@@ -1,0 +1,87 @@
+{
+  "schema": "wp12-static-native-witness-viability-v1",
+  "status": "OWN_ADDITIONAL_BI01_DRIVER_PLAUSIBLE_NOT_IMPLEMENTED_OR_EXECUTED",
+  "reviewer": "/root/compose_typecheck",
+  "question": "Can required sf_kpi_explain be exercised through real BI01 data without inventing authority or private artifacts?",
+  "confirmed": [
+    "dashboardMetricSelector is an exported deterministic qualifier of an already issued selection reference; it does not issue authority. resolveDashboardMetric re-resolves the selection against the authentic Request, actor, scope, revision and current projection.",
+    "BI01 is fixed to Budget Overview with fields [budgetSeries]. total-budget resolves to budgetMetrics, and Dashboard read requires exact field-set equality. Therefore qualifying the existing BI01 selector is insufficient and fails source-scope matching.",
+    "A separately issued Budget Overview selection with fields [budgetMetrics] and a complete-year period can be read by the installed KPI handler. The same public source issuer and case draft can retain this second real evidence reference without replacing the BI01 selection.",
+    "The KPI producer computes budgetMetrics.YEAR.totalBudget from its twelve budget:YEAR-MM:effective values. The budgetSeries producer emits the same monthly effective values from the same underlying authorized budget data. This supplies a meaningful consistency check; actual/forecast absence remains independent.",
+    "The current ContextualBIInput carries one dashboardSelection and the exact BI artifact projectionRefs. The verifier demands proposal.sourceRefs equal those BI projectionRefs and envelope.evidenceRefs equal proposal.sourceRefs; it does not allow a second KPI reference to be appended to the proposal."
+  ],
+  "proposedOwnPath": [
+    "Keep the existing BI08 milestone tests untouched and add a distinct BI01 budget driver only if root assigns it.",
+    "Issue both full-year public selections through the production Dashboard issuer, read their real projections, and include both real evidence references in one human-created case.",
+    "Use the public sf_case_read result to discover the second selection by its Budget Overview / budgetMetrics scope; describe the exported selector format without injecting an invented/private reference into the objective.",
+    "Require sf_kpi_explain as a meaningful check of the annual total against the same producer monthly effective series, while retaining each result original evidence references and their different scopes.",
+    "Audit the actual native KPI tool structured result and bound receipt in the durable Session, separately from the closed ContextualBIProposal; keep the proposed chart/table and its sourceRefs exactly the BI01 artifact result.",
+    "Do not treat this as execution before an installed model produces the native operation receipt. Empty model availability and missing output artifact-handle exposure remain separate limitations."
+  ],
+  "interpretationLimit": "The existing proposal has no numeric-summary field. An auxiliary KPI consistency check can be documented in its native tool evidence without adding an unsupported KPI claim to the proposal. If integration requires every auxiliary tool source to be copied into the closed proposal.evidenceRefs, a shared-contract decision is required instead; this review does not silently change that rule.",
+  "sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/bi-metadata.ts",
+      "commit": "efa940962023523848661d795856002d29510b19",
+      "blob": "da697797e33a54f8d7c3c3ecc0d7f16d516c68c3",
+      "sha256": "474225a0ee4cd68e6f06d2258e1a2394b8046c1904c7946b9beb2f2fb33c0ddd",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/modules/sucafina/Sucafinav1/product/dashboard/bi-metadata.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "commit": "efa940962023523848661d795856002d29510b19",
+      "blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+      "sha256": "fe44de260ce2d30d3ae48308517437c9a7b68681f702e536e16b7a1a9233ad61",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/modules/sucafina/Sucafinav1/product/dashboard/sources.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+      "commit": "efa940962023523848661d795856002d29510b19",
+      "blob": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811",
+      "sha256": "e3774ecdbc161eb827bf60a9c13bf7247ef0fcb2c86fada534a5456df6fb18fd",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/modules/sucafina/Sucafinav1/product/dashboard/port.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-bi.ts",
+      "commit": "efa940962023523848661d795856002d29510b19",
+      "blob": "a5cd14609db80287e6f122cfb199338df53a8b50",
+      "sha256": "a05bfb22661637e99d436552f5e914b2aec55e590a16a09b2aad82197415c6f7",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/apps/cli/src/sucafina-product/input-producer-bi.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-bi-bindings.ts",
+      "commit": "efa940962023523848661d795856002d29510b19",
+      "blob": "4f21e442aebcc2151b3d07ee5b78595d2322e67f",
+      "sha256": "4434de2a0218f6ccb86c7712cf7935ea890cbaa887d76c66a6851020ff5557a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/apps/cli/src/sucafina-product/analysis-bi-bindings.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-bi-contextual/SKILL.md",
+      "commit": "efa940962023523848661d795856002d29510b19",
+      "blob": "313d50dca7c9ca78e57ca2818f778e5c2680177e",
+      "sha256": "db1f3b552ea8d317ce8c27cc7e69f7912630ec314f1adfdb789137fccd48dfd7",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-bi-contextual/SKILL.md"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier-bi.ts",
+      "commit": "efa940962023523848661d795856002d29510b19",
+      "blob": "7fccb6aad336a780267d776bf06e7c2a4cc81457",
+      "sha256": "5e2f4b1cb508ac12433d9c2abd380e9f08a26e99b2b3128ee8c488f2fdca3b04",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/apps/cli/src/sucafina-product/analysis-verifier-bi.ts"
+    }
+  ],
+  "notEstablished": [
+    "Native model inference",
+    "Actual successful sf_kpi_explain execution through this new driver",
+    "Published new driver",
+    "Corrected artifact-handle discovery",
+    "GNATIVE or completed WP12 acceptance"
+  ],
+  "validation": {
+    "sourcePinsVerified": 7,
+    "localProductExecution": false,
+    "localTypecheck": false,
+    "sourceEdits": false,
+    "remoteMutation": false
+  }
+}

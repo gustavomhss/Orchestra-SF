@@ -1,0 +1,103 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts
+@@ -4,8 +4,9 @@
+ import { decodeSfOperationOutput, decodeSfSkillInput } from "../../../product/contracts/schema-admission.ts"
+ import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
+ import { readCaseAnalysisProjection } from "../../../product/interface/case-analysis-input.ts"
++import { compareScenarios } from "../../../product/planner/capabilities.ts"
+ import { object } from "../../../runtime/contract.ts"
+-import { dispatchWp12Ui, executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
++import { executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
+ import type { Wp12CompletedNativeMission } from "./native-mission-harness.ts"
+ import { initializeWp12ScenarioSources, prepareWp12ScenarioCase, WP12_SCENARIO_HUMAN_ACTIONS, WP12_SCENARIO_OPERATIONS, WP12_SCENARIO_PERIOD } from "./native-scenario-preparation.ts"
+ 
+@@ -43,11 +44,33 @@
+         expect(decoded.value.costCoverageBases).toEqual(decision.case.costCoverageBases)
+         expect(decoded.value.alternatives.map((item) => item.result)).toEqual([decision.baseline.result, alternative.result])
+         const comparisonRequest = { scenarioRefs: resultRefs, criteria: [] }
+-        const compared = await dispatchWp12Ui(context, "sf_scenario_compare", comparisonRequest)
+-        if (compared.status !== "ok") throw new Error(`The current deterministic scenario comparison was refused: ${compared.reason}`)
++        // The capability persists a result under a selected case. Keep the real
++        // UI admission, case scope, Planner, receipt factory and C09 persistence
++        // in this one business instance; the host dispatcher has its own scope.
++        const scoped = await context.ui("sf_scenario_compare", comparisonRequest, (call) =>
++          context.business.withCase(call, decision.caseRef, {}, async () => {
++            const compared = await compareScenarios(comparisonRequest, call, context.business.planner,
++              context.business.receipt, context.business.calculations.persist)
++            if (compared.status !== "ok" || typeof compared.outputRef !== "string" || !compared.outputRef.trim())
++              throw new Error(`The real UI scenario capability did not persist its comparison: ${compared.status === "ok" ? "missing-output-ref" : compared.reason}`)
++            const persisted = await context.business.results.read({ kind: "comparison", resultRef: compared.outputRef }, call)
++            if (persisted.status !== "ok" || persisted.value.kind !== "comparison")
++              throw new Error(`The real UI scenario comparison could not be read: ${persisted.status === "ok" ? "wrong-result-kind" : persisted.reason}`)
++            return { status: "ok" as const, value: { compared, persisted: persisted.value } }
++          }))
++        if (scoped.status !== "ok") throw new Error(`The current scenario case scope was refused: ${scoped.reason}`)
++        const { compared, persisted } = scoped.value
+         const comparison = decodeSfOperationOutput("sf_scenario_compare", compared.result)
+         if (!comparison.ok) throw new Error("The real scenario comparison failed its canonical output contract")
+         expect(compared.receipt.kind).toBe("ui")
++        expect(compared.receipt.operation).toBe("sf_scenario_compare")
++        expect(compared.receipt.inputDigest).toBe(digestSfValue(comparisonRequest))
++        expect(compared.receipt.resultDigest).toBe(digestSfValue(comparison.value))
++        expect(persisted.resultRef).toBe(compared.outputRef)
++        expect(persisted.caseRef).toEqual(decision.caseRef)
++        expect(persisted.requestDigest).toBe(digestSfValue(comparisonRequest))
++        expect(persisted.resultDigest).toBe(digestSfValue(comparison.value))
++        expect(persisted.result).toEqual(comparison.value)
+         expect(comparison.value.baselineResultRef).toBe(resultRefs[0])
+         expect(comparison.value.alternativeResultRef).toBe(resultRefs[1])
+         expect(comparison.value.costCoverageRefs).toHaveLength(2)
+@@ -57,13 +80,14 @@
+         expect(comparison.value.comparisonStatus).toBe("conditioned")
+         expect(comparison.value.unresolvedConditions).toContain("scenario-is-hypothetical")
+         expect(comparison.value.unresolvedConditions).toContain("comparison-requires-complete-current-coverage")
+-        prepared.push({ variant, incoming, input: decoded.value, resultRefs, alternativeRequest, comparison: comparison.value })
++        prepared.push({ variant, incoming, input: decoded.value, resultRefs, alternativeRequest, comparison: comparison.value, comparisonRecord: persisted })
+         console.log("SF_WP12_NATIVE_SCENARIO_INPUT:" + JSON.stringify({ scope: "real-host-input-and-deterministic-hypothetical-comparison", githubSha: process.env.GITHUB_SHA ?? null,
+           caseRef: decision.caseRef, variant, inputDigest: digestSfValue(decoded.value), resultRefs,
+           comparisonDigest: digestSfValue(comparison.value), comparisonStatus: comparison.value.comparisonStatus,
+           knownDifference: comparison.value.knownDifference, completeDifference: comparison.value.completeDifference,
+           coverageStates: decoded.value.alternatives.map((item) => item.result.costCoverage.coverageState),
+-          receiptKind: compared.receipt.kind, inferenceExecuted: false, gnativeAccepted: false }))
++          receiptKind: compared.receipt.kind, comparisonResultRef: persisted.resultRef,
++          comparisonPersistenceScope: "real-UI-capability-and-case-scoped-C09-result", inferenceExecuted: false, gnativeAccepted: false }))
+       }
+       expect(prepared).toHaveLength(2)
+       expect(digestSfValue(prepared[0]!.input)).not.toBe(digestSfValue(prepared[1]!.input))
+@@ -82,7 +106,8 @@
+         console.log("SF_WP12_NATIVE_MISSION:" + JSON.stringify({ scope: "reviewer-prerequisite-observation", status: "unavailable", githubSha: process.env.GITHUB_SHA ?? null,
+           skillId: reviewSkill.id, profileId: reviewer.profile.id, caseRef: decision.caseRef, reason: "real-author-analysis-not-executed-without-installed-model",
+           inputPrepared: false, inferenceExecuted: false, outputRef: null, consumerRef: null, gnativeAccepted: false }))
+-        return { witnesses: [] satisfies Wp12CompletedNativeMission[], case: decision.case, plannerSourceDigest: decision.plannerSourceDigest }
++        return { witnesses: [] satisfies Wp12CompletedNativeMission[], case: decision.case, plannerSourceDigest: decision.plannerSourceDigest,
++          comparisons: prepared.map((item) => item.comparisonRecord) }
+       }
+       expectSpawn(import.meta.path)
+       const witnesses: Wp12CompletedNativeMission[] = []
+@@ -152,7 +177,8 @@
+       if (retainedAuthor.status !== "ok") throw new Error("Reviewer did not preserve the author contribution")
+       expect(digestSfValue(retainedAuthor.value)).toBe(digestSfValue(author.output))
+       witnesses.push(critique)
+-      return { witnesses, case: decision.case, plannerSourceDigest: decision.plannerSourceDigest }
++      return { witnesses, case: decision.case, plannerSourceDigest: decision.plannerSourceDigest,
++        comparisons: prepared.map((item) => item.comparisonRecord) }
+     })
+     await open("reopened", async (context) => {
+       const caseRef = { id: completed.case.id, incarnation: completed.case.incarnation, version: completed.case.version }
+@@ -160,8 +186,16 @@
+       if (current.status !== "ok") throw new Error("The prepared scenario case cannot be reopened")
+       expect(digestSfValue(current.value.case)).toBe(digestSfValue(completed.case))
+       expect(await context.persistence.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data.versions) }))).toBe(completed.plannerSourceDigest)
++      for (const comparison of completed.comparisons) {
++        const persisted = await context.ui("sf_case_read", { caseRef: encodeCaseRef(caseRef) }, (call) =>
++          context.business.results.read({ kind: "comparison", resultRef: comparison.resultRef }, call))
++        if (persisted.status !== "ok" || persisted.value.kind !== "comparison") throw new Error("The real UI comparison cannot be reopened")
++        expect(digestSfValue(persisted.value)).toBe(digestSfValue(comparison))
++        expect(persisted.value.caseRef).toEqual(caseRef)
++      }
+       console.log("SF_WP12_SCENARIO_CASE_REOPEN:" + JSON.stringify({ scope: "real-case-and-Planner-source-reopen",
+         githubSha: process.env.GITHUB_SHA ?? null, caseRef, caseDigest: digestSfValue(current.value.case),
++        comparisonResultRefs: completed.comparisons.map((comparison) => comparison.resultRef),
+         outputRefs: completed.witnesses.map((witness) => witness.output.id), inferenceExecuted: completed.witnesses.length > 0, gnativeAccepted: false }))
+       for (const witness of completed.witnesses) {
+         const consumed = await readWp12NativeMissionAfterReload(context, witness)

@@ -19,7 +19,7 @@ for (const variant of ["pending", "complete"] as const) test(`native purchase ob
     const completed = await open("initial", async (context) => {
       const preparationStartedAt = Date.now()
       console.log("SF_WP12_PURCHASE_PHASE:" + JSON.stringify({ variant, phase: "prepare-case", state: "begin", githubSha: process.env.GITHUB_SHA ?? null }))
-      const prepared = await prepareWp12ProcurementCase(context, { selected: variant })
+      const prepared = await prepareWp12ProcurementCase(context, { selected: variant, withChoiceParameter: true })
       console.log("SF_WP12_PURCHASE_PHASE:" + JSON.stringify({ variant, phase: "prepare-case", state: "complete",
         durationMs: Date.now() - preparationStartedAt, githubSha: process.env.GITHUB_SHA ?? null }))
       const chosen = await choosePurchaseAlternative(context, prepared, variant)

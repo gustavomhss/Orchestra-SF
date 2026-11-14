@@ -3,6 +3,7 @@ import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
 import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { CostCoverageBasis, CostCoverageEntry } from "../../../product/contracts/decisions.ts"
+import type { ScenarioOperation } from "../../../product/contracts/operations.ts"
 import { readCaseAnalysisProjection } from "../../../product/interface/case-analysis-input.ts"
 import { object } from "../../../runtime/contract.ts"
 import type { Wp12NativeMissionContext } from "./native-mission-harness.ts"
@@ -84,6 +85,7 @@ export async function issueWp12Contract(context: Wp12NativeMissionContext) {
 export async function prepareWp12ProcurementCase(context: Wp12NativeMissionContext, options: {
   selected: "pending" | "complete"
   includeContract?: boolean
+  withChoiceParameter?: boolean
 }) {
   await selectWp12ProcurementPeriod(context)
   const requestEvidence = await context.ui("sf_request_read", { purpose: "native-purchase-source", id: WP12_PROCUREMENT_REQUEST_ID }, async (call) => {
@@ -118,12 +120,38 @@ export async function prepareWp12ProcurementCase(context: Wp12NativeMissionConte
   const basis: CostCoverageBasis = { id: `wp12-purchase-basis:${caseRef.id}`, version: 1, decisionType: "renewal-transition-v1",
     categoryIds: RENEWAL_TRANSITION_CATEGORIES, additionalCategoryIds: [], sourceRefs: sources.map((source) => source.evidence) }
   const resultRefs: { key: typeof definitions[number]["key"]; resultRef: string }[] = []
+  const sourceValueDigests = new Map<string, string>()
+  const choiceOperations: ScenarioOperation[] = []
   const productHttp = context.services.productHttp
   if (!productHttp) throw new Error("The real purchase case routes are missing")
   for (const source of sources) {
     const projection = await context.ui("sf_context_get", { sourceRef: source.evidence.refId }, (call) =>
       context.business.projectPlannerEvidence(source.evidence, call, { period: WP12_SCENARIO_PERIOD, currency: "USD" }))
     if (projection.status !== "ok") throw new Error(`Actual purchase Planner projection failed: ${projection.reason}`)
+    sourceValueDigests.set(source.definition.key, digestSfValue(projection.value.components.map((component) => ({ id: component.id, amount: component.amount, currency: component.currency, period: component.period }))))
+    // A simulated empty scenario has no selectable sensitivity operation. For
+    // the explicit human-choice mission, select a real current service value
+    // and propose that same amount. This changes no source or monetary value;
+    // the selected preview component still carries the domain's hypothetical state.
+    if (options.withChoiceParameter && source.definition.key === "candidate") {
+      const parameters = projection.value.components.filter((component) => component.id.startsWith("wp12-cost-service:") && component.period.start === WP12_SCENARIO_PERIOD.start)
+      const parameter = parameters[0]
+      if (parameters.length !== 1 || !parameter || parameter.currency !== "USD" || parameter.evidenceState !== "confirmed" ||
+        typeof parameter.amount !== "number" || !Number.isFinite(parameter.amount)) throw new Error("The current purchase service parameter is not uniquely confirmed")
+      const amounts = projection.value.values.filter((value) => value.id === `${parameter.id}:forecast`)
+      const currencies = projection.value.values.filter((value) => value.id === `${parameter.id}:currency-declared`)
+      const amount = amounts[0], currency = currencies[0]
+      if (amounts.length !== 1 || currencies.length !== 1 || !amount || !currency || amount.granularity !== "month" || currency.granularity !== "month" ||
+        amount.evidenceState !== "confirmed" || currency.evidenceState !== "confirmed" || typeof amount.value !== "number" || !Number.isFinite(amount.value) ||
+        amount.currency !== "USD" || currency.value !== "USD") throw new Error("The purchase sensitivity parameter has no current declared amount and unit")
+      expect(amount.value).toBe(parameter.amount)
+      expect(amount.period).toEqual(parameter.period)
+      expect(currency.period).toEqual(parameter.period)
+      expect(amount.sourceRefs).toContainEqual(source.evidence)
+      expect(currency.sourceRefs).toContainEqual(source.evidence)
+      choiceOperations.push({ kind: "replace", targetRef: parameter.id, amount: amount.value, currency: "USD", period: amount.period })
+    }
+    const operations = options.withChoiceParameter && source.definition.key === "candidate" ? choiceOperations : []
     const entries = RENEWAL_TRANSITION_CATEGORIES.flatMap((category): CostCoverageEntry[] => {
       const components = projection.value.components.filter((component) => component.id.startsWith(`wp12-cost-${category}:`))
       if (category === "training" && source.definition.trainingAbsent) { expect(components).toHaveLength(0); return [] }
@@ -136,7 +164,7 @@ export async function prepareWp12ProcurementCase(context: Wp12NativeMissionConte
     const coverage = object(await coverageResponse.json()), value = object(coverage.value)
     if (coverageResponse.status !== 200 || coverage.status !== "ok" || typeof value.coverageRef !== "string") throw new Error(`Actual purchase coverage failed: ${String(coverage.reason)}`)
     const response = await productHttp(context.request({ caseRef, title: source.definition.title,
-      scenario: { baseRef: source.evidence.refId, operations: [], assumptions: [] }, coverageRef: value.coverageRef }, "/sucafina/planner?sf=decision-promote"), "planner")
+      scenario: { baseRef: source.evidence.refId, operations, assumptions: [] }, coverageRef: value.coverageRef }, "/sucafina/planner?sf=decision-promote"), "planner")
     if (!response) throw new Error("Actual purchase promotion route missing")
     const promoted = object(await response.json()), receipt = object(promoted.value), next = object(receipt.caseRef)
     if (response.status !== 200 || promoted.status !== "ok" || typeof receipt.resultRef !== "string" || next.id !== caseRef.id ||
@@ -154,6 +182,9 @@ export async function prepareWp12ProcurementCase(context: Wp12NativeMissionConte
     return { alternative, resultRef: stored.resultRef }
   }
   const baseline = get("baseline"), candidate = get("candidate")
+  for (const [key, item] of [["baseline", baseline], ["candidate", candidate]] as const) {
+    expect(digestSfValue(item.alternative.result.components.map((component) => ({ id: component.id, amount: component.amount, currency: component.currency, period: component.period })))).toBe(sourceValueDigests.get(key))
+  }
   // Observed category coverage does not turn a simulated choice into an applied
   // result. Both alternatives retain the actual engine's hypothetical boundary.
   for (const item of [baseline, candidate]) {
@@ -171,7 +202,9 @@ export async function prepareWp12ProcurementCase(context: Wp12NativeMissionConte
     expect(item.alternative.result.costCoverage.entries.map((entry) => entry.categoryId).toSorted()).toEqual([...RENEWAL_TRANSITION_CATEGORIES].sort())
     expect(item.alternative.result.costCoverage.entries.every((entry) => entry.status === "included")).toBe(true)
     expect(item.alternative.result.components).toHaveLength(RENEWAL_TRANSITION_CATEGORIES.length * 12)
-    expect(item.alternative.result.components.every((component) => component.amount !== null && component.evidenceState === "confirmed")).toBe(true)
+    if (!options.withChoiceParameter || item === baseline) {
+      expect(item.alternative.result.components.every((component) => component.amount !== null && component.evidenceState === "confirmed")).toBe(true)
+    }
   }
   expect(candidate.alternative.result.knownSubtotal).toBe(options.selected === "pending" ? 210_000 : 250_000)
   expect(candidate.alternative.result.costCoverage.coverageState).toBe(options.selected === "pending" ? "pending" : "complete")
@@ -183,7 +216,20 @@ export async function prepareWp12ProcurementCase(context: Wp12NativeMissionConte
   }
   expect(training.filter((component) => component.amount === 40_000)).toHaveLength(options.selected === "pending" ? 0 : 1)
   expect(training.filter((component) => component.amount === 0)).toHaveLength(options.selected === "pending" ? 0 : 11)
-  const parameter = candidate.alternative.result.components.find((component) => component.id.startsWith("wp12-cost-service:"))
+  if (options.withChoiceParameter) {
+    expect(choiceOperations).toHaveLength(1)
+    expect(candidate.alternative.scenario.operations).toEqual(choiceOperations)
+    expect(candidate.alternative.scenario.assumptions).toEqual([])
+    expect(candidate.alternative.result.components.every((component) => component.amount !== null && Number.isFinite(component.amount))).toBe(true)
+    expect(candidate.alternative.result.components.filter((component) => component.evidenceState === "hypothetical").map((component) => component.id)).toEqual([choiceOperations[0]!.targetRef])
+    expect(candidate.alternative.result.components.filter((component) => component.id !== choiceOperations[0]!.targetRef).every((component) => component.evidenceState === "confirmed")).toBe(true)
+    console.log("SF_WP12_PURCHASE_PARAMETER:" + JSON.stringify({ scope: "real-current-source-value-selected-for-human-choice",
+      githubSha: process.env.GITHUB_SHA ?? null, caseRef, variant: options.selected, operation: choiceOperations[0],
+      sourceValueDigest: sourceValueDigests.get("candidate"), resultRef: candidate.resultRef, numericValuesUnchanged: true,
+      selectedComponentState: "hypothetical", inferenceExecuted: false, domainApplied: false }))
+  }
+  const parameter = candidate.alternative.result.components.find((component) => options.withChoiceParameter
+    ? component.id === choiceOperations[0]?.targetRef : component.id.startsWith("wp12-cost-service:"))
   const criterion = read.value.case.criteria[0]
   if (!parameter || !criterion) throw new Error("The actual case has no selectable service component or criterion")
   return { caseRef, case: read.value.case, requestEvidence, contract, baseline, candidate, parameterRef: parameter.id, criterionId: criterion.id }

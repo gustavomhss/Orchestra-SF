@@ -1,0 +1,237 @@
+{
+  "schema": "sf-wp12-surgical-product-result-v1",
+  "phase": "resume-15",
+  "scope": "scenarios",
+  "product": {
+    "sha": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "tree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e"
+  },
+  "snapshot": {
+    "sha": "24126b776427dfc6560456d921c7b8f1398afd1c",
+    "tree": "3969e7577dba71e21a5912ed76790ade3c480eb3",
+    "directParent": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "onlyEnvelopePath": ".ci-run.json",
+    "branch": "ci-run-linux-astra-wp12-71cbf64f-e4fe9b72-1"
+  },
+  "request": {
+    "sha256": "e4fe9b7243476212b20ee84e4e6844e20977918398f06b2cde94561d4b467645",
+    "gitBlob": "3077f502c093481a4b31d0f9a8a186e41e00fc99",
+    "validation": "PASS_METADATA_PUBLISHED_PINS",
+    "sourcePins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+        "blob": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06",
+        "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+        "sha256": "aa89749cba692f244a357d60efebf831933ee0e85590605f7d0f85d1707d1580",
+        "tests": [
+          {
+            "name": "native Finance preserves pending versus covered scenario costs and a fresh Reviewer critiques its real author",
+            "timeoutMs": 720000
+          }
+        ]
+      }
+    ],
+    "selectedNames": [
+      {
+        "file": "native-execution-scenarios-review.test.ts",
+        "name": "native Finance preserves pending versus covered scenario costs and a fresh Reviewer critiques its real author",
+        "timeoutMs": 720000
+      }
+    ],
+    "body": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+        "--timeout",
+        "120000",
+        "-t",
+        "^(native Finance preserves pending versus covered scenario costs and a fresh Reviewer critiques its real author)$"
+      ],
+      "env": {}
+    }
+  },
+  "run": {
+    "id": 43606961039,
+    "job": 132483561647,
+    "cleanupJob": 132487115526,
+    "status": "completed",
+    "conclusion": "failure",
+    "cleanup": "success",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43606961039",
+    "artifacts": []
+  },
+  "summary": {
+    "pass": 0,
+    "fail": 1,
+    "assertions": 101,
+    "files": 1,
+    "tests": 1,
+    "durationSeconds": 720.08
+  },
+  "cases": [
+    {
+      "line": 845,
+      "status": "fail",
+      "name": "native Finance preserves pending versus covered scenario costs and a fresh Reviewer critiques its real author",
+      "elapsedMs": 718291.49
+    }
+  ],
+  "omni": {
+    "status": "pass",
+    "kind": "focused-no-declaring-test-ran",
+    "nonce": "5232b3107bbb599a611336a679b30065",
+    "spawns": 24,
+    "delegated": 0
+  },
+  "log": {
+    "bytes": 73572,
+    "sha256": "ddd8faf5975532c29a93c9ee976c424cc95106c9d73afb4faac973262962c7fe",
+    "source": "GitHub Actions job log132483561647",
+    "verifiedFrom": "evidence/resume-15-scenarios.log"
+  },
+  "markers": [
+    {
+      "line": 833,
+      "name": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "scenarios-review",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "24126b776427dfc6560456d921c7b8f1398afd1c",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 834,
+      "name": "SF_WP12_NATIVE_SCENARIO_PREPARATION",
+      "value": {
+        "scope": "real-category-coverage-and-hypothetical-c09-promotions",
+        "githubSha": "24126b776427dfc6560456d921c7b8f1398afd1c",
+        "caseRef": {
+          "id": "323a4959-b0a8-44a6-9fa3-b29fbd7eb0ed",
+          "incarnation": "170196a0-55f3-47ec-a437-b764809aa1b7",
+          "version": 4
+        },
+        "basisId": "wp12-renewal-inventory:323a4959-b0a8-44a6-9fa3-b29fbd7eb0ed",
+        "routes": [
+          "baseline-coverage",
+          "decision-promote"
+        ],
+        "results": [
+          {
+            "key": "baseline",
+            "resultRef": "decision-result:68faee9a95de236c6a7dbcff3451957102f30953b2db35b60ca43d5495836b81",
+            "coverageRef": "baseline-coverage:d59d0769b3262e59928cbc30bc963c3f187129223bb41e2a03eb031f80ee554b"
+          },
+          {
+            "key": "pending",
+            "resultRef": "decision-result:64472dd1d39ba40e4964c6f92209c4f54e1a02ed593336a51995678ebb209668",
+            "coverageRef": "baseline-coverage:8fa0a2601f2bb3d9b7af21321e44f3c083bb9a3d6843c050ca5761a4e0458e9a"
+          },
+          {
+            "key": "complete",
+            "resultRef": "decision-result:873ea85fac2eb13e5b4ed4b60eb3343079ecb82475130936e764203eb6789511",
+            "coverageRef": "baseline-coverage:9c816ffa1188efcd66e66f2e29033ec9aaab70d41cdfcb49091c865636bad2f3"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "db9f38d5-bd3c-49bd-8be1-a3aae2f616fc",
+            "version": 1,
+            "knownSubtotal": 240000,
+            "total": null,
+            "comparisonStatus": "conditioned",
+            "coverageState": "complete",
+            "derivedMissingCategoryIds": [],
+            "restrictions": [
+              "preview-not-applied"
+            ]
+          },
+          {
+            "id": "78179b9c-1f0d-4184-a865-96145114e7ee",
+            "version": 1,
+            "knownSubtotal": 210000,
+            "total": null,
+            "comparisonStatus": "conditioned",
+            "coverageState": "pending",
+            "derivedMissingCategoryIds": [
+              "training"
+            ],
+            "restrictions": [
+              "preview-not-applied"
+            ]
+          },
+          {
+            "id": "33305086-b168-41cd-8385-0360c69046a4",
+            "version": 1,
+            "knownSubtotal": 250000,
+            "total": null,
+            "comparisonStatus": "conditioned",
+            "coverageState": "complete",
+            "derivedMissingCategoryIds": [],
+            "restrictions": [
+              "preview-not-applied"
+            ]
+          }
+        ],
+        "inferenceExecuted": false,
+        "plannerSourcesUnchanged": true,
+        "hypotheticalResultsRemainConditional": true,
+        "gnativeAccepted": false
+      }
+    }
+  ],
+  "observed": {
+    "preparation": "Three real source/coverage/promoted alternatives completed. Baseline240000/complete coverage; pending210000/training derived missing; complete250000/full coverage. All totals remain null, comparisons conditioned, preview-not-applied and raw Planner unchanged.",
+    "preparationMarkerLine": 834,
+    "catalogAt": "2026-11-14T14:52:08.0112530Z",
+    "preparedCaseAt": "2026-11-14T14:59:02.3607610Z",
+    "failureAt": "2026-11-14T15:04:02.6858459Z",
+    "failureReason": "analysis-authority-changed",
+    "failureLocation": "native-execution-scenarios-review.test.ts:38",
+    "phase": "first actual HTTP analysis input preparation",
+    "elapsedAfterPreparationMarkerMs": 300325.0849,
+    "explicitTestDeadlineMs": 720000,
+    "qualification": "The actual error is the authority refusal. The case elapsed718291.49ms is distinct from the aggregate720.08s; no explicit Bun test-timeout error is present in this log."
+  },
+  "independentLatentIssue": {
+    "status": "STATIC_CORRECTION_PREPARED_NOT_EXECUTED",
+    "driverBlobBefore": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06",
+    "driverBlobCorrected": "d418d5d462842ebfb0ddc3d890098eb00abc5653",
+    "issue": "The later UI comparison omitted the case binding expected by C09 persistence. Its correction composes the public capability and real ports within one business instance.",
+    "discovery": "Final static confirmation arrived after this run had been dispatched.",
+    "runtimeRelation": "This run failed before the comparison. The latent fix does not cure or prove resolution of the observed input-preparation failure."
+  },
+  "acceptance": {
+    "c10CoveragePreparation": "PASS_SCOPED_THREE_REAL_ALTERNATIVES",
+    "analysisInputPrepared": false,
+    "uiComparisonObserved": false,
+    "authorInference": false,
+    "reviewerInput": false,
+    "reviewerInference": false,
+    "nativeOutputs": 0,
+    "nativeOutputConsumers": 0,
+    "reopenedHostObserved": false,
+    "fullWp12": false
+  },
+  "followup": {
+    "scenariosRetest": "HOLD_UNTIL_RELEVANT_PREPARATION_OR_OWNER_PERFORMANCE_FIX",
+    "preserved": [
+      "same financial data and horizons",
+      "all strict assertions",
+      "300second authority lifetime",
+      "720000ms test deadline",
+      "no renewal within one operation"
+    ],
+    "ownerInvestigation": "Inspect the exact current-case/source validation and input composition path. Source pins and a concrete delta are being prepared; the aggregate reason does not isolate every internal subgate."
+  },
+  "localProductTests": false,
+  "localTypecheck": false
+}

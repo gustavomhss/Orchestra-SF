@@ -1,0 +1,118 @@
+{
+  "schema": "wp12-independent-static-review-v1",
+  "reviewer": "/root/own_review_resume",
+  "status": "PASS_STATIC",
+  "files": [
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+      "blob": "e3b9d1634b916cce45e9750b96b5a88deaf81fae",
+      "sha256": "879cca9345a218ec7c581383bc92f4616cbb9ab5398d06a6f58dc0437660d04b",
+      "bytes": 20388
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+      "blob": "2a3a788a56da8d53392f564e95dad168df670c84",
+      "sha256": "cd6e1478c7724a32036e8ed20a2aee834870ae5f35ac33995827990d970a96ed",
+      "bytes": 16762
+    }
+  ],
+  "findings": [],
+  "scope": "Purchase-only same-value parameter; no edits by reviewer",
+  "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "blob": "ed68563245e406aca2dc3ce335943647fd2cb002"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "blob": "e4a21957da6b91186ecae996a78664c54d7ce41a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "blob": "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "blob": "e0840d775274ea73c6b938711764c69593dadca0"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "blob": "c434de513cb7ceae4acad1fc595e776785ec85af"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "blob": "6facc71b1351aea04ed3e7d51d1d0ed5d81c24d9"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-preparation.ts",
+      "blob": "a661aaa134e046b093b300c260870e38c967aa10"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "blob": "138238ca9273e84f39f8e1db484378a3e62d41d4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+      "blob": "c357c6c66aac544394ab355306e1f6f7195395f7"
+    }
+  ],
+  "alternativesConsidered": [
+    {
+      "path": "Keep the promoted zero-operation preview and request units as before",
+      "result": "Rejected by plannerSourceParameter: zero operations and assumptions take the sourceOnly path, whose result.id must start source-scenario:. The installed simulateScenario result is preview:."
+    },
+    {
+      "path": "Register a criterion without sensitivity and choose using only the comparison metric",
+      "result": "HTTP schema allows omitted sensitivity, but installed decision-domain-services verifyEvidence explicitly requires rule.sensitivity; the public registration cannot accept that shortcut."
+    },
+    {
+      "path": "Promote a confirmed source-scenario directly through the existing decision-promote path",
+      "result": "The inspected public route calls addAlternative, which obtains its result only from simulateScenario. It exposes no caller-provided result or source-only alternative registration. Renaming/inserting result IDs or replacing foreign case/Planner ports would not be a legitimate fixture change. This is bounded to the inspected installed paths, not an assertion about every possible future owner API."
+    }
+  ],
+  "preservation": {
+    "assertions": [
+      {
+        "path": "repo/modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+        "priorExpectLines": 31,
+        "currentExpectLines": 43,
+        "priorExpectLinesPreservedInOrder": true,
+        "leadingOnlyPriorExpectLines": 30,
+        "leadingOnlyCurrentExpectLines": 42,
+        "countRule": "Every source line containing expect( or expect<, including inline if statements; leadingOnly fields retain the narrower previous metric."
+      },
+      {
+        "path": "repo/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+        "priorExpectLines": 35,
+        "currentExpectLines": 35,
+        "priorExpectLinesPreservedInOrder": true,
+        "leadingOnlyPriorExpectLines": 33,
+        "leadingOnlyCurrentExpectLines": 33,
+        "countRule": "Every source line containing expect( or expect<, including inline if statements; leadingOnly fields retain the narrower previous metric."
+      }
+    ],
+    "initializationPeriodSelectionContractIssuerByteIdentical": true,
+    "purchaseDriverDelta": "Only withChoiceParameter:true at the existing preparation call. All mission/output/consumer assertions and 360000ms deadline remain.",
+    "defaultDocuments": "The option remains optional and Documents does not set it. Both default scenarios still submit operations:[] and assumptions:[]; baseline and default complete candidates retain the original all-confirmed assertion. Raw fixtures, source issuance, coverage classification and contract observation are unchanged.",
+    "numericScope": "Both persisted alternatives compare ordered id/amount/currency/period digests with the actual source projections. The candidate operation carries the exact source monthly forecast amount, declared USD and actual period; it does not invent a new amount.",
+    "evidenceState": "The optional purchase candidate requires exactly one hypothetical component, whose id equals the single replace target; every remaining component is confirmed and finite. A same-value operation is still hypothetical under the real scenario port.",
+    "coverage": "Total remains null, comparison conditioned, scenario-is-hypothetical and preview-not-applied retained. Known subtotals 240000 baseline and 210000/250000 candidate, complete/pending coverage and derived training origin remain asserted."
+  },
+  "limits": [
+    "This is a human-selected scenario parameter, not a source-only observation or applied change.",
+    "No corrected product pass, native inference or deadline success is inferred from static review.",
+    "No bypass of installed rule/source authorization and no foreign intake is endorsed."
+  ],
+  "validation": {
+    "productTests": false,
+    "typecheck": false,
+    "localProductImports": false,
+    "remoteMutation": false,
+    "sourceModifiedByReviewer": false
+  }
+}

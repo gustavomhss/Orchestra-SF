@@ -1,0 +1,125 @@
+{
+  "schema": "wp12-independent-static-review-v1",
+  "reviewer": "/root/own_review_resume",
+  "status": "PASS_STATIC",
+  "source": {
+    "path": "repo/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts",
+    "blob": "b2d80e6bbfc05ea11bae9bd10490aeb2ea4711b5",
+    "sha256": "64d1c85c19e313b348d2844cc6ff7c924d165bd158a4771d7d44c5807222a810",
+    "bytes": 25475
+  },
+  "findings": [],
+  "checks": [
+    {
+      "area": "Grants and admission",
+      "result": "Explicit four-operation native scope is within the unique fixture grants and published skill/profile allowlists. The real dispatchWp12Ui helper admits once and leaves validation to the installed dispatcher. No native binding, context or receipt is seeded."
+    },
+    {
+      "area": "Selected action and producer inputs",
+      "result": "The human C06 handoff-create route supplies an actual Hot Topic and confirmed relation. The scalar status endpoint is read through the actual Dashboard record producer; its current observation day remains separate from the Planner annual horizon. Both exact source refs are linked to the real case before QuestionPlanningInput preparation."
+    },
+    {
+      "area": "Question provenance and empty condition refs",
+      "result": "The pending condition keeps evidenceRefs empty and has no predecessor answer. The legitimate relation provides the two permitted output refs to the actual QuestionProposal verifier. This does not repair or claim Planner answer reuse or the derived-training omission counterproof."
+    },
+    {
+      "area": "Native observation",
+      "result": "When a real model exists, required operations are checked by the existing harness real receipts. The HandoffProposal is decoded only from actual completed Session tools with matching toolCallIds, then its action/ref set and recipient are checked. The final QuestionProposal and reopened contribution use the real reader."
+    },
+    {
+      "area": "Existing human consumer",
+      "result": "handoff-link consumes actual preparation values and reauthorizes source, action and recipient. The exact published relation port returns commit:false for an already present matching pair/evidence/assignment, so checking unchanged action and relation version after retry/reload is appropriate. The driver explicitly says this route does not store the native receipt."
+    },
+    {
+      "area": "Optional native question consumer",
+      "result": "C11 question-output supplies the exact contribution reference and payload; C06 question-consume preserves native outputDigest/runRef and exact sources, retries idempotently and reopens the thread. The no-model branch does not manufacture that contribution."
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/relation-catalog.ts",
+      "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "blob": "bf3f09f5cbc23ad81b65cfd1de97ff608dd075d8",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+      "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "blob": "de499e6d34af826add34bee4125bcfba4e57ddb8",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/composition.ts",
+      "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "blob": "6ebbe23c3788d4dbd91521af823917796262f0c9",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/handoff.ts",
+      "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "blob": "a9c796045e3b329ff62736405d1939477dd7ce87",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
+      "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "blob": "4a1ebe9298dd62d2846a45f294aa1b6331343040",
+      "verified": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-question.ts",
+      "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "blob": "10d95e014c71c6c6f9600a2c1c52fa3532aee68a",
+      "verified": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier-collaboration.ts",
+      "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "blob": "d37b26367f9f2670d6187e253c5c5ed14348a330",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/question-consumer.ts",
+      "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "blob": "ddccfdf46810117fb49e123140c8411373b387e9",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts",
+      "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "blob": "ef4bcc991553eebff18153499a10714ac04de0e0",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts",
+      "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "blob": "b40a9dd3736ddacdb0f8f1760733e0d7e9ef9c4a",
+      "verified": true
+    }
+  ],
+  "additionalSourceArtifact": {
+    "path": "resume-input/criteria/question-handoff/independent-relations-source.json",
+    "blob": "8e083e9d7913cf9ea5c85f1f56ceaa4d4422487e",
+    "sha256": "568e5601a32c6c1f5f5c8bf58069ab747e540871052367fa1877203cb230db2d",
+    "bytes": 20349
+  },
+  "limits": [
+    "Static review only; no corrected runtime or 300000ms deadline success is asserted.",
+    "The fixture explicitly grants an isolated synthetic human principal admin access in raw Dashboard data so C06 may create its action; production authority is not replaced.",
+    "This increment adds a handoff witness when a model is available, not all skill operations. sf_answer_read and sf_work_list remain explicitly unexercised, and GNATIVE remains false."
+  ],
+  "validation": {
+    "productTests": false,
+    "typecheck": false,
+    "localProductImports": false,
+    "sourceModifiedByReviewer": false,
+    "remoteMutation": false,
+    "sourceBlobsVerified": 11
+  }
+}
