@@ -150,7 +150,7 @@ test("a projected date change moves the timeline but cannot create savings or re
     const before = page.locator("#before-date")
     const after = page.locator("#after-date")
     for (const view of [before, after]) {
-      await expect(view).toContainText("subtotal conhecido: 30 · total: indisponível · diferença conhecida: 5")
+      await expect(view).toContainText("subtotal conhecido: 30 · total: indisponível · diferença conhecida (alternativa − referência): 5")
       await expect(view).toContainText("Nenhuma regra financeira foi fornecida para alterar datas.")
       const table = view.getByRole("table", { name: "Componentes fornecidos pelo domínio" })
       await expect(table.getByRole("row")).toHaveCount(3)

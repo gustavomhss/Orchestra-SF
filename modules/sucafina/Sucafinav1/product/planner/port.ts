@@ -51,7 +51,7 @@ export function projectPlannerSource(snapshot: Snapshot, actor: Actor, versionId
 export function createPlannerPort(input: { host: DomainPortHost; sources: PlannerSourceHost; scenarios?: PlannerScenarioHost; criteria?: PlannerCriteriaHost; scenarioInputs?: PlannerScenarioInputs; evidence?: BusinessContextService; sensitivity?: PlannerPort["evaluateSensitivity"] }): PlannerPort {
   return {
     compareForecast: (request, binding) => compareForecast(input, request, binding),
-    simulateScenario: (request, binding) => simulateScenario({ ...input, inputs: input.scenarioInputs, compare: (request, binding) => compareForecast(input, request, binding), project: projectPlannerSource }, request, binding),
+    simulateScenario: (request, binding) => simulateScenario({ ...input, inputs: input.scenarioInputs, compare: (request, binding) => compareForecast(input, request, binding), project: projectPlannerSource, qualify: buildPlannerFinancialProjection }, request, binding),
     compareScenarios: (request, binding) => input.scenarios ? compareScenarios({ ...input, scenarios: input.scenarios }, request, binding) : Promise.resolve({ status: "unavailable", reason: "scenario-comparison-not-connected" }),
     evaluateSensitivity: input.sensitivity ?? (async () => ({ status: "unavailable", reason: "sensitivity-not-connected" })),
   }
@@ -70,7 +70,15 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
   const end = /^(\d{4})-(\d{2})-(\d{2})$/.exec(request.period.end)
   if (!start || !end || start[1] !== end[1] || Number(start[2]) < 1 || Number(end[2]) > 12 || Number(start[2]) > Number(end[2]) || Number(end[3]) !== new Date(Date.UTC(Number(end[1]), Number(end[2]), 0)).getUTCDate())
     return { status: "needs-input", reason: "period-must-cover-whole-months-in-one-year" }
-  const source = await Promise.all([input.sources.resolveForecastSource(request.baseRef, binding), input.sources.resolveForecastSource(request.candidateRef, binding)])
+  const sameSource = request.baseRef === request.candidateRef
+  // A self-comparison observes one source per stage. Each later stage still reads
+  // again; neither authority nor source results are cached between observations.
+  const readPair = async <T>(read: (reference: string) => Promise<T>): Promise<[T, T]> => {
+    if (sameSource) { const value = structuredClone(await read(request.baseRef)); return [value, structuredClone(value)] }
+    const observe = async (reference: string) => structuredClone(await read(reference))
+    return Promise.all([observe(request.baseRef), observe(request.candidateRef)])
+  }
+  const source = await readPair((reference) => input.sources.resolveForecastSource(reference, binding))
   const failure = source.find((result) => result.status !== "ok")
   if (failure) return failure
   if (source[0].status !== "ok" || source[1].status !== "ok") return { status: "unavailable", reason: "source-unavailable" }
@@ -78,7 +86,7 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
   const evidence = selected.map((entry) => entry.evidence)
   if (evidence.some((ref, index) => ref.refDigest !== digestSfEvidenceRef(ref) || ref.installationId !== binding.binding.installationId || ref.projectId !== binding.binding.projectId || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || ref.target.recordId !== selected[index].versionId || !ref.target.period || ref.target.period.start > request.period.start || ref.target.period.end < request.period.end))
     return { status: "denied", reason: "source-scope-mismatch" }
-  const coverage = structuredClone(await Promise.all([input.sources.resolveForecastCoverage(request.baseRef, binding), input.sources.resolveForecastCoverage(request.candidateRef, binding)]))
+  const coverage = await readPair((reference) => input.sources.resolveForecastCoverage(reference, binding))
   const coverageFailure = coverage.find((entry) => entry.status !== "ok" && entry.status !== "unavailable" && entry.status !== "needs-input")
   if (coverageFailure && coverageFailure.status !== "ok") return coverageFailure
   const read = async () => input.host.persistence.transaction("planner", async (snapshot) => {
@@ -87,6 +95,7 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
     const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
     const access = object(object(snapshot.data.access)[principal.id])
     const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((x): x is string => typeof x === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((x): x is string => typeof x === "string") : [] }
+    if (sameSource) { const projection = projectPlannerSource(snapshot, actor, selected[0]!.versionId); return { commit: false, value: [projection, structuredClone(projection)] } }
     return { commit: false, value: selected.map((item) => projectPlannerSource(snapshot, actor, item.versionId)) }
   })
   const projections = await read()
@@ -94,7 +103,7 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
   if (projections.some((projection, index) => !projection || digestSfValue(Object.keys(projection).sort()) !== digestSfValue([...evidence[index].target.fields].sort()) || digestSfValue({ versionId: evidence[index].target.recordId, projection }) !== evidence[index].target.projectionDigest)) return { status: "stale", reason: "source-changed" }
   if (projections.some((projection) => projection?.year !== Number(start[1]))) return { status: "needs-input", reason: "period-version-mismatch" }
   const base = buildPlannerFinancialProjection({ projection: projections[0]!, ref: evidence[0], period: request.period, binding, at: environment.at })
-  const candidate = buildPlannerFinancialProjection({ projection: projections[1]!, ref: evidence[1], period: request.period, binding, at: environment.at })
+  const candidate = sameSource ? structuredClone(base) : buildPlannerFinancialProjection({ projection: projections[1]!, ref: evidence[1], period: request.period, binding, at: environment.at })
   if ([base, candidate].some((projection) => new Set(projection.values.map((value) => value.id)).size !== projection.values.length)) return { status: "unavailable", reason: "duplicate-projection-value-id" }
   const total = (projection: DomainProjection) => projection.components.reduce((sum, item) => sum + (item.amount ?? 0), 0)
   const unknown = [...base.components, ...candidate.components].some((component) => component.amount === null) || [...base.missing, ...candidate.missing].some((entry) => entry.reason === "restricted")
@@ -110,9 +119,9 @@ async function compareForecast(input: { host: DomainPortHost; sources: PlannerSo
   const refs = coverage.flatMap((entry) => entry.status === "ok" ? [entry.value.coverageRef] : [])
   const latest = await read()
   if (!(await input.host.revalidate(binding)) || !latest || latest.some((projection, index) => !projection || digestSfValue({ versionId: evidence[index].target.recordId, projection }) !== evidence[index].target.projectionDigest)) return { status: "stale", reason: "source-or-authority-changed" }
-  const refreshed = await Promise.all([input.sources.resolveForecastSource(request.baseRef, binding), input.sources.resolveForecastSource(request.candidateRef, binding)])
+  const refreshed = await readPair((reference) => input.sources.resolveForecastSource(reference, binding))
   if (!(await input.host.revalidate(binding)) || refreshed.some((entry, index) => entry.status !== "ok" || entry.value.evidence.refDigest !== evidence[index].refDigest)) return { status: "stale", reason: "source-revoked-or-replaced" }
-  const latestCoverage = await Promise.all([input.sources.resolveForecastCoverage(request.baseRef, binding), input.sources.resolveForecastCoverage(request.candidateRef, binding)])
+  const latestCoverage = await readPair((reference) => input.sources.resolveForecastCoverage(reference, binding))
   if (!(await input.host.revalidate(binding)) || latestCoverage.some((entry, index) => digestSfValue(entry) !== digestSfValue(coverage[index]))) return { status: "stale", reason: "coverage-or-authority-changed" }
   const common = { analysisBasis: "domain" as const, domainApplied: true, baseline: base, candidate, sourceRefs: evidence, gaps }
   if (complete && difference !== null) {
