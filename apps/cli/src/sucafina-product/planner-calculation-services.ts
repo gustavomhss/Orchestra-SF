@@ -1,7 +1,7 @@
 import { digestSfValue, sfEvidenceSourceMaps } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DomainProjection, ProjectionValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
-import type { DomainPortHost, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+import type { DomainPortHost, PlannerPort, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
 import { createScenarioRequestStore } from "../../../../modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts"
@@ -14,7 +14,7 @@ type SourceFences = { dashboard: string; planner: string; procurement: string }
 type ProducerInput = Parameters<typeof createScenarioRequestStore>[0]
 type Persist = ReturnType<typeof createPlannerResultPersistence>
 
-/** Bind actual persisted Planner outputs to their original request and the published record-only replay. */
+/** Bind persisted Planner outputs and every ancestor to the installation's canonical replay. */
 export function createSfPlannerCalculationServices(input: {
   host: DomainPortHost
   state: ProducerInput["state"]
@@ -23,6 +23,7 @@ export function createSfPlannerCalculationServices(input: {
   operationIdentity: ProducerInput["operationIdentity"]
   writes: WeakSet<object>
   sources: PlannerSourceHost
+  replayScenario: PlannerPort["simulateScenario"]
   evidence: BusinessContextService
   persist: Persist
   readSourceFences: (call: TrustedDomainContext) => Promise<SourceFences | undefined>
@@ -30,8 +31,13 @@ export function createSfPlannerCalculationServices(input: {
   withCalculationCase: <T>(call: TrustedDomainContext, caseRef: { id: string; incarnation: string; version: number }, work: () => Promise<PortResult<T>>) => Promise<PortResult<T>>
 }) {
   const captures = new WeakMap<TrustedDomainContext, { requestDigest: string; resultDigest: string; resultRef?: string; sources: SourceFences }>()
+  const replaying = new Map<string, Set<string>>()
   const requests = createScenarioRequestStore({ state: input.state, results: input.results, host: input.host,
     authorizeCase: input.authorizeCase, operationIdentity: input.operationIdentity, writes: input.writes,
+    verifyRequestSources: async (request, stored, call): Promise<boolean> => {
+      const checked = await input.withCalculationCase(call, stored.caseRef, async () => ({ status: "ok", value: await calculation.verifyCalculationRequestSources(request, stored, call) }))
+      return checked.status === "ok" && checked.value
+    },
     authorizeProducer: async (request, resultRef, engineVersion, call) => {
       const captured = captures.get(call)
       return !!captured && captured.resultRef === resultRef && captured.requestDigest === digestSfValue(request) && engineVersion === "planner-runtime-v1" && await input.host.revalidate(call)
@@ -45,8 +51,8 @@ export function createSfPlannerCalculationServices(input: {
         sfRunSourceFence(snapshot) === captured.sources.planner && digestSfValue(current) === digestSfValue(captured.sources)
     },
   })
-  // Reuse the native Planner engine. This lane cannot accept assumptions, replacement
-  // references, or a coverage closure containing another calculation or ledger event.
+  // Keep the conservative producer lane available. Nested issuance uses the actual
+  // Planner product below, including its input resolvers and live evidence service.
   const recordOnly = createPlannerPort({ host: input.host, sources: { ...input.sources,
     resolveForecastCoverage: async (reference, call) => {
       const coverage = await input.sources.resolveForecastCoverage(reference, call)
@@ -64,28 +70,40 @@ export function createSfPlannerCalculationServices(input: {
       ? input.results.readForCalculation({ resultRef: request.resultRef }, call)
       : Promise.resolve({ status: "unavailable", reason: "calculation-result-kind-unsupported" }),
     replayRecordOnly: recordOnly.simulateScenario,
+    nested: { replayScenario: input.replayScenario, evidence: input.evidence },
   })
+  const verifyCalculationSources: typeof calculation.verifyCalculationSources = async (stored, refs, call) => {
+    const checked = await input.withCalculationCase(call, stored.caseRef, async () => ({ status: "ok", value: await calculation.verifyCalculationSources(stored, refs, call) }))
+    return checked.status === "ok" && checked.value
+  }
   const issue: typeof calculation.issue = async (runId, call) => {
-    const binding = await requests.read(runId, call)
-    return binding.status === "ok" ? input.withCalculationCase(call, binding.value.caseRef, () => calculation.issue(runId, call)) : binding
+    if (typeof runId !== "string" || !runId.trim()) return { status: "denied", reason: "calculation-authority-unavailable" }
+    // The first request read can itself resolve a persisted calculation ancestor,
+    // before the producer's own replay guard has started. Bound that admission too.
+    const key = digestSfValue([call.kind, call.binding])
+    const active = replaying.get(key) ?? new Set<string>()
+    if (active.has(runId) || active.size >= 16) return { status: "unavailable", reason: "calculation-replay-cycle" }
+    active.add(runId)
+    replaying.set(key, active)
+    try {
+      const binding = await requests.read(runId, call)
+      return binding.status === "ok" ? await input.withCalculationCase(call, binding.value.caseRef, () => calculation.issue(runId, call)) : binding
+    } catch { return { status: "unavailable", reason: "calculation-replay-unavailable" } }
+    finally { active.delete(runId); if (!active.size) replaying.delete(key) }
   }
   const persist: Persist = async (incoming, callId, call, comparisonReplay) => {
-    if (incoming.kind !== "scenario" || incoming.request.assumptions.length || incoming.request.operations.some((operation) => operation.replacementRef))
-      return input.persist(incoming, callId, call, comparisonReplay)
-    const closure = [...incoming.result.sourceRefs, ...incoming.result.costCoverage.evaluatedSourceRefs,
-      ...incoming.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
-    if (closure.some((ref) => ref.kind !== "record")) return input.persist(incoming, callId, call, comparisonReplay)
+    if (incoming.kind !== "scenario") return input.persist(incoming, callId, call, comparisonReplay)
     if (captures.has(call)) return { status: "unavailable", reason: "calculation-publication-already-active" }
     const value = structuredClone(incoming)
     const fences = await input.readSourceFences(call)
     if (!fences) return { status: "unavailable", reason: "calculation-source-fence-unavailable" }
-    const replay = await recordOnly.simulateScenario(value.request, call)
+    const replay = await input.replayScenario(value.request, call)
     if (replay.status !== "ok") return replay
     if (plannerScenarioDigest(replay.value) !== plannerScenarioDigest(value.result)) return { status: "stale", reason: "calculation-result-replay-changed" }
     const captured = { requestDigest: digestSfValue(value.request), resultDigest: digestSfValue(value.result), resultRef: undefined as string | undefined, sources: fences }
     captures.set(call, captured)
     try {
-      const saved = await input.persist(value, callId, call, comparisonReplay)
+      const saved = await input.persist(value, callId, call, { ...comparisonReplay, simulateScenario: input.replayScenario })
       if (saved.status !== "ok") return saved
       captured.resultRef = saved.value.resultRef
       const registered = await requests.register({ resultRef: saved.value.resultRef, request: value.request, engineVersion: "planner-runtime-v1" }, call)
@@ -111,8 +129,10 @@ export function createSfPlannerCalculationServices(input: {
         return unavailable()
       const sources = await input.evidence.context({ refs: ref.target.sourceRefs }, call)
       if (sources.length !== ref.target.sourceRefs.length || sources.some((source, index) => source.state !== "fresh" || !source.currentRef || !source.authorizedProjection ||
-        !("context" in source.authorizedProjection) || !("sourceRefs" in source.authorizedProjection.context) || digestSfValue(source.ref) !== digestSfValue(ref.target.sourceRefs[index]) || digestSfValue(source.currentRef) !== digestSfValue(source.ref))) return unavailable()
+        source.accessRevision !== call.binding.accessRevision || digestSfValue(source.ref) !== digestSfValue(ref.target.sourceRefs[index]) || digestSfValue(source.currentRef) !== digestSfValue(source.ref))) return unavailable()
       const result = stored.value.result
+      // Ledger/document/policy projections retain their typed evidence above. Only
+      // domain projections contribute record metadata; no numeric value is inferred.
       const metadata = sources.flatMap((source) => source.authorizedProjection && "context" in source.authorizedProjection && "sourceRefs" in source.authorizedProjection.context ? source.authorizedProjection.context.sourceRefs : [])
       const sourceRefs = [...metadata, ...result.components.flatMap((component) => component.sourceRefs)]
         .filter((source, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(source)) === index)
@@ -139,5 +159,5 @@ export function createSfPlannerCalculationServices(input: {
       return { state: "fresh", ref, currentRef: issued.value, authorizedProjection: projection, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }
     } catch { return unavailable() }
   }
-  return { persist, issue, resolveEvidence, requests: { read: requests.read } }
+  return { persist, issue, resolveEvidence, verifyCalculationSources, requests: { read: requests.read } }
 }

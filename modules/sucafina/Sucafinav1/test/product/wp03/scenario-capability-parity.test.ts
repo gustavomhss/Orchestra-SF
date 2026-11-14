@@ -23,6 +23,8 @@ import { createSfDecisionResultStore } from "../../../product/decisions/result-s
 import { createPlannerCapabilities } from "../../../product/planner/capabilities.ts"
 import { createPlannerPort } from "../../../product/planner/port.ts"
 import { createPlannerResultPersistence } from "../../../product/planner/persistence.ts"
+import { createPlannerOperationVerifier } from "../../../product/planner/operation-verifier.ts"
+import { createPlannerScenarioInputs } from "../../../product/planner/scenario-inputs.ts"
 import { createStoredPlannerScenarioHost } from "../../../product/planner/stored-scenarios.ts"
 import { plannerAt, plannerFixture, plannerPeriod } from "./planner-fixture.ts"
 
@@ -106,7 +108,8 @@ test("C16 scenario simulation and comparison share UI/MCP handlers and persist t
     const seeded = await state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed", commandDigest: digestSfValue(decision), targetRef: "case", targetIncarnation: "case-inc" }, async (staged) => { staged.cases.case = decision; return { commit: true, value: true } })
     expect(seeded.status).toBe("ok")
     const store = createSfDecisionResultStore({ state, host: fixture.host, authorizeCase, verifySources: async (_value, sourceRefs, context) => verifyRefs(sourceRefs, context), createId: randomUUID, now: () => plannerAt })
-    const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: "case", incarnation: "case-inc" }, operationIdentity: () => undefined, authorizeCase, evidence, createId: randomUUID, now: () => plannerAt })
+    const verifyOperations = createPlannerOperationVerifier({ host: fixture.host, sources, planner: base, scenarioInputs: createPlannerScenarioInputs({ planner: base, sources }) })
+    const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: "case", incarnation: "case-inc" }, operationIdentity: () => undefined, authorizeCase, verifyScenarioOperations: async (value, context) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: randomUUID, now: () => plannerAt })
     const caseEvidence = await step("case-evidence", () => evidence.context({ refs }, read))
     expect(caseEvidence).toHaveLength(refs.length)
     expect(caseEvidence.every((resolved) => resolved.state === "fresh" && resolved.authorizedProjection)).toBe(true)

@@ -102,6 +102,12 @@ Selecione **Preview import** e confira as alterações, origens e erros de linha
 
 ## Quando uma ação falha ou o acesso muda
 
+Nas edições comuns das páginas, uma resposta perdida deixa o resultado **inconclusivo**. A interface preserva sua tentativa e não reenvia esse comando por conta própria. **Inspect current record without resending** consulta a versão atual para comparação; essa consulta não altera a versão original da tentativa nem confirma que ela foi aplicada. Se o serviço ainda não puder recuperar o resultado, mantenha a página aberta e confira o registro com o responsável antes de iniciar outra alteração. O texto digitado nesses formulários não é guardado no navegador; sair da página pode perdê-lo.
+
+As alterações de **Year amount**, **Annual Entry** e **Save month** do Dashboard possuem uma prévia preservada no servidor. Se a resposta da aplicação se perder, selecione **Check saved outcome**. A interface consulta o resultado da mesma prévia; quando ainda não houver resultado confirmado, **Retry reviewed application** repete somente a aplicação já revisada. Campos alterados depois da tentativa continuam pendentes e não entram nessa repetição.
+
+Ao recarregar a mesma página, uma prévia ainda disponível é recuperada após nova conferência de acesso. O navegador conserva apenas as referências da prévia, página, registro e período; valores e justificativas continuam no servidor. Confira os valores anteriores e propostos antes de aplicar a prévia recuperada. Uma aplicação já confirmada reaparece como resultado recuperado, sem outra gravação. Prévia expirada ou desatualizada exige nova revisão.
+
 Mensagens de indisponibilidade, mudança de acesso, informação desatualizada ou edição simultânea indicam que a informação ou a permissão não pôde ser confirmada naquele momento. Atualize a página e confira o registro de origem. Se houver uma edição em andamento, compare os valores atuais com os seus antes de tentar novamente.
 
 Uma atualização que detecta sessão expirada ou mudança de permissão remove a visualização anterior, inclusive diálogos e rascunhos que não podem mais ser exibidos. Já uma indisponibilidade temporária conserva a edição e informa que a atualização falhou. Se você continuar digitando durante um salvamento, o novo texto permanece pendente depois que a tentativa anterior termina.

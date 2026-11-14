@@ -98,13 +98,12 @@ test("Planner's canonical known-subtotal solver proves the 55000 boundary; its i
     expect(bi.sensitivity?.comparisonStatus).toBe("conditioned")
     expect(bi.sensitivity?.unresolvedConditions.some((item) => item.reason.includes("unresolved coverage can change the decision"))).toBe(true)
 
-    // Seed WP11 rejects the pack's legitimate reuse of a component across coverage categories.
-    // This characterizes an upstream blocker; it is not acceptance of T05's complete fixture.
+    // Complete source coverage permits shared categories without promoting a hypothetical preview.
     const coverage = await assess(fixture, await projection(fixture), "bundled")
     expect(coverage.assessment.derivedMissingCategoryIds).toEqual([])
     expect(coverage.assessment.entries.every((entry) => entry.status !== "pending")).toBe(true)
-    expect(coverage.assessment.coverageState).toBe("pending")
-    expect(coverage.assessment.issues).toEqual(["uncategorized-component"])
+    expect(coverage.assessment.coverageState).toBe("complete")
+    expect(coverage.assessment.issues).toEqual([])
   } finally {
     await fixture.cleanup()
   }
@@ -154,9 +153,9 @@ test("real Planner results retain omitted training as unknown, then include its 
       expect(revisedBi.comparison.comparisonStatus).toBe("conditioned")
       expect(revisedBi.sensitivity?.threshold).toBeNull()
       expect(revisedBi.sensitivity?.thresholdEvidence).toMatchObject({ state: "sampled", interval: { minimum: 10000, maximum: 40000 } })
-      // Shared-category coverage and the preview gate remain upstream blockers after training.
-      expect(confirmed.assessment.coverageState).toBe("pending")
-      expect(confirmed.assessment.issues).toEqual(["uncategorized-component"])
+      // The source inventory is complete; its hypothetical preview remains explicitly conditioned.
+      expect(confirmed.assessment.coverageState).toBe("complete")
+      expect(confirmed.assessment.issues).toEqual([])
       expect(after.sourceRefs.find((ref) => ref.refId === after.scenario.baseRef)?.refDigest).not.toBe(before.sourceRefs.find((ref) => ref.refId === before.scenario.baseRef)?.refDigest)
       const original = await before.results.read({ kind: "scenario", resultRef: before.selectedRef }, before.context)
       expect(original.status).toBe("ok")
@@ -190,9 +189,8 @@ test("real Planner and persisted BI distinguish explicit zero training from an u
         expect(category.evidenceRefs.some((ref) => ref.refId === fixture.scenario.baseRef)).toBe(true)
       }
       if (training === "null") expect(category).toEqual({ categoryId: "training", status: "pending", reason: "component-unresolved" })
-      // Shared-category completeness remains an upstream blocker; no fixture promotes it.
-      expect(assessed.assessment.coverageState).toBe("pending")
-      expect(assessed.assessment.issues).toContain("uncategorized-component")
+      expect(assessed.assessment.coverageState).toBe(training === "zero" ? "complete" : "pending")
+      expect(assessed.assessment.issues).toEqual([])
       expect(fixture.selectedResult.knownSubtotal).toBe(210000)
       expect(fixture.comparison.knownDifference).toBe(-30000)
       const bi = await readBi(fixture)

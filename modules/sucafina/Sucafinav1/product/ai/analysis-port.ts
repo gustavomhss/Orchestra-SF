@@ -10,6 +10,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfNativeRunRecord } from "../contracts/state.ts"
 import { readDecisionRoutine, startDecisionRoutine } from "../routines/decision.ts"
 import type { DecisionRoutineHost } from "../routines/decision.ts"
+import { matchesSfRunOutput, sameSfSkillLoadReceipt } from "./run-provenance.ts"
 
 declare const nativeExecutionTicket: unique symbol
 /** Host-owned capability, bound to one Session, run, request digest and selected runtime. */
@@ -72,13 +73,6 @@ export type SfReviewTarget = {
   caseRef: ContributionEnvelope["caseRef"]
 }
 
-function sameSkillLoadReceipt(receipt: SkillLoadReceipt, provenance: ContributionEnvelope["runProvenance"]) {
-  return provenance.runId === receipt.runId && provenance.nativeSessionId === receipt.nativeSessionId && provenance.profileId === receipt.profileId &&
-    provenance.profileVersion === receipt.profileVersion && provenance.profileDigest === receipt.profileDigest && provenance.skillId === receipt.skillId &&
-    provenance.skillVersion === receipt.skillVersion && provenance.sourceDigest === receipt.sourceDigest && provenance.instructionsDigest === receipt.instructionsDigest &&
-    provenance.loadedMessageId === receipt.loadedMessageId && provenance.loadedAt === receipt.loadedAt && provenance.manifestDigest === receipt.manifestDigest
-}
-
 /** Publish only the output tied to the actual loaded skill and the still-authorized case. */
 export async function publishSfContribution(input: {
   host: SfAnalysisHost
@@ -90,10 +84,7 @@ export async function publishSfContribution(input: {
   const { decodeSfContributionOutput } = await import("../contracts/schema-admission.ts")
   const receipt = input.skillReceipt
   const provenance = input.output.runProvenance
-  if (input.output.state !== "ready") return input.output.state === "failed" || input.output.state === "unavailable" || input.output.state === "needs-input" || input.output.state === "stale"
-    ? { status: input.output.state, reason: input.output.reason } as const
-    : { status: "unavailable", reason: input.output.state === "cancelled" ? "analysis-cancelled" : "analysis-result-not-ready" } as const
-  if (provenance.runId !== input.runRef || !sameSkillLoadReceipt(receipt, provenance) || !provenance.actualModel || !provenance.contextFingerprint) {
+  if (provenance.runId !== input.runRef || !sameSfSkillLoadReceipt(receipt, provenance) || !provenance.actualModel || !provenance.contextFingerprint) {
     return { status: "failed", reason: "contribution-provenance-mismatch" } as const
   }
   if (receipt.skillId === "sf-contestar-decisao" || receipt.skillId === "sf-revisar-evidencias") {
@@ -108,6 +99,9 @@ export async function publishSfContribution(input: {
   if (input.output.state === "ready" && !decodeSfContributionOutput(input.output.kind, input.output.payload).ok) return { status: "failed", reason: "invalid-contribution-output" } as const
   const digest = Effect.runSync(Effect.result(Effect.try({ try: () => digestSfContribution(input.output), catch: () => "invalid-contribution" })))
   if (digest._tag === "Failure" || digest.success !== input.output.outputDigest) return { status: "failed", reason: "contribution-digest-mismatch" } as const
+  if (input.output.state !== "ready") return input.output.state === "failed" || input.output.state === "unavailable" || input.output.state === "needs-input" || input.output.state === "stale"
+    ? { status: input.output.state, reason: input.output.reason } as const
+    : { status: "unavailable", reason: input.output.state === "cancelled" ? "analysis-cancelled" : "analysis-result-not-ready" } as const
   if (input.output.state === "ready" && input.output.kind === "CritiqueReport" && (receipt.profileId !== "sf_reviewer" || !input.reviewTarget || input.output.payload.targetRunId !== input.reviewTarget.targetRunId ||
       input.output.payload.targetOutputDigest !== input.reviewTarget.targetOutputDigest || input.output.payload.reviewerRunId !== receipt.runId ||
       input.output.payload.reviewerSessionId !== receipt.nativeSessionId)) return { status: "failed", reason: "review-target-mismatch" } as const
@@ -146,7 +140,7 @@ export async function runSfAnalysis(input: {
   const prepared = await input.host.execution.admit(input.request, decoded.value, input.reviewTarget)
   if (prepared.status !== "ok") return prepared
   const admission = prepared.value
-  if (admission.skillReceipt.nativeSessionId !== admission.sessionID || admission.skillReceipt.profileId !== input.request.profileId ||
+  if (admission.skillReceipt.runId !== admission.runRef || admission.skillReceipt.nativeSessionId !== admission.sessionID || admission.skillReceipt.profileId !== input.request.profileId ||
       admission.skillReceipt.profileVersion !== input.request.profileVersion || admission.skillReceipt.skillId !== input.request.skillId ||
       admission.skillReceipt.skillVersion !== input.request.skillVersion || admission.skillReceipt.manifestDigest !== input.request.manifestDigest ||
       !admission.executionTicket) {
@@ -222,7 +216,7 @@ export async function runSfAnalysis(input: {
     const outcome = collected.value
     const provenance = outcome.runProvenance
     if (digestSfContribution(outcome) !== outcome.outputDigest || provenance.runId !== admission.runRef || provenance.nativeSessionId !== admission.sessionID ||
-      !sameSkillLoadReceipt(admission.skillReceipt, provenance) ||
+      !sameSfSkillLoadReceipt(admission.skillReceipt, provenance) ||
       provenance.contextFingerprint !== input.request.contextFingerprint || !provenance.actualModel || outcome.caseRef.id !== input.request.caseRef.id || outcome.caseRef.incarnation !== input.request.caseRef.incarnation || outcome.caseRef.version !== input.request.caseRef.version ||
       !admission.skillReceipt.profileId || !admission.skillReceipt.manifestDigest) {
       const saved = await input.host.withRunContext(admission.runRef, (context) => input.host.fail(admission.runRef, "invalid-native-outcome", context))
@@ -260,7 +254,8 @@ export async function runSfAnalysis(input: {
   if (collected.value.caseRef.id !== input.request.caseRef.id || collected.value.caseRef.version !== input.request.caseRef.version ||
       collected.value.caseRef.incarnation !== input.request.caseRef.incarnation ||
       collected.value.runProvenance.contextFingerprint !== input.request.contextFingerprint) {
-    const stale = await input.host.withRunContext(admission.runRef, (context) => input.host.preserveStale(admission.runRef, "analysis-base-changed", collected.value, context))
+    // A result for another case/version is an invalid envelope, not safe historical content.
+    const stale = await input.host.withRunContext(admission.runRef, (context) => input.host.markStale(admission.runRef, "analysis-base-changed", context))
     if (stale.status !== "ok") return stale
     return { status: "stale", reason: "analysis-base-changed" } as const
   }
@@ -277,7 +272,7 @@ export async function cancelSfAnalysis(input: {
   caseRef: ContributionEnvelope["caseRef"]
   contextFingerprint: string
 }) {
-  if (input.skillReceipt.nativeSessionId !== input.sessionID) return { status: "denied", reason: "session-mismatch" } as const
+  if (input.skillReceipt.nativeSessionId !== input.sessionID || input.skillReceipt.runId !== input.runRef) return { status: "denied", reason: "session-mismatch" } as const
   const authorized = await input.host.withRunContext(input.runRef, (context) => input.host.revalidate(context, {
     runRef: input.runRef,
     caseRef: input.caseRef,
@@ -286,7 +281,7 @@ export async function cancelSfAnalysis(input: {
     accessRevision: context.binding.accessRevision,
     skillReceipts: [input.skillReceipt],
   }))
-  if (authorized.status !== "ok") return authorized
+  if (authorized.status !== "ok" && authorized.status !== "stale") return authorized
   const cancelled = await input.host.withRunContext(input.runRef, (context) => input.host.analysis.cancel(input.runRef, context))
   if (cancelled.status !== "ok" || !cancelled.value.cancelled) return cancelled
   const interrupted = await input.host.withRunContext(input.runRef, async (context) => {
@@ -311,9 +306,7 @@ export async function readSfAnalysisRun(input: { host: SfAnalysisHost; runRef: s
     if (!run.outputRef || !run.native) return { status: "unavailable", reason: "ready-output-unavailable" } as const
     const output = await input.host.analysis.read(run.runRef, context)
     if (output.status !== "ok") return output
-    if (output.value.state !== "ready" || digestSfContribution(output.value) !== output.value.outputDigest || output.value.id !== run.outputRef || output.value.runProvenance.contextFingerprint !== run.contextFingerprint || output.value.runProvenance.actualModel !== `${run.model.providerID}/${run.model.id}` || output.value.runProvenance.runId !== run.runRef || output.value.runProvenance.nativeSessionId !== run.native.sessionID ||
-      output.value.caseRef.id !== run.caseRef.id || output.value.caseRef.incarnation !== run.caseRef.incarnation || output.value.caseRef.version !== run.caseRef.version ||
-      output.value.accessRevision !== run.accessRevision || !sameSkillLoadReceipt(run.native.skillReceipt, output.value.runProvenance)) return { status: "denied", reason: "run-output-provenance-mismatch" } as const
+    if (output.value.id !== run.outputRef || !matchesSfRunOutput(run, output.value)) return { status: "denied", reason: "run-output-provenance-mismatch" } as const
     const authorized = await input.host.revalidate(context, { runRef: run.runRef, caseRef: run.caseRef, contextFingerprint: run.contextFingerprint, manifestDigest: run.selection.manifestDigest,
       accessRevision: run.accessRevision, outputKind: output.value.kind, evidenceRefs: output.value.evidenceRefs, output: output.value, skillReceipts: [run.native.skillReceipt], reviewTarget: run.reviewTarget })
     if (authorized.status !== "ok") return authorized

@@ -1,8 +1,9 @@
 import { expect, test } from "bun:test"
 import { createPlannerCalculationEvidence } from "../../../product/planner/calculation-evidence.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
-import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
-import type { ScenarioResult } from "../../../product/contracts/decisions.ts"
+import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
+import type { DomainProjection } from "../../../product/contracts/context.ts"
+import type { CaseLedgerEvent, ScenarioResult } from "../../../product/contracts/decisions.ts"
 import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 import type { StoredDecisionResult } from "../../../product/decisions/result-store.ts"
@@ -111,4 +112,93 @@ test("cancellation and revocation after replay never issue calculation evidence"
   } })
   expect(await issuer.issue(f.record.resultRef, f.context)).toMatchObject({ status: "stale", reason: "calculation-or-authority-changed" })
   expect(await issuer.issue(f.record.resultRef, f.context)).toMatchObject({ status: "denied" })
+})
+
+/** Controlled loader/resolver boundaries exercise graph admission, not financial calculation. */
+async function nestedFixture() {
+  const f = fixture()
+  const child = await createPlannerCalculationEvidence(f.input).issue(f.record.resultRef, f.context)
+  if (child.status !== "ok") throw new Error("Record-only prerequisite failed")
+  const ledger: CaseLedgerEvent = { id: "accepted-analysis", caseRef: f.record.caseRef, kind: "analysis-accepted", principalRef: "finance", at: f.record.createdAt, consideredActions: [], factualGaps: ["training"], lifecycleState: "comparing", rationale: "Analysis only", evidenceRefs: [child.value], outputDigest: digestSfValue(f.result) }
+  const event: Extract<BusinessEvidenceRef, { kind: "case-event" }> = { schema: "sf-evidence-v1", kind: "case-event", refId: "case-event:accepted-analysis", installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "proposal", target: { caseId: f.record.caseRef.id, caseIncarnation: f.record.caseRef.incarnation, caseVersion: f.record.caseRef.version, eventId: ledger.id, outputDigest: ledger.outputDigest, evidenceRefs: ledger.evidenceRefs } }
+  event.refDigest = digestSfEvidenceRef(event)
+  const request: ScenarioRequest = { ...f.request, assumptions: [{ id: "prior-analysis", value: "reviewed", state: "hypothetical", evidenceRefs: [child.value, event] }] }
+  const result: ScenarioResult = { ...structuredClone(f.result), id: "preview:parent", sourceRefs: [f.source, child.value, event] }
+  const record: Extract<StoredDecisionResult, { kind: "scenario" }> = { ...f.record, resultRef: "decision-result:parent", requestDigest: digestSfValue(request), resultDigest: digestSfValue(result), sourceRefs: result.sourceRefs, result }
+  const projection: DomainProjection = { context: { ...f.context.binding, surface: "planner", period: f.result.horizon, currency: "USD", sourceRefs: f.result.components.flatMap((component) => component.sourceRefs), capabilities: [] }, version: 1, engineVersion: "planner-runtime-v1", components: f.result.components, values: [], missing: [] }
+  const state = { current: true, authorized: true, mutateRequest: false, revokeOnParentReplay: false, reads: 0, parentReplays: 0, calculationResolverCalls: 0 }
+  const evidence: Pick<BusinessContextService, "resolve"> = { resolve: async (ref) => {
+    if (ref.kind === "calculation") { state.calculationResolverCalls++; throw new Error("Calculation freshness cannot substitute producer replay") }
+    const matches = [f.source, event].some((source) => digestSfValue(source) === digestSfValue(ref))
+    return { state: state.current && matches ? "fresh" : "revoked", ref, currentRef: ref, ...(state.authorized ? { authorizedProjection: ref.kind === "case-event" ? ledger : projection } : {}), accessRevision: "1", checkedAt: f.record.createdAt }
+  } }
+  const replay: Parameters<typeof createPlannerCalculationEvidence>[0]["replayRecordOnly"] = async (incoming) => {
+    const parent = digestSfValue(incoming) === digestSfValue(request)
+    if (parent) state.parentReplays++
+    if (state.mutateRequest && incoming.operations[0]) incoming.operations[0].amount = 999
+    if (parent && state.revokeOnParentReplay) state.current = false
+    return { status: "ok", value: parent ? record.result : f.record.result }
+  }
+  const input: Parameters<typeof createPlannerCalculationEvidence>[0] = {
+    host: f.input.host,
+    readForCalculation: async (query) => { state.reads++; return query.resultRef === record.resultRef ? { status: "ok", value: record } : query.resultRef === f.record.resultRef ? { status: "ok", value: f.record } : { status: "unavailable", reason: "unknown-result" } },
+    loadRecordOnlyRequest: async (runId) => runId === record.resultRef ? { status: "ok", value: { resultRef: runId, request, engineVersion: "planner-runtime-v1" } } : runId === f.record.resultRef ? { status: "ok", value: { resultRef: runId, request: f.request, engineVersion: "planner-runtime-v1" } } : { status: "unavailable", reason: "unknown-binding" },
+    replayRecordOnly: replay,
+    nested: { replayScenario: replay, evidence },
+  }
+  return { ...f, parent: { request, record }, child: child.value, event, state, input, issuer: createPlannerCalculationEvidence(input) }
+}
+
+test("nested C17 requires replay for calculations and canonical authorization for ledger leaves", async () => {
+  const f = await nestedFixture()
+  expect(await createPlannerCalculationEvidence({ ...f.input, nested: undefined }).issue(f.parent.record.resultRef, f.context)).toMatchObject({ status: "unavailable", reason: "calculation-nested-evidence-unavailable" })
+  expect(f.state.parentReplays).toBe(0)
+  const before = structuredClone(f.parent.request)
+  f.state.mutateRequest = true
+  const issued = await f.issuer.issue(f.parent.record.resultRef, f.context)
+  expect(issued).toMatchObject({ status: "ok", value: { target: { runId: f.parent.record.resultRef, inputDigest: f.parent.record.requestDigest, resultDigest: f.parent.record.resultDigest, sourceRefs: f.parent.record.sourceRefs } } })
+  expect(f.parent.request).toEqual(before)
+  expect(f.state.parentReplays).toBe(2)
+  expect(f.state.calculationResolverCalls).toBe(0)
+  expect(await f.issuer.verifyCalculationRequestSources(f.parent.request, f.parent.record, f.context)).toBe(true)
+  expect(await f.issuer.verifyCalculationSources(f.parent.record, [f.source], f.context)).toBe(false)
+  f.state.authorized = false
+  expect(await f.issuer.issue(f.parent.record.resultRef, f.context)).toMatchObject({ status: "unavailable" })
+})
+
+test("nested C17 rejects a digest-valid calculation that cannot reproduce its stored result", async () => {
+  const f = await nestedFixture()
+  const altered = { ...f.child, target: { ...f.child.target, resultDigest: "f".repeat(64) } }
+  altered.refDigest = digestSfEvidenceRef(altered)
+  f.parent.request.assumptions = [{ ...f.parent.request.assumptions[0]!, evidenceRefs: [altered] }]
+  f.parent.record.result.sourceRefs = [f.source, altered]
+  f.parent.record.sourceRefs = f.parent.record.result.sourceRefs
+  f.parent.record.requestDigest = digestSfValue(f.parent.request)
+  f.parent.record.resultDigest = digestSfValue(f.parent.record.result)
+  expect(await f.issuer.issue(f.parent.record.resultRef, f.context)).toMatchObject({ status: "unavailable", reason: "calculation-nested-evidence-unproven" })
+  expect(f.state.parentReplays).toBe(0)
+  expect(f.state.calculationResolverCalls).toBe(0)
+})
+
+test("nested C17 rejects semantic ancestor cycles and releases traversal guards", async () => {
+  const f = await nestedFixture()
+  const ancestor = { ...f.child, refId: `planner-calculation:${encodeURIComponent(f.parent.record.resultRef)}`, target: { ...f.child.target, runId: f.parent.record.resultRef } }
+  ancestor.refDigest = digestSfEvidenceRef(ancestor)
+  const before = structuredClone(f.record)
+  f.record.result.sourceRefs = [f.source, ancestor]
+  f.record.sourceRefs = f.record.result.sourceRefs
+  f.record.resultDigest = digestSfValue(f.record.result)
+  expect(await f.issuer.issue(f.parent.record.resultRef, f.context)).toMatchObject({ status: "unavailable" })
+  expect(f.state.reads).toBeLessThanOrEqual(2)
+  expect(f.state.parentReplays).toBe(0)
+  Object.assign(f.record, before)
+  expect(await f.issuer.issue(f.parent.record.resultRef, f.context)).toMatchObject({ status: "ok" })
+})
+
+test("nested C17 refuses revoked lineage after replay while the caller remains authorized", async () => {
+  const f = await nestedFixture()
+  f.state.revokeOnParentReplay = true
+  expect(await f.issuer.issue(f.parent.record.resultRef, f.context)).toMatchObject({ status: "stale", reason: "calculation-or-authority-changed" })
+  expect(await f.input.host.revalidate(f.context)).toBe(true)
+  expect(await f.issuer.verifyCalculationSources(f.parent.record, f.parent.record.sourceRefs, f.context)).toBe(false)
 })

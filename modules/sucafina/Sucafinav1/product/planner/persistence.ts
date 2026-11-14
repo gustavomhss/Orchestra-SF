@@ -9,16 +9,18 @@ import type { createCriterionComparisonBindings } from "../decisions/criterion-c
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { PlannerScenarioHost } from "./scenario-comparison-port.ts"
 import { comparePlannerScenarios } from "./comparison.ts"
+import { plannerScenarioDigest } from "./preview-comparison.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type Input = { kind: "scenario"; request: ScenarioRequest; result: ScenarioResult } | { kind: "comparison"; request: ScenarioCompareRequest; result: ScenarioComparison }
+type Replay = Partial<Pick<PlannerPort, "simulateScenario" | "compareScenarios">>
 
 /** Persist produced outputs only under a host-authorized, current case. */
 export function createPlannerResultPersistence(input: {
   store: ReturnType<typeof createSfDecisionResultStore>
   scenarios?: PlannerScenarioHost
   comparisonBindings?: Pick<ReturnType<typeof createCriterionComparisonBindings>, "proofs" | "bind" | "read">
-  replay?: Pick<PlannerPort, "compareScenarios">
+  replay?: Replay
   resolveCase: (context: TrustedDomainContext) => Promise<PortResult<CaseRef>>
 }) {
   const persist = async (incoming: Input, callId: string, context: TrustedDomainContext, replay = input.replay): Promise<PortResult<{ resultRef: string }>> => {
@@ -30,10 +32,25 @@ export function createPlannerResultPersistence(input: {
     if (selected.status !== "ok") return selected
     const requestDigest = digestSfValue(value.request)
     if (value.kind === "scenario") {
+      const simulate = replay?.simulateScenario
+      if (!simulate) return { status: "unavailable", reason: "scenario-replay-unavailable" }
+      const validate = async (): Promise<PortResult<true>> => {
+        const current = structuredClone(await simulate(structuredClone(value.request), context))
+        if (current.status !== "ok") return current
+        if (plannerScenarioDigest(current.value) !== plannerScenarioDigest(value.result)) return { status: "stale", reason: "scenario-replay-changed" }
+        const latestCase = await input.resolveCase(context)
+        if (latestCase.status !== "ok") return latestCase
+        if (digestSfValue(latestCase.value) !== digestSfValue(selected.value)) return { status: "stale", reason: "scenario-case-changed" }
+        return { status: "ok", value: true }
+      }
+      const current = await validate()
+      if (current.status !== "ok") return current
       const refs = [...value.result.sourceRefs, ...value.result.costCoverage.evaluatedSourceRefs, ...value.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
       const sourceRefs = refs.filter((ref, index) => refs.findIndex((item) => item.refDigest === ref.refDigest) === index)
       const saved = await input.store.write({ kind: "scenario", result: value.result, caseRef: selected.value, requestDigest, sourceRefs, idempotencyKey: callId }, context)
       if (saved.status !== "ok") return saved
+      const latest = await validate()
+      if (latest.status !== "ok") return latest
       return { status: "ok", value: { resultRef: saved.value.resultRef } }
     }
     const scenarios = input.scenarios
@@ -44,7 +61,8 @@ export function createPlannerResultPersistence(input: {
     if (failed) return failed
     if (records.some((record) => record.status !== "ok" || record.value.caseRef.id !== selected.value.id || record.value.caseRef.incarnation !== selected.value.incarnation || record.value.caseRef.version > selected.value.version)) return { status: "denied", reason: "scenario-outside-case" }
     const bindings = input.comparisonBindings
-    if (value.request.criteria.length && (!bindings || !replay)) return { status: "unavailable", reason: "comparison-criterion-binding-unavailable" }
+    const compare = replay?.compareScenarios
+    if (value.request.criteria.length && (!bindings || !compare)) return { status: "unavailable", reason: "comparison-criterion-binding-unavailable" }
     const rules = bindings && value.request.criteria.length ? structuredClone(await bindings.proofs(selected.value, value.request.criteria, context)) : undefined
     if (rules && rules.status !== "ok") return rules
     const validate = async (): Promise<PortResult<true>> => {
@@ -58,8 +76,8 @@ export function createPlannerResultPersistence(input: {
       const baseline = current[0]
       const alternative = current[1]
       if (!baseline || baseline.status !== "ok" || !alternative || alternative.status !== "ok") return { status: "unavailable", reason: "scenario-validation-unavailable" }
-      const expected = replay
-        ? await replay.compareScenarios(structuredClone(value.request), context)
+      const expected = compare
+        ? await compare(structuredClone(value.request), context)
         : { status: "ok" as const, value: comparePlannerScenarios({ baselineRef: value.request.scenarioRefs[0]!, alternativeRef: value.request.scenarioRefs[1]!, baselineCoverageRef: baseline.value.coverageRef, alternativeCoverageRef: alternative.value.coverageRef, baseline: baseline.value.result, alternative: alternative.value.result, baselineProof: baseline.value, alternativeProof: alternative.value }) }
       if (expected.status !== "ok") return expected
       if (digestSfValue(expected.value) !== digestSfValue(value.result)) return { status: "stale", reason: "comparison-replay-changed" }
@@ -90,7 +108,7 @@ export function createPlannerResultPersistence(input: {
     }
     return { status: "ok", value: { resultRef: saved.value.resultRef } }
   }
-  return async (incoming: Input, callId: string, context: TrustedDomainContext, replay?: Pick<PlannerPort, "compareScenarios">): Promise<PortResult<{ resultRef: string }>> => {
+  return async (incoming: Input, callId: string, context: TrustedDomainContext, replay?: Replay): Promise<PortResult<{ resultRef: string }>> => {
     try { return await persist(incoming, callId, context, replay ?? input.replay) }
     catch { return { status: "unavailable", reason: "planner-result-persistence-unavailable" } }
   }

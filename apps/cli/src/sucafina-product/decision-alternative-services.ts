@@ -26,6 +26,7 @@ import type { createSfDecisionBaselineServices } from "./decision-baseline-servi
 import type { createSfBusinessServices } from "./business-services.ts"
 import { createSfAlternativeCallScope } from "./alternative-call-scope.ts"
 import type { SfComparisonInvocation } from "./portfolio-comparison-scope.ts"
+import type { SfVerifiedAlternativeAdmission } from "./analysis-native-inputs.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type SelectedScenario = { caseRef: CaseRef; scenario: ScenarioRequest; coverageRef: string }
@@ -48,6 +49,7 @@ export function createSfDecisionAlternativeServices(input: {
   selectedCase: (call: TrustedDomainContext) => Promise<PortResult<CaseRef>>
   verifiedInputFor?: (call: TrustedDomainContext) => Promise<PortResult<unknown>>
   verifiedAlternativeSelectionFor?: (call: TrustedDomainContext) => Promise<PortResult<SfAdmittedAlternativeSelection>>
+  verifiedAlternativeAdmissionFor?: (call: TrustedDomainContext) => Promise<PortResult<SfVerifiedAlternativeAdmission>>
   hasAdmittedInputContext?: (call: TrustedDomainContext) => boolean
   proposalCoverageWrites: WeakSet<object>
 }) {
@@ -58,7 +60,17 @@ export function createSfDecisionAlternativeServices(input: {
   const candidate = createDecisionCandidateResolver(business.cases)
   const callScope = createSfAlternativeCallScope<SelectedScenario>({ authority: input.authority, selectedCase: input.selectedCase,
     lockedSourceFences: business.lockedSourceFences, verifiedInputFor: input.verifiedInputFor,
-    verifiedAlternativeSelectionFor: input.verifiedAlternativeSelectionFor, hasAdmittedInputContext: input.hasAdmittedInputContext })
+    verifiedAlternativeSelectionFor: input.verifiedAlternativeSelectionFor, verifiedAlternativeAdmissionFor: input.verifiedAlternativeAdmissionFor,
+    hasAdmittedInputContext: input.hasAdmittedInputContext })
+  const readAdmission = async (call: TrustedDomainContext): Promise<PortResult<SfVerifiedAlternativeAdmission>> => {
+    if (input.verifiedAlternativeAdmissionFor) return input.verifiedAlternativeAdmissionFor(call)
+    if (!input.verifiedInputFor) return { status: "unavailable", reason: "alternative-run-input-unavailable" }
+    const admitted = await input.verifiedInputFor(call)
+    if (admitted.status !== "ok") return admitted
+    const alternative = decodeSfSkillInput("ScenarioComparisonInput", admitted.value).ok && input.verifiedAlternativeSelectionFor
+      ? await input.verifiedAlternativeSelectionFor(call) : { status: "needs-input" as const, reason: "alternative-comparison-selection-required" }
+    return { status: "ok", value: { input: admitted.value, alternative } }
+  }
   const withComparisonScope: SfComparisonInvocation = (call, work) => input.selection.withComparisonScope ? input.selection.withComparisonScope(call, work) : work()
   const comparisonSelection = async (comparison: ScenarioComparisonInput, selection: PortfolioSelection, call: TrustedDomainContext): Promise<PortResult<ComparisonSelection>> => {
     const selected = await input.selectedCase(call)
@@ -124,28 +136,25 @@ export function createSfDecisionAlternativeServices(input: {
     const current = await business.cases.read({ caseRef: encodeCaseRef(selected.value) }, call)
     if (current.status !== "ok" || current.value.case.version !== selected.value.version) return { status: "unavailable", reason: "alternative-selected-case-unavailable" }
     if (call.kind === "native" || input.hasAdmittedInputContext?.(call)) {
-      if (!input.verifiedInputFor) return { status: "unavailable", reason: "alternative-run-input-unavailable" }
-      const admitted = await input.verifiedInputFor(call)
+      const admitted = await readAdmission(call)
       if (admitted.status !== "ok") return admitted
-      const comparison = decodeSfSkillInput("ScenarioComparisonInput", admitted.value)
+      const comparison = decodeSfSkillInput("ScenarioComparisonInput", admitted.value.input)
       if (comparison.ok) {
-        if (!input.verifiedAlternativeSelectionFor) return { status: "needs-input", reason: "alternative-comparison-selection-required" }
-        const captured = await input.verifiedAlternativeSelectionFor(call)
+        const captured = admitted.value.alternative
         if (captured.status !== "ok") return captured
-        if (captured.value.schema !== "sf-admitted-alternative-selection-v1" || captured.value.inputDigest !== digestSfValue(admitted.value) ||
+        if (captured.value.schema !== "sf-admitted-alternative-selection-v1" || captured.value.inputDigest !== digestSfValue(admitted.value.input) ||
           !same(captured.value.caseRef, selected.value) || !same(captured.value.authority, selectionAuthority(call)))
           return { status: "denied", reason: "alternative-comparison-selection-outside-input" }
         const checked = await comparisonSelection(comparison.value, captured.value.selection, call)
         if (checked.status !== "ok") return checked
         const snapshot: ComparisonSelection = { caseRef: captured.value.caseRef, caseDigest: captured.value.caseDigest, selection: captured.value.selection,
           scenario: captured.value.scenario, coverageRef: captured.value.coverageRef, coverageDigest: captured.value.coverageDigest }
-        const again = await input.verifiedInputFor(call)
-        const captureAgain = await input.verifiedAlternativeSelectionFor(call)
-        if (!same(checked.value, snapshot) || again.status !== "ok" || !same(again.value, admitted.value) || captureAgain.status !== "ok" ||
-          !same(captureAgain.value, captured.value) || !await host.revalidate(call)) return { status: "stale", reason: "alternative-admitted-selection-changed" }
+        const again = await readAdmission(call)
+        if (!same(checked.value, snapshot) || again.status !== "ok" || !same(again.value.input, admitted.value.input) || again.value.alternative.status !== "ok" ||
+          !same(again.value.alternative.value, captured.value) || !await host.revalidate(call)) return { status: "stale", reason: "alternative-admitted-selection-changed" }
         return { status: "ok", value: { caseRef: checked.value.caseRef, scenario: checked.value.scenario, coverageRef: checked.value.coverageRef } }
       }
-      const decoded = decodeSfSkillInput("PortfolioCompositionInput", admitted.value)
+      const decoded = decodeSfSkillInput("PortfolioCompositionInput", admitted.value.input)
       if (!decoded.ok || decoded.value.candidates.length !== 1 || decoded.value.request.candidateRefs.length !== 1 || decoded.value.costCoverageRefs.length !== 1 ||
         !same(decoded.value.candidates[0]!.case, selected.value)) return { status: "needs-input", reason: "alternative-single-bound-candidate-required" }
       const ref = decoded.value.request.candidateRefs[0]!
@@ -156,8 +165,8 @@ export function createSfDecisionAlternativeServices(input: {
         !same(resolved.value.scenario, alternatives[0]!.scenario) || !same(resolved.value.operations, resolved.value.scenario.operations)) return { status: "stale", reason: "alternative-selected-candidate-changed" }
       const coverageRef = decisionCoverageRef(selected.value, alternatives[0]!.id, alternatives[0]!.version)
       const scenario = decodeSfOperationInput("sf_scenario_simulate", { ...resolved.value.scenario, operations: [...resolved.value.operations, ...decoded.value.request.operations] })
-      const again = await input.verifiedInputFor(call)
-      if (!scenario.ok || decoded.value.costCoverageRefs[0] !== coverageRef || again.status !== "ok" || !same(again.value, admitted.value) || !await host.revalidate(call)) return { status: "unavailable", reason: "alternative-run-selection-changed" }
+      const again = await readAdmission(call)
+      if (!scenario.ok || decoded.value.costCoverageRefs[0] !== coverageRef || again.status !== "ok" || !same(again.value.input, admitted.value.input) || !await host.revalidate(call)) return { status: "unavailable", reason: "alternative-run-selection-changed" }
       return { status: "ok", value: { caseRef: selected.value, scenario: scenario.value, coverageRef } }
     }
     const approved = await input.selection.read({ caseRef: selected.value }, call)
@@ -237,3 +246,4 @@ function selectionAuthority(call: TrustedDomainContext) {
   return { installationId: call.binding.installationId, projectId: call.binding.projectId, principalRef: call.binding.principalRef,
     accessRevision: call.binding.accessRevision, policyVersion: call.binding.policyVersion }
 }
+

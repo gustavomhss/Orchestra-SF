@@ -14,7 +14,7 @@ import { compareImportProjections } from "./changes.ts"
 
 type ImportFormat = DashboardImportFormat | "backup"
 type DashboardBackupAdapter = {
-  preview: (snapshot: Snapshot, actor: Actor, command: Command, environment: Environment) => ReturnType<typeof previewDashboardImport>
+  preview: typeof simulateBackup
   apply: (snapshot: Snapshot, actor: Actor, command: Command, environment: Environment, baseDigest: string, commandDigest: string) => ReturnType<typeof applyDashboardImport>
 }
 

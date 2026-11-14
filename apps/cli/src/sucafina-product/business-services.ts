@@ -277,7 +277,9 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
         ? result : { status: "denied", reason: "calculation-case-authority-changed" }
     } finally { if (scope) releaseCaseScope(call, scope) }
   }
+  const calculationVerifier: { current?: NonNullable<Parameters<typeof createSfDecisionResultStore>[0]["verifyCalculationSources"]> } = {}
   const results = createSfDecisionResultStore({ state: input.authority.state, host, authorizeCase, createId: randomUUID, now: () => new Date().toISOString(),
+    verifyCalculationSources: (value, refs, call) => calculationVerifier.current?.(value, refs, call) ?? Promise.resolve(false),
     verifySources: async (_value, refs, call) => {
       const found = await context.context({ refs }, call)
       return found.length === refs.length && found.every((item, index) => item.state === "fresh" && !!item.authorizedProjection && !!item.currentRef &&
@@ -329,7 +331,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     readSourceFences, resolveProcurementEvidence: context.resolve, externalOperation: dashboardDecisions.resolveOperation })
   const basePersist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, resolveCase })
   const calculations = createSfPlannerCalculationServices({ host, state: input.authority.state, results, authorizeCase, operationIdentity,
-    writes: input.proposalCoverageWrites, sources: plannerSources, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase })
+    writes: input.proposalCoverageWrites, sources: plannerSources, replayScenario: planner.simulateScenario, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase })
+  calculationVerifier.current = calculations.verifyCalculationSources
   const persist = calculations.persist
   const receipt = input.authority.authority.receiptFor
   const descriptors = [

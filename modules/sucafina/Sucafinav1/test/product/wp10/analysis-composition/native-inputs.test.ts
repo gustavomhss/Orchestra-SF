@@ -35,6 +35,8 @@ async function fixture(operation = "sf_forecast_compare", payload: unknown = { b
     projectScope: createSfSourceScopeProjector(() => "2026-11-14T00:00:00Z") }) }
   for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
   const control: { active: boolean; revokeDuringAuthentication: boolean; binding?: TrustedExecutionBinding } = { active: true, revokeDuringAuthentication: false }
+  const metrics = { authentications: 0, selectedCaseReads: 0 }
+  const interleavings: { afterSelectedCase?: (read: number) => Promise<void>; duringAuthentication?: (read: number) => void } = {}
   const proposalCoverageWrites = new WeakSet<object>()
   const nativePublicationGuards = new WeakMap<object, () => boolean>()
   const identity = { installationId: "installation", hostId: "host", projectId: "project", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
@@ -56,6 +58,8 @@ async function fixture(operation = "sf_forecast_compare", payload: unknown = { b
     grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "contributions"], operations: [operation], humanActions: [] }],
     proposalCoverageWrites, nativePublicationGuards, now: Date.now, createId: randomUUID,
     authenticate: async (_request, scope) => {
+      metrics.authentications++
+      interleavings.duringAuthentication?.(metrics.authentications)
       if (control.revokeDuringAuthentication && control.binding) { authority.native.revoke(control.binding); control.revokeDuringAuthentication = false }
       return control.active && scope ? { id: "person", canWrite: true, roles: [{ surface: scope.surface, role: "admin" }] } : null
     },
@@ -105,7 +109,12 @@ async function fixture(operation = "sf_forecast_compare", payload: unknown = { b
   if (leased.status !== "ok" || !authority.native.consume(leased.value, operation, digest)) throw new Error("Real one-use capability lease unavailable")
   const call = leased.value
   const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites })
-  const readers = createSfNativeAnalysisInputs({ authority, selectedCase: business.selectedCase, requestForRun: (id) => id === "run" ? request : undefined,
+  const readers = createSfNativeAnalysisInputs({ authority, selectedCase: async (context) => {
+    const selected = await business.selectedCase(context)
+    metrics.selectedCaseReads++
+    await interleavings.afterSelectedCase?.(metrics.selectedCaseReads)
+    return selected
+  }, requestForRun: (id) => id === "run" ? request : undefined,
     admittedInput: (id) => id === "run" ? admitted : undefined, captures: () => [], revalidateCapture: async () => false })
   const snapshot = () => authority.state.read(request, "contributions", (state) => ({ run: state.nativeRuns?.run, contributions: state.contributions, preferences: state.preferences, version: state.revision }))
   const versions = async () => {
@@ -114,7 +123,7 @@ async function fixture(operation = "sf_forecast_compare", payload: unknown = { b
     return value.value
   }
   const close = async () => { authority.native.finish(call); authority.native.revoke(bound.value); business.dispose(); await driver.dispose(); await rm(directory, { recursive: true, force: true }) }
-  return { authority, business, request, caseRef, call, admitted, readers, control, proposalCoverageWrites, nativePublicationGuards, snapshot, versions, close }
+  return { authority, business, request, caseRef, call, admitted, readers, control, metrics, interleavings, proposalCoverageWrites, nativePublicationGuards, snapshot, versions, close }
 }
 
 test("native input reader requires an exact consumed lease, stored run and admitted input, and observes revocation", async () => {
@@ -134,6 +143,105 @@ test("native input reader requires an exact consumed lease, stored run and admit
     expect((await state.readers.verifiedInputFor(state.call)).status).toBe("ok")
     state.authority.native.revoke(state.call.binding)
     expect((await state.readers.verifiedInputFor(state.call)).status).toBe("unavailable")
+  } finally { await state.close() }
+})
+
+test("the joint alternative reader samples real C08 once for both projections and repeats authorization on every call", async () => {
+  const state = await fixture()
+  try {
+    const before = { ...state.metrics }
+    const together = await state.readers.verifiedAlternativeAdmissionFor(state.call)
+    const sampled = { authentications: state.metrics.authentications - before.authentications, selectedCaseReads: state.metrics.selectedCaseReads - before.selectedCaseReads }
+    expect(together).toEqual({ status: "ok", value: { input: state.admitted.input, alternative: { status: "needs-input", reason: "alternative-comparison-selection-required" } } })
+    // One admission sample still contains both independently authorized run reads.
+    expect(sampled.selectedCaseReads).toBe(2)
+    expect(sampled.authentications).toBeGreaterThan(0)
+    const separateBefore = { ...state.metrics }
+    expect(await state.readers.verifiedInputFor(state.call)).toEqual({ status: "ok", value: state.admitted.input })
+    expect(await state.readers.verifiedAlternativeSelectionFor(state.call)).toEqual({ status: "needs-input", reason: "alternative-comparison-selection-required" })
+    expect(state.metrics.selectedCaseReads - separateBefore.selectedCaseReads).toBe(sampled.selectedCaseReads * 2)
+    expect(state.metrics.authentications - separateBefore.authentications).toBe(sampled.authentications * 2)
+    const againBefore = { ...state.metrics }
+    expect(await state.readers.verifiedAlternativeAdmissionFor(state.call)).toEqual(together)
+    expect(state.metrics.selectedCaseReads - againBefore.selectedCaseReads).toBe(sampled.selectedCaseReads)
+    expect(state.metrics.authentications - againBefore.authentications).toBe(sampled.authentications)
+    state.control.active = false
+    expect(await state.readers.verifiedAlternativeAdmissionFor(state.call)).toEqual({ status: "unavailable", reason: "native-input-provenance-unavailable" })
+  } finally { await state.close() }
+})
+
+test("a joint admission sample refuses a private input mutation between its real run reads", async () => {
+  const state = await fixture()
+  try {
+    const original = structuredClone(state.admitted.input)
+    const afterFirst = state.metrics.selectedCaseReads + 2
+    state.interleavings.afterSelectedCase = async (read) => {
+      if (read !== afterFirst) return
+      state.admitted.input = { selectedByHuman: "changed-between-run-reads" }
+    }
+    expect(await state.readers.verifiedAlternativeAdmissionFor(state.call)).toEqual({ status: "unavailable", reason: "native-input-provenance-unavailable" })
+    expect(state.metrics.selectedCaseReads).toBe(afterFirst)
+    state.interleavings.afterSelectedCase = undefined
+    state.admitted.input = original
+    expect(await state.readers.verifiedAlternativeAdmissionFor(state.call)).toEqual({ status: "ok", value: { input: original, alternative: { status: "needs-input", reason: "alternative-comparison-selection-required" } } })
+  } finally { await state.close() }
+})
+
+test("a joint admission sample refuses a committed C08 run change between its real run reads", async () => {
+  const state = await fixture()
+  try {
+    const afterFirst = state.metrics.selectedCaseReads + 2
+    const updates: number[] = []
+    state.interleavings.afterSelectedCase = async (read) => {
+      if (read !== afterFirst) return
+      const versions = await state.versions()
+      const changed = await state.authority.state.transaction(state.request, { namespace: "contributions", expectedStorageVersion: versions.contributions,
+        targetRef: state.caseRef.id, targetIncarnation: state.caseRef.incarnation, idempotencyKey: "changed-during-admission", commandDigest: digestSfValue("changed-during-admission") }, async (stored) => {
+        const run = stored.nativeRuns?.run
+        if (!run) throw new Error("Real running record unavailable")
+        stored.nativeRuns!.run = { ...run, version: run.version + 1, objective: "Changed during admission" }
+        return { commit: true, value: run.version + 1 }
+      })
+      if (changed.status !== "ok") throw new Error("C08 mutation counterproof was not committed")
+      updates.push(changed.value)
+    }
+    expect(await state.readers.verifiedAlternativeAdmissionFor(state.call)).toEqual({ status: "unavailable", reason: "native-input-provenance-unavailable" })
+    expect(updates).toHaveLength(1)
+    const current = await state.snapshot()
+    if (current.status !== "ok") throw new Error("Changed C08 run unavailable")
+    expect(current.value.run?.version).toBe(updates[0])
+    expect(current.value.run?.objective).toBe("Changed during admission")
+  } finally { await state.close() }
+})
+
+test("a joint admission sample refuses revocation between passes and exposes no input", async () => {
+  const state = await fixture()
+  try {
+    const afterFirst = state.metrics.selectedCaseReads + 2
+    state.interleavings.afterSelectedCase = async (read) => {
+      if (read === afterFirst) state.authority.native.revoke(state.call.binding)
+    }
+    expect(await state.readers.verifiedAlternativeAdmissionFor(state.call)).toEqual({ status: "unavailable", reason: "native-input-provenance-unavailable" })
+    expect(state.metrics.selectedCaseReads).toBe(afterFirst)
+  } finally { await state.close() }
+})
+
+test("a joint admission sample observes a private holder mutation during its final authentication", async () => {
+  const state = await fixture()
+  try {
+    const before = state.metrics.authentications
+    expect((await state.readers.verifiedAlternativeAdmissionFor(state.call)).status).toBe("ok")
+    const authentications = state.metrics.authentications - before
+    expect(authentications).toBeGreaterThan(0)
+    const finalAuthentication = state.metrics.authentications + authentications
+    const mutations: number[] = []
+    state.interleavings.duringAuthentication = (read) => {
+      if (read !== finalAuthentication) return
+      state.admitted.input = { selectedByHuman: "changed-during-final-authentication" }
+      mutations.push(read)
+    }
+    expect(await state.readers.verifiedAlternativeAdmissionFor(state.call)).toEqual({ status: "unavailable", reason: "native-input-provenance-unavailable" })
+    expect(mutations).toEqual([finalAuthentication])
   } finally { await state.close() }
 })
 

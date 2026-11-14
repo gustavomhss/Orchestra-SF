@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
-import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
+import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -18,6 +19,7 @@ import { createModule } from "../../../index.ts"
 import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 
 test("personal views isolate authenticated principals and reconcile exact retries", async () => {
+  expectSpawn(import.meta.path)
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-personal-views-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
@@ -39,6 +41,7 @@ test("personal views isolate authenticated principals and reconcile exact retrie
   const app = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
   const module = createModule("/sucafina", { persistence: store, authenticate, environment, product: app, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
   serverState.handle = async (request) => await first.handle(request) ?? await module(request)
+  let browserDriver: Awaited<ReturnType<typeof launchBrowserDriver>> | undefined
   try {
     const cookie = async (identity: typeof first) => (await identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`)))!.headers.get("set-cookie")!.split(";")[0]!
     const firstCookie = await cookie(first)
@@ -73,7 +76,8 @@ test("personal views isolate authenticated principals and reconcile exact retrie
       snapshot.data.versions = [{ id: "v1", year: 2027, closed: 0, lines: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
       return { commit: true, value: undefined }
     })
-    const browser = await launchWp01Browser()
+    browserDriver = await launchBrowserDriver("personal-views")
+    const browser = browserDriver.browser
     try {
       const tab = await browser.newPage()
       await tab.goto(`${origin}/sucafina/auth/local?code=${await first.enroll()}`)
@@ -88,6 +92,8 @@ test("personal views isolate authenticated principals and reconcile exact retrie
       await tab.getByRole("button", { name: "Filtered plan", exact: true }).waitFor()
       await tab.getByRole("button", { name: "Filtered plan", exact: true }).click()
       await tab.waitForURL((url) => url.searchParams.get("view") === filtered.view.id && url.searchParams.get("q") === "renewal")
-    } finally { await closeWp01Browser(browser) }
+    } finally { await browserDriver.close() }
   } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
+  if (!browserDriver) throw new Error("Personal views browser driver was not created")
+  browserDriver.report()
 })

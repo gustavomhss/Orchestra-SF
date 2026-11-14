@@ -266,6 +266,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   const decisionDomain = createSfDecisionDomainServices({ authority, business, baseline: business.baselineCoverage, proposalCoverageWrites, signalRegistryWrites,
     sharedPortfolio: extended.portfolioServices, selectedCase: business.selectedCase, verifiedInputFor: nativeInputs.verifiedInputFor,
     verifiedAlternativeSelectionFor: nativeInputs.verifiedAlternativeSelectionFor,
+    verifiedAlternativeAdmissionFor: nativeInputs.verifiedAlternativeAdmissionFor,
     hasAdmittedInputContext: nativeInputs.hasAdmittedInputContext, readAlternativeCapture: nativeInputs.readAlternativeCapture })
   business.bindDecisionDomain(decisionDomain)
   const decisionDomainHttp = createSfDecisionDomainHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() ? { authority, business, domain: decisionDomain } : undefined })

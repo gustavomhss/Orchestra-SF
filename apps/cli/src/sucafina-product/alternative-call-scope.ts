@@ -14,6 +14,7 @@ export function createSfAlternativeCallScope<Value>(input: {
   lockedSourceFences: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
   verifiedInputFor?: (call: TrustedDomainContext) => Promise<PortResult<unknown>>
   verifiedAlternativeSelectionFor?: (call: TrustedDomainContext) => Promise<PortResult<unknown>>
+  verifiedAlternativeAdmissionFor?: (call: TrustedDomainContext) => Promise<PortResult<{ input: unknown; alternative: PortResult<unknown> }>>
   hasAdmittedInputContext?: (call: TrustedDomainContext) => boolean
 }) {
   const host = input.authority.host
@@ -42,12 +43,18 @@ export function createSfAlternativeCallScope<Value>(input: {
         !value.participants.includes(actor.principalRef) || !current(call, scope) || !await host.revalidate(call)) return undefined
       let admission: unknown
       if (scope.admitted) {
-        const verified = await input.verifiedInputFor?.(call)
-        if (!verified || verified.status !== "ok") return undefined
         // These readers recheck the actual stored run, Request, private holder and
         // native generation. An unchanged C08 digest never substitutes for authority.
-        const alternative = await input.verifiedAlternativeSelectionFor?.(call)
-        admission = { input: verified.value, alternative }
+        if (input.verifiedAlternativeAdmissionFor) {
+          const verified = await input.verifiedAlternativeAdmissionFor(call)
+          if (verified.status !== "ok") return undefined
+          admission = verified.value
+        } else {
+          const verified = await input.verifiedInputFor?.(call)
+          if (!verified || verified.status !== "ok") return undefined
+          const alternative = await input.verifiedAlternativeSelectionFor?.(call)
+          admission = { input: verified.value, alternative }
+        }
       }
       const sources = input.lockedSourceFences()
       // Dashboard projections use the observed UTC day even when the raw

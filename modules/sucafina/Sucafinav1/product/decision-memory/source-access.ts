@@ -1,7 +1,7 @@
 import { roleMap } from "../../runtime/admin.ts"
 import { object } from "../../runtime/contract.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
-import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../contracts/business-context.ts"
 import type { DashboardPort, DomainPortHost, PortResult, ProcurementPort } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -172,12 +172,15 @@ function sameCurrentSource(original: BusinessEvidenceRef, current: BusinessEvide
   return false
 }
 
-/** Immutable ledger events are re-read through the authorized case port on every use. */
+/** Immutable ledger events are read through protected state without recursively reopening
+ * the full case. Every ancestor's dependencies still require the current caller's access. */
 export function createSfCaseEventSourceAccess(input: { host: DomainPortHost; state: SfProductStatePort; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<boolean>; authorizeEvidence: (refs: readonly BusinessEvidenceRef[], call: TrustedDomainContext, ancestors: ReadonlySet<string>) => Promise<boolean> }) {
   return async (ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string> = new Set()): Promise<BusinessEvidenceResolution> => {
     const unavailable = (checkedAt = ""): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt })
     try {
-      if (ref.kind !== "case-event" || ancestors.has(ref.refDigest) || ancestors.size > 16 || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId || ref.refDigest !== digestSfEvidenceRef(ref)) return unavailable()
+      if (ref.kind !== "case-event" || ancestors.has(ref.refDigest) || ancestors.size > 16 || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) return unavailable()
+      sfEvidenceSourceMaps([ref])
+      if (!Number.isSafeInteger(ref.target.caseVersion) || ref.target.caseVersion < 1 || !ref.target.eventId.trim() || !/^[a-f0-9]{64}$/i.test(ref.target.outputDigest)) return unavailable()
       const request = input.host.requestFor(call)
       if (!request || request.signal.aborted || !await input.host.revalidate(call)) return unavailable()
       const now = await input.host.environment(request)

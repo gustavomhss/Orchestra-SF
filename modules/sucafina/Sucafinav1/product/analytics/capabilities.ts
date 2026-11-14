@@ -19,6 +19,13 @@ export type BiSourcePort = {
   revalidate: (request: BiViewRequest, context: TrustedDomainContext, projection?: DomainProjection) => Promise<boolean>
 }
 
+/** A host fence must check the exact observed selection and projection, without changing either. */
+export async function revalidateBiSnapshot(source: BiSourcePort, request: BiViewRequest, context: TrustedDomainContext, projection?: DomainProjection) {
+  const snapshot = structuredClone({ request, ...(projection ? { projection } : {}) })
+  const digest = digestSfValue(snapshot)
+  return await source.revalidate(snapshot.request, context, snapshot.projection) && digestSfValue(snapshot) === digest
+}
+
 export async function readBiView(incoming: BiViewRequest, context: TrustedDomainContext, source: BiSourcePort, authority: SfDomainValidation): Promise<PortResult<DomainProjection>> {
   const decoded = decodeSfOperationInput("sf_bi_view", incoming)
   if (!decoded.ok) return { status: "needs-input", reason: "invalid-selection-or-period" }
@@ -30,7 +37,7 @@ export async function readBiView(incoming: BiViewRequest, context: TrustedDomain
   if (context.kind === "ui" && (receipt.kind !== "ui" || receipt.requestId !== context.binding.requestId)) return { status: "denied", reason: "authority-unavailable" }
   if (!request.selectionRef || !isSfPeriod(request.period)) return { status: "needs-input", reason: "invalid-selection-or-period" }
   if (!biViews.some((view) => view.id === request.viewId)) return { status: "unavailable", reason: "unsupported-view" }
-  if (!await source.revalidate(structuredClone(request), context)) return { status: "denied", reason: "binding-unavailable" }
+  if (!await revalidateBiSnapshot(source, request, context)) return { status: "denied", reason: "binding-unavailable" }
   const result = await source.read(structuredClone(request), context)
   if (result.status !== "ok") return result
   const output = decodeSfOperationOutput("sf_bi_view", result.value)
@@ -41,7 +48,7 @@ export async function readBiView(incoming: BiViewRequest, context: TrustedDomain
   if (projection.context.installationId !== context.binding.installationId || projection.context.projectId !== context.binding.projectId || projection.context.principalRef !== context.binding.principalRef || projection.context.accessRevision !== context.binding.accessRevision || projection.context.policyVersion !== context.binding.policyVersion) return { status: "denied", reason: "context-mismatch" }
   if (new Set(projection.values.map((value) => value.id)).size !== projection.values.length) return { status: "unavailable", reason: "duplicate-value-id" }
   if (projection.context.period.start !== request.period.start || projection.context.period.end !== request.period.end) return { status: "stale", reason: "period-mismatch" }
-  if (!await source.revalidate(structuredClone(request), context, structuredClone(projection)) || !await authority.revalidateDomainContext(context)) return { status: "denied", reason: "access-changed" }
+  if (!await revalidateBiSnapshot(source, request, context, projection) || !await authority.revalidateDomainContext(context)) return { status: "denied", reason: "access-changed" }
   return { status: "ok", value: projection }
 }
 
@@ -71,7 +78,7 @@ export async function readBiPresentation(incoming: BiViewRequest, context: Trust
   if (description.viewId !== request.viewId) return { status: "unavailable", reason: "view-mismatch" } as const
   const resolved = resolveBiPresentation(projection.value, description)
   if (resolved.status !== "ok") return resolved
-  if (!await source.revalidate(structuredClone(request), context, structuredClone(projection.value)) || !await authority.revalidateDomainContext(context)) return { status: "denied", reason: "access-changed" } as const
+  if (!await revalidateBiSnapshot(source, request, context, projection.value) || !await authority.revalidateDomainContext(context)) return { status: "denied", reason: "access-changed" } as const
   return { status: "ok", value: { projection: projection.value, presentation: description } } as const
 }
 

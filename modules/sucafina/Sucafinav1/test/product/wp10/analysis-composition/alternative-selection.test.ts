@@ -175,6 +175,7 @@ async function fixture() {
     } }
     const domain = createSfDecisionDomainServices({ authority, business, baseline: business.baselineCoverage, proposalCoverageWrites, signalRegistryWrites: new WeakSet(),
       selectedCase: business.selectedCase, verifiedInputFor: readers.verifiedInputFor, verifiedAlternativeSelectionFor: readers.verifiedAlternativeSelectionFor,
+      verifiedAlternativeAdmissionFor: readers.verifiedAlternativeAdmissionFor,
       hasAdmittedInputContext: readers.hasAdmittedInputContext, sharedPortfolio })
     cleanups.push(() => domain.dispose())
     business.bindDecisionDomain(domain)

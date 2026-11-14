@@ -8,7 +8,10 @@ export function deriveAuthorizedRecallFeatures(projection: AuthorizedCaseProject
   const context = projection.context
   const value = projection.case
   if (![context.installationId, context.projectId, context.principalRef, context.accessRevision, context.policyVersion].every((item) => item.trim()) || context.kind !== call.kind || context.installationId !== call.binding.installationId || context.projectId !== call.binding.projectId || context.principalRef !== call.binding.principalRef || context.accessRevision !== call.binding.accessRevision || context.policyVersion !== call.binding.policyVersion) return undefined
-  if (call.kind === "native" && (context.kind !== "native" || context.profileId !== call.binding.profileId || value.id !== call.binding.caseId || value.incarnation !== call.binding.caseIncarnation || value.version !== call.binding.caseVersion)) return undefined
+  if (!value.id.trim() || !value.incarnation.trim() || !Number.isSafeInteger(value.version) || value.version < 1 || !value.participants.includes(call.binding.principalRef)) return undefined
+  // A precedent is a different case. Its reader must prove current access; deriving
+  // comparison features does not change the originating native session's binding.
+  if (call.kind === "native" && (context.kind !== "native" || context.profileId !== call.binding.profileId)) return undefined
   const types = [...new Set(value.costCoverageBases.map((basis) => basis.decisionType))]
   if (types.length !== 1 || !types[0]?.trim() || !isSfPeriod(value.horizon)) return undefined
   const results = [...value.alternatives.map((alternative) => alternative.result), ...value.choices.map((choice) => choice.result)]

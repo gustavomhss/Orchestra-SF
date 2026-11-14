@@ -1,10 +1,11 @@
-import { digestSfContribution, digestSfValue } from "../contracts/canonical.ts"
+import { digestSfValue } from "../contracts/canonical.ts"
 import type { SfNativeRunRecord } from "../contracts/state.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { AlternativeCapabilityProvenance } from "../decisions/alternative-provenance.ts"
 import type { SfAnalysisHost } from "./analysis-port.ts"
 import type { createSfRunStore } from "./run-store.ts"
+import { matchesSfRunOutput } from "./run-provenance.ts"
 
 /** Compose the real run store with host-owned execution and domain authority.
  * The host must authenticate each context and verify current evidence and domain semantics;
@@ -30,7 +31,7 @@ export function createSfAnalysisHost(input: {
       if (loaded.status !== "ok") return loaded
       const run = loaded.value
       if (run.runRef !== request.runRef || !run.native || run.caseRef.id !== request.caseRef.id || run.caseRef.incarnation !== request.caseRef.incarnation || run.caseRef.version !== request.caseRef.version || run.contextFingerprint !== request.contextFingerprint || run.selection.manifestDigest !== request.manifestDigest || run.accessRevision !== request.accessRevision || request.skillReceipts.length !== 1 || digestSfValue(run.native.skillReceipt) !== digestSfValue(request.skillReceipts[0]) || digestSfValue(run.reviewTarget) !== digestSfValue(request.reviewTarget)) return { status: "denied", reason: "run-binding-mismatch" }
-      if (request.output && (request.output.state !== "ready" || request.output.runProvenance.runId !== run.runRef || request.output.caseRef.id !== run.caseRef.id || request.output.caseRef.incarnation !== run.caseRef.incarnation || request.output.caseRef.version !== run.caseRef.version || request.output.accessRevision !== run.accessRevision || request.output.outputDigest !== digestSfContribution(request.output) || request.output.kind !== request.outputKind || digestSfValue(request.output.evidenceRefs) !== digestSfValue(request.evidenceRefs))) return { status: "denied", reason: "run-output-binding-mismatch" }
+      if (request.output && (!matchesSfRunOutput(run, request.output) || request.output.kind !== request.outputKind || digestSfValue(request.output.evidenceRefs) !== digestSfValue(request.evidenceRefs))) return { status: "denied", reason: "run-output-binding-mismatch" }
       return input.verify(context, run, request)
     },
     fail: async (runRef, reason, context) => {

@@ -6,6 +6,7 @@ import { join } from "node:path"
 import { Location } from "@orchestra/core/location"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
+import { roleMap } from "../../../../runtime/admin.ts"
 import { createSfUiAuthority } from "../../../../product/integration/ui-authority.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
 import { createSfSourcePersistence } from "../../../../product/integration/source-lifecycle.ts"
@@ -21,7 +22,7 @@ test("coverage evidence projects exact whole months through Planner without recu
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-planner-evidence-"))
   const driver = await openLocalStore(directory)
   const at = "2027-02-02T00:00:00Z"
-  const live = { allowed: true, coverageReads: 0 }
+  const live = { allowed: true, coverageReads: 0, scopedSourceReads: 0, plannerRole: "finance", changeRoleDuringProjection: false }
   const subject = { installationId: "installation", projectId: "project", principalRef: "person", accessRevision: "access", policyVersion: "policy" }
   const ui = createSfUiAuthority({ authorize: async () => live.allowed ? subject : undefined, createId: randomUUID,
     now: () => Date.parse(at), commandIdentity: async () => randomUUID() })
@@ -33,8 +34,14 @@ test("coverage evidence projects exact whole months through Planner without recu
     createId: randomUUID, projectScope: createSfSourceScopeProjector(() => at) })
   const host: DomainPortHost = { persistence, requestFor: (current) => current.kind === "ui" ? ui.requestFor(current) : undefined,
     revalidate: (current) => current.kind === "ui" ? ui.revalidate(current) : Promise.resolve(false),
-    environment: async () => ({ at, id: randomUUID, directory: [] }),
-    authenticate: async (_request, scope) => live.allowed && scope ? { id: "person", canWrite: true, roles: [{ surface: scope.surface, role: "finance" }] } : null }
+    environment: async () => {
+      if (live.changeRoleDuringProjection) {
+        live.changeRoleDuringProjection = false
+        live.plannerRole = "viewer"
+      }
+      return { at, id: randomUUID, directory: [] }
+    },
+    authenticate: async (_request, scope) => live.allowed && scope ? { id: subject.principalRef, canWrite: true, roles: [{ surface: scope.surface, role: live.plannerRole }] } : null }
   try {
     if (!await ui.validate(call, "sf_forecast_compare", "a".repeat(64))) throw new Error("Real UI read lease could not be consumed")
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
@@ -46,7 +53,11 @@ test("coverage evidence projects exact whole months through Planner without recu
         officials: { "2027": "v0" }, entities: [], allocations: [], roster: [] }
       return { commit: true, value: undefined }
     })
-    const planner = createPlannerProduct({ host, scopedSources: persistence, coverageFor: async () => {
+    const planner = createPlannerProduct({ host, scopedSources: { ...persistence, readScopedSource: async (...args) => {
+      // Observe the actual source lifecycle without substituting any result.
+      live.scopedSourceReads++
+      return persistence.readScopedSource(...args)
+    } }, coverageFor: async () => {
       live.coverageReads++
       return { status: "unavailable", reason: "coverage-not-registered" }
     } })
@@ -54,11 +65,20 @@ test("coverage evidence projects exact whole months through Planner without recu
     if (source.status !== "ok") throw new Error(`Planner source unavailable: ${source.reason}`)
     const project = createSfPlannerEvidence({ host, sources: planner.sources })
     const period = { start: "2027-01-01", end: "2027-01-31" }
+    const before = live.scopedSourceReads
     const evidence = await project(source.value.evidence, call, { period, currency: "USD" })
+    expect(live.scopedSourceReads - before).toBe(2)
     expect(live.coverageReads).toBe(0)
     expect(evidence.status).toBe("ok")
     if (evidence.status !== "ok") throw new Error(`Planner projection unavailable: ${evidence.reason}`)
     expect(evidence.value.context.period).toEqual(period)
+    const legacy = createSfPlannerEvidence({ host, sources: { resolveForecastSource: planner.sources.resolveForecastSource, resolveForecastCoverage: planner.sources.resolveForecastCoverage } })
+    const legacyBefore = live.scopedSourceReads
+    expect(await legacy(source.value.evidence, call, { period, currency: "USD" })).toEqual(evidence)
+    expect(live.scopedSourceReads - legacyBefore).toBe(4)
+    const againBefore = live.scopedSourceReads
+    expect(await project(source.value.evidence, call, { period, currency: "USD" })).toEqual(evidence)
+    expect(live.scopedSourceReads - againBefore).toBe(2)
     const comparison = await planner.planner.compareForecast({ baseRef: source.value.evidence.refId,
       candidateRef: source.value.evidence.refId, period, currency: "USD" }, call)
     expect(comparison.status).toBe("ok")
@@ -66,6 +86,30 @@ test("coverage evidence projects exact whole months through Planner without recu
     expect(evidence.value).toEqual(comparison.value.baseline)
     expect(await project(source.value.evidence, call, { period: { start: "2027-01-02", end: "2027-01-31" }, currency: "USD" }))
       .toMatchObject({ status: "needs-input", reason: "period-must-cover-whole-months-in-one-year" })
+    // The UI binding remains valid, but a changed granular Planner role must
+    // invalidate the source proof after the projection callback's awaited work.
+    live.changeRoleDuringProjection = true
+    expect(await project(source.value.evidence, call, { period, currency: "USD" }))
+      .toEqual({ status: "stale", reason: "source-or-authority-changed" })
+    expect(live.changeRoleDuringProjection).toBe(false)
+    expect(await ui.revalidate(call)).toBe(true)
+    subject.principalRef = "local:person"
+    live.plannerRole = "finance"
+    const local = await ui.admit(request, "sf_forecast_compare", "b".repeat(64))
+    if (local.status !== "ok") throw new Error("Local identity counterproof requires a real UI lease")
+    try {
+      expect(await ui.validate(local.value, "sf_forecast_compare", "b".repeat(64))).toBe(true)
+      expect(await ui.revalidate(local.value)).toBe(true)
+      const localPrincipal = await persistence.transaction("planner", async (snapshot) => ({ commit: false,
+        value: await host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshot, "planner") }) }))
+      expect(localPrincipal?.id).toBe("local:person")
+      const localBefore = live.scopedSourceReads
+      expect(await project(source.value.evidence, local.value, { period, currency: "USD" }))
+        .toEqual({ status: "denied", reason: "planner-source-authority-unavailable" })
+      expect(await legacy(source.value.evidence, local.value, { period, currency: "USD" }))
+        .toEqual({ status: "denied", reason: "planner-source-authority-unavailable" })
+      expect(live.scopedSourceReads).toBe(localBefore)
+    } finally { ui.finish(local.value); subject.principalRef = "person" }
     live.allowed = false
     expect(await project(source.value.evidence, call, { period, currency: "USD" })).toMatchObject({ status: "denied" })
   } finally { ui.finish(call); await driver.dispose(); await rm(directory, { recursive: true, force: true }) }

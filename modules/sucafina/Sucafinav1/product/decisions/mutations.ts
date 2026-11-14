@@ -116,7 +116,7 @@ export function createDecisionMutations(input: MutationHost) {
       if (hotTopics.length && !input.resolveHotTopicDraft) return { status: "unavailable", reason: "hot-topic-draft-unavailable" }
       const drafts = await Promise.all(hotTopics.map((operation) => callMutationPort(() => input.resolveHotTopicDraft!({ caseRef: request.caseRef, draftRef: operation.replacementRef! }, context))))
       const failedDraft = drafts.find((item) => item.status !== "ok")
-      if (failedDraft && failedDraft.status !== "ok") return failedDraft
+      if (failedDraft) return failedDraft
       const prepared = await callMutationPort(() => input.prepareDomainCommands(request.caseRef, request.choiceId, request.operations, context))
       if (prepared.status !== "ok") return prepared
       if (!prepared.value.length) return { status: "unavailable", reason: "domain-commands-unavailable" }

@@ -11,6 +11,7 @@ import type { SfAdmittedAlternativeSelection } from "./decision-alternative-serv
 
 type CaseRef = { id: string; incarnation: string; version: number }
 export type SfAdmittedAnalysisInput = { request: SfAnalysisRequest & { contextFingerprint: string }; input: unknown; alternativeSelection?: SfAdmittedAlternativeSelection }
+export type SfVerifiedAlternativeAdmission = { input: unknown; alternative: PortResult<SfAdmittedAlternativeSelection> }
 
 /** Only the host can supply admitted inputs and bridge captures. No payload selects a fallback. */
 export function createSfNativeAnalysisInputs(input: {
@@ -55,28 +56,39 @@ export function createSfNativeAnalysisInputs(input: {
     const found = await readRun(runRef, call)
     if (!found || !matchesInput(found.run, captured)) return unavailable()
     const again = await readRun(runRef, call)
-    return again && same(again, found) && input.admittedInput(runRef) === admitted && same(admitted, captured) &&
-      (call.kind === "native" || input.runForContext?.(call) === runRef) && input.requestForRun(runRef) === source && !source.signal.aborted && binding === digestSfValue([call.kind, call.binding]) && await host.revalidate(call)
+    if (!again || !same(again, found) || !await host.revalidate(call)) return unavailable()
+    // The private holder and request must still be the captured ones after the
+    // final awaited authority check, including mutations during authentication.
+    return input.admittedInput(runRef) === admitted && same(admitted, captured) &&
+      (call.kind === "native" || input.runForContext?.(call) === runRef) && input.requestForRun(runRef) === source && !source.signal.aborted && binding === digestSfValue([call.kind, call.binding])
       ? { status: "ok", value: structuredClone(captured) } : unavailable()
   }
   const verifiedInputFor = async (call: TrustedDomainContext): Promise<PortResult<unknown>> => {
     const admitted = await verifiedAdmissionFor(call)
     return admitted.status === "ok" ? { status: "ok", value: admitted.value.input } : admitted
   }
-  const verifiedAlternativeSelectionFor = async (call: TrustedDomainContext): Promise<PortResult<SfAdmittedAlternativeSelection>> => {
-    const admitted = await verifiedAdmissionFor(call)
-    if (admitted.status !== "ok") return admitted
-    const selection = admitted.value.alternativeSelection
+  const alternativeSelectionFrom = (admitted: SfAdmittedAnalysisInput, call: TrustedDomainContext): PortResult<SfAdmittedAlternativeSelection> => {
+    const selection = admitted.alternativeSelection
     if (!selection) return { status: "needs-input", reason: "alternative-comparison-selection-required" }
-    const request = admitted.value.request
+    const request = admitted.request
     if (request.profileId !== "sf_finance" || request.skillId !== "sf-comparar-cenarios" || !request.requestedOperationScope.includes("sf_alternative_draft") ||
-      selection.schema !== "sf-admitted-alternative-selection-v1" || selection.requestDigest !== digestSfValue(request) || selection.inputDigest !== digestSfValue(admitted.value.input) ||
+      selection.schema !== "sf-admitted-alternative-selection-v1" || selection.requestDigest !== digestSfValue(request) || selection.inputDigest !== digestSfValue(admitted.input) ||
       !same(selection.caseRef, request.caseRef) || !same(selection.selection.caseRef, request.caseRef) ||
       selection.authority.installationId !== call.binding.installationId || selection.authority.projectId !== call.binding.projectId ||
       selection.authority.principalRef !== call.binding.principalRef || selection.authority.accessRevision !== call.binding.accessRevision || selection.authority.policyVersion !== call.binding.policyVersion ||
       selection.selection.principalRef !== call.binding.principalRef || selection.selection.accessRevision !== call.binding.accessRevision || selection.selection.policyVersion !== call.binding.policyVersion)
       return unavailable()
     return { status: "ok", value: selection }
+  }
+  // Input and selection belong to one authenticated admission sample. Each call
+  // still reopens the stored run twice; no result or authority survives it.
+  const verifiedAlternativeAdmissionFor = async (call: TrustedDomainContext): Promise<PortResult<SfVerifiedAlternativeAdmission>> => {
+    const admitted = await verifiedAdmissionFor(call)
+    return admitted.status === "ok" ? { status: "ok", value: { input: admitted.value.input, alternative: alternativeSelectionFrom(admitted.value, call) } } : admitted
+  }
+  const verifiedAlternativeSelectionFor = async (call: TrustedDomainContext): Promise<PortResult<SfAdmittedAlternativeSelection>> => {
+    const admitted = await verifiedAlternativeAdmissionFor(call)
+    return admitted.status === "ok" ? admitted.value.alternative : admitted
   }
   const matchingCapture = (record: AlternativeCapabilityProvenance, run: SfNativeRunRecord, call: TrustedDomainContext) => {
     const { recordDigest, ...material } = record
@@ -132,7 +144,7 @@ export function createSfNativeAnalysisInputs(input: {
       input.captures(runRef).filter((record) => same(record, records[0])).length === 1 && await input.revalidateCapture(found.value.record)
       ? { status: "ok", value: found.value.record } : unavailable()
   }
-  return { verifiedInputFor, verifiedAlternativeSelectionFor, readAlternativeCapture, readCapturedAlternative,
+  return { verifiedInputFor, verifiedAlternativeSelectionFor, verifiedAlternativeAdmissionFor, readAlternativeCapture, readCapturedAlternative,
     hasAdmittedInputContext: (call: TrustedDomainContext) => call.kind === "native" || !!input.runForContext?.(call) }
 }
 

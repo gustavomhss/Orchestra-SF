@@ -16,8 +16,16 @@ export type MaterialChangeEvent = {
 export type MaterialCondition = { id: string; source: SourceRef; fields: readonly string[]; period: Period; criterionId: string; choice: ChoiceRecord }
 export type ReconsiderationSignal = { correlationKey: string; conditionId: string; choiceId: string; severity: "reconsider" | "unknown"; reason: string; source: SourceRef; before: { comparison: ScenarioComparison; result: ScenarioResult } | undefined; after: { comparison: ScenarioComparison; result: ScenarioResult } | undefined; originalReason: string; impact: ChangeImpact }
 
+function materialChangeIdentity(change: MaterialChangeEvent) {
+  const sourceIdentity = (source: SourceRef) => ({ ...source, observedAt: "", fields: [...source.fields].sort() })
+  const scenarioIdentity = (result: ScenarioResult) => ({ ...result, components: result.components.map((component) => ({ ...component, sourceRefs: component.sourceRefs.map(sourceIdentity) })) })
+  return { ...change, source: sourceIdentity(change.source), fields: [...change.fields].sort(), ...(change.comparison ? { comparison: { ...change.comparison, resultBefore: scenarioIdentity(change.comparison.resultBefore), resultAfter: scenarioIdentity(change.comparison.resultAfter) } } : {}) }
+}
+
 export function classifySfMaterialChange(condition: MaterialCondition, change: MaterialChangeEvent): { impact: ChangeImpact; signal?: ReconsiderationSignal } {
-  const digest = change.availability === "available" ? digestSfValue(change) : digestSfValue([condition.id, "unavailable"])
+  // A new read timestamp is not a new material event. Source identity/version and all
+  // business values remain bound; only observation time and set ordering are normalized.
+  const digest = change.availability === "available" ? digestSfValue(materialChangeIdentity(change)) : digestSfValue([condition.id, "unavailable"])
   const key = digestSfValue([condition.id, digest])
   const same = condition.source.surface === change.source.surface && condition.source.type === change.source.type && condition.source.id === change.source.id
   const overlap = condition.period.start <= change.period.end && change.period.start <= condition.period.end
@@ -36,7 +44,15 @@ export function classifySfMaterialChange(condition: MaterialCondition, change: M
     ...change.comparison.resultBefore.costCoverage.entries.filter((entry) => !change.comparison?.resultAfter.costCoverage.entries.some((item) => item.categoryId === entry.categoryId)).map((entry) => `${entry.categoryId}:${entry.status}->absent`),
   ].sort() : []
   const affectedCategories = new Set(coverageChanges.map((item) => item.slice(0, item.indexOf(":"))))
-  const components = change.comparison?.resultAfter.costCoverage.entries.flatMap((entry) => entry.status === "included" && affectedCategories.has(entry.categoryId) ? entry.componentRefs : []) ?? []
+  const componentMeaning = (component: ScenarioResult["components"][number]) => [component.amount, component.currency, component.period, component.evidenceState]
+  const changedComponents = change.comparison ? [
+    ...change.comparison.resultAfter.components.filter((component) => {
+      const previous = change.comparison?.resultBefore.components.find((item) => item.id === component.id)
+      return !previous || digestSfValue(componentMeaning(previous)) !== digestSfValue(componentMeaning(component))
+    }).map((component) => component.id),
+    ...change.comparison.resultBefore.components.filter((component) => !change.comparison?.resultAfter.components.some((item) => item.id === component.id)).map((component) => component.id),
+  ] : []
+  const components = [...changedComponents, ...(change.comparison?.resultAfter.costCoverage.entries.flatMap((entry) => entry.status === "included" && affectedCategories.has(entry.categoryId) ? entry.componentRefs : []) ?? [])]
   const costChanged = !!change.comparison && digestSfValue([change.comparison.resultBefore.total, change.comparison.resultBefore.knownSubtotal, change.comparison.resultBefore.costCoverage.coverageState, change.comparison.resultBefore.costCoverage.entries.map((entry) => [entry.categoryId, entry.status]).sort((left, right) => left[0]!.localeCompare(right[0]!))]) !== digestSfValue([change.comparison.resultAfter.total, change.comparison.resultAfter.knownSubtotal, change.comparison.resultAfter.costCoverage.coverageState, change.comparison.resultAfter.costCoverage.entries.map((entry) => [entry.categoryId, entry.status]).sort((left, right) => left[0]!.localeCompare(right[0]!))])
   const comparisonChanged = !!change.comparison && (criterionBefore?.state !== criterionAfter?.state || change.comparison.before.comparisonStatus !== change.comparison.after.comparisonStatus || change.comparison.before.knownDifference !== change.comparison.after.knownDifference || change.comparison.before.completeDifference !== change.comparison.after.completeDifference)
   const deadlineChanged = condition.source.version !== change.source.version && condition.fields.some((field) => change.fields.includes(field) && ["deadline", "dueDate", "horizon"].includes(field))
@@ -58,7 +74,8 @@ export function createSfMaterialityAccess(input: {
       const binding = digestSfValue([call.kind, call.binding])
       if (!conditionId || !await input.revalidate(call)) return { status: "unavailable" as const }
       const read = async () => {
-        const value = await input.load(conditionId, call)
+        const loaded = await input.load(conditionId, call)
+        const value = loaded ? structuredClone(loaded) : undefined
         if (!value || value.condition.id !== conditionId) return undefined
         const choice = value.condition.choice
         const refs = [...choice.evidenceRefs, ...choice.result.sourceRefs, ...choice.scenario.assumptions.flatMap((item) => item.evidenceRefs), ...choice.costCoverage.evaluatedSourceRefs, ...choice.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs), ...choice.result.costCoverage.evaluatedSourceRefs, ...choice.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs), ...value.change.before, ...value.change.after, ...(value.change.comparison?.resultAfter.sourceRefs ?? []), ...(value.change.comparison?.resultAfter.costCoverage.evaluatedSourceRefs ?? []), ...(value.change.comparison?.resultAfter.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs) ?? [])]
@@ -69,7 +86,7 @@ export function createSfMaterialityAccess(input: {
       if (!first || !await input.revalidate(call)) return { status: "unavailable" as const }
       const result = classifySfMaterialChange(first.condition, first.change)
       const second = await read()
-      if (!second || digestSfValue(first) !== digestSfValue(second) || digestSfValue([call.kind, call.binding]) !== binding || !await input.revalidate(call)) return { status: "unavailable" as const }
+      if (!second || digestSfValue({ condition: first.condition, change: materialChangeIdentity(first.change) }) !== digestSfValue({ condition: second.condition, change: materialChangeIdentity(second.change) }) || digestSfValue([call.kind, call.binding]) !== binding || !await input.revalidate(call)) return { status: "unavailable" as const }
       return { status: "ok" as const, ...result, snapshot: { condition: first.condition, change: first.change }, scope: { source: first.condition.source, fields: first.condition.fields, period: first.condition.period, criterionId: first.condition.criterionId, choiceId: first.condition.choice.id } }
     } catch {
       return { status: "unavailable" as const }

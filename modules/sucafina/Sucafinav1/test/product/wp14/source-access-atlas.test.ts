@@ -89,8 +89,8 @@ test("protected Atlas original binds cross-principal continuity after store reop
       const nestedBase: Extract<BusinessEvidenceRef, { kind: "case-event" }> = { ...eventRef, refId: "nested-ref", refDigest: "", target: { ...eventRef.target, eventId: nestedEvent.id, outputDigest: nestedEvent.outputDigest, evidenceRefs: [eventRef] } }
       const nestedRef = { ...nestedBase, refDigest: digestSfEvidenceRef(nestedBase) }
       const decision: DecisionCase = { id: "case", incarnation: "case-inc", version: 1, state: "investigating", objective: "Compare", horizon: period, currency: "USD", criteria: [{ id: "cost", description: "Cost", required: true }], participants: ["alice", "bob"], sourceRefs: [source, eventRef], alternatives: [], costCoverageBases: [{ id: "renewal", version: 1, decisionType: "renewal", categoryIds: [], additionalCategoryIds: [], sourceRefs: [source] }], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [event, nestedEvent] }
-      const key = JSON.stringify(["case", "case-inc", event.id])
-      const seed = await first.state.transaction(new Request("https://example.test", { headers: { authorization: "alice" } }), { namespace: "cases", expectedStorageVersion: 0, additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: 0 }], idempotencyKey: "seed", commandDigest: digestSfValue(eventRef), targetRef: "seed", targetIncarnation: "seed" }, async (state) => { state.cases.case = decision; state.outbox[key] = { eventRef, writerPrincipalRef: "alice", accessRevision: "1", createdAt: time, attempts: 0, state: "pending" }; return { commit: true, value: null } })
+      const key = JSON.stringify(["case", "case-inc", nestedEvent.id])
+      const seed = await first.state.transaction(new Request("https://example.test", { headers: { authorization: "alice" } }), { namespace: "cases", expectedStorageVersion: 0, additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: 0 }], idempotencyKey: "seed", commandDigest: digestSfValue(nestedRef), targetRef: "seed", targetIncarnation: "seed" }, async (state) => { state.cases.case = decision; state.outbox[key] = { eventRef: nestedRef, writerPrincipalRef: "alice", accessRevision: "1", createdAt: time, attempts: 0, state: "pending" }; return { commit: true, value: null } })
       expect(seed.status).toBe("ok")
       expect((await first.cases.read({ caseRef: encodeCaseRef({ id: "case", incarnation: "case-inc" }) }, binding("alice"))).status).toBe("ok")
       expect((await first.eventAccess(nestedRef, binding("alice"))).state).toBe("fresh")
@@ -98,8 +98,21 @@ test("protected Atlas original binds cross-principal continuity after store reop
       session.evidence = false
       expect((await first.eventAccess(eventRef, binding("alice"))).state).toBe("unavailable")
       session.evidence = true
-      expect((await first.atlas.emitFromLedger(eventRef, binding("alice"))).status).toBe("committed")
+      const committed = await first.atlas.emitFromLedger(nestedRef, binding("alice"))
+      expect(committed.status).toBe("committed")
+      const replayed = await first.atlas.emitFromLedger(nestedRef, binding("alice"))
+      expect(replayed.status).toBe("already-committed")
+      expect(replayed.eventId).toBe(committed.eventId)
+      expect(replayed.recordDigest).toBe(committed.recordDigest)
       await store.dispose()
+      const restarted = await Effect.runPromise(AppProcess.Service.use((process) => process.run(ChildProcess.make(Bun.argv[0]!, [path.join(import.meta.dir, "atlas-restart-reader.ts"), directory, spec.command, version], { extendEnv: true, stdin: "ignore" }))).pipe(Effect.provide(LayerNode.compile(AppProcess.node))))
+      expect(restarted.exitCode).toBe(0)
+      const line = restarted.stdout.toString("utf8").split("\n").find((value) => value.startsWith("SF_ATLAS_RESTART_PROBE:"))
+      expect(line).toBeDefined()
+      if (!line) throw new Error(`Restart probe did not return a receipt: ${restarted.stderr.toString("utf8")}`)
+      const receipt = JSON.parse(line.slice("SF_ATLAS_RESTART_PROBE:".length))
+      expect(receipt.pid).not.toBe(process.pid)
+      expect(receipt).toMatchObject({ authorized: "ok", matches: 1, outsider: "unavailable", revoked: "unavailable" })
       store = await openLocalStore(directory, { lockTimeoutMs: 500 })
       session.id = "bob"
       const reopened = await open(false)

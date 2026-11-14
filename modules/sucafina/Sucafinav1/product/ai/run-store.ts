@@ -1,5 +1,4 @@
-import { digestSfContribution, digestSfValue } from "../contracts/canonical.ts"
-import { decodeSfContributionOutput } from "../contracts/schema-admission.ts"
+import { digestSfValue } from "../contracts/canonical.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import type { ContributionEnvelope, SkillLoadReceipt } from "../contracts/resident-ai.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -7,24 +6,11 @@ import type { SfNativeRunRecord, SfProductStatePort, SfStateNamespace } from "..
 import type { Snapshot } from "../../runtime/contract.ts"
 import { alternativeProvenanceKey, verifyAlternativePublication } from "../decisions/alternative-provenance.ts"
 import type { AlternativeCapabilityProvenance } from "../decisions/alternative-provenance.ts"
+import { hasSfRunSkillReceipt, matchesSfRunOutput } from "./run-provenance.ts"
 
 /** Fence the host snapshot used for source validation, excluding the product state checked separately by CAS. */
 export function sfRunSourceFence(snapshot: Snapshot) {
   return digestSfValue({ data: Object.fromEntries(Object.entries(snapshot.data).filter(([key]) => key !== "__sfProductV1")), versions: snapshot.versions, sequences: snapshot.sequences, sfSources: snapshot.sfSources, sfBlobGenerations: snapshot.sfBlobGenerations })
-}
-
-function sameSkillLoadReceipt(receipt: SkillLoadReceipt, provenance: ContributionEnvelope["runProvenance"]) {
-  return provenance.runId === receipt.runId && provenance.nativeSessionId === receipt.nativeSessionId && provenance.profileId === receipt.profileId &&
-    provenance.profileVersion === receipt.profileVersion && provenance.profileDigest === receipt.profileDigest && provenance.skillId === receipt.skillId &&
-    provenance.skillVersion === receipt.skillVersion && provenance.sourceDigest === receipt.sourceDigest && provenance.instructionsDigest === receipt.instructionsDigest &&
-    provenance.loadedMessageId === receipt.loadedMessageId && provenance.loadedAt === receipt.loadedAt && provenance.manifestDigest === receipt.manifestDigest
-}
-
-function validRunOutput(record: SfNativeRunRecord, runRef: string, output: ContributionEnvelope) {
-  return record.native && output.state === "ready" && record.selection.profile.outputTypes.includes(output.kind) && decodeSfContributionOutput(output.kind, output.payload).ok &&
-    !!output.runProvenance.actualModel && output.id.length > 0 && output.runProvenance.runId === runRef && sameSkillLoadReceipt(record.native.skillReceipt, output.runProvenance) &&
-    output.runProvenance.contextFingerprint === record.contextFingerprint && output.caseRef.id === record.caseRef.id && output.caseRef.incarnation === record.caseRef.incarnation &&
-    output.caseRef.version === record.caseRef.version && output.accessRevision === record.accessRevision && digestSfContribution(output) === output.outputDigest
 }
 
 /** Host preflight must resolve current ACL, case, evidence and C10 semantics against this exact snapshot;
@@ -157,14 +143,15 @@ export function createSfRunStore(input: {
     preserveStale: async (runRef: string, reason: string, output: ContributionEnvelope, context: TrustedDomainContext) => {
       const prior = await readRecord(runRef, context)
       if (prior.status !== "ok") return prior
-      if (!prior.value.native || !["queued", "running"].includes(prior.value.state) || output.kind === "AlternativeDraft" || !validRunOutput(prior.value, runRef, output)) return { status: "conflict", reason: "invalid-stale-run-output" } as const
+      if (!prior.value.native || !["queued", "running"].includes(prior.value.state) || output.kind === "AlternativeDraft" || !matchesSfRunOutput(prior.value, output)) return { status: "conflict", reason: "invalid-stale-run-output" } as const
       return mutate({ ...prior.value, version: prior.value.version + 1, updatedAt: input.now(), state: "stale", reason, outputRef: output.id, native: prior.value.native }, prior.value.version, context, output)
     },
     attach: async (runRef: string, expectedVersion: number, sessionID: string, receipt: SkillLoadReceipt, context: TrustedDomainContext) => {
       const prior = await read(runRef, context)
       if (prior.status !== "ok") return prior
-      if (prior.value.version !== expectedVersion || prior.value.state !== "preparing" || receipt.nativeSessionId !== sessionID || receipt.runId !== runRef || receipt.skillId !== prior.value.skillId || receipt.manifestDigest !== prior.value.selection.manifestDigest || receipt.profileId !== prior.value.selection.profile.id || receipt.profileVersion !== prior.value.selection.profile.version || receipt.profileDigest !== prior.value.selection.profile.sourceDigest || !prior.value.selection.skills.some((skill) => skill.id === receipt.skillId && skill.version === receipt.skillVersion && skill.sourceDigest === receipt.sourceDigest && skill.instructionsDigest === receipt.instructionsDigest) || !receipt.loadedMessageId || !receipt.loadedAt) return { status: "conflict", reason: "invalid-native-receipt" } as const
-      return mutate({ ...prior.value, version: expectedVersion + 1, updatedAt: input.now(), state: "queued", native: { sessionID, skillReceipt: receipt } }, expectedVersion, context)
+      const next = { ...prior.value, version: expectedVersion + 1, updatedAt: input.now(), state: "queued" as const, native: { sessionID, skillReceipt: receipt } }
+      if (prior.value.version !== expectedVersion || prior.value.state !== "preparing" || !sessionID.trim() || !hasSfRunSkillReceipt(next)) return { status: "conflict", reason: "invalid-native-receipt" } as const
+      return mutate(next, expectedVersion, context)
     },
     transition: async (runRef: string, expectedVersion: number, state: "running" | "failed" | "cancelled" | "stale" | "unavailable" | "needs-input", reason: string | undefined, context: TrustedDomainContext) => {
       const prior = (state === "stale" || state === "cancelled") ? await readRecord(runRef, context) : await read(runRef, context)
@@ -176,7 +163,7 @@ export function createSfRunStore(input: {
       const prior = await read(runRef, context)
       if (prior.status !== "ok") return prior
       const record = prior.value
-      if (record.version !== expectedVersion || record.state !== "running" || !validRunOutput(record, runRef, output)) return { status: "conflict", reason: "invalid-run-output" } as const
+      if (record.version !== expectedVersion || record.state !== "running" || !matchesSfRunOutput(record, output)) return { status: "conflict", reason: "invalid-run-output" } as const
       const next = { ...record, version: expectedVersion + 1, updatedAt: input.now(), state: "ready" as const, outputRef: output.id }
       if ((String(output.kind) === "AlternativeDraft") !== !!alternative || (alternative && !verifyAlternativePublication(alternative, next, output))) return { status: "conflict", reason: "alternative-provenance-unverified" } as const
       return mutate(next, expectedVersion, context, output, alternative)

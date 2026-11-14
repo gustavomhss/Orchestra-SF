@@ -5,6 +5,7 @@ import type { PortResult } from "../contracts/ports.ts"
 import type { SfNativeRunRecord, SfProductStatePort } from "../contracts/state.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { createSfRunStore } from "./run-store.ts"
+import { matchesSfRunOutput } from "./run-provenance.ts"
 
 /** Read an existing contribution for a currently authorized consumer; never starts another run. */
 export function createSfContributionReader(input: {
@@ -27,8 +28,7 @@ export function createSfContributionReader(input: {
     if (!decoded.ok || decoded.value.id !== request.outputRef || decoded.value.state !== "ready" || digestSfValue(decoded.value.caseRef) !== digestSfValue(request.caseRef) || decoded.value.accessRevision !== context.binding.accessRevision || digestSfContribution(decoded.value) !== decoded.value.outputDigest) return { status: "unavailable", reason: "contribution-unavailable" }
     const run = await input.runs.read(decoded.value.runProvenance.runId, context)
     if (run.status !== "ok") return run
-    const native = run.value.native
-    if (run.value.state !== "ready" || run.value.outputRef !== decoded.value.id || !native || digestSfValue(run.value.caseRef) !== digestSfValue(request.caseRef) || native.sessionID !== decoded.value.runProvenance.nativeSessionId || digestSfValue(native.skillReceipt) !== digestSfValue(Object.fromEntries(Object.keys(native.skillReceipt).map((key) => [key, decoded.value.runProvenance[key as keyof typeof native.skillReceipt]])))) return { status: "denied", reason: "contribution-provenance-mismatch" }
+    if (run.value.state !== "ready" || run.value.outputRef !== decoded.value.id || !matchesSfRunOutput(run.value, decoded.value)) return { status: "denied", reason: "contribution-provenance-mismatch" }
     const verified = await input.verify(decoded.value, run.value, context)
     if (verified.status !== "ok") return verified
     const current = await read()
@@ -70,7 +70,10 @@ export function createSfHistoricalContributionReader(input: {
       if (found.status !== "ok" || !found.value) return undefined
       const decoded = decodeSfContributionEnvelope(found.value.output)
       const run = found.value.run
-      if (!decoded.ok || decoded.value.id !== request.outputRef || decoded.value.state !== "ready" || decoded.value.caseRef.id !== request.currentCase.id || decoded.value.caseRef.incarnation !== request.currentCase.incarnation || decoded.value.caseRef.version >= request.currentCase.version || digestSfContribution(decoded.value) !== decoded.value.outputDigest || !run || run.runRef !== decoded.value.runProvenance.runId || run.principalRef !== context.binding.principalRef || (run.state !== "ready" && run.state !== "stale") || run.outputRef !== decoded.value.id || decoded.value.accessRevision !== run.accessRevision || decoded.value.runProvenance.contextFingerprint !== run.contextFingerprint || decoded.value.runProvenance.actualModel !== `${run.model.providerID}/${run.model.id}` || digestSfValue(run.caseRef) !== digestSfValue(decoded.value.caseRef) || !run.native || run.native.sessionID !== decoded.value.runProvenance.nativeSessionId || digestSfValue(run.native.skillReceipt) !== digestSfValue(Object.fromEntries(Object.keys(run.native.skillReceipt).map((key) => [key, decoded.value.runProvenance[key as keyof typeof run.native.skillReceipt]])))) return undefined
+      if (!decoded.ok || decoded.value.id !== request.outputRef || decoded.value.state !== "ready" || decoded.value.caseRef.id !== request.currentCase.id ||
+        decoded.value.caseRef.incarnation !== request.currentCase.incarnation || decoded.value.caseRef.version > request.currentCase.version || !run ||
+        run.principalRef !== context.binding.principalRef || (run.state !== "ready" && run.state !== "stale") || run.outputRef !== decoded.value.id ||
+        (decoded.value.caseRef.version === request.currentCase.version && run.state !== "stale") || !matchesSfRunOutput(run, decoded.value)) return undefined
       return { case: cases.value, output: decoded.value, run }
     }
     const first = await read()

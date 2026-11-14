@@ -28,7 +28,7 @@ export function createSfDossierServices(input: {
     if (request.value.version !== source.value.evidence.target.version || digestSfValue(request.value.context) !== digestSfValue(source.value.context) ||
       !request.value.values.length || request.value.values.some((value) => !value.sourceRefs.length || value.sourceRefs.some((ref) => digestSfValue(ref) !== digestSfValue(source.value.evidence))))
       return { status: "stale", reason: "request-projection-changed" }
-    return { status: "ok", value: { request: request.value, comparison: source.value.comparison,
+    return { status: "ok", value: { request: request.value, comparison: source.value.comparison, sourcing: source.value,
       limitations: source.value.comparison ? [] : ["commercial-comparison-unavailable"] } }
   }
   const prepare = async (requestRef: string, call: TrustedDomainContext) => prepareSourcingDossier({ requestRef, context: call,
@@ -41,10 +41,10 @@ export function createSfDossierServices(input: {
     revalidateProcurement: async (material, context) => {
       const current = await prepareProcurement(requestRef, context)
       if (current.status !== "ok") return false
-      // Age in days is clock-derived; the complete immutable source refs, context and comparison fence the material inputs.
+      // Age in days is clock-derived; source refs, context, comparison and proposal facts fence the material inputs.
       const identity = (value: typeof material) => ({ version: value.request.version, engineVersion: value.request.engineVersion,
         context: value.request.context, sources: value.request.values.map((entry) => ({ id: entry.id, refs: entry.sourceRefs })),
-        comparison: value.comparison, limitations: value.limitations })
+        comparison: value.comparison, sourcing: value.sourcing, limitations: value.limitations })
       return digestSfValue(identity(current.value)) === digestSfValue(identity(material)) && await input.authority.host.revalidate(context)
     },
   })
