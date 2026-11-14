@@ -63,6 +63,7 @@ test("C12 composed reconciliation refuses a material choice replacement after th
       materialChoicePreserved: digestSfValue(observed.decision.choices.find((choice) => choice.id === originalChoice.id)) === digestSfValue(materialChoice),
     }))
     expect(first.response.status).toBe(409)
+    expect(first.body).toEqual({ status: "stale", reason: "prepared-choice-changed" })
     expect(observed.decision.version).toBe(before.version + 1)
     expect(observed.decision.receipts).toEqual([])
     expect(observed.decision.preparedChanges).toEqual(before.preparedChanges)
@@ -73,3 +74,4 @@ test("C12 composed reconciliation refuses a material choice replacement after th
     expect(fixture.receiptCommits).toHaveLength(1)
   } finally { await fixture.dispose() }
 }, 90_000)
+

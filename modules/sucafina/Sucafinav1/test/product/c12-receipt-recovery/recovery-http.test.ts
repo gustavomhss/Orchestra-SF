@@ -4,7 +4,7 @@ import { object, rows } from "../../../runtime/contract.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { PreparedChange } from "../../../product/contracts/decisions.ts"
 import { createC12Fixture, prepareC12Change, readReviewDigest, changedReviewDigest } from "./fixture.ts"
-import { interleaveC12CaseEdit, observeC12 } from "./consumer.ts"
+import { interruptC12AfterCommit, observeC12 } from "./consumer.ts"
 import { appendPendingPlannerChange } from "./partial.ts"
 
 type Fixture = Awaited<ReturnType<typeof createC12Fixture>>
@@ -80,8 +80,10 @@ test("C12 recovery rejects altered digest payload principal case and target iden
     const reviewed = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
     expect(reviewed.response.status).toBe(200)
     const application = { ...prepared.request, reviewDigest: readReviewDigest(reviewed.body) }
-    interleaveC12CaseEdit(fixture)
-    expect((await fixture.http("decision-apply", application, "alice", "c12-original")).response.status).toBe(409)
+    interruptC12AfterCommit(fixture)
+    const interrupted = await fixture.http("decision-apply", application, "alice", "c12-original")
+    expect(interrupted.response.status).toBe(503)
+    expect(interrupted.body).toEqual({ status: "unavailable", reason: "domain-application-unavailable" })
     const committed = await observeC12(fixture)
     expect(committed.receipts).toHaveLength(1)
     const before = await fixture.durable()

@@ -31,6 +31,7 @@ export function createPreparedExecution(input: {
     const value = current.value
     if (!value || value.incarnation !== request.caseRef.incarnation || !value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(value, context)) return { status: "denied", reason: "case-access-unavailable" }
     const change = value.preparedChanges.find((item) => item.id === request.changeId && item.choiceId === request.choiceId)
+    const choiceDigest = digestSfValue(value.choices.filter((choice) => choice.id === request.choiceId))
     if (!change || !value.choices.some((choice) => choice.id === request.choiceId)) return { status: "unavailable", reason: "prepared-change-unavailable" }
     if (value.version < request.caseRef.version || mode === "apply" && value.version !== request.caseRef.version && !change.receipt) return { status: "stale", reason: "case-changed" }
     if (change.state !== "planned" && !change.receipt) return { status: "conflict", reason: "change-not-applicable" }
@@ -88,6 +89,9 @@ export function createPreparedExecution(input: {
     // Domain application may fence the cases namespace in its atomic receipt write.
     // Refresh that storage CAS, while requiring the selected case itself to be unchanged.
     const reconciliation = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[value.id] : undefined).catch(() => undefined)
+    // Fresh storage may preserve unrelated edits, but cannot bind the original
+    // receipt to a materially replaced or duplicated historical choice.
+    if (reconciliation?.status === "ok" && reconciliation.value && digestSfValue(reconciliation.value.choices.filter((choice) => choice.id === request.choiceId)) !== choiceDigest) return { status: "stale", reason: "prepared-choice-changed" }
     if (!reconciliation || reconciliation.status !== "ok") return { status: "unavailable", reason: "case-reconciliation-pending" }
     if (!reconciliation.value || digestSfValue(reconciliation.value) !== digestSfValue(value)) return { status: "stale", reason: "case-changed-after-application" }
     const authoritative = structuredClone(await callDomain(() => input.apply.readReceipt({ surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context)))
@@ -131,4 +135,5 @@ function failure(value: SfStateResult<unknown>): PortResult<never> {
   if ("reason" in value) return { status: value.status, reason: value.reason }
   return { status: "unavailable", reason: "case-reconciliation-pending" }
 }
+
 

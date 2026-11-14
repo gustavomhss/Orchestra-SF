@@ -3,7 +3,7 @@ import type { Page } from "@playwright/test"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { object, rows } from "../../../runtime/contract.ts"
 import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
-import { createC12Consumer, interleaveC12CaseEdit, observeC12 } from "./consumer.ts"
+import { createC12Consumer, interruptC12AfterCommit, observeC12 } from "./consumer.ts"
 import { readReviewDigest } from "./fixture.ts"
 
 /** Read the real response before the production script receives it and reloads. */
@@ -50,10 +50,11 @@ test("C12 UI recovers the original receipt after lost response concurrent edit r
     const proof = readReviewDigest(consumer.traffic.find((item) => item.mode === "decision-review")!.result)
     await confirm.check()
     const choiceBefore = structuredClone((await observeC12(consumer.current())).decision.choices)
-    interleaveC12CaseEdit(consumer.current())
+    interruptC12AfterCommit(consumer.current())
 
-    // The real request reaches HTTP, C08 and SQLite. Only its completed wire
-    // response is dropped; no receipt, status or domain response is fabricated.
+    // The real domain commits before its return path is interrupted, leaving a
+    // genuinely unlinked receipt. Drop the completed HTTP response as a second
+    // transport failure; no receipt, status or domain response is fabricated.
     const lost = Promise.withResolvers<number>()
     await page.route(/\/sf\/procurement\?sf=decision-apply$/, async (route) => {
       try {
@@ -66,13 +67,13 @@ test("C12 UI recovers the original receipt after lost response concurrent edit r
     const failed = page.waitForEvent("requestfailed", { predicate: (request) => new URL(request.url()).searchParams.get("sf") === "decision-apply" })
     await apply.click()
     await failed
-    expect(await lost.promise).toBe(409)
+    expect(await lost.promise).toBe(503)
     const retry = article.getByRole("button", { name: "Retry same application", exact: true })
     await retry.waitFor()
     await article.locator("[data-apply-change]:enabled").waitFor()
     const first = consumer.traffic.find((item) => item.mode === "decision-apply")!
     expect(JSON.parse(first.body)).toEqual({ ...consumer.prepared.request, reviewDigest: proof })
-    expect(first.result).toEqual({ status: "stale", reason: "case-changed-after-application" })
+    expect(first.result).toEqual({ status: "unavailable", reason: "domain-application-unavailable" })
     expect(first.key).toBeTruthy()
     const committed = await observeC12(consumer.current())
     expect(object(committed.domain.request.pr).estAmount).toBe(150)

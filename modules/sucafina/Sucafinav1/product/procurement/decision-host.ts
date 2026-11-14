@@ -27,7 +27,7 @@ type ApplicationAdmission = AdmittedApply | RecoverRequest
 type MutationHost = Parameters<typeof createDecisionMutations>[0]
 type BridgeInput = Parameters<typeof createProcurementC12Bridge>[0]
 type ApplicationScope = { context: TrustedDomainContext; bindingDigest: string; request: ApplyRequest; admission: ApplicationAdmission; mode: "apply" | "recover"; decision: DecisionCase; change: PreparedChange; actor: Actor; roleMapDigest: string; physicalIncarnation: string; environment: Environment }
-type ActiveApply = ApplicationScope & { admitted: AdmittedApply }
+type ActiveApply = ApplicationScope & { admitted: AdmittedApply; choiceDigest: string }
 type ApplicationIntent = { schema: "sf-c12-application-intent-v1"; installationId: string; projectId: string; principalRef: string; admitted: AdmittedApply; commandId: string; changeDigest: string; choiceDigest: string; physicalIncarnation: string }
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
 type ArchivedSource = { schema: "sf-procurement-evidence-v1"; evidence: RecordEvidence; projection: DomainProjection; scope: SfSourceScope; physicalIncarnation: string; projectionDigest: string; proofDigest: string }
@@ -48,7 +48,20 @@ export function createProcurementDecisionHost(input: BridgeInput & {
   const bridge = createProcurementC12Bridge(input)
   const host = input.host
   const state = input.authority.state
-  const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
+  const active = new WeakMap<Request, ActiveApply>()
+  const current = (context: TrustedDomainContext) => {
+    const source = host.requestFor(context)
+    const held = source ? active.get(source) : undefined
+    return held?.context === context && held.bindingDigest === digestSfValue(context.binding) && source && !source.signal.aborted ? held : undefined
+  }
+  const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => {
+    const source = host.requestFor(context)
+    const held = source ? active.get(source) : undefined
+    // Keep the canonical admission's choice bound across receipt lookup and the
+    // executor's later capture, without opening a nested persistence read.
+    if (held && (current(context) !== held || value.id !== held.decision.id || value.incarnation !== held.decision.incarnation || digestSfValue(value.choices.filter((choice) => choice.id === held.request.choiceId)) !== held.choiceDigest)) return false
+    return value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
+  }
   const intent = createDecisionIntentFences({ human: input.authority.human, ui: input.authority.ui, readSourceFences: input.readSourceFences, lockedSourceFences: input.lockedSourceFences })
   const archiveKey = (ref: RecordEvidence) => `sf:procurement-evidence:${ref.refDigest}`
   const captureSource = async (ref: RecordEvidence, context: TrustedDomainContext) => {
@@ -143,12 +156,6 @@ export function createProcurementDecisionHost(input: BridgeInput & {
     reviews.set(reviewKey(request, context), { changeDigest: digestSfValue(before.value.change), reviewDigest: review.value.reviewDigest, expiresAt })
     if (reviews.size > 512) reviews.delete(reviews.keys().next().value!)
     return review
-  }
-  const active = new WeakMap<Request, ActiveApply>()
-  const current = (context: TrustedDomainContext) => {
-    const source = host.requestFor(context)
-    const held = source ? active.get(source) : undefined
-    return held?.context === context && held.bindingDigest === digestSfValue(context.binding) && source && !source.signal.aborted ? held : undefined
   }
   // Only the active human intent supplies the producer proof to WP11. Initial
   // application also checks the observed review; receipt replay checks its durable binding.
@@ -259,7 +266,7 @@ export function createProcurementDecisionHost(input: BridgeInput & {
     const admitted = recorded.value.intent?.admitted ?? ("reviewDigest" in admission ? admission : undefined)
     if (!admitted) return { status: "unavailable", reason: "original-intent-unavailable" }
     const request: ApplyRequest = { caseRef: admitted.caseRef, changeId: admitted.changeId, choiceId: admitted.choiceId }
-    const held: ActiveApply = { ...scope, request, admitted }
+    const held: ActiveApply = { ...scope, request, admitted, choiceDigest: digestSfValue(scope.decision.choices.filter((choice) => choice.id === request.choiceId)) }
     const reviewed = reviews.get(reviewKey(request, context))
     active.set(source, held)
     try {
@@ -446,4 +453,5 @@ function readArchive(value: unknown): ArchivedSource | undefined {
   const material = { schema: "sf-procurement-evidence-v1" as const, evidence, projection: projection.value, scope: { principalRef: scope.principalRef, accessRevision: scope.accessRevision, policyVersion: scope.policyVersion, recordType: scope.recordType, recordId: scope.recordId, selector: scope.selector }, physicalIncarnation: stored.physicalIncarnation, projectionDigest: digestSfValue(projection.value) }
   return stored.proofDigest === digestSfValue(material) ? { ...material, proofDigest: stored.proofDigest } : undefined
 }
+
 
