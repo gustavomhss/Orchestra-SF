@@ -1,0 +1,15 @@
+{
+  "schema": "review-first-agenda-accessible-controls-fix/v1",
+  "failed_W": "97dd4d7a7097cad88170469379e7f190eb147c15",
+  "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649823660",
+  "changed_file": "modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts",
+  "cause": "The native label wrapped the select, so Playwright's exact label text included every nested option. This was the first Domain interaction; changing Period end did not revoke or remove the picker.",
+  "correction": "Assign the explicit visible label as aria-label on each date/domain control. Keep exact getByLabel assertions and all timeouts unchanged.",
+  "primary_sources": {
+    "playwright_version": "v1.59.1",
+    "selectorUtils_blob": "6466e1b7b02a3cf2be2973e9a96013d9a571c77b",
+    "injectedScript_blob": "a0882d2b0561016936d4f837896b0ed7563b6588",
+    "source": "https://github.com/microsoft/playwright/tree/v1.59.1/packages/injected/src"
+  },
+  "verification": "Static source/DOM analysis; runtime verification requires the new focused Actions snapshot."
+}

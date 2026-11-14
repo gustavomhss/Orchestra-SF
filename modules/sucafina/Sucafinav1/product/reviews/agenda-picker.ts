@@ -56,6 +56,7 @@ export function createReviewAgendaPicker(input: {
   }
   root.append(heading)
   for (const [text, control] of [["Period start", start], ["Period end", end], ["Domain", domain]] as const) {
+    control.setAttribute("aria-label", text)
     const label = document.createElement("label"); label.append(document.createTextNode(text), control); root.append(label)
   }
   const search = document.createElement("button"), status = document.createElement("p"), results = document.createElement("ul")
