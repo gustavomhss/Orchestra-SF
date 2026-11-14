@@ -47,8 +47,10 @@ export function createSfRunStore(input: {
   async function read(runRef: string, context: TrustedDomainContext): Promise<PortResult<SfNativeRunRecord>> {
     const found = await readRecord(runRef, context)
     if (found.status !== "ok") return found
+    const recordDigest = digestSfValue(found.value)
     const checked = await input.preflight(found.value, context).catch(() => ({ status: "unavailable", reason: "run-preflight-unavailable" } as const))
     if (checked.status !== "ok") return checked
+    if (digestSfValue(found.value) !== recordDigest) return { status: "denied", reason: "run-input-changed-during-preflight" }
     if (!await hasCurrentAuthority(context)) return { status: "denied", reason: "invalid-authority" }
     return { status: "ok", value: found.value }
   }
@@ -57,6 +59,8 @@ export function createSfRunStore(input: {
     const request = input.requestFor(context)
     if (!request || !await hasCurrentAuthority(context)) return { status: "denied", reason: "invalid-authority" }
     if (!record.runRef || !record.principalRef || !Number.isSafeInteger(record.version) || record.version !== (expectedVersion === null ? 1 : expectedVersion + 1) || record.principalRef !== context.binding.principalRef || record.policyVersion !== context.binding.policyVersion || record.accessRevision !== context.binding.accessRevision || (context.kind === "native" && (context.binding.runId !== record.runRef || context.binding.caseId !== record.caseRef.id || context.binding.caseIncarnation !== record.caseRef.incarnation || (record.native && context.binding.nativeSessionId !== record.native.sessionID)))) return { status: "denied", reason: "invalid-run-identity" }
+    const mutation = alternative ? { record, output, alternative } : { record, output }
+    const commandDigest = digestSfValue(mutation)
     const terminal = record.state === "stale" || record.state === "cancelled"
     if (terminal && alternative) return { status: "unavailable", reason: "alternative-capture-unavailable" }
     if (!terminal && invalidRequiredNamespaces) return { status: "unavailable", reason: "invalid-run-source-namespaces" }
@@ -80,6 +84,7 @@ export function createSfRunStore(input: {
     // Pin the C08 versions before the preflight reads other runs and their outputs.
     const checked = terminal ? undefined : await input.preflight(record, context, output).catch(() => ({ status: "unavailable", reason: "run-preflight-unavailable" } as const))
     if (checked && checked.status !== "ok") return checked
+    if (digestSfValue(mutation) !== commandDigest) return { status: "denied", reason: "run-input-changed-during-preflight" }
     if (checked?.status === "ok" && !/^[a-f0-9]{64}$/.test(checked.value.sourceFence)) return { status: "unavailable", reason: "source-fence-unavailable" }
     if (!await hasCurrentAuthority(context)) return { status: "denied", reason: "invalid-authority" }
     const saved = await input.state.transaction<PortResult<SfNativeRunRecord> | undefined>(request, {
@@ -87,9 +92,10 @@ export function createSfRunStore(input: {
       sourceFence: "all",
       checkNamespaces: [{ namespace: "cases", expectedStorageVersion: cases.storageVersion }, ...required.slice(0, guardedNamespaces.length).flatMap((result, index) => result.status === "ok" ? [{ namespace: guardedNamespaces[index]!, expectedStorageVersion: result.storageVersion }] : [])],
       ...(preferences?.status === "ok" ? { additionalNamespaces: [{ namespace: "preferences" as const, expectedStorageVersion: preferences.storageVersion }] } : {}),
-      idempotencyKey: `run:${record.runRef}:${record.version}`, commandDigest: digestSfValue(alternative ? { record, output, alternative } : { record, output }),
+      idempotencyKey: `run:${record.runRef}:${record.version}`, commandDigest,
       targetRef: `case:${encodeURIComponent(record.caseRef.id)}:${encodeURIComponent(record.caseRef.incarnation)}`, targetIncarnation: record.caseRef.incarnation,
     }, async (state, authority, snapshot) => {
+      if (digestSfValue(mutation) !== commandDigest) return { commit: false, value: { status: "denied", reason: "run-input-changed-before-commit" } as const }
       const previous = state.nativeRuns?.[record.runRef]
       const currentCase = state.cases[record.caseRef.id]
       if (authority.principalRef !== record.principalRef || authority.policyVersion !== record.policyVersion || authority.accessRevision !== record.accessRevision ||
@@ -98,6 +104,7 @@ export function createSfRunStore(input: {
       const before = structuredClone(snapshot)
       const current = await Promise.resolve().then(() => input.revalidateForCommit(record, context, snapshot, output, alternative)).catch(() => ({ status: "unavailable", reason: "commit-revalidation-unavailable" } as const))
       if (!Bun.deepEquals(snapshot, before)) return { commit: false, value: { status: "denied", reason: "commit-revalidation-mutated-snapshot" } as const }
+      if (digestSfValue(mutation) !== commandDigest) return { commit: false, value: { status: "denied", reason: "commit-revalidation-mutated-input" } as const }
       if (current.status !== "ok") return { commit: false, value: { status: current.status, reason: current.reason } as const }
       state.nativeRuns ??= {}
       state.nativeRuns[record.runRef] = record
@@ -123,6 +130,7 @@ export function createSfRunStore(input: {
     }
     const checkedAgain = terminal ? undefined : await input.preflight(current.value, context, output).catch(() => ({ status: "unavailable", reason: "run-preflight-unavailable" } as const))
     if (checkedAgain && checkedAgain.status !== "ok") return checkedAgain
+    if (digestSfValue(mutation) !== commandDigest || digestSfValue(current.value) !== digestSfValue(record)) return { status: "denied", reason: "run-input-changed-during-preflight" }
     if (!await hasCurrentAuthority(context)) return { status: "denied", reason: "invalid-authority" }
     return { status: "ok", value: current.value }
   }

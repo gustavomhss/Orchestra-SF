@@ -12,7 +12,7 @@ import { sfRunFixture } from "./run-fixture.ts"
 import { digestSfContribution, digestSfValue } from "../../../product/contracts/canonical.ts"
 
 // Real product-state transactions with an injected host; this does not prove a native host or ACL.
-async function fixture(options?: { mutateSnapshot?: boolean; concurrentPreflight?: boolean }) {
+async function fixture(options?: { mutateSnapshot?: boolean; concurrentPreflight?: boolean; mutatePreflightRun?: boolean; mutateCommitOutput?: boolean; onReadyPreflight?: () => Promise<void> }) {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-run-store-"))
   const persistence = await openLocalStore(directory)
   const request = new Request("https://example.test/")
@@ -24,7 +24,9 @@ async function fixture(options?: { mutateSnapshot?: boolean; concurrentPreflight
     return { commit: true, value: true }
   })
   const fired = { value: false }
-  const store = createSfRunStore({ state, requestFor: () => request, revalidate: async () => true, preflight: async () => {
+  const store = createSfRunStore({ state, requestFor: () => request, revalidate: async () => true, preflight: async (record) => {
+    if (options?.mutatePreflightRun) record.objective = "changed-by-verifier"
+    if (record.state === "ready") await options?.onReadyPreflight?.()
     if (options?.concurrentPreflight && !fired.value) {
       fired.value = true
       const current = await state.read(request, "contributions", () => null)
@@ -36,7 +38,11 @@ async function fixture(options?: { mutateSnapshot?: boolean; concurrentPreflight
     }
     const sourceFence = await persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: sfRunSourceFence(snapshot) }))
     return { status: "ok", value: { sourceFence } }
-  }, revalidateForCommit: async (_record, _context, snapshot) => { if (options?.mutateSnapshot) snapshot.data.injected = true; return { status: "ok", value: true } }, now: () => "2026-11-13T00:00:00Z" })
+  }, revalidateForCommit: async (_record, _context, snapshot, output) => {
+    if (options?.mutateSnapshot) snapshot.data.injected = true
+    if (options?.mutateCommitOutput && output) output.outputDigest = "0".repeat(64)
+    return { status: "ok", value: true }
+  }, now: () => "2026-11-13T00:00:00Z" })
   const record = { schema: "sf-native-run-v1", runRef: "run", version: 1, intentDigest: "c".repeat(64), requestDigest: "a".repeat(64), skillInputDigest: "b".repeat(64), principalRef: "user", accessRevision: "access", policyVersion: "policy", caseRef: { id: "case", incarnation: "inc", version: 1 }, selection: { profile: { id: "sf_finance", version: "1", outputTypes: [], sourceDigest: "d".repeat(64) }, skills: [{ id: "skill", version: "1", sourceDigest: "e".repeat(64), instructionsDigest: "f".repeat(64) }], operationIds: [], manifestDigest: "c".repeat(64) }, model: { providerID: "openai", id: "model" }, skillId: "skill", objective: "review", contextFingerprint: "context", createdAt: "2026-11-13T00:00:00Z", updatedAt: "2026-11-13T00:00:00Z", state: "preparing" } as unknown as SfNativeRunRecord
   return { persistence, state, store, context, record, [Symbol.asyncDispose]: async () => {
     await persistence.dispose()
@@ -130,5 +136,52 @@ test("stale output is preserved with its original provenance and cannot be publi
   expect(await f.store.preserveStale("run", "case-changed", original.output, f.context)).toMatchObject({ status: "ok", value: { state: "stale", version: 4, outputRef: "output", caseRef: { version: 1 } } })
   const stored = await f.state.read(new Request("https://example.test/"), "contributions", (state) => state.contributions.output)
   expect(stored.status === "ok" && digestSfValue(stored.value)).toBe(originalDigest)
+  expect(await f.store.publish("run", 4, original.output, f.context)).toEqual({ status: "conflict", reason: "invalid-run-output" })
+})
+
+test("read-only preflight cannot rewrite the admitted run", async () => {
+  const options = { mutatePreflightRun: false }
+  await using f = await fixture(options)
+  expect((await f.store.create(f.record, f.context)).status).toBe("ok")
+  options.mutatePreflightRun = true
+  expect(await f.store.read("run", f.context)).toEqual({ status: "denied", reason: "run-input-changed-during-preflight" })
+  const stored = await f.state.read(new Request("https://example.test/"), "contributions", (state) => state.nativeRuns?.run)
+  expect(stored).toMatchObject({ status: "ok", value: { objective: "review", version: 1 } })
+  const unpersisted = { ...f.record, runRef: "unpersisted" }
+  expect(await f.store.create(unpersisted, f.context)).toEqual({ status: "denied", reason: "run-input-changed-during-preflight" })
+  expect(await f.state.read(new Request("https://example.test/"), "contributions", (state) => state.nativeRuns?.unpersisted)).toMatchObject({ status: "ok", value: undefined })
+})
+
+test("a commit verifier cannot replace an already validated contribution", async () => {
+  await using f = await fixture({ mutateCommitOutput: true })
+  const original = sfRunFixture()
+  const { native: _native, outputRef: _outputRef, ...base } = original.run
+  expect((await f.store.create({ ...base, principalRef: "user", state: "preparing", version: 1 }, f.context)).status).toBe("ok")
+  expect((await f.store.attach("run", 1, "session", original.receipt, f.context)).status).toBe("ok")
+  expect((await f.store.transition("run", 2, "running", undefined, f.context)).status).toBe("ok")
+  expect(await f.store.publish("run", 3, original.output, f.context)).toEqual({ status: "denied", reason: "commit-revalidation-mutated-input" })
+  const stored = await f.state.read(new Request("https://example.test/"), "contributions", (state) => ({ run: state.nativeRuns?.run, output: state.contributions.output }))
+  expect(stored).toMatchObject({ status: "ok", value: { run: { state: "running", version: 3 }, output: undefined } })
+})
+
+test("durable cancellation wins a publication that is still validating its source", async () => {
+  const entered = Promise.withResolvers<void>()
+  const resume = Promise.withResolvers<void>()
+  await using f = await fixture({ onReadyPreflight: async () => { entered.resolve(); await resume.promise } })
+  const original = sfRunFixture()
+  const { native: _native, outputRef: _outputRef, ...base } = original.run
+  expect((await f.store.create({ ...base, principalRef: "user", state: "preparing", version: 1 }, f.context)).status).toBe("ok")
+  expect((await f.store.attach("run", 1, "session", original.receipt, f.context)).status).toBe("ok")
+  expect((await f.store.transition("run", 2, "running", undefined, f.context)).status).toBe("ok")
+  const publication = f.store.publish("run", 3, original.output, f.context)
+  await Promise.race([entered.promise, publication.then(() => { throw new Error("publication did not reach the source preflight") })])
+  try {
+    expect(await f.store.transition("run", 3, "cancelled", "human-cancelled", f.context)).toMatchObject({ status: "ok", value: { state: "cancelled", version: 4 } })
+  } finally {
+    resume.resolve()
+  }
+  expect(await publication).toEqual({ status: "conflict", reason: "product-state-changed" })
+  const stored = await f.state.read(new Request("https://example.test/"), "contributions", (state) => ({ run: state.nativeRuns?.run, output: state.contributions.output }))
+  expect(stored).toMatchObject({ status: "ok", value: { run: { state: "cancelled", version: 4, reason: "human-cancelled" }, output: undefined } })
   expect(await f.store.publish("run", 4, original.output, f.context)).toEqual({ status: "conflict", reason: "invalid-run-output" })
 })

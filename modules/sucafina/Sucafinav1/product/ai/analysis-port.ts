@@ -236,7 +236,8 @@ export async function runSfAnalysis(input: {
       return saved.status === "ok" ? { status: "failed", reason: outcome.reason } : saved
     }
     if (outcome.state === "needs-input" || outcome.state === "unavailable") {
-      const saved = await input.host.withRunContext(admission.runRef, (context) => input.host.settle(admission.runRef, outcome.state, outcome.reason, context))
+      const state = outcome.state
+      const saved = await input.host.withRunContext(admission.runRef, (context) => input.host.settle(admission.runRef, state, outcome.reason, context))
       return saved.status === "ok" ? { status: outcome.state, reason: outcome.reason } : saved
     }
     if (outcome.state === "stale") {
@@ -295,7 +296,7 @@ export async function cancelSfAnalysis(input: {
 
 /** Recover persisted progress and a ready result after restart without reviving an expired ticket or grant. */
 export async function readSfAnalysisRun(input: { host: SfAnalysisHost; runRef: string }) {
-  return input.host.withRunContext(input.runRef, async (context) => {
+  return input.host.withRunContext<{ run: SfAnalysisRunProgress; output?: Extract<ContributionEnvelope, { state: "ready" }> }>(input.runRef, async (context) => {
     const read = await input.host.readRun(input.runRef, context)
     if (read.status !== "ok") return read
     const run = read.value
@@ -306,7 +307,7 @@ export async function readSfAnalysisRun(input: { host: SfAnalysisHost; runRef: s
     if (!run.outputRef || !run.native) return { status: "unavailable", reason: "ready-output-unavailable" } as const
     const output = await input.host.analysis.read(run.runRef, context)
     if (output.status !== "ok") return output
-    if (output.value.id !== run.outputRef || !matchesSfRunOutput(run, output.value)) return { status: "denied", reason: "run-output-provenance-mismatch" } as const
+    if (output.value.state !== "ready" || output.value.id !== run.outputRef || !matchesSfRunOutput(run, output.value)) return { status: "denied", reason: "run-output-provenance-mismatch" } as const
     const authorized = await input.host.revalidate(context, { runRef: run.runRef, caseRef: run.caseRef, contextFingerprint: run.contextFingerprint, manifestDigest: run.selection.manifestDigest,
       accessRevision: run.accessRevision, outputKind: output.value.kind, evidenceRefs: output.value.evidenceRefs, output: output.value, skillReceipts: [run.native.skillReceipt], reviewTarget: run.reviewTarget })
     if (authorized.status !== "ok") return authorized
@@ -342,3 +343,4 @@ export async function readSfAnalysisRoutine(input: {
 }) {
   return readDecisionRoutine({ admissionRef: input.admissionRef, runRef: input.runRef, caseRef: input.caseRef, context: input.binding, host: input.decisionRoutine })
 }
+

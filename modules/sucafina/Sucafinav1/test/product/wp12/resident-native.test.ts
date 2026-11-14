@@ -1,27 +1,18 @@
 import { expect, test } from "bun:test"
 import path from "node:path"
 import { AgentV2 } from "@orchestra/core/agent"
-import { AppNodeBuilder } from "@orchestra/core/effect/app-node-builder"
-import { LayerNode } from "@orchestra/core/effect/layer-node"
 import { Location } from "@orchestra/core/location"
 import { LocationServiceMap } from "@orchestra/core/location-service-map"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { SessionV2 } from "@orchestra/core/session"
-import { SessionExecution } from "@orchestra/core/session/execution"
-import { SessionExecutionLocal } from "@orchestra/core/session/execution/local"
 import { SkillV2 } from "@orchestra/core/skill"
-import { SkillDiscovery } from "@orchestra/core/skill/discovery"
-import { Effect, Layer } from "effect"
+import { Effect } from "effect"
 import { createResidentAiBundle } from "../../../product/ai/resident.ts"
 import { registerSfResidentAgents, validSfSelection } from "../../../product/host-binding/resident-agents.ts"
 import { loadSfSkill } from "../../../product/host-binding/skill-loader.ts"
+import { residentNativeLayer } from "./resident-native-fixture.ts"
 
 const root = path.resolve(import.meta.dir, "../../../product/ai")
-const discovery = Layer.succeed(SkillDiscovery.Service, SkillDiscovery.Service.of({ pull: () => Effect.succeed([]) }))
-const layer = AppNodeBuilder.build(LayerNode.group([SessionV2.node, LocationServiceMap.node]), [
-  [SessionExecution.node, SessionExecutionLocal.node],
-  [SkillDiscovery.node, discovery],
-])
 
 // This exercises real AgentV2 registration and SessionV2.skill loading. No inference,
 // domain operation, persisted contribution or consumer witness is implied by a load.
@@ -44,6 +35,14 @@ test("five profiles register and all eighteen distributed skills load into disti
       const agents = yield* AgentV2.Service
       const skills = yield* SkillV2.Service
       const capability = yield* registerSfResidentAgents({ agents, skills, selected: bundle.selected, source: bundle.source })
+      yield* Effect.forEach(bundle.selected, (selection) => Effect.gen(function* () {
+        const registered = yield* agents.get(AgentV2.ID.make(selection.profile.id))
+        expect(registered?.engine).toBe("orchestra")
+        expect(registered?.steps).toBe(selection.profile.maxSteps)
+        expect(registered?.permissions).toContainEqual({ action: "*", resource: "*", effect: "deny" })
+        expect(registered?.permissions.filter((rule) => rule.effect === "allow" && rule.action.startsWith("sf_"))
+          .map((rule) => rule.action).sort()).toEqual([...selection.operationIds].sort())
+      }))
       const registered = yield* agents.get(AgentV2.ID.make("sf_maestro"))
       expect(registered?.engine).toBe("orchestra")
       expect(registered?.permissions).toContainEqual({ action: "*", resource: "*", effect: "deny" })
@@ -72,7 +71,7 @@ test("five profiles register and all eighteen distributed skills load into disti
         return receipt
       }))
     }).pipe(Effect.provide(locations.get(location)))
-  }).pipe(Effect.scoped, Effect.provide(layer), Effect.runPromise)
+  }).pipe(Effect.scoped, Effect.provide(residentNativeLayer), Effect.runPromise)
   expect(receipts).toHaveLength(18)
   expect(new Set(receipts.map((receipt) => receipt.nativeSessionId)).size).toBe(18)
   expect(new Set(receipts.map((receipt) => receipt.loadedMessageId)).size).toBe(18)
@@ -87,3 +86,4 @@ test("native probe registration grants only its one announced operation", async 
   expect(bundle.selected[0]!.operationIds).toEqual(["sf_forecast_compare"])
   expect(validSfSelection(bundle.selected[0]!)).toBe(true)
 })
+
