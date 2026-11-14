@@ -6,11 +6,12 @@ import { captureChromiumCleanup } from "./chromium-cleanup.ts"
 
 type Brief = Extract<ReviewContribution, { kind: "DecisionBrief" }>
 type Material = Extract<ReviewContribution, { kind: "MeetingMaterialProposal" }>
-// This HTTP fixture implements only the UI display/navigation contract. It omits
-// runProvenance entirely and is not a C11 reader, native run or producer proof.
+// These complete envelopes are controlled display fixtures. Their provenance is
+// explicitly labelled fixture-not-native-evidence; no native run or receipt was
+// executed, persisted, verified or consumed by this HTTP-only consumer test.
 type DisplayFixture =
-  | { kind: Brief["kind"]; output: Pick<Brief["output"], "id" | "kind" | "state" | "caseRef" | "outputDigest" | "payload">; links: Brief["links"] }
-  | { kind: Material["kind"]; output: Pick<Material["output"], "id" | "kind" | "state" | "caseRef" | "outputDigest" | "payload">; review: Pick<Material["review"], "id">; artifacts: []; links: Material["links"] }
+  | { kind: Brief["kind"]; output: Brief["output"]; links: Brief["links"] }
+  | { kind: Material["kind"]; output: Material["output"]; review: Pick<Material["review"], "id">; artifacts: []; links: Material["links"] }
 
 test("Chromium reauthorizes contribution navigation and discards revoked or superseded results", async () => {
   const started = Date.now()
@@ -31,18 +32,32 @@ test("Chromium reauthorizes contribution navigation and discards revoked or supe
   if (!bundle) throw new Error("WP07_CONTRIBUTION_BUNDLE_UNAVAILABLE")
   const caseRef = { id: "fixture-case", version: 1, incarnation: "fixture-incarnation" }
   const digest = "a".repeat(64)
+  const provenance: Brief["output"]["runProvenance"] = {
+    profileId: "sf_maestro", profileVersion: "fixture-not-native-evidence-v1", profileDigest: "c".repeat(64),
+    skillId: "sf-preparar-revisao-executiva", skillVersion: "fixture-not-native-evidence-v1", sourceDigest: "d".repeat(64),
+    instructionsDigest: "e".repeat(64), manifestDigest: "f".repeat(64),
+    runId: "fixture-not-native-evidence-run", nativeSessionId: "fixture-not-native-evidence-session",
+    loadedMessageId: "fixture-not-native-evidence-message", loadedAt: "2026-11-14T00:00:00Z",
+    actualModel: "fixture-not-native-evidence-model", contextFingerprint: "fixture-not-native-evidence-context",
+  }
+  const evidence: Brief["output"]["evidenceRefs"][number] = {
+    schema: "sf-evidence-v1", kind: "record", refId: "fixture-not-native-evidence-source", refDigest: "1".repeat(64),
+    installationId: "fixture-not-native-evidence-installation", projectId: "fixture-not-native-evidence-project", evidenceLevel: "proposal",
+    target: { surface: "planner", recordType: "fixture-not-native-evidence-type", recordId: "fixture-not-native-evidence-record", incarnation: "fixture-not-native-evidence-incarnation", version: 1, fields: ["value"], projectionDigest: "2".repeat(64) },
+  }
+  const envelope = { schemaVersion: "sf-contribution-v1" as const, evidenceRefs: [evidence], runProvenance: provenance, accessRevision: "fixture-not-native-evidence-access", createdAt: "2026-11-14T00:00:00Z" }
   const brief: DisplayFixture = {
     kind: "DecisionBrief",
-    output: { id: "fixture-brief", kind: "DecisionBrief", state: "ready", caseRef, outputDigest: digest, payload: { caseRef: "fixture-case", caseVersion: 1, objective: "Fixture decision objective", orderedResultRefs: ["fixture-result", "decision-result:fixture"], evidenceRefs: [], conditions: [] } },
+    output: { ...envelope, id: "fixture-brief", kind: "DecisionBrief", state: "ready", caseRef, outputDigest: digest, payload: { caseRef: "fixture-case", caseVersion: 1, objective: "Fixture decision objective", orderedResultRefs: ["fixture-result", "decision-result:fixture"], evidenceRefs: [evidence], conditions: [] } },
     links: [{ kind: "contribution", outputRef: "fixture-result" }, { kind: "decision-result", resultRef: "decision-result:fixture" }],
   }
   const material: DisplayFixture = {
     kind: "MeetingMaterialProposal",
-    output: { id: "fixture-material", kind: "MeetingMaterialProposal", state: "ready", caseRef, outputDigest: digest, payload: { reviewSelectionRef: "fixture-review", orderedResultRefs: [], coverage: [{ sectionRef: "fixture-section", includedCount: 2, totalCount: 2 }], gaps: [] } },
+    output: { ...envelope, evidenceRefs: [], runProvenance: { ...provenance, skillId: "sf-produzir-material-reuniao" }, id: "fixture-material", kind: "MeetingMaterialProposal", state: "ready", caseRef, outputDigest: digest, payload: { reviewSelectionRef: "fixture-review", orderedResultRefs: [], coverage: [{ sectionRef: "fixture-section", includedCount: 2, totalCount: 2 }], gaps: [] } },
     review: { id: "fixture-review" }, artifacts: [], links: [{ kind: "review", reviewRef: "fixture-review" }],
   }
   const state = {
-    mode: "fresh" as "fresh" | "denied" | "missing-link" | "changed-digest",
+    mode: "fresh" as "fresh" | "denied" | "missing-link" | "changed-digest" | "missing-provenance",
     rejectDestination: false,
     requests: [] as ReviewContributionRequest[],
     callbacks: [] as { kind: string; reference: string }[],
@@ -68,7 +83,8 @@ test("Chromium reauthorizes contribution navigation and discards revoked or supe
         current.output.outputDigest = "b".repeat(64)
         if (current.kind === "DecisionBrief") current.output.payload.objective = "Refreshed decision objective"
       }
-      const result = state.mode === "denied" ? { status: "denied", reason: "fixture-access-revoked" } : { status: "ok", value: current }
+      const value = state.mode === "missing-provenance" ? { ...current, output: Object.fromEntries(Object.entries(current.output).filter(([key]) => key !== "runProvenance")) } : current
+      const result = state.mode === "denied" ? { status: "denied", reason: "fixture-access-revoked" } : { status: "ok", value }
       const gate = input.expectedOutputDigest ? state.held : undefined
       if (gate) {
         state.held = undefined
@@ -79,7 +95,7 @@ test("Chromium reauthorizes contribution navigation and discards revoked or supe
     }
     if (request.method === "GET" && url.pathname === "/review") {
       const selected = url.searchParams.get("fixture") === "material" ? material : brief
-      const input: ReviewContributionRequest = { outputRef: selected.output.id, caseRef }
+      const input: ReviewContributionRequest = { outputRef: selected.output.id, caseRef, ...(url.searchParams.get("pin") === "1" ? { expectedOutputDigest: digest } : {}) }
       return new Response(`<!doctype html><html><head><meta charset="utf-8"><title>WP07 contribution consumer test</title></head><body><main></main><script type="application/json">${JSON.stringify(input).replaceAll("<", "\\u003c")}</script><script type="module" src="/contribution.js"></script></body></html>`, { headers: { "Content-Type": "text/html" } })
     }
     return new Response(null, { status: 404 })
@@ -98,27 +114,42 @@ test("Chromium reauthorizes contribution navigation and discards revoked or supe
     const view = page.getByRole("region", { name: "Review contribution", exact: true })
     const completed = page.getByRole("status", { name: "Contribution HTTP completions", exact: true })
     const navigation = page.getByRole("status", { name: "Host navigation", exact: true })
-    const openBrief = async () => {
+    const openBrief = async (pinned = false) => {
       state.mode = "fresh"
       state.rejectDestination = false
       state.requests = []
       state.callbacks = []
-      await page.goto(`${server.url.origin}/review?fixture=brief`, { waitUntil: "domcontentloaded" })
+      await page.goto(`${server.url.origin}/review?fixture=brief${pinned ? "&pin=1" : ""}`, { waitUntil: "domcontentloaded" })
       await expect(view.getByRole("heading", { name: "Fixture decision objective", exact: true })).toBeVisible()
       await expect(completed).toHaveText("1")
     }
     const cleared = async (reason: string) => {
       await expect(view.getByText(`Contribution unavailable: ${reason}`, { exact: true })).toBeVisible()
       await expect(view.getByRole("heading")).toHaveCount(0)
-      await expect(view.getByRole("button")).toHaveCount(0)
+      await expect(view.getByRole("button")).toHaveText(["Retry access"])
+      await expect(view.getByRole("button", { name: "Retry access", exact: true })).toBeEnabled()
+      await expect(view.getByRole("link")).toHaveCount(0)
       await expect(view.getByRole("listitem")).toHaveCount(0)
+      await expect(view.locator("details")).toHaveCount(0)
       await expect(view).not.toContainText("Fixture decision objective")
       await expect(view).not.toContainText("Refreshed decision objective")
+      await expect(view).not.toContainText("fixture-not-native-evidence")
     }
 
     checkpoint("fresh-link-navigation")
     await openBrief()
     expect(state.requests).toEqual([{ outputRef: "fixture-brief", caseRef }])
+    await view.locator("summary").filter({ hasText: "Contribution provenance" }).click()
+    for (const line of [
+      `Profile: ${provenance.profileId} · version ${provenance.profileVersion}`,
+      `Skill: ${provenance.skillId} · version ${provenance.skillVersion}`,
+      `Run: ${provenance.runId}`, `Session: ${provenance.nativeSessionId}`, `Model: ${provenance.actualModel}`,
+      "State: ready", `Created: ${envelope.createdAt}`, `Access revision: ${envelope.accessRevision}`,
+      `Profile digest: ${provenance.profileDigest}`, `Skill source digest: ${provenance.sourceDigest}`,
+      `Instructions digest: ${provenance.instructionsDigest}`, `Manifest digest: ${provenance.manifestDigest}`, `Output digest: ${digest}`,
+    ]) await expect(view.getByText(line, { exact: true })).toBeVisible()
+    await expect(view.getByRole("heading", { name: "Source evidence", exact: true })).toBeVisible()
+    await expect(view.getByText(`record · ${evidence.refId} · proposal · ${evidence.refDigest}`, { exact: true })).toBeVisible()
     await view.getByRole("button", { name: "Open result fixture-result", exact: true }).click()
     await expect(navigation).toHaveText("Opened contribution fixture-result")
     expect(state.requests.at(-1)).toEqual({ outputRef: "fixture-brief", caseRef, expectedOutputDigest: digest })
@@ -136,6 +167,11 @@ test("Chromium reauthorizes contribution navigation and discards revoked or supe
     await cleared("fixture-access-revoked")
     expect(state.callbacks).toHaveLength(2)
     expect(state.requests.at(-1)?.expectedOutputDigest).toBe(digest)
+    state.mode = "fresh"
+    await view.getByRole("button", { name: "Retry access", exact: true }).click()
+    await expect(view.getByRole("heading", { name: "Fixture decision objective", exact: true })).toBeVisible()
+    expect(state.requests.at(-1)).toEqual({ outputRef: "fixture-brief", caseRef })
+    expect(state.callbacks).toHaveLength(2)
 
     checkpoint("navigation-link-removed")
     await openBrief()
@@ -148,8 +184,33 @@ test("Chromium reauthorizes contribution navigation and discards revoked or supe
     await openBrief()
     state.mode = "changed-digest"
     await view.getByRole("button", { name: "Open decision result decision-result:fixture", exact: true }).click()
-    await cleared("contribution-changed")
+    await cleared("review-contribution-changed")
     expect(state.callbacks).toEqual([])
+
+    checkpoint("retry-keeps-request-digest-pin")
+    await openBrief(true)
+    state.mode = "changed-digest"
+    await view.getByRole("button", { name: "Open result fixture-result", exact: true }).click()
+    await cleared("review-contribution-changed")
+    await view.getByRole("button", { name: "Retry access", exact: true }).click()
+    await expect(completed).toHaveText("3")
+    await cleared("review-contribution-changed")
+    expect(state.requests).toEqual(Array.from({ length: 3 }, () => ({ outputRef: "fixture-brief", caseRef, expectedOutputDigest: digest })))
+    state.mode = "fresh"
+    await view.getByRole("button", { name: "Retry access", exact: true }).click()
+    await expect(view.getByRole("heading", { name: "Fixture decision objective", exact: true })).toBeVisible()
+    expect(state.requests.at(-1)?.expectedOutputDigest).toBe(digest)
+    expect(state.callbacks).toEqual([])
+
+    checkpoint("missing-provenance-refused")
+    await openBrief()
+    state.mode = "missing-provenance"
+    await view.getByRole("button", { name: "Refresh access", exact: true }).click()
+    await cleared("review-contribution-invalid")
+    expect(state.callbacks).toEqual([])
+    state.mode = "fresh"
+    await view.getByRole("button", { name: "Retry access", exact: true }).click()
+    await expect(view.getByRole("heading", { name: "Fixture decision objective", exact: true })).toBeVisible()
 
     checkpoint("async-destination-refused")
     await openBrief()
@@ -158,6 +219,13 @@ test("Chromium reauthorizes contribution navigation and discards revoked or supe
     await cleared("destination-unavailable")
     expect(state.callbacks).toEqual([{ kind: "contribution", reference: "fixture-result" }])
     await expect(navigation).toHaveText("No navigation")
+    state.rejectDestination = false
+    await view.getByRole("button", { name: "Retry access", exact: true }).click()
+    await expect(view.getByRole("heading", { name: "Fixture decision objective", exact: true })).toBeVisible()
+    expect(state.callbacks).toHaveLength(1)
+    await view.getByRole("button", { name: "Open result fixture-result", exact: true }).click()
+    await expect(navigation).toHaveText("Opened contribution fixture-result")
+    expect(state.callbacks).toHaveLength(2)
 
     checkpoint("dispose-during-navigation-read")
     await openBrief()
@@ -198,6 +266,8 @@ test("Chromium reauthorizes contribution navigation and discards revoked or supe
     await page.goto(`${server.url.origin}/review?fixture=material`, { waitUntil: "domcontentloaded" })
     await expect(view.getByRole("heading", { name: "Meeting material", exact: true })).toBeVisible()
     await expect(view.getByText("fixture-section: 2 of 2 selected records", { exact: true })).toBeVisible()
+    await view.locator("summary").filter({ hasText: "Contribution provenance" }).click()
+    await expect(view.getByText("No source references supplied.", { exact: true })).toBeVisible()
     await view.getByRole("button", { name: "Open preserved meeting", exact: true }).click()
     await expect(navigation).toHaveText("Opened review fixture-review")
     expect(state.requests.at(-1)).toEqual({ outputRef: "fixture-material", caseRef, expectedOutputDigest: digest })

@@ -7,7 +7,7 @@ import type { ReviewComparisonRead } from "./comparison-port.ts"
 import type { ReviewAgendaItem, ReviewAgendaPreview } from "./selection.ts"
 import type { ReviewPrepareRequest } from "../contracts/operations.ts"
 import type { MeetingMaterialProposal, ReviewDraft } from "../contracts/outputs.ts"
-import { decodeSfOperationOutput } from "../contracts/schema-admission.ts"
+import { decodeSfContributionEnvelope, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { ReviewContribution, ReviewContributionRequest } from "./contribution.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 
@@ -72,7 +72,10 @@ export function createReviewPreparationBrowser() {
     async contribution(payload: ReviewContributionRequest): Promise<PortResult<ReviewContribution>> {
       const { response, result } = await post("review-contribution", payload)
       if (!response?.ok || !isResult(result) || result.status !== "ok" || !result.value || typeof result.value !== "object" || !("kind" in result.value) || !["DecisionBrief", "MeetingMaterialProposal"].includes(String(result.value.kind)) || !("links" in result.value) || !Array.isArray(result.value.links) || !("output" in result.value) || !result.value.output || typeof result.value.output !== "object" || !("id" in result.value.output) || result.value.output.id !== payload.outputRef) return unavailable(result, "review-contribution-unavailable")
-      return { status: "ok", value: result.value as ReviewContribution }
+      const output = decodeSfContributionEnvelope(result.value.output)
+      if (!output.ok || output.value.state !== "ready" || output.value.kind !== result.value.kind) return { status: "unavailable", reason: "review-contribution-invalid" }
+      if (payload.expectedOutputDigest && output.value.outputDigest !== payload.expectedOutputDigest) return { status: "stale", reason: "review-contribution-changed" }
+      return { status: "ok", value: { ...result.value, output: output.value } as ReviewContribution }
     },
     async agenda(items: readonly ReviewAgendaItem[]): Promise<PortResult<ReviewAgendaPreview>> {
       const { response, result } = await post("review-agenda", { items })
