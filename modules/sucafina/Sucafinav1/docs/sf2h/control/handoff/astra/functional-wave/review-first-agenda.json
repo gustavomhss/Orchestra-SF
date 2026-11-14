@@ -1,0 +1,30 @@
+{
+  "number": 39,
+  "id": "review-first-agenda",
+  "actor": "S3-A independent disjoint UI sublane supporting Reports36",
+  "actor_pack": "execution/actors/S3-A.json",
+  "branch": "review-agenda",
+  "base": "c1bd1c91b0e0d32db3074408e815e36107384073 (or later explicitly reconciled immutable composed SHA)",
+  "pr": "Create one product PR to sf2-stack; new branch necessary because Reports36 writes PR27 concurrently",
+  "lease_epoch": "review-agenda-browser39",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/reviews/workspace.ts",
+    "modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts (new)",
+    "apps/cli/src/sucafina-product/review-agenda-services.ts (new)",
+    "modules/sucafina/Sucafinav1/test/product/review-first-agenda/",
+    "packages/app-shell/e2e/sucafina/review-agenda-support/ (new)",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-first-agenda/"
+  ],
+  "finding": "M27-C05-FIRST-AGENDA",
+  "review": "236595b5ff1c464b06882bd9b6aea4f30a078569",
+  "mission": "Implement actualhuman first-review agenda discovery/selection acrossmultipleexistingtopics/domains/periods, beforeanypreservedreviewexists. Existing workspaceonlyloads/moves/removesinputitems; enteringwithsingleDashboardsectioncannotfulfillmultiitemfirstuse. BackendalreadyacceptsarrayDashboard/Forecast/Procurement; reuseit. Deliverrealpicker+authorization/wiring+proof,not oldreviewclone ordirecttestAPIseed.",
+  "acceptance": [
+    "ReadfullS3ApackandliteralWP07T01CHK01/03CMP02DOD01SUC01/02. Inspectactualcurrententrypoints; iflaterproduceralreadyfixesgapconsumeandproveinsteadofduplicate.",
+    "Discoveronlyauthorizedexistingselectors bytype/domain/period; userexplicitlyadds/removes/reordersmultipleitems, inspectscompletepreview/count/refs andpreservesfirstreview. No manualopaqueJSON/internalrefpaste, no broadgrants/currentpageonlyrestriction.",
+    "References/currentauthority/sourceperiods preservedthroughpreview/preserve/reload. CAS/sourcechangesrequireexplicitnewpreview/confirmation whileuserselectionretained. Noautosave/autoApply, nooverwriteimmutableC05historicalcapture.",
+    "Keep existingworkspacecallers compatible andallcurrentC05/Reports36discussions untouched. Errorrecoverablekeepsselection; revocationpurgesprotecteditems andlateasyncresultdenied. Multi-domainpermissionreaddecisionsmustremainper-source.",
+    "First-reviewpositivewithmultipleDashboard+Planner+Procurementitemsasavailableexistingports, reorder/remove, preview/preserve/reload andnegativesaccess/sourcechange. Testsactualproductflows/authority,notHTMLreproduction orprogrammaticseedasrequiredhumanaction.",
+    "Sharedextended-business-services/HTTP/browser/dashboard-workbench/reviewservices/routes stayreadonly: delivercomplete minimalpatcheswithpreimages/postimages to33, preservingReport36andDecisionmodules. Existingreports.spec.ts alsoowned36; providecompleteproposednominalcoveragepatchratherthaneditit. Do notcreateunrecognizedninthfinalCIrecipe."
+  ],
+  "handoff": "Createfreshreview-agendabranch andonePRtosf2-stack viaGitHubMCP; productbranchisindependentsliceofsameWP, notwholecontrolsnapshot. Completecode+sharedpatches+tests+criteria/inputSHAs/results+terminalhandoffto33andboundedcoveragepatchto36; don'tneedhumanapprovalforroutineauthorizedchoices."
+}
