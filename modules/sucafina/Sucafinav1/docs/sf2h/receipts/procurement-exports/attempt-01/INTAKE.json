@@ -1,0 +1,181 @@
+{
+  "schema": "sf2h.procurement-exports.intake.v1",
+  "campaign": "sf2h-integral-20261112",
+  "actor": "S2-A",
+  "session": "procurement-exports-20261114",
+  "branch": "sourcing-money",
+  "pr": 57,
+  "state": "IMPLEMENTED_CI_PENDING",
+  "scope": "Consumer export delta only; functional and check outcomes remain NOT_RUN until hosted execution.",
+  "authority": {
+    "userInstruction": "Continue the existing sourcing-money / PR57; fix downloads.ts only, own tests/receipts.",
+    "mission": {
+      "sha": "5e5c6b6ad29b985376880b4da40cb51c7424849b",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/procurement-exports.json",
+      "blob": "1aad489096367fcebb1d640e221921eb3c79439e"
+    },
+    "common": {
+      "sha": "c708ec0609dbfc95b259707d8c38481617f74f11",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/COMMON.md",
+      "blob": "e54d84e3cdfa0046225518e253baf9dcf377fa7c"
+    },
+    "receivedHead": "2a185e05967f611d63796684379761ded991092b",
+    "receivedTree": "5f3f826dcafe7ac78817290160d2540f6a7d1723",
+    "previousTerminalHandoff": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/sourcing-money/attempt-02/HANDOFF.md",
+      "commit": "2a185e05967f611d63796684379761ded991092b",
+      "blob": "46a288969e6fc59342f0753ab7bb661b72c3ab3a"
+    },
+    "reconciliation": "Head matches mission and previous terminal delivery. PR body is unchanged from terminal report; no comments/new writer claim. Explicit new user mission supplies continuation authority; silence was not used as proof of termination.",
+    "leaseEpoch": 1,
+    "writePaths": [
+      "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "modules/sucafina/Sucafinav1/test/product/procurement-exports/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-exports/"
+    ],
+    "readOnly": [
+      "runtime/procurement.ts",
+      "product/procurement/monetary.ts",
+      "UI",
+      "shared fixtures",
+      "configs",
+      "engines"
+    ],
+    "publication": "Single-parent descendant via GitHub MCP CAS expected_sha, no force/reset/merge."
+  },
+  "sources": {
+    "planningCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "actorPack": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S2-A.json",
+      "blob": "7327be5449328c356a0f5b242ddc9d2014175e41",
+      "sha256": "912d62bbffb99a70ca880c255036c31bad9ad694288f7c6c4267d05b0c49fed8",
+      "read": "Full by independent pack_review; relevant implementation sections by writer."
+    },
+    "executionCommon": {
+      "blob": "d61f32af03fe10747a50274233f953af044decf6",
+      "sha256": "a518cf4b3136d5c1126d59304afedf71b5f93168314f1f2f56743dcae719c94e"
+    },
+    "mandatoryAppendices": [
+      {
+        "path": "specs/product-acceptance.md",
+        "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+        "sha256": "a41222e3bed4a8a8134a7fd814c73a99f607457a7df1e38b74566a4d2589eee2"
+      },
+      {
+        "path": "specs/resident-runtime.md",
+        "blob": "033737b1051b23443e633df7874c550629bf55a1",
+        "sha256": "024795abe175e756f93f1904eba23884bf4d9ad2416c6185b3eea2e6b13ca420"
+      }
+    ],
+    "canonicalCriterionCount": 111,
+    "canonicalCriteriaSha256": "de5df06984f523dea5807ba687a86a81e395655d1fbfac33410106f99570118f",
+    "criteriaUnchanged": true,
+    "agents": {
+      "path": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "localInstructions": "No nested AGENTS on runtime/test/docs write paths in the initial tree."
+    }
+  },
+  "intake": {
+    "operationsCommit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+    "handoffBlob": "5cf17dcdf04283384efe581ecc7a029b850fa798",
+    "proposedPatchBlob": "d47538f593c2b563e34c75434044def6e070de58",
+    "downloadsPreimage": "fa365f9d350be341348ab69d789e40779c8b9756",
+    "preimageMatches": true,
+    "helperBlob": "c9a224b12c13b7cec506be90527300caa7e984fd",
+    "requestValueBlob": "510be5b2aeb82e740f342a5b649619116cb8ff1c",
+    "patchReconciliation": "Both hunks reconciled against exact preimage; same purchaseOrderMoney wrapper for PO columns and per-line HTML. Temporary po_draft projection for sourcing/src_pending/src_rejected; producer/frozen PO/cancelled behavior unchanged.",
+    "sourceRegressions": {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/export-owner-regression.test.ts",
+      "blob": "3170c80978ef8c87e0a254c8817ffe8514019d7c"
+    },
+    "sourceFixture": {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/fixture.ts",
+      "blob": "13dc9ab57a57fbd5e1c1477cf5fc6718cd5d2cad"
+    },
+    "sourceControls": {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+      "blob": "f57ad2e8a745c56797bd7e1b7fe9c8fb0cda83bf"
+    },
+    "copyChanges": [
+      "Own namespace, preserve original two test names and expected export values.",
+      "Use persisted sourcing facts instead of legacy domain.view.record.value=108, which depends on Operations runtime/procurement.ts fix not imported here.",
+      "Fixture retains real domain commands and durable source lifecycle; drops unrelated C02/C06/UI scaffolding.",
+      "Both formats checked for filename/MIME/bytes, original/base currency, FX source/state, exact line values, unchanged snapshot and persisted record.",
+      "Malformed/multiline read premises are cloned and discarded; they do not claim allowed domain mutations."
+    ],
+    "baseline": {
+      "runId": 43628901747,
+      "jobId": 132550880255,
+      "productW": "fd363ca6f66dea56422c235f835103467c7ee8ba",
+      "snapshotS": "80e78d97f15b468b8393c6a1676472f1979d2d33",
+      "conclusion": "failure",
+      "observed": "10 pass / 2 fail; both EXPORT-01 and EXPORT-02 fail in actual logs.",
+      "logsRead": true
+    }
+  },
+  "verificationPlan": {
+    "functional": {
+      "status": "NOT_RUN",
+      "files": [
+        "./Sucafinav1/test/product/procurement-exports/export-regressions.test.ts",
+        "./Sucafinav1/test/product/procurement-exports/export-controls.test.ts"
+      ],
+      "testCount": 11,
+      "runner": "bun",
+      "directory": "modules/sucafina",
+      "env": {},
+      "timeoutMilliseconds": 120000
+    },
+    "checks": {
+      "status": "NOT_RUN",
+      "workflow": ".github/workflows/astra-operations-check.yml",
+      "mode": "all",
+      "commands": [
+        "modules/sucafina: bun typecheck",
+        "apps/cli: bun typecheck",
+        "root: bun run check:guards --base origin/dev"
+      ]
+    },
+    "dedupe": "Historical 58+5 sourcing evidence reused at original W; no equivalent exports run existed at intake, no mission run in flight. Recheck before snapshot ref creation. At most one mission run in flight.",
+    "snapshots": "Only CI.md-defined ephemeral refs; no new product branch or PR. Each S has single parent W and one request file only.",
+    "artifactEvidence": "Actual production download bytes inspected in tests. Full UTF-8 payload and sha256 of the two primary CSV/HTML pairs emitted to hosted logs for append-only archival; other cases emit artifact metadata and parsed content. No generic Bun artifact uploader is claimed."
+  },
+  "previousEvidence": [
+    {
+      "runId": 43625920456,
+      "productW": "aa5d8c0ee49777ea82bc707df8c976d311728292",
+      "snapshotS": "532a73aa2d7b8e7f5e57e0156b0de67f7ac1fb1c",
+      "result": "58 pass"
+    },
+    {
+      "runId": 43626658534,
+      "productW": "a3b7fb9b45d7852a3000e01098336a1aca9526c3",
+      "snapshotS": "fb440a03e4d712e0d6f40f021997b31a80943a3d",
+      "result": "5 affected tests revalidated; not 63 distinct tests"
+    }
+  ],
+  "knownExternalLimits": [
+    "Legacy runtime request.value divergence remains readonly in this branch; Operations has a separately published correction.",
+    "Historical WP14 TS2741 is outside write paths and must remain visible if reproduced by checks.",
+    "No browser/native journey, AM, full WP04 or global acceptance is claimed."
+  ],
+  "readOnlyReviews": [
+    {
+      "agent": "exports_review",
+      "kind": "static preimage/helper/patch review",
+      "result": "compatible; no runtime execution claimed"
+    },
+    {
+      "agent": "pack_review",
+      "kind": "full own-pack and appendices review",
+      "result": "111 canonical criteria intact; no scope widening"
+    },
+    {
+      "agent": "ci_contract",
+      "kind": "canonical hosted CI and dedupe review",
+      "result": "existing workflows usable unchanged"
+    }
+  ]
+}
