@@ -246,7 +246,7 @@ export async function runSfAnalysis(input: {
     }
     if (outcome.state === "cancelled") {
       const saved = await cancelSfAnalysis({ host: input.host, runRef: admission.runRef, sessionID: admission.sessionID, executionTicket: admission.executionTicket,
-        skillReceipt: admission.skillReceipt, caseRef: input.request.caseRef, contextFingerprint: input.request.contextFingerprint })
+        skillReceipt: admission.skillReceipt, caseRef: input.request.caseRef, contextFingerprint: input.request.contextFingerprint, reviewTarget: input.reviewTarget })
       return saved.status === "ok" ? { status: "unavailable", reason: "analysis-cancelled" } : saved
     }
     const saved = await input.host.withRunContext(admission.runRef, (context) => input.host.settle(admission.runRef, "unavailable", "native-result-not-final", context))
@@ -260,7 +260,17 @@ export async function runSfAnalysis(input: {
     if (stale.status !== "ok") return stale
     return { status: "stale", reason: "analysis-base-changed" } as const
   }
-  return publishSfContribution({ host: input.host, output: collected.value, skillReceipt: admission.skillReceipt, runRef: admission.runRef, reviewTarget: input.reviewTarget })
+  const publication = await publishSfContribution({ host: input.host, output: collected.value, skillReceipt: admission.skillReceipt, runRef: admission.runRef, reviewTarget: input.reviewTarget })
+  if (publication.status === "failed") {
+    const failed = await input.host.withRunContext(admission.runRef, (context) => input.host.fail(admission.runRef, publication.reason, context))
+    return failed.status === "ok" ? publication : failed
+  }
+  if (publication.status === "unavailable" || publication.status === "needs-input") {
+    const state = publication.status
+    const settled = await input.host.withRunContext(admission.runRef, (context) => input.host.settle(admission.runRef, state, publication.reason, context))
+    return settled.status === "ok" ? publication : settled
+  }
+  return publication
 }
 
 /** Cancel the durable run before interrupting its matching native session. */
@@ -272,6 +282,7 @@ export async function cancelSfAnalysis(input: {
   skillReceipt: SkillLoadReceipt
   caseRef: ContributionEnvelope["caseRef"]
   contextFingerprint: string
+  reviewTarget?: SfReviewTarget
 }) {
   if (input.skillReceipt.nativeSessionId !== input.sessionID || input.skillReceipt.runId !== input.runRef) return { status: "denied", reason: "session-mismatch" } as const
   const authorized = await input.host.withRunContext(input.runRef, (context) => input.host.revalidate(context, {
@@ -281,6 +292,7 @@ export async function cancelSfAnalysis(input: {
     manifestDigest: input.skillReceipt.manifestDigest,
     accessRevision: context.binding.accessRevision,
     skillReceipts: [input.skillReceipt],
+    reviewTarget: input.reviewTarget,
   }))
   if (authorized.status !== "ok" && authorized.status !== "stale") return authorized
   const cancelled = await input.host.withRunContext(input.runRef, (context) => input.host.analysis.cancel(input.runRef, context))

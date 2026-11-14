@@ -138,6 +138,9 @@ test("analysis uses separate host authority scopes before and after the native w
   } as unknown as Parameters<typeof digestSfContribution>[0]
   output.outputDigest = digestSfContribution(output)
   const scopes = new Set<object>()
+  const failures: string[] = []
+  const settlements: { state: string; reason: string }[] = []
+  let publicationOutcome: { status: "unavailable" | "needs-input" | "denied" | "conflict"; reason: string } | undefined
   const host = {
     withRunContext: async (_runRef: string, action: (context: unknown) => Promise<unknown>) => {
       const context = { binding: { accessRevision: "access-1" } }
@@ -146,13 +149,26 @@ test("analysis uses separate host authority scopes before and after the native w
     },
     revalidate: async () => ({ status: "ok", value: true }),
     execution: { admit: async () => ({ status: "ok", value: { runRef: "run-1", sessionID: "session-1", skillReceipt: receipt, executionTicket: {} } }), execute: async () => ({ status: "ok", value: true }), collect: async () => ({ status: "ok", value: output }) },
-    result: { write: async () => ({ status: "ok", value: { outputRef: "output-1", caseVersion: 1 } }) },
+    result: { write: async () => publicationOutcome ?? ({ status: "ok", value: { outputRef: "output-1", caseVersion: 1 } }) },
+    fail: async (_runRef: string, reason: string) => { failures.push(reason); return { status: "ok", value: true } },
+    settle: async (_runRef: string, state: string, reason: string) => { settlements.push({ state, reason }); return { status: "ok", value: true } },
   }
   const request = { caseRef, profileId: "sf_finance", profileVersion: "1.0.0", skillId: receipt.skillId, skillVersion: "1.0.0", manifestDigest: receipt.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: [], objective: "Review", contextFingerprint: "context-1" }
   const skillInput = { currentCase: caseRef, recallScope: { cases: [], period: { start: "2027-01-01", end: "2027-12-31" }, includeHistorical: true }, query: "renewal" }
   const input = { host, request, skillInput } as unknown as Parameters<typeof runSfAnalysis>[0]
   expect(await runSfAnalysis(input)).toEqual({ status: "ok", value: { outputRef: "output-1", caseVersion: 1 } })
   expect(scopes.size).toBe(4)
+  output.outputDigest = "0".repeat(64)
+  expect(await runSfAnalysis(input)).toEqual({ status: "failed", reason: "contribution-digest-mismatch" })
+  expect(failures).toEqual(["contribution-digest-mismatch"])
+  expect(scopes.size).toBe(7)
+  output.outputDigest = digestSfContribution(output)
+  for (const status of ["unavailable", "needs-input", "denied", "conflict"] as const) {
+    publicationOutcome = { status, reason: `publication-${status}` }
+    expect(await runSfAnalysis(input)).toEqual(publicationOutcome)
+  }
+  expect(settlements).toEqual([{ state: "unavailable", reason: "publication-unavailable" }, { state: "needs-input", reason: "publication-needs-input" }])
+  expect(failures).toEqual(["contribution-digest-mismatch"])
 })
 
 test("analysis rejects model-supplied identity before host admission", async () => {

@@ -32,8 +32,27 @@
       "regressions": ["Preflight cannot rewrite the stored run or an uncommitted admission.", "Commit verifier cannot replace the output after its provenance/schema validation.", "A real SQLite/C08 cancellation committed during publication preflight wins the version race; no contribution is stored and replay cannot publish the cancelled run."],
       "validation": "NOT_RUN_ON_THIS_CANDIDATE",
       "limit": "Uses real C08 and SQLite with injected authorization/verification callbacks. It does not claim native provider execution."
+    },
+    {
+      "paths": ["modules/sucafina/Sucafinav1/product/ai/analysis-port.ts", "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts"],
+      "change": "Forward the independent review target when cancelling a review run. Host revalidation continues comparing it with the stored target; altered targets remain denied. The run orchestrator forwards its target when processing a native cancelled outcome.",
+      "regression": "Real C08/SQLite review run refuses another author target, then persists cancellation for the matching target. The unattached native interrupt returns unavailable explicitly; it is not simulated as successful.",
+      "validation": "NOT_RUN_ON_THIS_CANDIDATE"
+    },
+    {
+      "paths": ["modules/sucafina/Sucafinav1/product/ai/analysis-port.ts", "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts", "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts"],
+      "change": "After native collection, persist final publication failures and unavailable/needs-input outcomes under a fresh authority scope. Return denied, conflict and already-handled stale outcomes unchanged. Existing store CAS and legal-transition checks remain mandatory; concurrent ready/cancelled results cannot be overwritten.",
+      "regressions": ["The existing orchestration harness records failure settlement for a bad digest and unavailable/needs-input settlement from the publication writer while denied/conflict trigger neither.", "Real SQLite/C08 refuses late failure after cancellation and refuses late failure or unavailable settlement after ready publication, preserving the original output."],
+      "validation": "NOT_RUN_ON_THIS_CANDIDATE",
+      "limit": "The orchestration harness is explicitly injected. Durable terminal-state checks use real C08/SQLite; neither claims provider execution."
     }
   ],
+  "consumer_review": {
+    "source_pin": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+    "paths": ["apps/cli/src/sucafina-product/host-context.ts", "apps/cli/src/sucafina-product/native-execution.ts"],
+    "finding": "Interactive host cancellation uses nativeExecution.cancelRun and cancelAdmitted/readForCancellation; it does not call cancelSfAnalysis. It reads the persisted run and checks the exact native session and skill receipt before the terminal C08 transition. No host callsite adaptation is needed for the new optional reviewTarget argument in the WP12 helper at this pin. The orchestration call to that helper now forwards its target.",
+    "validation": "SOURCE_REVIEW_ONLY"
+  },
   "external_deltas": [
     {
       "id": "WP12-STALE-HOST-01",

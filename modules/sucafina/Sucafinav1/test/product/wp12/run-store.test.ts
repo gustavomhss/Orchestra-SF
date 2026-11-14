@@ -4,6 +4,7 @@ import { tmpdir } from "node:os"
 import path from "node:path"
 import { createSfRunStore, sfRunSourceFence } from "../../../product/ai/run-store.ts"
 import { createSfAnalysisHost } from "../../../product/ai/analysis-host.ts"
+import { cancelSfAnalysis } from "../../../product/ai/analysis-port.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import type { SfNativeRunRecord } from "../../../product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
@@ -184,4 +185,49 @@ test("durable cancellation wins a publication that is still validating its sourc
   const stored = await f.state.read(new Request("https://example.test/"), "contributions", (state) => ({ run: state.nativeRuns?.run, output: state.contributions.output }))
   expect(stored).toMatchObject({ status: "ok", value: { run: { state: "cancelled", version: 4, reason: "human-cancelled" }, output: undefined } })
   expect(await f.store.publish("run", 4, original.output, f.context)).toEqual({ status: "conflict", reason: "invalid-run-output" })
+  const host = createSfAnalysisHost({ store: f.store } as Parameters<typeof createSfAnalysisHost>[0])
+  expect(await host.fail("run", "late-publication-failure", f.context)).toEqual({ status: "conflict", reason: "invalid-run-transition" })
+  expect(await f.store.read("run", f.context)).toMatchObject({ status: "ok", value: { state: "cancelled", version: 4 } })
+})
+
+test("review cancellation validates its durable target before committing even without an attached native runtime", async () => {
+  await using f = await fixture()
+  const reviewTarget = { targetRunId: "author", targetSessionId: "author-session", targetOutputDigest: "a".repeat(64), caseRef: f.record.caseRef }
+  const record = { ...f.record, reviewTarget, selection: { ...f.record.selection, profile: { ...f.record.selection.profile, id: "sf_reviewer" as const } } }
+  const receipt = { runId: "run", nativeSessionId: "review-session", profileId: "sf_reviewer", profileVersion: "1", profileDigest: "d".repeat(64), skillId: "skill", skillVersion: "1", sourceDigest: "e".repeat(64), instructionsDigest: "f".repeat(64), loadedMessageId: "review-message", loadedAt: "2026-11-13T00:00:00Z", manifestDigest: "c".repeat(64) } as const
+  expect((await f.store.create(record, f.context)).status).toBe("ok")
+  expect((await f.store.attach("run", 1, receipt.nativeSessionId, receipt, f.context)).status).toBe("ok")
+  expect((await f.store.transition("run", 2, "running", undefined, f.context)).status).toBe("ok")
+  // No provider or native interrupt is simulated. This probe proves the durable cancellation boundary only.
+  const unavailable = async () => ({ status: "unavailable", reason: "native-runtime-not-attached" } as const)
+  const host = createSfAnalysisHost({ store: f.store, verify: async () => ({ status: "ok", value: true }),
+    withRunContext: async (_runRef, action) => action(f.context),
+    execution: { admit: unavailable, execute: unavailable, collect: unavailable, interrupt: unavailable },
+    routines: { catalog: unavailable, prepareAdmission: unavailable, readAdmission: unavailable, readRun: unavailable, run: unavailable },
+    analysis: { create: unavailable, read: unavailable, cancel: async (runRef, context) => {
+      const prior = await f.store.read(runRef, context)
+      if (prior.status !== "ok") return prior
+      const cancelled = await f.store.transition(runRef, prior.value.version, "cancelled", "human-cancelled", context)
+      return cancelled.status === "ok" ? { status: "ok", value: { cancelled: true } } : cancelled
+    } },
+  })
+  const request = { host, runRef: "run", sessionID: receipt.nativeSessionId, executionTicket: {}, skillReceipt: receipt, caseRef: record.caseRef, contextFingerprint: record.contextFingerprint, reviewTarget } as Parameters<typeof cancelSfAnalysis>[0]
+  expect(await cancelSfAnalysis({ ...request, reviewTarget: { ...reviewTarget, targetRunId: "another-author" } })).toEqual({ status: "denied", reason: "run-binding-mismatch" })
+  expect(await f.store.read("run", f.context)).toMatchObject({ status: "ok", value: { state: "running", version: 3 } })
+  expect(await cancelSfAnalysis(request)).toEqual({ status: "unavailable", reason: "native-runtime-not-attached" })
+  expect(await f.store.read("run", f.context)).toMatchObject({ status: "ok", value: { state: "cancelled", version: 4, reviewTarget } })
+})
+
+test("late publication failure cannot overwrite a ready result", async () => {
+  await using f = await fixture()
+  const original = sfRunFixture()
+  const { native: _native, outputRef: _outputRef, ...base } = original.run
+  expect((await f.store.create({ ...base, principalRef: "user", state: "preparing", version: 1 }, f.context)).status).toBe("ok")
+  expect((await f.store.attach("run", 1, "session", original.receipt, f.context)).status).toBe("ok")
+  expect((await f.store.transition("run", 2, "running", undefined, f.context)).status).toBe("ok")
+  expect((await f.store.publish("run", 3, original.output, f.context)).status).toBe("ok")
+  const host = createSfAnalysisHost({ store: f.store } as Parameters<typeof createSfAnalysisHost>[0])
+  expect(await host.fail("run", "late-publication-failure", f.context)).toEqual({ status: "conflict", reason: "invalid-run-transition" })
+  expect(await host.settle("run", "unavailable", "late-publication-unavailable", f.context)).toEqual({ status: "conflict", reason: "invalid-run-transition" })
+  expect(await f.state.read(new Request("https://example.test/"), "contributions", (state) => ({ run: state.nativeRuns?.run, output: state.contributions.output }))).toMatchObject({ status: "ok", value: { run: { state: "ready", version: 4, outputRef: "output" }, output: original.output } })
 })
