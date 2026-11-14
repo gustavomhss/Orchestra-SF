@@ -1,0 +1,35 @@
+--- a/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts
+@@ -6,6 +6,8 @@
+ import type { SfProductStatePort } from "../contracts/state.ts"
+ import type { Actor, Environment, Snapshot } from "../../runtime/contract.ts"
+ import { isReviewDigest, receiptProofKey, receiptProofTransactionKey, receiptReviewBinding, type ReviewDigestFor } from "./receipt-review-binding.ts"
++
++type ApplyResult = CommandReceipt | { existing: CommandReceipt } | { failure: "unavailable" | "conflict" } | null
+ 
+ /** The callbacks resolve current host authority and domain data; none are supplied by a capability caller. */
+ export function createSfPreparedApply(input: {
+@@ -82,7 +84,7 @@
+       if (!receipts || receipts.status !== "ok" || !receipts.value) return { status: "unavailable", reason: "receipt-unavailable" }
+       const id = input.createId()
+       if (!id.trim()) return { status: "unavailable", reason: "receipt-identity-unavailable" }
+-      const applied = await input.state.transaction<CommandReceipt | { existing: CommandReceipt } | { failure: "unavailable" | "conflict" } | null>(source, { namespace: "receipts", domainSurface: change.target.surface, expectedStorageVersion: receipts.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: current.storageVersion }], targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: receiptProofKey(change.idempotencyKey), commandDigest: binding }, async (state, authority, snapshot) => {
++      const applied = await input.state.transaction<ApplyResult>(source, { namespace: "receipts", domainSurface: change.target.surface, expectedStorageVersion: receipts.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: current.storageVersion }], targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: receiptProofKey(change.idempotencyKey), commandDigest: binding }, async (state, authority, snapshot) => {
+         const actual = state.cases[request.caseRef.id]
+         const selected = actual?.preparedChanges.find((item) => item.id === request.changeId && item.choiceId === request.choiceId)
+         if (!sameAuthority(authority, context) || !actual || actual.incarnation !== decision.incarnation || actual.version !== decision.version || !actual.participants.includes(context.binding.principalRef) || !actual.choices.some((choice) => choice.id === request.choiceId) || !selected || selected.state !== "planned" || digestSfValue(selected) !== digestSfValue(change)) return { commit: false, value: null }
+@@ -90,7 +92,13 @@
+         if (!actor || actor.id !== context.binding.principalRef || !input.verifyGrant(snapshot, request, selected, actor, context)) return { commit: false, value: null }
+         const prior = Object.values(state.receipts).filter((item) => item.surface === selected.target.surface && item.idempotencyKey === selected.idempotencyKey && item.targetIncarnation === selected.target.incarnation && item.principalRef === actor.id)
+         if (prior.length > 1) return { commit: false, value: { failure: "unavailable" as const } }
+-        if (prior[0]) return prior[0].commandDigest === selected.operation.commandDigest ? { commit: false, value: { existing: prior[0] } } : { commit: false, value: { failure: "conflict" as const } }
++        if (prior[0]) {
++          if (prior[0].commandDigest !== selected.operation.commandDigest) return { commit: false, value: { failure: "conflict" as const } }
++          const proof = state.transactions[receiptProofTransactionKey(actor.id, selected.target.id, selected.idempotencyKey)]
++          if (!proof) return { commit: false, value: { failure: "unavailable" as const } }
++          if (proof.commandDigest !== binding || digestSfValue(proof.value) !== digestSfValue(prior[0])) return { commit: false, value: { failure: "conflict" as const } }
++          return { commit: false, value: { existing: prior[0] } }
++        }
+         const mutation = input.resolveMutation(snapshot, selected, actor, context)
+         if (!mutation || mutation.surface !== selected.target.surface || mutation.targetIncarnation !== selected.target.incarnation || mutation.idempotencyKey !== selected.idempotencyKey || mutation.commandDigest !== selected.operation.commandDigest || mutation.expectedVersion !== selected.expectedVersion || selected.operation.expectedVersion !== selected.expectedVersion || selected.operation.command.version !== selected.expectedVersion || selected.operation.idempotencyKey !== selected.idempotencyKey || digestSfValue(selected.operation.target) !== digestSfValue(selected.target) || state.receipts[id]) return { commit: false, value: null }
+         const staged = structuredClone(snapshot)

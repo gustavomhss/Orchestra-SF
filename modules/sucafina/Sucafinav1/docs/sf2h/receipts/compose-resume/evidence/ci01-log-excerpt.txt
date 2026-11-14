@@ -1,0 +1,42 @@
+omni control nonce: c4e61a9873f236ec8fa9178ae925bafc
+Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts:
+(pass) C02 preserves explicit numeric HR identity, known zero and independent actual/forecast for finance and viewer [95.37ms]
+(pass) qualified HR self-comparison still refuses revocation during the final coverage observation [31.70ms]
+Sucafinav1/test/product/wp09/schedule-boundaries.test.ts:
+(pass) a qualified occurrence binding reaches C08 create and update without approving the routine [3.03ms]
+(pass) revocation after occurrence qualification prevents scheduler creation [0.24ms]
+(pass) paused schedules and stale edits never reach native occurrence dispatch [0.48ms]
+(pass) manual requests require a retry key and retain admission-pending outcome [0.29ms]
+(pass) an occurrence cannot claim completion without C07 admission and a real result reference [0.17ms]
+(pass) revocation during occurrence dispatch hides every result and pending reference [0.19ms]
+(pass) create keeps the authorized recipe and cadence when owner resolution mutates the caller's request [0.34ms]
+(pass) update keeps the authorized schedule, version and cadence across owner awaits [0.38ms]
+(pass) pause keeps the authorized schedule, version and cadence across owner awaits [0.24ms]
+(pass) resume keeps the authorized schedule, version and cadence across owner awaits [0.14ms]
+(pass) runNow keeps the authorized schedule, version and cadence across owner awaits [0.11ms]
+(pass) authorization and qualification callbacks cannot rewrite the mutation payload [0.30ms]
+(pass) create requires the same payload authorization immediately before mutation [0.24ms]
+(pass) update requires the same payload authorization immediately before mutation [0.13ms]
+(pass) pause requires the same payload authorization immediately before mutation [0.04ms]
+(pass) resume requires the same payload authorization immediately before mutation [0.06ms]
+(pass) runNow requires the same payload authorization immediately before mutation [0.06ms]
+(pass) private pending references participate in occurrence egress authorization [0.22ms]
+(pass) invalid pending reference is rejected before egress:  [0.14ms]
+(pass) invalid pending reference is rejected before egress:  pending  [0.05ms]
+(pass) invalid pending reference is rejected before egress: ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp [0.03ms]
+(pass) pending reference arrays reject nonstrings and excessive entries [0.24ms]
+(pass) pending references are deduplicated and detached from callback mutation [0.21ms]
+(pass) create refuses a replacement authorizer before any native mutation [0.22ms]
+(pass) runNow refuses a replacement authorizer before any native mutation [0.04ms]
+(pass) update refuses a replacement scheduler method before dispatch [0.15ms]
+(pass) due dispatch refuses an occurrence provider replaced during the owner read [0.15ms]
+(pass) occurrence methods cannot be replaced behind an unchanged provider object [0.16ms]
+(pass) replacement after native dispatch hides the output and preserves the submitted retry identity [0.15ms]
+(pass) native result reader replacement cannot release a ready occurrence [0.21ms]
+(pass) list does not release metadata through an authorizer replaced after its read [0.24ms]
+(pass) native provider prototype methods retain their receiver and remain callable [0.33ms]
+omni positive control [c4e61a9873f236ec8fa9178ae925bafc]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+ 34 pass
+ 0 fail
+ 149 expect() calls
+Ran 34 tests across 2 files. [296.00ms]

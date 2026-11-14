@@ -1,0 +1,1462 @@
+[
+  {
+    "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+    "owner": "WP11",
+    "origin_and_candidate_blob": "229e64c2d8109b413a7667bbe1b208ffa3ab0a73",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "964a53310c340f4496d7410d66f8b852270b75f1",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "964a53310c340f4496d7410d66f8b852270b75f1",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "dbcc51d75ccefb23f328f1d4151504be96a35a45",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "dbcc51d75ccefb23f328f1d4151504be96a35a45",
+        "owner_source": false
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "fc1dbe4e23fe78c19b675e219bf45381d2929a49",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "fc1dbe4e23fe78c19b675e219bf45381d2929a49",
+        "owner_source": false
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": "229e64c2d8109b413a7667bbe1b208ffa3ab0a73",
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": "229e64c2d8109b413a7667bbe1b208ffa3ab0a73",
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": "fc1dbe4e23fe78c19b675e219bf45381d2929a49",
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": "fc1dbe4e23fe78c19b675e219bf45381d2929a49",
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": "964a53310c340f4496d7410d66f8b852270b75f1",
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": "f8404c18abc040c49cf111eb4561ce4c2873a4c6",
+        "owner_source": true
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+    "owner": "WP11",
+    "origin_and_candidate_blob": "90c3e981d8418c562342660bd3d56d03f9995383",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "90c3e981d8418c562342660bd3d56d03f9995383",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "90c3e981d8418c562342660bd3d56d03f9995383",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": "90c3e981d8418c562342660bd3d56d03f9995383",
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": "90c3e981d8418c562342660bd3d56d03f9995383",
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "acb3b7fb3050264758a5470ffe8168fa5f581370",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "acb3b7fb3050264758a5470ffe8168fa5f581370",
+        "owner_source": false
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "0c928756378108fa2c5029ef0708a33a4539cf78",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "0c928756378108fa2c5029ef0708a33a4539cf78",
+        "owner_source": false
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": "90c3e981d8418c562342660bd3d56d03f9995383",
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": "90c3e981d8418c562342660bd3d56d03f9995383",
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": "0c928756378108fa2c5029ef0708a33a4539cf78",
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": "0c928756378108fa2c5029ef0708a33a4539cf78",
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": "90c3e981d8418c562342660bd3d56d03f9995383",
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": "90c3e981d8418c562342660bd3d56d03f9995383",
+        "owner_source": true
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": "a45436a6fef8598b7ef9eae33d061ddebf0aa43d",
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": "a45436a6fef8598b7ef9eae33d061ddebf0aa43d",
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/planner/evidence-reader.ts",
+    "owner": "WP03",
+    "origin_and_candidate_blob": null,
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "9c11e2ad6977573a14725a0b514528c09e34bcc4",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "9c11e2ad6977573a14725a0b514528c09e34bcc4",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": "9c11e2ad6977573a14725a0b514528c09e34bcc4",
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": "9c11e2ad6977573a14725a0b514528c09e34bcc4",
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": null,
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": null,
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": null,
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": null,
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": null,
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": null,
+        "owner_source": true
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": null,
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": null,
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+    "owner": "WP13",
+    "origin_and_candidate_blob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "89ba60857babe8a5c80f409de39b7e0598695b96",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": null,
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "89ba60857babe8a5c80f409de39b7e0598695b96",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "89ba60857babe8a5c80f409de39b7e0598695b96",
+        "owner_source": true
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": null,
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": null,
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+        "owner_source": true
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": null,
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": null,
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+    "owner": "WP13",
+    "origin_and_candidate_blob": "4919ebc3367bb388974839382ff220a94667ad21",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "4919ebc3367bb388974839382ff220a94667ad21",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": "22e23b3f6f3f59b603a25162a11e935da6937e44",
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": "22e23b3f6f3f59b603a25162a11e935da6937e44",
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+        "owner_source": true
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+        "owner_source": false
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": "4919ebc3367bb388974839382ff220a94667ad21",
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": "4919ebc3367bb388974839382ff220a94667ad21",
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": "33a8d973c045769b456342499e1c247d524f6c53",
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": "33a8d973c045769b456342499e1c247d524f6c53",
+        "owner_source": true
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": "22e23b3f6f3f59b603a25162a11e935da6937e44",
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": "22e23b3f6f3f59b603a25162a11e935da6937e44",
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+    "owner": "WP13",
+    "origin_and_candidate_blob": "c2f37e94777d2bdd7d7e565b37f6b4140b3906d9",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "199d8ae6bbda17925b2b2b0423137cbb17211dc8",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "b2ac17f210886353d3596fc6a891242c7ea40f0a",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": "b7645ecd8043969fbfe18326bc64366e01b5e6cf",
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": "b7645ecd8043969fbfe18326bc64366e01b5e6cf",
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "b2ac17f210886353d3596fc6a891242c7ea40f0a",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "b2ac17f210886353d3596fc6a891242c7ea40f0a",
+        "owner_source": true
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "6723576021e0c8b7df91c0823fe0448aa58f4972",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "6723576021e0c8b7df91c0823fe0448aa58f4972",
+        "owner_source": false
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": "c2f37e94777d2bdd7d7e565b37f6b4140b3906d9",
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": "c2f37e94777d2bdd7d7e565b37f6b4140b3906d9",
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": "6723576021e0c8b7df91c0823fe0448aa58f4972",
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": "6723576021e0c8b7df91c0823fe0448aa58f4972",
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": "912df8ecd8552b245e124b93c46644c92a32f3ac",
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": "912df8ecd8552b245e124b93c46644c92a32f3ac",
+        "owner_source": true
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": "f23f28c0662a3a805648344fcabe8df129f2d9ba",
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": "f23f28c0662a3a805648344fcabe8df129f2d9ba",
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+    "owner": "WP13",
+    "origin_and_candidate_blob": null,
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": null,
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": null,
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": null,
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": null,
+        "owner_source": true
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": null,
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": null,
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": null,
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+        "owner_source": true
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": null,
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": null,
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+    "owner": "WP06",
+    "origin_and_candidate_blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+        "owner_source": true
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "bb97dc7d5b1df2b6813a5279028b7a44f36dbfbe",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "bb97dc7d5b1df2b6813a5279028b7a44f36dbfbe",
+        "owner_source": false
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "bb97dc7d5b1df2b6813a5279028b7a44f36dbfbe",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "bb97dc7d5b1df2b6813a5279028b7a44f36dbfbe",
+        "owner_source": false
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": "bb97dc7d5b1df2b6813a5279028b7a44f36dbfbe",
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": "bb97dc7d5b1df2b6813a5279028b7a44f36dbfbe",
+        "owner_source": false
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": "9ef67dac700401023fc6218b6f269286d67eff72",
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": "9ef67dac700401023fc6218b6f269286d67eff72",
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/interface/document-http.ts",
+    "owner": "WP06",
+    "origin_and_candidate_blob": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+        "owner_source": true
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "fbb76f54c1ebfa475189a92ecad6092e22733c81",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "fbb76f54c1ebfa475189a92ecad6092e22733c81",
+        "owner_source": false
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "fbb76f54c1ebfa475189a92ecad6092e22733c81",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "fbb76f54c1ebfa475189a92ecad6092e22733c81",
+        "owner_source": false
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": "fbb76f54c1ebfa475189a92ecad6092e22733c81",
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": "fbb76f54c1ebfa475189a92ecad6092e22733c81",
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": "fbb76f54c1ebfa475189a92ecad6092e22733c81",
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": "fbb76f54c1ebfa475189a92ecad6092e22733c81",
+        "owner_source": false
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": "fbb76f54c1ebfa475189a92ecad6092e22733c81",
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": "fbb76f54c1ebfa475189a92ecad6092e22733c81",
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+    "owner": "WP12",
+    "origin_and_candidate_blob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": "7efbb467220eac13dbbca95a69a87c164a2a1e14",
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": "7efbb467220eac13dbbca95a69a87c164a2a1e14",
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+        "owner_source": true
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "7efbb467220eac13dbbca95a69a87c164a2a1e14",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "7efbb467220eac13dbbca95a69a87c164a2a1e14",
+        "owner_source": false
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+        "owner_source": true
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": "7efbb467220eac13dbbca95a69a87c164a2a1e14",
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": "7efbb467220eac13dbbca95a69a87c164a2a1e14",
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": "7efbb467220eac13dbbca95a69a87c164a2a1e14",
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": "7efbb467220eac13dbbca95a69a87c164a2a1e14",
+        "owner_source": false
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": "7efbb467220eac13dbbca95a69a87c164a2a1e14",
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": "7efbb467220eac13dbbca95a69a87c164a2a1e14",
+        "owner_source": false
+      }
+    ],
+    "decision": "CONSUMED_EXACT_SLICE",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+    "owner": "WP12",
+    "origin_and_candidate_blob": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "3c78f724a50c37757570e80ba18af950a9469132",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "3c78f724a50c37757570e80ba18af950a9469132",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": "10903c2d183978f0539b0ff3b5d610213ad31852",
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": "10903c2d183978f0539b0ff3b5d610213ad31852",
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "f1127503cf3d25a44d76c766d6d52fcd3c41bd1d",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "f1127503cf3d25a44d76c766d6d52fcd3c41bd1d",
+        "owner_source": true
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "10903c2d183978f0539b0ff3b5d610213ad31852",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "10903c2d183978f0539b0ff3b5d610213ad31852",
+        "owner_source": false
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+        "owner_source": true
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": "10903c2d183978f0539b0ff3b5d610213ad31852",
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": "10903c2d183978f0539b0ff3b5d610213ad31852",
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": "10903c2d183978f0539b0ff3b5d610213ad31852",
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": "10903c2d183978f0539b0ff3b5d610213ad31852",
+        "owner_source": false
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": "10903c2d183978f0539b0ff3b5d610213ad31852",
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": "10903c2d183978f0539b0ff3b5d610213ad31852",
+        "owner_source": false
+      }
+    ],
+    "decision": "CONSUMED_EXACT_SLICE",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+    "owner": "WP12",
+    "origin_and_candidate_blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": "1ebb11deacb55df8d09e3071130b52f34159d47c",
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": "1ebb11deacb55df8d09e3071130b52f34159d47c",
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+        "owner_source": true
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "a547883f113e5879f13fb13ad23f31704209b4dc",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "a547883f113e5879f13fb13ad23f31704209b4dc",
+        "owner_source": false
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+        "owner_source": true
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": "9fb3be23997d87a5544dec543bf6e02fb7835b19",
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": "9fb3be23997d87a5544dec543bf6e02fb7835b19",
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": "9fb3be23997d87a5544dec543bf6e02fb7835b19",
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": "9fb3be23997d87a5544dec543bf6e02fb7835b19",
+        "owner_source": false
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": "9fb3be23997d87a5544dec543bf6e02fb7835b19",
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": "9fb3be23997d87a5544dec543bf6e02fb7835b19",
+        "owner_source": false
+      }
+    ],
+    "decision": "CONSUMED_EXACT_SLICE",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/decision-memory/invalidation.ts",
+    "owner": "WP14",
+    "origin_and_candidate_blob": "430cad970087abab2fcb05d299f5d358834c93e9",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "430cad970087abab2fcb05d299f5d358834c93e9",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "430cad970087abab2fcb05d299f5d358834c93e9",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": null,
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "3bafcac1d0114eff9cd6869fd8040a9fe414ed7f",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "3bafcac1d0114eff9cd6869fd8040a9fe414ed7f",
+        "owner_source": true
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "acca5b77dfef2cf4552ccf1caf27e19e74a98cf2",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "acca5b77dfef2cf4552ccf1caf27e19e74a98cf2",
+        "owner_source": true
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": null,
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": null,
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": null,
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": null,
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": null,
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+    "owner": "WP14",
+    "origin_and_candidate_blob": "cd87d8a7af91ac66e8e6a8d2e9ae48ed1db5ec74",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "cd87d8a7af91ac66e8e6a8d2e9ae48ed1db5ec74",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "cd87d8a7af91ac66e8e6a8d2e9ae48ed1db5ec74",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": "6e847ce8338e6a5145349249d7eb7559576b7415",
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": "6e847ce8338e6a5145349249d7eb7559576b7415",
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "1c586d321cf10bdaeccd95b4ac2a2100b439fe7f",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "1c586d321cf10bdaeccd95b4ac2a2100b439fe7f",
+        "owner_source": true
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "0299a2a5dadecbec526a5dcea127d8a010488824",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "0299a2a5dadecbec526a5dcea127d8a010488824",
+        "owner_source": true
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": "cd87d8a7af91ac66e8e6a8d2e9ae48ed1db5ec74",
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": "cd87d8a7af91ac66e8e6a8d2e9ae48ed1db5ec74",
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": "6e847ce8338e6a5145349249d7eb7559576b7415",
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": "6e847ce8338e6a5145349249d7eb7559576b7415",
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": "6e847ce8338e6a5145349249d7eb7559576b7415",
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": "6e847ce8338e6a5145349249d7eb7559576b7415",
+        "owner_source": false
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": "6e847ce8338e6a5145349249d7eb7559576b7415",
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": "6e847ce8338e6a5145349249d7eb7559576b7415",
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+    "owner": "WP14",
+    "origin_and_candidate_blob": "bc30d168f18a186a9cbdc149607fec9c30223247",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "bc30d168f18a186a9cbdc149607fec9c30223247",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "bc30d168f18a186a9cbdc149607fec9c30223247",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": null,
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "790e7c98820df61306ad67bd5897b1301118d335",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "790e7c98820df61306ad67bd5897b1301118d335",
+        "owner_source": true
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "03a3ddf8dacd2e7b050b20b73b14b2bd3e974f4c",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "03a3ddf8dacd2e7b050b20b73b14b2bd3e974f4c",
+        "owner_source": true
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": "bc30d168f18a186a9cbdc149607fec9c30223247",
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": "bc30d168f18a186a9cbdc149607fec9c30223247",
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": null,
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": null,
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": null,
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": null,
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome.ts",
+    "owner": "WP14",
+    "origin_and_candidate_blob": "c84aac867aab332b9ac7e4e92d03bf3f7e7ad430",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "c84aac867aab332b9ac7e4e92d03bf3f7e7ad430",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "c84aac867aab332b9ac7e4e92d03bf3f7e7ad430",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": null,
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "97d23e90f627472e525c50288fdf4163e3cc3c54",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "97d23e90f627472e525c50288fdf4163e3cc3c54",
+        "owner_source": true
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "d1c524a976e07524d9b2b197635805dde9ae650c",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "d1c524a976e07524d9b2b197635805dde9ae650c",
+        "owner_source": true
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": "c84aac867aab332b9ac7e4e92d03bf3f7e7ad430",
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": "c84aac867aab332b9ac7e4e92d03bf3f7e7ad430",
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": null,
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": null,
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": null,
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": null,
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+    "owner": "WP14",
+    "origin_and_candidate_blob": "b63fcc3744065daed31406ad19bc18a3ec983110",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "6c4c972fb678ca31fc09606008feef5090602b1f",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "6c4c972fb678ca31fc09606008feef5090602b1f",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": "84b66e7f7737b291510bee7f746323654415986a",
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": "84b66e7f7737b291510bee7f746323654415986a",
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "2d8524b42448ea63a7dd9ab0e9337c90540dc383",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "2d8524b42448ea63a7dd9ab0e9337c90540dc383",
+        "owner_source": true
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "57a9f7425de54eda1673a4f488d5567c66e94d5c",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "57a9f7425de54eda1673a4f488d5567c66e94d5c",
+        "owner_source": true
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": "6c4c972fb678ca31fc09606008feef5090602b1f",
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": "6c4c972fb678ca31fc09606008feef5090602b1f",
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": "84b66e7f7737b291510bee7f746323654415986a",
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": "84b66e7f7737b291510bee7f746323654415986a",
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": "84b66e7f7737b291510bee7f746323654415986a",
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": "84b66e7f7737b291510bee7f746323654415986a",
+        "owner_source": false
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": "b63fcc3744065daed31406ad19bc18a3ec983110",
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": "b63fcc3744065daed31406ad19bc18a3ec983110",
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+    "owner": "WP14",
+    "origin_and_candidate_blob": "2d41f7fc3a718b625a49e2fe85e414cca1c473c8",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "2d41f7fc3a718b625a49e2fe85e414cca1c473c8",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "2d41f7fc3a718b625a49e2fe85e414cca1c473c8",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": null,
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "c4a1d8d1f4e540c41c3e7d09efb92bb003ab6d8b",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "c4a1d8d1f4e540c41c3e7d09efb92bb003ab6d8b",
+        "owner_source": true
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "905770233118a2b0707dfed37f9038f89fb884ac",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "905770233118a2b0707dfed37f9038f89fb884ac",
+        "owner_source": true
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": "2d41f7fc3a718b625a49e2fe85e414cca1c473c8",
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": "2d41f7fc3a718b625a49e2fe85e414cca1c473c8",
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": null,
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": null,
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": null,
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": null,
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+    "owner": "WP14",
+    "origin_and_candidate_blob": "83b77eab0314943f3a6e5dfc16b648f1a166db33",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "83b77eab0314943f3a6e5dfc16b648f1a166db33",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "83b77eab0314943f3a6e5dfc16b648f1a166db33",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": null,
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+        "owner_source": true
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "d329fc03041ae86d7d0e57a5d31e05e98be46fe5",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "d329fc03041ae86d7d0e57a5d31e05e98be46fe5",
+        "owner_source": true
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": "83b77eab0314943f3a6e5dfc16b648f1a166db33",
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": "83b77eab0314943f3a6e5dfc16b648f1a166db33",
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": null,
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": null,
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": null,
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": null,
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  },
+  {
+    "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-work.ts",
+    "owner": "WP14",
+    "origin_and_candidate_blob": "44d56975554badd68d9156622c9f94df8145bcdd",
+    "variants": [
+      {
+        "pr": 29,
+        "pin": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "blob": "44d56975554badd68d9156622c9f94df8145bcdd",
+        "latest_pin": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "latest_blob": "44d56975554badd68d9156622c9f94df8145bcdd",
+        "owner_source": false
+      },
+      {
+        "pr": 34,
+        "pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "blob": null,
+        "latest_pin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 36,
+        "pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "3cc6b0ae5fd75ce84724eeafc053264fc9370740",
+        "latest_pin": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "latest_blob": "3cc6b0ae5fd75ce84724eeafc053264fc9370740",
+        "owner_source": true
+      },
+      {
+        "pr": 38,
+        "pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "blob": "8e03cb17343b87304238a8f9f17b9e0e130b5149",
+        "latest_pin": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "latest_blob": "8e03cb17343b87304238a8f9f17b9e0e130b5149",
+        "owner_source": true
+      },
+      {
+        "pr": 39,
+        "pin": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "blob": null,
+        "latest_pin": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 41,
+        "pin": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": null,
+        "latest_pin": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 42,
+        "pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "blob": null,
+        "latest_pin": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "latest_blob": null,
+        "owner_source": false
+      },
+      {
+        "pr": 43,
+        "pin": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": null,
+        "latest_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "latest_blob": null,
+        "owner_source": false
+      }
+    ],
+    "decision": "KEEP_C_AND_REQUEST_OWNER_RECONCILIATION",
+    "limitation": "Foreign branches may contain useful proposals, but are not canonical owners. No wholesale snapshot replacement."
+  }
+]

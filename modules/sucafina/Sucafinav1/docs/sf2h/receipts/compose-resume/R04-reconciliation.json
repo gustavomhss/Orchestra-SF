@@ -1,0 +1,703 @@
+{
+  "schema": "compose-resume-reconciliation-v1",
+  "origin": {
+    "branch": "astra-compose",
+    "pr": 32,
+    "head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+    "tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4"
+  },
+  "candidate": {
+    "branch": "compose-resume",
+    "pr": 44,
+    "head": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+    "tree": "64d26157c0044018712074e55a4a56f36db15d5f"
+  },
+  "base": {
+    "branch": "sf2-stack",
+    "head": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af"
+  },
+  "immutable_plan": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "modified": false,
+    "acceptance_predicate_reduced": false
+  },
+  "input_pins": [
+    {
+      "pr": 29,
+      "branch": "astra-wp10",
+      "head": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "tree": "ee95a2e3d0f02efabe6a4442fcf59479265a9f61",
+      "parents": [
+        "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9"
+      ],
+      "ancestry": "diverged",
+      "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "disposition": "HELD_OR_ALREADY_PRESENT_NO_NEW_INTAKE",
+      "latest": {
+        "head": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305"
+      }
+    },
+    {
+      "pr": 34,
+      "branch": "astra-operations",
+      "head": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "tree": "eb427121bcfd8c2511aac31d908f3c0d52c1915e",
+      "parents": [
+        "8ad7e16064e9f886b46519581aae5fb6182a2829"
+      ],
+      "ancestry": "diverged",
+      "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "disposition": "HELD_OR_ALREADY_PRESENT_NO_NEW_INTAKE",
+      "latest": {
+        "head": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "tree": "eb427121bcfd8c2511aac31d908f3c0d52c1915e"
+      }
+    },
+    {
+      "pr": 36,
+      "branch": "astra-intelligence",
+      "head": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "tree": "7c445488ea55c1c6d8d31cf91cb61b01665dac7b",
+      "parents": [
+        "8bb72c8cdeda149b000d91403c368642c3b53dec"
+      ],
+      "ancestry": "diverged",
+      "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "disposition": "HELD_OR_ALREADY_PRESENT_NO_NEW_INTAKE",
+      "latest": {
+        "head": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "tree": "7c445488ea55c1c6d8d31cf91cb61b01665dac7b"
+      }
+    },
+    {
+      "pr": 38,
+      "branch": "astra-wp14",
+      "head": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+      "tree": "7f76f3db44cb3cbaa69d070c6268560150067603",
+      "parents": [
+        "302332e2d30ecb3426265aac3adaa518b81a5ea3"
+      ],
+      "ancestry": "diverged",
+      "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "disposition": "HELD_OR_ALREADY_PRESENT_NO_NEW_INTAKE",
+      "latest": {
+        "head": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "tree": "7f76f3db44cb3cbaa69d070c6268560150067603"
+      }
+    },
+    {
+      "pr": 39,
+      "branch": "astra-wp12",
+      "head": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+      "tree": "37282950a3d1b07a08b2616c18a2bd06c1f4364e",
+      "parents": [
+        "449072d08500c744ac17d7ac73d46d2f620a56b2"
+      ],
+      "ancestry": "diverged",
+      "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "disposition": "PARTIAL_EXACT_BLOB_INTAKE",
+      "latest": {
+        "head": "5e768df0473a75b2436e3208350155c96708b1c6",
+        "tree": "61d375b8e61a8af181937bfdec0e811399b10921"
+      }
+    },
+    {
+      "pr": 41,
+      "branch": "collab-resume",
+      "head": "20821df310ebc6ea08ccab27e829008d72a04de6",
+      "tree": "98d5c2f4f62a778f4acf6ec1b69ef5bfd19d5783",
+      "parents": [
+        "ff557552936197b6734e57f0ecea0c44b19139b1"
+      ],
+      "ancestry": "diverged",
+      "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "disposition": "PARTIAL_EXACT_BLOB_INTAKE",
+      "latest": {
+        "head": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+        "tree": "44a6c14f500f88dc8b01f82f64dedb6cc4d3c47f"
+      }
+    },
+    {
+      "pr": 42,
+      "branch": "finance-resume",
+      "head": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+      "parents": [
+        "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+        "e8949be0e31952d5be4987c099003cd0b46e2add"
+      ],
+      "ancestry": "diverged",
+      "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "disposition": "PARTIAL_EXACT_BLOB_INTAKE",
+      "latest": {
+        "head": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "tree": "6f2cb4d131ba5437f70d7700e3274cc26a22630c"
+      }
+    },
+    {
+      "pr": 43,
+      "branch": "interface-resume",
+      "head": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+      "tree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+      "parents": [
+        "b1a477cd2346be755e10caec2941b1ba11171430"
+      ],
+      "ancestry": "diverged",
+      "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "disposition": "PARTIAL_EXACT_BLOB_INTAKE",
+      "latest": {
+        "head": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "tree": "cf3676a469a1f8bcab05e322ee7a4a1ada0704c5"
+      }
+    }
+  ],
+  "consumed_paths": 22,
+  "consumed": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+      "previous_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+      "source": {
+        "pr": 42,
+        "branch": "finance-resume",
+        "commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:36:33Z"
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:36:33Z"
+        }
+      },
+      "owner": "WP03",
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB",
+      "limitation": "Pending exact composed Actions evidence; source publication is not acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+      "previous_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "source": {
+        "pr": 42,
+        "branch": "finance-resume",
+        "commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:36:33Z"
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:36:33Z"
+        }
+      },
+      "owner": "WP03",
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB",
+      "limitation": "Pending exact composed Actions evidence; source publication is not acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "130c4940746088518376aa4c325bd68ade46aa87",
+      "previous_blob": null,
+      "source": {
+        "pr": 42,
+        "branch": "finance-resume",
+        "commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:36:33Z"
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:36:33Z"
+        }
+      },
+      "owner": "WP03",
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB",
+      "limitation": "Pending exact composed Actions evidence; source publication is not acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/routines/schedule.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c2f76fb6ebf2f05b8b89a08561bfac14cc52ad66",
+      "previous_blob": "56ca29211a52d2226686fc8ea8ddb1999cfb4e6c",
+      "source": {
+        "pr": 41,
+        "branch": "collab-resume",
+        "commit": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "tree": "98d5c2f4f62a778f4acf6ec1b69ef5bfd19d5783",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:40:18Z"
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:40:18Z"
+        }
+      },
+      "owner": "WP09",
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB",
+      "limitation": "Pending exact composed Actions evidence; source publication is not acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2e4b277dc0e2b15bbc7ff83fc3d6fae0d0d2f400",
+      "previous_blob": "c54a9c651f79c22ed747bee780d0a9177998f854",
+      "source": {
+        "pr": 41,
+        "branch": "collab-resume",
+        "commit": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "tree": "98d5c2f4f62a778f4acf6ec1b69ef5bfd19d5783",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:40:18Z"
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:40:18Z"
+        }
+      },
+      "owner": "WP09",
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB",
+      "limitation": "Pending exact composed Actions evidence; source publication is not acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/shell-state.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "74ccb3c50dcadd85878987870f0e388926898d53",
+      "previous_blob": "58f7a218124cffed60d6e639d7f3ee675cf159d2",
+      "owner": "WP01",
+      "source": {
+        "pr": 43,
+        "branch": "interface-resume",
+        "head": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "tree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:35:33Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2aeacf2c05e86fef28947c5332284f3089e00049",
+      "previous_blob": "d69bb554ba35863b0bf248c6aa0382205614d12a",
+      "owner": "WP01",
+      "source": {
+        "pr": 43,
+        "branch": "interface-resume",
+        "head": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "tree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:35:33Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c92748938661f561a7f99d16049c35d0b4ce345c",
+      "previous_blob": "bad4b08050949eb7cde69615b131649f1c0bcad7",
+      "owner": "WP02",
+      "source": {
+        "pr": 43,
+        "branch": "interface-resume",
+        "head": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "tree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:35:33Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "562cdca31a843ad893bc5f31eab039c55e7c9baa",
+      "previous_blob": "fefdb4b7814be4953e1a5e7f12e2385e0a6a03c4",
+      "owner": "WP02",
+      "source": {
+        "pr": 43,
+        "branch": "interface-resume",
+        "head": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "tree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:35:33Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "10fe1c087aae8b4f9d19124634676cd3840f69d8",
+      "previous_blob": "755e4d2fe5e65e0281674528eefece30dea56183",
+      "owner": "WP01",
+      "source": {
+        "pr": 43,
+        "branch": "interface-resume",
+        "head": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "tree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:35:33Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "156beb2d4ea52e4312c3bfb3c3298bcc32edfc0e",
+      "previous_blob": "67d9ca1c8b880d555f90a1aef227a78e5b9170e8",
+      "owner": "WP01",
+      "source": {
+        "pr": 43,
+        "branch": "interface-resume",
+        "head": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "tree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:35:33Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f681ca2a663d0540898c4b4472dce86355ef20ae",
+      "previous_blob": "6952098674a027afafb11ff9cdf6d942580c4149",
+      "owner": "WP01",
+      "source": {
+        "pr": 43,
+        "branch": "interface-resume",
+        "head": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "tree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:35:33Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cd43fad88f3424ac160f32be743df17b80a74336",
+      "previous_blob": "76188b9f567861b30dba3b22afce66d60a2424c8",
+      "owner": "WP02",
+      "source": {
+        "pr": 43,
+        "branch": "interface-resume",
+        "head": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "tree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:35:33Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4d7823be0abff16b4505910d080b47cf7cb96522",
+      "previous_blob": null,
+      "owner": "WP02",
+      "source": {
+        "pr": 43,
+        "branch": "interface-resume",
+        "head": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "tree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:35:33Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f96b7353b3fb595c133b8af87edea11c56f1c028",
+      "previous_blob": "e6c22b6df3ec47ebc7dff5c745514da94d0d53a2",
+      "owner": "WP02",
+      "source": {
+        "pr": 43,
+        "branch": "interface-resume",
+        "head": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "tree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:35:33Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8dc2ac105b64e73f9e5f0f18683ef27a59ee386d",
+      "previous_blob": null,
+      "owner": "WP02",
+      "source": {
+        "pr": 43,
+        "branch": "interface-resume",
+        "head": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "tree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:35:33Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+      "previous_blob": "337f6764a6e4fa84c09d4b53afd87c814a8d1fab",
+      "owner": "WP12",
+      "source": {
+        "pr": 39,
+        "branch": "astra-wp12",
+        "head": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "tree": "37282950a3d1b07a08b2616c18a2bd06c1f4364e",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:38:08Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+      "previous_blob": "03f6ba173ca1d27693f784fdf149d2c674ca5edf",
+      "owner": "WP12",
+      "source": {
+        "pr": 39,
+        "branch": "astra-wp12",
+        "head": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "tree": "37282950a3d1b07a08b2616c18a2bd06c1f4364e",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:38:08Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "previous_blob": "a3c306b720fd7f82e32340682e5001b1e6f4ef8e",
+      "owner": "WP12",
+      "source": {
+        "pr": 39,
+        "branch": "astra-wp12",
+        "head": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "tree": "37282950a3d1b07a08b2616c18a2bd06c1f4364e",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:38:08Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ab321fb2d1562255cf987571477233767c5240e3",
+      "previous_blob": "6d81c4df8d69be1a24581a316ba6e346343d6f67",
+      "owner": "WP12",
+      "source": {
+        "pr": 39,
+        "branch": "astra-wp12",
+        "head": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "tree": "37282950a3d1b07a08b2616c18a2bd06c1f4364e",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:38:08Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d12d8702f5914c94475b3ad1205718ecf1899fe9",
+      "previous_blob": "0353e266c6225d0ee0961e8c391bd045f84e92b9",
+      "owner": "WP12",
+      "source": {
+        "pr": 39,
+        "branch": "astra-wp12",
+        "head": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "tree": "37282950a3d1b07a08b2616c18a2bd06c1f4364e",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:38:08Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6bf1130c94bca4b3cd1377875492b8f910b4259a",
+      "previous_blob": null,
+      "owner": "WP12",
+      "source": {
+        "pr": 39,
+        "branch": "astra-wp12",
+        "head": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+        "tree": "37282950a3d1b07a08b2616c18a2bd06c1f4364e",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:38:08Z"
+        }
+      },
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB"
+    }
+  ],
+  "matrix_counts": {
+    "29": {
+      "ALREADY_PRESENT_IDENTICAL": 211,
+      "HOLD_OWNER_RECONCILIATION": 90,
+      "HOLD_NEW_EXPLICIT_INPUT": 3,
+      "KEEP_COMPOSITION_PATH": 4
+    },
+    "34": {
+      "ALREADY_PRESENT_IDENTICAL": 170,
+      "HOLD_OWNER_RECONCILIATION": 4
+    },
+    "36": {
+      "DEDUP_IDENTICAL_TO_CONSUMED": 3,
+      "HOLD_OWNER_RECONCILIATION": 82,
+      "ALREADY_PRESENT_IDENTICAL": 62
+    },
+    "38": {
+      "HOLD_OWNER_RECONCILIATION": 23,
+      "ALREADY_PRESENT_IDENTICAL": 8
+    },
+    "39": {
+      "CONSUMED_EXACT_BLOB": 6,
+      "ALREADY_PRESENT_IDENTICAL": 32,
+      "HOLD_OWNER_RECONCILIATION": 37,
+      "HOLD_NEW_EXPLICIT_INPUT": 2
+    },
+    "41": {
+      "HOLD_OWNER_RECONCILIATION": 105,
+      "ALREADY_PRESENT_IDENTICAL": 128,
+      "CONSUMED_EXACT_BLOB": 2
+    },
+    "42": {
+      "ALREADY_PRESENT_IDENTICAL": 235,
+      "HOLD_OWNER_RECONCILIATION": 97,
+      "CONSUMED_EXACT_BLOB": 3,
+      "HOLD_NEW_EXPLICIT_INPUT": 2
+    },
+    "43": {
+      "HOLD_OWNER_RECONCILIATION": 18,
+      "ALREADY_PRESENT_IDENTICAL": 124,
+      "CONSUMED_EXACT_BLOB": 11,
+      "KEEP_COMPOSITION_PATH": 1
+    }
+  },
+  "matrix_files": [
+    "matrix/pr-29.json",
+    "matrix/pr-34.json",
+    "matrix/pr-36.json",
+    "matrix/pr-38.json",
+    "matrix/pr-39.json",
+    "matrix/pr-41.json",
+    "matrix/pr-42.json",
+    "matrix/pr-43.json"
+  ],
+  "additional_indexes": [
+    "R04-post-pin-deltas.json",
+    "R04-critical-overlaps.json",
+    "R04-source-receipt-index.json"
+  ],
+  "policy": {
+    "author_blobs_preserved": true,
+    "source_branches_modified": false,
+    "remote_channel": "GitHub MCP only",
+    "force_push": false,
+    "product_deletions": 0,
+    "silent_functional_fixes": false,
+    "integration_counts_as_independent_review": false,
+    "qualification": "PARTIAL_CANDIDATE_NOT_GLOBAL_RELEASE_NOT_D"
+  }
+}

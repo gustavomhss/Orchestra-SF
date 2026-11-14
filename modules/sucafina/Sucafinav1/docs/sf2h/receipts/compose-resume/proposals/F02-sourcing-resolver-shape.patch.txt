@@ -1,0 +1,11 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts
+@@ -385,7 +385,7 @@
+   })
+   const bindings = createProcurementUiBindings({ authority: ui, dispatch: (_operation, payload, call) => dispatch(payload, call) })
+   const payload = { requestRef: issued.value, proposalRefs: variant === "single-offer" ? ["A"] : ["A", "B", "C"], criteria: [...settings.criteria, ...settings.commCriteria].map((criterion) => criterion.name) }
+-  const resolveSource = createSfProcurementSourceAccess({ host, resolve: sources.resolve, procurement: port })
++  const resolveSource = createSfProcurementSourceAccess({ host, resolve: sources, procurement: port })
+   const context = createSfBusinessContext({ revalidate: host.revalidate, resolveSource, proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not requested by sourcing verification" }) })
+   const state = createSfProductState({ persistence, createId: randomUUID,
+     authorize: async (request) => authorized(request) ? { principalRef: "buyer", accessRevision: "1", policyVersion: "1" } : undefined,
