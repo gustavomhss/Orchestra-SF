@@ -1,42 +1,51 @@
 import { expect, test } from "@playwright/test"
 import type { Page, TestInfo } from "@playwright/test"
+import { createHash } from "node:crypto"
 import { mkdir, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises"
 import { release, tmpdir } from "node:os"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { flowNames, prepareUiFlow, runUiFlow } from "./flows.ts"
+import type { Flow, UiCorpusReceipt } from "./flows.ts"
+import { compareMeasurements, createMeasurementPlan, measurementKey, summarizeMeasurements } from "./measurements.ts"
+import type { Measurement, MeasurementPlan } from "./measurements.ts"
 
-type Observation = {
-  flow: string; repetition: number; viewportWidth: number; viewportHeight: number; zoomPercent: number
-  startedAt: string; visualReadyMs: number | null; completionMs: number | null
-  outcome: "passed" | "failed"; failureReason: string | null; resultEvidenceRef: string | null
-}
-type CorpusReceipt = {
-  schema: string; datasetDigest: string; counts: { financialLines: number; purchaseOrders: number; projects: number }
-  expected: { actual2027: string; forecast2027: string; openRequests: number; firstRequest: string; firstAmount: string; lastRequest: string; lastAmount: string }
-  runtimeVersion: string; authentication: string; provider: string
-}
+test.describe.configure({ timeout: 1800000, retries: 0 })
 
-test.describe.configure({ timeout: 600000, retries: 0 })
-
-test("WP00 observes real local installation, volume consumers and comparable UI repetitions", async ({ page, browser }, testInfo) => {
+test("WP00 observes seven real business flows, browser zoom and thirty repetitions per configuration", async ({}, testInfo) => {
   expect(process.env.GITHUB_ACTIONS, "Qualification must run in GitHub Actions").toBe("true")
   expect(process.platform, "The isolated local provider requires the selected Linux runner").toBe("linux")
   expect(process.env.GITHUB_SHA).toMatch(/^[a-f0-9]{40}$/)
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../../..")
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "wp00-ui-"))
-  const output: Observation[] = []
+  const plan = createMeasurementPlan(flowNames)
+  const observations: Measurement[] = []
+  const cancellations: Record<string, string> = {}
+  const failedFlows = new Map<Flow, string>()
   const logs: string[] = []
-  const state = { stage: "prepare", exitCode: null as number | null, failure: null as string | null, corpus: null as CorpusReceipt | null }
+  const zoomObservations: { key: string; observed: object }[] = []
+  const state = {
+    stage: "prepare", exitCode: null as number | null, failure: null as string | null,
+    corpus: null as UiCorpusReceipt | null, productSha: null as string | null,
+    authenticated: false, browserVersion: null as string | null,
+  }
+  let processCounters: (() => { spawns: number; delegations: number }) | null = null
   const startedAt = new Date().toISOString()
+  const method = "Automation-observed elapsed time from user action to usable business result, then complete asserted outcome; no compositor-paint claim"
   try {
     await mkdir(path.join(directory, "host-tmp"), { mode: 0o700 })
-    // Load the process graph only during execution; `playwright --list` must be read-only.
+    // Load the process graph only during execution; `playwright --list` remains read-only.
     const { Effect, Stream } = await import("effect")
     const { ChildProcess } = await import("effect/unstable/process")
     const { AppProcess } = await import("@orchestra/core/process")
     const { LayerNode } = await import("@orchestra/core/effect/layer-node")
     const { Omni } = await import("@orchestra/core/omni")
+    const { scopedWp00Browser, setBrowserZoom } = await import("./browser.ts")
     const before = Omni.snapshot()
+    processCounters = () => {
+      const after = Omni.snapshot()
+      return { spawns: after.spawns - before.spawns, delegations: after.delegations - before.delegations }
+    }
     const environment = Object.fromEntries(Object.entries(process.env).filter((entry): entry is [string, string] =>
       entry[1] !== undefined && !["ORCHESTRA_SERVER_PASSWORD", "ORCHESTRA_SERVER_USERNAME", "ORCHESTRA_CONFIG", "ORCHESTRA_CONFIG_CONTENT"].includes(entry[0])))
     Object.assign(environment, {
@@ -48,17 +57,25 @@ test("WP00 observes real local installation, volume consumers and comparable UI 
       SUCAFINA_LOCAL_CONFIG: path.join(directory, "installation.json"),
     })
     await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
-      const process = yield* AppProcess.Service
-      // Preparation uses Bun because the authoritative provider is bun:sqlite.
-      const prepared = yield* process.run(ChildProcess.make("bun", [path.join(root, "packages/app-shell/e2e/sucafina/wp00/prepare-installation.ts"), directory], { cwd: root, env: environment }), { timeout: "60 seconds" })
+      const processService = yield* AppProcess.Service
+      // test-ci uses a shallow checkout. The raw commit still contains its real parent;
+      // rev-parse HEAD^ would incorrectly require the parent object to be fetched.
+      const revisions = yield* processService.run(ChildProcess.make("git", ["cat-file", "-p", "HEAD"], { cwd: root }), { timeout: "10 seconds" })
+      if (revisions.exitCode !== 0) throw new Error("Cannot bind the observation to its real CI snapshot and product parent")
+      const snapshot = createHash("sha1").update(`commit ${revisions.stdout.byteLength}\0`).update(revisions.stdout).digest("hex")
+      const product = /^parent ([a-f0-9]{40})$/m.exec(revisions.stdout.toString("utf8"))?.[1]
+      if (snapshot !== process.env.GITHUB_SHA || !product || !/^[a-f0-9]{40}$/.test(product)) throw new Error("Invalid observed CI revision chain")
+      state.productSha = product
+      const prepared = yield* processService.run(ChildProcess.make("bun", [path.join(root, "packages/app-shell/e2e/sucafina/wp00/prepare-installation.ts"), directory], { cwd: root, env: environment }), { timeout: "60 seconds" })
       logs.push(prepared.stdout.toString("utf8"), prepared.stderr.toString("utf8"))
       yield* Effect.promise(async () => {
         expect(prepared.exitCode, "Synthetic installation preparation failed; see wp00-server.log").toBe(0)
-        state.corpus = JSON.parse(await readFile(path.join(directory, "corpus-receipt.json"), "utf8")) as CorpusReceipt
+        state.corpus = JSON.parse(await readFile(path.join(directory, "corpus-receipt.json"), "utf8")) as UiCorpusReceipt
+        expect(state.corpus.schema).toBe("wp00-ui-corpus-v2")
         expect(state.corpus.counts).toEqual({ financialLines: 1000, purchaseOrders: 200, projects: 100 })
       })
       state.stage = "start-existing-cli"
-      const server = yield* process.spawn(ChildProcess.make("bun", ["run", path.join(root, "apps/cli/src/index.ts"), "serve", "--hostname", "localhost", "--port", "4110", "--installation", path.join(root, "modules/sucafina/Sucafinav1/local/entry.ts")], {
+      const server = yield* processService.spawn(ChildProcess.make("bun", ["run", path.join(root, "apps/cli/src/index.ts"), "serve", "--hostname", "localhost", "--port", "4110", "--installation", path.join(root, "modules/sucafina/Sucafinav1/local/entry.ts")], {
         cwd: directory, env: environment, stdin: "ignore", stdout: "pipe", stderr: "pipe",
       }))
       yield* Effect.forkScoped(Stream.runForEach(server.stdout, (chunk) => Effect.sync(() => logs.push(Buffer.from(chunk).toString("utf8")))))
@@ -75,64 +92,63 @@ test("WP00 observes real local installation, volume consumers and comparable UI 
           return ready.value = "ready"
         }, { timeout: 120000, message: "Existing CLI must expose its real local-operator installation" }).not.toBe("waiting")
         expect(ready.value, "Existing CLI exited before readiness; see wp00-server.log").toBe("ready")
+      })
+      state.stage = "start-isolated-browser"
+      const { browser, context, page, worker } = yield* scopedWp00Browser(directory)
+      state.browserVersion = browser.version()
+      yield* Effect.promise(async (signal) => {
         state.stage = "authenticate-existing-operator"
         const artifact = await readFile(path.join(directory, "open-local.html"), "utf8")
         const encoded = /location\.replace\(("[^\n]+")\)<\/script>/.exec(artifact)?.[1]
         expect(encoded, "Existing enrollment helper must produce its private handoff").toBeTruthy()
         const enrollment: unknown = JSON.parse(encoded!)
         if (typeof enrollment !== "string" || !enrollment.startsWith("http://localhost:4110/sucafina/auth/local?code=")) throw new Error("Invalid local enrollment destination")
-        // Keep the single-use enrollment URL out of Playwright traces; use only the cookie actually issued by the real endpoint.
+        // The single-use URL and cookie never enter browser traces or attachments.
         const authenticated = await fetch(enrollment, { redirect: "manual", signal: AbortSignal.timeout(10000) }).catch(() => { throw new Error("Local enrollment request failed") })
         expect(authenticated.status).toBe(303)
         const cookie = /^(sucafina_operator_[a-f0-9]{24})=([a-f0-9]{64}); Path=(\/sucafina);/.exec(authenticated.headers.get("set-cookie") ?? "")
         if (!cookie) throw new Error("Real local enrollment did not issue the expected scoped cookie")
-        await page.context().addCookies([{ name: cookie[1]!, value: cookie[2]!, domain: "localhost", path: cookie[3]!, httpOnly: true, secure: false, sameSite: "Lax" }])
-        await page.goto("http://localhost:4110/sucafina/dashboard?page=Budget+Overview&year=2026")
+        await context.addCookies([{ name: cookie[1]!, value: cookie[2]!, domain: "localhost", path: cookie[3]!, httpOnly: true, secure: false, sameSite: "Lax" }])
+        await page.setViewportSize({ width: 1440, height: 900 })
+        expect((await page.goto("http://localhost:4110/sucafina/dashboard?page=Budget+Overview&year=2026"))?.status()).toBe(200)
         await expect(page.getByRole("heading", { name: "Budget Overview", exact: true, level: 1 })).toBeVisible()
-        await expect(page.getByRole("combobox", { name: "FY", exact: true })).toHaveValue("2026")
+        state.authenticated = true
+        const normalZoom = await setBrowserZoom(page, worker, 100)
         state.stage = "measure-ui"
-        for (const width of [320, 768, 1440]) {
-          await page.setViewportSize({ width, height: 900 })
-          for (let repetition = 1; repetition <= 30; repetition++) {
-            await page.goto("http://localhost:4110/sucafina/dashboard?page=Budget+Overview&year=2026")
-            await expect(page.getByRole("combobox", { name: "FY", exact: true })).toHaveValue("2026")
-            await observe(page, testInfo, output, "dashboard-budget-filter", width, repetition, async (visual) => {
-              const response = page.waitForResponse((entry) => entry.request().method() === "GET" && new URL(entry.url()).pathname === "/sucafina/dashboard" && new URL(entry.url()).searchParams.get("year") === "2027")
-              await page.getByRole("combobox", { name: "FY", exact: true }).selectOption("2027")
-              expect((await response).status()).toBe(200)
-              await expect(page.getByRole("combobox", { name: "FY", exact: true })).toHaveValue("2027")
-              await expect(page.getByRole("heading", { name: "Budget Overview", exact: true, level: 1 })).toBeVisible()
-              const row = page.getByRole("row").filter({ has: page.getByRole("cell", { name: "OPEX", exact: true }) })
-              await expect(row.getByRole("cell", { name: state.corpus!.expected.actual2027, exact: true })).toBeVisible()
-              visual()
-              await expect(row.getByRole("cell", { name: state.corpus!.expected.forecast2027, exact: true })).toBeVisible()
-              await expect(page.getByRole("img", { name: "Effective monthly budget", exact: true })).toBeVisible()
-              const months = page.getByRole("table").filter({ has: page.getByRole("columnheader", { name: "Flat reference (annual allocations / 12)", exact: true }) })
-              await expect(months.getByRole("row")).toHaveCount(13)
-            })
-            await observe(page, testInfo, output, "procurement-volume-open", width, repetition, async (visual) => {
-              const response = await page.goto("http://localhost:4110/sucafina/procurement?page=Dashboard")
-              expect(response?.status()).toBe(200)
-              await expect(page.getByRole("heading", { name: "Dashboard", exact: true, level: 1 })).toBeVisible()
-              await expect(page.getByRole("link", { name: "Download request register", exact: true })).toBeEnabled()
-              const table = page.getByRole("table").filter({ has: page.getByRole("columnheader", { name: "Request", exact: true }) })
-              const initial = table.getByRole("row").filter({ has: page.getByRole("cell", { name: state.corpus!.expected.firstRequest, exact: true }) })
-              await expect(initial.getByRole("cell", { name: state.corpus!.expected.firstAmount, exact: true })).toBeVisible()
-              visual()
-              await expect(table.getByRole("row")).toHaveCount(state.corpus!.expected.openRequests + 1)
-              const row = table.getByRole("row").filter({ has: page.getByRole("cell", { name: state.corpus!.expected.lastRequest, exact: true }) })
-              await expect(row.getByRole("cell", { name: state.corpus!.expected.lastAmount, exact: true })).toBeVisible()
-            })
+        for (const configuration of plan) {
+          signal.throwIfAborted()
+          const flow = configuration.flow as Flow
+          const key = measurementKey(configuration)
+          const priorFailure = failedFlows.get(flow)
+          if (priorFailure) { cancellations[key] = priorFailure; continue }
+          try {
+            await page.setViewportSize({ width: configuration.viewportWidth, height: configuration.viewportHeight })
+            const percent = configuration.zoomPercent === 200 ? 200 : 100
+            await setBrowserZoom(page, worker, percent)
+            await expect.poll(() => page.evaluate(() => window.devicePixelRatio), { message: "Browser zoom must change the observed device pixel ratio" }).toBe(normalZoom.devicePixelRatio * percent / 100)
+            zoomObservations.push({ key, observed: await setBrowserZoom(page, worker, percent) })
+            for (let repetition = 1; repetition <= configuration.repetitions; repetition++) {
+              signal.throwIfAborted()
+              await prepareUiFlow(flow, page, state.corpus!, directory)
+              await observe(page, testInfo, observations, configuration, repetition, (visual) => runUiFlow(flow, page, state.corpus!, directory, testInfo, repetition, visual))
+            }
+          } catch (error) {
+            signal.throwIfAborted()
+            const reason = redact(error instanceof Error ? error.message : String(error))
+            // A failed stateful outcome is not retried. Independent flows still expose their own results.
+            failedFlows.set(flow, reason)
+            cancellations[key] = reason
           }
         }
-        expect(output).toHaveLength(180)
+        if (failedFlows.size) throw new Error("Business flows failed: " + [...failedFlows].map(([flow, reason]) => flow + ": " + reason).join("\n"))
+        expect(observations).toHaveLength(1260)
+        expect(observations.every((item) => item.outcome === "passed")).toBe(true)
         state.stage = "completed"
       })
-    })).pipe(Effect.provide(LayerNode.compile(AppProcess.node))))
-    const after = Omni.snapshot()
-    expect(after.spawns - before.spawns, "The owned seed and CLI must both use Omni").toBeGreaterThanOrEqual(2)
-    expect(after.delegations - before.delegations).toBe(0)
-    await testInfo.attach("wp00-process-observation", { body: JSON.stringify({ spawns: after.spawns - before.spawns, delegations: after.delegations - before.delegations, canonicalControlVerdict: "not applicable to Playwright runner; these are separate scoped process counters" }), contentType: "application/json" })
+    })).pipe(Effect.provide(LayerNode.compile(AppProcess.node))), { signal: AbortSignal.timeout(28 * 60_000) })
+    const counters = processCounters()
+    expect(counters.spawns, "Revision read, seed, CLI and browser must all use Omni").toBeGreaterThanOrEqual(4)
+    expect(counters.delegations).toBe(0)
   } catch (error) {
     state.failure = redact(error instanceof Error ? error.message : String(error))
     throw error
@@ -141,36 +157,40 @@ test("WP00 observes real local installation, volume consumers and comparable UI 
       await mkdir(testInfo.outputDir, { recursive: true })
       await writeFile(testInfo.outputPath("wp00-server.log"), redact(logs.join("")))
       await testInfo.attach("wp00-server", { path: testInfo.outputPath("wp00-server.log"), contentType: "text/plain" })
+      const summaries = summarizeMeasurements(plan, observations, cancellations, state.failure ?? "Configuration was not reached")
+      const environment = {
+        datasetDigest: state.corpus?.datasetDigest ?? "not-prepared", runtimeVersion: state.corpus?.runtimeVersion ?? "not-observed",
+        operatingSystem: `${process.platform} ${release()}`, device: "GitHub Actions runner", browserVersion: state.browserVersion ?? "not-started",
+        cacheState: state.authenticated ? "same authenticated browser context; server responses no-store; repeated navigation" : "not-reached", method,
+      }
       await testInfo.attach("wp00-raw-measurements", { body: JSON.stringify({
-      schema: "wp00-real-ui-measurements-v1", executedCommit: process.env.GITHUB_SHA, baselineReferenceCommit: "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
-      comparisonState: "candidate-only; baseline reference was not measured in this run", startedAt,
-      operatingSystem: `${process.platform} ${release()}`, device: "GitHub Actions runner", browserVersion: browser.version(),
-      authenticated: ["measure-ui", "completed"].includes(state.stage),
-      cacheState: ["measure-ui", "completed"].includes(state.stage) ? "same authenticated browser context; server responses no-store; repeated navigation" : null,
-      cacheStateUnavailableReason: ["measure-ui", "completed"].includes(state.stage) ? null : "Authentication and repeated business navigation were not reached",
-      method: "Automation-observed elapsed time: a current usable business result, then the complete asserted business outcome; neither timestamp claims compositor paint time",
-      state, observations: output,
-      limits: ["Local operator only; no Microsoft identity or native AI qualification", "Planner comparison, sourcing ranking, report preparation and exact reimport are not measured by this spec", "Zoom 200% is not measured; CSS zoom and page-scale emulation are not substituted", "The original baseline commit has not been timed"],
+        schema: "wp00-real-ui-measurements-v2", executedSnapshotCommit: process.env.GITHUB_SHA, productCommit: state.productSha,
+        baselineReferenceCommit: "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf", startedAt, environment,
+        authenticated: state.authenticated, state, plan, observations, summaries, zoomObservations,
+        comparison: compareMeasurements({ productSha: state.productSha ?? "not-observed", environment, summaries }, null),
+        processObservation: processCounters ? { ...processCounters(), canonicalControlVerdict: "Playwright scoped counters; not the Bun canonical control" } : null,
+        limits: ["Local operator only; no Microsoft identity or native AI qualification", "Seeded Planner alternatives do not prove a native AI scenario or composite J05", "The original baseline commit has not been timed", "Cancelled attempts have no invented latency or successful outcome"],
       }, null, 2), contentType: "application/json" })
     } finally { await rm(directory, { recursive: true, force: true }) }
   }
 })
 
-async function observe(page: Page, testInfo: TestInfo, output: Observation[], flow: string, width: number, repetition: number, action: (visual: () => void) => Promise<void>) {
+async function observe(page: Page, testInfo: TestInfo, output: Measurement[], configuration: MeasurementPlan, repetition: number, action: (visual: () => void) => Promise<void>) {
   const start = performance.now()
-  const record: Observation = { flow, repetition, viewportWidth: width, viewportHeight: 900, zoomPercent: 100, startedAt: new Date().toISOString(), visualReadyMs: null, completionMs: null, outcome: "failed", failureReason: null, resultEvidenceRef: null }
+  const record: Measurement = { ...configuration, repetition, startedAt: new Date().toISOString(), visualReadyMs: null, completionMs: null, outcome: "failed", failureReason: null, resultEvidenceRef: null }
   output.push(record)
   try {
-    await action(() => { record.visualReadyMs = performance.now() - start })
+    await action(() => { record.visualReadyMs ??= performance.now() - start })
+    if (record.visualReadyMs === null) throw new Error("The flow never observed a usable business result")
     record.completionMs = performance.now() - start
-    record.outcome = "passed"
-    if (repetition === 30) {
-      record.resultEvidenceRef = `${flow}-${width}.png`
-      await page.screenshot({ path: testInfo.outputPath(record.resultEvidenceRef), fullPage: true })
-      await testInfo.attach(record.resultEvidenceRef, { path: testInfo.outputPath(record.resultEvidenceRef), contentType: "image/png" })
+    if (repetition === configuration.repetitions) {
+      const evidence = `${configuration.flow}-${configuration.viewportWidth}-${configuration.zoomPercent}.png`
+      await page.screenshot({ path: testInfo.outputPath(evidence), fullPage: true })
+      await testInfo.attach(evidence, { path: testInfo.outputPath(evidence), contentType: "image/png" })
+      record.resultEvidenceRef = evidence
     }
+    record.outcome = "passed"
   } catch (error) {
-    record.outcome = "failed"
     record.failureReason = redact(error instanceof Error ? error.message : String(error))
     throw error
   }

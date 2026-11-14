@@ -88,8 +88,8 @@ jobs:
             const domain = request.package === 'sucafina' && request.directory === 'modules/sucafina' && request.runner === 'bun' &&
               request.args.every(file => /^Sucafinav1\/test\/product\/wp\d{2}\/[^\s]+\.test\.ts$/.test(file))
             const browser = request.package === 'app' && request.directory === 'packages/app-shell' && request.runner === 'playwright' &&
-              request.config === 'e2e/playwright.production.config.ts' && request.args.length === 1 &&
-              request.args[0] === 'e2e/sucafina/wp00/baseline-ui.spec.ts' &&
+              request.config === 'e2e/playwright.production.config.ts' && request.args.length === 2 &&
+              request.args.every(file => ['e2e/sucafina/wp00/baseline-ui.spec.ts', 'e2e/sucafina/wp00/zoom-capability.spec.ts'].includes(file)) &&
               request.env.ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER === 'strict' && request.env.ORCHESTRA_CHANNEL === 'prod'
             if ((!domain && !browser) || request.args.length === 0 || new Set(request.args).size !== request.args.length ||
                 request.args.some(file => !isFile(`${request.directory}/${file}`)))
@@ -125,13 +125,13 @@ jobs:
           // Read the actual compiler file list separately instead of inferring inclusion.
           const files = new Set(readFileSync(path.join(process.env.EVIDENCE, 'ui-typecheck-files.txt'), 'utf8')
             .split(/\r?\n/).filter(Boolean).map(file => path.resolve(file)))
-          for (const file of ['baseline-ui.spec.ts', 'prepare-installation.ts']) {
+          for (const file of ['baseline-ui.spec.ts', 'zoom-capability.spec.ts', 'prepare-installation.ts', 'browser.ts', 'flows.ts', 'measurements.ts']) {
             if (!files.has(path.join(root, file))) throw new Error(`The official typecheck omitted ${file}`)
           }
           if (config.configFilePath !== path.join(root, 'tsconfig.json') || config.noEmit !== true ||
               config.composite !== false || config.emitDeclarationOnly !== false)
             throw new Error('Unexpected UI typecheck compiler configuration')
-          console.log('Verified official app typecheck resolves both WP00 UI source files')
+          console.log('Verified official app typecheck resolves all six WP00 UI source files')
           NODE
 
       - name: Typecheck WP00 browser qualification through the official app script

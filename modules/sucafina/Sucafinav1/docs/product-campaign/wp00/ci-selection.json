@@ -12,7 +12,10 @@
       "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
       "Sucafinav1/test/product/wp00/ownership.test.ts",
       "Sucafinav1/test/product/wp00/scanner-host-preflight.test.ts",
-      "Sucafinav1/test/product/wp00/contract-boundaries.test.ts"
+      "Sucafinav1/test/product/wp00/contract-boundaries.test.ts",
+      "Sucafinav1/test/product/wp00/corpus-reconciliation.test.ts",
+      "Sucafinav1/test/product/wp00/scanner-failure.test.ts",
+      "Sucafinav1/test/product/wp00/measurement-receipts.test.ts"
     ]
   },
   "consumers": {
@@ -32,7 +35,8 @@
     "runner": "playwright",
     "config": "e2e/playwright.production.config.ts",
     "args": [
-      "e2e/sucafina/wp00/baseline-ui.spec.ts"
+      "e2e/sucafina/wp00/baseline-ui.spec.ts",
+      "e2e/sucafina/wp00/zoom-capability.spec.ts"
     ],
     "env": {
       "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict",

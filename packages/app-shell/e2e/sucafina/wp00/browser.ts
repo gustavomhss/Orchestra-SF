@@ -1,0 +1,79 @@
+import { chromium, expect } from "@playwright/test"
+import type { Page, Worker } from "@playwright/test"
+import { Effect, Stream } from "effect"
+import { ChildProcess } from "effect/unstable/process"
+import { AppProcess } from "@orchestra/core/process"
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+
+declare const chrome: {
+  tabs: {
+    query(query: { active: boolean; currentWindow: boolean }): Promise<{ id?: number; url?: string }[]>
+    setZoomSettings(id: number, settings: { mode: "automatic"; scope: "per-origin" }): Promise<void>
+    setZoom(id: number, factor: number): Promise<void>
+    getZoom(id: number): Promise<number>
+  }
+}
+
+/** Launch the existing bundled Chromium through Omni, with an isolated profile and a zoom-only extension. */
+export function scopedWp00Browser(directory: string) {
+  return Effect.gen(function* () {
+    const process = yield* AppProcess.Service
+    const extension = path.join(path.dirname(fileURLToPath(import.meta.url)), "zoom-extension")
+    const status = { endpoint: "", exitCode: null as number | null, diagnostic: "" }
+    const browserProcess = yield* process.spawn(ChildProcess.make(chromium.executablePath(), [
+      "--headless=new", "--no-sandbox", "--disable-dev-shm-usage", "--no-first-run", "--no-default-browser-check",
+      "--disable-background-networking", "--disable-component-update",
+      "--remote-debugging-address=127.0.0.1", "--remote-debugging-port=0",
+      "--user-data-dir=" + path.join(directory, "browser-profile"),
+      "--disable-extensions-except=" + extension, "--load-extension=" + extension, "about:blank",
+    ], { cwd: directory, extendEnv: true, stdin: "ignore", stdout: "pipe", stderr: "pipe" }))
+    const receive = (chunk: Uint8Array) => Effect.sync(() => {
+      status.diagnostic = (status.diagnostic + Buffer.from(chunk).toString("utf8")).slice(-16384)
+      status.endpoint = /DevTools listening on (ws:\/\/127\.0\.0\.1:\d+\/devtools\/browser\/[a-z0-9-]+)/i.exec(status.diagnostic)?.[1] ?? status.endpoint
+    })
+    yield* Effect.forkScoped(Stream.runForEach(browserProcess.stdout, receive))
+    yield* Effect.forkScoped(Stream.runForEach(browserProcess.stderr, receive))
+    yield* Effect.forkScoped(browserProcess.exitCode.pipe(Effect.tap((value) => Effect.sync(() => { status.exitCode = Number(value) }))))
+    yield* Effect.promise(async () => {
+      await expect.poll(() => status.endpoint || (status.exitCode === null ? "" : "exited"), {
+        timeout: 60000, message: "Bundled Chromium must expose its real CDP endpoint through the scoped process",
+      }).not.toBe("")
+      if (!status.endpoint) throw new Error("Chromium exited before readiness: " + status.diagnostic)
+    })
+    const browser = yield* Effect.acquireRelease(
+      Effect.promise(() => chromium.connectOverCDP(status.endpoint)),
+      (value) => Effect.promise(() => value.close()),
+    )
+    const context = browser.contexts()[0]
+    if (!context) throw new Error("The isolated Chromium profile did not expose a browser context")
+    context.setDefaultTimeout(30000)
+    const worker = context.serviceWorkers().find((value) => value.url().startsWith("chrome-extension://"))
+      ?? (yield* Effect.promise(() => context.waitForEvent("serviceworker", {
+        predicate: (value) => value.url().startsWith("chrome-extension://"), timeout: 30000,
+      }).catch(() => { throw new Error("Zoom extension did not start in bundled Chromium: " + status.diagnostic) })))
+    const page = yield* Effect.promise(() => context.newPage())
+    return { browser, context, page, worker }
+  })
+}
+
+/** Chrome's tabs API changes browser zoom; CSS zoom and page-scale emulation are never used. */
+export async function setBrowserZoom(page: Page, worker: Worker, percent: 100 | 200) {
+  await page.bringToFront()
+  const factor = await worker.evaluate(async (input) => {
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
+    const tab = tabs.find((entry) => entry.url === input.url)
+    if (tab?.id === undefined) throw new Error("The active browser tab does not match the measured page")
+    await chrome.tabs.setZoomSettings(tab.id, { mode: "automatic", scope: "per-origin" })
+    await chrome.tabs.setZoom(tab.id, input.percent / 100)
+    return chrome.tabs.getZoom(tab.id)
+  }, { url: page.url(), percent })
+  expect(factor, "Chrome must report the requested browser zoom").toBe(percent / 100)
+  const observed = await page.evaluate(() => ({
+    devicePixelRatio: window.devicePixelRatio,
+    cssViewportWidth: window.innerWidth,
+    cssViewportHeight: window.innerHeight,
+    visualViewportScale: window.visualViewport?.scale ?? null,
+  }))
+  return { ...observed, zoomPercent: factor * 100, mechanism: "chrome.tabs.setZoom/getZoom", url: page.url() }
+}
