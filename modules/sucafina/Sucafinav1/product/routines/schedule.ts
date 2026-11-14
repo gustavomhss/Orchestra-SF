@@ -1,6 +1,8 @@
 import type { BusinessPorts, PortResult } from "../contracts/ports.ts"
 import type { RoutineResult } from "../contracts/context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import { digestSfValue } from "../contracts/canonical.ts"
+import type { RoutineResultAccess } from "./result-access.ts"
 
 type SchedulePorts = BusinessPorts["schedules"]
 export type RoutineScheduleBinding = {
@@ -37,6 +39,8 @@ export type ScheduleHost = {
   validateRecurrence: (recurrence: string, timezone: string) => boolean
   authorize: (context: TrustedDomainContext, action: "schedules.create" | "schedules.update" | "schedules.pause" | "schedules.resume" | "schedules.run", payload: unknown) => Promise<boolean>
   occurrences?: RoutineOccurrencePort
+  /** A reference or occurrence state does not prove terminal execution or authorize output. */
+  resultAccess?: RoutineResultAccess
 }
 
 /** Safe internal recurrence operations. This module never sends externally or approves a workflow. */
@@ -155,6 +159,16 @@ async function validateOccurrence(result: PortResult<RoutineOccurrence>, schedul
   if (routine && !samePrincipal(routine, context)) return { status: "denied", reason: "schedule-authority-changed" }
   if ((occurrence.state === "running" || occurrence.state === "ready" || occurrence.state === "unchanged") && (routine?.admission !== "admitted" || !routine.runRef)) return { status: "unavailable", reason: "occurrence-admission-unavailable" }
   if ((occurrence.state === "ready" || occurrence.state === "unchanged") && !routine?.resultRef) return { status: "unavailable", reason: "occurrence-result-unavailable" }
+  if (occurrence.state === "ready" || occurrence.state === "unchanged") {
+    if (!host.resultAccess || !routine?.runRef) return { status: "unavailable", reason: "occurrence-result-reader-unavailable" }
+    const opened = await host.resultAccess.readResult(routine.runRef, context)
+    if (opened.status !== "ok") return opened
+    if (digestSfValue(opened.value.run) !== digestSfValue(routine) || opened.value.execution.state !== "completed" ||
+      opened.value.execution.runRef !== routine.runRef || opened.value.execution.resultRef !== routine.resultRef ||
+      opened.value.output.runRef !== routine.runRef || opened.value.output.resultRef !== routine.resultRef ||
+      !/^[a-f0-9]{64}$/.test(opened.value.execution.outputDigest ?? "") || opened.value.output.outputDigest !== opened.value.execution.outputDigest)
+      return { status: "stale", reason: "occurrence-result-changed" }
+  }
   if (!await host.revalidate(context, [...new Set([scheduleRef, ...occurrence.pendingRefs, ...(routine?.runRef ? [routine.runRef] : []), ...(routine?.resultRef ? [routine.resultRef] : [])])])) return { status: "denied", reason: "schedule-authority-changed" }
   return { status: "ok", value: occurrence }
 }
@@ -176,4 +190,5 @@ function validTimezone(timezone: string) {
     return false
   }
 }
+
 

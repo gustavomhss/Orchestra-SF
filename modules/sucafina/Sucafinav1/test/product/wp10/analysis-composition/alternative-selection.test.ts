@@ -471,7 +471,7 @@ test("canonical comparison scopes reject overlap, input replacement and authorit
         return environment
       } } }
       const guarded = createSfPortfolioComparisonScope({ authority: authorityAtClock, business: state.business, compareCanonical })
-      ok(await guarded.run(call, async () => {
+      const revoked = await guarded.run(call, async () => {
         ok(await guarded.compare(request, call))
         const before = produced
         armed = true
@@ -482,14 +482,19 @@ test("canonical comparison scopes reject overlap, input replacement and authorit
           clockRelease.resolve()
           const denied = await last
           expect(denied.status).toBe("denied")
+          expect(denied).toHaveProperty("reason", "portfolio-comparison-invocation-unavailable")
           expect(denied).not.toHaveProperty("value")
           expect(produced).toBe(before)
           expect(clockReads).toBe(8)
           expect(await state.authority.host.revalidate(call)).toBe(false)
           return { status: "ok", value: true }
         } finally { clockRelease.resolve() }
-      }))
+      })
+      expect(revoked.status).toBe("denied")
+      expect(revoked).toHaveProperty("reason", "portfolio-comparison-invocation-unavailable")
+      expect(revoked).not.toHaveProperty("value")
       return { status: "ok", value: true }
     }))
   } finally { await state.close() }
 }, 120_000)
+

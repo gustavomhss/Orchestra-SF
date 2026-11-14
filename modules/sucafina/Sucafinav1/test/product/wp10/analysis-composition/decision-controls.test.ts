@@ -182,7 +182,9 @@ test("Chromium navigates the own decision controls, saves real classification an
     const destination = page.getByRole("link", { name: "Controles da decisão", exact: true })
     expect(await destination.getAttribute("href")).toBe("?sf=decision-controls")
     const controlsNavigation = page.waitForResponse((response) => response.request().isNavigationRequest() && new URL(response.url()).searchParams.get("sf") === "decision-controls")
+    const controlsLoaded = page.waitForURL((url) => url.searchParams.get("sf") === "decision-controls", { waitUntil: "domcontentloaded" })
     await destination.click()
+    await controlsLoaded
     const controlsResponse = await controlsNavigation
     expect(controlsResponse.status()).toBe(200)
     expect(controlsResponse.headers()["content-type"]).toContain("text/html")
@@ -190,12 +192,20 @@ test("Chromium navigates the own decision controls, saves real classification an
     expect(await casePicker.getAttribute("aria-label")).toBe("Caso de decisão")
     expect(await casePicker.locator("option").allTextContents()).toContain("Renovação de licenças · revisão 1")
     await casePicker.selectOption({ label: "Renovação de licenças · revisão 1" })
+    const selectedCase = encodeCaseRef(state.caseRef)
+    const caseLoaded = page.waitForURL((url) => url.searchParams.get("sf") === "decision-controls" && url.searchParams.get("case") === selectedCase, { waitUntil: "domcontentloaded" })
     await page.getByRole("button", { name: "Abrir caso", exact: true }).click()
-    const forecastChoices = await page.getByLabel("Forecast para classificar", { exact: true }).locator('option').allTextContents()
+    await caseLoaded
+    const forecastPicker = page.getByLabel("Forecast para classificar", { exact: true })
+    await forecastPicker.waitFor({ state: "visible" })
+    const forecastChoices = await forecastPicker.locator('option').allTextContents()
     expect(new Set(forecastChoices).size).toBe(forecastChoices.length)
-    await page.getByLabel("Forecast para classificar", { exact: true }).selectOption(state.secondSource.refDigest)
+    await forecastPicker.selectOption(state.secondSource.refDigest)
+    const forecastLoaded = page.waitForURL((url) => url.searchParams.get("sf") === "decision-controls" && url.searchParams.get("case") === selectedCase &&
+      url.searchParams.get("source") === state.secondSource.refDigest, { waitUntil: "domcontentloaded" })
     await page.getByRole("button", { name: "Abrir forecast", exact: true }).click()
-    await page.locator('[data-classification-version="0"]').waitFor()
+    await forecastLoaded
+    await page.locator('[data-classification-version="0"]').waitFor({ state: "visible" })
     const groups = page.locator('[data-decision-action="decision-coverage"] fieldset')
     expect(await groups.count()).toBe(RENEWAL_TRANSITION_CATEGORIES.length)
     await groups.nth(0).getByLabel("Escopo ou motivo da pendência").fill("Rascunho preservado após nova observação")
@@ -340,3 +350,4 @@ test("Chromium navigates the own decision controls, saves real classification an
     } finally { await resources.state?.close() }
   }
 }, 120_000)
+

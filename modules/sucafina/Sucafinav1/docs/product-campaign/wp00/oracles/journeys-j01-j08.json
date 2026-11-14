@@ -12,7 +12,23 @@
       ],
       "given": "Mesmo conjunto compartilhado, competência escolhida e registros atribuídos; um item sem dado e outro com zero.",
       "when": "Abrir Meu trabalho; editar três valores e justificativa; voltar; confirmar outro registro sem alteração; provocar conflito por edição do segundo ator.",
-      "then": "Filtros/posição preservados; projeção compartilhada atualizada; confirmação guarda versão observada e validade material C06. Fevereiro independente não recobra janeiro; alteração pertinente gera uma pendência. Conflito preserva rascunho e ausência continua visível."
+      "then": "Filtros/posição preservados; projeção compartilhada atualizada; confirmação guarda versão observada e validade material C06. Fevereiro independente não recobra janeiro; alteração pertinente gera uma pendência. Conflito preserva rascunho e ausência continua visível.",
+      "tasks": [
+        "WP01.T03",
+        "WP01.T04",
+        "WP02.T02",
+        "WP08.T02",
+        "WP08.T03",
+        "WP08.T04"
+      ],
+      "evidenceRequired": "Registro de ações/versões antes/depois, identidade dos atores, captura do conflito e leitura pelo segundo ator.",
+      "fixtureBindings": [
+        "authorization",
+        "finance",
+        "CONFIRM-SCOPE"
+      ],
+      "executionStatus": "NOT_RUN",
+      "boundary": "Fixture/domain checks do not prove this end-to-end UI/native journey."
     },
     {
       "id": "J02",
@@ -24,7 +40,24 @@
       ],
       "given": "Budget USD600000; actual Jan–Sep400000; aberto190000 inclui licença72000; versão oficial/locked e cópia de hipótese.",
       "when": "Abrir composição; substituir licença por84000 e depois78000 em cenários distintos; comparar; examinar monthly HR/FTE e moeda sem FX; tentar alteração não autorizada.",
-      "then": "Outlooks602000/596000; deltas+12000/+6000 contra590000; margens−2000/+4000 contra budget; official/actual não mudam por efeito colateral; desconhecido não vira conhecido."
+      "then": "Outlooks602000/596000; deltas+12000/+6000 contra590000; margens−2000/+4000 contra budget; official/actual não mudam por efeito colateral; desconhecido não vira conhecido.",
+      "tasks": [
+        "WP03.T01",
+        "WP03.T02",
+        "WP03.T03",
+        "WP03.T04",
+        "WP03.T05",
+        "WP05.T01",
+        "WP05.T02"
+      ],
+      "evidenceRequired": "Oráculos independentes, componentes reconciliados, versões antes/depois e contraprovas de papel/FX.",
+      "fixtureBindings": [
+        "finance",
+        "FX01",
+        "FX03"
+      ],
+      "executionStatus": "NOT_RUN",
+      "boundary": "Fixture/domain checks do not prove this end-to-end UI/native journey."
     },
     {
       "id": "J03",
@@ -35,7 +68,22 @@
       ],
       "given": "Workbook válido, inválido e alteração concorrente; dados Dashboard com referências privadas preservadas.",
       "when": "Parsear; simular; cancelar; simular novamente; mudar base; aplicar; refazer prévia; confirmar e exportar/reimportar.",
-      "then": "Cancelamento não grava; base velha exige nova prévia; falha não aplica parcialmente; manifesto e recibo conferem; roundtrip mantém identidades/valores conforme formatos."
+      "then": "Cancelamento não grava; base velha exige nova prévia; falha não aplica parcialmente; manifesto e recibo conferem; roundtrip mantém identidades/valores conforme formatos.",
+      "tasks": [
+        "WP02.T02",
+        "WP03.T01",
+        "WP06.T01",
+        "WP06.T02",
+        "WP06.T03",
+        "WP06.T04"
+      ],
+      "evidenceRequired": "Arquivos sintéticos, manifesto, receipt real e comparação do estado antes/depois.",
+      "fixtureBindings": [
+        "import",
+        "projects"
+      ],
+      "executionStatus": "NOT_RUN",
+      "boundary": "Fixture/domain checks do not prove this end-to-end UI/native journey."
     },
     {
       "id": "J04",
@@ -48,7 +96,23 @@
       ],
       "given": "PR32000USD; ofertas A32400USD,B28000EUR a1.08,C29000USD tecnicamente inelegível; atores separados.",
       "when": "Criar pedido guiado; comparar ofertas; revisar justificativa; passar PR/sourcing/PO por seus estados; ressubmeter; verificar fila e supplier.",
-      "then": "B30240USD; C excluída; notas87.9333/85; decisão mostra seu valor/diferença/etapa; aging deriva da entrada atual comprovada; emissão segue sendo interna."
+      "then": "B30240USD; C excluída; notas87.9333/85; decisão mostra seu valor/diferença/etapa; aging deriva da entrada atual comprovada; emissão segue sendo interna.",
+      "tasks": [
+        "WP04.T01",
+        "WP04.T02",
+        "WP04.T03",
+        "WP04.T04",
+        "WP04.T05",
+        "WP05.T03"
+      ],
+      "evidenceRequired": "Histórico de versões/holders, cálculo esperado, tentativas recusadas e leitura cronometrada do resumo.",
+      "fixtureBindings": [
+        "procurement",
+        "actions",
+        "FX02"
+      ],
+      "executionStatus": "NOT_RUN",
+      "boundary": "Fixture/domain checks do not prove this end-to-end UI/native journey."
     },
     {
       "id": "J05",
@@ -59,7 +123,22 @@
       ],
       "given": "Pauta com competências diferentes,25projetos e notas longas; primeira revisão e revisão anterior compatível.",
       "when": "Selecionar pauta; preservar; mudar origem; conduzir meeting view; comparar; exportar PPTX/DOCX; revogar acesso e repetir leitura/export.",
-      "then": "Conteúdo apresentado permanece estável; diferenças corretas ou incompatibilidade declarada;25 registros presentes uma vez; acesso atual respeitado em todos os meios."
+      "then": "Conteúdo apresentado permanece estável; diferenças corretas ou incompatibilidade declarada;25 registros presentes uma vez; acesso atual respeitado em todos os meios.",
+      "tasks": [
+        "WP02.T03",
+        "WP05.T04",
+        "WP07.T01",
+        "WP07.T02",
+        "WP07.T03",
+        "WP07.T04"
+      ],
+      "evidenceRequired": "IDs das revisões, fontes/competências, arquivos extraídos e renderizados, comparação e negativa de acesso.",
+      "fixtureBindings": [
+        "report",
+        "projects"
+      ],
+      "executionStatus": "NOT_RUN",
+      "boundary": "Fixture/domain checks do not prove this end-to-end UI/native journey."
     },
     {
       "id": "J06",
@@ -70,7 +149,22 @@
       ],
       "given": "Nota da revisão, contrato e linha Planner que têm IDs distintos; homônimos e owner textual sem vínculo.",
       "when": "Criar relação explícita; pedir esclarecimento; confirmar ação proposta; perder resposta; reenviar; concluir no Hot Topics; retomar Meu trabalho.",
-      "then": "Uma ação canônica; contexto e responsável corretos; thread não é approval; link não lança valor no Planner; estado acompanha a origem."
+      "then": "Uma ação canônica; contexto e responsável corretos; thread não é approval; link não lança valor no Planner; estado acompanha a origem.",
+      "tasks": [
+        "WP02.T04",
+        "WP08.T01",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T05"
+      ],
+      "evidenceRequired": "IDs/correlação, efeito único, estados antes/depois e ausência de escrita financeira.",
+      "fixtureBindings": [
+        "actions",
+        "contracts",
+        "projects"
+      ],
+      "executionStatus": "NOT_RUN",
+      "boundary": "Fixture/domain checks do not prove this end-to-end UI/native journey."
     },
     {
       "id": "J07",
@@ -82,7 +176,23 @@
       ],
       "given": "Receitas publicadas/pinadas, recorte autorizado, pendências reais e admissão nativa qualificada.",
       "when": "Executar as quatro preparações; explicar diferença; cancelar/falhar; mudar origem/permissão; repetir handoff; agendar, pausar e observar ocorrência.",
-      "then": "Cada resultado aponta run/receita/entrada; versão velha é sinalizada; acesso revogado não vaza; não há aprovação nem envio externo; duplicatas e ocorrências perdidas são tratadas."
+      "then": "Cada resultado aponta run/receita/entrada; versão velha é sinalizada; acesso revogado não vaza; não há aprovação nem envio externo; duplicatas e ocorrências perdidas são tratadas.",
+      "tasks": [
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T05",
+        "WP09.T06"
+      ],
+      "evidenceRequired": "Referências reais de execução e saída, pendências, trilha de admissão e estado de agenda; mock não satisfaz.",
+      "fixtureBindings": [
+        "authorization",
+        "actions",
+        "CONFIRM-SCOPE"
+      ],
+      "executionStatus": "NOT_RUN",
+      "boundary": "Fixture/domain checks do not prove this end-to-end UI/native journey."
     },
     {
       "id": "J08",
@@ -92,7 +202,28 @@
       ],
       "given": "Estado anterior ao upgrade, corpus normal/adverso/volume e28capacidades.",
       "when": "Abrir cada entrada e ação; usar teclado,320/768/1440 px e zoom200%; pesquisar, filtrar, voltar e ler restrições; julgar a composição final.",
-      "then": "Capacidades preservadas, nenhuma fuga de escopo/dados, contexto recuperável, componentes reais e evidência coerente com o candidato final."
+      "then": "Capacidades preservadas, nenhuma fuga de escopo/dados, contexto recuperável, componentes reais e evidência coerente com o candidato final.",
+      "tasks": [
+        "WP00.T01",
+        "WP00.T02",
+        "WP00.T03",
+        "WP00.T04",
+        "WP01.T01",
+        "WP01.T02",
+        "WP10.T01",
+        "WP10.T02",
+        "WP10.T03",
+        "WP10.T04",
+        "WP10.T05"
+      ],
+      "evidenceRequired": "Matriz de capacidades, capturas representativas, checks de permissão/migração, pareceres e receipts de CI.",
+      "fixtureBindings": [
+        "volume",
+        "authorization",
+        "all-28-capabilities"
+      ],
+      "executionStatus": "NOT_RUN",
+      "boundary": "Fixture/domain checks do not prove this end-to-end UI/native journey."
     }
   ]
 }

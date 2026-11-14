@@ -1,0 +1,21 @@
+--- a/modules/sucafina/Sucafinav1/product/ai/analysis-port.ts
++++ b/modules/sucafina/Sucafinav1/product/ai/analysis-port.ts
+@@ -242,7 +242,8 @@
+       return saved.status === "ok" ? { status: "failed", reason: outcome.reason } : saved
+     }
+     if (outcome.state === "needs-input" || outcome.state === "unavailable") {
+-      const saved = await input.host.withRunContext(admission.runRef, (context) => input.host.settle(admission.runRef, outcome.state, outcome.reason, context))
++      const state = outcome.state
++      const saved = await input.host.withRunContext(admission.runRef, (context) => input.host.settle(admission.runRef, state, outcome.reason, context))
+       return saved.status === "ok" ? { status: outcome.state, reason: outcome.reason } : saved
+     }
+     if (outcome.state === "stale") {
+@@ -300,7 +301,7 @@
+ 
+ /** Recover persisted progress and a ready result after restart without reviving an expired ticket or grant. */
+ export async function readSfAnalysisRun(input: { host: SfAnalysisHost; runRef: string }) {
+-  return input.host.withRunContext(input.runRef, async (context) => {
++  return input.host.withRunContext<{ run: SfAnalysisRunProgress; output?: Extract<ContributionEnvelope, { state: "ready" }> }>(input.runRef, async (context) => {
+     const read = await input.host.readRun(input.runRef, context)
+     if (read.status !== "ok") return read
+     const run = read.value

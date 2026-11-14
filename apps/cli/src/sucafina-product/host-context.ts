@@ -16,7 +16,7 @@ import { ModelV2 } from "@orchestra/core/model"
 import { ClaudeCodeHost } from "@orchestra/engine-claude-code/v2/host"
 import { createResidentAiBundle } from "../../../../modules/sucafina/Sucafinav1/product/ai/resident.ts"
 import { digestSfContribution, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
-import type { CreateSfHostRuntime, SfHostRuntime, SfHostServices } from "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
+import type { CreateSfHostRuntime, SfHostRuntime, SfHostServices, SfAnalysisInputPort } from "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
 import { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import { createSfNativeEvidenceStore } from "../../../../modules/sucafina/Sucafinav1/product/integration/native-evidence.ts"
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
@@ -64,7 +64,6 @@ import { createProcurementDecisionHttp } from "../../../../modules/sucafina/Suca
 import { createCollaborationHttp } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/http.ts"
 import { createCollaborationHumanAuthority } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/human.ts"
 import { sfHumanReadActions } from "../../../../modules/sucafina/Sucafinav1/product/integration/human-authority.ts"
-import type { SfAnalysisInputPort } from "../../../../modules/sucafina/Sucafinav1/product/interface/analysis-input-port.ts"
 import { createSfProductContribution, createSfProductDispatch } from "./contribution.ts"
 import { createSfTokenGate } from "./token-gate.ts"
 import { createSfNativeHostContribution } from "./native-host.ts"
@@ -806,7 +805,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   const analysisHttp = createSfAnalysisHttp({ origin: input.origin, mount: input.mount,
     runtime: () => identity() ? { human: authority.human, selected, models: async () => state.models ? state.models() : [], inputs: analysisInputs, start: analyses.start,
       choices: (request) => readSfImportAnalysisChoices(request, services) } : undefined })
-  const services: SfHostServices & { analysisInputs: SfAnalysisInputPort; productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml,
+  const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml,
     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work,
     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents, routineRuns: routineServices.routineRuns,
     productHttp: async (request, surface) => await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
