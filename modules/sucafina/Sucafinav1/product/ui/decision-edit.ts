@@ -1,13 +1,33 @@
-import type { AuthorizedCaseProjection } from "../contracts/business-context.ts"
+import type { AuthorizedCaseProjection, BusinessEvidenceRef } from "../contracts/business-context.ts"
+import type { DomainProjection } from "../contracts/context.ts"
 import { esc } from "../../src/screen-shell.ts"
 import { decisionFormContext, decisionScriptHelpers } from "./decision-alternatives.ts"
+
+/** Only the existing BI06 projection can supply selectable Procurement references. */
+export function decisionProcurementEvidence(projection: DomainProjection, scope: ReturnType<typeof decisionFormContext>) {
+  if (!projection?.context || !["installationId", "projectId", "principalRef", "accessRevision", "policyVersion"].every((key) =>
+    projection.context[key as keyof typeof projection.context] === scope.authority[key as keyof typeof scope.authority]) ||
+    projection.context.surface !== "procurement" || projection.context.currency !== scope.currency ||
+    projection.context.period.start !== scope.horizon.start || projection.context.period.end !== scope.horizon.end ||
+    !Array.isArray(projection.values) || !Array.isArray(projection.components)) throw new Error("procurement-source-unavailable")
+  const supplied = projection.values.flatMap((value) => [...value.sourceRefs, ...(value.drilldown ? [value.drilldown] : [])])
+  const refs = supplied.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> =>
+    ref?.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" &&
+    ref.installationId === scope.authority.installationId && ref.projectId === scope.authority.projectId &&
+    typeof ref.refId === "string" && !!ref.refId.trim() && typeof ref.refDigest === "string" && /^[a-f0-9]{64}$/.test(ref.refDigest) &&
+    Number.isSafeInteger(ref.target.version) && ref.target.version > 0 && !!ref.target.period &&
+    ref.target.period.start <= scope.horizon.start && ref.target.period.end >= scope.horizon.end)
+    .filter((ref, index, all) => all.findIndex((other) => other.refDigest === ref.refDigest) === index)
+  if (new Set(refs.map((ref) => ref.refId)).size !== refs.length) throw new Error("ambiguous-procurement-source")
+  return refs
+}
 
 /** Discovery yields authorized evidence; the existing case command validates every saved reference. */
 export function decisionEditForm(projection: AuthorizedCaseProjection) {
   const item = projection.case
   const context = { ...decisionFormContext(projection), criteria: item.criteria.map((criterion) => ({ id: criterion.id, required: criterion.required })) }
   const sources = item.sourceRefs.map((ref) => `<li>${esc(ref.kind === "record" ? ref.target.recordType + " · " + ref.target.recordId + " · revision " + ref.target.version : ref.kind + " · " + ref.evidenceLevel)}</li>`).join("")
-  return `<details><summary>Edit decision</summary><form data-decision-edit data-context="${esc(JSON.stringify(context))}"><label>Decision objective<input name="objective" required value="${esc(item.objective)}"></label><label>Start<input name="start" type="date" required value="${esc(item.horizon.start)}"></label><label>End<input name="end" type="date" required value="${esc(item.horizon.end)}"></label><label>Currency<input name="currency" required value="${esc(item.currency)}"></label><div data-decision-criteria>${item.criteria.map((criterion, index) => `<label>Criterion ${index + 1}<input name="criterion-${index}" data-criterion-id="${esc(criterion.id)}" required value="${esc(criterion.description)}"></label>`).join("")}</div><fieldset><legend>Evidence attached to this decision</legend><ul data-decision-sources>${sources}</ul><p>Inspect an authorized source, attach it to this draft, then save the decision. Source values and financial approvals are unchanged.</p><button type="button" data-source-discover>Find Planner sources</button><label>Planner source<select name="source-option" disabled><option value="">Find sources first</option></select></label><button type="button" data-source-inspect disabled>Inspect selected source</button><div data-source-preview aria-live="polite"></div><button type="button" data-source-attach disabled>Attach source to draft</button></fieldset><button type="submit">Save decision</button><button type="button" data-decision-retry hidden style="display:none">Retry same request</button><button type="button" data-decision-review hidden style="display:none">Review current decision</button><p role="status" aria-live="polite"></p><div data-decision-conflict></div></form></details>`
+  return `<details><summary>Edit decision</summary><form data-decision-edit data-context="${esc(JSON.stringify(context))}"><label>Decision objective<input name="objective" required value="${esc(item.objective)}"></label><label>Start<input name="start" type="date" required value="${esc(item.horizon.start)}"></label><label>End<input name="end" type="date" required value="${esc(item.horizon.end)}"></label><label>Currency<input name="currency" required value="${esc(item.currency)}"></label><div data-decision-criteria>${item.criteria.map((criterion, index) => `<label>Criterion ${index + 1}<input name="criterion-${index}" data-criterion-id="${esc(criterion.id)}" required value="${esc(criterion.description)}"></label>`).join("")}</div><fieldset><legend>Evidence attached to this decision</legend><ul data-decision-sources>${sources}</ul><p>Inspect an authorized source, attach it to this draft, then save the decision. Source values and financial approvals are unchanged.</p><button type="button" data-source-discover>Find Planner sources</button><label>Planner source<select name="source-option" disabled><option value="">Find sources first</option></select></label><button type="button" data-source-inspect disabled>Inspect selected source</button><div data-source-preview aria-live="polite"></div><button type="button" data-source-attach disabled>Attach source to draft</button><hr><p>Procurement evidence is read from the authorized request collection. Attaching it does not create a scenario, change a request, or approve spending.</p><button type="button" data-procurement-discover>Find Procurement sources</button><label>Procurement source<select name="procurement-source-option" disabled><option value="">Find Procurement sources first</option></select></label><button type="button" data-procurement-inspect disabled>Inspect selected procurement source</button><div data-procurement-preview aria-live="polite"></div><button type="button" data-procurement-attach disabled>Attach procurement source to draft</button></fieldset><button type="submit">Save decision</button><button type="button" data-decision-retry hidden style="display:none">Retry same request</button><button type="button" data-decision-review hidden style="display:none">Review current decision</button><p role="status" aria-live="polite"></p><div data-decision-conflict></div></form></details>`
 }
 
 export const decisionEditScript = `
@@ -18,6 +38,10 @@ document.querySelectorAll('[data-decision-edit]').forEach((form) => {
   const submit = form.querySelector('button[type=submit]'); const retry = form.querySelector('[data-decision-retry]'); const review = form.querySelector('[data-decision-review]')
   const discover = form.querySelector('[data-source-discover]'); const inspect = form.querySelector('[data-source-inspect]'); const attach = form.querySelector('[data-source-attach]')
   const source = form.elements.namedItem('source-option'); const preview = form.querySelector('[data-source-preview]'); const list = form.querySelector('[data-decision-sources]'); const conflict = form.querySelector('[data-decision-conflict]')
+  const procurementDiscover = form.querySelector('[data-procurement-discover]'); const procurementInspect = form.querySelector('[data-procurement-inspect]'); const procurementAttach = form.querySelector('[data-procurement-attach]')
+  const procurementSource = form.elements.namedItem('procurement-source-option'); const procurementPreview = form.querySelector('[data-procurement-preview]')
+  const procurementEvidence = ${decisionProcurementEvidence.toString()}
+  let procurementOptions = []; let inspectedProcurement
   const names = ['objective', 'start', 'end', 'currency']
   const editable = () => [...form.querySelectorAll('input')].filter((input) => names.includes(input.name) || input.dataset.criterionId)
   const disabled = new Map(editable().map((input) => [input, input.disabled])); const removedDrafts = new Map()
@@ -37,17 +61,19 @@ document.querySelectorAll('[data-decision-edit]').forEach((form) => {
     if (!locked) {
       editable().forEach((input) => { input.disabled = disabled.get(input) || false })
       source.disabled = !options.length || !scopeMatches(); inspect.disabled = !source.value || !scopeMatches(); attach.disabled = !inspected || !scopeMatches(); submit.disabled = needsReview
+      procurementSource.disabled = !procurementOptions.length || !scopeMatches(); procurementInspect.disabled = !procurementSource.value || !scopeMatches(); procurementAttach.disabled = !inspectedProcurement || !scopeMatches()
     }
     shown(retry, !!pending); retry.disabled = busy || !pending || completed
     shown(review, !!pending || needsReview); review.disabled = busy || completed
   }
   const eraseDraft = () => {
     editable().forEach((input) => { input.value = ''; input.defaultValue = ''; input.removeAttribute('value') })
-    refs = []; options = []; inspected = undefined; pending = undefined; comparison = undefined; reviewed = undefined; context = undefined; removedDrafts.clear(); disabled.clear(); delete form.dataset.context
+    refs = []; options = []; inspected = undefined; procurementOptions = []; inspectedProcurement = undefined; pending = undefined; comparison = undefined; reviewed = undefined; context = undefined; removedDrafts.clear(); disabled.clear(); delete form.dataset.context
   }
   addEventListener('sf-access-revoked', eraseDraft)
   const invalidateDiscovery = () => {
     options = []; inspected = undefined; source.replaceChildren(new Option('Find sources first', '')); preview.replaceChildren(); delete preview.dataset.state
+    procurementOptions = []; inspectedProcurement = undefined; procurementSource.replaceChildren(new Option('Find Procurement sources first', '')); procurementPreview.replaceChildren(); delete procurementPreview.dataset.state
   }
   const inspectPlanner = async (refId, scope) => {
     const result = await read('bi-data', { viewId: 'BI01', baseRef: refId, candidateRef: refId, currency: scope.currency, start: scope.horizon.start, end: scope.horizon.end })
@@ -58,10 +84,30 @@ document.querySelectorAll('[data-decision-edit]').forEach((form) => {
     if (matches.length !== 1) throw new Error('source-unavailable')
     return { ref: matches[0], projection }
   }
+  const readProcurement = async (scope) => {
+    const choices = await read('bi-options', { viewId: 'BI06', start: scope.horizon.start, end: scope.horizon.end })
+    // BI06 exposes one scoped collection, never a first/latest business record.
+    if (!Array.isArray(choices.choices) || choices.choices.length !== 1 || typeof choices.choices[0].selectionRef !== 'string') throw new Error('procurement-collection-unavailable')
+    const result = await read('bi-data', { viewId: 'BI06', selectionRef: choices.choices[0].selectionRef, start: scope.horizon.start, end: scope.horizon.end })
+    return { refs: procurementEvidence(result.projection, scope), projection: result.projection }
+  }
+  const inspectProcurement = async (selected, scope) => {
+    const current = await readProcurement(scope)
+    const matching = current.refs.filter((ref) => same(ref, selected))
+    if (matching.length !== 1) throw new Error('procurement-source-changed')
+    const ref = matching[0]
+    const values = current.projection.values.filter((value) => value.sourceRefs.some((source) => source.refDigest === ref.refDigest) || value.drilldown?.refDigest === ref.refDigest)
+    if (!values.length) throw new Error('procurement-source-unavailable')
+    return { ref, projection: { ...current.projection, values, components: current.projection.components.filter((component) =>
+      component.sourceRefs.some((source) => source.surface === 'procurement' && source.type === 'procurement-request' && source.id === ref.target.recordId && source.incarnation === ref.target.incarnation)),
+      missing: current.projection.missing.filter((entry) => entry.field.startsWith(ref.target.recordId + ':' + ref.target.incarnation + ':')) } }
+  }
   const revalidateSources = async (selected, scope) => {
     for (const ref of selected) {
-      if (ref.kind !== 'record' || ref.target.surface !== 'planner' || ref.target.recordType !== 'planner-version') throw new Error('source-unavailable')
-      const current = await inspectPlanner(ref.refId, scope)
+      if (ref.kind !== 'record') throw new Error('source-unavailable')
+      const current = ref.target.surface === 'planner' && ref.target.recordType === 'planner-version' ? await inspectPlanner(ref.refId, scope)
+        : ref.target.surface === 'procurement' && ref.target.recordType === 'procurement-request' ? await inspectProcurement(ref, scope) : undefined
+      if (!current) throw new Error('source-unavailable')
       if (!same(current.ref, ref)) throw new Error('source-unavailable')
     }
   }
@@ -228,6 +274,37 @@ document.querySelectorAll('[data-decision-edit]').forEach((form) => {
     if (!live() || busy || pending || !inspected || !scopeMatches()) return
     if (refs.some((ref) => ref.refDigest === inspected.ref.refDigest)) { status.textContent = 'This exact source is already attached to the draft.'; return }
     refs = [...refs, inspected.ref]; renderRefs(); form.dataset.dirty = 'true'; status.textContent = 'Source attached to the draft. Save decision to persist it.'
+  })
+  procurementDiscover.addEventListener('click', async () => {
+    if (!live() || busy || pending || completed || !scopeMatches()) return
+    busy = true; controls(); inspectedProcurement = undefined; procurementPreview.replaceChildren(); delete procurementPreview.dataset.state
+    status.textContent = 'Finding authorized Procurement sources…'
+    try {
+      const current = await readProcurement(context)
+      procurementOptions = current.refs; procurementSource.replaceChildren(new Option('Choose a Procurement source', ''))
+      procurementOptions.forEach((ref) => procurementSource.append(new Option(ref.target.recordId + ' · revision ' + ref.target.version, ref.refDigest)))
+      status.textContent = procurementOptions.length ? 'Choose a request and inspect its authorized evidence.' : 'No authorized Procurement requests cover this decision scope.'
+    } catch { if (live()) { procurementOptions = []; procurementSource.replaceChildren(); status.textContent = 'Procurement sources are unavailable. Your decision draft is preserved.' } }
+    finally { busy = false; if (!live()) eraseDraft(); else controls() }
+  })
+  procurementSource.addEventListener('change', () => { if (!live() || busy || pending) return; inspectedProcurement = undefined; procurementPreview.replaceChildren(); delete procurementPreview.dataset.state; controls() })
+  procurementInspect.addEventListener('click', async () => {
+    if (!live() || busy || pending || completed || !scopeMatches()) return
+    const selected = procurementOptions.filter((ref) => ref.refDigest === procurementSource.value)
+    if (selected.length !== 1) return
+    busy = true; controls(); inspectedProcurement = undefined; status.textContent = 'Inspecting authorized Procurement evidence…'
+    try {
+      const current = await inspectProcurement(selected[0], context)
+      inspectedProcurement = current.ref; showProjection(procurementPreview, current.projection, current.ref.target.recordId)
+      status.textContent = 'Procurement evidence inspected. Attach it to the draft, then save the decision.'
+    } catch { if (live()) status.textContent = 'The request changed or is outside this decision scope. No Procurement reference was attached.' }
+    finally { busy = false; if (!live()) eraseDraft(); else controls() }
+  })
+  procurementAttach.addEventListener('click', () => {
+    if (!live() || busy || pending || completed || !inspectedProcurement || !scopeMatches()) return
+    if (refs.some((ref) => same(ref, inspectedProcurement))) { status.textContent = 'This exact Procurement source is already attached to the draft.'; return }
+    refs = [...refs, inspectedProcurement]; renderRefs(); form.dataset.dirty = 'true'
+    status.textContent = 'Procurement source attached to the draft. Save decision to persist it.'
   })
   form.addEventListener('submit', async (event) => {
     event.preventDefault(); if (!live() || busy || pending || completed || needsReview || !form.reportValidity()) return
