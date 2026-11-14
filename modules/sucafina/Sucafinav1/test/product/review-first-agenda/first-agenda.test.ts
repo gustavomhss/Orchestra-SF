@@ -193,7 +193,17 @@ test("first agenda uses three real domains, preserves edits through drift and re
     await playwright.expect(projects).toContainText("1 selected records")
     const attemptsBeforePreserve = transport.preserveCommands.length
     transport.loseNextPreserveBody = true
+    const diagnosticsBeforePreserve = f.preserveDiagnostics.length
+    const pendingPreserve = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "review-preserve")
     await view.getByRole("button", { name: "Preserve this review", exact: true }).click()
+    const preserveResponse = await pendingPreserve
+    const preserved = transport.preserve.at(-1)
+    if (preserved?.status !== "ok") {
+      const storedReviewIds = await f.storedReviews()
+      console.error("First agenda preserve authorization", JSON.stringify({ result: preserved,
+        storedReviewCount: storedReviewIds.length, storedReviewIds, gates: f.preserveDiagnostics.slice(diagnosticsBeforePreserve) }))
+    }
+    expect({ http: preserveResponse.status(), result: preserved }).toMatchObject({ http: 200, result: { status: "ok" } })
     await playwright.expect(view.getByRole("status")).toContainText("review-preserve-unavailable")
     const committedBeforeRetry = available(transport.preserve.at(-1)!)
     expect(await f.storedReviews()).toEqual([committedBeforeRetry.id])
@@ -234,7 +244,10 @@ test("first agenda uses three real domains, preserves edits through drift and re
     await playwright.expect(meeting.getByRole("heading", { name: "Hot Topics", exact: true })).toBeVisible()
     await page.reload({ waitUntil: "domcontentloaded" })
     await playwright.expect(meeting.getByRole("heading", { name: "Hot Topics", exact: true })).toBeVisible()
-    for (let index = 0; index < 3; index++) await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
+    for (let index = 0; index < 3; index++) {
+      await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
+      await playwright.expect(meeting.getByRole("heading", { name: ordered[index + 1]!, exact: true })).toBeVisible()
+    }
     await playwright.expect(meeting.getByRole("heading", { name: "Forecast · Agenda candidate · candidate", exact: true })).toBeVisible()
     await playwright.expect(meeting.getByRole("listitem").filter({ hasText: /^license:1:forecast: 120 USD · / })).toBeVisible()
     await playwright.expect(meeting.getByRole("listitem").filter({ hasText: /^license:1:forecast: 130 USD · / })).toHaveCount(0)

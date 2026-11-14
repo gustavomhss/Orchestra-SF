@@ -22,6 +22,9 @@ import { object, rows } from "../../../runtime/contract.ts"
 import { resolve } from "../../../src/identity.ts"
 import { available, createRelationsFixture } from "../wp08/relations-fixture.ts"
 
+type PreserveGateDiagnostic = { gate: string; allowed?: boolean; status?: string; refId?: string;
+  source?: Pick<SourceRef, "surface" | "type" | "id" | "incarnation" | "version"> }
+
 /** Isolated module proof: real SQLite, C17 producers, authority and C05 storage.
  * Authentication and source corpus are explicit fixtures; this is not installed Reports E2E. */
 export async function createFirstAgendaFixture() {
@@ -66,22 +69,53 @@ export async function createFirstAgendaFixture() {
     providerGeneration: async () => undefined, authorizeDocument: async () => undefined,
   })
   const business = createSfBusinessServices({ authority, persistence: f.persistence, proposalCoverageWrites: new WeakSet<object>() })
+  // Compose the real C17 evidence reader with explicit isolated-fixture metadata.
+  // No scanner, probe or engine is started; these versions are not native runtime evidence.
+  business.initializeAtlas(undefined, { boundaryVersion: "first-agenda-fixture-boundary", schemaVersion: "first-agenda-fixture-schema",
+    manifestVersion: "first-agenda-fixture-manifest", skillVersion: "first-agenda-fixture-skill" })
   const discovery = createSfReviewAgendaServices({ authority, business, persistence: f.persistence })
   const historical = createSfReviewHistory({ authority, persistence: f.persistence, authorizeCase: business.authorizeCase,
     evidence: { ...business.context, resolve: async (ref, call) => await discovery.resolveEvidence(ref, call) ?? business.context.resolve(ref, call) } })
-  const sources = async (call: TrustedDomainContext, refs: readonly SourceRef[]) => await authority.host.revalidate(call) &&
-    (await Promise.all([...new Map(refs.map((ref) => [digestSfValue(ref), ref])).values()].map(async (ref) => await historical.currentSource(ref, call) || await historical.historicalSource(ref, call)))).every(Boolean) &&
-    await authority.host.revalidate(call)
+  // Observe the existing gates without extra reads or changes to their return values.
+  // Diagnostics contain identities/status only, never captured values or private fields.
+  const preserveDiagnostics: PreserveGateDiagnostic[] = []
+  const checked = (gate: string, allowed: boolean) => { preserveDiagnostics.push({ gate, allowed }); return allowed }
+  const identity = ({ surface, type, id, incarnation, version }: SourceRef) => ({ surface, type, id, incarnation, version })
+  const sources = async (call: TrustedDomainContext, refs: readonly SourceRef[], gate = "revalidateSources") => {
+    if (!checked(`${gate}.entry`, await authority.host.revalidate(call))) return false
+    const resolutions = await Promise.all([...new Map(refs.map((ref) => [digestSfValue(ref), ref])).values()].map(async (ref) => {
+      const current = await historical.currentSource(ref, call)
+      preserveDiagnostics.push({ gate: `${gate}.currentSource`, source: identity(ref), allowed: current })
+      if (current) return true
+      const historicalSource = await historical.historicalSource(ref, call)
+      preserveDiagnostics.push({ gate: `${gate}.historicalSource`, source: identity(ref), allowed: historicalSource })
+      return historicalSource
+    }))
+    if (!checked(`${gate}.sources`, resolutions.every(Boolean))) return false
+    return checked(`${gate}.exit`, await authority.host.revalidate(call))
+  }
   const unavailable = async () => ({ status: "unavailable", reason: "not-selected-in-first-agenda-proof" } as const)
   const app = createReviewApplication({
-    state: authority.state, host: authority.host, authority: authority.authority, ui: authority.ui, humanAuthority: authority.human,
+    state: authority.state, host: { ...authority.host, revalidate: async (call) => checked("reviewHost.revalidate", await authority.host.revalidate(call)) },
+    authority: authority.authority, ui: authority.ui, humanAuthority: authority.human,
     origin, maxBodyBytes: 256 * 1024, creationTarget: authority.creationTarget, operationIdentity: business.operationIdentity,
-    requiredAuthority: ["reviews:read"], maxBytes: 8 * 1024 * 1024, now: () => f.clock.at, evidence: historical.evidence,
+    requiredAuthority: ["reviews:read"], maxBytes: 8 * 1024 * 1024, now: () => f.clock.at,
+    evidence: { ...historical.evidence, resolve: async (ref, call) => {
+      const result = await historical.evidence.resolve(ref, call)
+      const source = ref.kind === "record" ? { surface: ref.target.surface, type: ref.target.recordType, id: ref.target.recordId,
+        incarnation: ref.target.incarnation, version: ref.target.version } : undefined
+      preserveDiagnostics.push({ gate: "evidence.resolve", refId: ref.refId, source, status: result.state })
+      preserveDiagnostics.push({ gate: "evidence.accessRevision", refId: ref.refId, source, allowed: result.accessRevision === call.binding.accessRevision })
+      preserveDiagnostics.push({ gate: "evidence.reference", refId: ref.refId, source, allowed: digestSfValue(result.ref) === digestSfValue(ref) })
+      return result
+    } },
     ports: { planner: business.plannerProduct.planner, procurement: discovery.procurement,
       selectDashboardAgenda: createDashboardAgendaSelector({ host: authority.host, dashboard: business.dashboard, sources: business.dashboardSources, recordEvidence: business.dashboardRecords }) },
-    access: { revalidate: sources, authorizeSections: (call, sections) => sources(call, sections.flatMap((section) => section.sourceRefs)),
-      authorizeOutcomeComparison: async (_call, values) => values.length === 0, authorizeOutcome: async (_call, values) => values.length === 0,
-      authorizeDecision: async (_call, values) => values.length === 0, authorizeSensitivity: async (_call, values) => values.length === 0 },
+    access: { revalidate: sources, authorizeSections: (call, sections) => sources(call, sections.flatMap((section) => section.sourceRefs), "authorizeSections"),
+      authorizeOutcomeComparison: async (_call, values) => checked("authorizeOutcomeComparison", values.length === 0),
+      authorizeOutcome: async (_call, values) => checked("authorizeOutcome", values.length === 0),
+      authorizeDecision: async (_call, values) => checked("authorizeDecision", values.length === 0),
+      authorizeSensitivity: async (_call, values) => checked("authorizeSensitivity", values.length === 0) },
     collaboration: { threads: { read: unavailable }, history: { readVersion: unavailable }, authorizeSourceMapping: async () => false, maxMessages: 100 },
   })
   const readScope = protectSfReviewReads({ authority, reviews: app.reviews, localSnapshotReaders: true })
@@ -114,7 +148,7 @@ export async function createFirstAgendaFixture() {
     return { commit: true, value: undefined }
   })
   const storedReviews = () => f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: Object.keys(object(object(snapshot.data.__sfProductV1).reviews)) }))
-  return { ...f, control, authority, business, discovery, app, handle, request, readCall, discover, changeCandidate, storedReviews,
+  return { ...f, control, authority, business, discovery, app, handle, request, readCall, discover, changeCandidate, storedReviews, preserveDiagnostics,
     dispose: async () => { business.dispose(); await f.dispose() } }
 }
 

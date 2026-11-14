@@ -1,0 +1,18 @@
+{
+  "schema": "m39-c17-fixture-composition-v1",
+  "observedCandidate": "7c54573f279b197190b14487da256ddf0778f0b5",
+  "observedRun": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43651791685",
+  "diagnosis": "createSfBusinessServices starts with an unconnected evidence.current reader. The isolated fixture created the service without initializeAtlas, so Dashboard and Planner evidence resolution returned unavailable at the first C05 capture. No historical capture exists to provide a fallback on first use.",
+  "correction": "Connect the existing real C17 context using business.initializeAtlas(undefined, explicit isolated fixture versions). The canonical Dashboard/Planner producers and all access, reference and receipt gates remain active. An undefined scanner creates no process, probe, server or engine.",
+  "evidence": [
+    { "path": "apps/cli/src/sucafina-product/business-services.ts", "blob": "ce3a281bf07819f90af7fad10f98861980f3273b" },
+    { "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts", "blob": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993" },
+    { "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts", "blob": "11922bec60a7b9223f6f11043b02a63885b55b31" },
+    { "path": "modules/sucafina/Sucafinav1/product/reviews/services.ts", "blob": "f37a2c540b009a8c5bed90365c267b95303e646b" }
+  ],
+  "diagnostics": "Pass-through observations retain every gate result and make no extra authority decisions. Unexpected preserve responses report status/reason, gate identities and stored review IDs, without captured private values.",
+  "synchronization": "Each Next topic action waits for that exact destination heading before the next action; no sleep or timeout extension.",
+  "scope": "Isolated real-producer module proof with explicit authentication and source corpus fixtures; not installed Reports E2E or native runtime proof.",
+  "localTests": "NOT_RUN",
+  "followUp": "Publish a new immutable W and deduplicated Actions-only S for the unchanged exact two-test selection. The shared full-snapshot read fence remains unchanged and must pass on its own merits."
+}
