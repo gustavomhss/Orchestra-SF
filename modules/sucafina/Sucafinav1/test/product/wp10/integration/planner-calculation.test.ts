@@ -27,14 +27,25 @@ import { openLocalStore } from "../../../../runtime/local-store.ts"
 // BCS and Atlas. Coverage and the accepted ledger event are explicit fixtures;
 // no C09 human acceptance, provider completion or global qualification is claimed.
 test("Planner calculation replays through UI and BCS, survives Atlas reopen, and rejects tampering or revocation", async () => {
+  const started = performance.now(), deadline = started + 105_000
+  const deadlineError = new Error("Planner calculation fixture exceeded its 105000ms cooperative deadline")
+  const cancellation = new AbortController()
+  const checkDeadline = () => {
+    if (performance.now() >= deadline && !cancellation.signal.aborted) cancellation.abort(deadlineError)
+    cancellation.signal.throwIfAborted()
+  }
+  const phase = (name: string) => { checkDeadline(); console.info("SF_CALCULATION_PHASE", JSON.stringify({ phase: name, elapsedMs: Math.round(performance.now() - started) })) }
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-calculation-composition-"))
   const storeDirectory = path.join(directory, "store")
   const at = "2027-02-02T00:00:00Z"
   const period = { start: "2027-01-01", end: "2027-12-31" }
   const caseRef = { id: "calculation-case", incarnation: "calculation-inc", version: 1 }
   const control = { active: true, coverageReads: 0 }
+  const interleave: { environment?: () => Promise<void> } = {}
   let store = await openLocalStore(storeDirectory)
+  const timer = setTimeout(() => cancellation.abort(deadlineError), Math.max(0, deadline - performance.now()))
   try {
+    checkDeadline()
     expectSpawn(import.meta.path)
     const known = KNOWN_SCANNERS.find((entry) => entry.name === "gitleaks")
     if (!known) throw new Error("Pinned scanner unavailable")
@@ -59,12 +70,20 @@ test("Planner calculation replays through UI and BCS, survives Atlas reopen, and
       }
       const proposalCoverageWrites = new WeakSet<object>()
       const identity = { installationId: "calculation-installation", hostId: "host", projectId: "project", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
-      const request = () => new Request("https://example.test/planner", { method: "POST", headers: { origin: "https://example.test" } })
+      const request = () => new Request("https://example.test/planner", { method: "POST", headers: { origin: "https://example.test" }, signal: cancellation.signal })
       const authority = createSfProductAuthority({ identity: () => identity, installationId: identity.installationId, origin: "https://example.test", policyVersion: "calculation-policy",
         persistence, proposalCoverageWrites, grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "contributions", "atlas", "outbox"],
           operations: ["sf_scenario_simulate", "sf_source_get", "sf_evidence_get", "sf_context_get", "sf_freshness_check", "sf_decision_recall"], humanActions: [] }],
-        authenticate: async (_request, scope) => control.active && scope ? { id: "person", canWrite: true, roles: [{ surface: scope.surface, role: scope.surface === "planner" ? "finance" : "admin" }] } : null,
-        environment: async () => ({ at, id: randomUUID, directory: [] }), createId: randomUUID, now: Date.now, commandIdentity: async () => randomUUID(),
+        authenticate: async (_request, scope) => { checkDeadline(); return control.active && scope ? { id: "person", canWrite: true, roles: [{ surface: scope.surface, role: scope.surface === "planner" ? "finance" : "admin" }] } : null },
+        environment: async () => {
+          checkDeadline()
+          const waiting = interleave.environment
+          delete interleave.environment
+          await waiting?.()
+          checkDeadline()
+          return { at, id: randomUUID, directory: [] }
+        }, createId: randomUUID, now: Date.now,
+        commandIdentity: async () => { checkDeadline(); return randomUUID() },
         inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
         providerGeneration: async () => 1, authorizeDocument: async () => undefined })
       const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites })
@@ -97,6 +116,7 @@ test("Planner calculation replays through UI and BCS, survives Atlas reopen, and
       return { persistence, authority, business, atlas, ui, request, dispose: () => business.dispose() }
     }
     const first = await open(true)
+    phase("initialized-real-store-producers-and-scanner")
     let source: Extract<BusinessEvidenceRef, { kind: "record" }>
     let calculation: Extract<BusinessEvidenceRef, { kind: "calculation" }>
     let eventRef: Extract<BusinessEvidenceRef, { kind: "case-event" }>
@@ -116,6 +136,7 @@ test("Planner calculation replays through UI and BCS, survives Atlas reopen, and
       if (produced.status !== "ok") throw new Error(produced.reason)
       source = produced.value.source
       calculation = produced.value.calculation
+      phase("persisted-and-replayed-calculation")
       expect(control.coverageReads).toBeGreaterThan(0)
       const payload = { evidenceRef: calculation }
       const resolved = await first.ui("sf_source_get", payload, (call) => {
@@ -125,6 +146,11 @@ test("Planner calculation replays through UI and BCS, survives Atlas reopen, and
       })
       expect(resolved).toMatchObject({ status: "ok", result: { state: "fresh", currentRef: calculation } })
       await first.ui("sf_evidence_get", payload, async (call) => {
+        // Both branches use the same real admission, persisted request/result
+        // and Planner replay. Neither branch may consume another's case scope.
+        const simultaneous = await Promise.all([first.business.context.resolve(calculation, call), first.business.context.resolve(calculation, call)])
+        expect(simultaneous.map((item) => item.state)).toEqual(["fresh", "fresh"])
+        expect(simultaneous.map((item) => item.currentRef)).toEqual([calculation, calculation])
         const found = await first.business.context.resolve(calculation, call)
         if (!found.authorizedProjection || !("context" in found.authorizedProjection)) throw new Error("Authorized calculation projection missing")
         expect(found.authorizedProjection.components).toEqual(produced.value.result.components)
@@ -143,6 +169,7 @@ test("Planner calculation replays through UI and BCS, survives Atlas reopen, and
         expect((await first.business.context.context({ refs: Array.from({ length: 513 }, () => calculation) }, call)).every((item) => item.state === "unavailable")).toBe(true)
         expect(control.coverageReads).toBe(reads)
       })
+      phase("parallel-read-and-negative-proofs")
       const event: CaseLedgerEvent = { id: "calculation-event", caseRef, kind: "analysis-accepted", principalRef: "person", at,
         consideredActions: ["retain-original"], factualGaps: ["fixture-training-unresolved"], lifecycleState: "investigating", rationale: "Exercise authorized calculation memory",
         evidenceRefs: [calculation], outputDigest: "c".repeat(64) }
@@ -164,10 +191,12 @@ test("Planner calculation replays through UI and BCS, survives Atlas reopen, and
       expect(seeded.status).toBe("ok")
       const appended = await first.ui("sf_evidence_get", payload, (call) => first.business.context.emitFromLedger(eventRef, call))
       expect(appended).toMatchObject({ status: "committed" })
+      phase("real-atlas-write-committed")
     } finally { first.dispose() }
     await store.dispose()
     store = await openLocalStore(storeDirectory)
     const reopened = await open(false)
+    phase("reopened-sqlite-and-authority")
     try {
       const payload = { evidenceRef: calculation }
       await reopened.ui("sf_evidence_get", payload, async (call) => {
@@ -177,8 +206,22 @@ test("Planner calculation replays through UI and BCS, survives Atlas reopen, and
         const recalled = await reopened.atlas.memory.recall(caseRef, call)
         expect(recalled.status).toBe("ok")
         if (recalled.status === "ok") expect(recalled.records).toHaveLength(1)
+        phase("real-atlas-recall-authorized")
         expect((await reopened.business.context.emitFromLedger(eventRef, call)).status).toBe("already-committed")
-        control.active = false
+        // Pause at an actual host environment read, queue another proof, then
+        // revoke the principal before either can disclose its result.
+        const entered = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
+        interleave.environment = async () => { entered.resolve(); await release.promise }
+        const running = reopened.business.calculations.issue(calculation.target.runId, call)
+        try {
+          await Promise.race([entered.promise, running.then(() => { throw new Error("Actual Planner replay did not reach the environment boundary") })])
+          const queued = reopened.business.calculations.issue(calculation.target.runId, call)
+          control.active = false
+          release.resolve()
+          const outcomes = await Promise.all([running, queued])
+          expect(outcomes[0]!.status).not.toBe("ok")
+          expect(outcomes[1]!.status).not.toBe("ok")
+        } finally { release.resolve(); delete interleave.environment }
         expect((await reopened.business.context.resolve(calculation, call)).state).toBe("unavailable")
         expect((await reopened.atlas.memory.recall(caseRef, call)).status).toBe("unavailable")
       })
@@ -188,5 +231,13 @@ test("Planner calculation replays through UI and BCS, survives Atlas reopen, and
         expect((await reopened.business.context.resolve(calculation, call)).state).toBe("unavailable")
       })
     } finally { reopened.dispose() }
-  } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
-}, 300_000)
+  } finally {
+    clearTimeout(timer)
+    try { await store.dispose() } finally {
+      await rm(directory, { recursive: true, force: true })
+      // A port may translate abort into unavailable; a timed-out negative must
+      // still fail after the real resources have been released.
+      if (cancellation.signal.reason === deadlineError || performance.now() >= deadline) throw deadlineError
+    }
+  }
+}, 120_000)

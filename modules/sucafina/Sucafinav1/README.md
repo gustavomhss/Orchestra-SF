@@ -60,7 +60,7 @@ A seleção de BI lista apenas versões, coleções e relações de resultados a
 
 Para atualizar uma revisão preservada, use **Check for updates** e **Create an updated review**. A revisão anterior permanece imutável; a sucessora conserva vínculo, tópicos, ordem, períodos e notas. O contrato atual não guarda toda a seleção original de registros da agenda: confirme explicitamente uma nova seleção autorizada antes de preservá-la. Agendas mistas com gráficos, outcomes ou threads não são reconstruídas silenciosamente.
 
-Após perda confirmada de acesso, o consumidor de revisão remove tópicos, valores, notas, links e o JSON inicial; respostas anteriores ainda em trânsito não podem repor esse conteúdo. Uma mudança autorizada de fonte conserva o histórico e exige revisão sucessora explícita.
+Após perda confirmada de acesso, o consumidor de revisão remove tópicos, valores, notas, links e o JSON inicial; respostas anteriores ainda em trânsito não podem repor esse conteúdo. Isso também vale quando a sessão continua válida, mas a pessoa deixa de participar do caso ou perde acesso à origem. Uma mudança autorizada de fonte conserva o histórico e exige revisão sucessora explícita.
 
 O histórico de revisão reabre somente corpos imutáveis correspondentes aos recibos C08. Histórico de cálculo também exige run e pedido originais, digests e participação atual no mesmo caso. O cálculo Planner atual usa o pedido persistido e replay real do domínio; as limitações de cobertura e valores ausentes permanecem. Uma referência histórica de revisão não se transforma em autorização atual para executar uma alteração.
 
@@ -120,6 +120,8 @@ A execução utiliza somente o cenário da alternativa escolhida, com operaçõe
 O adapter próprio de preparação de análise e o encaixe da fila Procurement foram compostos com os deltas publicados da tranche recuperada. O renderer de AlternativeDraft, a aplicação C12 e as jornadas completas ainda exigem as verificações e correções indicadas no pacote de revisão; os contratos compartilhados consumidos permanecem sujeitos à revisão dos respectivos owners/S0.
 
 Seleções humanas de BI, memória, contestação, sensibilidade e reavaliação são persistidas por request e digest exatos, com principal, projeto, política, revisão de acesso e versão do caso. Não existe escolha mais recente implícita. O prefixo privado só aceita o writer de preparação; leitores revalidam fontes e autoridade. A validade padrão é de uma hora, com até 4096 seleções e 1024 artefatos BI; expiração, capacidade ou mudança material retornam indisponibilidade/conflito. Nova preparação humana, com os mesmos fatos revalidados, pode renovar uma seleção expirada por CAS. Runs admitidos antes dessa renovação não podem usar a nova validade.
+
+A prova de seleção reutilizada durante uma única chamada mantém o vínculo com o dia UTC observado pelo host. A passagem de dia exige nova leitura das fontes dependentes do relógio, mesmo quando os snapshots persistidos não mudaram; uma mudança durante essa leitura invalida o resultado.
 
 A cobertura base usa classificações humanas e componentes calculados pelo Planner para o horizonte exato do caso. Categorias pendentes continuam pendentes. Uma declaração humana de não aplicabilidade não substitui o produtor de prova dessa categoria. O registro de condições materiais e de observações de meses encerrados usa C08, CAS e fences das fontes. Review pode consumir observações comparáveis reabertas; preparar uma condição de watch não cria admissão ou agenda nativa.
 

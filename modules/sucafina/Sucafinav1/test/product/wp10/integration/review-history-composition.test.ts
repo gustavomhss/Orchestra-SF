@@ -43,7 +43,7 @@ test("C08 preserved domain values survive an ordinary edit, while revocation, re
     const human = createReviewHumanPort({ state: authority.state, reviews: services.reviews, human: authority.human, ui: authority.ui, creationTarget: authority.creationTarget })
     selected.projection = await project()
     const first = await human.preserve(fixture.request("preserve-v1"), { selectionRef: "selected-v1", sectionRefs: ["budget"] })
-    expect(first.status).toBe("ok")
+    expect(first.status, first.status !== "ok" ? first.reason : undefined).toBe("ok")
     if (first.status !== "ok") throw new Error(first.reason)
     const original = structuredClone(first.value)
     const rendered = await renderPreservedReview(original, { title: "Budget at v1", format: "docx", sectionRefs: ["budget"] })

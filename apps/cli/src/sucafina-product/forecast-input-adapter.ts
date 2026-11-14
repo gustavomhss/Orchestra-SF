@@ -16,7 +16,9 @@ export function createSfForecastInputAdapter(input: {
   return { prepare: async (call, incoming) => {
     const selection = structuredClone(incoming)
     const source = input.authority.host.requestFor(call)
-    if (!source || call.kind !== "ui" || !await input.authority.ui.validate(call, "sf_forecast_compare", digestSfValue(selection)))
+    // The HTTP owner consumes the admission once; this adapter verifies that
+    // exact consumed intent and its current authority instead of consuming twice.
+    if (!source || call.kind !== "ui" || !input.authority.ui.matchesIntent(call, "sf_forecast_compare", digestSfValue(selection)) || !await input.authority.host.revalidate(call))
       return { status: "denied", reason: "forecast-selection-authority-unavailable" }
     const current = await input.business.cases.read({ caseRef: encodeCaseRef(selection.caseRef) }, call)
     if (current.status !== "ok" || current.value.case.version !== selection.caseRef.version) return { status: "stale", reason: "forecast-case-changed" }

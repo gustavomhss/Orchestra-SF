@@ -21,8 +21,14 @@ export function createSfAlternativeCallScope<Value>(input: {
   const current = (call: TrustedDomainContext, scope: Scope<Value>) => active.get(call) === scope &&
     host.requestFor(call) === scope.request && !scope.request.signal.aborted && scope.admitted === admitted(call) &&
     scope.binding === digestSfValue([call.kind, call.binding])
+  const observedDay = async (request: Request) => {
+    const at = (await host.environment(request)).at
+    return typeof at === "string" && Number.isFinite(Date.parse(at)) ? new Date(at).toISOString().slice(0, 10) : undefined
+  }
   const fence = async (call: TrustedDomainContext, scope: Scope<Value>): Promise<string | undefined> => {
     if (!current(call, scope) || !await host.revalidate(call)) return undefined
+    const day = await observedDay(scope.request)
+    if (!day || !current(call, scope)) return undefined
     const selected = await input.selectedCase(call)
     if (selected.status !== "ok" || !current(call, scope)) return undefined
     // The C08 read holds the real SQLite read scope. Its complete digest detects even
@@ -42,10 +48,13 @@ export function createSfAlternativeCallScope<Value>(input: {
         admission = { input: verified.value, alternative }
       }
       const sources = input.lockedSourceFences()
+      // Dashboard projections use the observed UTC day even when the raw
+      // snapshots have not changed. A proof cannot cross that boundary.
       return sources && current(call, scope) && await host.revalidate(call)
-        ? digestSfValue({ state, sources, caseRef: selected.value, binding: scope.binding, admission }) : undefined
+        ? digestSfValue({ state, sources, day, caseRef: selected.value, binding: scope.binding, admission }) : undefined
     })
-    return found.status === "ok" && typeof found.value === "string" && current(call, scope) && await host.revalidate(call) ? found.value : undefined
+    return found.status === "ok" && typeof found.value === "string" && current(call, scope) && await host.revalidate(call) &&
+      await observedDay(scope.request) === day ? found.value : undefined
   }
   const read = async (call: TrustedDomainContext, produce: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
     const scope = active.get(call)

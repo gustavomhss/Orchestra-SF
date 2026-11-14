@@ -57,7 +57,9 @@ test("a non-Budget review update preserves topic, period, notes and predecessor 
     const period = { start: "2026-01-01", end: "2026-12-31" }
     const source = await business.dashboardServices.discover({ page: "OPEX Detail", period }, call)
     if (source.status !== "ok" || !source.value.agenda) throw new Error("OPEX agenda unavailable")
-    const item = { kind: "dashboard" as const, ...source.value.agenda.section, id: "selected-opex", agendaNote: "Preserve this human note" }
+    const selection = source.value.agenda.section
+    const item = { kind: "dashboard" as const, id: "selected-opex", topic: selection.topic, selectionRef: selection.selectionRef, period: selection.period,
+      agendaNote: "Preserve this human note" }
     const agenda = await reviews.agenda!.create([item], call)
     if (agenda.status !== "ok") throw new Error(agenda.reason)
     const preserved = await reviews.human.preserve(fixture.request("review-previous"), { selectionRef: agenda.value.selectionRef, sectionRefs: agenda.value.sectionRefs })

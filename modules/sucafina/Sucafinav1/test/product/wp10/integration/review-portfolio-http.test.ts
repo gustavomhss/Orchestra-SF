@@ -15,6 +15,7 @@ import { createSfReviewPortfolioHistory } from "../../../../../../../apps/cli/sr
 import { createSfExtendedHttp } from "../../../../../../../apps/cli/src/sucafina-product/extended-http.ts"
 import { createSfExtendedAssets } from "../../../../../../../apps/cli/src/sucafina-product/extended-assets.ts"
 import { financialCompositionFixture } from "./financial-composition-fixture.ts"
+import { prepareSfReviewAccessBrowser } from "./review-access-browser-fixture.ts"
 
 // Real Planner/Portfolio evaluation, result persistence, Review receipt, HTTP and
 // report/download consumers. The historical human selection/binding is explicit
@@ -26,8 +27,8 @@ test("default Review HTTP retains a persisted Portfolio at N after the case reac
   const period = { start: "2026-01-01", end: "2026-12-31" }
   const caseRef = { id: "history-case", incarnation: "history-incarnation", version: 1 }
   const call = await fixture.read()
+  const browserChecks: { current?: Awaited<ReturnType<typeof prepareSfReviewAccessBrowser>> } = {}
   try {
-    business.initializeAtlas(undefined, { boundaryVersion: "fixture", schemaVersion: "fixture", manifestVersion: "fixture", skillVersion: "fixture" })
     await persistence.transaction("planner", async (snapshot) => {
       snapshot.data.versions = [{ id: "history-forecast", name: "Historical forecast", year: 2026, closed: 1,
         lines: [{ id: "line", name: "Service", ownerId: "owner", sec: "opex", el: "licenses", cur: "USD",
@@ -52,7 +53,10 @@ test("default Review HTTP retains a persisted Portfolio at N after the case reac
     const produced = await business.withCase(call, caseRef, {}, async () => {
       const issued = await business.plannerProduct.issueSource("history-forecast", call)
       if (issued.status !== "ok") return issued
-      const scenario = { baseRef: issued.value.evidence.refId, operations: [], assumptions: [] }
+      // A Portfolio candidate must carry a real, replayable operation. The
+      // producer intentionally rejects an empty baseline as a candidate.
+      const scenario = { baseRef: issued.value.evidence.refId, operations: [{ kind: "replace" as const, targetRef: "line:2", amount: 110,
+        currency: "USD", period: { start: "2026-02-01", end: "2026-02-28" } }], assumptions: [] }
       const preview = await business.planner.simulateScenario(scenario, call)
       if (preview.status !== "ok") return preview
       const current = await authority.state.read(fixture.request(), "cases", (state) => state.cases[caseRef.id])
@@ -77,7 +81,7 @@ test("default Review HTTP retains a persisted Portfolio at N after the case reac
       if (candidate.status !== "ok") return candidate
       return { status: "ok", value: { stored: stored.value, request, candidate: candidate.value } }
     })
-    expect(produced.status).toBe("ok")
+    expect(produced.status, produced.status !== "ok" ? produced.reason : undefined).toBe("ok")
     if (produced.status !== "ok") throw new Error(produced.reason)
     const { stored, request, candidate } = produced.value
     expect(stored.result.combinations[0]!.eligibility).toBe("conditioned")
@@ -141,6 +145,7 @@ test("default Review HTTP retains a persisted Portfolio at N after the case reac
     const [receiptKey, receipt] = sealed.value
     const http = createSfExtendedHttp({ authority, business, bi, reviews: application, persistence, origin: "https://example.test", assets })
     const get = (mode: string, ref = original.id) => http(new Request(`https://example.test/dashboard?${new URLSearchParams({ sf: mode, reviewRef: ref })}`), "dashboard")
+    const getSource = () => http(new Request(`https://example.test/dashboard?${new URLSearchParams({ sf: "review-source", reviewRef: original.id, referenceId: source.value.refId })}`), "dashboard")
     const first = await get("review-read")
     expect(first?.status).toBe(200)
     expect(await first!.json()).toEqual(preserved)
@@ -180,7 +185,27 @@ test("default Review HTTP retains a persisted Portfolio at N after the case reac
     const mutate = (work: (state: SfProductState) => void) => fixture.store.transaction("dashboard", async (snapshot) => {
       work(snapshot.data.__sfProductV1 as SfProductState); return { commit: true, value: undefined }
     })
+    browserChecks.current = await prepareSfReviewAccessBrowser({ http, privateText: "Selected Portfolio",
+      url: `https://example.test/dashboard?${new URLSearchParams({ sf: "review", reviewRef: original.id, sectionId: "portfolio", start: period.start, end: period.end })}` })
     await mutate((state) => { state.cases[caseRef.id]!.participants = [] })
+    // The principal remains authenticated and can get a new read admission.
+    // Only access to this case has been removed, which must clear the page just
+    // like a denied source read; it is not a logout or an expired UI lease.
+    expect(fixture.active.value).toBe(true)
+    expect(await authority.host.revalidate(call)).toBe(true)
+    const stillAuthenticated = await fixture.read()
+    expect(await authority.host.revalidate(stillAuthenticated)).toBe(true)
+    authority.ui.finish(stillAuthenticated)
+    await browserChecks.current.verifyAfterCaseRevocation()
+    await browserChecks.current.dispose()
+    browserChecks.current = undefined
+    for (const denied of [await get("review"), await getSource(), await get("review-update")]) {
+      expect(denied?.status).toBe(403)
+      const body = await denied!.json()
+      expect(body).toMatchObject({ status: "denied" })
+      expect(body).not.toHaveProperty("value")
+      expect(body).not.toHaveProperty("selectedSection")
+    }
     expect((await get("review-read"))?.status).toBe(403)
     expect((await download())?.status).toBe(403)
     await mutate((state) => { state.cases[caseRef.id]!.participants = ["person"]; state.cases[caseRef.id]!.incarnation = "replacement" })
@@ -199,6 +224,12 @@ test("default Review HTTP retains a persisted Portfolio at N after the case reac
     expect((await get("review-read"))?.status).toBe(403)
     await mutate((state) => { state.reviews[original.id] = original })
     expect((await get("review-read"))?.status).toBe(200)
+    // An ordinary source edit leaves the preserved Review authorized. A stale
+    // backlink remains 409 and must not be mislabeled as access revocation.
+    expect((await get("review"))?.status).toBe(200)
+    const staleSource = await getSource()
+    expect(staleSource?.status).toBe(409)
+    expect(await staleSource!.json()).toEqual({ status: "unavailable", reason: "source-or-destination-period-unavailable" })
     await mutate((state) => { state.transactions[receiptKey] = { ...receipt, value: { schema: "sf-review-receipt-v1", reviewRef: original.id, reviewDigest: "0".repeat(64) } } })
     expect((await get("review-read"))?.status).toBe(403)
     expect((await get("review-read", successor.value.id))?.status).toBe(200)
@@ -207,5 +238,8 @@ test("default Review HTTP retains a persisted Portfolio at N after the case reac
     fixture.active.value = false
     expect((await get("review-read"))?.status).toBe(403)
     expect((await download())?.status).toBe(403)
-  } finally { authority.ui.finish(call); assets.dispose(); await fixture.dispose() }
+  } finally {
+    try { await browserChecks.current?.dispose() }
+    finally { authority.ui.finish(call); assets.dispose(); await fixture.dispose() }
+  }
 }, 120_000)

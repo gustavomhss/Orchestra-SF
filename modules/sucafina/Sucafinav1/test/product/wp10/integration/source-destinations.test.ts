@@ -27,6 +27,7 @@ test("authorized monthly source links open the real page with the exact primary 
       const issued = await issue({ page: item.page, fields: [item.field], period }, call)
       expect(issued.status).toBe("ok")
       if (issued.status !== "ok") throw new Error(issued.reason)
+      expect((await business.context.resolve(issued.value.evidence, call)).state).toBe("fresh")
       const links = await sfExtendedSourceLinks({ business, reference: issued.value.evidence, call, url: new URL("https://example.test/sucafina/dashboard?sf=review-source&year=2026") })
       expect(links).toHaveLength(1)
       const destination = new URL(links[0]!.url, "https://example.test")

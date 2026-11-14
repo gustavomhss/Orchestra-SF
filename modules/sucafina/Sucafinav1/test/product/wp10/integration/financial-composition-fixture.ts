@@ -13,14 +13,15 @@ import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
 import { createSfPortfolioServices } from "../../../../../../../apps/cli/src/sucafina-product/portfolio-services.ts"
 
-export async function financialCompositionFixture() {
+export async function financialCompositionFixture(options: { clock?: { at: string } } = {}) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-financial-composition-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(join(directory, "store"))
   const active = { value: true }
-  const at = "2026-11-14T00:00:00Z"
+  const clock = options.clock ?? { at: "2026-11-14T00:00:00Z" }
+  const at = clock.at
   const persistence = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, createId: randomUUID,
-    projectScope: createSfSourceScopeProjector(() => at) })
+    projectScope: createSfSourceScopeProjector(() => clock.at) })
   for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
   await persistence.transaction("dashboard", async (snapshot) => {
     snapshot.data.roleMap = [{ surface: "dashboard", role: "admin", entra: "admins", version: 1, by: "person" }]
@@ -39,9 +40,12 @@ export async function financialCompositionFixture() {
       humanActions: ["decisions.prepare-portfolio", "decisions.promote-portfolio", "decisions.prepare-changes", "decisions.choose", "decisions.answer-question", "reviews.preserve", "decisions.coverage", "decisions.criteria", "decisions.promote-alternative", "decisions.select-portfolio"] }],
     createId: randomUUID, now: Date.now, commandIdentity: async (request) => request.headers.get("x-operation") ?? randomUUID(),
     authenticate: async (_request, context) => active.value && context ? { id: "person", canWrite: true, roles: [{ surface: context.surface, role: "admin" }] } : null,
-    environment: async () => ({ at, id: randomUUID, directory: [{ id: "person", name: "Person" }] }), inspectSession: async () => undefined,
+    environment: async () => ({ at: clock.at, id: randomUUID, directory: [{ id: "person", name: "Person" }] }), inspectSession: async () => undefined,
     verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => 1, authorizeDocument: async () => undefined })
   const business = createSfBusinessServices({ authority, persistence, ...guards })
+  // Compose the real BCS readers just as the host does. A fixture that omits
+  // this stage correctly gets unavailable evidence from every domain reader.
+  business.initializeAtlas(undefined, { boundaryVersion: "fixture", schemaVersion: "fixture", manifestVersion: "fixture", skillVersion: "fixture" })
   const portfolio = createSfPortfolioServices({ authority, business, ...guards })
   const request = (operation = randomUUID()) => new Request("https://example.test/dashboard", { method: "POST", headers: { origin: "https://example.test", "x-operation": operation } })
   const read = async () => {
@@ -51,6 +55,6 @@ export async function financialCompositionFixture() {
     if (admitted.status !== "ok" || !await authority.ui.validate(admitted.value, "sf_review_prepare", digest)) throw new Error("Authenticated review context unavailable")
     return admitted.value
   }
-  return { directory, store, persistence, active, guards, authority, business, portfolio, request, read, at,
+  return { directory, store, persistence, active, guards, authority, business, portfolio, request, read, at, clock,
     dispose: async () => { portfolio.dispose(); business.dispose(); await store.dispose(); await rm(directory, { recursive: true, force: true }) } }
 }

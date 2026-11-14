@@ -40,7 +40,8 @@ export function createSfExtendedReviewCycle(input: { authority: ReturnType<typeo
       if (discovered.status !== "ok") return discovered
       if (!discovered.value.agenda) { value.unavailableSections.push({ sectionId: section.id, title: section.title, reason: "Este tópico requer uma seleção de origem antes de preparar a nova revisão." }); continue }
       value.available ||= resolved.value.evidence.target.incarnation !== source.incarnation || resolved.value.evidence.target.version !== source.version
-      const item: ReviewAgendaItem = { kind: "dashboard", ...discovered.value.agenda.section, id: section.id,
+      const selection = discovered.value.agenda.section
+      const item: ReviewAgendaItem = { kind: "dashboard", id: section.id, topic: selection.topic, selectionRef: selection.selectionRef, period: selection.period,
         ...(projection.reviewAgendaNote !== undefined ? { agendaNote: projection.reviewAgendaNote } : {}) }
       // C04 keeps the exact projection but does not persist its original C17 recordRefs. Do not infer "all" from a count.
       value.confirmations.push({ sectionId: section.id, label: `Selecionar explicitamente os registros atuais autorizados de ${source.id}, ${section.period.start} – ${section.period.end}; revisar a lista e remover registros antes de preservar.` })

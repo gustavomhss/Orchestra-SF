@@ -62,11 +62,11 @@ export function createSfExtendedHttp(input: {
         const reference = url.searchParams.get("reviewRef"), referenceId = url.searchParams.get("referenceId")
         if (!input.reviews || !reference || !referenceId || reference.length > 2048 || referenceId.length > 16384) return json({ status: "needs-input", reason: "invalid-review-source" }, 400)
         const reviewed = await input.reviews.reviews.read(reference, call)
-        if (reviewed.status !== "ok") return json(reviewed, 409)
+        if (reviewed.status !== "ok") return json(reviewed, reviewed.status === "denied" ? 403 : 409)
         let sources = reviewCycle.evidence(reviewed.value, referenceId)
         if (!sources.length && reviewed.value.previousReviewRef) {
           const previous = await input.reviews.reviews.read(reviewed.value.previousReviewRef, call)
-          if (previous.status !== "ok") return json(previous, 409)
+          if (previous.status !== "ok") return json(previous, previous.status === "denied" ? 403 : 409)
           sources = reviewCycle.evidence(previous.value, referenceId)
         }
         if (!sources.length || sources.some((source) => digestSfValue(source) !== digestSfValue(sources[0]))) return json({ status: "denied", reason: "source-outside-preserved-review" }, 403)
@@ -91,7 +91,7 @@ export function createSfExtendedHttp(input: {
           return links.length ? { status: "ok" as const, value: { links } } : { status: "unavailable" as const, reason: "source-or-destination-period-unavailable" }
         }
         const result = selectedCase ? await business.withCase(call, selectedCase, {}, read) : await read()
-        return result.status === "ok" ? json(result.value) : json(result, 409)
+        return result.status === "ok" ? json(result.value) : json(result, result.status === "denied" ? 403 : 409)
       }
       if (mode === "bi-data") {
         let selectionRef = url.searchParams.get("selectionRef")
@@ -105,7 +105,7 @@ export function createSfExtendedHttp(input: {
           const route = resolveDashboardBiSelection(viewId, period)
           if (!route) return json({ status: "needs-input", reason: "choose-producer-selection" }, 422)
           const selected = await issue({ ...route, period }, call)
-          if (selected.status !== "ok") return json(selected, 409)
+          if (selected.status !== "ok") return json(selected, selected.status === "denied" ? 403 : 409)
           selectionRef = selected.value.selectionRef
         }
         const payload = { viewId, selectionRef, period }
@@ -125,20 +125,21 @@ export function createSfExtendedHttp(input: {
         const reviewRef = url.searchParams.get("reviewRef")
         if (reviewRef) {
           const current = await input.reviews.reviews.read(reviewRef, call)
-          if (current.status !== "ok") return json(current, 409)
+          if (current.status !== "ok") return json(current, current.status === "denied" ? 403 : 409)
           const sectionId = url.searchParams.get("sectionId")
           const selectedSection = sectionId ? current.value.sections.find((section) => section.id === sectionId) : undefined
           if (sectionId && !selectedSection) return json({ status: "denied", reason: "review-section-unavailable" }, 403)
           data = { reviewRef, ...(selectedSection ? { selectedSection: { ...selectedSection, content: selectedSection.content as DomainProjection } } : {}) }
         } else if (url.searchParams.has("previousReviewRef")) {
           const updated = await reviewCycle.update(url.searchParams.get("previousReviewRef")!, call)
-          if (updated.status !== "ok") return json(updated, 409)
+          if (updated.status !== "ok") return json(updated, updated.status === "denied" ? 403 : 409)
           data = updated.value
         } else {
           const current = await business.dashboardServices.discover({ page: url.searchParams.get("page") ?? "Budget Overview", period }, call)
-          if (current.status !== "ok") return json(current, 409)
+          if (current.status !== "ok") return json(current, current.status === "denied" ? 403 : 409)
           if (!current.value.agenda) return json({ status: "unavailable", reason: "review-source-selection-unavailable" }, 409)
-          data = { items: [{ kind: "dashboard", ...current.value.agenda.section }] }
+          const section = current.value.agenda.section
+          data = { items: [{ kind: "dashboard", id: section.id, topic: section.topic, selectionRef: section.selectionRef, period: section.period }] }
         }
       }
       const script = await (mode === "review" ? input.assets.reviews() : input.assets.bi()).catch(() => undefined)
