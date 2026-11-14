@@ -1,5 +1,6 @@
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import type { ThreadSourceContext } from "./thread-context.ts"
 
 /** Host-private proof of the selected person's current access to every source field and period.
  * Directory membership, a role name, and the caller's access are not this proof.
@@ -12,6 +13,16 @@ export type CollaborationRecipientAuthority = {
    * Directory membership and a previously successful authorize() are not a current lease.
    */
   checkAtCommit?: CollaborationRecipientCommitCheck
+}
+
+/** A C05 recipient grant binds the immutable review pin and every historical source
+ * basis to the caller, recipient and their current authority. The host owns the
+ * recipient principal; an ID or a caller-authorized review cannot create a grant.
+ */
+export type ReviewThreadRecipientAuthority = {
+  authorize: (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => Promise<boolean>
+  /** No I/O: verify the same review/source/ACL lease in the protected snapshot. */
+  checkAtCommit: (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => boolean
 }
 
 export type CollaborationRecipientCommitCheck = (recipientRef: string, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => boolean
@@ -42,3 +53,4 @@ export function createRecipientSourceAuthorizer(input: {
     return await input.sources(selected, context) && await input.revalidate(context)
   }
 }
+

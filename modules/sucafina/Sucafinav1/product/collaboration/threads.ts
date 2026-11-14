@@ -13,6 +13,7 @@ import { threadMessageContext } from "./thread-context.ts"
 import { isReviewThreadContext } from "../reviews/thread-context.ts"
 import type { ReviewThreadContext } from "../reviews/thread-context.ts"
 import type { ThreadSourceContext } from "./thread-context.ts"
+import type { PrepareReviewThreadFence } from "./review-source-fence.ts"
 
 export type CollaborationThread = {
   id: string
@@ -38,10 +39,15 @@ export function createThreadPort(input: {
   mutationFence: CollaborationMutationFence
   authorize: (thread: Draft | CollaborationThread, context: TrustedDomainContext, mode: "read" | "write") => Promise<boolean>
   checkRecipientAtCommit?: CollaborationRecipientCommitCheck
+  checkReviewRecipientAtCommit?: (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => boolean
+  prepareReviewThreadFence?: PrepareReviewThreadFence
   createId: () => string
   now: () => string
 }) {
   const checkRecipient = input.checkRecipientAtCommit ?? createRecipientCommitCheck()
+  const checkThreadRecipient = (recipientRef: string, refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext, basis?: ThreadSourceContext, reviewCheck?: typeof input.checkReviewRecipientAtCommit) => basis?.reviewContext
+    ? input.checkReviewRecipientAtCommit !== reviewCheck ? false : reviewCheck ? reviewCheck(recipientRef, basis, context) && input.checkReviewRecipientAtCommit === reviewCheck : recipientRef === context.binding.principalRef
+    : checkRecipient(recipientRef, refs, context)
   return {
     create: async (draft: Draft, mutation: Mutation, context: TrustedDomainContext): Promise<PortResult<CollaborationThread>> => {
       if (context.kind !== "ui") return { status: "denied", reason: "human-action-required" }
@@ -49,19 +55,22 @@ export function createThreadPort(input: {
       const selected = structuredClone({ draft, mutation })
       const sources = selected.draft.evidenceRefs.filter((ref) => ref && typeof ref === "object" && ref.refId === selected.draft.sourceRef)
       const source = sources[0]
-      if (selected.draft.reviewContext && selected.draft.recipientRef && selected.draft.recipientRef !== context.binding.principalRef) return { status: "denied", reason: "review-recipient-authority-unavailable" }
       if (sources.length !== 1 || !source || source.kind !== "record" || !source.target || typeof source.target !== "object" || source.target.incarnation !== selected.draft.sourceIncarnation || source.target.version !== selected.draft.observedVersion || (!isSfPeriod(source.target.period) || source.target.period.start > selected.draft.period.start || source.target.period.end < selected.draft.period.end)) return { status: "needs-input", reason: "thread-source-mismatch" }
       const request = input.host.requestFor(context)
       if (!request || !await input.human.authorize(context, "collaboration.thread.create", selected) || !await input.host.revalidate(context)) return { status: "denied", reason: "thread-access-unavailable" }
       const review = selected.draft.reviewContext ? await input.state.read(request, "reviews", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion) : undefined
       if (selected.draft.reviewContext && (review?.status !== "ok" || !review.value)) return { status: "denied", reason: "review-thread-context-unavailable" }
+      const sourceContext: ThreadSourceContext | undefined = selected.draft.reviewContext ? { sourceRef: selected.draft.sourceRef, sourceIncarnation: selected.draft.sourceIncarnation, observedVersion: selected.draft.observedVersion, period: selected.draft.period, evidenceRefs: selected.draft.evidenceRefs, reviewContext: selected.draft.reviewContext } : undefined
+      const prepareReviewFence = input.prepareReviewThreadFence
+      const checkReviewRecipient = input.checkReviewRecipientAtCommit
+      const reviewFence = sourceContext && prepareReviewFence ? await prepareReviewFence(sourceContext, context) : undefined
+      if (sourceContext && !reviewFence) return { status: "unavailable", reason: "review-thread-source-fence-unavailable" }
       const fence = await input.mutationFence.prepare(() => input.authorize(structuredClone(selected.draft), context, "write"))
       if (!fence) return { status: "unavailable", reason: "thread-source-fence-unavailable" }
-      const sourceContext: ThreadSourceContext | undefined = selected.draft.reviewContext ? { sourceRef: selected.draft.sourceRef, sourceIncarnation: selected.draft.sourceIncarnation, observedVersion: selected.draft.observedVersion, period: selected.draft.period, evidenceRefs: selected.draft.evidenceRefs, reviewContext: selected.draft.reviewContext } : undefined
       const thread: CollaborationThread = { id: input.createId(), kind: selected.draft.kind, sourceRef: selected.draft.sourceRef, sourceIncarnation: selected.draft.sourceIncarnation, observedVersion: selected.draft.observedVersion, period: selected.draft.period, ...(selected.draft.recipientRef ? { recipientRef: selected.draft.recipientRef } : {}), state: "open", messages: [{ id: input.createId(), incarnation: input.createId(), version: 1, authorRef: context.binding.principalRef, body: selected.draft.body, createdAt: input.now(), ...(sourceContext ? { sourceContext } : {}) }], evidenceRefs: selected.draft.evidenceRefs }
       if (!thread.id.trim() || !thread.messages[0]?.id.trim() || !thread.messages[0]?.incarnation.trim() || !isThread(thread)) return { status: "unavailable", reason: "identity-unavailable" }
       const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, ...(review?.status === "ok" ? { sourceFence: "all" as const, checkNamespaces: [{ namespace: "reviews" as const, expectedStorageVersion: review.storageVersion }] } : {}), commandDigest: digestSfValue(selected.draft), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, async (state, authority) => {
-        if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.thread.create", selected) || sourceContext?.reviewContext && !await input.authorize(thread, context, "write") || !input.mutationFence.check(fence) || selected.draft.recipientRef && !checkRecipient(selected.draft.recipientRef, selected.draft.evidenceRefs, context) || state.threads[thread.id]) return { commit: false, value: null }
+        if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.thread.create", selected) || sourceContext && (input.prepareReviewThreadFence !== prepareReviewFence || !reviewFence || !await reviewFence() || input.prepareReviewThreadFence !== prepareReviewFence) || !input.mutationFence.check(fence) || selected.draft.recipientRef && !checkThreadRecipient(selected.draft.recipientRef, selected.draft.evidenceRefs, context, sourceContext, checkReviewRecipient) || state.threads[thread.id]) return { commit: false, value: null }
         state.threads[thread.id] = thread
         return { commit: true, value: thread }
       })
@@ -101,13 +110,18 @@ export function createThreadPort(input: {
     const prior = read.value
     const review = prior.messages[0]?.sourceContext?.reviewContext ? await input.state.read(request, "reviews", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion) : undefined
     if (prior.messages[0]?.sourceContext?.reviewContext && (review?.status !== "ok" || !review.value)) return { status: "denied", reason: "review-thread-context-unavailable" }
+    const reviewBasis = prior.messages[0]?.sourceContext?.reviewContext ? prior.messages[0].sourceContext : undefined
+    const prepareReviewFence = input.prepareReviewThreadFence
+    const checkReviewRecipient = input.checkReviewRecipientAtCommit
+    const reviewFence = reviewBasis && prepareReviewFence ? await prepareReviewFence(reviewBasis, context) : undefined
+    if (reviewBasis && !reviewFence) return { status: "unavailable", reason: "review-thread-source-fence-unavailable" }
     const fence = await input.mutationFence.prepare(() => input.authorize(structuredClone(prior), context, "write"))
     if (!fence) return { status: "unavailable", reason: "thread-source-fence-unavailable" }
     const messageId = selected.action.kind === "reply" ? input.createId() : undefined
     const incarnation = selected.action.kind === "reply" ? input.createId() : undefined
     if (selected.action.kind === "reply" && (!messageId?.trim() || !incarnation?.trim() || prior.messages.some((message) => message.id === messageId || message.incarnation === incarnation))) return { status: "unavailable", reason: "identity-unavailable" }
     const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, ...(review?.status === "ok" ? { sourceFence: "all" as const, checkNamespaces: [{ namespace: "reviews" as const, expectedStorageVersion: review.storageVersion }] } : {}), commandDigest: digestSfValue({ id, action: selected.action }), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, async (state, authority) => {
-      if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, humanAction, payload) || prior.messages[0]?.sourceContext?.reviewContext && !await input.authorize(prior, context, "write") || !input.mutationFence.check(fence) || prior.recipientRef && !checkRecipient(prior.recipientRef, prior.evidenceRefs, context) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || prior.state !== "open") return { commit: false, value: null }
+      if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, humanAction, payload) || reviewBasis && (input.prepareReviewThreadFence !== prepareReviewFence || !reviewFence || !await reviewFence() || input.prepareReviewThreadFence !== prepareReviewFence) || !input.mutationFence.check(fence) || prior.recipientRef && !checkThreadRecipient(prior.recipientRef, prior.evidenceRefs, context, reviewBasis, checkReviewRecipient) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || prior.state !== "open") return { commit: false, value: null }
       const next: CollaborationThread = selected.action.kind === "reply" ? { ...prior, messages: [...prior.messages, { id: messageId!, incarnation: incarnation!, version: 1, authorRef: context.binding.principalRef, body: selected.action.body, createdAt: input.now(), ...(prior.messages[0]?.sourceContext?.reviewContext ? { sourceContext: structuredClone(prior.messages[0].sourceContext) } : {}) }] } : { ...prior, state: "resolved" }
       if (!isThread(next)) return { commit: false, value: null }
       state.threads[id] = next
@@ -154,5 +168,6 @@ export function isThread(value: unknown): value is CollaborationThread {
     return [message.id, message.incarnation, message.authorRef, message.body, message.createdAt].every((part) => typeof part === "string" && !!part.trim()) && Number.isSafeInteger(message.version) && Number(message.version) > 0
   }) && new Set(thread.messages.map((message: unknown) => (message as Record<string, unknown>).id)).size === thread.messages.length && new Set(thread.messages.map((message: unknown) => (message as Record<string, unknown>).incarnation)).size === thread.messages.length && thread.messages.every((message) => !!threadMessageContext(value as CollaborationThread, message as CollaborationThread["messages"][number]))
 }
+
 
 

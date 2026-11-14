@@ -11,6 +11,8 @@ import { answerReuseBaselineKey } from "./answer-reuse.ts"
 import type { AnswerReuseBaseline } from "./answer-reuse.ts"
 import { isThread } from "./threads.ts"
 import { threadMessageContext } from "./thread-context.ts"
+import type { createReviewAnswerSource } from "../reviews/review-answer-source.ts"
+import type { ReviewThreadContext } from "../reviews/thread-context.ts"
 
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
 export type AnswerWork = { state: "unconfirmed" } | {
@@ -20,6 +22,7 @@ export type AnswerWork = { state: "unconfirmed" } | {
   observedVersion: number
   sourceVersion: number
   reason?: "answer-changed" | "material-change" | "dependency-change"
+  reviewContext?: ReviewThreadContext
 }
 
 /** The current producer evaluates the reviewed scope; historical answer text never enters this projection. */
@@ -30,6 +33,8 @@ export function createAnswerWorkPort<T extends AvailableConfirmationScopeObserva
     verifyManifest: (scope: AnswerReuseBaseline["scope"], context: TrustedDomainContext) => Promise<boolean>
     fenceManifest: (scope: AnswerReuseBaseline["scope"], context: TrustedDomainContext) => Promise<boolean>
   }
+  reviewSource?: ReturnType<typeof createReviewAnswerSource>
+  authorizeHistoricalSources?: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
   authorizeSources: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
 }) {
   return { project: async (questionId: string, context: TrustedDomainContext): Promise<PortResult<AnswerWork>> => {
@@ -50,6 +55,30 @@ export function createAnswerWorkPort<T extends AvailableConfirmationScopeObserva
     const scope = baseline.scope
     const basis = threadMessageContext(thread, answer)
     if (!basis) return { status: "unavailable", reason: "answer-work-unavailable" }
+    if (basis.reviewContext || baseline.reviewBasis) {
+      const source = input.reviewSource
+      const authorize = input.authorizeHistoricalSources
+      const reviewed = baseline.reviewBasis
+      if (!source || !authorize || !reviewed || !basis.reviewContext || digestSfValue(reviewed) !== digestSfValue(basis)) return { status: "unavailable", reason: "answer-work-unavailable" }
+      const resolve = source.resolve
+      const observe = source.observe
+      const fence = source.fence
+      const host = input.host
+      const revalidate = host.revalidate
+      const persistence = host.persistence
+      const transactionAll = persistence.transactionAll
+      const current = () => input.reviewSource === source && source.resolve === resolve && source.observe === observe && source.fence === fence && input.authorizeHistoricalSources === authorize && input.host === host && host.revalidate === revalidate && host.persistence === persistence && persistence.transactionAll === transactionAll
+      if (!transactionAll) return { status: "unavailable", reason: "answer-work-unavailable" }
+      const derived = await resolve.call(source, reviewed, context)
+      if (!current() || derived.status !== "ok" || digestSfValue(derived.value.scope) !== digestSfValue(scope) || !await authorize(reviewed.evidenceRefs, context) || !current()) return { status: "unavailable", reason: "answer-work-unavailable" }
+      const observation = await observe.call(source, scope, reviewed, context)
+      if (!current() || observation.state !== "available" || observation.physicalIncarnation !== baseline.physicalIncarnation || observation.incarnation !== scope.sourceRef.incarnation || observation.sourceFingerprint !== baseline.sourceFingerprint || observation.dependencyFingerprint !== baseline.dependencyFingerprint || observation.scopeFingerprint !== baseline.scopeFingerprint || observation.sourceVersion !== baseline.observedVersion) return { status: "unavailable", reason: "answer-work-unavailable" }
+      const again = await read()
+      if (!current() || again.status !== "ok" || !again.value || digestSfValue(again.value.thread) !== digestSfValue(thread) || digestSfValue(again.value.baseline) !== digestSfValue(baseline) || !await authorize(reviewed.evidenceRefs, context) || !current() || !await revalidate.call(host, context) || !current()) return { status: "unavailable", reason: "answer-work-unavailable" }
+      if (!await transactionAll.call(persistence, async () => ({ commit: false, value: current() && await fence.call(source, scope, observation, reviewed, context) && current() })).catch(() => false) || !current()) return { status: "unavailable", reason: "answer-work-unavailable" }
+      const changed = baseline.answerDigest !== digestSfValue({ questionId, ...answer })
+      return { status: "ok", value: { state: changed ? "stale" : "valid", sourceRefs: reviewed.evidenceRefs, period: scope.period, observedVersion: baseline.observedVersion, sourceVersion: observation.sourceVersion, reviewContext: reviewed.reviewContext, ...(changed ? { reason: "answer-changed" } : {}) } }
+    }
     const originals = basis.evidenceRefs.filter((ref) => ref.refId === basis.sourceRef)
     const original = originals[0]
     if (originals.length !== 1 || !original || original.kind !== "record" || original.target.surface !== scope.sourceRef.surface || original.target.recordType !== scope.sourceRef.type || original.target.recordId !== scope.sourceRef.id || digestSfValue([...original.target.fields].sort()) !== digestSfValue([...scope.fields].sort()) || digestSfValue(basis.period) !== digestSfValue(scope.period) || !await input.source.verifyManifest(scope, context)) return { status: "unavailable", reason: "answer-work-unavailable" }
@@ -82,4 +111,5 @@ function isBaseline(value: unknown): value is AnswerReuseBaseline {
     return identity(dependency) && fields(dependency.fields) && isSfPeriod(dependency.period) && Number.isSafeInteger(dependency.version) && Number(dependency.version) > 0 && typeof dependency.observedAt === "string" && Number.isFinite(Date.parse(dependency.observedAt))
   })
 }
+
 

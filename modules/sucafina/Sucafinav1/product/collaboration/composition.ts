@@ -6,7 +6,7 @@ import type { SfProductStatePort } from "../contracts/state.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { createCollaborationMutationFence } from "./mutation-fence.ts"
 import { createCollaborationAuthority } from "./authority.ts"
-import type { CollaborationRecipientAuthority } from "./recipient-authority.ts"
+import type { CollaborationRecipientAuthority, ReviewThreadRecipientAuthority } from "./recipient-authority.ts"
 import { createCollaborationHotTopicHost } from "./hot-topic-host.ts"
 import { createCollaborationHotTopicReadHost } from "./hot-topic-read-host.ts"
 import { createRelationPort } from "./relations.ts"
@@ -25,6 +25,7 @@ import type { CollaborationHumanAuthority } from "./human.ts"
 import type { WorkSelectionPort } from "./selection.ts"
 import type { AnswerWork } from "./answer-work.ts"
 import type { CollaborationWorkSourceRefresh } from "./work-source-refresh.ts"
+import type { PrepareReviewThreadFence } from "./review-source-fence.ts"
 
 /** The source producer must issue a current authorized C17 record for the exact action. */
 export function createCollaborationComposition(input: {
@@ -38,8 +39,10 @@ export function createCollaborationComposition(input: {
   signals?: WorkSignals
   reviewContexts?: WorkReviewContexts
   authorizeReviewThreadContext?: ReviewThreadContextAuthorizer
+  prepareReviewThreadFence?: PrepareReviewThreadFence
   human: CollaborationHumanAuthority
   recipientAuthority?: CollaborationRecipientAuthority
+  reviewRecipientAuthority?: ReviewThreadRecipientAuthority
   recipientThread?: ReturnType<typeof createRecipientThreadReader>
   reissue?: ReturnType<typeof createCollaborationReissuer>
   captureWorkSource?: (memberRef: string, context: TrustedDomainContext) => Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>>
@@ -50,7 +53,7 @@ export function createCollaborationComposition(input: {
   now: () => string
 }) {
   const mutationFence = createCollaborationMutationFence(input.host)
-  const authority = createCollaborationAuthority({ host: input.host, evidence: input.evidence, recipientAuthority: input.recipientAuthority, authorizeReviewThreadContext: input.authorizeReviewThreadContext })
+  const authority = createCollaborationAuthority({ host: input.host, evidence: input.evidence, recipientAuthority: input.recipientAuthority, reviewRecipientAuthority: input.reviewRecipientAuthority, authorizeReviewThreadContext: input.authorizeReviewThreadContext })
   const activeHandoffs = new WeakMap<TrustedDomainContext, Parameters<Parameters<typeof createHandoffPort>[0]["run"]>[1]>()
   const handoffPermit = Symbol("handoff")
   const hotTopicWriter = createHotTopicPort(createCollaborationHotTopicHost({ host: input.host, state: input.state, evidence: input.evidence, creationTarget: input.creationTarget, mutationFence, authorizeMutation: async (context) => {
@@ -70,7 +73,7 @@ export function createCollaborationComposition(input: {
     return input.recordEvidence.issue({ page: "Hot Topics & Actions", recordType: "hotTopics", recordId: topic.id, fields: ["status"], period: { start: day, end: day } }, context)
   } }
   const relations = createRelationPort({ state: input.state, host: input.host, createId: input.createId, now: input.now, authorizePair: authority.authorizePair, checkRecipientAtCommit: authority.checkRecipientAtCommit, creationTarget: input.creationTarget, human: input.human, mutationFence, reissue: input.reissue, projectHandoff: createHandoffRelationProjection({ host: input.host, authorizeSources: authority.sources, reissue: input.reissue, readTopic: hotTopics.read, issueTopic: topicSource.issue }), handoffPermit })
-  const threads = createThreadPort({ state: input.state, host: input.host, createId: input.createId, now: input.now, authorize: authority.authorizeThread, checkRecipientAtCommit: authority.checkRecipientAtCommit, creationTarget: input.creationTarget, human: input.human, mutationFence })
+  const threads = createThreadPort({ state: input.state, host: input.host, createId: input.createId, now: input.now, authorize: authority.authorizeThread, checkRecipientAtCommit: authority.checkRecipientAtCommit, checkReviewRecipientAtCommit: authority.checkReviewRecipientAtCommit, prepareReviewThreadFence: input.prepareReviewThreadFence, creationTarget: input.creationTarget, human: input.human, mutationFence })
   const handoff = createHandoffPort({ hotTopics, relations, human: input.human, permit: handoffPermit, run: async (context, request, work) => {
     if (activeHandoffs.has(context)) return { status: "conflict", reason: "handoff-in-progress" }
     activeHandoffs.set(context, request)
@@ -93,5 +96,6 @@ export function createCollaborationComposition(input: {
   const work = createCollaborationWorkPort({ host: input.host, state: input.state, collaboration: { authority, hotTopics, threads, recipientThread: input.recipientThread, reissue: input.reissue, captureWorkSource: input.captureWorkSource, confirmationWork: input.confirmationWork, answerWork: input.answerWork, refreshWorkSource: input.refreshWorkSource }, procurement: input.procurement, topicSource, selections: input.selections, signals: input.signals, reviewContexts: input.reviewContexts })
   return { authority, hotTopics: { read: hotTopics.read }, relations: { read: relations.read, create: relations.create, remove: relations.remove, storageVersion: relations.storageVersion, readVersioned: relations.readVersioned }, threads, handoff, work }
 }
+
 
 

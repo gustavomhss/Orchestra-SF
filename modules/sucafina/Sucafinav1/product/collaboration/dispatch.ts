@@ -10,6 +10,7 @@ import type { CollaborationCapabilityHost } from "./capabilities.ts"
 import type { createThreadPort } from "./threads.ts"
 import type { createCollaborationComposition } from "./composition.ts"
 import type { createAnswerReusePort } from "./answer-reuse.ts"
+import { threadMessageContext } from "./thread-context.ts"
 
 type Operation = "sf_work_list" | "sf_question_prepare" | "sf_answer_read" | "sf_relation_read" | "sf_handoff_prepare"
 
@@ -42,9 +43,12 @@ export function createCollaborationDispatch(input: {
       if (thread.value.kind === "comment" || !thread.value.recipientRef) return { status: "needs-input", reason: "answer-unavailable" }
       const answer = thread.value.messages.slice(1).reverse().find((message) => message.authorRef === thread.value.recipientRef)
       if (!answer) return { status: "needs-input", reason: "answer-unavailable" }
+      // C16's current AnswerProjection cannot carry the immutable C05 pin.
+      // Its owner must add that scope before shared transport can publish it.
+      if (threadMessageContext(thread.value, answer)?.reviewContext) return { status: "unavailable", reason: "review-answer-output-contract-unavailable" }
       const reusable = await input.answerReuse?.read(thread.value.id, context)
       if (reusable && reusable.status !== "ok" && reusable.status !== "stale" && !(reusable.status === "needs-input" && reusable.reason === "answer-unconfirmed")) return reusable
-      if (reusable?.status === "ok" && (reusable.value.answer !== answer.body || reusable.value.authorRef !== answer.authorRef)) return { status: "stale", reason: "answer-changed" }
+      if (reusable?.status === "ok" && (reusable.value.answer !== answer.body || reusable.value.authorRef !== answer.authorRef || digestSfValue(reusable.value.reviewContext) !== digestSfValue(answer.sourceContext?.reviewContext))) return { status: "stale", reason: "answer-changed" }
       const current = await (input.threadReads ?? input.collaboration.threads).read(parsed.value.questionRef, context)
       if (current.status !== "ok" || digestSfValue(current.value) !== digestSfValue(thread.value)) return { status: "unavailable", reason: "answer-unavailable" }
       return { status: "ok", value: { questionRef: thread.value.id, answer: answer.body, evidenceRefs: current.value.evidenceRefs, state: reusable?.status === "ok" ? "confirmed" : reusable?.status === "stale" ? "stale" : "unconfirmed" } }
@@ -84,4 +88,5 @@ function caseDigest(value: AuthorizedCaseProjection) {
   const { checkedAt: _checkedAt, ...stable } = value
   return digestSfValue(stable)
 }
+
 

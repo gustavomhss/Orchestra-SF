@@ -1,15 +1,21 @@
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import type { SourceRef } from "../../../product/contracts/context.ts"
+import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
+import type { DomainProjection, SourceRef } from "../../../product/contracts/context.ts"
+import type { DomainPortHost } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { createReviewServices } from "../../../product/reviews/services.ts"
+import { createReviewAnswerSource } from "../../../product/reviews/review-answer-source.ts"
+import { reviewProjectionEvidence } from "../../../product/reviews/port.ts"
 import { createReviewThreadContext, isReviewThreadContext } from "../../../product/reviews/thread-context.ts"
 import { createReviewHttp } from "../../../product/reviews/http.ts"
 import { threadMessageContext } from "../../../product/collaboration/thread-context.ts"
 import type { ThreadSourceContext } from "../../../product/collaboration/thread-context.ts"
 import { isThread } from "../../../product/collaboration/threads.ts"
 import { DashboardPortfolio } from "../../../runtime/dashboard-portfolio.ts"
+import { object } from "../../../runtime/contract.ts"
 import { createThreadActorsFixture } from "../wp08/thread-actors-fixture.ts"
+import { createReviewAnswersFixture } from "../wp08/review-answers-fixture.ts"
 import { available } from "../wp08/relations-fixture.ts"
 
 // Actual C05, C06, C08, Dashboard source issuers and SQLite. Authentication,
@@ -18,10 +24,29 @@ import { available } from "../wp08/relations-fixture.ts"
 test("a question on C05 keeps its original review and source basis through current data changes and denies revoked review access", async () => {
   let reviewContext: ReturnType<typeof createReviewThreadContext> | undefined
   const access = { review: true, revokeAfterFirstRead: false, reads: 0 }
-  const f = await createThreadActorsFixture({ authorizeReviewThreadContext: async (pin, basis, context) => {
+  const f: Awaited<ReturnType<typeof createThreadActorsFixture>> = await createThreadActorsFixture({ authorizeReviewThreadContext: async (pin, basis, context) => {
     const allowed = !!reviewContext && await reviewContext.authorize(pin, basis, context)
     if (access.revokeAfterFirstRead && ++access.reads === 1) access.review = false
     return allowed
+  }, prepareReviewThreadFence: async (basis, context) => {
+    const pin = basis.reviewContext
+    if (!reviewContext || !pin) return undefined
+    const captured = await reviewContext.read(pin, basis, context)
+    if (captured.status !== "ok") return undefined
+    const capturedPin = captured.value.pin
+    const references = [...new Map(captured.value.review.sections.flatMap((section) => reviewProjectionEvidence(section.content as DomainProjection)).map((ref) => [digestSfValue(ref), ref])).values()]
+    if (!references.length || references.some((ref) => ref.kind !== "record")) return undefined
+    const records = references.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.kind === "record")
+    const grants = await Promise.all(records.map((ref) => f.observer.prepareHistoricalReissue(ref, context)))
+    if (grants.some((grant) => grant.status !== "ok")) return undefined
+    const actorDigest = digestSfValue(f.actors[context.binding.principalRef])
+    // Preparation above may reopen C05/C17. The write fence below only reads
+    // protected snapshots and the actual source leases; it does not issue refs.
+    return async () => {
+      const snapshot = f.persistence.currentSnapshots?.()?.dashboard
+      const stored = snapshot && object(object(snapshot.data.__sfProductV1).reviews)[capturedPin.reviewRef]
+      return !!snapshot && access.review && digestSfValue(stored) === capturedPin.reviewDigest && digestSfValue(f.actors[context.binding.principalRef]) === actorDigest && await f.host.revalidate(context) && (await Promise.all(grants.map((grant) => grant.status === "ok" ? grant.value.fence() : false))).every(Boolean)
+    }
   } })
   try {
     const port = f.port
@@ -187,6 +212,82 @@ test("a question on C05 keeps its original review and source basis through curre
     const forbiddenResponse = await http(prepareRequest(payload), "dashboard")
     expect(forbiddenResponse?.status).toBe(403)
     expect(JSON.stringify(await forbiddenResponse!.json())).not.toContain(review.id)
+  } finally { await f.dispose() }
+}, 120000)
+
+test("C05 observation rejects a provider replacement after its protected read-only source fence", async () => {
+  const f = await createReviewAnswersFixture()
+  try {
+    const reached = { fence: false, replacement: false }
+    const revalidate = f.host.revalidate
+    const host: DomainPortHost = { ...f.host, revalidate: async (context) => {
+      const allowed = await revalidate(context)
+      // Switch after the real protected source fence has finished, while the
+      // final authorization await is still returning an otherwise valid grant.
+      if (reached.fence && !f.persistence.currentSnapshots?.()) {
+        reached.replacement = true
+        host.revalidate = (current) => revalidate(current)
+      }
+      return allowed
+    } }
+    const source = createReviewAnswerSource({ reviews: f.services.reviews, host, prepareAccess: async (pin, basis, review, context) => {
+      if (digestSfValue(review) !== pin.reviewDigest || !f.access[context.binding.principalRef] || !await f.services.threadContext.authorize(pin, basis, context)) return { status: "denied", reason: "review-access-unavailable" }
+      const references = [...new Map(review.sections.flatMap((section) => reviewProjectionEvidence(section.content as DomainProjection)).map((ref) => [digestSfValue(ref), ref])).values()]
+      if (!references.length || references.some((ref) => ref.kind !== "record")) return { status: "unavailable", reason: "review-source-unavailable" }
+      const records = references.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.kind === "record")
+      const grants = await Promise.all(records.map((ref) => f.observer.prepareHistoricalReissue(ref, context)))
+      if (grants.some((grant) => grant.status !== "ok")) return { status: "unavailable", reason: "review-source-unavailable" }
+      return { status: "ok", value: { fence: async () => {
+        if (!f.persistence.currentSnapshots?.() || !f.access[context.binding.principalRef] || !await f.host.revalidate(context)) return false
+        const allowed = (await Promise.all(grants.map((grant) => grant.status === "ok" ? grant.value.fence() : false))).every(Boolean)
+        reached.fence ||= allowed
+        return allowed
+      } } }
+    } })
+    const scope = available(await source.resolve(f.basis, f.recipient)).scope
+    const observation = await source.observe(scope, f.basis, f.recipient)
+    expect(reached.fence).toBe(true)
+    expect(reached.replacement).toBe(true)
+    expect(observation).toEqual({ state: "access-unavailable", sourceVersion: 0 })
+    expect(JSON.stringify(observation)).not.toContain(f.review.id)
+    expect(JSON.stringify(observation)).not.toContain("Shared project")
+    expect(digestSfValue(available(await f.services.reviews.read(f.review.id, f.recipient)))).toBe(f.basis.reviewContext.reviewDigest)
+  } finally { await f.dispose() }
+}, 120000)
+
+test("a second C05 observation cannot rebind the first observation to a replacement access producer", async () => {
+  const f = await createReviewAnswersFixture()
+  try {
+    const input: Parameters<typeof createReviewAnswerSource>[0] = { reviews: f.services.reviews, host: f.host, prepareAccess: async (pin, basis, review, context) => {
+      if (digestSfValue(review) !== pin.reviewDigest || !f.access[context.binding.principalRef] || !await f.services.threadContext.authorize(pin, basis, context)) return { status: "denied", reason: "review-access-unavailable" }
+      const references = [...new Map(review.sections.flatMap((section) => reviewProjectionEvidence(section.content as DomainProjection)).map((ref) => [digestSfValue(ref), ref])).values()]
+      if (!references.length || references.some((ref) => ref.kind !== "record")) return { status: "unavailable", reason: "review-source-unavailable" }
+      const records = references.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.kind === "record")
+      const grants = await Promise.all(records.map((ref) => f.observer.prepareHistoricalReissue(ref, context)))
+      if (grants.some((grant) => grant.status !== "ok")) return { status: "unavailable", reason: "review-source-unavailable" }
+      return { status: "ok", value: { fence: async () => !!f.persistence.currentSnapshots?.() && f.access[context.binding.principalRef] === true && await f.host.revalidate(context) && (await Promise.all(grants.map((grant) => grant.status === "ok" ? grant.value.fence() : false))).every(Boolean) } }
+    } }
+    const source = createReviewAnswerSource(input)
+    const scope = available(await source.resolve(f.basis, f.recipient)).scope
+    const first = await source.observe(scope, f.basis, f.recipient)
+    expect(first.state).toBe("available")
+    if (first.state !== "available") throw new Error("Original observation unavailable")
+    const original = input.prepareAccess
+    input.prepareAccess = (pin, basis, review, context) => original(pin, basis, review, context)
+    const second = await source.observe(scope, f.basis, f.recipient)
+    expect(second.state).toBe("available")
+    if (second.state !== "available") throw new Error("Replacement observation unavailable")
+    expect(second.sourceFingerprint).toBe(first.sourceFingerprint)
+    expect(second.dependencyFingerprint).toBe(first.dependencyFingerprint)
+    expect(second.scopeFingerprint).toBe(first.scopeFingerprint)
+    expect(second.accessLeaseRef).not.toBe(first.accessLeaseRef)
+    const fenced = await f.persistence.transactionAll!(async () => ({ commit: false, value: {
+      first: await source.fence(scope, first, f.basis, f.recipient),
+      second: await source.fence(scope, second, f.basis, f.recipient),
+      tampered: await source.fence(scope, { ...first, sourceVersion: first.sourceVersion + 1, accessLeaseRef: second.accessLeaseRef }, f.basis, f.recipient),
+    } }))
+    expect(fenced).toEqual({ first: false, second: true, tampered: false })
+    expect(await f.persistence.transactionAll!(async () => ({ commit: false, value: await source.fence(scope, structuredClone(first), f.basis, f.recipient) })))).toBe(false)
   } finally { await f.dispose() }
 }, 120000)
 

@@ -49,16 +49,20 @@ function businessSnapshot(snapshot: Snapshot) {
 export async function createRelationsFixture(options: { threadHistoryWrites?: WeakSet<object>; clock?: { at: string } } = {}) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-relations-sources-"))
   await chmod(directory, 0o700)
-  const store = await openLocalStore(directory)
-  const transactionAll = store.transactionAll
-  if (!transactionAll) throw new Error("SQLite fixture requires transactionAll")
+  const resources = { store: await openLocalStore(directory) }
+  const store = resources.store
+  if (!store.transactionAll) throw new Error("SQLite fixture requires transactionAll")
   const clock = options.clock ?? { at: "2026-11-13T00:00:00Z" }
   const period = { start: "2026-01-01", end: "2026-12-31" }
   const gate = { active: true, dashboard: true, procurement: true, planner: true }
   const person = { id: "person", name: "Person" }
   const environment = (id: string = randomUUID()) => ({ at: clock.at, id: () => id, directory: [person] })
   const actor = { id: person.id, roles: ["admin", "buyer"], canWrite: true }
-  const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => clock.at) })
+  const persistence = createSfSourcePersistence({ persistence: {
+    transaction: (surface, work, options) => resources.store.transaction(surface, work, options),
+    transactionAll: (work, options) => resources.store.transactionAll!(work, options),
+    currentSnapshots: () => resources.store.currentSnapshots?.(),
+  }, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => clock.at) })
   for (const surface of ["dashboard", "planner", "procurement"] as const) {
     await persistence.initializeSources(surface)
     await persistence.transaction(surface, async (snapshot) => {
@@ -106,8 +110,10 @@ export async function createRelationsFixture(options: { threadHistoryWrites?: We
   const relations = createRelationPort({ state, host, human, mutationFence, creationTarget, handoffPermit: Symbol("fixture"), authorizePair: authority.authorizePair, checkRecipientAtCommit: authority.checkRecipientAtCommit, createId: randomUUID, now: () => clock.at })
   const threads = createThreadPort({ state, host, human, mutationFence, creationTarget, authorize: authority.authorizeThread, checkRecipientAtCommit: authority.checkRecipientAtCommit, createId: randomUUID, now: () => clock.at })
   return { clock, store, persistence, period, person, gate, request, read, admit, records, suppliers, state, relations, threads, mutate, secondSupplier, host, human, evidence, creationTarget, authority, mutationFence, ui,
-    snapshots: () => transactionAll(async (snapshots) => ({ commit: false, value: { dashboard: businessSnapshot(snapshots.dashboard), planner: businessSnapshot(snapshots.planner), procurement: businessSnapshot(snapshots.procurement) } })),
-    dispose: async () => { await store.dispose(); await rm(directory, { recursive: true, force: true }) },
+    snapshots: () => resources.store.transactionAll!(async (snapshots) => ({ commit: false, value: { dashboard: businessSnapshot(snapshots.dashboard), planner: businessSnapshot(snapshots.planner), procurement: businessSnapshot(snapshots.procurement) } })),
+    reopen: async () => { const previous = resources.store; await previous.dispose(); resources.store = await openLocalStore(directory); return previous },
+    dispose: async () => { await resources.store.dispose(); await rm(directory, { recursive: true, force: true }) },
   }
 }
+
 

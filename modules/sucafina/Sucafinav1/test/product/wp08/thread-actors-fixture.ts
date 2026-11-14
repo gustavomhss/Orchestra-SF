@@ -29,7 +29,7 @@ import { available, createRelationsFixture } from "./relations-fixture.ts"
 /** Real SQLite, domain selectors, UI admissions, actor scopes and Dashboard historical access verifier.
  * Recipient leases and capture archive remain explicit fixture boundaries; this is not a native/host witness.
  */
-export async function createThreadActorsFixture(options: { reviewContexts?: Parameters<typeof createCollaborationHost>[0]["reviewContexts"]; authorizeReviewThreadContext?: Parameters<typeof createCollaborationHost>[0]["authorizeReviewThreadContext"] } = {}) {
+export async function createThreadActorsFixture(options: Pick<Parameters<typeof createCollaborationHost>[0], "reviewContexts" | "authorizeReviewThreadContext" | "prepareReviewThreadFence" | "reviewRecipientAuthority" | "reviewAnswerSource"> = {}) {
   const base = await createRelationsFixture()
   const at = "2026-11-13T00:00:00Z"
   const actors: Record<string, { enabled: boolean; access: string; group: string; name: string }> = {
@@ -125,13 +125,14 @@ export async function createThreadActorsFixture(options: { reviewContexts?: Para
   }
   const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
   const cases = createDecisionCasePort({ state, host, creationTarget: base.creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, evidence, createId: randomUUID, now: () => at })
-  const port = createCollaborationHost({ reviewContexts: options.reviewContexts, authorizeReviewThreadContext: options.authorizeReviewThreadContext, host, state, creationTarget: base.creationTarget, scopedSources: base.persistence, evidence, human, authority: domainAuthority, recipientAuthority, issueForActor, prepareReissueScope: observer.prepareReissueScope, confirmationSource: observer, threadHistoryWrites, caseSelectionWrites, cases, workCaseAuthority: authorizeCase,
+  const compose = () => createCollaborationHost({ reviewContexts: options.reviewContexts, prepareReviewThreadFence: options.prepareReviewThreadFence, authorizeReviewThreadContext: options.authorizeReviewThreadContext, reviewRecipientAuthority: options.reviewRecipientAuthority, reviewAnswerSource: options.reviewAnswerSource, host, state, creationTarget: base.creationTarget, scopedSources: base.persistence, evidence, human, authority: domainAuthority, recipientAuthority, issueForActor, prepareReissueScope: observer.prepareReissueScope, confirmationSource: observer, threadHistoryWrites, caseSelectionWrites, cases, workCaseAuthority: authorizeCase,
     workSignals: async (_selection, period, context) => {
       const issued = await createDashboardSourceIssuer({ host, scopedSources: base.persistence })({ page: "Executive Dashboard", fields: ["signals"], period }, context)
       if (issued.status !== "ok") return { status: "unavailable" }
       const read = await dashboard.read({ selectionRef: issued.value.selectionRef, fields: ["signals"], period }, context)
       return read.status === "ok" && read.value.values.length === 0 && read.value.missing.length === 0 ? { status: "ok", signals: [] } : { status: "unavailable" }
     }, procurement: { list: async () => ({ status: "unavailable", reason: "not-selected" }) }, collections: { resolveRequestCollection: async () => ({ status: "unavailable", reason: "not-selected" }) }, requiredAuthority: { sf_work_list: [], sf_question_prepare: [], sf_answer_read: [], sf_relation_read: [], sf_handoff_prepare: [] }, createId: randomUUID, now: () => at })
+  const port = compose()
   const issueProject = async (context: TrustedDomainContext) => available(await records.issue({ page: "Portfolio Dashboard", recordType: "projects", recordId: "project", fields: ["name", "status"], period: base.period }, context))
   const select = async (id: string, context: TrustedUiContext) => {
     if (!port.caseSelection) throw new Error("case selection unavailable")
@@ -146,5 +147,6 @@ export async function createThreadActorsFixture(options: { reviewContexts?: Para
     return { selectionRef: selected.selectionRef, period: base.period }
   }
   const capture = async (ref: BusinessEvidenceRef, context: TrustedDomainContext) => archived.set(ref.refDigest, { ref: structuredClone(ref), projection: available(await records.read(ref.refId, context)) })
-  return { ...base, actors, request, author, recipient, homonym, admitRead, admit, ui, human, host, state, records, evidence, port, observer, reissue, historical, capture, select, issueProject, cases, domainAuthority }
+  return { ...base, actors, request, author, recipient, homonym, admitRead, admit, ui, human, host, state, records, evidence, port, observer, reissue, historical, capture, select, issueProject, cases, domainAuthority, compose }
 }
+

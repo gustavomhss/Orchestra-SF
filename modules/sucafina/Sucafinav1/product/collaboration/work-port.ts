@@ -116,11 +116,15 @@ export function createCollaborationWorkPort(input: {
         if (answer?.status === "ok" && answer.value.state === "stale") {
           const current = answer.value
           if (current.period.end < selected.period.start || current.period.start > selected.period.end) continue
-          const membership = await input.selections.contains(scope.value, current.sourceRefs, context)
+          const recipient = current.reviewContext && input.collaboration.recipientThread ? await input.collaboration.recipientThread(id, context) : undefined
+          if (current.reviewContext && (recipient?.status !== "ok" || digestSfValue(recipient.value.messages[0]?.sourceContext?.reviewContext) !== digestSfValue(current.reviewContext))) return { status: "unavailable", reason: "review-thread-context-unavailable" }
+          const refs = recipient?.status === "ok" ? recipient.value.current.evidenceRefs : current.sourceRefs
+          const membership = await input.selections.contains(scope.value, refs, context)
           if (membership.status !== "ok") return membership
           if (!membership.value) continue
-          items.push({ actionRef: id, ownerRef: own, state: "answer-stale", sourceRefs: current.sourceRefs })
-          presentation.push({ kind: "clarification", actionRef: id, title: null, ownerRef: own, period: current.period, observedVersion: current.observedVersion, sourceVersion: current.sourceVersion, ...(current.reason ? { reason: current.reason } : {}), state: "answer-stale", destination: { kind: "thread", threadId: id }, sourceRefs: current.sourceRefs })
+          if (current.reviewContext) discussionProofs.push({ id, pin: structuredClone(current.reviewContext) })
+          items.push({ actionRef: id, ownerRef: own, state: "answer-stale", sourceRefs: refs })
+          presentation.push({ kind: "clarification", actionRef: id, title: null, ownerRef: own, period: current.period, observedVersion: current.observedVersion, sourceVersion: current.sourceVersion, ...(current.reason ? { reason: current.reason } : {}), state: "answer-stale", destination: { kind: "thread", threadId: id }, sourceRefs: refs, ...(current.reviewContext ? { reviewContext: current.reviewContext } : {}) })
           continue
         }
         if (entry.state === "resolved") continue
@@ -253,4 +257,5 @@ export function createCollaborationWorkPort(input: {
     },
   }
 }
+
 

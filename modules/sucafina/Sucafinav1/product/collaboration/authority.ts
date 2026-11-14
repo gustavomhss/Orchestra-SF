@@ -10,10 +10,20 @@ import { validThreadSourceContext } from "./thread-context.ts"
 import type { ThreadSourceContext, ReviewThreadContextAuthorizer } from "./thread-context.ts"
 import { isAllowedRelationPair } from "./relation-catalog.ts"
 import { createRecipientCommitCheck, createRecipientSourceAuthorizer } from "./recipient-authority.ts"
-import type { CollaborationRecipientAuthority } from "./recipient-authority.ts"
+import type { CollaborationRecipientAuthority, ReviewThreadRecipientAuthority } from "./recipient-authority.ts"
 
 /** Current source access and explicitly selected directory IDs are checked separately. */
-export function createCollaborationAuthority(input: { host: DomainPortHost; evidence: BusinessContextService; recipientAuthority?: CollaborationRecipientAuthority; authorizeReviewThreadContext?: ReviewThreadContextAuthorizer }) {
+export function createCollaborationAuthority(input: { host: DomainPortHost; evidence: BusinessContextService; recipientAuthority?: CollaborationRecipientAuthority; reviewRecipientAuthority?: ReviewThreadRecipientAuthority; authorizeReviewThreadContext?: ReviewThreadContextAuthorizer }) {
+  const reviewRecipientLeases = new Map<string, { proof: ReviewThreadRecipientAuthority; authorize: ReviewThreadRecipientAuthority["authorize"]; check: ReviewThreadRecipientAuthority["checkAtCommit"] }>()
+  const reviewRecipientKey = (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => digestSfValue({ recipientRef, basis, authority: context.binding })
+  const checkReviewRecipient = (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => {
+    if (!recipientRef.trim() || !basis.reviewContext || !validThreadSourceContext(basis)) return false
+    if (recipientRef === context.binding.principalRef) return true
+    const lease = reviewRecipientLeases.get(reviewRecipientKey(recipientRef, basis, context))
+    if (!lease) return false
+    const current = () => input.reviewRecipientAuthority === lease.proof && lease.proof.authorize === lease.authorize && lease.proof.checkAtCommit === lease.check
+    try { return current() && lease.check.call(lease.proof, recipientRef, structuredClone(basis), context) === true && current() } catch { return false }
+  }
   const sources = async (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => {
     if (!refs.length || refs.some((ref) => !ref || typeof ref !== "object" || ref.installationId !== context.binding.installationId || ref.projectId !== context.binding.projectId)) return false
     const current = await input.evidence.context({ refs: structuredClone(refs) }, context).catch(() => [])
@@ -30,6 +40,24 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     const selected = structuredClone(basis)
     if (!authorize || !validThreadSourceContext(selected) || !await input.host.revalidate(context)) return false
     return await authorize(selected.reviewContext!, selected, context).catch(() => false) && input.authorizeReviewThreadContext === authorize && await input.host.revalidate(context)
+  }
+  const reviewRecipientSources = async (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => {
+    const selected = structuredClone(basis)
+    if (!recipientRef.trim() || !selected.reviewContext || !validThreadSourceContext(selected) || !await reviewThreadBasis(selected, context) || !await historicalSources(selected.evidenceRefs, context)) return false
+    if (recipientRef === context.binding.principalRef) return await input.host.revalidate(context)
+    // C08 already owns all source snapshots. Reuse only the privately prepared
+    // authority here; preparing a new recipient lease could open a nested write.
+    if (input.host.persistence.currentSnapshots?.()) return checkReviewRecipient(recipientRef, selected, context)
+    const proof = input.reviewRecipientAuthority
+    const authorize = proof?.authorize
+    const checkAtCommit = proof?.checkAtCommit
+    if (!proof || !authorize || !checkAtCommit) return false
+    const current = () => input.reviewRecipientAuthority === proof && proof.authorize === authorize && proof.checkAtCommit === checkAtCommit
+    if (!await authorize.call(proof, recipientRef, structuredClone(selected), context).catch(() => false) || !current() || !await reviewThreadBasis(selected, context) || !await historicalSources(selected.evidenceRefs, context)) return false
+    if (!await authorize.call(proof, recipientRef, structuredClone(selected), context).catch(() => false) || !current() || !await input.host.revalidate(context)) return false
+    reviewRecipientLeases.set(reviewRecipientKey(recipientRef, selected, context), { proof, authorize, check: checkAtCommit })
+    if (reviewRecipientLeases.size > 512) reviewRecipientLeases.delete(reviewRecipientLeases.keys().next().value!)
+    return true
   }
   const recipientSources = createRecipientSourceAuthorizer({ sources, revalidate: input.host.revalidate, recipientAuthority: input.recipientAuthority })
   const recipient = async (id: string, context: TrustedDomainContext) => {
@@ -52,7 +80,9 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     reviewThreadBasis,
     recipient,
     recipientSources,
+    reviewRecipientSources,
     checkRecipientAtCommit: createRecipientCommitCheck(input.recipientAuthority),
+    checkReviewRecipientAtCommit: checkReviewRecipient,
     authorizePair: async (pair: { fromRef: string; toRef: string; kind: string; evidenceRefs: readonly BusinessEvidenceRef[]; recipientRef?: string }, context: TrustedDomainContext) => {
       if (!Array.isArray(pair.evidenceRefs) || pair.evidenceRefs.some((ref) => !ref || typeof ref !== "object")) return false
       const from = pair.evidenceRefs.filter((ref) => ref.refId === pair.fromRef)
@@ -65,7 +95,7 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
       if (!Array.isArray(thread.evidenceRefs) || thread.evidenceRefs.some((ref) => !ref || typeof ref !== "object")) return false
       const pin = thread.messages ? thread.messages[0]?.sourceContext?.reviewContext : thread.reviewContext
       const basis = pin ? { sourceRef: thread.sourceRef, sourceIncarnation: thread.sourceIncarnation, observedVersion: thread.observedVersion, period: thread.period, evidenceRefs: thread.evidenceRefs, reviewContext: pin } : undefined
-      if (basis && (!validThreadSourceContext(basis) || !await reviewThreadBasis(basis, context) || mode === "write" && thread.recipientRef && thread.recipientRef !== context.binding.principalRef)) return false
+      if (basis && (!validThreadSourceContext(basis) || !await reviewThreadBasis(basis, context) || mode === "write" && thread.recipientRef && !await reviewRecipientSources(thread.recipientRef, basis, context))) return false
       const authorizeSources = pin ? historicalSources : sources
       if (!thread.evidenceRefs.some((ref) => ref.refId === thread.sourceRef) || !await authorizeSources(thread.evidenceRefs, context)) return false
       const messageRefs = [...new Map((thread.messages ?? []).flatMap((message) => message.sourceContext?.evidenceRefs ?? []).map((ref) => [ref.refDigest, ref])).values()]
@@ -82,5 +112,6 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     },
   }
 }
+
 
 

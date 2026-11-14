@@ -9,6 +9,7 @@ import { isThread } from "./threads.ts"
 import { validThreadSourceContext } from "./thread-context.ts"
 import type { ThreadSourceContext } from "./thread-context.ts"
 import type { AnswerWork } from "./answer-work.ts"
+import type { PrepareReviewThreadFence } from "./review-source-fence.ts"
 
 type Mutation = { expectedStorageVersion: number; idempotencyKey: string }
 
@@ -19,6 +20,9 @@ export function createRecipientThreadActions(input: {
   human: CollaborationHumanAuthority
   mutationFence: CollaborationMutationFence
   read: ReturnType<typeof createRecipientThreadReader>
+  prepareReviewThreadFence?: PrepareReviewThreadFence
+  authorizeReviewRecipient?: (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => Promise<boolean>
+  checkReviewRecipientAtCommit?: (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => boolean
   answerWork?: (id: string, context: TrustedDomainContext) => Promise<PortResult<AnswerWork>>
   creationTarget: { ref: string; incarnation: string }
   createId: () => string
@@ -49,6 +53,10 @@ export function createRecipientThreadActions(input: {
     if (!validThreadSourceContext(basis)) return { status: "unavailable", reason: "thread-source-unavailable" }
     const review = reviewBasis ? await input.state.read(request, "reviews", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion) : undefined
     if (reviewBasis && (review?.status !== "ok" || !review.value)) return { status: "denied", reason: "review-thread-context-unavailable" }
+    const prepareReviewFence = input.prepareReviewThreadFence
+    const checkReviewRecipient = input.checkReviewRecipientAtCommit
+    const reviewFence = reviewBasis && prepareReviewFence ? await prepareReviewFence(reviewBasis, context) : undefined
+    if (reviewBasis && (!reviewFence || prior.recipientRef && (!input.authorizeReviewRecipient || !checkReviewRecipient || !await input.authorizeReviewRecipient(prior.recipientRef, reviewBasis, context)))) return { status: "unavailable", reason: "review-thread-source-fence-unavailable" }
     const fence = await input.mutationFence.prepare(async () => {
       const current = await input.read(id, context)
       if (current.status !== "ok" || digestSfValue(current.value.current) !== digestSfValue(projected.value.current) || digestSfValue({ id: current.value.id, kind: current.value.kind, recipientRef: current.value.recipientRef, state: current.value.state, messages: current.value.messages, version: current.value.observed.version, period: current.value.observed.period }) !== digestSfValue({ id: prior.id, kind: prior.kind, recipientRef: prior.recipientRef, state: prior.state, messages: prior.messages, version: prior.observedVersion, period: prior.period })) return false
@@ -63,9 +71,9 @@ export function createRecipientThreadActions(input: {
     const next = message ? { ...prior, state: "open" as const, messages: [...prior.messages, message] } : { ...prior, state: "resolved" as const }
     if (!isThread(next)) return { status: "unavailable", reason: "thread-source-context-invalid" }
     const work = async (state: SfProductState, authority: SfStateAuthority) => {
-      const reviewed = reviewBasis ? await input.read(id, context) : undefined
-      if (reviewBasis && (reviewed?.status !== "ok" || digestSfValue(reviewed.value.messages) !== digestSfValue(prior.messages))) return { commit: false, value: false }
-      if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, humanAction, payload) || !input.mutationFence.check(fence) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || prior.state !== "open" && !reopen || !isThread(next)) return { commit: false, value: false }
+      if (!await input.human.authorize(context, humanAction, payload)) return { commit: false, value: false }
+      if (reviewBasis && (input.prepareReviewThreadFence !== prepareReviewFence || !reviewFence || !await reviewFence() || input.prepareReviewThreadFence !== prepareReviewFence || prior.recipientRef && (input.checkReviewRecipientAtCommit !== checkReviewRecipient || !checkReviewRecipient || !checkReviewRecipient(prior.recipientRef, reviewBasis, context) || input.checkReviewRecipientAtCommit !== checkReviewRecipient))) return { commit: false, value: false }
+      if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !input.mutationFence.check(fence) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || prior.state !== "open" && !reopen || !isThread(next)) return { commit: false, value: false }
       if (reopen) state.threads[`sf:thread-resolution-history:${digestSfValue(prior)}`] = { kind: "thread-resolution-history-v1", messages: [{ resolution: structuredClone(prior) }] }
       state.threads[id] = next
       return { commit: true, value: true }
@@ -81,5 +89,6 @@ export function createRecipientThreadActions(input: {
     resolve: (id: string, mutation: Mutation, context: TrustedDomainContext) => change(id, { kind: "resolve" }, mutation, context),
   }
 }
+
 
 

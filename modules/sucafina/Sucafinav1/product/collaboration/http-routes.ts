@@ -25,7 +25,7 @@ export function createCollaborationHttpRoutes(host: Host) {
     const value = result.value
     const observation = value.observation
     const presented = { ...("evidence" in observation ? { evidence: observation.evidence } : {}), ...("projection" in observation ? { projection: observation.projection } : {}) }
-    return { status: "ok", value: { observationRef: value.observationRef, observedSourceVersion: value.observedSourceVersion, expectedScopeFingerprint: value.expectedScopeFingerprint, answerRef: value.answerRef, answer: value.answer, authorRef: value.authorRef, scope: value.scope, ...presented } }
+    return { status: "ok", value: { observationRef: value.observationRef, observedSourceVersion: value.observedSourceVersion, expectedScopeFingerprint: value.expectedScopeFingerprint, answerRef: value.answerRef, answer: value.answer, authorRef: value.authorRef, scope: value.scope, ...(value.reviewContext ? { reviewContext: value.reviewContext } : {}), ...presented } }
   }
   const threadRead = (id: string, context: TrustedUiContext) => createRecipientAwareThreadReads(host.threads, host.recipientThread).read(id, context)
   const threadChange = async (payload: Payload, context: TrustedUiContext, kind: "reply" | "resolve"): Promise<PortResult<unknown>> => {
@@ -74,4 +74,5 @@ export function createCollaborationHttpRoutes(host: Host) {
   ])
   return routes
 }
+
 

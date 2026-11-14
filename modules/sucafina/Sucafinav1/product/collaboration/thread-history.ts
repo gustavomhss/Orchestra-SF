@@ -9,6 +9,7 @@ import { isThread } from "./threads.ts"
 import type { CollaborationThread } from "./threads.ts"
 import { threadMessageContext } from "./thread-context.ts"
 import type { ThreadSourceContext } from "./thread-context.ts"
+import type { PrepareReviewThreadFence } from "./review-source-fence.ts"
 
 type Message = CollaborationThread["messages"][number]
 type Mutation = { expectedStorageVersion: number; idempotencyKey: string }
@@ -21,6 +22,9 @@ export function createThreadHistory(input: {
   read: ReturnType<typeof createRecipientAwareThreadReads>["read"]
   readHistorical?: ReturnType<typeof createRecipientAwareThreadReads>["readHistorical"]
   authorizeSources?: (basis: ThreadSourceContext, context: TrustedDomainContext) => Promise<boolean>
+  prepareReviewThreadFence?: PrepareReviewThreadFence
+  authorizeReviewRecipient?: (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => Promise<boolean>
+  checkReviewRecipientAtCommit?: (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => boolean
   human: CollaborationHumanAuthority
   fence: CollaborationMutationFence
   target: { ref: string; incarnation: string }
@@ -52,13 +56,17 @@ export function createThreadHistory(input: {
       if (!basis || input.authorizeSources && !await input.authorizeSources(basis, context)) return { status: "unavailable", reason: "thread-history-unavailable" }
       const review = basis.reviewContext ? await input.state.read(request, "reviews", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion) : undefined
       if (basis.reviewContext && (review?.status !== "ok" || !review.value)) return { status: "denied", reason: "review-thread-context-unavailable" }
+      const prepareReviewFence = input.prepareReviewThreadFence
+      const checkReviewRecipient = input.checkReviewRecipientAtCommit
+      const reviewFence = basis.reviewContext && prepareReviewFence ? await prepareReviewFence(basis, context) : undefined
+      if (basis.reviewContext && (!reviewFence || prior.recipientRef && (!input.authorizeReviewRecipient || !checkReviewRecipient || !await input.authorizeReviewRecipient(prior.recipientRef, basis, context)))) return { status: "unavailable", reason: "review-thread-source-fence-unavailable" }
       const fence = await input.fence.prepare(async () => {
         const current = await load(id, context)
         return current.status === "ok" && digestSfValue(current.value.thread) === digestSfValue(prior) && (!input.authorizeSources || await input.authorizeSources(basis, context))
       })
       if (!fence) return { status: "unavailable", reason: "thread-source-fence-unavailable" }
       const work = async (state: SfProductState, authority: SfStateAuthority) => {
-        if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.thread.edit", selected) || basis.reviewContext && (!input.authorizeSources || !await input.authorizeSources(basis, context)) || !input.fence.check(fence) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || message.version !== selected.expectedVersion || prior.state !== "open") return { commit: false, value: 0 }
+        if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.thread.edit", selected) || basis.reviewContext && (input.prepareReviewThreadFence !== prepareReviewFence || !reviewFence || !await reviewFence() || input.prepareReviewThreadFence !== prepareReviewFence || prior.recipientRef && (input.checkReviewRecipientAtCommit !== checkReviewRecipient || !checkReviewRecipient || !checkReviewRecipient(prior.recipientRef, basis, context) || input.checkReviewRecipientAtCommit !== checkReviewRecipient)) || !input.fence.check(fence) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || message.version !== selected.expectedVersion || prior.state !== "open") return { commit: false, value: 0 }
         state.threads[id] = { ...prior, messages: prior.messages.map((entry) => entry.id === message.id ? { ...entry, body: selected.body, version: entry.version + 1, sourceContext: basis } : entry), messageRevisions: [...(prior.messageRevisions ?? []), message] }
         return { commit: true, value: message.version + 1 }
       }
@@ -85,5 +93,6 @@ export function createThreadHistory(input: {
     },
   }
 }
+
 
 
