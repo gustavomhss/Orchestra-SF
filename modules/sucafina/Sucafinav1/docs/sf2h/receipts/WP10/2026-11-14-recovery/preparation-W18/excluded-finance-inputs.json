@@ -1,0 +1,60 @@
+{
+  "selected": [],
+  "excluded": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "blobSha": "81513bbca0d087211e4d3d46afe805941bb98a6c",
+      "sha256": "d7348a65355b38db23b65586e64c81744a329c0b1b229d1fb004160c6b5f44ce",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/ci/W18-fixes/foreign/pr35-latest/modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "owner": "astra-finance/WP03-WP05-WP11",
+      "baseBlobSha": "922358d17c470c16b43076510bdf04744e2306e4",
+      "diffPath": "/workspace/scratch/301a7f2754f4/agents/ci/W18-fixes/diffs/mutations.ts.latest.diff",
+      "changed": true,
+      "decision": "exclude-from-BI409-fix",
+      "reason": "The no-op reassessed=false branch still skips coverageEvidence.entries; reject-change additions and validation reordering do not capture the missing proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "blobSha": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "sha256": "6e0f003055c08005e3a2f339d221c6f608d615a8068e66d30555a981604eb0fd",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/ci/W18-fixes/foreign/pr35-latest/modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "owner": "astra-finance/WP03-WP05-WP11",
+      "baseBlobSha": "9ef6d197759bbfb9513cce5118c93c08ac797303",
+      "diffPath": "/workspace/scratch/301a7f2754f4/agents/ci/W18-fixes/diffs/scenario-port.ts.latest.diff",
+      "changed": true,
+      "decision": "exclude-from-BI409-fix",
+      "reason": "Published delta is not causal to promotion.0 HTTP409. Preserve as source; no ownership or intake expansion justified by this observed failure."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "blobSha": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/ci/W18-fixes/foreign/pr35-latest/modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "owner": "astra-finance/WP03-WP05-WP11",
+      "baseBlobSha": "d3098aa94cdeee71193c94ae906f6fafd14bda9b",
+      "diffPath": "/workspace/scratch/301a7f2754f4/agents/ci/W18-fixes/diffs/scenario-comparison-port.ts.latest.diff",
+      "changed": true,
+      "decision": "exclude-from-BI409-fix",
+      "reason": "Published delta is not causal to promotion.0 HTTP409. Preserve as source; no ownership or intake expansion justified by this observed failure."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "blobSha": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "sha256": "771b060898fce1b1d851461bee7df743014ab55f9c0994a0331f2664a1c8bfd1",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/ci/W18-fixes/foreign/pr35-latest/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "owner": "astra-finance/WP03-WP05-WP11",
+      "baseBlobSha": "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b",
+      "diffPath": "/workspace/scratch/301a7f2754f4/agents/ci/W18-fixes/diffs/stored-scenarios.ts.latest.diff",
+      "changed": true,
+      "decision": "exclude-from-BI409-fix",
+      "reason": "Published delta is not causal to promotion.0 HTTP409. Preserve as source; no ownership or intake expansion justified by this observed failure."
+    }
+  ],
+  "supersededInspectedPin": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+  "pinnedAtParentRequest": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+  "noRemoteMutation": true
+}

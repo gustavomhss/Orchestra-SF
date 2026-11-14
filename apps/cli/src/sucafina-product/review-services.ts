@@ -94,6 +94,9 @@ export function createSfReviewServices(input: {
     handoffs,
     ...(input.readers?.contributions ? { contributions: input.readers.contributions } : {}),
   })
-  protectSfReviewReads({ authority, reviews: application.reviews })
-  return { application, historical, portfolioHistory, handoffs, unavailable: input.readers?.outcome ? [] : ["review-historical-outcome-reader-unavailable"] }
+  const readScope = protectSfReviewReads({ authority, reviews: application.reviews,
+    localSnapshotReaders: !input.readers || Object.values(input.readers).every((reader) => reader === undefined) })
+  const protectedApplication: typeof application & { readScope?: typeof readScope } = { ...application, readScope,
+    http: (request, surface) => readScope.run(request, () => application.http(request, surface)) }
+  return { application: protectedApplication, historical, portfolioHistory, handoffs, unavailable: input.readers?.outcome ? [] : ["review-historical-outcome-reader-unavailable"] }
 }

@@ -12,12 +12,12 @@ import type { ScannerBinarySpec } from "@orchestra/atlas-boundary/native-memory"
 import type { DecisionCase } from "../contracts/decisions.ts"
 import type { DomainProjection } from "../contracts/context.ts"
 import { mapSfEvidenceInOrder } from "./evidence-order.ts"
-import { createSfAtlasRecallScope } from "./atlas-recall-scope.ts"
-import type { SfCalculationCaseScope } from "./atlas-recall-scope.ts"
 import { roleMap } from "../../runtime/admin.ts"
 import { object } from "../../runtime/contract.ts"
 import { sfPlannerProjectionSelector } from "../integration/source-projections.ts"
 import { sfPlannerSourceSelector } from "../integration/planner-sources.ts"
+import { createSfAtlasRecallScope } from "./atlas-recall-scope.ts"
+import type { SfCalculationCaseScope } from "./atlas-recall-scope.ts"
 
 /** Bound repeated source reauthorization without caching an authorization across reads. */
 function evidenceWithinBudget(refs: readonly BusinessEvidenceRef[]) {
@@ -153,6 +153,7 @@ function sameHistoricalSource(original: BusinessEvidenceRef, current: BusinessEv
   if (original.kind === "document" && current.kind === "document") return original.target.documentId === current.target.documentId && original.target.incarnation === current.target.incarnation
   if (original.kind === "receipt" && current.kind === "receipt") return original.target.surface === current.target.surface && original.target.receiptId === current.target.receiptId && original.target.targetIncarnation === current.target.targetIncarnation
   if (original.kind === "case-event" && current.kind === "case-event") return original.target.caseId === current.target.caseId && original.target.caseIncarnation === current.target.caseIncarnation && original.target.eventId === current.target.eventId
+  if (original.kind === "calculation" && current.kind === "calculation") return digestSfValue(original) === digestSfValue(current)
   return false
 }
 
@@ -223,9 +224,11 @@ export function createSfAtlasBusiness(input: {
     /** Host-owned reader with current source and projection checks; an arbitrary project callback does not qualify. */
     readEvidence?: (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution> }
   calculation?: (ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>
+  caseForEvidence: (digest: string, call: TrustedDomainContext) => Promise<readonly { id: string; incarnation: string }[] | { id: string; incarnation: string } | undefined>
+  calculationHistorical?: (ref: BusinessEvidenceRef, call: TrustedDomainContext,
+    readCapture: (caseRef: { id: string; incarnation: string; version: number }, digest: string, call: TrustedDomainContext) => Promise<ProtectedEvidenceCapture | undefined>) => Promise<BusinessEvidenceResolution>
   withCalculationCase?: SfCalculationCaseScope
   lockedSourceFences?: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
-  caseForEvidence: (digest: string, call: TrustedDomainContext) => Promise<readonly { id: string; incarnation: string }[] | { id: string; incarnation: string } | undefined>
   selections: Pick<Parameters<typeof createSfEvidenceCapabilities>[0], "contextSelections" | "recallSelections" | "featuresForCase" | "runtimeVersions">
   scanner?: { spec: ScannerBinarySpec; version: string }
   now: () => string
@@ -331,9 +334,34 @@ export function createSfAtlasBusiness(input: {
   })
   const planner = withRecordHistory(freshPlanner)
   const recallScope = input.calculation && input.planner && input.withCalculationCase && input.lockedSourceFences
-    ? createSfAtlasRecallScope({ host: input.host, state: input.state, sources: input.planner.sources, readPlanner: planner,
+    ? createSfAtlasRecallScope({ host: input.host, state: input.state, sources: input.planner.sources, readPlanner: freshPlanner,
       calculation: input.calculation, withCalculationCase: input.withCalculationCase, lockedSourceFences: input.lockedSourceFences, now: input.now }) : undefined
-  const calculation = recallScope?.resolve ?? input.calculation
+  const currentCalculation = recallScope?.resolve ?? input.calculation
+  const historicalCalculation = input.calculationHistorical ? (ref: BusinessEvidenceRef, call: TrustedDomainContext) =>
+    input.calculationHistorical!(ref, call, (caseRef, digest, trusted) => memory.readOriginalCapture(caseRef, digest, trusted)) : undefined
+  const calculation = currentCalculation ? async (ref: BusinessEvidenceRef, call: TrustedDomainContext) => {
+    const current = await currentCalculation(ref, call)
+    if (current.state === "fresh" || !historicalCalculation) return current
+    const historical = await historicalCalculation(ref, call)
+    return historical.state === "historical" ? historical : current
+  } : undefined
+  const calculationProof = currentCalculation ? async (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => {
+    const reference = structuredClone(original), expected = structuredClone(current), binding = digestSfValue([call.kind, call.binding]), request = input.host.requestFor(call)
+    if (historicalCalculation && original.kind === "calculation" && current.kind === "calculation" && digestSfValue(original) === digestSfValue(current)) {
+      const first = await historicalCalculation(reference, call)
+      if (first.state === "historical") {
+        const second = await historicalCalculation(reference, call)
+        const valid = await input.host.revalidate(call)
+        return second.state === "historical" && !!first.currentRef && !!second.currentRef && !!first.authorizedProjection && !!second.authorizedProjection &&
+          first.accessRevision === call.binding.accessRevision && second.accessRevision === call.binding.accessRevision &&
+          digestSfValue(first.currentRef) === digestSfValue(expected) && digestSfValue(second.currentRef) === digestSfValue(expected) &&
+          digestSfValue(first.authorizedProjection) === digestSfValue(second.authorizedProjection) && digestSfValue(first.differences) === digestSfValue(second.differences) &&
+          valid && !!request && !request.signal.aborted && input.host.requestFor(call) === request && binding === digestSfValue([call.kind, call.binding]) &&
+          digestSfValue(original) === digestSfValue(reference) && digestSfValue(current) === digestSfValue(expected)
+      }
+    }
+    return createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: currentCalculation })(original, current, call)
+  } : undefined
   const router = createSfEvidenceRouter({
     dashboard, dashboardRecord, caseEvent, procurement, document, planner, calculation,
     dashboardProof: recordHistory.proveContinuity,
@@ -352,7 +380,7 @@ export function createSfAtlasBusiness(input: {
     },
     documentProof: createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: document }),
     plannerProof: recordHistory.proveContinuity,
-    calculationProof: calculation ? createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: calculation }) : undefined,
+    calculationProof,
   })
   const assembled = assembleSfBusinessContext({
     revalidate: input.host.revalidate, ...router,

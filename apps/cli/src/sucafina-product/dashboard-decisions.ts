@@ -30,6 +30,7 @@ import { projectSfSourceScope } from "../../../../modules/sucafina/Sucafinav1/pr
 import { dashboardSourceCurrent } from "./dashboard-services.ts"
 import { createSfDashboardDecisionEvidence } from "./dashboard-decision-evidence.ts"
 import type { DashboardSourceCapture } from "./dashboard-decision-evidence.ts"
+import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 export type DashboardPrepareRequest = { caseRef: CaseRef; choiceId: string; draftRef: string }
@@ -63,6 +64,7 @@ export function createSfDashboardDecisions(input: {
   dashboardHostWrites: WeakSet<object>
 }) {
   const { state, host, human, ui } = input.authority
+  const applicationEgress = createSfPreparedApplicationEgress(input.authority)
   const evidence = createSfDashboardDecisionEvidence({ authority: input.authority, records: input.records, isBinding, bindingDigest })
   const environments = new WeakMap<TrustedDomainContext, Environment>()
   const preferenceReads = new WeakSet<TrustedDomainContext>()
@@ -88,8 +90,14 @@ export function createSfDashboardDecisions(input: {
     verifySources,
     verifySnapshot: (snapshot, _request, draft, context) => {
       const environment = environments.get(context)
-      return !!host.persistence.currentSnapshots?.() && !!environment && dashboardSourceCurrent(snapshot, draft.target, context, environment.at) &&
-        draft.sourceRefs.every((ref) => ref.kind === "record" && ref.target.surface === "dashboard" && !!ref.target.period && dashboardSourceCurrent(snapshot,
+      const locked = host.persistence.currentSnapshots?.()
+      // The published draft store selects Planner as its callback domain, but this
+      // target belongs to Dashboard. Use the actual Dashboard snapshot from the
+      // same C08 all-surface lock. currentSnapshots returns defensive copies, so
+      // bind the complete callback bytes while taking authority from that lock.
+      const dashboard = locked?.dashboard
+      return !!locked && !!dashboard && [dashboard, locked.planner].some((domain) => digestSfValue(domain) === digestSfValue(snapshot)) && !!environment && dashboardSourceCurrent(dashboard, draft.target, context, environment.at) &&
+        draft.sourceRefs.every((ref) => ref.kind === "record" && ref.target.surface === "dashboard" && !!ref.target.period && dashboardSourceCurrent(dashboard,
           { surface: "dashboard", type: ref.target.recordType, id: ref.target.recordId, incarnation: ref.target.incarnation, version: ref.target.version, fields: ref.target.fields, period: ref.target.period, observedAt: environment.at }, context, environment.at))
     },
     operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined,
@@ -347,7 +355,7 @@ export function createSfDashboardDecisions(input: {
         value: { actor: await actorFor(snapshot, context), roles: digestSfValue(roleMap(snapshot, "dashboard")), access: digestSfValue(object(snapshot.data.access)[context.binding.principalRef]) } }))
       if (!captured.actor) return { status: "denied" as const, reason: "application-authority-unavailable" }
       admitted.set(context, { ...captured, actor: captured.actor, request: structuredClone(request), environment })
-      try { return await execute({ caseRef: request.caseRef, changeId: request.changeId, choiceId: request.choiceId }, context) }
+      try { return await applicationEgress(request, context, (captured) => execute({ caseRef: captured.caseRef, changeId: captured.changeId, choiceId: captured.choiceId }, context)) }
       finally { admitted.delete(context) }
     },
   }

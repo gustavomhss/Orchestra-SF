@@ -31,7 +31,7 @@ export function createSfExtendedHttp(input: {
   const issue = createDashboardSourceIssuer({ host: authority.host, scopedSources: input.persistence })
   const options = createSfExtendedBiOptions(input)
   const reviewCycle = createSfExtendedReviewCycle(input)
-  return async (request: Request, surface: string): Promise<Response | undefined> => {
+  const handle = async (request: Request, surface: string): Promise<Response | undefined> => {
     const reviewed = await input.reviews?.http(request, surface)
     if (reviewed) return reviewed
     const url = new URL(request.url), mode = url.searchParams.get("sf")
@@ -74,6 +74,9 @@ export function createSfExtendedHttp(input: {
         }
         if (!sources.length || sources.some((source) => digestSfValue(source) !== digestSfValue(sources[0]))) return json({ status: "denied", reason: "source-outside-preserved-review" }, 403)
         const links = await sfExtendedSourceLinks({ business, reference: sources[0]!, call, url })
+        // The canonical readers may materialize source scopes. Finish that work
+        // before C08; the final grouped reads require the same complete proof.
+        await input.reviews.readScope?.prepare(preserved.map((entry) => entry.reference), call)
         // The record destination does not authorize its association with a
         // preserved review. Reopen every review used by that association after
         // resolving links, in one real C08 read scope, including the predecessor.
@@ -84,7 +87,7 @@ export function createSfExtendedHttp(input: {
             if (digestSfValue(current.value) !== expected.digest) return { status: "stale" as const, reason: "review-source-changed" }
           }
           return { status: "ok" as const, value: true }
-        })
+        }).catch(() => ({ status: "unavailable" as const, reason: "review-source-scope-unavailable" }))
         if (checked.status !== "ok") return json(checked, checked.status === "denied" ? 403 : 409)
         if (checked.value.status !== "ok") return json(checked.value, checked.value.status === "denied" ? 403 : 409)
         return links.length ? json({ links }) : json({ status: "unavailable", reason: "source-or-destination-period-unavailable" }, 409)
@@ -209,4 +212,6 @@ export function createSfExtendedHttp(input: {
       return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
     } finally { authority.ui.finish(call) }
   }
+  return (request: Request, surface: string) => input.reviews?.readScope
+    ? input.reviews.readScope.run(request, () => handle(request, surface)) : handle(request, surface)
 }

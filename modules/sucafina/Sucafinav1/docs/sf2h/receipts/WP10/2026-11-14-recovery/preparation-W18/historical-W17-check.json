@@ -1,0 +1,213 @@
+{
+  "schema": "wp10.normalized-hosted-ci.v3",
+  "label": "W17-check",
+  "productSha": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+  "productTree": "526f67866223b8b73e1bcae16e45ec9377b1af2e",
+  "snapshotSha": "585831c5d9279a7b87f804bc3598ed66af1bb9e5",
+  "snapshotTree": "ba4a5e990184089122d9a98254a76ee578a4c225",
+  "runId": 43587702180,
+  "jobId": 132425652500,
+  "runAttempt": 1,
+  "status": "completed",
+  "conclusion": "failure",
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43587702180",
+  "runStartedAt": "2026-11-14T10:57:30Z",
+  "runUpdatedAt": "2026-11-14T11:01:14Z",
+  "envelopeOnlyDiff": [
+    {
+      "filename": ".astra-wp10-check.json",
+      "status": "added",
+      "additions": 4,
+      "deletions": 0,
+      "changes": 4,
+      "previous_filename": null
+    }
+  ],
+  "request": {
+    "path": "agents/criteria/final-package/normalized/terminals-W16-W17/remote/envelope-W17-check.json",
+    "bytes": 119,
+    "sha256": "d9b95f7556405297b621a979dae029e57f3017beed97cf9e612d85514f8efdcf",
+    "git_blob_sha1": "f87f9e335c54335e93dc82304e0650e57234121e"
+  },
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Checkout check envelope",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Validate exact product and envelope",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3
+    },
+    {
+      "name": "Checkout exact product",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4
+    },
+    {
+      "name": "Record product and guard base",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5
+    },
+    {
+      "name": "Setup Bun",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 6
+    },
+    {
+      "name": "Typecheck Sucafina",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 7
+    },
+    {
+      "name": "Typecheck CLI consumers",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 8
+    },
+    {
+      "name": "Typecheck WP10 test consumers",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 9
+    },
+    {
+      "name": "Verify canonical Atlas generation",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 10
+    },
+    {
+      "name": "Typecheck Atlas boundary",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 11
+    },
+    {
+      "name": "Guard subprocess imports",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 12
+    },
+    {
+      "name": "Guard product against origin/dev",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 13
+    },
+    {
+      "name": "Upload exact-check evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 14
+    },
+    {
+      "name": "Post Setup Bun",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 26
+    },
+    {
+      "name": "Post Checkout exact product",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 27
+    },
+    {
+      "name": "Post Checkout check envelope",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 28
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 29
+    }
+  ],
+  "cleanupJobs": [],
+  "returnedArtifacts": [
+    {
+      "id": 14111600606,
+      "name": "astra-wp10-check-1",
+      "bytes": 4382,
+      "digest": "sha256:7dc49186b98b1732a8ab444a1d535b9b4d44a77cfc71d83066432b5fefb3247c",
+      "expired": false
+    }
+  ],
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "builderIndependentAcceptance": false,
+  "kind": "check",
+  "counts": {
+    "diagnosticOccurrences": 19,
+    "uniqueDiagnostics": 19,
+    "ownUniqueDiagnostics": 0,
+    "foreignUniqueDiagnostics": 19,
+    "ownProductionUniqueDiagnostics": 0
+  },
+  "diagnosticsByLog": {
+    "sucafina-typecheck.log": {
+      "occurrences": 19,
+      "own": 0,
+      "foreign": 19
+    },
+    "cli-typecheck.log": {
+      "occurrences": 0,
+      "own": 0,
+      "foreign": 0
+    },
+    "wp10-test-typecheck.log": {
+      "occurrences": 0,
+      "own": 0,
+      "foreign": 0
+    },
+    "atlas-typecheck.log": {
+      "occurrences": 0,
+      "own": 0,
+      "foreign": 0
+    }
+  },
+  "log": {
+    "path": "evidence/W17/check-job-132425652500.raw.txt",
+    "bytes": 87550,
+    "sha256": "fdf9ffc8eaf25f0af8b31cd91a5010b71b810aff9e333e751895ddf6591367c6",
+    "git_blob_sha1": "43e4672c0211301461db22bc25479c0523a35cb5",
+    "characters": 87548,
+    "byteExactRawCapture": true,
+    "duplicatedInPackage": false,
+    "priorTransportCopy": {
+      "path": "evidence/W17/check-job-132425652500.txt",
+      "bytes": 87551,
+      "sha256": "4b89203b02bac91cfe6521c2c627a9e7a72878e9f4799460fdb90f5073cfbcc4",
+      "git_blob_sha1": "0155e0c2f94ca4c74e648f0669f7501b1e37c00b",
+      "relation": "prior bytes equal byte-exact raw capture plus one LF",
+      "supersededForByteIdentity": true,
+      "originalPreserved": true
+    }
+  },
+  "artifact": {
+    "id": 14111600606,
+    "path": "evidence/W17/check-artifact-14111600606.zip",
+    "bytes": 4382,
+    "sha256": "7dc49186b98b1732a8ab444a1d535b9b4d44a77cfc71d83066432b5fefb3247c",
+    "git_blob_sha1": "307ad2d6705b7722e31aaf7a7ef5163009248318",
+    "membersVerified": 11,
+    "duplicatedZipInPackage": false
+  },
+  "scopeQualification": "SF typecheck failed on19 foreign diagnostics. CLI consumers, WP10 test consumers, Atlas, spawn-imports and guards passed within this failed check. No product-test/native/global acceptance follows."
+}

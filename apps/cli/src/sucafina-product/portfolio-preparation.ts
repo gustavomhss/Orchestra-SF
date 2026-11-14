@@ -46,6 +46,8 @@ export function createSfPortfolioPreparation(input: {
   const verifyMutation: Mutations["verifyMutation"] = (_snapshot, operation, request, call) => handoff.parent(operation, request, call) !== undefined
     ? handoff.verify(operation, request, call) : registries.intent.verify(call, action(operation), request)
   const coverage = createSfPortfolioCoverage({ authority, business, verifyIntent: verifyMutation })
+  const mutationPlanner: typeof registries.planner = { ...registries.planner,
+    simulateScenario: async (request, call) => coverage.prepareNoop(request, await registries.planner.simulateScenario(request, call), call) }
   const confirmChoice: Mutations["confirmChoice"] = async (caseRef, alternativeId, call) => {
     const payload = registries.intent.payload(call, "decisions.choose")
     const value = object(payload)
@@ -89,6 +91,7 @@ export function createSfPortfolioPreparation(input: {
     ? procurement.prepareDomainCommands(caseRef, choiceId, operations, call)
     : Promise.resolve({ status: "unavailable", reason: "portfolio-procurement-evidence-authority-unavailable" })
   return { authorizeMutation, verifyMutation, coverageEvidence: coverage.evidence, portfolioParent: handoff.parent, confirmChoice, confirmAnswer, resolveChoiceValues, prepareDomainCommands,
+    mutationPlanner, createMutationId: coverage.createMutationId, runPromotion: coverage.runPromotion,
     handoff, dispose: () => { coverage.dispose(); procurement?.dispose() }, unavailable: input.procurementEvidenceWrites ? [] : ["portfolio-procurement-evidence-authority-unavailable"] }
 }
 

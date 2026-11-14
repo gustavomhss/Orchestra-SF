@@ -1,8 +1,12 @@
+import { AsyncLocalStorage } from "node:async_hooks"
+import { randomUUID } from "node:crypto"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { CostCoverageEntry, ScenarioResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+import type { ScenarioRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
+import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { createDecisionMutations } from "../../../../modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
 import { reassessScenarioCoverage } from "../../../../modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts"
 import { supportsCoverageClassification } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts"
@@ -14,6 +18,8 @@ import type { createSfBusinessServices } from "./business-services.ts"
 type MutationInput = Parameters<typeof createDecisionMutations>[0]
 type Promotion = Parameters<ReturnType<typeof createDecisionMutations>["addAlternative"]>[0]
 type Evidence = NonNullable<MutationInput["coverageEvidence"]>
+type PromotionRun = { incoming: Promotion; inputDigest: string; call: TrustedDomainContext; source: Request;
+  binding: string; open: boolean; allocated: boolean; identity?: { id: string; version: number } }
 const same = (a: unknown, b: unknown) => digestSfValue(a) === digestSfValue(b)
 const unavailable = () => ({ status: "unavailable" as const, reason: "promotion-coverage-authority-unavailable" })
 
@@ -25,12 +31,17 @@ export function createSfPortfolioCoverage(input: {
 }) {
   const { authority, business } = input
   const host = authority.host
+  const execution = new AsyncLocalStorage<PromotionRun>()
+  const running = new WeakMap<TrustedDomainContext, PromotionRun>()
   let active = true
   let selections = new WeakMap<TrustedDomainContext, { value: Promotion; source: Request; binding: string }>()
   let classifications = new WeakMap<object, CoverageClassification>()
   let proofs = new WeakMap<TrustedDomainContext, { selection: Promotion; source: Request; binding: string; state: string;
-    sources: NonNullable<Awaited<ReturnType<typeof business.readSourceFences>>>; expected: ScenarioResult; basis: CoverageClassification["basis"] }>()
+    sources: NonNullable<Awaited<ReturnType<typeof business.readSourceFences>>>; expected: ScenarioResult; basis: CoverageClassification["basis"]; run?: PromotionRun }>()
   const binding = (call: TrustedDomainContext) => digestSfValue([call.kind, call.binding])
+  const currentRun = (run: PromotionRun) => active && run.open && execution.getStore() === run && running.get(run.call) === run &&
+    host.requestFor(run.call) === run.source && !run.source.signal.aborted && run.binding === binding(run.call) &&
+    run.inputDigest === digestSfValue(run.incoming)
   const remember = (value: unknown, call: TrustedDomainContext) => {
     if (!active || call.kind !== "ui" || !value || typeof value !== "object" || Array.isArray(value)) return false
     const fields = value as Record<string, unknown>
@@ -78,7 +89,9 @@ export function createSfPortfolioCoverage(input: {
   const evidence: Evidence = {
     entries: async (scenario, baseline, call) => {
       const held = selections.get(call)
-      if (!active || !held || held.source !== host.requestFor(call) || held.source.signal.aborted || held.binding !== binding(call) || !await host.revalidate(call)) return unavailable()
+      const run = execution.getStore()
+      if (!active || !held || held.source !== host.requestFor(call) || held.source.signal.aborted || held.binding !== binding(call) ||
+        run && (run.call !== call || !currentRun(run)) || !await host.revalidate(call)) return unavailable()
       const before = await readState(held.value, call)
       const sources = await business.readSourceFences(call)
       const coverage = await business.plannerSources.resolveForecastCoverage(held.value.coverageRef, call)
@@ -98,12 +111,14 @@ export function createSfPortfolioCoverage(input: {
       const latest = await business.readSourceFences(call)
       if (!expected || before !== after || !same(sources, latest) || selections.get(call) !== held || held.binding !== binding(call) ||
         held.source.signal.aborted || !await host.revalidate(call)) return unavailable()
-      proofs.set(call, { selection: held.value, source: held.source, binding: held.binding, state: before, sources, expected, basis: coverage.value.basis })
+      proofs.set(call, { selection: held.value, source: held.source, binding: held.binding, state: before, sources, expected, basis: coverage.value.basis,
+        ...(run ? { run } : {}) })
       return { status: "ok", value: entries }
     },
     resolve: async (refs, call) => {
       const proof = proofs.get(call)
       if (!active || !proof || proof.source !== host.requestFor(call) || proof.source.signal.aborted || proof.binding !== binding(call) ||
+        proof.run && !currentRun(proof.run) ||
         await readState(proof.selection, call) !== proof.state || !same(await business.readSourceFences(call), proof.sources)) return []
       return await fresh(refs, call) ?? []
     },
@@ -114,10 +129,62 @@ export function createSfPortfolioCoverage(input: {
     verifySnapshot: (snapshot, result, basis, call) => {
       const proof = proofs.get(call)
       return active && !!proof && proof.source === host.requestFor(call) && !proof.source.signal.aborted && proof.binding === binding(call) &&
+        (!proof.run || currentRun(proof.run)) &&
         same(result, proof.expected) && same(basis, proof.basis) && business.lockedDecisionStateDigest(proof.selection.caseRef.id) === proof.state &&
         same(business.lockedSourceFences(), proof.sources) && sfRunSourceFence(snapshot) === proof.sources.planner &&
         input.verifyIntent(snapshot, "add-alternative", proof.selection, call)
     },
   }
-  return { remember, evidence, dispose: () => { active = false; selections = new WeakMap(); proofs = new WeakMap(); classifications = new WeakMap() } }
+  const prepareNoop = async (request: ScenarioRequest, observed: PortResult<ScenarioResult>, call: TrustedDomainContext): Promise<PortResult<ScenarioResult>> => {
+    if (observed.status !== "ok" || request.operations.length || request.assumptions.length) return observed
+    const run = execution.getStore(), held = selections.get(call)
+    if (!run || run.call !== call || !currentRun(run) || !run.identity || !held || held.source !== run.source || held.binding !== run.binding ||
+      !same(held.value, run.incoming) || !same(request, held.value.scenario)) return unavailable()
+    const result = structuredClone(observed)
+    const coverage = await business.plannerSources.resolveForecastCoverage(held.value.coverageRef, call)
+    if (coverage.status !== "ok") return coverage
+    if (!same(result.value.costCoverage, coverage.value.assessment)) return result
+    // The foreign mutator allocates this exact identity before asking Planner.
+    // Reassess its otherwise unchanged result before C08, without altering the
+    // source scenario or allowing verifySnapshot to ignore any identity field.
+    const identity = run.identity
+    const attributed: ScenarioResult = result.value.comparisonStatus === "complete"
+      ? { ...result.value, costCoverage: { ...result.value.costCoverage, alternativeId: identity.id, alternativeVersion: identity.version } }
+      : { ...result.value, costCoverage: { ...result.value.costCoverage, alternativeId: identity.id, alternativeVersion: identity.version } }
+    const entries = await evidence.entries(attributed, coverage.value.assessment, call)
+    if (entries.status !== "ok") return entries
+    const proof = proofs.get(call)
+    if (!currentRun(run) || !proof || !same(proof.expected, attributed) || !same(proof.basis, coverage.value.basis) ||
+      selections.get(call) !== held || !await host.revalidate(call) || !currentRun(run)) return unavailable()
+    return structuredClone(result)
+  }
+  const createMutationId = () => {
+    const id = randomUUID(), run = execution.getStore()
+    if (run && currentRun(run) && selections.has(run.call) && !run.incoming.alternativeRef && !run.allocated) {
+      run.identity = { id, version: 1 }
+      run.allocated = true
+    }
+    return id
+  }
+  const runPromotion = async <Value>(incoming: Promotion, call: TrustedDomainContext, work: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
+    const source = host.requestFor(call)
+    if (call.kind !== "ui" || !source || source.signal.aborted) return { status: "denied", reason: "human-promotion-required" }
+    if (!active || running.has(call)) return unavailable()
+    const run: PromotionRun = { incoming, inputDigest: digestSfValue(incoming), call, source, binding: binding(call), open: true, allocated: false,
+      ...(incoming.alternativeRef ? { identity: { id: incoming.alternativeRef.id, version: incoming.alternativeRef.version + 1 } } : {}) }
+    running.set(call, run)
+    return execution.run(run, async () => {
+      try {
+        const result = await work()
+        return currentRun(run) ? result : unavailable()
+      } finally {
+        run.open = false
+        if (running.get(call) === run) running.delete(call)
+        selections.delete(call)
+        proofs.delete(call)
+      }
+    })
+  }
+  return { remember, evidence, prepareNoop, createMutationId, runPromotion,
+    dispose: () => { active = false; selections = new WeakMap(); proofs = new WeakMap(); classifications = new WeakMap() } }
 }

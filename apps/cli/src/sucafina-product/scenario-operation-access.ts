@@ -7,6 +7,7 @@ import type { ScenarioOperation } from "../../../../modules/sucafina/Sucafinav1/
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { PlannerScenarioInputs } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-port.ts"
 import type { createSfPlannerEvidence } from "./planner-evidence.ts"
+import type { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
 
 /** Authorize selectors concealed inside a stored scenario without recursively reopening its case. */
 export function createSfScenarioOperationAccess(input: {
@@ -16,14 +17,18 @@ export function createSfScenarioOperationAccess(input: {
   scenarioInputs: PlannerScenarioInputs
   readSourceFences: (call: TrustedDomainContext) => Promise<unknown | undefined>
   resolveProcurementEvidence: BusinessContextService["resolve"]
+  recordedPlanner?: ReturnType<typeof createSfRecordedPlannerOperationAccess>
   externalOperation: (request: { caseRef: { id: string; incarnation: string; version: number }; draftRef: string; operation: ScenarioOperation }, call: TrustedDomainContext) => Promise<PortResult<{ operationDigest: string; sourceRefs: readonly BusinessEvidenceRef[] }>>
 }) {
   return async (value: DecisionCase, call: TrustedDomainContext): Promise<boolean> => {
-    if (!await input.host.revalidate(call)) return false
+    const request = input.host.requestFor(call)
+    const binding = digestSfValue([call.kind, call.binding])
+    const currentAuthority = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && binding === digestSfValue([call.kind, call.binding])
+    if (!currentAuthority() || !await input.host.revalidate(call)) return false
     const captured = structuredClone(value)
     const original = digestSfValue(captured)
     const selected = [...captured.alternatives, ...captured.choices].filter((item) => item.scenario.operations.length)
-    if (!selected.length) return digestSfValue(value) === original && await input.host.revalidate(call)
+    if (!selected.length) return digestSfValue(value) === original && await input.host.revalidate(call) && currentAuthority()
     const fences = await input.readSourceFences(call)
     if (!fences) return false
     const caseRef = { id: captured.id, incarnation: captured.incarnation, version: captured.version }
@@ -55,7 +60,11 @@ export function createSfScenarioOperationAccess(input: {
         continue
       }
       const source = await input.sources.resolveForecastSource(item.scenario.baseRef, call)
-      if (source.status !== "ok" || !refs.some((ref) => digestSfValue(ref) === digestSfValue(source.value.evidence))) return false
+      if (source.status !== "ok") {
+        if (source.status !== "stale" || !input.recordedPlanner || !await input.recordedPlanner(captured, item, call)) return false
+        continue
+      }
+      if (!refs.some((ref) => digestSfValue(ref) === digestSfValue(source.value.evidence))) return false
       if (item.result.currency !== "USD") return false
       // This guard authorizes component selectors against the real domain
       // projection. Comparing a forecast with itself also reopens its coverage,
@@ -73,7 +82,13 @@ export function createSfScenarioOperationAccess(input: {
         if (targets.length !== 1 || !targets[0]!.sourceRefs.length || targets[0]!.sourceRefs.some((ref) => !covered(ref, refs))) return false
         if (operation.replacementRef) {
           const replacement = await input.scenarioInputs.resolveAmount(operation.replacementRef, call)
-          if (replacement.status !== "ok" || !Number.isFinite(replacement.value.amount) || !covered(replacement.value.source, refs) ||
+          if (replacement.status !== "ok") {
+            if (replacement.status !== "stale" || !input.recordedPlanner || !await input.recordedPlanner(captured, item, call)) return false
+            // The protected verifier rechecks every stored selector, including
+            // any remaining operations and the otherwise still-current base.
+            break
+          }
+          if (!Number.isFinite(replacement.value.amount) || !covered(replacement.value.source, refs) ||
             !refs.some((ref) => digestSfValue(ref) === digestSfValue(replacement.value.evidence)) ||
             replacement.value.currency !== item.result.currency || replacement.value.period.start < item.result.horizon.start || replacement.value.period.end > item.result.horizon.end ||
             operation.amount !== undefined || operation.currency !== undefined && operation.currency !== replacement.value.currency ||
@@ -83,7 +98,7 @@ export function createSfScenarioOperationAccess(input: {
       const again = await input.sources.resolveForecastSource(item.scenario.baseRef, call)
       if (again.status !== "ok" || digestSfValue(again.value.evidence) !== digestSfValue(source.value.evidence)) return false
     }
-    return digestSfValue(value) === original && digestSfValue(await input.readSourceFences(call)) === digestSfValue(fences) && await input.host.revalidate(call)
+    return digestSfValue(value) === original && digestSfValue(await input.readSourceFences(call)) === digestSfValue(fences) && await input.host.revalidate(call) && currentAuthority()
   }
 }
 

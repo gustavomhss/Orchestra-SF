@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto"
+import { AsyncLocalStorage } from "node:async_hooks"
 import { createPlannerConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/planner/confirmation.ts"
 import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { domain } from "../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
@@ -46,6 +47,8 @@ import { createSfDashboardDecisions } from "./dashboard-decisions.ts"
 import { createSfPlannerEvidence } from "./planner-evidence.ts"
 import { createSfPlannerCalculationServices } from "./planner-calculation-services.ts"
 import { createSfScenarioOperationAccess } from "./scenario-operation-access.ts"
+import { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
+import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
 import { createSfDecisionBaselineServices } from "./decision-baseline-services.ts"
 import { createCollaborationHost } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/host.ts"
 import type { createSfContributionReader } from "../../../../modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts"
@@ -228,7 +231,11 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       !await host.revalidate(call) || !currentCaseAuthority(call, request, binding) || caseBindings.has(call)) return { status: "denied", reason: "case-selection-unavailable" }
     const scope: CaseScope = { selected: captured, request, bindingDigest: binding, retainers: 1 }
     caseBindings.set(call, scope)
-    try { return await action() } finally { releaseCaseScope(call, scope) }
+    try {
+      const result = await action()
+      return await host.revalidate(call) && currentCaseAuthority(call, request, binding) && caseBindings.get(call) === scope &&
+        digestSfValue(selected) === digestSfValue(captured) ? result : { status: "denied", reason: "case-selection-authority-changed" }
+    } finally { releaseCaseScope(call, scope) }
   }
   // This private entry receives a case from authenticated calculation stores
   // or the recall's current C08 selection. Avoid cases.read: that projection
@@ -284,6 +291,45 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
         ? final : { status: "denied", reason: "calculation-case-authority-changed" }
     } finally { if (scope) releaseCaseScope(call, scope) }
   }
+  // A historical calculation may replay the current authorized coverage of its
+  // case while its caller still retains the original Analysis selection. Keep
+  // that read-only selection lexical and private to historical coverage; it must never
+  // replace caseBindings or upgrade selectedCase/resolveCase for fresh work.
+  const historicalCalculations = new AsyncLocalStorage<{ call: TrustedDomainContext; selected: CaseRef; request: Request; binding: string; originalScope: CaseScope | undefined; open: boolean }>()
+  const historicalSelection = async (call: TrustedDomainContext): Promise<PortResult<CaseRef>> => {
+    const scope = historicalCalculations.getStore()
+    if (!scope?.open || scope.call !== call) return { status: "denied", reason: "historical-calculation-scope-unavailable" }
+    const current = () => scope.open && historicalCalculations.getStore() === scope && currentCaseAuthority(call, scope.request, scope.binding) && caseBindings.get(call) === scope.originalScope
+    if (!current() || !await host.revalidate(call) || !current()) return { status: "denied", reason: "historical-calculation-case-authority-unavailable" }
+    const found = await input.authority.state.read(scope.request, "cases", (state, actor) => {
+      const value = state.cases[scope.selected.id]
+      return actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion &&
+        value?.id === scope.selected.id && value.incarnation === scope.selected.incarnation && value.version === scope.selected.version && value.participants.includes(actor.principalRef)
+    })
+    const authorized = await host.revalidate(call)
+    return found.status === "ok" && found.value === true && authorized && current()
+      ? { status: "ok", value: structuredClone(scope.selected) } : { status: "denied", reason: "historical-calculation-case-authority-unavailable" }
+  }
+  const withHistoricalCalculationCase = async <T>(call: TrustedDomainContext, selected: CaseRef, work: () => Promise<PortResult<T>>,
+    egress?: (result: PortResult<T>) => Promise<PortResult<T>>): Promise<PortResult<T>> => {
+    const request = host.requestFor(call), binding = callBindingDigest(call), captured = structuredClone(selected), originalScope = caseBindings.get(call)
+    const held = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : originalScope?.selected
+    if (!request || request.signal.aborted || held && (held.id !== captured.id || held.incarnation !== captured.incarnation || held.version > captured.version || call.kind === "native" && held.version !== captured.version) ||
+      originalScope && (originalScope.request !== request || originalScope.bindingDigest !== binding)) return { status: "denied", reason: "historical-calculation-case-scope-mismatch" }
+    const scope = { call, selected: captured, request, binding, originalScope, open: true }
+    return historicalCalculations.run(scope, async (): Promise<PortResult<T>> => {
+      try {
+        const before = await historicalSelection(call)
+        if (before.status !== "ok") return before
+        const result = await work()
+        const after = await historicalSelection(call)
+        if (after.status !== "ok" || digestSfValue(before.value) !== digestSfValue(after.value)) return { status: "denied", reason: "historical-calculation-case-changed" }
+        const final = egress ? await egress(result) : result
+        return scope.open && historicalCalculations.getStore() === scope && currentCaseAuthority(call, request, binding) && caseBindings.get(call) === originalScope &&
+          digestSfValue(selected) === digestSfValue(captured) ? final : { status: "denied", reason: "historical-calculation-case-changed" }
+      } finally { scope.open = false }
+    })
+  }
   const calculationVerifier: { current?: NonNullable<Parameters<typeof createSfDecisionResultStore>[0]["verifyCalculationSources"]> } = {}
   const results = createSfDecisionResultStore({ state: input.authority.state, host, authorizeCase, createId: randomUUID, now: () => new Date().toISOString(),
     verifyCalculationSources: (value, refs, call) => calculationVerifier.current?.(value, refs, call) ?? Promise.resolve(false),
@@ -304,8 +350,10 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   type DecisionDomain = { proposalCoverage: { resolveForecastCoverage: Parameters<typeof createPlannerCoverageRouter>[0]["forecast"] }; plannerCriteria: NonNullable<Parameters<typeof createPlannerProduct>[0]["criteria"]> }
   const decisionDomain: { current?: DecisionDomain } = {}
   const plannerHolder: { current?: ReturnType<typeof createPlannerProduct>["planner"] } = {}
-  const baselineCoverage = createSfDecisionBaselineServices({ authority: input.authority, evidence: context, selectedCase,
-    planner: () => plannerHolder.current, proposalCoverageWrites: input.proposalCoverageWrites, readSourceFences, lockedSourceFences })
+  const baselineInput = { authority: input.authority, evidence: context, planner: () => plannerHolder.current,
+    proposalCoverageWrites: input.proposalCoverageWrites, readSourceFences, lockedSourceFences }
+  const baselineCoverage = createSfDecisionBaselineServices({ ...baselineInput, selectedCase })
+  const historicalCoverage = createSfDecisionBaselineServices({ ...baselineInput, selectedCase: historicalSelection })
   const bindDecisionDomain = (value: DecisionDomain) => {
     if (decisionDomain.current) throw new Error("SF_DECISION_DOMAIN_ALREADY_BOUND")
     decisionDomain.current = value
@@ -330,15 +378,30 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     sourceFence: async (call) => { const current = await readSourceFences(call); return current ? digestSfValue(current) : undefined },
     authorize: (request, call) => input.authority.human.authorize(call, "planner.preview", request) }) : undefined
   const projectPlannerEvidence = createSfPlannerEvidence({ host, sources: plannerSources })
-  const procurementDecisions = createProcurementDecisionHost({ host: procurementHost, port: procurement, individual,
+  const procurementProducer = createProcurementDecisionHost({ host: procurementHost, port: procurement, individual,
     authority: input.authority, procurementEvidenceWrites: input.procurementEvidenceWrites ?? new WeakSet<object>(), cases, planner, plannerSources,
     operationIdentity, readSourceFences, lockedSourceFences, createId: randomUUID, now: () => new Date().toISOString() })
+  const applicationEgress = createSfPreparedApplicationEgress(input.authority)
+  const procurementDecisions = { ...procurementProducer,
+    apply: (request: Parameters<typeof procurementProducer.apply>[0], call: TrustedDomainContext) =>
+      applicationEgress(request, call, (captured) => procurementProducer.apply(captured, call)) }
   decisionEvidence.current = procurementDecisions
   scenarioOperationAccess = createSfScenarioOperationAccess({ host, sources: plannerSources, projectPlanner: projectPlannerEvidence, scenarioInputs: product.scenarioInputs,
-    readSourceFences, resolveProcurementEvidence: context.resolve, externalOperation: dashboardDecisions.resolveOperation })
+    readSourceFences, resolveProcurementEvidence: context.resolve, externalOperation: dashboardDecisions.resolveOperation,
+    recordedPlanner: createSfRecordedPlannerOperationAccess({ host, state: input.authority.state, resolveEvidence: context.resolve }) })
   const basePersist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, replay: planner, resolveCase })
   const calculations = createSfPlannerCalculationServices({ host, state: input.authority.state, results, authorizeCase, operationIdentity,
-    writes: input.proposalCoverageWrites, sources: plannerSources, replayScenario: planner.simulateScenario, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase })
+    writes: input.proposalCoverageWrites, sources: plannerSources, replayScenario: planner.simulateScenario, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase, withHistoricalCalculationCase,
+    // The historical reader alone receives this coverage route. The exposed
+    // Planner and baseline registry continue using the strict original selector.
+    resolveHistoricalForecastCoverage: async (ref, call) => {
+      const scope = historicalCalculations.getStore()
+      if (!scope?.open || scope.call !== call || !currentCaseAuthority(call, scope.request, scope.binding) || caseBindings.get(call) !== scope.originalScope)
+        return { status: "denied", reason: "historical-calculation-scope-unavailable" }
+      if (ref.startsWith("proposal-coverage:")) return decisionDomain.current?.proposalCoverage.resolveForecastCoverage(ref, call) ?? { status: "unavailable", reason: "decision-domain-not-initialized" }
+      return decisionDomain.current ? historicalCoverage.resolveForecastCoverage(ref, call)
+        : forecastCoverage.current?.(ref, call) ?? historicalCoverage.resolveForecastCoverage(ref, call)
+    } })
   calculationVerifier.current = calculations.verifyCalculationSources
   const persist = calculations.persist
   const receipt = input.authority.authority.receiptFor
@@ -401,7 +464,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       // WP14's published reader calls the resolver; WP04 also exposes named methods on it.
       procurement, procurementResolve: Object.assign(resolveProcurement, { ...individual, resolve: resolveProcurement }), procurementEvidence, planner: { sources: plannerSources, port: planner, project: projectPlannerEvidence, readEvidence: projectPlannerEvidence.readEvidence },
       documentRead: input.documentRead ?? (async (_id, call) => ({ status: "unavailable", accessRevision: call.binding.accessRevision })),
-      caseForEvidence, calculation: calculations.resolveEvidence, withCalculationCase, lockedSourceFences, ...(scanner ? { scanner } : {}), now: () => new Date().toISOString(), selections: {
+      caseForEvidence, calculation: calculations.resolveEvidence, calculationHistorical: calculations.resolveHistoricalEvidence,
+      withCalculationCase, lockedSourceFences, ...(scanner ? { scanner } : {}), now: () => new Date().toISOString(), selections: {
         runtimeVersions: versions, featuresForCase,
         contextSelections: async (request, call) => {
           const refs: BusinessEvidenceRef[] = []

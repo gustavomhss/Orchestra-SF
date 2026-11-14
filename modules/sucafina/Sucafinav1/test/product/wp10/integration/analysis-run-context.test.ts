@@ -78,6 +78,17 @@ test("Analysis reentry reaches current lifecycle metadata after case advancement
       expect(entered).toBe(false)
     } finally { authority.human.finish(strict.value) }
 
+    const ended = await authority.human.admit(request, "analysis.start", start)
+    if (ended.status !== "ok") throw new Error(ended.reason)
+    const released = await business.withCase(ended.value, caseRef, { allowHistoricalRetry: true }, async () => {
+      const current = await authority.state.read(request, "cases", (state) => state.cases[caseRef.id]?.version)
+      if (current.status !== "ok") throw new Error("Case lease egress read unavailable")
+      authority.human.finish(ended.value)
+      expect(request.signal.aborted).toBe(false)
+      return { status: "ok", value: current.value }
+    })
+    expect(released).toEqual({ status: "denied", reason: "case-selection-authority-changed" })
+
     expect((await withRunContext("other-run", readLifecycle)).status).toBe("denied")
     await edit({ ...advanced, version: 3, participants: [] }, "reentry-remove-member")
     expect((await withRunContext(runRef, readLifecycle)).status).toBe("denied")

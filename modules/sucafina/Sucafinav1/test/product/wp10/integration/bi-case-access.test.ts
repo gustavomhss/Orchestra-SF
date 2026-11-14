@@ -88,6 +88,8 @@ test("BI clears a real persisted case after participant revocation with the sess
       const payload = { caseRef, title: index ? "BI candidate" : "BI baseline", scenario: { baseRef: sources[index]!.refId, operations: [], assumptions: [] }, coverageRef: classifications[index]!.coverageRef }
       const response = await deadline.phase(`promotion.${index}`, () => mutationHttp(new Request("https://example.test/product/planner?sf=decision-promote", {
         method: "POST", signal: deadline.signal, headers: { origin: "https://example.test", "content-type": "application/json", "x-operation": `bi-promote-${index}` }, body: JSON.stringify(payload) }), "planner"))
+      if (response?.status !== 200) console.error("SF_BI_PROMOTION_FAILURE", JSON.stringify({ fixture: "bi-case-access", index, caseRef,
+        status: response?.status, body: response ? await response.clone().text() : "no-response" }))
       expect(response?.status).toBe(200)
       const receipt = ok(await response!.json() as PortResult<{ caseRef: typeof initialRef; resultRef?: string }>, "Promote real BI scenario")
       if (!receipt.resultRef) throw new Error("Actual promotion did not persist its scenario")
@@ -100,6 +102,9 @@ test("BI clears a real persisted case after participant revocation with the sess
     expect(snapshot.value.alternatives).toHaveLength(2)
     expect(snapshot.value.choices).toHaveLength(0)
     for (const alternative of snapshot.value.alternatives) {
+      expect(alternative.scenario).toMatchObject({ operations: [], assumptions: [] })
+      expect(alternative.result.costCoverage.alternativeId).toBe(alternative.id)
+      expect(alternative.result.costCoverage.alternativeVersion).toBe(alternative.version)
       expect(alternative.result).toMatchObject({ comparisonStatus: "conditioned", total: null, costCoverage: { coverageState: "pending" } })
       expect(alternative.result.horizon).toEqual(period)
       expect(alternative.result.costCoverage.entries.find((entry) => entry.categoryId === "service")?.status).toBe("included")

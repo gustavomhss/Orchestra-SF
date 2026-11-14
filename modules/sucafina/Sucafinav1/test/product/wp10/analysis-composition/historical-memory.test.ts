@@ -40,6 +40,7 @@ import type { BusinessEvidenceRef } from "../../../../product/contracts/business
 import type { CostCoverageBasis, DecisionCase, ScenarioResult, CaseLedgerEvent } from "../../../../product/contracts/decisions.ts"
 import type { ScenarioOperation } from "../../../../product/contracts/operations.ts"
 import { verifierOutputFixture } from "./verifier-output-fixture.ts"
+import { compositionTestDeadline } from "../integration/composition-test-deadline.ts"
 import type { DecisionRecallInput } from "../../../../product/contracts/skill-inputs.ts"
 import atlasPackage from "../../../../../../atlas/boundary/package.json" with { type: "json" }
 import contractFreeze from "../../../../product/contracts/freeze-v1.json" with { type: "json" }
@@ -54,17 +55,23 @@ const at = "2026-11-14T00:00:00Z"
 // structural fixture; no loaded-skill receipt or native publication is claimed.
 test("historical decision recall binds original/current evidence and rejects changed proof or authority", async () => {
   expectSpawn(import.meta.path)
+  // Keep the existing 240-second Bun limit and cancel actual Request/process
+  // work before it expires. Phase evidence identifies the blocked boundary.
+  const deadline = compositionTestDeadline("historical-memory", 225_000)
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-historical-recall-"))
   await chmod(directory, 0o700)
   const driver = await openLocalStore(path.join(directory, "store"))
   let business: ReturnType<typeof createSfBusinessServices> | undefined
+  deadline.own(() => rm(directory, { recursive: true, force: true }))
+  deadline.own(() => driver.dispose())
+  deadline.own(() => business?.dispose())
   try {
     const pinned = KNOWN_SCANNERS.find((scanner) => scanner.name === "gitleaks")
     if (!pinned) throw new Error("Qualified Atlas scanner missing")
-    const spec = { ...pinned, command: (await Effect.runPromise(BackendToolkit.ensure("gitleaks").pipe(
-      Effect.provideService(BackendToolkit.Root, path.join(directory, "toolkit"))))).executable }
-    const scanVersion = await Effect.runPromise(AppProcess.Service.use((process) => process.run(ChildProcess.make(spec.command, ["--version"],
-      { extendEnv: true, stdin: "ignore" }))).pipe(Effect.provide(LayerNode.compile(AppProcess.node))))
+    const spec = { ...pinned, command: (await deadline.phase("scanner.ensure", () => Effect.runPromise(BackendToolkit.ensure("gitleaks").pipe(
+      Effect.provideService(BackendToolkit.Root, path.join(directory, "toolkit"))), { signal: deadline.signal }))).executable }
+    const scanVersion = await deadline.phase("scanner.version", () => Effect.runPromise(AppProcess.Service.use((process) => process.run(ChildProcess.make(spec.command, ["--version"],
+      { extendEnv: true, stdin: "ignore" }))).pipe(Effect.provide(LayerNode.compile(AppProcess.node))), { signal: deadline.signal }))
     const version = scanVersion.stdout.toString("utf8").trim()
     if (scanVersion.exitCode !== 0 || !version) throw new Error("Atlas scanner version unavailable")
     const persistence = { ...driver, ...createSfSourcePersistence({ persistence: driver, createId: randomUUID,
@@ -79,7 +86,7 @@ test("historical decision recall binds original/current evidence and rejects cha
     })
     const origin = "https://example.test"
     const access = { allowed: true }
-    const request = () => new Request(`${origin}/sf/procurement`, { method: "POST", headers: { authorization: "alice", origin, "idempotency-key": randomUUID() } })
+    const request = () => new Request(`${origin}/sf/procurement`, { method: "POST", signal: deadline.signal, headers: { authorization: "alice", origin, "idempotency-key": randomUUID() } })
     const procurementEvidenceWrites = new WeakSet<object>()
     const proposalCoverageWrites = new WeakSet<object>()
     const authority = createSfProductAuthority({ installationId: "installation", origin, policyVersion: "policy", persistence,
@@ -88,7 +95,7 @@ test("historical decision recall binds original/current evidence and rejects cha
         operations: ["sf_work_list", "sf_request_read", "sf_case_read"], humanActions: ["decisions.prepare-changes", "analysis.prepare", "analysis.start", "analysis.cancel", "analysis.read"] }],
       authenticate: async (value, selection) => access.allowed && value.headers.get("authorization") === "alice" && selection
         ? { id: "alice", canWrite: true, roles: [{ surface: selection.surface, role: selection.surface === "procurement" ? "requester" : "admin" }] } : null,
-      environment: async () => ({ at, id: randomUUID, directory: [{ id: "alice", name: "Alice" }] }),
+      environment: async () => { deadline.check(); return { at, id: randomUUID, directory: [{ id: "alice", name: "Alice" }] } },
       commandIdentity: async (value, operation, digest) => digestSfValue({ key: value.headers.get("idempotency-key"), operation, digest }),
       now: Date.now, createId: randomUUID, inspectSession: async () => undefined, verifySelection: async () => false,
       verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined,
@@ -154,10 +161,10 @@ test("historical decision recall binds original/current evidence and rejects cha
     const preparation = await authority.human.admit(request(), "decisions.prepare-changes", preparePayload)
     if (preparation.status !== "ok") throw new Error(preparation.reason)
     try {
-      const commands = await activeBusiness.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], preparation.value)
+      const commands = await deadline.phase("procurement.capture-original", () => activeBusiness.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], preparation.value))
       if (commands.status !== "ok") throw new Error(`Original source capture unavailable: ${commands.reason}`)
       expect(commands.value).toHaveLength(1)
-      const committed = await activeBusiness.context.emitFromLedger(eventRef, preparation.value)
+      const committed = await deadline.phase("atlas.emit-ledger", () => activeBusiness.context.emitFromLedger(eventRef, preparation.value))
       if (committed.status !== "committed") throw new Error(`Real Atlas append failed: ${committed.status}:${committed.reason}`)
       expect(committed.scanner).toMatchObject({ name: "gitleaks", status: "clean", version })
     } finally { authority.human.finish(preparation.value) }
@@ -180,7 +187,7 @@ test("historical decision recall binds original/current evidence and rejects cha
     if (admitted.status !== "ok") throw new Error(admitted.reason)
     const call = admitted.value
     try {
-      const source = await activeBusiness.context.resolve(original, call)
+      const source = await deadline.phase("memory.resolve-original", () => activeBusiness.context.resolve(original, call))
       expect(source.state).toBe("historical")
       expect(source.ref).toEqual(original)
       expect(source.currentRef?.refDigest).not.toBe(original.refDigest)
@@ -188,10 +195,10 @@ test("historical decision recall binds original/current evidence and rejects cha
       const dependencies = { cases: activeBusiness.cases, planner: activeBusiness.planner, procurement: activeBusiness.procurement,
         context: activeBusiness.context, host: authority.host, caseRecall: activeBusiness.caseRecall }
       const producer = createSfMemoryInputProducer(dependencies)
-      expect(await producer.prepare(value, analysis, call)).toEqual({ status: "ok", value })
+      expect(await deadline.phase("memory.prepare", () => producer.prepare(value, analysis, call))).toEqual({ status: "ok", value })
       const readers = createSfAnalysisSelectionReaders({ authority, business: activeBusiness })
       const verifier = createSfDecisionMemoryVerifier({ ...dependencies, readRecallSelection: readers.recallSelection(value) })
-      const verified = await verifier.verify(value, analysis, call)
+      const verified = await deadline.phase("memory.verify", () => verifier.verify(value, analysis, call))
       if (verified.status !== "ok") throw new Error(verified.reason)
       const proof = verified.value
       expect(sfAnalysisSourcesAuthorized(proof, analysis, call)).toBe(true)
@@ -216,7 +223,7 @@ test("historical decision recall binds original/current evidence and rejects cha
       // The canonical decoder checks this structural fixture; only the payload verifier runs.
       // Its explicitly unexecuted metadata confers no publication authority.
       const output = verifierOutputFixture(analysis, { kind: "CaseRecall", state: "ready", payload: prompt.result, evidenceRefs: proof.sources.map((item) => item.ref) })
-      expect(await proof.acceptsOutput(output, call)).toEqual({ status: "ok", value: true })
+      expect(await deadline.phase("memory.accept-output", () => proof.acceptsOutput(output, call))).toEqual({ status: "ok", value: true })
       const excluded = await activeBusiness.caseRecall({ caseRef, limit: 50, scope: { query: value.query, recallScope: { ...value.recallScope, includeHistorical: false } } }, call)
       expect(excluded).toMatchObject({ status: "ok", matches: [] })
 
@@ -263,7 +270,7 @@ test("historical decision recall binds original/current evidence and rejects cha
         expect((await staleAccess.commit(staleRecord, staleCall, detached, fixtureOutput)).status).toBe("unavailable")
         const runs = staleAccess.wrapStore(createSfRunStore({ state: authority.state, requestFor: authority.host.requestFor, revalidate: authority.host.revalidate,
           preflight: staleAccess.preflight, revalidateForCommit: staleAccess.commit, now: () => at }))
-        expect((await runs.preserveStale(fixtureRun.runRef, "source-changed", fixtureOutput, staleCall)).status).toBe("ok")
+        expect((await deadline.phase("stale.preserve", () => runs.preserveStale(fixtureRun.runRef, "source-changed", fixtureOutput, staleCall))).status).toBe("ok")
         const preserved = await authority.state.read(staleRequest, "contributions", (stored) => ({ run: stored.nativeRuns?.[fixtureRun.runRef], output: stored.contributions[fixtureOutput.id] }))
         if (preserved.status !== "ok") throw new Error("Preserved lifecycle fixture unavailable")
         expect(preserved.value.run).toMatchObject({ state: "stale", version: 4, outputRef: fixtureOutput.id })
@@ -356,5 +363,5 @@ test("historical decision recall binds original/current evidence and rejects cha
       expect((await verifier.verify(value, analysis, call)).status).toBe("unavailable")
       expect((await proof.acceptsOutput(output, call)).status).toBe("unavailable")
     } finally { authority.human.finish(call) }
-  } finally { business?.dispose(); await driver.dispose(); await rm(directory, { recursive: true, force: true }) }
+  } finally { await deadline.close() }
 }, 240_000)

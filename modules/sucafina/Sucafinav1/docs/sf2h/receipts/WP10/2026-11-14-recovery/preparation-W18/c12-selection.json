@@ -1,0 +1,139 @@
+{
+  "schema": "wp10-c12-builder-static-audit-v1",
+  "role": "builder-not-independent-review",
+  "baseApply": {
+    "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+    "sourceCommit": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+    "blobSha": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+    "sha256": "5c25c65a9c521c7c7ca8dbb9a6070e9e343833d6e40755183a128d8d1fdbb52b",
+    "size": 12410
+  },
+  "publishedCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+  "minimalCandidateFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "blobSha": "964a53310c340f4496d7410d66f8b852270b75f1",
+      "sha256": "debb437646fff9e9143b713b42e445f34754fe33df379fdd5f62b35e4a26a6da",
+      "size": 20833,
+      "localPath": "/workspace/scratch/301a7f2754f4/incoming/c12/apply-pr35.ts",
+      "mode": "candidate-exact-foreign-intake-with-own-egress-required",
+      "reason": "Reopen C08 cases after durable domain receipt; reserve dispatch before crossing domain boundary; preserve unrelated case edits; receipt/state fences. Final lease fence remains required in own composition.",
+      "currentRepositoryMatchesIncoming": true,
+      "appliedByThisBuilder": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/application-attempt.ts",
+      "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "blobSha": "d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e",
+      "sha256": "b952a9869602aee8c6696a769ee3d96278868dafc441bbdb4ff4b15c6b03762c",
+      "size": 1585,
+      "localPath": "/workspace/scratch/301a7f2754f4/incoming/c12/pr35/modules/sucafina/Sucafinav1/product/decisions/application-attempt.ts",
+      "mode": "candidate-exact-foreign-intake",
+      "reason": "New runtime attempt helper",
+      "currentRepositoryMatchesIncoming": true,
+      "appliedByThisBuilder": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "blobSha": "b6499c30a3a2482cd96c72e3b4b6bf9b2a04c72e",
+      "sha256": "eb621371e679b84989e8a7bbb23b4944e52bc5d3134dd65c272ac30cd4ebf449",
+      "size": 18411,
+      "localPath": "/workspace/scratch/301a7f2754f4/incoming/c12/pr35/modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "mode": "candidate-exact-foreign-intake",
+      "reason": "Owner-published surgical execution/reconciliation regression test; remains unexecuted.",
+      "currentRepositoryMatchesIncoming": true,
+      "appliedByThisBuilder": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "blobSha": "3cf9948e4fefbeceb4c2e99b04dc47b4e29ad816",
+      "sha256": "4157e20a55cada0a0f498c7a9af52246068b87e91725edf9d99f904db4bbbd26",
+      "size": 27347,
+      "localPath": "/workspace/scratch/301a7f2754f4/incoming/c12/pr35/modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "mode": "candidate-exact-foreign-intake",
+      "reason": "Owner-published surgical execution/reconciliation regression test; remains unexecuted.",
+      "currentRepositoryMatchesIncoming": true,
+      "appliedByThisBuilder": false
+    }
+  ],
+  "alreadyIdentical": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "blobSha": "90c3e981d8418c562342660bd3d56d03f9995383",
+      "sha256": "e5fe2ce6591d04a8289a895418225c8fd4ce2e0a58bf789fd4657145ae6d689c",
+      "size": 14701,
+      "localPath": "/workspace/scratch/301a7f2754f4/incoming/c12/prepared-apply-pr35.ts",
+      "mode": "reuse-already-identical",
+      "matchesRepository": true,
+      "reason": "Existing atomic producer/receipt contract remains exact; no replacement needed."
+    }
+  ],
+  "deferredTests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "blobSha": "d13ec6d28ff5eb89bb00e8db39ef9065aab394a2",
+      "sha256": "2aaa0568b95fbbe645496129a91d28fbd4f0e5d656c98ab8a933d148f0fdb1d7",
+      "size": 29836,
+      "localPath": "/workspace/scratch/301a7f2754f4/incoming/c12/pr35/modules/sucafina/Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "mode": "archive-test-pending-dependency-closure",
+      "reason": "Imports absent decisions/application-status.ts and new decisions/http.ts applicationStatus route; do not copy test alone."
+    }
+  ],
+  "blockingCompositionRisk": {
+    "id": "C12-FINAL-C08-LEASE-EGRESS",
+    "source": "retainReceipt performs the final awaited C08 read after host.revalidate, then checks only Request.signal and C08 result. C08 authenticates the Request separately from the TrustedUiContext lease.",
+    "mitigation": "Root implemented own prepared-application-egress wrapper on mounted Procurement/Dashboard apply entrypoints and generic withCase final Request/binding/lease fence. Source-audited by this builder; hosted counterproof and independent acceptance remain pending. Raw foreign reuse outside wrappers retains limitation.",
+    "counterproof": "Finish real UI/human admission during final retained-receipt C08 read after a real domain receipt and case reconciliation; authenticated Request remains alive. Require no receipt disclosure and no repeat effect on fresh retry."
+  },
+  "behavioralIncompatibility": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+    "case": "H05",
+    "expectedOldBehavior": "409 stale case-changed-after-application with domain receipt only and case left planned after unrelated objective edit",
+    "publishedBehavior": "Receipt-first reconciliation preserves unrelated versioned objective edit, records receipt and returns ok; no second domain effect",
+    "resolution": "Keep foreign test untouched; owner/contract decision or explicitly failing compatibility evidence is required."
+  },
+  "executed": {
+    "productTests": false,
+    "typecheck": false,
+    "build": false,
+    "remoteMutation": false,
+    "repositoryEditsForC12": false,
+    "nativeGlobalAcceptance": false
+  },
+  "reviewStatus": "Static builder source-audit of foreign delta and root own egress mitigation; hosted candidate CI, H05 contract reconciliation and independent reviews remain pending.",
+  "ownMitigationObserved": {
+    "status": "implemented-by-root-source-audited-not-executed",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/prepared-application-egress.ts",
+        "blobSha": "e4af87d2a1c5f9c72f86810db1cacc39fcb19faf",
+        "sha256": "8c2009995220001b82a423be035c651cb5bb62b5a7409d753107bddfa54f0e62"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "blobSha": "97cde4dce2858f47b57b446c9c20bad77d367591",
+        "sha256": "217ce1f268ae119bd38292f9b6697c6f6c1bfb08e31be3e25a434c5cf91d6b48"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "blobSha": "3061f529e1417ba29f9976c3f132c1a08ead0742",
+        "sha256": "faa9602f7f7465e2748ac2fc0fe31a2ced07679a3522c4b4fea603e1dfff1726"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/dashboard-after-apply.test.ts",
+        "blobSha": "e4dbc0913068f3e35ed4023eaf3cd64d9a6a2bcd",
+        "sha256": "9af8fe59d29cdbeb48ea52837d04217b512cc51119b1fa8753c4f991eee2006a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+        "blobSha": "ccc4405d5647eaca9b74da6579f2a040a1ac82e3",
+        "sha256": "fe3d3b0cfc706c6532923bac77e6db13ae915a02e77390704ae9ea7c951495a5"
+      }
+    ]
+  }
+}

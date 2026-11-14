@@ -13,15 +13,20 @@ import { Effect } from "effect"
 import { ChildProcess } from "effect/unstable/process"
 import { expectSpawn } from "../../../../../../../packages/core/test/fixture/omni-expect.ts"
 import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
+import { createSfAnalysisRunContext } from "../../../../../../../apps/cli/src/sucafina-product/analysis-run-context.ts"
+import { createSfStaleAnalysisAccess } from "../../../../../../../apps/cli/src/sucafina-product/analysis-stale-commit.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
 import { createSfSourcePersistence } from "../../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
-import { digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { digestSfContribution, digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef, BusinessMemoryEnvelope } from "../../../../product/contracts/business-context.ts"
 import type { CaseLedgerEvent } from "../../../../product/contracts/decisions.ts"
-import type { SfProductState } from "../../../../product/contracts/state.ts"
-import type { TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
+import type { SfProductState, SfNativeRunRecord } from "../../../../product/contracts/state.ts"
+import type { ContributionEnvelope } from "../../../../product/contracts/resident-ai.ts"
+import type { TrustedDomainContext, TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
+import { createSfRunStore } from "../../../../product/ai/run-store.ts"
+import { sfRunFixture } from "../../wp12/run-fixture.ts"
 import { object } from "../../../../runtime/contract.ts"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
@@ -76,7 +81,7 @@ async function calculationFixture(deadline: ReturnType<typeof compositionTestDea
     const request = () => new Request("https://example.test/planner", { method: "POST", headers: { origin: "https://example.test" }, signal: deadline.signal })
     const authority = createSfProductAuthority({ identity: () => identity, installationId: identity.installationId, origin: "https://example.test", policyVersion: "calculation-policy",
       persistence, proposalCoverageWrites, grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "contributions", "atlas", "outbox"],
-        operations: ["sf_scenario_simulate", "sf_source_get", "sf_evidence_get", "sf_context_get", "sf_freshness_check", "sf_decision_recall"], humanActions: [] }],
+        operations: ["sf_scenario_simulate", "sf_source_get", "sf_evidence_get", "sf_context_get", "sf_freshness_check", "sf_decision_recall"], humanActions: ["analysis.start"] }],
       authenticate: async (_request, scope) => { checkDeadline(); return control.active && scope ? { id: "person", canWrite: true, roles: [{ surface: scope.surface, role: scope.surface === "planner" ? "finance" : "admin" }] } : null },
       environment: async () => {
         checkDeadline()
@@ -215,6 +220,226 @@ async function withCalculation(name: string, work: (fixture: Awaited<ReturnType<
   try { await work(await calculationFixture(deadline, name)) }
   finally { await deadline.close() }
 }
+
+test("Planner ledger history preserves the protected original after case advance and cannot authorize current execution", async () => {
+  expectSpawn(import.meta.path)
+  await withCalculation("historical-case-advance", async ({ calculation, caseRef, reopen, change, interleave, phase }) => {
+    const { reopened } = await reopen()
+    await reopened.ui("sf_evidence_get", { evidenceRef: calculation }, async (call) => {
+      const capture = await reopened.atlas.memory.readOriginalCapture(caseRef, calculation.refDigest, call)
+      if (!capture) throw new Error("Actual protected calculation capture unavailable")
+      await change((state) => { state.cases[caseRef.id]!.version = 2 })
+      let reentered = false
+      interleave.coverage = async () => {
+        reentered = true
+        expect((await reopened.business.selectedCase(call)).status).toBe("unavailable")
+        expect((await reopened.business.resolveCase(call)).status).toBe("unavailable")
+        expect((await reopened.business.plannerSources.resolveForecastCoverage(calculation.target.sourceRefs[0]!.refId, call)).status).not.toBe("ok")
+        expect((await reopened.business.baselineCoverage.resolveForecastCoverage(calculation.target.sourceRefs[0]!.refId, call)).status).not.toBe("ok")
+        const nested = await reopened.business.calculations.resolveHistoricalEvidence(calculation, call, reopened.atlas.memory.readOriginalCapture)
+        expect(nested.state).toBe("unavailable")
+        expect(nested.authorizedProjection).toBeUndefined()
+      }
+      const resolved = await reopened.business.context.resolve(calculation, call)
+      expect(resolved).toMatchObject({ state: "historical", ref: calculation, currentRef: calculation,
+        accessRevision: call.binding.accessRevision, differences: [{ field: "case.version", before: 1, after: 2 }] })
+      expect(resolved.authorizedProjection).toEqual(capture.projection)
+      expect(reentered).toBe(true)
+      const advanced = { ...caseRef, version: 2 }
+      expect(await reopened.atlas.memory.readOriginalCapture(advanced, calculation.refDigest, call)).toEqual(capture)
+      expect(await reopened.business.calculations.issue(calculation.target.runId, call))
+        .toEqual({ status: "unavailable", reason: "scenario-request-unavailable" })
+      expect(await reopened.business.calculations.requests.read(calculation.target.runId, call))
+        .toEqual({ status: "unavailable", reason: "scenario-request-unavailable" })
+      expect(await reopened.business.resolveCase(call)).toEqual({ status: "unavailable", reason: "case-selection-unavailable" })
+      phase("historical-original-preserved-current-execution-denied")
+    })
+  })
+}, 120_000)
+
+test("Planner calculation history requires its actual ledger, case incarnation, request, result, capture and fresh sources", async () => {
+  expectSpawn(import.meta.path)
+  await withCalculation("historical-integrity", async ({ calculation, caseRef, reopen, change, phase }) => {
+    const { reopened } = await reopen()
+    await change((state) => { state.cases[caseRef.id]!.version = 2 })
+    await reopened.ui("sf_evidence_get", { evidenceRef: calculation }, async (call) => {
+      const saved = await reopened.authority.state.read(reopened.request(), "cases", (state) => ({ decision: state.cases[caseRef.id],
+        result: state.decisionResults?.[calculation.target.runId], preferences: state.preferences, atlas: state.atlas }))
+      if (saved.status !== "ok" || !saved.value.decision || !saved.value.result) throw new Error("Actual historical C08 fixture unavailable")
+      const original = { ...saved.value, decision: saved.value.decision, result: saved.value.result }
+      expect((await reopened.business.context.resolve(calculation, call)).state).toBe("historical")
+      const mutations: readonly ((state: SfProductState) => void)[] = [
+        (state) => { state.cases[caseRef.id]!.participants = [] },
+        (state) => { state.cases[caseRef.id]!.ledger = [] },
+        (state) => { state.cases[caseRef.id]!.incarnation = "replacement-incarnation" },
+        (state) => { const decision = state.cases[caseRef.id]!; decision.ledger = [...decision.ledger, structuredClone(decision.ledger[0]!)] },
+        (state) => { state.decisionResults![calculation.target.runId]!.resultDigest = "0".repeat(64) },
+        (state) => {
+          const key = `sf:proposal-coverage:scenario-request:${digestSfValue(calculation.target.runId)}`
+          state.preferences[key] = { ...object(state.preferences[key]), engineVersion: "replaced-engine" }
+        },
+        (state) => { state.atlas = {} },
+      ]
+      const restore = (state: SfProductState) => {
+        state.cases[caseRef.id] = structuredClone(original.decision)
+        state.decisionResults![calculation.target.runId] = structuredClone(original.result)
+        state.preferences = structuredClone(original.preferences)
+        state.atlas = structuredClone(original.atlas)
+      }
+      for (const mutate of mutations) {
+        await change((state) => { restore(state); mutate(state) })
+        const denied = await reopened.business.context.resolve(calculation, call)
+        expect(denied.state).toBe("unavailable")
+        expect(denied.authorizedProjection).toBeUndefined()
+        expect(denied.currentRef).toBeUndefined()
+      }
+      await change(restore)
+      expect(await reopened.authority.host.revalidate(call)).toBe(true)
+      // The explicit historical lane does not replay a new result from old
+      // source bytes. Material source drift remains unavailable until the
+      // producer supplies that separate authenticated historical closure.
+      await reopened.persistence.transaction("planner", async (snapshot) => {
+        snapshot.data.entities = [{ id: "historical-source-change", name: "Changed source after capture" }]
+        return { commit: true, value: undefined }
+      })
+      const changed = await reopened.business.context.resolve(calculation, call)
+      expect(changed.state).toBe("unavailable")
+      expect(changed.authorizedProjection).toBeUndefined()
+      phase("historical-tamper-replacement-and-source-drift-closed")
+    })
+  })
+}, 120_000)
+
+test("Planner calculation history denies disclosure after principal, Request or lease revocation", async () => {
+  expectSpawn(import.meta.path)
+  await withCalculation("historical-replay-revocation", async ({ calculation, caseRef, reopen, change, control, interleave, phase }) => {
+    const { reopened } = await reopen()
+    await change((state) => { state.cases[caseRef.id]!.version = 2 })
+    await reopened.ui("sf_evidence_get", { evidenceRef: calculation }, async (call) => {
+      const positive = await reopened.business.calculations.resolveHistoricalEvidence(calculation, call, reopened.atlas.memory.readOriginalCapture)
+      expect(positive.state).toBe("historical")
+      expect(positive.authorizedProjection).toBeDefined()
+      let revokedDuringReplay = false
+      interleave.coverage = async () => { revokedDuringReplay = true; control.active = false }
+      try {
+        const denied = await reopened.business.context.resolve(calculation, call)
+        expect(revokedDuringReplay).toBe(true)
+        expect(denied.state).toBe("unavailable")
+        expect(denied.authorizedProjection).toBeUndefined()
+        expect(denied.currentRef).toBeUndefined()
+        expect(await reopened.authority.host.revalidate(call)).toBe(false)
+      } finally { control.active = true }
+      phase("historical-real-replay-revocation-closed")
+    })
+    for (const mutation of ["abort", "finish"] as const) {
+      const controller = new AbortController(), base = reopened.request()
+      const request = new Request(base, { signal: AbortSignal.any([base.signal, controller.signal]) })
+      const payload = { evidenceRef: calculation }, digest = digestSfValue(payload)
+      const admitted = await reopened.authority.ui.admit(request, "sf_evidence_get", digest)
+      if (admitted.status !== "ok" || !await reopened.authority.ui.validate(admitted.value, "sf_evidence_get", digest)) throw new Error("Actual historical read admission unavailable")
+      try {
+        let captured = false
+        const denied = await reopened.business.calculations.resolveHistoricalEvidence(calculation, admitted.value, async (selection, refDigest, call) => {
+          const original = await reopened.atlas.memory.readOriginalCapture(selection, refDigest, call)
+          if (!original) throw new Error("Actual capture unavailable before Request revocation")
+          captured = true
+          if (mutation === "abort") controller.abort(new Error("Fixture abort after protected read"))
+          else reopened.authority.ui.finish(admitted.value)
+          return original
+        })
+        expect(captured).toBe(true)
+        expect(denied.state).toBe("unavailable")
+        expect(denied.authorizedProjection).toBeUndefined()
+        expect(denied.currentRef).toBeUndefined()
+      } finally { reopened.authority.ui.finish(admitted.value) }
+    }
+    phase("historical-request-abort-and-lease-loss-closed")
+  })
+}, 120_000)
+
+test("Analysis lifecycle reentry preserves a real historical calculation without upgrading its original case selector", async () => {
+  expectSpawn(import.meta.path)
+  await withCalculation("historical-analysis-lifecycle", async ({ calculation, caseRef, reopen, interleave, control, phase }) => {
+    const { reopened } = await reopen()
+    const { authority, business, persistence } = reopened
+    const request = reopened.request()
+    // Only lifecycle metadata is seeded. The C17 result, request, ledger source
+    // and protected Atlas original above were actually persisted and reopened.
+    // No Task, Session, loaded-skill observation or model execution is claimed.
+    const fixture = sfRunFixture()
+    if (!fixture.run.native) throw new Error("Unexecuted lifecycle metadata missing")
+    const start = { request: { caseRef }, purpose: "Unexecuted C17 lifecycle fixture" }
+    const admission = await authority.human.admit(request, "analysis.start", start)
+    if (admission.status !== "ok") throw new Error(admission.reason)
+    const run: SfNativeRunRecord = { ...fixture.run, native: fixture.run.native, caseRef,
+      principalRef: admission.value.binding.principalRef, accessRevision: admission.value.binding.accessRevision,
+      policyVersion: admission.value.binding.policyVersion }
+    authority.human.finish(admission.value)
+    const output: ContributionEnvelope = { ...fixture.output, caseRef, evidenceRefs: [calculation], accessRevision: run.accessRevision }
+    output.outputDigest = digestSfContribution(output)
+    const expectedOutput = digestSfValue(output)
+    const state = await authority.state.read(request, "cases", (value) => value.versions)
+    if (state.status !== "ok") throw new Error("Current C08 versions unavailable")
+    expect((await authority.state.transaction(request, { namespace: "cases", expectedStorageVersion: state.value.cases,
+      additionalNamespaces: [{ namespace: "contributions", expectedStorageVersion: state.value.contributions }],
+      targetRef: caseRef.id, targetIncarnation: caseRef.incarnation, idempotencyKey: "advance-c17-lifecycle",
+      commandDigest: digestSfValue({ run, caseVersion: 2 }) }, async (stored) => {
+      stored.cases[caseRef.id]!.version = 2
+      stored.nativeRuns ??= {}
+      stored.nativeRuns[run.runRef] = run
+      return { commit: true, value: true }
+    })).status).toBe("ok")
+    const access = createSfStaleAnalysisAccess({ authority, persistence, context: business.context, request, start,
+      proof: { runRef: run.runRef, caseRef, contextFingerprint: run.contextFingerprint, evidenceRefs: [calculation] } })
+    const runs = access.wrapStore(createSfRunStore({ state: authority.state, requestFor: authority.host.requestFor,
+      revalidate: authority.host.revalidate, preflight: access.preflight, revalidateForCommit: access.commit, now: () => "2027-02-02T00:00:00Z" }))
+    const replayContexts = new WeakMap<TrustedDomainContext, string>()
+    const withRunContext = createSfAnalysisRunContext({ authority, business, request, runRef: run.runRef, caseRef, start,
+      active: () => control.active, replayContexts })
+    let last: TrustedDomainContext | undefined
+    const preserved = await withRunContext(run.runRef, async (call) => {
+      last = call
+      expect(authority.host.requestFor(call)).toBe(request)
+      expect(replayContexts.get(call)).toBe(run.runRef)
+      expect((await business.selectedCase(call)).status).toBe("unavailable")
+      expect((await business.resolveCase(call)).status).toBe("unavailable")
+      let checkedInsideReplay = false
+      interleave.coverage = async () => {
+        checkedInsideReplay = true
+        expect((await business.selectedCase(call)).status).toBe("unavailable")
+        expect((await business.resolveCase(call)).status).toBe("unavailable")
+        expect((await business.baselineCoverage.resolveForecastCoverage(calculation.target.sourceRefs[0]!.refId, call)).status).not.toBe("ok")
+      }
+      const historical = await business.context.resolve(calculation, call)
+      expect(historical.state).toBe("historical")
+      expect(historical.currentRef).toEqual(calculation)
+      expect(historical.differences).toEqual([{ field: "case.version", before: 1, after: 2 }])
+      expect(checkedInsideReplay).toBe(true)
+      expect((await business.calculations.issue(calculation.target.runId, call)).status).not.toBe("ok")
+      phase("historical-calculation-resolved-under-original-run-selector")
+      return runs.preserveStale(run.runRef, "case-advanced", output, call)
+    })
+    expect(preserved.status).toBe("ok")
+    if (!last) throw new Error("Original run context did not enter lifecycle")
+    expect(replayContexts.has(last)).toBe(false)
+    expect(authority.host.requestFor(last)).toBeUndefined()
+    const stored = await authority.state.read(request, "contributions", (value) => ({ run: value.nativeRuns?.[run.runRef], output: value.contributions[output.id] }))
+    if (stored.status !== "ok") throw new Error("Preserved lifecycle unavailable")
+    expect(stored.value.run).toMatchObject({ state: "stale", version: run.version + 1, caseRef, outputRef: output.id })
+    expect(digestSfValue(stored.value.output)).toBe(expectedOutput)
+    expect(stored.value.run?.native).toEqual(run.native)
+    control.active = false
+    try {
+      let entered = false
+      expect((await withRunContext(run.runRef, async (call) => { entered = true; return runs.markStale(run.runRef, "revoked", call) })).status).toBe("denied")
+      expect(entered).toBe(false)
+    } finally { control.active = true }
+    const unchanged = await authority.state.read(request, "contributions", (value) => value.contributions[output.id])
+    if (unchanged.status !== "ok") throw new Error("Preserved output unavailable")
+    expect(digestSfValue(unchanged.value)).toBe(expectedOutput)
+    phase("historical-calculation-through-original-run-context-and-c08-stale-commit")
+  })
+}, 120_000)
 
 test("Planner calculation preserves UI and repeated BCS reads and rejects cycles, tampering and over-budget selectors", async () => {
   expectSpawn(import.meta.path)

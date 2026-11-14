@@ -47,8 +47,10 @@ test("composed C12 preserves the original, receipt and case read after apply and
       version: ref.target.version, fields: ref.target.fields, period: ref.target.period!, observedAt: f.clock.at }
     const payload = { caseRef: initialCaseRef, target, targetEvidence: ref, sourceRefs: [ref], expectedVersion: 0,
       fields: { action: "Applied action", owner: "Person", due: "2026-12-01", priority: "high" as const, notes: "Explicit operational decision" } }
+    const plannerBeforeDraft = await f.persistence.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))
     const registered = await human("decisions.edit", payload, (call) => f.business.dashboardDecisions.drafts.register(payload, call))
-    if (registered.status !== "ok") throw new Error(`Draft unavailable: ${registered.reason}`)
+    if (registered.status !== "ok") throw new Error(`Draft unavailable: ${registered.status}:${registered.reason}`)
+    expect(await f.persistence.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))).toBe(plannerBeforeDraft)
     const draft = await read((call) => f.business.dashboardDecisions.drafts.readCurrent({ caseRef: initialCaseRef, draftRef: registered.value.draftRef }, call))
     if (draft.status !== "ok") throw new Error(`Draft read unavailable: ${draft.reason}`)
     const result: ScenarioResult = { id: "scenario", version: 1, currency: "USD", horizon: period, components: [], sourceRefs: [ref],
@@ -96,9 +98,57 @@ test("composed C12 preserves the original, receipt and case read after apply and
     expect((await read((call) => f.business.dashboardDecisions.resolveOperation(actualOperation, call))).status).toBe("ok")
     expect((await read((call) => f.business.dashboardDecisions.resolveOperation({ ...actualOperation, operation: { ...operation, targetRef: "other-target" } }, call))).status).not.toBe("ok")
     expect((await read((call) => f.business.dashboardDecisions.resolveOperation({ ...actualOperation, caseRef: { ...actualOperation.caseRef, id: "other-case" } }, call))).status).not.toBe("ok")
+    const domainEffect = () => f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false,
+      value: digestSfValue({ hotTopics: snapshot.data.hotTopics, versions: snapshot.versions, audit: snapshot.audit }) }))
+    const effectBeforeReplay = await domainEffect()
+    const replayWithLeaseBoundary = async (finishAt?: number) => {
+      let observed = 0
+      let finished = false
+      const result = await human("decisions.apply", applyRequest, async (call) => {
+        const source = f.authority.host.requestFor(call)
+        if (!source) throw new Error("Replay Request unavailable")
+        const realRead = f.authority.state.read
+        f.authority.state.read = async (request, namespace, reader) => {
+          let receiptRetained = false
+          const value = await realRead(request, namespace, async (state, actor) => {
+            const selected = await reader(state, actor)
+            receiptRetained = request === source && namespace === "cases" && selected === true &&
+              state.cases[decision.id]?.preparedChanges.some((change) => change.receipt?.id === applied.value.id) === true &&
+              digestSfValue(state.receipts[applied.value.id]) === digestSfValue(applied.value)
+            return selected
+          })
+          if (receiptRetained) {
+            observed++
+            if (observed === finishAt) {
+              f.authority.human.finish(call)
+              finished = true
+              expect(source.signal.aborted).toBe(false)
+            }
+          }
+          return value
+        }
+        try { return await f.business.dashboardDecisions.apply(applyRequest, call) }
+        finally { f.authority.state.read = realRead }
+      }, "apply-once")
+      return { result, observed, finished }
+    }
+    // Observe the real successful replay, then end only its human lease at its
+    // final C08 receipt-retention read. Principal, Request and durable bytes stay
+    // valid; a C08 authorization alone must not release the ended UI admission.
+    const baselineReplay = await replayWithLeaseBoundary()
+    expect(baselineReplay.result).toEqual(applied)
+    expect(baselineReplay.observed).toBeGreaterThan(0)
+    const endedReplay = await replayWithLeaseBoundary(baselineReplay.observed)
+    expect(endedReplay.finished).toBe(true)
+    expect(endedReplay.observed).toBe(baselineReplay.observed)
+    expect(endedReplay.result).toEqual({ status: "denied", reason: "application-authority-changed" })
     expect((await human("decisions.apply", applyRequest, (call) => f.business.dashboardDecisions.apply(applyRequest, call), "apply-once"))).toEqual(applied)
     const unmodified = await f.authority.state.read(f.request(), "cases", (state) => state.cases[decision.id])
     expect(unmodified.status === "ok" && unmodified.value).toEqual(after)
+    expect(after.receipts).toHaveLength(1)
+    expect(await domainEffect()).toBe(effectBeforeReplay)
+    const actualReceipts = await f.authority.state.read(f.request(), "receipts", (state) => Object.values(state.receipts))
+    expect(actualReceipts.status === "ok" && actualReceipts.value).toEqual([applied.value])
     const forged = { ...receiptRef, target: { ...receiptRef.target, commandDigest: "f".repeat(64) } }
     expect((await read((call) => f.business.context.resolve({ ...forged, refDigest: digestSfEvidenceRef(forged) }, call))).state).toBe("unavailable")
 

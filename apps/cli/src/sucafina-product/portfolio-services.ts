@@ -33,7 +33,8 @@ export function createSfPortfolioServices(input: {
   const composed = createSfPortfolioPreparation({ ...input, registries })
   const preparation = input.preparation ?? composed
   const action = (operation: DecisionMutationOperation) => operation === "add-alternative" ? "decisions.promote-alternative" : operation === "prepare-changes" ? "decisions.prepare-changes" : operation === "record-choice" ? "decisions.choose" : operation === "add-question" ? "decisions.add-question" : "decisions.answer-question"
-  const mutations = createDecisionMutations({ state: authority.state, host: authority.host, planner: registries.planner, sources: business.plannerSources,
+  const rawMutations = createDecisionMutations({ state: authority.state, host: authority.host,
+    planner: input.preparation ? registries.planner : composed.mutationPlanner, sources: business.plannerSources,
     authorizeCase: registries.authorizeCase, operationIdentity: business.operationIdentity,
     authorizeMutation: preparation.authorizeMutation ?? ((operation, request, call) => registries.intent.authorize(call, action(operation), request)),
     verifyMutation: preparation.verifyMutation ?? ((_snapshot, operation, request, call) => registries.intent.verify(call, action(operation), request)),
@@ -46,8 +47,10 @@ export function createSfPortfolioServices(input: {
     resolveChoiceValues: preparation.resolveChoiceValues,
     prepareDomainCommands: preparation.prepareDomainCommands,
     readScenarioResult: (resultRef, call) => business.results.readHistoricalScenario({ resultRef }, call),
-    createId: randomUUID, now: () => new Date().toISOString(),
+    createId: input.preparation ? randomUUID : composed.createMutationId, now: () => new Date().toISOString(),
   })
+  const mutations: typeof rawMutations = input.preparation ? rawMutations : { ...rawMutations,
+    addAlternative: (request, call) => composed.runPromotion(request, call, () => rawMutations.addAlternative(request, call)) }
   const scenarios = business.plannerProduct.scenarios
   const idempotencyKey: Parameters<typeof createPortfolioProduct>[0]["idempotencyKey"] = async (digest, call) => {
     const identity = business.operationIdentity(call)

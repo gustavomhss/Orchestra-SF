@@ -231,6 +231,53 @@ async function preserveSuccessor({ deadline, human, fixture, original }: ReviewP
   return successor
 }
 
+test("Review grouped reads keep exact receipts and current authority without lending a proof to another invocation", async () => {
+  await withReviewPortfolio("read-scope", async ({ application, authority, business, fixture, call, caseRef, original, mutate }) => {
+    const scope = application.readScope
+    const request = authority.host.requestFor(call)
+    if (!scope || !request) throw new Error("Real Review read scope unavailable")
+    await scope.run(request, async () => {
+      const first = await application.reviews.read(original.id, call)
+      expect(first.status).toBe("ok")
+      if (first.status !== "ok") throw new Error(first.reason)
+      const immutable = structuredClone(first.value)
+      first.value.createdAt = "2026-01-02T00:00:00Z"
+      const locked = await authority.state.read(request, "reviews", async () => {
+        expect(business.lockedSourceFences()).toBeDefined()
+        return application.reviews.read(original.id, call)
+      })
+      expect(locked.status).toBe("ok")
+      if (locked.status !== "ok") throw new Error("Real C08 group unavailable")
+      expect(locked.value).toEqual({ status: "ok", value: immutable })
+      try {
+        await mutate((state) => { state.cases[caseRef.id]!.participants = [] })
+        expect(fixture.active.value).toBe(true)
+        expect(await authority.host.revalidate(call)).toBe(true)
+        await scope.prepare([original.id], call)
+        const revoked = await authority.state.read(request, "reviews", () => application.reviews.read(original.id, call))
+        expect(revoked.status).toBe("ok")
+        if (revoked.status !== "ok") throw new Error("Real C08 group unavailable")
+        expect(revoked.value.status).toBe("denied")
+        expect(revoked.value).not.toHaveProperty("value")
+      } finally { await mutate((state) => { state.cases[caseRef.id]!.participants = ["person"] }) }
+      const restored = await application.reviews.read(original.id, call)
+      expect(restored).toEqual({ status: "ok", value: immutable })
+    })
+    // A second invocation with the very same Request and call still needs its
+    // own producer proof. A C08 reader cannot acquire it by borrowing the first.
+    await scope.run(request, async () => {
+      const next = await authority.state.read(request, "reviews", () => application.reviews.read(original.id, call))
+      expect(next.status).toBe("ok")
+      if (next.status !== "ok") throw new Error("Real C08 group unavailable")
+      expect(next.value.status).toBe("denied")
+      expect(next.value).not.toHaveProperty("value")
+    })
+    const replacement = await scope.run(new Request(request), () => application.reviews.read(original.id, call))
+    expect(replacement.status).toBe("denied")
+    expect(replacement).not.toHaveProperty("value")
+  })
+}, 120_000)
+
 // R3-W13-SOURCE-EGRESS-02: preserve real bodies and receipts, pause only the
 // actual BCS destination read, and change C08 without changing the session.
 for (const revocation of ["current-case", "previous-case", "successor-body"] as const) {

@@ -1,0 +1,200 @@
+{
+  "schema": "wp10-independent-review-v1",
+  "candidate": {
+    "label": "W17",
+    "productSha": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+    "tree": "526f67866223b8b73e1bcae16e45ec9377b1af2e",
+    "parent": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+    "pr": 29,
+    "base": "sf2-stack"
+  },
+  "reviewer": {
+    "id": "/root/independent_r2_w16",
+    "role": "R2 — consumer and human journey review",
+    "implementationParticipation": false,
+    "authoredSections": [],
+    "authorsExamined": [
+      "/root and WP10 implementation contributors",
+      "PR31 astra-interface/WP01-WP02",
+      "PR33 astra-collaboration/WP07-WP08-WP09",
+      "PR36 astra-intelligence/WP12-WP13-WP14"
+    ],
+    "independence": "Reviewer wrote only new review artifacts, did not author product changes, execute product, mutate remote or borrow a builder verdict. Prior R2 review finding and advice do not constitute implementation authorship."
+  },
+  "verdict": "HOLD",
+  "acceptance": {
+    "ownNewMandatoryFindings": 0,
+    "ownPriorFindingResolvedInSource": true,
+    "sourceReviewCompleteWithinDeclaredScope": true,
+    "hostedFunctionalRecheckComplete": false,
+    "productAccepted": false,
+    "nativeAccepted": false,
+    "globalAccepted": false,
+    "threeReviewGateClosed": false,
+    "reason": "BI source defect is corrected in published bytes; exact-candidate functional evidence is absent, hosted check failed, strict freeze mismatch remains, and an independent R1 C17 finding requires a successor."
+  },
+  "method": {
+    "local": "Static source/diff/JSON/hash only; no product/test/typecheck/build/browser execution",
+    "remote": "Read-only GitHub MCP; commit and four candidate source blobs, all 18 newly admitted foreign source blobs, immutable handoff archive index and W17 check run",
+    "remoteMutations": false,
+    "sourceVerificationDoesNotEqualExecution": true
+  },
+  "inventory": {
+    "source": "source-inventory-W17.json",
+    "intake": "intake-audit-W17.json",
+    "remote": "remote-observation-W17.json",
+    "hydratedFiles": 1115,
+    "matchingHydratedFiles": 1115,
+    "fullTreeBlobs": 16093,
+    "changedPaths": 28,
+    "deletions": 0,
+    "ownPaths": 10,
+    "ownCodeOrTestPaths": 6,
+    "newReceiptPaths": 4,
+    "ownOwnershipViolations": 0,
+    "foreignNewPaths": 18,
+    "foreignNewSourceBlobsFetched": 18,
+    "allForeignSourceBlobsMatchCandidate": true,
+    "effectiveForeignPins": 393,
+    "foreignPinMismatches": 0,
+    "previousWp10ReceiptsUnchanged": 96,
+    "absenceInHydrationIsNotDeletion": true
+  },
+  "criterionIntegrity": {
+    "count": 171,
+    "uniqueIds": 171,
+    "literalTextsPreserved": true,
+    "canonicalProofMapSetMatches": true,
+    "taskCount": 7,
+    "criterionMapSha256": "95fc2fe3cdbebffa5aefe990991fb495c7d4f6c194395c27e01b7d8e2208a8e1",
+    "acceptancePromotion": false
+  },
+  "closedFindings": [
+    {
+      "id": "R2-W16-BI-QUERY-01",
+      "priorCandidate": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "status": "RESOLVED_IN_PUBLISHED_SOURCE",
+      "functionalRecheck": "PENDING_HOSTED_W17_OR_SUCCESSOR",
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "blob": "65ec2c948a1c83aa7ada84d5f0f806bd236038b5",
+      "evidence": "The exact published W17 diff adds referenceDigest to bi-source's closed allowlist and the bootstrap object hashed for admission. Unique parameters, 64-hex validation, mapping to current producer row, explicit multi-origin choice and post-link sameBiProjection reread remain byte-identical. Tests and browser source retained.",
+      "limits": "Closed as a source defect, not as a successful end-to-end browser journey. The unchanged positive source-choice/egress proofs still need an exact-candidate hosted result."
+    }
+  ],
+  "newFindings": [],
+  "rechecks": [
+    {
+      "topic": "W16 own fixture diagnostics",
+      "status": "CORRECTED_IN_SOURCE_PENDING_TYPECHECK_RESULT",
+      "detail": "dossier-consumers checks reason membership before interpolation; native-host-disposal supplies a readLifecycle that remains unavailable/not-exercised. No assertion was removed and native behavior is not fabricated."
+    },
+    {
+      "topic": "Run lifecycle reentry",
+      "status": "STATIC_REVIEW_COMPLETE",
+      "paths": [
+        "apps/cli/src/sucafina-product/analysis-run-context.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts"
+      ],
+      "detail": "Helper captures original caseRef/start, rejects wrong run/aborted request/inactive host, admits actual analysis.start, uses historical retry only to enter same current authorized case, retains the original selector and cleans replay context/lease in finally. Fresh selectedCase/resolveCase still demand original version; final human authorization and Request/run identity gate result. New test uses real human/C08/case composition, advances case versions, verifies strict fresh selection denial, member/access/host/abort/replacement denials and cleanup. No run or native session is manufactured."
+    },
+    {
+      "topic": "WP02 host-workbench source blocker",
+      "status": "RESOLVED_IN_PUBLISHED_SOURCE_PENDING_HOSTED_CONSUMERS",
+      "detail": "PR31 replaces incomplete custom case/BCS with actual createSfBusinessServices, real resident bundle metadata and production case/scenario verifier. Four consumers retain their assertions and cleanup. The helper explicitly supplies no scanner/native inference acceptance. Prior W16 blocker is not claimed as a passed UI run."
+    },
+    {
+      "topic": "PR33 current conversation and routine schedule",
+      "status": "STATIC_REVIEW_COMPLETE",
+      "detail": "Thread continuity changes only unknown narrowing; confirmation removes redundant narrowed comparisons and adds types. Artifact/thread array changes preserve exact ordered bytes/messages. Schedule provider identity is pinned across each await and final egress; ten new provider replacement obligations accompany retained value/binding drift tests. This does not install a native C07 adapter."
+    },
+    {
+      "topic": "PR36 publication lifecycle/C08 aliases",
+      "status": "STATIC_REVIEW_COMPLETE",
+      "detail": "Publication unavailable/needs-input settles via fresh context; denied/conflict do not write terminal states. Run store fixes command/record digests before awaits, rejects verifier/caller mutation, clones staged values and checks egress. New tests retain ready/cancelled durable state against late signals and reject alias substitution; no native execution proof is inferred."
+    },
+    {
+      "topic": "PR36 portfolio/restart test composition",
+      "status": "STATIC_REVIEW_COMPLETE_WITH_FIXTURE_LIMITS",
+      "detail": "Planner consumer uses real Planner coverage classification and retains numeric/training assertions. Sensitivity fixture separates base/rules/runtime/positive calculation without introducing a new permissive verifier; preexisting fixture grant/verifier policy remains explicitly a boundary. Removed precomputed comparison fields are not consumed in the hydrated test graph. The independent sensitivity-units-boundary test still seeds and checks a real second case. Restart reader replaces always-false operation verifier with real Planner replay and before/after full-snapshot/actor/binding authentication fences. No result or native acceptance is assumed."
+    }
+  ],
+  "foreignSources": [
+    {
+      "pr": 31,
+      "commit": "01633144c83fb1080e6d985ef226b8db2aa131cb",
+      "changedFiles": 5,
+      "remoteBlobsVerified": 5
+    },
+    {
+      "pr": 33,
+      "commit": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+      "changedFiles": 6,
+      "remoteBlobsVerified": 6
+    },
+    {
+      "pr": 36,
+      "commit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "changedFiles": 7,
+      "remoteBlobsVerified": 7
+    }
+  ],
+  "archiveIntegrity": {
+    "immutableHandoff": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "indexBlob": "22281097328a26be9d0dc17b98d4b19e08cd8eaf",
+    "foreignCopies": 128,
+    "readOnlyInputs": 131,
+    "policy": "Preserve index and archived inputs; no runtime admission is inferred from historical entries.",
+    "limit": "Remote original index read and local index hash checked; individual 128/131 original working-copy blobs were not all re-fetched. Candidate diff has no deletion, no excluded authored path and no mutation of 96 prior WP10 receipts."
+  },
+  "hostedObservation": {
+    "runId": 43587702180,
+    "snapshotSha": "585831c5d9279a7b87f804bc3598ed66af1bb9e5",
+    "runAttempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43587702180",
+    "logsInspected": false,
+    "meaning": "Run metadata independently observed as terminal failure. No diagnostic count, repaired typecheck or functional PASS is inferred before logs/artifacts are reviewed. W16 test A does not validate W17."
+  },
+  "openGates": [
+    {
+      "id": "R1_C17_LIFECYCLE",
+      "status": "REPORTED_BY_INDEPENDENT_R1_REQUIRES_SUCCESSOR",
+      "source": "Root forwarded R1 finding; not a new independently rediscovered R2 finding.",
+      "detail": "Current Planner calculation consumers still route strict request/result reads and stored case selector after case advancement. R1 reports this prevents lifecycle entry when a case ledger carries C17. Reader composition correction and recheck remain required."
+    },
+    {
+      "id": "FREEZE9",
+      "status": "HOLD_STATIC_37_OF_38",
+      "owner": "WP00",
+      "actualHostSha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+      "expectedHostSha256": "4c654665a12aa02a6d5a851cdbe662f6f0fabdacf21e4b600f598e499a3a1922",
+      "manifestUnchanged": true,
+      "strictTestUnchanged": true,
+      "method": "Independent static byte hashing, not executing the product test"
+    },
+    {
+      "id": "HOSTED_CHECK_AND_CONSUMERS",
+      "status": "HOLD",
+      "detail": "W17 check terminal failure; exact functional selection proof pending. Successor changes require affected rechecks."
+    },
+    {
+      "id": "C07_NATIVE",
+      "status": "BLOCKED",
+      "detail": "No installed governed native Task/plan/admission/terminal receipt adapter; five routine descriptors not advertised. Fixtures and reject paths do not prove all 39 operations."
+    },
+    {
+      "id": "GLOBAL_AND_THREE_REVIEWS",
+      "status": "OPEN",
+      "detail": "AM01–AM06, eight outputs, full native residency, three final independent reviews and final epic bundle are not accepted here."
+    }
+  ],
+  "requiredRecheck": [
+    "Review successor published code/tree, including R1's C17 correction, without replacing historical reports.",
+    "Inspect exact check artifacts and terminal scoped tests for BI source choice, BI/Review egress/assets, reentry lifecycle and affected producer/browser consumers.",
+    "Keep strict foreign freeze and literal criteria; WP00 must bind final host bytes.",
+    "Do not transfer W16 tests or pending W17 metadata to successor acceptance."
+  ],
+  "historicalPolicy": "R2 W16 review and CI addendum remain unchanged; W17 files are new."
+}
