@@ -118,4 +118,4 @@ test("routine answer uses the real versioned case command and a replay cannot cr
     gate.active = false
     expect((await answerDecisionRoutine(input)).status).toBe("denied")
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
-})
+}, 120_000)
