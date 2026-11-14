@@ -1,0 +1,148 @@
+{
+  "schema": "sf2h-mission38-dependency-pins-v1",
+  "source": "f1642ba926738befceb4cba66dc463f9c847cd02",
+  "implementation_base": "e7e97591edfc15f230856a035e32951f2f700c2f",
+  "read_target": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+  "latest_target_preimage_check": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+  "five_preimages": [
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "blob": "b6a84dd807207e9b6791dc10f1419ec756ea1167",
+      "matched_preimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "blob": "b7174b16b485323f767d63e6842f3d61284245eb",
+      "matched_preimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/portfolio.ts",
+      "blob": "4fd2a1ec2fc8cc78b21699e5a008362fec588444",
+      "matched_preimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "blob": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e",
+      "matched_preimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+      "blob": "fef3b0546384fcb0739fcf11ef531406c60ad760",
+      "matched_preimage": true
+    }
+  ],
+  "entries": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+      "blob": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "blob": "1782c2094239c3712d3a895a6a25f4160fb429c7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+      "blob": "9cc4cc81538a7247cd87893f958acf5665194eb5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+      "blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/projection.ts",
+      "blob": "266c97092d1c0f91f5694879883bd7839c081626"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/bi-difference.ts",
+      "blob": "86ef1b9781ee46bc8cb30eeabc66870332094e7d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "blob": "febb795303b8c4ada5fb6f39d6373667ee71dac1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-decision-navigation.test.ts",
+      "blob": "9f63fb36f4f390b3acad937e388435b6a648b2b0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/source-navigation.ts",
+      "blob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357",
+      "bytes": 3425
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/chromium-cleanup.ts",
+      "blob": "26a07dfe8d5a5c1986535aea0c857bfd9faffda5",
+      "bytes": 6790
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "blob": "3eb140557b597156baf52578d8981d332e52aef3",
+      "bytes": 2313
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/bi-selections.ts",
+      "blob": "3e1d2ec43831e689c19c5178a0ff370e60001e40",
+      "bytes": 3084
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "blob": "881ce4672d9d0e641d1cc849663c0980c118774d",
+      "bytes": 11364
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/bi-call-scope.ts",
+      "blob": "8f7b3ebb09bdaacfcad25d653e3ff333956d35f6",
+      "bytes": 11888
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "bytes": 6977
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "ce3a281bf07819f90af7fad10f98861980f3273b",
+      "bytes": 70107
+    }
+  ],
+  "observed_source_load_blockers": [
+    {
+      "file": "waterfall-contract.test.ts",
+      "missing": "product/analytics/source-navigation.ts"
+    },
+    {
+      "file": "presentation.test.ts",
+      "missing": "product/planner/scenario-bi.ts"
+    },
+    {
+      "file": "rendering.test.ts",
+      "missing": "test/product/wp07/chromium-cleanup.ts"
+    }
+  ],
+  "control": {
+    "bunfig": "7000633db2c4f11e3f1aff351cd28c0df9affeca",
+    "implementation": "643ad90a4606c2afd6c6c9aee389ca6389ab54e9",
+    "status": "Preload already present; no redundant import, forged verdict or altered scope added"
+  },
+  "rule": "These are explicit boundary pins within the existing integrated closure. Do not import the whole target tree into astra-wp05 or edit these external paths from mission38.",
+  "current_mount": "No additional wiring outside the five owned paths is required in the observed target. Consume the full patch into its already integrated closure.",
+  "consumer_authority": {
+    "requested": "session33",
+    "successor_observed": "mission42 / S0-C-e8-browser42",
+    "ack_blob": "3033ac3c98b4bf0bac07a44ff78708a6c071cc6e",
+    "predecessor_handoff_blob": "68531a8e0b819699b29bbb83d4a2244218d3791f",
+    "M38_consumer_ack": "NOT_OBSERVED"
+  }
+}

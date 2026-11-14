@@ -1,0 +1,67 @@
+{
+  "schema": "sf2h-mission38-terminal-v1",
+  "mission": 38,
+  "actor": "S2-B",
+  "lease_epoch": "bi-waterfall-browser38",
+  "state": "DELIVERED_BLOCKED_RUNTIME_QUALIFICATION",
+  "lease_state": "TERMINAL_RELEASED",
+  "branch": "astra-wp05",
+  "pr": 24,
+  "product": "f1642ba926738befceb4cba66dc463f9c847cd02",
+  "product_tree": "eeb05ef64f82776c95ef1fab1859607a61ae40f2",
+  "snapshot": "8897e46674f528883c3efb3c59c4fd60bb0f9242",
+  "release_unit": {
+    "manifest": "integration-manifest.json",
+    "patch": "integration/M38-BI09-WATERFALL.patch",
+    "patch_sha256": "b9574dc964d46fa22929ad814264e9922871e7309cffcacf09e5bb080ca0f827",
+    "product_paths": 5,
+    "test_files_including_helper": 5,
+    "selective_intake_authorized": true
+  },
+  "integration_acceptance": false,
+  "global_release": false,
+  "BI10_closed": false,
+  "consumer": "session33 integration chain; mission42 successor authority observed; S0 retains final CI/acceptance",
+  "consumer_ack": "NOT_OBSERVED",
+  "last_observed_stack": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+  "runtime_claim": "Implementation and complete integration patch delivered. Installed producer/renderer proof remains blocked on source dependencies; no bundle approval.",
+  "tests": {
+    "W2_run": 43649817896,
+    "passed_adapter_cases": 17,
+    "load_failures": 3,
+    "unexecuted_case_bodies": 28,
+    "omni": "MISSING_NOT_PASS"
+  },
+  "checks": {
+    "W2_run": 43649821021,
+    "typecheck": "FAIL_334",
+    "guards": "PASS_13_UNCHANGED_WARNINGS",
+    "working_tree": "PASS"
+  },
+  "outstanding": [
+    "Apply only the bounded patch against exact preimages in the authorized integration lane",
+    "Record actual consumer W and request S through the authorized CI dispatcher",
+    "Run the requested 48 scoped cases and both relevant package typechecks plus guards",
+    "Resolve any failure shown on that exact consumer; preserve all unfavorable runs",
+    "Keep global 8+3, historical CHK20 and BI10 acceptance separate"
+  ],
+  "permissions_observed": {
+    "GitHub_remote": "MCP only",
+    "branch_updates": "CAS expected_sha and force:false",
+    "same_PR": true,
+    "history_preserved": true,
+    "whole_branch_intake": false,
+    "external_financial_producer_edit": false,
+    "normative_contract_edit": false,
+    "local_product_execution": false,
+    "workflow_edit": false,
+    "merge": false,
+    "deploy": false,
+    "credentials": false,
+    "restart": false,
+    "messages": false
+  },
+  "authorship": "Root sole remote writer. Helpers performed full normative read, bounded local test/seam authoring and static review under disjoint paths; no independent bundle review claimed.",
+  "in_flight_runs": [],
+  "receipt_commit": "The commit that adds HANDOFF-38.md and this terminal record is documentation-only, parent W2; code/test/config/fixture blobs remain those of W2. Its exact SHA is recorded in PR24 and the delivery response."
+}
