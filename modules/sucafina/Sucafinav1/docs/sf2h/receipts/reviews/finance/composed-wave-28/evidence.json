@@ -1,0 +1,886 @@
+{
+  "schema": "sf2h-mission28-evidence-v1",
+  "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+  "product_tree": "f13eadcdf86861982ded1d05ef02e3bdd94adb2f",
+  "as_of_utc": "2026-11-14 21:24:03 UTC",
+  "new_execution": "NOT_RUN",
+  "new_ci_dispatch": false,
+  "method": "Existing GitHub Actions metadata/jobs/logs and exact source/target blobs were read by MCP. Source observations preserve original W/S and selection; not approval of target.",
+  "source_evidence": {
+    "c09_c17": {
+      "label": "C09/C17 source scoped proof",
+      "W": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "S": "8dedb1fa71a0805505e50eda8c0a038de79276a8",
+      "run": 43627315630,
+      "job": 132546009522,
+      "request_blob": "2a5d2075dd0bc797ddbe251d9b0bc7391856427b",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/wp10/atlas-business/case-event-continuity.test.ts",
+          "Sucafinav1/test/product/wp10/integration/authority-composition.test.ts",
+          "Sucafinav1/test/product/wp10/integration/calculation-source-observation.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "source_snapshot_diff": "One commit, only .ci-run.json (read via compare)",
+      "result": {
+        "pass": 8,
+        "fail": 1,
+        "expects": 136,
+        "global": "failure",
+        "specific": "C09 retained event + C17 forged/replaced/refused/reopen tests passed",
+        "failure": "Planner source consolidation transaction-count assertion"
+      },
+      "limits": [
+        "Source scope only, caller changed by later Memory delta",
+        "Same-process reopen not native AM05",
+        "No exact target composed proof"
+      ],
+      "metadata_and_logs_read_by": "principal",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627315630"
+    },
+    "ui": {
+      "label": "UI implicit submit source",
+      "W": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+      "name": "UI",
+      "snapshot": "a03193f99c3e28c149e1d47c5913b3a673fecc27",
+      "parents": [
+        "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde"
+      ],
+      "tree": "2214579196870d4d85ce19744127d5839f5754d3",
+      "request_blob": "b91f03e5b0842484ef8a51af1db8d445f3315d77",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "./Sucafinav1/test/product/forecast-cancel-visibility/forecast-submit.test.ts",
+          "./Sucafinav1/test/product/forecast-cancel-visibility/states.test.ts",
+          "./Sucafinav1/test/product/forecast-cancel-visibility/recovery.test.ts",
+          "./Sucafinav1/test/product/forecast-cancel-visibility/revocation.test.ts",
+          "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      },
+      "run": 43633001171,
+      "job": 132563524780,
+      "result": {
+        "pass": 14,
+        "fail": 1,
+        "expects": 280,
+        "global": "failure",
+        "positive": [
+          "implicit submit prepares/starts/polls/displays supplied result",
+          "keyboard submit rejected preparation, no start"
+        ],
+        "failure": "revocation shell-event test expected retained form while shell changed"
+      },
+      "limits": [
+        "Real browser/renderer/HTTP harness, supplied model/fixture data",
+        "Not complete installed Finance/native model journey",
+        "Later source recheck4pass0fail reported by handoff, not independently relabeled candidate proof"
+      ],
+      "metadata_and_logs_read_by": "principal",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633001171"
+    },
+    "operations": [
+      {
+        "feature": "C12 recovery source",
+        "sourceSha": "0b483fbf2040e0551f817ea6211d54c7cb2e2d14",
+        "snapshotSha": "f4a1e6e2743188276f42dd68e14b7c06a23ad55c",
+        "run": 43636531401,
+        "job": 132574441676,
+        "status": "success",
+        "pass": 7,
+        "fail": 0,
+        "assertions": 225,
+        "files": 2,
+        "independentlyRead": [
+          "run",
+          "job logs",
+          "source file blobs",
+          "compare source...snapshot"
+        ],
+        "compare": "only .ci-run.json",
+        "targetDifference": "apply.ts source2776a112cd24c1cb3bd4fe2791f7b232fb68286d vs target6ad51e47b22eca073a0a81731575c463d98673e4",
+        "limits": [
+          "minimal GET shell; real renderer/script/POST/C08/SQLite",
+          "SQLite/services reopened; Bun process not restarted",
+          "choice seeded with pending coverage",
+          "not complete Planner-applied/Procurement-refused AM04",
+          "not a green19test run"
+        ],
+        "request_metadata": {
+          "name": "C12",
+          "snapshot": "f4a1e6e2743188276f42dd68e14b7c06a23ad55c",
+          "parents": [
+            "0b483fbf2040e0551f817ea6211d54c7cb2e2d14"
+          ],
+          "tree": "519288ec0078ff66151d3304c47ea069f0bfc04f",
+          "request_blob": "2a3fb5dd04b5e9f1f9721495096b6c46451319ff",
+          "request": {
+            "package": "sucafina",
+            "packageSelector": "packages/sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "./Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+              "./Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "env": {}
+          }
+        },
+        "metadata_and_logs_read_by": "C12 auxiliary; source/snapshot/request parent reread by principal",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43636531401"
+      },
+      {
+        "feature": "Recipient original reply receipt source",
+        "sourceSha": "9dd3c830810d4f3e56f0e3474f5a633978c91831",
+        "snapshotSha": "0499e3e313814baad066b3cccb14e4c37ee9fa1c",
+        "run": 43628901092,
+        "job": 132550878448,
+        "status": "success",
+        "pass": 20,
+        "fail": 0,
+        "assertions": 247,
+        "files": 8,
+        "independentlyRead": [
+          "run",
+          "job logs",
+          "compare source...snapshot"
+        ],
+        "compare": "only .ci-run.json",
+        "targetSourceBlob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+        "verifiedSourceW2": "f34edcfff26d0041145e13ea612d8d67f58dcbff",
+        "targetConsumerBlob": "d9362a92e0bc71c8068790bf308e2a88adcb3243",
+        "limits": [
+          "producer replay proof retains original payload in test memory",
+          "target consumer persists sessionStorage intent and uses durable receipt, but target browser ACK/reload proof not established here"
+        ],
+        "request_metadata": {
+          "name": "recipient",
+          "snapshot": "0499e3e313814baad066b3cccb14e4c37ee9fa1c",
+          "parents": [
+            "9dd3c830810d4f3e56f0e3474f5a633978c91831"
+          ],
+          "tree": "612b4cd7b90de76f1947e90daed7e2100e2ae2c9",
+          "request_blob": "ae3b5687cf047c174138d8d2b69c54f2d1accc6d",
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "./Sucafinav1/test/product/wp08/recipient-receipt.test.ts",
+              "./Sucafinav1/test/product/wp08/recipient-receipt-recovery.test.ts",
+              "./Sucafinav1/test/product/wp08/recipient-receipt-fences.test.ts",
+              "./Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+              "./Sucafinav1/test/product/wp08/thread-actors.test.ts",
+              "./Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+              "./Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+              "./Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "env": {
+              "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+            }
+          }
+        },
+        "metadata_and_logs_read_by": "C12 auxiliary; source/snapshot/request parent reread by principal",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628901092"
+      }
+    ],
+    "finance": {
+      "schema": "mission28-finance-evidence-v1",
+      "fixed_target": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "target_tree": "f13eadcdf86861982ded1d05ef02e3bdd94adb2f",
+      "verdict": "REQUEST_CHANGES",
+      "source_runs": [
+        {
+          "selection": "S2",
+          "source_product_sha": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+          "source_tree": "a736cd370da6081c6010ffb26d66130fea94736f",
+          "snapshot_sha": "8bf015c999750c26a721749cfca9372891d3cec3",
+          "snapshot_tree": "3a39ba90cc639ac950a6e874f686bc167e72c8eb",
+          "run_id": 43635340065,
+          "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43635340065",
+          "event": "push",
+          "branch": "ci-run-linux-finance-closure-5a029e77-0cf38dfb-s2",
+          "attempt": 1,
+          "conclusion": "success",
+          "status": "completed",
+          "job_id": 132570795422,
+          "checkout_sha_verified_from_job_log": "8bf015c999750c26a721749cfca9372891d3cec3",
+          "job_log_sha256_local_cache": "a9a61ea1990cc70b78b3c9b204dcd3f3a7e8db4594f2b1a9afdc83c429306de7",
+          "jobs": [
+            {
+              "id": 132570795422,
+              "name": "test (ubuntu-24.04)",
+              "conclusion": "success"
+            },
+            {
+              "id": 132572958059,
+              "name": "cleanup",
+              "conclusion": "success"
+            }
+          ],
+          "request_blob": "31d1cb62b1295a7e5aa869b7dd8e3d4b4fbec0a9",
+          "request_sha256_exact_bytes": "0cf38dfb81bbe8de79924b91743641c536d4ac30bb7a67bf3ffd102ceaee7b10",
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "packageSelector": "packages/sucafina",
+            "runner": "bun",
+            "args": [
+              "Sucafinav1/test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts",
+              "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+              "Sucafinav1/test/product/review-fixes/finance-resume-performance/persisted-recertification.test.ts",
+              "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+              "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts",
+              "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+              "Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+              "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+              "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+              "Sucafinav1/test/product/wp11/result-store.test.ts",
+              "Sucafinav1/test/product/finance-journey-closure/units-batch.test.ts",
+              "Sucafinav1/test/product/finance-journey-closure/original-authority.test.ts",
+              "Sucafinav1/test/product/finance-journey-closure/result-receipt.test.ts",
+              "--timeout",
+              "120000",
+              "-t",
+              "^(Finance sensitivity|units resolution|persisted Finance candidates|historical scenario batch|historical batch|sensitivity retains the admitted request|sensitivity detects a provider|each sensitivity verification reads a fresh|a failed sensitivity scope cannot retain|real Planner sensitivity keeps EUR|one sibling batch|units emit the identical binding|comparison starts independent batches|different cases and historical|ledger, alternative|authority revoked after result rereads|a real Planner source change|retained store and case|batch refusals|decision result persistence|Finance units|FIN-IND-005 result receipt|coverage refuses its original predicate)"
+            ],
+            "env": {}
+          },
+          "source_to_snapshot_files": [
+            {
+              "path": ".ci-run.json",
+              "status": "added",
+              "sha": "31d1cb62b1295a7e5aa869b7dd8e3d4b4fbec0a9"
+            }
+          ],
+          "pass": 43,
+          "fail": 0,
+          "expect_calls": 350,
+          "bundle_execution": false,
+          "omni": {
+            "nonce": "259d9a265d29897b68040510b147a828",
+            "result": "not applicable"
+          }
+        },
+        {
+          "selection": "S3",
+          "source_product_sha": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+          "source_tree": "a736cd370da6081c6010ffb26d66130fea94736f",
+          "snapshot_sha": "5b82d9de8e329bdf2656ab8785c8d7ed2d7841a8",
+          "snapshot_tree": "bae23ebfe8e0304117ff0320a8c47ead30f549c5",
+          "run_id": 43636137688,
+          "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43636137688",
+          "event": "push",
+          "branch": "ci-run-linux-finance-closure-5a029e77-40edbce1-s3",
+          "attempt": 1,
+          "conclusion": "failure",
+          "status": "completed",
+          "job_id": 132573236668,
+          "checkout_sha_verified_from_job_log": "5b82d9de8e329bdf2656ab8785c8d7ed2d7841a8",
+          "job_log_sha256_local_cache": "b8973d8852ac6e8bc496deabd34cca497be9b57c3c815df63163ca7b5f69f28c",
+          "jobs": [
+            {
+              "id": 132573236668,
+              "name": "test (ubuntu-24.04)",
+              "conclusion": "failure"
+            },
+            {
+              "id": 132574504341,
+              "name": "cleanup",
+              "conclusion": "success"
+            }
+          ],
+          "request_blob": "9c4c5e2cd8e06becbd335ea9fb90af2e712f6802",
+          "request_sha256_exact_bytes": "40edbce1b941db354f5c11012dde995239dba070a4e9481b88e2246534a9acf9",
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "packageSelector": "packages/sucafina",
+            "runner": "bun",
+            "args": [
+              "Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+              "--timeout",
+              "120000",
+              "-t",
+              "^FIN-IND-005 Finance performance"
+            ],
+            "env": {}
+          },
+          "source_to_snapshot_files": [
+            {
+              "path": ".ci-run.json",
+              "status": "added",
+              "sha": "9c4c5e2cd8e06becbd335ea9fb90af2e712f6802"
+            }
+          ],
+          "pass": 0,
+          "fail": 1,
+          "expect_calls": 18,
+          "bundle_execution": false,
+          "omni": {
+            "nonce": "6e1e671411c9ac1c04ef3df202838bd6",
+            "result": "not applicable"
+          }
+        }
+      ],
+      "source_blob_identity_check": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+          "target_blob": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+          "cache_git_blob": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+          "cache_matches_target": true,
+          "cache_normalization": "Removed exactly one tool-cache-added final LF; normalized bytes independently match Git blob."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+          "target_blob": "fe4ab56201fd1898905ac7bc810f0495a64f8602",
+          "cache_git_blob": "fe4ab56201fd1898905ac7bc810f0495a64f8602",
+          "cache_matches_target": true,
+          "cache_normalization": "Removed exactly one tool-cache-added final LF; normalized bytes independently match Git blob."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+          "target_blob": "46a04597df74205add4531465f35d8a55ca1f8dd",
+          "cache_git_blob": "46a04597df74205add4531465f35d8a55ca1f8dd",
+          "cache_matches_target": true,
+          "cache_normalization": "Removed exactly one tool-cache-added final LF; normalized bytes independently match Git blob."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "target_blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332",
+          "cache_git_blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332",
+          "cache_matches_target": true,
+          "cache_normalization": "Removed exactly one tool-cache-added final LF; normalized bytes independently match Git blob."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+          "target_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+          "cache_git_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+          "cache_matches_target": true,
+          "cache_normalization": "Removed exactly one tool-cache-added final LF; normalized bytes independently match Git blob."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+          "target_blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+          "cache_git_blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+          "cache_matches_target": true,
+          "cache_normalization": "Removed exactly one tool-cache-added final LF; normalized bytes independently match Git blob."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/choice.ts",
+          "target_blob": "ac65bdd3445113f00b643b72dfaa2a8840826a99",
+          "cache_git_blob": "ac65bdd3445113f00b643b72dfaa2a8840826a99",
+          "cache_matches_target": true,
+          "cache_normalization": "Removed exactly one tool-cache-added final LF; normalized bytes independently match Git blob."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+          "target_blob": "3f31dd52babca16249fb04fec29abbf74e7a5da4",
+          "cache_git_blob": "3f31dd52babca16249fb04fec29abbf74e7a5da4",
+          "cache_matches_target": true,
+          "cache_normalization": "Removed exactly one tool-cache-added final LF; normalized bytes independently match Git blob."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+          "target_blob": "64deee2c7570d718686eb2181ff197f4347e6764",
+          "cache_git_blob": "64deee2c7570d718686eb2181ff197f4347e6764",
+          "cache_matches_target": true,
+          "cache_normalization": "Removed exactly one tool-cache-added final LF; normalized bytes independently match Git blob."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "target_blob": "c27e908140ba34ffea39078a78626f47943a8444",
+          "cache_git_blob": "c27e908140ba34ffea39078a78626f47943a8444",
+          "cache_matches_target": true,
+          "cache_normalization": "Removed exactly one tool-cache-added final LF; normalized bytes independently match Git blob."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+          "target_blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+          "cache_git_blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+          "cache_matches_target": true,
+          "cache_normalization": "Removed exactly one tool-cache-added final LF; normalized bytes independently match Git blob."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+          "target_blob": "a1765988434920f8dc9c71eaea2427b6ecac59cb",
+          "cache_git_blob": "a1765988434920f8dc9c71eaea2427b6ecac59cb",
+          "cache_matches_target": true,
+          "cache_normalization": "Removed exactly one tool-cache-added final LF; normalized bytes independently match Git blob."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/original-authority.test.ts",
+          "target_blob": "1a6989101c47f36ff21d8495780b179ceb595357",
+          "cache_git_blob": "1a6989101c47f36ff21d8495780b179ceb595357",
+          "cache_matches_target": true,
+          "cache_normalization": "Removed exactly one tool-cache-added final LF; normalized bytes independently match Git blob."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+          "target_blob": "6395a5dc529acadfb0d9c1e2d8dca0664f40a39e",
+          "cache_git_blob": "6395a5dc529acadfb0d9c1e2d8dca0664f40a39e",
+          "cache_matches_target": true,
+          "cache_normalization": "Removed exactly one tool-cache-added final LF; normalized bytes independently match Git blob."
+        }
+      ],
+      "FIN-IND-005": {
+        "severity": "P1",
+        "class": "NEEDS_EVIDENCE",
+        "disposition": "OPEN_IMPLEMENTED_NOT_CLOSED",
+        "owner": [
+          "Finance/WP11",
+          "WP13",
+          "WP10/S0 integration"
+        ],
+        "latest_observed_source_run": 43636137688,
+        "reached": [
+          "baseline cost240000",
+          "omitted known210000/totalnull/pending training",
+          "conditioned threshold approximately55000",
+          "human choice version4",
+          "same incarnation confirmed training40000/cost250000/savings-10000/version6",
+          "coverage.issue ok",
+          "both qualifiers ok",
+          "both confirmed sample writes ok"
+        ],
+        "not_reached": [
+          "confirmed final threshold15000",
+          "witness 15001",
+          "historical choice durable reread after confirmation",
+          "authorized choice replay",
+          "financial journey real SQLite/UI reopen and collaborator/outsider/revocation"
+        ],
+        "terminal": "confirmed.exact -> units.issue -> stored-scenarios -> Planner.compareForecast -> fixture deadline180000ms; observed180006ms",
+        "new_execution": "NOT_RUN"
+      },
+      "FIN28-CALLBACK-PROOF": {
+        "severity": "P1",
+        "class": "REQUIRED_PROOF_GAP",
+        "owner": [
+          "WP13/Finance",
+          "WP10 installed producer"
+        ],
+        "runtime_exploit_claim": false,
+        "counterexample": "A true initially, A false after awaited structural proof, B true with equal reduced data digest; original A not invoked late. Actual installed private digest contains full source fences/envelopes/projections/evidence currentRef/differences omitted from reduced digest. Other finalizers remain and may refuse.",
+        "new_execution": "NOT_RUN",
+        "old_PR56_shortcut_applied": false,
+        "early_original_refusal_counterproof": "S2 resolutions1/originalChecks1/replacementChecks0/previews0, stale"
+      },
+      "later_delta": {
+        "state": "LATER_DELTA_NOT_REVIEWED",
+        "pr": 42,
+        "head": "1a656f1f7251de8c104e5b03a43b457e80437181",
+        "tree": "1ebd1ee9d0e95253526d0ee73cf2353a71ccbe58",
+        "changes_consumed_in_fixed_target": false
+      },
+      "no_product_tests_or_ci_dispatched": true
+    },
+    "memory": {
+      "origin": "source receipt fields independently reconciled with Actions metadata/job logs for MI06 MI07 MI08 CHECK36",
+      "source_index_blob": "d05413eb1ae863cc7820c65328649ba997e2a3be",
+      "target_product_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "executed_on_target_by_this_reviewer": false,
+      "source_tests": [
+        {
+          "attempt": "MI06",
+          "status": "PASS",
+          "scope": "Head-specific hosted selection only",
+          "entity_id": "WP10.S0-B.MemoryA27",
+          "candidate_sha": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+          "product_candidate_sha": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+          "product_tree_hash": "0c7b73bd55ca21498477e9b32a763a87dff2bf50",
+          "ci_snapshot_sha": "5860244f722a2c8e5c47c6a24dfb0f44768f5478",
+          "ci_snapshot_tree": "03dc6af04898f8e90559075b1c57cdd85bba63db",
+          "ci_request_hash": "b753a2c99edf373a1d754e7db32c2f9a6dd5a5021544beecf7a785bd7788eb54",
+          "ci_request_blob": "8d30e700292a6d9b20138383a16bcc9ffdcc5cd6",
+          "request_path": "attempt-06/request.json",
+          "expected_selection": [
+            "./Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+            "-t",
+            "in-place source change",
+            "--timeout",
+            "120000"
+          ],
+          "selected_files": [
+            "./Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts"
+          ],
+          "test_name_pattern": "in-place source change",
+          "observed_counts": {
+            "pass": 1,
+            "fail": 0,
+            "filtered": 4,
+            "expects": 5,
+            "tests": 1,
+            "files": 1
+          },
+          "measured_duration_seconds": 10.72,
+          "duration_scope": "Bun selected execution; not whole job or human effort",
+          "run": 43637049651,
+          "job": 132576026162,
+          "cleanup_job": 132576501547,
+          "cleanup": "SUCCESS",
+          "omni": {
+            "status": "PASS",
+            "spawns": 2,
+            "delegated": 0,
+            "nonce": "f790c1797445044aecc6b3ba14b9a601"
+          },
+          "artifacts": [],
+          "expected": "Same source-await assertion must return denied after the early stable fence; no test or budget change.",
+          "observed": "Memory integrity rejects an in-place source change after the real Atlas capture reader awaited",
+          "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43637049651",
+          "result_path": "attempt-06/RESULT.json",
+          "log": {
+            "path": "attempt-06/job.txt",
+            "bytes": 71953,
+            "sha256": "ba847e14facbf701cbc150c3827bd3a4d43f1c1692966b5228439755e588c203"
+          }
+        },
+        {
+          "attempt": "MI07",
+          "status": "FAIL",
+          "scope": "Head-specific hosted selection only",
+          "entity_id": "WP10.S0-B.MemoryA27",
+          "candidate_sha": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+          "product_candidate_sha": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+          "product_tree_hash": "0c7b73bd55ca21498477e9b32a763a87dff2bf50",
+          "ci_snapshot_sha": "e63511737be687a2e42f9a15706a229db42a31c1",
+          "ci_snapshot_tree": "d09d2cbe63e4168822399a59d3b85a28b00c0dce",
+          "ci_request_hash": "9f6d6f3e5a949573c5b05710150172c9541668c88ac9233b2485a807f3a743ef",
+          "ci_request_blob": "6d6531c8be34410efe3366662c437556ff65b1d0",
+          "request_path": "attempt-07/request.json",
+          "expected_selection": [
+            "./Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "selected_files": [
+            "./Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts"
+          ],
+          "test_name_pattern": null,
+          "observed_counts": {
+            "pass": 0,
+            "fail": 1,
+            "filtered": 0,
+            "expects": 687,
+            "tests": 1,
+            "files": 1
+          },
+          "measured_duration_seconds": 225.71,
+          "duration_scope": "Bun selected execution; not whole job or human effort",
+          "run": 43637227753,
+          "job": 132576581546,
+          "cleanup_job": 132578002038,
+          "cleanup": "SUCCESS",
+          "omni": {
+            "status": "PASS",
+            "spawns": 2,
+            "delegated": 0,
+            "nonce": "f0806026496b389c2a52c40365a9347b"
+          },
+          "artifacts": [],
+          "expected": "Unchanged complete historical scenario must reach corrupt-capture and final revocation assertions within225000/240000.",
+          "observed": {
+            "error": "historical-memory exceeded its 225000 ms cooperative deadline",
+            "lastPhase": "memory.fence-final-request-headers",
+            "lastElapsedMs": 225014,
+            "lastPhaseMs": 18805,
+            "aborted": true,
+            "stalePreserve": "NOT_REACHED",
+            "corruptCaptureAssertion580": "NOT_REACHED",
+            "finalRevocationAssertions583_585": "NOT_REACHED",
+            "locationRelativeToDelta": "Before the stale access path modified by MemoryA27. No inference that the new capture reader caused this run's earlier deadline.",
+            "next": "Do not rerun unchanged, change budgets/assertions or enter X29. Retain full historical FAIL and add separate own-namespace proof of the three revocation entrypoints."
+          },
+          "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43637227753",
+          "result_path": "attempt-07/RESULT.json",
+          "log": {
+            "path": "attempt-07/job.txt",
+            "bytes": 79104,
+            "sha256": "eb847a7a181edd7c331080a1e75550050d905e060489eb942efbb44a81ca39ec"
+          }
+        },
+        {
+          "attempt": "MI08",
+          "status": "PASS",
+          "scope": "Three focused real revocation boundaries, with prior positives",
+          "entity_id": "WP10.S0-B.MemoryA27",
+          "candidate_sha": "f29f9f7acdc860590581d76e1d276139da7af1e3",
+          "product_candidate_sha": "f29f9f7acdc860590581d76e1d276139da7af1e3",
+          "product_tree_hash": "6f69fc8bfcfcd8ae313ef1a556a35d11ad09e556",
+          "ci_snapshot_sha": "088c84fe639638b3623f2278a91b08e24e614964",
+          "ci_snapshot_tree": "0d12b520fd0adf578d8202bbb8f7223892971065",
+          "ci_request_hash": "ae25bc1b17bb395a8319e3cd169a2f5e5ef1cf75b46ea2a313a8ff6bf9233ccb",
+          "ci_request_blob": "6e5f4480eb06a383b3426d99d3a8848a45f3da64",
+          "request_path": "attempt-08/request.json",
+          "expected_selection": [
+            "./Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "selected_files": [
+            "./Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts"
+          ],
+          "test_name_pattern": null,
+          "observed_counts": {
+            "pass": 3,
+            "fail": 0,
+            "filtered": 0,
+            "expects": 51,
+            "tests": 3,
+            "files": 1
+          },
+          "measured_duration_seconds": 95.22,
+          "duration_scope": "Bun selected execution, not whole job",
+          "run": 43638160793,
+          "job": 132579470930,
+          "cleanup_job": 132580450675,
+          "cleanup": "SUCCESS",
+          "omni": {
+            "status": "PASS",
+            "spawns": 6,
+            "delegated": 0,
+            "nonce": "4d9b9608ca5e9de4daa19f58a92731ab"
+          },
+          "artifacts": [],
+          "expected": "Each same real entrypoint accepts historical evidence first and becomes unavailable solely after fixture principal authority revocation.",
+          "observed": "All three positives and corresponding unavailable negatives reached; Request/headers/selection/Atlas and same output remain unchanged, Request not aborted; canonical recalls completed2/2/4.",
+          "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43638160793",
+          "result_path": "attempt-08/RESULT.json",
+          "log": {
+            "path": "attempt-08/job.txt",
+            "bytes": 75979,
+            "sha256": "1ae31c80dfda1baae11708cafbd2c2dd58a41857b09b6d1558dda3a6a95ee0a9"
+          }
+        }
+      ],
+      "source_checks": [
+        {
+          "label": "CHECK36",
+          "status": "FAIL",
+          "W": "f29f9f7acdc860590581d76e1d276139da7af1e3",
+          "S": "42bb400783f50b06c5925a1411c94a33734bc95c",
+          "run": 43638533816,
+          "ci_request_hash": "1925b62e904109f2044382644dda7e45ac78a28f07587e9bb108137cd9638dd7",
+          "result_path": "check-36/RESULT.json",
+          "finding": "Global FAIL only13 external TS errors, identical to CHECK30/CHECK34; CLI/WP10/Atlas/guards PASS on W36. Historical MI07 remains FAIL."
+        }
+      ],
+      "runtime_blobs_confirmed_at_W36_and_target": [
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+          "blob": "8e1b7eaab139c3303462bdb5af9b4c679e61b276"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "blob": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993"
+        }
+      ]
+    }
+  },
+  "fixed_bundle_receipts": {
+    "assembly": "dfbbc986ec49f19b1a203b5b051980a9b3ed34c6",
+    "verification": "061a2fd5b932e2b2205a5db0391a025aa35695cb",
+    "memory_authority": "6483e6284be8b01babd0acf33036f86ce27c3b55",
+    "findings": "Memory intake supersedes inherited pending-Memory note; verification01 product executionNOT_RUN/source_green_transferredfalse. Recovery/Finance consumer changes are selectively integrated, not wholesale source tree equality."
+  },
+  "direct_target_run_query": {
+    "head_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+    "total_count": 0,
+    "limitation": "Does not exclude child CI snapshots; no approval/no-evidence conclusion based on this query alone."
+  },
+  "mandatory_candidate_evidence": {
+    "ci": [
+      {
+        "id": "CI-SF",
+        "required": true,
+        "scope": "Suite completa do módulo Sucafina, inclusive casos novos",
+        "request": {
+          "package": "sucafina",
+          "runner": "bun",
+          "args": []
+        },
+        "status_on_fixed_candidate": "NOT_ESTABLISHED_BY_INSPECTED_EVIDENCE"
+      },
+      {
+        "id": "CI-CLI",
+        "required": true,
+        "scope": "Suite completa do pacote CLI cujo composition root foi alterado",
+        "request": {
+          "package": "cli",
+          "runner": "bun",
+          "args": []
+        },
+        "status_on_fixed_candidate": "NOT_ESTABLISHED_BY_INSPECTED_EVIDENCE"
+      },
+      {
+        "id": "CI-APP-SRC",
+        "required": true,
+        "scope": "Suíte Bun do app na árvore src, com condição solid; args vazios respeitam bunfig test.root=./src.",
+        "request": {
+          "package": "app",
+          "runner": "bun",
+          "args": []
+        },
+        "status_on_fixed_candidate": "NOT_ESTABLISHED_BY_INSPECTED_EVIDENCE"
+      },
+      {
+        "id": "CI-APP-BROWSER",
+        "required": true,
+        "scope": "Suíte Bun da árvore test-browser do app; workflow usa condição browser, happydom e controleomni.",
+        "request": {
+          "package": "app",
+          "runner": "bun",
+          "args": [
+            "test-browser"
+          ]
+        },
+        "status_on_fixed_candidate": "NOT_ESTABLISHED_BY_INSPECTED_EVIDENCE"
+      },
+      {
+        "id": "CI-ATLAS-BUSINESS",
+        "required": true,
+        "scope": "Suíte completa da boundary alterada, incluindo import/export das duas portas, preservação dos exports bound e negativos de AST no teste business-memory-ports; geração/AST/check:spawn-imports/typecheck são gates estáticos explícitos adicionais.",
+        "request": {
+          "package": "atlas-boundary",
+          "runner": "bun",
+          "args": [
+            "--timeout",
+            "30000"
+          ]
+        },
+        "status_on_fixed_candidate": "NOT_ESTABLISHED_BY_INSPECTED_EVIDENCE"
+      },
+      {
+        "id": "CI-UI-OPERATIONS",
+        "required": true,
+        "scope": "UI real das 28 capacidades, edição, import e colaboração",
+        "request": {
+          "package": "app",
+          "runner": "playwright",
+          "config": "e2e/playwright.production.config.ts",
+          "args": [
+            "e2e/sucafina/operations.spec.ts"
+          ]
+        },
+        "status_on_fixed_candidate": "NOT_ESTABLISHED_BY_INSPECTED_EVIDENCE"
+      },
+      {
+        "id": "CI-UI-DECISIONS",
+        "required": true,
+        "scope": "Caso, portfólio, memória e estados as síncronos pela UI real",
+        "request": {
+          "package": "app",
+          "runner": "playwright",
+          "config": "e2e/playwright.production.config.ts",
+          "args": [
+            "e2e/sucafina/decisions.spec.ts"
+          ]
+        },
+        "status_on_fixed_candidate": "NOT_ESTABLISHED_BY_INSPECTED_EVIDENCE"
+      },
+      {
+        "id": "CI-UI-REPORTS",
+        "required": true,
+        "scope": "Reunião, documentos e exportações com conteúdo completo",
+        "request": {
+          "package": "app",
+          "runner": "playwright",
+          "config": "e2e/playwright.production.config.ts",
+          "args": [
+            "e2e/sucafina/reports.spec.ts"
+          ]
+        },
+        "status_on_fixed_candidate": "NOT_ESTABLISHED_BY_INSPECTED_EVIDENCE"
+      }
+    ],
+    "additional_suites": "All epic/AGENTS/affected package gates remain required; eight is minimum, not global Orchestra suite.",
+    "typechecks": [
+      "bun typecheck em modules/sucafina",
+      "bun typecheck em apps/cli",
+      "bun typecheck em packages/app-shell",
+      "bun typecheck em modules/atlas/boundary",
+      "bun run check:guards --base origin/dev na raiz"
+    ],
+    "static_gates": [
+      {
+        "id": "BUILD-ATLAS",
+        "command": "bun run generate",
+        "owner_task": "WP10.T07",
+        "status_on_fixed_candidate": "NOT_ESTABLISHED"
+      },
+      {
+        "id": "CHECK-ATLAS-GENERATED",
+        "command": "bun run check:generated",
+        "owner_task": "WP10.T07",
+        "status_on_fixed_candidate": "NOT_ESTABLISHED"
+      },
+      {
+        "id": "TYPECHECK-ATLAS",
+        "command": "bun typecheck",
+        "owner_task": "WP10.T07",
+        "status_on_fixed_candidate": "NOT_ESTABLISHED"
+      },
+      {
+        "id": "GUARDS",
+        "command": "bun run check:guards --base origin/dev",
+        "owner_task": "WP10.T04",
+        "status_on_fixed_candidate": "NOT_ESTABLISHED"
+      },
+      {
+        "id": "CHECK-SPAWNS",
+        "command": "bun run check:spawn-imports",
+        "owner_task": "WP10.T07",
+        "status_on_fixed_candidate": "NOT_ESTABLISHED"
+      }
+    ],
+    "native": [
+      {
+        "id": "AM01",
+        "status": "NOT_ESTABLISHED_ON_FIXED_CANDIDATE"
+      },
+      {
+        "id": "AM02",
+        "status": "NOT_ESTABLISHED_ON_FIXED_CANDIDATE"
+      },
+      {
+        "id": "AM03",
+        "status": "NOT_ESTABLISHED_ON_FIXED_CANDIDATE"
+      },
+      {
+        "id": "AM04",
+        "status": "NOT_ESTABLISHED_ON_FIXED_CANDIDATE"
+      },
+      {
+        "id": "AM05",
+        "status": "NOT_ESTABLISHED_ON_FIXED_CANDIDATE"
+      },
+      {
+        "id": "AM06",
+        "status": "NOT_ESTABLISHED_ON_FIXED_CANDIDATE"
+      }
+    ],
+    "three_reviews": "This document supplies only S2-R2; auxiliary readers do not satisfy R1/R3 or native reviewer."
+  },
+  "artifact_limits": "Job log/receipt metadata examined. Binary archives not downloaded/executed; no uninspected artifact claimed valid. All missing mandatory proof remains unresolved."
+}

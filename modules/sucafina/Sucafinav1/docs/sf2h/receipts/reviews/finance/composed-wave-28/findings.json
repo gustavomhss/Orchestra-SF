@@ -1,0 +1,521 @@
+{
+  "schema": "sf2h-mission28-findings-v1",
+  "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+  "product_tree": "f13eadcdf86861982ded1d05ef02e3bdd94adb2f",
+  "verdict": "REQUEST_CHANGES",
+  "execution_by_reviewer": "NOT_RUN",
+  "findings": [
+    {
+      "reviewer": "S2-R2 / mission28",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "product_execution_by_reviewer": "NOT_RUN",
+      "product_authorship": "none",
+      "approval": false,
+      "id": "FIN-IND-001",
+      "severity": "P1",
+      "kind": "HISTORICAL_BUG_RECONCILED",
+      "status": "FIXED_IN_SOURCE_AND_INTEGRATED",
+      "title": "Callback C09 verifyScenarioOperations fornecido no consumidor atual",
+      "owner": "WP10 composition; WP11 C09; session23 intake",
+      "criteria": [
+        "C09",
+        "C16",
+        "WP10.T03.CHK.03"
+      ],
+      "source_fixed": {
+        "sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6"
+      },
+      "consumer_integrated": true,
+      "locations": [
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "blob": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+          "lines": "162-169,428-433",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/business-services.ts"
+        },
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6",
+          "lines": "C09 producer/required callback",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "observed": "O caller fornece callback real para createSfScenarioOperationAccess. A incompatibilidade antiga não permanece nesse par.",
+      "executed_proof": {
+        "source_run": 43627315630,
+        "source_tests": "C09/C17 specific tests passed; full run 8 pass /1 fail",
+        "candidate": "NOT_ESTABLISHED"
+      },
+      "action": "Não repetir o BUG antigo. Qualificar os consumidores compostos no candidato aceito; manter gates gerais abertos."
+    },
+    {
+      "reviewer": "S2-R2 / mission28",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "product_execution_by_reviewer": "NOT_RUN",
+      "product_authorship": "none",
+      "approval": false,
+      "id": "FIN-IND-002",
+      "severity": "P1",
+      "kind": "HISTORICAL_BUG_RECONCILED",
+      "status": "FIXED_IN_SOURCE_AND_INTEGRATED",
+      "title": "Assinaturas de case-event C09→C17 reconciliadas",
+      "owner": "WP10.T07/BCS; source composition PR32; session23 intake",
+      "criteria": [
+        "C09",
+        "C17",
+        "WP10.T03.CHK.03"
+      ],
+      "source_fixed": {
+        "sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6"
+      },
+      "consumer_integrated": true,
+      "locations": [
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+          "blob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+          "lines": "177-246",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts"
+        },
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "blob": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993",
+          "lines": "281-285",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+        }
+      ],
+      "observed": "Produtor recebe host/state/authorizeCase/authorizeEvidence; caller atual fornece esse contrato. Valida evento, ledger, incarnation e dependências, com releitura. O blob BCS também inclui MemoryA27.",
+      "executed_proof": {
+        "source_run": 43627315630,
+        "candidate": "NOT_ESTABLISHED"
+      },
+      "action": "Encerrar apenas a causa antiga de assinatura. R1-W23-C17-BETWEEN-OBSERVATIONS continua separado; AM05 não fechado."
+    },
+    {
+      "reviewer": "S2-R2 / mission28",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "product_execution_by_reviewer": "NOT_RUN",
+      "product_authorship": "none",
+      "approval": false,
+      "id": "FIN-IND-003",
+      "severity": "P1",
+      "kind": "HISTORICAL_BUG_RECONCILED",
+      "status": "FIXED_IN_SOURCE_AND_INTEGRATED",
+      "title": "Campanha Portfolio pertence ao grant privado C08",
+      "owner": "WP10.T01/C08; WP13 consumer; session23 intake",
+      "criteria": [
+        "C08",
+        "C14"
+      ],
+      "source_fixed": {
+        "sha": "9048e0e65351a5bd80768458a79fed94a4993db7"
+      },
+      "consumer_integrated": true,
+      "locations": [
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+          "lines": "102-104",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+        }
+      ],
+      "observed": "sf:portfolio:campaign: agora integra proposalMetadata e exige a identidade do callback no WeakSet proposalCoverageWrites. O negativo sobre o blob antigo não prova falha deste blob.",
+      "executed_proof": {
+        "candidate": "NOT_ESTABLISHED"
+      },
+      "action": "Não repetir bypass antigo. Owner deve apresentar positivos/negativos do consumidor composto, CAS/replay e namespace no novo candidato."
+    },
+    {
+      "reviewer": "S2-R2 / mission28",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "product_execution_by_reviewer": "NOT_RUN",
+      "product_authorship": "none",
+      "approval": false,
+      "id": "FIN-IND-004",
+      "severity": "P2",
+      "kind": "HISTORICAL_BUG_RECONCILED",
+      "status": "FIXED_IN_SOURCE_AND_INTEGRATED",
+      "title": "Formulário Forecast reconhece submit implícito",
+      "owner": "WP01/UI; WP10 composition; session23 intake",
+      "criteria": [
+        "C11",
+        "WP01.T03.CHK.01",
+        "WP01.T05.CHK.03"
+      ],
+      "source_fixed": {
+        "sha": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde"
+      },
+      "consumer_integrated": true,
+      "locations": [
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+          "blob": "dad8eeb1879e6c93bc9a448c6567fc0e2ee0f747",
+          "lines": "43,189",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts"
+        },
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+          "blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+          "lines": "hidden controls",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/src/screen-shell.ts"
+        }
+      ],
+      "observed": "Seletor inclui button:not([type]) e button[type=submit]. Há prova browser fonte positiva e Enter/preparação recusada; controles hidden corrigidos.",
+      "executed_proof": {
+        "source_run": 43633001171,
+        "positive": "implicit submit passed; keyboard rejection passed",
+        "full_run": "14 pass /1 fail",
+        "candidate": "NOT_ESTABLISHED"
+      },
+      "action": "Não repetir null.disabled no código atual. Exigir jornada instalada Finance/modelo e recheck de deltas UI."
+    },
+    {
+      "reviewer": "S2-R2 / mission28",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "product_execution_by_reviewer": "NOT_RUN",
+      "product_authorship": "none",
+      "approval": false,
+      "id": "FIN-IND-005",
+      "severity": "P1",
+      "kind": "NEEDS_EVIDENCE",
+      "status": "OPEN_IMPLEMENTED_NOT_CLOSED",
+      "title": "Jornada Finance integral não alcança a cauda de limiar, histórico e reopen",
+      "owner": "Finance/WP11/WP13, WP03 canonical engine; session23 integration; S0 final evidence",
+      "criteria": [
+        "C09",
+        "C10",
+        "C14",
+        "WP13.T03.CHK.20",
+        "WP01.T05.CHK.20",
+        "WP05.T05.CHK.20",
+        "WP14.T01.CHK.20"
+      ],
+      "locations": [
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+          "blob": "6395a5dc529acadfb0d9c1e2d8dca0664f40a39e",
+          "lines": "18-98",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts"
+        },
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+          "blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+          "lines": "93-206",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
+        },
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332",
+          "lines": "source18 implementation",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts"
+        }
+      ],
+      "source_fixed": {
+        "sha": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "status": "performance/integrity improvements consumed; obligation not closed"
+      },
+      "consumer_integrated": true,
+      "executed_proof": {
+        "source_run": 43635340065,
+        "source_result": "43 pass /0 fail",
+        "journey_run": 43636137688,
+        "journey_snapshot": "5b82d9de8e329bdf2656ab8785c8d7ed2d7841a8",
+        "journey_job": 132573236668,
+        "journey_result": "0 pass /1 fail /18 expects; fixture deadline180000ms",
+        "candidate": "NOT_ESTABLISHED"
+      },
+      "observed": "S3 at W2 supera S6 histórico: dois qualifiers e duas escritas confirmadas; aborta em confirmed.exact, não no primeiro qualifier. Prefixo 210000/pending/totalnull → training40000/250000/difference-10000 observado. 240000 é custo baseline.",
+      "unproved": [
+        "confirmed threshold15000 and witnesses15000/15001",
+        "minimum benefit20000 on same base",
+        "persistent historical reread of choice",
+        "idempotent replay without duplicate ledger",
+        "same journey SQLite/UI reopen and collaborator/outsider/revocation tail"
+      ],
+      "counterevidence": [
+        "Canonical source and stored choice implement missing!=zero and immutable original choice.",
+        "S2 has isolated receipt reopen and authority negatives; they do not replace S3 tail."
+      ],
+      "action": "Owner corrige ou qualifica delta material sem remover assertions/fences/budgets para simular sucesso; publica jornada integral e consumidores reais, depois intake e recheck independente. Finance22/laterPR42 não qualificado.",
+      "reproduction": "Read source job 132573236668 and existing journey lines48-94; no reproduction executed by reviewer."
+    },
+    {
+      "reviewer": "S2-R2 / mission28",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "product_execution_by_reviewer": "NOT_RUN",
+      "product_authorship": "none",
+      "approval": false,
+      "id": "R28-COVERAGE-CALLBACK-PROOF",
+      "related_ids": [
+        "FIN-IND-005"
+      ],
+      "severity": "P1",
+      "kind": "REQUIRED_PROOF_GAP",
+      "status": "OPEN_NEEDS_EVIDENCE",
+      "title": "Autoridade A original não é recertificada depois de prove; nova B com dados iguais não prova equivalência temporal",
+      "owner": "WP13/Finance coverage; WP10 installed authority producer; session23 intake",
+      "criteria": [
+        "C10",
+        "C14",
+        "C16",
+        "C17",
+        "WP13.T03.CHK.20"
+      ],
+      "locations": [
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+          "blob": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+          "lines": "85,92-104,107-165",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts"
+        },
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/portfolio-coverage-authority.ts",
+          "blob": "03a4a0d82676423c76b8055e2e7efeb9bfe9a973",
+          "lines": "119-133",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/portfolio-coverage-authority.ts"
+        },
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/source-fence-read.ts",
+          "blob": "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18",
+          "lines": "53-54",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/source-fence-read.ts"
+        },
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+          "blob": "881ce4672d9d0e641d1cc849663c0980c118774d",
+          "lines": "71-105",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/portfolio-services.ts"
+        }
+      ],
+      "source_fixed": {
+        "status": "PR56 shortcut NOT_APPLIED; original early guard retained"
+      },
+      "consumer_integrated": true,
+      "observed": "issue invokes A.isStillValid early, awaits prove, then current() resolves and invokes B; public digest omits stronger captured source fences/envelopes/projections. Installed producer is reachable.",
+      "reproduction": "Cold trace: A(D,true) → await prove changes condition captured by A → A would now reject → B(D,true) passes. A Procurement fence may change without lower Planner business digest changing. Not executed; materiality/bypass of downstream finalizers not established.",
+      "counterevidence": [
+        "Early Afalse test passed in source S2 with zero previews.",
+        "Interval and final verifier retain Request/header/scope/unit/witness guards and cleanup.",
+        "No claim that PR56 was integrated or that an exploit/Apply occurred."
+      ],
+      "executed_proof": {
+        "specific_late_callback_trace": "NOT_RUN/NOT_ESTABLISHED",
+        "candidate": "NOT_ESTABLISHED"
+      },
+      "action": "Preservar A e recertificar nas fronteiras de sucesso/falha/replay apropriadas, ou provar no produtor real que B implica cada condição material/temporal de A. Demonstrar Atrue→Afalse/Btrue, mutação original, retornos precoces e cleanup; igualdade de dados não basta."
+    },
+    {
+      "reviewer": "S2-R2 / mission28",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "product_execution_by_reviewer": "NOT_RUN",
+      "product_authorship": "none",
+      "approval": false,
+      "id": "R1-W23-C17-BETWEEN-OBSERVATIONS",
+      "severity": "P1",
+      "kind": "STATIC_CONTRACT_GAP",
+      "status": "OPEN_RELOCATED_IN_FIXED_BUNDLE",
+      "title": "Par de observações históricas C17 não fixa headers do Request ao longo do par",
+      "owner": "WP00/C17 composition source PR32, WP10.T07 BCS; session23 integration",
+      "criteria": [
+        "C16",
+        "C17",
+        "WP14.T02.CHK.03",
+        "WP14.T04.CHK.10"
+      ],
+      "locations": [
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "blob": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993",
+          "lines": "359-419; specifically371-383",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+        },
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+          "blob": "dbf13c657c7d5e93837367eae7bb7b704f7577c4",
+          "lines": "65-71,132,141",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/planner-calculation-history.ts"
+        },
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "blob": "5dfca7fad55453672986fbb3b29d6c68a9e1afa9",
+          "lines": "91-93,267",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/planner-calculation-services.ts"
+        },
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+          "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+          "lines": "26-33",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
+        }
+      ],
+      "source_fixed": {
+        "status": "MemoryA27 fixed a different boundary; this finding explicitly retained"
+      },
+      "consumer_integrated": true,
+      "reproduction": "Static trace using real historical.resolve: first observation R/H1; change headers of same R between awaits to H2 preserving derived principal/grants/binding/data; second observation captures H2. Outer proof checks object/binding/ref/projection equality but not original headers digest across pair.",
+      "counterevidence": [
+        "Inner historical reader checks headers within each observation.",
+        "Memory stale-preflight separately pins headers and consumes original array identity.",
+        "No executed breach asserted; retain original finding ID rather than duplicate."
+      ],
+      "executed_proof": {
+        "between_observations": "NOT_ESTABLISHED",
+        "candidate": "NOT_ESTABLISHED"
+      },
+      "action": "Prender Request/method/url/headers/binding e callback authority através do par e egress; provar positivo instalado e negativos entre as observações e depois da última revalidação em novo SHA."
+    },
+    {
+      "reviewer": "S2-R2 / mission28",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "product_execution_by_reviewer": "NOT_RUN",
+      "product_authorship": "none",
+      "approval": false,
+      "id": "R28-C12-ORACLE",
+      "severity": "P2",
+      "kind": "STATIC_INTEGRATION_ORACLE_DIVERGENCE",
+      "status": "OPEN_KNOWN_COMPOSITION_GAP",
+      "title": "Executor C12 composto preserva edição concorrente; testes incorporados ainda exigem409 antigo",
+      "owner": "WP11/Finance apply reconciliation and WP04 Procurement recovery tests; session23 composition",
+      "criteria": [
+        "C03",
+        "C12",
+        "WP11.T04.CHK.01",
+        "WP11.T04.CHK.02",
+        "WP11.T04.DOD.01",
+        "WP11.T04.DOD.02"
+      ],
+      "locations": [
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+          "blob": "6ad51e47b22eca073a0a81731575c463d98673e4",
+          "lines": "114-145",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/decisions/apply.ts"
+        },
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts",
+          "blob": "80e4b8f5eba72f95ba94f906c982e4d4ad902907",
+          "lines": "56-67",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts"
+        },
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+          "blob": "5bad0ed7698de7a75ce394773e7ec6d629ea3c10",
+          "lines": "69,75,91-99",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts"
+        },
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+          "blob": "15aaff1ae0406f9b495c9f60b81b18d9c8174e64",
+          "lines": "84",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts"
+        }
+      ],
+      "source_fixed": {
+        "sha": "0b483fbf2040e0551f817ea6211d54c7cb2e2d14",
+        "source_apply_blob": "2776a112cd24c1cb3bd4fe2791f7b232fb68286d"
+      },
+      "consumer_integrated": "host/http/ui/prepared apply exact; executor selectively adapted to preserve Finance reservation/fresh CAS",
+      "reproduction": "Existing consumer edits objective only after durable receipt. Target rereads fresh case and reconciles unchanged proposal while preserving unrelated edit; source tests expect stale409/planned/no-linked-receipt. Static discrepancy, no target test executed.",
+      "counterevidence": [
+        "Recovery mode exists before dispatch when no original receipt.",
+        "Original intent key/digest and source incarnation reconstructed from durable source.",
+        "Source recovery run7pass0fail real HTTP/UI narrow scope; not full AM04."
+      ],
+      "executed_proof": {
+        "source_run": 43636531401,
+        "source_job": 132574441676,
+        "source_snapshot": "f4a1e6e2743188276f42dd68e14b7c06a23ad55c",
+        "candidate": "NOT_ESTABLISHED"
+      },
+      "action": "Reconciliar fixtures/oráculos com comportamento composto sem remover no-redispatch, lost response, original receipt ou CAS. Owner qualifica composição e Planner-applied/Procurement-refused; revisor relê novoSHA."
+    },
+    {
+      "reviewer": "S2-R2 / mission28",
+      "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "product_execution_by_reviewer": "NOT_RUN",
+      "product_authorship": "none",
+      "approval": false,
+      "id": "R28-COMPOSED-PROOFS",
+      "severity": "P1",
+      "kind": "REQUIRED_PROOF_GAP",
+      "status": "OPEN_NO_APPROVAL",
+      "title": "Conjunto obrigatório de provas do mesmo candidato não estabelecido",
+      "owner": "S0 sole final dispatcher/acceptor; session23 sole sf2-stack writer; domain owners for source fixes",
+      "criteria": [
+        "C01-C17",
+        "WP00.T04.DOD.01",
+        "WP10.T03.DOD.01",
+        "WP10.T03.DOD.40",
+        "WP01.T05.CHK.30",
+        "WP10.CMP.40",
+        "WP10.CMP.60"
+      ],
+      "locations": [
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/verification-01.json",
+          "blob": "061a2fd5b932e2b2205a5db0391a025aa35695cb",
+          "lines": "whole receipt",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/verification-01.json"
+        },
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/memory-terminal-authority.json",
+          "blob": "6483e6284be8b01babd0acf33036f86ce27c3b55",
+          "lines": "whole receipt",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/memory-terminal-authority.json"
+        },
+        {
+          "candidate_sha": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+          "path": "apps/cli/src/sucafina-product/bi-services.ts",
+          "blob": "b6a84dd807207e9b6791dc10f1419ec756ea1167",
+          "lines": "decisionPresentation and unavailable plans",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/bi-services.ts"
+        }
+      ],
+      "observed": "Receipts record composed tests/typecheck/guards/AM/final reviews NOT_RUN; source_green_transferred=false. Direct target Actions query0 is only supporting inventory, not exclusion of all child snapshots. No complete same-target proof set established by inspected receipts/logs.",
+      "unproved": [
+        "Eight minimal CI selections plus applicable additional suites",
+        "Package typechecks, Atlas generation/check/spawn and guards on accepted candidate",
+        "AM01–AM06;18 skill witnesses/5profiles/8 packs/39routes and real consumers after reload",
+        "C05 installed report/review closure and complete exports",
+        "WP13 semantic union and CurrentChoice consumer cohort",
+        "C17 historical MI07 tail, real process restart→recall→UI and scanner variants",
+        "C17 reviewed-policy/projectSlab installed lane (pure mapper exists, runtime task lane only in inspected composition)",
+        "C02 decision waterfall/timeline producer plans explicitly unavailable in bi-services"
+      ],
+      "counterevidence": [
+        "Real source positives exist for C09/C17, UI submit, C12 recovery, recipient receipt, Finance targeted tests and Memory MI06/MI08.",
+        "Catalog/loaders/private bridge and namespace/CAS code are implemented; these are not runtime proof."
+      ],
+      "executed_proof": {
+        "reviewer": "NOT_RUN",
+        "candidate": "NOT_ESTABLISHED",
+        "source_checks": "Memory CHECK36 globalFAIL13; partial passes cannot be relabeled targetPASS"
+      },
+      "action": "S0 reúne candidato aceito e provas obrigatórias com W/C/S/tree/request/seleção/job/resultado efetivos; owners entregam outputs faltantes, session23 integra; três revisores independentes reavaliam mesmoC. Este recibo documental não é candidatoD aprovado nem dispensa guard."
+    }
+  ],
+  "note": "Four historical defects corrected and integrated; five remaining records include specific old/new gaps plus mandatory proof aggregate. No runtime exploit claimed."
+}
