@@ -46,7 +46,7 @@ function businessSnapshot(snapshot: Snapshot) {
 }
 
 /** Real SQLite, source producers and human admission; authentication is an explicit test fixture. */
-export async function createRelationsFixture() {
+export async function createRelationsFixture(options: { threadHistoryWrites?: WeakSet<object> } = {}) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-relations-sources-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
@@ -100,7 +100,7 @@ export async function createRelationsFixture() {
     return { state: current && digestSfValue(current) === digestSfValue(ref) ? "fresh" : "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }
   }, proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not-selected" }) })
   const creationTarget = { ref: "workspace", incarnation: "workspace-inc" }
-  const state = createSfProductState({ persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: creationTarget.incarnation }), authorize: async (candidate) => gate.active && candidate.headers.get("actor") === person.id ? { principalRef: person.id, accessRevision: "access", policyVersion: "policy" } : undefined })
+  const state = createSfProductState({ ...options, persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: creationTarget.incarnation }), authorize: async (candidate) => gate.active && candidate.headers.get("actor") === person.id ? { principalRef: person.id, accessRevision: "access", policyVersion: "policy" } : undefined })
   const authority = createCollaborationAuthority({ host, evidence })
   const mutationFence = createCollaborationMutationFence(host)
   const relations = createRelationPort({ state, host, human, mutationFence, creationTarget, handoffPermit: Symbol("fixture"), authorizePair: authority.authorizePair, checkRecipientAtCommit: authority.checkRecipientAtCommit, createId: randomUUID, now: () => at })
@@ -110,3 +110,4 @@ export async function createRelationsFixture() {
     dispose: async () => { await store.dispose(); await rm(directory, { recursive: true, force: true }) },
   }
 }
+

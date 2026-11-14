@@ -3,11 +3,13 @@ import type { MeetingMaterialProposal } from "../contracts/outputs.ts"
 import { createReviewPreparationBrowser } from "./browser.ts"
 import type { ReviewAgendaItem, ReviewAgendaPreview } from "./selection.ts"
 import type { ReviewContribution, ReviewContributionRequest } from "./contribution.ts"
+import type { RoutineReviewSelectionRequest } from "./routine-selection.ts"
 
 /** Mount from the host's existing Prepare review / Generate Report entry with authorized source selectors. */
 export function createReviewPreparationView(input: {
   items: readonly ReviewAgendaItem[]
   previousReviewRef?: string
+  routineResult?: RoutineReviewSelectionRequest
   client?: ReturnType<typeof createReviewPreparationBrowser>
   openReview: (reviewRef: string) => void
 }) {
@@ -15,7 +17,7 @@ export function createReviewPreparationView(input: {
   const root = document.createElement("section")
   root.setAttribute("aria-label", "Prepare review")
   let disposed = false
-  const state: { busy: boolean; message: string; selection?: ReviewAgendaPreview; order: string[]; items: ReviewAgendaItem[]; review?: PreservedReview; material?: MeetingMaterialProposal; previousReviewRef?: string } = { busy: false, message: "Load the authorized selection to prepare a review.", order: [], items: structuredClone([...input.items]), previousReviewRef: input.previousReviewRef }
+  const state: { busy: boolean; message: string; selection?: ReviewAgendaPreview; order: string[]; items: ReviewAgendaItem[]; review?: PreservedReview; material?: MeetingMaterialProposal; previousReviewRef?: string; routine?: RoutineReviewSelectionRequest } = { busy: false, message: "Load the authorized selection to prepare a review.", order: [], items: structuredClone([...input.items]), previousReviewRef: input.previousReviewRef, routine: input.routineResult ? structuredClone(input.routineResult) : undefined }
   const node = <K extends keyof HTMLElementTagNameMap>(tag: K, text: string) => {
     const element = document.createElement(tag)
     element.textContent = text
@@ -36,15 +38,24 @@ export function createReviewPreparationView(input: {
     status.setAttribute("aria-live", "polite")
     root.append(status)
     if (!state.selection) {
-      root.append(action("Load selection", load))
+      root.append(action(state.routine ? "Open routine result" : "Load selection", state.routine ? () => openRoutineResult(state.routine!) : load))
       return
+    }
+    if (state.routine) {
+      root.append(node("p", "Captured routine result. Preserving this selection keeps its recorded values and rechecks access."))
+      const provenance = document.createElement("details")
+      provenance.append(node("summary", "Routine provenance"), node("p", `Run: ${state.routine.runRef}`), node("p", `Result: ${state.routine.resultRef}`), node("p", `Digest: ${state.routine.outputDigest}`))
+      root.append(provenance)
     }
     if (state.review) {
       root.append(node("p", `Reference: ${state.review.id} · Preserved: ${state.review.createdAt}`))
       root.append(action("Open meeting", () => input.openReview(state.review!.id)))
       root.append(action("Generate PPTX", () => report("pptx")), action("Generate DOCX", () => report("docx")))
-      root.append(action("Prepare current data as a new revision", load))
-    } else root.append(action("Refresh selection from current data", load))
+      if (state.items.length) root.append(action("Prepare current data as a new revision", load))
+    } else {
+      if (state.routine) root.append(action("Reopen the same routine result", () => openRoutineResult(state.routine!)))
+      if (state.items.length) root.append(action("Refresh selection from current data", load))
+    }
     const list = document.createElement("ol")
     state.order.forEach((id, index) => {
       const section = state.selection!.sections.find((entry) => entry.id === id)
@@ -63,7 +74,7 @@ export function createReviewPreparationView(input: {
         row.append(action(`Move ${section.title} up`, () => move(index, -1), index === 0), action(`Move ${section.title} down`, () => move(index, 1), index === state.order.length - 1))
         row.append(action(`Remove ${section.title}`, () => { state.order = state.order.filter((ref) => ref !== id); render() }))
         const records = state.selection!.sectionRecordRefs.find((entry) => entry.sectionRef === id)?.recordRefs ?? []
-        records.forEach((ref) => row.append(action(`Remove record ${ref}`, () => removeRecord(id, ref))))
+        if (!state.routine) records.forEach((ref) => row.append(action(`Remove record ${ref}`, () => removeRecord(id, ref))))
       }
       const table = document.createElement("table")
       table.append(node("caption", `${title} · selected source values`))
@@ -129,9 +140,22 @@ export function createReviewPreparationView(input: {
     state.review = undefined
     state.material = undefined
     state.items = items
+    state.routine = undefined
     state.selection = selection.value
     state.order = oldOrder.length ? oldOrder.filter((ref) => selection.value.sectionRefs.includes(ref)) : [...selection.value.sectionRefs]
     state.message = "Review the selection, order and periods, then explicitly preserve it."
+  })
+  const openRoutineResult = (request: RoutineReviewSelectionRequest) => run("Opening the authorized routine result…", async () => {
+    const pin = structuredClone(request)
+    const selection = await client.routine(pin)
+    if (selection.status !== "ok") { clearRestricted(); state.routine = pin; state.message = `Routine result unavailable: ${selection.reason}. Retry access to the same result.`; return }
+    state.selection = selection.value
+    state.routine = pin
+    state.review = undefined
+    state.material = undefined
+    state.previousReviewRef = selection.value.previousReviewRef
+    state.order = [...selection.value.sectionRefs]
+    state.message = "Review the captured result and choose the sections to preserve. The source values remain those recorded by this run."
   })
   const removeRecord = (sectionId: string, recordRef: string) => run("Updating the authorized record selection…", async () => {
     if (!state.selection || state.review) return
@@ -172,7 +196,7 @@ export function createReviewPreparationView(input: {
     render()
   }
   render()
-  return { element: root, load, dispose: () => { disposed = true; clearRestricted(); root.replaceChildren() } }
+  return { element: root, load, openRoutineResult, dispose: () => { disposed = true; clearRestricted(); root.replaceChildren() } }
 }
 
 /** Consumer of persisted resident outputs; every opening uses the current host authority. */
@@ -297,3 +321,4 @@ export function createReviewContributionView(input: {
   root.append(text("p", "Open the contribution to check current access."))
   return { element: root, refresh, dispose: () => { disposed = true; generation++; root.replaceChildren() } }
 }
+

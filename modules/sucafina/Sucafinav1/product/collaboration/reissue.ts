@@ -39,12 +39,13 @@ export function createCollaborationReissuer(input: {
     if (!transactionAll || !input.host.requestFor(context) || !await input.host.revalidate(context) || selected.installationId !== context.binding.installationId || selected.projectId !== context.binding.projectId || selected.refDigest !== digestSfEvidenceRef(selected) || !selected.target.period) return { status: "denied", reason: "source-reissue-unavailable" }
     const physical = await capture(selected)
     if (!physical) return { status: "unavailable", reason: "source-reissue-unavailable" }
-    const cacheKey = digestSfValue({ ref: selected, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion })
+    const cacheKey = digestSfValue({ installationId: selected.installationId, projectId: selected.projectId, physical, surface: selected.target.surface, recordType: selected.target.recordType, recordId: selected.target.recordId, fields: [...selected.target.fields].sort(), period: selected.target.period, projectionDigest: selected.target.projectionDigest, evidenceLevel: selected.evidenceLevel, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion })
     const cached = issuedRefs.get(cacheKey)
-    const issued = cached && await input.authorize(cached, context) ? { status: "ok" as const, value: cached } : await input.issueForActor(structuredClone(selected.target), context)
+    const issued = cached && await input.authorize(cached, context) ? { status: "ok" as const, value: cached } : await input.authorize(selected, context) ? { status: "ok" as const, value: selected } : await input.issueForActor(structuredClone(selected.target), context)
     if (issued.status !== "ok") return issued
     const current = issued.value
     if (current.installationId !== selected.installationId || current.projectId !== selected.projectId || current.refDigest !== digestSfEvidenceRef(current) || current.evidenceLevel !== selected.evidenceLevel || current.target.surface !== selected.target.surface || current.target.recordType !== selected.target.recordType || current.target.recordId !== selected.target.recordId || digestSfValue([...current.target.fields].sort()) !== digestSfValue([...selected.target.fields].sort()) || digestSfValue(current.target.period) !== digestSfValue(selected.target.period) || !await input.authorize(current, context)) return { status: "unavailable", reason: "source-reissue-unavailable" }
+    if (current.target.projectionDigest !== selected.target.projectionDigest) return { status: "unavailable", reason: "source-material-scope-unavailable" }
     if (!input.prepareMaterialScope) return { status: "unavailable", reason: "source-material-scope-unavailable" }
     const proof = await input.prepareMaterialScope(selected, current, context)
     if (proof.status !== "ok") return { status: "unavailable", reason: "source-material-scope-unavailable" }
@@ -57,3 +58,4 @@ export function createCollaborationReissuer(input: {
     return { status: "ok", value: structuredClone(current) }
   }
 }
+

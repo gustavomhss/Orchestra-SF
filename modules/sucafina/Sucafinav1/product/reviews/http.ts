@@ -12,6 +12,7 @@ import type { createReviewAgendaSelection, ReviewAgendaItem } from "./selection.
 import type { createReviewPort } from "./port.ts"
 import type { createReviewComparisonPort } from "./comparison-port.ts"
 import type { createReviewContributionConsumer, ReviewContributionRequest } from "./contribution.ts"
+import type { createReviewRoutineSelection, RoutineReviewSelectionRequest } from "./routine-selection.ts"
 
 /** Mount in the existing authenticated application; starts no listener or storage. */
 export function createReviewHttp(input: {
@@ -24,6 +25,7 @@ export function createReviewHttp(input: {
   descriptors: readonly CapabilityDescriptor[]
   reviews: ReturnType<typeof createReviewPort>
   agenda?: ReturnType<typeof createReviewAgendaSelection>
+  routineAgenda?: ReturnType<typeof createReviewRoutineSelection>
   comparison?: ReturnType<typeof createReviewComparisonPort>
   contribution?: ReturnType<typeof createReviewContributionConsumer>
   download: ReturnType<typeof createReviewDownloadHandler>
@@ -33,14 +35,14 @@ export function createReviewHttp(input: {
   return async (request: Request, surface: string): Promise<Response | undefined> => {
     const url = new URL(request.url)
     const mode = url.searchParams.get("sf")
-    if (mode !== "review-read" && mode !== "review-preview" && mode !== "review-contribution" && mode !== "review-comparison" && mode !== "review-preserve" && mode !== "review-agenda" && mode !== "review-close" && mode !== "review-closure" && mode !== "review-report" && mode !== "review-download") return undefined
+    if (mode !== "review-read" && mode !== "review-preview" && mode !== "review-contribution" && mode !== "review-comparison" && mode !== "review-preserve" && mode !== "review-agenda" && mode !== "review-routine" && mode !== "review-close" && mode !== "review-closure" && mode !== "review-report" && mode !== "review-download") return undefined
     const json = (value: unknown, status: number) => new Response(JSON.stringify(value), { status, headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
     if (surface !== "dashboard" || url.origin !== input.origin || request.signal.aborted || url.searchParams.getAll("sf").length !== 1) return json({ status: "denied", reason: "review-unavailable" }, 403)
     if (mode === "review-download") {
       if ([...url.searchParams.keys()].some((key) => !["sf", "artifactRef"].includes(key)) || url.searchParams.getAll("artifactRef").length !== 1) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
       return input.download(request, url.searchParams.get("artifactRef") ?? "")
     }
-    if (mode === "review-preserve" || mode === "review-agenda" || mode === "review-contribution" || mode === "review-close" || mode === "review-report" || mode === "review-preview") {
+    if (mode === "review-preserve" || mode === "review-agenda" || mode === "review-routine" || mode === "review-contribution" || mode === "review-close" || mode === "review-report" || mode === "review-preview") {
       if (request.method !== "POST") return json({ status: "denied", reason: "method-unavailable" }, 405)
       if (request.headers.get("origin") !== input.origin || request.headers.get("sec-fetch-site") === "cross-site") return json({ status: "denied", reason: "review-unavailable" }, 403)
       if ([...url.searchParams.keys()].some((key) => key !== "sf") || !request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return json({ status: "needs-input", reason: "invalid-request" }, 400)
@@ -92,17 +94,17 @@ export function createReviewHttp(input: {
           } finally { input.humanAuthority.finish(admission.value) }
         } finally { input.ui.finish(reviewAdmission.value) }
       }
-      if (mode === "review-agenda") {
-        if (!input.agenda) return json({ status: "unavailable", reason: "agenda-producer-unavailable" }, 503)
-        if (!payload || typeof payload !== "object" || Array.isArray(payload) || !Object.hasOwn(payload, "items") || Object.keys(payload).some((key) => key !== "items") || !Array.isArray(payload.items)) return json({ status: "needs-input", reason: "invalid-agenda" }, 400)
+      if (mode === "review-agenda" || mode === "review-routine") {
+        if (mode === "review-agenda" ? !input.agenda : !input.routineAgenda) return json({ status: "unavailable", reason: "agenda-producer-unavailable" }, 503)
+        if (mode === "review-agenda" && (!payload || typeof payload !== "object" || Array.isArray(payload) || !Object.hasOwn(payload, "items") || Object.keys(payload).some((key) => key !== "items") || !Array.isArray(payload.items))) return json({ status: "needs-input", reason: "invalid-agenda" }, 400)
         const digest = digestSfValue(payload)
         const admitted = await input.ui.admit(request, "sf_review_prepare", digest)
         if (admitted.status !== "ok") return json({ status: "denied", reason: "agenda-unavailable" }, 403)
         try {
           if (!await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "agenda-unavailable" }, 403)
-          const result = await input.agenda.create(payload.items as ReviewAgendaItem[], admitted.value)
+          const result = mode === "review-agenda" ? await input.agenda!.create(payload.items as ReviewAgendaItem[], admitted.value) : await input.routineAgenda!.create(payload as RoutineReviewSelectionRequest, admitted.value)
           if (!await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "agenda-unavailable" }, 403)
-          return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : 503)
+          return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "stale" ? 409 : 503)
         } finally { input.ui.finish(admitted.value) }
       }
       if (mode === "review-preserve") {
@@ -160,3 +162,4 @@ export function createReviewHttp(input: {
     }
   }
 }
+

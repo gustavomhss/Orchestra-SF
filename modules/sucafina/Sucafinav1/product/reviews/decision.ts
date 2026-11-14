@@ -7,12 +7,13 @@ type Decision = NonNullable<DomainProjection["decision"]>
 
 /** Preserve the producer's coverage and comparison state; never infer a complete result. */
 export function validReviewDecision(decision: DomainProjection["decision"]) {
-  if (!decision) return true
+  if (decision === undefined) return true
+  if (!decision || typeof decision !== "object" || Array.isArray(decision)) return false
   if (decision.kind === "scenario") {
     const sensitivityRef = (decision as typeof decision & { sensitivityResultRef?: string }).sensitivityResultRef
-    return !!decision.scenarioResultRef && !!decision.comparisonRef && decodeSfOperationOutput("sf_scenario_simulate", decision.scenario).ok && decodeSfOperationOutput("sf_scenario_compare", decision.comparison).ok && (decision.comparison.baselineResultRef === decision.scenarioResultRef || decision.comparison.alternativeResultRef === decision.scenarioResultRef) && (decision.comparison.comparisonStatus !== "complete" || decision.scenario.comparisonStatus === "complete") && (decision.sensitivity ? typeof sensitivityRef === "string" && !!sensitivityRef.trim() && decodeSfOperationOutput("sf_sensitivity_evaluate", decision.sensitivity).ok : sensitivityRef === undefined)
+    return Object.keys(decision).every((key) => ["kind", "scenarioResultRef", "scenario", "comparisonRef", "comparison", "sensitivity", "sensitivityResultRef"].includes(key)) && !!decision.scenarioResultRef && !!decision.comparisonRef && decodeSfOperationOutput("sf_scenario_simulate", decision.scenario).ok && decodeSfOperationOutput("sf_scenario_compare", decision.comparison).ok && (decision.comparison.baselineResultRef === decision.scenarioResultRef || decision.comparison.alternativeResultRef === decision.scenarioResultRef) && (decision.comparison.comparisonStatus !== "complete" || decision.scenario.comparisonStatus === "complete") && (decision.sensitivity ? typeof sensitivityRef === "string" && !!sensitivityRef.trim() && decodeSfOperationOutput("sf_sensitivity_evaluate", decision.sensitivity).ok : sensitivityRef === undefined)
   }
-  if (decision.kind === "portfolio") return !!decision.portfolioResultRef && decodeSfOperationOutput("sf_portfolio_evaluate", decision.portfolio).ok && decision.portfolio.combinations.every((combination) => !combination.analysis || ((combination.analysis.comparison.baselineResultRef === combination.analysis.scenarioResultRef || combination.analysis.comparison.alternativeResultRef === combination.analysis.scenarioResultRef) && (combination.analysis.comparison.comparisonStatus !== "complete" || combination.analysis.scenario.comparisonStatus === "complete") && (combination.eligibility !== "eligible-complete" || (combination.analysis.scenario.comparisonStatus === "complete" && combination.analysis.comparison.comparisonStatus === "complete"))))
+  if (decision.kind === "portfolio") return Object.keys(decision).every((key) => ["kind", "portfolioResultRef", "portfolio"].includes(key)) && !!decision.portfolioResultRef && decodeSfOperationOutput("sf_portfolio_evaluate", decision.portfolio).ok && decision.portfolio.combinations.every((combination) => !combination.analysis || ((combination.analysis.comparison.baselineResultRef === combination.analysis.scenarioResultRef || combination.analysis.comparison.alternativeResultRef === combination.analysis.scenarioResultRef) && (combination.analysis.comparison.comparisonStatus !== "complete" || combination.analysis.scenario.comparisonStatus === "complete") && (combination.eligibility !== "eligible-complete" || (combination.analysis.scenario.comparisonStatus === "complete" && combination.analysis.comparison.comparisonStatus === "complete"))))
   return false
 }
 
@@ -56,3 +57,4 @@ export function reviewDecisionLines(decision: Decision): string[] {
     ...(item.analysis ? [`Scenario ${item.analysis.scenarioResultRef} · comparison ${item.analysis.comparisonRef}`, ...scenarioLines(item.analysis.scenario), `Comparison ${item.analysis.comparison.comparisonStatus} · known difference ${item.analysis.comparison.knownDifference ?? "unavailable"}`, `Complete difference: ${item.analysis.comparison.completeDifference ?? "unavailable"}`, ...item.analysis.comparison.unresolvedConditions] : []),
   ])]
 }
+

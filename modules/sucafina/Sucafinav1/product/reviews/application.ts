@@ -9,6 +9,8 @@ import { createReviewComposition } from "./composition.ts"
 import { createReviewContributionConsumer } from "./contribution.ts"
 import { createReviewHumanPort } from "./human.ts"
 import { createReviewHttp } from "./http.ts"
+import { createReviewRoutineReader } from "./routine-reader.ts"
+import { createReviewThreadComments } from "./thread-access.ts"
 
 /** The existing host supplies authenticated services; this factory opens no server or store. */
 export function createReviewApplication(input: Parameters<typeof createReviewComposition>[0] & {
@@ -18,8 +20,13 @@ export function createReviewApplication(input: Parameters<typeof createReviewCom
   maxBodyBytes: number
   handoffs?: Pick<Parameters<typeof createReviewClosurePort>[0], "handoff" | "verifyHandoff" | "readAction">
   contributions?: Pick<Parameters<typeof createReviewContributionConsumer>[0], "contributions" | "results">
+  routineProduct?: Parameters<typeof createReviewRoutineReader>[0]["product"]
 }) {
-  const composed = createReviewComposition(input)
+  const routineResults = input.routineProduct ? createReviewRoutineReader({
+    product: input.routineProduct, ui: input.ui, authority: input.authority, evidence: input.evidence,
+    access: { ...input.access, authorizeComments: createReviewThreadComments({ ...input.collaboration, host: input.host }).authorizeComments },
+  }) : input.routineResults
+  const composed = createReviewComposition({ ...input, routineResults })
   const human = createReviewHumanPort({ state: input.state, reviews: composed.reviews, human: input.humanAuthority, ui: input.ui, creationTarget: input.creationTarget })
   const closures = input.handoffs ? createReviewClosurePort({
     ...input.handoffs, state: input.state, host: input.host, reviews: composed.reviews,
@@ -50,8 +57,9 @@ export function createReviewApplication(input: Parameters<typeof createReviewCom
   const http = createReviewHttp({
     origin: input.origin, ui: input.ui, human, humanAuthority: input.humanAuthority,
     closure: closures, authority: input.authority, descriptors: composed.descriptors,
-    reviews: composed.reviews, agenda: composed.agenda, comparison, contribution, download,
+    reviews: composed.reviews, agenda: composed.agenda, routineAgenda: composed.routineAgenda, comparison, contribution, download,
     maxBodyBytes: input.maxBodyBytes,
   })
   return { ...composed, human, closures, comparison, contribution, download, http }
 }
+

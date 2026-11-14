@@ -15,6 +15,7 @@ import { createSfUiAuthority } from "../../../product/integration/ui-authority.t
 import { createReviewApplication } from "../../../product/reviews/application.ts"
 import { prepareReview } from "../../../product/reviews/capabilities.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
+import { reviewRoutineFixture, reviewRoutineProduct } from "./routine-result-fixture.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
 const source = { surface: "procurement", type: "requests", id: "request-1", incarnation: "request-original", version: 1, fields: ["amount"], period, observedAt: "2026-11-13T00:00:00Z" } as const
@@ -25,13 +26,13 @@ afterEach(async () => { for (const close of cleanup.splice(0)) await close() })
 
 // Synthetic domain inputs; the product state provider, UI authority, dispatcher and artifact renderer are real.
 async function fixture() {
-  const control = { allowed: true, talentAllowed: true, available: true, amount: 1320, now: 0, sequence: 0, afterRead: undefined as (() => void) | undefined }
+  const control = { allowed: true, accessRevision: "access", policyVersion: "policy", routineAllowed: true, sectionsAllowed: true, talentAllowed: true, available: true, amount: 1320, now: 0, sequence: 0, afterRead: undefined as (() => void) | undefined, routine: undefined as ReturnType<typeof reviewRoutineProduct> | undefined }
   const identity = { installationId: "installation", projectId: "project", principalRef: "principal", policyVersion: "policy", accessRevision: "access" }
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-wp07-application-"))
   const persistence = await openLocalStore(directory)
   cleanup.push(async () => { await persistence.dispose(); await rm(directory, { recursive: true, force: true }) })
   const ui = createSfUiAuthority({
-    authorize: async () => control.allowed ? identity : undefined,
+    authorize: async (_request, operation) => control.allowed && (operation !== "sf_routine_result" || control.routineAllowed) ? { ...identity, accessRevision: control.accessRevision, policyVersion: control.policyVersion } : undefined,
     commandIdentity: async (_request, operation, digest) => `${operation}:${digest}`,
     createId: () => `request-${++control.sequence}`, now: () => control.now,
     privateCommands: ["sf-human:reviews.preserve", "sf-human:collaboration.handoff.confirm"],
@@ -48,10 +49,10 @@ async function fixture() {
   const state = createSfProductState({
     persistence, createId: () => "state-original",
     resolveTarget: async (_request, _snapshot, _namespace, target) => target === "workspace" ? { incarnation: "installation" } : undefined,
-    authorize: async () => control.allowed ? identity : undefined,
+    authorize: async () => control.allowed ? { ...identity, accessRevision: control.accessRevision, policyVersion: control.policyVersion } : undefined,
   })
   const projection = (): DomainProjection => ({
-    context: { ...identity, surface: "procurement", period, currency: "USD", sourceRefs: [source], capabilities: [] },
+    context: { ...identity, accessRevision: control.accessRevision, policyVersion: control.policyVersion, surface: "procurement", period, currency: "USD", sourceRefs: [source], capabilities: [] },
     version: 1, engineVersion: "synthetic-procurement-v1", components: [], missing: [],
     values: [{ id: "request.amount", value: control.amount, currency: "USD", period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: "confirmed" }],
   })
@@ -64,11 +65,12 @@ async function fixture() {
     requiredAuthority: [], maxBytes: 5_000_000, now: () => "2026-11-13T00:00:00Z",
     evidence: { resolve: async (ref, context) => ({ state: control.allowed && (ref.kind !== "record" || ref.target.surface !== "dashboard" || control.talentAllowed) ? "historical" : "revoked", ref, accessRevision: context.binding.accessRevision, checkedAt: "2026-11-13T00:00:00Z" }) },
     access: {
-      authorizeSections: async (_context, sections) => control.allowed && (control.talentAllowed || sections.every((section) => section.id !== "talent")), authorizeOutcomeComparison: async () => control.allowed,
+      authorizeSections: async (_context, sections) => control.allowed && control.sectionsAllowed && (control.talentAllowed || sections.every((section) => section.id !== "talent")), authorizeOutcomeComparison: async () => control.allowed,
       authorizeOutcome: async () => control.allowed, authorizeDecision: async () => control.allowed,
       authorizeSensitivity: async () => control.allowed, revalidate: async () => control.allowed,
     },
     collaboration: { threads: { read: unavailable }, history: { readVersion: unavailable }, authorizeSourceMapping: async () => false, maxMessages: 20 },
+    routineProduct: { get descriptors() { return control.routine?.descriptors ?? [] }, openResult: (runRef, context) => control.routine?.openResult(runRef, context) ?? Promise.resolve({ status: "unavailable", reason: "routine-not-selected" }) },
     ports: {
       selectDashboardAgenda: async (selected) => {
         if (selected.topic !== "talent-review") return unavailable()
@@ -143,6 +145,78 @@ test("application consumes agenda, shared review/report/artifact capabilities an
   expect(await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))).toEqual(storedBefore)
 })
 
+test("HTTP opens a pinned C07 factual result and preserves its original values through the same human and report ports", async () => {
+  const f = await fixture()
+  const admitted = await f.ui.admit(f.request("review-routine", {}), "sf_review_prepare", digestSfValue({}))
+  if (admitted.status !== "ok") throw new Error(admitted.reason)
+  const routine = await reviewRoutineFixture(admitted.value)
+  f.ui.finish(admitted.value)
+  f.control.routine = reviewRoutineProduct(routine, f.authority)
+  f.control.sectionsAllowed = false
+  const restricted = await f.app.http(f.request("review-routine", routine.pin), "dashboard")
+  expect(restricted?.status).toBe(403)
+  expect(await restricted!.text()).not.toContain("1320")
+  f.control.sectionsAllowed = true
+  const opened = await f.app.http(f.request("review-routine", routine.pin), "dashboard")
+  expect(opened?.status).toBe(200)
+  const result = await opened!.json() as { value: { selectionRef: string; sectionRefs: string[]; routine: typeof routine.pin } }
+  expect(result.value.routine).toEqual(routine.pin)
+  f.control.routineAllowed = false
+  const unreadable = await f.app.http(f.request("review-preserve", { selectionRef: result.value.selectionRef, sectionRefs: result.value.sectionRefs }), "dashboard")
+  expect(unreadable?.status).toBe(403)
+  expect(await unreadable!.text()).not.toContain("1320")
+  f.control.routineAllowed = true
+  f.control.amount = 1400
+  f.control.available = false
+  const preserved = await f.app.http(f.request("review-preserve", { selectionRef: result.value.selectionRef, sectionRefs: result.value.sectionRefs }), "dashboard")
+  expect(preserved?.status).toBe(200)
+  const saved = await preserved!.json() as { value: { id: string; sections: { content: DomainProjection }[] } }
+  expect(saved.value.sections[0]?.content.values[0]?.value).toBe(1320)
+  for (const format of ["docx", "pptx"] as const) {
+    const report = await f.dispatch("sf_report_prepare", { reviewRef: saved.value.id, sectionRefs: result.value.sectionRefs, format })
+    if (report.status !== "ok" || !("outputRef" in report) || !report.outputRef) throw new Error("routine report unavailable")
+    const downloaded = await f.app.http(f.request(`review-download&artifactRef=${encodeURIComponent(report.outputRef)}`), "dashboard")
+    expect(downloaded?.status).toBe(200)
+    const bytes = await downloaded!.arrayBuffer()
+    const reopened = await f.app.http(f.request(`review-download&artifactRef=${encodeURIComponent(report.outputRef)}`), "dashboard")
+    expect(reopened?.status).toBe(200)
+    expect(new Uint8Array(await reopened!.arrayBuffer())).toEqual(new Uint8Array(bytes))
+    const zip = await JSZip.loadAsync(bytes)
+    const paths = Object.keys(zip.files).filter((path) => format === "docx" ? path === "word/document.xml" : path.startsWith("ppt/slides/slide") && path.endsWith(".xml"))
+    expect(paths.length).toBeGreaterThan(0)
+    const document = (await Promise.all(paths.map((path) => zip.file(path)!.async("string")))).join("\n")
+    expect(document).toContain("1320")
+    expect(document).not.toContain("1400")
+    expect(document).toContain("Discuss the preserved source")
+    expect(document).toContain("2026-01-01")
+    expect(document).toContain("2026-12-31")
+    expect(document).toContain("USD")
+  }
+  f.control.accessRevision = "access-next"
+  f.control.policyVersion = "policy-next"
+  const resumed = await f.app.http(f.request("review-routine", routine.pin), "dashboard")
+  expect(resumed?.status).toBe(200)
+  const next = await resumed!.json() as { value: { selectionRef: string; sectionRefs: string[] } }
+  const nextPreview = await f.app.http(f.request("review-preview", { selectionRef: next.value.selectionRef, sectionRefs: next.value.sectionRefs, period }), "dashboard")
+  expect(nextPreview?.status).toBe(200)
+  const nextSaved = await f.app.http(f.request("review-preserve", { selectionRef: next.value.selectionRef, sectionRefs: next.value.sectionRefs }), "dashboard")
+  expect(nextSaved?.status).toBe(200)
+  const historical = await nextSaved!.json() as { value: { sections: { content: DomainProjection }[] } }
+  expect(historical.value.sections[0]?.content.context.accessRevision).toBe("access")
+  expect(historical.value.sections[0]?.content.context.policyVersion).toBe("policy")
+  f.control.sectionsAllowed = false
+  const revisionRevoked = await f.app.http(f.request("review-routine", routine.pin), "dashboard")
+  expect(revisionRevoked?.status).toBe(403)
+  expect(await revisionRevoked!.text()).not.toContain("1320")
+  f.control.sectionsAllowed = true
+  routine.state.allowed = false
+  const blocked = await f.app.http(f.request("review-routine", routine.pin), "dashboard")
+  expect(blocked?.status).toBe(403)
+  expect(await blocked!.text()).not.toContain("1320")
+  f.control.allowed = false
+  expect((await f.app.http(f.request(`review-read&reviewRef=${encodeURIComponent(saved.value.id)}`), "dashboard"))?.status).toBe(403)
+})
+
 test("shared dispatcher refuses forged arguments, missing admission, reused leases, expiry and source loss", async () => {
   const f = await fixture()
   const selection = await f.agenda()
@@ -214,3 +288,4 @@ test("Talent allowed in the preview is denied before export without writing a pr
   expect(JSON.stringify(report)).not.toContain("Private salary")
   expect(await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))).toEqual(before)
 })
+

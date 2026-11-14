@@ -10,6 +10,7 @@ import type { MeetingMaterialProposal, ReviewDraft } from "../contracts/outputs.
 import { decodeSfContributionEnvelope, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
 import type { ReviewContribution, ReviewContributionRequest } from "./contribution.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+import type { RoutineReviewSelection, RoutineReviewSelectionRequest } from "./routine-selection.ts"
 
 /** Uses the mounted application's same-origin route; each read obtains a fresh host lease. */
 export function createReviewBrowser(input: {
@@ -69,6 +70,13 @@ export function createReviewBrowser(input: {
 export function createReviewPreparationBrowser() {
   const post = createReviewPost()
   return {
+    async routine(payload: RoutineReviewSelectionRequest): Promise<PortResult<RoutineReviewSelection>> {
+      const { response, result } = await post("review-routine", payload)
+      if (!response?.ok || !isResult(result) || result.status !== "ok" || !result.value || typeof result.value !== "object" || !("selectionRef" in result.value) || typeof result.value.selectionRef !== "string" || !result.value.selectionRef.startsWith("review-routine:") || !("sections" in result.value) || !Array.isArray(result.value.sections) || !("sectionRefs" in result.value) || !Array.isArray(result.value.sectionRefs) || !("routine" in result.value) || !result.value.routine || typeof result.value.routine !== "object") return unavailable(result, "routine-review-unavailable")
+      const pin = result.value.routine as Partial<RoutineReviewSelectionRequest>
+      if (pin.runRef !== payload.runRef || pin.resultRef !== payload.resultRef || pin.outputDigest !== payload.outputDigest) return { status: "stale", reason: "routine-review-result-changed" }
+      return { status: "ok", value: result.value as RoutineReviewSelection }
+    },
     async contribution(payload: ReviewContributionRequest): Promise<PortResult<ReviewContribution>> {
       const { response, result } = await post("review-contribution", payload)
       if (!response?.ok || !isResult(result) || result.status !== "ok" || !result.value || typeof result.value !== "object" || !("kind" in result.value) || !["DecisionBrief", "MeetingMaterialProposal"].includes(String(result.value.kind)) || !("links" in result.value) || !Array.isArray(result.value.links) || !("output" in result.value) || !result.value.output || typeof result.value.output !== "object" || !("id" in result.value.output) || result.value.output.id !== payload.outputRef) return unavailable(result, "review-contribution-unavailable")
@@ -139,3 +147,4 @@ function unavailable(value: unknown, fallback: string): Exclude<PortResult<never
   }
   return { status: "unavailable", reason: fallback }
 }
+

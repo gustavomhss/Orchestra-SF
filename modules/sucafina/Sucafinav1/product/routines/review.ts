@@ -2,7 +2,7 @@ import { digestSfValue } from "../contracts/canonical.ts"
 import type { ConfirmationValidityProjection, DomainProjection, Period, PreservedReview } from "../contracts/context.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
-import { routineProjectionMaterial } from "./material.ts"
+import { routineProjectionMaterial, routineValueMaterial } from "./material.ts"
 
 /** The host resolves the selection, confirmation, and any selected prior review under the caller's current authority. */
 export type ReviewPreparationHost = {
@@ -205,7 +205,7 @@ export function compareProjections(previous: DomainProjection, current: DomainPr
     const newValue = after.get(id)
     if (!oldValue) return newValue ? [{ state: "added" as const, current: newValue }] : []
     if (!newValue) return [{ state: "removed" as const, previous: oldValue }]
-    if (oldValue.value === newValue.value && oldValue.unit === newValue.unit && oldValue.currency === newValue.currency && oldValue.evidenceState === newValue.evidenceState) return []
+    if (routineValueMaterial(previous, oldValue).value === routineValueMaterial(current, newValue).value && oldValue.unit === newValue.unit && oldValue.currency === newValue.currency && oldValue.evidenceState === newValue.evidenceState) return []
     const delta = typeof oldValue.value === "number" && Number.isFinite(oldValue.value) && typeof newValue.value === "number" && Number.isFinite(newValue.value) && oldValue.unit === newValue.unit && oldValue.currency === newValue.currency && oldValue.evidenceState !== "absent" && newValue.evidenceState !== "absent" ? newValue.value - oldValue.value : null
     return [{ state: "changed" as const, previous: oldValue, current: newValue, delta }]
   })
@@ -233,4 +233,5 @@ function freshness(confirmation: ConfirmationValidityProjection | null): TopicFr
   if (!scopeFingerprint) return { evaluatedAt: confirmation.evaluatedAt, evaluatedSourceVersion: confirmation.evaluatedSourceVersion }
   return { evaluatedAt: confirmation.evaluatedAt, evaluatedSourceVersion: confirmation.evaluatedSourceVersion, scopeFingerprint }
 }
+
 
