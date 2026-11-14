@@ -127,12 +127,18 @@ async function compose(input: {
   const bridge = createSfBusinessMcpBridge({ registry: authority.native, mcp: input.mcp, descriptors: business.descriptors, dispatch })
   const documentHttp = createSfDocumentHttp({ origin: app.origin, mount: "/sucafina", runtime: () => ({ ui: authority.ui, human: authority.human, ...documents }) })
   const importHttp = createSfImportHttp({ origin: app.origin, mount: "/sucafina", runtime: () => ({ ui: authority.ui, human: authority.human, service: imports }) })
-  const ui = async <T>(operation: string, payload: unknown, work: (call: TrustedUiContext) => Promise<T>, cookie = app.cookie) => {
+  const admittedUi = async <T>(operation: string, payload: unknown, work: (call: TrustedUiContext) => Promise<T>, cookie = app.cookie) => {
     const request = new Request(`${app.origin}/sucafina/dashboard`, { method: "POST", headers: { cookie, origin: app.origin, "Idempotency-Key": randomUUID() } })
     const access = await authority.ui.admit(request, operation, digestSfValue(payload))
-    if (access.status !== "ok" || !await authority.ui.validate(access.value, operation, digestSfValue(payload))) throw new Error("UI admission unavailable")
+    if (access.status !== "ok") throw new Error(`UI admission ${operation}: ${access.reason}`)
     try { return await work(access.value) } finally { authority.ui.finish(access.value) }
   }
+  const ui = <T>(operation: string, payload: unknown, work: (call: TrustedUiContext) => Promise<T>, cookie = app.cookie) => admittedUi(operation, payload, async (call) => {
+    if (!await authority.ui.validate(call, operation, digestSfValue(payload))) throw new Error(`UI validation ${operation}: authority-unavailable`)
+    return work(call)
+  }, cookie)
+  // The dispatcher consumes its own admission; direct domain handlers above receive a consumed grant.
+  const uiDispatch = (operation: string, payload: unknown, cookie = app.cookie) => admittedUi(operation, payload, (call) => dispatch(operation, payload, call), cookie)
   const human = async <T>(action: SfHumanAction, payload: unknown, work: (call: TrustedUiContext) => Promise<T>) => {
     const access = await authority.human.admit(app.request(), action, payload)
     if (access.status !== "ok") throw new Error(`Human admission ${action}: ${access.reason}`)
@@ -146,7 +152,7 @@ async function compose(input: {
       criteria: [], participants: [app.principal.id], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
     return { commit: true, value: caseRef }
   })
-  if (seeded.status !== "ok") throw new Error("Case admission unavailable")
+  if (seeded.status !== "ok") throw new Error(`Case admission: ${"reason" in seeded ? seeded.reason : seeded.status}`)
   const checkCase = async (record: SfNativeRunRecord, call: TrustedDomainContext): Promise<boolean> => {
     const request = authority.host.requestFor(call)
     if (!request || !await authority.host.revalidate(call)) return false
@@ -184,7 +190,7 @@ async function compose(input: {
     const currentCaseRef = structuredClone(caseRef)
     const intent = { caseRef: currentCaseRef, skillId, skillInput, selected, model }
     const access = await authority.human.admit(request, "analysis.start", intent)
-    if (access.status !== "ok") throw new Error("Run admission unavailable")
+    if (access.status !== "ok") throw new Error(`Run admission: ${access.reason}`)
     try {
       const at = new Date().toISOString()
       const record: SfNativeRunRecord = { schema: "sf-native-run-v1", runRef: runId, version: 1, requestDigest: digestSfValue(intent), intentDigest: digestSfValue(intent),
@@ -234,8 +240,11 @@ async function compose(input: {
       const domain = async <T>(operation: string, payload: unknown, work: (call: TrustedDomainContext) => Promise<T>): Promise<T> => {
         const native = await context(operation, payload)
         const lease = await authority.native.lease(native, operation, digestSfValue(payload))
-        if (lease.status !== "ok" || !authority.native.consume(lease.value, operation, digestSfValue(payload))) throw new Error("Native domain lease unavailable")
-        try { return await work(lease.value) } finally { authority.native.finish(lease.value) }
+        if (lease.status !== "ok") throw new Error(`Native domain lease ${operation}: ${lease.reason}`)
+        try {
+          if (!authority.native.consume(lease.value, operation, digestSfValue(payload))) throw new Error(`Native domain consumption ${operation}: invalid-binding`)
+          return await work(lease.value)
+        } finally { authority.native.finish(lease.value) }
       }
       const complete = async (candidate: unknown, verify: (output: ContributionEnvelope, call: TrustedDomainContext) => Promise<PortResult<true>>) => {
         outputVerifiers.set(runId, verify)
@@ -278,7 +287,7 @@ async function compose(input: {
     if (!response) throw new Error("Native consumer route missing")
     return response
   }
-  return { app, installation, authority, documents, imports, business, dispatch, bridge, proof, selected: input.selected, sessionStore: input.store, caseRef, runs, ui, human, bind, http, importHttp,
+  return { app, installation, authority, documents, imports, business, dispatch, bridge, proof, selected: input.selected, sessionStore: input.store, caseRef, runs, ui, uiDispatch, human, bind, http, importHttp,
     dispose: async () => { for (const release of releases) release(); proof.clear(); lifetime.open = false; documents.dispose(); business.dispose() } }
 }
 

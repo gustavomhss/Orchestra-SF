@@ -36,11 +36,14 @@ test.each(["txt", "docx", "pdf"] as const)("%s real Session skill and MCP share 
     const payload = { documentRef: admitted.documentRef, fieldSchemaRef: schema.ref }
     const uiEvidence = await readNativeResponse<DocumentEvidence>(await fixture.http("document", "document-extract", payload))
     expect(uiEvidence).toMatchObject({ status: "extracted", fieldCandidate: "Price", value: 42, unit: "USD" })
-    const uiReceipt = await fixture.ui("sf_document_extract", payload, (call) => fixture.dispatch("sf_document_extract", payload, call))
+    const uiReceipt = await fixture.uiDispatch("sf_document_extract", payload)
+    if (uiReceipt.status !== "ok") throw new Error(`UI sf_document_extract: ${uiReceipt.reason}`)
     expect(uiReceipt.status).toBe("ok")
-    if (uiReceipt.status !== "ok") throw new Error(uiReceipt.reason)
     expect(uiReceipt.result).toEqual(uiEvidence)
     expect(uiReceipt.receipt).toMatchObject({ kind: "ui", handlerExport: "extractDocumentEvidence", inputDigest: digestSfValue(payload) })
+    const reused = await fixture.ui("sf_document_extract", payload, (call) => fixture.dispatch("sf_document_extract", payload, call))
+    expect(reused).toMatchObject({ status: "denied", reason: "authority-unavailable", receipt: { kind: "unbound", code: "invalid-binding" } })
+    expect(reused).not.toHaveProperty("result")
     const finished = await fixture.ui("sf_document_extract", payload, async (call) => call)
     const extractionHandler = fixture.documents.descriptors.find((descriptor) => descriptor.id === "sf_document_extract")
     if (!extractionHandler) throw new Error("Extraction destination unavailable")
@@ -55,8 +58,8 @@ test.each(["txt", "docx", "pdf"] as const)("%s real Session skill and MCP share 
     const prepare = createSfDocumentAnalysisInput({ ...dependencies, documents: fixture.documents.documents.evidenceHost,
       authorize: (call) => fixture.authority.human.authorize(call, "analysis.prepare", analysisSelection) })
     const prepared = await fixture.human("analysis.prepare", analysisSelection, (call) => prepare(call, analysisSelection))
-    expect(prepared.status).toBe("ok")
     if (prepared.status !== "ok") throw new Error(prepared.reason)
+    expect(prepared.status).toBe("ok")
     expect(decodeSfSkillInput("EvidenceExtractionInput", prepared.value).ok).toBe(true)
     expect(prepared.value.limits).toEqual(sfDocumentAnalysisLimits)
     expect(prepared.value.limits).not.toHaveProperty("version")
@@ -72,8 +75,8 @@ test.each(["txt", "docx", "pdf"] as const)("%s real Session skill and MCP share 
     const results = []
     for (const surface of ["native", "mcp"] as const) {
       const result = await native.call(surface, "sf_document_extract", payload)
-      expect(result.status).toBe("ok")
       if (result.status !== "ok") throw new Error(`${surface}: ${result.reason}`)
+      expect(result.status).toBe("ok")
       const evidence = decodeSfOperationOutput("sf_document_extract", result.result)
       if (!evidence.ok) throw new Error("Native evidence output invalid")
       expect(evidence.value).toEqual(uiEvidence)
@@ -93,10 +96,12 @@ test.each(["txt", "docx", "pdf"] as const)("%s real Session skill and MCP share 
     output.outputDigest = digestSfContribution(output)
     await fixture.human("analysis.read", { runRef: native.record.runRef }, async (call) => {
       const proof = await verifier.verify(prepared.value, requestInput, call)
-      expect(proof.status).toBe("ok")
       if (proof.status !== "ok") throw new Error(proof.reason)
+      expect(proof.status).toBe("ok")
       expect(await proof.value.acceptsOutput(output, call)).toEqual({ status: "ok", value: true })
-      expect((await readSfDocumentAnalysisCandidate(candidate, call, fixture.documents.documents.evidenceHost)).status).toBe("ok")
+      const readCandidate = await readSfDocumentAnalysisCandidate(candidate, call, fixture.documents.documents.evidenceHost)
+      if (readCandidate.status !== "ok") throw new Error(`Document candidate: ${readCandidate.reason}`)
+      expect(readCandidate.status).toBe("ok")
       expect((await fixture.business.context.resolve(candidate.ref, call)).state).not.toBe("fresh")
       expect((await proof.value.acceptsOutput({ ...output, payload: { ...candidate, value: 99 } }, call)).status).not.toBe("ok")
       expect((await verifier.verify({ ...prepared.value, targetFieldSchema: { ...prepared.value.targetFieldSchema, version: `${prepared.value.targetFieldSchema.version}-changed` } }, requestInput, call)).status).not.toBe("ok")
@@ -123,14 +128,14 @@ test.each(["txt", "docx", "pdf"] as const)("%s real Session skill and MCP share 
     const searchRun = await fixture.bind("sf-revisar-condicoes-contratuais")
     const query = { query: "Price", documentRefs: [admitted.documentRef], limit: 5 }
     const searched = await readNativeResponse<EvidenceSearchResult>(await fixture.http("document", "document-search", query))
-    const searchUi = await fixture.ui("sf_knowledge_search", query, (call) => fixture.dispatch("sf_knowledge_search", query, call))
+    const searchUi = await fixture.uiDispatch("sf_knowledge_search", query)
+    if (searchUi.status !== "ok") throw new Error(`UI sf_knowledge_search: ${searchUi.reason}`)
     expect(searchUi.status).toBe("ok")
-    if (searchUi.status !== "ok") throw new Error(searchUi.reason)
     expect(searchUi.result).toEqual(searched)
     for (const surface of ["native", "mcp"] as const) {
       const result = await searchRun.call(surface, "sf_knowledge_search", query)
+      if (result.status !== "ok") throw new Error(`${surface} sf_knowledge_search: ${result.reason}`)
       expect(result.status).toBe("ok")
-      if (result.status !== "ok") throw new Error(result.reason)
       expect(result.result).toEqual(searched)
       expect(result.receipt).toMatchObject({ kind: "native", nativeSessionId: searchRun.session.id, runId: searchRun.record.runRef,
         handlerExport: "searchDocumentEvidence", inputDigest: digestSfValue(query), resultDigest: digestSfValue(searched) })
@@ -141,8 +146,8 @@ test.each(["txt", "docx", "pdf"] as const)("%s real Session skill and MCP share 
     expect(JSON.stringify(unavailableSearch)).not.toContain(admitted.documentRef)
     for (const surface of ["native", "mcp"] as const) {
       const result = await searchRun.call(surface, "sf_knowledge_search", unknownQuery)
+      if (result.status !== "ok") throw new Error(`${surface} scoped search: ${result.reason}`)
       expect(result.status).toBe("ok")
-      if (result.status !== "ok") throw new Error(result.reason)
       expect(result.result).toEqual(unavailableSearch)
     }
     const entries = await Effect.runPromise(fixture.sessionStore.entries(native.session.id))
