@@ -1,0 +1,1008 @@
+{
+  "reviewed_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+  "reviewed_tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4",
+  "reviewer": "/root/review_product_ux_final",
+  "no_author_overlap": true,
+  "verdict": "CHANGES_REQUIRED",
+  "schema": "sf2h-independent-product-ux-final/v8",
+  "recorded_at": "2026-11-14T14:40:46.891090+00:00",
+  "pr": 32,
+  "base_head": "34e6dd4f3588a64a3963a854ee29729f82fdd594",
+  "status": "FINAL_FOR_DECLARED_W17_SCOPE",
+  "review_role": "Independent nonauthor product/UX reviewer",
+  "authorship_exclusions": {
+    "product_edits": false,
+    "test_edits": false,
+    "workflow_edits": false,
+    "github_mutations": false,
+    "local_product_execution": false,
+    "writes": "Only own independent-review-staging/product-ux review/metadata files.",
+    "implementation_owners_not_this_reviewer": [
+      "Astra WP00/WP10 composition root",
+      "Finance owners",
+      "Intelligence owners",
+      "Other published implementation owners"
+    ]
+  },
+  "source_plan": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "observed_campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "campaign_bytes": 1503706,
+    "handoff": "a3d29d011ba3607a57914701300f09117a3e2de9"
+  },
+  "scope": "Independent exact-W17 product/UX delta, terminal Check15 and terminal CI10 review. CI10 establishes five complete lifecycle cases and four actual normal-driver-cleanup proofs at this C. Overall CHANGES_REQUIRED: complete UX, other consumers, native/manual evidence and global gates remain open.",
+  "predecessor": {
+    "report": "final-34e6dd4f3588.json",
+    "sha256": "3a07e286b2f1a7d3c2be10dd2f0522af4320542f578581c2869c01116cbe7624",
+    "markdown": "final-34e6dd4f3588.md",
+    "markdown_sha256": "c61807d9ab2bad806cbb80a689d53ea532e9e18b0ad07cae4805cca254ef3997",
+    "originals_preserved": true
+  },
+  "method": [
+    "Independent MCP Git object and complete9-path W16→W17 compare;1 own fixture,8 receipts,zero deletions,zero product or foreign helper changes.",
+    "Independent exact-W17 reads of48 repository blobs. All46 W16 critical paths reopened:45 identical, only bi-lifecycle changed. Driver76188b9 and deadline3eb1405 identities confirmed unchanged.",
+    "Read the complete362-line driver and actual fixture acquisition/cancellation/disposal/report paths; no runtime behavior inferred from source.",
+    "Metadata-only comparison confirms81 standalone and83 containing-expect lines retained, same5 test names and120000ms budgets,4 expectSpawn declarations and4 reports; fifth nonbrowser body byte-identical.",
+    "Independently verified Check15 W→S envelope, parents, jobs/logs/artifact metadata, and14 diagnostic equality with Check14. Root performs the only ZIP download.",
+    "Independently read CI10 W/S Git identities, sole-envelope diff, full request, terminal run and both jobs, decoded job log, all five case results and four actual driver proofs. The earlier zero-run cut remains preserved in the draft; terminal SUCCESS was independently observed at 14:32:34Z.",
+    "Validated only log metadata locally: four unique Node and Chromium PID pairs, actual Omni accounting, all normal-cleanup proof fields; no product runtime executed locally.",
+    "No product/browser/test/typecheck/build/guard execution locally, no CI dispatch, no GitHub mutations or artifact download."
+  ],
+  "mcp_anchor": "final-9048e0e65351-anchor.json",
+  "incremental_review_file": "final-9048e0e65351-delta-review.json",
+  "checks_observation_file": "final-9048e0e65351-checks-observation.json",
+  "compare": {
+    "paths": 9,
+    "own_fixture_files": 1,
+    "receipt_files": 8,
+    "deletions": 0,
+    "product_source_changes": 0,
+    "foreign_helper_changes": 0
+  },
+  "new_candidate_delta": {
+    "reviewed_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+    "reviewed_tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4",
+    "reviewer": "/root/review_product_ux_final",
+    "no_author_overlap": true,
+    "verdict": "CHANGES_REQUIRED",
+    "schema": "sf2h-independent-product-ux-delta/v7",
+    "status": "FINAL_STATIC_AND_SCOPED_RUNTIME_REVIEW",
+    "publication": {
+      "paths": 9,
+      "own_fixture_files": 1,
+      "receipt_files": 8,
+      "deletions": 0,
+      "product_source_changes": 0,
+      "foreign_helper_changes": 0
+    },
+    "fixture": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "base_blob": "d4f3078394e65092f5da9261d5febfad61080f0a",
+      "blob": "a6e4dbe4bddc18866a8fe8082fa889540ac75972",
+      "static_assertion_comparison": {
+        "prior_blob": "d4f3078394e65092f5da9261d5febfad61080f0a",
+        "composed_blob": "a6e4dbe4bddc18866a8fe8082fa889540ac75972",
+        "standalone_expect_lines": {
+          "old": 81,
+          "new": 81,
+          "retained_in_order": true
+        },
+        "containing_expect_lines": {
+          "old": 83,
+          "new": 83,
+          "all_retained": true
+        },
+        "test_names_and_budgets": [
+          {
+            "name": "BI keeps the canonical shell, refreshes on manual focus and timer, and signs out once while discarding a held genuine success",
+            "name_unchanged": true,
+            "old_budget": "120_000",
+            "new_budget": "120_000",
+            "unchanged": false
+          },
+          {
+            "name": "the canonical shell still polls authority while BI awaits a held result and revocation prevents every late render",
+            "name_unchanged": true,
+            "old_budget": "120_000",
+            "new_budget": "120_000",
+            "unchanged": false
+          },
+          {
+            "name": "clearing the BI selection while genuine authorized options are delayed prevents restoration of the previous selection",
+            "name_unchanged": true,
+            "old_budget": "120_000",
+            "new_budget": "120_000",
+            "unchanged": false
+          },
+          {
+            "name": "BI returns from a real source with the same human filters, version pair, currency and mark focus after current reauthorization",
+            "name_unchanged": true,
+            "old_budget": "120_000",
+            "new_budget": "120_000",
+            "unchanged": false
+          },
+          {
+            "name": "BI origin digests select only an explicit source of the real current Planner difference and never choose A or B implicitly",
+            "name_unchanged": true,
+            "old_budget": "120_000",
+            "new_budget": "120_000",
+            "unchanged": true
+          }
+        ],
+        "expectSpawn_declarations": 4,
+        "report_calls": 4,
+        "unchanged_field_semantics": "The per-case unchanged flag compares the entire case body; names and budgets are separately unchanged for all five cases."
+      },
+      "judgment": "The four browser cases now use the already published WP02 Node driver. Real Bun HTTP/product host, SQLite/C08/C16, mounted session, held actual responses, source navigation and state assertions remain. Diagnostics add request/handler produced/returned/failed phases and comparison click timing without changing response handling or payload."
+    },
+    "driver_review": {
+      "blob": "76188b9f567861b30dba3b22afce66d60a2424c8",
+      "full_source_read": true,
+      "ownership": "Node AppProcess scope owns Chromium DevTools pipes; Bun remains the actual product HTTP host and Playwright client. The helper is unchanged, and only an allowed contextual-controls diagnostic consumer label is reused.",
+      "acquisition": "Dispose is registered before async acquisition; acquired close is retained before cancellation is checked. Pending acquisitions and held gates are awaited/released. Helper removes startup abort listener on return, so fixture disposal does not prematurely abort an acquired process before its normal close protocol.",
+      "normal_cleanup": "Helper closes all contexts, disconnects browser, sends stdin EOF, awaits normal Node/Chromium exit0, validates clean WebSocket1000 and Unix EOF, bounded actual traffic, zero queued/pending bytes, closed listener/socket and removed socket/directory before storing proof.",
+      "failure_cleanup": "A failed close remains failed; helper cancels and awaits its AppProcess scope and rethrows. No cleanup failure can fabricate observed.proof.",
+      "scope_limit": "The source contract is now accompanied by four actual CI10 normal-cleanup proofs at W17. No forced driver-failure path or historical WP07 cleanup repair is established. Bun descriptor recycling remains a helper rationale, not a proved root cause of CI9."
+    },
+    "report_gating": {
+      "declarations": 4,
+      "reports": 4,
+      "judgment": "Each report is after awaited finally cleanup. Uncaught test errors or aggregated body/cleanup failures prevent reaching it. report() itself rejects missing completed-cleanup proof. Fifth nonbrowser case remains byte-identical and has no new declaration/report.",
+      "actual_omni_proof": "PASS: four actual declaring tests, four actual Omni spawns, zero delegated, four driver proofs followed by the corresponding passing case."
+    },
+    "trace_scope": {
+      "logged": [
+        "mode",
+        "method",
+        "viewId",
+        "phase",
+        "status",
+        "elapsedMs",
+        "aborted"
+      ],
+      "excluded": [
+        "cookie",
+        "full URL",
+        "selector",
+        "payload",
+        "credential"
+      ],
+      "judgment": "Passive diagnostics for three controlled BI modes; no product behavior or financial/native policy changed."
+    },
+    "budgets": {
+      "outer_each_ms": 120000,
+      "cooperative_ms": 105000,
+      "driver_acquisition_ms": 15000,
+      "page_default_ms": 10000,
+      "navigation_ms": 15000,
+      "existing_increases": 0
+    },
+    "open_findings": [
+      "Historical WP07 process/group/transport fault path remains open; the exercised new-driver Planner source/Back return path passed W17 CI10.",
+      "UX-WP05-BI-ADVANTAGE-REFLOW-07",
+      "Six positive browser destinations",
+      "Open-detail refresh/focus/scroll",
+      "Viewport/zoom/keyboard",
+      "p95",
+      "Installed/native C07/C17, AM01–AM06",
+      "Four historical CI5 C17 ancestry/reopen cases remain without passing execution; earlier two stale-case positives belong to W15 CI8 only.",
+      "C12/H05 and external typechecks",
+      "Eight S0 final selections; three independent final reviews; C/G7 and D/G8"
+    ],
+    "runtime_status": "CI10 SUCCESS at exact W17: five complete lifecycle cases and four authentic driver normal-cleanup proofs",
+    "local_product_execution": false,
+    "product_authorship": false,
+    "github_writes": false,
+    "runtime_result": {
+      "run": 43605201442,
+      "job": 132478265438,
+      "S": "dcd14c5fad0c84143d3071557c493e2c5de3e9e4",
+      "pass": 5,
+      "fail": 0,
+      "tests": 5,
+      "files": 1,
+      "assertions": 114,
+      "elapsed_seconds": 16.02,
+      "omni": {
+        "status": "PASS",
+        "nonce": "7b19b299b892fc9d0777b0a87e16f2b7",
+        "declared_tests": 4,
+        "spawns": 4,
+        "delegated": 0
+      },
+      "driver_proofs": 4
+    },
+    "current_scope_pass": {
+      "return_to_source_and_back": true,
+      "human_filters_pair_currency_and_focus_marker": true,
+      "mounted_session_revocation_and_late_payload_exclusion": true,
+      "normal_driver_cleanup": true,
+      "full_six_destinations": false,
+      "full_UX_criteria": false,
+      "native_AM_global": false
+    }
+  },
+  "findings": [
+    {
+      "id": "UX-WP10-BI-RETURN-CONTEXT-01",
+      "severity": "MUST_FIX",
+      "owner": "WP10",
+      "status": "RESOLVED_FOR_EXERCISED_PLANNER_SOURCE_RETURN_AT_W17_CI10",
+      "criteria": [
+        "CAMP.QLT.01",
+        "CAMP.QLT.03",
+        "WP10.T02.CMP.01",
+        "WP10.T02.SUC.01",
+        "WP10.T03.CHK.02"
+      ],
+      "evidence": [
+        "extended-bi-browser.ts preserves identifiers/filters/version pair/currency/ready/focus in this history entry; it clears private DOM on pagehide and reauthorizes options and data on return. Invalid history selectors do not fall back to old URL selectors.",
+        "bi-lifecycle.test.ts adds actual Chromium/SQLite/cookie/C16 source navigation and Back assertions for filter, explicit A/B, currency and focus restoration.",
+        "CI10 actual source/Back case passed in 5783.85ms at W17: comparison response and DOM, Planner source HTTP/navigation, fresh authorization and BI response on Back, exact period/selection/A-B/USD and active mark focus assertions all completed before normal cleanup/report."
+      ],
+      "remaining": [
+        "This closes the exercised Planner origin/source and Back return path only. The six canonical destinations, active-detail refresh, visual/keyboard/performance and native/global criteria are tracked separately and remain incomplete.",
+        "The earlier W16 timeout and WP07 cleanup failure remain historical evidence. A passing new Node-driver path does not prove their root cause or repair that unmodified helper fault path."
+      ],
+      "independent_recheck_reviewer": "/root/review_product_ux_final",
+      "independent_recheck_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "static_recheck": "Exact-W17 MCP reanchor: 45/46 prior critical sources unchanged; only the BI lifecycle fixture changes driver, diagnostics and report gating. UI markup, service and foreign reflow renderer remain unchanged. CI10 current-head runtime covers only the five lifecycle cases detailed in this review.",
+      "originated_by_reviewer": "/root/review_product_ux_w8",
+      "independent_recheck_tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4",
+      "current_case": {
+        "run": 43605201442,
+        "job": 132478265438,
+        "elapsed_ms": 5783.85,
+        "whole_compound_criteria_pass": false
+      }
+    },
+    {
+      "id": "UX-WP10-BI-DECISION-NAV-02",
+      "severity": "MUST_FIX",
+      "owner": "WP10; canonical destination owners",
+      "status": "ONE_CURRENT_PLANNER_SOURCE_RETURN_PASS_FULL_SIX_DESTINATIONS_OPEN",
+      "criteria": [
+        "WP10.T01.DOD.01",
+        "WP10.T01.CMP.01",
+        "WP10.T02.CMP.01",
+        "WP10.SUC.10",
+        "CAMP.SUC.90"
+      ],
+      "evidence": [
+        "renderBiView receives all six canonical navigation callbacks; bi-data returns selection membership descriptors, and bi-decision reopens actual result/coverage/question/case/BCS readers under fresh C16 and case authority.",
+        "Server rechecks exact projection/selection/Request/binding/abort/authority; ambiguous same-kind/key targets are not resolved by array order. Browser aborts superseded destination reads and excludes stale responses.",
+        "New adapter tests use real published Planner/C08 fixture for result/coverage destinations and negative HTTP admission; source/evidence/question/case positive browser behavior is not established.",
+        "CI10 now adds a positive actual Planner origin/source navigation and Back browser path at W17. It does not exercise all six decision callbacks or every source/evidence/question/case journey."
+      ],
+      "remaining": [
+        "All six positive browser destinations and complete J01–J13 remain unproved. The exercised Planner origin/source is a narrow positive path, not blanket source/destination acceptance.",
+        "Other source/evidence/question/case contexts and destination callback lifecycle require actual positive journeys. C12/H05 Expected409/Received200 and consumer dependencies remain."
+      ],
+      "independent_recheck_reviewer": "/root/review_product_ux_final",
+      "independent_recheck_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "static_recheck": "Exact-W17 MCP reanchor: 45/46 prior critical sources unchanged; only the BI lifecycle fixture changes driver, diagnostics and report gating. UI markup, service and foreign reflow renderer remain unchanged. CI10 current-head runtime covers only the five lifecycle cases detailed in this review.",
+      "originated_by_reviewer": "/root/review_product_ux_w8",
+      "independent_recheck_tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4"
+    },
+    {
+      "id": "UX-WP10-REVIEW-SHELL-REFRESH-03",
+      "severity": "MUST_FIX",
+      "owner": "WP10",
+      "status": "IMPLEMENTED_STATIC_RECHECKED_HISTORICAL_NARROW_BROWSER_PASS",
+      "criteria": [
+        "WP10.T01.DOD.01",
+        "WP10.T02.QLT.01",
+        "WP10.T02.SUC.01",
+        "WP10.T03.CHK.02",
+        "CAMP.QLT.01",
+        "CAMP.QLT.03"
+      ],
+      "evidence": [
+        "Mounted Review claims sucafina:main-refresh after shell authorization and keeps the live reader, preserving human state rather than replacing it with an unbootstrapped Loading review main. HTTP now emits accessRevision for Review as well as BI.",
+        "sf-access-revoked, logout and pagehide dispose/abort private reads and remove private content; read/probe requests are bounded and late responses cannot remount after generation changes.",
+        "review-access-browser-fixture.ts asserts manual and 30-second refresh preserve the connected workspace and selected section before existing real revocation checks.",
+        "CI7 W14 actual Review browser manual/periodic refresh, retained DOM and case-revocation body passed in71485.65ms; overall run and Omni gate failed. This is a narrow historical body observation."
+      ],
+      "remaining": [
+        "Review sources remain unchanged and outside CI10. The narrow browser body PASS stays W14/CI7 historical with that run/Omni failure; it is not current-head execution evidence.",
+        "Complete browser/installed authority and p95 remain unqualified."
+      ],
+      "independent_recheck_reviewer": "/root/review_product_ux_final",
+      "independent_recheck_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "static_recheck": "Exact-W17 MCP reanchor: 45/46 prior critical sources unchanged; only the BI lifecycle fixture changes driver, diagnostics and report gating. UI markup, service and foreign reflow renderer remain unchanged. CI10 current-head runtime covers only the five lifecycle cases detailed in this review.",
+      "originated_by_reviewer": "/root/review_product_ux_w8",
+      "independent_recheck_tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4"
+    },
+    {
+      "id": "UX-WP10-BI-DETAIL-REFLOW-04",
+      "severity": "MUST_FIX",
+      "owner": "WP10",
+      "status": "IMPLEMENTED_STATIC_RECHECKED_RUNTIME_UNVERIFIED",
+      "criteria": [
+        "CAMP.QLT.02",
+        "CAMP.QLT.03"
+      ],
+      "original_blob": "66ed9f24390da0994bfad812706d9639a536f8a6",
+      "rechecked_blob": "2296b8a2ff874f22e074666f8fa5d4e6432fb5c9",
+      "mechanism": "Original detail attached 4–6-column tables directly to the section while global shell td is nowrap and th has minimum widths. This propagates width to the page at small viewport. Long dd identifiers also lacked wrapping.",
+      "correction": "Owner added width-constrained/wrapping section and local horizontally scrolling, named, keyboard-focusable table regions with preserved captions and scoped headers. Source recheck addresses the static cause.",
+      "remaining": [
+        "320/768/1440px,200%zoom,keyboard and dense/long data remain unobserved. Static detail containment does not close foreign advantage reflow."
+      ],
+      "independent_recheck_reviewer": "/root/review_product_ux_final",
+      "independent_recheck_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "static_recheck": "Exact-W17 MCP reanchor: 45/46 prior critical sources unchanged; only the BI lifecycle fixture changes driver, diagnostics and report gating. UI markup, service and foreign reflow renderer remain unchanged. CI10 current-head runtime covers only the five lifecycle cases detailed in this review.",
+      "originated_by_reviewer": "/root/review_product_ux_w8",
+      "independent_recheck_tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4"
+    },
+    {
+      "id": "UX-WP10-BI-DETAIL-REFRESH-05",
+      "severity": "MUST_FIX",
+      "owner": "WP10",
+      "status": "IMPLEMENTED_STATIC_RECHECKED_RUNTIME_UNVERIFIED",
+      "criteria": [
+        "CAMP.QLT.01",
+        "CAMP.QLT.02",
+        "CAMP.QLT.03",
+        "WP10.T02.CMP.01"
+      ],
+      "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "scenario": "Open a BI09–BI11 result/coverage/source detail; continue reading for 30 seconds, or leave and refocus the window.",
+      "mechanism": "scheduleRefresh calls load() whenever selection is nonempty. load removes content and renders only the chart; successful load then restores returnFocus. refreshAuthorized on window focus/visibility likewise clears content via loadOptions and load. No active-detail descriptor is retained.",
+      "impact": "The detail disappears silently during reading and focus moves back into the chart; context and reading position are lost despite unchanged authority/data.",
+      "expectation": "Keep or re-open the exact active detail under fresh current authorization, with stable reading focus; if changed authority/data invalidate it, explain that transition. Do not retain protected data merely to avoid refreshing.",
+      "proof_kind": "Direct static control-flow evidence; no local/runtime execution.",
+      "original_blob": "debf7353155b88cd98c2ab2a2156b23f5a0e4fb0",
+      "rechecked_blob": "e491194f76b2183d04666a7f82c53a9490822678",
+      "correction": "Owner preserves only selected detail identity and reading position across refresh, then fetches a fresh projection/catalog and reopens the same protected destination with a new C16 invocation. It restores focus/table/document position after successful reauthorization and explicitly clears invalidated membership, filters, logout, revocation and close.",
+      "remaining": [
+        "W17 CI10 currently passes shell authority polling, mounted-session revocation, protected DOM removal and held late-payload exclusion; this does not exercise a detail that stays open across timer/focus refresh.",
+        "Positive detail-open timer/focus refresh with current authority/membership, focus/scroll and changed-selection/late-response exclusion remains missing."
+      ],
+      "independent_recheck_reviewer": "/root/review_product_ux_final",
+      "independent_recheck_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "static_recheck": "Exact-W17 MCP reanchor: 45/46 prior critical sources unchanged; only the BI lifecycle fixture changes driver, diagnostics and report gating. UI markup, service and foreign reflow renderer remain unchanged. CI10 current-head runtime covers only the five lifecycle cases detailed in this review.",
+      "originated_by_reviewer": "/root/review_product_ux_w8",
+      "independent_recheck_tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4"
+    },
+    {
+      "id": "UX-WP10-BI-CHOICE-AMPLIFICATION-06",
+      "severity": "MUST_FIX",
+      "owner": "WP10",
+      "status": "HISTORICAL_SCOPED_RUNTIME_PASS_CURRENT_SOURCE_REANCHOR_ONLY",
+      "criteria": [
+        "CAMP.QLT.05",
+        "CAMP.QLT.03"
+      ],
+      "path": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+      "mechanism": "300-result raw-record bound does not bound the Cartesian product of direct comparisons, inverses and sensitivities; every generated choice is subsequently reopened sequentially via fresh C16 and producer reads.",
+      "example": "2 scenarios + 100 A-to-B comparisons + 99 B-to-A comparisons + 99 B sensitivities = 300 authorized records. BI09 generates at least 100 * (1+99) * (1+99) = 1,000,000 distinct B choices before producer rereads. Distinct refs prevent Map deduplication.",
+      "impact": "Selection work and eventual select DOM can grow by orders of magnitude within the accepted raw-record bound. A 30-second client timeout is not a bound on the precomputed expansion and does not make this a usable selection flow.",
+      "expectation": "Bound work before expanded enumeration, using explicit progressive selection/current case or a clearly explained needs-input path. Preserve every human choice without silently choosing first/latest or truncating alternatives.",
+      "proof_kind": "Arithmetic and source control-flow only; no benchmark, elapsed-time or p95 claim.",
+      "original_blob": "0176385836ed58bc58ce2c171ece3596ccfe9fdd",
+      "rechecked_blob": "865eb0ca54fce9dd9c85ea227b0bc6e947f9e170",
+      "correction": "Owner now reserves complete planned candidate cardinality before constructing any Cartesian selector or invoking per-choice C16. Above 300 choices the function returns needs-input without a partial value; ordinary options are not silently truncated or chosen by first/latest. Scenario/inverse/sensitivity products and portfolio choices consume the same bounded plan.",
+      "remaining": [
+        "Advantage/cardinality/authorization/header cases passed on W16 CI9 and remain source-identical at W17; they are outside CI10 and are not a current-head runtime claim.",
+        "Progressive recovery/case-chooser UX,30 comparable measurements,200msfeedback and p95 baseline/regression qualification remain missing."
+      ],
+      "independent_recheck_reviewer": "/root/review_product_ux_final",
+      "independent_recheck_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "static_recheck": "Exact-W17 MCP reanchor: 45/46 prior critical sources unchanged; only the BI lifecycle fixture changes driver, diagnostics and report gating. UI markup, service and foreign reflow renderer remain unchanged. CI10 current-head runtime covers only the five lifecycle cases detailed in this review.",
+      "originated_by_reviewer": "/root/review_product_ux_w8",
+      "independent_recheck_tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4",
+      "evidence": [
+        "W16 CI9 passes all3 advantage cases: inverse/canonical values, cardinality bound, first/last actual authorization lease loss, Request substitution and first/last header mutation, preserving the unconditional baseline counter."
+      ]
+    },
+    {
+      "id": "UX-WP05-BI-ADVANTAGE-REFLOW-07",
+      "severity": "MUST_FIX",
+      "owner": "WP05/Finance; WP10 composition consumer",
+      "status": "OPEN_MUST_FIX",
+      "criteria": [
+        "CAMP.QLT.02"
+      ],
+      "reviewed_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/analytics/advantage-view.ts",
+          "blob": "47b271f492292956a8d8696cc32cd999e9878661"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+          "blob": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+          "blob": "d69bb554ba35863b0bf248c6aa0382205614d12a"
+        }
+      ],
+      "scenario": "Open a scenario selection with an explicit stored advantage comparison at a narrow viewport or equivalent zoom.",
+      "mechanism": "The new Finance renderer appends a six-column table directly to its section. Its BI parent sets minWidth and overflowWrap but no overflow containment. Global shell cells remain nowrap and column headers have minimum widths, so the table pushes the page horizontally beyond the viewport.",
+      "impact": "The newly composed advantage view recreates the reflow problem from finding 04 in a separate foreign-owned producer/renderer. Existing correction 04 applies to inline navigation details and does not contain this table.",
+      "expectation": "Owner supplies local table overflow containment and keyboard-operable access while preserving caption/header associations, canonical values and destination callbacks. Confirm 320/768/1440px and 200% zoom on the affected candidate.",
+      "proof_kind": "Independent GitHub MCP identity plus static DOM/CSS/control-flow inspection; no browser execution and no visual PASS.",
+      "forwarding": "Sent immediately to root for owner intake; no foreign product edit or proposed author patch.",
+      "independent_recheck_reviewer": "/root/review_product_ux_final",
+      "independent_recheck_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "static_recheck": "Exact-W17 MCP reanchor: 45/46 prior critical sources unchanged; only the BI lifecycle fixture changes driver, diagnostics and report gating. UI markup, service and foreign reflow renderer remain unchanged. CI10 current-head runtime covers only the five lifecycle cases detailed in this review.",
+      "owner_comment": "https://github.com/gustavomhss/Orchestra-SF/pull/35#issuecomment-6876551357",
+      "originated_by_reviewer": "/root/review_product_ux_w8",
+      "independent_recheck_tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4",
+      "original_reviewed_head": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "remaining": [
+        "No W17 owner reflow correction. Blob47b271f remains mandatory; needs owner containment correction and viewport/zoom/keyboard proof."
+      ]
+    }
+  ],
+  "runtime_signals_requiring_owner_followup": [
+    {
+      "id": "WP07-HISTORICAL-FAULT-PATH",
+      "owner": "WP07 browser owner with WP10 composition",
+      "status": "OPEN_HISTORICAL_FAILURE_NOT_RETESTED_BY_NORMAL_NODE_PATH",
+      "last_observed_product": "34e6dd4f3588a64a3963a854ee29729f82fdd594",
+      "last_run": 43603388390,
+      "last_job": 132472742026,
+      "evidence": "The old path timed out before navigation, then reported connected:true and three unsettled close RPCs; final physical group members were not enumerated. W17 does not change the WP07 helper.",
+      "current_positive_limit": "CI10 passes the complete Planner return body and normal Node-driver cleanup at W17. No forced driver-failure path or repair of the former WP07 helper is demonstrated.",
+      "next_action": "Owner qualifies the failing teardown/cancellation path without weakening body or cleanup assertions; do not infer physical process survivors or a specific timeout root cause from incomplete historical telemetry.",
+      "owner_comment": "https://github.com/gustavomhss/Orchestra-SF/pull/33#issuecomment-6878062059"
+    }
+  ],
+  "positive_scoped_observations": [
+    "Exact-W17 CI10 passes all five complete lifecycle cases: 114 assertions in16.02s, zero unhandled errors. All four browser cases have an authentic report after mandatory awaited cleanup.",
+    "Current Planner source/Back return passes actual comparison HTTP and DOM, source HTTP/navigation, fresh BI response after Back, period/selection/A-B/USD and active mark focus. This is one exercised destination journey.",
+    "Current shell/manual/focus/timer refresh, mounted-session revocation, delayed real options clearing, protected DOM removal and held late-payload exclusion pass through the real Bun host and browser.",
+    "Four actual normal-driver-cleanup proofs establish zero contexts, disconnection, clean EOF/WebSocket1000, normal Node/Chromium exit0, closed listener/socket, zero pending/queued bytes, and removed socket/directory.",
+    "Omni PASS: four declaring tests, four actual spawns, zero delegated, nonce7b19b299b892fc9d0777b0a87e16f2b7. The fifth nonbrowser case does not invent a spawn.",
+    "Exact-W17 Check15 CLI/Atlas/subprocess/guards pass; Sucafina still fails the14 external diagnostics identical to Check14."
+  ],
+  "check_evidence": {
+    "Check15": {
+      "run": 43604348151,
+      "job": 132475647040,
+      "W": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "S": "771cf5896aa504620ab35a2e44cca2606b7e18c3",
+      "snapshot_tree": "12707f474e546fe850ab798de957d2fc535007ff",
+      "conclusion": "failure",
+      "sf_diagnostics": 14,
+      "own_diagnostics": 0,
+      "cli_diagnostics": 0,
+      "same_14_as_Check14": true,
+      "guard": {
+        "rules": 78,
+        "changed_paths": 1423,
+        "gate": 0,
+        "warn": 46,
+        "errors": 0,
+        "base": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "spawn_guard": {
+        "files": 4671,
+        "allow_listed_sites": 66
+      },
+      "artifact": {
+        "id": 14117816293,
+        "sha256": "c9520733218b5b12b9540594b4330b76f1d313bd6af2f3b97cbb7d5569700c33",
+        "reviewer_metadata_only": true
+      },
+      "root_artifact_verification_receipt": {
+        "path": "evidence/check15-artifact-verification.json",
+        "reported_sha256": "be75cee1629735451727fbc7fac806da27392ebdf11d9a0294650f8b5402620f",
+        "scope": "Root performed the unique ZIP download; reviewer only reads receipt metadata.",
+        "local_metadata_sha256": "be75cee1629735451727fbc7fac806da27392ebdf11d9a0294650f8b5402620f",
+        "matches_root_reported_sha256": true,
+        "reviewer_opened_zip": false
+      }
+    },
+    "CI10": {
+      "W": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "product_tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4",
+      "S": "dcd14c5fad0c84143d3071557c493e2c5de3e9e4",
+      "snapshot_tree": "823a2081fbc1fab1f39e441cf0f9bd3fa34687e1",
+      "parents": [
+        "9048e0e65351a5bd80768458a79fed94a4993db7"
+      ],
+      "envelope_blob": "6decd1736e1fda8ac653ff5ec7a03d3f48d47ede",
+      "only_changed_paths": [
+        ".ci-run.json"
+      ],
+      "request_sha256": "b7e57c0f9591b817e4d387c73e29d1875c1fbb684dd100687dd6b1a688475d2a",
+      "status": "completed",
+      "run": 43605201442,
+      "job": 132478265438,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43605201442/job/132478265438",
+      "conclusion": "success",
+      "pass": 5,
+      "fail": 0,
+      "tests": 5,
+      "files": 1,
+      "assertions": 114,
+      "elapsed_seconds": 16.02,
+      "unhandled_errors": 0,
+      "omni": {
+        "status": "PASS",
+        "nonce": "7b19b299b892fc9d0777b0a87e16f2b7",
+        "declared_tests": 4,
+        "spawns": 4,
+        "delegated": 0
+      },
+      "actual_spawns": 4,
+      "actual_driver_cleanup_proofs": 4,
+      "proof_log_lines": [
+        871,
+        919,
+        952,
+        1026
+      ],
+      "proof_metadata_validation": {
+        "kind": "LOG_METADATA_ONLY",
+        "proof_count": 4,
+        "distinct_drivers": 4,
+        "distinct_browsers": 4,
+        "results": [
+          {
+            "driver": 4099,
+            "browser": 4114,
+            "valid": true
+          },
+          {
+            "driver": 4236,
+            "browser": 4251,
+            "valid": true
+          },
+          {
+            "driver": 4374,
+            "browser": 4389,
+            "valid": true
+          },
+          {
+            "driver": 4514,
+            "browser": 4529,
+            "valid": true
+          }
+        ]
+      },
+      "cases": [
+        {
+          "status": "pass",
+          "name": "BI keeps the canonical shell, refreshes on manual focus and timer, and signs out once while discarding a held genuine success",
+          "elapsed_ms": 4333.16,
+          "line": 872
+        },
+        {
+          "status": "pass",
+          "name": "the canonical shell still polls authority while BI awaits a held result and revocation prevents every late render",
+          "elapsed_ms": 2357.29,
+          "line": 920
+        },
+        {
+          "status": "pass",
+          "name": "clearing the BI selection while genuine authorized options are delayed prevents restoration of the previous selection",
+          "elapsed_ms": 2468.05,
+          "line": 953
+        },
+        {
+          "status": "pass",
+          "name": "BI returns from a real source with the same human filters, version pair, currency and mark focus after current reauthorization",
+          "elapsed_ms": 5783.85,
+          "line": 1027
+        },
+        {
+          "status": "pass",
+          "name": "BI origin digests select only an explicit source of the real current Planner difference and never choose A or B implicitly",
+          "elapsed_ms": 652.69,
+          "line": 1044
+        }
+      ],
+      "workflow_cleanup": {
+        "job": 132478786112,
+        "conclusion": "success",
+        "scope": "Snapshot branch deletion; separate from four actual driver normal-cleanup proofs."
+      },
+      "artifacts": [],
+      "root_log_metadata": {
+        "path": "evidence/ci10.log",
+        "sha256": "e1523b406dbed298dea8853371390c09366e094510a3e57642f97d5083b6b2d2",
+        "bytes": 108596,
+        "scope": "Local hash metadata only. Actual run/job/log/proof evidence was also read independently through GitHub MCP; no artifact download."
+      },
+      "detailed_proof_file": "final-9048e0e65351-checks-observation.json"
+    },
+    "historical": [
+      {
+        "file": "final-34e6dd4f3588-checks-observation.json",
+        "product": "34e6dd4f3588a64a3963a854ee29729f82fdd594",
+        "scope": "CI9 W16 only:7pass/1fail, return response and cleanup failure; no W17 runtime result transfer."
+      }
+    ]
+  },
+  "criteria_map": [
+    {
+      "criteria": [
+        "WP10.T02.DOD.01",
+        "WP10.T02.CMP.01",
+        "WP10.T02.SUC.01",
+        "CAMP.SUC.90"
+      ],
+      "state": "SCOPED_CURRENT_PLANNER_RETURN_PASS_COMPOSITE_OPEN",
+      "evidence": "CI10 passes actual Planner source/Back and exact human state at W17. Complete six destinations and J01–J13 remain unproved; no blanket composite-criterion PASS."
+    },
+    {
+      "criteria": [
+        "CAMP.QLT.01",
+        "CAMP.QLT.03",
+        "WP10.T02.QLT.01",
+        "WP10.T03.CHK.02"
+      ],
+      "state": "SCOPED_CURRENT_SHELL_RETURN_AND_NORMAL_CLEANUP_PASS_COMPOSITE_OPEN",
+      "evidence": "Five lifecycle cases and four actual normal cleanup proofs pass. Active-detail refresh/read-position, Review current execution and historical WP07 fault path remain incomplete."
+    },
+    {
+      "criteria": [
+        "CAMP.QLT.02"
+      ],
+      "state": "MUST_FIX_OPEN",
+      "evidence": "Reflow07 is unchanged; viewport/zoom/keyboard/dense-data validation is absent."
+    },
+    {
+      "criteria": [
+        "CAMP.QLT.05",
+        "WP10.T02.CHK.05"
+      ],
+      "state": "OPEN",
+      "evidence": "W16 bounded-cardinality positives remain historical. Single CI10 phase/case durations do not establish30 comparable measurements,200msfeedback,p95baseline or +20%regression investigation."
+    },
+    {
+      "criteria": [
+        "WP10.T02.INV.01",
+        "WP10.T02.INV.10"
+      ],
+      "state": "SCOPED_CURRENT_OMNI_PASS_NATIVE_RELEASE_OPEN",
+      "evidence": "CI10 independently reports4 declaring tests/4 actual spawns/0delegated and4 completed driver proofs; this does not establish installed native/provider closure."
+    },
+    {
+      "criteria": [
+        "WP10.T02.DOD.10",
+        "WP10.T02.CMP.10"
+      ],
+      "state": "NATIVE_AND_C17_CLOSURE_OPEN",
+      "evidence": "Installed C07/C17 provider/recipient/policy/project-memory/mixed-source/failure/retry/revoke and AM01–AM06 remain. Four CI5 ancestry/reopen cases lack passing execution; two selected stale-case positives belong only to W15 CI8."
+    },
+    {
+      "criteria": [
+        "WP10.T03",
+        "C/G7"
+      ],
+      "state": "OPEN",
+      "evidence": "This final independent review is CHANGES_REQUIRED. Three final nonauthor reviews without mandatory findings and8 S0 final selections remain required."
+    },
+    {
+      "criteria": [
+        "D/G8"
+      ],
+      "state": "BLOCKED_NOT_QUALIFIED",
+      "evidence": "PROPOSED_EVIDENCE_BRANCH_NOT_D; original input audit is not relabelled to W17."
+    }
+  ],
+  "source_owner_reflow_observation": {
+    "path": "modules/sucafina/Sucafinav1/product/analytics/advantage-view.ts",
+    "blob": "47b271f492292956a8d8696cc32cd999e9878661",
+    "status": "OPEN_MUST_FIX",
+    "owner_comment": "https://github.com/gustavomhss/Orchestra-SF/pull/35#issuecomment-6876551357",
+    "not_changed_by_W15": true,
+    "not_changed_by_W16": true,
+    "not_changed_by_W17": true
+  },
+  "delivery_assessment": {
+    "status": "PROPOSED_EVIDENCE_BRANCH_NOT_D",
+    "blocking_reason": "Existing generate -> format -> prettier . includes proposed JSON/Markdown receipts without matching ignores; no new-input proof for Turbo/full loader closure.",
+    "root_audit": "evidence/delivery-envelope-input-audit.json",
+    "independent_config_mcp_reads": {
+      "script/generate.ts": "60308900ce20c10784bd6c34ad75d2e10f693058",
+      "script/format.ts": "996de9ad04a41b06ae0d12cd311d733ec9541665",
+      ".prettierignore": "dc65965b09963d0c3409d1accf4408d1139f84a5",
+      ".gitignore": "f87b0cd6e00813278e36474cf332bae735394518",
+      "turbo.json": "c375d67bc4b2738991a62994d3a81e01cdc7c639"
+    },
+    "guard_C_is_not_guard_D": true,
+    "config_sources_pinned_to": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+    "configs_unchanged_in_complete_W9_W10_compare": true,
+    "same_C_current": "9048e0e65351a5bd80768458a79fed94a4993db7",
+    "audit_is_not_relabelled_to_W10": true,
+    "D_G8": "BLOCKED_NOT_QUALIFIED",
+    "configs_unchanged_in_complete_W10_W11_compare": true,
+    "audit_is_not_relabelled_to_W11": true,
+    "configs_unchanged_in_complete_W11_W12_compare": true,
+    "audit_is_not_relabelled_to_W12": true,
+    "configs_unchanged_in_complete_W12_W13_compare": true,
+    "audit_is_not_relabelled_to_W13": true,
+    "configs_unchanged_in_complete_W13_W14_compare": true,
+    "audit_is_not_relabelled_to_W14": true,
+    "configs_unchanged_in_complete_W14_W15_compare": true,
+    "audit_is_not_relabelled_to_W15": true,
+    "configs_unchanged_in_complete_W15_W16_compare": true,
+    "audit_is_not_relabelled_to_W16": true,
+    "configs_unchanged_in_complete_W16_W17_compare": true,
+    "audit_is_not_relabelled_to_W17": true
+  },
+  "preserved_global_gates": {
+    "final_selections": [
+      "CI-SF",
+      "CI-CLI",
+      "CI-APP-SRC",
+      "CI-APP-BROWSER",
+      "CI-ATLAS-BUSINESS",
+      "CI-UI-OPERATIONS",
+      "CI-UI-DECISIONS",
+      "CI-UI-REPORTS"
+    ],
+    "proofs": [
+      "AM01",
+      "AM02",
+      "AM03",
+      "AM04",
+      "AM05",
+      "AM06"
+    ],
+    "reviews": 3,
+    "C_G7": "OPEN",
+    "D_G8": "BLOCKED_NOT_QUALIFIED",
+    "global_release": false
+  },
+  "held_intakes": {
+    "PR31": {
+      "source_head": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7",
+      "status": "HOLD_OUTSIDE_CURRENT_COMPOSITION",
+      "review_file": "independent-review-staging/product-ux/pr31-f4ed6dfd8250-harness-intake.json",
+      "review_sha256": "4d75790b914b8466e11080285583d12f794bc4b9feb0c5a02e5fd76e9730460a",
+      "unchanged_in_W13_W14_compare": true
+    },
+    "Atlas_and_Finance_comparison": "W12 Atlas test restoration and W13 Finance comparison fixture restoration remain unchanged; source-owner closure and performance findings remain."
+  },
+  "limitations": [
+    "Current-head runtime acceptance is limited to the complete five-case lifecycle file and four normal driver cleanups. No current PASS is transferred from CI9/W16, CI8/W15 or CI7/W14.",
+    "The current Planner source and Back journey is positive; it does not establish all six destination callbacks, J01–J13 or the active-detail refresh/read-position scenario.",
+    "The Bun1.3.14 descriptor-recycling helper comment is a transport rationale, not a proved root cause of the earlier timeout. The historical WP07 helper fault path is unmodified and untested by successful normal Node cleanup.",
+    "host-contextual-controls is an allowed diagnostic category, not WP02 human-journey or installed/native acceptance.",
+    "No local product execution, artifact download, visual inspection or fabricated viewport/zoom/keyboard/p95/native/AM evidence. Single fixture durations do not qualify a performance criterion.",
+    "All85 WP00,171 WP10 and50 global criteria remain intact, together with8 final selections,AM01–AM06 and3 independent final nonauthor reviews. This review is independent and still CHANGES_REQUIRED.",
+    "S0 retains sf2-stack integration and the final global suite. C/G7 remains open; D/G8 remains blocked by input qualification."
+  ],
+  "next_actions": [
+    "Root may consume this exact-W17 narrow lifecycle/normal-cleanup acceptance and preserve all predecessors; no duplicate equivalent CI10 is needed.",
+    "WP05 supplies the bounded reflow correction; qualify all remaining destinations, detail refresh, visual/keyboard and performance scenarios on their actual affected candidate.",
+    "WP07 closes the historical failure-path teardown evidence; WP10 and Planner/Atlas owners close the four C17 ancestry/reopen cases and native/provider/policy/project dependencies without transferring old greens.",
+    "Owners resolve14 external typecheck diagnostics and remaining C12/consumer dependencies; S0 retains eight final selections, AM01–AM06, three accepted independent reviews and actual C/G7 and D/G8 qualification."
+  ],
+  "ready": false,
+  "global_release": false,
+  "owner_findings_forwarding": [
+    {
+      "id": "WP10_BI_AUTHORIZATION_COUNTER_REGRESSION",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/29#issuecomment-6878456445",
+      "MCP_read": true,
+      "source_branch_modified_by_reviewer": false
+    },
+    {
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/33#issuecomment-6878062059",
+      "thread_original_product": "W14/CI7",
+      "MCP_read": true,
+      "CI9_recurrence_forwarded_to_root": true
+    },
+    {
+      "finding": "UX-WP05-BI-ADVANTAGE-REFLOW-07",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/35#issuecomment-6876551357",
+      "status": "OPEN_MUST_FIX",
+      "provenance": "Existing owner forwarding preserved."
+    }
+  ],
+  "precursor_review": {
+    "path": "independent-review-staging/runtime-authority/bi-w17-proposal/final-a6e4dbe4bddc.json",
+    "sha256": "abead061a43681b1e0c4fe16864ce60d4672f5a4241a4d53609c61a241a1ed5a",
+    "reviewer": "/root/review_runtime_final",
+    "scope": "Static proposal against W16, not published W17 runtime acceptance. Reused as provenance only; current reviewer independently reopened published delta and entire driver source."
+  },
+  "historical_runtime_signals": [
+    {
+      "id": "CI8-BI-AUTHORITY-403-200",
+      "origin_product": "5cb947a4d6e11a37dbd702404c2d4f4d352a4b57",
+      "owner": "WP10 composition",
+      "status": "RESOLVED_FOR_NARROW_CASE_AT_W16_CI9",
+      "reviewed_head": "34e6dd4f3588a64a3963a854ee29729f82fdd594",
+      "run": 43603388390,
+      "job": 132472742026,
+      "evidence": "Mounted cookie, real403, protected DOM removal and held late-payload exclusion pass in2025.68ms.",
+      "scope_limit": "Does not close whole BI, detail refresh, native identity or global criteria."
+    },
+    {
+      "id": "CI8-BI-RETURN-BODY-AND-CLEANUP",
+      "origin_product": "5cb947a4d6e11a37dbd702404c2d4f4d352a4b57",
+      "owner": "WP10 comparison/transport; coordinate WP07 harness investigation",
+      "status": "REPRODUCED_AT_W16_CI9",
+      "severity": "MUST_RESOLVE_FOR_AFFECTED_SCOPE",
+      "reviewed_head": "34e6dd4f3588a64a3963a854ee29729f82fdd594",
+      "run": 43603388390,
+      "job": 132472742026,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 438,
+      "evidence": "comparison.http10002ms after exact options/form readiness;24733.08ms case total includes failed cleanup. Connected=true,3close RPCs unsettled; final group members absent from log.",
+      "next_action": "Trace actual request/handler/response boundary; diagnose missing response and group/transport cleanup separately while preserving all behavior and cleanup assertions. No foreign defect/root cause is presumed.",
+      "forwarded_to_root": true
+    }
+  ],
+  "preserved_draft": {
+    "status_at_its_cut": "DRAFT_RUNTIME_NOT_DISPATCHED_AT_OBSERVED_CUT",
+    "observed_cut": "2026-11-14T14:30:07Z",
+    "not_rewritten": true,
+    "files": [
+      {
+        "file": "draft-9048e0e65351-anchor.json",
+        "sha256": "db17f3228228949e9cb7ba4b1d02cc65cbef11668a430ba535e22f65417b05a2",
+        "bytes": 37340
+      },
+      {
+        "file": "draft-9048e0e65351-checks-observation.json",
+        "sha256": "51be2613cab8cea77701092337eae406a7135959e6600c39e58150d3e9582d35",
+        "bytes": 14932
+      },
+      {
+        "file": "draft-9048e0e65351-ci10-dispatch-observation.json",
+        "sha256": "2074d02df51ec8d11245a24336857bacdae0a37180a3b47a289a142395d01a65",
+        "bytes": 279
+      },
+      {
+        "file": "draft-9048e0e65351-delta-review.json",
+        "sha256": "6650755b15227cf54aad57a548e62307a6c7b2c8f15f0871e571a98eeabfff41",
+        "bytes": 6048
+      },
+      {
+        "file": "draft-9048e0e65351.json",
+        "sha256": "ab72ba0c16b1b7677bacd83cfe7f1f573bf2d09c7cf487699a992d001558c4ae",
+        "bytes": 41004
+      },
+      {
+        "file": "draft-9048e0e65351.md",
+        "sha256": "69b1f505fd50ab14ed8f92f9749e8a632d81b59410a023393392da5d107de6b9",
+        "bytes": 8221
+      }
+    ]
+  },
+  "current_scoped_acceptance": {
+    "head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+    "tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4",
+    "run": 43605201442,
+    "job": 132478265438,
+    "snapshot": "dcd14c5fad0c84143d3071557c493e2c5de3e9e4",
+    "status": "PASS_FOR_FIVE_SELECTED_LIFECYCLE_CASES_AND_FOUR_NORMAL_CLEANUPS",
+    "case_results": [
+      {
+        "status": "pass",
+        "name": "BI keeps the canonical shell, refreshes on manual focus and timer, and signs out once while discarding a held genuine success",
+        "elapsed_ms": 4333.16,
+        "line": 872
+      },
+      {
+        "status": "pass",
+        "name": "the canonical shell still polls authority while BI awaits a held result and revocation prevents every late render",
+        "elapsed_ms": 2357.29,
+        "line": 920
+      },
+      {
+        "status": "pass",
+        "name": "clearing the BI selection while genuine authorized options are delayed prevents restoration of the previous selection",
+        "elapsed_ms": 2468.05,
+        "line": 953
+      },
+      {
+        "status": "pass",
+        "name": "BI returns from a real source with the same human filters, version pair, currency and mark focus after current reauthorization",
+        "elapsed_ms": 5783.85,
+        "line": 1027
+      },
+      {
+        "status": "pass",
+        "name": "BI origin digests select only an explicit source of the real current Planner difference and never choose A or B implicitly",
+        "elapsed_ms": 652.69,
+        "line": 1044
+      }
+    ],
+    "omni": {
+      "status": "PASS",
+      "nonce": "7b19b299b892fc9d0777b0a87e16f2b7",
+      "declared_tests": 4,
+      "spawns": 4,
+      "delegated": 0
+    },
+    "proof_metadata_validation": {
+      "kind": "LOG_METADATA_ONLY",
+      "proof_count": 4,
+      "distinct_drivers": 4,
+      "distinct_browsers": 4,
+      "results": [
+        {
+          "driver": 4099,
+          "browser": 4114,
+          "valid": true
+        },
+        {
+          "driver": 4236,
+          "browser": 4251,
+          "valid": true
+        },
+        {
+          "driver": 4374,
+          "browser": 4389,
+          "valid": true
+        },
+        {
+          "driver": 4514,
+          "browser": 4529,
+          "valid": true
+        }
+      ]
+    },
+    "whole_WP10_or_global_pass": false,
+    "tested_return_state": [
+      "BI02",
+      "2026-01-01 to 2026-03-31",
+      "Planner selection",
+      "explicit base and candidate",
+      "USD",
+      "ready true",
+      "same data-bi-focus active mark"
+    ],
+    "untested_scope": [
+      "all six positive destinations",
+      "all J01–J13",
+      "active-detail refresh/read position",
+      "viewport/zoom/keyboard",
+      "p95",
+      "installed/native",
+      "AM01–AM06",
+      "forced-failure cleanup"
+    ]
+  },
+  "cross_review_dependencies": {
+    "source_review": "independent-review-staging/runtime-authority/final-34e6dd4f3588.json",
+    "sha256": "70850a38869caba1f48e5944827c510e6378159cff11fd5ce05b4f2e81ee26db",
+    "reviewer": "/root/review_runtime_final",
+    "reviewed_head": "34e6dd4f3588a64a3963a854ee29729f82fdd594",
+    "provenance": "Preserved independent runtime review dependencies; not recast as new CI10 execution or unconsumed-source defects in Compose.",
+    "findings": [
+      {
+        "id": "OWN-C17-TIMEOUTS-6",
+        "owner": "WP10 with Planner/Atlas",
+        "status": "FOUR_UNSELECTED_OPEN;TWO_PRIOR_W15_PASSES_HISTORICAL",
+        "detail": "Four historical CI5 ancestry/reopen cases still lack passing execution. The two selected stale cases passed only at W15 CI8; CI10 selects no C17 cases."
+      },
+      {
+        "id": "ATLAS-FINAL-CANDIDATE-GRANT",
+        "owner": "WP14",
+        "status": "HELD_SOURCE_NOT_CONSUMED",
+        "detail": "The earlier e4e648fe source grant-after-last-await finding remains an owner source hold. Do not attribute that unconsumed source to rollback-preserved Compose."
+      },
+      {
+        "id": "C12-HTTP",
+        "owner": "WP04/WP02",
+        "status": "OPEN",
+        "detail": "Remaining real HTTP/browser and Dashboard withdrawal/revocation dependencies are not selected by CI10; preserve CI6 H05 Expected409/Received200 evidence."
+      },
+      {
+        "id": "BASELINE-14",
+        "owner": "WP04/WP06/WP08/WP09/WP13/WP14",
+        "status": "OPEN_CURRENT_CHECK15",
+        "detail": "Check15 independently confirms14 unchanged external TypeScript diagnostics, zero own/CLI."
+      },
+      {
+        "id": "C07-C17-NATIVE-AM",
+        "owner": "WP10 and provider/recipient/Atlas owners",
+        "status": "OPEN",
+        "detail": "Governed provider/recipient lease/checkAtCommit, C17 policy/project/mixed-source and installed manual/native AM remain without sufficient proof."
+      }
+    ]
+  }
+}

@@ -1,0 +1,1254 @@
+{
+  "schema": "sf2-astra-delivery-envelope-input-audit-v1",
+  "audit_role": "AUTHOR_METADATA_PREPARATION_NOT_INDEPENDENT_REVIEW",
+  "observed_at_utc": "2026-11-14 11:35:27 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "candidate": {
+    "branch": "astra-compose",
+    "pr": 32,
+    "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+    "tree": "57ce597f3ebe8ddb543f9d71d34d20f789c76e33",
+    "claim": "Candidato de composição W9; não constitui aceitação do bundle global."
+  },
+  "scope": {
+    "allowed_new_receipt_scopes": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/astra-compose/assessment-ed10a3806a4f/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/assessment-ed10a3806a4f/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/astra-compose-ed10a3806a4f-*"
+    ],
+    "extensions": [
+      ".json",
+      ".md",
+      ".txt"
+    ],
+    "mode": "100644",
+    "new_files_only": true,
+    "control_paths": [],
+    "no_product_or_remote_mutation": true,
+    "product_tests_typechecks_guards_builds_executed": false
+  },
+  "normative_source": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "blob": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+    "sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "bytes": 1503706,
+    "section": "execution.candidate_delivery",
+    "pack_read": "context/WP10.pack.json canonical_work_package.tasks[3].checks[0] references execution.candidate_delivery",
+    "policy_preserved": true,
+    "verification_relevant": [
+      "Confirmar C ancestral de D e obter diff Git completo C→D sem truncamento, incluindo status, path, tipo, modo e blob SHA. Um simples filtro dos arquivos exibidos não basta.",
+      "Exigir somente adições de arquivos novos nos prefixos receipts enumerados ou na lista finita de paths control previamente alocados para o mesmo C/instância. Conferir registro de alocação por SHA, parent esperado e ausência do novo path antes da tentativa; conferir conteúdo, extensão e modo. Rejeitar qualquer mudança fora do envelope.",
+      "Confirmar todos os blobs existentes de C inalterados em D e registrar seus hashes/árvore. Conferir que nenhum novo arquivo é input de import, glob, bundle, registry, geração, seleção de teste ou runtime; dependência desconhecida ou uso detectado rejeita o envelope.",
+      "Conferir hashes dos novos recibos, referências aos runs/snapshots reais, seleção observada e candidato C. O delivery receipt indexa os artefatos; não altera seus SHAs de origem.",
+      "Executar bun run check:guards --base origin/dev no checkout real de C para G7 e no checkout real de D para G8, preservando configuração e regras. Guard de C não é registrado como se fosse guard de D.",
+      "Somente aceitar D após envelope, proveniência e guard de D passarem. Se qualquer condição falhar, rejeitar D como entrega evidencial, classificar a alteração e produzir/requalificar novo C quando houver mudança de produto."
+    ],
+    "self_reference_rule": "O receipt dentro de D não grava seu próprio SHA de D nem seu próprio hash ou o resultado de um guard posterior. D é identificado pelo commit que contém o receipt; seu blob hash vem da árvore Git. Depois de verificar D, S0 publica SHA/resultado/recibo externo do guard no fechamento, sem editar D apenas para anotar o próprio resultado. O índice interno não se inclui em sua própria lista de hashes."
+  },
+  "conclusion": {
+    "status": "NOT_QUALIFIED_FOR_STRICT_CANDIDATE_DELIVERY",
+    "eligible_D": false,
+    "global_release": false,
+    "reason": "DELIVERY-INPUT-01: seletor abrangente de geração/formatação sem exclusão. DELIVERY-INPUT-02/03: inputs/hash/closure efetivos ainda não integralmente provados. A política rejeita uso detectado ou dependência desconhecida. Não se concede exceção por conteúdo ser documental ou por hashing não executar código.",
+    "no_claim": "Não há D avaliado nem resultado D/G8; observações de C não são relabeladas como provas de D."
+  },
+  "coverage": {
+    "root_tree": {
+      "sha": "57ce597f3ebe8ddb543f9d71d34d20f789c76e33",
+      "truncated": false,
+      "recursive": false,
+      "entries": 43
+    },
+    "selected_recursive_trees": [
+      {
+        "prefix": ".github",
+        "tree": "60fe5fd4c097b4150e089ce51a08dc1d54ba80a9",
+        "metadata_recursive": true,
+        "truncated": false,
+        "tree_entries": 47,
+        "blob_entries": 39,
+        "materialized_exact_content_blobs": 2,
+        "all_blob_contents_reviewed": false
+      },
+      {
+        "prefix": "script",
+        "tree": "ffc37deca8c3d510faccdc82ec56f295e1a02af3",
+        "metadata_recursive": true,
+        "truncated": false,
+        "tree_entries": 143,
+        "blob_entries": 140,
+        "materialized_exact_content_blobs": 8,
+        "all_blob_contents_reviewed": false
+      },
+      {
+        "prefix": "tooling",
+        "tree": "2ef9fcce92be2f17e5eb36f498769f68456306c0",
+        "metadata_recursive": true,
+        "truncated": false,
+        "tree_entries": 70,
+        "blob_entries": 57,
+        "materialized_exact_content_blobs": 0,
+        "all_blob_contents_reviewed": false
+      },
+      {
+        "prefix": "modules/sucafina",
+        "tree": "38a524c8c5df0c6e9de19aa44811b95ab7fa31aa",
+        "metadata_recursive": true,
+        "truncated": false,
+        "tree_entries": 1374,
+        "blob_entries": 1273,
+        "materialized_exact_content_blobs": 1050,
+        "all_blob_contents_reviewed": false
+      },
+      {
+        "prefix": "apps/cli",
+        "tree": "590f45913efa04f7b6c642efd1cc3ddaa61ca508",
+        "metadata_recursive": true,
+        "truncated": false,
+        "tree_entries": 327,
+        "blob_entries": 305,
+        "materialized_exact_content_blobs": 297,
+        "all_blob_contents_reviewed": false
+      },
+      {
+        "prefix": "apps/desktop",
+        "tree": "4c3fceae4c156277f8c9945d54dc5334060dcfa8",
+        "metadata_recursive": true,
+        "truncated": false,
+        "tree_entries": 568,
+        "blob_entries": 537,
+        "materialized_exact_content_blobs": 3,
+        "all_blob_contents_reviewed": false
+      },
+      {
+        "prefix": "packages/core",
+        "tree": "c4cdc7e8854fa8aab2fe7ce03dfd1536593c81da",
+        "metadata_recursive": true,
+        "truncated": false,
+        "tree_entries": 1970,
+        "blob_entries": 1795,
+        "materialized_exact_content_blobs": 1,
+        "all_blob_contents_reviewed": false
+      },
+      {
+        "prefix": "packages/server",
+        "tree": "92c6efa998cc37a7756593678522ec7f1a4afe03",
+        "metadata_recursive": true,
+        "truncated": false,
+        "tree_entries": 181,
+        "blob_entries": 174,
+        "materialized_exact_content_blobs": 0,
+        "all_blob_contents_reviewed": false
+      },
+      {
+        "prefix": "modules/maestro",
+        "tree": "e1426eefa49939d584c1ab8db93289c0e726cd3e",
+        "metadata_recursive": true,
+        "truncated": false,
+        "tree_entries": 445,
+        "blob_entries": 377,
+        "materialized_exact_content_blobs": 7,
+        "all_blob_contents_reviewed": false
+      },
+      {
+        "prefix": "packages/script",
+        "tree": "46787615f5390211936d94920a20b266cd433e5d",
+        "metadata_recursive": true,
+        "truncated": false,
+        "tree_entries": 47,
+        "blob_entries": 44,
+        "materialized_exact_content_blobs": 1,
+        "all_blob_contents_reviewed": false
+      }
+    ],
+    "materialized_exact_blob_count": 1375,
+    "bounded_lexical_scan": {
+      "head": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "scope": "exact-W9 materialized SF/CLI source/config only; not a full-repository scan",
+      "files_examined": 1345,
+      "all_materialized_sources": 1375,
+      "patterns": {
+        "proposed_receipts_literal": "docs/sf2h/receipts|sf2h/receipts|assessment-ed10a3806a4f",
+        "fixed_docs_input": "docs/product-campaign|\\.\\./docs/",
+        "dynamic_loader": "import\\s*\\(|import\\.meta\\.glob|new\\s+(?:Bun\\.)?Glob|readdir\\s*\\(|readdirSync\\s*\\("
+      },
+      "counts": {
+        "proposed_receipts_literal": 0,
+        "fixed_docs_input": 61,
+        "dynamic_loader": 593
+      }
+    },
+    "limitations": [
+      "Root tree lida sem recursão; árvores selecionadas foram completas, não a árvore recursiva inteira do repositório.",
+      "1375 blobs materializados/hashes verificados não equivalem a revisão humana de todo seu conteúdo.",
+      "A worktree é sparse e tinha diferenças; somente bytes iguais ao blob W9 ou fetch_file MCP no pin foram usados.",
+      "Ausência lexical de referência em 1345 arquivos SF/CLI não fecha loaders/composição de paths/transitivos."
+    ],
+    "cache_artifacts": [
+      {
+        "path": "evidence/delivery-input-audit-cache/w9-root-tree.json",
+        "sha256": "31cd4f84a7011a4b16feb337cfb71b65ac57c98338e93c17788469ee595ab186",
+        "bytes": 11993
+      },
+      {
+        "path": "evidence/delivery-input-audit-cache/trees-final.json",
+        "sha256": "cc5aac6fde7e7f92b1985d9f4e0718d8d66e76332e71fb22c752fb6b4999429b",
+        "bytes": 1688776
+      },
+      {
+        "path": "evidence/delivery-input-audit-cache/materialized-sources.json",
+        "sha256": "7f8d41a693da87e2a2f8fe572af4cfe41f91ae8c777295be86684814df7182af",
+        "bytes": 328795
+      },
+      {
+        "path": "evidence/delivery-input-audit-cache/static-scan.json",
+        "sha256": "80ce977e77f84557df6dc0eb45c1c084d3ef546250e9782cd40271a68ad1a5be",
+        "bytes": 192631
+      },
+      {
+        "path": "evidence/delivery-input-audit-cache/w9-modules-tree.json",
+        "sha256": "3e203233fc57953e9fc85e7b8223f98606171489500fb0638a9ce2b886666dbd",
+        "bytes": 3109
+      }
+    ]
+  },
+  "sources": [
+    {
+      "path": "package.json",
+      "blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 6526,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/package.json",
+      "content_sha256": "6e5c01f798f19ec5d6f3103f611cc9e57d4430f8da15c2fa49701a4c1d1509c8"
+    },
+    {
+      "path": "bunfig.toml",
+      "blob": "c506ff57c4bf3fa3a6bd3501b8ce2fc29122accb",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 1024,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/bunfig.toml",
+      "content_sha256": "ed50f5745fbcb845251debe79cc464a2142c62cf17a013c2a29de38bf248f158"
+    },
+    {
+      "path": "tsconfig.json",
+      "blob": "65fa6c7f31c11e2a1ff643ea263f97815c6bac5d",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 126,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/tsconfig.json",
+      "content_sha256": "3566d273bac7985b182fde3fc49e3d9a6b8d1451c122c31a4f87877faa9ae7aa"
+    },
+    {
+      "path": "turbo.json",
+      "blob": "c375d67bc4b2738991a62994d3a81e01cdc7c639",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 7461,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/turbo.json",
+      "content_sha256": "fbe803ff0db57acdd0c1272f4bc09beee0f4778bc270e4bc7c6dc1b68e822fa1"
+    },
+    {
+      "path": ".prettierignore",
+      "blob": "dc65965b09963d0c3409d1accf4408d1139f84a5",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 679,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/.prettierignore",
+      "content_sha256": "b172f99ca72de2c3bc208665d9a4a976069c8ad7474273bef9542237878192d1"
+    },
+    {
+      "path": ".gitignore",
+      "blob": "f87b0cd6e00813278e36474cf332bae735394518",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 1037,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/.gitignore",
+      "content_sha256": "dd0aa40ba5e0fb4ec231c24b60b1c20beaf872910abbb8bc00be485af3ffa99b"
+    },
+    {
+      "path": "script/generate.ts",
+      "blob": "60308900ce20c10784bd6c34ad75d2e10f693058",
+      "mode": "100755",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 123,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/script/generate.ts",
+      "content_sha256": "684ad505cfc47a847565c642926089994c5674503c9cb8bc238089394c8804ae"
+    },
+    {
+      "path": "script/format.ts",
+      "blob": "996de9ad04a41b06ae0d12cd311d733ec9541665",
+      "mode": "100755",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 98,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/script/format.ts",
+      "content_sha256": "f8f74171be553022f31aee0bce71005b8c677cb785a531da23f403ebe108be62"
+    },
+    {
+      "path": "script/module-registry.json",
+      "blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 4256,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/script/module-registry.json",
+      "content_sha256": "b2e5f9332aa3b1cfdc08f30b1b6c206ef326efe07ee0b2abc18b5d993c7f332f"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 19419,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/script/test-ci.ts",
+      "content_sha256": "10133a07fe140bf3e618fedfb9c8ac363592dae5f6a8b94c82286471f4fa393b"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 17001,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/script/test-ci-request.ts",
+      "content_sha256": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc"
+    },
+    {
+      "path": "script/test-ci-paths.ts",
+      "blob": "b6977405d4dd8b2db95f3926f2a0322fd511357e",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 1285,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/script/test-ci-paths.ts",
+      "content_sha256": "e1fd31eb2b69aedf6f8d6d1803bd29a6d2f9268ac41b8cab0e85d804689efbbd"
+    },
+    {
+      "path": "script/test-guard.ts",
+      "blob": "f2f55d97fd05a5136e17eac7043bbf315de88bb6",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 1018,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/script/test-guard.ts",
+      "content_sha256": "9028f435539512533da5abaf84fc561d2699ee15602c05b81b1394d3915e5057"
+    },
+    {
+      "path": "script/test-omni-control.ts",
+      "blob": "643ad90a4606c2afd6c6c9aee389ca6389ab54e9",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 5231,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/script/test-omni-control.ts",
+      "content_sha256": "424dbd75b6ec0965d64685b1d054c2a50fc853b434d3a6e7cb437ffa27536065"
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 17126,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/.github/workflows/test-ci.yml",
+      "content_sha256": "10c4bb7b3b4fc6c9201736dfa1d4d211dccf0e75de74efa38ae5299473008d26"
+    },
+    {
+      "path": ".github/workflows/astra-compose-check.yml",
+      "blob": "e7a815a797e960e826af4268dd381cb4c5df6ffc",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 6249,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/.github/workflows/astra-compose-check.yml",
+      "content_sha256": "62db767f014e2f0f61b993826cc8adc9733bd3f5c80e4c8a5493f9c68692a231"
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 868,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/sucafina/package.json",
+      "content_sha256": "33d138842aa2e8ef078b9f4dbcdebb2fb0796c5aed1f41f48b79510d919d4e30"
+    },
+    {
+      "path": "modules/sucafina/bunfig.toml",
+      "blob": "7000633db2c4f11e3f1aff351cd28c0df9affeca",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 85,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/sucafina/bunfig.toml",
+      "content_sha256": "8368eec3486be10b2b1090a89d385a3db1f7843013484a83aa554c913322e608"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/package.json",
+      "blob": "18911fee9313f8fb57c1a972bc70eec2f7864c55",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 646,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/sucafina/Sucafinav1/package.json",
+      "content_sha256": "a8ef10b98d2f3ca047e5a1bf93df77fcfbeb9dbbf59c8ce0f167e884dfc447ec"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/tsconfig.json",
+      "blob": "51895f3c254e6020d116ca73d4a1c690f7562169",
+      "mode": "100644",
+      "source": "local_bytes_verified_against_W9_MCP_tree",
+      "bytes": 419,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/sucafina/Sucafinav1/tsconfig.json",
+      "content_sha256": "a14b3c1c9ec9b8bfaac0ebc77321091ccb4634186ff248af7ca5e7c26bf2f28f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+      "mode": "100644",
+      "source": "local_bytes_verified_against_W9_MCP_tree",
+      "bytes": 22887,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/sucafina/Sucafinav1/local/entry.ts",
+      "content_sha256": "8803349c063a93cb03a805c9833ff612bec158e832f4ef05a1ef3cc5b7d7324b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+      "blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+      "mode": "100644",
+      "source": "local_bytes_verified_against_W9_MCP_tree",
+      "bytes": 9059,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/sucafina/Sucafinav1/product/ai/resident.ts",
+      "content_sha256": "7de5f0c1630a547fcfae4de691d96d1d138a983955b31622194689b24067b27a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/generate-output-schemas.ts",
+      "blob": "eef174095e02eb4448a6c53d6119ce7a8fda4a9d",
+      "mode": "100644",
+      "source": "local_bytes_verified_against_W9_MCP_tree",
+      "bytes": 5472,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/sucafina/Sucafinav1/product/contracts/generate-output-schemas.ts",
+      "content_sha256": "d20f720d0f27cbcc71699a4ed24d26dcc337bc69a51bb16bebfef854584e495a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "blob": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+      "mode": "100644",
+      "source": "local_bytes_verified_against_W9_MCP_tree",
+      "bytes": 185302,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "content_sha256": "fb41c5f7c7889fbb058541d9a415c034f403eedcc30c273a0cd948b1b6466c01"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/build-bi.ts",
+      "blob": "b7a97cf867a2649bc5033fc9eb978c0e6d21182d",
+      "mode": "100644",
+      "source": "local_bytes_verified_against_W9_MCP_tree",
+      "bytes": 775,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/sucafina/Sucafinav1/product/integration/build-bi.ts",
+      "content_sha256": "414d598947250d99730d69c609b2ae685bab8af91548c9f552625c0b86668301"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/elo.test.ts",
+      "blob": "89fbfc47e8f25f2eb371e92bff7d37ec5436e5e4",
+      "mode": "100644",
+      "source": "local_bytes_verified_against_W9_MCP_tree",
+      "bytes": 8706,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/sucafina/Sucafinav1/test/elo.test.ts",
+      "content_sha256": "3c0e9031a7ba9f139a7709f11c4976dc0b6687f8c40d9b7fbdcafd0bdcbe7e26"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+      "blob": "47b4a49cd85ae20e5f0006ded9736eb8be1993bb",
+      "mode": "100644",
+      "source": "local_bytes_verified_against_W9_MCP_tree",
+      "bytes": 6138,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/sucafina/Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+      "content_sha256": "109e0c8cc6cb0e2dd52731aeb9c4eb993abfc163e8d8151e8389a1a7a1f49b1a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "blob": "fc4d57604c21ab5d007f747a908b17b67027ffd6",
+      "mode": "100644",
+      "source": "local_bytes_verified_against_W9_MCP_tree",
+      "bytes": 13004,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "content_sha256": "3aaf504efcfbad502a811c494ad49746d8355cf1f430a46052cb41ac78e7c137"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/ownership.test.ts",
+      "blob": "c8e196509be4ee3eda54e26276c830a4df1dff98",
+      "mode": "100644",
+      "source": "local_bytes_verified_against_W9_MCP_tree",
+      "bytes": 3828,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/sucafina/Sucafinav1/test/product/wp00/ownership.test.ts",
+      "content_sha256": "5e3a02acf911db1db6ee18c39388d6ded1e44a648a4bc960b9d0fd1eaf194163"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/check-ownership.ts",
+      "blob": "058e69fc3abd8157ea4c42dfa27f75de96327104",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 3251,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/sucafina/Sucafinav1/docs/product-campaign/wp00/check-ownership.ts",
+      "content_sha256": "190cf52b2c300e2fe780f49097f9461845960db4cd1987bc8f35dd65fad730f7"
+    },
+    {
+      "path": "apps/cli/package.json",
+      "blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 1319,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/apps/cli/package.json",
+      "content_sha256": "c6a7e4907aa7d3fdffbe1938d019fb077c5138426ac61f81e6d1080e3fd89fd9"
+    },
+    {
+      "path": "apps/cli/tsconfig.json",
+      "blob": "ac9f4c63f786ccf7e925e3c637bb5c76aac77495",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 277,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/apps/cli/tsconfig.json",
+      "content_sha256": "44a0e8f0d9b775518e390cc7aa264e8912ac8745edc43c41cc668fd8dce80939"
+    },
+    {
+      "path": "apps/cli/bunfig.toml",
+      "blob": "b63db7a054a18092d613327093aaec2acba606b2",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 123,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/apps/cli/bunfig.toml",
+      "content_sha256": "82ab81e08816114bd44286a5831354d60b713123648434653be6b1de3cf742f7"
+    },
+    {
+      "path": "apps/cli/script/build.ts",
+      "blob": "a5066b1fe295a10c5463e33f4a256fb3dab32cc4",
+      "mode": "100755",
+      "source": "local_bytes_verified_against_W9_MCP_tree",
+      "bytes": 14512,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/apps/cli/script/build.ts",
+      "content_sha256": "e6fdba44f87bf7edc3875ecda0461a0c8dbd2c33c72b390e6612f76756812a9c"
+    },
+    {
+      "path": "apps/cli/script/generate.ts",
+      "blob": "3735eca79dc11c60124162aeb8a17047659c5914",
+      "mode": "100755",
+      "source": "local_bytes_verified_against_W9_MCP_tree",
+      "bytes": 313,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/apps/cli/script/generate.ts",
+      "content_sha256": "ef77f7b1a16876b62190759a3091e2bdd756a72e49df8f96247a89bf1c7edf32"
+    },
+    {
+      "path": "apps/cli/script/packaged-skills.ts",
+      "blob": "72e362c649c1a88d83ee2adca9b5bd1acedde217",
+      "mode": "100644",
+      "source": "local_bytes_verified_against_W9_MCP_tree",
+      "bytes": 934,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/apps/cli/script/packaged-skills.ts",
+      "content_sha256": "cad1aeeb4dc4232917b89cf141493f2236a691edf48fd911730c0f10d4fb2943"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-assets.ts",
+      "blob": "d4f61546186a0f752be4c103b3a2e112deb4a582",
+      "mode": "100644",
+      "source": "local_bytes_verified_against_W9_MCP_tree",
+      "bytes": 995,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/apps/cli/src/sucafina-product/extended-assets.ts",
+      "content_sha256": "8070debc6f7ccac7eed67b6d736c7051405d9584d4610ceb81c2d066ec2884f0"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "mode": "100644",
+      "source": "local_bytes_verified_against_W9_MCP_tree",
+      "bytes": 74908,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/apps/cli/src/sucafina-product/host-context.ts",
+      "content_sha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772"
+    },
+    {
+      "path": "apps/desktop/package.json",
+      "blob": "a7dd0b12de0f8c3855c7f5b2f069416ef711f577",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 3472,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/apps/desktop/package.json",
+      "content_sha256": "cb11bc929a46b3bbeb1e5ed323f3fa06aa612bfa3f9743489f14f0de3e821d9f"
+    },
+    {
+      "path": "apps/desktop/electron-builder.config.ts",
+      "blob": "30cdff984b46f20c76066ff24e4304d76b5a8467",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 13149,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/apps/desktop/electron-builder.config.ts",
+      "content_sha256": "01744e44fcf150f1fcccba8ee4e2d103d43382fca150aa38c15d586a0c5a1fb3"
+    },
+    {
+      "path": "apps/desktop/electron.vite.config.ts",
+      "blob": "b90da178775d53d1c8779edb633a6ccc23758c82",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 3159,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/apps/desktop/electron.vite.config.ts",
+      "content_sha256": "dc5fae1962859449c960f3896662f862c1f889f2a59f7bb40d21d74301e955ef"
+    },
+    {
+      "path": "packages/core/src/packaged-skills.ts",
+      "blob": "5b3685e5e72885318b383f7f23589147a6882488",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 9174,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/packages/core/src/packaged-skills.ts",
+      "content_sha256": "a02ad175679a33aad82c376e714e7d5be5e787b1a3ff2a370bca412567952097"
+    },
+    {
+      "path": "packages/script/src/workspace-paths.ts",
+      "blob": "7e84903752776142e1ac43c0a5dd1f304de2cf9f",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 4815,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/packages/script/src/workspace-paths.ts",
+      "content_sha256": "8f33cd7e68a3964b118556782b95f4818d77e59c059de1e8212a28d40edb40e5"
+    },
+    {
+      "path": "modules/maestro/coordination/package.json",
+      "blob": "438c5a89f01d13d992e86582030d1a3b59f277a3",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 1913,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/maestro/coordination/package.json",
+      "content_sha256": "d99ccbaad3dd30a0842dbae7fd705b48c295d335e03d1bba71adda7f50e2d5d8"
+    },
+    {
+      "path": "modules/maestro/coordination/src/seats/index.ts",
+      "blob": "a4f0ecf5b5144f91837571286f91fc552be0c826",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 2398,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/maestro/coordination/src/seats/index.ts",
+      "content_sha256": "3c46606588711e9af4f71c8c3d04c69c76435bd7ca5049b8a7fafac014673f6b"
+    },
+    {
+      "path": "modules/maestro/coordination/src/seats/seat.ts",
+      "blob": "041587dc6d049eee78eca22b71acb9db0a1fb523",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 7481,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/maestro/coordination/src/seats/seat.ts",
+      "content_sha256": "6c91a22c1b7ef2861fb6111619724595e6247384f9c8ef60cc0303741556b933"
+    },
+    {
+      "path": "modules/maestro/coordination/src/seat-skill-content.ts",
+      "blob": "ee9de21c4aeceb1c9b014cdae2b710efb9d0360a",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 8797,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/maestro/coordination/src/seat-skill-content.ts",
+      "content_sha256": "7aaebead2a68c47dd89f2e86541d53114039d5a1b38cb00ec6c455827fcb087f"
+    },
+    {
+      "path": "modules/maestro/coordination/src/seat-skills-module.ts",
+      "blob": "a3ed7947dbf9b8a632ca1deae91a0fc1e94c94b3",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 2287,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/maestro/coordination/src/seat-skills-module.ts",
+      "content_sha256": "f8bb11f21a4859649f8e154c8cf468cc605c516bf219816290cb329a9c38015a"
+    },
+    {
+      "path": "modules/maestro/coordination/src/seat-skill-root.ts",
+      "blob": "c01632881ed8e61ee0b008fb41d36ef8ceba8afd",
+      "mode": "100644",
+      "source": "github_mcp_fetch_file_exact_W9",
+      "bytes": 10150,
+      "commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/modules/maestro/coordination/src/seat-skill-root.ts",
+      "content_sha256": "804a7ec1d341ba32e074d1badd3cbce8612b218d105b61660beae44340dd705c"
+    }
+  ],
+  "observed_rules": [
+    {
+      "area": "TypeScript/Sucafina",
+      "conclusion": "EXCLUSÃO_DIRETA_OBSERVADA_LIMITADA",
+      "patterns": [
+        "installation.ts",
+        "src/**/*.ts",
+        "test/**/*.ts",
+        "../porta/act.ts",
+        "runtime/**/*.ts",
+        "index.ts",
+        "local/**/*.ts"
+      ],
+      "explanation": "Nenhum include direto cobre docs/sf2h/receipts ou seus arquivos json/md/txt. Imports transitivos continuam possíveis em tese; a busca lexical limitada não os encontrou nos receipts propostos.",
+      "sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/tsconfig.json",
+          "blob": "51895f3c254e6020d116ca73d4a1c690f7562169"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/package.json",
+          "blob": "18911fee9313f8fb57c1a972bc70eec2f7864c55"
+        }
+      ]
+    },
+    {
+      "area": "Bundle de browser WP10/BI",
+      "conclusion": "ENTRYPOINTS_EXPLÍCITOS_DISJUNTOS",
+      "patterns": [
+        "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+        "apps/cli/src/sucafina-product/extended-browser.ts",
+        "modules/sucafina/Sucafinav1/product/interface/bi-entry.ts"
+      ],
+      "explanation": "Bun.build recebe entradas de código constantes; não há descoberta de docs nesses entrypoints. A prova de fechamento completo do bundler não foi produzida.",
+      "sources": [
+        {
+          "path": "apps/cli/src/sucafina-product/extended-assets.ts",
+          "blob": "d4f61546186a0f752be4c103b3a2e112deb4a582"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/build-bi.ts",
+          "blob": "b7a97cf867a2649bc5033fc9eb978c0e6d21182d"
+        }
+      ]
+    },
+    {
+      "area": "Geração de schemas",
+      "conclusion": "FONTES_EXPLÍCITAS_DISJUNTAS",
+      "patterns": [
+        "product/contracts/outputs.ts",
+        "product/contracts/skill-inputs.ts",
+        "product/contracts/output-schemas.ts"
+      ],
+      "explanation": "createProgram recebe dois arquivos constantes e usa options do tsconfig; escreve/checka output-schemas.ts. Nenhum glob de receipts nesse gerador.",
+      "sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/generate-output-schemas.ts",
+          "blob": "eef174095e02eb4448a6c53d6119ce7a8fda4a9d"
+        }
+      ]
+    },
+    {
+      "area": "Runtime residente SF",
+      "conclusion": "LEITOR_DELIMITADO_OBSERVADO",
+      "patterns": [
+        "product/ai/manifests/resident.json",
+        "product/ai/profiles/<profile-id>.json",
+        "product/ai/skills/<skill-id>/SKILL.md"
+      ],
+      "explanation": "local/entry fixa sourceRoot em ../product/ai; host-context fixa manifests/resident.json; resident verifica realpath, IDs normativos e arquivos internos desse root. Não deriva os destinos docs/sf2h/receipts.",
+      "sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "blob": "834b3c967d73411771e1f5aa82b683c6427e6769"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+          "blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188"
+        }
+      ]
+    },
+    {
+      "area": "Registry de workspace",
+      "conclusion": "MANIFESTS_EXPLÍCITOS_DISJUNTOS",
+      "patterns": [
+        "script/module-registry.json",
+        "<registered-module>/package.json",
+        "script/toolchain-registry.json"
+      ],
+      "explanation": "WorkspacePaths lê o registry e package.json dos módulos declarados; não descobre novos módulos varrendo receipts. modules/sucafina é um workspace único.",
+      "sources": [
+        {
+          "path": "packages/script/src/workspace-paths.ts",
+          "blob": "7e84903752776142e1ac43c0a5dd1f304de2cf9f"
+        },
+        {
+          "path": "script/module-registry.json",
+          "blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903"
+        }
+      ]
+    },
+    {
+      "area": "Skills empacotadas",
+      "conclusion": "ROOTS_DE_SKILL_DISJUNTOS",
+      "patterns": [
+        "modules/specialists/<backend|archie>/skills/**",
+        "packages/<seat>-specialist/skills/**",
+        "modules/specialists/team/skills/**"
+      ],
+      "explanation": "Seats.skillSource/sharedSource fixam raízes; SeatSkillContent.read percorre somente a raiz dada, rejeitando symlinks e validando a árvore. Esse leitor não inclui docs/sf2h/receipts. A auditoria leu fontes, não alterou engine Maestro.",
+      "sources": [
+        {
+          "path": "apps/cli/script/packaged-skills.ts",
+          "blob": "72e362c649c1a88d83ee2adca9b5bd1acedde217"
+        },
+        {
+          "path": "modules/maestro/coordination/src/seats/seat.ts",
+          "blob": "041587dc6d049eee78eca22b71acb9db0a1fb523"
+        },
+        {
+          "path": "modules/maestro/coordination/src/seat-skill-content.ts",
+          "blob": "ee9de21c4aeceb1c9b014cdae2b710efb9d0360a"
+        },
+        {
+          "path": "modules/maestro/coordination/src/seat-skills-module.ts",
+          "blob": "a3ed7947dbf9b8a632ca1deae91a0fc1e94c94b3"
+        },
+        {
+          "path": "packages/core/src/packaged-skills.ts",
+          "blob": "5b3685e5e72885318b383f7f23589147a6882488"
+        }
+      ]
+    },
+    {
+      "area": "Desktop packaging",
+      "conclusion": "GLOBS_DE_RECURSOS_OBSERVADOS_DISJUNTOS",
+      "patterns": [
+        "apps/desktop/out/**/*",
+        "apps/desktop/resources/**/*",
+        "apps/desktop/resources/cli",
+        "apps/desktop/resources/claude-code/{claude,claude.exe,manifest.json,README.md,LICENSE.md}",
+        "modules/maestro/playbooks",
+        "LICENSE",
+        "NOTICE"
+      ],
+      "explanation": "Os globs de arquivos e recursos inspecionados não abrangem a pasta SF docs. Electron/Vite usa entradas src/main, src/preload e src/renderer. Plugins transitivos não foram integralmente fechados.",
+      "sources": [
+        {
+          "path": "apps/desktop/electron-builder.config.ts",
+          "blob": "30cdff984b46f20c76066ff24e4304d76b5a8467"
+        },
+        {
+          "path": "apps/desktop/electron.vite.config.ts",
+          "blob": "b90da178775d53d1c8779edb633a6ccc23758c82"
+        }
+      ]
+    },
+    {
+      "area": "Seleção de testes",
+      "conclusion": "SEM_DESCOBERTA_DE_RECEIPTS_OBSERVADA_NO_PROTOCOLO",
+      "patterns": [
+        ".ci-run.json args explícitos",
+        "Playwright: arquivos *.spec.ts explicitamente validados",
+        "Bun: argumentos explícitos e/ou filtros repassados"
+      ],
+      "explanation": "test-ci.yml lê a requisição, valida e passa os argumentos ao runner. O branch Bun não impõe sozinho uma allowlist exaustiva de extensão; este audit não o usa como prova de impossibilidade de import. Preloads guard e Omni são scripts fixos. Nenhuma seleção/teste foi disparada.",
+      "sources": [
+        {
+          "path": ".github/workflows/test-ci.yml",
+          "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+        },
+        {
+          "path": "script/test-ci.ts",
+          "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95"
+        },
+        {
+          "path": "script/test-ci-request.ts",
+          "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+        },
+        {
+          "path": "script/test-ci-paths.ts",
+          "blob": "b6977405d4dd8b2db95f3926f2a0322fd511357e"
+        },
+        {
+          "path": "script/test-guard.ts",
+          "blob": "f2f55d97fd05a5136e17eac7043bbf315de88bb6"
+        },
+        {
+          "path": "script/test-omni-control.ts",
+          "blob": "643ad90a4606c2afd6c6c9aee389ca6389ab54e9"
+        },
+        {
+          "path": "modules/sucafina/bunfig.toml",
+          "blob": "7000633db2c4f11e3f1aff351cd28c0df9affeca"
+        },
+        {
+          "path": "apps/cli/bunfig.toml",
+          "blob": "b63db7a054a18092d613327093aaec2acba606b2"
+        }
+      ]
+    },
+    {
+      "area": "Docs usados por testes WP00",
+      "conclusion": "DOCS_PODEM_SER_INPUTS_MAS_PATHS_OBSERVADOS_SÃO_OUTROS",
+      "patterns": [
+        "docs/product-campaign/wp00/baseline-capabilities.json",
+        "docs/product-campaign/wp00/baseline-new-capabilities.json",
+        "docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
+        "docs/product-campaign/wp00/ownership-v1.json",
+        "docs/product-campaign/wp00/check-ownership.ts",
+        "freeze.artifacts (lista fixa de paths)"
+      ],
+      "explanation": "Esses testes provam que uma extensão documental, por si só, não basta. Os imports e a lista freeze observados são fixos, disjuntos de docs/sf2h/receipts; check-ownership trabalha sobre argumentos e não varre filesystem.",
+      "sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+          "blob": "fc4d57604c21ab5d007f747a908b17b67027ffd6"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp00/ownership.test.ts",
+          "blob": "c8e196509be4ee3eda54e26276c830a4df1dff98"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/check-ownership.ts",
+          "blob": "058e69fc3abd8157ea4c42dfa27f75de96327104"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+          "blob": "b20cf5cecf22885dd8858f3659056a50ab88f485"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+          "blob": "47b4a49cd85ae20e5f0006ded9736eb8be1993bb"
+        }
+      ]
+    },
+    {
+      "area": "Workflow de guarda C/D",
+      "conclusion": "GUARDA_POSTERIOR_NÃO_SUBSTITUI_AUDIT_DE_INPUTS",
+      "patterns": [
+        "adições em docs/sf2h/receipts/(WP00|WP10)/...\\.(json|md|txt)",
+        "modo 100644 blob"
+      ],
+      "explanation": "astra-compose-check.yml verifica ancestralidade e alterações A nos prefixos/mode. Em modo delivery pula typecheck e geração Atlas, mas executa guards no checkout real do productSha. Essas verificações não fecham o requisito de não entrada em geração/globs. G7/G8 não foram executados por este agente.",
+      "sources": [
+        {
+          "path": ".github/workflows/astra-compose-check.yml",
+          "blob": "e7a815a797e960e826af4268dd381cb4c5df6ffc"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "DELIVERY-INPUT-01",
+      "severity": "BLOCKING_STRICT_ENVELOPE",
+      "owner": "S0 / root build-generation ownership",
+      "title": "Geração geral inclui formatação recursiva sem exclusão dos novos receipts JSON/Markdown.",
+      "observation": "script/generate.ts executa bun run generate em packages/client e depois ./script/format.ts. O formatador executa bun run prettier --ignore-unknown --write . no cwd de invocação. No uso a partir da raiz, os diretórios propostos estão dentro desse seletor. Os ignores W9 inspecionados não os excluem.",
+      "observed_globs": [
+        ". (Prettier directory traversal)",
+        "native/omni/** (exclusão não pertinente)",
+        "modules/atlas/boundary/src/generated/ (exclusão não pertinente)"
+      ],
+      "exact_sources": [
+        {
+          "path": "script/generate.ts",
+          "blob": "60308900ce20c10784bd6c34ad75d2e10f693058"
+        },
+        {
+          "path": "script/format.ts",
+          "blob": "996de9ad04a41b06ae0d12cd311d733ec9541665"
+        },
+        {
+          "path": ".prettierignore",
+          "blob": "dc65965b09963d0c3409d1accf4408d1139f84a5"
+        },
+        {
+          "path": ".gitignore",
+          "blob": "f87b0cd6e00813278e36474cf332bae735394518"
+        }
+      ],
+      "additional_tree_evidence": {
+        "prefix": "modules/sucafina",
+        "tree": "38a524c8c5df0c6e9de19aa44811b95ab7fa31aa",
+        "truncated": false,
+        "nested_prettierignore_gitignore_or_turbo_config": [],
+        "modules_ancestor_tree": {
+          "sha": "95960eae54af768956b94491630c1fb36bb151fe",
+          "truncated": false,
+          "recursive": false,
+          "gitignore_prettierignore_turbo_files": []
+        }
+      },
+      "scope_qualification": "O helper de geração existe em W9. Não foi observado como etapa dos dois workflows ativos inspecionados, nem foi executado. Não se afirma que conteúdo dos receipts seja executado como código. A falta de exclusão do input de geração/glob basta para impedir a garantia literal pedida. .txt não foi declarado como arquivo formatado; o caso concreto inclui .json e .md.",
+      "policy_refs": [
+        "execution.candidate_delivery.D_definition",
+        "execution.candidate_delivery.verification[2]"
+      ],
+      "required_resolution": "S0 deve definir e verificar a exclusão nos inputs pertinentes antes de novo freeze C; alteração de configuração não pode ser acrescentada como evidência D.",
+      "suggested_patch": "evidence/delivery-envelope-input-exclusions.suggested.patch"
+    },
+    {
+      "id": "DELIVERY-INPUT-02",
+      "severity": "UNRESOLVED_STRICT_ENVELOPE",
+      "owner": "S0 / task-graph ownership",
+      "title": "Turbo conserva hashing padrão de pacote e transit; nenhuma exclusão de receipts observada.",
+      "observation": "package.json inclui modules/sucafina como workspace e typecheck invoca bun turbo typecheck. turbo.json define typecheck→transit e transit→^transit; o comentário do próprio arquivo explica que os arquivos das dependências entram nos hashes. Não há inputs explícitos nem exclusão para @orchestra/sucafina nesses tasks.",
+      "observed_globs": [
+        "inputs padrão implícitos do pacote",
+        "^transit (arquivos das dependências no hash, conforme comentário W9)",
+        "$TURBO_DEFAULT$ (usado em outros overrides sem exclusão receipts)"
+      ],
+      "exact_sources": [
+        {
+          "path": "package.json",
+          "blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2"
+        },
+        {
+          "path": "turbo.json",
+          "blob": "c375d67bc4b2738991a62994d3a81e01cdc7c639"
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917"
+        },
+        {
+          "path": ".gitignore",
+          "blob": "f87b0cd6e00813278e36474cf332bae735394518"
+        }
+      ],
+      "scope_qualification": "Hashing não é execução de conteúdo, mas não foi inventada exceção normativa para ele. Não houve dry-run, resolved task graph ou enumeração real dos inputs Turbo; a entrada concreta dos oito paths no hash permanece não resolvida, não é marcada PASS.",
+      "required_resolution": "S0 deve produzir o grafo/input set exato da versão pinned em checkout completo, corrigir exclusões se forem inputs e requalificar C quando a configuração mudar. O patch Prettier isolado não resolve este finding."
+    },
+    {
+      "id": "DELIVERY-INPUT-03",
+      "severity": "UNRESOLVED_STRICT_ENVELOPE",
+      "owner": "S0 / final bundle integration",
+      "title": "Não há fechamento integral do grafo de imports/loaders e dos inputs efetivos do build.",
+      "observation": "Foram verificadas árvores completas selecionadas e 1375 blobs materializados exatos de W9. A busca lexical em 1345 fontes/configs SF/CLI não encontrou referência literal aos destinos sf2h/receipts. Isso não demonstra ausência de dependência construída dinamicamente ou de loaders transitivos fora desse conjunto.",
+      "missing_evidence": [
+        "Metafile/input manifest de build W9 com fechamento dos imports e plugins realmente usados.",
+        "Enumeração ou prova estática completa dos loaders de arquivos transitivos relevantes em todos os pacotes do bundle final.",
+        "Ambiente de build efetivo para o override MODELS_DEV_API_JSON; apps/cli/script/generate.ts pode ler um arquivo indicado por esse valor.",
+        "Árvore/diff C→D completos da futura tentativa, conteúdos e proveniência dos novos blobs; D ainda não existe nesta auditoria."
+      ],
+      "exact_sources": [
+        {
+          "path": "apps/cli/script/build.ts",
+          "blob": "a5066b1fe295a10c5463e33f4a256fb3dab32cc4"
+        },
+        {
+          "path": "apps/cli/script/generate.ts",
+          "blob": "3735eca79dc11c60124162aeb8a17047659c5914"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-assets.ts",
+          "blob": "d4f61546186a0f752be4c103b3a2e112deb4a582"
+        }
+      ],
+      "required_resolution": "Preservar como desconhecido; a política exige rejeição do envelope enquanto houver dependência desconhecida. Não inferir fechamento a partir da worktree sparse, do suffix ou de busca sem hits."
+    }
+  ],
+  "allocation": {
+    "status": "PROPOSED_OWN_RECEIPTS_ONLY_NOT_D_QUALIFICATION",
+    "product_candidate_sha": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+    "expected_parent_sha": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+    "path_label": "ed10a3806a4f",
+    "count": 8,
+    "exact_paths": [
+      {
+        "owner": "WP00",
+        "exact_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/astra-compose/assessment-ed10a3806a4f/criteria.json",
+        "purpose": "Mapa integral dos 85 critérios WP00; sem transferir PASS de outro SHA.",
+        "expected_parent_sha": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+        "absent_at_expected_parent": true,
+        "absence_evidence_tree": "38a524c8c5df0c6e9de19aa44811b95ab7fa31aa",
+        "required_mode": "100644",
+        "required_type": "blob",
+        "required_encoding": "UTF-8",
+        "content_sha256": null,
+        "content_blob_sha": null,
+        "status": "PROPOSED_ONLY_CONTENT_AND_PROVENANCE_PENDING"
+      },
+      {
+        "owner": "WP10",
+        "exact_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/assessment-ed10a3806a4f/criteria.json",
+        "purpose": "Mapa integral dos 171 critérios WP10 e gates herdados.",
+        "expected_parent_sha": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+        "absent_at_expected_parent": true,
+        "absence_evidence_tree": "38a524c8c5df0c6e9de19aa44811b95ab7fa31aa",
+        "required_mode": "100644",
+        "required_type": "blob",
+        "required_encoding": "UTF-8",
+        "content_sha256": null,
+        "content_blob_sha": null,
+        "status": "PROPOSED_ONLY_CONTENT_AND_PROVENANCE_PENDING"
+      },
+      {
+        "owner": "WP10",
+        "exact_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/assessment-ed10a3806a4f/gate-packet.json",
+        "purpose": "Estado factual das oito seleções, AM01–AM06, pareceres e C/G7 versus D/G8.",
+        "expected_parent_sha": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+        "absent_at_expected_parent": true,
+        "absence_evidence_tree": "38a524c8c5df0c6e9de19aa44811b95ab7fa31aa",
+        "required_mode": "100644",
+        "required_type": "blob",
+        "required_encoding": "UTF-8",
+        "content_sha256": null,
+        "content_blob_sha": null,
+        "status": "PROPOSED_ONLY_CONTENT_AND_PROVENANCE_PENDING"
+      },
+      {
+        "owner": "WP10",
+        "exact_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/assessment-ed10a3806a4f/integration.json",
+        "purpose": "Recibo de composição, pins, runs reais e pendências.",
+        "expected_parent_sha": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+        "absent_at_expected_parent": true,
+        "absence_evidence_tree": "38a524c8c5df0c6e9de19aa44811b95ab7fa31aa",
+        "required_mode": "100644",
+        "required_type": "blob",
+        "required_encoding": "UTF-8",
+        "content_sha256": null,
+        "content_blob_sha": null,
+        "status": "PROPOSED_ONLY_CONTENT_AND_PROVENANCE_PENDING"
+      },
+      {
+        "owner": "WP10",
+        "exact_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/assessment-ed10a3806a4f/delivery-envelope-input-audit.json",
+        "purpose": "Este audit documental; rejeição de qualificação D preservada integralmente.",
+        "expected_parent_sha": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+        "absent_at_expected_parent": true,
+        "absence_evidence_tree": "38a524c8c5df0c6e9de19aa44811b95ab7fa31aa",
+        "required_mode": "100644",
+        "required_type": "blob",
+        "required_encoding": "UTF-8",
+        "content_sha256": null,
+        "content_blob_sha": null,
+        "status": "PROPOSED_ONLY_CONTENT_AND_PROVENANCE_PENDING"
+      },
+      {
+        "owner": "WP10",
+        "exact_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/astra-compose-ed10a3806a4f-product-and-UX.md",
+        "purpose": "Pacote/parecer de revisão de produto e UX recebido; não inventar independência ou aprovação.",
+        "expected_parent_sha": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+        "absent_at_expected_parent": true,
+        "absence_evidence_tree": "38a524c8c5df0c6e9de19aa44811b95ab7fa31aa",
+        "required_mode": "100644",
+        "required_type": "blob",
+        "required_encoding": "UTF-8",
+        "content_sha256": null,
+        "content_blob_sha": null,
+        "status": "PROPOSED_ONLY_CONTENT_AND_PROVENANCE_PENDING"
+      },
+      {
+        "owner": "WP10",
+        "exact_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/astra-compose-ed10a3806a4f-semantic-and-integrity.md",
+        "purpose": "Pacote/parecer semântico recebido; autoria deste audit não conta como revisão.",
+        "expected_parent_sha": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+        "absent_at_expected_parent": true,
+        "absence_evidence_tree": "38a524c8c5df0c6e9de19aa44811b95ab7fa31aa",
+        "required_mode": "100644",
+        "required_type": "blob",
+        "required_encoding": "UTF-8",
+        "content_sha256": null,
+        "content_blob_sha": null,
+        "status": "PROPOSED_ONLY_CONTENT_AND_PROVENANCE_PENDING"
+      },
+      {
+        "owner": "WP10",
+        "exact_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/astra-compose-ed10a3806a4f-runtime-authority-AI-MCP-Atlas-Relay.md",
+        "purpose": "Pacote/parecer de runtime recebido; provas nativas ausentes permanecem ausentes.",
+        "expected_parent_sha": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+        "absent_at_expected_parent": true,
+        "absence_evidence_tree": "38a524c8c5df0c6e9de19aa44811b95ab7fa31aa",
+        "required_mode": "100644",
+        "required_type": "blob",
+        "required_encoding": "UTF-8",
+        "content_sha256": null,
+        "content_blob_sha": null,
+        "status": "PROPOSED_ONLY_CONTENT_AND_PROVENANCE_PENDING"
+      }
+    ],
+    "control_paths": [],
+    "allocation_record_commit": null,
+    "allocation_record_status": "Nenhum registro S0 em sf2-control foi criado ou alegado. Este campo não concede paths control.",
+    "previous_attempt_refs": [],
+    "previous_attempt_status": "Não inferidos; devem ser preenchidos pelo integrador se houver tentativa prévia.",
+    "source_of_seven_existing_names": {
+      "path": "evidence/prepare_delivery.py",
+      "sha256": "28e31e19ead7763212c4d04ed5ed1b33c7f08a3b62bb0f149610ae4aac56d3ba",
+      "role": "Script local lido apenas para nomes planejados; não foi executado/alterado por este audit.",
+      "eighth_name": "delivery-envelope-input-audit.json proposto por este audit."
+    },
+    "content_and_delivery_checks_still_required": [
+      "Bytes UTF-8 e dados evidenciais autorizados; sem guia normativo ou instrução executável.",
+      "Proveniência source commit/path/blob de cada evidência recebida e hashes finais, sem reescrita dos pareceres.",
+      "Ausência dos paths revalidada contra o parent real da publicação.",
+      "Diff completo e todos os blobs/modos antigos preservados na futura tentativa.",
+      "Nenhum hash próprio/futuro D/resultados posteriores gravados no receipt interno."
+    ]
+  },
+  "suggested_patch": {
+    "path": "evidence/delivery-envelope-input-exclusions.suggested.patch",
+    "sha256": "dabfd94ef9a565b44e8bf591d6cafd9193e004871fddd461fd2d27d568345a65",
+    "owner": "S0 / root config owner",
+    "applied": false,
+    "base_commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+    "target_path": ".prettierignore",
+    "before_blob": "dc65965b09963d0c3409d1accf4408d1139f84a5",
+    "proposed_after_blob": "f9831ab49cf60f616411e6dc64041a071a627619",
+    "scope": "Somente três padrões de receipts desta entrega. É correção de input de geração, fora do ownership Astra; cria novo C quando integrada.",
+    "does_not_resolve": [
+      "DELIVERY-INPUT-02 Turbo/hash input set",
+      "DELIVERY-INPUT-03 transitive closure/input manifests",
+      "G7/G8 ou provas funcionais/nativas"
+    ],
+    "validation": "Patch produzido documentalmente por diff dos bytes W9 e proposta; não foi aplicado nem executado."
+  },
+  "delivery_alternative": {
+    "status": "PROPOSED_SEPARATE_EVIDENCE_BRANCH",
+    "product_reference_to_preserve": {
+      "pr": 32,
+      "branch": "astra-compose",
+      "head": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "tree": "57ce597f3ebe8ddb543f9d71d34d20f789c76e33"
+    },
+    "strategy": "Manter o produto testado na PR32. Publicar o pacote proposto em branch própria de evidências, sem incorporá-lo ao produto e sem qualificá-lo D. S0 consome os blobs depois de resolver os inputs e, quando necessário, criar/requalificar novo C.",
+    "suggested_branch": "astra-compose-evidence-ed10a3806a4f",
+    "branch_created_by_this_audit": false,
+    "qualifies_D": false,
+    "claims_D_G8": false,
+    "gates_unchanged": [
+      "oito seleções finais no mesmo C",
+      "AM01–AM06",
+      "três revisões independentes no C correto",
+      "C/G7",
+      "D/G8 após envelope válido"
+    ],
+    "no_sf2_control_merge": true
+  },
+  "next_action": "Encaminhar DELIVERY-INPUT-01/02/03 e patch sugerido a S0; preservar W9 e seus runs. A branch evidencial proposta deve publicar a limitação, não contorná-la. Novo produto/configuração exige novo C e revalidação pertinente."
+}

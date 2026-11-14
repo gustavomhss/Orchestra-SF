@@ -1,0 +1,568 @@
+{
+  "schema": "sf2-input-audit-candidate-supplement-v1",
+  "status": "PROPOSED_EVIDENCE_BRANCH_NOT_D",
+  "target_candidate": {
+    "head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+    "tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4",
+    "branch": "astra-compose",
+    "pr": 32
+  },
+  "original_audit": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/assessment-9048e0e65351/w17-final-01/input-audit-w9-original.json",
+    "sha256": "e332bfe664b7f879fce79b82e0375434cc7fb01814220dc92765d1872d6fa83b",
+    "subject_head": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+    "subject_tree": "57ce597f3ebe8ddb543f9d71d34d20f789c76e33",
+    "original_allocation": "Historical W9 proposal preserved verbatim; never replaced by this supplement"
+  },
+  "source_pins": [
+    {
+      "path": "package.json",
+      "audit_W9_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "bunfig.toml",
+      "audit_W9_blob": "c506ff57c4bf3fa3a6bd3501b8ce2fc29122accb",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "c506ff57c4bf3fa3a6bd3501b8ce2fc29122accb",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "tsconfig.json",
+      "audit_W9_blob": "65fa6c7f31c11e2a1ff643ea263f97815c6bac5d",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "65fa6c7f31c11e2a1ff643ea263f97815c6bac5d",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "turbo.json",
+      "audit_W9_blob": "c375d67bc4b2738991a62994d3a81e01cdc7c639",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "c375d67bc4b2738991a62994d3a81e01cdc7c639",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": ".prettierignore",
+      "audit_W9_blob": "dc65965b09963d0c3409d1accf4408d1139f84a5",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "dc65965b09963d0c3409d1accf4408d1139f84a5",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": ".gitignore",
+      "audit_W9_blob": "f87b0cd6e00813278e36474cf332bae735394518",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "f87b0cd6e00813278e36474cf332bae735394518",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "script/generate.ts",
+      "audit_W9_blob": "60308900ce20c10784bd6c34ad75d2e10f693058",
+      "audit_W9_mode": "100755",
+      "candidate_blob": "60308900ce20c10784bd6c34ad75d2e10f693058",
+      "candidate_mode": "100755",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "script/format.ts",
+      "audit_W9_blob": "996de9ad04a41b06ae0d12cd311d733ec9541665",
+      "audit_W9_mode": "100755",
+      "candidate_blob": "996de9ad04a41b06ae0d12cd311d733ec9541665",
+      "candidate_mode": "100755",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "script/module-registry.json",
+      "audit_W9_blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "audit_W9_blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "audit_W9_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "script/test-ci-paths.ts",
+      "audit_W9_blob": "b6977405d4dd8b2db95f3926f2a0322fd511357e",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "b6977405d4dd8b2db95f3926f2a0322fd511357e",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "script/test-guard.ts",
+      "audit_W9_blob": "f2f55d97fd05a5136e17eac7043bbf315de88bb6",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "f2f55d97fd05a5136e17eac7043bbf315de88bb6",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "script/test-omni-control.ts",
+      "audit_W9_blob": "643ad90a4606c2afd6c6c9aee389ca6389ab54e9",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "643ad90a4606c2afd6c6c9aee389ca6389ab54e9",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "audit_W9_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": ".github/workflows/astra-compose-check.yml",
+      "audit_W9_blob": "e7a815a797e960e826af4268dd381cb4c5df6ffc",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "e7a815a797e960e826af4268dd381cb4c5df6ffc",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "audit_W9_blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/sucafina/bunfig.toml",
+      "audit_W9_blob": "7000633db2c4f11e3f1aff351cd28c0df9affeca",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "7000633db2c4f11e3f1aff351cd28c0df9affeca",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/package.json",
+      "audit_W9_blob": "18911fee9313f8fb57c1a972bc70eec2f7864c55",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "18911fee9313f8fb57c1a972bc70eec2f7864c55",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/tsconfig.json",
+      "audit_W9_blob": "51895f3c254e6020d116ca73d4a1c690f7562169",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "51895f3c254e6020d116ca73d4a1c690f7562169",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "audit_W9_blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+      "audit_W9_blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/generate-output-schemas.ts",
+      "audit_W9_blob": "eef174095e02eb4448a6c53d6119ce7a8fda4a9d",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "eef174095e02eb4448a6c53d6119ce7a8fda4a9d",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "audit_W9_blob": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/build-bi.ts",
+      "audit_W9_blob": "b7a97cf867a2649bc5033fc9eb978c0e6d21182d",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "b7a97cf867a2649bc5033fc9eb978c0e6d21182d",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/elo.test.ts",
+      "audit_W9_blob": "89fbfc47e8f25f2eb371e92bff7d37ec5436e5e4",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "89fbfc47e8f25f2eb371e92bff7d37ec5436e5e4",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+      "audit_W9_blob": "47b4a49cd85ae20e5f0006ded9736eb8be1993bb",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "47b4a49cd85ae20e5f0006ded9736eb8be1993bb",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "audit_W9_blob": "fc4d57604c21ab5d007f747a908b17b67027ffd6",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "fc4d57604c21ab5d007f747a908b17b67027ffd6",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/ownership.test.ts",
+      "audit_W9_blob": "c8e196509be4ee3eda54e26276c830a4df1dff98",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "c8e196509be4ee3eda54e26276c830a4df1dff98",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/check-ownership.ts",
+      "audit_W9_blob": "058e69fc3abd8157ea4c42dfa27f75de96327104",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "058e69fc3abd8157ea4c42dfa27f75de96327104",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "apps/cli/package.json",
+      "audit_W9_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "apps/cli/tsconfig.json",
+      "audit_W9_blob": "ac9f4c63f786ccf7e925e3c637bb5c76aac77495",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "ac9f4c63f786ccf7e925e3c637bb5c76aac77495",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "apps/cli/bunfig.toml",
+      "audit_W9_blob": "b63db7a054a18092d613327093aaec2acba606b2",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "b63db7a054a18092d613327093aaec2acba606b2",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "apps/cli/script/build.ts",
+      "audit_W9_blob": "a5066b1fe295a10c5463e33f4a256fb3dab32cc4",
+      "audit_W9_mode": "100755",
+      "candidate_blob": "a5066b1fe295a10c5463e33f4a256fb3dab32cc4",
+      "candidate_mode": "100755",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "apps/cli/script/generate.ts",
+      "audit_W9_blob": "3735eca79dc11c60124162aeb8a17047659c5914",
+      "audit_W9_mode": "100755",
+      "candidate_blob": "3735eca79dc11c60124162aeb8a17047659c5914",
+      "candidate_mode": "100755",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "apps/cli/script/packaged-skills.ts",
+      "audit_W9_blob": "72e362c649c1a88d83ee2adca9b5bd1acedde217",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "72e362c649c1a88d83ee2adca9b5bd1acedde217",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-assets.ts",
+      "audit_W9_blob": "d4f61546186a0f752be4c103b3a2e112deb4a582",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "d4f61546186a0f752be4c103b3a2e112deb4a582",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "audit_W9_blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "apps/desktop/package.json",
+      "audit_W9_blob": "a7dd0b12de0f8c3855c7f5b2f069416ef711f577",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "a7dd0b12de0f8c3855c7f5b2f069416ef711f577",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "apps/desktop/electron-builder.config.ts",
+      "audit_W9_blob": "30cdff984b46f20c76066ff24e4304d76b5a8467",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "30cdff984b46f20c76066ff24e4304d76b5a8467",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "apps/desktop/electron.vite.config.ts",
+      "audit_W9_blob": "b90da178775d53d1c8779edb633a6ccc23758c82",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "b90da178775d53d1c8779edb633a6ccc23758c82",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "packages/core/src/packaged-skills.ts",
+      "audit_W9_blob": "5b3685e5e72885318b383f7f23589147a6882488",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "5b3685e5e72885318b383f7f23589147a6882488",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "packages/script/src/workspace-paths.ts",
+      "audit_W9_blob": "7e84903752776142e1ac43c0a5dd1f304de2cf9f",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "7e84903752776142e1ac43c0a5dd1f304de2cf9f",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/maestro/coordination/package.json",
+      "audit_W9_blob": "438c5a89f01d13d992e86582030d1a3b59f277a3",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "438c5a89f01d13d992e86582030d1a3b59f277a3",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/maestro/coordination/src/seats/index.ts",
+      "audit_W9_blob": "a4f0ecf5b5144f91837571286f91fc552be0c826",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "a4f0ecf5b5144f91837571286f91fc552be0c826",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/maestro/coordination/src/seats/seat.ts",
+      "audit_W9_blob": "041587dc6d049eee78eca22b71acb9db0a1fb523",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "041587dc6d049eee78eca22b71acb9db0a1fb523",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/maestro/coordination/src/seat-skill-content.ts",
+      "audit_W9_blob": "ee9de21c4aeceb1c9b014cdae2b710efb9d0360a",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "ee9de21c4aeceb1c9b014cdae2b710efb9d0360a",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/maestro/coordination/src/seat-skills-module.ts",
+      "audit_W9_blob": "a3ed7947dbf9b8a632ca1deae91a0fc1e94c94b3",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "a3ed7947dbf9b8a632ca1deae91a0fc1e94c94b3",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    },
+    {
+      "path": "modules/maestro/coordination/src/seat-skill-root.ts",
+      "audit_W9_blob": "c01632881ed8e61ee0b008fb41d36ef8ceba8afd",
+      "audit_W9_mode": "100644",
+      "candidate_blob": "c01632881ed8e61ee0b008fb41d36ef8ceba8afd",
+      "candidate_mode": "100644",
+      "status": "SAME_BLOB"
+    }
+  ],
+  "pin_counts": {
+    "SAME_BLOB": 49
+  },
+  "finding_status": [
+    {
+      "id": "DELIVERY-INPUT-01",
+      "original_owner": "S0 / root build-generation ownership",
+      "status": "OPEN_NO_REQUALIFICATION",
+      "rule": "Equal source/config blobs preserve the known rules and blockers; they do not prove Turbo/bundler closure or qualify another candidate."
+    },
+    {
+      "id": "DELIVERY-INPUT-02",
+      "original_owner": "S0 / task-graph ownership",
+      "status": "OPEN_NO_REQUALIFICATION",
+      "rule": "Equal source/config blobs preserve the known rules and blockers; they do not prove Turbo/bundler closure or qualify another candidate."
+    },
+    {
+      "id": "DELIVERY-INPUT-03",
+      "original_owner": "S0 / final bundle integration",
+      "status": "OPEN_NO_REQUALIFICATION",
+      "rule": "Equal source/config blobs preserve the known rules and blockers; they do not prove Turbo/bundler closure or qualify another candidate."
+    }
+  ],
+  "conclusion": "NO_NEW_INPUT_AUDIT_OR_ENVELOPE_ACCEPTANCE",
+  "qualifies_D": false,
+  "claims_G8": false,
+  "scope_limit": "Only Git metadata/hash correspondence is verified here. No imports, generator, bundler, Turbo, runtime or product validation is executed.",
+  "catalog_sources": [
+    {
+      "prefix": "",
+      "tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4",
+      "recursive": false,
+      "source_path": "evidence/candidate-w17-catalogs/root.json",
+      "source_sha256": "58851e076b3bf011a257fe8f12c3df0bcd7a287a6fd091f9461d64b2da398f8d",
+      "source_commit": "9048e0e65351a5bd80768458a79fed94a4993db7"
+    },
+    {
+      "prefix": "modules",
+      "tree": "66c49c6e4d1a4d2882ac13bdcb1793c55da5b40b",
+      "recursive": false,
+      "source_path": "evidence/candidate-w17-catalogs/modules.json",
+      "source_sha256": "6184b385942240cb94559269453b5c13c98b6a1e288b5d2adc86747d376c8cc7",
+      "source_commit": "9048e0e65351a5bd80768458a79fed94a4993db7"
+    },
+    {
+      "prefix": "apps",
+      "tree": "7e05149c03ea18ce9245e0b21b4eb103445df1d8",
+      "recursive": false,
+      "source_path": "evidence/candidate-w17-catalogs/apps.json",
+      "source_sha256": "fafc4157c7a8d222c61b080b93b75da42da4a6d07b29aeab93f07af8f5be9787",
+      "source_commit": "34e6dd4f3588a64a3963a854ee29729f82fdd594"
+    },
+    {
+      "prefix": "packages",
+      "tree": "6ab4ca4d5a49a0143f34eca26367cb0d54ce4edd",
+      "recursive": false,
+      "source_path": "evidence/candidate-w17-catalogs/packages.json",
+      "source_sha256": "5c854695ee8c3e53ff8717d6cf8032de0781a1781936e02bf0f16d5480363623",
+      "source_commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf"
+    },
+    {
+      "prefix": ".github",
+      "tree": "60fe5fd4c097b4150e089ce51a08dc1d54ba80a9",
+      "recursive": true,
+      "source_path": "evidence/candidate-w17-catalogs/_github.json",
+      "source_sha256": "7ea251f5a5b6b2ce79310bb6c005db2ed545c7838933ac710a7dcc33976b039a",
+      "source_commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf"
+    },
+    {
+      "prefix": "script",
+      "tree": "ffc37deca8c3d510faccdc82ec56f295e1a02af3",
+      "recursive": true,
+      "source_path": "evidence/candidate-w17-catalogs/script.json",
+      "source_sha256": "a572eac55a2fd8720b5d55924429692b6cbf8d7ad3d830f297a6e94c2013201c",
+      "source_commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf"
+    },
+    {
+      "prefix": "tooling",
+      "tree": "2ef9fcce92be2f17e5eb36f498769f68456306c0",
+      "recursive": true,
+      "source_path": "evidence/candidate-w17-catalogs/tooling.json",
+      "source_sha256": "7e56ef8f17061772bb66a6260d10e40ac95682ddcbf4fc522410d6c5c87bc957",
+      "source_commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf"
+    },
+    {
+      "prefix": "modules/sucafina",
+      "tree": "46995d7123580a0862376812153f3ff6577aa2af",
+      "recursive": true,
+      "source_path": "evidence/candidate-w17-catalogs/modules_sucafina.json",
+      "source_sha256": "4081faeb57aa6c051f8f33247ac4cc1435a341976cad46f629e54f31235d5be7",
+      "source_commit": "9048e0e65351a5bd80768458a79fed94a4993db7"
+    },
+    {
+      "prefix": "apps/cli",
+      "tree": "92d3fa66f6fd7d5307e8f57f40b34f61ed53a3ab",
+      "recursive": true,
+      "source_path": "evidence/candidate-w17-catalogs/apps_cli.json",
+      "source_sha256": "110f0922f3d2cd11ba07c8ce201fe58f1b56c04115f53fff6e824676494f836a",
+      "source_commit": "34e6dd4f3588a64a3963a854ee29729f82fdd594"
+    },
+    {
+      "prefix": "apps/desktop",
+      "tree": "4c3fceae4c156277f8c9945d54dc5334060dcfa8",
+      "recursive": true,
+      "source_path": "evidence/candidate-w17-catalogs/apps_desktop.json",
+      "source_sha256": "083a27c1ab8799b3cb24a458545dde5e03f43cf8059bd28cd2f619d99caf6328",
+      "source_commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf"
+    },
+    {
+      "prefix": "packages/core",
+      "tree": "c4cdc7e8854fa8aab2fe7ce03dfd1536593c81da",
+      "recursive": true,
+      "source_path": "evidence/candidate-w17-catalogs/packages_core.json",
+      "source_sha256": "35bebc7c920c8189f00ceafba26a70736ba3fed5e6d95962666c059d7fc5d3c1",
+      "source_commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf"
+    },
+    {
+      "prefix": "packages/server",
+      "tree": "92c6efa998cc37a7756593678522ec7f1a4afe03",
+      "recursive": true,
+      "source_path": "evidence/candidate-w17-catalogs/packages_server.json",
+      "source_sha256": "3104c50db58d6a8a7824f416c0a1d9e8fc6425d17f2b8df91453118bb9374a24",
+      "source_commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf"
+    },
+    {
+      "prefix": "modules/maestro",
+      "tree": "e1426eefa49939d584c1ab8db93289c0e726cd3e",
+      "recursive": true,
+      "source_path": "evidence/candidate-w17-catalogs/modules_maestro.json",
+      "source_sha256": "617815a82d2cfe7d076c7636d600059619ae7b51f2315e1e986ba5a8a0d185ba",
+      "source_commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf"
+    },
+    {
+      "prefix": "packages/script",
+      "tree": "46787615f5390211936d94920a20b266cd433e5d",
+      "recursive": true,
+      "source_path": "evidence/candidate-w17-catalogs/packages_script.json",
+      "source_sha256": "2597586235cb93995af1a2f66e92645d0323f0ce2270805148575528ae9ea962",
+      "source_commit": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf"
+    },
+    {
+      "prefix": "modules/atlas",
+      "tree": "cf7fdc434560d994fbe66e821a621622d0b2c85b",
+      "recursive": true,
+      "source_path": "evidence/candidate-w17-catalogs/modules_atlas.json",
+      "source_sha256": "337b454aba638da8d0ed70de50d170030152d2af26472ce1cbc471af636eada6",
+      "source_commit": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1"
+    },
+    {
+      "prefix": "packages/app-shell",
+      "tree": "d7607496b271bdc1300dc43caf56f6be96496021",
+      "recursive": true,
+      "source_path": "evidence/candidate-w17-catalogs/packages_app-shell.json",
+      "source_sha256": "aa843e3e7fd02c07b1e35ce238e08e8e7db22192c35a1a485a2a5112cbfec754",
+      "source_commit": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1"
+    }
+  ]
+}

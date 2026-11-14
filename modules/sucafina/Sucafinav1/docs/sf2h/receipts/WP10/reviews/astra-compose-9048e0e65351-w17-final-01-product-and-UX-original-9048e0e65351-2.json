@@ -1,0 +1,847 @@
+{
+  "schema": "sf2h-independent-product-ux-checks/v7",
+  "reviewer": "/root/review_product_ux_final",
+  "reviewed_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+  "reviewed_tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4",
+  "Check15": {
+    "W": "9048e0e65351a5bd80768458a79fed94a4993db7",
+    "product_tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4",
+    "S": "771cf5896aa504620ab35a2e44cca2606b7e18c3",
+    "snapshot_tree": "12707f474e546fe850ab798de957d2fc535007ff",
+    "parents": [
+      "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "8005cdc71222a6656c38e0ab90a434bb66d20949"
+    ],
+    "envelope_blob": "fab08401863895c347b6b64a9e6322786575129b",
+    "envelope": {
+      "productSha": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    },
+    "only_changed_paths": [
+      ".astra-compose-check.json"
+    ],
+    "run": 43604348151,
+    "job": 132475647040,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43604348151/job/132475647040",
+    "status": "completed",
+    "conclusion": "failure",
+    "sf_diagnostics": 14,
+    "own_sf_diagnostics": 0,
+    "cli_diagnostics": 0,
+    "diagnostics": [
+      "product/procurement/sourcing-analysis.ts(4,10): error TS2305: Module '\"../ui/forecast-analysis.ts\"' has no exported member 'analysisHistory'.",
+      "test/product/wp04/finance-sourcing-integration.test.ts(388,65): error TS2322: Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, \"resolve\">'.",
+      "test/product/wp04/finance-sourcing-integration.test.ts(394,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "test/product/wp06/native/import-analysis.test.ts(130,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "test/product/wp06/native/import-analysis.test.ts(166,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "test/product/wp06/native/import-analysis.test.ts(205,45): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "test/product/wp06/native/import-analysis.test.ts(324,37): error TS2554: Expected 1 arguments, but got 2.",
+      "test/product/wp08/collaboration-journey.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "test/product/wp08/confirmation-work-integration.test.ts(82,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "test/product/wp08/host-answer-reuse.test.ts(78,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "test/product/wp08/question-consumer.test.ts(44,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "test/product/wp09/decision-answer-consumer.test.ts(76,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (binding: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, binding: TrustedDomainContext) => Promise<...>; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "test/product/wp13/sensitivity-units-boundary.test.ts(158,127): error TS2322: Type 'PlannerSourceHost' is not assignable to type 'PlannerSourceHost & { projectForecastSource: SfPlannerSourceProjector; }'.",
+      "test/product/wp14/atlas-restart-reader.ts(54,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: () => string; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: RandomUUIDOptions | undefined) => `${s...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'."
+    ],
+    "same_14_as_Check14": true,
+    "guard": {
+      "rules": 78,
+      "changed_paths": 1423,
+      "gate": 0,
+      "warn": 46,
+      "errors": 0,
+      "base": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    },
+    "spawn_guard": {
+      "files": 4671,
+      "allow_listed_sites": 66
+    },
+    "commands": [
+      "2026-11-14T14:21:25.8882619Z \u001b[36;1mbun typecheck 2>&1 | tee \"$RUNNER_TEMP/astra-compose-evidence/sucafina-typecheck.log\"\u001b[0m",
+      "2026-11-14T14:22:05.4206699Z \u001b[36;1mbun typecheck 2>&1 | tee \"$RUNNER_TEMP/astra-compose-evidence/cli-typecheck.log\"\u001b[0m",
+      "2026-11-14T14:22:44.9526844Z \u001b[36;1mbun run check:generated 2>&1 | tee \"$RUNNER_TEMP/astra-compose-evidence/atlas-generated-check.log\"\u001b[0m",
+      "2026-11-14T14:23:52.6424232Z \u001b[36;1mbun typecheck 2>&1 | tee \"$RUNNER_TEMP/astra-compose-evidence/atlas-typecheck.log\"\u001b[0m",
+      "2026-11-14T14:23:52.8574303Z $ bun run script/check-spawn-imports.ts",
+      "2026-11-14T14:23:53.3645504Z spawn-imports: 4671 files checked, 66 allow-listed sites",
+      "2026-11-14T14:23:53.3935835Z $ bun run script/guards/run.ts --base origin/dev",
+      "2026-11-14T14:23:55.8793013Z guards: 78 rules, 1423 changed paths, 0 gate and 46 warn findings, 0 errors."
+    ],
+    "jobs": [
+      {
+        "id": 132475647040,
+        "name": "composition",
+        "status": "completed",
+        "conclusion": "failure",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout check envelope",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Validate exact product and envelope",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout exact product",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Record product and guard base",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Setup Bun",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Typecheck Sucafina",
+            "status": "completed",
+            "conclusion": "failure"
+          },
+          {
+            "name": "Typecheck CLI consumers",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Verify canonical Atlas generation",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Typecheck Atlas boundary",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Guard subprocess imports",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Guard product against origin/dev",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Upload exact-check evidence",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Setup Bun",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout exact product",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout check envelope",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 14117816293,
+        "name": "astra-compose-check-1",
+        "size_in_bytes": 3947,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14117816293",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14117816293/zip",
+        "expired": false,
+        "created_at": "2026-11-14T14:23:56Z",
+        "expires_at": "2026-11-28T14:23:56Z",
+        "updated_at": "2026-11-14T14:23:56Z",
+        "digest": "sha256:c9520733218b5b12b9540594b4330b76f1d313bd6af2f3b97cbb7d5569700c33",
+        "workflow_run": {
+          "id": 43604348151,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-compose",
+          "head_sha": "771cf5896aa504620ab35a2e44cca2606b7e18c3"
+        }
+      }
+    ],
+    "artifact_downloaded_by_reviewer": false,
+    "root_artifact_verification_receipt": {
+      "path": "evidence/check15-artifact-verification.json",
+      "reported_sha256": "be75cee1629735451727fbc7fac806da27392ebdf11d9a0294650f8b5402620f",
+      "scope": "Root performed the unique ZIP download; reviewer only reads receipt metadata.",
+      "local_metadata_sha256": "be75cee1629735451727fbc7fac806da27392ebdf11d9a0294650f8b5402620f",
+      "matches_root_reported_sha256": true,
+      "reviewer_opened_zip": false
+    }
+  },
+  "CI10": {
+    "W": "9048e0e65351a5bd80768458a79fed94a4993db7",
+    "product_tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4",
+    "S": "dcd14c5fad0c84143d3071557c493e2c5de3e9e4",
+    "snapshot_tree": "823a2081fbc1fab1f39e441cf0f9bd3fa34687e1",
+    "parents": [
+      "9048e0e65351a5bd80768458a79fed94a4993db7"
+    ],
+    "envelope_blob": "6decd1736e1fda8ac653ff5ec7a03d3f48d47ede",
+    "request_content": "{\n  \"package\": \"sucafina\",\n  \"directory\": \"modules/sucafina\",\n  \"packageSelector\": \"packages/sucafina\",\n  \"runner\": \"bun\",\n  \"args\": [\n    \"./Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts\",\n    \"--timeout\",\n    \"120000\"\n  ],\n  \"env\": {\n    \"ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER\": \"1\"\n  }\n}\n",
+    "only_changed_paths": [
+      ".ci-run.json"
+    ],
+    "status": "completed",
+    "run": 43605201442,
+    "conclusion": "success",
+    "observed_runs_for_snapshot": 1,
+    "expected_test_cases": 5,
+    "expected_spawn_declarations": 4,
+    "actual_spawns": 4,
+    "actual_omni_result": "PASS",
+    "actual_driver_cleanup_proofs": 4,
+    "root_reported_dispatch_dependency": {
+      "run": 43604032487,
+      "owner": "WP10 source",
+      "observed_by_reviewer": false
+    },
+    "not_dispatched_by_reviewer": true,
+    "request_sha256": "b7e57c0f9591b817e4d387c73e29d1875c1fbb684dd100687dd6b1a688475d2a",
+    "last_MCP_run_query_at": "2026-11-14T14:30:07Z",
+    "job": 132478265438,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43605201442/job/132478265438",
+    "observed_run_ids": [
+      43605201442
+    ],
+    "observation_history": [
+      {
+        "at": "2026-11-14T14:30:07Z",
+        "runs": 0,
+        "status": "PREPARED_NO_RUN_OBSERVED"
+      },
+      {
+        "at": "2026-11-14T14:32:34Z",
+        "run": 43605201442,
+        "status": "completed",
+        "conclusion": "success",
+        "head": "dcd14c5fad0c84143d3071557c493e2c5de3e9e4"
+      }
+    ],
+    "pass": 5,
+    "fail": 0,
+    "tests": 5,
+    "files": 1,
+    "assertions": 114,
+    "elapsed_seconds": 16.02,
+    "unhandled_errors": 0,
+    "unhandled_error_lines": [],
+    "omni": {
+      "status": "PASS",
+      "nonce": "7b19b299b892fc9d0777b0a87e16f2b7",
+      "declared_tests": 4,
+      "spawns": 4,
+      "delegated": 0
+    },
+    "cases": [
+      {
+        "status": "pass",
+        "name": "BI keeps the canonical shell, refreshes on manual focus and timer, and signs out once while discarding a held genuine success",
+        "elapsed_ms": 4333.16,
+        "line": 872
+      },
+      {
+        "status": "pass",
+        "name": "the canonical shell still polls authority while BI awaits a held result and revocation prevents every late render",
+        "elapsed_ms": 2357.29,
+        "line": 920
+      },
+      {
+        "status": "pass",
+        "name": "clearing the BI selection while genuine authorized options are delayed prevents restoration of the previous selection",
+        "elapsed_ms": 2468.05,
+        "line": 953
+      },
+      {
+        "status": "pass",
+        "name": "BI returns from a real source with the same human filters, version pair, currency and mark focus after current reauthorization",
+        "elapsed_ms": 5783.85,
+        "line": 1027
+      },
+      {
+        "status": "pass",
+        "name": "BI origin digests select only an explicit source of the real current Planner difference and never choose A or B implicitly",
+        "elapsed_ms": 652.69,
+        "line": 1044
+      }
+    ],
+    "proofs": [
+      {
+        "consumer": "host-contextual-controls",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4078
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4099
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4114,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 71,
+          "framesFromBrowser": 189,
+          "peakQueuedBytes": 2545,
+          "peakBufferedBytes": 913,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      },
+      {
+        "consumer": "host-contextual-controls",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4078
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4236
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4251,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 48,
+          "framesFromBrowser": 131,
+          "peakQueuedBytes": 2545,
+          "peakBufferedBytes": 868,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      },
+      {
+        "consumer": "host-contextual-controls",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4078
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4374
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4389,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 33,
+          "framesFromBrowser": 102,
+          "peakQueuedBytes": 2458,
+          "peakBufferedBytes": 912,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      },
+      {
+        "consumer": "host-contextual-controls",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4078
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4514
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4529,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 84,
+          "framesFromBrowser": 213,
+          "peakQueuedBytes": 3063,
+          "peakBufferedBytes": 1223,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      }
+    ],
+    "proof_metadata_validation": {
+      "kind": "LOG_METADATA_ONLY",
+      "proof_count": 4,
+      "distinct_drivers": 4,
+      "distinct_browsers": 4,
+      "results": [
+        {
+          "driver": 4099,
+          "browser": 4114,
+          "valid": true
+        },
+        {
+          "driver": 4236,
+          "browser": 4251,
+          "valid": true
+        },
+        {
+          "driver": 4374,
+          "browser": 4389,
+          "valid": true
+        },
+        {
+          "driver": 4514,
+          "browser": 4529,
+          "valid": true
+        }
+      ]
+    },
+    "proof_log_lines": [
+      871,
+      919,
+      952,
+      1026
+    ],
+    "jobs": [
+      {
+        "id": 132478265438,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Assert Linux ARM64",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Assert macOS arm64",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Read request",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Fetch source history for Script fixtures",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Setup Bun",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "ripgrep",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Install Chromium",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Linux sandbox dependencies",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Setup Python",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Install Python test dependencies",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Configure git identity",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Export requested environment",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "omni binaries",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Rust toolchain (rust-toolchain.toml)",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Omni control nonce",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run tests",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Upload Lean dashboard previews (extension)",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Upload Playwright evidence",
+            "status": "completed",
+            "conclusion": "skipped"
+          },
+          {
+            "name": "Post Setup Bun",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "id": 132478786112,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Delete the snapshot branch",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ],
+    "workflow_cleanup": {
+      "job": 132478786112,
+      "conclusion": "success",
+      "scope": "Snapshot branch deletion; separate from four actual driver normal-cleanup proofs."
+    },
+    "return_phases": [
+      "2026-11-14T14:32:11.8741957Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"browser.setup\",\"state\":\"started\",\"elapsedMs\":0}",
+      "2026-11-14T14:32:16.2872058Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"browser.setup\",\"state\":\"returned\",\"phaseMs\":4413,\"elapsedMs\":4413,\"aborted\":false}",
+      "2026-11-14T14:32:16.2891505Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"navigation-clock.resume\",\"state\":\"started\",\"elapsedMs\":4413}",
+      "2026-11-14T14:32:16.2892390Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"navigation-clock.resume\",\"state\":\"returned\",\"phaseMs\":2,\"elapsedMs\":4415,\"aborted\":false}",
+      "2026-11-14T14:32:16.2893371Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"filters.view\",\"state\":\"started\",\"elapsedMs\":4415}",
+      "2026-11-14T14:32:16.3333166Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"filters.view\",\"state\":\"returned\",\"phaseMs\":44,\"elapsedMs\":4459,\"aborted\":false}",
+      "2026-11-14T14:32:16.3377953Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"filters.period\",\"state\":\"started\",\"elapsedMs\":4464}",
+      "2026-11-14T14:32:16.3383313Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"filters.period.gesture\",\"state\":\"started\",\"elapsedMs\":4464}",
+      "2026-11-14T14:32:16.3929119Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"filters.period.gesture\",\"state\":\"returned\",\"phaseMs\":54,\"elapsedMs\":4519,\"aborted\":false}",
+      "2026-11-14T14:32:16.3930519Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"filters.period\",\"state\":\"returned\",\"phaseMs\":55,\"elapsedMs\":4519,\"aborted\":false}",
+      "2026-11-14T14:32:16.3931708Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"filters.period.dom\",\"state\":\"started\",\"elapsedMs\":4519}",
+      "2026-11-14T14:32:16.3989340Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"filters.period.dom\",\"state\":\"returned\",\"phaseMs\":6,\"elapsedMs\":4525,\"aborted\":false}",
+      "2026-11-14T14:32:16.4494639Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"comparison.ready\",\"state\":\"started\",\"elapsedMs\":4575}",
+      "2026-11-14T14:32:16.4528394Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"comparison.ready\",\"state\":\"returned\",\"phaseMs\":3,\"elapsedMs\":4579,\"aborted\":false}",
+      "2026-11-14T14:32:16.4559034Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"comparison.http\",\"state\":\"started\",\"elapsedMs\":4582}",
+      "2026-11-14T14:32:16.4564771Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"comparison.click\",\"state\":\"started\",\"elapsedMs\":4582}",
+      "2026-11-14T14:32:16.8100693Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"comparison.click\",\"state\":\"returned\",\"phaseMs\":353,\"elapsedMs\":4936,\"aborted\":false}",
+      "2026-11-14T14:32:16.8128558Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"comparison.http\",\"state\":\"returned\",\"phaseMs\":357,\"elapsedMs\":4939,\"aborted\":false}",
+      "2026-11-14T14:32:16.8130034Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"comparison.dom\",\"state\":\"started\",\"elapsedMs\":4939}",
+      "2026-11-14T14:32:16.8316370Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"comparison.dom\",\"state\":\"returned\",\"phaseMs\":19,\"elapsedMs\":4957,\"aborted\":false}",
+      "2026-11-14T14:32:16.8355435Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"source.http\",\"state\":\"started\",\"elapsedMs\":4961}",
+      "2026-11-14T14:32:16.9689037Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"source.http\",\"state\":\"returned\",\"phaseMs\":133,\"elapsedMs\":5095,\"aborted\":false}",
+      "2026-11-14T14:32:16.9713778Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"source.navigation\",\"state\":\"started\",\"elapsedMs\":5097}",
+      "2026-11-14T14:32:17.0708120Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"source.navigation\",\"state\":\"returned\",\"phaseMs\":99,\"elapsedMs\":5196,\"aborted\":false}",
+      "2026-11-14T14:32:17.0828019Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"return.http\",\"state\":\"started\",\"elapsedMs\":5209}",
+      "2026-11-14T14:32:17.0833150Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"return.navigation\",\"state\":\"started\",\"elapsedMs\":5209}",
+      "2026-11-14T14:32:17.1002133Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"return.navigation\",\"state\":\"returned\",\"phaseMs\":17,\"elapsedMs\":5226,\"aborted\":false}",
+      "2026-11-14T14:32:17.4649807Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"return.http\",\"state\":\"returned\",\"phaseMs\":382,\"elapsedMs\":5591,\"aborted\":false}",
+      "2026-11-14T14:32:17.4651091Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"return.dom\",\"state\":\"started\",\"elapsedMs\":5591}",
+      "2026-11-14T14:32:17.4833865Z SF_COMPOSITION_PHASE {\"fixture\":\"bi-return-context\",\"phase\":\"return.dom\",\"state\":\"returned\",\"phaseMs\":18,\"elapsedMs\":5609,\"aborted\":false}"
+    ],
+    "http_phases": [
+      "2026-11-14T14:32:04.8468936Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:04.9379152Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":91,\"aborted\":false}",
+      "2026-11-14T14:32:04.9380314Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":91,\"aborted\":false}",
+      "2026-11-14T14:32:04.9989223Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:05.0612059Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":62,\"aborted\":false}",
+      "2026-11-14T14:32:05.0613448Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":62,\"aborted\":false}",
+      "2026-11-14T14:32:05.1568131Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:05.4603417Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":304,\"aborted\":false}",
+      "2026-11-14T14:32:05.4604596Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":304,\"aborted\":false}",
+      "2026-11-14T14:32:05.6541348Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:05.6991948Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":45,\"aborted\":false}",
+      "2026-11-14T14:32:05.7002241Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":45,\"aborted\":false}",
+      "2026-11-14T14:32:05.7038040Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:05.9648879Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":261,\"aborted\":false}",
+      "2026-11-14T14:32:05.9650434Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":261,\"aborted\":false}",
+      "2026-11-14T14:32:06.0018013Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:06.0435728Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":42,\"aborted\":false}",
+      "2026-11-14T14:32:06.0437027Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":42,\"aborted\":false}",
+      "2026-11-14T14:32:06.0502403Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:06.2919739Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":242,\"aborted\":false}",
+      "2026-11-14T14:32:06.2921313Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":242,\"aborted\":false}",
+      "2026-11-14T14:32:06.3298630Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:06.5691300Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":239,\"aborted\":false}",
+      "2026-11-14T14:32:06.5692567Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":239,\"aborted\":false}",
+      "2026-11-14T14:32:06.6150746Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:06.8550976Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":240,\"aborted\":false}",
+      "2026-11-14T14:32:06.8908801Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":276,\"aborted\":true}",
+      "2026-11-14T14:32:07.8335292Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:07.8992138Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":66,\"aborted\":false}",
+      "2026-11-14T14:32:07.8993884Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":66,\"aborted\":false}",
+      "2026-11-14T14:32:07.9571664Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:08.0097878Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":53,\"aborted\":false}",
+      "2026-11-14T14:32:08.0099046Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":53,\"aborted\":false}",
+      "2026-11-14T14:32:08.1012606Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:08.3622117Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":261,\"aborted\":false}",
+      "2026-11-14T14:32:08.3623553Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":261,\"aborted\":false}",
+      "2026-11-14T14:32:08.4112432Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:08.6620300Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":251,\"aborted\":false}",
+      "2026-11-14T14:32:08.6621485Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":251,\"aborted\":false}",
+      "2026-11-14T14:32:08.7320670Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:08.9721165Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":240,\"aborted\":false}",
+      "2026-11-14T14:32:09.1140423Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":382,\"aborted\":true}",
+      "2026-11-14T14:32:10.3940775Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:10.4553414Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":61,\"aborted\":false}",
+      "2026-11-14T14:32:10.4558164Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":61,\"aborted\":false}",
+      "2026-11-14T14:32:10.5321818Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:10.5833554Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":51,\"aborted\":false}",
+      "2026-11-14T14:32:10.5834926Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":51,\"aborted\":false}",
+      "2026-11-14T14:32:10.6680102Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:10.9268159Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":259,\"aborted\":false}",
+      "2026-11-14T14:32:10.9269256Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":259,\"aborted\":false}",
+      "2026-11-14T14:32:11.0038124Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:11.0450559Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":41,\"aborted\":false}",
+      "2026-11-14T14:32:11.0599303Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":56,\"aborted\":true}",
+      "2026-11-14T14:32:15.7034562Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:15.8121438Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":110,\"aborted\":false}",
+      "2026-11-14T14:32:15.8122242Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":110,\"aborted\":false}",
+      "2026-11-14T14:32:15.8733074Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:15.9299445Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":57,\"aborted\":false}",
+      "2026-11-14T14:32:15.9309202Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":57,\"aborted\":false}",
+      "2026-11-14T14:32:16.0013863Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:16.2432770Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":242,\"aborted\":false}",
+      "2026-11-14T14:32:16.2433931Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI01\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":242,\"aborted\":false}",
+      "2026-11-14T14:32:16.2991815Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:16.3280036Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":29,\"aborted\":false}",
+      "2026-11-14T14:32:16.3281195Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":29,\"aborted\":false}",
+      "2026-11-14T14:32:16.3478285Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:16.3767585Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":29,\"aborted\":false}",
+      "2026-11-14T14:32:16.3768744Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":29,\"aborted\":false}",
+      "2026-11-14T14:32:16.4975187Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:16.8096928Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":312,\"aborted\":false}",
+      "2026-11-14T14:32:16.8098033Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":312,\"aborted\":false}",
+      "2026-11-14T14:32:16.8658112Z SF_BI_HTTP_PHASE {\"mode\":\"bi-source\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:16.9622388Z SF_BI_HTTP_PHASE {\"mode\":\"bi-source\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":96,\"aborted\":false}",
+      "2026-11-14T14:32:16.9623780Z SF_BI_HTTP_PHASE {\"mode\":\"bi-source\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":97,\"aborted\":false}",
+      "2026-11-14T14:32:17.1108022Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:17.1425043Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":32,\"aborted\":false}",
+      "2026-11-14T14:32:17.1434067Z SF_BI_HTTP_PHASE {\"mode\":\"bi-options\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":32,\"aborted\":false}",
+      "2026-11-14T14:32:17.1484820Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"entered\",\"elapsedMs\":0,\"aborted\":false}",
+      "2026-11-14T14:32:17.4589605Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"produced\",\"status\":200,\"elapsedMs\":311,\"aborted\":false}",
+      "2026-11-14T14:32:17.4590823Z SF_BI_HTTP_PHASE {\"mode\":\"bi-data\",\"method\":\"GET\",\"viewId\":\"BI02\",\"phase\":\"returned\",\"status\":200,\"elapsedMs\":311,\"aborted\":false}"
+    ],
+    "summary_log": [
+      "2026-11-14T14:32:18.3100715Z omni positive control [7b19b299b892fc9d0777b0a87e16f2b7]: pass (declared: 4 test(s) in Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts); 4 omni spawn(s), 0 delegated.",
+      "2026-11-14T14:32:18.3101678Z  5 pass",
+      "2026-11-14T14:32:18.3101911Z  0 fail",
+      "2026-11-14T14:32:18.3102159Z  114 expect() calls",
+      "2026-11-14T14:32:18.3102449Z Ran 5 tests across 1 file. [16.02s]"
+    ],
+    "artifacts": [],
+    "last_MCP_run_detail_observed_at": "2026-11-14T14:32:34Z",
+    "root_log_metadata": {
+      "path": "evidence/ci10.log",
+      "sha256": "e1523b406dbed298dea8853371390c09366e094510a3e57642f97d5083b6b2d2",
+      "bytes": 108596,
+      "scope": "Local hash metadata only. Actual run/job/log/proof evidence was also read independently through GitHub MCP; no artifact download."
+    }
+  },
+  "historical_observation_refs": [
+    {
+      "file": "final-34e6dd4f3588-checks-observation.json",
+      "product": "34e6dd4f3588a64a3963a854ee29729f82fdd594",
+      "scope": "CI9 W16 only:7pass/1fail, return response and cleanup failure; no W17 runtime result transfer."
+    }
+  ],
+  "no_candidate_result_transfer": true,
+  "local_product_execution": false,
+  "global_release": false,
+  "recorded_at": "2026-11-14T14:40:46.891090+00:00",
+  "preserved_draft": "draft-9048e0e65351-checks-observation.json"
+}

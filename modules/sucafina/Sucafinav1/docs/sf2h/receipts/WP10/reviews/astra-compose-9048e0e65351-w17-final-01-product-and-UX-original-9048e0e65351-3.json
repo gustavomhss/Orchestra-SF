@@ -1,0 +1,163 @@
+{
+  "reviewed_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+  "reviewed_tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4",
+  "reviewer": "/root/review_product_ux_final",
+  "no_author_overlap": true,
+  "verdict": "CHANGES_REQUIRED",
+  "schema": "sf2h-independent-product-ux-delta/v7",
+  "status": "FINAL_STATIC_AND_SCOPED_RUNTIME_REVIEW",
+  "publication": {
+    "paths": 9,
+    "own_fixture_files": 1,
+    "receipt_files": 8,
+    "deletions": 0,
+    "product_source_changes": 0,
+    "foreign_helper_changes": 0
+  },
+  "fixture": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+    "base_blob": "d4f3078394e65092f5da9261d5febfad61080f0a",
+    "blob": "a6e4dbe4bddc18866a8fe8082fa889540ac75972",
+    "static_assertion_comparison": {
+      "prior_blob": "d4f3078394e65092f5da9261d5febfad61080f0a",
+      "composed_blob": "a6e4dbe4bddc18866a8fe8082fa889540ac75972",
+      "standalone_expect_lines": {
+        "old": 81,
+        "new": 81,
+        "retained_in_order": true
+      },
+      "containing_expect_lines": {
+        "old": 83,
+        "new": 83,
+        "all_retained": true
+      },
+      "test_names_and_budgets": [
+        {
+          "name": "BI keeps the canonical shell, refreshes on manual focus and timer, and signs out once while discarding a held genuine success",
+          "name_unchanged": true,
+          "old_budget": "120_000",
+          "new_budget": "120_000",
+          "unchanged": false
+        },
+        {
+          "name": "the canonical shell still polls authority while BI awaits a held result and revocation prevents every late render",
+          "name_unchanged": true,
+          "old_budget": "120_000",
+          "new_budget": "120_000",
+          "unchanged": false
+        },
+        {
+          "name": "clearing the BI selection while genuine authorized options are delayed prevents restoration of the previous selection",
+          "name_unchanged": true,
+          "old_budget": "120_000",
+          "new_budget": "120_000",
+          "unchanged": false
+        },
+        {
+          "name": "BI returns from a real source with the same human filters, version pair, currency and mark focus after current reauthorization",
+          "name_unchanged": true,
+          "old_budget": "120_000",
+          "new_budget": "120_000",
+          "unchanged": false
+        },
+        {
+          "name": "BI origin digests select only an explicit source of the real current Planner difference and never choose A or B implicitly",
+          "name_unchanged": true,
+          "old_budget": "120_000",
+          "new_budget": "120_000",
+          "unchanged": true
+        }
+      ],
+      "expectSpawn_declarations": 4,
+      "report_calls": 4,
+      "unchanged_field_semantics": "The per-case unchanged flag compares the entire case body; names and budgets are separately unchanged for all five cases."
+    },
+    "judgment": "The four browser cases now use the already published WP02 Node driver. Real Bun HTTP/product host, SQLite/C08/C16, mounted session, held actual responses, source navigation and state assertions remain. Diagnostics add request/handler produced/returned/failed phases and comparison click timing without changing response handling or payload."
+  },
+  "driver_review": {
+    "blob": "76188b9f567861b30dba3b22afce66d60a2424c8",
+    "full_source_read": true,
+    "ownership": "Node AppProcess scope owns Chromium DevTools pipes; Bun remains the actual product HTTP host and Playwright client. The helper is unchanged, and only an allowed contextual-controls diagnostic consumer label is reused.",
+    "acquisition": "Dispose is registered before async acquisition; acquired close is retained before cancellation is checked. Pending acquisitions and held gates are awaited/released. Helper removes startup abort listener on return, so fixture disposal does not prematurely abort an acquired process before its normal close protocol.",
+    "normal_cleanup": "Helper closes all contexts, disconnects browser, sends stdin EOF, awaits normal Node/Chromium exit0, validates clean WebSocket1000 and Unix EOF, bounded actual traffic, zero queued/pending bytes, closed listener/socket and removed socket/directory before storing proof.",
+    "failure_cleanup": "A failed close remains failed; helper cancels and awaits its AppProcess scope and rethrows. No cleanup failure can fabricate observed.proof.",
+    "scope_limit": "The source contract is now accompanied by four actual CI10 normal-cleanup proofs at W17. No forced driver-failure path or historical WP07 cleanup repair is established. Bun descriptor recycling remains a helper rationale, not a proved root cause of CI9."
+  },
+  "report_gating": {
+    "declarations": 4,
+    "reports": 4,
+    "judgment": "Each report is after awaited finally cleanup. Uncaught test errors or aggregated body/cleanup failures prevent reaching it. report() itself rejects missing completed-cleanup proof. Fifth nonbrowser case remains byte-identical and has no new declaration/report.",
+    "actual_omni_proof": "PASS: four actual declaring tests, four actual Omni spawns, zero delegated, four driver proofs followed by the corresponding passing case."
+  },
+  "trace_scope": {
+    "logged": [
+      "mode",
+      "method",
+      "viewId",
+      "phase",
+      "status",
+      "elapsedMs",
+      "aborted"
+    ],
+    "excluded": [
+      "cookie",
+      "full URL",
+      "selector",
+      "payload",
+      "credential"
+    ],
+    "judgment": "Passive diagnostics for three controlled BI modes; no product behavior or financial/native policy changed."
+  },
+  "budgets": {
+    "outer_each_ms": 120000,
+    "cooperative_ms": 105000,
+    "driver_acquisition_ms": 15000,
+    "page_default_ms": 10000,
+    "navigation_ms": 15000,
+    "existing_increases": 0
+  },
+  "open_findings": [
+    "Historical WP07 process/group/transport fault path remains open; the exercised new-driver Planner source/Back return path passed W17 CI10.",
+    "UX-WP05-BI-ADVANTAGE-REFLOW-07",
+    "Six positive browser destinations",
+    "Open-detail refresh/focus/scroll",
+    "Viewport/zoom/keyboard",
+    "p95",
+    "Installed/native C07/C17, AM01–AM06",
+    "Four historical CI5 C17 ancestry/reopen cases remain without passing execution; earlier two stale-case positives belong to W15 CI8 only.",
+    "C12/H05 and external typechecks",
+    "Eight S0 final selections; three independent final reviews; C/G7 and D/G8"
+  ],
+  "runtime_status": "CI10 SUCCESS at exact W17: five complete lifecycle cases and four authentic driver normal-cleanup proofs",
+  "local_product_execution": false,
+  "product_authorship": false,
+  "github_writes": false,
+  "runtime_result": {
+    "run": 43605201442,
+    "job": 132478265438,
+    "S": "dcd14c5fad0c84143d3071557c493e2c5de3e9e4",
+    "pass": 5,
+    "fail": 0,
+    "tests": 5,
+    "files": 1,
+    "assertions": 114,
+    "elapsed_seconds": 16.02,
+    "omni": {
+      "status": "PASS",
+      "nonce": "7b19b299b892fc9d0777b0a87e16f2b7",
+      "declared_tests": 4,
+      "spawns": 4,
+      "delegated": 0
+    },
+    "driver_proofs": 4
+  },
+  "current_scope_pass": {
+    "return_to_source_and_back": true,
+    "human_filters_pair_currency_and_focus_marker": true,
+    "mounted_session_revocation_and_late_payload_exclusion": true,
+    "normal_driver_cleanup": true,
+    "full_six_destinations": false,
+    "full_UX_criteria": false,
+    "native_AM_global": false
+  }
+}
