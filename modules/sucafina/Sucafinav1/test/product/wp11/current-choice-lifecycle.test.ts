@@ -156,6 +156,12 @@ test("a current quote replays the same historical choice, requires a separate hu
     }
     let observedCoverage: { scenario: ScenarioResult; baseline: CostCoverageAssessment } | undefined
     let coverageDiagnostic: unknown
+    const diagnosticFailures: { phase: string; name: string; message: string; stack?: string }[] = []
+    const recordDiagnosticFailure = (phase: string, error: unknown) => {
+      const failure = { phase, ...(error instanceof Error ? { name: error.name, message: error.message, stack: error.stack } : { name: typeof error, message: String(error) }) }
+      diagnosticFailures.push(failure)
+      console.debug("WP11_CURRENT_CHOICE_DIAGNOSTIC", JSON.stringify(failure))
+    }
     const preview = createCurrentChoicePreview({
       state, host: fixture.host, sources, results, authorizeCase, resimulate: (request, context) => tracePreview("resimulate", () => resimulate(request, context)), writes,
       authorizePreview: async () => human.preview,
@@ -163,14 +169,24 @@ test("a current quote replays the same historical choice, requires a separate hu
       coverageEvidence: {
         entries: async (scenario, baseline) => {
           previewTrace.phase = "coverage-entries:start"
-          observedCoverage = { scenario: structuredClone(scenario), baseline: structuredClone(baseline) }
-          coverageDiagnostic = { basisVersions: { selected: basis.version, baseline: baseline.basisVersion, scenario: scenario.costCoverage.basisVersion }, coverageError: "resolution-not-observed" }
+          // This observer never mutates the inputs and must not turn a diagnostic
+          // exception into a product denial. Keep the real callback's output intact.
+          try {
+            observedCoverage = { scenario: structuredClone(scenario), baseline: structuredClone(baseline) }
+          } catch (error) {
+            observedCoverage = { scenario, baseline }
+            recordDiagnosticFailure("entries-clone", error)
+          }
+          try {
+            coverageDiagnostic = { basisVersions: { selected: basis.version, baseline: baseline.basisVersion, scenario: scenario.costCoverage.basisVersion }, coverageError: "resolution-not-observed" }
+          } catch (error) { recordDiagnosticFailure("entries-observation", error) }
+          previewTrace.phase = "coverage-entries:complete"
           return { status: "ok", value: coverage.entries }
         },
         resolve: async (refs, context) => {
           const resolutions = await resolveEvidence(refs, context)
           const observed = observedCoverage
-          if (observed) {
+          if (observed) try {
             // Diagnostic only: reuse this exact resolver result, with no additional
             // source reads or Planner replay and no change to the caller's output.
             const assessed = await reassessScenarioCoverage({ scenario: observed.scenario, basis, baseline: observed.baseline, entries: coverage.entries,
@@ -183,7 +199,7 @@ test("a current quote replays the same historical choice, requires a separate hu
               gaps: { issues: assessed?.costCoverage.issues, missingCategories: assessed?.costCoverage.derivedMissingCategoryIds,
                 pending: assessed?.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [{ categoryId: entry.categoryId, reason: entry.reason }] : []), unresolvedConditions: assessed?.unresolvedConditions },
             }
-          }
+          } catch (error) { recordDiagnosticFailure("coverage-observation", error) }
           return resolutions
         },
         supports: coverage.supports, verifySnapshot: (snapshot, _result, candidateBasis) => sourceFence(snapshot) && digestSfValue(candidateBasis) === digestSfValue(basis),
@@ -223,7 +239,7 @@ test("a current quote replays the same historical choice, requires a separate hu
     expect((await preview.prepare({ ...previewRequest, alternativeRef: { id: "selected", version: 9 } }, fixture.context)).status).toBe("stale")
     const firstPrepared = await preview.prepare(previewRequest, fixture.context)
     if (firstPrepared.status !== "ok") {
-      console.debug("WP11_CURRENT_CHOICE_COVERAGE", JSON.stringify({ trace: previewTrace, coverage: coverageDiagnostic ?? { coverageError: "coverage-callback-not-reached" } }))
+      console.debug("WP11_CURRENT_CHOICE_COVERAGE", JSON.stringify({ trace: previewTrace, coverage: coverageDiagnostic ?? { coverageError: "coverage-observation-unavailable" }, diagnosticFailures }))
       throw new Error(`Current choice preview: ${JSON.stringify(firstPrepared)}`)
     }
     const previewResult = await results.read({ kind: "scenario", resultRef: firstPrepared.value.promotion.resultRef }, fixture.context)
@@ -254,7 +270,7 @@ test("a current quote replays the same historical choice, requires a separate hu
     human.round = 2
     const prepared = await preview.prepare({ ...previewRequest, caseRef: { ...recorded.value.caseRef, version: 3 } }, fixture.context)
     if (prepared.status !== "ok") {
-      console.debug("WP11_CURRENT_CHOICE_COVERAGE", JSON.stringify({ trace: previewTrace, coverage: coverageDiagnostic ?? { coverageError: "coverage-callback-not-reached" } }))
+      console.debug("WP11_CURRENT_CHOICE_COVERAGE", JSON.stringify({ trace: previewTrace, coverage: coverageDiagnostic ?? { coverageError: "coverage-observation-unavailable" }, diagnosticFailures }))
       throw new Error(`Refreshed choice preview: ${JSON.stringify(prepared)}`)
     }
     const promoted = await promotion(prepared.value.promotion, fixture.context)
