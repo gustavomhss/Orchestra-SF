@@ -24,16 +24,21 @@ function resolution(ref: BusinessEvidenceRef, state: BusinessEvidenceResolution[
   return { ref, state, accessRevision: "access-1", checkedAt: "2026-11-13T00:00:00Z" }
 }
 
-function coveredEntries(except?: string) {
-  return RENEWAL_TRANSITION_CATEGORIES.filter((category) => category !== except && category !== "training").map((categoryId) => ({
+function notApplicableEntry(categoryId: string) {
+  return {
     status: "not-applicable" as const, categoryId, justification: "The reviewed scope excludes this cost", evidenceRefs: [evidenceRef],
-  }))
+  }
+}
+
+function coveredEntries(except?: string) {
+  return RENEWAL_TRANSITION_CATEGORIES.filter((category) => category !== except && category !== "training").map(notApplicableEntry)
 }
 
 test("C10 derives omitted renewal costs, distinguishes supported zero, and fails closed on bad evidence", () => {
   const common = { basis, alternativeId: "replacement", alternativeVersion: 2, currency: "USD", horizon, evidence: [resolution(evidenceRef)], supports: () => true }
   const omitted = assessCostCoverage({ ...common, entries: coveredEntries("training"), components: [] })
-  expect(omitted).toMatchObject({ coverageState: "pending", derivedMissingCategoryIds: ["training"], entries: [{ categoryId: "training", status: "pending", reason: "missing-category" }] })
+  expect(omitted).toMatchObject({ coverageState: "pending", derivedMissingCategoryIds: ["training"], issues: [] })
+  expect(omitted.entries).toEqual(RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => categoryId === "training" ? { categoryId, status: "pending", reason: "missing-category" } : notApplicableEntry(categoryId)))
 
   const trainingSource: SourceRef = { surface: "planner", type: "quote", id: "quote-1", incarnation: "quote-inc-1", version: 3, fields: ["amount"], period: horizon, observedAt: "2026-11-13T00:00:00Z" }
   const zero = assessCostCoverage({ ...common,
@@ -42,14 +47,17 @@ test("C10 derives omitted renewal costs, distinguishes supported zero, and fails
   })
   expect(zero.coverageState).toBe("complete")
   expect(zero.derivedMissingCategoryIds).toEqual([])
+  expect(zero.entries).toEqual(RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => categoryId === "training" ? { status: "included", categoryId, componentRefs: ["training-zero"], evidenceRefs: [evidenceRef], scopeNote: "Confirmed no charge" } : notApplicableEntry(categoryId)))
 
   const unsupportedNa = assessCostCoverage({ ...common, supports: () => false, entries: coveredEntries(), components: [] })
-  expect(unsupportedNa).toMatchObject({ coverageState: "pending", entries: [{ categoryId: "service", status: "pending", reason: "scope-not-supported" }] })
+  expect(unsupportedNa).toMatchObject({ coverageState: "pending", derivedMissingCategoryIds: ["training"], issues: [] })
+  expect(unsupportedNa.entries).toEqual(RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => ({ categoryId, status: "pending", reason: categoryId === "training" ? "missing-category" : "scope-not-supported" })))
   const missingValue = assessCostCoverage({ ...common,
     entries: [...coveredEntries(), { status: "included", categoryId: "training", componentRefs: ["training-null"], evidenceRefs: [evidenceRef], scopeNote: "Unpriced" }],
     components: [{ id: "training-null", amount: null, currency: "USD", period: horizon, evidenceState: "absent", sourceRefs: [trainingSource] }],
   })
-  expect(missingValue).toMatchObject({ coverageState: "pending", entries: [{ categoryId: "training", status: "pending", reason: "component-unresolved" }] })
+  expect(missingValue).toMatchObject({ coverageState: "pending", derivedMissingCategoryIds: [], issues: [] })
+  expect(missingValue.entries).toEqual(RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => categoryId === "training" ? { categoryId, status: "pending", reason: "component-unresolved" } : notApplicableEntry(categoryId)))
   const revoked = assessCostCoverage({ ...common, evidence: [resolution(evidenceRef, "revoked")], entries: coveredEntries(), components: [] })
   expect(revoked).toMatchObject({ coverageState: "unavailable", issues: ["evidence-unavailable"] })
   const invalidInventory = assessCostCoverage({ ...common, basis: { ...basis, categoryIds: RENEWAL_TRANSITION_CATEGORIES.slice(1) }, entries: [], components: [] })
