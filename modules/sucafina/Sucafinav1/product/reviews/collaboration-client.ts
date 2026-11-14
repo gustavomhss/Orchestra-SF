@@ -8,7 +8,7 @@ export type ReviewDiscussionThread = { id: string; recipientRef: string; state: 
 export type ReviewPreparedAnswer = { answerRef: string; answer: string; authorRef: string; observationRef: string; observedSourceVersion: number; expectedScopeFingerprint: string; reviewContext: ReviewDiscussionPin; projection: DomainProjection }
 
 export type ReviewDiscussionTransport = {
-  fetch: typeof fetch
+  fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
   url: () => string
   binding: () => string | undefined
 }
