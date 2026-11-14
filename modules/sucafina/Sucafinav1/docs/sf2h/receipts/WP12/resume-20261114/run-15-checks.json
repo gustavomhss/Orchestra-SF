@@ -1,0 +1,211 @@
+{
+  "schema": "sf-wp12-hosted-check-result-v1",
+  "phase": "resume-15",
+  "product": {
+    "sha": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "tree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e"
+  },
+  "check": {
+    "snapshot": "71894701b187aaca938bfe97a8b6c6b8508de4ab",
+    "tree": "5070d3b096c7b997d065a6d6a7257eb04f84fbbd",
+    "runId": 43603981195,
+    "jobId": 132474528320,
+    "conclusion": "success",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43603981195",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "typecheck": {
+      "command": "bun typecheck",
+      "cwd": "modules/sucafina",
+      "exitCode": 0,
+      "diagnostics": 0
+    },
+    "spawnImports": {
+      "conclusion": "success",
+      "checkedFiles": 4618,
+      "allowListedSites": 66
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 933,
+      "gate": 0,
+      "warn": 15,
+      "errors": 0,
+      "warnings": [
+        {
+          "path": "apps/cli/package.json",
+          "line": 37,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/atlas/boundary/package.json",
+          "line": 66,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/atlas/boundary/package.json",
+          "line": 67,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/atlas/boundary/package.json",
+          "line": 68,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 17,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 18,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 19,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 20,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 21,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 22,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 23,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 24,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "package.json",
+          "line": 126,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "package.json",
+          "line": 127,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts",
+          "line": 46,
+          "rule": "ts-double-cast",
+          "message": "Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard."
+        }
+      ]
+    }
+  },
+  "log": {
+    "bytes": 65555,
+    "sha256": "c602a8d398863bcbcc3ffd1f5bbe56cd358e8a412ee93b4eefceaa0cdd5bde3b",
+    "source": "GitHub Actions job log 132474528320",
+    "verifiedFrom": "evidence/resume-15-check.log"
+  },
+  "artifact": {
+    "id": 14117496622,
+    "name": "astra-wp12-check-1",
+    "digest": "sha256:4a34f1e0e621abbb9f8c7da76281434ec9cf248141c34f23b6217e554b8fe5ba",
+    "bytes": 1423,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43603981195/artifacts/14117496622"
+  },
+  "validationScope": "Hosted package typecheck, spawn import guard and repository guard. Product tests, native execution and consumer acceptance are separate evidence.",
+  "provenance": {
+    "runAndTreeMetadata": "GitHub MCP completed run/jobs/artifacts; C is a direct child of W changing only the exact-check envelope.",
+    "log": "Exact fetched UTF-8 job log, hashed after transport without newline changes; checkout SHAs, dev pin, commands and summaries verified.",
+    "sourcePins": "W20 tree has one exact foreign C10 blob plus six own receipts over W19. All thirteen W19 source/test deltas remain unchanged."
+  },
+  "localProductTests": false,
+  "localTypecheck": false,
+  "fullWp12Acceptance": false,
+  "validatedForeignDelta": {
+    "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+    "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+    "sourceCommit": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+    "receipt": "c10-intake-15.json"
+  },
+  "retainedOwnedDeltas": [
+    {
+      "path": "test/product/wp12/native-mission-harness.ts",
+      "blob": "49300a78a44ac0739791d10a11c386b317f4b51a"
+    },
+    {
+      "path": "test/product/wp12/native-execution-intent.test.ts",
+      "blob": "3d0fac5384b433dde3eab26b011679031218fc2f"
+    },
+    {
+      "path": "test/product/wp12/native-question-consumer.test.ts",
+      "blob": "1323c71bab9055e40a7f8d95b0cc94f097a1a1c9"
+    },
+    {
+      "path": "test/product/wp12/native-question-preparation.ts",
+      "blob": "c3c2efe6004c513370ab04077f7d2c79a704d9c6"
+    },
+    {
+      "path": "test/product/wp12/native-execution-collaboration-recall.test.ts",
+      "blob": "12d52cdc872e64cf3265a3f5b09cbe0d5f07d57f"
+    },
+    {
+      "path": "test/product/wp12/native-execution-scenarios-review.test.ts",
+      "blob": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06"
+    },
+    {
+      "path": "test/product/wp12/native-execution-reevaluation.test.ts",
+      "blob": "dc3ac4d4b02e392170059911b7c8a5fba171c7b4"
+    },
+    {
+      "path": "test/product/wp12/native-execution-sourcing.test.ts",
+      "blob": "a38c64dfbf2d27143c756677e49171c4d0cadbfd"
+    },
+    {
+      "path": "test/product/wp12/native-execution-dependencies.test.ts",
+      "blob": "4fe9d9c1caf31f918d3e791af587fdf0b0d2834f"
+    },
+    {
+      "path": "test/product/wp12/native-procurement-preparation.ts",
+      "blob": "f1433397246117886e109d32b171345ec1992066"
+    },
+    {
+      "path": "test/product/wp12/native-execution-questions.test.ts",
+      "blob": "50303355860a26718686f5daf7dddad8978434c3"
+    },
+    {
+      "path": "test/product/wp12/native-choice-preparation.ts",
+      "blob": "ce7e079d3abcc8af0fc881483addfa2ca337ae9c"
+    },
+    {
+      "path": "test/product/wp12/native-execution-purchase.test.ts",
+      "blob": "4c303604768e8a2e750aee8ea8f35d7f17302742"
+    }
+  ]
+}

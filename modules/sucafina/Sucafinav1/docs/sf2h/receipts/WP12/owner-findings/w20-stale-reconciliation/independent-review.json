@@ -1,0 +1,54 @@
+{
+  "schema": "wp12-static-independent-review-v1",
+  "reviewer": "compose_typecheck",
+  "status": "PASS_STATIC_EXACT_W20_PROPOSAL_NOT_APPLIED",
+  "reviewedManifestSha256": "3f54e277614dc1a6a2c42a3a10d8068f2543f4abf3b46645b9603f595f746224",
+  "sourceCommit": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+  "baseCommit": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+  "baseBlob": "299979047340dd76d7cc2db667b826da675a1e2e",
+  "publishedW20Blob": "9f574a7573538c2a46796dfd650fadbac052dc80",
+  "candidateBlob": "392442a4ea55579953ce439aff76d549723e4891",
+  "candidateSha256": "c897748ddc5543027c5f16e6370356df191d0695024422e6a6c247cd21ad4823",
+  "patchSha256": "e7fb3e0f5ab903f78eca12a004312b4af91af9e445feb00beca338b76dc48a5a",
+  "mechanicalChecks": {
+    "sourceBlobsRecomputed": 49,
+    "manifestPayloadHashesAndSizesRecomputed": 7,
+    "candidatePrefixEqualsCurrentExceptImportAndOptionalLifecycle": true,
+    "candidateWrapStoreTailExactlyPublishedW20": true,
+    "foreignInstalledSourceRemainsBaseBlob": true,
+    "crossClusterExactlyMatchesFrozenWorkManifestSha256": "960d80c72b169a3bd6af8f01804e38b0edd7afc4fd797e8629afdf0674be2d43",
+    "uniqueProductionPaths": 16,
+    "publishedAiC07Paths": 6,
+    "proposedUnpublishedStalePath": 1,
+    "publishedWorkPaths": 9,
+    "duplicateProductionPaths": 0,
+    "hashOrPreservationFailures": 0
+  },
+  "semanticReview": [
+    "The proposal keeps the current case id/incarnation/version/participant guards, pre-await snapshot digest, exact stored historical scenario checks, distinct human read lease and finally-finish behavior. No active source selector is upgraded by the retained historical path.",
+    "markStale captures an independent clone of the observation and freezes its publication member before awaited preparation. The current run-store still validates run identity/version and the already persisted output digest, and supplies no caller output to lifecycle commit.",
+    "Lifecycle ownership only bypasses the strict source preflight for terminal metadata. The mounted lifecycle commit rejects caller output, alternative capture, ready/running/admission and cancelled states, and verifies the admitted predecessor, current human request, binding/lease identity, membership, C08 snapshot and final record digest.",
+    "preserveStale explicitly refuses lifecycle-owned calls, keeping fresh content and AlternativeDraft outside metadata authority.",
+    "The wrapper always routes cancelled through the existing cancellation path before any lifecycle exception. Its human analysis.cancel authorization and durable predecessor checks remain byte-preserved; analysis.start lifecycle admission does not grant cancellation.",
+    "The added type import and optional lifecycle argument match analysis-run-context and the final host at the pinned W20 commit. The final host actually passes lifecycle ownership and selects lifecycle.commit before strict stale validation.",
+    "The six current WP12 AI files remain preserved; the two later security-fenced files are not replaced by older W20 owner snapshots. The work closure is the exact previously audited nine-file cluster, with the shared host counted once.",
+    "The finding accurately identifies the historical path, snapshot identity and case identity losses in a whole-file W20 replacement. Required hosted verification is listed as pending rather than acceptance."
+  ],
+  "findings": [],
+  "limitations": [
+    "This is a static review of the exact frozen W20 proposal, not a product/typecheck result or approval to author or apply foreign code.",
+    "The proposal still requires publication by its owner before intake; hosted checks must validate the resulting exact composition. No CI was dispatched and no test module was imported.",
+    "No native model, Session inference, C07 native execution or knowledge port is established by this review. Existing WorkRef asset-key and question-skill allowlist limits remain.",
+    "The peer reported a newer owner head 532da498e08fa36fadbd3c01e3e7da00d869dd47 during review. This receipt does not assert that W20 findings remain unresolved at that newer head; the exact owner delta must be checked before forwarding or intake."
+  ],
+  "execution": {
+    "metadataHashAndStringComparisons": true,
+    "sourceReadOnly": true,
+    "parserRun": false,
+    "productTestsRun": false,
+    "typecheckRun": false,
+    "foreignRepoSourceChanges": false,
+    "remoteMutation": false,
+    "ciDispatched": false
+  }
+}

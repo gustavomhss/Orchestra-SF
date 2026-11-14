@@ -1,0 +1,59 @@
+{
+  "schema": "wp12-owner-finding-latest-source-check-v1",
+  "status": "FINDING_STILL_APPLICABLE_PATCH_NOT_APPLIED_PRODUCT_NOT_RUN",
+  "latestPr29": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+  "originalReviewManifestSha256": "3f54e277614dc1a6a2c42a3a10d8068f2543f4abf3b46645b9603f595f746224",
+  "independentReviewSha256": "c8eb24bf7e61d0882c791ed01303caeee5368184e05ba2a15211b596e86fc2bd",
+  "sourcePins": [
+    {
+      "commit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "blob": "9f574a7573538c2a46796dfd650fadbac052dc80",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/532da498e08fa36fadbd3c01e3e7da00d869dd47/apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "sha256": "d17e9da079cc365ee4305d7ddecd2bfd1dfa9c829ed8424ebac9ea8818aec266"
+    },
+    {
+      "commit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/532da498e08fa36fadbd3c01e3e7da00d869dd47/apps/cli/src/sucafina-product/host-context.ts",
+      "sha256": "42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893"
+    },
+    {
+      "commit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-context.test.ts",
+      "blob": "2250ef8a6ed3bdee2cb26d38ab5b7a2daa3301e9",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/532da498e08fa36fadbd3c01e3e7da00d869dd47/modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-context.test.ts",
+      "sha256": "6a5d50e3dd2b074386b12d6cdce047c153191c1b5abd26abd969e99bd51f6926"
+    },
+    {
+      "commit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "blob": "848f81ae5e9315295f84ffc6a63d3b09ff7016fc",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/532da498e08fa36fadbd3c01e3e7da00d869dd47/modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "sha256": "8c6f4f73808679e1886fc65e385744780a3858707552fec6a2fde48924df31f7"
+    },
+    {
+      "commit": "e8949be0e31952d5be4987c099003cd0b46e2add",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "blob": "206271d33bcfb7786ee80ef0dfad50eb80e4fee2",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e8949be0e31952d5be4987c099003cd0b46e2add/modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "sha256": "82f7865ae309d1fa3ef5d9138f373029d7b3d4a40db203f6a2cae48523282450"
+    }
+  ],
+  "facts": [
+    "PR29 latest still publishes exactly the W20 stale adapter 9f574a75 and final host bdf6d4e2. The four finding facts and the NOT_APPLIED reconciliation remain applicable.",
+    "The candidate patch has not changed after independent review: 29997904 -> 392442a4. No foreign source was edited.",
+    "minimum-closure.json is the exact W20 closure under review, not a claim that every file is the latest owner publication. W21 changes business-services/work-destinations/portfolio-reconciliation-services and four tests; peer separately audits the minimum W21 dependency delta before intake.",
+    "For future CI use the W21 lifecycle test2250ef8a and installed-publication test848f81ae after exact review instead of their W20 predecessor pins. These source changes do not constitute hosted execution.",
+    "PR40 e8949be0 case-port206271d3 retains the same final-read lease window reported in the existing finding: host.revalidate precedes the final awaited C08 read; after it there are case/reference digests and abort checks but no synchronous host.requestFor(context) identity/live-lease fence. The hold remains for composition with the currently published real authority; no runtime counterexample was executed."
+  ],
+  "ciLimit": "Owner W21 intake record c84ac70c reports W20 check43601767154/job132467830629 failure (22 unique diagnostics,9 own,13 foreign). Do not conflate it with the separate WP12 C20 check or mark new W21 tests passed.",
+  "verification": {
+    "source": "GitHub MCP exact current owner heads; all five source blob hashes recomputed.",
+    "foreignSourceChanged": false,
+    "productTestsRun": false,
+    "typecheckRun": false,
+    "ciDispatched": false
+  }
+}
