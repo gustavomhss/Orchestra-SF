@@ -1,0 +1,191 @@
+# NOT_APPLIED — WP10 lifecycle + collab-resume host + ui-source consumer
+# Proposal only; no runtime or typecheck acceptance is claimed.
+diff --git a/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts b/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
+index 65867a3e6aa9b5b85266bb637fb22cf1c6c6d539..9e9261743f8599051b0308c8416a62b72b58bf84 100644
+--- a/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts
+@@ -8,6 +8,11 @@
+   resolveScopedSource: (surface: Surface, incarnation: string, authorize: (snapshot: Snapshot, scope: SfSourceScope) => Promise<boolean>) => Promise<{ scope: SfSourceScope; projection: unknown; incarnation: string; version: number; inputDigest: string } | undefined>
+   readScopedSource: (surface: Surface, scope: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => Promise<{ projection: unknown; incarnation: string; version: number; inputDigest: string } | undefined>
+   checkScopedSource?: (surface: Surface, scope: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, expected: { incarnation: string; version: number; inputDigest: string }) => Promise<boolean>
++}
++
++/** Host-private capability, never serialized or accepted from browser input. */
++export type SfAtomicSourcePort = {
++  bindCreatedSource: (snapshot: Snapshot, recordType: string, recordId: string) => ReturnType<typeof sfSourceIdentity>
+ }
+ 
+ export type SfSourceIdentityInput = { recordType: string; recordId: string; inputDigest: string }
+@@ -19,7 +24,8 @@
+   createId: () => string
+   purpose?: "business-restore"
+   projectScope?: (surface: Surface, snapshot: Snapshot, scope: SfSourceScope) => unknown | undefined
+-}): AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
++}): AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots"> & SfScopedSourcePort & SfAtomicSourcePort & { initializeSources: (surface: Surface) => Promise<void> } {
++  const active = new WeakMap<Snapshot, { surface: Surface; expectedDigest: string; originalAlive: Set<string>; reserved: Map<string, string> }>()
+   const observe = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => {
+     requireSourceIdentities(snapshot)
+     const scope = structuredClone(requested)
+@@ -34,13 +40,15 @@
+     return { scope, projection, source, inputDigest: digestSfValue(projection) }
+   }
+   const guard = (surface: Surface, snapshot: Snapshot) => {
+-    const before = digestSfValue(snapshot.sfSources)
++    if (active.has(snapshot)) throw new Error("SF_SOURCE_TRANSACTION_REENTERED")
++    const session = { surface, expectedDigest: digestSfValue(snapshot.sfSources), originalAlive: new Set(Object.entries(snapshot.sfSources!.records).filter(([, value]) => value.alive).map(([key]) => key)), reserved: new Map<string, string>() }
++    active.set(snapshot, session)
+     const auditStart = snapshot.audit.length
+     const auditPrefix = digestSfValue(snapshot.audit)
+     const productState = input.purpose === "business-restore" ? structuredClone(snapshot.data.__sfProductV1) : undefined
+-    return () => {
+-      requireSourceIdentities(snapshot)
+-      if (before !== digestSfValue(snapshot.sfSources)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
++    return { dispose: () => { active.delete(snapshot) }, finish: () => {
++      requireSourceIdentities(snapshot)
++      if (session.expectedDigest !== digestSfValue(snapshot.sfSources)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
+       if (snapshot.audit.length < auditStart || digestSfValue(snapshot.audit.slice(0, auditStart)) !== auditPrefix) throw new Error("SF_SOURCE_AUDIT_REWRITTEN")
+       const replacement = snapshot.audit.slice(auditStart).some((event) => event.record === "dataset")
+       if (input.purpose === "business-restore") {
+@@ -48,12 +56,29 @@
+         if (productState === undefined) delete snapshot.data.__sfProductV1
+         if (productState !== undefined) snapshot.data.__sfProductV1 = productState
+       }
+-      synchronizeSources(snapshot, input.enumerate(surface, snapshot), input.createId, replacement)
++      const entries = input.enumerate(surface, snapshot)
++      if (session.reserved.size && (replacement || [...session.reserved].some(([key, digest]) => entries.filter((entry) => JSON.stringify([entry.recordType, entry.recordId]) === key && entry.inputDigest === digest).length !== 1))) throw new Error("SF_SOURCE_CREATED_RECORD_CHANGED")
++      synchronizeSources(snapshot, entries, input.createId, replacement)
+       synchronizeScopes(surface, snapshot, input.projectScope, input.createId)
+       requireSourceIdentities(snapshot)
+-    }
++    } }
+   }
+-  const persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots"> & SfScopedSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
++  const persistence: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots"> & SfScopedSourcePort & SfAtomicSourcePort & { initializeSources: (surface: Surface) => Promise<void> } = {
++    bindCreatedSource: (snapshot, recordType, recordId) => {
++      const session = active.get(snapshot), key = JSON.stringify([recordType, recordId])
++      if (!session || input.purpose === "business-restore" || session.originalAlive.has(key) || session.reserved.has(key)) return undefined
++      requireSourceIdentities(snapshot)
++      if (session.expectedDigest !== digestSfValue(snapshot.sfSources)) throw new Error("SF_SOURCE_IDENTITY_MUTATION")
++      const entries = input.enumerate(session.surface, snapshot).filter((entry) => entry.recordType === recordType && entry.recordId === recordId)
++      const entry = entries.length === 1 ? entries[0] : undefined
++      if (!entry || !recordType.trim() || !recordId.trim() || !/^[a-f0-9]{64}$/.test(entry.inputDigest) || sfSourceIdentity(snapshot, recordType, recordId)) return undefined
++      const incarnation = input.createId()
++      if (!incarnation.trim() || [...Object.values(snapshot.sfSources!.records), ...Object.values(snapshot.sfSources!.scopes ?? {})].some((value) => value.incarnation === incarnation)) throw new Error("SF_SOURCE_INCARNATION_INVALID")
++      snapshot.sfSources!.records[key] = { incarnation, version: 1, alive: true, inputDigest: entry.inputDigest }
++      session.reserved.set(key, entry.inputDigest)
++      session.expectedDigest = digestSfValue(snapshot.sfSources)
++      return sfSourceIdentity(snapshot, recordType, recordId)
++    },
+     ...(input.persistence.currentSnapshots ? { currentSnapshots: () => input.persistence.currentSnapshots!() } : {}),
+     resolveScopedSource: async (surface, incarnation, authorize) => {
+       const scope = await input.persistence.transaction(surface, async (snapshot) => {
+@@ -106,10 +131,11 @@
+     transaction: (surface, work, options) => input.persistence.transaction(surface, async (snapshot, blobs) => {
+       requireSourceIdentities(snapshot)
+       const finish = guard(surface, snapshot)
+-      const result = await work(snapshot, blobs)
+-      if (!result.commit) return result
+-      finish()
+-      return result
++      try {
++        const result = await work(snapshot, blobs)
++        if (result.commit) finish.finish()
++        return result
++      } finally { finish.dispose() }
+     }, options),
+     ...(input.persistence.transactionAll ? { transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) =>
+       input.persistence.transactionAll!(async (snapshots) => {
+@@ -117,13 +143,15 @@
+         const original = surfaces.map((surface) => snapshots[surface])
+         const before = surfaces.map((surface) => digestSfValue(snapshots[surface]))
+         const finish = surfaces.map((surface) => guard(surface, snapshots[surface]))
+-        const result = await work(snapshots)
+-        if (result.commit) {
+-          if (surfaces.some((surface, index) => Object.getOwnPropertyDescriptor(snapshots, surface)?.value !== original[index]))
+-            throw new Error("SF_SOURCE_SNAPSHOT_REPLACED")
+-          surfaces.forEach((surface, index) => { if (digestSfValue(snapshots[surface]) !== before[index]) finish[index]!() })
+-        }
+-        return result
++        try {
++          const result = await work(snapshots)
++          if (result.commit) {
++            if (surfaces.some((surface, index) => Object.getOwnPropertyDescriptor(snapshots, surface)?.value !== original[index]))
++              throw new Error("SF_SOURCE_SNAPSHOT_REPLACED")
++            surfaces.forEach((surface, index) => { if (digestSfValue(snapshots[surface]) !== before[index]) finish[index]!.finish() })
++          }
++          return result
++        } finally { finish.forEach((entry) => entry.dispose()) }
+       }, options) } : {}),
+   }
+   return persistence
+diff --git a/modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts b/modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts
+index aaae9db90459f8e6b34d9a1a2a1aedfda2a4affb..37c3164af1b17985213cd86e6c82f742ef5a24bd 100644
+--- a/modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts
++++ b/modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts
+@@ -7,12 +7,13 @@
+ import type { SfProductStatePort } from "../contracts/state.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import type { CollaborationMutationFence } from "./mutation-fence.ts"
++import type { SfAtomicSourcePort } from "../integration/source-lifecycle.ts"
+ import type { HotTopicHost } from "../dashboard/hot-topics.ts"
+ 
+ const prefix = "sf:hot-topic:"
+ 
+ /** C08 stages the producer's domain mutation and its correlations in one durable transaction. */
+-export function createCollaborationHotTopicHost(input: { host: DomainPortHost; state: SfProductStatePort; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string }; authorizeMutation: (context: TrustedDomainContext) => Promise<boolean>; mutationFence: CollaborationMutationFence }): HotTopicHost {
++export function createCollaborationHotTopicHost(input: { host: DomainPortHost; state: SfProductStatePort; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string }; authorizeMutation: (context: TrustedDomainContext) => Promise<boolean>; mutationFence: CollaborationMutationFence; sourceCreation?: SfAtomicSourcePort }): HotTopicHost {
+   const transact: HotTopicHost["transact"] = async (context, sourceRefs, work) => {
+     const refs = structuredClone(sourceRefs)
+     const request = input.host.requestFor(context)
+@@ -38,7 +39,7 @@
+       const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: Array.isArray(access.assigned) ? access.assigned.filter((entry): entry is string => typeof entry === "string") : [], domains: Array.isArray(access.domains) ? access.domains.filter((entry): entry is string => typeof entry === "string") : [] }
+       const correlations = Object.fromEntries(Object.entries(state.relations).filter(([key]) => key.startsWith(prefix)).map(([key, value]) => [key.slice(prefix.length), structuredClone(value)])) as Parameters<Parameters<HotTopicHost["transact"]>[2]>[3]
+       if (Object.entries(correlations).some(([key, value]) => !/^[a-f0-9]{64}$/.test(key) || !value || typeof value.id !== "string" || !value.id.trim() || typeof value.digest !== "string" || !/^[a-f0-9]{64}$/.test(value.digest))) return { commit: false, value: { status: "unavailable" as const, reason: "invalid-correlations" } }
+-      const outcome = work(snapshot, actor, environment, correlations)
++      const outcome = work(snapshot, actor, environment, correlations, input.sourceCreation ? (id) => input.sourceCreation!.bindCreatedSource(snapshot, "hotTopics", id)?.incarnation : undefined)
+       if (!outcome.commit) return { commit: false, value: outcome.value }
+       if (request.signal.aborted || !await input.authorizeMutation(context)) return { commit: false, value: { status: "denied" as const, reason: "source-access-unavailable" } }
+       Object.entries(correlations).forEach(([key, value]) => { state.relations[`${prefix}${key}`] = value })
+diff --git a/modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts b/modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts
+index 051be54adbf197a0f4b290ab6bc6aaa9f0f563d5..cfc9d98c5c463041becbab11f1455c925a594451 100644
+--- a/modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts
++++ b/modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts
+@@ -11,7 +11,7 @@
+ // Host authenticates, validates current source access and serializes correlations with the domain
+ // mutation in one durable dashboard transaction. It must revalidate the binding before returning.
+ export type HotTopicHost = {
+-  transact: <T>(binding: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<string, Correlation>) => { commit: boolean; value: PortResult<T> }) => Promise<PortResult<T>>
++  transact: <T>(binding: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<string, Correlation>, bindCreatedAction?: (id: string) => string | undefined) => { commit: boolean; value: PortResult<T> }) => Promise<PortResult<T>>
+ }
+ export type HotTopicIntent = { correlationKey: string; sourceRefs: readonly BusinessEvidenceRef[]; action: string; owner: string; due: string; priority: "critical" | "high" | "normal"; notes: string }
+ 
+@@ -20,7 +20,7 @@
+     create: (input: HotTopicIntent, binding: TrustedDomainContext) => {
+       const intent = (() => { try { return structuredClone(input) } catch { return undefined } })()
+       if (!intent || !Array.isArray(intent.sourceRefs) || [intent.correlationKey, intent.action, intent.owner, intent.due, intent.priority, intent.notes].some((value) => typeof value !== "string")) return Promise.resolve({ status: "needs-input" as const, reason: "invalid-intent" })
+-      return host.transact<{ state: "created" | "existing"; topic: HotTopic }>(binding, intent.sourceRefs, (snapshot, actor, _environment, correlations) => {
++      return host.transact<{ state: "created" | "existing"; topic: HotTopic }>(binding, intent.sourceRefs, (snapshot, actor, environment, correlations, bindCreatedAction) => {
+         if (!intent.correlationKey.trim() || !intent.action.trim() || !intent.sourceRefs.length) return { commit: false, value: { status: "needs-input", reason: "intent-and-source-required" } }
+         if (!actor.canWrite || !actor.roles.some((role) => role === "admin" || role === "domain leader")) return { commit: false, value: { status: "denied", reason: "hot-topic-write-denied" } }
+         const key = digestSfValue({ correlationKey: intent.correlationKey })
+@@ -36,10 +36,16 @@
+           if (currentIncarnation !== existing.targetIncarnation) return { commit: false, value: { status: "unavailable", reason: "action-replaced" } }
+           return { commit: false, value: { status: "ok", value: { state: "existing" as const, topic } } }
+         }
+-        // The published host finalizes source identities after this callback. Until it
+-        // exposes atomic creation/binding, neither a textual ID nor a later write can
+-        // establish which physical action this correlation created.
+-        return { commit: false, value: { status: "unavailable", reason: "action-create-identity-unavailable" } }
++        if (!bindCreatedAction) return { commit: false, value: { status: "unavailable", reason: "action-create-identity-unavailable" } }
++        const result = DashboardPeople.domain.execute(snapshot, actor, { page: "Hot Topics & Actions", action: "save", version: 0, values: { action: intent.action, owner: intent.owner, due: intent.due, priority: intent.priority, notes: intent.notes } }, environment)
++        if (!result.ok) return { commit: false, value: { status: result.status === 403 ? "denied" : result.status === 409 ? "conflict" : "needs-input", reason: result.errors?.join("; ") || "action-rejected" } }
++        const id = typeof result.value === "object" && result.value !== null && "id" in result.value ? String(result.value.id) : ""
++        const topic = read(snapshot, actor, id)
++        if (!topic) return { commit: false, value: { status: "unavailable", reason: "action-unavailable" } }
++        const targetIncarnation = bindCreatedAction(id)
++        if (!targetIncarnation) return { commit: false, value: { status: "unavailable", reason: "action-create-identity-unavailable" } }
++        correlations[key] = { digest, id, targetIncarnation }
++        return { commit: true, value: { status: "ok", value: { state: "created" as const, topic } } }
+       })
+     },
+     read: (id: string, sourceRefs: readonly BusinessEvidenceRef[], binding: TrustedDomainContext) => {
