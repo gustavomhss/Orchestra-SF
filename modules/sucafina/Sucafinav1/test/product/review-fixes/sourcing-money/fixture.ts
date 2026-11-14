@@ -97,7 +97,7 @@ export async function sourcingMoneyFixture() {
   const sources = createProcurementSourceResolver({ host, scopedSources: persistence, contextFor })
   const collection = createProcurementCollectionRegistry({ host, scopedSources: persistence, contextFor })
   const unavailable = async () => ({ status: "unavailable" as const, reason: "outside-sourcing-money-scope" })
-  const port = createProcurementPort({ ...host, resolveRequestSource: sources.resolve, isCurrentRequestSource: sources.isCurrent, resolveSupplierSource: sources.resolve, isCurrentSupplierSource: sources.isCurrent, resolveRequestCollection: collection.resolveRequestCollection, isCurrentRequestCollection: collection.isCurrentRequestCollection, readContractSource: unavailable })
+  const port = createProcurementPort({ ...host, resolveRequestSource: sources.resolve, isCurrentRequestSource: (snapshot, evidence) => sources.isCurrent(snapshot, evidence) || collection.isCurrentRequestSource(snapshot, evidence), resolveSupplierSource: sources.resolve, isCurrentSupplierSource: sources.isCurrent, resolveRequestCollection: collection.resolveRequestCollection, isCurrentRequestCollection: collection.isCurrentRequestCollection, readContractSource: unavailable })
   const observer = createProcurementConfirmationObserver({ host, scopedSources: persistence, contextFor })
   const confirmation = async () => {
     const issued = await observer.issue(target.id, moneyFields, period, binding)
