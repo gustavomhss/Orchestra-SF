@@ -67,27 +67,46 @@ export function createSfStagedImportFiles(input: Dependencies): ImportFileHost &
         const verified = await read(id, context)
         return verified.status === "ok" ? { status: "ok", value: { ref: id, digest: previous.value.digest, expiresAt: previous.value.expiresAt } } : verified
       }
-      const staged = await input.assets.transaction("dashboard", async (_, blobs) => { if (await blobs.get(entry.key)) return { commit: false, value: false }; await blobs.put(entry.key, bytes, "application/octet-stream"); return { commit: true, value: true } }, { signal: request.signal }).catch(() => false)
-      if (!staged) return { status: "conflict", reason: "file-admission-conflict" }
-      const admission = { namespace: "documents" as const, domainSurface: entry.target.surface, expectedStorageVersion: prior.status === "ok" ? prior.storageVersion : 0, targetRef: entry.target.selectionRef, targetIncarnation: entry.target.incarnation, idempotencyKey: operation, commandDigest: digestSfValue({ action: "admit-import", entry }) }
+      const staged = await input.assets.transaction<PortResult<Entry>>("dashboard", async (_, blobs) => {
+        const existing = await blobs.get(entry.key)
+        const proofBytes = await blobs.get(`${entry.key}/admission`)
+        if (existing || proofBytes) {
+          // Bytes alone cannot prove the original target, format or authority of an interrupted admission.
+          if (!existing || !proofBytes) return { commit: false, value: { status: "conflict", reason: "file-admission-conflict" } }
+          const proof: unknown = JSON.parse(new TextDecoder().decode(proofBytes))
+          if (!proof || typeof proof !== "object" || !("schema" in proof) || proof.schema !== "sf-import-admission-v1" || !("entryDigest" in proof) || !("expiresAt" in proof) || typeof proof.expiresAt !== "string" || !Number.isFinite(Date.parse(proof.expiresAt)) || Date.parse(proof.expiresAt) <= now) return { commit: false, value: { status: "conflict", reason: "file-admission-conflict" } }
+          const recovered = { ...entry, expiresAt: proof.expiresAt }
+          if (proof.entryDigest !== digestSfValue(recovered) || existing.byteLength !== recovered.size || new Bun.CryptoHasher("sha256").update(existing).digest("hex") !== recovered.digest) return { commit: false, value: { status: "conflict", reason: "file-admission-conflict" } }
+          return { commit: false, value: { status: "ok", value: recovered } }
+        }
+        // The private proof and bytes share one durable commit; the catalog may be published on a later retry.
+        await blobs.put(entry.key, bytes, "application/octet-stream")
+        await blobs.put(`${entry.key}/admission`, new TextEncoder().encode(JSON.stringify({ schema: "sf-import-admission-v1", entryDigest: digestSfValue(entry), expiresAt: entry.expiresAt })), "application/json")
+        return { commit: true, value: { status: "ok", value: entry } }
+      }, { signal: request.signal }).catch(() => ({ status: "unavailable" as const, reason: "file-admission-unavailable" }))
+      if (staged.status !== "ok") return staged
+      const admitted = staged.value
+      if (!await input.host.revalidate(context) || !await input.authorizeTarget(admitted.target, context)) return { status: "denied", reason: "target-access-unavailable" }
+      const admission = { namespace: "documents" as const, domainSurface: admitted.target.surface, expectedStorageVersion: prior.status === "ok" ? prior.storageVersion : 0, targetRef: admitted.target.selectionRef, targetIncarnation: admitted.target.incarnation, idempotencyKey: operation, commandDigest: digestSfValue({ action: "admit-import", entry: admitted }) }
       const saved = await input.state.transaction(request, admission, async (state, authority) => {
-        if (authority.principalRef !== entry.principalRef || authority.accessRevision !== entry.accessRevision || authority.policyVersion !== entry.policyVersion || state.documents[`import-file:${id}`] !== undefined) return { commit: false, value: false }
-        state.documents[`import-file:${id}`] = entry
+        if (authority.principalRef !== admitted.principalRef || authority.accessRevision !== admitted.accessRevision || authority.policyVersion !== admitted.policyVersion || state.documents[`import-file:${id}`] !== undefined) return { commit: false, value: false }
+        state.documents[`import-file:${id}`] = admitted
         return { commit: true, value: true }
       }).catch(() => undefined)
       if (!saved || saved.status !== "ok" || !saved.value) {
         const observed = await input.state.read(request, "documents", (state) => state.documents[`import-file:${id}`]).catch(() => undefined)
-        if (observed?.status === "ok" && digestSfValue(observed.value) === digestSfValue(entry)) {
+        if (observed?.status === "ok" && digestSfValue(observed.value) === digestSfValue(admitted)) {
           const verified = await read(id, context)
-          return verified.status === "ok" ? { status: "ok", value: { ref: id, digest: entry.digest, expiresAt: entry.expiresAt } } : verified
+          return verified.status === "ok" ? { status: "ok", value: { ref: id, digest: admitted.digest, expiresAt: admitted.expiresAt } } : verified
         }
-        // An unknown commit may already have published this blob; never delete on ambiguity.
-        if (saved && ((observed?.status === "ok" && observed.value === undefined) || (observed?.status === "unavailable" && observed.reason === "product-state-uninitialized"))) await input.assets.transaction("dashboard", async (_, blobs) => { await blobs.remove(entry.key); return { commit: true, value: undefined } })
+        // A concurrent/uncertain catalog commit may reference these bytes even after an empty read.
+        // Keep the durable pair so an authorized identical retry can reconcile without destroying it.
         return { status: "unavailable", reason: "file-admission-unavailable" }
       }
       const verified = await read(id, context)
       if (verified.status !== "ok") return verified
-      return { status: "ok", value: { ref: id, digest: entry.digest, expiresAt: entry.expiresAt } }
+      return { status: "ok", value: { ref: id, digest: admitted.digest, expiresAt: admitted.expiresAt } }
     },
   }
 }
+
