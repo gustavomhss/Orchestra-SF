@@ -57,11 +57,13 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-wp07-browser-"))
   await chmod(directory, 0o700)
   const store = await timed("sqlite-open", () => openLocalStore(directory))
+  const snapshotRead = store.currentSnapshots
+  if (!snapshotRead) throw new Error("WP07_BROWSER_SNAPSHOT_READER_UNAVAILABLE")
   // Observe the real persistence method without adding a read or changing its
   // result. All durations are inclusive; nested measurements are not additive.
   const observedStore = { ...store, currentSnapshots: () => {
     const before = performance.now()
-    try { return store.currentSnapshots() } finally { record("store.currentSnapshots", performance.now() - before) }
+    try { return snapshotRead.call(store) } finally { record("store.currentSnapshots", performance.now() - before) }
   } }
   const serverState: { handle?: (request: Request) => Promise<Response> } = {}
   const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await serverState.handle?.(request) ?? new Response(null, { status: 503 }) })
