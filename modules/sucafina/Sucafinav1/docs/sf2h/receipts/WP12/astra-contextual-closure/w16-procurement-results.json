@@ -1,0 +1,172 @@
+{
+  "schema": "sf-wp12-product-run-result-v1",
+  "phase": "resume-11-procurement",
+  "product": {
+    "sha": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+    "tree": "f875b3a78ee8123c959bad5c7c5d4c9fb4f978df"
+  },
+  "run": {
+    "id": 43600564160,
+    "jobId": 132464186609,
+    "conclusion": "failure",
+    "snapshot": "5fe687cdfae8f30e4a7121ac87d6e2a14982433a",
+    "snapshotTree": "2fae3c8c5b91577fd7a1f0b7514159d7f92ab01a",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43600564160",
+    "branch": "ci-run-linux-astra-wp12-2ea0673c-9aefd10c-1",
+    "cleanup": {
+      "jobId": 132466533134,
+      "conclusion": "success"
+    }
+  },
+  "request": {
+    "sha256": "9aefd10c6baedbcf8ce9d6a90815df0d9dc3fd7197b666ab4300982f72eee33c",
+    "blob": "54ae60f5d134bb7345d904df6509b206c7756c24",
+    "body": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+        "./Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+        "./Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    }
+  },
+  "summary": {
+    "pass": 0,
+    "fail": 4,
+    "tests": 4,
+    "files": 3,
+    "assertions": 116,
+    "elapsedSeconds": 473.37,
+    "completedBunSummary": true
+  },
+  "omni": {
+    "verdict": "PASS",
+    "scope": "focused: no declaring test ran",
+    "declaringTests": 0,
+    "spawns": 111,
+    "delegated": 0,
+    "nonce": "473f8781d9d753d5cacf8fe59020f2dd"
+  },
+  "tests": [
+    {
+      "status": "fail",
+      "name": "native Procurement reuses submitted FX and domain ranking without choosing the cheapest quote or changing sourcing",
+      "elapsedMs": 4247.93
+    },
+    {
+      "status": "fail",
+      "name": "native document extraction uses real private bytes and schema; contract review retains the actual issued source surface",
+      "elapsedMs": 3485.94
+    },
+    {
+      "status": "fail",
+      "name": "native purchase observes preparation boundaries and reopens the pending human choice without approval or source mutation",
+      "elapsedMs": 154761.19
+    },
+    {
+      "status": "fail",
+      "name": "native purchase observes preparation boundaries and reopens the complete human choice without approval or source mutation",
+      "elapsedMs": 309143.56
+    }
+  ],
+  "catalogs": [
+    {
+      "label": "sourcing",
+      "phase": "initial",
+      "scope": "host-installed-catalog",
+      "githubSha": "5fe687cdfae8f30e4a7121ac87d6e2a14982433a",
+      "state": "empty",
+      "available": [],
+      "supported": [],
+      "published": [],
+      "intersection": []
+    },
+    {
+      "label": "document-contract",
+      "phase": "initial",
+      "scope": "host-installed-catalog",
+      "githubSha": "5fe687cdfae8f30e4a7121ac87d6e2a14982433a",
+      "state": "empty",
+      "available": [],
+      "supported": [],
+      "published": [],
+      "intersection": []
+    },
+    {
+      "label": "purchase-pending",
+      "phase": "initial",
+      "scope": "host-installed-catalog",
+      "githubSha": "5fe687cdfae8f30e4a7121ac87d6e2a14982433a",
+      "state": "empty",
+      "available": [],
+      "supported": [],
+      "published": [],
+      "intersection": []
+    },
+    {
+      "label": "purchase-complete",
+      "phase": "initial",
+      "scope": "host-installed-catalog",
+      "githubSha": "5fe687cdfae8f30e4a7121ac87d6e2a14982433a",
+      "state": "empty",
+      "available": [],
+      "supported": [],
+      "published": [],
+      "intersection": []
+    }
+  ],
+  "log": {
+    "bytes": 82721,
+    "sha256": "b62cbffc299996d1c6bd2b5f4f965bb8ddd3f7c69154933ef7e84a98b45bf7f7"
+  },
+  "artifacts": [],
+  "observations": [
+    {
+      "scope": "sourcing and documents-contract",
+      "failure": "Actual contract source issuance failed: source-unavailable",
+      "file": "test/product/wp12/native-procurement-preparation.ts",
+      "line": 55,
+      "requestIssuerPassed": true,
+      "diagnosis": "UNDER_SOURCE_REVIEW; no failure accepted as success."
+    },
+    {
+      "scope": "pending purchase",
+      "failure": "derivedMissingCategoryIds expected training, received []",
+      "file": "test/product/wp12/native-procurement-preparation.ts",
+      "line": 165,
+      "expected": [
+        "training"
+      ],
+      "received": [],
+      "passedBeforeFailure": [
+        "Known subtotal210000",
+        "coverageState pending"
+      ],
+      "diagnosis": "Runtime evidence now reaches the previously identified C10 origin-loss boundary; exact owner cause remains separately pinned."
+    },
+    {
+      "scope": "complete purchase",
+      "failure": "Real decision-sensitivity-units failed: case-evidence-unavailable",
+      "file": "test/product/wp12/native-choice-preparation.ts",
+      "line": 31,
+      "passedBeforeFailure": [
+        "Complete category coverage and known subtotal250000, with hypothetical total null"
+      ],
+      "diagnosis": "UNDER_SOURCE_REVIEW; exact failing source not identified in the log."
+    }
+  ],
+  "native": {
+    "inferenceExecuted": false,
+    "outputsObserved": 0,
+    "nativeConsumersObserved": 0
+  },
+  "localProductTests": false,
+  "localTypecheck": false,
+  "fullWp12Acceptance": false
+}

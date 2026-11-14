@@ -1,0 +1,65 @@
+{
+  "schema": "wp12-native-recall-candidate-access-static-finding-v1",
+  "id": "WP12-RECALL-NATIVE-CANDIDATE-ACCESS",
+  "status": "STATIC_MOUNTING_GAP_NOT_A_RUNTIME_LEAK_OR_EXECUTED_PRECEDENT",
+  "owners": [
+    "WP10 installed business/analysis mounting",
+    "WP14 protected precedent scope"
+  ],
+  "currentProduct": {
+    "sha": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "tree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e"
+  },
+  "sourceOwner": {
+    "sha": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+    "pr": 29
+  },
+  "skill": "sf-consultar-memoria-decisoria",
+  "literalCriteria": [
+    "WP12.T02.CHK.11",
+    "WP12.T02.CMP.40",
+    "WP12.T02.CHK.60",
+    "WP12.T02.SUC.60"
+  ],
+  "canonicalSkillPointer": "/resident_ai/skills/17",
+  "findings": [
+    {
+      "boundary": "createSfCaseRecall",
+      "observation": "A native call requesting any candidate outside its bound current case requires a host candidateAccess result. Without it, the read stage returns undefined and the operation reports unavailable before ranking or returning precedent content.",
+      "scope": "The refusal correctly preserves native case isolation."
+    },
+    {
+      "boundary": "installed createSfBusinessServices",
+      "observation": "The current consumed97cde4d and source WP10 W20 89881259 instantiate createSfCaseRecall without candidateAccess. Explicit recall scope selects eligible participant cases but is not itself a grant to cross a native case binding."
+    },
+    {
+      "boundary": "WP12 current driver",
+      "observation": "The driver deliberately selects an empty recall scope. Its observed empty input/reopen does not prove a real prior decision, protected Atlas record or cross-case native consumption. The companion business instance initializes Atlas without a scanner; inventing an emit success there would not solve installed proof."
+    }
+  ],
+  "impact": "A meaningful positive precedent branch requires authenticated, selection-scoped host access to the protected prior case/memory under the original native run authority. Adding only a second case fixture cannot make the current native path positive.",
+  "proposedOwnerDelta": "Supply a host-owned candidateAccess implementation bound to exact currentCase, ExplicitRecallScope, original Request, principal, profile, run, current access/policy and case versions. Reauthorize each prior case and protected Atlas read before and at egress. Do not rewrite the native binding or turn recorded IDs into authority.",
+  "proposedWp12FollowOn": "After a published compatible mount exists, prepare a genuine prior decision/outbox/Atlas emit through real APIs, select it explicitly in a distinct current case, require native receipt operations, reopen the same persisted CaseRecall and consume its authorized previous-case link. Preserve revoked/incarnation/owner negatives.",
+  "sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+      "sha": "fdc378d5f251511f66bb256b78240f472f1d566c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "sha": "97cde4dce2858f47b57b446c9c20bad77d367591",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/apps/cli/src/sucafina-product/business-services.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "sha": "89881259b635344d626ed5f90d60bfbd31488b79",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3b02c7693c1ff3b702596c7c8458f913972a404/apps/cli/src/sucafina-product/business-services.ts"
+    }
+  ],
+  "verification": {
+    "method": "Full relevant functions and constructors read; exact blobs independently fetched via GitHub MCP. No product execution, typecheck, foreign edit or hypothesis relabeled as observed runtime.",
+    "nativePositiveExecuted": false,
+    "leakObserved": false
+  }
+}

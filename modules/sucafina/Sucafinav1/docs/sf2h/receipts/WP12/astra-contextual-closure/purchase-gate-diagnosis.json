@@ -1,0 +1,146 @@
+{
+  "schema": "wp12-w16-purchase-gate-diagnosis-v1",
+  "status": "READ_ONLY_DIAGNOSIS_NO_PRODUCT_EXECUTION",
+  "product": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+  "snapshot": "5fe687cdfae8f30e4a7121ac87d6e2a14982433a",
+  "run": 43600564160,
+  "job": 132464186609,
+  "log": {
+    "path": "evidence/resume-11-procurement.log",
+    "sha256": "b62cbffc299996d1c6bd2b5f4f965bb8ddd3f7c69154933ef7e84a98b45bf7f7"
+  },
+  "readOnlyRemotePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "blob": "d654b13aafcf1e0b29d410e916c1a09b4fa19963",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2ea0673cd17d97607ee020910bf66db4ee6c1bde/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "blob": "495169ccb0da1c775622907facf9b2ba13e0bb5c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2ea0673cd17d97607ee020910bf66db4ee6c1bde/modules/sucafina/Sucafinav1/product/portfolio/product.ts"
+    }
+  ],
+  "gates": [
+    {
+      "id": "PENDING_DERIVED_TRAINING",
+      "observation": "FAIL after actual baseline coverage registration, promotion and case reread: final pending alternative has derivedMissingCategoryIds=[]; expected ['training'].",
+      "logLines": [
+        923,
+        942
+      ],
+      "runtimeMs": 154761.19,
+      "passedBeforeFailure": [
+        "Actual request source issued/resolved with approvalStage after the exact projector intake.",
+        "Actual coverage registration and C09 promotion.",
+        "Conditioned hypothetical null totals, baseline knownSubtotal 240000 with complete coverage.",
+        "Pending candidate knownSubtotal210000 and coverageState pending."
+      ],
+      "notReached": [
+        "Training pending-entry assertion after failed derived check.",
+        "Human choice/units and purchase analysis input.",
+        "Any Session inference or DossierDraft consumer."
+      ],
+      "cause": {
+        "class": "PUBLISHED_OWNER_IMPLEMENTATION",
+        "owner": "WP10 coverage adapter / WP11 C10 integration",
+        "consumedAdapter": {
+          "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+          "commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "blob": "d8a668281ea9cac6a3a04c6bea19811ee8954808"
+        },
+        "domain": {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+          "blob": "d654b13aafcf1e0b29d410e916c1a09b4fa19963"
+        },
+        "trace": [
+          "assessCostCoverage computes missing from categories absent in incoming entries, and synthesizes pending/missing-category entries.",
+          "Published portfolio coverage adapter clones already normalized baseline.entries for reassessment.",
+          "reassessScenarioCoverage calls assessCostCoverage on those normalized entries, so training now exists and the derived missing list becomes empty."
+        ],
+        "latestOwnerInspection": {
+          "commit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+          "adapterBlob": "d20eafe56f782c8d23917c53d60377fa09a386a6",
+          "finding": "captureEntries still clones baseline.entries. This source is inspected, not consumed; no runtime result is attributed to it."
+        }
+      },
+      "ownFix": "None justified. Preserve the omitted category fixture and strict expected derived list; do not manufacture pending entries or change the assertion to [] for a green test."
+    },
+    {
+      "id": "COMPLETE_CASE_EVIDENCE",
+      "observation": "FAIL decision-sensitivity-units returns case-evidence-unavailable after successful complete preparation and first choice case read.",
+      "logLines": [
+        962,
+        972
+      ],
+      "runtimeMs": 309143.56,
+      "catalogAt": "2026-11-14T13:40:12.0999244Z",
+      "failureAt": "2026-11-14T13:45:12.7536069Z",
+      "cause": {
+        "class": "STRONG_TEMPORAL_INFERENCE_NOT_EXCLUSIVE_RUNTIME_PROOF",
+        "reason": "The authenticated Procurement period selection expires after300000ms. The source resolver re-enters contextFor on every resolution, and case.read aggregates evidence/scenario failures under the observed reason. The driver selected once before ~150s preparation, then performed costly choice replays without renewal.",
+        "pins": [
+          {
+            "path": "apps/cli/src/sucafina-product/business-services.ts",
+            "blob": "97cde4dce2858f47b57b446c9c20bad77d367591",
+            "lines": [
+              91,
+              105,
+              522,
+              537
+            ]
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+            "blob": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e",
+            "lines": [
+              32,
+              61
+            ]
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "lines": [
+              79,
+              86
+            ]
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+            "blob": "ed68563245e406aca2dc3ce335943647fd2cb002",
+            "lines": [
+              28,
+              61
+            ]
+          }
+        ],
+        "limitation": "The current log has no phase timestamps or direct source-resolution reason at failure. case-evidence-unavailable can also originate in scenario verification; TTL causality must remain inferred until the renewed path/diagnostic executes."
+      },
+      "ownFixProposal": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+        "change": "Renew both real public Procurement selection registries through existing selectWp12ProcurementPeriod immediately before chooseWp12Alternative; add phase timestamps and source/context diagnostics on failure without retry or suppressing failure.",
+        "sharedHelperOption": "If each choice sub-action requires a new human selection, add an explicit optional before-action hook to native-choice-preparation in coordination with its owner, never refresh a private registry or extend the host TTL.",
+        "constraints": [
+          "No foreign source changes.",
+          "No fake authority, receipt, output or clock.",
+          "No weakened coverage/cost/ranking/negative assertion.",
+          "No claim that future gate is fixed before hosted execution."
+        ]
+      },
+      "notReached": [
+        "criterion registration and actual human choice",
+        "purchase input preparation",
+        "native execution and consumer"
+      ]
+    }
+  ],
+  "execution": "None locally; source and immutable hosted log review only.",
+  "falseClaimsExcluded": [
+    "Procurement projector presence is not the whole purchase mission.",
+    "No approval, complete financial total, real native receipt, native output or consumer proof.",
+    "No inference is credited from empty catalogs."
+  ]
+}

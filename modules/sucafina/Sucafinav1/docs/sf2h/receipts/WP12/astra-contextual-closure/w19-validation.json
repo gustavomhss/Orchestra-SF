@@ -1,0 +1,205 @@
+{
+  "schema": "sf-wp12-hosted-check-result-v1",
+  "phase": "resume-14",
+  "product": {
+    "sha": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+    "tree": "33edf29551a88ca93f8258e913f3ce127bfc88d4"
+  },
+  "check": {
+    "snapshot": "fa0a52716877dd513e32d59a43c9652b50fe2821",
+    "tree": "00b5b8092f0ca029daa27c7dd663afa51e9dad89",
+    "runId": 43602925189,
+    "jobId": 132471348121,
+    "conclusion": "success",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43602925189",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "typecheck": {
+      "command": "bun typecheck",
+      "cwd": "modules/sucafina",
+      "exitCode": 0,
+      "diagnostics": 0
+    },
+    "spawnImports": {
+      "conclusion": "success",
+      "checkedFiles": 4618,
+      "allowListedSites": 66
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 927,
+      "gate": 0,
+      "warn": 15,
+      "errors": 0,
+      "warnings": [
+        {
+          "path": "apps/cli/package.json",
+          "line": 37,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/atlas/boundary/package.json",
+          "line": 66,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/atlas/boundary/package.json",
+          "line": 67,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/atlas/boundary/package.json",
+          "line": 68,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 17,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 18,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 19,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 20,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 21,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 22,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 23,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/package.json",
+          "line": 24,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "package.json",
+          "line": 126,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "package.json",
+          "line": 127,
+          "rule": "dep-new-added",
+          "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts",
+          "line": 46,
+          "rule": "ts-double-cast",
+          "message": "Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard."
+        }
+      ]
+    }
+  },
+  "log": {
+    "bytes": 63847,
+    "sha256": "b1cb6bcde2599f60d675a9f8e9ffb0ec187f0bed761b1d3a1581d0afae77dc2f",
+    "source": "GitHub Actions job log 132471348121",
+    "verifiedFrom": "evidence/resume-14-check.log"
+  },
+  "artifact": {
+    "id": 14116958147,
+    "name": "astra-wp12-check-1",
+    "digest": "sha256:b851b8312e91f6107cf489580b817071329205aa6db8c969a187bcc56b89a9c7",
+    "bytes": 1422,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43602925189/artifacts/14116958147"
+  },
+  "validatedOwnedDeltas": [
+    {
+      "path": "test/product/wp12/native-mission-harness.ts",
+      "blob": "49300a78a44ac0739791d10a11c386b317f4b51a"
+    },
+    {
+      "path": "test/product/wp12/native-execution-intent.test.ts",
+      "blob": "3d0fac5384b433dde3eab26b011679031218fc2f"
+    },
+    {
+      "path": "test/product/wp12/native-question-consumer.test.ts",
+      "blob": "1323c71bab9055e40a7f8d95b0cc94f097a1a1c9"
+    },
+    {
+      "path": "test/product/wp12/native-question-preparation.ts",
+      "blob": "c3c2efe6004c513370ab04077f7d2c79a704d9c6"
+    },
+    {
+      "path": "test/product/wp12/native-execution-collaboration-recall.test.ts",
+      "blob": "12d52cdc872e64cf3265a3f5b09cbe0d5f07d57f"
+    },
+    {
+      "path": "test/product/wp12/native-execution-scenarios-review.test.ts",
+      "blob": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06"
+    },
+    {
+      "path": "test/product/wp12/native-execution-reevaluation.test.ts",
+      "blob": "dc3ac4d4b02e392170059911b7c8a5fba171c7b4"
+    },
+    {
+      "path": "test/product/wp12/native-execution-sourcing.test.ts",
+      "blob": "a38c64dfbf2d27143c756677e49171c4d0cadbfd"
+    },
+    {
+      "path": "test/product/wp12/native-execution-dependencies.test.ts",
+      "blob": "4fe9d9c1caf31f918d3e791af587fdf0b0d2834f"
+    },
+    {
+      "path": "test/product/wp12/native-procurement-preparation.ts",
+      "blob": "f1433397246117886e109d32b171345ec1992066"
+    },
+    {
+      "path": "test/product/wp12/native-execution-questions.test.ts",
+      "blob": "50303355860a26718686f5daf7dddad8978434c3"
+    },
+    {
+      "path": "test/product/wp12/native-choice-preparation.ts",
+      "blob": "ce7e079d3abcc8af0fc881483addfa2ca337ae9c"
+    },
+    {
+      "path": "test/product/wp12/native-execution-purchase.test.ts",
+      "blob": "4c303604768e8a2e750aee8ea8f35d7f17302742"
+    }
+  ],
+  "validationScope": "Hosted package typecheck, spawn import guard and repository guard. Product tests, native execution and consumer acceptance are separate evidence.",
+  "provenance": {
+    "runAndTreeMetadata": "Root supplied exact GitHub MCP publication and completed run metadata; no duplicate remote lookup.",
+    "log": "Raw local copy independently hashed; commands, summary counts, checkout SHAs, dev pin and artifact upload metadata inspected.",
+    "sourcePins": "Thirteen W19 source blobs from resume-input/w19/manifest.json, independently checked against published W19 during metadata preparation."
+  },
+  "localProductTests": false,
+  "localTypecheck": false,
+  "fullWp12Acceptance": false
+}

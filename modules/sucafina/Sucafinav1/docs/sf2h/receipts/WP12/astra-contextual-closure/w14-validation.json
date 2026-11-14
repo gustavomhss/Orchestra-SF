@@ -1,0 +1,120 @@
+{
+  "schema": "sf-wp12-hosted-validation-v1",
+  "phase": "resume-09",
+  "product": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+  "productTree": "99def04f22a5e4c998baeef5a28f47be2aa1ca19",
+  "check": {
+    "snapshot": "f4f261068359a12393e847518e8d59eaf99f046c",
+    "snapshotTree": "858d213d0738f9c930db0e08db489a7bf7983a44",
+    "runId": 43597130262,
+    "jobId": 132453928953,
+    "conclusion": "success",
+    "commands": {
+      "typecheck": {
+        "command": "bun typecheck",
+        "directory": "modules/sucafina",
+        "exitCode": 0,
+        "diagnostics": 0
+      },
+      "spawnImports": {
+        "command": "bun run check:spawn-imports",
+        "files": 4618,
+        "allowListedSites": 66,
+        "conclusion": "success"
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "rules": 78,
+        "changedPaths": 875,
+        "gate": 0,
+        "warn": 15,
+        "errors": 0,
+        "conclusion": "success"
+      }
+    },
+    "artifact": {
+      "id": 14115202076,
+      "digest": "sha256:47df43d18d523d933e0f15de8e690c371a0a25eb2dce546117b23f99ef42a26c",
+      "expiresAt": "2026-11-28T12:56:39Z"
+    },
+    "log": {
+      "sha256": "781133ec47a82b2b398bddd1912a69c7b51949e856e567eea1709de32dfca40b",
+      "bytes": 64046,
+      "file": "evidence/resume-09-check.log"
+    }
+  },
+  "productTests": {
+    "snapshot": "c2ae5835aa01dca7ed4fd3481f631f72d6168b36",
+    "snapshotTree": "58f34a3840b6dced9a80b7f06e41a10459050103",
+    "runId": 43597142350,
+    "jobId": 132453963349,
+    "conclusion": "success",
+    "cleanup": {
+      "jobId": 132454369533,
+      "conclusion": "success"
+    },
+    "tests": 77,
+    "passed": 77,
+    "failed": 0,
+    "expectCalls": 888,
+    "files": 6,
+    "durationSeconds": 4.65,
+    "request": {
+      "sha256": "f246ff02fe78c3c185702006248d569cdde00c1ca8f6ca8dcbcbf7ee10b4a386",
+      "gitBlob": "f40220c16255b1c51dc923d7413b179f7a87106b",
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+          "blob": "ab321fb2d1562255cf987571477233767c5240e3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+          "blob": "282255c3f34ac9df7f14c913e5698d0d6146a71a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+          "blob": "6bf1130c94bca4b3cd1377875492b8f910b4259a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+          "blob": "f8305eeb2dae22565dbb27e21137cbd1237afae3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts",
+          "blob": "6806a786ac9e41a6b87c539ab7e2eccc38871cb4"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/continuation.test.ts",
+          "blob": "14c0349d5d425533c6132e7eec802bae35425644"
+        }
+      ],
+      "env": {}
+    },
+    "omni": {
+      "state": "not-applicable",
+      "nonce": "d918b686c5053766f5b9e0fbf9e11120",
+      "declaringTests": 0,
+      "spawned": 0,
+      "delegated": 0,
+      "provedOmni": false
+    },
+    "log": {
+      "sha256": "e3b6ce9b3b0f79a0336fba4f1f876edbd7f8f58ea0b1d46898510080db0b3419",
+      "bytes": 80480,
+      "file": "evidence/resume-09-security.log"
+    }
+  },
+  "scope": [
+    "Publication, run-store, current and historical readers, continuation boundaries on the exact indicated product.",
+    "Real C08/SQLite fixtures are distinguished from explicitly injected continuation/verification ports.",
+    "No model inference, native skill tool sequence, installed continuation mounting or GNATIVE is proved by this six-file run.",
+    "No earlier or later changed implementation/driver receives a transferred PASS."
+  ],
+  "remainingProductScope": [
+    "Changed native input and consumer missions not selected here.",
+    "Own scenario and portfolio hypothetical-total expectations under correction after interrupted W11."
+  ],
+  "localProductTests": false,
+  "localTypecheck": false,
+  "fullWp12Acceptance": false
+}

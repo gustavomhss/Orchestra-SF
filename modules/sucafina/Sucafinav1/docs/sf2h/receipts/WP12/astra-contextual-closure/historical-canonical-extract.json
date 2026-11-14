@@ -1,0 +1,539 @@
+{
+  "plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "source_campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "campaign_git_blob": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+  "output_handoffs": [
+    {
+      "id": "AI-NATIVE",
+      "producer_task": "WP12.T01",
+      "ready_minute": 13,
+      "consumer_tasks": [
+        "WP10.T06"
+      ],
+      "consume_not_before": 13,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/ai/profiles/sf_finance.json",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/manifests/native-probe.json"
+      ],
+      "acceptance": "Profile+skill com conteúdo/digest reais; manifest não referencia fonte ausente.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/ai-native.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "declared_checkpoint_or_task_phase"
+    },
+    {
+      "id": "AI-CATALOG-PORT",
+      "producer_task": "WP12.T01",
+      "ready_minute": 25,
+      "consumer_tasks": [
+        "WP12.T02"
+      ],
+      "consume_not_before": 25,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/ai/profiles/",
+        "modules/sucafina/Sucafinav1/product/ai/manifests/"
+      ],
+      "acceptance": "Registry/schema/builder de manifest; pré-requisito da fase runtime T02, não da autoria fontes 10-25.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/ai-catalog.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "declared_checkpoint_or_task_phase"
+    },
+    {
+      "id": "SKILLS-FINANCE-PORTFOLIO",
+      "producer_task": "WP12.T02",
+      "ready_minute": 29,
+      "consumer_tasks": [
+        "WP12.T02"
+      ],
+      "consume_not_before": 29,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-avaliar-sensibilidade/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-dependencias/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-reavaliar-compromissos/SKILL.md"
+      ],
+      "acceptance": "Seis fontes no SHA recebido; lease S1 fecha 29, a fonte de forecast já era antecipada em 13.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/skills-finance-portfolio.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "integration_or_proof"
+    },
+    {
+      "id": "SKILLS-MAESTRO-REVIEWER",
+      "producer_task": "WP12.T02",
+      "ready_minute": 38,
+      "consumer_tasks": [
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "consume_not_before": 38,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-contestar-decisao/SKILL.md",
+        "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-evidencias/SKILL.md"
+      ],
+      "acceptance": "Cinco fontes no SHA recebido; lease S3 fecha 38, Revisor tem execução/instruções próprias.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/skills-maestro-reviewer.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "integration_or_proof"
+    },
+    {
+      "id": "AI-FULL",
+      "producer_task": "WP12.T02",
+      "ready_minute": 42,
+      "consumer_tasks": [
+        "WP10.T06",
+        "WP12.T03",
+        "WP09.T07"
+      ],
+      "consume_not_before": 42,
+      "artifacts": [
+        "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json"
+      ],
+      "acceptance": "Cinco perfis e 18 sources com hashes reais; compra/sharedsete completa dos por S4-B.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/ai-full.json",
+      "receipt_writer": "producer task execution_actor; one exact receipt per handoff",
+      "status": "PLANNED_NOT_PRODUCED",
+      "consumer_phase": "integration_or_proof",
+      "contract_alias": "AI-CATALOG"
+    }
+  ],
+  "resident_handoff_interfaces": [
+    {
+      "producer_task": "WP12.T01",
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/native-probe.json",
+      "export": "nativeProbeManifest",
+      "ready_checkpoint": 13,
+      "consumer_tasks": [
+        "WP10.T06",
+        "WP00.T04"
+      ],
+      "payload": "sf_finance + sf-explicar-forecast com hashes reais"
+    },
+    {
+      "producer_task": "WP12.T02",
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "export": "residentAiManifest",
+      "ready_checkpoint": 42,
+      "consumer_tasks": [
+        "WP10.T06"
+      ],
+      "payload": "5/18 completo"
+    }
+  ],
+  "skill_leases": [
+    {
+      "skill_id": "sf-explicar-forecast",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T01",
+      "writer": "S1",
+      "writer_session": "S1",
+      "branch": "sf2-skills-finance",
+      "active_windows": [
+        [
+          10,
+          13
+        ]
+      ],
+      "exclusive_lease_until": 29,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": 13
+    },
+    {
+      "skill_id": "sf-comparar-cenarios",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S1",
+      "writer_session": "S1",
+      "branch": "sf2-skills-finance",
+      "active_windows": [
+        [
+          16,
+          29
+        ]
+      ],
+      "exclusive_lease_until": 29,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    },
+    {
+      "skill_id": "sf-avaliar-sensibilidade",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-avaliar-sensibilidade/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S1",
+      "writer_session": "S1",
+      "branch": "sf2-skills-finance",
+      "active_windows": [
+        [
+          16,
+          29
+        ]
+      ],
+      "exclusive_lease_until": 29,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    },
+    {
+      "skill_id": "sf-revisar-dependencias",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-dependencias/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S1",
+      "writer_session": "S1",
+      "branch": "sf2-skills-finance",
+      "active_windows": [
+        [
+          16,
+          29
+        ]
+      ],
+      "exclusive_lease_until": 29,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    },
+    {
+      "skill_id": "sf-compor-portfolio",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S1",
+      "writer_session": "S1",
+      "branch": "sf2-skills-finance",
+      "active_windows": [
+        [
+          16,
+          29
+        ]
+      ],
+      "exclusive_lease_until": 29,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    },
+    {
+      "skill_id": "sf-reavaliar-compromissos",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-reavaliar-compromissos/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S1",
+      "writer_session": "S1",
+      "branch": "sf2-skills-finance",
+      "active_windows": [
+        [
+          16,
+          29
+        ]
+      ],
+      "exclusive_lease_until": 29,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    },
+    {
+      "skill_id": "sf-enquadrar-decisao",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S3",
+      "writer_session": "S3",
+      "branch": "sf2-skills-maestro",
+      "active_windows": [
+        [
+          23,
+          38
+        ]
+      ],
+      "exclusive_lease_until": 38,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    },
+    {
+      "skill_id": "sf-preparar-revisao-executiva",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S3",
+      "writer_session": "S3",
+      "branch": "sf2-skills-maestro",
+      "active_windows": [
+        [
+          23,
+          38
+        ]
+      ],
+      "exclusive_lease_until": 38,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    },
+    {
+      "skill_id": "sf-coordenar-perguntas",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S3",
+      "writer_session": "S3",
+      "branch": "sf2-skills-maestro",
+      "active_windows": [
+        [
+          23,
+          38
+        ]
+      ],
+      "exclusive_lease_until": 38,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    },
+    {
+      "skill_id": "sf-contestar-decisao",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-contestar-decisao/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S3",
+      "writer_session": "S3",
+      "branch": "sf2-skills-maestro",
+      "active_windows": [
+        [
+          23,
+          38
+        ]
+      ],
+      "exclusive_lease_until": 38,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    },
+    {
+      "skill_id": "sf-revisar-evidencias",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-evidencias/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S3",
+      "writer_session": "S3",
+      "branch": "sf2-skills-maestro",
+      "active_windows": [
+        [
+          23,
+          38
+        ]
+      ],
+      "exclusive_lease_until": 38,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    },
+    {
+      "skill_id": "sf-comparar-sourcing",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-sourcing/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S4-B",
+      "writer_session": "S4",
+      "branch": "sf2-ai",
+      "active_windows": [
+        [
+          25,
+          42
+        ]
+      ],
+      "exclusive_lease_until": 120,
+      "handoff_to": null,
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    },
+    {
+      "skill_id": "sf-revisar-condicoes-contratuais",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-condicoes-contratuais/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S4-B",
+      "writer_session": "S4",
+      "branch": "sf2-ai",
+      "active_windows": [
+        [
+          25,
+          42
+        ]
+      ],
+      "exclusive_lease_until": 120,
+      "handoff_to": null,
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    },
+    {
+      "skill_id": "sf-preparar-compra",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-compra/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S4-B",
+      "writer_session": "S4",
+      "branch": "sf2-ai",
+      "active_windows": [
+        [
+          25,
+          42
+        ]
+      ],
+      "exclusive_lease_until": 120,
+      "handoff_to": null,
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    },
+    {
+      "skill_id": "sf-extrair-evidencias",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-extrair-evidencias/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S4-B",
+      "writer_session": "S4",
+      "branch": "sf2-ai",
+      "active_windows": [
+        [
+          25,
+          42
+        ]
+      ],
+      "exclusive_lease_until": 120,
+      "handoff_to": null,
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    },
+    {
+      "skill_id": "sf-produzir-bi-contextual",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-bi-contextual/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S4-B",
+      "writer_session": "S4",
+      "branch": "sf2-ai",
+      "active_windows": [
+        [
+          25,
+          42
+        ]
+      ],
+      "exclusive_lease_until": 120,
+      "handoff_to": null,
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    },
+    {
+      "skill_id": "sf-produzir-material-reuniao",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-material-reuniao/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S4-B",
+      "writer_session": "S4",
+      "branch": "sf2-ai",
+      "active_windows": [
+        [
+          25,
+          42
+        ]
+      ],
+      "exclusive_lease_until": 120,
+      "handoff_to": null,
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    },
+    {
+      "skill_id": "sf-consultar-memoria-decisoria",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-consultar-memoria-decisoria/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S4-B",
+      "writer_session": "S4",
+      "branch": "sf2-ai",
+      "active_windows": [
+        [
+          25,
+          42
+        ]
+      ],
+      "exclusive_lease_until": 120,
+      "handoff_to": null,
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null
+    }
+  ],
+  "transfer_receipt_fields": [
+    "logical_owner",
+    "path_set_hash",
+    "previous_writer",
+    "new_writer",
+    "source_branch",
+    "received_sha",
+    "last_write_at",
+    "lease_closed_at",
+    "lease_accepted_at",
+    "remaining_tasks",
+    "proof_owner"
+  ],
+  "event_protocol": {
+    "events": [
+      "SESSION_ACK",
+      "JOB_STARTED",
+      "OUTPUT_READY",
+      "CONSUMED",
+      "INTEGRATION_RESULT",
+      "VALIDATION_REQUEST",
+      "PROOF_RESULT",
+      "FINDING",
+      "BLOCKED",
+      "CHECKPOINT",
+      "LEASE_RELEASED",
+      "SESSION_CLOSED",
+      "GLOBAL_RELEASE"
+    ],
+    "identity": [
+      "execution_instance",
+      "event_id",
+      "actor_id",
+      "attempt_id",
+      "lease_epoch",
+      "sequence"
+    ],
+    "payload": [
+      "task_or_output_ids",
+      "source_commit",
+      "previous_checkpoint",
+      "contract_digests",
+      "changed_paths",
+      "evidence_refs",
+      "observed_state",
+      "next_action",
+      "owner_eta"
+    ],
+    "idempotency": "Deduplicate event_id inside execution_instance. Accept sequence per actor/attempt and reconcile duplicates without reapplying writes.",
+    "readiness": "OUTPUT_READY names a committed consumable output, producer, dependencies, consumer and evidence; it does not mark a WP DONE.",
+    "receipt": "CONSUMED names the exact producer SHA, consumer SHA and observed behavior. A message saying integrated is insufficient.",
+    "reject": [
+      "Wrong execution instance or plan digest",
+      "Stale/revoked lease epoch",
+      "Unexpected writer/path",
+      "Missing commit or source evidence",
+      "Claimed output without its declared dependency"
+    ],
+    "timing": "Emit at material state changes and required checkpoints. Do not narrate every task step or resend unchanged files."
+  },
+  "operational_allocation_same_18_planned_leases": true,
+  "classification": "NORMATIVE_PLAN_AND_ALLOCATION_NOT_ACTUAL_TRANSFER_RECEIPTS",
+  "original_audit_campaign_path": "context/plan/campaign.json",
+  "campaign_source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json"
+}

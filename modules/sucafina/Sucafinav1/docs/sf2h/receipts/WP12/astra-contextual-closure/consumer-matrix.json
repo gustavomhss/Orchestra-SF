@@ -1,0 +1,980 @@
+{
+  "schema": "wp12-consumer-stages-v2",
+  "candidate": {
+    "name": "W20",
+    "sha": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "tree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e",
+    "parent": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+    "check_status": "PASS",
+    "check_snapshot": "71894701b187aaca938bfe97a8b6c6b8508de4ab",
+    "check_run": 43603981195,
+    "check_job": 132474528320,
+    "check_snapshot_tree": "5070d3b096c7b997d065a6d6a7257eb04f84fbbd",
+    "mission_tests_status": "C10_DERIVED_ORIGIN_RUNTIME_PENDING; QUESTIONS_RETEST_FAILED_1_PASS_2_FAIL; PROCUREMENT_RETEST_IN_PROGRESS; W16_BI_EXECUTIVE_FAILED_1_PASS_1_FAIL_RETAINS_W16_SHA",
+    "last_completed_check": {
+      "product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "run_id": 43603981195,
+      "job_id": 132474528320,
+      "result": "PASS"
+    },
+    "metadata_source": "Root W20 WP12 publication/preparation-15.json:one exact C10 owner blob,zero own source changes,six own docs,339 foreign pins. This is distinct from the source owner WP10 W20."
+  },
+  "count": 18,
+  "stages": [
+    "IMPLEMENTED_PATH",
+    "REAL_INPUT_PREPARED",
+    "REAL_DOMAIN_OUTPUT_PREPARED",
+    "REAL_DOMAIN_CONSUMER_OBSERVED",
+    "NATIVE_EXECUTION",
+    "NATIVE_TYPED_OUTPUT_PERSISTED",
+    "NATIVE_DOMAIN_CONSUMER_AFTER_RELOAD"
+  ],
+  "rules": [
+    "A human/UI prepared receipt retains UI provenance.",
+    "HTTP input preparation is a real consumer of inputs, not a consumer of an absent native output.",
+    "Generic JSON/HTML reopening is recorded separately from canonical domain action.",
+    "Read-only C08 assertions do not become product UI consumers.",
+    "An always-refused operation does not count as delivered."
+  ],
+  "skills": [
+    {
+      "skill_id": "sf-enquadrar-decisao",
+      "entry": "Analisar alternativas em contrato/pedido/projeto ou Novo caso na mesa. Na prévia de importação, Analisar impacto do arquivo reutiliza a mesma skill e o mesmo manifesto C04.",
+      "required_visible_consumption": "Objetivo, horizonte, critérios e fontes tornam-se campos editáveis do mesmo caso; plano mostra por que cada especialista necessário participa. Reabrir a mesa recupera o enquadramento e autoriza corrigir a intenção. O output guarda importPreviewRef; WP06.T03 abre o manifesto persistido, suas linhas/deltas/erros e o rótulo de simulação. A análise não altera o domínio.",
+      "required_negative_discriminator": "Prompt idêntico com outra referência material muda a saída; resposta genérica sem campos consumidos não passa. Arquivo não admitido ou base alterada recusa/recalcula a prévia; ausência de mudança no estado de domínio é verificada antes e depois.",
+      "canonical_consumers": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "implementation": [
+        "handleSfAnalysis output/HTML after reload",
+        "readCaseAnalysisProjection source/objective/horizon check",
+        "createSfImportHttp import-reference/import-detail after reload"
+      ],
+      "implemented_domain_preparation": "Two current cases use the same human objective and different real issued Planner sources; actual HTTP preparation and outside-case/authority refusals. W14 adds real C04 multipart admission, preview and selected import input when an installed scanner exists. W15 adds exact AM02 freshness and unassigned question preparation with selected source refs; W16 changes only the readonly assertion type, preserving emitted JavaScript.",
+      "actually_observed_stages": [
+        {
+          "stage": "REAL_INPUT_PREPARED",
+          "evidence_ref": "W11.INTENT_INPUT",
+          "native": false
+        },
+        {
+          "stage": "OWN_PERIOD_OR_DISPATCH_PRECONDITION_FAILED",
+          "evidence_ref": "W16.QUESTION_PRECONDITION_FAILURES",
+          "native": false
+        },
+        {
+          "stage": "IMPORT_CONFIGURATION_UNAVAILABLE_BEFORE_ADMISSION",
+          "evidence_ref": "W16.IMPORT_UNAVAILABLE",
+          "native": false
+        },
+        {
+          "stage": "TWO_CURRENT_INPUTS_UI_FRESHNESS_QUESTION_AND_NEGATIVES_PASS",
+          "evidence_ref": "W20.INTENT_INPUT_UI_PASS",
+          "native": false
+        }
+      ],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "No persisted AnalysisPlan.",
+        "W11 observed only input preparation with empty models; no output consumer ran.",
+        "Reopening matching fields does not prove a subsequent human edit or specialized plan consumption.",
+        "Import mission requires actual installed scanner and model. AM02 source/question witnesses are published; no provider receipt or output is inferred from implementation.",
+        "W19 corrects own UI dispatch admission consumption through the actual shared dispatcher; direct business-port authority helpers remain unchanged. Source changes are not a passing runtime witness.",
+        "W20 passed two current selections, real UI freshness/unassigned question preparation and outside-case/changed-request refusals. The empty-catalog branch returns before any native output/reopen; the named test alone is not a native mission witness."
+      ],
+      "output_kinds": [
+        {
+          "kind": "IntentFrame",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        },
+        {
+          "kind": "AnalysisPlan",
+          "positive_driver_implemented": false,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-preparar-revisao-executiva",
+      "entry": "Preparar revisão na mesa ou síntese opcional da rotina de revisão concluída. A entrada opcional Preparar com rotina conduz catálogo → proposta de admissão → execução admitida → progresso → resultado e pauta, no fluxo C07 existente.",
+      "required_visible_consumption": "Pauta apresenta mudanças, decisões e pendências com links; usuário ajusta ordem e preserva revisão C05 sem reconstruir o conteúdo em chat. A UI de rotina mostra AdmissionProposal, runRef, estado e resultado canônico; a pauta preservada usa essas referências e a mesma contribuição persistida.",
+      "required_negative_discriminator": "Texto de resumo sem pauta/referências consumidas por WP07 não satisfaz a skill; confirmar fevereiro não recobra janeiro. Sem admissão atual, sf_routine_run é denied. Em routine-result, prepare/run são denied para impedir loop, embora a mesma skill permita essas operações na entrada interactive autorizada.",
+      "canonical_consumers": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "implementation": [
+        "createReviewHttp review-contribution",
+        "review-read and preserved review after reload"
+      ],
+      "implemented_domain_preparation": "Real WP07 agenda, preview and preservation from issued forecast sources; real executive input; routine-result selection is separately refused. W15 adds phase observations and bounds raw forecasts to two lines while preserving the full beyond-12-row export discriminator and existing deadline.",
+      "actually_observed_stages": [
+        {
+          "stage": "SHARED_PREPARATION_TIMEOUT_WITHOUT_POST_CATALOG_PHASE",
+          "evidence_ref": "W14.EXECUTIVE_TIMEOUT",
+          "native": false
+        },
+        {
+          "stage": "INITIAL_TYPED_INPUTS_PRESERVED_REVIEW_AND_COMPLETE_ARCHIVES_OBSERVED_BEFORE_FAILED_TIMEOUT",
+          "evidence_ref": "W16.EXECUTIVE_PARTIAL_INPUT_EXPORT",
+          "native": false,
+          "testResult": "FAIL",
+          "hostReloadObserved": false
+        }
+      ],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "Native C07 catalog/admission/run/status/result cycle is not implemented by this driver.",
+        "The agenda selector is ephemeral for a new prepare/start after reopening. This alone does not imply failure to consume a durable DecisionBrief: WP07 reads it through the C08 author reader without rerunning the verifier.",
+        "The shared W14 driver timed out after the initial catalog observation, with no subsequent phase log. This does not identify the blocked await or prove any input, output or download branch.",
+        "W16 returned18 phases, prepared both typed inputs and their selector negatives, preserved506 review values, and inspected18271 DOCX/5115149 PPTX bytes before the failed420000ms timeout. No reopened review/report/source-change branch or native consumer was observed; the test remains FAIL."
+      ],
+      "output_kinds": [
+        {
+          "kind": "DecisionBrief",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-coordenar-perguntas",
+      "entry": "Resolver pendência/Preparar perguntas na mesa ou em Meu trabalho.",
+      "required_visible_consumption": "Pergunta mostra contexto, condição que pode mudar e destinatário explicitamente conhecido. A ação autorizada cria contribuição canônica; resposta única aparece no caso e em Meu trabalho.",
+      "required_negative_discriminator": "Homônimo não recebe atribuição; repetir skill com resposta válida não duplica pergunta; preparação não é envio externo.",
+      "canonical_consumers": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "implementation": [
+        "C11 question-output after host reload",
+        "C06 question-consume idempotently",
+        "real reply/read after second reload",
+        "human UI consumer with UI receipt",
+        "work-list availability probe"
+      ],
+      "implemented_domain_preparation": "Focused current input from a genuine confirmed C06 relation, explicit human pending training condition and an actual answered predecessor thread. The condition evidenceRefs remains empty; relation evidence is additional authorized support. The older omitted-category driver remains separate.",
+      "actually_observed_stages": [
+        {
+          "stage": "OWN_PERIOD_OR_DISPATCH_PRECONDITION_FAILED",
+          "evidence_ref": "W16.QUESTION_PRECONDITION_FAILURES",
+          "native": false
+        },
+        {
+          "stage": "REAL_ENDPOINTS_ISSUED_RELATION_FENCE_FAILED; HUMAN_THREAD_CONSUMED_REPLIED_PARTIALLY_REOPENED_ANSWER_READ_FAILED",
+          "evidence_ref": "W20.QUESTION_PARTIAL_CONSUMER_FAILURES",
+          "native": false,
+          "testResult": "FAIL",
+          "fullAnswerConsumerObserved": false
+        },
+        {
+          "stage": "EMPTY_SCOPE_INPUT_AND_INPUT_REOPEN_OBSERVED",
+          "evidence_ref": "W11.RECALL_QUESTION_INPUT",
+          "native": false
+        }
+      ],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-question-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "No native result has been observed. A UI prepared QuestionProposal remains human-origin evidence.",
+        "The predecessor answer is unconfirmed; this does not prove confirmed-answer reuse.",
+        "sf_work_list needs mounted work signals; sf_handoff_prepare still lacks a genuine selected action. No private or fabricated selector is injected.",
+        "Explicit human training pending is separate from the C10 omitted-category derivation; that strict test was not relaxed.",
+        "W19 corrects own UI dispatch admission consumption through the actual shared dispatcher; direct business-port authority helpers remain unchanged. Source changes are not a passing runtime witness.",
+        "W20 corrected period and UI admission preconditions. The native question branch issued current Project2026/Capex2027 endpoints then failed relation-source-fence-unavailable before QuestionPlanningInput. The human branch created one thread, retried idempotently, rejected changed preparation, received a real reply and reopened/read/retried the stored thread; sf_answer_read then returned unavailable. Its overall test remains FAIL; no completed answer consumption, confirmed answer, omitted-category proof, native output or work projection is accepted."
+      ],
+      "output_kinds": [
+        {
+          "kind": "QuestionProposal",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-explicar-forecast",
+      "entry": "Explicar diferença no Planner/BI ou preparação de revisão de forecast. Na prévia de importação, Analisar impacto do arquivo reutiliza a mesma skill e o mesmo manifesto C04.",
+      "required_visible_consumption": "Diferença de forecast abre sua composição e motivos registrados; resultado persistido referencia os valores canônicos. Finance distingue margem do orçamento e mudança contra a base. O output guarda importPreviewRef; WP06.T03 abre o manifesto persistido, suas linhas/deltas/erros e o rótulo de simulação. A análise não altera o domínio.",
+      "required_negative_discriminator": "590000→602000/596000 deve apontar12000/6000; não trocar por margem-2000/+4000 nem calcular salário restrito no texto. Arquivo não admitido ou base alterada recusa/recalcula a prévia; ausência de mudança no estado de domínio é verificada antes e depois.",
+      "canonical_consumers": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ],
+      "implementation": [
+        "handleSfAnalysis output/HTML after reload",
+        "real forecast comparison/domain projection",
+        "C04 import-reference/import-detail, changed-base refusal"
+      ],
+      "implemented_domain_preparation": "Real source issuers, persisted case and ForecastExplainInput; six materially different source variants observed in W11. W14 adds source receipts and real C04 admitted import input when an installed scanner exists.",
+      "actually_observed_stages": [
+        {
+          "stage": "REAL_INPUT_PREPARED",
+          "evidence_ref": "W9.FINANCE_INPUT",
+          "native": false
+        },
+        {
+          "stage": "REAL_INPUT_AND_DOMAIN_REOPEN_OBSERVED",
+          "evidence_ref": "W11.FORECAST_VARIANTS",
+          "native": false
+        },
+        {
+          "stage": "REAL_INPUT_AND_DOMAIN_REOPEN_OBSERVED",
+          "evidence_ref": "W14.FORECAST_VARIANTS",
+          "native": false
+        },
+        {
+          "stage": "REAL_INPUT_PREPARED",
+          "evidence_ref": "W14.FINANCE_INPUT",
+          "native": false
+        },
+        {
+          "stage": "IMPORT_CONFIGURATION_UNAVAILABLE_BEFORE_ADMISSION",
+          "evidence_ref": "W14.IMPORT_UNAVAILABLE",
+          "native": false
+        },
+        {
+          "stage": "REAL_DOMAIN_SCHEMA_NEGATIVES_AND_UNCHANGED_PLANNER_C08_REOPEN",
+          "evidence_ref": "W18.DOMAIN_VERIFIER_NEGATIVES",
+          "native": false
+        }
+      ],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "W9 and W11 observed empty model catalogs; no inference or output executed.",
+        "Required sf_kpi_explain lacks a legitimately linked DashboardMetric in the Forecast input; exact owner finding is recorded.",
+        "New source/import native witnesses are not observed execution.",
+        "W14 observed the real Finance input and six variants/reopens; C04 import returned unavailable before file admission because no installed configuration was selected. No model output ran."
+      ],
+      "output_kinds": [
+        {
+          "kind": "FinancialAnalysis",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-comparar-cenarios",
+      "entry": "Comparar cenários/Analisar alternativas na mesa ou Planner.",
+      "required_visible_consumption": "Tabela de alternativas usa ScenarioResult refs do motor; custo, diferença, condição financeira e categorias pendentes C10 são iguais na mesa e no detalhe.",
+      "required_negative_discriminator": "Training omitido mantém subtotal 210000 condicionado; treinamento 40000 muda resultado250000/-10000. Resumo sem cenário persistido não passa.",
+      "canonical_consumers": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "implementation": [
+        "handleSfAnalysis output/HTML",
+        "readCaseAnalysisProjection persisted alternatives after reload"
+      ],
+      "implemented_domain_preparation": "Real issued Planner sources, human coverage and C09 alternatives including omitted training and later explicit evidence; W14 adds exact human alternative selection for installed native draft capture.",
+      "actually_observed_stages": [
+        {
+          "stage": "OWN_SCENARIO_PRECONDITION_FAILED_BEFORE_ANALYSIS",
+          "evidence_ref": "W11.SCENARIO_FAILURE",
+          "native": false
+        }
+      ],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "W11 failed on an owned total assertion before native input/Reviewer; W15 corrects the owned hypothetical-total assertion; its runtime remains pending.",
+        "No missing-category C10 failure was observed in W11, and no synthetic ScenarioResult is substituted.",
+        "W19 corrects own UI dispatch admission consumption through the actual shared dispatcher; direct business-port authority helpers remain unchanged. Source changes are not a passing runtime witness."
+      ],
+      "output_kinds": [
+        {
+          "kind": "ScenarioComparison",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-avaliar-sensibilidade",
+      "entry": "Explorar limites na comparação da mesa/BI.",
+      "required_visible_consumption": "Série/limiar calculados são exibidos com intervalo, unidade, fonte e condição. Usuário altera parâmetro e a tabela equivalente mostra a mesma transição.",
+      "required_negative_discriminator": "Base completa gera teto 55000; treinamento 40000 gera15000. Cenário não linear amostrado não recebe limiar exato inventado.",
+      "canonical_consumers": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "implementation": [
+        "createSfPortfolioHttp decision-sensitivity-read",
+        "sensitivity-selection-read",
+        "handleSfAnalysis output/HTML after reload"
+      ],
+      "implemented_domain_preparation": "Real hypothetical Planner operations, coverage/C09 results, units, human criterion/choice, calculated sensitivity samples and selected persisted result.",
+      "actually_observed_stages": [],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "Hypothetical comparisons retain null totals and unresolved conditions; no exact threshold is fabricated."
+      ],
+      "output_kinds": [
+        {
+          "kind": "SensitivityResult",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-comparar-sourcing",
+      "entry": "Comparar propostas no pedido ou Preparar dossiê.",
+      "required_visible_consumption": "Comparação comercial abre escopo, moeda, prazo, critérios e lacunas do pedido real; reutiliza ranking/valores do WP04 e fica ligada à versão da submissão.",
+      "required_negative_discriminator": "Menor preço não é escolhido automaticamente; fonte sem acesso não aparece em exclusão, total ou comparação.",
+      "canonical_consumers": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "implementation": [
+        "WP04 real comparison and selected source reads",
+        "handleSfAnalysis output/HTML after reload"
+      ],
+      "implemented_domain_preparation": "Real request/supplier issuers, explicit period/FX and canonical sourcing comparison; W14 adds the human-selected issued contract attached to the case and actual evidence resolution.",
+      "actually_observed_stages": [
+        {
+          "stage": "PROCUREMENT_SOURCE_PRECONDITION_FAILED_BEFORE_INPUT",
+          "evidence_ref": "W14.PROCUREMENT_PRECONDITION_FAILURE",
+          "native": false
+        },
+        {
+          "stage": "REQUEST_ISSUANCE_PASSED_LATER_CONTRACT_OR_PURCHASE_GATE_FAILED",
+          "evidence_ref": "W16.PROCUREMENT_FAILURES",
+          "native": false
+        }
+      ],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "AM02 contract/evidence routes are now required under this exact Procurement skill, but hosted native execution has not occurred.",
+        "Human-selected contract does not invent a supplier association or replace offer ranking/FX.",
+        "W14 stopped before native input at the actual Procurement issuer. A later exact source comparison found an incomplete intake: issuer includes approvalStage but the published legacy integration projector omits it. Raw fixture records and period selection were valid; the exact owner delegation was consumed in W15; its changed runtime has not yet completed hosted observation.",
+        "W19 corrects own UI dispatch admission consumption through the actual shared dispatcher; direct business-port authority helpers remain unchanged. Source changes are not a passing runtime witness."
+      ],
+      "output_kinds": [
+        {
+          "kind": "CommercialComparison",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-revisar-condicoes-contratuais",
+      "entry": "Revisar condições no contrato, proposta ou dossiê de sourcing.",
+      "required_visible_consumption": "Cláusula relevante aparece com trecho/documento/versão e lacuna de prazo/custo; usuário pode abrir a fonte, confirmar candidato ou criar pergunta. Custos não são inseridos sem fonte/ação previstas.",
+      "required_negative_discriminator": "Não produzir parecer jurídico conclusivo, inventar taxa/penalidade nem aprovar fornecedor; evidência candidata não vira confirmed automaticamente.",
+      "canonical_consumers": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ],
+      "implementation": [
+        "handleSfAnalysis output/HTML after reload"
+      ],
+      "implemented_domain_preparation": "Real Dashboard contract issuer/read, actual cost coverage and registered document schema; mounted input refusal is observed separately if returned.",
+      "actually_observed_stages": [
+        {
+          "stage": "PROCUREMENT_SOURCE_PRECONDITION_FAILED_BEFORE_INPUT",
+          "evidence_ref": "W14.PROCUREMENT_PRECONDITION_FAILURE",
+          "native": false
+        },
+        {
+          "stage": "REQUEST_ISSUANCE_PASSED_LATER_CONTRACT_OR_PURCHASE_GATE_FAILED",
+          "evidence_ref": "W16.PROCUREMENT_FAILURES",
+          "native": false
+        }
+      ],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "Published contract producer/verifier require a different surface from the actual contract issuer; owner patch is proposed, not applied.",
+        "EvidenceCandidate and populated document/schema branch remain separate.",
+        "The document extraction/search named routes are not required by this contract native branch; source/evidence receipt requirements were added in W14.",
+        "W14 stopped before native input at the actual Procurement issuer. A later exact source comparison found an incomplete intake: issuer includes approvalStage but the published legacy integration projector omits it. Raw fixture records and period selection were valid; the exact owner delegation was consumed in W15; its changed runtime has not yet completed hosted observation."
+      ],
+      "output_kinds": [
+        {
+          "kind": "CommercialGap",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        },
+        {
+          "kind": "EvidenceCandidate",
+          "positive_driver_implemented": false,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-preparar-compra",
+      "entry": "Preparar próximos passos de compra a partir da escolha/dossiê.",
+      "required_visible_consumption": "Dossiê referencia a escolha e mostra diff/destino/versão/autoridade requerida. Ação humana segue o comando de domínio; receipt aparece no caso por C12.",
+      "required_negative_discriminator": "Preparação não aprova PR/PO, não envia ao fornecedor e retry não cria segundo efeito; dossiê apenas em chat não passa.",
+      "canonical_consumers": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ],
+      "implementation": [
+        "readCaseAnalysisProjection chosen case after reload",
+        "handleSfAnalysis DossierDraft HTML if native execution becomes possible"
+      ],
+      "implemented_domain_preparation": "Real complete/conditioned choice, issued units, human criterion, request projection and ranking; actual input target gap is recorded without injecting authority.",
+      "actually_observed_stages": [
+        {
+          "stage": "PROCUREMENT_SOURCE_PRECONDITION_FAILED_BEFORE_INPUT",
+          "evidence_ref": "W14.PROCUREMENT_PRECONDITION_FAILURE",
+          "native": false
+        },
+        {
+          "stage": "REQUEST_ISSUANCE_PASSED_LATER_CONTRACT_OR_PURCHASE_GATE_FAILED",
+          "evidence_ref": "W16.PROCUREMENT_FAILURES",
+          "native": false
+        },
+        {
+          "stage": "ACTUAL_PENDING_COVERAGE_DERIVATION_LOST_AFTER_PROMOTION",
+          "evidence_ref": "W16.DERIVED_TRAINING_FAILURE",
+          "native": false
+        }
+      ],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "Ordinary request exposes no allowed target in the inspected composition; true commercial comparison binding is explicitly unavailable.",
+        "PreparedChangeSet, change_prepare and receipt_get are not covered by the DossierDraft branch.",
+        "W14 stopped before native input at the actual Procurement issuer. A later exact source comparison found an incomplete intake: issuer includes approvalStage but the published legacy integration projector omits it. Raw fixture records and period selection were valid; the exact owner delegation was consumed in W15; its changed runtime has not yet completed hosted observation.",
+        "Pending training origin loss is now observed after real promotion; its strict discriminator remains unchanged.",
+        "The complete units failure occurred at about300seconds after catalog discovery. Expired public Procurement selection is strongly supported by the source trace but not the exclusive cause established by the aggregated error. W19 publishes public-selection renewal before each human action; runtime remains unobserved."
+      ],
+      "output_kinds": [
+        {
+          "kind": "PreparedChangeSet",
+          "positive_driver_implemented": false,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        },
+        {
+          "kind": "DossierDraft",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-revisar-dependencias",
+      "entry": "Revisar dependências em caso/projeto ou campanha de portfólio.",
+      "required_visible_consumption": "Mesa mostra compromisso, dependência confirmada e conflito; março presumido versus marco maio vira questão vinculada, consumida pelo responsável correto.",
+      "required_negative_discriminator": "FTE não prova capacidade livre; coincidência de nome não cria dependência; Finance e Portfólio devem entregar efeitos diferentes no mesmo caso.",
+      "canonical_consumers": [
+        "WP13.T01",
+        "WP01.T05",
+        "WP08.T06"
+      ],
+      "implementation": [
+        "sf_relation_read confirmed relation after reload",
+        "real dependency input reprepare",
+        "handleSfAnalysis outputs/HTML"
+      ],
+      "implemented_domain_preparation": "Actual identity-based C06 relation, real human choice, issued Dashboard milestone; homonym/unknown choice/capacity injection negatives.",
+      "actually_observed_stages": [],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "Human March/FTE declarations stay unverified. Expected conflict state/date/generated ID is not supplied in the objective.",
+        "No official date or capacity changes are applied.",
+        "W19 corrects own UI dispatch admission consumption through the actual shared dispatcher; direct business-port authority helpers remain unchanged. Source changes are not a passing runtime witness."
+      ],
+      "output_kinds": [
+        {
+          "kind": "DeliveryAssessment",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        },
+        {
+          "kind": "DependencyConflict",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-compor-portfolio",
+      "entry": "Comparar portfólio preservando compromissos selecionados.",
+      "required_visible_consumption": "Comparador persistente mostra combinações avaliadas, compromissos preservados, motivos de inviável/incompleto e limite de exploração; usuário seleciona opção para preparar via WP11.",
+      "required_negative_discriminator": "Não relaxar restrição, duplicar contribuição, declarar ótimo global de amostra limitada ou promover subtotal a elegibilidade completa.",
+      "canonical_consumers": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP13.T04"
+      ],
+      "implementation": [
+        "decision-portfolio-read after reload",
+        "actual alternative-selection-set",
+        "handleSfAnalysis PortfolioComparison and AlternativeDraft"
+      ],
+      "implemented_domain_preparation": "Real human choices and candidate refs, bounded domain combinations, duplicate-target refusal and exact human alternative selection.",
+      "actually_observed_stages": [],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "Selection preparation is not human acceptance/application of the later native AlternativeDraft.",
+        "No global optimum or complete total is asserted for hypothetical operations."
+      ],
+      "output_kinds": [
+        {
+          "kind": "PortfolioComparison",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        },
+        {
+          "kind": "AlternativeDraft",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": false,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-reavaliar-compromissos",
+      "entry": "Reavaliar mudança material em Hoje/mesa ou resultado de rotina autorizada.",
+      "required_visible_consumption": "Sinal mostra razão original e consequência atual por compromisso; usuário pode comparar, perguntar ou manter escolha com nova justificativa. A proposta é persistida por referência.",
+      "required_negative_discriminator": "Training40000/cotação alterada devem afetar a condição pertinente; simples descrição alterada não gera alerta e skill não muda data oficial.",
+      "canonical_consumers": [
+        "WP01.T05",
+        "WP08.T04",
+        "WP09.T07"
+      ],
+      "implementation": [
+        "createSfMemoryHttp memory-conditions and memory-materiality after reload",
+        "handleSfAnalysis output/HTML"
+      ],
+      "implemented_domain_preparation": "Actual chosen case, registered source-bound material condition, public registry/materiality read and current input; real routine catalog availability observed separately.",
+      "actually_observed_stages": [],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "sf_watch_prepare is NOT_EXECUTED: no human recipe or admission selected; static native-watch-admission-port-unavailable finding is not labeled an executed failure.",
+        "Narrow native analysis is not full watch/Relay acceptance.",
+        "W19 corrects own UI dispatch admission consumption through the actual shared dispatcher; direct business-port authority helpers remain unchanged. Source changes are not a passing runtime witness."
+      ],
+      "output_kinds": [
+        {
+          "kind": "ReconsiderationProposal",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-contestar-decisao",
+      "entry": "Contestar decisão, revisão material ou convocação de revisão pela política explícita do trabalho.",
+      "required_visible_consumption": "Execução própria do Revisor entrega objeções com fontes/condições; mesa lista o que pode invalidar a escolha e permite responder/corrigir sem copiar conversa. Registro liga critiqueRun ao authorRun sem reutilizar suas instruções.",
+      "required_negative_discriminator": "Mesmo run/perfil do autor renomeado como Revisor falha. Parecer não aprova compra e não substitui o engine numérico.",
+      "canonical_consumers": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP08.T06"
+      ],
+      "implementation": [
+        "handleSfAnalysis critique output/HTML after reload",
+        "readCaseAnalysisProjection preserved alternatives"
+      ],
+      "implemented_domain_preparation": "Real author ScenarioComparison is required before independent review input/run; missing author remains explicit when no model exists.",
+      "actually_observed_stages": [
+        {
+          "stage": "OWN_SCENARIO_PRECONDITION_FAILED_BEFORE_ANALYSIS",
+          "evidence_ref": "W11.SCENARIO_FAILURE",
+          "native": false
+        }
+      ],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "Standalone UnresolvedCondition lacks installed host acceptance in the reviewed verifier.",
+        "W11 failed on the owned author-scenario precondition before any Reviewer input or model execution.",
+        "No actual human correction/continuation is inferred from a critique read.",
+        "W19 corrects own UI dispatch admission consumption through the actual shared dispatcher; direct business-port authority helpers remain unchanged. Source changes are not a passing runtime witness."
+      ],
+      "output_kinds": [
+        {
+          "kind": "CritiqueReport",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        },
+        {
+          "kind": "UnresolvedCondition",
+          "positive_driver_implemented": false,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-revisar-evidencias",
+      "entry": "Revisar evidências/Verificar afirmação na crítica ou detalhe de fonte.",
+      "required_visible_consumption": "Cada claim fica sustentado/contradito/inconclusivo com motivo e trecho/recibo. Usuário abre evidência, corrige interpretação ou resolve candidato no fluxo existente; leitura do Revisor não confirma documento.",
+      "required_negative_discriminator": "Citação com ID plausível mas inexistente não sustenta claim; mesma conclusão após contradição removida falha; revisão própria não ganha permissões.",
+      "canonical_consumers": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP11.T02"
+      ],
+      "implementation": [
+        "handleSfAnalysis ClaimIssue HTML if a real claim/author becomes available"
+      ],
+      "implemented_domain_preparation": "Select only claims actually present in current case assumptions; empty claims submit to the real producer and remain needs-input. A native branch requires a real independent extraction author.",
+      "actually_observed_stages": [
+        {
+          "stage": "PROCUREMENT_SOURCE_PRECONDITION_FAILED_BEFORE_INPUT",
+          "evidence_ref": "W14.PROCUREMENT_PRECONDITION_FAILURE",
+          "native": false
+        },
+        {
+          "stage": "REQUEST_ISSUANCE_PASSED_LATER_CONTRACT_OR_PURCHASE_GATE_FAILED",
+          "evidence_ref": "W16.PROCUREMENT_FAILURES",
+          "native": false
+        }
+      ],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "The inspected real case/acceptance path does not create a claim selector; no C08 claim is seeded.",
+        "W14 requires all five native operations, but the actual claim prerequisite and positive model execution remain unobserved.",
+        "W14 stopped before native input at the actual Procurement issuer. A later exact source comparison found an incomplete intake: issuer includes approvalStage but the published legacy integration projector omits it. Raw fixture records and period selection were valid; the exact owner delegation was consumed in W15; its changed runtime has not yet completed hosted observation."
+      ],
+      "output_kinds": [
+        {
+          "kind": "ClaimIssue",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-extrair-evidencias",
+      "entry": "Extrair evidências do anexo autorizado na mesa/pedido.",
+      "required_visible_consumption": "Campos candidatos aparecem com valor/unidade e página/trecho/parágrafo; confirmar no produto promove a premissa e reutiliza a mesma referência no cenário/dossiê.",
+      "required_negative_discriminator": "Instruções do fornecedor são dados; extracted não vira confirmed por ser citado no dossiê; nenhum parser duplicado em WP09.",
+      "canonical_consumers": [
+        "WP01.T05",
+        "WP11.T02",
+        "WP09.T04"
+      ],
+      "implementation": [
+        "createSfDocumentHttp document-schemas/candidate after reload",
+        "document-open actual source",
+        "document-confirm and document-scenario-targets/preview",
+        "confirmed document source after a second reload",
+        "handleSfAnalysis DocumentEvidence after a real native run"
+      ],
+      "implemented_domain_preparation": "Private real persisted attachment bytes, actual document admission/parser/schema registry and mounted extraction input; wrong-file/schema refusals. W14 adds human confirmation and actual document-backed Planner preview.",
+      "actually_observed_stages": [
+        {
+          "stage": "PROCUREMENT_SOURCE_PRECONDITION_FAILED_BEFORE_INPUT",
+          "evidence_ref": "W14.PROCUREMENT_PRECONDITION_FAILURE",
+          "native": false
+        },
+        {
+          "stage": "REQUEST_ISSUANCE_PASSED_LATER_CONTRACT_OR_PURCHASE_GATE_FAILED",
+          "evidence_ref": "W16.PROCUREMENT_FAILURES",
+          "native": false
+        }
+      ],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "No upload/scanner qualification is claimed.",
+        "When no model exists the consumer uses the real HTTP parser and records origin=ui; that path is never labeled native execution.",
+        "The newly implemented human consumer has not run in hosted CI.",
+        "W14 stopped before native input at the actual Procurement issuer. A later exact source comparison found an incomplete intake: issuer includes approvalStage but the published legacy integration projector omits it. Raw fixture records and period selection were valid; the exact owner delegation was consumed in W15; its changed runtime has not yet completed hosted observation.",
+        "W15 removed knowledge_search from this extractor scope to match its actual allowlist and canonical required_operations; independent review confirmed no required operation was removed."
+      ],
+      "output_kinds": [
+        {
+          "kind": "DocumentEvidence",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-produzir-bi-contextual",
+      "entry": "Ver composição, linha do tempo ou sensibilidade a partir da pergunta do caso.",
+      "required_visible_consumption": "Proposta escolhe uma visualização do catálogo suportado, tabela equivalente e recorte autorizado; o componente real WP05 a renderiza com drilldown e cobertura C10. A leitura de desempenho vem de sf_dashboard_read; gráfico e tabela preservam as mesmas fontes, filtros e versão.",
+      "required_negative_discriminator": "Gráfico bonito sem tabela/produtor/referência falha; não criar regra de cálculo ou barra zero para categoria omitida.",
+      "canonical_consumers": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "implementation": [
+        "WP05 bi-data/bi-source before and after reload",
+        "handleSfAnalysis optional ContextualBIProposal"
+      ],
+      "implemented_domain_preparation": "Real Dashboard milestone projection, canonical BI08 human selection and C08 chart/table artifacts; absent date/source deletion negatives.",
+      "actually_observed_stages": [
+        {
+          "stage": "REAL_DOMAIN_CONSUMER_AND_C08_ARTIFACT_REOPEN_OBSERVED",
+          "evidence_ref": "W14.BI_DOMAIN_CONSUMER",
+          "native": false
+        },
+        {
+          "stage": "MAESTRO_REAL_BI_INPUT_C08_ARTIFACT_WP05_REOPEN_AND_SOURCE_DELETION_PASS",
+          "evidence_ref": "W16.BI_MAESTRO_DOMAIN_CONSUMER",
+          "native": false,
+          "profile": "sf_maestro"
+        }
+      ],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "Private canonicalProjectionRefs/tableRef are absent from model-visible input/tools in the inspected composition; expected IDs are never inserted into the objective.",
+        "sf_kpi_explain is not required by the selected BI08 milestone branch.",
+        "W14 corrects the exact named Finance AM02 route; this is implementation, not native execution.",
+        "W14 proved the real WP05 UI/artifact consumer and source-deletion refusal, with an empty model catalog. No native ContextualBIProposal was created or consumed.",
+        "W15 adds the exact named Maestro AM02 route. The completed W16 request selected Maestro and executive only, excluding the already observed equivalent Finance BI branch; its domain-only pass is separately identified below.",
+        "The distinct W16 Maestro branch passed with real input, durable artifacts, UI consumer/reload and source-deletion refusal. Finance was filtered out. No native operation or ContextualBIProposal was observed, so this does not close the named AM02 model route."
+      ],
+      "output_kinds": [
+        {
+          "kind": "ContextualBIProposal",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-produzir-material-reuniao",
+      "entry": "Preparar material/relatório da revisão selecionada.",
+      "required_visible_consumption": "Seleção/seções/pauta propostas tornam-se revisão e DOCX/PPTX gerados pelo WP07, com cobertura integral e links. Resultado persistido abre o arquivo real e a revisão correspondente.",
+      "required_negative_discriminator": "Texto no chat não substitui material real; arquivo truncado em12 linhas não passa; narrativa não inventa decisão nem reescreve a reunião.",
+      "canonical_consumers": [
+        "WP07.T02",
+        "WP07.T04",
+        "WP01.T05"
+      ],
+      "implementation": [
+        "createReviewHttp review-contribution",
+        "review-download before/after reload and source change"
+      ],
+      "implemented_domain_preparation": "Actual preserved WP07 forecast review and complete real DOCX/PPTX producer/download, explicit empty C09/routine-result selections. W15 adds phase observations and bounds raw forecasts to two lines while preserving the full beyond-12-row export discriminator and existing deadline.",
+      "actually_observed_stages": [
+        {
+          "stage": "SHARED_PREPARATION_TIMEOUT_WITHOUT_POST_CATALOG_PHASE",
+          "evidence_ref": "W14.EXECUTIVE_TIMEOUT",
+          "native": false
+        },
+        {
+          "stage": "INITIAL_TYPED_INPUTS_PRESERVED_REVIEW_AND_COMPLETE_ARCHIVES_OBSERVED_BEFORE_FAILED_TIMEOUT",
+          "evidence_ref": "W16.EXECUTIVE_PARTIAL_INPUT_EXPORT",
+          "native": false,
+          "testResult": "FAIL",
+          "hostReloadObserved": false
+        }
+      ],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "sf_review_prepare is exercised as domain preparation but not required in this skill's native execution.",
+        "No C07 factual result or C09 decision-result link is inferred from forecast-only material.",
+        "The shared W14 driver timed out after the initial catalog observation, with no subsequent phase log. This does not identify the blocked await or prove any input, output or download branch.",
+        "W16 returned18 phases, prepared both typed inputs and their selector negatives, preserved506 review values, and inspected18271 DOCX/5115149 PPTX bytes before the failed420000ms timeout. No reopened review/report/source-change branch or native consumer was observed; the test remains FAIL."
+      ],
+      "output_kinds": [
+        {
+          "kind": "MeetingMaterialProposal",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    },
+    {
+      "skill_id": "sf-consultar-memoria-decisoria",
+      "entry": "Consultar precedentes na mesa, detalhe de condição ou preparação de nova decisão.",
+      "required_visible_consumption": "Mesa mostra precedente, razão de pertinência, fontes originais e diferenças atuais; ação abre caso anterior autorizado e pode referenciar premissa nova sem copiá-la como fato atual.",
+      "required_negative_discriminator": "Somente ler ledger SF sem consumo instrumentado createMemoryRead/createMemoryEmit/DurableMemory não prova Atlas; mesmo perfil de dois atores não permite compartilhamento implícito.",
+      "canonical_consumers": [
+        "WP01.T05",
+        "WP11.T01",
+        "WP09.T07"
+      ],
+      "implementation": [
+        "createSfAnalysisHttp prepare after reload",
+        "handleSfAnalysis empty related-decisions result if native execution exists"
+      ],
+      "implemented_domain_preparation": "Actual producer with explicitly empty current recall scope, strict query/source selection negatives and reprepare after reload.",
+      "actually_observed_stages": [
+        {
+          "stage": "EMPTY_SCOPE_INPUT_AND_INPUT_REOPEN_OBSERVED",
+          "evidence_ref": "W11.RECALL_QUESTION_INPUT",
+          "native": false
+        }
+      ],
+      "native_execution_pending_files": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts"
+      ],
+      "native_output_executed": false,
+      "native_output_consumed_after_reload": false,
+      "limits": [
+        "Empty recall is not authorized historical precedent/Atlas consumption.",
+        "MatchExplanation and an actual precedent opening remain unproved; historical verifier has a separately pinned rejection.",
+        "W19 corrects own UI dispatch admission consumption through the actual shared dispatcher; direct business-port authority helpers remain unchanged. Source changes are not a passing runtime witness.",
+        "At both the consumed business-services97cde4d and published WP10 W20 business-services89881259, createSfCaseRecall is mounted without candidateAccess. Native reads of a selected prior case outside the current binding therefore lack the required host-owned grant; this is a static mounting gap, not an observed leak or precedent mission."
+      ],
+      "output_kinds": [
+        {
+          "kind": "CaseRecall",
+          "positive_driver_implemented": true,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        },
+        {
+          "kind": "MatchExplanation",
+          "positive_driver_implemented": false,
+          "immutable_primary_output": true,
+          "published_output": true,
+          "executed_output_ref": null,
+          "observed_consumer_action": null
+        }
+      ]
+    }
+  ]
+}

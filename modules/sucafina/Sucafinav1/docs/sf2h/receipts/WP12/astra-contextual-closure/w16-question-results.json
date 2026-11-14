@@ -1,0 +1,253 @@
+{
+  "schema": "sf-wp12-product-run-result-v1",
+  "phase": "resume-11-questions",
+  "product": {
+    "sha": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+    "tree": "f875b3a78ee8123c959bad5c7c5d4c9fb4f978df"
+  },
+  "run": {
+    "id": 43601851442,
+    "jobId": 132468089391,
+    "conclusion": "failure",
+    "snapshot": "1878f1a513c99d95d4640faa042fa10ead947884",
+    "snapshotTree": "5d973d55473ed6441d4c8e559ce7c18b4bcc8416",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43601851442",
+    "branch": "ci-run-linux-astra-wp12-2ea0673c-7e0c0054-1",
+    "cleanup": {
+      "jobId": 132468595591,
+      "conclusion": "success"
+    }
+  },
+  "request": {
+    "sha256": "7e0c0054fba8bac1a446580a843cfa74bbe739498f84a5e0dbafd16a88932c57",
+    "blob": "d6898f440d2c85d9fa1e7e5c9e1993a90722f930",
+    "body": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+        "./Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+        "./Sucafinav1/test/product/wp12/native-question-consumer.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    }
+  },
+  "summary": {
+    "pass": 1,
+    "fail": 3,
+    "tests": 4,
+    "files": 3,
+    "assertions": 52,
+    "elapsedSeconds": 23.6,
+    "completedBunSummary": true
+  },
+  "omni": {
+    "verdict": "PASS",
+    "scope": "focused: no declaring test ran",
+    "declaringTests": 0,
+    "spawns": 82,
+    "delegated": 0,
+    "nonce": "9b576c84cb65c228ce0bc777eb7242c1"
+  },
+  "tests": [
+    {
+      "status": "fail",
+      "name": "Maestro frames two real case selections and its native contribution reopens with the selected evidence",
+      "elapsedMs": 5677.51
+    },
+    {
+      "status": "pass",
+      "name": "Maestro frames a real admitted import selection and reopens its C04 source without applying it",
+      "elapsedMs": 0.44
+    },
+    {
+      "status": "fail",
+      "name": "QuestionPlanningInput carries real C06 support and its native proposal is consumed once after reload when a model exists",
+      "elapsedMs": 1963.38
+    },
+    {
+      "status": "fail",
+      "name": "a focused human pending question is consumed once and its unconfirmed answer reopens through the canonical thread",
+      "elapsedMs": 14761.21
+    }
+  ],
+  "markers": [
+    {
+      "kind": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "intent",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "1878f1a513c99d95d4640faa042fa10ead947884",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_IMPORT_AVAILABILITY",
+      "value": {
+        "scope": "existing-installation-scanner-configuration",
+        "githubSha": "1878f1a513c99d95d4640faa042fa10ead947884",
+        "skillId": "sf-enquadrar-decisao",
+        "status": "unavailable",
+        "reason": "installed-configuration-not-selected",
+        "fileAdmitted": false,
+        "inputPrepared": false,
+        "scanExecuted": false,
+        "inferenceExecuted": false,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "question-coordination",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "1878f1a513c99d95d4640faa042fa10ead947884",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "kind": "SF_WP12_FOCUSED_QUESTION_PHASE",
+      "value": {
+        "stage": "source-start",
+        "at": "2026-11-14T13:53:11.405Z"
+      }
+    },
+    {
+      "kind": "SF_WP12_FOCUSED_QUESTION_PHASE",
+      "value": {
+        "stage": "source-ready",
+        "at": "2026-11-14T13:53:11.448Z"
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "question-human-consumer",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "1878f1a513c99d95d4640faa042fa10ead947884",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "kind": "SF_WP12_FOCUSED_QUESTION_PHASE",
+      "value": {
+        "stage": "source-start",
+        "at": "2026-11-14T13:53:13.564Z"
+      }
+    },
+    {
+      "kind": "SF_WP12_FOCUSED_QUESTION_PHASE",
+      "value": {
+        "stage": "source-ready",
+        "at": "2026-11-14T13:53:13.625Z"
+      }
+    },
+    {
+      "kind": "SF_WP12_FOCUSED_QUESTION_PHASE",
+      "value": {
+        "stage": "support-ready",
+        "at": "2026-11-14T13:53:13.625Z"
+      }
+    },
+    {
+      "kind": "SF_WP12_FOCUSED_QUESTION_PHASE",
+      "value": {
+        "stage": "coverage-ready",
+        "at": "2026-11-14T13:53:15.967Z"
+      }
+    },
+    {
+      "kind": "SF_WP12_FOCUSED_QUESTION_PHASE",
+      "value": {
+        "stage": "promotion-ready",
+        "at": "2026-11-14T13:53:24.870Z"
+      }
+    },
+    {
+      "kind": "SF_WP12_FOCUSED_QUESTION_PREPARATION",
+      "value": {
+        "scope": "one-real-alternative-with-explicit-human-pending-coverage",
+        "githubSha": "1878f1a513c99d95d4640faa042fa10ead947884",
+        "caseRef": {
+          "id": "31a52723-b7df-4e56-8935-dcbec96291d5",
+          "incarnation": "ea0db918-dd5f-4ad7-adb9-4e3af264b93e",
+          "version": 2
+        },
+        "sourceRef": "planner-version:wp12-question-source:ce3102c2-d779-49fa-8b67-049a3d9af9d0:1",
+        "alternativeId": "7cb2745a-47f0-4eb3-8694-6f1b4b1717d0",
+        "resultRef": "decision-result:825585328ff08cb8bafaef034080361d55d7bc9ac91024768189a1a1896405e4",
+        "coverageRef": "baseline-coverage:1e3dfcaa4789043a3f415493c10e6eada9a82958d1e31535b95c21e52e71ee00",
+        "pendingReason": "human-awaiting-training-confirmation",
+        "questionRef": null,
+        "plannerSourceCount": 1,
+        "alternativeCount": 1,
+        "derivedMissingCategoryIds": [],
+        "conditionOrigin": "human-classification",
+        "derivedOmissionProof": false,
+        "total": null,
+        "inferenceExecuted": false,
+        "gnativeAccepted": false
+      }
+    }
+  ],
+  "log": {
+    "bytes": 80937,
+    "sha256": "35c5491e1ca49267ee5d7fa70f3098ac01e2b532a748e63408125dd4985f7518"
+  },
+  "artifacts": [],
+  "observations": [
+    {
+      "scope": "Intent",
+      "failure": "sf_freshness_check authority-unavailable",
+      "file": "test/product/wp12/native-execution-intent.test.ts",
+      "line": 69,
+      "diagnosis": "Own helper pre-consumed UI admission before shared dispatch; dispatcher correctly refused second consumption. First typed source selection reached this point, second loop was not reached."
+    },
+    {
+      "scope": "import variant",
+      "testResult": "pass",
+      "meaning": "Configuration availability observation only; installed-configuration-not-selected before scan/admission/input/inference."
+    },
+    {
+      "scope": "native question preparation",
+      "failure": "The real relation endpoints were not issued",
+      "file": "test/product/wp12/native-execution-questions.test.ts",
+      "line": 235,
+      "diagnosis": "Own current Project snapshot selected with a future2027 period during2026; CAPEX has a separate legitimate explicit2027 year. No native QuestionPlanningInput was reached."
+    },
+    {
+      "scope": "human question consumer",
+      "failure": "UI question preparation denied",
+      "file": "test/product/wp12/native-question-consumer.test.ts",
+      "line": 49,
+      "diagnosis": "Same double UI-admission consumption. Real focused C10 case and explicit human pending coverage were prepared; no thread was consumed or native output produced."
+    }
+  ],
+  "native": {
+    "inferenceExecuted": false,
+    "outputsObserved": 0,
+    "nativeConsumersObserved": 0
+  },
+  "localProductTests": false,
+  "localTypecheck": false,
+  "fullWp12Acceptance": false
+}
