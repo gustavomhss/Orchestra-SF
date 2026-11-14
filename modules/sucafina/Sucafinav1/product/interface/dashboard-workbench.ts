@@ -6,7 +6,7 @@ export function dashboardWorkbenchWidget(page: string) {
     <p>Monte a pauta desta página, preserve registros e revise escolhas existentes antes de aplicar alterações. As opções mostram até 100 registros e 50 casos autorizados.</p>
     <div class="form-grid"><label>Início do período<input type="date" data-dashboard-from></label><label>Fim do período<input type="date" data-dashboard-to></label></div>
     <button type="button" data-dashboard-load>Carregar opções</button><p role="status" aria-live="polite" data-dashboard-status></p>
-    <div data-dashboard-recovery hidden><p>O resultado da tentativa anterior ainda não foi confirmado. Os valores enviados estão preservados; repita a mesma requisição para recuperar seu resultado antes de iniciar outra alteração.</p><button type="button" data-dashboard-retry disabled>Repetir mesma tentativa</button></div><form data-dashboard-pending hidden></form>
+    <div data-dashboard-recovery hidden><p data-dashboard-recovery-message></p><button type="button" data-dashboard-retry disabled>Repetir mesma tentativa</button></div><form data-dashboard-pending hidden></form>
     <fieldset><legend>Pauta da reunião</legend><p data-dashboard-agenda-count>Carregue as opções desta página.</p><button type="button" data-dashboard-agenda disabled>Pré-visualizar pauta</button> <button type="button" data-dashboard-preserve disabled>Preservar reunião</button><div data-dashboard-agenda-view></div></fieldset>
     <fieldset><legend>Retratos e histórico</legend><label>Registro para preservar<select data-dashboard-record><option value="">Selecione um registro</option></select></label><button type="button" data-dashboard-capture disabled>Preservar retrato</button><label>Reunião ou retrato preservado<select data-dashboard-history><option value="">Selecione um item do histórico</option></select></label><button type="button" data-dashboard-reopen disabled>Abrir histórico</button><div data-dashboard-history-view></div></fieldset>
     <form data-dashboard-draft><fieldset><legend>Rascunho de Hot Topic</legend><p>O rascunho precisa integrar uma escolha no caso antes de ser preparado. O impacto financeiro não é calculado aqui.</p>
@@ -40,7 +40,7 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     return value && value.schema === 1 && value.path === location.pathname && value.page === root.dataset.page ? value : {};
   };
   // Browser state contains only selectors and application correlation, never draft fields or evidence.
-  // Every restoration first matches the current authorized discovery; the host admits every replay again.
+  // Draft restoration matches fresh authorized discovery; the host admits every exact apply replay again.
   const remember = (change) => {
     try {
       const previous = history.state && typeof history.state === 'object' ? history.state : {};
@@ -48,8 +48,22 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     } catch { /* A browser that cannot retain navigation state still keeps the active attempt in memory. */ }
   };
   const rememberDraft = () => remember({ draft: draftIdentity && draftBinding ? { id: draftIdentity.id, incarnation: draftIdentity.incarnation, caseId: draftBinding.caseRef.id, caseIncarnation: draftBinding.caseRef.incarnation } : undefined });
-  let applicationToRestore = storedView().application;
+  let applicationToRestore = storedView().application, draftOutcome = storedView().draftAttempt;
+  if (draftOutcome) {
+    const ref = draftOutcome.caseRef;
+    if (Object.keys(draftOutcome).sort().join(',') !== 'caseRef,key' || typeof draftOutcome.key !== 'string' || !/^[a-f0-9-]{36}$/.test(draftOutcome.key) ||
+      !ref || Object.keys(ref).sort().join(',') !== 'id,incarnation,version' || typeof ref.id !== 'string' || !ref.id.trim() || ref.id.length > 16384 ||
+      typeof ref.incarnation !== 'string' || !ref.incarnation.trim() || ref.incarnation.length > 16384 || !Number.isSafeInteger(ref.version) || ref.version < 0) {
+      draftOutcome = undefined; remember({ draftAttempt: undefined });
+    }
+  }
   const rememberApplication = () => remember({ application: mutation && mutation.mode === 'dashboard-hot-topic-apply' ? { body: mutation.body, key: mutation.key } : undefined });
+  // A first save has no draftRef yet. Keep only the opaque intent, never the private
+  // request body; discovery cannot identify its outcome by label, position or target.
+  const rememberDraftAttempt = () => {
+    const sent = mutation && mutation.mode === 'dashboard-hot-topic-draft' ? JSON.parse(mutation.body) : undefined;
+    remember({ draftAttempt: sent && !sent.draftRef ? { caseRef: sent.caseRef, key: mutation.key } : undefined });
+  };
   const scalar = (value) => value === null || value === undefined ? 'Não informado' : typeof value === 'boolean' ? value ? 'Sim' : 'Não' : String(value);
   const choice = (name, list) => find(name).value === '' ? undefined : list[Number(find(name).value)];
   const fieldLabel = (id) => {
@@ -70,7 +84,7 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
   const resetReview = () => { review = undefined; find('confirm').checked = false; find('review-view').replaceChildren(); };
   const retainView = () => {
     if (revoked) return;
-    if (panel.open || busy || mutation || form.dataset.dirty) root.setAttribute('data-sf-retain-view', 'true');
+    if (panel.open || busy || mutation || draftOutcome || applicationToRestore || form.dataset.dirty) root.setAttribute('data-sf-retain-view', 'true');
     else if (root.hasAttribute('data-sf-retain-view')) {
       root.removeAttribute('data-sf-retain-view');
       if (typeof window.sucafinaRefresh === 'function') void window.sucafinaRefresh();
@@ -78,13 +92,15 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
   };
   const enable = () => {
     if (revoked) return;
-    const locked = busy || !!mutation;
+    const locked = busy || !!mutation || !!draftOutcome || !!applicationToRestore;
     root.querySelectorAll('input, select, textarea, button').forEach((control) => { control.disabled = locked; });
     const permissions = data && data.permissions || {}, decisions = data && data.decisions || {}, writes = decisions.permissions || {};
     const selectedChange = choice('change', decisions.changes || []);
     find('load').disabled = busy;
-    find('recovery').hidden = !mutation || !mutation.uncertain;
-    find('retry').disabled = busy || !mutation || !mutation.uncertain;
+    find('recovery').hidden = !draftOutcome && (!mutation || !mutation.uncertain);
+    find('recovery-message').textContent = draftOutcome ? 'O resultado do primeiro salvamento continua pendente. O serviço ainda não permite recuperar esta tentativa após recarregar a página. Nenhum novo salvamento será enviado; o comprovante precisa ser recuperado com seu acesso atual antes de continuar.' : mutation && mutation.ambiguous ? 'A tentativa anterior continua pendente. As opções recebidas são ambíguas. Atualize as opções antes de tentar recuperar o comprovante; nenhuma nova alteração foi enviada.' : 'O resultado da tentativa anterior ainda não foi confirmado. Repita a mesma requisição para consultar seu resultado com seu acesso atual antes de iniciar outra alteração.';
+    find('retry').hidden = !!draftOutcome;
+    find('retry').disabled = busy || !mutation || !mutation.uncertain || !!mutation.ambiguous;
     find('agenda').disabled = locked || !data || !data.agenda;
     find('preserve').disabled = locked || !permissions.preserve || !agenda;
     find('capture').disabled = locked || !permissions.capture || !choice('record', data && data.records || []);
@@ -184,7 +200,7 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     if (selected) find('draft-choice').add(new Option('Novo rascunho', 'new'), 1);
     find('draft-source').value = ''; selectDraft();
   };
-  const refresh = async () => {
+  const refresh = async (recheckingDenied = false) => {
     const from = find('from').value, to = find('to').value;
     if ((from && !to) || (!from && to) || (from && to && from > to)) throw new Error('Informe o início e o fim do período em ordem cronológica.');
     const next = await request('dashboard-workbench', { page: root.dataset.page, ...(from && to ? { period: { start: from, end: to } } : {}) });
@@ -196,7 +212,11 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     const listedDraft = retainingDraft && draftIdentity && next.decisions.drafts.some((value) => value.id === draftIdentity.id && value.incarnation === draftIdentity.incarnation && value.caseRef.id === draftBinding.caseRef.id && value.caseRef.incarnation === draftBinding.caseRef.incarnation);
     const listedTarget = retainingDraft && next.records.some((value) => value.draft && value.draft.target.surface === draftBinding.target.surface && value.draft.target.type === draftBinding.target.type && value.draft.target.id === draftBinding.target.id && value.draft.target.incarnation === draftBinding.target.incarnation && value.draft.targetEvidence.refId === draftBinding.targetEvidence.refId && value.draft.targetEvidence.refDigest === draftBinding.targetEvidence.refDigest);
     const missingDraftSource = retainingDraft && (draftIdentity ? !listedDraft : !listedTarget);
-    if (mutationCase && !caseAvailable(mutationCase) || retainingDraft && !caseAvailable(draftBinding.caseRef) || missingDraftSource) {
+    // Discovery is bounded and may omit a committed case whose sources advanced.
+    // A restored apply contains no private fields. Its exact POST reauthorizes the
+    // case and receipt at the host; an actual denial still takes the purge path.
+    const requireListedCase = mutation && (!mutation.restored || recheckingDenied);
+    if (mutationCase && requireListedCase && !caseAvailable(mutationCase) || retainingDraft && !caseAvailable(draftBinding.caseRef) || missingDraftSource) {
       window.dispatchEvent(new CustomEvent('sf-access-revoked', { detail: { reason: missingDraftSource ? 'draft-source-unconfirmed' : 'case-unavailable' } }));
       throw new Error('O caso, rascunho ou origem não está disponível com seu acesso atual.');
     }
@@ -210,7 +230,7 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     options('change', next.decisions.changes.map((change) => ({ ...change, label: change.label + ' · ' + (states[change.state] || 'Aguardando revisão') })), 'Selecione uma alteração');
     find('choice-reason').textContent = '';
     if (!form.dataset.dirty) {
-      const selected = storedView().draft;
+      const selected = draftOutcome ? undefined : storedView().draft;
       caseCatalog = next.decisions.cases; sourceCatalog = next.records.filter((record) => record.draft);
       options('case', caseCatalog, 'Selecione um caso'); options('draft-source', sourceCatalog, 'Selecione um Hot Topic');
       const caseIndex = selected ? caseCatalog.findIndex((value) => value.caseRef.id === selected.caseId && value.caseRef.incarnation === selected.caseIncarnation) : -1;
@@ -234,23 +254,29 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
       if (sourceIndex >= 0) find('draft-source').value = String(sourceIndex);
     }
     restoreApplication();
+    if (mutation && mutation.restored) {
+      const sent = JSON.parse(mutation.body);
+      mutation.ambiguous = next.decisions.changes.filter((change) => change.caseRef.id === sent.caseRef.id && change.caseRef.incarnation === sent.caseRef.incarnation && change.choiceId === sent.choiceId && change.changeId === sent.changeId).length > 1;
+    }
   };
   const refreshedAfter = async (message) => {
     try { await refresh(); announce(message); }
     catch { if (!revoked) { data = undefined; agenda = undefined; resetReview(); announce(message + ' Atualize as opções para continuar.'); } }
   };
   const restoreApplication = () => {
-    if (!applicationToRestore || mutation) return;
+    if (!applicationToRestore || mutation || draftOutcome) return;
     const saved = applicationToRestore; applicationToRestore = undefined;
     try {
       if (typeof saved.body !== 'string' || saved.body.length > 65536 || typeof saved.key !== 'string' || !/^[a-f0-9-]{36}$/.test(saved.key)) throw new Error('Invalid correlation');
       const value = JSON.parse(saved.body), ref = value.caseRef;
       if (Object.keys(value).sort().join(',') !== 'caseRef,changeId,choiceId,reviewDigest' || !ref || Object.keys(ref).sort().join(',') !== 'id,incarnation,version' ||
-        typeof ref.id !== 'string' || typeof ref.incarnation !== 'string' || !Number.isSafeInteger(ref.version) || ref.version < 0 ||
-        typeof value.choiceId !== 'string' || typeof value.changeId !== 'string' || !/^[a-f0-9]{64}$/.test(value.reviewDigest)) throw new Error('Invalid correlation');
+        typeof ref.id !== 'string' || !ref.id.trim() || ref.id.length > 16384 || typeof ref.incarnation !== 'string' || !ref.incarnation.trim() || ref.incarnation.length > 16384 || !Number.isSafeInteger(ref.version) || ref.version < 0 ||
+        typeof value.choiceId !== 'string' || !value.choiceId.trim() || value.choiceId.length > 16384 || typeof value.changeId !== 'string' || !value.changeId.trim() || value.changeId.length > 16384 || !/^[a-f0-9]{64}$/.test(value.reviewDigest)) throw new Error('Invalid correlation');
       const current = data.decisions.changes.filter((change) => change.caseRef.id === ref.id && change.caseRef.incarnation === ref.incarnation && change.choiceId === value.choiceId && change.changeId === value.changeId);
-      if (current.length !== 1) throw new Error('Application no longer available');
-      mutation = { mode: 'dashboard-hot-topic-apply', body: saved.body, key: saved.key, uncertain: true };
+      // The host's admitted apply route looks up the durable receipt before any
+      // mutation and binds it to reviewDigest. Absence from a list is not failure
+      // of that intent. Never replace the original case version, body or key.
+      mutation = { mode: 'dashboard-hot-topic-apply', body: saved.body, key: saved.key, uncertain: true, restored: true, ambiguous: current.length > 1 };
       guard.dataset.dirty = 'true';
     } catch { remember({ application: undefined }); }
   };
@@ -294,13 +320,13 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
   };
   const retryMutation = async () => {
     const attempt = mutation;
-    if (!attempt || revoked) return;
+    if (!attempt || draftOutcome || attempt.ambiguous || revoked) return;
     const reconciling = attempt.uncertain;
     try {
       const value = await request(attempt.mode, undefined, undefined, attempt);
       if (revoked || mutation !== attempt) return;
       if (!confirmedMutation(attempt, value)) throw new Error('Resultado não confirmado.');
-      mutation = undefined; delete guard.dataset.dirty; rememberApplication();
+      mutation = undefined; delete guard.dataset.dirty; rememberApplication(); rememberDraftAttempt();
       await completeMutation(attempt, value);
     } catch (error) {
       if (revoked || mutation !== attempt) return;
@@ -308,7 +334,7 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
       if (error.status === 'denied') {
         // Write refusal alone does not revoke readable local work. Recheck the authorized
         // case immediately; a missing case or denied read removes its private content.
-        try { await refresh(); readRechecked = true; }
+        try { await refresh(true); readRechecked = true; }
         catch { if (revoked || mutation !== attempt) return; }
         if (revoked || mutation !== attempt) return;
       }
@@ -316,7 +342,7 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
       // may also describe a receipt committed before delivery; neither creates a new intent.
       const definitive = error.rejected && error.status !== 'denied' && !(attempt.mode === 'dashboard-hot-topic-apply' && (error.status === 'conflict' || error.status === 'stale'));
       if (definitive && !reconciling) {
-        mutation = undefined; delete guard.dataset.dirty; rememberApplication();
+        mutation = undefined; delete guard.dataset.dirty; rememberApplication(); rememberDraftAttempt();
         if (attempt.mode === 'dashboard-hot-topic-draft' && (error.status === 'conflict' || error.status === 'stale')) {
           clearDraftReview(); draftConflict = true;
           throw new Error('O rascunho mudou. Use Carregar versão atual e manter minhas alterações, compare as diferenças e confirme a base antes de salvar.');
@@ -328,13 +354,13 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     }
   };
   const mutate = async (mode, payload) => {
-    if (mutation || revoked) return;
+    if (mutation || draftOutcome || applicationToRestore || revoked) return;
     mutation = { mode, body: JSON.stringify(payload), key: crypto.randomUUID(), uncertain: false };
-    guard.dataset.dirty = 'true'; rememberApplication();
+    guard.dataset.dirty = 'true'; rememberApplication(); rememberDraftAttempt();
     await retryMutation();
   };
   find('retry').addEventListener('click', () => run(retryMutation));
-  find('load').addEventListener('click', () => run(async () => { await refresh(); announce(form.dataset.dirty ? 'Opções atualizadas. As alterações do formulário foram mantidas com a origem revisada anteriormente.' + (mutation ? ' Repita a mesma tentativa para confirmar o resultado anterior.' : '') : mutation ? 'Opções atualizadas com seu acesso atual. Repita a mesma tentativa para confirmar o resultado anterior.' : 'Opções carregadas. Selecione os registros e escolhas que deseja revisar.'); }));
+  find('load').addEventListener('click', () => run(async () => { await refresh(); announce(draftOutcome ? 'Opções carregadas. O resultado do primeiro salvamento permanece pendente; a lista de rascunhos não confirma qual foi o resultado desta tentativa.' : mutation && mutation.ambiguous ? 'Opções atualizadas com seu acesso atual. A tentativa permanece pendente porque a seleção recebida é ambígua.' : form.dataset.dirty ? 'Opções atualizadas. As alterações do formulário foram mantidas com a origem revisada anteriormente.' + (mutation ? ' Repita a mesma tentativa para confirmar o resultado anterior.' : '') : mutation ? 'Opções atualizadas com seu acesso atual. Repita a mesma tentativa para confirmar o resultado anterior.' : 'Opções carregadas. Selecione os registros e escolhas que deseja revisar.'); }));
   find('agenda').addEventListener('click', () => run(async () => { agenda = await request('dashboard-agenda', { sections: [data.agenda.section] }); sections(find('agenda-view'), agenda.sections); announce('Pauta pronta para revisão.'); }));
   find('preserve').addEventListener('click', () => run(async () => { await mutate('dashboard-review-preserve', { selectionRef: agenda.selectionRef, sectionRefs: agenda.sections.map((section) => section.id) }); }));
   find('capture').addEventListener('click', () => run(async () => { const selected = choice('record', data.records); await mutate('dashboard-capture', { sourceRef: selected.sourceRef }); }));
@@ -401,15 +427,16 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
   window.addEventListener('sf-access-revoked', (event) => {
     if (revoked) return;
     revoked = true; controllers.forEach((controller) => controller.abort()); controllers.clear();
-    data = agenda = review = draftBinding = draftIdentity = pendingDraft = mutation = applicationToRestore = undefined;
+    data = agenda = review = draftBinding = draftIdentity = pendingDraft = mutation = applicationToRestore = draftOutcome = undefined;
     draftCatalog = []; caseCatalog = []; sourceCatalog = []; delete form.dataset.dirty; delete guard.dataset.dirty;
-    remember({ draft: undefined, application: undefined });
+    remember({ draft: undefined, application: undefined, draftAttempt: undefined });
     const note = document.createElement('p'); note.textContent = 'Seu acesso mudou. Reabra a página com o acesso atual.'; root.replaceChildren(note);
     if (event instanceof CustomEvent && event.detail && event.detail.reason === 'draft-source-unconfirmed') {
       const explanation = document.createElement('p'); explanation.textContent = 'Não foi possível confirmar a identidade autorizada do rascunho ou de sua origem. Os dados locais foram removidos. Recarregue as opções com seu acesso atual.'; root.append(explanation);
     }
   });
   if (applicationToRestore) announce('Há uma tentativa anterior para conferir. Carregue as opções com seu acesso atual antes de recuperar o resultado.');
+  if (draftOutcome) { guard.dataset.dirty = 'true'; announce('O resultado do primeiro salvamento ainda não foi confirmado. A recuperação autorizada desta tentativa precisa estar disponível antes de continuar.'); }
   enable();
 });
 `
