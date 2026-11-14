@@ -1,0 +1,26 @@
+--- a/apps/cli/src/sucafina-product/portfolio-services.ts
++++ b/apps/cli/src/sucafina-product/portfolio-services.ts
+@@ -1,6 +1,7 @@
+ import { randomUUID } from "node:crypto"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import { createPortfolioProduct } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/product.ts"
++import type { PortfolioReconciliationHost } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts"
+ import { createDecisionMutations } from "../../../../modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+ import type { DecisionMutationOperation } from "../../../../modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+ import { decisionCoverageRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
+@@ -26,6 +27,7 @@
+   proposalCoverageWrites: WeakSet<object>
+   procurementEvidenceWrites?: WeakSet<object>
+   preparation?: SfPortfolioPreparation
++  reconciliation?: PortfolioReconciliationHost
+ }) {
+   const { authority, business } = input
+   const verification: { proof?: ReturnType<typeof createPortfolioProofVerifier> } = {}
+@@ -80,6 +82,7 @@
+     rules: registries.rules, selection: registries.selection, sensitivityBindings: registries.sensitivityBindings,
+     comparisonBindings: registries.comparisonBindings, portfolioBindings: registries.portfolioBindings,
+     decisions: mutations, createReceipt, caseFor: business.resolveCase,
++    ...(input.reconciliation ? { reconciliation: input.reconciliation } : {}),
+     idempotencyKey,
+   }) : undefined
+   const product = rawProduct ? { ...rawProduct, http: { ...rawProduct.http,

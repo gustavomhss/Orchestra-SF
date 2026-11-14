@@ -1,0 +1,84 @@
+{
+  "schema": "wp13-test-adaptation-v1",
+  "increment": "W15",
+  "preparedAt": "2026-11-14T12:37:20.134839+00:00",
+  "parent": {
+    "head": "4a7e22c4462cc5e65464b6b5026e222a483cc231",
+    "tree": "f9d96be47eb0b252bbc8466c726c713fa0704ad9"
+  },
+  "ready": false,
+  "trigger": {
+    "label": "C14",
+    "runId": 43595314492,
+    "jobId": 132448438975,
+    "product": "4a7e22c4462cc5e65464b6b5026e222a483cc231",
+    "ownDiagnostics": 0,
+    "foreignDiagnostics": 134,
+    "newDiagnostics": 4,
+    "cause": "The newly imported WP11 test calls optional transactionAll without narrowing at lines10/14 (TS2722 and TS18048).",
+    "guards": "PASS"
+  },
+  "source": {
+    "owner": "WP11/Finance",
+    "commit": "96fc3162ae309f8b91b2c55524335026f8704714",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+    "blob": "d91a07ddb9dc9cc5d093121112b7603533d4e1fb"
+  },
+  "ownAdaptation": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/renewal-read-scope.test.ts",
+    "blob": "bcd5ed7f2cc26b2d9e271dae421b4d86e2f05591",
+    "sha256": "f014f4a675faa9d172eb30f71cc46a8d1cbde4458ca802d60dfc19f5b68bb479",
+    "changes": [
+      "Adjust two imports to the unchanged published WP11 helpers.",
+      "Bind optional transactionAll once and throw if unavailable, before taking the durable snapshot.",
+      "Call that narrowed function at the same two snapshot observations."
+    ],
+    "preserved": {
+      "tests": 3,
+      "expectCalls": 9,
+      "finallyCleanupBlocks": 3,
+      "testBodies2And3": "byte-identical",
+      "timeouts": "unchanged",
+      "canonicalSourceEdit": "unchanged",
+      "revokedLease": "unchanged",
+      "durableStateComparison": "unchanged"
+    }
+  },
+  "removedFromComposition": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+    "blob": "d91a07ddb9dc9cc5d093121112b7603533d4e1fb",
+    "reason": "This test path was first added by our W14 and was absent from W13/base. Remove that imported copy while preserving its bytes in W14 history and the archive; do not author modifications to WP11 source.",
+    "deleteOnlyW14Introduction": true
+  },
+  "retainedForeignHelpers": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "commit": "d7775d6f1eb17af1590ccfb98547259eb017cd1b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "blob": "2338917427497733e4bd88aec852985206cce066",
+      "commit": "96fc3162ae309f8b91b2c55524335026f8704714"
+    }
+  ],
+  "ownerDelta": {
+    "status": "NOT_APPLIED",
+    "patch": "finance-renewal-test-narrowing.NOT_APPLIED.patch.txt",
+    "targetCommit": "96fc3162ae309f8b91b2c55524335026f8704714",
+    "targetBlob": "d91a07ddb9dc9cc5d093121112b7603533d4e1fb",
+    "note": "Owner may apply the same optional-capability narrowing in its own test; no owner branch was changed."
+  },
+  "review": {
+    "path": "read-scope-adaptation-review-W15.json",
+    "sha256": "c83f6be6d2f1de8a3646209a30cbd198116aed432ba200741ce6e70d4e7c3771",
+    "status": "NO_STATIC_BLOCKER_NOT_RUNTIME_PASS"
+  },
+  "nextAction": [
+    "C15 typecheck/guards of this exact composition.",
+    "S9 uses own renewal-read-scope path; seven selected files, no product run has been dispatched for S9 yet.",
+    "Do not erase C14 additional diagnostics or borrow owner test results."
+  ],
+  "runtimeSourceChanged": false,
+  "localProductExecution": false
+}

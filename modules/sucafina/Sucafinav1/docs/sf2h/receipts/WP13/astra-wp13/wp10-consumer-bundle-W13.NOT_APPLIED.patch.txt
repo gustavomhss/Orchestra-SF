@@ -1,0 +1,179 @@
+diff --git a/apps/cli/src/sucafina-product/portfolio-services.ts b/apps/cli/src/sucafina-product/portfolio-services.ts
+--- a/apps/cli/src/sucafina-product/portfolio-services.ts
++++ b/apps/cli/src/sucafina-product/portfolio-services.ts
+@@ -1,6 +1,7 @@
+ import { randomUUID } from "node:crypto"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import { createPortfolioProduct } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/product.ts"
++import type { PortfolioReconciliationHost } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts"
+ import { createDecisionMutations } from "../../../../modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+ import type { DecisionMutationOperation } from "../../../../modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+ import { decisionCoverageRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
+@@ -8,6 +9,9 @@
+ import { createPlannerSensitivityUnits } from "../../../../modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts"
+ import { comparePlannerPreview } from "../../../../modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts"
+ import { createPortfolioProofVerifier } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
++import { createPlannerExactThreshold } from "../../../../modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts"
++import { createPortfolioCoveragePreview } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts"
++import { createSfPortfolioSensitivityAuthority } from "./portfolio-sensitivity-authority.ts"
+ import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+ import type { createSfBusinessServices } from "./business-services.ts"
+ import { createSfPortfolioAuthority } from "./portfolio-authority.ts"
+@@ -26,6 +30,7 @@
+   proposalCoverageWrites: WeakSet<object>
+   procurementEvidenceWrites?: WeakSet<object>
+   preparation?: SfPortfolioPreparation
++  reconciliation?: PortfolioReconciliationHost
+ }) {
+   const { authority, business } = input
+   const verification: { proof?: ReturnType<typeof createPortfolioProofVerifier> } = {}
+@@ -58,8 +63,13 @@
+   }
+   const units = scenarios ? createPlannerSensitivityUnits({ host: authority.host, cases: business.cases, scenarios, store: business.results,
+     evidence: business.context, rules: registries.rules }) : undefined
++  const sensitivityPreview = scenarios ? (request: Parameters<typeof comparePlannerPreview>[1], call: Parameters<typeof comparePlannerPreview>[2]) => comparePlannerPreview({ host: authority.host, sources: business.plannerSources, scenarios, planner: registries.planner }, request, call) : undefined
++  const resolveCoverageAuthority = createSfPortfolioSensitivityAuthority({ authority, business, registries })
++  const coveragePreview = units && sensitivityPreview ? createPortfolioCoveragePreview({ units, preview: sensitivityPreview, resolveAuthority: resolveCoverageAuthority }) : undefined
++  const exact = units && sensitivityPreview ? createPlannerExactThreshold({ units, preview: sensitivityPreview }) : undefined
++  const exactThreshold: Parameters<typeof createPortfolioProduct>[0]["exactThreshold"] = exact ? (request, binding, call) => exact(request, binding.baselineRef, call) : undefined
+   const createReceipt: Parameters<typeof createPortfolioProduct>[0]["createReceipt"] = async (call, operation, digest, result) => business.receipt(call, operation, digest, result)
+-  if (scenarios && units) verification.proof = createPortfolioProofVerifier({ cases: business.cases, planner: registries.planner,
++  if (scenarios && units && sensitivityPreview) verification.proof = createPortfolioProofVerifier({ cases: business.cases, planner: registries.planner,
+     sources: business.plannerSources, evidence: business.context, results: business.results, revalidate: authority.host.revalidate,
+     readSourceFences: business.readSourceFences, lockedSourceFences: business.lockedSourceFences, caseFor: business.resolveCase,
+     idempotencyKey, decisions: mutations, createReceipt, units,
+@@ -76,14 +86,15 @@
+       const bound = await registries.comparisonBindings.read({ caseRef: comparison.value.caseRef, resultRef: analysis.comparisonRef }, call)
+       return bound.status === "ok" && await authority.host.revalidate(call)
+     },
+-    sensitivityPreview: (request, call) => comparePlannerPreview({ host: authority.host, sources: business.plannerSources, scenarios, planner: registries.planner }, request, call),
++    sensitivityPreview, coveragePreview, exactThreshold,
+   })
+   const rawProduct = scenarios ? createPortfolioProduct({ host: authority.host, cases: business.cases, evidence: business.context,
+     planner: { planner: registries.planner, sources: business.plannerSources, scenarios }, results: business.results,
+     rules: registries.rules, selection: registries.selection, sensitivityBindings: registries.sensitivityBindings,
+     comparisonBindings: registries.comparisonBindings, portfolioBindings: registries.portfolioBindings,
+     decisions: mutations, createReceipt, caseFor: business.resolveCase,
+-    idempotencyKey,
++    ...(input.reconciliation ? { reconciliation: input.reconciliation } : {}),
++    idempotencyKey, resolveCoverageAuthority, exactThreshold,
+   }) : undefined
+   const product = rawProduct ? { ...rawProduct, http: { ...rawProduct.http,
+     prepare: (request: Parameters<Product["http"]["prepare"]>[0], call: Parameters<Product["http"]["prepare"]>[1]) =>
+diff --git a/apps/cli/src/sucafina-product/portfolio-coverage.ts b/apps/cli/src/sucafina-product/portfolio-coverage.ts
+--- a/apps/cli/src/sucafina-product/portfolio-coverage.ts
++++ b/apps/cli/src/sucafina-product/portfolio-coverage.ts
+@@ -98,7 +98,7 @@
+       const classification = await business.baselineCoverage.readClassification(held.value.scenario.baseRef, call)
+       if (!before || !sources || coverage.status !== "ok" || classification.status !== "ok" || !same(coverage.value.assessment, baseline) ||
+         !same(coverage.value.basis, classification.value.basis) || classification.value.source.refId !== held.value.scenario.baseRef ||
+-        baseline.entries.some((entry) => entry.status === "not-applicable") || baseline.entries.some((entry) => entry.status === "included" &&
++        baseline.entries.some((entry) => entry.status === "included" &&
+           !classification.value.mappings.some((mapping) => same(mapping.entry, entry)))) return unavailable()
+       const entries: readonly CostCoverageEntry[] = structuredClone(baseline.entries)
+       for (const entry of entries) if (entry.status !== "pending") classifications.set(entry, classification.value)
+diff --git a/apps/cli/src/sucafina-product/review-portfolio-history.ts b/apps/cli/src/sucafina-product/review-portfolio-history.ts
+--- a/apps/cli/src/sucafina-product/review-portfolio-history.ts
++++ b/apps/cli/src/sucafina-product/review-portfolio-history.ts
+@@ -6,6 +6,7 @@
+ import type { SfStoredDecisionResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
+ import { createPortfolioHistory } from "../../../../modules/sucafina/Sucafinav1/product/decisions/portfolio-history.ts"
+ import { createPortfolioHistoricalProvenance } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts"
++import { createPortfolioCandidateHistoryReader } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/proof.ts"
+ import { createReviewDecisionAccess } from "../../../../modules/sucafina/Sucafinav1/product/reviews/decision-access.ts"
+ import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+ import type { createSfBusinessServices } from "./business-services.ts"
+@@ -58,10 +59,11 @@
+     const scope = await scopeFor(resultRef, call, expected)
+     return scope.status === "ok" ? { status: "ok", value: scope.value.caseRef } : scope
+   }
++  const readHistoricalCandidate = createPortfolioCandidateHistoryReader({ state: authority.state, cases: business.cases, results: business.results, evidence: input.evidence, host })
+   const portfolioHistory = input.portfolioHistory ?? createPortfolioHistory({ state: authority.state, host, authorizeCase: business.authorizeCase,
+     verifyHistoricalProvenance: (stored, call) => createPortfolioHistoricalProvenance({
+       readHistoricalBinding: input.portfolio.portfolioBindings.readHistoricalBinding, caseFor: caseFor(stored.resultRef, stored),
+-      cases: business.cases, evidence: input.evidence, host,
++      cases: business.cases, readHistoricalCandidate, evidence: input.evidence, host,
+     })(stored, call),
+   })
+   const authorizeDecision: ReturnType<typeof createReviewDecisionAccess> = async (call, decisions) => {
+diff --git a/apps/cli/src/sucafina-product/portfolio-sensitivity-authority.ts b/apps/cli/src/sucafina-product/portfolio-sensitivity-authority.ts
+new file mode 100644
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/portfolio-sensitivity-authority.ts
+@@ -0,0 +1,76 @@
++import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import type { SensitivityRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
++import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
++import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
++import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
++import type { PortfolioCoverageAuthority } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts"
++import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
++import type { createSfBusinessServices } from "./business-services.ts"
++import type { createSfPortfolioAuthority } from "./portfolio-authority.ts"
++
++type Snapshot = Omit<PortfolioCoverageAuthority, "isStillValid">
++type Observation = { value: Snapshot; digest: string; sources: string; source: Request; binding: string }
++
++/** Read the persisted human selection, C08 scenarios and C10 classifications within one current case. */
++export function createSfPortfolioSensitivityAuthority(input: {
++  authority: ReturnType<typeof createSfProductAuthority>
++  business: ReturnType<typeof createSfBusinessServices>
++  registries: ReturnType<typeof createSfPortfolioAuthority>
++}) {
++  const { business, registries } = input
++  const host = input.authority.host
++  const same = (left: unknown, right: unknown) => digestSfValue(left) === digestSfValue(right)
++  const fingerprint = (value: Snapshot) => digestSfValue({ ...value, evidence: value.evidence.map(({ ref, currentRef, state, accessRevision }) => ({ ref, currentRef, state, accessRevision })) })
++  const read = async (request: SensitivityRequest, baselineRef: string, call: TrustedDomainContext): Promise<PortResult<Observation>> => {
++    const source = host.requestFor(call)
++    const binding = digestSfValue([call.kind, call.binding])
++    if (!source || source.signal.aborted || !await host.revalidate(call)) return { status: "denied", reason: "sensitivity-coverage-authority-unavailable" }
++    const caseRef = await business.resolveCase(call)
++    if (caseRef.status !== "ok") return caseRef
++    const initial = await business.readSourceFences(call)
++    if (!initial) return { status: "unavailable", reason: "sensitivity-coverage-source-fence-unavailable" }
++    const current = structuredClone(await business.cases.read({ caseRef: encodeCaseRef(caseRef.value) }, call))
++    const selected = structuredClone(await registries.selection.read({ caseRef: caseRef.value }, call))
++    if (current.status !== "ok") return current
++    if (selected.status !== "ok") return selected
++    const decision = current.value.case
++    if (!same({ id: decision.id, incarnation: decision.incarnation, version: decision.version }, caseRef.value) || !same(selected.value.caseRef, caseRef.value) || selected.value.alternativeRef !== request.scenarioRef || selected.value.baselineRef !== baselineRef || !await registries.authorizeCase(decision, call)) return { status: "stale", reason: "sensitivity-coverage-selection-changed" }
++    const alternatives = decision.alternatives.filter((item) => item.id === selected.value.alternativeId)
++    const baselines = decision.alternatives.filter((item) => item.id === selected.value.baselineAlternativeId)
++    if (alternatives.length !== 1 || baselines.length !== 1) return { status: "unavailable", reason: "sensitivity-coverage-alternative-unavailable" }
++    const alternative = alternatives[0]!
++    const baseline = baselines[0]!
++    const stored = structuredClone(await business.results.readHistoricalScenario({ resultRef: request.scenarioRef }, call))
++    const baselineStored = structuredClone(await business.results.readHistoricalScenario({ resultRef: baselineRef }, call))
++    const classification = structuredClone(await business.baselineCoverage.readClassification(alternative.scenario.baseRef, call))
++    const baselineClassification = structuredClone(await business.baselineCoverage.readClassification(baseline.scenario.baseRef, call))
++    const rule = structuredClone(await registries.rules.resolve({ caseRef: caseRef.value, criterionId: request.criterion.id }, call))
++    if (stored.status !== "ok") return stored
++    if (baselineStored.status !== "ok") return baselineStored
++    if (classification.status !== "ok") return classification
++    if (baselineClassification.status !== "ok") return baselineClassification
++    if (rule.status !== "ok") return rule
++    if (stored.value.kind !== "scenario" || baselineStored.value.kind !== "scenario" || stored.value.resultDigest !== digestSfValue(alternative.result) || baselineStored.value.resultDigest !== digestSfValue(baseline.result) || stored.value.requestDigest !== digestSfValue(alternative.scenario) || baselineStored.value.requestDigest !== digestSfValue(baseline.scenario) || [stored.value, baselineStored.value].some((item) => item.caseRef.id !== decision.id || item.caseRef.incarnation !== decision.incarnation || item.caseRef.version > decision.version) || !same(classification.value.basis, baselineClassification.value.basis)) return { status: "stale", reason: "sensitivity-coverage-scenario-changed" }
++    const basis = classification.value.basis
++    const refs = [classification.value.source, baselineClassification.value.source, ...basis.sourceRefs, ...stored.value.result.sourceRefs, ...baselineStored.value.result.sourceRefs, ...stored.value.result.costCoverage.evaluatedSourceRefs, ...baselineStored.value.result.costCoverage.evaluatedSourceRefs, ...stored.value.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs), ...baselineStored.value.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs), ...rule.value.evidenceRefs, ...(rule.value.sensitivity?.sourceRefs ?? [])].filter((ref, index, all) => all.findIndex((item) => same(item, ref)) === index)
++    const evidence = structuredClone(await business.context.context({ refs }, call))
++    if (evidence.length !== refs.length || evidence.some((item, index) => item.state !== "fresh" || item.accessRevision !== call.binding.accessRevision || !item.authorizedProjection || !item.currentRef || !same(item.ref, refs[index]) || !same(item.currentRef, item.ref))) return { status: "unavailable", reason: "sensitivity-coverage-evidence-unavailable" }
++    const latest = await business.readSourceFences(call)
++    if (!latest || !same(initial, latest) || host.requestFor(call) !== source || source.signal.aborted || binding !== digestSfValue([call.kind, call.binding]) || !await host.revalidate(call)) return { status: "stale", reason: "sensitivity-coverage-source-changed" }
++    const value: Snapshot = { decision, selection: selected.value, scenario: alternative.scenario, storedResult: stored.value.result, rule: rule.value, basis, classification: classification.value, baseline: { result: baselineStored.value.result, classification: baselineClassification.value }, evidence }
++    return { status: "ok", value: { value, digest: fingerprint(value), sources: digestSfValue(initial), source, binding } }
++  }
++  return async (incoming: SensitivityRequest, baselineRef: string, call: TrustedDomainContext): Promise<PortResult<PortfolioCoverageAuthority>> => {
++    const request = structuredClone(incoming)
++    const first = await read(request, baselineRef, call)
++    if (first.status !== "ok") return first
++    const captured = first.value
++    const isStillValid = async (trusted: TrustedDomainContext) => {
++      if (host.requestFor(trusted) !== captured.source || captured.source.signal.aborted || digestSfValue([trusted.kind, trusted.binding]) !== captured.binding) return false
++      const current = await read(structuredClone(request), baselineRef, trusted)
++      return current.status === "ok" && current.value.source === captured.source && current.value.binding === captured.binding && current.value.sources === captured.sources && current.value.digest === captured.digest && await host.revalidate(trusted)
++    }
++    if (!await isStillValid(call)) return { status: "stale", reason: "sensitivity-coverage-authority-changed" }
++    return { status: "ok", value: { ...structuredClone(captured.value), isStillValid } }
++  }
++}

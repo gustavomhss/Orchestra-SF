@@ -1,0 +1,72 @@
+{
+  "schema": "sf-wp13-published-input-manifest-v1",
+  "parentProduct": "84fa950ed4925124ca7ee6c854d4ae534bcd6d1a",
+  "authoredForeignFiles": [],
+  "exactPublishedInputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "sha": "dbcc51d75ccefb23f328f1d4151504be96a35a45",
+      "pin": "efa0e57e54862f99a07b2837af5e729adb881415"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts",
+      "sha": "8815cc1fc27b570d241e2dd464d925eff05e5455",
+      "pin": "efa0e57e54862f99a07b2837af5e729adb881415"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-history.ts",
+      "sha": "b90dcbc9e79e6dc505780da885c1fbd504c1fb4c",
+      "pin": "efa0e57e54862f99a07b2837af5e729adb881415"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "sha": "acb3b7fb3050264758a5470ffe8168fa5f581370",
+      "pin": "efa0e57e54862f99a07b2837af5e729adb881415"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "sha": "338889513cfc681bdda91697a9d5bbc16bde8fd1",
+      "pin": "efa0e57e54862f99a07b2837af5e729adb881415"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "sha": "54c5155aa64b4528a75a601950b56bed8e021471",
+      "pin": "efa0e57e54862f99a07b2837af5e729adb881415"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "sha": "62365bd79c1f90b6ee90e64746678bfe779011cf",
+      "pin": "efa0e57e54862f99a07b2837af5e729adb881415"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+      "sha": "5d5491cd95fb989f1233ba49db6185214e980899",
+      "pin": "efa0e57e54862f99a07b2837af5e729adb881415"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "sha": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "pin": "ffe77b53f3c074f03fe6dc3ff7caa788778eca99"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "sha": "aaacc8bf7df9fa67870c4067154fe67a58c34a22",
+      "pin": "ffe77b53f3c074f03fe6dc3ff7caa788778eca99"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "sha": "a0a67918c69a636120daa66877669020803c108e",
+      "pin": "ffe77b53f3c074f03fe6dc3ff7caa788778eca99"
+    }
+  ],
+  "excluded": [
+    {
+      "path": "product/decisions/proposals.ts",
+      "reason": "Published fix includes a new proposal-store contract and broader host composition. Preserve the existing base consumer; report its type diagnostic to the owner."
+    },
+    {
+      "path": "test/product/wp11/cross-domain-execution.test.ts",
+      "reason": "Read as an upstream reference only; its cross-domain producer closure is outside this surgical WP13 intake."
+    }
+  ]
+}

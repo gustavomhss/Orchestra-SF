@@ -1,0 +1,38 @@
+{
+  "schema": "wp13-documentation-publication-v1",
+  "label": "D1",
+  "head": "3def4e3a4038b0819284931be1b56704bb949208",
+  "tree": "c52f2bc11483d785a92a5bdf8cdbe49445716076",
+  "branch": "astra-wp13",
+  "parent": "cb111a14ee527d66748c4e19040c26b828f2bfe4",
+  "testedProduct": {
+    "head": "cb111a14ee527d66748c4e19040c26b828f2bfe4",
+    "tree": "022548856d95a1df933e6f34e70250e86ccd95ec"
+  },
+  "published": true,
+  "expectedShaGuard": true,
+  "compare": {
+    "totalCommits": 1,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/check-W15.json",
+        "sha": "7577c42062587cbc4c3e5f46edc2c41da52bb3f7",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/wp10-consumer-bundle-W15.NOT_APPLIED.json",
+        "sha": "446504c50d0d42407b21d1ab200071742108b39e",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/wp10-consumer-bundle-W15.NOT_APPLIED.patch.txt",
+        "sha": "609a24d1b5ddc2d3006657d176d4c0e6c0b65402",
+        "status": "added"
+      }
+    ]
+  },
+  "productTestConfigurationUnchanged": true,
+  "equivalentProductRunDispatched": false,
+  "reason": "Only three own receipt/delta files added; no source/test/config changes. S9 retains exact W15 snapshot identity.",
+  "ready": false
+}

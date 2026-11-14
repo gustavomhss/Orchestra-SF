@@ -1,0 +1,549 @@
+{
+  "schema": "sf-wp13-finance-batch-intake-review-v1",
+  "createdAt": "2026-11-14T11:30:10.309082+00:00",
+  "repository": "gustavomhss/Orchestra-SF",
+  "purpose": "Static, read-only review of a narrowly pinned Finance batch optimization. No source intake, source mutation, test execution or remote write.",
+  "decision": "DEFER_RUNTIME_INTAKE_PENDING_BOTTLENECK_EVIDENCE",
+  "ready": false,
+  "performanceAccepted": false,
+  "consumed": false,
+  "reviewedCandidate": {
+    "commit": "61d92392e9bded167eb2794995a623b2719cc4ba",
+    "observedWithinOwnerHead": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+    "ancestry": {
+      "status": "ahead",
+      "ownerHeadCommitsAfterCandidate": 8,
+      "mergeBase": "61d92392e9bded167eb2794995a623b2719cc4ba"
+    },
+    "runtimePathsUnchangedInCandidateToObservedOwnerCompare": true,
+    "commitScope": {
+      "runtimeFiles": 3,
+      "newOwnerTestFilesAtOriginalCommit": 2,
+      "broaderSnapshotConsumed": false
+    },
+    "laterOwnerObservation": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+    "runtimeAndCorrectedProofInputsUnchangedThroughLatestOwnerHead": true
+  },
+  "publishedBaseline": {
+    "label": "W8",
+    "head": "44ecc88ad6c8c56bf08693e386e9e5dd9e46cfbc",
+    "tree": "536b79767d971c82c0d5b8a6728da93265019232",
+    "method": "Reconstruct exact published entries from W2 remote map and W3-W8 manifests; all three runtime paths retain their W2 blob. Local runtime bytes were then verified against those published hashes.",
+    "sourceArtifacts": [
+      {
+        "path": "reference/wp13-W2-remote-map.json",
+        "sha256": "c701ec81dbaa8299abb4f7e67c1dea39256786ebabd5c5a079cc282be6e1b32b",
+        "gitBlob": "513fded5b4fd257eaf7aa57ac56cdf22940c3336"
+      },
+      {
+        "path": "reference/wp13-W3-file-manifest.json",
+        "sha256": "799272895de3a77f65691c5495abd07b0faba166785a1d53474df723da6b8b29",
+        "gitBlob": "606ec1500f75c3d5e50c28d484c7a2f88cf0b1d5"
+      },
+      {
+        "path": "reference/wp13-W4-file-manifest.json",
+        "sha256": "40afa4786ef6974e206ac283d220346769279755944f7e83c14778a2220e1537",
+        "gitBlob": "299e07bb39050684ea88e55a418164f37b9a059a"
+      },
+      {
+        "path": "reference/wp13-W5-file-manifest.json",
+        "sha256": "42f97f435980ab35a5bfb7c445f14cb400bf13e3844e0cbabc2d96f0c0b83598",
+        "gitBlob": "d24097d47c1ffc6f62b6f8ed52211c42cd1e4bfe"
+      },
+      {
+        "path": "reference/wp13-W6-file-manifest.json",
+        "sha256": "c36dfe5a9267635a997460c8d50069ec9007a807c964ef7c71c7c3333b1a5d4f",
+        "gitBlob": "7b3af33c1b819f4c7e84b4e172c4256027f27708"
+      },
+      {
+        "path": "reference/wp13-W7-file-manifest.json",
+        "sha256": "e47b632d293cfcc6da918b9185ef9803e6cf2a9b9dee44c0651ad8a7259845e0",
+        "gitBlob": "f8d72ba953265310ba644eb47518cb1c031c68d9"
+      },
+      {
+        "path": "reference/wp13-W8-file-manifest.json",
+        "sha256": "2711bbf388abafec5f51729368e3d424dcdecdab5bfd757cab722f5347b47893",
+        "gitBlob": "9b98d1cbde583dccaef4bfe3bd5e6b2c18dc803c"
+      }
+    ],
+    "localRuntimeFilesMatchPublishedBlobs": true,
+    "laterRootPublication": {
+      "label": "W9",
+      "head": null,
+      "status": "ROOT_REPORTED_PUBLISHED_NOT_REVIEWED_BY_THIS_CUT",
+      "nextAction": "Before any later intake, confirm the three exact published W9 baseline blobs still equal this reviewed W8 baseline; do not use local hydration alone."
+    }
+  },
+  "proposedRuntimeInputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "pin": "61d92392e9bded167eb2794995a623b2719cc4ba",
+      "blob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "oldBlob": "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b",
+      "kind": "runtime",
+      "sha256": "771b060898fce1b1d851461bee7df743014ab55f9c0994a0331f2664a1c8bfd1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/61d92392e9bded167eb2794995a623b2719cc4ba/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "consumed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "pin": "61d92392e9bded167eb2794995a623b2719cc4ba",
+      "blob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "oldBlob": "d3098aa94cdeee71193c94ae906f6fafd14bda9b",
+      "kind": "runtime",
+      "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/61d92392e9bded167eb2794995a623b2719cc4ba/modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "consumed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "pin": "61d92392e9bded167eb2794995a623b2719cc4ba",
+      "blob": "1673c86995cf71b61e288d91492ae7b691934171",
+      "oldBlob": "ed68563245e406aca2dc3ce335943647fd2cb002",
+      "kind": "runtime",
+      "sha256": "d83e19bff860ad2a54fc3f41b3b5790d3d31cd3b2b55ea8785a61ea30aa8827b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/61d92392e9bded167eb2794995a623b2719cc4ba/modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "consumed": false
+    }
+  ],
+  "minimalOwnerProofInputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "pin": "61d92392e9bded167eb2794995a623b2719cc4ba",
+      "blob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "oldBlob": null,
+      "kind": "test",
+      "sha256": "6a2576aa4495ec03a38c67f9c5453cd0a9cec3455f21306e435bc269cced8bce",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/61d92392e9bded167eb2794995a623b2719cc4ba/modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "consumed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+      "pin": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+      "blob": "0bd661681e2dd3c3daafdea82851af88c772f0cf",
+      "oldBlob": null,
+      "kind": "test-fixture",
+      "sha256": "cec7996db6f11c3fc45de8ab768288c548e6cb7184d85da70b05b1d020ea0ac4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6016a70d7ab0c3d50f1ec2827a534a80e48a5c56/modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+      "consumed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+      "pin": "61d92392e9bded167eb2794995a623b2719cc4ba",
+      "blob": "19cb4262ca02a680b06cdd4db54d5bb9d33a1219",
+      "oldBlob": null,
+      "kind": "test-fixture",
+      "sha256": "ce0483cee32f81c4616ae51369152618da94784ea195f5f8c6c3bcdabf038a5f",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/61d92392e9bded167eb2794995a623b2719cc4ba/modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+      "consumed": false
+    }
+  ],
+  "minimalIntake": {
+    "runtimeOnlyChangedFiles": 3,
+    "runtimePlusSpecificOwnerProofFiles": 6,
+    "additionalHelperRequired": "modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+    "additionalHelperAbsenceProof": {
+      "publishedW8Map": "absent",
+      "githubMcpFetchAtW8": "404_NOT_FOUND",
+      "localPath": "absent"
+    },
+    "newRuntimeImportFilesOutsideTheThree": 0,
+    "newOwnerRuntimeOrEngineSnapshotRequired": false,
+    "directRelativeDependenciesOfAllSix": "Every direct relative dependency is one of the six candidate inputs or an already published W8 blob.",
+    "transitiveInspection": {
+      "pathsVisited": 67,
+      "missingPublishedDependenciesFound": 0,
+      "existingPublishedDependenciesNotHydratedLocally": 16,
+      "limit": "Traversal stops at the sixteen nonhydrated existing blobs. Their publication is known, but their full contents were not fetched in this review. This is not a hosted typecheck or proof of all transitive API compatibility."
+    },
+    "existingApiAnchors": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "blob": "338889513cfc681bdda91697a9d5bbc16bde8fd1",
+        "requiredExports": [
+          "StoredDecisionResult",
+          "createSfDecisionResultStore/readHistoricalScenario"
+        ],
+        "availability": "verified in exact published local bytes"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "blob": "2fd55c7304add0829d7434917c80664fe86356b9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts",
+        "blob": "086c0100a39525f5d78f5864ad589e2d72fc40cd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-inputs.ts",
+        "blob": "f2a49fc79880ccb204184c6c83e957bab97b483f"
+      }
+    ]
+  },
+  "rejectedOriginalProofFixture": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+    "commit": "61d92392e9bded167eb2794995a623b2719cc4ba",
+    "blob": "76602236238df061e96af1338d05d01799c5ecab",
+    "state": "SUPERSEDED_BY_OWNER_FIXES_DO_NOT_INTAKE_FOR_NEW_PROOF",
+    "corrections": [
+      {
+        "ownerCommit": "c80144bfa8e0097c6be189ff6dbdb85f4b37e2e7",
+        "change": "Call plannerFixture.admit with consume=true, exercising the actual UI validate/lease consumption rather than leaving the private admission unconsumed.",
+        "semantics": "The fourth argument is consume, not broader domain scope or a bypass of principal authorization."
+      },
+      {
+        "ownerCommit": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+        "change": "Increment observation counters before optional hook calls. The old ++counts expressions were optional-call arguments and did not execute when the hook was absent."
+      }
+    ],
+    "correctedBlob": "0bd661681e2dd3c3daafdea82851af88c772f0cf",
+    "correctedPinVerifiedByGitHubMcp": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56"
+  },
+  "mechanism": {
+    "storedScenarios": "resolveMany copies references, authenticates every C08 ref, groups case observations by digest of complete stored.caseRef, captures each projection/result, rereads every prepared C08 ref, then starts a separate final case-observation map. Both maps are local to one invocation.",
+    "comparison": "Initial, repeated and final criterion phases each invoke a new resolvePlannerScenarioBatch. Existing source/coverage/projection comparisons and host revalidation remain.",
+    "units": "Initial and final selected/baseline resolution use the optional batch. Existing independent stored-result digests, case identity, units, period, source refs, evidence freshness/accessRevision, rules and final host authority checks remain.",
+    "legacyHost": "resolveMany is optional. Without it the helper resolves individually and clones each observation. A batch refusal or wrong cardinality is not retried through a weaker individual fallback.",
+    "noFinancialChange": "The diff does not alter canonical formulas, thresholds, currency or missing-value rules, C10 state promotion, decision application, engines, identity policy or public output contracts."
+  },
+  "staticCallCounts": [
+    {
+      "operation": "Stored scenario observation of n refs in g identical stored.caseRef groups",
+      "oldDirectCaseReads": "2*n",
+      "newDirectCaseReads": "2*g",
+      "retained": "Two C08 reads per successful ref and one forecast projection per ref; repeated refs are still authenticated individually."
+    },
+    {
+      "operation": "Two sibling refs, same stored.caseRef, one observation",
+      "oldDirectCaseReads": 4,
+      "newDirectCaseReads": 2,
+      "storeReads": 4,
+      "forecasts": 2
+    },
+    {
+      "operation": "Sensitivity units issue, two siblings",
+      "oldDirectCaseReads": 10,
+      "newDirectCaseReads": 6,
+      "storeReads": 12,
+      "forecasts": 4
+    },
+    {
+      "operation": "Comparison without criteria, initial and repeated observations",
+      "oldDirectCaseReads": 8,
+      "newDirectCaseReads": 4,
+      "storeReads": 8,
+      "forecasts": 4
+    }
+  ],
+  "countInterpretation": "Static control-flow derivation and assertions in the owner's unexecuted-for-this-review test. These counts exclude internal work performed by each C08 read, projection, case authorization and financial replay. They are not elapsed-time measurements.",
+  "authorityAndCorrelationReview": [
+    {
+      "finding": "No authority state is shared across requests or phases",
+      "evidence": "initialCases/finalCases are allocated inside resolveMany; context is passed to every C08, case and forecast call. Every later comparison/units phase creates a new batch."
+    },
+    {
+      "finding": "Fresh final authority remains mandatory",
+      "evidence": "All per-result rereads complete before the final case map begins; failed final case reads propagate. Current case digest must equal the captured initial digest."
+    },
+    {
+      "finding": "Grouping does not conflate case or producer history",
+      "evidence": "Key includes full stored.caseRef, including id/incarnation/version; current case id and incarnation are explicitly checked and its version must not precede stored producer version. Distinct historical versions remain separate groups."
+    },
+    {
+      "finding": "Mutation of borrowed observations is fenced",
+      "evidence": "C08 reads, case reads, forecasts, references and returned values are copied before later awaits; initial caseDigest is captured before projection work."
+    },
+    {
+      "finding": "Canonical output order and repeated refs are preserved",
+      "evidence": "The concrete stored resolver retains array order and returns one result per incoming reference; duplicate refs receive separate reads and cloned outputs."
+    },
+    {
+      "finding": "Generic optional batch correlation remains a trusted-adapter obligation",
+      "risk": "The helper verifies cardinality but does not tag each entry with its requested reference. A custom resolveMany implementation must preserve ordering. Units additionally compares selected/baseline digests against independent C08 reads; this review does not certify arbitrary custom batch adapters.",
+      "recommendation": "Use the canonical published stored-scenario host for this intake; retain the owner's order/cardinality/refusal tests. Do not treat the optional batch callback as untrusted public input."
+    },
+    {
+      "finding": "Legacy scheduling changes are not an authority relaxation",
+      "risk": "Units previously used Promise.all for two individual resolves; batch/fallback now performs staged or sequential work. This can alter latency and interleaving without changing authority checks; no wall-clock improvement is assumed."
+    }
+  ],
+  "ownerTest": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+    "commit": "61d92392e9bded167eb2794995a623b2719cc4ba",
+    "blob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+    "testCount": 9,
+    "declaredBudgetPerTestMs": 60000,
+    "runtimeVerdict": "NOT_VALIDATED_IN_THIS_REVIEW",
+    "fixtureState": "USE_CORRECTED_6016_FIXTURE_AND_PLANNER_HELPER",
+    "oracles": [
+      "A sibling batch makes two case observations while retaining all result rereads; another call and duplicate refs do not reuse observations or mutable outputs.",
+      "Batched units binding equals legacy binding, with six versus ten direct case reads and unchanged twelve C08 reads/four forecasts.",
+      "Comparison starts independent initial/final batches; simultaneous contexts stay separate and unauthorized admin is denied.",
+      "Different cases and historical producer versions preserve order, cardinality and missing-ref refusal.",
+      "Ledger, alternative and coverage changes between phases invalidate all siblings even without a case-version increment.",
+      "Authority revocation after all result rereads is caught by the fresh final case observation.",
+      "A real Planner source change during projection invalidates both stored siblings.",
+      "Borrowed store/case callback mutation cannot rewrite an earlier captured observation.",
+      "Wrong batch length and denied batch entries never fall back to individual resolution."
+    ],
+    "proofLimits": [
+      "The test uses actual private UI authority, Planner commands/source issuer, persisted case and C08 APIs, but its inventory is intentionally conditioned; it is not full C10, installed-host or GNATIVE acceptance.",
+      "No accepted owner test run, complete control verdict, throughput result or current WP13 end-to-end performance result was verified by this review."
+    ]
+  },
+  "wp13Relevance": {
+    "reachesObservedTimeoutFixture": true,
+    "callPath": [
+      "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview-fixture.ts:createPortfolioCoverageFixture",
+      "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts:createWp05SensitivityFixture",
+      "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts / sensitivity-units.ts"
+    ],
+    "independentOfW7RenewalFixture": "The timed-out omitted and bundled modes use the WP05 engine fixture directly, not the WP11 renewal-choice fixture corrected in W7.",
+    "potentialBenefit": "Fewer repeated authorized case observations in fixture setup, comparison and each repeated units resolution/revalidation can reduce one source of repeated C10/source replay.",
+    "unreducedPreviewPath": {
+      "path": "modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "publishedBlob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "mechanism": "Each sample resolves one baseline initially and again at egress, plus a canonical simulation and source checks. resolve([one]) has no sibling sharing; the new batch does not directly reduce these single-baseline operations."
+    },
+    "otherRetainedCosts": [
+      "Per-result C08 reads and their current source/authority checks",
+      "Forecast projection and simulation per reference/sample",
+      "Canonical exact-threshold witnesses",
+      "Full persistence and read-only verification/replay"
+    ],
+    "conclusion": "The optimization reaches part of the hot path but is not demonstrated to be the limiting cost or sufficient to meet the existing test budget."
+  },
+  "observedWp13Performance": {
+    "runId": 43586147077,
+    "productSha": "00f1582e7a26f37b2f4ea4a18f7883f1837e48db",
+    "snapshotSha": "f54db2faaf1b285fb6ebf8ccf922f9cde5e60459",
+    "conclusion": "CANCELLED_45_MIN_AS_REPORTED_BY_ROOT",
+    "log": {
+      "path": "reference/wp13-S3-A-tests.log.txt",
+      "sha256": "0373bdf6c393688686aa4e6a2e66e5e67dafc619e301f9f00de7773bb87b7978",
+      "gitBlob": "aee1332d5b8bdac6aa4bb5956d8078452af7dc18"
+    },
+    "cases": [
+      {
+        "name": "WP13 persists and cold-reloads omitted training with its real 55000 sensitivity bound",
+        "observedDurationMs": 944759.46,
+        "budgetMs": 300000,
+        "outcome": "TIMEOUT"
+      },
+      {
+        "name": "WP13 persists and cold-reloads bundled training with its real 55000 sensitivity bound",
+        "observedDurationMs": 1592075.58,
+        "budgetMs": 300000,
+        "outcome": "TIMEOUT"
+      }
+    ],
+    "rootCause": "UNDETERMINED; these durations establish the problem, not the fraction attributable to sibling case reads."
+  },
+  "conditionalRecommendation": {
+    "currentAction": "Do not consume the Finance batch only because it is available. Preserve the existing published runtime while collecting discriminating bottleneck evidence.",
+    "beforeRuntimeIntake": [
+      "Obtain phase/call-count and duration evidence for the exact current candidate: units.resolve/revalidate, singular baseline resolve, canonical preview, C08 read, verifier replay and persistence binding phases.",
+      "Use test-side boundary observation that preserves all original callbacks and results; do not replace fresh authority/source checks with cached answers or widen timeouts to hide stalls.",
+      "If repeated sibling case observations are a material bottleneck, consume only the three runtime blobs at 61d923 by exact hashes; refresh the currently published baseline before doing so.",
+      "If using the owner's dedicated proof, consume the corrected scenario-batch fixture at6016, the unchanged test at61d and the missing WP03 planner helper at61d, then validate that composed candidate in GitHub Actions.",
+      "Require both the focused owner batch/authority proof and current-input WP13 end-to-end runtime evidence before claiming a performance improvement; retain all omission/null/FX/choice/replay oracles."
+    ],
+    "prohibitedInference": "No fewer-read assertion, source correction or zero own compiler diagnostics is a measured performance fix. No cache, reduced ACL check, removed final fresh read or threshold/coverage promotion is proposed.",
+    "currentRootExecutionContext": "Root reports W9 published and only a surgical Acore4 plus corrected reconciliation selection running. This artifact does not dispatch another run or modify that selection.",
+    "latestOwnerFinding": "The latest inspected Finance head is 6184a0d3; its delta after92f6 contains no newer fix in the listed C08/singular-baseline-preview hot path. Keep intake deferred until discriminating phase/call-count evidence identifies a material bottleneck."
+  },
+  "writeScope": {
+    "onlyArtifact": "reference/wp13-finance-batch-intake-review.json",
+    "productOrTestSourceEdits": false,
+    "ledgerOrMapEdits": false,
+    "remoteReads": "GitHub MCP only",
+    "remoteWrites": false,
+    "localProductTests": false,
+    "CIRequests": false
+  },
+  "limits": [
+    "W8 is the exact published baseline reconstructed for this review; no unverified W9 source identity is assumed.",
+    "The six-file set is a minimal proposed intake with direct dependencies present; hosted typecheck remains required for composed API compatibility.",
+    "The sixteen existing published but unhydrated transitive dependencies were not fetched merely to reproduce an already published snapshot.",
+    "This review preserves runtime ownership: no Planner, decision, host, engine, identity, Azure or deployment source was authored or modified."
+  ],
+  "latestOwnerReview": {
+    "ref": "refs/heads/astra-finance",
+    "head": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+    "headCommitMessage": "fix(sucafina): give decision timeline marks usable pointer targets",
+    "headCommitCreatedAt": "2026-11-14T11:29:47Z",
+    "source": "GitHub MCP read-only git/ref, fetch_commit and compare_commits in this task",
+    "compare": {
+      "base": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "head": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "status": "ahead",
+      "aheadBy": 7,
+      "totalCommits": 7,
+      "tooLarge": null,
+      "fileCount": 58
+    },
+    "targetPaths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+        "changedSincePreviousOwnerHead": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "changedSincePreviousOwnerHead": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+        "changedSincePreviousOwnerHead": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+        "changedSincePreviousOwnerHead": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "changedSincePreviousOwnerHead": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+        "changedSincePreviousOwnerHead": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+        "changedSincePreviousOwnerHead": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+        "changedSincePreviousOwnerHead": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+        "changedSincePreviousOwnerHead": false
+      }
+    ],
+    "changedProductSources": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/decision-view.ts",
+        "status": "modified",
+        "additions": 11,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+        "status": "modified",
+        "additions": 1,
+        "deletions": 1
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 2
+      }
+    ],
+    "changedTestSources": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+        "status": "added"
+      }
+    ],
+    "rootReportedRunHint": {
+      "runId": 43589528126,
+      "branch": "ci-run-linux-astra-finance-cfbf7c8-38f2e35-a1",
+      "verification": "Hint supplied by root; no run verdict fetched or accepted by this review"
+    },
+    "observedAt": "2026-11-14T11:31:51.582596+00:00",
+    "conclusion": "NO_LATER_CHANGE_IN_THE_REVIEWED_C08_OR_SINGULAR_BASELINE_PREVIEW_PATH",
+    "meaning": "The seven later commits modify BI timeline/decision mutations and other test fixtures, but do not modify the batch candidates, C08 result-store, baseline preview, WP05 engine fixture or corrected owner batch proof files. No larger runtime optimization for the two observed WP13 cold-reload timeouts is established by this later published range.",
+    "limits": [
+      "This conclusion is confined to 92f6d97d..6184a0d3 and the listed hot-path files; it is not a global performance claim.",
+      "Later owner tests/receipts are not imported and no owner run PASS is borrowed.",
+      "Changes to engine-revision and WP11 renewal/history fixtures may matter to other scenarios; they are not changes to the WP05 engine fixture directly used by the timed-out omitted/bundled cases."
+    ]
+  },
+  "reviewHistory": [
+    {
+      "reason": "Root requested a fresh Finance ref and narrow comparison before closeout",
+      "previousArtifactSha256": "e0f0108d5a532f1c2bbb3ca2a122712d1f9d23e4d359b053263d173b789e0e53",
+      "latestOwnerHead": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "decisionUnchanged": true,
+      "sourceIntake": false
+    }
+  ]
+}

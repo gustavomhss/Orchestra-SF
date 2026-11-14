@@ -1,0 +1,407 @@
+{
+  "schema": "wp13-cold-W18-static-review-v1",
+  "reviewer": "/root/wp13_review_acceptance/w6_handoff_static",
+  "status": "NO_SUBSTANTIAL_SAFE_OWN_CHANGE_ESTABLISHED_UNDER_CURRENT_PORTS",
+  "target": {
+    "head": "30312b0737daded8f5aaee40f59bc923908bce53",
+    "tree": "0fba102f4af116561926c105477ef32f916eb7ba",
+    "identitySource": "Root publication message; inspected local blobs match the stated exact W18 Finance closure. No remote operation by reviewer."
+  },
+  "priorReview": {
+    "path": "reference/wp13-cold-replay-static-review.json",
+    "sha256": "a9d0a8713b6411af640bc12982db92279e34c08e29c00f5ce96c60ff9f692657",
+    "scope": "W13 static causal model, not execution evidence for W18"
+  },
+  "execution": {
+    "productEdited": false,
+    "fixturesEdited": false,
+    "mapsOrAssemblerEdited": false,
+    "localTests": false,
+    "localTypecheck": false,
+    "productCodeImportedOrExecuted": false,
+    "ciOperations": false,
+    "remoteOperations": false,
+    "reportOnlyWritten": true
+  },
+  "recommendation": {
+    "publishOwnOptimizationNow": false,
+    "newEquivalentProductSelectionJustifiedByThisReview": false,
+    "reason": "The WP13 replay/cold graph is unchanged by hash. Its expensive public callbacks combine canonical numerical reproduction with fresh case/source/rule/coverage admission. Current contracts do not expose an authenticated cheaper observation that could replace one whole replay without removing an existing consistency boundary. No measured bottleneck or safe substantial reduction has been established inside WP13 alone.",
+    "whatIsViableNow": "Keep the W18 exact closure and current oracles. Finish the existing pinned hosted work; use its logs to decide whether phase/call instrumentation is needed in the next non-equivalent authorized selection. Synchronous digest deduplication is a safe small possibility, but not a justified timeout fix.",
+    "notAUniversalImpossibilityClaim": "This is a conclusion about the inspected published ports, not a claim that no future owner-provided batch/certificate revalidation API can reduce cost."
+  },
+  "w18DeltaRelevantToCold": [
+    {
+      "path": "product/planner/port.ts",
+      "gitBlob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "staticEffect": "Per successful self-comparison, direct source resolves 4 to 2, direct coverage resolves 4 to 2, canonical source projections 4 to 2, financial projection builds 2 to 1. Initial/final observations remain; the two Planner snapshot transactions and final authority checks remain. These are call-site counts, not timings or query counts."
+    },
+    {
+      "path": "product/planner/scenario-port.ts + scenario.ts",
+      "staticEffect": "Each successful simulation now projects and financially qualifies the actual post-command clone. This necessary absence/zero/FX hardening adds work compared with reading the legacy preview summary; no net latency improvement is inferred from self-comparison dedup alone."
+    },
+    {
+      "path": "test/product/wp11/renewal-operation-verifier.ts",
+      "gitBlob": "f85c1c8e7196aff1381513b2d5ed2109641d6a45",
+      "staticEffect": "The source-only shortcut and fresh two-projection admission apply to the renewal fixture path. The first omitted/bundled/confirmed cold coverage cases use createWp05ComparisonFixture and its existing createPlannerOperationVerifier, so the new renewal verifier is not on that execution path."
+    },
+    {
+      "path": "product/decisions/case-port.ts",
+      "gitBlob": "e646386af209978f2a931a10a070061ba0c97cbe",
+      "staticEffect": "The W17 full-case final fence moves the final case snapshot after external callbacks; it does not remove either scenario verification phase."
+    }
+  ],
+  "unchangedColdGraph": {
+    "scenario": "Stable successful cold persistent.read; n=2 endpoint samples and an exact certificate. Early failure may stop sooner.",
+    "path": [
+      "coverage-sensitivity-integration.test.ts persistedServices creates fresh coverage/verifier factories",
+      "sensitivity-store.ts read performs initial binding read, sample validation, final result read and final binding read",
+      "criterion-rules.ts read invokes verifyBinding before and after current binding/rule/result rereads",
+      "verification.ts verifySensitivity reproduces samples, canonical threshold and applicable coverage"
+    ],
+    "counts": {
+      "bindingRead": 2,
+      "verifySensitivityPerBindingRead": 2,
+      "verifySensitivity": 4,
+      "exactThresholdCalls": 8,
+      "sourceFenceCollections": 8,
+      "directC08ReadsExcludingNestedUnitsPreview": 33
+    },
+    "formulaForDirectC08": "2 outer sensitivity reads + 4 sensitivity reads inside binding reads + (1+n) sample validation + 4*(4+n) verifier historical/sample reads = 23+5n =33.",
+    "newSaveAndColdCombined": {
+      "producerSensitivityEvaluations": 1,
+      "verifySensitivity": 11,
+      "exactThresholdCallsIncludingProducer": 24,
+      "excludes": "Fixture bootstrap, explicit test witnesses/units resolution/sample reads, revocation and cleanup; confirmed also performs an idempotent evaluateAndStore."
+    },
+    "omittedPerVerifier": {
+      "coverageIssue": 1,
+      "coverageIssueOutcome": "unavailable for incomplete classification before structural proof",
+      "coverageQualify": 0,
+      "coverageVerify": 0,
+      "structuralProofs": 0,
+      "unitsIssueIncludingNestedExact": 6,
+      "nonSolverCanonicalPreviews": 6
+    },
+    "completeCoveredPerVerifier": {
+      "coverageIssue": 1,
+      "coverageQualifyIncludingVerify": 4,
+      "coverageVerify": 2,
+      "coverageRevalidateIncludingVerify": 3,
+      "structuralProofs": 4,
+      "unitsIssueIncludingNestedExactAndStructure": 14,
+      "nonSolverCanonicalPreviews": 20,
+      "coverageAuthorityResolutions": 16
+    },
+    "solverWork": "Each exactThreshold additionally performs its endpoint, anchor/neighbor/binary probes and final adjacent IEEE witnesses. Probe count and duration were not evaluated. A cold omitted read has 24 non-solver previews plus eight exact-solver preview sequences; bundled/confirmed has 80 plus eight such sequences.",
+    "nestedCost": "Each canonical preview itself resolves the baseline twice, reads C08/case/source, simulates through Planner and performs final rechecks. Same-case batching already exists within a units.issue, not across distinct units/preview/replay observations.",
+    "countLimit": "Static successful-path API counts rechecked against unchanged code. These do not establish which phase dominates elapsed time."
+  },
+  "coveragePersistenceRisks": [
+    {
+      "id": "COLD-NO-PREWARM",
+      "paths": [
+        "test/product/wp13/coverage-sensitivity-integration.test.ts:64-68",
+        "product/portfolio/coverage-preview.ts:75-77"
+      ],
+      "finding": "Cold services have new issued/qualified maps. Their first operation is persistent.read; pre-evaluating to populate maps would weaken the cold-reconstruction oracle. Persisted C08 references exclude transient portfolio-coverage-interval refs by an explicit assertion."
+    },
+    {
+      "id": "ABSENCE-COMPLETE-DISTINCTION",
+      "paths": [
+        "product/portfolio/sensitivity.ts:42-68",
+        "test/product/wp13/coverage-sensitivity-integration.test.ts:30-52"
+      ],
+      "finding": "An exact 55000 known-components bound under omitted training remains conditioned. Complete C10 is produced only from current authenticated classifications; confirmed 40000 shifts the numerical bound to15000. A performance shortcut must not convert threshold precision into completeness or application."
+    },
+    {
+      "id": "AUTHORITY-MUTATION-WINDOWS",
+      "paths": [
+        "product/portfolio/sensitivity-store.ts:29-44",
+        "product/decisions/criterion-rules.ts:166-182",
+        "product/portfolio/coverage-preview.ts:92-102,137-177"
+      ],
+      "finding": "The repeated reads bracket different awaited providers. Digest equality of one returned value does not authenticate future permission, rule, case or C10 observations. Removing an initial/final binding read or using a previously qualified preview changes the currently checked windows."
+    },
+    {
+      "id": "SOURCE-FENCE-NOT-REPLAY-TOKEN",
+      "paths": [
+        "product/portfolio/verification.ts:45-54,157-160",
+        "product/ai/run-store.ts:11-14"
+      ],
+      "finding": "The existing map is a short-lived snapshot check for commit preflight, not numerical replay reuse. sfRunSourceFence explicitly excludes __sfProductV1, and provides no monotonic ABA generation for C08/case/rule/classification state. It cannot justify skipping a later mathematical/admission observation."
+    },
+    {
+      "id": "TRANSIENT-LIFETIME",
+      "paths": [
+        "product/portfolio/coverage-preview.ts:78-82,131"
+      ],
+      "finding": "Issued interval proofs expire after300000ms and may be pruned on subsequent current checks. Very slow work can fail closed when its transient proof expires; no W18 expiration was observed by this reviewer. Increasing that lifetime or the test budget is not proposed."
+    },
+    {
+      "id": "W18-NEW-RESULT-SEMANTICS",
+      "paths": [
+        "product/planner/scenario-port.ts:83-95,123-128"
+      ],
+      "finding": "Post-command qualification can change results for explicitly addressed absent cells. Historical C08/result proofs remain pinned to their producing composition; a W16 run or old financial proof must not be relabeled as W18 replay proof."
+    }
+  ],
+  "ownOptimizationCandidatesReviewed": [
+    {
+      "candidate": "Remove one outer bindings.read",
+      "decision": "REJECT_WITH_CURRENT_API",
+      "reason": "The public WP11 binding reader exposes only bind/read. The final read currently detects binding mutation during sample/result reads; replacing it with local digest lookup or omitting the first observation changes that guarantee. The underlying two verifyBinding calls cannot be removed by WP13."
+    },
+    {
+      "candidate": "Skip the second exactThreshold solve and only reuse the previous scalar certificate",
+      "decision": "REJECT_WITH_CURRENT_CERTIFICATE_CONTRACT",
+      "reason": "The callback returns only value/evidenceRefs, not an independently revalidatable producer proof over all canonical inputs. Adjacent witness validation alone does not establish that the final domain certificate/metadata is still available; it may also miss changed fixed behavior elsewhere in the interval. Keeping fresh authorization while dropping this final producer observation is not equivalent."
+    },
+    {
+      "candidate": "Fuse coverage verify and qualify to skip the second preview",
+      "decision": "NO_READY_SAFE_EQUIVALENCE",
+      "reason": "qualify is a public consumer of possibly forged incoming preview; it deliberately replays after its own current-authority read. verify produces one preview, then qualify observes authority and produces another. A private fusion would require a new proved contract/order for mutation between those callbacks, not a one-line removal. It saves only part of the complete-C10 path and does not help omitted training."
+    },
+    {
+      "candidate": "Reuse a previous complete verifySensitivity result using existing source fences",
+      "decision": "REJECTED_DEFERRED_CACHE_NOT_REINTRODUCED",
+      "reason": "No current generation/full-product-state/fresh-admission guarantee exists. Cross-observation or cross-call memo remains outside authorization."
+    },
+    {
+      "candidate": "Parallelize replay phases or hold a long transaction during mathematical replay",
+      "decision": "REJECT",
+      "reason": "The LocalStore serializes transactions; callback mutations and read ordering are observable. A long lock around exact probes/C10 would recreate the rejected approach and would not safely establish a gain."
+    },
+    {
+      "candidate": "Stable Set-based full-digest dedup in synchronous finalization",
+      "decision": "SAFE_SMALL_ONLY_NOT_TIMEOUT_FIX",
+      "paths": [
+        "product/portfolio/planner-sensitivity.ts:148",
+        "product/portfolio/coverage-preview.ts:128",
+        "product/portfolio/threshold-proof.ts:39"
+      ],
+      "reason": "Compute full canonical keys once in the same synchronous section, retain first occurrence/order and exact full-object equality. This removes redundant hashing only; no awaited call or numeric proof disappears. Few fixture references and no timings provide no basis for a substantial gain claim."
+    },
+    {
+      "candidate": "Retry-only persisted idempotency fast path before evaluation",
+      "decision": "NOT_A_COLD_FIX_NOT_PROPOSED_NOW",
+      "reason": "An already-bound retry might admit a separately designed fast path using the existing canonical read, but orphan recovery and result-conflict semantics need their own proof. It does not remove initial save or cold read work in the omitted/bundled tests."
+    }
+  ],
+  "ownerBoundary": {
+    "WP11": "A cheaper authenticated binding/result observation or owner-provided combined read/proof protocol would need to preserve initial/final full C08, case, rule and authority consistency. Current return {bind,read} has no such separate capability.",
+    "FinanceWP03": "Canonical batch/interval/threshold revalidation APIs could expose reusable mathematical derivation with fresh producer evidence and current authority within a single proved invocation. WP13 cannot synthesize those guarantees from scalar values, source ref digests or sampled endpoints.",
+    "WP05": "Its actual comparison fixture still verifies every alternative through createPlannerOperationVerifier at both case phases. Renewal fixture changes are not an implicit replacement for that path.",
+    "WP10": "Installed host composition and source admission remain an owner responsibility. This report requests no speculative host edit and does not infer an installed performance gain.",
+    "nextAction": "After the pinned hosted results, route a concrete measured cost report to the relevant owner if necessary. Do not modify foreign fixtures/producers or introduce another speculative WP13 cache."
+  },
+  "evidenceAndRunLimits": {
+    "S12": {
+      "runId": 43598721883,
+      "productPin": "eb5d411292b8892673cff751b3492a14146b7785",
+      "statusAtAssignment": "IN_PROGRESS",
+      "observedBy": "Root message only",
+      "acceptanceForW18": "NONE"
+    },
+    "W18ChecksAndS14": "Root prepares/checks these; reviewer did not query them or infer execution from prepared selections.",
+    "oldDurationEvidence": {
+      "product": "00f1582e7a26f37b2f4ea4a18f7883f1837e48db",
+      "runId": 43586147077,
+      "omittedMs": 944759.46,
+      "bundledMs": 1592075.58,
+      "budgetMs": 300000,
+      "limit": "Old W5 whole test durations include bootstrap/save/witnesses/cold/revocation/cleanup. They are not a measured cold phase or W18 performance result."
+    },
+    "possibleInstrumentation": "Time and count the actual fixture bootstrap, evaluateAndStore, explicit witnesses, first cold read, revoked read, cleanup; nested wrappers for bindings, verifySensitivity, units, coverage and exact/preview. Preserve arguments/errors/await ordering and all calls. Add only if needed to a newly authorized non-equivalent hosted selection, not an extra duplicate run."
+  },
+  "files": [
+    {
+      "path": "test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "w13Blob": "8eb97976d7a2f228acf189b25882fd72d960d95b",
+      "gitBlob": "8eb97976d7a2f228acf189b25882fd72d960d95b",
+      "sha256": "5c09acc087257862eb16920c893645b75d54aded4a8f73a5d5cbf8416ac1a594",
+      "bytes": 23011,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "test/product/wp13/coverage-preview-fixture.ts",
+      "w13Blob": "6e56a64ee1b76422706d685e2f646a156a8ade39",
+      "gitBlob": "6e56a64ee1b76422706d685e2f646a156a8ade39",
+      "sha256": "c1bd849c0d0c716caf2ca55fb1b8cb0ef58af8297e3e1daa6a5b3f88951f0aec",
+      "bytes": 9717,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "test/product/wp05/engine-fixture.ts",
+      "w13Blob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "gitBlob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "sha256": "afb559f4b2403025b977a33a5a118be567a5936de5ca46e3308687186b250ad8",
+      "bytes": 22570,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "product/portfolio/verification.ts",
+      "w13Blob": "dd571e43b841dc7cbc37296c4fa9ccd708215ef4",
+      "gitBlob": "dd571e43b841dc7cbc37296c4fa9ccd708215ef4",
+      "sha256": "fa2ec4afe016ef0820cce9d08601cd9772e099b1308790e23fd6f538af226320",
+      "bytes": 17055,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "product/portfolio/sensitivity-store.ts",
+      "w13Blob": "33a8d973c045769b456342499e1c247d524f6c53",
+      "gitBlob": "33a8d973c045769b456342499e1c247d524f6c53",
+      "sha256": "180d8117de887296d11e73bf49e1cda9afb53c5144ee6f4ca50dd8b4ef72c3a2",
+      "bytes": 8025,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "product/portfolio/planner-sensitivity.ts",
+      "w13Blob": "3dec070ca5f56f7bd03a09b4b19468c950d82214",
+      "gitBlob": "3dec070ca5f56f7bd03a09b4b19468c950d82214",
+      "sha256": "ccfd69570f4cc7dbe180f4e60cbf9891522e3f10674a6c8d84c78b61af8b491d",
+      "bytes": 19201,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "product/portfolio/sensitivity.ts",
+      "w13Blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5",
+      "gitBlob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5",
+      "sha256": "1c6a655eedd44c6f09411e8e3a9b5f7cfaa82f6cedcaeb006dd00b293cf5e63c",
+      "bytes": 12310,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "product/portfolio/coverage-preview.ts",
+      "w13Blob": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+      "gitBlob": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+      "sha256": "dedee7a05f2fb00a7267b93fc7ba23052c5bd625cfd161ab6bce71f4f07d635e",
+      "bytes": 20097,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "product/portfolio/threshold-proof.ts",
+      "w13Blob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+      "gitBlob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+      "sha256": "96ed59925c95abe55fe15185f30f2026f0713f5f916238d4529c29d812aa86bf",
+      "bytes": 6719,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "product/decisions/criterion-rules.ts",
+      "w13Blob": "c357c6c66aac544394ab355306e1f6f7195395f7",
+      "gitBlob": "c357c6c66aac544394ab355306e1f6f7195395f7",
+      "sha256": "88d63af3bb3b3f115e59bcde29de014dd5337ba71ce68910089d97bd89299217",
+      "bytes": 31605,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "product/decisions/result-store.ts",
+      "w13Blob": "338889513cfc681bdda91697a9d5bbc16bde8fd1",
+      "gitBlob": "338889513cfc681bdda91697a9d5bbc16bde8fd1",
+      "sha256": "44c12d1bca211d423296526b7fbe31d713566c86fbba1860c9832f6d53001998",
+      "bytes": 16090,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "product/decisions/case-port.ts",
+      "w13Blob": "810539cbd2f0b89006102b334710e9d6695151ca",
+      "gitBlob": "e646386af209978f2a931a10a070061ba0c97cbe",
+      "sha256": "8a16ba240d930c60ec90a25f4189fe053f61df2e2021aada83fb3a1874b256ab",
+      "bytes": 17077,
+      "unchangedSinceReviewedW13": false
+    },
+    {
+      "path": "product/planner/sensitivity-units.ts",
+      "w13Blob": "1673c86995cf71b61e288d91492ae7b691934171",
+      "gitBlob": "1673c86995cf71b61e288d91492ae7b691934171",
+      "sha256": "d83e19bff860ad2a54fc3f41b3b5790d3d31cd3b2b55ea8785a61ea30aa8827b",
+      "bytes": 19887,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "product/planner/stored-scenarios.ts",
+      "w13Blob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "gitBlob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "sha256": "771b060898fce1b1d851461bee7df743014ab55f9c0994a0331f2664a1c8bfd1",
+      "bytes": 6407,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "product/planner/scenario-comparison-port.ts",
+      "w13Blob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "gitBlob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+      "bytes": 8591,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "product/planner/preview-comparison.ts",
+      "w13Blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "gitBlob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "sha256": "51c9b83256825e90e3a8a8b49c11d73339527edcb1a67da4d98ce6e8bf17e143",
+      "bytes": 6770,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "product/planner/interval-proof.ts",
+      "w13Blob": "55a701b7be49fb3f550a0b52b580e6f7dc819b31",
+      "gitBlob": "55a701b7be49fb3f550a0b52b580e6f7dc819b31",
+      "sha256": "f6e8a733e688221146c2213b8b4e601cda41a2600ef65937006a26ddad6b3f28",
+      "bytes": 4817,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "product/planner/exact-threshold.ts",
+      "w13Blob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+      "gitBlob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+      "sha256": "a85a427a345629af0be0f03095a8f21095c6228ab163105dab6a3258ee5987a4",
+      "bytes": 10472,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "product/planner/operation-verifier.ts",
+      "w13Blob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+      "gitBlob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+      "sha256": "05d1f9c62a415c881bd6b36802abd68a5956cfab2fa4c173d5a0dc63cb53876d",
+      "bytes": 9875,
+      "unchangedSinceReviewedW13": true
+    },
+    {
+      "path": "product/planner/port.ts",
+      "gitBlob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "sha256": "8c51fdb91dc3c35bd6ff075488f3d393711b2d16e411085960fa3728c1fe5bd1",
+      "bytes": 26150
+    },
+    {
+      "path": "product/planner/scenario-port.ts",
+      "gitBlob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "sha256": "6e0f003055c08005e3a2f339d221c6f608d615a8068e66d30555a981604eb0fd",
+      "bytes": 17443
+    },
+    {
+      "path": "product/planner/scenario.ts",
+      "gitBlob": "dd92a35b3025a69c198a2d99c4ef38a472dd3bc7",
+      "sha256": "a04c007eeb6505ed778b6f319cf131552b8a87d66dad370ae46430bccd9b646c",
+      "bytes": 5187
+    },
+    {
+      "path": "product/planner/actual-presence.ts",
+      "gitBlob": "c7497d7a71e90dd51ad362921e36d0de12fe431f",
+      "sha256": "1d9eb4259a257a7dddf064f08cb7cbd6c39d87533c747004c1587eba5fd93d2d",
+      "bytes": 978
+    },
+    {
+      "path": "test/product/wp11/renewal-operation-verifier.ts",
+      "gitBlob": "f85c1c8e7196aff1381513b2d5ed2109641d6a45",
+      "sha256": "9a23b44d9ac78f6597f0942a9a17dd8c94c40d93e80d2de7eb25b42291d8a7bc",
+      "bytes": 6337
+    },
+    {
+      "path": "product/ai/run-store.ts",
+      "gitBlob": "26ee90e86489c55d24222b8f9fb48aed255e24c5",
+      "sha256": "9be98a1d9061f2a6ee181730cf22630ea32909028f06740687fcb1a2c3d6c628",
+      "bytes": 17713
+    }
+  ]
+}

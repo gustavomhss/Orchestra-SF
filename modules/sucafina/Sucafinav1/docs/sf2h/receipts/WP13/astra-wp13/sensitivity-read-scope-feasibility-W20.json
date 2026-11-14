@@ -1,0 +1,312 @@
+{
+  "schema": "wp13-owned-readscope-feasibility-v1",
+  "status": "CONDITIONALLY_FEASIBLE_PRIVATE_OPT_IN_NOT_IMPLEMENTED_IN_THIS_REPORT",
+  "reviewer": "/root/wp13_findings",
+  "preparedAt": "2026-11-14T13:57:52.312668+00:00",
+  "subject": "One immutable LocalStore read scope per verifySensitivity invocation; no cross-invocation numerical cache",
+  "product": {
+    "head": "30312b0737daded8f5aaee40f59bc923908bce53",
+    "tree": "0fba102f4af116561926c105477ef32f916eb7ba"
+  },
+  "decision": {
+    "ownChangeLegitimate": true,
+    "needsPublicOrForeignContractChangeForAuditedLocalFixture": false,
+    "installedHostAdoption": "WP10 private composition delta NOT_APPLIED; not automatically safe for arbitrary Persistence implementations or independently stored sources",
+    "recommendation": "An opt-in own verifier/fixture increment is defensible if every condition below is implemented and discriminating hosted counterexamples pass. Keep the default full replay unchanged. This report proves neither runtime correctness nor speedup."
+  },
+  "scopeOfReadOnlyReview": {
+    "localProductExecution": false,
+    "testsRun": false,
+    "typecheckRun": false,
+    "remoteOperations": false,
+    "productOrFixtureEdits": false,
+    "findingsLedgerMapsAssemblerEdited": false,
+    "onlyArtifactWritten": "reference/wp13-owned-readscope-feasibility-W18.json"
+  },
+  "currentCallGraph": [
+    {
+      "path": "product/portfolio/sensitivity-store.ts:read",
+      "fact": "A cold persistent.read calls criterion bindings.read twice, preserving C08/source/sample reads around them."
+    },
+    {
+      "path": "product/decisions/criterion-rules.ts:createCriterionResultBindings.read",
+      "fact": "Each bindings.read invokes verifyBinding twice, with fresh rule/result/binding reads and final host revalidation. Thus one cold persistent.read performs four independent verifySensitivity replays."
+    },
+    {
+      "path": "product/portfolio/verification.ts:verifySensitivity",
+      "fact": "Every replay still resolves units, source/baseline C08, interval authority, each persisted sample, actual preview, coverage qualification, canonical exact solver and adjacent witnesses, then revalidates units/historical sources/coverage/exact evidence and captures source fences."
+    },
+    {
+      "path": "test/product/wp13/coverage-sensitivity-integration.test.ts:persistedServices",
+      "fact": "The existing three cold-reload cases use this complete chain. Initial persistence reaches seven verifier calls; reload four, for eleven total before optional retry. Confirmed idempotent retry adds six, for seventeen. These are structural call counts, not runtime samples or a timing profile."
+    }
+  ],
+  "localStoreFacts": [
+    {
+      "path": "runtime/local-store.ts:operation and transaction",
+      "fact": "Top-level transaction uses operation(true): opens SQLite, BEGIN IMMEDIATE, reads/decodes dashboard, planner and procurement, runs work once and rolls back on commit:false. The 5000ms default limits lock acquisition, not how long a callback owns the transaction."
+    },
+    {
+      "path": "runtime/local-store.ts:transaction nested branch",
+      "fact": "With this same LocalStore AsyncLocalStorage scope active, nested transaction(surface) reads a detached encode/decode copy of the root snapshot and remains on the existing database connection. commit:true or blob writes poison the root even if a caller catches the error."
+    },
+    {
+      "path": "runtime/local-store.ts:transactionAll",
+      "fact": "transactionAll has no nested read-only branch. It enters operation(true), whose inherited-scope check immediately poisons and rejects as Nested local writes are forbidden. This is fail-fast, not a proven self-queue deadlock."
+    },
+    {
+      "path": "runtime/local-store.ts:currentSnapshots",
+      "fact": "Returns detached copies of all three root snapshots and throws after scope end. C08 cases/results/preferences live in dashboard __sfProductV1 and therefore share this root snapshot despite sfRunSourceFence deliberately excluding that product state."
+    },
+    {
+      "path": "runtime/local-store.ts:scope finalization",
+      "fact": "Root checks poison, unfinished readers and blob-generation invariants before accepting the value. Detached readers reject after scope closure; read-only success writes no durable snapshot. Callback-created unawaited work is not a valid part of this contract."
+    },
+    {
+      "path": "product/planner/scenario.ts:simulatePlannerOperations",
+      "fact": "Canonical hypothetical commands execute against structuredClone(snapshot), not the durable LocalStore root. Their real canWrite/role/target/closed-month checks and post-command projection can remain inside a read-only outer scope."
+    }
+  ],
+  "requiredOwnComposition": {
+    "suggestedPrivateOption": "sensitivityReadScope?: Pick<DomainPortHost, \"persistence\" | \"requestFor\" | \"revalidate\">",
+    "capabilityBoundary": "A trusted root-selected host capability, not caller JSON and not an arbitrary callback returning true. Its persistence must be the same audited LocalStore instance used by cases, rules, C08, preview/exact and source adapters. currentSnapshots support is mandatory for opt-in; mere presence of a transaction method is not proof of this guarantee.",
+    "transaction": "Open one persistence.transaction(\"planner\", ..., {signal: request.signal}) per verifySensitivity and always return commit:false. Do not wrap sensitivity evaluation/persistence/bind writes, an entire persistent.read, all four verifier calls, or all test cases in one scope.",
+    "readSourceFences": "Keep fresh host.revalidate. If currentSnapshots exists during this scope, hash those three snapshots. Otherwise retain the existing transactionAll read. Never call transactionAll from inside the outer scope.",
+    "replay": "Run the existing full numerical/source/coverage proof anew, retaining every current callback, solver, qualification and witness. No memo of a result, authority, qualification, source or successful replay between invocations.",
+    "inputFences": "Capture the private Request identity, kind+binding digest and borrowed binding/stored-result digests before the first await. Detach mutable inputs for the inner work; reject ingress/egress mutation, changed requestFor identity, abort or authority revocation. Do not expose the root mutable snapshot to dependencies.",
+    "grantPublication": "Invalidate the prior commit fence for the same binding/authority at the beginning of the scoped attempt. capture must stage only an invocation-private candidate. Publish to the existing bounded/expiring fence map only after the root transaction itself succeeds, all final authority checks inside it pass and synchronous egress fences still match. Throw/false/abort/poison must leave no candidate or old grant usable. Protect same-key overlapping attempts so a superseded invocation cannot publish later.",
+    "default": "Without the explicit capability, preserve the current full unscoped replay and its API behavior; do not infer opt-in from a generic Persistence object."
+  },
+  "safetyLimits": [
+    "This scope makes durable snapshots immutable for one invocation. It does not turn external document ACLs, WeakMap leases, fixture revoked-source sets, environment clocks or remote providers into SQLite state. Keep all their fresh callbacks; unsupported side-effectful/external provider contracts remain an owner boundary.",
+    "The ordinary published coverage fixture uses the same LocalStore for all numerical/C08/rule reads and read-only callbacks. Its controlled revocation gates remain synthetic host seams. Passing its scoped test is not installed WP10/native acceptance.",
+    "A callback attempting a real source write inside the same scope must now fail/poison rather than commit between observations. This is an intentional stronger read-only contract, not proof that two separately committed changing observations were detected. Keep the unscoped mutation counterexamples and add scoped refusal plus later-invocation freshness tests.",
+    "A write through a different LocalStore instance or provider is not automatically covered by the instance AsyncLocalStorage poison. Same-database writers contend with BEGIN IMMEDIATE, while an independent store/remote source does not. Do not advertise universal atomicity across them.",
+    "Holding BEGIN IMMEDIATE for a whole replay may block writers long enough for the default5000ms admission timeout. Runtime latency and contention remain unmeasured. An installation owner must assess this before adoption; no timeout increase is part of the proposal.",
+    "Scope rollback must precede successful grant publication. A boolean raw verifier result before root finalization is insufficient because a swallowed nested-write error can still poison the root.",
+    "Nested reads still serialize/deserialize detached snapshots, and state.read additionally structuredClones product state. Canonical math and coverage evidence work remain unchanged. Eliminating SQLite opens/locks/SELECTs is plausible benefit, not proof that the observed cold-case bottleneck is solved."
+  ],
+  "minimalHostedCounterproofs": [
+    {
+      "id": "READSCOPE-01",
+      "name": "swallowed nested write rolls back and denies",
+      "setup": "Real LocalStore, real Planner/C08 proof inputs, and a source/authority callback that attempts a canonical durable Planner edit inside the scope, catches its error, and returns its earlier observation.",
+      "required": "Callback reached; verifier false; all dashboard/planner/procurement snapshots unchanged; no final commit fence accepted. Keep numerical and authority callbacks active."
+    },
+    {
+      "id": "READSCOPE-02",
+      "name": "next invocation sees a committed canonical source edit",
+      "setup": "First real scoped verification succeeds; commit a canonical Planner edit outside the scope under existing fixture authority; invoke verification again with the old bound proof.",
+      "required": "The later call opens fresh scope and refuses stale old proof; actual source edit is observed. No reuse of the first numerical proof or authority."
+    },
+    {
+      "id": "READSCOPE-03",
+      "name": "final awaited revocation or abort denies",
+      "setup": "Revoke current source/classification access or a real exposed UI lease in the final awaited verification/authority boundary, or abort the private request; maintain original callback ordering.",
+      "required": "Verifier false and no published fence after callback completion; unrelated numerical correctness must not override denial. Document a synthetic revocation seam when the fixture cannot expose UI.finish; do not fabricate native authority."
+    },
+    {
+      "id": "READSCOPE-04",
+      "name": "old or staged grant cannot survive failed scope",
+      "setup": "First establish a legitimate fence at unchanged source hashes; run a second same-key invocation that stages a candidate but then fails root finalization or final authority. Inspect verifySnapshot using a genuine subsequent immutable transaction.",
+      "required": "Old and provisional fences are unusable even when source hashes are unchanged. A thrown/poisoned root cannot be converted to accepted proof by an arbitrary hook; include borrowed input/request identity guards where exercised."
+    }
+  ],
+  "performanceAssessment": {
+    "established": "Structural elimination of repeated same-instance connection/transaction/snapshot SQL work inside each invocation is plausible from the concrete implementation.",
+    "notEstablished": [
+      "wall-clock speedup",
+      "cold-reload completion within300000ms",
+      "absence of writer contention",
+      "isolated phase or solver timings",
+      "installed host latency"
+    ],
+    "retained": [
+      "all four independent cold verifier invocations",
+      "all6 coverage integration cases and existing budgets",
+      "canonical exact solver and adjacent witnesses",
+      "C10 missing/null/zero/N-A/shared and currencies",
+      "fresh source/evidence/authority callbacks",
+      "original human choice and no apply"
+    ]
+  },
+  "ownership": {
+    "possibleOwnFiles": [
+      "product/portfolio/verification.ts",
+      "test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "new own fixture helper",
+      "new test/product/wp13/sensitivity-read-scope.test.ts"
+    ],
+    "foreignFilesToEdit": [],
+    "runtimeOrEngineChanges": false,
+    "publicContractChanges": false,
+    "WP10": "Private consumer-composition delta required; not installed or applied by a fixture option.",
+    "otherOwners": "No adoption of owner1350 grouped case helper is implied by this report."
+  },
+  "owner1350Analogy": {
+    "pin": {
+      "owner": "Finance",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "sha": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "localPath": "reference/owner-1350/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "bytes": 8303,
+      "sha256": "9fb65068cc969ebb04f2e14f9082147d058287f09fa40702d56c4c4838a6d9a1"
+    },
+    "meaning": "The new createRenewalCaseOperationVerifier wraps alternative checks in transaction(planner), awaits every sibling including caught failures and places final async authority callback inside the root. This is evidence the concrete LocalStore supports that limited grouping.",
+    "limit": "It does not execute full sensitivity replay, exact solver or C08/C10 chain and cannot supply whole-replay proof. The helper is observational input here, not consumed by this task."
+  },
+  "crossReview": {
+    "reviewer": "/root/wp13_review_acceptance/w6_handoff_static",
+    "agreement": "Confirmed transactionAll fail-fast/poison; warned not to infer whole sensitivity safety or performance from grouped owner alternatives and to retain the separate mutation semantics.",
+    "relatedReport": "reference/wp13-cold-W18-static-review.json"
+  },
+  "pins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "localBlob": "dd571e43b841dc7cbc37296c4fa9ccd708215ef4",
+      "localSha256": "fa2ec4afe016ef0820cce9d08601cd9772e099b1308790e23fd6f538af226320",
+      "bytes": 17055,
+      "publishedBlob": "dd571e43b841dc7cbc37296c4fa9ccd708215ef4",
+      "matchesPublished": true,
+      "oneExtraFinalLfOnly": false,
+      "sourceCommit": "30312b0737daded8f5aaee40f59bc923908bce53",
+      "sourceMetadata": "wp13-W18-base-compare / wp13-W18-pin-audit; unchanged W2 tree entries retained where absent from the base diff",
+      "modified": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "localBlob": "33a8d973c045769b456342499e1c247d524f6c53",
+      "localSha256": "180d8117de887296d11e73bf49e1cda9afb53c5144ee6f4ca50dd8b4ef72c3a2",
+      "bytes": 8025,
+      "publishedBlob": "33a8d973c045769b456342499e1c247d524f6c53",
+      "matchesPublished": true,
+      "oneExtraFinalLfOnly": false,
+      "sourceCommit": "30312b0737daded8f5aaee40f59bc923908bce53",
+      "sourceMetadata": "wp13-W18-base-compare / wp13-W18-pin-audit; unchanged W2 tree entries retained where absent from the base diff",
+      "modified": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview-fixture.ts",
+      "localBlob": "6e56a64ee1b76422706d685e2f646a156a8ade39",
+      "localSha256": "c1bd849c0d0c716caf2ca55fb1b8cb0ef58af8297e3e1daa6a5b3f88951f0aec",
+      "bytes": 9717,
+      "publishedBlob": "6e56a64ee1b76422706d685e2f646a156a8ade39",
+      "matchesPublished": true,
+      "oneExtraFinalLfOnly": false,
+      "sourceCommit": "30312b0737daded8f5aaee40f59bc923908bce53",
+      "sourceMetadata": "wp13-W18-base-compare / wp13-W18-pin-audit; unchanged W2 tree entries retained where absent from the base diff",
+      "modified": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "localBlob": "8eb97976d7a2f228acf189b25882fd72d960d95b",
+      "localSha256": "5c09acc087257862eb16920c893645b75d54aded4a8f73a5d5cbf8416ac1a594",
+      "bytes": 23011,
+      "publishedBlob": "8eb97976d7a2f228acf189b25882fd72d960d95b",
+      "matchesPublished": true,
+      "oneExtraFinalLfOnly": false,
+      "sourceCommit": "30312b0737daded8f5aaee40f59bc923908bce53",
+      "sourceMetadata": "wp13-W18-base-compare / wp13-W18-pin-audit; unchanged W2 tree entries retained where absent from the base diff",
+      "modified": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "localBlob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "localSha256": "c8ce4f6d20eb89d2adebc6577692c310b65310be251784b109431bc18a7c26e5",
+      "bytes": 24537,
+      "publishedBlob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "matchesPublished": true,
+      "oneExtraFinalLfOnly": false,
+      "sourceCommit": "30312b0737daded8f5aaee40f59bc923908bce53",
+      "sourceMetadata": "wp13-W18-base-compare / wp13-W18-pin-audit; unchanged W2 tree entries retained where absent from the base diff",
+      "modified": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "localBlob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "localSha256": "cb9ea7ac4610fc19cf6caa51a7339df9fd69ae181cdf638a8712779c846987c0",
+      "bytes": 4642,
+      "publishedBlob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "matchesPublished": true,
+      "oneExtraFinalLfOnly": false,
+      "sourceCommit": "30312b0737daded8f5aaee40f59bc923908bce53",
+      "sourceMetadata": "wp13-W18-base-compare / wp13-W18-pin-audit; unchanged W2 tree entries retained where absent from the base diff",
+      "modified": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "localBlob": "78009bbe25a975baa14066376fa0686e821dd5c3",
+      "localSha256": "4b825a62baf60c02bf9d2400e19f5e1deb6b0e6c03cfd6c62972eb43ef5e54c1",
+      "bytes": 19837,
+      "publishedBlob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "matchesPublished": false,
+      "oneExtraFinalLfOnly": true,
+      "sourceCommit": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "sourceMetadata": "wp13-W18-base-compare / wp13-W18-pin-audit; unchanged W2 tree entries retained where absent from the base diff",
+      "modified": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+      "localBlob": "c357c6c66aac544394ab355306e1f6f7195395f7",
+      "localSha256": "88d63af3bb3b3f115e59bcde29de014dd5337ba71ce68910089d97bd89299217",
+      "bytes": 31605,
+      "publishedBlob": "c357c6c66aac544394ab355306e1f6f7195395f7",
+      "matchesPublished": true,
+      "oneExtraFinalLfOnly": false,
+      "sourceCommit": "30312b0737daded8f5aaee40f59bc923908bce53",
+      "sourceMetadata": "wp13-W18-base-compare / wp13-W18-pin-audit; unchanged W2 tree entries retained where absent from the base diff",
+      "modified": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "localBlob": "338889513cfc681bdda91697a9d5bbc16bde8fd1",
+      "localSha256": "44c12d1bca211d423296526b7fbe31d713566c86fbba1860c9832f6d53001998",
+      "bytes": 16090,
+      "publishedBlob": "338889513cfc681bdda91697a9d5bbc16bde8fd1",
+      "matchesPublished": true,
+      "oneExtraFinalLfOnly": false,
+      "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+      "sourceMetadata": "wp13-W18-base-compare / wp13-W18-pin-audit; unchanged W2 tree entries retained where absent from the base diff",
+      "modified": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+      "localBlob": "dd92a35b3025a69c198a2d99c4ef38a472dd3bc7",
+      "localSha256": "a04c007eeb6505ed778b6f319cf131552b8a87d66dad370ae46430bccd9b646c",
+      "bytes": 5187,
+      "publishedBlob": "dd92a35b3025a69c198a2d99c4ef38a472dd3bc7",
+      "matchesPublished": true,
+      "oneExtraFinalLfOnly": false,
+      "sourceCommit": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+      "sourceMetadata": "wp13-W18-base-compare / wp13-W18-pin-audit; unchanged W2 tree entries retained where absent from the base diff",
+      "modified": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts",
+      "localBlob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+      "localSha256": "05d1f9c62a415c881bd6b36802abd68a5956cfab2fa4c173d5a0dc63cb53876d",
+      "bytes": 9875,
+      "publishedBlob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+      "matchesPublished": true,
+      "oneExtraFinalLfOnly": false,
+      "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "sourceMetadata": "wp13-W18-base-compare / wp13-W18-pin-audit; unchanged W2 tree entries retained where absent from the base diff",
+      "modified": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "localBlob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "localSha256": "afb559f4b2403025b977a33a5a118be567a5936de5ca46e3308687186b250ad8",
+      "bytes": 22570,
+      "publishedBlob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "matchesPublished": true,
+      "oneExtraFinalLfOnly": false,
+      "sourceCommit": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "sourceMetadata": "wp13-W18-base-compare / wp13-W18-pin-audit; unchanged W2 tree entries retained where absent from the base diff",
+      "modified": false
+    }
+  ],
+  "nextAction": "Root separately authorized a proposed own implementation after this report. Preserve original bytes before editing, implement the guarded opt-in and four counterproofs, request independent static review, then root may publish a new increment and run only surgical hosted checks. This feasibility record is not an implementation or execution PASS.",
+  "ready": false
+}

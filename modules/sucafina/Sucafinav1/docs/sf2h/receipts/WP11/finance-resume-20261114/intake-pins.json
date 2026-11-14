@@ -1,0 +1,81 @@
+{
+  "schema": "sf2h.finance-resume.intake.v1",
+  "branch": "finance-resume",
+  "base": {
+    "sha": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "tree": "ec517fa26571228bc1ce5e3698fcfc9c5d137ae3",
+    "pr": 35
+  },
+  "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "handoff": "a3d29d011ba3607a57914701300f09117a3e2de9",
+  "restart": "c208200cb39529ba09c1f3bbc5594a1ff579d385",
+  "sources": [
+    {
+      "pr": 22,
+      "branch": "astra-wp03",
+      "head": "90c467cea436daa24987ad68a588a7d80f91064e",
+      "tree": "62545e5c8a90e03d6ca92298dc5547853e8ea88a",
+      "author": "gustavomhss",
+      "authored_at": "2026-11-14T00:54:26Z",
+      "committer": "gustavomhss",
+      "commit_message": "docs(sucafina): append WP03 overview validation and attempt evidence",
+      "disposition": "UNCHANGED_ALREADY_CONSUMED"
+    },
+    {
+      "pr": 24,
+      "branch": "astra-wp05",
+      "head": "0881fee21f07bf8a9a1153d7d55727837cdf497a",
+      "tree": "220df3c21c228afee30bc7d06e998eaa4fca2f36",
+      "author": "gustavomhss",
+      "authored_at": "2026-11-14T00:57:39Z",
+      "committer": "gustavomhss",
+      "commit_message": "docs(sucafina): record WP05 resumption evidence and open blockers",
+      "disposition": "UNCHANGED_ALREADY_CONSUMED"
+    },
+    {
+      "pr": 40,
+      "branch": "astra-wp11",
+      "head": "e8949be0e31952d5be4987c099003cd0b46e2add",
+      "tree": "694ab744ce9e1361ec65704c5854c0bd30bf833a",
+      "author": "gustavomhss",
+      "authored_at": "2026-11-14T13:49:39Z",
+      "committer": "gustavomhss",
+      "commit_message": "docs(sucafina): publish WP11 scoped acceptance evidence and integration handoff",
+      "disposition": "OWN_PATH_RECONCILIATION_REQUIRED"
+    },
+    {
+      "pr": 37,
+      "branch": "astra-wp13",
+      "head": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "tree": "f9e4e23db0b3bc941599efba5341a653bb4ca3d9",
+      "author": "gustavomhss",
+      "authored_at": "2026-11-14T14:14:22Z",
+      "committer": "gustavomhss",
+      "commit_message": "fix(sucafina): scope full sensitivity replay to fresh immutable reads",
+      "disposition": "OWN_PATH_RECONCILIATION_REQUIRED"
+    }
+  ],
+  "external_observed": [
+    {
+      "pr": 32,
+      "branch": "astra-compose",
+      "head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "disposition": "READ_ONLY_OWNER_DEPENDENCY"
+    },
+    {
+      "pr": 31,
+      "branch": "astra-interface",
+      "head": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "disposition": "READ_ONLY_OWNER_DEPENDENCY"
+    },
+    {
+      "pr": 36,
+      "branch": "astra-intelligence",
+      "head": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "disposition": "READ_ONLY_OWNER_DEPENDENCY"
+    }
+  ],
+  "publication_policy": "One writer for finance-resume. Preserve original branches, archived inputs and dirty work. Own four-WP files only; source commits retained as ancestry with a selective tree, no whole-tree merge. No global acceptance.",
+  "test_policy": "GitHub Actions only for product tests. CI.md snapshot protocol; reuse existing evidence by exact closure and request, never promote timeouts or setup failure to success."
+}

@@ -1,0 +1,11 @@
+--- a/apps/cli/src/sucafina-product/portfolio-coverage.ts
++++ b/apps/cli/src/sucafina-product/portfolio-coverage.ts
+@@ -86,6 +86,6 @@
+       if (!before || !sources || coverage.status !== "ok" || classification.status !== "ok" || !same(coverage.value.assessment, baseline) ||
+         !same(coverage.value.basis, classification.value.basis) || classification.value.source.refId !== held.value.scenario.baseRef ||
+-        baseline.entries.some((entry) => entry.status === "not-applicable") || baseline.entries.some((entry) => entry.status === "included" &&
++        baseline.entries.some((entry) => entry.status === "included" &&
+           !classification.value.mappings.some((mapping) => same(mapping.entry, entry)))) return unavailable()
+       const entries: readonly CostCoverageEntry[] = structuredClone(baseline.entries)
+       for (const entry of entries) if (entry.status !== "pending") classifications.set(entry, classification.value)
+

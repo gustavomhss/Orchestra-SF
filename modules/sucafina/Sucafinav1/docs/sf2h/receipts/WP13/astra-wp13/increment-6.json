@@ -1,0 +1,79 @@
+{
+  "schema": "sf-wp13-increment-v1",
+  "label": "W6",
+  "parentProduct": "00f1582e7a26f37b2f4ea4a18f7883f1837e48db",
+  "status": "IMPLEMENTED_PENDING_HOSTED_PROOF",
+  "ready": false,
+  "existingProductSourceAndFixturesUnchanged": true,
+  "exactOwnerIntake": {
+    "path": "modules/sucafina/Sucafinav1/product/planner/materiality.ts",
+    "sourceCommit": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe",
+    "blob": "cbaa9e6f900eb539d393e75891a66318e50be22c",
+    "reason": "Required price integration producer was hydrated but absent in W5 publication; C5 disclosed this missing module."
+  },
+  "ownedPriceTestFix": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+    "blob": "ce02051d09115665056d36382bde5f1dbd0d9238",
+    "sha256": "f6e287bf766f4525e1dda38f83adfdc2d10d8c4d9aa02ab06d98a5e3980e02e3",
+    "bytes": 29300,
+    "changes": [
+      "Narrow actual selected combination before comparing the selectable reconciliation view.",
+      "Reject unexpected preparedChanges/receipts before constructing the authorized empty-effect case projection."
+    ],
+    "independentReview": {
+      "reviewer": "wp13_price_reconciliation",
+      "status": "STATIC_ONLY_NO_ADDITIONAL_BLOCKER",
+      "closureFilesVisited": 88,
+      "onlyMissingRelativeModule": "product/planner/materiality.ts",
+      "runtimeProof": "NOT_RUN"
+    }
+  },
+  "financialHandoffTest": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+    "blob": "e098a74a6476be4bef1f18bde98225d20e83bc25",
+    "sha256": "4deded02ffffcdd9b74958ae94794eae701a9dd8d4794daa2f631e0da858b042",
+    "bytes": 44137,
+    "flow": [
+      "Canonical Planner prepared mutation and domain preview/command: forecast30->40",
+      "Canonical Procurement prepared mutation and C12: originalAmount50->60",
+      "Actual persisted C08 comparison and WP11 recordChoice/ledger",
+      "WP13 preparePortfolioChoice, separate human confirmation for each change",
+      "Actual domain mutations and durable receipts with expectedVersion",
+      "Partial application then resume; receipt replay after confirmations cleared does not execute again"
+    ],
+    "controlledSeams": [
+      "Host admission/current principal",
+      "Case source/history authorization",
+      "Conditioned service-only C10 assessment",
+      "WP04 private source admission using fields accepted by the published integration projector"
+    ],
+    "notEstablished": [
+      "Installed UI/native approval flow",
+      "Current WP04 issuer parity",
+      "Full C10 coverage",
+      "Hosted test PASS"
+    ]
+  },
+  "observedCheck": {
+    "label": "C5",
+    "runId": 43586151224,
+    "productSha": "00f1582e7a26f37b2f4ea4a18f7883f1837e48db",
+    "typecheck": "FAIL",
+    "ownedDiagnostics": 7,
+    "foreignDiagnostics": 130,
+    "guards": "PASS",
+    "receipt": "check-W5.json"
+  },
+  "productEvidence": {
+    "S3-A": {
+      "runId": 43586147077,
+      "productSha": "00f1582e7a26f37b2f4ea4a18f7883f1837e48db",
+      "snapshotSha": "f54db2faaf1b285fb6ebf8ccf922f9cde5e60459",
+      "status": "IN_PROGRESS_AT_PREPARATION",
+      "carryoverBoundary": "All A selected source/test/fixture/config blobs unchanged; W6 new test and added materiality producer belong to selection C."
+    },
+    "S3-B": "NOT_DISPATCHED_13_FILES",
+    "S3-C": "NOT_DISPATCHED_11_FILES_NEW_REQUEST_7fb5cc242da1e78a02aa306cbf63d837ecdcbbe6805d88ce7a123f283dc38a42"
+  },
+  "next": "Check the exact published W6 candidate; finish A before the next single product request; record full jobs and omni control with no inferred PASS."
+}

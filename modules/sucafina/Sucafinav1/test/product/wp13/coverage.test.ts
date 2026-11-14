@@ -51,5 +51,9 @@ test("portfolio distinguishes omitted training from sourced zero using WP11 cove
   expect(unknown.status === "ok" && unknown.value.combinations[0].comparisonStatus).toBe("complete")
   const partialFailure = createPortfolioPort({ ...host, evaluate: async () => ({ status: "ok", value: { scenario: scenarios[0], costCoverageRefs: ["coverage-0"], constraints: [{ ref: "max-cost", state: "failed", reason: "criterion-not-satisfied-conditioned" }], analysis: { scenarioResultRef: "partial", scenario: scenarios[0], comparisonRef: "comparison", comparison: { baselineResultRef: "baseline", alternativeResultRef: "partial", costCoverageRefs: ["coverage-0"], criterionResults: [{ criterionId: "max-cost", state: "failed", reason: "criterion-not-satisfied-conditioned" }], unresolvedConditions: ["missing-training"], comparisonStatus: "conditioned", knownDifference: 1, completeDifference: null } } } }) })
   const partial = await partialFailure.evaluate({ ...request, constraints: ["max-cost"] }, {} as TrustedDomainContext)
-  expect(partial.status === "ok" && partial.value.combinations[0].eligibility).toBe("conditioned")
+  // Incomplete financial coverage cannot erase a definitive failed criterion.
+  expect(partial.status === "ok" && partial.value.combinations[0].eligibility).toBe("ineligible")
+  expect(partial.status === "ok" && partial.value.combinations[0].comparisonStatus).toBe("conditioned")
+  expect(partial.status === "ok" && partial.value.combinations[0].analysis?.scenario.total).toBeNull()
+  expect(partial.status === "ok" && partial.value.combinations[0].analysis?.comparison.criterionResults[0]?.state).toBe("failed")
 })

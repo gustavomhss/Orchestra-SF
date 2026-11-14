@@ -1,0 +1,56 @@
+{
+  "schema": "sf-wp13-increment-v1",
+  "label": "W7",
+  "parentProduct": "9f30a9362abe41399f2e2026119abd7b000a77b7",
+  "ready": false,
+  "status": "PUBLISHED_FIXTURE_RECONCILIATION_PENDING_HOSTED_PROOF",
+  "productRuntimeSourceUnchanged": true,
+  "authoredChanges": "WP13 receipts only; three test inputs are exact published WP11 blobs",
+  "inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blob": "b913d9c0ab46a3f624b6c0aee28f5adf6654940a",
+      "previousBlob": "52dc09126bc81da39aa4b5beb0a28d0218d7560d",
+      "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "sha256": "31756549e2bc37f2810c25ddc8c5a9c43e462513576a66330d21790433d8b2b4",
+      "action": "EXACT_PUBLISHED_OWNER_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "blob": "02af3b8a606b91949f9009d239e4f2289dd41e7d",
+      "previousBlob": "a9bd9674d033d5a990dda651e01371cc024d4a52",
+      "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "sha256": "b2ed5b6c44fbf56a3d9ca04e3a1519f72a5258f595c67da10f2d584da81287f1",
+      "action": "EXACT_PUBLISHED_OWNER_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "blob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "previousBlob": null,
+      "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "sha256": "3c679344d17a97136ac59f22284527d14ee2b9dde0004f63e548dd454a83f449",
+      "action": "EXACT_PUBLISHED_OWNER_BLOB"
+    }
+  ],
+  "staticReview": "fixture-intake-review-W7.json",
+  "observedCheck": {
+    "label": "C6",
+    "product": "9f30a9362abe41399f2e2026119abd7b000a77b7",
+    "runId": 43587097333,
+    "envelope": "67be20204f8128bfa44f03c8ac9673cf5b624cb2",
+    "typecheck": "FAIL",
+    "ownedDiagnostics": 0,
+    "foreignDiagnostics": 130,
+    "guards": "PASS",
+    "receipt": "check-W6.json"
+  },
+  "currentOwnerReview": "owner-head-reconciliation-W7.json",
+  "productSelection": "product-selection-W7.json",
+  "claimLimits": [
+    "The owner timeout and static call-graph diagnosis justify the targeted fixture intake, not a product PASS.",
+    "No latest owner runtime, engine, host, Azure or full snapshot is merged.",
+    "S3-A remains the only active product run on its original W5 snapshot. W7 changes do not change that live checkout.",
+    "The new fixture preserves canonical source and operation checks; C10 enrichment remains in financial judgment. Its cooperative180000ms guard does not abort a blocked upstream call."
+  ],
+  "next": "Check W7 package/guards, wait for full S3-A and omni outcome, then execute outstanding explicit product selections sequentially and record accepted evidence only for its actual inputs."
+}

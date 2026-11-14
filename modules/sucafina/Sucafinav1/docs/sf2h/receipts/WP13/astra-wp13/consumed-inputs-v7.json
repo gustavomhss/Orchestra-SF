@@ -1,0 +1,63 @@
+{
+  "schema": "sf-wp13-consumed-inputs-v1",
+  "label": "W7",
+  "owner": "WP11",
+  "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blob": "b913d9c0ab46a3f624b6c0aee28f5adf6654940a",
+      "previousBlob": "52dc09126bc81da39aa4b5beb0a28d0218d7560d",
+      "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "sha256": "31756549e2bc37f2810c25ddc8c5a9c43e462513576a66330d21790433d8b2b4",
+      "action": "EXACT_PUBLISHED_OWNER_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "blob": "02af3b8a606b91949f9009d239e4f2289dd41e7d",
+      "previousBlob": "a9bd9674d033d5a990dda651e01371cc024d4a52",
+      "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "sha256": "b2ed5b6c44fbf56a3d9ca04e3a1519f72a5258f595c67da10f2d584da81287f1",
+      "action": "EXACT_PUBLISHED_OWNER_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "blob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "previousBlob": null,
+      "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "sha256": "3c679344d17a97136ac59f22284527d14ee2b9dde0004f63e548dd454a83f449",
+      "action": "EXACT_PUBLISHED_OWNER_BLOB"
+    }
+  ],
+  "reason": "Published owner observed renewal-history timeout of 1724688.33ms at run43580722320 and reconciled repeated C10 enrichment in operation admission. Consume the minimal fixture-only correction before pending own integrations.",
+  "sourceReceipt": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-fixture-performance-reconciliation.json",
+    "blob": "f61f77a507605af61f6cadadf79fa80b96e2dc5d"
+  },
+  "runtimeProductBlobsUnchanged": true,
+  "semantics": [
+    "Operation admission still uses real canonical Planner/current source authority and original operation verifier.",
+    "C10 enrichment remains on calculation, comparison, criterion, exact-threshold and interval-proof paths.",
+    "Tracing forwards original C08 callbacks and does not bypass WeakSet admission.",
+    "The helper retains the owner180000ms budget; no test timeout is increased.",
+    "The cooperative guard does not abort a blocked await or the upstream bootstrap; hosted performance remains unproved."
+  ],
+  "selectionImpact": {
+    "A": [
+      "Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts"
+    ],
+    "B": [],
+    "C": [
+      "Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts"
+    ]
+  },
+  "activeOldRun": {
+    "id": 43586147077,
+    "product": "00f1582e7a26f37b2f4ea4a18f7883f1837e48db",
+    "status": "IN_PROGRESS_AT_PREPARATION",
+    "rule": "Wait for complete job/omni before starting another product request. No PASS inferred or reused for changed fixture inputs."
+  },
+  "notConsumed": "Latest owner runtime/engines, decision lifecycle, analytics and host snapshots are not imported with this fixture-only intake."
+}

@@ -1,0 +1,266 @@
+{
+  "schema": "sf2h-wp13-reconciliation-static-review-v1",
+  "observedAt": "2026-11-14T12:08:17.432180+00:00",
+  "reviewer": "Astra / wp13_findings (independent static review)",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp13",
+  "pullRequest": 37,
+  "candidateIncrement": "W12",
+  "candidateCommit": null,
+  "candidatePublicationState": "WORKSPACE_BYTES_REVIEWED_AWAITING_ROOT_PUBLICATION",
+  "priorPublishedProduct": {
+    "increment": "W11",
+    "head": "4d3995a71b4ccafe2367679ab5024f8aa3013c50",
+    "tree": "7c490fd0fecd11abd7b3265acb327b6cc130a521"
+  },
+  "externalSourcePin": {
+    "branch": "astra-intelligence",
+    "commit": "e5b3adf215939e9a5c16cbcaf3ad028475e0a693",
+    "provenance": "Parent fetched selected WP13 source paths using GitHub MCP; this review compares their saved bytes to current repository bytes. No new remote operation was performed by this reviewer.",
+    "receipt": {
+      "path": "reference/intelligence-w4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-intelligence-w4/review-corrections.json",
+      "bytes": 6268,
+      "gitBlob": "160d28ec62bc1b8780e9d64cf8b6fdafc7336d80",
+      "sha256": "e4eca67dd23b792a3744ba6bfc3c61ccdab7349a2422ca79088c79704d50577d"
+    }
+  },
+  "status": "STATIC_REVIEW_NO_BLOCKER_FOR_FOCUSED_CI_NOT_RUNTIME_PASS",
+  "ready": false,
+  "scope": {
+    "ownPathsReviewed": 3,
+    "productPaths": 2,
+    "testPaths": 1,
+    "foreignPathsAuthored": 0,
+    "canonicalContractPathsModified": 0,
+    "wholeSnapshotIntake": false,
+    "planChanges": false,
+    "engineChanges": false,
+    "hostChanges": false,
+    "remoteMutationsByReviewer": 0,
+    "productTestsExecutedByReviewer": 0,
+    "metadataWrittenByReviewer": [
+      "reference/wp13-W12-reconciliation-review.json"
+    ]
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+      "ownership": "WP13",
+      "current": {
+        "bytes": 22284,
+        "gitBlob": "aedc80310eee2752d067dd52afa6312a9558b87a",
+        "sha256": "cc40071c5f25343ee587ff6d86cec61ac2bdd6e364b3d488296303e22ebaee46"
+      },
+      "previousW11": {
+        "bytes": 21793,
+        "gitBlob": "214f0900792a7b491722ba4d576a7ab4915ad2cf",
+        "sha256": "6402a3950ebf3e8e8ce2103b8947e1dab4dbd613f3a17f99e5ed6d8ef12d1b36"
+      },
+      "externalSource": {
+        "commit": "e5b3adf215939e9a5c16cbcaf3ad028475e0a693",
+        "branch": "astra-intelligence",
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+        "bytes": 22284,
+        "gitBlob": "aedc80310eee2752d067dd52afa6312a9558b87a",
+        "sha256": "cc40071c5f25343ee587ff6d86cec61ac2bdd6e364b3d488296303e22ebaee46"
+      },
+      "intakeMode": "EXACT_OWN_PATH_BYTES",
+      "matchesExternalSourceBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "ownership": "WP13",
+      "current": {
+        "bytes": 11948,
+        "gitBlob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+        "sha256": "b4d5f22cc08da980addedbe25c72428f112162993a977a0e5674892ea67dedd8"
+      },
+      "previousW11": {
+        "bytes": 11229,
+        "gitBlob": "df0b1b8ff11debc47ed9ec62d637caca23bbd27e",
+        "sha256": "52640e9bf2e2d94f9b1a995472a267badbfe87e5e9f0c976d67f2dcb3fd321fd"
+      },
+      "externalSource": {
+        "commit": "e5b3adf215939e9a5c16cbcaf3ad028475e0a693",
+        "branch": "astra-intelligence",
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+        "bytes": 11948,
+        "gitBlob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+        "sha256": "b4d5f22cc08da980addedbe25c72428f112162993a977a0e5674892ea67dedd8"
+      },
+      "intakeMode": "EXACT_OWN_PATH_BYTES",
+      "matchesExternalSourceBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "ownership": "WP13",
+      "current": {
+        "bytes": 33398,
+        "gitBlob": "6b2a318f73aa8adb67840958add758f151f0bade",
+        "sha256": "a0088fb0607598b1f47210aedbc1bfea240babbf380a60243c3f389f7371ed4b"
+      },
+      "previousW11": {
+        "bytes": 22620,
+        "gitBlob": "5e5461c2020288610b7ee8928747378d9977acd5",
+        "sha256": "a93408209e61fea1e3d7b9c5958877caf82c00244267e7f5eb70e438a4bfe147"
+      },
+      "externalSource": {
+        "commit": "e5b3adf215939e9a5c16cbcaf3ad028475e0a693",
+        "branch": "astra-intelligence",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+        "bytes": 32777,
+        "gitBlob": "7823451c6be37307317d3527b6a7367d64a5d58d",
+        "sha256": "9020a7bb8342f7fc37a5598efe227621b489312bb91e6061a9a08535872112a7"
+      },
+      "intakeMode": "SELECTED_OWN_DELTA_WITH_EXISTING_W9_ORACLE_PRESERVED",
+      "matchesExternalSourceBytes": false
+    }
+  ],
+  "fixes": [
+    {
+      "id": "WP13-W12-RECONCILIATION-AUTHORITY-EGRESS",
+      "severity": "P1",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+      "problem": "A callback in the final successful host revalidation could mutate the borrowed trusted context after the prior authority comparisons and before the successful response.",
+      "change": "Capture digest of {kind,binding} before the first await. Compare it after initial authorization observations, after final case/scope observations, after each final awaited host.revalidate and again after the last awaited revalidation of both equal reconciliation projections.",
+      "reviewedInvariant": "The final authority comparison is synchronous after the last await and before returning the detached successful result. The original TrustedDomainContext capability is passed to collaborators, rather than replacing it with a clone.",
+      "test": "reconciliation refuses authority mutation after the final successful revalidation",
+      "negativeControls": [
+        "Mutate principalRef only at the final successful revalidation.",
+        "Mutate accessRevision only at that call.",
+        "Mutate context.kind only at that call.",
+        "Each negative verifies the injection occurred, the expected last-call count was reached, and no ok/value escaped."
+      ],
+      "disposition": "IMPLEMENTED_IN_REVIEWED_BYTES_AWAITING_HOSTED_TEST"
+    },
+    {
+      "id": "WP13-W12-HTTP-INGRESS-SNAPSHOT",
+      "severity": "P1",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "problem": "The HTTP wrapper previously authorized the caller-owned request and then forwarded the same borrowed object; authorization could mutate the selected portfolio or establish a changed authority before core ingress.",
+      "change": "Dedicated reconcileHttp captures authority and structured-clones the incoming request before authorized/caseFor can await. It checks the same authority after authorization and after core reconciliation. The core receives the original trusted context and the detached selected request.",
+      "reviewedInvariant": "The admitted selection remains the one captured at HTTP ingress even when another selection is independently valid. A changed ingress authority cannot be accepted just because downstream owner projections also accept it.",
+      "tests": [
+        "HTTP reconciliation preserves the admitted selection when authorization mutates the caller request",
+        "HTTP reconciliation fences authority from ingress before the core captures it"
+      ],
+      "negativeControls": [
+        "A and B are independently valid in the controlled case; authorization mutates the caller request from A to B, and the result must still identify A.",
+        "A legitimate already-current access revision is accepted as a positive control.",
+        "Changing both the borrowed context revision and owner projection during first authorization returns denied and no value."
+      ],
+      "additionalTypeChange": "Planner factory input now names only its consumed public PlannerPort, PlannerSourceHost and PlannerScenarioHost capabilities; this removes unused producer return-type projection requirements and does not itself change runtime authority.",
+      "disposition": "IMPLEMENTED_IN_REVIEWED_BYTES_AWAITING_HOSTED_TEST"
+    },
+    {
+      "id": "WP13-W12-INDEPENDENT-SOURCE-CAS-REVISIONS",
+      "severity": "P1",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+      "problem": "Reconciliation equated a source evidence revision with a domain command CAS revision and used the command revision for component-source attribution, rejecting legitimate prepared changes with independently versioned records.",
+      "change": "Require both change.expectedVersion and change.target.version to be nonnegative safe integers, without equating them. Bind a component source to change.target.version. Preserve expectedVersion for the command and receipt view, and retain existing case/choice, source identity, period, field, preview-component and receipt evidence correlations.",
+      "reviewedInvariant": "A source matches the evidence target revision; command CAS continues to match command.version according to the unchanged prepared-change contract. Neither source substitution nor invalid revision values are relaxed.",
+      "test": "reconciliation retains independent evidence and command revisions while binding effects and receipts",
+      "positiveControl": "Source revisions 3 and 4 coexist with command CAS revisions 0 and 1 and applied receipt revisions 1 and 2; partial then completed reconciliation preserves original choice and portfolio digests.",
+      "negativeControls": [
+        "A source revision equal to CAS 0 but different from target source 3 must remain not-prepared/unmapped.",
+        "Negative, fractional and unsafe expected command revisions are rejected.",
+        "Negative, fractional and unsafe source target revisions are rejected."
+      ],
+      "disposition": "IMPLEMENTED_IN_REVIEWED_BYTES_AWAITING_HOSTED_TEST"
+    }
+  ],
+  "contractsReviewed": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-change.ts",
+      "reviewedWorkspaceBytes": {
+        "bytes": 2147,
+        "gitBlob": "fc9dc0b25e1a1d646318bc0df3e0d41f95b9562e",
+        "sha256": "5df78f725d09ab748e7cb34357784de7c37894d1334c9284bbc62b983aaf5d4b"
+      },
+      "inspection": "STATIC_READ_ONLY",
+      "relevantContract": "createPreparedChange validates nonnegative safe integer source and expected command revisions independently; command.version must equal expectedVersion, while target.version is the evidence revision. It returns both without equating them.",
+      "modifiedByThisDelta": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/prepared.ts",
+      "reviewedWorkspaceBytes": {
+        "bytes": 9952,
+        "gitBlob": "da7ed326826e1b63b5853248d3ba4a18ccce9736",
+        "sha256": "69b289788ea504cd2a558d502d3ebf9fabf30e4c9bebe34a7c5a4ca94c9fac8b"
+      },
+      "inspection": "STATIC_READ_ONLY",
+      "relevantContract": "Canonical prepared mutation binds evidence.target.version and current scoped source identity to prepared.target.version. PreparedDomainMutation.expectedVersion uses prepared.command.version. Source identity/base digest is freshly checked before the domain command executes.",
+      "modifiedByThisDelta": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "reviewedWorkspaceBytes": {
+        "bytes": 6977,
+        "gitBlob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+        "sha256": "a703d59373a826021214617867191e0a8bba920cef9ead22dc064e0f018e6517"
+      },
+      "inspection": "STATIC_READ_ONLY",
+      "relevantContract": "SourceRef carries source.version. PreparedCommand has target:SourceRef, command:Command and independent expectedVersion:number. The type does not require target.version === expectedVersion.",
+      "modifiedByThisDelta": false
+    }
+  ],
+  "tests": {
+    "file": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+    "previousCount": 7,
+    "currentCount": 11,
+    "retainedPreviousNames": [
+      "reconciliation preserves the chosen composition and WP11 partial/retry receipts without writing",
+      "reconciliation sends a source-bound price observation to the WP14 classifier while retaining original null and currency",
+      "a global criterion change cannot attribute a different component's price to an unchanged component",
+      "reconciliation refuses a substituted historical selection even when its numbers match the choice",
+      "reconciliation refuses receipt substitution, revoked sources and a different current principal",
+      "reconciliation rejects a changed ledger, borrowed callback mutation and a changed read during egress",
+      "reconciliation does not reinterpret another source or missing data as a material price signal"
+    ],
+    "newNames": [
+      "reconciliation retains independent evidence and command revisions while binding effects and receipts",
+      "reconciliation refuses authority mutation after the final successful revalidation",
+      "HTTP reconciliation preserves the admitted selection when authorization mutates the caller request",
+      "HTTP reconciliation fences authority from ingress before the core captures it"
+    ],
+    "allPreviousNamesPreserved": true,
+    "retainedW9Oracle": {
+      "case": "a global criterion change cannot attribute a different component's price to an unchanged component",
+      "assertions": [
+        "Unchanged component has scopeReason component-scope-bound.",
+        "Component evidence beforeDigest equals afterDigest.",
+        "Impact remains unknown with reason evidence-unavailable.",
+        "WP14 signal severity remains unknown.",
+        "The unchanged comparison.after equals the original choice comparison.",
+        "Original total remains null and original changed component amount remains 45000."
+      ],
+      "whyAdaptedFromExternalTest": "The external test still expected irrelevant/no signal for unresolved criterion evidence. Current own test preserves the previously corrected canonical W9 unknown/unknown oracle; external test bytes were not imported wholesale."
+    },
+    "boundary": "Tests use controlled admission, case/evidence/portfolio observations and callback seams. The HTTP tests invoke the actual portfolio product HTTP entry and core reconciliation. They do not establish installed host, real domain command execution, financial engine correctness, native interaction or consumer end-to-end acceptance."
+  },
+  "verificationPerformed": [
+    "Read old and new own product diffs and the external-to-current test diff.",
+    "Computed git-blob and SHA256 hashes from the three actual current repository files.",
+    "Confirmed both product files exactly match the selected immutable external source bytes.",
+    "Confirmed seven old test names remain and four targeted tests were added.",
+    "Read the current shared prepared-change contract, public command/source types and canonical Planner prepared mutation implementation."
+  ],
+  "ci": {
+    "claim": "NONE",
+    "testsExecutedByThisReview": false,
+    "typecheckExecutedByThisReview": false,
+    "guardsExecutedByThisReview": false,
+    "candidateHostedResult": "NOT_RUN_OR_NOT_YET_REPORTED_FOR_THESE_REVIEWED_BYTES",
+    "historicalResultUse": "Earlier reconciliation results apply only to their exact earlier source and input snapshots. They are not promoted to W12 proof.",
+    "nextAction": "Parent to publish the reviewed bytes and run the prepared surgical selection containing this eleven-test file after the currently active external WP13 product run ends."
+  },
+  "limitations": [
+    "Static review is not a runtime, CI, installed-consumer or whole-package acceptance claim.",
+    "The external commit is a source pin for these selected own paths; no broader snapshot, host or engine intake is approved by this review.",
+    "The Procurement prepared implementation was not locally available for this inspection; no claim of a direct Procurement implementation audit is made. The inspected shared prepared-change contract and canonical Planner adapter establish the independent revision semantics.",
+    "Authority digests check the mutable fields visible in the trusted context. Host revalidate and evidence/case authorization remain required; the digest is not a substitute for access admission.",
+    "No concurrency performance improvement or durable host wiring is claimed.",
+    "This artifact records current bytes before W12 publication; the parent must bind these exact hashes to the published commit and hosted evidence."
+  ],
+  "nextAction": "Publish only the reviewed WP13 changes and receipts; preserve plan/contracts/foreign sources; run the eleven reconciliation cases in the next non-overlapping authorized GitHub Actions product selection, then record actual source/snapshot/run/job evidence."
+}

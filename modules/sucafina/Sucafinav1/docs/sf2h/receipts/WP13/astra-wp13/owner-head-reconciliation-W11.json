@@ -1,0 +1,404 @@
+{
+  "observedAt": "2026-11-14 11:57:52 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "rootProduct": {
+    "head": "a3df1c494495f5fcc5a644caf2d88bc0e9e39fa4",
+    "tree": "0f108eeab2750ec969ea1e6c4d7044ea7705ecb6"
+  },
+  "owners": [
+    {
+      "branch": "astra-wp10",
+      "head": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+      "wholeHeadConsumed": false
+    },
+    {
+      "branch": "astra-wp11",
+      "head": "c41d7277be5941bafb105654360a32adea7f0347",
+      "wholeHeadConsumed": false
+    },
+    {
+      "branch": "astra-finance",
+      "head": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "wholeHeadConsumed": false
+    }
+  ],
+  "wp10Targets": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "blob": "18caa4381d7d02f1193bdac4c2e9c2134c64daf1"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "blob": "ec824f54d67630edce6ef218e2e1301193362f3c"
+    }
+  ],
+  "findings": [
+    {
+      "id": "WP13-HOST-SOURCE-ONLY-PROOF",
+      "state": "SUPERSEDED_IN_OWNER_CODE_NOT_CONSUMED",
+      "evidence": {
+        "head": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+        "files": [
+          "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+          "apps/cli/src/sucafina-product/portfolio-preparation.ts",
+          "apps/cli/src/sucafina-product/portfolio-services.ts"
+        ]
+      },
+      "observed": "Default mutationPlanner invokes coverage.prepareNoop inside runPromotion; captures classification proof for source-only promotion and fences the attributed identity before C08. No own branch intake or hosted acceptance is inferred."
+    },
+    {
+      "id": "WP13-HOST-THRESHOLD-02",
+      "state": "NOT_APPLIED",
+      "observed": "Current owner portfolio-services still supplies neither exactThreshold nor authenticated coveragePreview/resolveCoverageAuthority to product and verifier."
+    },
+    {
+      "id": "WP13-HOST-NA-01",
+      "state": "NOT_APPLIED",
+      "observed": "Current owner portfolio-coverage still rejects any baseline.entries status not-applicable before supportsCoverageClassification."
+    },
+    {
+      "id": "WP13-WP10-HISTORY-CANDIDATE-READER",
+      "state": "NOT_APPLIED",
+      "observed": "review-portfolio-history.ts absent from owner delta since previous inspected pin; no new factory injection observed."
+    },
+    {
+      "id": "WP13-HOST-RECONCILIATION",
+      "state": "NOT_APPLIED",
+      "observed": "Current portfolio-services lacks private readPortfolio/materiality componentScope reconciliation composition."
+    }
+  ],
+  "wp10Intakes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W17/intake-pins.json",
+      "blob": "272761865ed7943aea5434f9bb130c545bd22d91",
+      "portfolioProducerPins": [
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+          "blobSha": "6095c6ec91cabd1a29ce851d5eb20c987d450d6d",
+          "sha256": "2f63bea6d0efeb739a227bbf51a10f486a920957ce3ff917c349f6208d873a62",
+          "owner": "WP13",
+          "reason": "Documents known-subtotal exact boundary distinct from incomplete financial comparison and definitive failed constraints."
+        },
+        {
+          "pr": 36,
+          "owners": [
+            "WP12",
+            "WP13",
+            "WP14"
+          ],
+          "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+          "blobSha": "347d1c97952167523f9b2b04f1ab4fac7178cc9a",
+          "beforeBlob": "9a74bc4b5b92054a32e3ae2b084b661937ce4964",
+          "size": 9225
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+          "blobSha": "d364563602bb002ebe24f22d36572b888008f665",
+          "sha256": "cbcf6c624d51372c12d15e23fa5e5c82095af380d3afd0d25e6b0997e52157d2",
+          "owner": "WP13",
+          "reason": "Permits same-case-version historical campaign under current authority/source access, rejects future case version, and validates array/index corruption before traversal."
+        },
+        {
+          "pr": 36,
+          "owners": [
+            "WP12",
+            "WP13",
+            "WP14"
+          ],
+          "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+          "blobSha": "5a56fb5305e64922af8b6b3246b8807256e79138",
+          "beforeBlob": "34e1f60df0d31db15597cce55718506ffaa5b6b1",
+          "size": 2520
+        },
+        {
+          "pr": 36,
+          "owners": [
+            "WP12",
+            "WP13",
+            "WP14"
+          ],
+          "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+          "blobSha": "6feaa3d88691460436b9c64699d6a6946357498d",
+          "beforeBlob": "484ee7dc8ac3a78a381f73c020a3afc06c5394c7",
+          "size": 3644
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+          "blobSha": "00ca4f72b811e7a85ebd2995ad8f982083c18af9",
+          "sha256": "7cbe34e6ba27bc66478b76f110d17a364b8b4be20f74b2fc25a378cff19bd422",
+          "owner": "WP13",
+          "reason": "Captures caller request, case, operations and producer results; egress digest is fixed before awaiting potentially mutating candidate resolver."
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+          "blobSha": "5b1877a97620c1863c7ee43d3274594ddedde8f9",
+          "sha256": "1a1d35c9de02bcd43fc9a2db851bbe5c1c47b6f4331bc3611a06ad3034845921",
+          "owner": "WP13",
+          "reason": "Permits preserved original-version evidence at case N/N after source change, retaining incarnation/access/future-version guards; captures mutable inputs."
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+          "blobSha": "604d2a7806dcd7594e03207bf3011d6c1dc801b8",
+          "sha256": "2194bd5956722a5514704dc13482b28dd728d2ee59ec2ad530d897eebc3862d4",
+          "owner": "WP13",
+          "reason": "Admits producer-registered current parameterOperation and validates exact known-subtotal certificate via current real preview; keeps original missing coverage and sample provenance."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+          "blobSha": "7edeb37247fd3f9229749e2bb94460b8ac57271f",
+          "sourceCommit": "e4e9ceb5ec97a9c3238a35582cb7ca5401756536",
+          "owner": "WP13",
+          "publisher": "WP06",
+          "mode": "exact-published-blob",
+          "reason": "published compatibility delta"
+        },
+        {
+          "pr": 36,
+          "owners": [
+            "WP12",
+            "WP13",
+            "WP14"
+          ],
+          "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+          "blobSha": "8fc915379f153fdb437be09c2c84924d7d59b6ed",
+          "beforeBlob": "495169ccb0da1c775622907facf9b2ba13e0bb5c",
+          "size": 10066
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+          "blobSha": "f134c70c0e38879bfb36bc31c9743c99a6ad509a",
+          "sha256": "ef67a8630290c493e166dbe4feb5ac26e53168a5f119e90fdb03435c13aec258",
+          "owner": "WP13",
+          "reason": "Captures retained evaluation inputs and repairs a missing durable portfolio binding on idempotent retry using current proof and producer bind checks."
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+          "blobSha": "4919ebc3367bb388974839382ff220a94667ad21",
+          "sha256": "84a24fc357cdaa061fa16a31ff352e9977ca5d9223d9508f067404d398df3d2c",
+          "owner": "WP13",
+          "reason": "Captures retained inputs/reads and repairs missing criterion binding on idempotent retry after durable samples/result; current producer binding and reread checks remain."
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+          "blobSha": "bf8f775085a26adcaf4566fba4daff22ae33262b",
+          "sha256": "7cad0aa546662799ee12921096cdd55052fa5af734fde2afe8116d484017ef34",
+          "owner": "WP13",
+          "reason": "Allows exact registered-metric boundary with conditioned coverage, still rejects incompatible/unavailable comparison, null samples and invalid evidence/values."
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+          "blobSha": "6c08aae11dd559553d5f9274d1aa5750686ff8fc",
+          "sha256": "f377fc7ce657f0f999f6081568872af805f48c7e596ea75db8b242a1dab881f0",
+          "owner": "WP13",
+          "reason": "Allows incomplete coverage threshold only with a certified known-subtotal scope; other incomplete thresholds remain null."
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+          "blobSha": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+          "sha256": "96ed59925c95abe55fe15185f30f2026f0713f5f916238d4529c29d812aa86bf",
+          "owner": "WP13",
+          "reason": "New validator checks canonical current evidence, USD rule/parameter, fixed components, included threshold and adjacent IEEE excluded point using actual preview."
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+          "blobSha": "c2f37e94777d2bdd7d7e565b37f6b4140b3906d9",
+          "sha256": "624e80ae47fcbe8070fde0090748e3622eeeffd927e3dc41ab2ba1d69661a323",
+          "owner": "WP13",
+          "reason": "Read-only replay repeats exact threshold certificate validation and preserves original coverage conditions; captures narrowed ScenarioResult before async closures."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W18/intake-pins.json",
+      "blob": "cd28fdaaa44599f5b45adc1898e7aec0b0f47333",
+      "portfolioProducerPins": [
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+          "blobSha": "6095c6ec91cabd1a29ce851d5eb20c987d450d6d",
+          "sha256": "2f63bea6d0efeb739a227bbf51a10f486a920957ce3ff917c349f6208d873a62",
+          "owner": "WP13",
+          "reason": "Documents known-subtotal exact boundary distinct from incomplete financial comparison and definitive failed constraints."
+        },
+        {
+          "pr": 36,
+          "owners": [
+            "WP12",
+            "WP13",
+            "WP14"
+          ],
+          "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+          "blobSha": "347d1c97952167523f9b2b04f1ab4fac7178cc9a",
+          "beforeBlob": "9a74bc4b5b92054a32e3ae2b084b661937ce4964",
+          "size": 9225
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+          "blobSha": "d364563602bb002ebe24f22d36572b888008f665",
+          "sha256": "cbcf6c624d51372c12d15e23fa5e5c82095af380d3afd0d25e6b0997e52157d2",
+          "owner": "WP13",
+          "reason": "Permits same-case-version historical campaign under current authority/source access, rejects future case version, and validates array/index corruption before traversal."
+        },
+        {
+          "pr": 36,
+          "owners": [
+            "WP12",
+            "WP13",
+            "WP14"
+          ],
+          "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+          "blobSha": "5a56fb5305e64922af8b6b3246b8807256e79138",
+          "beforeBlob": "34e1f60df0d31db15597cce55718506ffaa5b6b1",
+          "size": 2520
+        },
+        {
+          "pr": 36,
+          "owners": [
+            "WP12",
+            "WP13",
+            "WP14"
+          ],
+          "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+          "blobSha": "6feaa3d88691460436b9c64699d6a6946357498d",
+          "beforeBlob": "484ee7dc8ac3a78a381f73c020a3afc06c5394c7",
+          "size": 3644
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+          "blobSha": "00ca4f72b811e7a85ebd2995ad8f982083c18af9",
+          "sha256": "7cbe34e6ba27bc66478b76f110d17a364b8b4be20f74b2fc25a378cff19bd422",
+          "owner": "WP13",
+          "reason": "Captures caller request, case, operations and producer results; egress digest is fixed before awaiting potentially mutating candidate resolver."
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+          "blobSha": "5b1877a97620c1863c7ee43d3274594ddedde8f9",
+          "sha256": "1a1d35c9de02bcd43fc9a2db851bbe5c1c47b6f4331bc3611a06ad3034845921",
+          "owner": "WP13",
+          "reason": "Permits preserved original-version evidence at case N/N after source change, retaining incarnation/access/future-version guards; captures mutable inputs."
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+          "blobSha": "604d2a7806dcd7594e03207bf3011d6c1dc801b8",
+          "sha256": "2194bd5956722a5514704dc13482b28dd728d2ee59ec2ad530d897eebc3862d4",
+          "owner": "WP13",
+          "reason": "Admits producer-registered current parameterOperation and validates exact known-subtotal certificate via current real preview; keeps original missing coverage and sample provenance."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+          "blobSha": "7edeb37247fd3f9229749e2bb94460b8ac57271f",
+          "sourceCommit": "e4e9ceb5ec97a9c3238a35582cb7ca5401756536",
+          "owner": "WP13",
+          "publisher": "WP06",
+          "mode": "exact-published-blob",
+          "reason": "published compatibility delta"
+        },
+        {
+          "pr": 36,
+          "owners": [
+            "WP12",
+            "WP13",
+            "WP14"
+          ],
+          "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+          "blobSha": "8fc915379f153fdb437be09c2c84924d7d59b6ed",
+          "beforeBlob": "495169ccb0da1c775622907facf9b2ba13e0bb5c",
+          "size": 10066
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+          "blobSha": "f134c70c0e38879bfb36bc31c9743c99a6ad509a",
+          "sha256": "ef67a8630290c493e166dbe4feb5ac26e53168a5f119e90fdb03435c13aec258",
+          "owner": "WP13",
+          "reason": "Captures retained evaluation inputs and repairs a missing durable portfolio binding on idempotent retry using current proof and producer bind checks."
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+          "blobSha": "4919ebc3367bb388974839382ff220a94667ad21",
+          "sha256": "84a24fc357cdaa061fa16a31ff352e9977ca5d9223d9508f067404d398df3d2c",
+          "owner": "WP13",
+          "reason": "Captures retained inputs/reads and repairs missing criterion binding on idempotent retry after durable samples/result; current producer binding and reread checks remain."
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+          "blobSha": "bf8f775085a26adcaf4566fba4daff22ae33262b",
+          "sha256": "7cad0aa546662799ee12921096cdd55052fa5af734fde2afe8116d484017ef34",
+          "owner": "WP13",
+          "reason": "Allows exact registered-metric boundary with conditioned coverage, still rejects incompatible/unavailable comparison, null samples and invalid evidence/values."
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+          "blobSha": "6c08aae11dd559553d5f9274d1aa5750686ff8fc",
+          "sha256": "f377fc7ce657f0f999f6081568872af805f48c7e596ea75db8b242a1dab881f0",
+          "owner": "WP13",
+          "reason": "Allows incomplete coverage threshold only with a certified known-subtotal scope; other incomplete thresholds remain null."
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+          "blobSha": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+          "sha256": "96ed59925c95abe55fe15185f30f2026f0713f5f916238d4529c29d812aa86bf",
+          "owner": "WP13",
+          "reason": "New validator checks canonical current evidence, USD rule/parameter, fixed components, included threshold and adjacent IEEE excluded point using actual preview."
+        },
+        {
+          "pr": 36,
+          "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+          "blobSha": "c2f37e94777d2bdd7d7e565b37f6b4140b3906d9",
+          "sha256": "624e80ae47fcbe8070fde0090748e3622eeeffd927e3dc41ab2ba1d69661a323",
+          "owner": "WP13",
+          "reason": "Read-only replay repeats exact threshold certificate validation and preserves original coverage conditions; captures narrowed ScenarioResult before async closures."
+        }
+      ]
+    }
+  ]
+}

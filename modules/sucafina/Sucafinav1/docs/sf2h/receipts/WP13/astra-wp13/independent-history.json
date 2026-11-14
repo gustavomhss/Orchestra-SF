@@ -1,0 +1,382 @@
+{
+  "schema": "wp13-independent-static-review-v1",
+  "reviewer": "/root/wp13_review_history",
+  "independent_of_product_authorship": true,
+  "reviewed_at_utc": "2026-11-14T09:42:11.556911+00:00",
+  "status": "W2_FINDING_WITH_UNPUBLISHED_STATIC_FIX_CONFIRMED_CI_REQUIRED_NOT_GLOBAL_ACCEPTANCE",
+  "candidate": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "pull_request": 37,
+    "head": "84fa950ed4925124ca7ee6c854d4ae534bcd6d1a",
+    "tree": "c619bb577c20133c41388eb6d2e538c9af8e453e",
+    "identity_source": "Parent supplied published head/tree; no independent remote lookup by reviewer.",
+    "local_files_verified_against_W2_manifest": true,
+    "verification_method": "Read-only Git blob SHA-1 calculation before follow-up edits for five product files and four tests; all nine matched reference/wp13-W2-file-manifest.json.",
+    "reviewed_blobs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "sha": "b398e4b6bbbb7a494846dd0794fccae43c2440e0"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+        "sha": "dd702abfe4792cf131fb9847e989f5e7aec5b0bb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+        "sha": "954d664b86abb876300042e98d057d01015c77df"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+        "sha": "cb75aeeae32310911063b673fc27e9c94eef3762"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+        "sha": "3488f1d757fca6fd6527540679f4fb68a533aee0"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "sha": "6d70512d24f5c5e150f14d9e968a76256f2b2b9f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+        "sha": "457f1e3e255e9c45f7f12b538048ee52418f93e4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+        "sha": "22e9e17fdfc2fb07f6a5ef3c23e521fc3781c25f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+        "sha": "6db9ed6e4adaf3c12fe54214f38f2dca18e9f8fd"
+      }
+    ]
+  },
+  "method": {
+    "applicable_instructions_read": [
+      "repo/AGENTS.md"
+    ],
+    "product_tests_executed": false,
+    "typecheck_executed": false,
+    "ci_dispatched": false,
+    "remote_operations": false,
+    "product_or_test_edits": false,
+    "only_written_artifact": "reference/wp13-independent-history.json",
+    "note": "Parent explicitly authorized this temporary report. No product/test authorship or edits by reviewer. Static review and metadata hashing do not establish runtime or global acceptance."
+  },
+  "primary_files": [
+    "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts"
+  ],
+  "tests_read": [
+    "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts"
+  ],
+  "supporting_files_read": [
+    "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts"
+  ],
+  "findings": [
+    {
+      "id": "WP13-HISTORY-REVIEW-01",
+      "severity": "P2",
+      "owner": "WP13",
+      "state_at_published_W2": "OPEN",
+      "state_of_followup": "STATIC_FIX_CONFIRMED_UNPUBLISHED_CI_REQUIRED",
+      "title": "Equivalent C08 writes make witnessed historical choice unavailable before its exact resultRef can disambiguate ancestry",
+      "locations": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+          "W2_lines": "63-71"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+          "lines": "94-115"
+        }
+      ],
+      "mechanism": "W2 selects every C08 with matching requestDigest/resultDigest, chooses the greatest case version and rejects latest.length != 1 before using ChoiceRecord.comparison.alternativeResultRef. The result writer allows equivalent results with different idempotency keys and resultRefs at the same DecisionCase.version. A legitimate chosen original becomes unavailable after alternative v1 to v2, despite an exact choice ledger witness. A later eligible equivalent record can likewise be preferred over the witnessed original.",
+      "impact": "Historical read fails closed for a valid persisted choice; availability/ancestry selection defect, not an access grant.",
+      "static_reproduction": [
+        "Persist C08 A for alternative v1.",
+        "Persist the same result/request at the same case version with a new idempotency key, obtaining C08 B.",
+        "Record the human choice with comparison.alternativeResultRef pointing to A.",
+        "Revise alternative v1 to v2.",
+        "W2 historical reader rejects equivalent A+B before using the choice witness."
+      ],
+      "followup_assessment": "The reviewed local correction collects witnessed choices even when a transaction snapshot exists, filters matching C08 records by exact witnessed alternativeResultRef before ambiguity selection, and rejects missing/ambiguous witnessed provenance. With no witnessed choice it preserves the conservative latest-record ambiguity rule. No concrete regression identified in this correction.",
+      "test_delta": "The existing real ChoiceRecord history test now writes an equivalent C08 through results.write with a distinct idempotency key, asserts distinct ref and equal case/result digest, records the choice using the original ref, revises v1 to v2 and requires recovery of that original ref. Revoked C08 and tampered-ledger negatives remain.",
+      "next_action": "Publish the reviewed blob(s) on the WP13 branch, associate head/tree and surgical GitHub Actions results for the amended test and package checks, and verify the exact tested/published hashes. Until then the published W2 finding is not closed by executable evidence."
+    }
+  ],
+  "followup": {
+    "scope": "Only proof.ts selection correction and amended historical chosen-candidate test; other concurrent follow-up edits are excluded.",
+    "publication_status": "UNPUBLISHED_AT_REVIEW",
+    "blobs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "git_blob_sha1": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+        "sha256": "cc8dabe132377e30ca307dff6b043aeb61a8b5aba1e8caf30ae97446efbe20ae",
+        "W2_git_blob_sha1": "b398e4b6bbbb7a494846dd0794fccae43c2440e0",
+        "publication_status": "UNPUBLISHED_AT_REVIEW_NO_HEAD_OR_TREE_ASSIGNED"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "git_blob_sha1": "5ff476c271542229588f5518909b31d5d74e4854",
+        "sha256": "af07a1e4cc9de46f64899581e44eeb21b989bf24afb12b041b0c4300ef8b537e",
+        "W2_git_blob_sha1": "6d70512d24f5c5e150f14d9e968a76256f2b2b9f",
+        "publication_status": "UNPUBLISHED_AT_REVIEW_NO_HEAD_OR_TREE_ASSIGNED"
+      }
+    ],
+    "conclusion": "Correction addresses the reported mechanism by static inspection; GitHub Actions verification and publication still required.",
+    "additional_test_limit": "The amended regression uses the choice-only historical recovery path. The code also collects choice witnesses alongside a transaction snapshot, but the new test does not specifically construct equivalent C08 writes for that transaction-present branch."
+  },
+  "static_positive_observations": [
+    {
+      "area": "Historical authorization and origin",
+      "evidence": "proof.ts checks currently authorized case identity/incarnation, matching state authority, a trusted transaction snapshot or an exact ChoiceRecord ledger event, authenticated C08 content and current evidence resolution accessRevision. Digest alone is rejected."
+    },
+    {
+      "area": "Historical portfolio binding",
+      "evidence": "history-provenance.ts checks original binding/request/result/selection and candidate digests, repeats provenance inspection and rejects incarnation/payload changes. Historical candidate callback must match original and current case references."
+    },
+    {
+      "area": "Campaign and source access",
+      "evidence": "campaign.ts clones incoming edits before awaits, verifies owner/candidate currency and horizon, owner criteria and protected state writes. Existing historical alternatives are read through DecisionCasePort; its implementation validates the alternatives’ evidence before returning."
+    },
+    {
+      "area": "Catalog immutability",
+      "evidence": "catalog.ts clones admitted selection and case observations, passes a clone to source validation and compares a second current case read before disclosure."
+    },
+    {
+      "area": "Handoff same case and human selection",
+      "evidence": "handoff.ts requires UI, exactly one persisted choice in the specified case id/incarnation/version, matching operations/components and revalidated candidates before WP11 prepareChanges. It does not directly apply domain operations."
+    }
+  ],
+  "limitations": [
+    "No local or hosted product test was executed or independently certified by this reviewer. No global PASS, READY, GNATIVE or consumer-complete conclusion is given.",
+    "At W2, handoff-integration.test.ts seeds a partial ChoiceRecord by cast with empty alternatives and ledger; domain mutations use snapshot.data.wp13Amount. It exercises real WP11 preparation/apply/receipt mechanisms under controlled callbacks, but does not prove actual human recordChoice -> preparation -> application in one integrated native case.",
+    "At W2, the handoff integration explicitly accepts case-reconciliation-pending. The known WP11 CAS delta and the WP10 historical-reader wiring remain external integration obligations for that candidate.",
+    "Parent reports newer WP11 efa0e57e54862f99a07b2837af5e729adb881415 consumed and a real-choice handoff rewrite in progress. Those changes are not included in this focused follow-up review.",
+    "Parent reports C2 guards passed and five fixture typecheck diagnostics, and S2 product CI was still running. These are parent-reported statuses, not CI certifications by this reviewer.",
+    "Archive/dirty workspace preservation is not independently attested by this source review. The reviewer performed no product/workspace mutation; defensive copies of admitted in-memory inputs were inspected.",
+    "The exact hash identities recorded above bound the unpublished follow-up. Later edits require a new review or an explicit reviewed delta."
+  ],
+  "closeout_rule": "W2 remains the published reviewed candidate with its recorded P2 finding. A static-confirmed unpublished correction is not executable evidence. S0 retains final integration and global acceptance; no criterion is marked PASS by this report.",
+  "handoff_followup": {
+    "reviewed_at_utc": "2026-11-14T09:47:45.764600+00:00",
+    "candidate": "W3 work in progress; unpublished at review; not the published W2 tree",
+    "status": "NO_NEW_CONCRETE_DEFECT_IDENTIFIED_STATIC_ONLY_CI_REQUIRED",
+    "scope": "Only the frozen handoff-integration.test.ts replacement, read against the local WP11 apply/prepared-apply and supporting choice/comparison code. No edits by reviewer.",
+    "test_identity": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "git_blob_sha1": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+      "sha256": "e78f7f8875f619e53bbdba0e709fb09a6dac0dd5fc5aafaa2ad0c40a0f2bd157"
+    },
+    "frozen_sha256_matches_parent": true,
+    "reported_dependency_pin": "efa0e57e54862f99a07b2837af5e729adb881415",
+    "dependency_pin_source": "Parent supplied consumed WP11 head; reviewer read local code and recorded its hashes, without a new remote pin lookup.",
+    "dependency_local_identities": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "git_blob_sha1": "dbcc51d75ccefb23f328f1d4151504be96a35a45",
+        "sha256": "17ebbee07716968b0bfef30a52afd3a9b68577d952aa57cd448bc551ae801c3e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+        "git_blob_sha1": "acb3b7fb3050264758a5470ffe8168fa5f581370",
+        "sha256": "9fd9aa6332a54db49592cad13ec12d2aab50e9213112ad442dfc669233a4395d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+        "git_blob_sha1": "219073fdcc4915577e4aaceb0ef36ec6fb6d06bf",
+        "sha256": "3eeb9b2218b7787a80aab4286a5c6f28f1bb658cc74c14451e94e9d207de9b2f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+        "git_blob_sha1": "922358d17c470c16b43076510bdf04744e2306e4",
+        "sha256": "94f28f541f238aba4542f3b77259effcf4817ed22756a3a9895953605a4ec5d6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "git_blob_sha1": "338889513cfc681bdda91697a9d5bbc16bde8fd1",
+        "sha256": "44c12d1bca211d423296526b7fbe31d713566c86fbba1860c9832f6d53001998"
+      }
+    ],
+    "supporting_sources": [
+      "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "modules/sucafina/Sucafinav1/product/planner/comparison.ts",
+      "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+      "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+    ],
+    "findings": [],
+    "assertions_reviewed": [
+      {
+        "area": "C08 and canonical comparison",
+        "lines": "73-103",
+        "observation": "The fixture persists the two scenario results with the real C08 store, invokes createPlannerPort.compareScenarios over those persisted refs and persists the canonical comparison. Expected knownDifference=20 is conditioned; completeDifference and the unavailable-rule criterion value remain null/unknown."
+      },
+      {
+        "area": "Real choice and ledger",
+        "lines": "106-128",
+        "observation": "The initial case has choices=[] and ledger=[]. The fixture calls createDecisionMutations.recordChoice, first checks refusal without confirmation, then reads the resulting choice from the case. It checks exact comparison, scenario operations, principal/reason, one choice-recorded event and its outputDigest, and an idempotent retry. The previous fake ChoiceRecord cast is removed."
+      },
+      {
+        "area": "Same-case handoff and preparation",
+        "lines": "129-165",
+        "observation": "The candidate ref pins the same post-choice case/version and alternative. Portfolio evaluation reads the persisted C08 scenario and comparison. preparePortfolioChoice refuses before the preparation grant, then delegates to real WP11 preparation. It asserts two planned effects with expectedVersion=4 and unchanged controlled domain amounts."
+      },
+      {
+        "area": "Confirmation and CAS reconciliation",
+        "lines": "167-221",
+        "observation": "The application path uses createPreparedExecution and createSfPreparedApply with proposalReviewDigest and receiptReviewBinding. It refuses before apply confirmation and asserts no mutation. After confirmation it requires first execution ok, exactly one authoritative receipt, immediate case reconciliation, applied/planned states, unchanged ChoiceRecord digest and an identical retry result. This matches the local WP11 fresh-CAS reconciliation logic; no case-reconciliation-pending success surrogate remains."
+      },
+      {
+        "area": "Partial application and retry identity",
+        "lines": "223-258",
+        "observation": "The controlled Procurement mutation is initially unavailable; the case remains partially-applied with one receipt and Planner already applied. On resume the test requires both effects applied, amounts [40,60], exactly one execution per domain, two durable receipts, review-proof transaction digests matching the prepared changes, and unchanged choice/scenario/comparison digests. It retries both completed effects without duplicating execution."
+      }
+    ],
+    "limitations": [
+      "Static review only. The amended frozen test has not been executed or independently certified by this reviewer. S2 is for W2 and cannot establish this W3 delta.",
+      "Scenario results and case alternatives are controlled fixture data. Canonical comparison and actual C08 persistence are exercised, but canonical domain scenario production is not demonstrated by this test.",
+      "Authentication, authority, confirmations, evidence resolution and prepared-domain-command production are supplied as controlled callbacks. The TrustedUiContext is a fixture cast; there is no actual user UI/native/session admission.",
+      "Applied mutations still operate on snapshot.data.wp13Amount and its version, not actual Planner/Procurement business engine records. The test demonstrates WP11 transaction/receipt orchestration with bounded domain callbacks, not GNATIVE or complete native-host integration.",
+      "The unavailable Procurement branch returns no mutation before execution, so it demonstrates partial progress with a temporarily unavailable second producer, not a committed failed-domain receipt.",
+      "The test explicitly covers idempotent recordChoice and application retries. It does not retry preparation after a successful preparation commit, nor reopen the store in a new process.",
+      "The choice remains conditioned with missing cost categories and no cost rule. Its eventual application in this controlled fixture is not evidence of complete financial coverage or an automatically satisfied financial criterion."
+    ],
+    "prior_W2_limitation_update": "The specific W2 fake-ChoiceRecord limitation is addressed structurally by this frozen W3 test, subject to hosted execution. The broader controlled-domain/native-host limitation remains.",
+    "next_action": "Publish the exact frozen test and consumed dependency pins, run the surgical GitHub Actions slice and package checks once for that candidate, and attach resulting run IDs/SHAs. Do not use a W2 run or this static opinion as W3 executable proof or global acceptance."
+  },
+  "same_version_history_followup": {
+    "reviewed_at_utc": "2026-11-14T09:51:36.977149+00:00",
+    "candidate": "W3 work in progress; unpublished at review; not W2",
+    "status": "GATE_CHANGES_STATICALLY_CONFIRMED_NO_OPEN_DELTA_FINDING_CI_REQUIRED",
+    "scope": "Only same-version admission gates in history-provenance.ts and campaign.readHistorical plus the two new tests, including the parent-applied test discriminant correction. Product/tests were read only.",
+    "blobs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+        "git_blob_sha1": "7fd45d8286219e33e37c92c5a73ea3e818c03a70",
+        "sha256": "d461236c111f57f74b67fcba976e869dacb0f2a10b422a644890d66eb7ebfdf8"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+        "git_blob_sha1": "d5fe38ec0a02ce23dedd756869a8f10c15e3db4d",
+        "sha256": "9b1a1897263edbe0660c4a184743ad1e59ad6990532049bc0e32d753455e8769"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "git_blob_sha1": "bd7b56c7c91dd4549ecab89520cd8093ed0f6239",
+        "sha256": "3d13e78c9b9e4ea24340bb31b007752844766793a8f6b5595fc744b0e6a21e7a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+        "git_blob_sha1": "e83d632e6cd26ad360a9ea7ff72ba04a31c97eb4",
+        "sha256": "4466611dec2bac1bdfc5a49668e7d3c986733b2e22d205cc7517e94da373987b"
+      }
+    ],
+    "gate_assessment": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+        "location": "createPortfolioHistoricalProvenance.inspect current-case gate",
+        "change": "Reject current.version < stored.caseRef.version, instead of <=.",
+        "assessment": "Equality now reaches authenticated binding, selection and candidate digest checks, current case identity/incarnation, evidence reference equality/current accessRevision, and double provenance/host revalidation. A stored future case version remains rejected before the historical binding reader."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+        "location": "createPortfolioCampaign.readHistorical persisted owner-case gate",
+        "change": "Reject stored.ownerCase.version > request.ownerCase.version, instead of >=.",
+        "assessment": "Equality now allows the explicit historical-read path. Owner authorization still requires the exact current owner id/incarnation/version and participant/native binding; persisted campaign digest, candidate history, proposal/commitment checks and repeated current authority checks remain. No write or source refresh is added."
+      }
+    ],
+    "test_assessment": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "name": "accepts authenticated source history at the same case version and still rejects revocation",
+        "assessment": "With owner and candidate case both at the stored version, historical evidence is accepted. Revocation is then refused. For the future-version negative, the final reviewed test restores valid historical evidence, counts binding reads, requests a current owner version below the stored version and requires false plus bindingReads=0. This separates version rejection from evidence revocation."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+        "name": "a saved campaign remains authenticated historical data at the same owner case version",
+        "assessment": "The fixture saves a campaign, reads and lists it historically at the unchanged owner version, then independently checks source revocation (unavailable) and case-access revocation (denied). The source-revocation switch is reset before the case-access negative."
+      }
+    ],
+    "review_issue_corrected_during_followup": {
+      "id": "WP13-HISTORY-REVIEW-TEST-02",
+      "severity": "P3_TEST_DISCRIMINATION",
+      "initial_observation": "The initial new future-version assertion retained evidence.context=revoked from the preceding assertion, so it could pass without exercising the version gate.",
+      "root_correction": "Restored harness().evidence.context before the future-version attempt and asserted the historical binding reader was called zero times.",
+      "final_state": "CORRECTED_IN_REVIEWED_LOCAL_BLOB_STATICALLY_CONFIRMED_CI_REQUIRED",
+      "reviewer_authored_fix": false
+    },
+    "open_findings": [],
+    "limitations": [
+      "These are controlled callback/fixture regressions. They establish intended admission assertions if hosted tests pass; they do not independently demonstrate native host wiring or a real source revision in the installed module.",
+      "This follow-up did not re-review all content of the four files or other concurrent W3 changes; its identity is the recorded hashes and specified gates/tests.",
+      "No product test, typecheck, CI run or remote lookup was performed by this reviewer. S2 remains a W2 run and cannot certify the W3 changes.",
+      "No global PASS, GNATIVE or READY is granted. Publication, surgical hosted tests and package checks for the matching candidate remain required."
+    ],
+    "next_action": "Freeze and publish these hashes with W3, include the affected history-provenance/campaign tests in the single surgical hosted validation for W3, and attach exact head/tree/run/check identities."
+  },
+  "borrowed_input_hardening_followup": {
+    "reviewed_at_utc": "2026-11-14T09:56:34.503039+00:00",
+    "candidate": "W3 work in progress; unpublished at review; independent from W2 and earlier local hashes",
+    "status": "NO_NEW_CONCRETE_DEFECT_IDENTIFIED_STATIC_ONLY_CI_REQUIRED",
+    "scope": "Only the latest history-provenance.ts defensive-copy and incoming-digest hardening, and its two new regression tests. No product/test edits by reviewer.",
+    "reported_origin": "Parent reports an owned adaptation of PR36 increment 46c904e. Reviewer did not independently fetch that remote commit or review its other files.",
+    "blobs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+        "git_blob_sha1": "caa3b783b41f95287bba8a4bab3c652c8375c320",
+        "sha256": "ac1433763f818ccdd4c7d4c49cd71efa3ddec3781171d350b5b6e4b03dc7cf77"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "git_blob_sha1": "606591b793eecf9a97ba1459dd0c02d6f9d352f7",
+        "sha256": "cb2e23d83d213ab29c02adf060cad359f02692675b7e1abd1b0cc83357708cdf"
+      }
+    ],
+    "assessment": [
+      {
+        "area": "Admitted input and boolean verification result",
+        "observation": "incoming is cloned before the first await and the full admitted digest is captured. All verification reads use the private stored snapshot. Before returning true, after the final host revalidation, the original incoming object must still have the admitted digest. This prevents a true boolean result from approving a caller object that changed during verification."
+      },
+      {
+        "area": "Borrowed provider observations",
+        "observation": "caseFor, readHistoricalBinding, cases.read and evidence.context results are cloned immediately after their awaited returns. The two inspection records therefore retain independent observations even if providers reuse mutable objects. The existing historical-candidate callback was already cloned."
+      },
+      {
+        "area": "Inputs passed to providers",
+        "observation": "readHistoricalBinding receives a clone of current.value, and evidence.context receives a clone of stored.sourceRefs. Provider mutation of those arguments cannot rewrite the private inspected case/evidence snapshot."
+      },
+      {
+        "area": "Existing provenance and authority gates",
+        "observation": "The same-version admission/future-version rejection, binding/selection/request/result/candidate digest comparisons, evidence reference equality/accessRevision, historical/fresh policy and repeated host revalidation remain in place."
+      },
+      {
+        "area": "Caller-mutation regression",
+        "observation": "The test mutates a private incoming clone during caseFor, expects false and asserts the caller mutation is not undone. With the new input snapshot, this specifically requires the final incoming digest comparison; snapshot alone would approve the old admitted content while the caller object had changed."
+      },
+      {
+        "area": "Borrowed-owner regression",
+        "observation": "The test returns a shared owner object and mutates its version only during the first binding read. The first observation remains at its original version and differs from the second. This discriminates the copy boundary: without the caseFor clone, the first record could absorb that one-time mutation and both passes could agree."
+      }
+    ],
+    "findings": [],
+    "limitations": [
+      "Static review only; no local product execution, CI dispatch, typecheck or remote verification by this reviewer.",
+      "The new regressions use controlled callbacks and do not establish native-host behavior or global acceptance.",
+      "This opinion applies only to the two hashes listed here. The earlier same-version review remains valid for its reviewed gate semantics, but its two historical-provenance file identities are superseded by these newer hashes.",
+      "Other PR36/W3 changes, including adjacent exact-threshold proof changes, are outside this follow-up.",
+      "The caller-mutation test is scoped to the newly combined snapshot-plus-egress-digest contract; by itself it is not a complete proof that every borrowed-reference mutation is detected."
+    ],
+    "next_action": "Freeze/publish the listed hashes, validate the affected history-provenance test in the single surgical GitHub Actions run for the corresponding W3 candidate, and record exact head/tree/run/check identities. No READY, GNATIVE or global PASS follows from this review."
+  }
+}

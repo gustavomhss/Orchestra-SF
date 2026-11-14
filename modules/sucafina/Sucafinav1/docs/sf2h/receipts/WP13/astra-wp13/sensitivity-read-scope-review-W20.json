@@ -1,0 +1,78 @@
+{
+  "schema": "wp13-W20-owned-readscope-implementation-review-v1",
+  "status": "IMPLEMENTED_OWN_OPT_IN_REQUIRES_HOSTED_VALIDATION_NO_RUNTIME_PASS",
+  "author": "/root/wp13_findings",
+  "manifest": {
+    "path": "reference/wp13-W20-own-readscope-manifest.json",
+    "blob": "5cee238a160449a31bbda0024c09ce4968f67ab6",
+    "sha256": "6c466125d043d92faad7dc56d3c0fa88b9d7872c3f11f4ab8aa963810d406997",
+    "bytes": 4347
+  },
+  "change": "Optional private same-LocalStore read scope for one full verifySensitivity invocation; no cache of numerical results or authorization across invocations.",
+  "privateContract": {
+    "input": "sensitivityReadScope?: Pick<DomainPortHost, \"persistence\" | \"requestFor\" | \"revalidate\">",
+    "trustBoundary": "Selected by trusted composition only. Every C08/case/rule/source/preview/exact reader in the scope must use the same audited LocalStore. Type compatibility alone does not establish these guarantees for another Persistence.",
+    "oneInvocation": "One fresh transaction(\"planner\", commit:false, signal) per call. Refuse an inherited currentSnapshots scope because child completion cannot authorize publication before its parent root succeeds.",
+    "fenceReads": "Retain fresh host revalidation; use detached currentSnapshots during the root and original transactionAll only when outside a root.",
+    "fallback": "Absent capability runs original full unscoped replay unchanged.",
+    "installedWP10": "NOT_APPLIED. No installed-host adoption, consumer acceptance or performance is implied by the own fixture option."
+  },
+  "authorityLifecycle": [
+    "Before await, invalidate previous fence for this binding/installation/project/principal/accessRevision/policyVersion and register invocation token.",
+    "Capture and detach incoming binding/stored values; fence both caller objects and the replay copies, kind+context binding, capability/function identities, private Request identity/method/url/headers, and abort signal.",
+    "Inside the root require currentSnapshots, fresh scope authority and unchanged ingress. Run all original replay observations, canonical preview/exact/C10 callbacks and source fences.",
+    "capture stages only a private candidate. Final scope authority callback and synchronous unchanged checks execute before root completion.",
+    "Only after the real transaction returns successfully, matching exactly one invocation and still-current token/inputs/request, publish bounded expiring fence. No await follows publication.",
+    "Throw/false/abort/revocation/swallowed-write poison cannot publish. Failed cleanup affects only its own active token; a superseded invocation cannot publish or delete a newer grant."
+  ],
+  "retainedNumericalProof": [
+    "Original replay body exactly retained except private capture staging parameter.",
+    "Fresh unit/rule and historical source/baseline C08 reads; every saved sample plus canonical preview; full coverage certificate issue/qualify/revalidate; exact solver and adjacent canonical witnesses; final sources and authority remain active.",
+    "Four independent verifier invocations per cold persistent read remain. Initial persistence and confirmed retry replay counts are not reduced.",
+    "Existing six integration case bodies, 64 expect expressions, two-endpoint requests, budgets, C08 persistence/reload/revocation/idempotence and human-choice assertions are preserved."
+  ],
+  "counterexamples": [
+    {
+      "id": "READSCOPE-01",
+      "case": "swallowed canonical nested write after staging",
+      "mechanism": "Real Planner OPEX command returns ok from the nested snapshot; LocalStore rejects commit:true; callback catches the error. Provisional verifySnapshot is observed false before the write.",
+      "assertions": "verify false; final scope callback reached; canonical command accepted; write rejected; all three snapshots unchanged; no final grant."
+    },
+    {
+      "id": "READSCOPE-02",
+      "case": "next invocation sees a committed source edit",
+      "mechanism": "Seed real successful grant; execute canonical Planner amount edit outside the scope; invoke the same verifier again.",
+      "assertions": "first true with valid fence; durable snapshots changed by real edit; next call false and grant absent."
+    },
+    {
+      "id": "READSCOPE-03",
+      "case": "final actual fixture UI authority revocation",
+      "mechanism": "In final scope callback after staging, remove authorization from the same private Request. The real fixture UI authorizer rejects and retires its actual admitted lease.",
+      "assertions": "provisional grant false; verify false; real host.revalidate false; requestFor undefined; snapshots unchanged; grant absent.",
+      "limit": "This is real local fixture UI admission, not installed/native UI acceptance."
+    },
+    {
+      "id": "READSCOPE-04",
+      "case": "inherited scope refusal plus valid old grant followed by internal-input mutation",
+      "mechanism": "First attempt under inherited actual root is refused before scope callbacks. Then establish successful grant. Delegate canonical units.resolve while retaining its request argument; final callback mutates the detached replay request.",
+      "assertions": "inherited false/checks0/no grant; later valid grant true; subsequent mutated-copy attempt false with provisional and final grants false, caller inputs and durable snapshots unchanged.",
+      "ordering": "Inherited refusal precedes valid seed, so it does not erase the old grant before the separate mutation counterexample."
+    }
+  ],
+  "testSeam": {
+    "financialData": "Real Planner canonical sensitivity and samples, canonical units/rule issuer, real C08 writes/reads and real LocalStore; no fabricated numerical PortResult or broadened access.",
+    "bindingEnvelope": "Private CriterionResultBinding input constructed from actual issuer and actual persisted sensitivity fields, with digest, solely to call the private verifier without seven unrelated publication replays per counterexample.",
+    "fullBindingPersistence": "Original integration suite still publishes real criterion binding, persists/reloads C08 and runs all four cold replays; no binding seam replaces that suite.",
+    "scopeCallback": "Controlled host revalidate wrapper delegates original authority and runs the failure injection only on the final scope-specific callback; original replay revalidate remains unchanged."
+  },
+  "limits": [
+    "No tests, typecheck, guards or product execution performed in this task. No hosted outcome or runtime gain is claimed.",
+    "Same-key overlapping token ordering is covered by static code review only, without a new scheduled interleaving test in these four cases.",
+    "Borrowed original/context/request identity and abort fences are present, but these four tests specifically exercise the detached inner request mutation and real same-Request authority revocation; not every guarded variation has a new runtime counterexample.",
+    "External ACLs, revocation sets, UI leases, independent persistence instances and remote providers are outside SQLite snapshot atomicity. All existing callbacks remain mandatory.",
+    "BEGIN IMMEDIATE lasts for the full replay and may cause writer contention. Detached snapshot serialization, math and coverage cost remain. No timing budget was increased.",
+    "Earlier S12 complete-case timeouts remain historical observed failures; this unexecuted increment does not resolve them by assertion.",
+    "W19 foreign grouped Finance intake is separate and unchanged by these four own files. No broader snapshot or new foreign closure was imported."
+  ],
+  "nextAction": "Root and independent peer inspect frozen hashes, publish only authorized own delta if accepted, then run hosted package typecheck/guards and surgical four-counterexample plus unchanged integration selections under existing budgets. Treat failures as findings, not permission to weaken authority or oracles."
+}

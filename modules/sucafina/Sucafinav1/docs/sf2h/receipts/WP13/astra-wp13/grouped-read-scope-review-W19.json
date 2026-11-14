@@ -1,0 +1,244 @@
+{
+  "schema": "wp13-independent-static-review-v1",
+  "id": "WP13-W19-FINANCE-GROUPED-CASE-READ-SCOPE",
+  "reviewedAt": "2026-11-14T13:55:18.825105+00:00",
+  "status": "NO_NEW_STATIC_BLOCKER_BOUNDED_THREE_FILE_INTAKE_REQUIRES_CURRENT_HOSTED_PROOF",
+  "ready": false,
+  "reviewer": "/root/wp13_review_acceptance/w6_handoff_static",
+  "reviewMode": {
+    "sourceReadOnly": true,
+    "metadataHashesOnly": true,
+    "productExecuted": false,
+    "typecheckExecuted": false,
+    "ciDispatched": false,
+    "remoteOperations": false,
+    "productOrFixtureEdited": false,
+    "mapsEdited": false
+  },
+  "targetBeforeIntake": {
+    "label": "W18",
+    "head": "30312b0737daded8f5aaee40f59bc923908bce53",
+    "tree": "0fba102f4af116561926c105477ef32f916eb7ba"
+  },
+  "owner": {
+    "name": "Finance/WP03/WP11 fixture ownership",
+    "observedHead": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "codeCommit": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+    "codeTree": "052583ce35edbadd4b7ec68ffe021bb59e05a20f",
+    "observedAt": "2026-11-14T13:49:26.218Z",
+    "manifest": "reference/owner-1350-files.json"
+  },
+  "conclusion": [
+    "The exact three-file intake is relevant to the current WP13 renewal consumers and introduces no identified new static blocker. It provides consistent admission of every alternative in one case-read invocation using the existing real LocalStore read-only nested transaction semantics.",
+    "This is a bounded published owner dependency intake, not a new WP13 authorization implementation. The current consumer must still perform its own final full-case/source/evidence checks.",
+    "The grouped caller closes the inter-alternative mixed-snapshot opportunity within this controlled fixture composition and places its final asynchronous authority callback inside the protected scope. No result or authority cache crosses calls.",
+    "This review does not establish a WP13 timeout fix, product PASS, native/installed acceptance, or closure of generic compareForecast/individual-nonempty final-callback findings."
+  ],
+  "minimumExactClosure": [
+    {
+      "owner": "Finance",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "sha": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "localPath": "reference/owner-1350/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "bytes": 8303,
+      "sha256": "9fb65068cc969ebb04f2e14f9082147d058287f09fa40702d56c4c4838a6d9a1",
+      "blobAndSha256VerifiedByStaticBytes": true
+    },
+    {
+      "owner": "Finance",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "sha": "2da82bf379910826f4558b5b330c97cdaf6806df",
+      "localPath": "reference/owner-1350/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "bytes": 25464,
+      "sha256": "e25c0f56ec3b9e8efe762e9bf372bb56b2a7d7d08b94cfaf66358033d8401a97",
+      "blobAndSha256VerifiedByStaticBytes": true
+    },
+    {
+      "owner": "Finance",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "sha": "75a2cbcd0c3907fc2d14f18f2b35f131331ecfb2",
+      "localPath": "reference/owner-1350/modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "bytes": 6024,
+      "sha256": "fbccc98f43e078bcc735ac9f613507ab152f2fbbdd5fbce09e45b3a580a6929f",
+      "blobAndSha256VerifiedByStaticBytes": true
+    }
+  ],
+  "priorConsumedBlobs": {
+    "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts": "f85c1c8e7196aff1381513b2d5ed2109641d6a45",
+    "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+    "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts": null
+  },
+  "excludedInputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "blob": "3bbcabb4272ba2d083aa39b03142498178e95193",
+      "reason": "Current inspected WP13 source-scenario, coverage-sensitivity human case and price integration import createRenewalChoiceHistory from renewal-choice-fixture, not this independent human fixture. No additional dependency is required for these roots."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "blob": "206271d33bcfb7786ee80ef0dfad50eb80e4fee2",
+      "reason": "Later WP11 draft/prepare egress change is a separate owner finding, not required by this three-file fixture closure. Keep consumed W17 full-case reader pin and reconcile the new delta independently."
+    },
+    {
+      "scope": "runtime, engines, financial policies, host application and whole Finance/WP11 heads",
+      "reason": "No new runtime import or implementation is necessary; the added DecisionCase import is type-only and already published in the current closure."
+    }
+  ],
+  "implementationChecks": [
+    {
+      "id": "GROUP-01",
+      "path": "test/product/wp11/renewal-operation-verifier.ts",
+      "lines": "86-104",
+      "finding": "Root transaction(planner) captures one immutable LocalStore snapshot for all cloned scenario requests. Every individual verifier promise catches refusal/exception and Promise.all awaits all siblings before scope exit."
+    },
+    {
+      "id": "GROUP-02",
+      "path": "test/product/wp11/renewal-operation-verifier.ts",
+      "lines": "89-102",
+      "finding": "Initial live request/authority, cloned binding digest, signal checks, final asynchronous host.revalidate inside the scope, then synchronous request identity/binding/abort checks are retained. No asynchronous provider callback runs after the outer scope returns."
+    },
+    {
+      "id": "GROUP-03",
+      "path": "runtime/local-store.ts",
+      "lines": "99-108,163-197,199-219",
+      "finding": "transaction(planner) detects the inherited read scope and clones the staged snapshot. Nested commit:true or blob writes poison the root and throw even if the callback catches the rejection. This is supported nested readonly behavior; transactionAll is not substituted or nested here.",
+      "blob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "sha256": "c8ce4f6d20eb89d2adebc6577692c310b65310be251784b109431bc18a7c26e5"
+    },
+    {
+      "id": "GROUP-04",
+      "path": "test/product/wp11/renewal-operation-verifier.ts",
+      "finding": "The complete exported createRenewalOperationVerifier body is byte-for-byte unchanged after ignoring the added type import and new function suffix. Its function-text SHA256 is 800486f775b7950e96b08f35d0fc69b78cc5b541261916e064d2b850c5d73679 in both inputs. Existing seven direct source-admission cases remain a distinct oracle."
+    },
+    {
+      "id": "GROUP-05",
+      "path": "test/product/wp11/renewal-choice-fixture.ts",
+      "lines": "24,101-103,178-184",
+      "finding": "Only three hunks: import grouped helper, compose it directly for verifyScenarioOperations, and obtain one projection-only phase member through sourcePlanner. The existing persisted selected/baseline C08, comparison, canonical criterion, coverage registry and previews remain on classified paths. The phase exposes only candidate DomainProjection from this call, not a substituted C10 result."
+    },
+    {
+      "id": "GROUP-06",
+      "path": "test/product/wp11/renewal-case-read-scope.test.ts",
+      "lines": "12-18,26-49",
+      "finding": "Optional transactionAll used by the test only before/after the grouped call is checked for presence. Cleanup remains in finally in all four cases. No changed timeout or weakened pre-existing assertion was found."
+    }
+  ],
+  "directConsumers": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "import": "createRenewalChoiceHistory",
+      "purpose": "Same-case baseline/selected history, real C08, coverage and two canonical criteria. The grouped case admission is directly reached while reading historical and current alternatives."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "import": "createRenewalChoiceHistory",
+      "scope": "Renewal/human history case only. The first three WP05 cold-reload cases use a different fixture closure and gain no direct benefit from this grouped renewal helper."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+      "import": "createRenewalChoiceHistory",
+      "purpose": "Controlled real-price and choice/history composition; preserve the historical proof pin instead of attributing its result to this new closure."
+    }
+  ],
+  "newOracles": [
+    {
+      "name": "case operation admission observes all alternatives in a read-only scope without changing durable state",
+      "path": "test/product/wp11/renewal-case-read-scope.test.ts",
+      "lines": "9-21",
+      "canDemonstrateIfHostedPasses": "Real-fixture nonempty and source-only alternative admission returns true; all cross-surface durable snapshots before and after are identical.",
+      "doesNotDemonstrate": "Installed/native authority or a numerical sensitivity/threshold result."
+    },
+    {
+      "name": "case operation admission refuses a nested source write even when the source callback swallows its rejection",
+      "path": "test/product/wp11/renewal-case-read-scope.test.ts",
+      "lines": "23-52",
+      "canDemonstrateIfHostedPasses": "Canonical OPEX command is valid in the nested staged snapshot but cannot commit; swallowed rejection still poisons/refuses the outer admission, leaves durable snapshots unchanged, and does not revoke the unrelated live authority.",
+      "doesNotDemonstrate": "A successful committed change between two independent mutable top-level observations; grouped semantics deliberately reject the nested write."
+    },
+    {
+      "name": "a later case operation admission observes a committed source change instead of reusing the prior scope",
+      "path": "test/product/wp11/renewal-case-read-scope.test.ts",
+      "lines": "54-70",
+      "canDemonstrateIfHostedPasses": "A real OPEX mutation committed between invocations is detected by the next admission although synthetic source-reference arrays remain unchanged and authority remains valid.",
+      "doesNotDemonstrate": "A cache or generation mechanism; the helper simply reopens its read scope."
+    },
+    {
+      "name": "case operation admission refuses authority revoked by an awaited source callback",
+      "path": "test/product/wp11/renewal-case-read-scope.test.ts",
+      "lines": "72-87",
+      "canDemonstrateIfHostedPasses": "Revocation during an awaited source callback makes admission false and removes the live request/authority.",
+      "doesNotDemonstrate": "Every remote provider or installed host authority channel."
+    }
+  ],
+  "genericResidual": {
+    "status": "REMAINS_OPEN_SEPARATE_OWNER_FINDING",
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/finance-generic-freshness-W18.NOT_APPLIED.json",
+    "paths": [
+      "product/planner/port.ts",
+      "test/product/wp11/renewal-operation-verifier.ts:createRenewalOperationVerifier(nonempty)"
+    ],
+    "reason": "The individual nonempty helper and generic compareForecast retain their existing callback ordering. The grouped caller encloses its own awaits and final revalidation in a protected snapshot, but does not change these APIs or all their consumers. Do not mark the generic finding fixed or the WP10 host source-only/C17 deltas consumed.",
+    "owners": [
+      "Finance/WP03",
+      "WP10"
+    ],
+    "nextAction": "Owner provide and prove a separate generic final-callback contract/correction; consume exact published inputs when independently relevant."
+  },
+  "ownerReportedExecutionContext": {
+    "evidenceLevel": "PUBLISHED_OWNER_RECEIPT_READ_ONLY_NOT_RAW_LOG_VERIFIED_NOT_WP13_PROOF",
+    "source": "reference/owner-1350/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/final-validation.md",
+    "priorFailure": {
+      "selection": "S22",
+      "product": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+      "run": 43597449806,
+      "job": 132454907023,
+      "reported": "14 pass, 2 timeout failures; original 180000ms budget retained",
+      "affected": [
+        {
+          "file": "renewal-choice-history.test.ts",
+          "elapsedMs": 180034.05,
+          "lastCheckpoint": "threshold-after:start"
+        },
+        {
+          "file": "renewal-choice-revision.test.ts",
+          "elapsedMs": 196569.25,
+          "lastCheckpoint": "prepare:transition-confirmed:complete"
+        }
+      ]
+    },
+    "candidateRun": {
+      "selection": "S25",
+      "product": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "snapshot": "34c2647395a03749e5bbc795bcf1656be5d10a03",
+      "run": 43599384924,
+      "job": 132460663327,
+      "reported": "17 pass, 0 fail, 197 assertions; six owner files",
+      "reportedHistoryMs": {
+        "renewal-choice-history.test.ts": 155286.57,
+        "renewal-choice-revision.test.ts": 141792.59,
+        "implementation-quote-history.test.ts": 76963.17
+      }
+    },
+    "limit": "Owner-reported outcomes support relevance, not current WP13 execution acceptance. No isolated speedup is calculated: timers overlap and earlier timer scopes differ. The four new assertions/cases are not counted as PASS by this static review."
+  },
+  "hostedNextAction": {
+    "candidateSelection": "Root reports S14 was never dispatched and can be prepared on a new exact W19 snapshot with the previous six files plus renewal-case-read-scope.test.ts: seven files, 25 static cases. These are planned cardinalities, not results.",
+    "preserve": [
+      "S12 stays pinned to its original W16 snapshot/run and cannot be relabeled W19.",
+      "Keep the existing seven direct source-admission cases and the new four grouped cases separate; they exercise distinct transaction semantics.",
+      "Keep source-scenario canonical coverage/ceiling/minimum-advantage/absence-zero oracles and the 180000ms budget intact.",
+      "No rerun of an equivalent already dispatched snapshot is authorized by this static review.",
+      "Current hosted typecheck/guards and product logs must name the new product/snapshot before any new claim."
+    ],
+    "notResolved": [
+      "First three WP05 cold reload costs",
+      "Positive canonical contract-term/cancellation rule",
+      "Four WP10 host consumer deltas",
+      "WP14 installed reconciliation/memory",
+      "Native/GNATIVE or complete campaign acceptance"
+    ]
+  }
+}

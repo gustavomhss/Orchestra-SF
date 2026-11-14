@@ -1,0 +1,36 @@
+{
+  "schema": "wp13-existing-published-selector-pins-v1",
+  "sourceProduct": {
+    "head": "058391623bd254a7e989d14183e38bada6808052",
+    "tree": "43c98b7200487a0a0fd3e5ad0280e91eac6063f1"
+  },
+  "pins": {
+    "Sucafinav1/test/product/wp03/port.test.ts": {
+      "publishedPath": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+      "sourceHead": "058391623bd254a7e989d14183e38bada6808052",
+      "sourceTree": "43c98b7200487a0a0fd3e5ad0280e91eac6063f1",
+      "gitBlob": "03a51004ce15979fe5d5a47b2f95f58edbef0ba5",
+      "sha256": "ef315ebcd25ecdcf0809ab37c214eff91fb9d2b91b668c8f8d768a768bd1d305",
+      "localPath": "reference/finance-closure-W17/WP13-W17-port-test.reference.ts",
+      "expectedCases": 2,
+      "testNames": [
+        "headcount projection follows domain visibility and increase preview is disposable",
+        "forecast port compares the real engine, and detects source changes"
+      ],
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/058391623bd254a7e989d14183e38bada6808052/modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+      "candidateIntakeOperation": null,
+      "reason": "Existing published source; separate selector-pin metadata, not a fabricated changed-file manifest entry. The nine-file proposal does not modify this path. Assembled-head blob equality must be checked after actual publication.",
+      "existingDependency": {
+        "path": "modules/sucafina/Sucafinav1/test/fixture/persistence.ts",
+        "artifact": {
+          "path": "reference/finance-closure-W17/WP13-W17-test-persistence.reference.ts",
+          "bytes": 1240,
+          "gitBlob": "b33c8f41fb719266e6100e8dc307c53ec66cdcff",
+          "sha256": "d8a3e502f5b64cb660b64f8ba4b083a32bda8dda17e4db316cb98acb8d803fa1"
+        },
+        "provenance": "Exact W17 read through GitHub MCP; missing local hydration is not a missing published dependency."
+      }
+    }
+  },
+  "meaning": "Unchanged existing published files admitted as precise CI selectors. These are not operations in the changed-file manifest and are not product proof. Verify their blobs on the assembled published candidate before dispatch."
+}

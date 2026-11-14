@@ -1,0 +1,91 @@
+{
+  "schema": "wp13-exact-owner-intake-v1",
+  "increment": "W19",
+  "preparedAt": "2026-11-14T13:56:42.376516+00:00",
+  "parent": {
+    "head": "30312b0737daded8f5aaee40f59bc923908bce53",
+    "tree": "0fba102f4af116561926c105477ef32f916eb7ba"
+  },
+  "ownerHead": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "sha": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "sha256": "9fb65068cc969ebb04f2e14f9082147d058287f09fa40702d56c4c4838a6d9a1",
+      "bytes": 8303,
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "codeCommit": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "owner": "Finance/WP11",
+      "action": "EXACT_PUBLISHED_OWNER_BLOB",
+      "previousBlob": "f85c1c8e7196aff1381513b2d5ed2109641d6a45",
+      "preservedLocalBefore": {
+        "path": "reference/wp13-W19-before/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "bytes": 6337,
+        "sha256": "9a23b44d9ac78f6597f0942a9a17dd8c94c40d93e80d2de7eb25b42291d8a7bc",
+        "gitBlob": "f85c1c8e7196aff1381513b2d5ed2109641d6a45"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "sha": "2da82bf379910826f4558b5b330c97cdaf6806df",
+      "sha256": "e25c0f56ec3b9e8efe762e9bf372bb56b2a7d7d08b94cfaf66358033d8401a97",
+      "bytes": 25464,
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "codeCommit": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "owner": "Finance/WP11",
+      "action": "EXACT_PUBLISHED_OWNER_BLOB",
+      "previousBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "preservedLocalBefore": {
+        "path": "reference/wp13-W19-before/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "bytes": 25425,
+        "sha256": "31559515ade97893610d6ccfef80bba7b4eb5c1cc096e6840013fb1309cdbc48",
+        "gitBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "sha": "75a2cbcd0c3907fc2d14f18f2b35f131331ecfb2",
+      "sha256": "fbccc98f43e078bcc735ac9f613507ab152f2fbbdd5fbce09e45b3a580a6929f",
+      "bytes": 6024,
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "codeCommit": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "owner": "Finance/WP11",
+      "action": "EXACT_PUBLISHED_OWNER_BLOB",
+      "previousBlob": null,
+      "preservedLocalBefore": null
+    }
+  ],
+  "review": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/grouped-read-scope-review-W19.json",
+    "bytes": 14812,
+    "sha256": "95055a8de5872843491e41b41a98dcafb2b523c3bfa207c05403b9cd608f9b19",
+    "gitBlob": "542a27f386de33298e163512652c2767cd4667e5"
+  },
+  "purpose": "Keep all alternatives in one real read-only source observation for the renewal consumers. Preserve the complete individual verifier and all original financial/human assertions. No cross-call cache.",
+  "productProof": "PENDING_CURRENT_HOSTED_SELECTION",
+  "excluded": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "blob": "3bbcabb4272ba2d083aa39b03142498178e95193",
+      "reason": "Current inspected WP13 source-scenario, coverage-sensitivity human case and price integration import createRenewalChoiceHistory from renewal-choice-fixture, not this independent human fixture. No additional dependency is required for these roots."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "blob": "206271d33bcfb7786ee80ef0dfad50eb80e4fee2",
+      "reason": "Later WP11 draft/prepare egress change is a separate owner finding, not required by this three-file fixture closure. Keep consumed W17 full-case reader pin and reconcile the new delta independently."
+    },
+    {
+      "scope": "runtime, engines, financial policies, host application and whole Finance/WP11 heads",
+      "reason": "No new runtime import or implementation is necessary; the added DecisionCase import is type-only and already published in the current closure."
+    }
+  ],
+  "limits": [
+    "First three WP05 cold reload costs",
+    "Positive canonical contract-term/cancellation rule",
+    "Four WP10 host consumer deltas",
+    "WP14 installed reconciliation/memory",
+    "Native/GNATIVE or complete campaign acceptance"
+  ],
+  "genericFindingStillOpen": true,
+  "ready": false
+}

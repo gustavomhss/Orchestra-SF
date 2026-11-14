@@ -27,15 +27,16 @@ export type PortfolioPort = {
 }
 
 export function createPortfolioPort(host: PortfolioHost): PortfolioPort & { evaluateWithSelections: (request: PortfolioRequest, context: TrustedDomainContext) => Promise<PortResult<{ portfolio: PortfolioResult; selections: readonly { combinationId: string; selectedCandidateRefs: readonly string[] }[] }>> } {
-  const evaluate = async (request: PortfolioRequest, context: TrustedDomainContext, selections: { combinationId: string; selectedCandidateRefs: readonly string[] }[] = []): Promise<PortResult<PortfolioResult>> => {
+  const evaluate = async (incoming: PortfolioRequest, context: TrustedDomainContext, selections: { combinationId: string; selectedCandidateRefs: readonly string[] }[] = []): Promise<PortResult<PortfolioResult>> => {
+    const request = structuredClone(incoming)
     if (!(await host.revalidate(context))) return { status: "denied", reason: "invalid-binding" }
     if (!request.candidateRefs.length || request.candidateRefs.length > 64 || new Set(request.candidateRefs).size !== request.candidateRefs.length || !Number.isSafeInteger(request.explorationLimit) || request.explorationLimit < 1 || request.explorationLimit > 1024 || !request.scope.currency || request.scope.horizon.start > request.scope.horizon.end)
       return { status: "needs-input", reason: "invalid-portfolio-scope-or-limit" }
     const resolved = await Promise.all(request.candidateRefs.map((ref) => host.resolveCandidate(ref, context)))
     const failure = resolved.find((item) => item.status !== "ok")
-    if (failure && failure.status !== "ok") return failure
-    const candidates = resolved.flatMap((item) => item.status === "ok" ? [item.value] : [])
-    if (candidates.some((item) => !item.operations.length || item.operations.some((operation) => !operation.targetRef.trim()))) return { status: "needs-input", reason: "candidate-operation-required" }
+    if (failure) return failure
+    const candidates = resolved.flatMap((item) => item.status === "ok" ? [structuredClone(item.value)] : [])
+    if (candidates.some((item) => (!item.operations.length && (!item.result?.id.startsWith("source-scenario:") || item.scenario.assumptions.length > 0)) || item.operations.some((operation) => !operation.targetRef.trim()))) return { status: "needs-input", reason: "candidate-operation-required" }
     if (candidates.some((item, index) => item.ref !== request.candidateRefs[index] || digestSfValue(item.operations) !== digestSfValue(item.scenario.operations))) return { status: "stale", reason: "candidate-reference-changed" }
     // Enumerate a bounded prefix without computing 2 ** n or materializing the power set.
     const combinations: PortfolioResult["combinations"][number][] = []
@@ -55,7 +56,7 @@ export function createPortfolioPort(host: PortfolioHost): PortfolioPort & { eval
         combinations.push({ id, caseRefs: selected.map((candidate) => candidate.caseRef), components: [], costCoverageRefs: [], conflicts: [...new Set(duplicateTargets)].map((target) => `duplicate-target:${target}`), restrictions: [], eligibility: "ineligible", comparisonStatus: "incompatible" })
         continue
       }
-      const evaluated = await host.evaluate({ request, candidates: selected, operations }, context)
+      const evaluated = structuredClone(await host.evaluate(structuredClone({ request, candidates: selected, operations }), context))
       if (evaluated.status !== "ok") return evaluated
       const scenario = evaluated.value.scenario
       evaluatedSources.push({ scenario, costCoverageRefs: evaluated.value.costCoverageRefs, analysis: evaluated.value.analysis, candidates: selected })
@@ -75,8 +76,12 @@ export function createPortfolioPort(host: PortfolioHost): PortfolioPort & { eval
       const common = { ...(analysis ? { analysis } : {}), id, caseRefs: selected.map((candidate) => candidate.caseRef), components: scenario.components, costCoverageRefs: evaluated.value.costCoverageRefs, conflicts: [], restrictions }
       evidenceRefs.push(...selected.flatMap((candidate) => candidate.result ? [...candidate.result.sourceRefs, ...candidate.result.costCoverage.evaluatedSourceRefs, ...candidate.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)] : []), ...scenario.sourceRefs, ...scenario.costCoverage.evaluatedSourceRefs, ...scenario.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs))
       const candidateComplete = selected.every((candidate) => !!candidate.result && candidate.result.comparisonStatus === "complete" && candidate.result.costCoverage.coverageState === "complete" && !candidate.result.unresolvedConditions.length && !candidate.result.restrictions.length && !candidate.result.costCoverage.issues.length && candidate.result.components.every((component) => component.amount !== null && Number.isFinite(component.amount) && component.evidenceState === "confirmed" && component.sourceRefs.length > 0) && candidate.result.costCoverage.entries.length > 0 && candidate.result.costCoverage.evaluatedSourceRefs.length > 0 && candidate.result.costCoverage.entries.every((entry) => entry.evidenceRefs.length > 0))
-      if (scenario.comparisonStatus === "incompatible" || selected.some((candidate) => candidate.result?.comparisonStatus === "incompatible") || analysis?.comparison.comparisonStatus === "incompatible" || (candidateComplete && scenario.comparisonStatus === "complete" && analysis?.comparison.comparisonStatus === "complete" && (analysis.comparison.criterionResults.some((item) => item.state === "failed") || checks.some((check) => check.state === "failed")))) {
-        combinations.push({ ...common, eligibility: "ineligible", comparisonStatus: analysis?.comparison.comparisonStatus === "incompatible" || selected.some((candidate) => candidate.result?.comparisonStatus === "incompatible") ? "incompatible" : scenario.comparisonStatus })
+      const observedStatuses = [scenario.comparisonStatus, ...selected.flatMap((candidate) => candidate.result ? [candidate.result.comparisonStatus] : []), ...(analysis ? [analysis.comparison.comparisonStatus] : [])]
+      const financialStatus = observedStatuses.includes("incompatible") ? "incompatible" : observedStatuses.includes("unavailable") ? "unavailable" : scenario.comparisonStatus === "complete" && candidateComplete && analysis?.comparison.comparisonStatus === "complete" ? "complete" : scenario.comparisonStatus === "complete" ? "conditioned" : scenario.comparisonStatus
+      // A definitive failed domain constraint is infeasible even when financial coverage is pending.
+      // Provisional financial findings remain unknown; WP13 never derives failure from a subtotal.
+      if (scenario.comparisonStatus === "incompatible" || selected.some((candidate) => candidate.result?.comparisonStatus === "incompatible") || analysis?.comparison.comparisonStatus === "incompatible" || analysis?.comparison.criterionResults.some((item) => item.state === "failed") || checks.some((check) => check.state === "failed")) {
+        combinations.push({ ...common, eligibility: "ineligible", comparisonStatus: analysis?.comparison.comparisonStatus === "incompatible" || selected.some((candidate) => candidate.result?.comparisonStatus === "incompatible") ? "incompatible" : financialStatus })
         continue
       }
       if (scenario.comparisonStatus === "complete" && analysis && analysis.comparison.comparisonStatus === "complete" && !analysis.comparison.unresolvedConditions.length && analysis.comparison.criterionResults.every((item) => item.state === "satisfied") && scenario.costCoverage.coverageState === "complete" && !scenario.unresolvedConditions.length && !scenario.restrictions.length && !scenario.costCoverage.issues.length && scenario.costCoverage.entries.length > 0 && scenario.costCoverage.evaluatedSourceRefs.length > 0 && scenario.costCoverage.entries.every((entry) => entry.evidenceRefs.length > 0) && scenario.components.every((component) => component.amount !== null && Number.isFinite(component.amount) && component.evidenceState === "confirmed" && component.sourceRefs.length > 0) && candidateComplete && checks.every((check) => check.state === "satisfied") && evaluated.value.costCoverageRefs.length) {
@@ -87,10 +92,14 @@ export function createPortfolioPort(host: PortfolioHost): PortfolioPort & { eval
         combinations.push({ ...common, eligibility: "unavailable", comparisonStatus: "unavailable" })
         continue
       }
-      const financialStatus = scenario.comparisonStatus === "complete" && candidateComplete && analysis?.comparison.comparisonStatus === "complete" ? "complete" : scenario.comparisonStatus === "complete" ? "conditioned" : scenario.comparisonStatus
       combinations.push({ ...common, eligibility: "conditioned", comparisonStatus: financialStatus })
     }
-    if (!(await host.revalidate(context)) || !(await Promise.all(evaluatedSources.map((item) => host.revalidateEvaluation(item.scenario, item.costCoverageRefs, item.analysis, context, item.candidates)))).every(Boolean)) return { status: "stale", reason: "source-or-authority-changed" }
+    if (!(await host.revalidate(context)) || !(await Promise.all(evaluatedSources.map(async (item) => {
+      const observed = structuredClone(item)
+      const expected = digestSfValue(observed)
+      const valid = await host.revalidateEvaluation(observed.scenario, observed.costCoverageRefs, observed.analysis, context, observed.candidates)
+      return valid && digestSfValue(observed) === expected
+    }))).every(Boolean)) return { status: "stale", reason: "source-or-authority-changed" }
     const latest = await Promise.all(request.candidateRefs.map((ref) => host.resolveCandidate(ref, context)))
     if (latest.some((item, index) => item.status !== "ok" || digestSfValue(item.value) !== digestSfValue(candidates[index]))) return { status: "stale", reason: "candidate-changed-or-revoked" }
     return { status: "ok", value: { combinations, evidenceRefs: evidenceRefs.filter((ref, index) => evidenceRefs.findIndex((item) => item.refDigest === ref.refDigest) === index), limitations: ["Finite exploration; no global optimum is asserted.", ...(queue.length ? [`Exploration limit ${request.explorationLimit} reached.`] : [])] } }

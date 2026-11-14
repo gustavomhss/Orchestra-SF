@@ -1,0 +1,292 @@
+{
+  "schema": "wp13-finance-full-closure-independent-review-v1",
+  "reviewer": "/root/wp13_review_acceptance/w6_handoff_static",
+  "mode": "STATIC_READ_ONLY_PRODUCT_REVIEW",
+  "status": "NO_NEW_STATIC_BLOCKER_FOR_BOUNDED_EXACT_INTAKE_HOSTED_VALIDATION_REQUIRED",
+  "candidateOwnerCommit": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+  "scope": "Alternative to extracting only plannerSourceActor: consume the exact published dependency closure, with no engine/runtime/policy change and no foreign source edits.",
+  "execution": {
+    "localProductTests": false,
+    "localTypecheck": false,
+    "productCodeImportedOrExecuted": false,
+    "ciDispatched": false,
+    "remoteOperations": false,
+    "productFilesEdited": false,
+    "reportOnlyWritten": true,
+    "acceptancePassClaimed": false,
+    "gnativeClaimed": false
+  },
+  "conclusion": [
+    "The exact four Planner producer files plus the renewal fixture verifier form a coherent bounded closure. No new runtime import remains unresolved in the inspected closure; scenario-port imports buildPlannerFinancialProjection as a type only, so this does not create a new executable port cycle.",
+    "The scenario qualifier is required by the exact published port. Its semantics are a relevant financial hardening, not merely the actor helper: explicit addressed null cells may become hypothetical finite values or explicit zero, while untouched absent cells and missing FX remain absent.",
+    "The closure uses the existing Planner domain command on an isolated snapshot; scenario.ts changes only its optional projection callback/result. The financial engine, runtime Planner, identity, UI and financial policies are not part of this intake.",
+    "This review permits a publication decision with new surgical hosted validation. It does not establish successful execution, unchanged timing, native installation, complete criterion acceptance or all-provider race closure."
+  ],
+  "inputs": [
+    {
+      "role": "runtime",
+      "path": "product/planner/port.ts",
+      "reviewInput": "reference/owner-1314/modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "gitBlob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "sha256": "8c51fdb91dc3c35bd6ff075488f3d393711b2d16e411085960fa3728c1fe5bd1",
+      "bytes": 26150
+    },
+    {
+      "role": "runtime",
+      "path": "product/planner/actual-presence.ts",
+      "reviewInput": "reference/finance-closure-W17/product/planner/actual-presence.ts",
+      "gitBlob": "c7497d7a71e90dd51ad362921e36d0de12fe431f",
+      "sha256": "1d9eb4259a257a7dddf064f08cb7cbd6c39d87533c747004c1587eba5fd93d2d",
+      "bytes": 978
+    },
+    {
+      "role": "runtime",
+      "path": "product/planner/scenario-port.ts",
+      "reviewInput": "reference/finance-closure-W17/product/planner/scenario-port.ts",
+      "gitBlob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "sha256": "6e0f003055c08005e3a2f339d221c6f608d615a8068e66d30555a981604eb0fd",
+      "bytes": 17443
+    },
+    {
+      "role": "runtime",
+      "path": "product/planner/scenario.ts",
+      "reviewInput": "reference/finance-closure-W17/product/planner/scenario.ts",
+      "gitBlob": "dd92a35b3025a69c198a2d99c4ef38a472dd3bc7",
+      "sha256": "a04c007eeb6505ed778b6f319cf131552b8a87d66dad370ae46430bccd9b646c",
+      "bytes": 5187
+    },
+    {
+      "role": "fixture",
+      "path": "test/product/wp11/renewal-operation-verifier.ts",
+      "reviewInput": "reference/owner-1314/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "gitBlob": "f85c1c8e7196aff1381513b2d5ed2109641d6a45",
+      "sha256": "9a23b44d9ac78f6597f0942a9a17dd8c94c40d93e80d2de7eb25b42291d8a7bc",
+      "bytes": 6337
+    },
+    {
+      "role": "compatibility-test",
+      "path": "test/product/wp03/source-scenario.test.ts",
+      "reviewInput": "reference/finance-closure-W17/test/product/wp03/source-scenario.test.ts",
+      "gitBlob": "46b31d8a8d9038f74c0d0b825078ecc8229fe6d4",
+      "sha256": "751a7069d98a576a18987eb38bdec434aaabadaa675d48d82bf413f150e5bb67",
+      "bytes": 8384
+    },
+    {
+      "role": "source-admission-proof",
+      "path": "test/product/wp11/renewal-source-admission.test.ts",
+      "reviewInput": "reference/owner-1314/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "gitBlob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "sha256": "ed792565e2a75a2b29a65dc81eee892db5bcefd0744c55d110ee9af6401df737",
+      "bytes": 11611
+    },
+    {
+      "role": "qualification-fixture",
+      "path": "test/product/wp03/scenario-engine-fixture.ts",
+      "reviewInput": "reference/finance-closure-W17/test/product/wp03/scenario-engine-fixture.ts",
+      "gitBlob": "fd6a6b8b75152e858961360d16f7432233700b2f",
+      "sha256": "3972443bbfe4eec57e4f3ba0b6dfe08c55ebed1dad19fd7bdb650659b3b69796",
+      "bytes": 2744
+    },
+    {
+      "role": "qualification-proof",
+      "path": "test/product/wp03/scenario-qualification.test.ts",
+      "reviewInput": "reference/finance-closure-W17/test/product/wp03/scenario-qualification.test.ts",
+      "gitBlob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+      "sha256": "7b5b59fb90149d739858ffb5ded2ebe473ad105e5ffda892cc1393d621e6c9f6",
+      "bytes": 17737
+    },
+    {
+      "role": "optional-related-proof",
+      "path": "test/product/wp03/port-hr.test.ts",
+      "reviewInput": "reference/finance-closure-W17/test/product/wp03/port-hr.test.ts",
+      "gitBlob": "68d049f957257e089810ae0f9be230a157dba70c",
+      "sha256": "8346e63ae0c41634c87224ec3c4206ac3d77411973bfa870fbd9a779577fc328",
+      "bytes": 5129
+    }
+  ],
+  "minimumClosure": {
+    "codeCompatibilityAndAdmissionProofFileCount": 7,
+    "withQualificationFixtureAndSixCaseFileCount": 9,
+    "optionalHrProofAddsOneFile": true,
+    "runtimePaths": [
+      "product/planner/port.ts",
+      "product/planner/actual-presence.ts",
+      "product/planner/scenario-port.ts",
+      "product/planner/scenario.ts"
+    ],
+    "requiredCompatibilityChange": "test/product/wp03/source-scenario.test.ts adds the required qualify callback and its import only; assertions and test budgets are unchanged in the inspected diff.",
+    "retainExistingFixture": {
+      "path": "test/product/wp11/renewal-source-fixture.ts",
+      "gitBlob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "reason": "The source-admission cases use this existing API. No new quote/f-array semantics from a later fixture are required."
+    },
+    "exclude": [
+      {
+        "path": "runtime/planner.ts",
+        "reason": "The owner diff includes UI/monthly grid, HR redaction and official-year permissions beyond this closure. None is required by the new direct imports; do not import this snapshot."
+      },
+      {
+        "path": "test/product/wp03/port.test.ts",
+        "candidateBlob": "2c6a3519024d2cca0fcf5256dcf9055fa1d7ae26",
+        "reason": "Owner test adds catalogs/observed/forecast-insights coverage outside this intake. Retain and run the already-published WP13 test instead."
+      },
+      {
+        "path": "test/product/wp11/renewal-source-fixture.ts",
+        "reason": "Do not replace the retained fixture with the later unrelated quote revision variant."
+      }
+    ]
+  },
+  "dependencyReasoning": [
+    {
+      "from": "test/product/wp11/renewal-operation-verifier.ts",
+      "to": "product/planner/port.ts",
+      "reason": "The new source-only verifier imports the canonical exported plannerSourceActor and projectPlannerSource. Its empty branch produces admission only, no financial result or C10."
+    },
+    {
+      "from": "product/planner/port.ts",
+      "to": "product/planner/actual-presence.ts",
+      "reason": "Mandatory runtime import qualifies existing actual aggregate; finite zero is confirmed, missing contributor/FX is null."
+    },
+    {
+      "from": "product/planner/port.ts",
+      "to": "product/planner/scenario-port.ts",
+      "reason": "Passes required qualify: buildPlannerFinancialProjection. Old scenario-port cannot represent the exact new port API/behavior."
+    },
+    {
+      "from": "product/planner/scenario-port.ts",
+      "to": "product/planner/scenario.ts",
+      "reason": "Uses the sixth project callback and returned preview.projection from the actual post-command clone."
+    },
+    {
+      "from": "test/product/wp03/scenario-qualification.test.ts",
+      "to": "test/product/wp03/scenario-engine-fixture.ts",
+      "reason": "Fixture uses existing real SQLite/domain/source issuer/private UI authority. C10 classification remains explicitly pending."
+    }
+  ],
+  "wp13OracleReview": [
+    {
+      "oracle": "Unaddressed absent component versus explicit zero",
+      "paths": [
+        "product/planner/scenario-port.ts:88-95",
+        "test/product/wp13/coverage-preview.test.ts",
+        "test/product/wp13/coverage-sensitivity-integration.test.ts"
+      ],
+      "finding": "absentBefore restores null for untouched components after legacy row normalization; only addressed cells can acquire hypothetical quantification. Omitted training remains absent as an inventory category; a present null training cell not targeted by the implementation parameter stays null. No complete coverage is manufactured.",
+      "hostedAction": "Run qualification null/zero/untouched-month cases and the current owned coverage preview consumers against the assembled pin."
+    },
+    {
+      "oracle": "Missing FX and separate parameter/output currencies",
+      "paths": [
+        "product/planner/port.ts:142-225",
+        "product/planner/scenario-port.ts:83-95",
+        "test/product/wp13/sensitivity-units-boundary.test.ts"
+      ],
+      "finding": "The post-command projection passes through the canonical financial qualifier; missing EUR FX cannot expose the legacy engine zero as a USD cost. Source denomination and output USD remain separate.",
+      "hostedAction": "Run the qualification missing-FX case, existing WP03 port file and owned sensitivity-units boundary file."
+    },
+    {
+      "oracle": "Source-only financial observation versus human choice/application",
+      "paths": [
+        "product/planner/scenario-port.ts:107-118",
+        "test/product/wp13/source-scenario.test.ts",
+        "test/product/wp11/renewal-source-admission.test.ts"
+      ],
+      "finding": "The empty scenario path still requires real coverage/source checks and plannerCoverageComplete before total. The verifier empty branch only authenticates the source; no C10, choice, receipt or application is returned by it. The WP13 W17 comparison routing remains independently responsible for canonical C08/C10 pairing.",
+      "hostedAction": "Run new source-admission proof, compatible WP03 source-scenario and own same-case source-scenario at the target pin; do not reuse old provider proof as new assembled acceptance."
+    },
+    {
+      "oracle": "Monthly defer is cost neutral, not cancellation savings",
+      "paths": [
+        "product/planner/scenario.ts:31-40",
+        "product/planner/scenario-port.ts:88-95",
+        "test/product/wp13/term-defer-boundary.test.ts"
+      ],
+      "finding": "The domain command is unchanged: origin is zeroed and its amount added to the destination. Both addresses are included in changed. A third absent month remains null. The owned Nov112000/Dec40000 to Nov0/Dec152000 case remains semantically compatible, total pending/null and no durable application.",
+      "hostedAction": "Run existing owned term-defer test on the assembled closure. The positive contractual term/cancellation rule required by WP13.T03.CHK.02 remains outside this review and pending its producer contract."
+    },
+    {
+      "oracle": "55000 exact covered bound and 40000 training shifting it to 15000",
+      "paths": [
+        "test/product/wp13/coverage-preview.test.ts",
+        "test/product/wp13/coverage-sensitivity-integration.test.ts"
+      ],
+      "finding": "The closure does not alter exact-threshold, interval proof, C10 or rule formulas. It does change the producing scenario projection, so historical exact/cold proof cannot automatically become evidence for this new composition.",
+      "hostedAction": "Keep pinned historical evidence, and let root select the affected owned coverage/sensitivity cases without duplicating equivalent active runs or increasing their budgets."
+    }
+  ],
+  "authorityAndFinalCallbackReview": {
+    "sourceOnlyFix": {
+      "path": "test/product/wp11/renewal-operation-verifier.ts:35-79",
+      "finding": "Two fresh real read-only snapshots authenticate and compare the full actor-filtered canonical projection. The second external source resolve and outer revalidation occur before the final transaction; final authentication is fenced by a fresh lease/request/binding check before projection. After that projection only synchronous request/binding/abort checks remain in the admission path. The source is cloned and schema/ref digest/scope/record/fields/whole-month period/year are checked.",
+      "localStoreAssumption": "The currently published LocalStore permits nested reads and rejects/poisons nested writes; both observation transactions return commit:false. No cross-call memo is introduced.",
+      "testsAvailable": [
+        "static reference after real Planner edit",
+        "second-source-resolve",
+        "last-revalidate-source-change",
+        "last-revalidate-revocation",
+        "final authentication revocation",
+        "scope/fields/digest/period mismatch",
+        "nonempty canonical operation verifier with no durable write"
+      ],
+      "runtimeStatus": "NOT_RUN_BY_REVIEWER_NO_ASSEMBLED_PASS"
+    },
+    "sameSourceOptimization": {
+      "path": "product/planner/port.ts:82-100,127-132",
+      "finding": "A self-comparison resolves one source/coverage per observation and clones both sides, but repeats the later source/coverage observations. This is per-invocation duplicate work elimination, not cached authority or a cached financial result."
+    },
+    "retainedLimit": {
+      "status": "PREEXISTING_OWNER_BOUNDARY_NOT_NEW_REGRESSION_PROOF",
+      "paths": [
+        "product/planner/port.ts:127-132",
+        "test/product/wp11/renewal-operation-verifier.ts:23-33",
+        "product/planner/scenario-port.ts:96-112"
+      ],
+      "finding": "Generic compareForecast still takes its final canonical projection before the final source/coverage provider callbacks. The nonempty verifier still performs one revalidate after its transaction. Consequently this closure does not establish a universal final-callback fence for arbitrary providers that change source state while returning prior valid observations. The code shape existed in the consumed versions; this review did not execute a new counterexample.",
+      "nextAction": "Keep any wider producer/host final-callback finding separately scoped to Finance/WP10. Do not label the source-only fixture fix as resolving all comparison/operation freshness. No foreign runtime edit is recommended here."
+    }
+  },
+  "hostedValidationRecommendation": {
+    "newOrChangedPublishedFiles": [
+      "test/product/wp11/renewal-source-admission.test.ts",
+      "test/product/wp03/scenario-qualification.test.ts",
+      "test/product/wp03/source-scenario.test.ts"
+    ],
+    "existingExactPortProof": {
+      "role": "existing-proof-no-intake",
+      "path": "test/product/wp03/port.test.ts",
+      "reviewInput": "reference/finance-closure-W17/WP13-W17-port-test.reference.ts",
+      "gitBlob": "03a51004ce15979fe5d5a47b2f95f58edbef0ba5",
+      "sha256": "ef315ebcd25ecdcf0809ab37c214eff91fb9d2b91b668c8f8d768a768bd1d305",
+      "bytes": 31207
+    },
+    "existingExactPortFixture": {
+      "role": "existing-dependency-no-intake",
+      "path": "test/fixture/persistence.ts",
+      "reviewInput": "reference/finance-closure-W17/WP13-W17-test-persistence.reference.ts",
+      "gitBlob": "b33c8f41fb719266e6100e8dc307c53ec66cdcff",
+      "sha256": "d8a3e502f5b64cb660b64f8ba4b083a32bda8dda17e4db316cb98acb8d803fa1",
+      "bytes": 1240
+    },
+    "existingPortReason": "The existing forecast port case already asserts actual month null versus explicit zero and known/missing FX (reference lines 205-239); no broad owner port.test import is needed.",
+    "optionalHrProof": {
+      "path": "test/product/wp03/port-hr.test.ts",
+      "gitBlob": "68d049f957257e089810ae0f9be230a157dba70c",
+      "finding": "Uses only current plannerFixture/contract/projector; the projector already allowlists viewer position fields and derives aggregate HR states. Static inspection does not require importing the owner runtime UI/redaction changes. One related compatibility case, not a native or owner installation witness."
+    },
+    "ownConsumersToConsider": [
+      "test/product/wp13/coverage-preview.test.ts",
+      "test/product/wp13/sensitivity-units-boundary.test.ts",
+      "test/product/wp13/source-scenario.test.ts",
+      "test/product/wp13/term-defer-boundary.test.ts",
+      "test/product/wp13/coverage-sensitivity-integration.test.ts"
+    ],
+    "selectionRule": "Root owns the surgical selection and can split expensive consumers while preserving all current budgets and active-run reuse constraints. Do not infer time savings from the source-only call count or test count."
+  },
+  "evidenceLimits": [
+    "Only pinned local bytes, static diffs and data/hash parsing were reviewed. No TypeScript, product test or runtime behavior was executed.",
+    "Parent reports an owner S5 financial six-case run with exact fc15/dd92/c749 but an earlier port without the actor helper; this is historical source evidence only, not proof for f85c or this WP13 closure.",
+    "Owner prepared S22/S23/S24 receipts are not PASS. No run ID is invented or promoted here.",
+    "The retained source fixture admissions and pending classification are controlled test seams. Successful future tests would establish producer/consumer behavior under those seams, not installed WP10/WP14/native/UI behavior.",
+    "Raw projectPlannerSource is unchanged in the exact port diff; financial projection semantics may still change result digests for addressed absent cells or actual qualification. Preserve old C08/accepted evidence by their pins and require canonical revalidation at the new target."
+  ]
+}

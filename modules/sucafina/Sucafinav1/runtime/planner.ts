@@ -155,6 +155,11 @@ function versionOf(row: Row): Version {
     lists: object(row.lists ?? row.els),
   }
 }
+/** Canonical normalized HR inputs for internal qualification before public redaction. */
+export function plannerHeadcountInputs(row: Record<string, unknown>) {
+  return versionOf(row).hc
+}
+
 function months(value: unknown, nullable = false): (number | null)[] {
   return Array.from({ length: 12 }, (_, i) =>
     Array.isArray(value) && value[i] != null ? finite(value[i]) : nullable ? null : 0,
