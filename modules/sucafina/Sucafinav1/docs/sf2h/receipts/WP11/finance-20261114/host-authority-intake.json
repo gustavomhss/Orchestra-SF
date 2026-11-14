@@ -1,0 +1,19 @@
+{
+  "schema": "sf2h-published-dependency-intake-v1",
+  "recordedDate": "2026-11-14",
+  "owner": "astra-compose",
+  "sourceCommit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+  "alsoPresentAt": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+  "parentProduct": "8184761b61f78d6aeac73232fdc879e93f85bc5e",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "priorBlob": "ad72a4d73e2b31003deb028a6f761e164b7a860d",
+      "sourceBlob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+      "transformation": "NONE_EXACT_PUBLISHED_BLOB"
+    }
+  ],
+  "reason": "Consume the published human-action authority required by the existing WP11 decision HTTP contract. No local allowlist or policy fork. Four actions already exist at the producer head; they are a composition dependency, not missing producer implementation.",
+  "validation": "Next grouped surgical increment checks the WP11 HTTP consumer. Hosted checks on W1 do not validate this dependency commit.",
+  "ownership": "No edits to producer behavior or source branch; the shared artifact-store and remaining host integration stay with astra-compose."
+}
