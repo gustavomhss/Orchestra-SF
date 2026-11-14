@@ -1,0 +1,249 @@
+{
+  "schema": "sf2-authority-ack-v1",
+  "mission": 42,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "canonical_scope_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "actor": "S0-C",
+  "lease_epoch": "S0-C-e8-browser42",
+  "execution_instance": "mission42-rolling-integration-20261114",
+  "local_task": "/root",
+  "external_session_id": null,
+  "observed_at": "2026-11-14 22:30:22 UTC",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "expected_head": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+  "received_tree": "f2027afd2be824ad1bb1a4116044fd1be0760039",
+  "control_sha": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+  "predecessor": {
+    "mission": 33,
+    "handoff_blob": "68531a8e0b819699b29bbb83d4a2244218d3791f",
+    "authority_reconciliation_blob": "b441a69f5250462319545dea193fb18089d68520",
+    "status": "TERMINAL_BOUNDED_INTEGRATED_HANDOFF_TO_S0",
+    "lease_closed_explicitly": true,
+    "head_matched": true,
+    "later_integrator_observed": false
+  },
+  "authority": "User mission42 plus pinned rolling COMMON grant sole sf2-stack integration writer for selective explicitly released outputs. Root alone writes remote. S0 retains final dispatcher and acceptance; source leases are not transferred.",
+  "control_reconciliation": {
+    "from": "edee66d9a22ab4a3090e6b461953e783b9910ca8",
+    "to": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+    "commits": 3,
+    "files": [
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/memory-original-reauthorization.json",
+        "status": "added",
+        "additions": 45,
+        "deletions": 0,
+        "changes": 45,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/routine-native-owner-binding.json",
+        "status": "added",
+        "additions": 48,
+        "deletions": 0,
+        "changes": 48,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/COMMON.json",
+        "status": "added",
+        "additions": 17,
+        "deletions": 0,
+        "changes": 17,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/portfolio-held-closure.json",
+        "status": "added",
+        "additions": 40,
+        "deletions": 0,
+        "changes": 40,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/rolling-product-integration.json",
+        "status": "added",
+        "additions": 30,
+        "deletions": 0,
+        "changes": 30,
+        "previous_filename": null
+      }
+    ],
+    "interpretation": "40 owns C17 original/replay reauthorization;41 owns native owner registry;42 explicitly succeeds closed33 as sole integrator;43 owns Portfolio held P02-P04. Earlier mentions of consumer33 are reconciled by later explicit42 authority. No control tree is consumed."
+  },
+  "scope": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "resident_profiles": 5,
+    "skills": 18,
+    "packs": 8,
+    "operations": 39,
+    "AM": [
+      "AM01",
+      "AM02",
+      "AM03",
+      "AM04",
+      "AM05",
+      "AM06"
+    ]
+  },
+  "read_pins": [
+    {
+      "path": "AGENTS.md",
+      "commit": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "read": "complete"
+    },
+    {
+      "path": "packages/app-shell/AGENTS.md",
+      "commit": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+      "blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03",
+      "read": "complete"
+    },
+    {
+      "path": "packages/app-shell/e2e/AGENTS.md",
+      "commit": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+      "blob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec",
+      "read": "complete"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "522782bb7e113124a937d7ef17313032be9d6850",
+      "read": "complete"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "043205bee6031b4517a98591b3588fca0ab12925",
+      "read": "complete"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6",
+      "read": "complete"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+      "read": "Full JSON parsed; all 2462 distinct scalar values read with source section/path, including complete tasks/contracts/proofs/criteria; repeated identical values read once. No criteria removed."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "read": "complete"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1",
+      "read": "complete"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/atlas-packaging.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "907750ae7c945e5f303480cc6e14f11bb1696eb9",
+      "read": "complete"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/COMMON.json",
+      "commit": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+      "blob": "ad53f26697738fc410648b198a79b6bfe6e7bac5",
+      "read": "complete"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/rolling-product-integration.json",
+      "commit": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+      "blob": "1ac932bec6c885b1921257098907116cbbc0327b",
+      "read": "complete"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/memory-original-reauthorization.json",
+      "commit": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+      "blob": "412a17f0af27ba66d4a8d8c79823752db3bf67d6",
+      "read": "complete"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/routine-native-owner-binding.json",
+      "commit": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+      "blob": "4122719b784f6a4ac0f780a14b194bae2a4d09cf",
+      "read": "complete"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/portfolio-held-closure.json",
+      "commit": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+      "blob": "d56819d53cc3a3533e1916700e81a593ba535fce",
+      "read": "complete"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/pending-owners-final.json",
+      "commit": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+      "blob": "6a35eb7217770453d38b22a2879cd70a19a100e0",
+      "read": "complete"
+    }
+  ],
+  "applicable_instructions_inventory": {
+    "root_AGENTS": true,
+    "modules_parent_tree": "9e758120034687aa1c7836cc884b5adf9954a056",
+    "sucafina_parent_tree": "311fc41d68020c0babce2270b825f3e436ad3af1",
+    "sf_subtree": "d62e87c04e2974b3ce27dd4a4b527d4e00be4c0f",
+    "sf_recursive_entries": 2589,
+    "sf_tree_truncated": false,
+    "nested_AGENTS": []
+  },
+  "write_scope": [
+    "selectively released code/test/fixture/skill/guide integration on sf2-stack",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/"
+  ],
+  "helpers": {
+    "capacity": 4,
+    "tasks": [
+      "atlas_c12_intake",
+      "finance_reports_sources",
+      "memory_native_portfolio"
+    ],
+    "permissions": "Remote GitHub MCP read-only and scratch proposals only; no remote author/source/dispatcher authority."
+  },
+  "publication": {
+    "remote": "GitHub MCP only",
+    "cas_expected_sha_required": true,
+    "force": false,
+    "whole_source_tree": false,
+    "control_branch": false
+  },
+  "constraints": {
+    "tests": "NOT_RUN_FORBIDDEN",
+    "typecheck": "NOT_RUN_FORBIDDEN",
+    "guards": "NOT_RUN_FORBIDDEN",
+    "CI": "NOT_RUN_FORBIDDEN",
+    "AM": "NOT_RUN_FORBIDDEN",
+    "workflow_ref_moves": false,
+    "source_ref_moves": false,
+    "dev_merge": false,
+    "deploy": false,
+    "Azure": false,
+    "credentials": false,
+    "engines": false,
+    "restart": false,
+    "external_messages": false
+  },
+  "candidate_policy": {
+    "prior": {
+      "symbol": "C11",
+      "commit": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+      "tree": "ab936df4784ad81deacec756af1cee69f739f712"
+    },
+    "each_material_delta_new_candidate": true,
+    "source_pass_transferred": false,
+    "proposal35_runtime": "INERT_UNTIL_QUALIFIED_MEMORY40_RELEASE",
+    "global_release": false
+  }
+}
