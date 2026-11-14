@@ -157,8 +157,8 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       requireScope(scope)
       const snapshots = scope.root.snapshots
       if (!snapshots.dashboard || !snapshots.planner || !snapshots.procurement) throw new Error("Local transaction snapshots unavailable")
-      return { dashboard: decodeSnapshot(encodeSnapshot(snapshots.dashboard)), planner: decodeSnapshot(encodeSnapshot(snapshots.planner)),
-        procurement: decodeSnapshot(encodeSnapshot(snapshots.procurement)) }
+      return { dashboard: cloneSnapshot(snapshots.dashboard), planner: cloneSnapshot(snapshots.planner),
+        procurement: cloneSnapshot(snapshots.procurement) }
     },
     transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
       const parent = context.getStore()
@@ -169,7 +169,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         const scope: ReadScope = { root: parent.root, parent, open: true, signal: transactionOptions?.signal }
         const staged = parent.root.snapshots[surface]
         const row = staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
-        const snapshot = staged ? decodeSnapshot(encodeSnapshot(staged)) :
+        const snapshot = staged ? cloneSnapshot(staged) :
           row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
         const blobs: BlobTransaction = {
           get: async (key) => {
@@ -437,7 +437,15 @@ export function decodeSnapshot(payload: string): Snapshot {
   const envelope: unknown = JSON.parse(payload)
   if (!Array.isArray(envelope) || envelope.length !== 3 || envelope[0] !== "sucafina-snapshot" || envelope[1] !== 1)
     throw new Error("Unsupported local snapshot encoding")
-  const value = decode(envelope[2])
+  return validateSnapshot(decode(envelope[2]))
+}
+
+/** Keep the wire codec's validation and normalization without allocating its JSON text in memory. */
+function cloneSnapshot(snapshot: Snapshot): Snapshot {
+  return validateSnapshot(decode(encode(snapshot)))
+}
+
+function validateSnapshot(value: unknown): Snapshot {
   if (!record(value) || !record(value.data) || !record(value.versions) || !record(value.sequences) || !Array.isArray(value.audit) || !Array.isArray(value.notices))
     throw new Error("Corrupt local snapshot shape")
   if (value.sfBlobGenerations !== undefined && (!record(value.sfBlobGenerations) || !Object.values(value.sfBlobGenerations).every((generation) => Number.isSafeInteger(generation) && Number(generation) >= 0)))
