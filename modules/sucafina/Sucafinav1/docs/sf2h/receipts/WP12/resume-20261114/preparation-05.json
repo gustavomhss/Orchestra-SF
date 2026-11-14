@@ -1,0 +1,38 @@
+{
+  "schema": "sf-wp12-increment-preparation-v1",
+  "round": 5,
+  "baseProduct": "e10864d5a51c859611e72c881aa243f181d2f304",
+  "status": "READY_FOR_HOSTED_TYPECHECK",
+  "changes": [
+    "Preserve the native-bearing reviewRun discriminant using satisfies SfNativeRunRecord. No runtime statement or assertion changes."
+  ],
+  "ownFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "blob": "fa507f9830c73fb789c5bca2bd06895d95772472",
+      "sha256": "a1efd867063ee3804877ebd54c19c7cf95d55e4bbd228580041a2446713160c8",
+      "bytes": 9291
+    }
+  ],
+  "typeOnlyEvidence": {
+    "sourceBaseBlob": "de910bfb01cc7a0044a85c9c35a33ecaf62abf76",
+    "newBlob": "fa507f9830c73fb789c5bca2bd06895d95772472",
+    "method": "Node stripTypeScriptTypes transform; source text only, product never imported or executed",
+    "beforeJavaScriptSha256": "80b8c52210b54ca2897ffe202187a9ddd9642e60c4ea047f18c2d610d065e225",
+    "afterJavaScriptSha256": "80b8c52210b54ca2897ffe202187a9ddd9642e60c4ea047f18c2d610d065e225",
+    "javaScriptIdentical": true
+  },
+  "validation": {
+    "productTests": "NOT_REPEATED_EQUIVALENT_RUNTIME",
+    "productEvidence": {
+      "product": "e10864d5a51c859611e72c881aa243f181d2f304",
+      "runId": 43590407696,
+      "jobId": 132433723902
+    },
+    "packageTypecheck": "HOSTED_PENDING",
+    "guards": "HOSTED_PENDING",
+    "localProductExecution": false
+  },
+  "foreignChanges": [],
+  "completeWp12": false
+}

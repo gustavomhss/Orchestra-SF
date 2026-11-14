@@ -9,7 +9,7 @@ const { caseRef, receipt, run } = sfRunFixture()
 const candidate = { kind: "MatchExplanation", payload: { candidateCaseRef: caseRef, matchedCriteria: [], currentDifferences: [], sourceStates: [], limitations: [] }, evidenceRefs: [] }
 const input = { run, candidate, actualModel: { providerID: "provider", id: "model" }, outputId: "output", createdAt: "2026-11-13T00:00:00Z" }
 
-function reviewRun(): SfNativeRunRecord {
+function reviewRun() {
   const fixture = sfRunFixture()
   return { ...fixture.run, runRef: "review", skillId: "sf-contestar-decisao",
     native: { sessionID: "review-session", skillReceipt: { ...receipt, runId: "review", nativeSessionId: "review-session", profileId: "sf_reviewer", skillId: "sf-contestar-decisao" } },
@@ -18,7 +18,7 @@ function reviewRun(): SfNativeRunRecord {
       skills: [{ ...fixture.skill, id: "sf-contestar-decisao", allowedProfiles: ["sf_reviewer"], outputSchemaRefs: ["CritiqueReport", "UnresolvedCondition"] }],
     },
     reviewTarget: { targetRunId: "author", targetSessionId: "author-session", targetOutputDigest: "e".repeat(64), caseRef },
-  }
+  } satisfies SfNativeRunRecord
 }
 
 test("host builds persisted provenance from the observed assistant model and skill receipt", () => {
