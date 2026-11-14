@@ -1,0 +1,1287 @@
+{
+  "schema": "sf-wp12-product-run-result-v1",
+  "phase": "resume-11-bi-executive",
+  "product": {
+    "sha": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+    "tree": "f875b3a78ee8123c959bad5c7c5d4c9fb4f978df"
+  },
+  "run": {
+    "id": 43602247803,
+    "jobId": 132469301705,
+    "conclusion": "failure",
+    "snapshot": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+    "snapshotTree": "66b5739f7c96dc1608379ceb81e66a4835272a82",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43602247803",
+    "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43602247803/job/132469301705",
+    "cleanup": {
+      "jobId": 132475140894,
+      "conclusion": "success"
+    }
+  },
+  "request": {
+    "sha256": "a21e6ac164cfc61898826c60d42e0fed846b4b8a712427b461c91536d2b37996",
+    "blob": "51572381ad433c99ca651db22ecbdc20eb811b53",
+    "bytes": 544,
+    "body": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp12/native-execution-bi.test.ts",
+        "./Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "--timeout",
+        "120000",
+        "-t",
+        "^(native contextual BI \\[sf_maestro\\] uses the real Dashboard producer and durable chart/table selection across host reload|real executive and meeting inputs use a preserved WP07 review and complete downloadable material, with native consumers when installed)$"
+      ],
+      "env": {}
+    },
+    "selectedNames": [
+      {
+        "file": "native-execution-bi.test.ts",
+        "name": "native contextual BI [sf_maestro] uses the real Dashboard producer and durable chart/table selection across host reload",
+        "timeoutMs": 600000
+      },
+      {
+        "file": "native-execution-executive.test.ts",
+        "name": "real executive and meeting inputs use a preserved WP07 review and complete downloadable material, with native consumers when installed",
+        "timeoutMs": 420000
+      }
+    ],
+    "excludedNames": [
+      {
+        "file": "native-execution-bi.test.ts",
+        "name": "native contextual BI [sf_finance] uses the real Dashboard producer and durable chart/table selection across host reload",
+        "timeoutMs": 600000
+      }
+    ],
+    "scope": "Anchored name union selects Maestro BI and executive; the previously observed Finance BI case was filtered out."
+  },
+  "summary": {
+    "pass": 1,
+    "fail": 1,
+    "filtered": 1,
+    "tests": 2,
+    "files": 2,
+    "assertions": 1117,
+    "elapsedSeconds": 1233.74,
+    "completedBunSummary": true,
+    "summaryLogLines": [
+      924,
+      928
+    ]
+  },
+  "omni": {
+    "verdict": "PASS",
+    "scope": "focused: no declaring test ran",
+    "declaringTests": 0,
+    "spawns": 82,
+    "delegated": 0,
+    "nonce": "4b976ffcca17afa91d2af260265799dc",
+    "logLine": 921
+  },
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi.test.ts",
+      "blob": "7e29eba6598ce78fe1a8e7416220e229ea4b219c",
+      "sourceCommit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "sha256": "b66980f040afc09dad0b1c680b0b58a581693ca7b08e89bfbbd4e48fe27fafbb",
+      "tests": [
+        {
+          "name": "native contextual BI [sf_finance] uses the real Dashboard producer and durable chart/table selection across host reload",
+          "timeoutMs": 600000
+        },
+        {
+          "name": "native contextual BI [sf_maestro] uses the real Dashboard producer and durable chart/table selection across host reload",
+          "timeoutMs": 600000
+        }
+      ],
+      "bytes": 15791,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2ea0673cd17d97607ee020910bf66db4ee6c1bde/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+      "blob": "1df012698094f318d5c745d73ffceaf56e0f9ee3",
+      "sourceCommit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "sha256": "e855029b8586842a7aa7ac182699c87795150475e3997d0651a1ac01572f6ade",
+      "tests": [
+        {
+          "name": "real executive and meeting inputs use a preserved WP07 review and complete downloadable material, with native consumers when installed",
+          "timeoutMs": 420000
+        }
+      ],
+      "bytes": 29354,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2ea0673cd17d97607ee020910bf66db4ee6c1bde/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts"
+    }
+  ],
+  "tests": [
+    {
+      "status": "pass",
+      "name": "native contextual BI [sf_maestro] uses the real Dashboard producer and durable chart/table selection across host reload",
+      "elapsedMs": 58566.48,
+      "logLine": 858,
+      "path": "Sucafinav1/test/product/wp12/native-execution-bi.test.ts"
+    },
+    {
+      "status": "fail",
+      "name": "real executive and meeting inputs use a preserved WP07 review and complete downloadable material, with native consumers when installed",
+      "elapsedMs": 1173945.28,
+      "logLine": 920,
+      "path": "Sucafinav1/test/product/wp12/native-execution-executive.test.ts"
+    }
+  ],
+  "markers": [
+    {
+      "kind": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "logLine": 833,
+      "value": {
+        "label": "contextual-bi",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_BI_INPUT",
+      "logLine": 834,
+      "value": {
+        "scope": "real-dashboard-producer-c08-artifacts-and-wp05-http",
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "profileId": "sf_maestro",
+        "skillId": "sf-produzir-bi-contextual",
+        "caseRef": {
+          "id": "9ff6bc44-eb7c-4e3f-8aad-9c295ee3a023",
+          "incarnation": "bbdebb19-364c-488d-b1af-df6213af5695",
+          "version": 1
+        },
+        "inputDigest": "d2c158eb2f4c218ec287554298a75222e0c3539a1f4aac08f6c6c59ce53d620e",
+        "projectionRef": "sf-bi-projection:69141fea754a8d600e712cc0c499222a5ef7471baaf2c00b24334ca5bbdfd4cb",
+        "tableRef": "sf-bi-table:69141fea754a8d600e712cc0c499222a5ef7471baaf2c00b24334ca5bbdfd4cb",
+        "tableDigest": "4b6d7cd7449f143f5db9cb9468c762c906a6c48fa02c8905bb284ef307352ea7",
+        "absentDate": "milestone:wp12-bi-project:follow-up:date",
+        "sourceLinks": 1,
+        "referencesExposedByCanonicalInput": {
+          "canonicalProjectionRefs": false,
+          "tableRef": false
+        },
+        "inferenceExecuted": false,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_MISSION",
+      "logLine": 835,
+      "value": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "profileId": "sf_maestro",
+        "skillId": "sf-produzir-bi-contextual",
+        "caseRef": {
+          "id": "9ff6bc44-eb7c-4e3f-8aad-9c295ee3a023",
+          "incarnation": "bbdebb19-364c-488d-b1af-df6213af5695",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "d2c158eb2f4c218ec287554298a75222e0c3539a1f4aac08f6c6c59ce53d620e",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "logLine": 855,
+      "value": {
+        "label": "contextual-bi",
+        "phase": "reopened",
+        "scope": "host-installed-catalog",
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_BI_REOPEN",
+      "logLine": 856,
+      "value": {
+        "scope": "real-persisted-bi-selection-and-wp05-http-after-host-reload",
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "profileId": "sf_maestro",
+        "skillId": "sf-produzir-bi-contextual",
+        "projectionRef": "sf-bi-projection:69141fea754a8d600e712cc0c499222a5ef7471baaf2c00b24334ca5bbdfd4cb",
+        "tableRef": "sf-bi-table:69141fea754a8d600e712cc0c499222a5ef7471baaf2c00b24334ca5bbdfd4cb",
+        "tableDigest": "4b6d7cd7449f143f5db9cb9468c762c906a6c48fa02c8905bb284ef307352ea7",
+        "consumer": "WP05 bi-data/bi-source",
+        "nativeContributionConsumed": false,
+        "requiredOperations": [
+          "sf_bi_view",
+          "sf_kpi_explain",
+          "sf_source_get",
+          "sf_dashboard_read"
+        ],
+        "observedOperations": [],
+        "missingRequiredOperations": [
+          "sf_bi_view",
+          "sf_kpi_explain",
+          "sf_source_get",
+          "sf_dashboard_read"
+        ],
+        "normativeSkillWitnessComplete": false,
+        "am02": {
+          "profileId": "sf_maestro",
+          "skillId": "sf-produzir-bi-contextual",
+          "operation": "sf_dashboard_read",
+          "nativeCallObserved": false
+        },
+        "gnativeAccepted": false,
+        "independentGnativeReview": false
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_BI_SOURCE_REMOVED",
+      "logLine": 857,
+      "value": {
+        "scope": "source-deletion-not-acl-revocation",
+        "profileId": "sf_maestro",
+        "status": "denied",
+        "oldSelectionRejected": true
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "logLine": 880,
+      "value": {
+        "label": "executive-meeting",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 881,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "source-selection",
+        "sequence": 1,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 882,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "source-selection",
+        "sequence": 1,
+        "state": "returned",
+        "elapsedMs": 45
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 883,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "case-draft",
+        "sequence": 2,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 884,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "case-draft",
+        "sequence": 2,
+        "state": "returned",
+        "elapsedMs": 155
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 885,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "http:review-agenda",
+        "sequence": 3,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 886,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "http:review-agenda",
+        "sequence": 3,
+        "state": "returned",
+        "elapsedMs": 95
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 887,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "http:review-preview",
+        "sequence": 4,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 888,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "http:review-preview",
+        "sequence": 4,
+        "state": "returned",
+        "elapsedMs": 399
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 889,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+        "sequence": 5,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 890,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+        "sequence": 5,
+        "state": "returned",
+        "elapsedMs": 5213
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 891,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+        "sequence": 6,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 892,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+        "sequence": 6,
+        "state": "returned",
+        "elapsedMs": 435
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 893,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+        "sequence": 7,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 894,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+        "sequence": 7,
+        "state": "returned",
+        "elapsedMs": 976
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 895,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "http:review-preserve",
+        "sequence": 8,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 896,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "http:review-preserve",
+        "sequence": 8,
+        "state": "returned",
+        "elapsedMs": 5593
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 897,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "http:review-report",
+        "sequence": 9,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 898,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "http:review-report",
+        "sequence": 9,
+        "state": "returned",
+        "elapsedMs": 38760
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 899,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "http:review-download",
+        "sequence": 10,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 900,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "http:review-download",
+        "sequence": 10,
+        "state": "returned",
+        "elapsedMs": 28219
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 901,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "http:review-report",
+        "sequence": 11,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 902,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "http:review-report",
+        "sequence": 11,
+        "state": "returned",
+        "elapsedMs": 64741
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 903,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "http:review-download",
+        "sequence": 12,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 904,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "http:review-download",
+        "sequence": 12,
+        "state": "returned",
+        "elapsedMs": 54306
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 905,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "sequence": 13,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 906,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "sequence": 13,
+        "state": "returned",
+        "elapsedMs": 219628
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 907,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "sequence": 14,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 908,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "sequence": 14,
+        "state": "returned",
+        "elapsedMs": 35460
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 909,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "sequence": 15,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 910,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "sequence": 15,
+        "state": "returned",
+        "elapsedMs": 114676
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 911,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "sequence": 16,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 912,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "sequence": 16,
+        "state": "returned",
+        "elapsedMs": 93235
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_INPUTS",
+      "logLine": 913,
+      "value": {
+        "scope": "real-WP07-selection-preservation-export-and-host-inputs",
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "caseRef": {
+          "id": "611cc874-704e-4ba7-88d4-ff9af29a1ebe",
+          "incarnation": "46cf3654-bb82-45c4-aaf6-73617a8e0b7d",
+          "version": 1
+        },
+        "selectionRef": "review-agenda:8203678f-e65d-4abc-a799-c5089cdf81d5",
+        "reviewRef": "review:ac0661783ffd93d2b647be1e5b505a0ab611476c19fb776ea8b2a0b3709ed2e3",
+        "reviewDigest": "013e5d7abb02d880eccaa2496dfffb01fb7030a83856de9b8ac31daef942b6e5",
+        "sectionRefs": [
+          "wp12-review-forecast:baseline",
+          "wp12-review-forecast:candidate"
+        ],
+        "capturedValueCount": 506,
+        "executiveInputDigest": "2cb2f8e1ddf5b35cd034ea29c85d212c46b68ef970f75cb234cbc90659988e0d",
+        "meetingInputDigest": "3b4192f52dc2f664fc69e1391b4dc19e163054192859c2cc8b9cb81c83fa892f",
+        "reports": [
+          {
+            "artifactRef": "report:9de2d365d607fa7cde8dd4b3c7d47939966682874c3eb1fafdeef87880becc0e",
+            "format": "docx",
+            "digest": "df1d33787d23c7f0565abebc871c66f8ba7d80a6b69cc3e0286a6ed2caa7808a",
+            "bytes": 18271
+          },
+          {
+            "artifactRef": "report:40e993e0fda6d44bc9af442a4af3afeb9df7e980178c46239fff1d5d147d7d8b",
+            "format": "pptx",
+            "digest": "bc1daf1e2d331f41b2fd54374b0eda451b5b3e112f60b9ca79d4f7ccb8a456c4",
+            "bytes": 5115149
+          }
+        ],
+        "c07ResultsObserved": false,
+        "c07AdmissionObserved": false,
+        "executiveReportRoute": {
+          "publicReviewRef": "review:ac0661783ffd93d2b647be1e5b505a0ab611476c19fb776ea8b2a0b3709ed2e3",
+          "inputCarriesPreservedReviewRef": false,
+          "bindingStatus": "preserved-review-not-selected-by-executive-input",
+          "nativeCallObserved": false
+        },
+        "c09DecisionResultsLinkedToMaterial": 0,
+        "inferenceExecuted": false,
+        "nativeContributionRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 914,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+        "sequence": 17,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 915,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+        "sequence": 17,
+        "state": "returned",
+        "elapsedMs": 263422
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_MISSION",
+      "logLine": 916,
+      "value": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "profileId": "sf_maestro",
+        "skillId": "sf-preparar-revisao-executiva",
+        "caseRef": {
+          "id": "611cc874-704e-4ba7-88d4-ff9af29a1ebe",
+          "incarnation": "46cf3654-bb82-45c4-aaf6-73617a8e0b7d",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "2cb2f8e1ddf5b35cd034ea29c85d212c46b68ef970f75cb234cbc90659988e0d",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 917,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "sequence": 18,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "logLine": 918,
+      "value": {
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "sequence": 18,
+        "state": "returned",
+        "elapsedMs": 223365
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_MISSION",
+      "logLine": 919,
+      "value": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+        "profileId": "sf_maestro",
+        "skillId": "sf-produzir-material-reuniao",
+        "caseRef": {
+          "id": "611cc874-704e-4ba7-88d4-ff9af29a1ebe",
+          "incarnation": "46cf3654-bb82-45c4-aaf6-73617a8e0b7d",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "3b4192f52dc2f664fc69e1391b4dc19e163054192859c2cc8b9cb81c83fa892f",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    }
+  ],
+  "log": {
+    "file": "evidence/resume-11-bi-executive.log",
+    "bytes": 87112,
+    "sha256": "bf4b2d19af97ce7f2acef4a99071afb9bb04104d707d6b636d20f77bb7ce3034"
+  },
+  "observations": [
+    {
+      "scope": "Maestro BI domain preparation and consumer",
+      "testResult": "pass",
+      "logLines": [
+        833,
+        858
+      ],
+      "observed": "Actual Dashboard BI08 input, C08 projection/table persistence, WP05 bi-data/bi-source after host reload, absent milestone date and source-deletion refusal.",
+      "profileId": "sf_maestro",
+      "nativeOutput": false,
+      "nativeConsumer": false,
+      "limit": "Source deletion is not ACL revocation. Passing the UI/domain path does not witness the AM02 native tool call, sf_kpi_explain, or a ContextualBIProposal."
+    },
+    {
+      "scope": "Executive and meeting initial preparation",
+      "testResult": "fail",
+      "logLines": [
+        880,
+        922
+      ],
+      "observed": "Eighteen logged phases returned before the failed timeout verdict. The source-pinned assertions before marker913 admit ExecutiveReviewInput and MeetingMaterialInput, preserve a real review, inspect complete DOCX/PPTX archives, reject invented section/routine/review-version/unlinked-case selectors, compare Planner state and verify no analysis runs.",
+      "preparedReviewMarker": {
+        "kind": "SF_WP12_NATIVE_REVIEW_INPUTS",
+        "logLine": 913,
+        "value": {
+          "scope": "real-WP07-selection-preservation-export-and-host-inputs",
+          "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+          "caseRef": {
+            "id": "611cc874-704e-4ba7-88d4-ff9af29a1ebe",
+            "incarnation": "46cf3654-bb82-45c4-aaf6-73617a8e0b7d",
+            "version": 1
+          },
+          "selectionRef": "review-agenda:8203678f-e65d-4abc-a799-c5089cdf81d5",
+          "reviewRef": "review:ac0661783ffd93d2b647be1e5b505a0ab611476c19fb776ea8b2a0b3709ed2e3",
+          "reviewDigest": "013e5d7abb02d880eccaa2496dfffb01fb7030a83856de9b8ac31daef942b6e5",
+          "sectionRefs": [
+            "wp12-review-forecast:baseline",
+            "wp12-review-forecast:candidate"
+          ],
+          "capturedValueCount": 506,
+          "executiveInputDigest": "2cb2f8e1ddf5b35cd034ea29c85d212c46b68ef970f75cb234cbc90659988e0d",
+          "meetingInputDigest": "3b4192f52dc2f664fc69e1391b4dc19e163054192859c2cc8b9cb81c83fa892f",
+          "reports": [
+            {
+              "artifactRef": "report:9de2d365d607fa7cde8dd4b3c7d47939966682874c3eb1fafdeef87880becc0e",
+              "format": "docx",
+              "digest": "df1d33787d23c7f0565abebc871c66f8ba7d80a6b69cc3e0286a6ed2caa7808a",
+              "bytes": 18271
+            },
+            {
+              "artifactRef": "report:40e993e0fda6d44bc9af442a4af3afeb9df7e980178c46239fff1d5d147d7d8b",
+              "format": "pptx",
+              "digest": "bc1daf1e2d331f41b2fd54374b0eda451b5b3e112f60b9ca79d4f7ccb8a456c4",
+              "bytes": 5115149
+            }
+          ],
+          "c07ResultsObserved": false,
+          "c07AdmissionObserved": false,
+          "executiveReportRoute": {
+            "publicReviewRef": "review:ac0661783ffd93d2b647be1e5b505a0ab611476c19fb776ea8b2a0b3709ed2e3",
+            "inputCarriesPreservedReviewRef": false,
+            "bindingStatus": "preserved-review-not-selected-by-executive-input",
+            "nativeCallObserved": false
+          },
+          "c09DecisionResultsLinkedToMaterial": 0,
+          "inferenceExecuted": false,
+          "nativeContributionRef": null,
+          "gnativeAccepted": false
+        }
+      },
+      "returnedPhaseCount": 18,
+      "phaseMarkers": [
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 881,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "source-selection",
+            "sequence": 1,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 882,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "source-selection",
+            "sequence": 1,
+            "state": "returned",
+            "elapsedMs": 45
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 883,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "case-draft",
+            "sequence": 2,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 884,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "case-draft",
+            "sequence": 2,
+            "state": "returned",
+            "elapsedMs": 155
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 885,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "http:review-agenda",
+            "sequence": 3,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 886,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "http:review-agenda",
+            "sequence": 3,
+            "state": "returned",
+            "elapsedMs": 95
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 887,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "http:review-preview",
+            "sequence": 4,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 888,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "http:review-preview",
+            "sequence": 4,
+            "state": "returned",
+            "elapsedMs": 399
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 889,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+            "sequence": 5,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 890,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+            "sequence": 5,
+            "state": "returned",
+            "elapsedMs": 5213
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 891,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+            "sequence": 6,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 892,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+            "sequence": 6,
+            "state": "returned",
+            "elapsedMs": 435
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 893,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+            "sequence": 7,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 894,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+            "sequence": 7,
+            "state": "returned",
+            "elapsedMs": 976
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 895,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "http:review-preserve",
+            "sequence": 8,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 896,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "http:review-preserve",
+            "sequence": 8,
+            "state": "returned",
+            "elapsedMs": 5593
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 897,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "http:review-report",
+            "sequence": 9,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 898,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "http:review-report",
+            "sequence": 9,
+            "state": "returned",
+            "elapsedMs": 38760
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 899,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "http:review-download",
+            "sequence": 10,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 900,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "http:review-download",
+            "sequence": 10,
+            "state": "returned",
+            "elapsedMs": 28219
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 901,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "http:review-report",
+            "sequence": 11,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 902,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "http:review-report",
+            "sequence": 11,
+            "state": "returned",
+            "elapsedMs": 64741
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 903,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "http:review-download",
+            "sequence": 12,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 904,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "http:review-download",
+            "sequence": 12,
+            "state": "returned",
+            "elapsedMs": 54306
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 905,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-produzir-material-reuniao",
+            "sequence": 13,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 906,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-produzir-material-reuniao",
+            "sequence": 13,
+            "state": "returned",
+            "elapsedMs": 219628
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 907,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-produzir-material-reuniao",
+            "sequence": 14,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 908,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-produzir-material-reuniao",
+            "sequence": 14,
+            "state": "returned",
+            "elapsedMs": 35460
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 909,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-produzir-material-reuniao",
+            "sequence": 15,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 910,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-produzir-material-reuniao",
+            "sequence": 15,
+            "state": "returned",
+            "elapsedMs": 114676
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 911,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-produzir-material-reuniao",
+            "sequence": 16,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 912,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-produzir-material-reuniao",
+            "sequence": 16,
+            "state": "returned",
+            "elapsedMs": 93235
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 914,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+            "sequence": 17,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 915,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+            "sequence": 17,
+            "state": "returned",
+            "elapsedMs": 263422
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 917,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-produzir-material-reuniao",
+            "sequence": 18,
+            "state": "started",
+            "elapsedMs": 0
+          }
+        },
+        {
+          "kind": "SF_WP12_NATIVE_REVIEW_PHASE",
+          "logLine": 918,
+          "value": {
+            "githubSha": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+            "phase": "analysis-prepare:sf-produzir-material-reuniao",
+            "sequence": 18,
+            "state": "returned",
+            "elapsedMs": 223365
+          }
+        }
+      ],
+      "completionBoundaries": {
+        "actualPreservedReview": true,
+        "initialCompleteArchivesRead": true,
+        "initialExecutiveInputPrepared": true,
+        "initialMeetingInputPrepared": true,
+        "initialInputDigestsReprepared": true,
+        "hostReloadObserved": false,
+        "reviewReopenObserved": false,
+        "reportAfterSourceChangeObserved": false,
+        "unauthenticatedDownloadNegativeObserved": false,
+        "c07AdmissionObserved": false,
+        "c07ResultsObserved": false,
+        "nativeContributionsObserved": 0,
+        "nativeConsumersObserved": 0
+      },
+      "failure": {
+        "kind": "timeout",
+        "declaredMs": 420000,
+        "elapsedMs": 1173945.28,
+        "logLines": [
+          920,
+          922
+        ],
+        "scope": "The final test result is failure. Returned initial phases and actual archive checks are partial observations, not an accepted end-to-end Executive/Meeting consumer or a specific diagnosis of the unobserved reload."
+      }
+    }
+  ],
+  "native": {
+    "inferenceExecuted": false,
+    "outputsObserved": 0,
+    "nativeConsumersObserved": 0,
+    "observedCatalogs": 3,
+    "catalogState": "empty",
+    "fullMissionAcceptance": false,
+    "gnativeAccepted": false
+  },
+  "transferRule": "Keep this exact W16 product, snapshot, test blobs and log. Later W19/W20 source changes are not executions of this run; a preparation or UI/domain result is not native inference.",
+  "localProductTests": false,
+  "localTypecheck": false,
+  "fullWp12Acceptance": false
+}

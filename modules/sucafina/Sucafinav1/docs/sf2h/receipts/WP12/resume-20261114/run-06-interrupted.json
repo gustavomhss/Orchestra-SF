@@ -1,0 +1,261 @@
+{
+  "schema": "sf-wp12-interrupted-product-observation-v1",
+  "product": "70219282bc9f458c41fd670936e793da44d18363",
+  "productTree": "9b1160b811f889485d5a581e2bb2b03b7aac4986",
+  "snapshot": "799d7113a8d9c4c34e16a7ea70cff8c5c6768fd1",
+  "snapshotTree": "a2a8c20648f06150283003077aa819c277824d47",
+  "runId": 43592776338,
+  "jobId": 132440838567,
+  "conclusion": "cancelled",
+  "startedAt": "2026-11-14T12:01:40Z",
+  "completedAt": "2026-11-14T12:46:54Z",
+  "testStep": {
+    "startedAt": "2026-11-14T12:03:10Z",
+    "completedAt": "2026-11-14T12:46:52Z",
+    "conclusion": "cancelled"
+  },
+  "cleanup": {
+    "jobId": 132451981453,
+    "conclusion": "success",
+    "snapshotBranchRemoved": true
+  },
+  "observedCases": [
+    {
+      "file": "Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+      "status": "pass",
+      "name": "real host Finance prepares increase-12000 and verifies native output when an installed model is available",
+      "elapsedMs": 9716.77,
+      "line": 876
+    },
+    {
+      "file": "Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+      "status": "pass",
+      "name": "real host Finance prepares increase-6000 and verifies native output when an installed model is available",
+      "elapsedMs": 15061.35,
+      "line": 919
+    },
+    {
+      "file": "Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+      "status": "pass",
+      "name": "real host Finance prepares unchanged and verifies native output when an installed model is available",
+      "elapsedMs": 10802.85,
+      "line": 962
+    },
+    {
+      "file": "Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+      "status": "pass",
+      "name": "real host Finance prepares observed-zero and verifies native output when an installed model is available",
+      "elapsedMs": 10395.86,
+      "line": 1005
+    },
+    {
+      "file": "Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+      "status": "pass",
+      "name": "real host Finance prepares missing-fx and verifies native output when an installed model is available",
+      "elapsedMs": 13119.97,
+      "line": 1048
+    },
+    {
+      "file": "Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+      "status": "pass",
+      "name": "real host Finance prepares missing-month and verifies native output when an installed model is available",
+      "elapsedMs": 9714.54,
+      "line": 1091
+    },
+    {
+      "file": "Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+      "status": "pass",
+      "name": "Maestro frames two real case selections and its native contribution reopens with the selected evidence",
+      "elapsedMs": 13217.11,
+      "line": 1119
+    },
+    {
+      "file": "Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+      "status": "pass",
+      "name": "real Recall preparation preserves an explicit empty scope and the native empty result reopens when a model exists",
+      "elapsedMs": 19335.11,
+      "line": 1165
+    },
+    {
+      "file": "Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+      "status": "pass",
+      "name": "real question preparation preserves absent conditions and refuses an unverified recipient before any native run",
+      "elapsedMs": 11836.17,
+      "line": 1207
+    },
+    {
+      "file": "Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+      "status": "fail",
+      "name": "question input derives a real pending training condition and the human preview preserves its actual source",
+      "elapsedMs": 423137.49,
+      "line": 1228
+    },
+    {
+      "file": "Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "status": "fail",
+      "name": "native Finance preserves pending versus covered scenario costs and a fresh Reviewer critiques its real author",
+      "elapsedMs": 419432.3,
+      "line": 1265
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+      "status": "fail",
+      "name": "Analysis reentry reaches current lifecycle metadata after case advancement without upgrading its original fresh selector",
+      "elapsedMs": 174.76,
+      "line": 1284
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner ledger history preserves the protected original after case advance and cannot authorize current execution",
+      "elapsedMs": 72298.87,
+      "line": 1302
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner calculation history requires its actual ledger, case incarnation, request, result, capture and fresh sources",
+      "elapsedMs": 81130.08,
+      "line": 1334
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner calculation history denies disclosure after principal, Request or lease revocation",
+      "elapsedMs": 53496.71,
+      "line": 1351
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "fail",
+      "name": "Analysis lifecycle reentry preserves a real historical calculation without upgrading its original case selector",
+      "elapsedMs": 105015.7,
+      "line": 1378
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner calculation preserves UI and repeated BCS reads and rejects cycles, tampering and over-budget selectors",
+      "elapsedMs": 52417.42,
+      "line": 1398
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "fail",
+      "name": "Planner calculation survives SQLite and Atlas reopen with continuity, original and ancestor context",
+      "elapsedMs": 105013.94,
+      "line": 1426
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "fail",
+      "name": "Planner calculation recalls the actual reopened Atlas record and does not append it twice",
+      "elapsedMs": 105029.72,
+      "line": 1456
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "fail",
+      "name": "Planner calculation rejects foreign case routing and all six corrupted durable Atlas capture fields",
+      "elapsedMs": 105025.37,
+      "line": 1483
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "fail",
+      "name": "Planner continuity fences membership changes during a real environment await and recovers after restoration",
+      "elapsedMs": 105014.21,
+      "line": 1510
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "fail",
+      "name": "Planner overlapping replays and Atlas recall disclose nothing after principal revocation",
+      "elapsedMs": 105030.02,
+      "line": 1540
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner calculation becomes unavailable after its real persisted source changes",
+      "elapsedMs": 82246.45,
+      "line": 1557
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "fail",
+      "name": "Planner reopened recall rejects source drift after a completed calculation proof",
+      "elapsedMs": 46928.93,
+      "line": 1587
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "fail",
+      "name": "Planner reopened recall rejects membership drift after a completed calculation proof",
+      "elapsedMs": 46766.57,
+      "line": 1617
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "fail",
+      "name": "Planner reopened recall rejects capture drift after a completed calculation proof",
+      "elapsedMs": 47349.86,
+      "line": 1647
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "fail",
+      "name": "Planner reopened recall rejects coverage drift after a completed calculation proof",
+      "elapsedMs": 45686.57,
+      "line": 1676
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "fail",
+      "name": "Planner reopened recall rejects selector drift after a completed calculation proof",
+      "elapsedMs": 43883.41,
+      "line": 1706
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "fail",
+      "name": "Planner reopened recall rejects clock drift after a completed calculation proof",
+      "elapsedMs": 105097.59,
+      "line": 1732
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "fail",
+      "name": "Planner reopened recall rejects principal drift after a completed calculation proof",
+      "elapsedMs": 105101.38,
+      "line": 1758
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "fail",
+      "name": "Planner reopened recall rejects lease drift after a completed calculation proof",
+      "elapsedMs": 105020.84,
+      "line": 1784
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "fail",
+      "name": "Planner recall proof stays lexical while an independent same-call calculation resolves in parallel",
+      "elapsedMs": 105023.67,
+      "line": 1812
+    }
+  ],
+  "scopeLimits": [
+    "These are individual observed test outcomes before cancellation, not a completed-suite summary.",
+    "No final Bun/Omni receipt is present; no overall product PASS or Omni PASS is asserted.",
+    "planner-recorded-history.test.ts was requested but was not reached in this log.",
+    "WP12 model catalogs were empty and no native inference/output was observed.",
+    "The scenario total assertion is an owned fixture assumption under correction, not evidence that C10 derived-category origin already failed."
+  ],
+  "fullWp12Acceptance": false,
+  "log": {
+    "sha256": "fe7e52fb09f4f24b4ecd213f02356f62fbea02e2ef2190dc5ca4ecca27811117",
+    "bytes": 198695,
+    "file": "evidence/resume-06-tests.log"
+  }
+}

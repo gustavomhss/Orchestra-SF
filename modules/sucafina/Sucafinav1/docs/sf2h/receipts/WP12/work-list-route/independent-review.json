@@ -1,0 +1,291 @@
+{
+  "schema": "sf-wp12-independent-static-review-v1",
+  "status": "PASS_STATIC",
+  "runtime_status": "NOT_RUN",
+  "reviewer": "Astra / compose_typecheck",
+  "owner": "WP12",
+  "created_at": "2026-11-14T16:15:29.463172+00:00",
+  "subject": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+    "blob": "d305c89fcbf42eef0290e744880342b3b017b48d",
+    "sha256": "cb26d5358dc10b8f303301b2d49708eff3a0b192730fb745cacd5fc2d8b76fbf",
+    "bytes": 46720,
+    "lines": 583,
+    "tests": [
+      {
+        "name": "native question work list uses a public Procurement selection for its own pending case and reopens its real consumers",
+        "explicit_timeout_ms": 360000
+      },
+      {
+        "name": "native executive work list matches its selected real Hot Topic review and reopens the existing human action",
+        "explicit_timeout_ms": 360000
+      }
+    ]
+  },
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "literal_scope": "sf_work_list in sf_maestro/sf-coordenar-perguntas required_operations and sf_maestro/sf-preparar-revisao-executiva AM02; this review does not accept either entire skill."
+  },
+  "method": {
+    "test_source_read_in_full": true,
+    "source_blobs_checked_against_full_github_mcp_bytes": true,
+    "types_and_calls_reviewed_statically": true,
+    "product_modules_imported": false,
+    "product_tests_executed_locally": false,
+    "typecheck_executed_locally": false,
+    "remote_ci_started": false,
+    "production_or_test_source_edited": false,
+    "foreign_source_intake": false
+  },
+  "findings": [],
+  "reviewed_contracts": [
+    {
+      "area": "Public selector and host boundary",
+      "conclusion": "The selector is parsed from the actual workbench-work-select HTML returned by createSfWorkbenchHttp using the installed runtime; its origin, path and annual period are asserted. A separate authenticated UI selection initializes the auxiliary business source reader. The auxiliary token is never substituted for the public mounted-services token. UI dispatcher admission remains single-use through dispatchWp12Ui."
+    },
+    {
+      "area": "Same PR, C06 action and pending case",
+      "conclusion": "Raw input contains two homonymous Procurement requests; only the selected request is issued and linked through human handoff-create with the real directory identity. The actual relation supplies the Hot Topic endpoint and complete evidence. Question case support includes Planner, selected PR and actual action. The input producer requires full relation references on the real case; C10 training remains an explicit human pending category, without a predecessor or derived-category substitution."
+    },
+    {
+      "area": "Action identity and Work item",
+      "conclusion": "composition.ts6ebbe23c uses the same topicSource.issue for handoff resolution and work-list output: fields status, observed day and actual Hot Topic record. sameHandoffWorkSource also checks physical scope identity and current authority. The test compares the full evidence set, action ref, state and current principal; the homonymous unrelated request has no action/assignment. Draft requests are outside Procurement aging, so the expected one initial Work item is the actual handoff rather than an omitted pending approval."
+    },
+    {
+      "area": "Question consumer and replay",
+      "conclusion": "Only an actual ready QuestionProposal returned by the native mission is passed through question-output and human question-consume. The test retains C08 output/run/digest provenance, compares the real created thread and repeats the identical command with no storage-version increment. After reload it checks both canonical retry and the public thread projection. The thread is deliberately unanswered; answer-work returns unconfirmed before the missing answer-scope resolver gate. No sf_answer_read/predecessor proof is claimed."
+    },
+    {
+      "area": "Executive producer and consumer",
+      "conclusion": "The review agenda selects the very Hot Topic from the real PR handoff, with its actual observed-day scope. The case keeps the annual Procurement horizon separately. Preserved sections use content.values; real id/action/status and absence of other topics are checked. The native output remains a verified DecisionBrief with empty orderedResultRefs, exact conditions and selected review sources; auxiliary Work material is audited separately. The current C11 review-contribution reader permits this empty result list and returns empty results/links."
+    },
+    {
+      "area": "Native execution and receipts",
+      "conclusion": "The provider branch uses the existing actual Session/SkillLoadReceipt harness and selected profile/skill grants. It requires real tools, reads completed assistant tool messages in ascending order, joins them to harness-observed tool IDs, and verifies native call/run/session/principal, input digest, result digest and handler. Work output must equal the independently obtained UI result. Reload reads the original native message and its original selector only as persisted evidence, never reexecutes the expired selector as current authority."
+    },
+    {
+      "area": "Reload and isolation boundaries",
+      "conclusion": "Each new host must refuse the prior ephemeral token and creates a new selection through the public HTML route. The same durable case, action and review are then read. Unauthenticated Requests are absent from the real harness admission WeakSet and must return HTTP403 without action text. Work output excludes the unrelated homonymous request and requires only the selected current principal."
+    },
+    {
+      "area": "Source loss and nonmutation",
+      "conclusion": "Before the deliberate negative, case digests, raw Procurement/Hot Topic digests and Planner digest are preserved. The negative deletes the selected raw request through persistence, then requires both actual Work dispatcher and HTML consumer to refuse; any real completed contribution is reauthorized and must also be refused. This is a source-removal refusal, not evidence of a separate authenticated-principal ACL revision."
+    },
+    {
+      "area": "Empty model catalog",
+      "conclusion": "No-model branches record actual input/UI/consumer preparation and the real unavailable observation. They create no native output, question contribution, substitute Session or forged receipt. Logs explicitly keep GNATIVE/full-skill acceptance false, C07 absent, and confirmed-answer reuse unproved."
+    }
+  ],
+  "limits": [
+    "This is an independent source review, not hosted typecheck or product execution. API shapes and overload risks were inspected; only the requested GitHub Actions checks can establish runtime/type acceptance.",
+    "Each real Procurement selection retains its existing 300000ms TTL. The two tests keep 360000ms explicit deadlines, no sleeps, TTL changes, hidden retries or renewal within an action. Preparation and subsequent reads may still exceed the lease in CI; no inevitability or future success is inferred.",
+    "The unanswered native question branch does not resolve the existing C06 answer-scope gap for Planner/Procurement or demonstrate confirmed-answer reuse.",
+    "The executive route does not execute C07, reports or artifact export, and the Question route does not execute every normative operation. Existing independent routes/results remain separate.",
+    "The negative demonstrates unauthenticated HTTP refusal, same-list homonym exclusion and source deletion. It is not a substitute for the wider installation/project/session/ACL isolation matrix.",
+    "No hosted result is yet available for this new file; a green no-provider execution would prove its real deterministic consumers and bounded unavailability, not native inference."
+  ],
+  "source_pins": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "97cde4dce2858f47b57b446c9c20bad77d367591",
+      "source_commit": "24bae062742ad51abe80c2f50f62f9e5fe1049d1",
+      "source_capsule": "resume-input/criteria/obligation-progress-w24/source-mcp.json",
+      "bytes": 62972,
+      "sha256": "217ce1f268ae119bd38292f9b6697c6f6c1bfb08e31be3e25a434c5cf91d6b48"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-question.ts",
+      "blob": "10d95e014c71c6c6f9600a2c1c52fa3532aee68a",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/criteria/work-list/extra-source-mcp.json",
+      "bytes": 8780,
+      "sha256": "585d678b56466810afcf9def3a6fb3371d81a0823aee839fae685c763454be9c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-executive.ts",
+      "blob": "39cd47fda0547ad74f7c2193b3a11d8e0f112c65",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/independent-review/work-list/extra-source-mcp.json",
+      "bytes": 9060,
+      "sha256": "d4801b0d7fc254cd2a7872c948e60248db768dacd533ec5e5bc05f79bc6cdcc7"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier-routines.ts",
+      "blob": "9bab28aada4fd5ddfd0a437e81c183db30f2eced",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/criteria/work-list/extra-source-mcp.json",
+      "bytes": 13418,
+      "sha256": "e9144150943557da20acfdab78948512b42243e1413a1b81ba8ffca54a84909f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "blob": "970686ad87415779c4db807cfe03affeeb9ec59b",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/criteria/work-list/source-mcp.json",
+      "bytes": 24143,
+      "sha256": "b677fc882ca2b40f80084c06074d8b92c574604f0c36cc0f5c79f1ac61726388"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "blob": "7d8396e2f6b07dbb41fd4a1694da6fab32bb25d0",
+      "source_commit": "24bae062742ad51abe80c2f50f62f9e5fe1049d1",
+      "source_capsule": "resume-input/criteria/obligation-progress-w24/source-mcp.json",
+      "bytes": 25666,
+      "sha256": "4afff123a457f0b077fb61d7038d0710b745825680115585ca0fdaa0f5da41b2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+      "blob": "22a2a7fab04757667fcfed82147b7676d6928fee",
+      "source_commit": "24bae062742ad51abe80c2f50f62f9e5fe1049d1",
+      "source_capsule": "resume-input/criteria/obligation-progress-w24/source-mcp.json",
+      "bytes": 26206,
+      "sha256": "c212766b21b89ad0b5ad9c321bfd34e4b6a9352e08050760976dbb7b676a68bf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/selection.ts",
+      "blob": "990adc94f3d18562af337ecabb4310e5f21b14b3",
+      "source_commit": "24bae062742ad51abe80c2f50f62f9e5fe1049d1",
+      "source_capsule": "resume-input/criteria/obligation-progress-w24/source-mcp.json",
+      "bytes": 4478,
+      "sha256": "695a001297dda770b4bb987d8d1b127339c7d0ec922a3e14402c255a0f13ea87"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-work.ts",
+      "blob": "0bec2b428730833b6e2823c700aacfa059f76b92",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/criteria/work-list/source-mcp.json",
+      "bytes": 9233,
+      "sha256": "353bf7c45c0d137b6a39533fc4d82921df512e877c3b6f9d4bb6530851190104"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/handoff.ts",
+      "blob": "a9c796045e3b329ff62736405d1939477dd7ce87",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/criteria/work-list/source-mcp.json",
+      "bytes": 12059,
+      "sha256": "be85cf6d9d084c26fdf5782ab0f86a18acede76fa7149d10969a2a3e1e2106b3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/composition.ts",
+      "blob": "6ebbe23c3788d4dbd91521af823917796262f0c9",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/independent-review/work-list/extra-source-mcp.json",
+      "bytes": 7623,
+      "sha256": "1c7b353b0cdfe816b02d71a504222d2e64eaac5ac3132a1e40503573e3ef344c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/work-handoff-source.ts",
+      "blob": "4fe2e41effccbb682773419762c00fc9bb3c5fe5",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/independent-review/work-list/extra-source-mcp.json",
+      "bytes": 2727,
+      "sha256": "cbff3052173a64c45ee954649e37f1fbea60ff8c3560fa32921ca7a3019c8686"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+      "blob": "c0bd1afe946a79a906c4f29c4afbd31a992daa68",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/criteria/work-list/source-mcp.json",
+      "bytes": 5391,
+      "sha256": "464f647062b04c4bbe7a5ab79c370d1a91d6986e854e6d5abf69941359fafb3a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/relation-catalog.ts",
+      "blob": "bf3f09f5cbc23ad81b65cfd1de97ff608dd075d8",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/criteria/work-list/source-mcp.json",
+      "bytes": 2079,
+      "sha256": "a5b040a4a62a78e46da4e650bace93cb5e7bf51ac84ec46d57fd87b6a58dabb2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "blob": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e",
+      "source_commit": "24bae062742ad51abe80c2f50f62f9e5fe1049d1",
+      "source_capsule": "resume-input/criteria/obligation-progress-w24/source-mcp.json",
+      "bytes": 32624,
+      "sha256": "690ad63560314587ecb355a7185650796c6c6ddd5e9da2015f34d1966893b311"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+      "blob": "0332b118846cc8a45399aa24e4694fb6bf055719",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/criteria/work-list/source-mcp.json",
+      "bytes": 36243,
+      "sha256": "0e79d2e1ff308072100c60b2a32dd448948b069c39678b9879a7a60b04712940"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/agenda.ts",
+      "blob": "32b95d4a270cb9b9c987c6cb3097dbd6de975895",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/criteria/work-list/source-mcp.json",
+      "bytes": 23941,
+      "sha256": "de91827bb2c4816a75a56a6e5ca5ca8b8c77c4f7c27a1918db1e2215aad9768f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/criteria/work-list/extra-source-mcp.json",
+      "bytes": 22358,
+      "sha256": "c3d843a4bb26a0f74fce550aa1114ae490e0410e1bcc4016a33b62c72c49eb81"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+      "blob": "4ddee38662690ce5284cc46ef04d315cb3fb4f6c",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/criteria/work-list/source-mcp.json",
+      "bytes": 8314,
+      "sha256": "af0164cbb864b16e4cc813e1f49fdb6711a705a3722bad6e1b61c75e794333e8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+      "blob": "4db2e631bd83ccda67442824557881c2ed990c92",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/criteria/work-list/extra-source-mcp.json",
+      "bytes": 12947,
+      "sha256": "4de7c758a68bab91ed464dd465d9e17ba7146a05e2a4b8c66ad1161297534a80"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/contribution.ts",
+      "blob": "78a2d943c4711cb63f3104f82a62ac96b5b9e92b",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/criteria/work-list/extra-source-mcp.json",
+      "bytes": 12384,
+      "sha256": "261cc76bde266220352a5c7413ad166343750b8c2c4d0204cf9b5efbf8314254"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+      "blob": "3411fe33f7e907cdb98c35841161342fda43a3c8",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/criteria/work-list/extra-source-mcp.json",
+      "bytes": 14129,
+      "sha256": "17c808c3bbb98de06bd1a0f7e0b3ab82a60fc577fa3649781d25cc8a964c09a5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "blob": "49300a78a44ac0739791d10a11c386b317f4b51a",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/criteria/work-list/extra-source-mcp.json",
+      "bytes": 20042,
+      "sha256": "050238396e5f12c067de3ab488f1dc207350cb636fc68d71fc72ef2d8a1b59bc"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-preparation.ts",
+      "blob": "c3c2efe6004c513370ab04077f7d2c79a704d9c6",
+      "source_commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "source_capsule": "resume-input/criteria/work-list/extra-source-mcp.json",
+      "bytes": 10795,
+      "sha256": "1ff25c69a32523eed1d1aadaf9f94d42c54ca416f345dfe309254b7d5d83aa04"
+    }
+  ],
+  "ci_recommendation": {
+    "single_new_file": true,
+    "selected_tests": 2,
+    "explicit_deadline_sum_ms": 720000,
+    "unpublished_target": "W26",
+    "target_sha": null,
+    "no_existing_green_file_repeated": true,
+    "dispatch_by": "root only, after publication and hosted full-package check"
+  }
+}

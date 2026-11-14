@@ -1,0 +1,85 @@
+{
+  "schema": "wp12-independent-own-assertion-narrowing-review-v1",
+  "status": "PASS_STATIC",
+  "reviewer": "/root/compose_typecheck",
+  "base": {
+    "productSha": "5c148a16b76f98dfe194823c0e10ed2ef7685a69",
+    "productTree": "42bc4bbb0662ad74a4974a4e6165274f50cc32fa",
+    "failedCheckRun": 43609369186,
+    "failedCheckJob": 132490822394,
+    "logPath": "evidence/resume-17-check.log",
+    "logSHA256": "d0611cbc573393cc3d7762c40ef392bb60cf39224148d72f1e3bce1b7cf9c1d1",
+    "diagnostics": 3,
+    "foreignDiagnostics": 0
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts",
+      "before": {
+        "bytes": 25475,
+        "sha256": "64d1c85c19e313b348d2844cc6ff7c924d165bd158a4771d7d44c5807222a810",
+        "blob": "b2d80e6bbfc05ea11bae9bd10490aeb2ea4711b5"
+      },
+      "after": {
+        "bytes": 25631,
+        "sha256": "c9e3783e52da1e841f4ca951122de716270030d701f2a5d93015e988cb5e1c1c",
+        "blob": "621efad20bd3860e57a3834256378339e89984c4"
+      },
+      "expectLinesBefore": 74,
+      "expectLinesAfter": 74,
+      "explicitDeadlinesUnchanged": true,
+      "allOtherBytesPreservedByInversePatch": true,
+      "effect": "Captures the real HTTP status before awaits and refuses a non-string status; the original equality against the real projection remains."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "before": {
+        "bytes": 21320,
+        "sha256": "249961ad4c5b067b1b16863cc6774235c67be9b27f4eb8369f8071ff25be64a9",
+        "blob": "d418d5d462842ebfb0ddc3d890098eb00abc5653"
+      },
+      "after": {
+        "bytes": 21486,
+        "sha256": "6bd80f8da335e5571fa5c793ca49fba87cff6d8ac91bea681653dd3eecdf5f53",
+        "blob": "80da902f35f80d9b61175fd90d5c10fa7b3f00aa"
+      },
+      "expectLinesBefore": 58,
+      "expectLinesAfter": 58,
+      "explicitDeadlinesUnchanged": true,
+      "allOtherBytesPreservedByInversePatch": true,
+      "effect": "Reasserts a non-empty output reference after the scoped async wrapper. The original resultRef equality, digest/receipt checks and native branch remain."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+      "before": {
+        "bytes": 20388,
+        "sha256": "879cca9345a218ec7c581383bc92f4616cbb9ab5398d06a6f58dc0437660d04b",
+        "blob": "e3b9d1634b916cce45e9750b96b5a88deaf81fae"
+      },
+      "after": {
+        "bytes": 20548,
+        "sha256": "979e285e285699f9ea5e3b0f61acaad280bbfbc7670726bd5445b873a3e2a196",
+        "blob": "78331ae620b34f0fa1c5923a8b769415c5bdaaff"
+      },
+      "expectLinesBefore": 43,
+      "expectLinesAfter": 43,
+      "explicitDeadlinesUnchanged": true,
+      "allOtherBytesPreservedByInversePatch": true,
+      "effect": "Reads the same canonical Map digest once and refuses its absence; the original component-value digest equality remains."
+    }
+  ],
+  "findings": [],
+  "conclusion": "All three existing comparisons keep their real values and strict assertions. The added guards provide genuine control-flow narrowing without casts, fabricated data, fixture changes or authority changes. No assertion or deadline is removed.",
+  "emittedJavaScriptQualification": "These are small runtime guards/captures, not erased generic-only annotations; emitted JavaScript identity is NOT claimed. The valid canonical-data path retains the original comparisons, while a malformed or missing prerequisite now fails explicitly before its matcher.",
+  "validation": {
+    "exactBeforeAfterHashesVerified": true,
+    "inversePatchRestoresEveryOtherByte": true,
+    "importsOperationsInputsNativeBranchesUnchanged": true,
+    "localProductExecution": false,
+    "localProductImports": false,
+    "localTypecheck": false,
+    "remoteCI": false,
+    "sourceEditsByReviewer": false
+  },
+  "requires": "Hosted full package typecheck in the next published W23 candidate; product success is not inferred."
+}

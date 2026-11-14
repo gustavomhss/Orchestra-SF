@@ -1,0 +1,63 @@
+{
+  "schema": "sf-wp12-independent-bounded-owner-refresh-review-v1",
+  "reviewer": "Astra root",
+  "status": "PASS_BOUNDED_SOURCE_APPLICABILITY_REVIEW",
+  "subject": {
+    "snapshot": {
+      "bytes": 11728,
+      "sha256": "f43000c34770d325c7a896c873e6b25ae20ed452f6919cdcc077959ad04ea44f",
+      "blob": "057bc92561e3ee9075769a323288b32d1a8bd917"
+    },
+    "pins": {
+      "bytes": 8312,
+      "sha256": "850c26963fe35a004687e33cb8a81b644f178c80ea7828bafd42944a11c9844f",
+      "blob": "c3e9b8b8b0d9e39855901ac855801310f6648edc"
+    }
+  },
+  "verifiedPayloads": 16,
+  "reviewedIncrement": {
+    "from": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+    "to": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+    "commits": 1,
+    "paths": 179,
+    "codeAndTests": 17
+  },
+  "findings": [
+    {
+      "id": "R01",
+      "evidenceBlobs": [
+        "28d0eaf1013e6a7f53672a43d3d440bded1fd462",
+        "bd4701de1dabd10be4b19253981d288108c2a3f7",
+        "68bae96124f2a0994be25b86765415b0d52452f4",
+        "7438cac1582ec97b4e55fcef0494554a21e9e7b4",
+        "77a0d6f197c215bb4e59794f65bf1e5673a4ee9f"
+      ],
+      "conclusion": "The new complete-record scope is composed at memoryCaseScope.readCanonical. Ordinary cases fall through outside an active recall observation; eligibility excludes the actual mixed Planner/Procurement references and questions used by WP12. The evidence wrapper still scopes only the archive resolver and preserves its undefined fresh-source fallthrough. The new test exercises two admitted PR reads directly, not this first Choice path. No measured speedup or repaired authority refusal is inferred."
+    },
+    {
+      "id": "R02",
+      "evidenceBlobs": [
+        "9cb78aa7320e5e28fa43018cbd9ab94650523a5d",
+        "100d57989df0be3b0de8f03f1f183b2478587b39"
+      ],
+      "conclusion": "The owner fixture uses a real Core root lifetime. No production native mount or provider binding changes. The owner audit independently retains the missing SfRoutineNativePort/five-callable composition and canonical Task/author prerequisites. Its correctness or hosted result cannot replace native WP12 acceptance."
+    },
+    {
+      "id": "R03",
+      "evidenceBlobs": [
+        "e8a931a3d0788d0c6899e9550fbe069a4a5dc7de",
+        "881ce4672d9d0e641d1cc849663c0980c118774d"
+      ],
+      "conclusion": "Exact threshold adapters add a separate WP13 capability. These hunks do not publish a first Procurement Choice producer, C12 mutation path or relevant fix for the recorded Choice failure. The full WP13 closure is outside this bounded review."
+    }
+  ],
+  "temporalQualification": "The frozen owner snapshot describes its own 17:04:03 cutoff, including C27/owner CI then in progress. C28 subsequently passed and a separate W28 product flight was dispatched; neither update changes those immutable source findings.",
+  "nextAction": "Publish these source pins and continue own legitimate missions. Consume only a relevant compatible published owner change before an equivalent failed-route retry.",
+  "intakeApplied": false,
+  "foreignSourceEdited": false,
+  "equivalentProductRerunReleased": false,
+  "localProductTests": false,
+  "localTypecheck": false,
+  "nativeAcceptance": false,
+  "completeWp12": false
+}

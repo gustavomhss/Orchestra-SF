@@ -1,0 +1,139 @@
+{
+  "schema": "sf-wp12-forecast-kpi-route-preparation-v1",
+  "status": "FROZEN_PENDING_INDEPENDENT_STATIC_REVIEW_NOT_RUN",
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "base_product": {
+    "label": "W26",
+    "sha": "6880666b15dc18bf400c908a8457580526b70f4d",
+    "tree": "258bc03adf6343a10847f80060b6983cfc65ad43"
+  },
+  "publication_parent": {
+    "label": "D28",
+    "sha": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+    "tree": "37282950a3d1b07a08b2616c18a2bd06c1f4364e"
+  },
+  "source": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+    "blob": "5ff043a8d9d2cd932020aa6074864b16e36f49b9",
+    "sha256": "35d4f8573f1e5ece274ca29fc6e4a4f2f8c70851e206cd529de957213bf762ce",
+    "bytes": 29693,
+    "lines": 372,
+    "expects": 83,
+    "deadlineMs": 360000
+  },
+  "source_pin_file": "source-pins.json",
+  "original27_indices": [
+    6,
+    12
+  ],
+  "canonical_required_operation": {
+    "pointer": "/resident_ui_consumption/skills/3/required_operations/1",
+    "operation": "sf_kpi_explain",
+    "literal_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+  },
+  "canonical_named_am02_route": {
+    "pointer": "/resident_ai/operation_call_routes/1",
+    "literal": {
+      "operation_id": "sf_kpi_explain",
+      "pack_id": "performance",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-explicar-forecast",
+      "entry_mode": "interactive",
+      "input_schema": "KpiExplainRequest",
+      "output_type": "KpiBreakdown",
+      "producer_task": "WP02.T01",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    }
+  },
+  "criterion_links": [
+    "WP12.CMP.40",
+    "WP12.T02.CHK.11",
+    "WP12.T02.CHK.60",
+    "WP12.T02.DOD.60",
+    "WP12.T02.CMP.40",
+    "WP12.T02.CMP.60",
+    "WP12.T02.SUC.60"
+  ],
+  "test": {
+    "name": "native Finance checks a human-selected budget KPI without replacing forecast delta or inventing comparable currency",
+    "deadline_ms": 360000,
+    "profile": "sf_finance",
+    "skill": "sf-explicar-forecast",
+    "input": "ForecastExplainInput",
+    "output": "FinancialAnalysis",
+    "native_required_operations": [
+      "sf_context_get",
+      "sf_kpi_explain",
+      "sf_forecast_compare",
+      "sf_source_get"
+    ],
+    "native_source_calls_required": 3,
+    "uncovered_normative_operation": "sf_import_preview; separate existing import mission, not exercised here"
+  },
+  "classification_correction": {
+    "prior": "The previous addendum treated a common producer/currency relation as an owner prerequisite for every Forecast-to-KPI call.",
+    "current": "No canonical or mounted-verifier rule was found requiring every auxiliary read to enter the closed FinancialAnalysis. A real human-selected public budget source of the same case and period can be checked separately, with its true currency/unit and receipts. This is an own driver obligation; actual execution remains NOT_RUN.",
+    "not_inferred": "Numerically matching budgets do not establish same-source financial equivalence, FX or a cross-producer margin."
+  },
+  "public_reference_flow": [
+    "Human issues an actual Budget Overview budgetMetrics selection through createDashboardSourceIssuer.",
+    "Human issues two actual Planner forecasts and drafts one real C09 case containing all three source refs for the same2027 horizon.",
+    "The objective explicitly identifies the human-selected public budget source; no autonomous discovery or private artifact handle is claimed.",
+    "Native sf_context_get resolves that exact public selection before sf_kpi_explain in a later assistant message. Three native sf_source_get receipts must cover the selected sources.",
+    "Native sf_forecast_compare supplies the exact replay. The verifier and assertions keep FinancialAnalysis payload/evidenceRefs equal to the two-forecast replay.",
+    "After a fresh host opens the same store, the real HTTP FinancialAnalysis consumer and durable Session tool receipts/results are re-read independently."
+  ],
+  "purpose": "Check whether the human-selected budget KPI is a comparable measure or a distinct quantity before confusing it with change against the forecast baseline. The KPI producer currency remains unspecified; Planner remains USD. The real KPI producer refuses monetary comparison with comparison-basis-unavailable. No combined margin or conversion is calculated.",
+  "real_producers_and_consumers": {
+    "input": "services.productHttp workbench-analysis:prepare -> installed Forecast producer/verifier",
+    "forecast": "Actual Planner source issuance and compareForecast; known590000/596000 and delta6000 are assertions on producer results, with null complete difference and conditioned coverage.",
+    "auxiliary": "Actual public Dashboard KPI source -> sf_context_get/sf_kpi_explain/source_get. UI receipts count as UI only; native receipts must originate in Session/SkillLoadReceipt execution.",
+    "closed_contribution": "Actual FinancialAnalysis publication and handleSfAnalysis:output after reload when a real model is available.",
+    "auxiliary_consumer": "Actual model tool result and durable Session audit after reload; otherwise authenticated UI result only.",
+    "auxiliary_consumed_by_forecast_chart": false
+  },
+  "required_negatives": [
+    "Real KPI producer refuses comparison when currency is unspecified; no driver-made FX/margin substitutes for it.",
+    "Planner selector formatted as a Dashboard metric and unselected period are refused by actual scope resolution.",
+    "Request outside the private explicit synthetic authenticator is refused before UI dispatch.",
+    "After all positive consumers, remove the actual selected Dashboard raw source: old KPI/context references must be refused while Planner raw versions/officials stay unchanged.",
+    "If a native contribution exists, re-read it after source removal even if the reopened catalog is empty; availability never disables the current-source fence."
+  ],
+  "preservation": [
+    "No existing driver, harness, contract, domain producer, grant or financial policy edited.",
+    "No synthetic model/run/receipt/output or seeded C08 case/choice/contribution; only explicit raw business inputs are supplied.",
+    "Sources selected by the human are the only business basis. No schema expansion or source injection into FinancialAnalysis.",
+    "The real provider branch requires actual Session, skill-load receipt, completed calls, result digests and consumers; an empty catalog records unavailability.",
+    "No local product tests or typecheck; no remote CI triggered by author."
+  ],
+  "runtime": "NOT_RUN",
+  "native_inference_observed": false,
+  "native_am02_acceptance": false,
+  "gnative_accepted": false,
+  "markers": [
+    "SF_WP12_FORECAST_KPI_PHASE",
+    "SF_WP12_FORECAST_KPI_INPUT",
+    "SF_WP12_FORECAST_KPI_REOPEN",
+    "SF_WP12_FORECAST_KPI_REMOVED"
+  ],
+  "independent_review": "PENDING",
+  "negative_status_pairs": {
+    "scope": "Two exact refusal pairs only",
+    "wrongProducer": "needs-input / invalid-dashboard-source-selector",
+    "wrongPeriod": "denied / source-unavailable",
+    "source": "dashboard sources c32c973 / capabilities e86b1ca / dispatch6ba1b02"
+  }
+}

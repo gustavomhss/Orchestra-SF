@@ -1,0 +1,117 @@
+{
+  "schema": "wp12-own-driver-static-finding-v1",
+  "id": "WP12-SCENARIO-UI-COMPARISON-CASE-SCOPE",
+  "status": "CONFIRMED_STATIC_CORRECTED_NOT_RUN",
+  "recordedAt": "2026-11-14T14:55:53Z",
+  "timing": "The blocker was confirmed after the root had started the already-staged unique Scenarios run; no cancellation channel was available and no alternate channel was used.",
+  "originalRun": {
+    "runId": 43606961039,
+    "productCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "productTree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e",
+    "ciSnapshot": "24126b776427dfc6560456d921c7b8f1398afd1c",
+    "ciSnapshotTree": "3969e7577dba71e21a5912ed76790ade3c480eb3",
+    "terminalResult": "NOT_YET_OBSERVED_BY_THIS_REVIEW",
+    "oldDriverBlob": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06"
+  },
+  "cause": [
+    "The driver calls shared UI dispatch for sf_scenario_compare, but the comparison input has no caseRef and dispatch does not choose a case.",
+    "The published capability persists comparisons. Its real persistence calls resolveCase; for a UI call the business instance requires its own withCase scope.",
+    "The helper and installed host have distinct real business instances. Wrapping installed services.dispatch in the helper business.withCase would not select the case used by that dispatcher."
+  ],
+  "routeInspection": [
+    "decision-domain-http exposes selection registration, criteria and human decision actions, without a standalone comparison capability route.",
+    "portfolio-http consumes comparisons in decision-choose or exposes distinct portfolio/sensitivity operations; those would change the requested mission.",
+    "analysis-choice-http exposes BI/sensitivity/alternative selections, without an equivalent standalone comparison route."
+  ],
+  "correction": [
+    "Use the existing real UI admission and single validation through context.ui.",
+    "Select the already-created case with the same business instance own withCase method; this method authenticates and checks its real current case and Request.",
+    "Invoke the public Planner capability handler with that instance real Planner, receipt factory and calculation persistence. No context, receipt or output is constructed by the test.",
+    "Assert the real UI receipt, request/result digests, outputRef and stored comparison under the selected case; reopen the exact stored records after host reload."
+  ],
+  "preserved": [
+    "All original 48 expect lines, raw scenario preparation and missing-category discriminator.",
+    "Requested native scopes and the Finance/Reviewer execution block remain byte-identical.",
+    "No new grants, deadlines, foreign source edits, provider, native receipt or synthetic contribution."
+  ],
+  "proofClassification": "Real domain/UI capability and C09 persistence preparation only; distinct from optional actual Session missions and their native receipts.",
+  "validation": {
+    "syntax": "PASS node --check without imports",
+    "localProductTests": false,
+    "localTypecheck": false,
+    "ciDispatched": false,
+    "correctedRuntimeSuccess": false
+  },
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "commit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "gitBlob": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts",
+      "commit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "gitBlob": "3f02a1ad9ee2985b4094690bd32c16e22a0dda75"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "commit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "gitBlob": "49300a78a44ac0739791d10a11c386b317f4b51a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "commit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "gitBlob": "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "commit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "gitBlob": "63b7b60dcb8a3f6fe491106280f95d04d482c2da"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "commit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "gitBlob": "1d750c4d699eb27acd2b5066d23b66307f5ae931"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "commit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "gitBlob": "1c371738c80789cfc6d0d52d482c9c09a3757b0b"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "commit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "gitBlob": "834b3c967d73411771e1f5aa82b683c6427e6769"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "commit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "gitBlob": "97cde4dce2858f47b57b446c9c20bad77d367591"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "commit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "gitBlob": "c434de513cb7ceae4acad1fc595e776785ec85af"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "commit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "gitBlob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-choice-http.ts",
+      "commit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "gitBlob": "ade98212eba04a8fe35624ea7e96214ec00a92ce"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "commit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "gitBlob": "bc32bfb39e8b6012230ee0d136bed142340e5d89"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "commit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "gitBlob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2"
+    }
+  ]
+}

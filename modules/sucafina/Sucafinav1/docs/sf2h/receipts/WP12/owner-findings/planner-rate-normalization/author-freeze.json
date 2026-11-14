@@ -1,0 +1,221 @@
+{
+  "schema": "wp12-planner-rate-normalization-final-freeze-v1",
+  "status": "FROZEN_WITH_INDEPENDENT_HOLD_REVIEW",
+  "finding": "WP12-OWNER-PLANNER-NUMERIC-RATE-IDENTITY-01",
+  "publicationScope": "Seven owned WP12 documentation/proposal files only; no production source intake.",
+  "candidateIntakeAllowed": false,
+  "sourceEditsApplied": false,
+  "proposalStatus": "NOT_APPLIED_NOT_RUN_UNPUBLISHED",
+  "productImports": false,
+  "productTests": false,
+  "typecheck": false,
+  "ciTriggered": false,
+  "independentReview": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/review.json",
+    "bytes": 28442,
+    "blob": "9b25b0db91520ecf1dafdccadb87dc2befab42a4",
+    "sha256": "4bfe8a748b8affea57835dc6ed290b03730ebdd14f4727128d30ff8b0edc73b3",
+    "scope": "Complete five-file candidate and relevant consumers/fences; HOLD F01. This is not execution approval of the proposed getter or test."
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/README.md",
+      "bytes": 3120,
+      "blob": "d866dee808c534ab812f13e06eaae75c7fcec678",
+      "sha256": "4837749a613d7fb5c135dcf4fcd791f5ee3a848c4a966b8a7a4a315c5e0e3456"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/owner-delta.json",
+      "bytes": 4496,
+      "blob": "913d38f8c35b3e5b79d402d3905731b7548c87e3",
+      "sha256": "6c89ce9455a2a60f5b67374901ab72bf2b6b3e97fb9e447425ca099a40e04853"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/proposal.json",
+      "bytes": 2557,
+      "blob": "d60b847589bc4330465c8afcbf50b2e975675bec",
+      "sha256": "0c8dafe35cf05d8b74547b00c1e0261aa892bab71c0676e249928be8c53d4810"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/proposed-owner-fix.NOT_APPLIED.patch",
+      "bytes": 2107,
+      "blob": "4e996cef4245bad3feacb313724b1cb7d55f46f0",
+      "sha256": "3f30f2a7a7afb3261a042092fcb9de7b4a7c30d83e03b55a4d479efaeead8e73"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/proposed-owner-test.NOT_RUN.patch",
+      "bytes": 3451,
+      "blob": "13699cba497c552e80c063355af644aacaa964e2",
+      "sha256": "42c740c0252bc5786050c470b5726a9ac7642e7a6030ebe1b6cd2c5c04690b7b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/review.json",
+      "bytes": 28442,
+      "blob": "9b25b0db91520ecf1dafdccadb87dc2befab42a4",
+      "sha256": "4bfe8a748b8affea57835dc6ed290b03730ebdd14f4727128d30ff8b0edc73b3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/source-pins.json",
+      "bytes": 5782,
+      "blob": "08891ea55bfaa24af2039d236b8d43198b07ddc0",
+      "sha256": "2558bef94e3c210e37d7340dc15f3e6081489a24cb1beedfc59fd340f3743736"
+    }
+  ],
+  "checks": {
+    "publishedSourceBlobsVerified": 44,
+    "publicJsonParsed": true,
+    "proposalReconstruction": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "before": "c487332777d4053be7a2b177ea598efb77ca0d66",
+        "unpublishedProposedBlob": "8168c4b8fea256d0dbf4a961c4b14284d4999dec",
+        "patch": "proposed-owner-fix.NOT_APPLIED.patch",
+        "verification": "Metadata-only patch reconstruction; no product import, parsing, test or typecheck."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "before": "8389709232225424b5905638d0951d8cdbb71dd7",
+        "unpublishedProposedBlob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+        "patch": "proposed-owner-fix.NOT_APPLIED.patch",
+        "verification": "Metadata-only patch reconstruction; no product import, parsing, test or typecheck."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/port-hr.test.ts",
+        "before": "68d049f957257e089810ae0f9be230a157dba70c",
+        "unpublishedProposedBlob": "e6c559bdda26f62c130a0fa8eeed5bf078fe66aa",
+        "patch": "proposed-owner-test.NOT_RUN.patch",
+        "verification": "Metadata-only patch reconstruction; no product import, parsing, test or typecheck."
+      }
+    ],
+    "ownHelpersUnchanged": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts",
+        "bytes": 12693,
+        "blob": "3f02a1ad9ee2985b4094690bd32c16e22a0dda75",
+        "sha256": "09013a33b61063928df974b1c90f814c4c042d8017d65f79bfb4f8fbd3f607f1",
+        "sourceChanged": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-preparation.ts",
+        "bytes": 10795,
+        "blob": "c3c2efe6004c513370ab04077f7d2c79a704d9c6",
+        "sha256": "1ff25c69a32523eed1d1aadaf9f94d42c54ca416f345dfe309254b7d5d83aa04",
+        "sourceChanged": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+        "bytes": 20548,
+        "blob": "78331ae620b34f0fa1c5923a8b769415c5bdaaff",
+        "sha256": "979e285e285699f9ea5e3b0f61acaad280bbfbc7670726bd5445b873a3e2a196",
+        "sourceChanged": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-portfolio-preparation.ts",
+        "bytes": 15077,
+        "blob": "02977fd1ec3c58b52269d1f261abe523bf60bfee",
+        "sha256": "9f0bdd6641a65fd151b43d0ce53b21516e76793211326d55fed41e5f5ca56875",
+        "sourceChanged": false
+      }
+    ]
+  },
+  "scratchClosure": [
+    {
+      "path": "resume-input/own-missions/planner-port-838-closure/minimal-intake.json",
+      "bytes": 18421,
+      "blob": "f37e84c48b3bdc1de7b91c4c05d650c1f0c0d2f2",
+      "sha256": "405c2a32a04be0edf7ffa4498599cbe9564a3d512aa1ae20ebd76e12673282d5"
+    },
+    {
+      "path": "resume-input/own-missions/planner-port-838-closure/impact-map.json",
+      "bytes": 6691,
+      "blob": "5e1f559471f0a55fba32765873d9d3bdd23ec7a2",
+      "sha256": "6dc3b41c900be24786ed0fbbba890950e6c786a7c7bae20cc3e90748fd2f78b1"
+    },
+    {
+      "path": "resume-input/own-missions/planner-port-838-closure/verification-plan.json",
+      "bytes": 5522,
+      "blob": "6d3e22befb62d398144161e79ed5a5dddd462193",
+      "sha256": "39a772ce251eea72c75f026cf1e80d3503588f00c19261c39b45c1576cfc4e6c"
+    },
+    {
+      "path": "resume-input/own-missions/planner-port-838-closure/README.md",
+      "bytes": 9039,
+      "blob": "ce465639fb1a5b436534d4ae23128d03a0bc1673",
+      "sha256": "bc706bb544b262c0078557cdab2ead6d63e28af2e705fdefe25261e8e6637386"
+    },
+    {
+      "path": "resume-input/own-missions/planner-port-838-closure/port-history.json",
+      "bytes": 5031,
+      "blob": "883ecd8ee69587a0b039216c0c7b701dd58b9760",
+      "sha256": "d48acdd00a351daa2928ce99792332745b66e457bc2b6d1e7e77ada8b597b68b"
+    },
+    {
+      "path": "resume-input/own-missions/planner-port-838-closure/source-bytes.json",
+      "bytes": 407156,
+      "blob": "4e13d2e7ce21aefc68d59b1fef5f1f1a7f96b25d",
+      "sha256": "867ef069a4a1cccacdbe1e962412f984bc35565a6a3b528fb8d6e5edbfd52d6a"
+    },
+    {
+      "path": "resume-input/own-missions/planner-port-838-closure/additional-source-bytes.json",
+      "bytes": 183589,
+      "blob": "e6c31e3e107f7dbe48e46c796d8135cf715cc8b1",
+      "sha256": "7535a073be03c2efebc0c3d8405d4da9650cebcdca60694406987e4c5ea177d2"
+    },
+    {
+      "path": "resume-input/own-missions/planner-port-838-closure/origin-source-bytes.json",
+      "bytes": 43426,
+      "blob": "6b34e094db8104e676a1d9a11e9f05a869d9b26c",
+      "sha256": "a0570e4b10e40652daa8d36014bf90aa8633f7e384c4a8936bb8679547857be0"
+    },
+    {
+      "path": "resume-input/own-missions/planner-port-838-closure/independent-full-review-compose.json",
+      "bytes": 28442,
+      "blob": "9b25b0db91520ecf1dafdccadb87dc2befab42a4",
+      "sha256": "4bfe8a748b8affea57835dc6ed290b03730ebdd14f4727128d30ff8b0edc73b3"
+    },
+    {
+      "path": "resume-input/own-missions/planner-port-838-closure/independent-zero-op-review-compose.json",
+      "bytes": 4726,
+      "blob": "7d1708c420504eac428efa3a0ce45a090b59348f",
+      "sha256": "55dbc27528baa708c133342217cfcb0807197dea1e05d73ed4dce2d663e0efd5"
+    },
+    {
+      "path": "resume-input/own-missions/planner-port-838-closure/independent-origin-addendum-compose.json",
+      "bytes": 2480,
+      "blob": "5da6e8526306ffe63d65b3791b6b7ae534ddfe63",
+      "sha256": "c962d469f00b92d748b861cd57e4346c5cd40401d36e2608b4f4ef8270f28421"
+    }
+  ],
+  "heldCandidate": {
+    "origin": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "blob": "8389709232225424b5905638d0951d8cdbb71dd7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/actual-presence.ts",
+        "blob": "c7497d7a71e90dd51ad362921e36d0de12fe431f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+        "blob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+        "blob": "dd92a35b3025a69c198a2d99c4ef38a472dd3bc7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/coverage.ts",
+        "blob": "de86e90c86aca626a575bf5b8dfdf6973fac8b1e"
+      }
+    ],
+    "reason": "Explicit numeric rate identity differs from the current domain normalizer; no inspected published readPair-bearing port closes F01."
+  },
+  "exit": "Owner publishes complete compatible normalization correction and discriminating hosted counterproof; fresh closure review and own fixture reconciliation precede one changed scoped CI candidate. No policy, deadline, lease, archived digest or expected-result relaxation.",
+  "reviewLimits": [
+    "No dynamic counterexample or performance claim.",
+    "The proposed getter and tests are unexecuted patch artifacts, not published intake blobs.",
+    "Earlier limited zero-op reviews do not supersede the complete HOLD review."
+  ]
+}

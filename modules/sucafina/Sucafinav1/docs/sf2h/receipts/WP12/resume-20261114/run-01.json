@@ -1,0 +1,59 @@
+{
+  "schema": "wp12-scoped-hosted-result-v1",
+  "productSha": "0f3a312b709da8012fdac8b077a1525e6c0fc220",
+  "productTree": "87a3c84021d1e02f80f9818b272ee14348040402",
+  "snapshotSha": "f3719c13f982e88c82d78e8dd288ce0b6ed174cb",
+  "snapshotTree": "d4185a179b625254f5606dabe85cf56e6ed1c341",
+  "runId": 43587356544,
+  "jobId": 132424604604,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43587356544",
+  "conclusion": "failure",
+  "pass": 55,
+  "fail": 1,
+  "tests": 56,
+  "files": 11,
+  "assertions": 455,
+  "requestSha256": "5f242d19a7a600b584a7740e57862401bd13084c63a94c83d210950596307165",
+  "omni": {
+    "verdict": "pass",
+    "nonce": "bdb5f6f4f93c8b37f4b339f539c78aa8",
+    "spawns": 240,
+    "delegated": 0,
+    "qualifier": "focused: no declaring test ran",
+    "declarationFixInNextProduct": true
+  },
+  "artifactCount": 0,
+  "mandatoryArtifactMissing": false,
+  "observedModelAdmission": {
+    "scope": "native-model-admission-only",
+    "githubSha": "f3719c13f982e88c82d78e8dd288ce0b6ed174cb",
+    "nativeSessionId": "ses_e264ddc9affeJDCSjnywYA5ywj",
+    "receipt": {
+      "runId": "wp12-admission-ses_e264ddc9affeJDCSjnywYA5ywj",
+      "nativeSessionId": "ses_e264ddc9affeJDCSjnywYA5ywj",
+      "profileId": "sf_finance",
+      "profileVersion": "1.0.0",
+      "profileDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+      "skillId": "sf-explicar-forecast",
+      "skillVersion": "1.0.0",
+      "sourceDigest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740",
+      "instructionsDigest": "ba80c66c9a4b41677c0e2ffb94f94cc63b5e2a3c81e8a4a230739d80f0ff9227",
+      "loadedMessageId": "msg_1d9b22516001jlgXRkm7hnfJfn",
+      "loadedAt": "2026-11-14T10:54:53.210Z",
+      "manifestDigest": "c21f7e493e5a48e5f21ceaf49834a384519ce5f9267bec5eb14b435b2449a106"
+    },
+    "candidates": [],
+    "inferenceExecuted": false,
+    "outputRef": null,
+    "consumerRef": null,
+    "gnativeAccepted": false,
+    "status": "unavailable",
+    "reason": "SessionRunnerModel.ModelNotSelectedError"
+  },
+  "failure": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+    "reason": "Test incorrectly required a forbidden profile for recall, which is shared by all five profiles.",
+    "correction": "Use forbidden-profile refusal for 17 skills and manifest-digest refusal for shared recall; preserve all assertions about no added prompt messages."
+  },
+  "limits": "This run proves no provider inference, no GNATIVE, and no all-18 mission consumption."
+}

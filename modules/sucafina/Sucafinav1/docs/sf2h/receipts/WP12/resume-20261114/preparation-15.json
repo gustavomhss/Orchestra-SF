@@ -1,0 +1,70 @@
+{
+  "schema": "sf-wp12-increment-preparation-v1",
+  "increment": "W20",
+  "phase": "resume-15",
+  "baseCommit": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+  "baseTree": "33edf29551a88ca93f8258e913f3ce127bfc88d4",
+  "ownProductAndTestChanges": 0,
+  "foreignChangeCount": 1,
+  "foreignEffectiveCount": 339,
+  "foreignPinsReceipt": "foreign-pins-15.json",
+  "sourceFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "bytes": 11922,
+      "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "sha256": "0cca19827cfe6793207441d493561d76830d6903383701b9d84230380561a701"
+    }
+  ],
+  "ownReceipts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/c10-review-15.json",
+      "bytes": 18065,
+      "blob": "89d15ccf550c3f052ee17cf25a6fb1ff90337b9f",
+      "sha256": "4b2e3549704b1e28034f5dcb641f7895308e7f8de0f3f45cbfc8b0b3296f727c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/c10-delta-15.diff",
+      "bytes": 10350,
+      "blob": "34f37633e43edf01bf2f68d70e8f5b3d3d64dd20",
+      "sha256": "a6908c327addd7adee9c1c5a8560a0538a81f38a578ce43e034deb631eafb83a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/c10-intake-15.json",
+      "bytes": 13514,
+      "blob": "7284cbe190c21d5fdfa1d573b44a478113e6c03d",
+      "sha256": "bda4b0c20c84f0c0a886b617ded4bdf5a5861dbfed659a8f27fb8e73ecfca367"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json",
+      "bytes": 189465,
+      "blob": "4ece2fa7dda0586ee7047d0e1a8f80763137371e",
+      "sha256": "f4af967d04b58ea34f63d7adc0af8aa8bf780e3af412d43a9a353d0d904ba77b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-14-checks.json",
+      "bytes": 8354,
+      "blob": "e22ab1e7d8725117affb1868e73c1a4cbf0a5d02",
+      "sha256": "998d2f066cba831a0724d17c92bc8743857c020fbc5665268b60ed1917108460"
+    }
+  ],
+  "reason": "Consume the exact compatible published C10 fix for runtime-confirmed loss of derived omitted-category origin. Preserve all W19 own fixes and existing strict tests.",
+  "checks": {
+    "previous": {
+      "product": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+      "run": 43602925189,
+      "conclusion": "success",
+      "receipt": "run-14-checks.json"
+    },
+    "currentProduct": "PENDING"
+  },
+  "productValidation": "Pending strict purchase omission/scenario composition on this new product head; prior equivalent green missions excluded.",
+  "constraints": {
+    "remote": "GitHub MCP only",
+    "localProductTests": false,
+    "localTypecheck": false,
+    "foreignAuthorship": false,
+    "wholeSnapshotMerge": false,
+    "fullWp12Acceptance": false
+  }
+}

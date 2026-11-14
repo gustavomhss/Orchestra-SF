@@ -1,0 +1,303 @@
+{
+  "schema": "wp12-owned-document-freeze-v1",
+  "status": "FROZEN_REVIEWED_READY_FOR_PARENT_PUBLICATION",
+  "scope": "scenario-analysis-prepare-cost",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/scenario-analysis-prepare-cost/README.md",
+      "bytes": 2402,
+      "sha256": "cc8a0112221be603f678b3595d9735f32b978a9f93ce2647c6343e6bd7dfdc45",
+      "blob": "c57494ce95581c1e3594f0534eb0641efdf4f1ea"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/scenario-analysis-prepare-cost/finding.json",
+      "bytes": 10233,
+      "sha256": "f796b05abb42da261231ece43899290322e7f2636b165113621de299b85461d7",
+      "blob": "7949f75591d4398a4f41e7848b830cee47945f66"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/scenario-analysis-prepare-cost/minimal-intake-proposal.json",
+      "bytes": 4654,
+      "sha256": "e60b0b28b58ec2219faa274c94a033e83f0a0e1129bbf6c2d288d978866404c8",
+      "blob": "eafa657cfaaa5f0da87e7e36bb71e6c67afb4912"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/scenario-analysis-prepare-cost/owner-delta.json",
+      "bytes": 2714,
+      "sha256": "9343191d2e491c65d866aacd72ba8915cda6243299810d470d67c3fd9d0a1bcb",
+      "blob": "46c2bb672a315daa41c76eb0d1d0325f77eb9ed5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/scenario-analysis-prepare-cost/source-pins.json",
+      "bytes": 11487,
+      "sha256": "201d3f55bdc1fa91ff715b612ece6464e8d4d8a31081e81fd43e97a062759cf7",
+      "blob": "eaf71eca897bf62dbc46557a7660a604be88491a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/scenario-analysis-prepare-cost/independent-review-root.json",
+      "bytes": 4839,
+      "sha256": "3eeeb6bc86834213f85b623f146e6e5e5abafe0fed51e02ab42c98f89a8dbb02",
+      "blob": "3f66efe66426da3ee030ba71a02fb7ca18a36827"
+    }
+  ],
+  "sourceCount": 35,
+  "sourceBytesVerified": true,
+  "testsExecuted": false,
+  "typecheckExecuted": false,
+  "foreignSourceEdits": false,
+  "retest": "HOLD",
+  "sourceChecks": [
+    {
+      "group": "base",
+      "path": "apps/cli/src/sucafina-product/analysis-http.ts",
+      "blob": "06522fa4a2eaa0841af8aabead799d9d56a8ada7",
+      "sha256": "63d857907611f32dc40172c93eaca3ba82187ad4d892005026c5a8616ae87a51",
+      "bytes": 11010
+    },
+    {
+      "group": "base",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "sha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+      "bytes": 74908
+    },
+    {
+      "group": "base",
+      "path": "apps/cli/src/sucafina-product/analysis-host-services.ts",
+      "blob": "9b21d9f7d4b115bb690ab82256b2cef0590c6afe",
+      "sha256": "1a19441f5f9c5a28a464f9edcb74af72a22477637663be10d4d867f44a35bc98",
+      "bytes": 25306
+    },
+    {
+      "group": "base",
+      "path": "apps/cli/src/sucafina-product/analysis-services.ts",
+      "blob": "900f199800b683503267b011af2c255be841a3a1",
+      "sha256": "cf5596f0600053b4d7f88d05102365d62b0f9d185f39581fdb7d7863a450080e",
+      "bytes": 20244
+    },
+    {
+      "group": "base",
+      "path": "apps/cli/src/sucafina-product/analysis-services-inputs.ts",
+      "blob": "7f4ccee85c4eeaec82d932a69ba93c5fe6d59eff",
+      "sha256": "3185107d8da80d5a1db0e5c74c1bf93eae04a7c0fbb58e98d7755a50e556fe55",
+      "bytes": 8253
+    },
+    {
+      "group": "base",
+      "path": "apps/cli/src/sucafina-product/analysis-inputs.ts",
+      "blob": "ddb8c540f734ae9492cc471fde2df00606396f03",
+      "sha256": "8734962a25cba8c6778367acfdb6c475c138132097eee4ade8cafd1d892011db",
+      "bytes": 7645
+    },
+    {
+      "group": "base",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "97cde4dce2858f47b57b446c9c20bad77d367591",
+      "sha256": "217ce1f268ae119bd38292f9b6697c6f6c1bfb08e31be3e25a434c5cf91d6b48",
+      "bytes": 62972
+    },
+    {
+      "group": "base",
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "blob": "138238ca9273e84f39f8e1db484378a3e62d41d4",
+      "sha256": "b73b4bc448f80aea25c369fa02cb37b0c1ccb9093a01d8b4e77ee65e5bec8ea6",
+      "bytes": 10628
+    },
+    {
+      "group": "base",
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "sha256": "b6e875b8fc9ff731d225af16f84966bf78f6c1f65aefb852ef52a2983c6ec93e",
+      "bytes": 6876
+    },
+    {
+      "group": "base",
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+      "sha256": "9e9c6a91d75479a65f6fa09775d45a8b360c52cb60523773f28e9799b6e4f495",
+      "bytes": 4062
+    },
+    {
+      "group": "base",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "blob": "40c78dee5908cd8af58cc3d58435f3cfb4542045",
+      "sha256": "d7b258c4d957d37c7b3099e342bc582586003bcda832dbb55039293ee75cc115",
+      "bytes": 3994
+    },
+    {
+      "group": "base",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "sha256": "a34b014aead5afe68cb6b45edf8a7981588b5b80fae99af9a0c082ce6986d47a",
+      "bytes": 16654
+    },
+    {
+      "group": "base",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "blob": "e0840d775274ea73c6b938711764c69593dadca0",
+      "sha256": "c1270b39da0574403f7461e007c14e9fb19c8726aa949f938d09879df3988813",
+      "bytes": 39202
+    },
+    {
+      "group": "base",
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "blob": "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b",
+      "sha256": "659c483b654c54765a6f5636e44c93537f9cb0ef19ee136256515b9665f1fbc9",
+      "bytes": 3864
+    },
+    {
+      "group": "base",
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "blob": "d3098aa94cdeee71193c94ae906f6fafd14bda9b",
+      "sha256": "23767836ce893bfb803243830ab62bd55d3352a917d55c927157d42ca5160643",
+      "bytes": 7667
+    },
+    {
+      "group": "base",
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "3a9eaaa0f52c22f68f6e889af66b970fb51197b9",
+      "sha256": "1b657382afc234817bf82334197ac5c1d27e80252f60a920f8045ec5f3fb7af9",
+      "bytes": 22874
+    },
+    {
+      "group": "base",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts",
+      "blob": "3f02a1ad9ee2985b4094690bd32c16e22a0dda75",
+      "sha256": "09013a33b61063928df974b1c90f814c4c042d8017d65f79bfb4f8fbd3f607f1",
+      "bytes": 12693
+    },
+    {
+      "group": "base",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "blob": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06",
+      "sha256": "aa89749cba692f244a357d60efebf831933ee0e85590605f7d0f85d1707d1580",
+      "bytes": 18456
+    },
+    {
+      "group": "base",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "blob": "49300a78a44ac0739791d10a11c386b317f4b51a",
+      "sha256": "050238396e5f12c067de3ab488f1dc207350cb636fc68d71fc72ef2d8a1b59bc",
+      "bytes": 20042
+    },
+    {
+      "group": "latest",
+      "path": "apps/cli/src/sucafina-product/analysis-inputs.ts",
+      "blob": "47681b3ec907c33073755342817bcd288e951e89",
+      "sha256": "f00ad701d4749a8b10287ece8c58d80d1bedc70069d428bbcda1982286957048",
+      "bytes": 7891
+    },
+    {
+      "group": "latest",
+      "path": "apps/cli/src/sucafina-product/analysis-host-services.ts",
+      "blob": "6b5f44ef8eb4d969cfc43fbbad4d0f2e923d5c1b",
+      "sha256": "f251b02093d54ac8d2d21806c9b2f663f9399f3dcb6f03fe9ae7765501992496",
+      "bytes": 25418
+    },
+    {
+      "group": "latest",
+      "path": "apps/cli/src/sucafina-product/analysis-services.ts",
+      "blob": "900f199800b683503267b011af2c255be841a3a1",
+      "sha256": "cf5596f0600053b4d7f88d05102365d62b0f9d185f39581fdb7d7863a450080e",
+      "bytes": 20244
+    },
+    {
+      "group": "latest",
+      "path": "apps/cli/src/sucafina-product/analysis-http.ts",
+      "blob": "06522fa4a2eaa0841af8aabead799d9d56a8ada7",
+      "sha256": "63d857907611f32dc40172c93eaca3ba82187ad4d892005026c5a8616ae87a51",
+      "bytes": 11010
+    },
+    {
+      "group": "latest",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "da80511814c86214a963fc721fda4a3a891df147",
+      "sha256": "52b0778b68b8c53218c6eea61a948e830fe745eed8c2b591c17b5ee3eba944da",
+      "bytes": 68104
+    },
+    {
+      "group": "latest",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+      "sha256": "42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893",
+      "bytes": 74216
+    },
+    {
+      "group": "latest",
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "blob": "138238ca9273e84f39f8e1db484378a3e62d41d4",
+      "sha256": "b73b4bc448f80aea25c369fa02cb37b0c1ccb9093a01d8b4e77ee65e5bec8ea6",
+      "bytes": 10628
+    },
+    {
+      "group": "latest",
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "blob": "463dafc3e1900099391cee63f83bc0f3148df03c",
+      "sha256": "796aa756ce3a2518f71f57b75cfc23cf096748a08c41736074b0012c484cada5",
+      "bytes": 10810
+    },
+    {
+      "group": "latest",
+      "path": "apps/cli/src/sucafina-product/portfolio-preparation.ts",
+      "blob": "cd9b7e0ebd49db83ea8612d80fc636ed008b2c2c",
+      "sha256": "c1a6a6298de5715b62e19398cfca2c150e371e38ba6261b4de7093330928da51",
+      "bytes": 9317
+    },
+    {
+      "group": "latest",
+      "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "blob": "907d1a0c48389af4b32cc958d53d2b1a7ae1fcc3",
+      "sha256": "9523b90ae8289efafad0e3309fcee7970d62665929d6f7ab9b23432b8d458aa1",
+      "bytes": 18251
+    },
+    {
+      "group": "latest",
+      "path": "apps/cli/src/sucafina-product/source-fence-read.ts",
+      "blob": "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18",
+      "sha256": "52fe5e9c88e7845842380d0f6a8fe64d9474d027e70c8580065edfdefdb12e55",
+      "bytes": 3948
+    },
+    {
+      "group": "latest",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "blob": "40c78dee5908cd8af58cc3d58435f3cfb4542045",
+      "sha256": "d7b258c4d957d37c7b3099e342bc582586003bcda832dbb55039293ee75cc115",
+      "bytes": 3994
+    },
+    {
+      "group": "latest",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "sha256": "a34b014aead5afe68cb6b45edf8a7981588b5b80fae99af9a0c082ce6986d47a",
+      "bytes": 16654
+    },
+    {
+      "group": "latest",
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "blob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "sha256": "771b060898fce1b1d851461bee7df743014ab55f9c0994a0331f2664a1c8bfd1",
+      "bytes": 6407
+    },
+    {
+      "group": "latest",
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "blob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+      "bytes": 8591
+    },
+    {
+      "group": "latest",
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "sha256": "8c51fdb91dc3c35bd6ff075488f3d393711b2d16e411085960fa3728c1fe5bd1",
+      "bytes": 26150
+    }
+  ],
+  "independentReview": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/scenario-analysis-prepare-cost/independent-review-root.json",
+    "bytes": 4839,
+    "sha256": "3eeeb6bc86834213f85b623f146e6e5e5abafe0fed51e02ab42c98f89a8dbb02",
+    "blob": "3f66efe66426da3ee030ba71a02fb7ca18a36827",
+    "status": "PASS_STATIC_DOCUMENTED_BOUNDARY_ONLY"
+  }
+}

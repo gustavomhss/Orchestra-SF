@@ -1,0 +1,524 @@
+{
+  "schema": "sf-wp12-hosted-round-v1",
+  "status": "FAILED_WITH_OBSERVATIONS",
+  "product": {
+    "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+    "tree": "421a1b965efa426fc56e0bc5474f4dc21bd4ebe6"
+  },
+  "test": {
+    "snapshot": "39b25885f09ac930a25877771fbf60acf62b9026",
+    "tree": "0121eb1bba09cb36d82a4181e541ef48c312d404",
+    "runId": 43588279103,
+    "jobId": 132427359022,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43588279103",
+    "conclusion": "failure",
+    "pass": 58,
+    "fail": 2,
+    "error": 1,
+    "tests": 60,
+    "files": 12,
+    "assertions": 475,
+    "logSha256": "218e50f5117e931cd37fe9c1716ceccf5a938ab9578b7da30763839f0b538574",
+    "requestSha256": "9fbde36d035368db9b48b3d562f822fce09642a66a6dfab16ad951fdd10eace3",
+    "omni": {
+      "verdict": "FAIL",
+      "nonce": "190ffb413385f390283a3e8331c14d83",
+      "cause": "Pre-load authority-revoked negative declared expectSpawn but correctly refused before spawning; remove this declaration only, keep all revocation assertions."
+    },
+    "errors": [
+      "Finance suite import failed: @orchestra/relay/authoring/graph absent from consumer workspace links; no Finance host boot or inference occurred."
+    ],
+    "observations": {
+      "WP12 native skill loads:": {
+        "scope": "registration-and-load-only",
+        "receipts": [
+          {
+            "runId": "wp12-load-sf-enquadrar-decisao",
+            "nativeSessionId": "ses_e26437c42ffeIGKxcmsUStfcvE",
+            "profileId": "sf_maestro",
+            "profileVersion": "1.0.0",
+            "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+            "skillId": "sf-enquadrar-decisao",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "0fd53b0f08deef41253462578105b5571dd055c140120ba7045a4893a75422e4",
+            "instructionsDigest": "cc342bb2b520a8ae37220bf600508d085553308ead08eb6e1b0843e52cb8f464",
+            "loadedMessageId": "msg_1d9bc8646001xj9f56FkW5kqQC",
+            "loadedAt": "2026-11-14T11:06:13.462Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-preparar-revisao-executiva",
+            "nativeSessionId": "ses_e2643798dffezOFXw7G68ynRto",
+            "profileId": "sf_maestro",
+            "profileVersion": "1.0.0",
+            "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+            "skillId": "sf-preparar-revisao-executiva",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6",
+            "instructionsDigest": "acaae8c302cfe934e9a9b1d6e31784090ac96fa48e66dc5859d4f81cbbb4e801",
+            "loadedMessageId": "msg_1d9bc8692001cZ6kqNWAFFzWf2",
+            "loadedAt": "2026-11-14T11:06:13.533Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-coordenar-perguntas",
+            "nativeSessionId": "ses_e26437946ffeNcreNx09YILSED",
+            "profileId": "sf_maestro",
+            "profileVersion": "1.0.0",
+            "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+            "skillId": "sf-coordenar-perguntas",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "4768df83520cafc5492d13d4d5c6ca9c0900916930726904e92c35ca70108f33",
+            "instructionsDigest": "9dd6da0563e59248ba5dca0ffd2c26437a0a6bafb5abeae5a0f77aacef82fafa",
+            "loadedMessageId": "msg_1d9bc86da001QMsZMgF3SZGSKz",
+            "loadedAt": "2026-11-14T11:06:13.606Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-explicar-forecast",
+            "nativeSessionId": "ses_e264378fcffepw6wf2fzq6x0bW",
+            "profileId": "sf_finance",
+            "profileVersion": "1.0.0",
+            "profileDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+            "skillId": "sf-explicar-forecast",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740",
+            "instructionsDigest": "ba80c66c9a4b41677c0e2ffb94f94cc63b5e2a3c81e8a4a230739d80f0ff9227",
+            "loadedMessageId": "msg_1d9bc8723001dDY7DDh7MMIFQ1",
+            "loadedAt": "2026-11-14T11:06:13.678Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-comparar-cenarios",
+            "nativeSessionId": "ses_e264378b3ffe2j0rY2DSNS84K1",
+            "profileId": "sf_finance",
+            "profileVersion": "1.0.0",
+            "profileDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+            "skillId": "sf-comparar-cenarios",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "65f975cbfa6e7f78528b58d3bdea90f4991357378667e4a6e3ba41b8b52b7cd2",
+            "instructionsDigest": "4a5ee94713eb474032dcc089f5cac3a073ea089479dba7ea0f90aebeb67c8ef9",
+            "loadedMessageId": "msg_1d9bc877e001qeRr3lGVVD4N2m",
+            "loadedAt": "2026-11-14T11:06:13.770Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-avaliar-sensibilidade",
+            "nativeSessionId": "ses_e2643784affeFtiNHoi7MGYBGm",
+            "profileId": "sf_finance",
+            "profileVersion": "1.0.0",
+            "profileDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+            "skillId": "sf-avaliar-sensibilidade",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "e55e50dbc3a108570c59c432b50382ac3a8d5f38281fe76cfcdf27a99626b9e5",
+            "instructionsDigest": "fc415d2d3c3e7ca205e9ba92b34537f69a1a3f036ddfc0274785349d56d0e9f0",
+            "loadedMessageId": "msg_1d9bc87d20011AT0brWv5pUxpQ",
+            "loadedAt": "2026-11-14T11:06:13.852Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-comparar-sourcing",
+            "nativeSessionId": "ses_e26437806ffe13YHJVJvd1Go6x",
+            "profileId": "sf_procurement",
+            "profileVersion": "1.0.0",
+            "profileDigest": "65f339bb5c3394c9cba7b5da5a702b3d94f61a378aee3d1067a3635ad5ceef3a",
+            "skillId": "sf-comparar-sourcing",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "be1605aea670cae00db5c63c4592cdedc0acf8ec70775b721dfe08715d637553",
+            "instructionsDigest": "bd851ccc61d93d5978b7f5068f51b7f774458e70b3a6a8caee9b9076667fb050",
+            "loadedMessageId": "msg_1d9bc8847001iO0kclvqeJqDfM",
+            "loadedAt": "2026-11-14T11:06:13.975Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-revisar-condicoes-contratuais",
+            "nativeSessionId": "ses_e2643778effeWQQf8E1yVR8cxT",
+            "profileId": "sf_procurement",
+            "profileVersion": "1.0.0",
+            "profileDigest": "65f339bb5c3394c9cba7b5da5a702b3d94f61a378aee3d1067a3635ad5ceef3a",
+            "skillId": "sf-revisar-condicoes-contratuais",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "7bcddfa9054f8d7c2f53428631106c8dc717ed246956cdf6aa58349fc491bbdb",
+            "instructionsDigest": "f170a1a4cf8fadd83716d70428425446b33b0849c9eac7af476df44c1b863fd1",
+            "loadedMessageId": "msg_1d9bc888c001fJPpAF6JTISN4u",
+            "loadedAt": "2026-11-14T11:06:14.031Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-preparar-compra",
+            "nativeSessionId": "ses_e26437751ffev64ZRh329zSP1P",
+            "profileId": "sf_procurement",
+            "profileVersion": "1.0.0",
+            "profileDigest": "65f339bb5c3394c9cba7b5da5a702b3d94f61a378aee3d1067a3635ad5ceef3a",
+            "skillId": "sf-preparar-compra",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "7134f86374e622e82353c93c68504462f6d75dab85d496c74a1c9d0294510cf0",
+            "instructionsDigest": "6b5a139ed88269b55c86f711c922cb7ec16ddaef7d9285e0891514319e125213",
+            "loadedMessageId": "msg_1d9bc88cd001RQFKTpDCsYm4E7",
+            "loadedAt": "2026-11-14T11:06:14.097Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-revisar-dependencias",
+            "nativeSessionId": "ses_e26437708ffetd0crpjDNV1PUr",
+            "profileId": "sf_portfolio",
+            "profileVersion": "1.0.0",
+            "profileDigest": "249ec91f7d1a76fef83c4408795b66953589d3b3f45e91c64ca691c60c8c2b83",
+            "skillId": "sf-revisar-dependencias",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "6adbeb96f182706d6125cfad31f679801a24becd9589231121ff54d62d476005",
+            "instructionsDigest": "bc18710e773e2ef7902e2899886ffd4081e6553be7bc2b076204f826b74bbdf0",
+            "loadedMessageId": "msg_1d9bc8923001G2mF5FGps5Mj0E",
+            "loadedAt": "2026-11-14T11:06:14.272Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-compor-portfolio",
+            "nativeSessionId": "ses_e26437662ffeCaDbo2Q4ENd4rd",
+            "profileId": "sf_portfolio",
+            "profileVersion": "1.0.0",
+            "profileDigest": "249ec91f7d1a76fef83c4408795b66953589d3b3f45e91c64ca691c60c8c2b83",
+            "skillId": "sf-compor-portfolio",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "8910dd159591b5849f60a734ed27549e57ec3de6d05c125b004202c217166642",
+            "instructionsDigest": "0f6f8d575fd60b062fe2b700cde10fadd9e93bcb47409a0b8b362f028629cd07",
+            "loadedMessageId": "msg_1d9bc89bc001AqVZwwwbuo57S2",
+            "loadedAt": "2026-11-14T11:06:14.341Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-reavaliar-compromissos",
+            "nativeSessionId": "ses_e26437622ffe8EmdT1qn7q0vXb",
+            "profileId": "sf_portfolio",
+            "profileVersion": "1.0.0",
+            "profileDigest": "249ec91f7d1a76fef83c4408795b66953589d3b3f45e91c64ca691c60c8c2b83",
+            "skillId": "sf-reavaliar-compromissos",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "a7f8d1b51ab0d5ac5182a4f9bbf8035c9227be27f45c50d85e76318919d356d6",
+            "instructionsDigest": "a8f4ee47edb3c6d51ae9494ffee887af9c9d2072679f663583dbcc8ed30f6ea1",
+            "loadedMessageId": "msg_1d9bc89fb001e3Ux31usTz81f8",
+            "loadedAt": "2026-11-14T11:06:14.399Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-contestar-decisao",
+            "nativeSessionId": "ses_e264375e2ffemUJgJtX2K5tP7C",
+            "profileId": "sf_reviewer",
+            "profileVersion": "1.0.0",
+            "profileDigest": "cd0f89c9a1342101bf00a74c8ab794098889775773a7fe4cef120d28cf6f6391",
+            "skillId": "sf-contestar-decisao",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "9d0a00c76ce8064f87eeb325eb0bc5c252bc9119d25e2047b78a55803b735696",
+            "instructionsDigest": "ea13087b54f1c8e8d94974cba313f407c6fbb21bc825e4452aa57c7789e81def",
+            "loadedMessageId": "msg_1d9bc8a49001z1tdyPKsr9X7pI",
+            "loadedAt": "2026-11-14T11:06:14.476Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-revisar-evidencias",
+            "nativeSessionId": "ses_e26437592ffe1JzkGPshoYmf1e",
+            "profileId": "sf_reviewer",
+            "profileVersion": "1.0.0",
+            "profileDigest": "cd0f89c9a1342101bf00a74c8ab794098889775773a7fe4cef120d28cf6f6391",
+            "skillId": "sf-revisar-evidencias",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "eda2166e5a588ba51888b1b7968544f05debb7179be8959c24cf681c4d1f0be8",
+            "instructionsDigest": "8f407777a68965d86469eb1ce1554a231ac1b546af0e4d8e080734984f7f9a1d",
+            "loadedMessageId": "msg_1d9bc8a93001S0W7u1dAaGVHX1",
+            "loadedAt": "2026-11-14T11:06:14.565Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-extrair-evidencias",
+            "nativeSessionId": "ses_e2643753affegQH7oG7c5ENMbx",
+            "profileId": "sf_maestro",
+            "profileVersion": "1.0.0",
+            "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+            "skillId": "sf-extrair-evidencias",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "344827329b05b260be70c2dfbdbfcee22e329b090e38af82863bacfc2a610a1f",
+            "instructionsDigest": "e5097d33f0505ab51088100b25bae02dc830bdcdd55eb4bf4c54acd976bf558b",
+            "loadedMessageId": "msg_1d9bc8aee001Ruc554wayVYxca",
+            "loadedAt": "2026-11-14T11:06:14.642Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-produzir-bi-contextual",
+            "nativeSessionId": "ses_e264374ecffeHFyhzOWrwnccDI",
+            "profileId": "sf_maestro",
+            "profileVersion": "1.0.0",
+            "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+            "skillId": "sf-produzir-bi-contextual",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "db1f3b552ea8d317ce8c27cc7e69f7912630ec314f1adfdb789137fccd48dfd7",
+            "instructionsDigest": "4b0f8eda17125e40a9458f9390328419f9460a34f291c0d7ab9636ed89686bd0",
+            "loadedMessageId": "msg_1d9bc8b36001wTzxHPj3O7x23c",
+            "loadedAt": "2026-11-14T11:06:14.721Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-produzir-material-reuniao",
+            "nativeSessionId": "ses_e264374a4ffecoN1ThSjulj7de",
+            "profileId": "sf_maestro",
+            "profileVersion": "1.0.0",
+            "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+            "skillId": "sf-produzir-material-reuniao",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "d5389ae1fa4cebab61ddf53cc75a1d25c5a293182fff7b5d03bce5f90ac1a7bb",
+            "instructionsDigest": "a18bc877c2b0abc80836667342f53833446c1328a6464edc2dcac05ed8a56879",
+            "loadedMessageId": "msg_1d9bc8b78001HqDp5lR6XG4jeP",
+            "loadedAt": "2026-11-14T11:06:14.786Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          },
+          {
+            "runId": "wp12-load-sf-consultar-memoria-decisoria",
+            "nativeSessionId": "ses_e26437465ffeFe0llWaqnlOu2H",
+            "profileId": "sf_maestro",
+            "profileVersion": "1.0.0",
+            "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+            "skillId": "sf-consultar-memoria-decisoria",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "46912ccaacbcd9488f36ed8258f0780c4451412967e79506558f8aee68c64db2",
+            "instructionsDigest": "67d4166705d222b9d654f4e32d0b804ae0fdf7a157755545fde5ed7da92629a6",
+            "loadedMessageId": "msg_1d9bc8bb5001F1HM3GySM7DW1z",
+            "loadedAt": "2026-11-14T11:06:14.841Z",
+            "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+          }
+        ],
+        "refusals": [
+          {
+            "skillId": "sf-enquadrar-decisao",
+            "profileId": "sf_finance",
+            "nativeSessionId": "ses_e264379a7ffebvmwx8eHDiAScJ",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-preparar-revisao-executiva",
+            "profileId": "sf_finance",
+            "nativeSessionId": "ses_e26437961ffewPLQtQur5FQ75u",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-coordenar-perguntas",
+            "profileId": "sf_finance",
+            "nativeSessionId": "ses_e26437918ffeN014RsXq9T9C0M",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-explicar-forecast",
+            "profileId": "sf_maestro",
+            "nativeSessionId": "ses_e264378cfffeKJjCk0FwlGAd5s",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-comparar-cenarios",
+            "profileId": "sf_maestro",
+            "nativeSessionId": "ses_e26437874ffeIoiXiXfvaFkUeu",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-avaliar-sensibilidade",
+            "profileId": "sf_maestro",
+            "nativeSessionId": "ses_e26437822ffeKxoxqtJ6VZxN9M",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-comparar-sourcing",
+            "profileId": "sf_maestro",
+            "nativeSessionId": "ses_e264377a7ffegniEkv0qdxDXEq",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-revisar-condicoes-contratuais",
+            "profileId": "sf_maestro",
+            "nativeSessionId": "ses_e2643776fffeB53Ji6lkc1KF7Y",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-preparar-compra",
+            "profileId": "sf_maestro",
+            "nativeSessionId": "ses_e2643772dffe3rzeQDaMDBqzya",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-revisar-dependencias",
+            "profileId": "sf_maestro",
+            "nativeSessionId": "ses_e2643767effep2hDtgAyBDiAV9",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-compor-portfolio",
+            "profileId": "sf_maestro",
+            "nativeSessionId": "ses_e26437639ffehjJl0OiObgLB7j",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-reavaliar-compromissos",
+            "profileId": "sf_maestro",
+            "nativeSessionId": "ses_e264375ffffeQKvhtk00lIzGCe",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-contestar-decisao",
+            "profileId": "sf_maestro",
+            "nativeSessionId": "ses_e264375b2ffe2uMLBTO2WnA4g7",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-revisar-evidencias",
+            "profileId": "sf_maestro",
+            "nativeSessionId": "ses_e26437559ffeHo3HpmfCf5VoAt",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-extrair-evidencias",
+            "profileId": "sf_finance",
+            "nativeSessionId": "ses_e2643750cffe8fafYJRjUKD1Bg",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-produzir-bi-contextual",
+            "profileId": "sf_procurement",
+            "nativeSessionId": "ses_e264374bdffeLwjjhhN20mVn81",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-produzir-material-reuniao",
+            "profileId": "sf_finance",
+            "nativeSessionId": "ses_e2643747cffe9LcgJfcVcYlVwY",
+            "boundary": "profile-allowlist",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          },
+          {
+            "skillId": "sf-consultar-memoria-decisoria",
+            "profileId": "sf_maestro",
+            "nativeSessionId": "ses_e26437445ffetDZvLeS804Zp8O",
+            "boundary": "manifest-digest",
+            "state": "Failure",
+            "reason": "resident-source-capability-invalid",
+            "messageCount": 0
+          }
+        ]
+      },
+      "SF_WP12_NATIVE_ADMISSION:": {
+        "scope": "native-model-admission-only",
+        "githubSha": "39b25885f09ac930a25877771fbf60acf62b9026",
+        "nativeSessionId": "ses_e26436508ffehXAnngl5nqMbIX",
+        "receipt": {
+          "runId": "wp12-admission-ses_e26436508ffehXAnngl5nqMbIX",
+          "nativeSessionId": "ses_e26436508ffehXAnngl5nqMbIX",
+          "profileId": "sf_finance",
+          "profileVersion": "1.0.0",
+          "profileDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+          "skillId": "sf-explicar-forecast",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740",
+          "instructionsDigest": "ba80c66c9a4b41677c0e2ffb94f94cc63b5e2a3c81e8a4a230739d80f0ff9227",
+          "loadedMessageId": "msg_1d9bc9d5f001yn43d1PY7aOHZG",
+          "loadedAt": "2026-11-14T11:06:19.365Z",
+          "manifestDigest": "c21f7e493e5a48e5f21ceaf49834a384519ce5f9267bec5eb14b435b2449a106"
+        },
+        "candidates": [],
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false,
+        "status": "unavailable",
+        "reason": "SessionRunnerModel.ModelNotSelectedError"
+      }
+    }
+  },
+  "check": {
+    "snapshot": "41ffcf8adaeb3fa1106f6965b364c8477e6ae4b0",
+    "tree": "a751abcbe4859d79c8b4203cb66d0532e73d762b",
+    "runId": 43588290544,
+    "jobId": 132427393876,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43588290544",
+    "conclusion": "failure",
+    "typecheck": {
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "diagnostics": 159,
+      "paths": 43,
+      "ownWp12Diagnostics": 0
+    },
+    "spawnImports": "PASS",
+    "guards": "PASS",
+    "logSha256": "6e8301394ad5a8abcce4d3a7e94ad1de5208cb0cc9a26db43fba408ed79b2f47",
+    "artifacts": [
+      {
+        "id": 14111531474,
+        "name": "astra-wp12-check-1",
+        "size_in_bytes": 6179,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14111531474",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14111531474/zip",
+        "expired": false,
+        "created_at": "2026-11-14T11:06:27Z",
+        "expires_at": "2026-11-28T11:06:27Z",
+        "updated_at": "2026-11-14T11:06:27Z",
+        "digest": "sha256:50ccf2085eb65659a537a5126f0772b35685b176bde74f4384dccc26cae7818b",
+        "workflow_run": {
+          "id": 43588290544,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp12",
+          "head_sha": "41ffcf8adaeb3fa1106f6965b364c8477e6ae4b0"
+        }
+      }
+    ]
+  },
+  "inferenceExecuted": false,
+  "fullWp12Accepted": false,
+  "scopeLimit": "Native loads and refusals are observed on this product only. Empty Core catalog is an availability observation, not an inference proof. Do not transfer results to a later product tree.",
+  "localProductTestsExecuted": false
+}

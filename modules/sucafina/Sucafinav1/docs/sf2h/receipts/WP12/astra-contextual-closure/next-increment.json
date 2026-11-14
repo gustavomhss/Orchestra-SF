@@ -1,0 +1,376 @@
+{
+  "schema": "wp12-next-increment-map-v3",
+  "published_base": {
+    "name": "W20",
+    "sha": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "tree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e",
+    "parent": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+    "check_status": "PASS",
+    "check_snapshot": "71894701b187aaca938bfe97a8b6c6b8508de4ab",
+    "check_run": 43603981195,
+    "check_job": 132474528320,
+    "check_snapshot_tree": "5070d3b096c7b997d065a6d6a7257eb04f84fbbd",
+    "mission_tests_status": "C10_DERIVED_ORIGIN_RUNTIME_PENDING; QUESTIONS_RETEST_FAILED_1_PASS_2_FAIL; PROCUREMENT_RETEST_IN_PROGRESS; W16_BI_EXECUTIVE_FAILED_1_PASS_1_FAIL_RETAINS_W16_SHA",
+    "last_completed_check": {
+      "product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "run_id": 43603981195,
+      "job_id": 132474528320,
+      "result": "PASS"
+    },
+    "metadata_source": "Root W20 WP12 publication/preparation-15.json:one exact C10 owner blob,zero own source changes,six own docs,339 foreign pins. This is distinct from the source owner WP10 W20."
+  },
+  "rule": "Published source, a completed hosted check, an in-flight product request and a frozen future test remain separate states. No source count is native execution.",
+  "published_W15": {
+    "product": {
+      "name": "W15",
+      "sha": "aebf95b980c461b6330d030ac5f4991ee96d8f88",
+      "tree": "964c6bb84a7002c58660ba27d3a574517990b0ed",
+      "check_run": 43600168125,
+      "check_job": 132463010548,
+      "check_status": "FAIL_ONE_OWN_TYPE_DIAGNOSTIC",
+      "product_tests_status": "NOT_DISPATCHED_TYPE_ONLY_FIX_BEFORE_W16"
+    },
+    "preparation_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-10.json",
+    "own_code_count": 13,
+    "foreign_change_count": 1,
+    "foreign_effective_count": 338,
+    "implemented_deltas": [
+      "Intent exact AM02 source freshness/unassigned question",
+      "focused C06 question and human/native consumer paths",
+      "scenario/portfolio/purchase hypothetical total assertions",
+      "Procurement projector delegation and source evidence checks",
+      "Maestro BI profile without equivalent Finance rerun",
+      "extractor allowlist scope correction",
+      "executive phase markers and bounded raw export sources"
+    ],
+    "runtime": "W16 Procurement ended0pass4fail at documented later gates; the remaining distinct flights retain their own source SHAs and outcomes. W15 typecheck failed before its type-only correction."
+  },
+  "published_W16": {
+    "product": {
+      "name": "W16",
+      "sha": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "tree": "f875b3a78ee8123c959bad5c7c5d4c9fb4f978df",
+      "check_run": 43600551809,
+      "check_job": 132464148364,
+      "check_snapshot": "b44a28cace5e9cff526718abf2eaa4d3b06b12b1",
+      "check_snapshot_tree": "47cbdb2f15d5bee571f13fd93dd374f68649e750",
+      "check_status": "PASS",
+      "mission_tests_status": "PROCUREMENT_FAILED_0_PASS_4_FAIL; INTENT_QUESTIONS_FAILED_1_PASS_3_FAIL; BI_EXECUTIVE_FAILED_1_PASS_1_FAIL",
+      "mission_runs": [
+        {
+          "scope": "procurement",
+          "run_id": 43600564160,
+          "job_id": 132464186609,
+          "status": "COMPLETED",
+          "result": "FAIL"
+        },
+        {
+          "scope": "intent-questions",
+          "run_id": 43601851442,
+          "snapshot": "1878f1a513c99d95d4640faa042fa10ead947884",
+          "status": "COMPLETED",
+          "result": "FAIL"
+        },
+        {
+          "scope": "bi-executive",
+          "run_id": 43602247803,
+          "job_id": 132469301705,
+          "status": "COMPLETED",
+          "result": "FAIL"
+        }
+      ],
+      "metadata_source": "Root published W15 and W16; preparation-10, foreign-pins-10, intent-typefix-11 and run-11-checks. No mission result inferred from check success."
+    },
+    "type_fix_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/intent-typefix-11.json",
+    "validation": "w16-validation.json",
+    "emitted_javascript_unchanged": true
+  },
+  "published_W17": {
+    "product": {
+      "name": "W17",
+      "sha": "7fe43d5b12f27f714a2c3208f49568c1013ba7fa",
+      "tree": "646e1fa06eaf8b5081c72c12c29d514e6240dfe1",
+      "parent": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "check_status": "COVERED_BY_W18_C18_CHECK_PASS",
+      "mission_tests_status": "CANCELLATION_BOUNDARIES_EXECUTED_AT_W18",
+      "metadata_source": "Root publication and preparation-12.json; W18 check and exact cancellation selection cover these unchanged W17 bytes. No separate W17 run is invented."
+    },
+    "preparation_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-12.json",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+        "blob": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+        "sha256": "24e3adae61412737721c26b7115af965236d34a183ba9b1c0a6f7f7bb997ff79",
+        "bytes": 33852
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+        "blob": "d12d8702f5914c94475b3ad1205718ecf1899fe9",
+        "sha256": "4bcc5ae386a1700e7ce987777d6e102441cf8cbb1d351e31a3f178d9bc183731",
+        "bytes": 52814
+      }
+    ],
+    "scope": [
+      "Retain command identity, original observed run and clone, and every cancellation/interrupt scope through all asynchronous boundaries.",
+      "Add two real C08/SQLite component counterproofs with explicit unavailable native interrupt; preserve all22 previous run-store tests and every implementation byte outside cancelSfAnalysis."
+    ],
+    "check": "W18_PASS",
+    "component_tests": "W18_EXACT_CANCELLATION_PROGRESS_PASS",
+    "review_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/cancellation-review-12.json"
+  },
+  "published_W18": {
+    "product": {
+      "name": "W18",
+      "sha": "e8ae326420eae2d51247fcab5730e82e5d3b8d39",
+      "tree": "4475ca36282141b4ec00212736fd9831cfc5f0e2",
+      "parent": "7fe43d5b12f27f714a2c3208f49568c1013ba7fa",
+      "check_snapshot": "804421e364d1392ead32c954f9d87adc38b9f027",
+      "check_run": 43601239454,
+      "check_job": 132466234270,
+      "check_status": "PASS",
+      "mission_tests_status": "CANCELLATION_VERIFIER_9_PASS_0_FAIL; DISTINCT_W16_MISSIONS_RETAIN_ORIGINAL_SHAS",
+      "boundary_run": 43601627208,
+      "boundary_job": 132467402304,
+      "boundary_snapshot": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+      "metadata_source": "Root W18 publication and preparation-13.json. One new domain-verifier test and five docs; check covers W17 cancellation plus W18, with no duplicated C17 check."
+    },
+    "preparation_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-13.json",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-verifier-negatives.test.ts",
+        "blob": "7656809cc7e610d6427cb5df64355d29ecee30a6",
+        "sha256": "72a90a73eddac162a5b5e347c139bec6beb3df6c05336bead869f73dbd60cd7c",
+        "bytes": 18104
+      }
+    ],
+    "verifier_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/verifier-negatives-13.json",
+    "check": "PASS",
+    "product_tests": "NINE_BOUNDARY_CASES_PASS_ZERO_INFERENCE"
+  },
+  "published_W19": {
+    "product": {
+      "name": "W19",
+      "sha": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+      "tree": "33edf29551a88ca93f8258e913f3ce127bfc88d4",
+      "parent": "e8ae326420eae2d51247fcab5730e82e5d3b8d39",
+      "check_status": "PASS",
+      "check_snapshot": "fa0a52716877dd513e32d59a43c9652b50fe2821",
+      "check_run": 43602925189,
+      "check_job": 132471348121,
+      "mission_tests_status": "OWN_UI_SELECTION_FIXES_PUBLISHED_NOT_RUN_AT_W19; W16_BI_EXECUTIVE_FAILURE_RETAINS_W16_SHA",
+      "last_completed_check": {
+        "product": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+        "run_id": 43602925189,
+        "job_id": 132471348121,
+        "result": "PASS"
+      },
+      "metadata_source": "Root W19 publication/preparation-14.json:13 own sources,17 own docs, zero foreign deltas;338 foreign pins. Prior CI retains its original SHA."
+    },
+    "preparation_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-14.json",
+    "own_source_changes": 13,
+    "own_document_changes": 17,
+    "foreign_changes": 0,
+    "foreign_pin_count": 338,
+    "check": "PASS_C19",
+    "check_file": "w19-validation.json",
+    "product_missions": "NO_W19_FLIGHT; EXACT_RETAINED_OWN_BYTES_OBSERVED_WITH_W20_DEPENDENCIES_AT_W20",
+    "changes": [
+      "Actual UI dispatcher consumes its authorization exactly once",
+      "Current-project/contract observation period remains distinct from2027 financial horizon",
+      "Public Procurement selection renewed before human choice steps with unchanged TTL/deadline",
+      "No renewal on error probes; original error preserved"
+    ]
+  },
+  "published_W20": {
+    "product": {
+      "name": "W20",
+      "sha": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "tree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e",
+      "parent": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+      "check_status": "PASS",
+      "check_snapshot": "71894701b187aaca938bfe97a8b6c6b8508de4ab",
+      "check_run": 43603981195,
+      "check_job": 132474528320,
+      "check_snapshot_tree": "5070d3b096c7b997d065a6d6a7257eb04f84fbbd",
+      "mission_tests_status": "C10_DERIVED_ORIGIN_RUNTIME_PENDING; QUESTIONS_RETEST_FAILED_1_PASS_2_FAIL; PROCUREMENT_RETEST_IN_PROGRESS; W16_BI_EXECUTIVE_FAILED_1_PASS_1_FAIL_RETAINS_W16_SHA",
+      "last_completed_check": {
+        "product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+        "run_id": 43603981195,
+        "job_id": 132474528320,
+        "result": "PASS"
+      },
+      "metadata_source": "Root W20 WP12 publication/preparation-15.json:one exact C10 owner blob,zero own source changes,six own docs,339 foreign pins. This is distinct from the source owner WP10 W20."
+    },
+    "preparation_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-15.json",
+    "own_source_changes": 0,
+    "own_document_changes": 6,
+    "foreign_changes": 1,
+    "foreign_pin_count": 339,
+    "source_files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+        "bytes": 11922,
+        "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+        "sha256": "0cca19827cfe6793207441d493561d76830d6903383701b9d84230380561a701"
+      }
+    ],
+    "check": "PASS_C20",
+    "check_file": "w20-validation.json",
+    "runtime": "PENDING",
+    "owner_source_review": "owner-c10-source-review.json"
+  },
+  "frozen_owned_changes": [],
+  "new_verifier_boundaries": {
+    "criterion": "WP12.T03.CHK.02",
+    "c08_scope": "Only selected case plus contributions/nativeRuns; not every namespace or storageVersion.",
+    "publication_scope": "Real domain/schema negatives do not by themselves prove an adversarial native completion reaching the private installed publisher."
+  },
+  "serial_product_requests": {
+    "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/surgical-selections-11.json",
+    "product": {
+      "name": "W16",
+      "sha": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "tree": "f875b3a78ee8123c959bad5c7c5d4c9fb4f978df",
+      "check_run": 43600551809,
+      "check_job": 132464148364,
+      "check_snapshot": "b44a28cace5e9cff526718abf2eaa4d3b06b12b1",
+      "check_snapshot_tree": "47cbdb2f15d5bee571f13fd93dd374f68649e750",
+      "check_status": "PASS",
+      "mission_tests_status": "PROCUREMENT_FAILED_0_PASS_4_FAIL; INTENT_QUESTIONS_FAILED_1_PASS_3_FAIL; BI_EXECUTIVE_FAILED_1_PASS_1_FAIL",
+      "mission_runs": [
+        {
+          "scope": "procurement",
+          "run_id": 43600564160,
+          "job_id": 132464186609,
+          "status": "COMPLETED",
+          "result": "FAIL"
+        },
+        {
+          "scope": "intent-questions",
+          "run_id": 43601851442,
+          "snapshot": "1878f1a513c99d95d4640faa042fa10ead947884",
+          "status": "COMPLETED",
+          "result": "FAIL"
+        },
+        {
+          "scope": "bi-executive",
+          "run_id": 43602247803,
+          "job_id": 132469301705,
+          "status": "COMPLETED",
+          "result": "FAIL"
+        }
+      ],
+      "metadata_source": "Root published W15 and W16; preparation-10, foreign-pins-10, intent-typefix-11 and run-11-checks. No mission result inferred from check success."
+    },
+    "scopes": [
+      "procurement",
+      "intent-questions",
+      "bi-executive",
+      "portfolio",
+      "scenarios"
+    ],
+    "completed_procurement": {
+      "run_id": 43600564160,
+      "state": "COMPLETED",
+      "result": "FAIL_0_PASS_4_FAIL"
+    },
+    "completed_questions": {
+      "run_id": 43601851442,
+      "snapshot": "1878f1a513c99d95d4640faa042fa10ead947884",
+      "state": "COMPLETED",
+      "result": "FAIL_1_PASS_3_FAIL"
+    },
+    "completed_bi_executive": {
+      "run_id": 43602247803,
+      "job_id": 132469301705,
+      "snapshot": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+      "state": "COMPLETED",
+      "result": "FAIL_1_PASS_1_FAIL",
+      "receipt": "w16-bi-executive-results.json",
+      "scope": "Maestro BI domain/reload PASS. Executive initial input/export observations precede the failed timeout; no executive reopen or native consumer."
+    },
+    "completed_questions_retest": {
+      "scope": "questions-retest",
+      "product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "run_id": 43604476634,
+      "job_id": 132476041608,
+      "snapshot": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+      "snapshot_tree": "f2a50e56effd6d7a9f767949bd340e01a8a7aecf",
+      "request_sha256": "126ebb9ab7e116751bd0a829b6ea0c51e8745c9efe11dcc8fa91cd5174cf46ff",
+      "state": "COMPLETED",
+      "result": "FAIL_1_PASS_2_FAIL",
+      "scope_rule": "Intent input/UI pass. Real endpoint emission and human thread/reply/partial reopen observed, but relation fence and answer reader failed. No native inference."
+    },
+    "active": {
+      "scope": "procurement-retest",
+      "product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "snapshot": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+      "snapshot_tree": "3f59c774e6161ff6eb0b4ecf485d2994c0144f8f",
+      "request_sha256": "85f0285957ca7c333bb1f101d69da7b93df7aef24f2793d832a2a5af5687dccf",
+      "state": "IN_PROGRESS",
+      "result": null
+    },
+    "other_scopes": "PORTFOLIO_SCENARIOS_REQUIRE_W19_UI_DISPATCH_FIX_AND_RELEVANT_C10_INTAKE; SEPARATE_SOURCE_PINS",
+    "equivalent_finance_bi_branch_excluded": true
+  },
+  "proposed_exact_foreign_intake": [],
+  "new_hosted_execution": true,
+  "already_published_W14": {
+    "preparation_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-09.json",
+    "security_reconciliation": {
+      "schema": "sf-wp12-selective-own-reconciliation-v1",
+      "baseProduct": "ede812eaf2644cde161f2360b2e4762d9c942146",
+      "sourceCommit": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+      "sourcePR": 36,
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+          "blob": "38ce273d8a953868fa3c1ea577f0ef18a433243d",
+          "sha256": "d98da8227b889ceabc491ae2805eadf35d3640659fee00f47c370324589ca1e6",
+          "bytes": 33498
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/continuation.ts",
+          "blob": "940a98787420b7f88e625d7f7e9aeee39373f215",
+          "sha256": "db4ea2b4f05f2a32615a75d2f323a49e3e7984963072f31a0106c8ec693615b9",
+          "bytes": 9965
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/continuation.test.ts",
+          "blob": "14c0349d5d425533c6132e7eec802bae35425644",
+          "sha256": "67d5c3e01717e762f1543176c4d748c81730363419da42c84f4dd81e00b9ceec",
+          "bytes": 14290
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+          "blob": "6bf1130c94bca4b3cd1377875492b8f910b4259a",
+          "sha256": "4c4e8eb054bf78148b90e5fd13617bf3c3605d57f83829481f5c5957a120293d",
+          "bytes": 33130
+        }
+      ],
+      "selection": [
+        "Only publishSfContribution function was reconciled; current run/read/final callback fences and all analysis.test cases retained.",
+        "Continuation adds the exact binding object identity to already pinned command/lease values, plus callback/admission isolation tests.",
+        "Publication tests add real C08/SQLite counterproofs for resealed commands at stale authorization/write return; stale metadata belongs to the original observed publication, never the changed candidate.",
+        "Contribution builder already exactly matches source e0f70be52df22cac36dbaa88aa1ca7404f4abecc and is not replaced."
+      ],
+      "validation": {
+        "staticSyntax": "PASS for four files; imports not evaluated",
+        "localProductTests": false,
+        "localTypecheck": false,
+        "hostedTests": "PENDING",
+        "hostedTypecheck": "PENDING",
+        "independentReview": "PENDING"
+      },
+      "scopeLimits": [
+        "Metadata lifecycle tests use explicit host authority and C08 storage; they do not prove installed host mounting of a separate metadata authority scope.",
+        "No provider inference or native consumer receipt is supplied by these lifecycle fixtures."
+      ],
+      "fullWp12Acceptance": false
+    },
+    "security_independent_review": "own-source-w6-review.json",
+    "validation": "w14-validation.json",
+    "mission_results": "w14-mission-results.json",
+    "scope": "New own PR36 security recovery, Sourcing AM02, import/source witnesses, document confirmation consumer and type corrections are published. Security and checks passed. Seven-file mission flight failed9pass5fail with exact Finance/BI input/domain observations, unavailable import, four issuer failures and executive timeout; no provider output executed."
+  }
+}

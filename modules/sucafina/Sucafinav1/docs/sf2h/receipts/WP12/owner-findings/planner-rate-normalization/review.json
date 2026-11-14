@@ -1,0 +1,435 @@
+{
+  "schema": "wp12-independent-planner-five-file-review-v1",
+  "reviewer": "compose_typecheck",
+  "date": "2026-11-14",
+  "status": "HOLD_NOT_APPLIED_NOT_RUN",
+  "decision": "The exact five-file candidate is not approved for intake because of F01. No production source has been changed or copied into the candidate tree by this review.",
+  "inspectedCurrentProduct": {
+    "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+    "tree": "6e81c0e51f3fa5fb9fef7d88456020e061ca2c7b"
+  },
+  "immutablePlan": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "before": "3a9eaaa0f52c22f68f6e889af66b970fb51197b9",
+      "blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/ec052c2c3bef96f492512f3d5f663919580f25c8/modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "readScope": "entire file",
+      "disposition": "BLOCKED_BY_F01"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/actual-presence.ts",
+      "before": null,
+      "blob": "c7497d7a71e90dd51ad362921e36d0de12fe431f",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/ec052c2c3bef96f492512f3d5f663919580f25c8/modules/sucafina/Sucafinav1/product/planner/actual-presence.ts",
+      "readScope": "entire file",
+      "disposition": "NO_ADDITIONAL_CONCRETE_BLOCK_FOUND_STATIC_ONLY"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "before": "e4a21957da6b91186ecae996a78664c54d7ce41a",
+      "blob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/ec052c2c3bef96f492512f3d5f663919580f25c8/modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "readScope": "entire file",
+      "disposition": "NO_ADDITIONAL_CONCRETE_BLOCK_FOUND_STATIC_ONLY"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+      "before": "52b09da8ee31f6681bdc2c29a69bc76755f9d232",
+      "blob": "dd92a35b3025a69c198a2d99c4ef38a472dd3bc7",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/ec052c2c3bef96f492512f3d5f663919580f25c8/modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+      "readScope": "entire file",
+      "disposition": "NO_ADDITIONAL_CONCRETE_BLOCK_FOUND_STATIC_ONLY"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/coverage.ts",
+      "before": "ac34d7405ec5b9f1c60b2aec9d78065738aca83c",
+      "blob": "de86e90c86aca626a575bf5b8dfdf6973fac8b1e",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/ec052c2c3bef96f492512f3d5f663919580f25c8/modules/sucafina/Sucafinav1/product/planner/coverage.ts",
+      "readScope": "entire file",
+      "disposition": "NO_ADDITIONAL_CONCRETE_BLOCK_FOUND_STATIC_ONLY"
+    }
+  ],
+  "findings": [
+    {
+      "id": "WP12-OWNER-PLANNER-NUMERIC-RATE-IDENTITY-01",
+      "status": "SOURCE_DERIVED_COUNTEREXAMPLE_NOT_EXECUTED",
+      "severity": "blocking-candidate-intake",
+      "affectedBlob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "title": "Raw numeric rateId can be discarded by the qualifier and incorrectly select an automatic rate",
+      "canonicalCriteria": [
+        "WP03.T01.INV.03",
+        "WP03.T01.INV.01",
+        "WP03.T01.CHK.04",
+        "WP03.T03.CHK.05"
+      ],
+      "mechanism": [
+        "runtime/planner.ts c487 versionOf maps both positions and rates through identified. identified converts numeric rateId to its string identity before calculated calls chosenRate.",
+        "port.ts 838 projectPlannerSource instead builds qualification.hc from rawHc and normalizes rates[].id only. rawHc.positions[].rateId remains numeric.",
+        "headcount-months.ts 7896 calls chosenRate with text(position.rateId). runtime/contract.ts b62 text returns an empty string for every non-string value.",
+        "chosenRate in planner-accounts.ts 6ca9 uses the explicit reference when nonempty and falls back to autoRate only when empty. The qualifier therefore changes the selection rule for numeric references.",
+        "fteInputsKnown stays true for the example: it verifies position identity, include and finite fte/start/end, but not rateId normalization. It does not block this path.",
+        "With a dangling numeric reference and a location-compatible card, the engine has no selected rate and contributes its legacy zero. The qualifier can choose the automatic card, find no missing-rate, and expose that same zero as a confirmed budget. A missing input becomes known zero."
+      ],
+      "illustrativeStoredVersion": {
+        "id": "numeric-rate-gap",
+        "name": "Numeric rate identity counterexample",
+        "year": 2027,
+        "closed": 0,
+        "lines": [],
+        "projects": [],
+        "fx": [],
+        "hc": {
+          "positions": [
+            {
+              "id": "position-1",
+              "name": "Position",
+              "domain": "IT",
+              "include": true,
+              "fte": 1,
+              "start": 1,
+              "end": 12,
+              "type": "Employee",
+              "location": "Brazil",
+              "rateId": 999
+            }
+          ],
+          "rates": [
+            {
+              "id": 1,
+              "name": "Brazil employee",
+              "locs": "Brazil",
+              "annual": 120000,
+              "cur": "USD"
+            }
+          ],
+          "inc": 0,
+          "incMonth": 1,
+          "hrAF": {}
+        }
+      },
+      "exampleScope": "An illustrative stored Planner version for a source-level counterexample. It has not been inserted into a store or executed. Numeric identity normalization is explicitly supported by the existing runtime; no principal, binding, receipt, projection or result has been fabricated.",
+      "staticTrace": {
+        "canonicalRuntime": {
+          "normalizedPositionRateId": "999",
+          "normalizedCardId": "1",
+          "chosenRate": null,
+          "hasRate": false,
+          "domainMonthlyBudget": 0,
+          "domainOutlook": 0
+        },
+        "proposedQualifier": {
+          "rawPositionRateId": 999,
+          "rateIdAfterText": "",
+          "autoRateCardId": "1",
+          "budgetMissing": [],
+          "budgetUsd": 0,
+          "outlookSource": "budget",
+          "outlookUsd": 0
+        },
+        "affectedPublishedValues": [
+          {
+            "id": "HR:IT:1:budget",
+            "incorrectState": "confirmed",
+            "incorrectValue": 0
+          },
+          {
+            "id": "HR:IT:1:budget-usd",
+            "incorrectState": "confirmed",
+            "incorrectValue": 0
+          },
+          {
+            "id": "month:1:hr-budget",
+            "incorrectState": "confirmed",
+            "incorrectValue": 0
+          }
+        ],
+        "expectedQualification": "The explicit dangling identity must remain unresolved. Budget and inherited outlook remain null/absent with missing-rate; the legacy computed zero may remain in the underlying domain view and must not be changed.",
+        "notClaimed": "This trace does not claim that complete C10 or a persisted complete ScenarioResult is reached; the false confirmed budget cell is independently sufficient to reject the candidate."
+      },
+      "minimumOwnerCorrection": [
+        "Publish a whole producer file that preserves the same canonical identity normalization used by versionOf/identified before the private HR qualification. An explicit numeric rateId must never become an absent selector and trigger autoRate.",
+        "Keep raw presence checks separate from normalized identity lookup; retain aggregate-only egress, individual-data redaction, real domain formulas, role/lock rules and every current readPair/source/coverage/authority fence.",
+        "Include a focused hosted counterproof for a dangling numeric rateId with an auto-compatible card, plus controls for the same dangling string reference, a valid numeric reference, explicit known zero and independent actual/forecast. Exercise finance and viewer aggregate privacy without exposing raw rates.",
+        "Supply the exact commit/blob and GitHub Actions result. WP12 will review and consume that published file, never synthesize a foreign hunk combination."
+      ],
+      "noPolicyAmendmentRequested": true
+    }
+  ],
+  "completedReview": {
+    "entireFiveFiles": true,
+    "authorityAndVisibility": {
+      "classification": "The proposed aggregate visibility is consistent with the current domain policy. F01 is a qualification defect, not a reason to alter the policy.",
+      "evidence": [
+        "runtime c487 privateAccess permits admin/hr/finance. The same roles govern the new source projector; plannerKeys and authenticated principal mapping remain in place.",
+        "The unchanged domain.view computes synthetic HR domain aggregates before recursive redaction. Its non-private view removes individual salary/cost/override/rates/rateId/increase and position annual/months/total/budget fields, while retaining the permitted domain-level summary aggregates.",
+        "port838 narrows already-redacted hc.positions and summary.positions to the same public position allowlist used by current projectHeadcount. Raw rate inputs are used only in a local qualification object. hrMonthStates returns bounded aggregate values and missing-state codes, not cards, rates, individual costs or overrides.",
+        "restrictedHr:false is not substituted for host authority: projectPlannerSource still requires Planner visibility; caller authentication, principal identity, role-map selector, source identity and host revalidation remain required. No inspected trusted policy producer uses a raw version restrictedHr property as a separate grant.",
+        "The canonical plan expressly permits reconciliable aggregates for owner/viewer while prohibiting individual rates/costs. That permission does not excuse F01's false known-zero classification."
+      ],
+      "limitation": "This is a source review. No dynamic privacy, mutation, role or denial test was run."
+    },
+    "actorAndSourceIdentity": {
+      "plannerSourceActor": "The extracted mapping retains the prior principal equality and local-principal refusal, Planner-only roles, viewer canWrite restriction, and assigned/domain values from the authenticated principal's current access record.",
+      "issuer": "Current source issuer ba502 and Planner source host 8a320 derive a selector from the same roles/canWrite/role-map digest. The exact current scope projector c28a1675 rehydrates assigned/domains from the same snapshot before calling projectPlannerSource.",
+      "fieldsAndDigest": "Current Planner source host emits Object.keys(current.projection) and the digest of {versionId,projection}; compareForecast checks the same sorted key set and complete projection digest. New qualification fields are therefore included on both sides; no fixed field-list mismatch was found.",
+      "scopedVersioning": "Current source-lifecycle d0cab7f3 recomputes the selected projection under authorization before and after observation, compares callback mutation, and increments scope version when inputDigest changes. Changed producer output must invalidate old current selectors; this review does not authorize rewriting old digests.",
+      "subsetCaution": "Two local read-only files differed from W25 (source-projections 4e0f vs c28a; source-lifecycle 6586 vs d0ca). Full exact W25 files were fetched by GitHub MCP and used for this review. Their relevant Planner paths preserve the identity behavior described here."
+    },
+    "scenarioAndFinancialSemantics": {
+      "domainAuthority": "scenario dd92 keeps domain.execute on an isolated clone and adds only the optional post-command projector. No engine or planner-role formula, write policy, closed-month rule, FX rule, official-version rule or identity policy is edited by the five-file proposal.",
+      "actualPresence": "actual-presence c749 reads the existing engine total, finite raw actual cells and current FX warnings; it qualifies explicit zero versus absence without supplying a replacement formula.",
+      "knownDifference": "The proposed port can report a numerical knownDifference when every outlook component is quantifiable despite an independently missing budget disclosure. It still emits the disclosure and keeps completeDifference null unless exact current C10 plus no missing fields and confirmed components satisfy plannerCoverageComplete. This does not repair F01.",
+      "hypothetical": "Any operation or assumption retains total null, preview identity, scenario-is-hypothetical and preview-not-applied. fc15 qualifies only the real isolated post-command copy, restores absence for untouched null cells, preserves other-month disclosures, and includes a defer destination in the changed set.",
+      "sourceObservation": "Only empty operations and assumptions may become source-scenario. Complete output additionally requires finite known subtotal, a complete real comparison, complete current coverage and plannerCoverageComplete; latest source/coverage/authority are checked again. This does not apply a human choice.",
+      "coverage": "coverage de86 adds installation/project/surface and unique component-ID checks while preserving source identity, category inventory, no derived omissions/issues/missing fields, evidence refs, finite confirmed amounts and currency/horizon requirements.",
+      "replacementRecheck": "The changed replacement comparison ignores only observation timestamp. Amount, currency, period, source identity and evidence remain in the digest; separate current evidence and authority rechecks remain.",
+      "persistence": "Current C09 mutator e084 always obtains real coverage entries/proof even when the assessment value matches. Mounted coverage d8a668 verifies the canonical result/basis/fences at commit; C10 09097 preserves a complete observed result only when reassessment is complete and preserves true derived omissions. No prefix/version requirement rejecting source-scenario was found in the inspected persistence/consumer path."
+    },
+    "revalidation": {
+      "readPair": "Identical selectors share one observed source/coverage result within each compare stage, with independent cloned return objects. Later stages still read again. Different selectors remain independently observed.",
+      "retainedChecks": [
+        "parsed request cloned before callbacks",
+        "initial host revalidation",
+        "authenticated principal on each domain read",
+        "exact selected evidence scope/ref digest",
+        "projection key-set and full digest",
+        "final domain projection reread",
+        "source identity refresh",
+        "coverage refresh",
+        "final host authority checks",
+        "assumption confirmation replay",
+        "replacement replay",
+        "fresh evidence egress",
+        "additional source-only source/coverage/abort rechecks"
+      ],
+      "limit": "No latency improvement, expiry closure or revocation execution is claimed from this static review."
+    },
+    "importAndSignatureClosure": {
+      "newRuntimeModule": "Only actual-presence is a newly required production module for the five files. decodeSfOperationInput, headcount-months, runtime contract and accounts dependencies already exist at the pinned compatible signatures.",
+      "requiredCallback": "scenario-port now requires qualify; createPlannerPort in the same selected port supplies buildPlannerFinancialProjection. The import back to port is type-only and creates no runtime cycle.",
+      "optionalCallback": "simulatePlannerOperations keeps existing five-argument callers valid and optionally returns the projected isolated copy.",
+      "limit": "No additional concrete interface blocker was found in the inspected product/caller set. The hosted full-package typecheck remains required after any accepted owner publication."
+    }
+  },
+  "ownMissionImpact": {
+    "status": "NOT_IMPLEMENTED",
+    "helpers": [
+      {
+        "path": "test/product/wp12/native-scenario-preparation.ts",
+        "blob": "3f02a1ad9ee2985b4094690bd32c16e22a0dda75",
+        "effect": "Its three empty scenarios no longer all have hypothetical semantics. Complete baseline/resolved observations and true omitted-category pending must be reconciled deliberately."
+      },
+      {
+        "path": "test/product/wp12/native-question-preparation.ts",
+        "blob": "c3c2efe6004c513370ab04077f7d2c79a704d9c6",
+        "effect": "Human pending stays pending, but an empty observation no longer has preview restrictions. Do not change human pending to derived omission."
+      },
+      {
+        "path": "test/product/wp12/native-procurement-preparation.ts",
+        "blob": "78331ae620b34f0fa1c5923a8b769415c5bdaaff",
+        "effect": "Purchase baseline and default document alternatives are empty; genuine chosen operations retain hypothetical semantics. Defaults and selected operation identity require an intentional own change."
+      },
+      {
+        "path": "test/product/wp12/native-portfolio-preparation.ts",
+        "blob": "02977fd1ec3c58b52269d1f261abe523bf60bfee",
+        "effect": "Only the empty baseline becomes an observation; genuine operation variants remain hypothetical. Preserve numeric/component/scope discriminants."
+      }
+    ],
+    "reconciliationCondition": "After an acceptable whole owner file is published, a legitimate explicit same-value selected forecast operation may preserve a hypothetical mission. Derive its target/value from the real current source, prove numeric/source conservation and exact addressed evidence states, preserve all deadlines and add a separate real source-only control. No expectation is to be relaxed solely because the producer changed.",
+    "history": "Old source/result digests are immutable. A changed projection producer can make current/replay reads stale; existing archived compatibility has not been proved. The January-vs-annual Executive historical finding remains separate."
+  },
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "blob": "c487332777d4053be7a2b177ea598efb77ca0d66",
+      "commit": "5c148a16b76f98dfe194823c0e10ed2ef7685a69",
+      "functions": [
+        "identified",
+        "versionOf",
+        "calculated",
+        "redact",
+        "domain.view",
+        "domain.execute"
+      ],
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/5c148a16b76f98dfe194823c0e10ed2ef7685a69/modules/sucafina/Sucafinav1/runtime/planner.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "blob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "commit": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+      "functions": [
+        "text",
+        "object",
+        "rows"
+      ],
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2ef423f09e0297fd9edb3c3e3f703d00410033bd/modules/sucafina/Sucafinav1/runtime/contract.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/planner-accounts.ts",
+      "blob": "6ca9b19e8b54e3279c2c16667e92ad7df748b3ea",
+      "commit": "5c148a16b76f98dfe194823c0e10ed2ef7685a69",
+      "functions": [
+        "chosenRate",
+        "autoRate",
+        "hrMonth",
+        "syntheticHr",
+        "usdAmount",
+        "outlookMonth"
+      ],
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/5c148a16b76f98dfe194823c0e10ed2ef7685a69/modules/sucafina/Sucafinav1/src/planner-accounts.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/planner-role.ts",
+      "blob": "15ff3391a6bde761e0c176b37d88ec3dd000e72d",
+      "commit": "5c148a16b76f98dfe194823c0e10ed2ef7685a69",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/5c148a16b76f98dfe194823c0e10ed2ef7685a69/modules/sucafina/Sucafinav1/src/planner-role.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/headcount-months.ts",
+      "blob": "789615d49e519c742cef9c55d36362ec413a9fbe",
+      "commit": "5c148a16b76f98dfe194823c0e10ed2ef7685a69",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/5c148a16b76f98dfe194823c0e10ed2ef7685a69/modules/sucafina/Sucafinav1/product/planner/headcount-months.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/headcount.ts",
+      "blob": "7c6b2f0b03c29dddc743537f0e8964799155ae57",
+      "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/modules/sucafina/Sucafinav1/product/planner/headcount.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/nav.ts",
+      "blob": "12c7c92b109f1653e9bc9db79566a2e380868827",
+      "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/modules/sucafina/Sucafinav1/src/nav.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/source-issuer.ts",
+      "blob": "ba5023491e7aa7e2591e25e4f17f06f4292c77d4",
+      "commit": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2ef423f09e0297fd9edb3c3e3f703d00410033bd/modules/sucafina/Sucafinav1/product/planner/source-issuer.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "blob": "8a3201272fddf48b25d137886dcdd290e2d2db3e",
+      "commit": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2ef423f09e0297fd9edb3c3e3f703d00410033bd/modules/sucafina/Sucafinav1/product/integration/planner-sources.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "blob": "c28a167575bf2713590f97798e463ccb33dc50c8",
+      "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "blob": "d0cab7f33b08806a6bb01a869fa789dc77e087ee",
+      "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "blob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+      "commit": "5c148a16b76f98dfe194823c0e10ed2ef7685a69",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/5c148a16b76f98dfe194823c0e10ed2ef7685a69/modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "blob": "e0840d775274ea73c6b938711764c69593dadca0",
+      "commit": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2ef423f09e0297fd9edb3c3e3f703d00410033bd/modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "blob": "d8a668281ea9cac6a3a04c6bea19811ee8954808",
+      "commit": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2ef423f09e0297fd9edb3c3e3f703d00410033bd/apps/cli/src/sucafina-product/portfolio-coverage.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "commit": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2ef423f09e0297fd9edb3c3e3f703d00410033bd/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+      "commit": "5c148a16b76f98dfe194823c0e10ed2ef7685a69",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/5c148a16b76f98dfe194823c0e10ed2ef7685a69/modules/sucafina/Sucafinav1/product/planner/persistence.ts"
+    }
+  ],
+  "sourceTestsRead": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/port-hr.test.ts",
+      "blob": "68d049f957257e089810ae0f9be230a157dba70c",
+      "scope": "Aggregate privacy and per-month independent HR qualification; does not include the numeric dangling rateId counterexample."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "blob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+      "scope": "Post-command absent/zero/FX/HR, untouched months, deferral, readPair/final revocation; source inspection only."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "blob": "46b31d8a8d9038f74c0d0b825078ecc8229fe6d4",
+      "scope": "Observed result versus hypothetical boundary and persistence semantics; constructed boundary sources are not installed/native execution proof."
+    }
+  ],
+  "previousBoundedReviews": [
+    {
+      "file": "independent-zero-op-review-compose.json",
+      "sha256": "55dbc27528baa708c133342217cfcb0807197dea1e05d73ed4dce2d663e0efd5",
+      "scope": "Historical intermediate9ef C09/C10 slice only, not superseded into a full approval."
+    },
+    {
+      "file": "independent-origin-addendum-compose.json",
+      "sha256": "c962d469f00b92d748b861cd57e4346c5cd40401d36e2608b4f4ef8270f28421",
+      "scope": "Historical two-hunk 9ef to fc15 review only."
+    }
+  ],
+  "alternativePublicationSearch": {
+    "status": "NO_COMPATIBLE_READPAIR_WHOLE_FILE_IN_INSPECTED_ORIGIN_HISTORY",
+    "latestOrigin": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "scope": "Four readPair-bearing commits in the 14-entry port.ts history reported for the PR35 origin; three distinct whole blobs. The three projectPlannerSource implementations have the same rawHc qualification and lack numeric position rateId normalization.",
+    "wholeBlobs": [
+      {
+        "commit": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+        "blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+        "alsoAtOrigin": "ec052c2c3bef96f492512f3d5f663919580f25c8"
+      },
+      {
+        "commit": "c52f7eed38cefd58962251a8d27a41777af18f6d",
+        "blob": "e365ac59376482dfcc6f81aed045b0153f911038",
+        "alsoCommit": "9913b0c622aa09da7914f231bd9f2ff54d872634"
+      },
+      {
+        "commit": "df29a62e5ede5b9ff9344b4f5b51eba4102e2093",
+        "blob": "8c922385eaeba66ba5b302a8387b627ca607f495"
+      }
+    ],
+    "evidence": "Full bytes of the two older distinct ports were fetched independently through GitHub MCP into independent-readpair-history-sources.json; current838 is in origin-source-bytes.json. All three exact projector preambles were inspected.",
+    "limit": "This is a bounded ancestry search, not a claim about every repository branch. No synthetic foreign hunk combination, runtime snapshot or policy change is proposed."
+  },
+  "method": {
+    "githubMcpOnly": true,
+    "hashesCompared": true,
+    "staticSourceReview": true,
+    "foreignSourcesApplied": false,
+    "ownProductChanged": false,
+    "localProductImports": false,
+    "localProductTests": false,
+    "localTypecheck": false,
+    "ciTriggered": false,
+    "runtimeCounterexampleExecuted": false
+  },
+  "requiredNextAction": "Keep intake and dependent mission rerun on hold. Send F01 to the Planner owner, obtain a whole compatible published fix and a hosted counterproof, then complete the exact package check and scoped consumer validation. Missing provider/native evidence remains separate."
+}

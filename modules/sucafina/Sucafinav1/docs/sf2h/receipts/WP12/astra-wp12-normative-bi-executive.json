@@ -1,0 +1,281 @@
+{
+  "schema": "sf-wp12-static-witness-audit-v1",
+  "status": "own-witness-reporting-corrected; normative-native-witness-not-established",
+  "sourceCommit": "ede812eaf2644cde161f2360b2e4762d9c942146",
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "pointer": "/resident_ui_consumption/skills",
+    "requiredOperations": {
+      "sf-produzir-bi-contextual": [
+        "sf_bi_view",
+        "sf_kpi_explain",
+        "sf_source_get",
+        "sf_dashboard_read"
+      ],
+      "sf-preparar-revisao-executiva": [
+        "sf_review_prepare",
+        "sf_case_read",
+        "sf_source_get",
+        "sf_routine_catalog",
+        "sf_routine_prepare",
+        "sf_routine_run",
+        "sf_routine_status",
+        "sf_routine_result"
+      ],
+      "sf-produzir-material-reuniao": [
+        "sf_review_prepare",
+        "sf_report_prepare",
+        "sf_artifact_get"
+      ]
+    },
+    "callRoutesPointer": "/resident_ai/operation_call_routes",
+    "callRoutes": [
+      {
+        "operation_id": "sf_dashboard_read",
+        "profile_id": "sf_maestro",
+        "skill_id": "sf-produzir-bi-contextual",
+        "entry_mode": "interactive",
+        "requires_current_c07_admission": false
+      },
+      {
+        "operation_id": "sf_bi_view",
+        "profile_id": "sf_finance",
+        "skill_id": "sf-produzir-bi-contextual",
+        "entry_mode": "interactive",
+        "requires_current_c07_admission": false
+      },
+      {
+        "operation_id": "sf_source_get",
+        "profile_id": "sf_maestro",
+        "skill_id": "sf-preparar-revisao-executiva",
+        "entry_mode": "interactive",
+        "requires_current_c07_admission": false
+      },
+      {
+        "operation_id": "sf_work_list",
+        "profile_id": "sf_maestro",
+        "skill_id": "sf-preparar-revisao-executiva",
+        "entry_mode": "interactive",
+        "requires_current_c07_admission": false
+      },
+      {
+        "operation_id": "sf_review_prepare",
+        "profile_id": "sf_maestro",
+        "skill_id": "sf-preparar-revisao-executiva",
+        "entry_mode": "interactive",
+        "requires_current_c07_admission": false
+      },
+      {
+        "operation_id": "sf_report_prepare",
+        "profile_id": "sf_maestro",
+        "skill_id": "sf-preparar-revisao-executiva",
+        "entry_mode": "interactive",
+        "requires_current_c07_admission": false
+      },
+      {
+        "operation_id": "sf_artifact_get",
+        "profile_id": "sf_maestro",
+        "skill_id": "sf-preparar-revisao-executiva",
+        "entry_mode": "interactive",
+        "requires_current_c07_admission": false
+      },
+      {
+        "operation_id": "sf_routine_catalog",
+        "profile_id": "sf_maestro",
+        "skill_id": "sf-preparar-revisao-executiva",
+        "entry_mode": "interactive",
+        "requires_current_c07_admission": false
+      },
+      {
+        "operation_id": "sf_routine_prepare",
+        "profile_id": "sf_maestro",
+        "skill_id": "sf-preparar-revisao-executiva",
+        "entry_mode": "interactive",
+        "requires_current_c07_admission": false
+      },
+      {
+        "operation_id": "sf_routine_run",
+        "profile_id": "sf_maestro",
+        "skill_id": "sf-preparar-revisao-executiva",
+        "entry_mode": "interactive",
+        "requires_current_c07_admission": true
+      },
+      {
+        "operation_id": "sf_routine_status",
+        "profile_id": "sf_maestro",
+        "skill_id": "sf-preparar-revisao-executiva",
+        "entry_mode": "interactive",
+        "requires_current_c07_admission": false
+      },
+      {
+        "operation_id": "sf_routine_result",
+        "profile_id": "sf_maestro",
+        "skill_id": "sf-preparar-revisao-executiva",
+        "entry_mode": "interactive",
+        "requires_current_c07_admission": false
+      }
+    ]
+  },
+  "ownChanges": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi.test.ts",
+      "baseBlob": "927d24805e18ae16149449d9f4ac4e8ef6816c2e",
+      "blob": "09485fec7126df97bc8947a3f81e744ff088f7ba",
+      "change": "Select the published Finance profile for AM02 sf_bi_view, assert the real SkillLoadReceipt profile/skill, and report exact route observation separately from the four normative skill operations. Preserve every BI08 milestone, artifact, HTTP, source-removal and reload assertion."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+      "baseBlob": "ee89ba17f024c7cfe886df767271dc4418f9d3b8",
+      "blob": "ddf29abc39c40ffe1c680b9acfb7ebd50e1664cf",
+      "change": "Require actual sf_source_get for the executive native contribution; report canonical required operations and all ten exact AM02 executive routes separately. Record the public preserved review without injecting its identity into the native request. Preserve C07 refusal, full ZIP inspection and durable consumers."
+    }
+  ],
+  "findings": [
+    {
+      "id": "WP12-NORM-BI-KPI",
+      "owner": "WP02/WP05 producer; WP00 shared input contract; WP12 driver consumes the published result",
+      "fact": "The current BI08 scenario selects Portfolio Dashboard/milestoneDates. The real Dashboard metric resolver accepts total-budget for Budget/Executive Dashboard, monthly operations for Executive Dashboard, and active-headcount for Executive Dashboard; it has no milestone metric. ContextualBIInput does not supply a KPI metric selector.",
+      "action": "Keep the milestone regression intact. Provide a public authorized KPI selector/discovery in the host-assembled input or native tool output, then use a genuine budget/performance BI scenario and require all four operations. Do not issue an irrelevant KPI request only to create a receipt.",
+      "implemented": false
+    },
+    {
+      "id": "WP12-NORM-BI-HANDLES",
+      "owner": "WP00 contract and WP10/WP05 composition",
+      "fact": "The real host reader has canonicalProjectionRefs/tableRef and the output verifier demands their exact values. The canonical input producer drops those handles; sf_bi_view returns DomainProjection. The driver reads private C08 artifacts only for assertions, never to feed the model.",
+      "action": "Publish the already-authorized immutable artifact handles through the canonical input or a documented native consumer result, with existing case/source/selection/ACL pins. WP12 can then consume them without reading private persistence or injecting IDs into the objective.",
+      "implemented": false
+    },
+    {
+      "id": "WP12-NORM-MEETING-SELECTION",
+      "owner": "WP00 contract and WP07/WP10 review composition",
+      "fact": "MeetingMaterialInput exposes preservedReviewRef and authorizedSections. PreservedReview stores no agenda selectionRef. sf_review_prepare calls preview(selectionRef), which resolves the transient agenda Map; the preserved review ID is not a valid agenda selection.",
+      "action": "Publish a supported authorized way to prepare the preserved review itself or expose a current validated review selection through the canonical producer. Preserve the original captured sources rather than silently selecting current values. Then require native sf_review_prepare alongside report/artifact consumption.",
+      "implemented": false
+    },
+    {
+      "id": "WP12-NORM-EXECUTIVE-C07",
+      "owner": "WP09 C07 adapter and WP10 host/input composition",
+      "fact": "The installed host does not supply SfRoutineNativePort or publish routine descriptors. Executive input production refuses includeRoutineResults; its verifier refuses factualRoutineResults, routinePreparation and admittedRun. The current factual review therefore cannot exercise the five required C07 operations.",
+      "action": "Consume a published real C07 adapter with governed Task admission and terminal receipts, mount its descriptors, and connect admitted preparation/results to executive input plus WP07 preservation. Retain current-admission checks and routine-result recursion refusal. WP12 must not replace this with a Session resume or a manufactured admission.",
+      "implemented": false
+    },
+    {
+      "id": "WP12-AM02-EXECUTIVE-REPORT-BINDING",
+      "owner": "WP00 shared input/output contract; WP07 preserved review/report producer; WP10 authorized input/verifier composition",
+      "canonicalRoutes": [
+        "/resident_ai/operation_call_routes/26",
+        "/resident_ai/operation_call_routes/27"
+      ],
+      "fact": "AM02 requires sf_report_prepare and sf_artifact_get under sf_maestro/sf-preparar-revisao-executiva. This driver obtains a genuine public reviewRef from review-preserve, but the exact six-field executive human selection and ExecutiveReviewInput carry only the agenda selection, sections, period, cases and confirmations. sf_review_prepare returns that agenda selection and source/gap data, never the preserved review identity. ReportPrepareRequest requires the preserved reviewRef. The current executive verifier also insists DecisionBrief.orderedResultRefs is empty. Calls made under sf-produzir-material-reuniao do not prove either executive route.",
+      "action": "Publish a governed binding of the already human-preserved review identity and captured sections/sources in the executive input or an authorized native discovery result. Define and verify the matching report-consumption linkage without silently repurposing C07 result fields or bypassing reviews.preserve authority. WP12 can then require native report/artifact receipts for this exact executive profile/skill and consume their actual outputs.",
+      "implemented": false,
+      "driverBehavior": "Keep the public reviewRef only in the genuine UI/meeting flow and evidence log. Do not insert it as an expected/private handle into the executive objective or substitute a fabricated input. Report each missing exact AM02 operation."
+    }
+  ],
+  "sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+      "role": "dashboard KPI selectors and supported metric/page pairs"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts",
+      "blob": "e86b1ca37f7b82d1618b6209cfb362a422e475a1",
+      "role": "sf_kpi_explain receipt-producing handler"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-bi.ts",
+      "blob": "a5cd14609db80287e6f122cfb199338df53a8b50",
+      "role": "actual ContextualBIInput producer omits artifact handles and metric selectors"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier-bi.ts",
+      "blob": "7fccb6aad336a780267d776bf06e7c2a4cc81457",
+      "role": "requires exact stored projection/table handles in ContextualBIProposal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+      "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db",
+      "role": "canonical BI, executive and meeting input shapes"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-executive.ts",
+      "blob": "39cd47fda0547ad74f7c2193b3a11d8e0f112c65",
+      "role": "rejects requested routine results and builds empty factual results"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-meeting.ts",
+      "blob": "672a24c3fd9e48bbef106720d63ee29225f8a9d3",
+      "role": "builds preserved-review input without agenda selection; rejects routine results"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier-routines.ts",
+      "blob": "9bab28aada4fd5ddfd0a437e81c183db30f2eced",
+      "role": "rejects factualRoutineResults, routinePreparation and admittedRun"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+      "blob": "fd79690c368087f48276e0cb21198f91f59d5e63",
+      "role": "sf_review_prepare calls reviews.preview(selectionRef)"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+      "blob": "1b93fd89a1f544808455c15d12f9c06cc18e21f3",
+      "role": "preview delegates to agenda; preserved review stores no agenda selector"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-services.ts",
+      "blob": "8b76b7591bf3ce0312108faafcda6b244a2d5e89",
+      "role": "real native port prerequisite for prepare/run/status/result"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "role": "installs routine services without native adapter and does not add routine descriptors"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/selection.ts",
+      "blob": "90e42fbf42c07b11d7a1546a3e828d2de5e970fd",
+      "role": "agenda selectionRef is an ephemeral authorized Map key"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_finance.json",
+      "blob": "3f6c6d59ef7374f7ede0c6f21f9c652ee8019e25",
+      "role": "Finance explicitly allows the shared BI skill and all consumed BI operations"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "role": "published reciprocal Finance/BI grants and AM02 exact profile/skill routes"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/capabilities.ts",
+      "blob": "87e36883d92f6982cc8765337f8802ffacd6e52c",
+      "role": "readBiView grants Finance and binds native receipts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "role": "ReportPrepareRequest requires preserved reviewRef; agenda ReviewPrepareRequest is a different identity"
+    }
+  ],
+  "validation": {
+    "staticTsTransform": "passed",
+    "emittedJavaScriptSyntaxCheck": "passed",
+    "newImports": [],
+    "sharedHelpersChanged": [],
+    "existingConsumerAssertionsPreserved": true,
+    "productTestsRunLocally": false,
+    "typecheckRunLocally": false,
+    "ciDispatched": false,
+    "remoteCommitCreated": false
+  },
+  "proofLimits": [
+    "No new native execution is claimed by this static increment.",
+    "A consumed native contribution with missing canonical operations remains an incomplete normative witness.",
+    "The earlier suspected DecisionBrief reload failure from an ephemeral agenda is withdrawn: durable installed output readers do not reexecute the executive input verifier.",
+    "C07 absence and empty model availability remain explicit; no provider, receipt, operation arguments or private artifact handle were fabricated.",
+    "The Finance BI route does not establish the separate AM02 sf_maestro/sf-produzir-bi-contextual/sf_dashboard_read route, and the meeting-material skill cannot establish any executive skill route."
+  ]
+}

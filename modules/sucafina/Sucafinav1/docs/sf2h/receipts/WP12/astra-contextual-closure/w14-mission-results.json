@@ -1,0 +1,980 @@
+{
+  "schema": "sf-wp12-hosted-product-result-v1",
+  "phase": "resume-09-inputs",
+  "product": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+  "productTree": "99def04f22a5e4c998baeef5a28f47be2aa1ca19",
+  "snapshot": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+  "snapshotTree": "ef79f930903b9a2cca8e1bf8cdd02e3b9f8cb3eb",
+  "runId": 43597537890,
+  "jobId": 132455165334,
+  "conclusion": "failure",
+  "cleanup": {
+    "jobId": 132458340938,
+    "conclusion": "success"
+  },
+  "summary": {
+    "passed": 9,
+    "failed": 5,
+    "total": 14,
+    "files": 7,
+    "expectCalls": 196,
+    "durationSeconds": 653.66,
+    "completedBunSummary": true
+  },
+  "omni": {
+    "conclusion": "pass",
+    "nonce": "89159e2657c9ecc1f105c8b520912ba1",
+    "scope": "focused: no declaring test ran",
+    "declaringTests": 0,
+    "spawns": 588,
+    "delegated": 0
+  },
+  "request": {
+    "sha256": "da06783804d5bb057b5eb17784073184579107b9d11abb8ddd506efd2e7c65d0",
+    "blob": "f177028984fad29508572d617deafc7b6878cac3",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+        "blob": "15f64ede1ffcfae7a9ba35592b9a4dbaf3442097"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+        "blob": "4424cea6540a61131741ea0a1cf7aaa5aa54e337"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+        "blob": "9d07048be0b79123ffb590b0c5b1ff808f0df10d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+        "blob": "9147d1550f34d066c55f1692dcceaf168cbe9ed6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+        "blob": "4c494e718a9a5097b48aeaed40c4c3f8223bd46c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi.test.ts",
+        "blob": "09485fec7126df97bc8947a3f81e744ff088f7ba"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "blob": "ddf29abc39c40ffe1c680b9acfb7ebd50e1664cf"
+      }
+    ],
+    "env": {}
+  },
+  "log": {
+    "file": "evidence/resume-09-inputs.log",
+    "sha256": "fbbc981aa52def2e0351072f374f51cfccbfca016dea241d69e1ab1edf56bca7",
+    "bytes": 126516
+  },
+  "tests": [
+    {
+      "line": 858,
+      "file": "Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+      "status": "pass",
+      "name": "configured Finance executes through the real host and its persisted contribution opens after reload",
+      "durationMs": 7152.47
+    },
+    {
+      "line": 860,
+      "file": "Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+      "status": "pass",
+      "name": "Finance reads a genuinely admitted import preview and retains its conditional analysis after reload",
+      "durationMs": 0.55
+    },
+    {
+      "line": 905,
+      "file": "Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+      "status": "pass",
+      "name": "real host Finance prepares increase-12000 and verifies native output when an installed model is available",
+      "durationMs": 8353.05
+    },
+    {
+      "line": 948,
+      "file": "Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+      "status": "pass",
+      "name": "real host Finance prepares increase-6000 and verifies native output when an installed model is available",
+      "durationMs": 15098.93
+    },
+    {
+      "line": 991,
+      "file": "Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+      "status": "pass",
+      "name": "real host Finance prepares unchanged and verifies native output when an installed model is available",
+      "durationMs": 10154
+    },
+    {
+      "line": 1034,
+      "file": "Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+      "status": "pass",
+      "name": "real host Finance prepares observed-zero and verifies native output when an installed model is available",
+      "durationMs": 8983.52
+    },
+    {
+      "line": 1077,
+      "file": "Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+      "status": "pass",
+      "name": "real host Finance prepares missing-fx and verifies native output when an installed model is available",
+      "durationMs": 12643.07
+    },
+    {
+      "line": 1120,
+      "file": "Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+      "status": "pass",
+      "name": "real host Finance prepares missing-month and verifies native output when an installed model is available",
+      "durationMs": 9568.85
+    },
+    {
+      "line": 1154,
+      "file": "Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+      "status": "fail",
+      "name": "native Procurement reuses submitted FX and domain ranking without choosing the cheapest quote or changing sourcing",
+      "durationMs": 2886.67
+    },
+    {
+      "line": 1190,
+      "file": "Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+      "status": "fail",
+      "name": "native document extraction uses real private bytes and schema; contract review retains the actual issued source surface",
+      "durationMs": 3917.94
+    },
+    {
+      "line": 1226,
+      "file": "Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+      "status": "fail",
+      "name": "native purchase observes preparation boundaries and reopens the pending human choice without approval or source mutation",
+      "durationMs": 3403.07
+    },
+    {
+      "line": 1260,
+      "file": "Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+      "status": "fail",
+      "name": "native purchase observes preparation boundaries and reopens the complete human choice without approval or source mutation",
+      "durationMs": 3177.7
+    },
+    {
+      "line": 1307,
+      "file": "Sucafinav1/test/product/wp12/native-execution-bi.test.ts",
+      "status": "pass",
+      "name": "native contextual BI uses the real Dashboard producer and durable chart/table selection across host reload",
+      "durationMs": 84312.7
+    },
+    {
+      "line": 1330,
+      "file": "Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+      "status": "fail",
+      "name": "real executive and meeting inputs use a preserved WP07 review and complete downloadable material, with native consumers when installed",
+      "durationMs": 482104.49
+    }
+  ],
+  "markers": [
+    {
+      "line": 855,
+      "type": "NATIVE_FINANCE_CATALOG",
+      "value": {
+        "scope": "host-installed-catalog",
+        "phase": "initial",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 856,
+      "type": "NATIVE_FINANCE_INPUT",
+      "value": {
+        "scope": "real-host-input-producer",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "profileId": "sf_finance",
+        "skillId": "sf-explicar-forecast",
+        "caseRef": {
+          "id": "3f2dc217-ce6f-4994-b26e-7d47d7b649c7",
+          "incarnation": "7d1ef688-12b2-4475-9c1f-2c8be51e996d",
+          "version": 1
+        },
+        "inputDigest": "39c0c64e1d9f6e3d639c244296b284ddebd752f1363d50faf13fde31e1326481",
+        "sourceRefIds": [
+          "planner-version:wp12-forecast-0:bcc95c70-a951-404c-8ca1-e5205b0c6fa7:1",
+          "planner-version:wp12-forecast-1:e0e0ad49-862e-4526-a06d-906e33455ae4:1"
+        ],
+        "knownDifference": -240,
+        "inferenceExecuted": false
+      }
+    },
+    {
+      "line": 857,
+      "type": "NATIVE_FINANCE",
+      "value": {
+        "scope": "host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "classification": "catalog-observation",
+        "catalogState": "empty",
+        "inputPrepared": true,
+        "inputDigest": "39c0c64e1d9f6e3d639c244296b284ddebd752f1363d50faf13fde31e1326481",
+        "caseRef": {
+          "id": "3f2dc217-ce6f-4994-b26e-7d47d7b649c7",
+          "incarnation": "7d1ef688-12b2-4475-9c1f-2c8be51e996d",
+          "version": 1
+        },
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "candidates": [],
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 859,
+      "type": "NATIVE_IMPORT_AVAILABILITY",
+      "value": {
+        "scope": "existing-installation-scanner-configuration",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "skillId": "sf-explicar-forecast",
+        "status": "unavailable",
+        "reason": "installed-configuration-not-selected",
+        "fileAdmitted": false,
+        "inputPrepared": false,
+        "scanExecuted": false,
+        "inferenceExecuted": false,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 882,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "forecast-increase-12000",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 883,
+      "type": "FORECAST_VARIANT_INPUT",
+      "value": {
+        "variant": "increase-12000",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "caseRef": {
+          "id": "66f521ec-04f6-4821-80ca-8cc666059283",
+          "incarnation": "b41a5678-82e0-4ff5-b522-be7117c206f8",
+          "version": 1
+        },
+        "inputDigest": "1bf424512acad106a2681519d1a3d42b843490bc7abcdc52eebdfb93d230a4d2",
+        "objectiveDigest": "4b760b33b8215a3367fb8ef1192947b9049f7ab582740d3e27e5399a4814491d",
+        "knownDifference": 12000,
+        "completeDifference": null,
+        "gaps": [
+          "cost-coverage-unavailable"
+        ],
+        "sourceRefIds": [
+          "planner-version:wp12-variant-0:93001285-8816-43c1-8072-cabb24d61f1c:1",
+          "planner-version:wp12-variant-1:0741a6a2-1afd-4811-8c48-afa3e013fbab:1"
+        ],
+        "producer": "workbench-analysis:prepare",
+        "domainUnchanged": true,
+        "inferenceExecuted": false
+      }
+    },
+    {
+      "line": 884,
+      "type": "NATIVE_MISSION",
+      "value": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "profileId": "sf_finance",
+        "skillId": "sf-explicar-forecast",
+        "caseRef": {
+          "id": "66f521ec-04f6-4821-80ca-8cc666059283",
+          "incarnation": "b41a5678-82e0-4ff5-b522-be7117c206f8",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "1bf424512acad106a2681519d1a3d42b843490bc7abcdc52eebdfb93d230a4d2",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 904,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "forecast-increase-12000",
+        "phase": "reopened",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 925,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "forecast-increase-6000",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 926,
+      "type": "FORECAST_VARIANT_INPUT",
+      "value": {
+        "variant": "increase-6000",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "caseRef": {
+          "id": "0fc94221-e3b5-4992-9469-e1d6ec52e78f",
+          "incarnation": "d6777a46-c3a3-46d9-ae92-44115a6e5268",
+          "version": 1
+        },
+        "inputDigest": "a03357469e59f7f71bc1480889a98b6a1f27057a8bb058e51fc4549758dc1fba",
+        "objectiveDigest": "4b760b33b8215a3367fb8ef1192947b9049f7ab582740d3e27e5399a4814491d",
+        "knownDifference": 6000,
+        "completeDifference": null,
+        "gaps": [
+          "cost-coverage-unavailable"
+        ],
+        "sourceRefIds": [
+          "planner-version:wp12-variant-0:dd2c087c-188d-4a49-bbec-185959e7576c:1",
+          "planner-version:wp12-variant-1:45bf52f0-d6f1-401a-a376-6b4cc065b803:1"
+        ],
+        "producer": "workbench-analysis:prepare",
+        "domainUnchanged": true,
+        "inferenceExecuted": false
+      }
+    },
+    {
+      "line": 927,
+      "type": "NATIVE_MISSION",
+      "value": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "profileId": "sf_finance",
+        "skillId": "sf-explicar-forecast",
+        "caseRef": {
+          "id": "0fc94221-e3b5-4992-9469-e1d6ec52e78f",
+          "incarnation": "d6777a46-c3a3-46d9-ae92-44115a6e5268",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "a03357469e59f7f71bc1480889a98b6a1f27057a8bb058e51fc4549758dc1fba",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 947,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "forecast-increase-6000",
+        "phase": "reopened",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 968,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "forecast-unchanged",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 969,
+      "type": "FORECAST_VARIANT_INPUT",
+      "value": {
+        "variant": "unchanged",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "caseRef": {
+          "id": "c0617024-30dd-4ce4-8aa3-d18af2d78544",
+          "incarnation": "b1dd37d9-290b-494d-9886-2f11642ace13",
+          "version": 1
+        },
+        "inputDigest": "a53e77a26228d51d33d130c0b4452902a2b4f427d1f623556db72967c75fa43e",
+        "objectiveDigest": "4b760b33b8215a3367fb8ef1192947b9049f7ab582740d3e27e5399a4814491d",
+        "knownDifference": 0,
+        "completeDifference": null,
+        "gaps": [
+          "cost-coverage-unavailable"
+        ],
+        "sourceRefIds": [
+          "planner-version:wp12-variant-0:e0d1eace-3057-41fc-8223-bc66ec12c88b:1",
+          "planner-version:wp12-variant-1:f06d9850-6f3d-4746-abd6-c7485bf77bd9:1"
+        ],
+        "producer": "workbench-analysis:prepare",
+        "domainUnchanged": true,
+        "inferenceExecuted": false
+      }
+    },
+    {
+      "line": 970,
+      "type": "NATIVE_MISSION",
+      "value": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "profileId": "sf_finance",
+        "skillId": "sf-explicar-forecast",
+        "caseRef": {
+          "id": "c0617024-30dd-4ce4-8aa3-d18af2d78544",
+          "incarnation": "b1dd37d9-290b-494d-9886-2f11642ace13",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "a53e77a26228d51d33d130c0b4452902a2b4f427d1f623556db72967c75fa43e",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 990,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "forecast-unchanged",
+        "phase": "reopened",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 1011,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "forecast-observed-zero",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 1012,
+      "type": "FORECAST_VARIANT_INPUT",
+      "value": {
+        "variant": "observed-zero",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "caseRef": {
+          "id": "5b89882c-2018-4d39-8526-93fad7454f92",
+          "incarnation": "9bf63cd9-b304-42ef-bb21-d7f58179d977",
+          "version": 1
+        },
+        "inputDigest": "b2237f247b0160966b051c6b17aabe391a8588f35c16723365552f38d2958e65",
+        "objectiveDigest": "4b760b33b8215a3367fb8ef1192947b9049f7ab582740d3e27e5399a4814491d",
+        "knownDifference": 0,
+        "completeDifference": null,
+        "gaps": [
+          "cost-coverage-unavailable"
+        ],
+        "sourceRefIds": [
+          "planner-version:wp12-variant-0:542ffb21-f4a7-405b-8aa2-2d135e0aaf83:1",
+          "planner-version:wp12-variant-1:373c278d-b0a6-426a-9330-14e8f6050943:1"
+        ],
+        "producer": "workbench-analysis:prepare",
+        "domainUnchanged": true,
+        "inferenceExecuted": false
+      }
+    },
+    {
+      "line": 1013,
+      "type": "NATIVE_MISSION",
+      "value": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "profileId": "sf_finance",
+        "skillId": "sf-explicar-forecast",
+        "caseRef": {
+          "id": "5b89882c-2018-4d39-8526-93fad7454f92",
+          "incarnation": "9bf63cd9-b304-42ef-bb21-d7f58179d977",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "b2237f247b0160966b051c6b17aabe391a8588f35c16723365552f38d2958e65",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 1033,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "forecast-observed-zero",
+        "phase": "reopened",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 1054,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "forecast-missing-fx",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 1055,
+      "type": "FORECAST_VARIANT_INPUT",
+      "value": {
+        "variant": "missing-fx",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "caseRef": {
+          "id": "3bd7e41d-caca-47ba-8b06-31813d73e263",
+          "incarnation": "9e359c6d-0885-4005-8bce-81630c346d99",
+          "version": 1
+        },
+        "inputDigest": "4e7e8564e22070dc454627b0b9f40a58de75e201f2aa7152d4e8dceac89b84b3",
+        "objectiveDigest": "4b760b33b8215a3367fb8ef1192947b9049f7ab582740d3e27e5399a4814491d",
+        "knownDifference": null,
+        "completeDifference": null,
+        "gaps": [
+          "currency:missing-fx",
+          "wp12-variant-service:1:fx:missing-fx",
+          "wp12-variant-service:2:fx:missing-fx",
+          "wp12-variant-service:3:fx:missing-fx",
+          "wp12-variant-service:4:fx:missing-fx",
+          "wp12-variant-service:5:fx:missing-fx",
+          "wp12-variant-service:6:fx:missing-fx",
+          "wp12-variant-service:7:fx:missing-fx",
+          "wp12-variant-service:8:fx:missing-fx",
+          "wp12-variant-service:9:fx:missing-fx",
+          "wp12-variant-service:10:fx:missing-fx",
+          "wp12-variant-service:11:fx:missing-fx",
+          "wp12-variant-service:12:fx:missing-fx",
+          "cost-coverage-unavailable"
+        ],
+        "sourceRefIds": [
+          "planner-version:wp12-variant-0:f21cf5e3-bec7-45fc-803d-1f8940a3ff21:1",
+          "planner-version:wp12-variant-1:eba04d5f-670f-407d-9013-14317634de1b:1"
+        ],
+        "producer": "workbench-analysis:prepare",
+        "domainUnchanged": true,
+        "inferenceExecuted": false
+      }
+    },
+    {
+      "line": 1056,
+      "type": "NATIVE_MISSION",
+      "value": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "profileId": "sf_finance",
+        "skillId": "sf-explicar-forecast",
+        "caseRef": {
+          "id": "3bd7e41d-caca-47ba-8b06-31813d73e263",
+          "incarnation": "9e359c6d-0885-4005-8bce-81630c346d99",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "4e7e8564e22070dc454627b0b9f40a58de75e201f2aa7152d4e8dceac89b84b3",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 1076,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "forecast-missing-fx",
+        "phase": "reopened",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 1097,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "forecast-missing-month",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 1098,
+      "type": "FORECAST_VARIANT_INPUT",
+      "value": {
+        "variant": "missing-month",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "caseRef": {
+          "id": "4b46c6d9-3a6e-47a6-adf6-d66e470f04dd",
+          "incarnation": "dc5c58e6-702e-4253-b2b5-ba6b55cccfff",
+          "version": 1
+        },
+        "inputDigest": "83df7643518ea9e85a43bdc858a37e631b910b7db181f56f025199686c33bac9",
+        "objectiveDigest": "4b760b33b8215a3367fb8ef1192947b9049f7ab582740d3e27e5399a4814491d",
+        "knownDifference": null,
+        "completeDifference": null,
+        "gaps": [
+          "wp12-variant-service:1:budget:missing",
+          "cost-coverage-unavailable"
+        ],
+        "sourceRefIds": [
+          "planner-version:wp12-variant-0:4ccf6cea-a451-4e22-a538-8af67aa9b861:1",
+          "planner-version:wp12-variant-1:14898612-26df-4f25-977e-517523211c6c:1"
+        ],
+        "producer": "workbench-analysis:prepare",
+        "domainUnchanged": true,
+        "inferenceExecuted": false
+      }
+    },
+    {
+      "line": 1099,
+      "type": "NATIVE_MISSION",
+      "value": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "profileId": "sf_finance",
+        "skillId": "sf-explicar-forecast",
+        "caseRef": {
+          "id": "4b46c6d9-3a6e-47a6-adf6-d66e470f04dd",
+          "incarnation": "dc5c58e6-702e-4253-b2b5-ba6b55cccfff",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "83df7643518ea9e85a43bdc858a37e631b910b7db181f56f025199686c33bac9",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 1119,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "forecast-missing-month",
+        "phase": "reopened",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 1142,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "sourcing",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 1176,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "document-contract",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 1212,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "purchase-pending",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 1246,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "purchase-complete",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 1282,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "contextual-bi",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 1283,
+      "type": "NATIVE_BI_INPUT",
+      "value": {
+        "scope": "real-dashboard-producer-c08-artifacts-and-wp05-http",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "profileId": "sf_finance",
+        "skillId": "sf-produzir-bi-contextual",
+        "caseRef": {
+          "id": "2b781bb7-3df1-400f-b476-764793e972cf",
+          "incarnation": "c915e8a9-778d-445c-99c1-43a37f0a7220",
+          "version": 1
+        },
+        "inputDigest": "400c9b2a35bbc02162781a59d57e4b81afa660ef6ff3533e56f55e0d24274d15",
+        "projectionRef": "sf-bi-projection:55d9047a7a1ee4c47437f9c7654bfe9c80522ee66d81036dc89bfd8e2745bc35",
+        "tableRef": "sf-bi-table:55d9047a7a1ee4c47437f9c7654bfe9c80522ee66d81036dc89bfd8e2745bc35",
+        "tableDigest": "76d13db1d8ae73c9aad1eb561a284322afce6be5418b4411d4109ee2e69367b8",
+        "absentDate": "milestone:wp12-bi-project:follow-up:date",
+        "sourceLinks": 1,
+        "referencesExposedByCanonicalInput": {
+          "canonicalProjectionRefs": false,
+          "tableRef": false
+        },
+        "inferenceExecuted": false,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 1284,
+      "type": "NATIVE_MISSION",
+      "value": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "profileId": "sf_finance",
+        "skillId": "sf-produzir-bi-contextual",
+        "caseRef": {
+          "id": "2b781bb7-3df1-400f-b476-764793e972cf",
+          "incarnation": "c915e8a9-778d-445c-99c1-43a37f0a7220",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "400c9b2a35bbc02162781a59d57e4b81afa660ef6ff3533e56f55e0d24274d15",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 1304,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "contextual-bi",
+        "phase": "reopened",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 1305,
+      "type": "NATIVE_BI_REOPEN",
+      "value": {
+        "scope": "real-persisted-bi-selection-and-wp05-http-after-host-reload",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "projectionRef": "sf-bi-projection:55d9047a7a1ee4c47437f9c7654bfe9c80522ee66d81036dc89bfd8e2745bc35",
+        "tableRef": "sf-bi-table:55d9047a7a1ee4c47437f9c7654bfe9c80522ee66d81036dc89bfd8e2745bc35",
+        "tableDigest": "76d13db1d8ae73c9aad1eb561a284322afce6be5418b4411d4109ee2e69367b8",
+        "consumer": "WP05 bi-data/bi-source",
+        "nativeContributionConsumed": false,
+        "requiredOperations": [
+          "sf_bi_view",
+          "sf_kpi_explain",
+          "sf_source_get",
+          "sf_dashboard_read"
+        ],
+        "observedOperations": [],
+        "missingRequiredOperations": [
+          "sf_bi_view",
+          "sf_kpi_explain",
+          "sf_source_get",
+          "sf_dashboard_read"
+        ],
+        "normativeSkillWitnessComplete": false,
+        "am02": {
+          "profileId": "sf_finance",
+          "skillId": "sf-produzir-bi-contextual",
+          "operation": "sf_bi_view",
+          "nativeCallObserved": false
+        },
+        "gnativeAccepted": false,
+        "independentGnativeReview": false
+      }
+    },
+    {
+      "line": 1306,
+      "type": "NATIVE_BI_SOURCE_REMOVED",
+      "value": {
+        "scope": "source-deletion-not-acl-revocation",
+        "status": "denied",
+        "oldSelectionRejected": true
+      }
+    },
+    {
+      "line": 1329,
+      "type": "NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "executive-meeting",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    }
+  ],
+  "interpretation": {
+    "finance": "Real case input and source-comparison preparation observed; installed model catalog empty, no native output.",
+    "import": "Existing installation scanner configuration not selected; no admission, scan or import input prepared. The test returning PASS on this explicit unavailability is not a completed import proof.",
+    "forecastVariants": "All six actual input/reload cases passed, including distinct amounts, observed zero and missing FX/month.",
+    "bi": "Actual Dashboard projection and C08 chart/table artifact passed WP05 bi-data/bi-source consumers, reload, absent-date and source-deletion negative. This is a UI/artifact consumer proof, not consumption of a native ContextualBIProposal.",
+    "procurementFailures": "Sourcing, documents/contract and both purchase cases stop at the real procurement-request issuer with Source unavailable, before native inputs or proposed consumers.",
+    "executive": "Timed out after reported 420000ms budget, observed482104.49ms; no post-catalog phase was recorded, so the blocked await is not identified by this log.",
+    "native": {
+      "executed": false,
+      "outputCount": 0,
+      "consumerCount": 0
+    },
+    "nextOwnActions": [
+      "Consume exactly the published integration Procurement projector blob3e8830c3: the selected source's approvalStage field is rejected by the older W14 projector08fdfb. Raw fixtures and selected period were valid; a semantic dependency was omitted from the earlier intake.",
+      "Bound executive raw data while preserving complete-export evidence beyond12 rows and add phase observations before another focused run.",
+      "Do not rerun passed Finance/forecast or BI Finance equivalents absent a relevant delta. The new BI Maestro route is separately selected."
+    ]
+  },
+  "fullWp12Acceptance": false,
+  "localProductTests": false,
+  "localTypecheck": false,
+  "laterDiagnosis": {
+    "classification": "static diagnosis after the completed hosted run",
+    "sourceProduct": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+    "oldProjector": "08fdfb878f6f9282f70ec71b3e66122f1b95f6f5",
+    "newPublishedProjector": "3e8830c3dddc8b9609f583f877b2fe7458eccd28",
+    "delegatedOwnerProjectorAlreadyPresent": "ab9814817d11c0b477636ee54d1b2763d365f405",
+    "publishedSourceCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+    "runtimeFixProved": false
+  }
+}

@@ -1,0 +1,279 @@
+{
+  "schema": "wp12-c10-published-source-review-v1",
+  "status": "SOURCE_REVIEWED_CONSUMED_IN_WP12_W20_RUNTIME_PENDING",
+  "observed_product": {
+    "name": "W20",
+    "sha": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "tree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e",
+    "parent": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+    "check_status": "PASS",
+    "check_snapshot": "71894701b187aaca938bfe97a8b6c6b8508de4ab",
+    "check_run": 43603981195,
+    "check_job": 132474528320,
+    "check_snapshot_tree": "5070d3b096c7b997d065a6d6a7257eb04f84fbbd",
+    "mission_tests_status": "C10_DERIVED_ORIGIN_RUNTIME_PENDING; QUESTIONS_RETEST_FAILED_1_PASS_2_FAIL; PROCUREMENT_RETEST_IN_PROGRESS; W16_BI_EXECUTIVE_FAILED_1_PASS_1_FAIL_RETAINS_W16_SHA",
+    "last_completed_check": {
+      "product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "run_id": 43603981195,
+      "job_id": 132474528320,
+      "result": "PASS"
+    },
+    "metadata_source": "Root W20 WP12 publication/preparation-15.json:one exact C10 owner blob,zero own source changes,six own docs,339 foreign pins. This is distinct from the source owner WP10 W20."
+  },
+  "source_product": {
+    "sha": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+    "tree": "f3719144bcaa6cfebcfdbd9cd1283edaae99ae3c",
+    "pr": 29
+  },
+  "origin_owner": {
+    "sha": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+    "pr": 35,
+    "blob_independently_confirmed": "09097eaba2e0eae71d33d88077a2f86e83e1dde9"
+  },
+  "consumed_intake": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "before_blob": "d654b13aafcf1e0b29d410e916c1a09b4fa19963",
+      "after_blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "after_sha256": "0cca19827cfe6793207441d493561d76830d6903383701b9d84230380561a701",
+      "source_commit": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+      "reason": "Preserve omitted-category origin when current host replays canonical normalized baseline entries; consume exact published bytes."
+    }
+  ],
+  "source_urls": {
+    "before": "https://github.com/gustavomhss/Orchestra-SF/blob/35954072193ee08e0cdefd63c8ec03474d0b5bc5/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+    "after": "https://github.com/gustavomhss/Orchestra-SF/blob/c3b02c7693c1ff3b702596c7c8458f913972a404/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts"
+  },
+  "closure": {
+    "source_files": 1,
+    "additional_dependencies": 0,
+    "exported_signatures_unchanged": true,
+    "exported_functions": [
+      "assessCostCoverage",
+      "validateScenarioCoverage",
+      "reassessScenarioCoverage"
+    ],
+    "imports_byte_identical": true,
+    "imports": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+        "before_blob": "102c849084980ae52223809d33bdeea36a58536b",
+        "after_blob": "102c849084980ae52223809d33bdeea36a58536b",
+        "byte_identical": true,
+        "sources": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+            "ref": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+            "sha": "102c849084980ae52223809d33bdeea36a58536b",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35954072193ee08e0cdefd63c8ec03474d0b5bc5/modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+            "ref": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+            "sha": "102c849084980ae52223809d33bdeea36a58536b",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3b02c7693c1ff3b702596c7c8458f913972a404/modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+          }
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "before_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+        "after_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+        "byte_identical": true,
+        "sources": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+            "ref": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+            "sha": "1769271386cdda1017c38023b0988ce2d64423d2",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35954072193ee08e0cdefd63c8ec03474d0b5bc5/modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+            "ref": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+            "sha": "1769271386cdda1017c38023b0988ce2d64423d2",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3b02c7693c1ff3b702596c7c8458f913972a404/modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+          }
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+        "before_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+        "after_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+        "byte_identical": true,
+        "sources": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+            "ref": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+            "sha": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35954072193ee08e0cdefd63c8ec03474d0b5bc5/modules/sucafina/Sucafinav1/product/contracts/context.ts"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+            "ref": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+            "sha": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3b02c7693c1ff3b702596c7c8458f913972a404/modules/sucafina/Sucafinav1/product/contracts/context.ts"
+          }
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/coverage-inventory.ts",
+        "before_blob": "e4d72cc7cf5beed1a76a61b1b9a28acfd0d121d8",
+        "after_blob": "e4d72cc7cf5beed1a76a61b1b9a28acfd0d121d8",
+        "byte_identical": true,
+        "sources": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/contracts/coverage-inventory.ts",
+            "ref": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+            "sha": "e4d72cc7cf5beed1a76a61b1b9a28acfd0d121d8",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35954072193ee08e0cdefd63c8ec03474d0b5bc5/modules/sucafina/Sucafinav1/product/contracts/coverage-inventory.ts"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/contracts/coverage-inventory.ts",
+            "ref": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+            "sha": "e4d72cc7cf5beed1a76a61b1b9a28acfd0d121d8",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3b02c7693c1ff3b702596c7c8458f913972a404/modules/sucafina/Sucafinav1/product/contracts/coverage-inventory.ts"
+          }
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+        "before_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+        "after_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+        "byte_identical": true,
+        "sources": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+            "ref": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+            "sha": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35954072193ee08e0cdefd63c8ec03474d0b5bc5/modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+            "ref": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+            "sha": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3b02c7693c1ff3b702596c7c8458f913972a404/modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+          }
+        ]
+      }
+    ],
+    "current_caller": {
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "blob": "d8a668281ea9cac6a3a04c6bea19811ee8954808",
+      "lines": [
+        78,
+        111
+      ],
+      "supports_identity": "filter preserves the existing entry object references used as keys in the private classification WeakMap",
+      "authority": "Current caller requires exact baseline assessment equality to the actual coverage producer, classification/basis equality, fresh sources, Request/binding/state/source fences before and after reassessment."
+    }
+  },
+  "changes": [
+    {
+      "id": "C10-ORIGIN",
+      "effect": "Before reassessment, remove only pending rows with reason missing-category whose category also appears in authoritative baseline.derivedMissingCategoryIds. Assessment then derives omission again.",
+      "preserved": "Explicit included zero/training answers and pending rows with any other reason remain; no monetary value invented."
+    },
+    {
+      "id": "C10-SHARED-COMPONENT",
+      "effect": "A unique priced component may be referenced by several separately evidence-supported coverage categories. Coverage completeness now requires at least one category per component, rather than exactly one.",
+      "preserved": "Coverage classification never adds monetary contributions. Components remain unique in the scenario; each category remains unique; within one category duplicate component refs are explicitly refused."
+    },
+    {
+      "id": "C10-DUPLICATE-GUARD",
+      "effect": "assessCostCoverage now returns pending duplicate-component-ref for repeated component refs inside one included category.",
+      "preserved": "validateScenarioCoverage already rejects duplicate refs inside a category and still does so."
+    }
+  ],
+  "invariants_static": [
+    {
+      "name": "financial_sum",
+      "claim": "The unchanged reduce adds scenario.components amounts exactly once, checks knownSubtotal, and requires total===knownSubtotal only for comparisonStatus complete. No category-based sum is introduced."
+    },
+    {
+      "name": "hypothetical_totals",
+      "claim": "The unchanged reassessment return retains conditioned scenarios and null total. The fix does not turn a simulated operation into a confirmed amount."
+    },
+    {
+      "name": "component_unique",
+      "claim": "Duplicate component IDs still produce pending duplicate-component and invalidate a complete seal."
+    },
+    {
+      "name": "category_unique",
+      "claim": "Missing, duplicate and unexpected categories remain refused/pending; full inventory count and per-category uniqueness remain in the complete seal."
+    },
+    {
+      "name": "source_authority",
+      "claim": "Fresh evidence, full ref digest membership, basis equality, evidence support callback, source identity/incarnation/version/fields/period and Planner source checks are unchanged."
+    },
+    {
+      "name": "amount_quality",
+      "claim": "Null, non-finite, absent evidence, currency mismatch, out-of-horizon component, empty scope or source refs remain refused."
+    },
+    {
+      "name": "policy_unchanged",
+      "claim": "No inventory, exchange rate, threshold, criterion, budget, horizon, assumption or formula is changed; only coverage classification multiplicity and omitted-input origin change."
+    }
+  ],
+  "published_tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+      "blob": "b4da64e28c6a207311859595b0a36e07e0c5151b",
+      "source_commit": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+      "scope": "Shared component across categories, supported N/A, real Planner knownSubtotal210000, hypothetical total null, structural55000 interval; omitted/null/zero/40000, unsupported evidence and duplicate refs/components.",
+      "state": "READ_STATIC_ONLY_IN_THIS_WP12_AUDIT"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+      "blob": "b7b8b59ca121e03aea5ae7e9f0b43bd46390b6a7",
+      "source_commit": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+      "scope": "Incomplete seal refusal, unassigned component, reassessment using actual scenario entries, hypothetical totals stay conditioned.",
+      "state": "READ_STATIC_ONLY_IN_THIS_WP12_AUDIT"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+      "blob": "27e0580d6c9ba7b4c549bc33e5d252a7ce74ae66",
+      "source_commit": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+      "scope": "Owner S17 reports the two composite coverage cases PASS on the same C10 blob09097. Test fixture differs from W20 version and full dependency closure is not transferred.",
+      "state": "OWNER_REPORTED_TWO_PASS_NOT_WP12_EXECUTION",
+      "run": 43591635600,
+      "job": 132437416020,
+      "whole_run_conclusion": "failure"
+    }
+  ],
+  "test_gap": "Neither reviewed short coverage-seal test nor W20 composite test directly asserts normalized missing-category row roundtrip preserves derivedMissingCategoryIds. The already published strict WP12 pending purchase and scenario drivers exercise that concrete composition and should run only after exact intake.",
+  "owner_ci": {
+    "W20_check": {
+      "run": 43601767154,
+      "job": 132467830629,
+      "snapshot": "746652850ccfc46c6ae5c9987c129daedcf12799",
+      "status": "completed",
+      "conclusion": "failure",
+      "productTests": "NOT_DISPATCHED according to current PR29 body and preparation",
+      "sourcePins": [
+        {
+          "sha": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/746652850ccfc46c6ae5c9987c129daedcf12799/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts"
+        },
+        {
+          "sha": "b7b8b59ca121e03aea5ae7e9f0b43bd46390b6a7",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/746652850ccfc46c6ae5c9987c129daedcf12799/modules/sucafina/Sucafinav1/test/product/wp11/coverage-seal.test.ts"
+        },
+        {
+          "sha": "b4da64e28c6a207311859595b0a36e07e0c5151b",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/746652850ccfc46c6ae5c9987c129daedcf12799/modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts"
+        }
+      ]
+    },
+    "W20_product_tests": "No test-ci dispatched according to current PR29 body; source preparation requests remain unexecuted. No current-green claim.",
+    "origin_relevant_owner_report": {
+      "run": 43591635600,
+      "job": 132437416020,
+      "whole_run": "failure:4pass15fail",
+      "relevant_cases": "2 composite-coverage cases pass per published owner receipt; C10 blob equality independently checked. Test/helper source differs; no result transfer."
+    }
+  },
+  "root_independent_review": "Static agreement on one-file compatibility, sums, component uniqueness, evidence and omitted-category gates; no runtime acceptance.",
+  "historical_failure_ref": "W16.DERIVED_TRAINING_FAILURE",
+  "new_wp12_execution": false,
+  "local_product_execution": false
+}

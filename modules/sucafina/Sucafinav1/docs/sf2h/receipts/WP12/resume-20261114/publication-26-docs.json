@@ -1,0 +1,101 @@
+{
+  "schema": "sf-wp12-document-publication-v1",
+  "increment": "D26",
+  "baseCommit": "84ab86fa83ca20e610840da6a5f0ef0a31542941",
+  "baseTree": "de717a7f40f87ac6651d7fe319ba76821eb65cc5",
+  "productUnchanged": true,
+  "productionChanges": 0,
+  "testChanges": 0,
+  "foreignSourceChanges": 0,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/README.md",
+      "bytes": 3120,
+      "sha256": "4837749a613d7fb5c135dcf4fcd791f5ee3a848c4a966b8a7a4a315c5e0e3456",
+      "blob": "d866dee808c534ab812f13e06eaae75c7fcec678",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/owner-delta.json",
+      "bytes": 4496,
+      "sha256": "6c89ce9455a2a60f5b67374901ab72bf2b6b3e97fb9e447425ca099a40e04853",
+      "blob": "913d38f8c35b3e5b79d402d3905731b7548c87e3",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/proposal.json",
+      "bytes": 2557,
+      "sha256": "0c8dafe35cf05d8b74547b00c1e0261aa892bab71c0676e249928be8c53d4810",
+      "blob": "d60b847589bc4330465c8afcbf50b2e975675bec",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/proposed-owner-fix.NOT_APPLIED.patch",
+      "bytes": 2107,
+      "sha256": "3f30f2a7a7afb3261a042092fcb9de7b4a7c30d83e03b55a4d479efaeead8e73",
+      "blob": "4e996cef4245bad3feacb313724b1cb7d55f46f0",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/proposed-owner-test.NOT_RUN.patch",
+      "bytes": 3451,
+      "sha256": "42c740c0252bc5786050c470b5726a9ac7642e7a6030ebe1b6cd2c5c04690b7b",
+      "blob": "13699cba497c552e80c063355af644aacaa964e2",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/review.json",
+      "bytes": 28442,
+      "sha256": "4bfe8a748b8affea57835dc6ed290b03730ebdd14f4727128d30ff8b0edc73b3",
+      "blob": "9b25b0db91520ecf1dafdccadb87dc2befab42a4",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/source-pins.json",
+      "bytes": 5782,
+      "sha256": "2558bef94e3c210e37d7340dc15f3e6081489a24cb1beedfc59fd340f3743736",
+      "blob": "08891ea55bfaa24af2039d236b8d43198b07ddc0",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/independent-root.json",
+      "bytes": 6188,
+      "sha256": "66fb34361c7c7fa760e86772e80f86c82a43eb575af4a37714fd8656bd2dfa5f",
+      "blob": "ffd5e61c0118ff70424240f240caeda66829ae53",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/author-freeze.json",
+      "bytes": 10267,
+      "sha256": "3a03051aaba2b6ed24dc6ac44f3e8594852eebede057fe1b23824b2e7123bf9b",
+      "blob": "ed1ad711d0ed98043c94e5f6e63bb5a1864bb3da",
+      "kind": "own-document"
+    }
+  ],
+  "finding": "WP12-OWNER-PLANNER-NUMERIC-RATE-IDENTITY-01",
+  "candidateIntake": "HOLD_NOT_APPLIED",
+  "ownerProposal": "NOT_APPLIED_NOT_RUN",
+  "independentReview": {
+    "wholeFiveFileCandidate": "compose_typecheck",
+    "counterexampleAndProposedPatches": "root",
+    "authorFreezePreservedLiterally": true,
+    "patchResultsReconstructedOnlyInMemory": 3
+  },
+  "resultBoundary": "The explicit numeric-rate counterexample is derived from exact published source, not an executed product test. No complete C10 result, false persisted result, financial policy change, timing improvement or native inference is claimed.",
+  "requiredOwnerExit": [
+    "Publish complete compatible normalizer/producer blobs preserving current formulas, role/lock/FX policy, aggregate redaction and revalidation.",
+    "Run the focused numeric-rate counterproof and retained controls through GitHub Actions.",
+    "Provide immutable source pins for renewed WP12 closure review before intake and own helper reconciliation."
+  ],
+  "product": {
+    "sha": "dc8f3b19d40f52c19aabd219544c291460592b99",
+    "tree": "6e81c0e51f3fa5fb9fef7d88456020e061ca2c7b",
+    "checkRun": 43612042512,
+    "checkSnapshot": "61640e1646294d2a485e9420c64bbce199149b0e",
+    "checkResult": "PASS",
+    "noNewProductRunRequiredForThisDocsOnlyDelta": true
+  },
+  "fullWp12": false,
+  "localProductTests": false,
+  "localTypecheck": false
+}

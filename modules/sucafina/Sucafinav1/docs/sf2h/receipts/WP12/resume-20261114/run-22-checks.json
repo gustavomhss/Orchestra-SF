@@ -1,0 +1,90 @@
+{
+  "schema": "sf-wp12-exact-hosted-check-result-v1",
+  "phase": "resume-22",
+  "product": {
+    "sha": "5e768df0473a75b2436e3208350155c96708b1c6",
+    "tree": "61d375b8e61a8af181937bfdec0e811399b10921"
+  },
+  "check": {
+    "snapshot": "565e4153a6bfb6f41dd7ac06718d5b0d95113b8f",
+    "tree": "957e57eeeb4b39a0cfe9d48b549e8763d7a47ec3",
+    "directParent": "5e768df0473a75b2436e3208350155c96708b1c6",
+    "onlyEnvelopePath": ".astra-wp12-check.json",
+    "branch": "astra-check-wp12",
+    "runId": 43618678972,
+    "jobId": 132519258483,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618678972",
+    "status": "completed",
+    "conclusion": "failure",
+    "completedAt": "2026-11-14T17:01:57Z",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "envelope": {
+      "bytes": 119,
+      "sha256": "13215511534fc2690246ff62bbbba2b6ef65888c8ce85857754c760c088f38f8",
+      "blob": "e1b6e788b7178ab18718c01d1cc54db2e2b52e25"
+    },
+    "typecheck": {
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "status": "failure",
+      "exitCode": 2,
+      "diagnostics": [
+        {
+          "file": "test/product/wp12/native-execution-forecast-kpi.test.ts",
+          "line": 106,
+          "column": 37,
+          "code": "TS2769",
+          "message": "Argument of type string is not assignable to the closed operation-result status union in expect(...).toBe(invalid.status).",
+          "logLines": [
+            586,
+            588
+          ]
+        }
+      ]
+    },
+    "spawnImports": {
+      "command": "bun run check:spawn-imports",
+      "status": "success",
+      "filesChecked": 4618,
+      "allowListedSites": 66
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "status": "success",
+      "rules": 78,
+      "changedPaths": 1144,
+      "gate": 0,
+      "warn": 15,
+      "errors": 0
+    }
+  },
+  "log": {
+    "path": "evidence/resume-22-check.log",
+    "bytes": 65119,
+    "sha256": "8c7a53b7fb290bd45e34b2b4a2c951d275143a9daafea5312a84f3e68bdd74d8",
+    "blob": "29af1cb75071831d68e91bd64c292106e9689df8",
+    "fetchCount": 1,
+    "bundled": false
+  },
+  "artifact": {
+    "id": 14123375832,
+    "name": "astra-wp12-check-1",
+    "bytes": 1628,
+    "digest": "sha256:6a367486c9402b320bfd0215abfffeedb9e06ca3b670dad071f3e11945e626b9",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618678972/artifacts/14123375832",
+    "qualification": "Digest and size match GitHub artifact metadata and upload log; ZIP contents not inspected."
+  },
+  "ownCorrection": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+    "originalBlob": "5ff043a8d9d2cd932020aa6074864b16e36f49b9",
+    "candidateBlob": "749063953007e4e0d216dcaf278337de45ef6e3d",
+    "change": "Preserve the two expected status/reason tuples as const literals. Request values, assertions, negative behavior and timeout remain unchanged.",
+    "requiresFreshHostedCheck": true
+  },
+  "productRunForW27": null,
+  "productWasNotDispatchedAfterFailedCheck": true,
+  "localProductTests": false,
+  "localTypecheck": false,
+  "foreignSourceChanges": 0,
+  "fullWp12": false
+}

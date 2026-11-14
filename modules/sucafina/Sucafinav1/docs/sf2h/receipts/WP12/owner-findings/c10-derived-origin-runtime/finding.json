@@ -1,0 +1,112 @@
+{
+  "schema": "sf-wp12-owner-runtime-finding-v1",
+  "id": "WP12-C10-DERIVED-CATEGORY-ORIGIN-LOSS",
+  "status": "OBSERVED_RUNTIME_FAILURE_PENDING_OWNER_DELTA",
+  "reporting_owner": "WP12",
+  "affected_owner": "WP10 portfolio coverage adapter with WP11 C09/C10 classification/reassessment integration",
+  "product": {
+    "sha": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+    "tree": "f875b3a78ee8123c959bad5c7c5d4c9fb4f978df"
+  },
+  "evidence": {
+    "run_id": 43600564160,
+    "job_id": 132464186609,
+    "snapshot": "5fe687cdfae8f30e4a7121ac87d6e2a14982433a",
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43600564160",
+    "log_sha256": "b62cbffc299996d1c6bd2b5f4f965bb8ddd3f7c69154933ef7e84a98b45bf7f7",
+    "log_lines": [
+      923,
+      942
+    ],
+    "test": "native purchase observes preparation boundaries and reopens the pending human choice without approval or source mutation",
+    "elapsed_ms": 154761.19,
+    "result": "FAIL"
+  },
+  "literal_criteria": [
+    {
+      "id": "WP12.DOD.20",
+      "text": "Crítica real consome a avaliação C10 e entrega objeção/questão tipadas usadas na mesa.",
+      "pointer": "/work_packages/12/axioms/dod/2"
+    },
+    {
+      "id": "WP12.INV.20",
+      "text": "Ausência não vira custo presumido, alíquota ou benefício confirmado; o modelo não apaga pending do produtor.",
+      "pointer": "/work_packages/12/axioms/invariants/2"
+    },
+    {
+      "id": "WP12.CMP.20",
+      "text": "Cobrir categoria inteiramente ausente, inaplicabilidade sem evidência, custo zero e revisão após resolução.",
+      "pointer": "/work_packages/12/axioms/completeness_criteria/1"
+    },
+    {
+      "id": "WP12.T03.CHK.20",
+      "text": "Revisor real recebe alternativa com training inteiramente ausente e sem indício roteirizado no prompt: a saída cita missing-category do C10, formula a questão pertinente e conserva conditioned. Posterior evidência40000 muda a análise/critério sem substituir o cálculo oficial.",
+      "pointer": "/work_packages/12/tasks/2/checks/3"
+    },
+    {
+      "id": "WP12.T03.CMP.20",
+      "text": "Cobrir categoria inteiramente ausente, inaplicabilidade sem evidência, custo zero e revisão após resolução.",
+      "pointer": "/work_packages/12/tasks/2/axioms/completeness_criteria/1"
+    }
+  ],
+  "observation": "FAIL after actual baseline coverage registration, promotion and case reread: final pending alternative has derivedMissingCategoryIds=[]; expected ['training'].",
+  "passed_before_failure": [
+    "Actual request source issued/resolved with approvalStage after the exact projector intake.",
+    "Actual coverage registration and C09 promotion.",
+    "Conditioned hypothetical null totals, baseline knownSubtotal 240000 with complete coverage.",
+    "Pending candidate knownSubtotal210000 and coverageState pending."
+  ],
+  "unobserved_branches": [
+    "Training pending-entry assertion after failed derived check.",
+    "Human choice/units and purchase analysis input.",
+    "Any Session inference or DossierDraft consumer."
+  ],
+  "input_discriminator": {
+    "baseline": "All nine renewal-transition categories have twelve confirmed monthly components each; baseline known subtotal240000 and complete coverage.",
+    "pending_candidate": "Training has neither a source row nor a human classification entry. Other eight categories have twelve confirmed monthly components; known subtotal210000, coverage pending, comparison conditioned and totalnull.",
+    "expected_derived_missing_category_ids": [
+      "training"
+    ],
+    "observed_derived_missing_category_ids": [],
+    "pending_entry_assertion": "Located after the failing derived assertion; it was not executed in this run."
+  },
+  "source_cause": {
+    "class": "PUBLISHED_OWNER_IMPLEMENTATION",
+    "owner": "WP10 coverage adapter / WP11 C10 integration",
+    "consumedAdapter": {
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "blob": "d8a668281ea9cac6a3a04c6bea19811ee8954808"
+    },
+    "domain": {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "blob": "d654b13aafcf1e0b29d410e916c1a09b4fa19963"
+    },
+    "trace": [
+      "assessCostCoverage computes missing from categories absent in incoming entries, and synthesizes pending/missing-category entries.",
+      "Published portfolio coverage adapter clones already normalized baseline.entries for reassessment.",
+      "reassessScenarioCoverage calls assessCostCoverage on those normalized entries, so training now exists and the derived missing list becomes empty."
+    ],
+    "latestOwnerInspection": {
+      "commit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+      "adapterBlob": "d20eafe56f782c8d23917c53d60377fa09a386a6",
+      "finding": "captureEntries still clones baseline.entries. This source is inspected, not consumed; no runtime result is attributed to it."
+    }
+  },
+  "requested_owner_delta": [
+    "Preserve the distinction between an omitted category and an explicit pending classification when the coverage adapter reassesses the original human classification.",
+    "Do not feed synthesized normalized entries back as if they were original declared entries without retaining and verifying omission origin.",
+    "Retain source authority, original basis/alternative identity, source-fence and C08 commit checks. A caller-supplied list is not authority.",
+    "Publish the minimal compatible exact owner delta and its source/dependency pins for WP12 intake."
+  ],
+  "wp12_next_step": "Keep the missing-category discriminator unchanged and rerun the pending branch only after the exact owner correction is consumed; no equivalent pending rerun while the known source remains unchanged.",
+  "prior_observation_precision": "W11 failed earlier on an owned hypothetical-total assertion and did not observe this defect. This W16 result is the first recorded runtime witness here; current owner head inspection remains source-only.",
+  "implementation_edits": "None. WP12 does not edit the adapter, C10 engine, contracts, decisions or owner branches.",
+  "native_execution": {
+    "inference": false,
+    "outputs": 0,
+    "consumers": 0,
+    "gnative_accepted": false
+  },
+  "full_wp12_acceptance": false
+}

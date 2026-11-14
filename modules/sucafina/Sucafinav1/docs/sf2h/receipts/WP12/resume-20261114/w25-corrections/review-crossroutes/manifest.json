@@ -1,0 +1,88 @@
+{
+  "schema": "wp12-own-driver-manifest-v1",
+  "status": "FROZEN_STATIC_REVIEWED_NOT_RUN",
+  "publication_parent": {
+    "sha": "24bae062742ad51abe80c2f50f62f9e5fe1049d1",
+    "tree": "ce638631fc58a5c1f89fa7907f9d3069bcf5681b"
+  },
+  "scope": "Public human review selections enable the three own Executive report/artifact and Meeting review_prepare gaps; no schema/host/source changes.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts",
+      "frozen_path": "resume-input/criteria/review-crossroutes/frozen/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts",
+      "kind": "own-test",
+      "blob": "33a8103345de3addbd5dd75ed1303d3ff9826095",
+      "sha256": "65563a4d9499c410720a97efef55e0d96222e3307a4d2229032d1836ea35b742",
+      "bytes": 33596
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/review-crossroutes/README.md",
+      "frozen_path": "resume-input/criteria/review-crossroutes/frozen/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/review-crossroutes/README.md",
+      "kind": "own-document",
+      "blob": "0ba71ccff0c668d356e393ed4972be34dd5df345",
+      "sha256": "dbd8d42371767d6a7397542c37abf586abb35a580cf11695f90e0e1b46ee3c10",
+      "bytes": 3790
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/review-crossroutes/implementation.json",
+      "frozen_path": "resume-input/criteria/review-crossroutes/frozen/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/review-crossroutes/implementation.json",
+      "kind": "own-document",
+      "blob": "1689c59ca58851bc83b427f8dd0839a3d40089e5",
+      "sha256": "57e86a45b52c105b24d69d356120d46e9e052b54d6c45a3deec8b01bcc872936",
+      "bytes": 17897
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/review-crossroutes/source-pins.json",
+      "frozen_path": "resume-input/criteria/review-crossroutes/frozen/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/review-crossroutes/source-pins.json",
+      "kind": "own-document",
+      "blob": "c548c730c412f2a66503723802a80a8d98ac7c05",
+      "sha256": "be0926edbbd9aa2345bae08443c6ba913613460a5e1d17be4597d919ef7d0d9e",
+      "bytes": 13947
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/review-crossroutes/independent-review.json",
+      "frozen_path": "resume-input/criteria/review-crossroutes/frozen/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/review-crossroutes/independent-review.json",
+      "kind": "own-document",
+      "blob": "a176f96b6a2f065fbfec7c823afdaaffdd54560b",
+      "sha256": "0f168275653f89a619b9a8d94838b09afdc59370da05054d2d9b7b96fca07daa",
+      "bytes": 16032
+    }
+  ],
+  "source_files_added": 1,
+  "source_files_edited": 0,
+  "docs_added": 4,
+  "source_pins": 24,
+  "classification_indices_corrected": [
+    11,
+    18,
+    19
+  ],
+  "acceptance_statuses_changed": 0,
+  "native_inference_observed": 0,
+  "am02_routes_accepted": 0,
+  "hosted_selection": {
+    "paths": [
+      "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+    ],
+    "test_name": "native executive report routes and meeting review preparation consume real public human selections without changing either output contract",
+    "deadline_ms": 420000,
+    "status": "NOT_RUN"
+  },
+  "independent_review": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/review-crossroutes/independent-review.json",
+    "blob": "a176f96b6a2f065fbfec7c823afdaaffdd54560b",
+    "sha256": "0f168275653f89a619b9a8d94838b09afdc59370da05054d2d9b7b96fca07daa",
+    "status": "PASS_STATIC_ONLY"
+  },
+  "retained": [
+    "Original Executive historical-source mutation and strict200 expectation untouched",
+    "Closed ExecutiveReviewInput/MeetingMaterialInput and DecisionBrief/MeetingMaterialProposal",
+    "Actual public authority and native Session/receipt gates",
+    "UI-only availability branch never attributed to native inference",
+    "No automatic agenda reconstruction or autonomous discovery claim"
+  ],
+  "local_product_tests": false,
+  "local_typecheck": false,
+  "foreign_edits": false,
+  "other_branch_edits": false
+}

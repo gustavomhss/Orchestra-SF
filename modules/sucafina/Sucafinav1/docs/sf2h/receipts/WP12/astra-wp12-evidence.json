@@ -1,0 +1,1152 @@
+{
+  "schema": "sf-wp12-hosted-evidence-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "pr": 39,
+  "branch": "astra-wp12",
+  "base": {
+    "sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af"
+  },
+  "approved_plan": {
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "product": {
+    "sha": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+    "tree": "432fcdbd97cc6e653be3af32554c63f2d1ae6e5e"
+  },
+  "tested_product": {
+    "sha": "b284a1c4fb54536b54bd4c2eb2adf2d947504725",
+    "tree": "58d8b9f59cf206fecea78c55d05b57c1bfdce8db"
+  },
+  "test_snapshot": {
+    "sha": "17450c7220ca3d97c57ef2edb29879d3bd68b6bb",
+    "tree": "470d3f56125109394c3e1324e86f57520926f3a6",
+    "branch": "ci-run-linux-astra-wp12-b284a1c4-6a0d9e45-1",
+    "product": {
+      "sha": "b284a1c4fb54536b54bd4c2eb2adf2d947504725",
+      "tree": "58d8b9f59cf206fecea78c55d05b57c1bfdce8db"
+    },
+    "requestSha256": "6a0d9e4517be5447b511d0fe0d9550caa6dce70b5029004c9a4cddef7bf50ea3"
+  },
+  "check_snapshot": {
+    "sha": "f7e70a2dccc82567a901b646be64695251392d5b",
+    "tree": "b102e41d8c403e0ca5f72467cf92eaed4124bae3",
+    "branch": "astra-check-wp12",
+    "product": {
+      "sha": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "tree": "432fcdbd97cc6e653be3af32554c63f2d1ae6e5e"
+    },
+    "envelope": {
+      "productSha": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    },
+    "previousSnapshot": "4ea1711bc425a2de53c40ffb8db1697c1f379b88"
+  },
+  "normalized_request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp12/analysis.test.ts",
+      "./Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "./Sucafinav1/test/product/wp12/continuation.test.ts",
+      "./Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "./Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+      "./Sucafinav1/test/product/wp12/historical-reader.test.ts",
+      "./Sucafinav1/test/product/wp12/resident.test.ts",
+      "./Sucafinav1/test/product/wp12/resident-native.test.ts",
+      "./Sucafinav1/test/product/wp12/resident-authority.test.ts",
+      "./Sucafinav1/test/product/wp12/run-store.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "request_sha256": "6a0d9e4517be5447b511d0fe0d9550caa6dce70b5029004c9a4cddef7bf50ea3",
+  "request_blob": "a763f813739520060c0b82e47cbc0597469de669",
+  "validation": {
+    "validation": "PASS",
+    "runtime": "v24.22.1",
+    "validatorCommit": "7cdcadbbba77b90e129fdac414c318121aaf1515",
+    "sourceBlobsVerified": 42,
+    "argv": [
+      "packages/sucafina",
+      "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+      "Sucafinav1/test/product/wp12/historical-reader.test.ts",
+      "Sucafinav1/test/product/wp12/resident.test.ts",
+      "Sucafinav1/test/product/wp12/resident-native.test.ts",
+      "Sucafinav1/test/product/wp12/resident-authority.test.ts",
+      "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "--runner",
+      "bun",
+      "--timeout",
+      "120000"
+    ],
+    "located": {
+      "package": "sucafina",
+      "directory": "modules/sucafina"
+    },
+    "requestPath": "/workspace/scratch/c9769bf2adb3/ci-validation/.ci-run.json",
+    "bytes": 704,
+    "sha256": "6a0d9e4517be5447b511d0fe0d9550caa6dce70b5029004c9a4cddef7bf50ea3",
+    "gitBlob": "a763f813739520060c0b82e47cbc0597469de669",
+    "omniControl": "declared",
+    "namedFiles": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+        "blob": "839354e9b0c51a7c919539dbf246edd723194a9c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+        "blob": "bc76ac585880bb3d160aa5156878b62234cd4c3b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/continuation.test.ts",
+        "blob": "4a4191b7b7b556d5e3c0fd6b66f96bb042f375df"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+        "blob": "0ff0519df135fb971dc49822e28849ea3d97aadb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+        "blob": "d481eb6824b062da49d56e2608a51f90bbdb248c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts",
+        "blob": "8daf1d4de7432504250a4d44cddc2eaa3b661a59"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident.test.ts",
+        "blob": "6b83c09abb8a65ca109f31d953de30e8f9f955d3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+        "blob": "dcca1255b1a05ed082a72367419d6469907bd4d2"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-authority.test.ts",
+        "blob": "81840ce2745a2d970f8bacb4878a9b537a2f96b6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+        "blob": "542403e347b2cf09282bfde4f3c9078ccccebeeb"
+      }
+    ],
+    "productTestsExecutedLocally": false,
+    "remoteRunTriggered": false,
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp12/analysis.test.ts",
+        "./Sucafinav1/test/product/wp12/author-reader.test.ts",
+        "./Sucafinav1/test/product/wp12/continuation.test.ts",
+        "./Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+        "./Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+        "./Sucafinav1/test/product/wp12/historical-reader.test.ts",
+        "./Sucafinav1/test/product/wp12/resident.test.ts",
+        "./Sucafinav1/test/product/wp12/resident-native.test.ts",
+        "./Sucafinav1/test/product/wp12/resident-authority.test.ts",
+        "./Sucafinav1/test/product/wp12/run-store.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    }
+  },
+  "validation_scope_note": "The nested validator receipt describes local request normalization only; its remoteRunTriggered=false means that validator did not dispatch. The actual remote runs are recorded separately in tests/check.",
+  "envelope_proof": "GitHub compare confirms S3 differs from W3 only by added .ci-run.json; C4 differs from W4 only by added .astra-wp12-check.json.",
+  "type_only_bridge": {
+    "typeOnly": true,
+    "transform": "node:module.stripTypeScriptTypes mode=transform",
+    "runtime": "v24.22.1",
+    "runtimeCodeSha256": "54ae52fac404d7b4df27c5a8f1bd86a6394d1c561755726b86c07a2475889725",
+    "byteIdenticalTransformedJavaScript": true,
+    "productTestsExecutedLocally": false,
+    "changed_path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native-fixture.ts",
+    "from": {
+      "sha": "b284a1c4fb54536b54bd4c2eb2adf2d947504725",
+      "tree": "58d8b9f59cf206fecea78c55d05b57c1bfdce8db"
+    },
+    "to": {
+      "sha": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "tree": "432fcdbd97cc6e653be3af32554c63f2d1ae6e5e"
+    },
+    "product_test_rerun": "Not repeated: transformed runtime bytes are identical; the changed type declaration is covered by the new package typecheck."
+  },
+  "tests": {
+    "run": 43580716747,
+    "job": 132404670331,
+    "status": "PASS",
+    "pass": 50,
+    "fail": 0,
+    "assertions": 302,
+    "files": 10,
+    "omni": {
+      "verdict": "pass",
+      "nonce": "ac1588a3c86a5106539c3f2725625658",
+      "spawnCount": 111,
+      "delegated": 0
+    }
+  },
+  "check": {
+    "run": 43580980934,
+    "job": 132405442055,
+    "status": "FAIL",
+    "command": "bun typecheck",
+    "directory": "modules/sucafina",
+    "diagnosticCount": 140,
+    "ownDiagnosticCount": 0,
+    "paths": 49,
+    "diagnostics": [
+      "../../../apps/cli/src/sucafina-product/business-services.ts(85,30): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+      "../../../apps/cli/src/sucafina-product/business-services.ts(85,40): error TS7006: Parameter 'evidence' implicitly has an 'any' type.",
+      "../../../apps/cli/src/sucafina-product/business-services.ts(188,20): error TS2322: Type '(ref: string, call: TrustedDomainContext) => Promise<{ status: \"ok\"; value: { evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }; } | { ...; } | { ...; }>' is not assignable to type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(158,128): error TS2345: Argument of type '{ cases: { draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>; prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<...>; read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<...>; prepareIntentForCase: (request...' is not assignable to parameter of type 'SfAnalysisDependencies & { replayIntent: (request: CaseDraftRequest, ref: { id: string; incarnation: string; version: number; }, context: TrustedDomainContext) => Promise<...>; imports: Pick<...>; selectedPreviewRef: (caseRef: { ...; }, call: TrustedDomainContext) => Promise<...>; }'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(185,136): error TS2322: Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(217,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(273,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(373,58): error TS2345: Argument of type '{ status: \"ok\"; value: { outputRef: string; caseVersion: number; }; } | { status: \"ok\"; value: { runRef: string; }; } | { readonly status: \"failed\" | \"needs-input\" | \"stale\" | \"unavailable\"; readonly reason: string; } | { ...; } | { ...; }' is not assignable to parameter of type 'PromiseLike<PortResult<{ runRef: string; }>> | PortResult<{ runRef: string; }> | undefined'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(396,5): error TS2322: Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(412,5): error TS2322: Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(551,5): error TS2322: Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.",
+      "../../../apps/cli/src/sucafina-product/import-services.ts(85,101): error TS2304: Cannot find name 'Period'.",
+      "../../../apps/cli/src/sucafina-product/import-services.ts(115,21): error TS2304: Cannot find name 'isSfPeriod'.",
+      "product/collaboration/confirmation.ts(79,34): error TS2322: Type 'SfStateResult<(ConfirmationRecord & ConfirmationBaseline) | null>' is not assignable to type 'PortResult<ConfirmationRecord>'.",
+      "product/collaboration/confirmation.ts(91,34): error TS2322: Type 'SfStateResult<ConfirmationRecord | undefined>' is not assignable to type 'PortResult<ConfirmationValidityProjection>'.",
+      "product/collaboration/hot-topic-host.ts(16,9): error TS2322: Type '<T>(context: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>' is not assignable to type '<T>(binding: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>'.",
+      "product/collaboration/recipient-actions.ts(50,32): error TS2322: Type 'SfStateResult<boolean>' is not assignable to type 'PortResult<RecipientThread>'.",
+      "product/collaboration/relations.ts(70,66): error TS2322: Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.",
+      "product/collaboration/relations.ts(116,35): error TS2322: Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.",
+      "product/collaboration/relations.ts(127,35): error TS2322: Type 'SfStateResult<({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined>' is not assignable to type 'PortResult<{ relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }>'.",
+      "product/collaboration/threads.ts(57,34): error TS2322: Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'.",
+      "product/collaboration/threads.ts(68,33): error TS2322: Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'.",
+      "product/collaboration/threads.ts(86,31): error TS2322: Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'.",
+      "product/collaboration/threads.ts(101,32): error TS2322: Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'.",
+      "product/contracts/host-context.ts(14,45): error TS2307: Cannot find module '../routines/factory.ts' or its corresponding type declarations.",
+      "product/dashboard/confirmation.ts(66,474): error TS7006: Parameter 'field' implicitly has an 'any' type.",
+      "product/dashboard/confirmation.ts(104,41): error TS2345: Argument of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: false; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }>'.",
+      "product/dashboard/confirmation.ts(118,16): error TS2339: Property 'state' does not exist on type '{}'.",
+      "product/dashboard/confirmation.ts(118,52): error TS2339: Property 'index' does not exist on type '{}'.",
+      "product/dashboard/confirmation.ts(119,16): error TS2339: Property 'state' does not exist on type '{}'.",
+      "product/dashboard/confirmation.ts(120,77): error TS2339: Property 'fingerprints' does not exist on type '{}'.",
+      "product/dashboard/confirmation.ts(121,163): error TS2339: Property 'fingerprints' does not exist on type '{}'.",
+      "product/dashboard/confirmation.ts(123,61): error TS2339: Property 'fingerprints' does not exist on type '{}'.",
+      "product/dashboard/confirmation.ts(128,126): error TS2339: Property 'physicalIncarnations' does not exist on type '{}'.",
+      "product/decision-memory/source-access.ts(224,35): error TS2349: This expression is not callable.",
+      "product/decision-memory/source-access.ts(230,33): error TS2349: This expression is not callable.",
+      "product/decisions/prepared-apply.ts(46,5): error TS2322: Type '(incoming: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, context: TrustedDomainContext) => Promise<{ reason?: undefined; status: \"ok\"; value: {}; } | { ...; }>' is not assignable to type '(request: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, binding: TrustedDomainContext) => Promise<PortResult<CommandReceipt>>'.",
+      "product/decisions/prepared-apply.ts(71,446): error TS2345: Argument of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: false; value: null; } | { commit: false; value: { ...; }; } | { ...; } | { ...; } | { ...; }>' is not assignable to parameter of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: { failure: \"unavailable\"; existing?: undefined; } | null; }>'.",
+      "product/decisions/prepared-apply.ts(95,75): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "product/decisions/prepared-apply.ts(97,185): error TS2740: Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.",
+      "product/decisions/prepared-apply.ts(100,74): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "product/decisions/prepared-apply.ts(101,81): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "product/decisions/prepared-apply.ts(101,112): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "product/decisions/prepared-apply.ts(102,183): error TS2740: Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.",
+      "product/decisions/proposals.ts(92,26): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "product/documents/capabilities.ts(71,172): error TS2339: Property 'reason' does not exist on type 'SfStateResult<SfDocumentAssetCatalogEntry | undefined>'.",
+      "product/host-binding/business-context.ts(210,55): error TS2307: Cannot find module '../procurement/decision-host.ts' or its corresponding type declarations.",
+      "product/imports/dashboard-preview.ts(38,75): error TS2345: Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }>'.",
+      "product/imports/dashboard-preview.ts(60,17): error TS2339: Property 'result' does not exist on type '{}'.",
+      "product/imports/dashboard-preview.ts(60,71): error TS2339: Property 'result' does not exist on type '{}'.",
+      "product/imports/dashboard-preview.ts(60,119): error TS2339: Property 'result' does not exist on type '{}'.",
+      "product/imports/dashboard-preview.ts(62,29): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "product/imports/dashboard-preview.ts(74,251): error TS2339: Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "product/imports/dashboard-preview.ts(74,306): error TS2339: Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "product/imports/dashboard-preview.ts(74,353): error TS2339: Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "product/imports/dashboard-preview.ts(74,457): error TS2339: Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "product/imports/dashboard-preview.ts(75,297): error TS2322: Type 'unknown' is not assignable to type 'Record<string, unknown>'.",
+      "product/imports/dashboard-preview.ts(75,445): error TS2322: Type 'unknown' is not assignable to type 'Record<string, unknown>'.",
+      "product/imports/dashboard-preview.ts(75,469): error TS2322: Type 'unknown' is not assignable to type 'Record<string, unknown>'.",
+      "product/imports/dashboard-preview.ts(75,545): error TS2339: Property 'format' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "product/imports/dashboard-preview.ts(75,573): error TS2339: Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "product/imports/dashboard-preview.ts(75,592): error TS2322: Type '{}' is not assignable to type 'string'.",
+      "product/imports/dashboard-preview.ts(75,674): error TS2339: Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "product/imports/dashboard-preview.ts(75,848): error TS2339: Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "product/interface/analysis-http.ts(30,114): error TS2339: Property 'runRef' does not exist on type 'ContributionEnvelope'.",
+      "product/interface/analysis-http.ts(30,171): error TS2339: Property 'version' does not exist on type 'ContributionEnvelope'.",
+      "product/interface/analysis-http.ts(30,197): error TS2339: Property 'outputRef' does not exist on type 'ContributionEnvelope'.",
+      "product/interface/analysis-http.ts(30,235): error TS2339: Property 'outputRef' does not exist on type 'ContributionEnvelope'.",
+      "product/interface/http.ts(148,82): error TS7006: Parameter 'run' implicitly has an 'any' type.",
+      "product/interface/http.ts(148,87): error TS7006: Parameter 'index' implicitly has an 'any' type.",
+      "product/interface/import-http.ts(54,249): error TS2345: Argument of type '{ surface: string; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }' is not assignable to parameter of type '{ surface: \"dashboard\" | \"planner\"; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }'.",
+      "product/planner/headcount.ts(27,73): error TS2339: Property 'domain' does not exist on type '{ state: HeadcountState; }'.",
+      "product/planner/headcount.ts(39,66): error TS2339: Property 'domain' does not exist on type '{ state: HeadcountState; }'.",
+      "product/planner/monthly-host.ts(58,598): error TS7006: Parameter 'cell' implicitly has an 'any' type.",
+      "product/planner/persistence.ts(33,19): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "product/planner/persistence.ts(38,22): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "product/planner/prepared.ts(54,5): error TS2322: Type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: boolean; value: JsonValue; }'.",
+      "product/planner/scenario-comparison-port.ts(40,18): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "product/portfolio/catalog.ts(13,20): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "product/portfolio/handoff.ts(41,18): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "product/portfolio/handoff.ts(78,18): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "product/portfolio/planner-sensitivity.ts(80,106): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "product/portfolio/planner-sensitivity.ts(80,171): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "product/portfolio/port.ts(36,20): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "product/portfolio/sensitivity-store.ts(25,19): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "product/portfolio/verification.ts(119,106): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "product/portfolio/verification.ts(119,171): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "product/procurement/prepared.ts(69,5): error TS2322: Type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: boolean; value: JsonValue; }'.",
+      "product/ui/components.ts(49,9): error TS2741: Property 'AlternativeDraft' is missing in type '{ IntentFrame: string; AnalysisPlan: string; DecisionBrief: string; QuestionProposal: string; FinancialAnalysis: string; ScenarioComparison: string; SensitivityResult: string; CommercialComparison: string; ... 15 more ...; MatchExplanation: string; }' but required in type 'Record<\"AlternativeDraft\" | \"AnalysisPlan\" | \"CaseRecall\" | \"ClaimIssue\" | \"CommercialComparison\" | \"CommercialGap\" | \"ContextualBIProposal\" | \"CritiqueReport\" | \"DecisionBrief\" | ... 16 more ... | \"UnresolvedCondition\", string>'.",
+      "product/ui/contribution-body.ts(7,65): error TS2366: Function lacks ending return statement and return type does not include 'undefined'.",
+      "test/product/wp01/personal-views.test.ts(35,137): error TS2322: Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.",
+      "test/product/wp01/workbench-analysis.test.ts(6,38): error TS2307: Cannot find module '@orchestra/server/routes' or its corresponding type declarations.",
+      "test/product/wp03/parity-matrix.test.ts(106,68): error TS2339: Property 'recordId' does not exist on type '{ surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; } | ... 5 more ... | { ...; }'.",
+      "test/product/wp04/prepared-production.test.ts(208,41): error TS2554: Expected 0 arguments, but got 1.",
+      "test/product/wp04/prepared-production.test.ts(220,107): error TS2554: Expected 0 arguments, but got 1.",
+      "test/product/wp06/documents/runtime-e2e.test.ts(25,40): error TS2307: Cannot find module '../../../../product/routines/dossier.ts' or its corresponding type declarations.",
+      "test/product/wp06/documents/runtime-e2e.test.ts(101,227): error TS7006: Parameter '_' implicitly has an 'any' type.",
+      "test/product/wp06/documents/runtime-e2e.test.ts(101,230): error TS7006: Parameter 'call' implicitly has an 'any' type.",
+      "test/product/wp06/documents/runtime-e2e.test.ts(114,229): error TS7006: Parameter '_' implicitly has an 'any' type.",
+      "test/product/wp06/documents/runtime-e2e.test.ts(114,232): error TS7006: Parameter 'call' implicitly has an 'any' type.",
+      "test/product/wp06/documents/runtime-e2e.test.ts(253,225): error TS7006: Parameter '_' implicitly has an 'any' type.",
+      "test/product/wp06/documents/runtime-e2e.test.ts(253,228): error TS7006: Parameter 'call' implicitly has an 'any' type.",
+      "test/product/wp06/documents/runtime-e2e.test.ts(263,227): error TS7006: Parameter '_' implicitly has an 'any' type.",
+      "test/product/wp06/documents/runtime-e2e.test.ts(263,230): error TS7006: Parameter 'call' implicitly has an 'any' type.",
+      "test/product/wp06/imports/end-to-end.test.ts(56,72): error TS2345: Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+      "test/product/wp06/imports/end-to-end.test.ts(65,590): error TS2322: Type '() => Promise<unknown>' is not assignable to type '(target: ImportTarget, context: TrustedDomainContext) => Promise<PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { ...; }; }; }>>'.",
+      "test/product/wp06/imports/sqlite-planner.test.ts(41,76): error TS2322: Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; status: string; reason: string; warnings?: undefined; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; status: string; reason: string; warnings?: undefined; }; }>'.",
+      "test/product/wp06/imports/sqlite-planner.test.ts(42,12): error TS18046: 'applied' is of type 'unknown'.",
+      "test/product/wp06/imports/sqlite-planner.test.ts(46,74): error TS2322: Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; status: string; reason: string; warnings?: undefined; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; status: string; reason: string; warnings?: undefined; }; }>'.",
+      "test/product/wp06/imports/sqlite-planner.test.ts(47,12): error TS18046: 'stale' is of type 'unknown'.",
+      "test/product/wp07/review-port.test.ts(106,64): error TS2769: No overload matches this call.",
+      "test/product/wp07/review-port.test.ts(113,122): error TS2769: No overload matches this call.",
+      "test/product/wp07/review-port.test.ts(124,64): error TS2769: No overload matches this call.",
+      "test/product/wp08/confirmation-integration.test.ts(63,289): error TS2739: Type '{ state: \"available\"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; }' is missing the following properties from type '{ state: \"available\"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: EvidenceIdentity & { ...; }; projection: DomainProjection; }': evidence, projection",
+      "test/product/wp10/integration/blob-generations.test.ts(13,112): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+      "test/product/wp10/integration/blob-generations.test.ts(13,122): error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+      "test/product/wp10/integration/blob-generations.test.ts(31,58): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+      "test/product/wp10/integration/blob-generations.test.ts(31,68): error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+      "test/product/wp10/integration/blob-generations.test.ts(40,63): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+      "test/product/wp10/integration/blob-generations.test.ts(40,73): error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+      "test/product/wp10/integration/blob-generations.test.ts(51,49): error TS7006: Parameter '_snapshot' implicitly has an 'any' type.",
+      "test/product/wp10/integration/blob-generations.test.ts(51,60): error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+      "test/product/wp10/integration/blob-generations.test.ts(68,69): error TS7006: Parameter '_snapshot' implicitly has an 'any' type.",
+      "test/product/wp10/integration/blob-generations.test.ts(68,80): error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+      "test/product/wp10/integration/product-authority.test.ts(24,47): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+      "test/product/wp10/integration/product-authority.test.ts(24,57): error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+      "test/product/wp11/analysis-acceptance-adversarial.test.ts(73,60): error TS2345: Argument of type 'TrustedDomainContext' is not assignable to parameter of type 'TrustedUiContext'.",
+      "test/product/wp11/coverage-access.test.ts(39,127): error TS2322: Type '{ surface: string; type: string; id: string; incarnation: string; version: number; fields: string[]; period: { start: string; end: string; }; observedAt: string; }' is not assignable to type 'SourceRef'.",
+      "test/product/wp11/coverage-access.test.ts(48,127): error TS2322: Type '{ surface: string; type: string; id: string; incarnation: string; version: number; fields: string[]; period: { start: string; end: string; }; observedAt: string; }' is not assignable to type 'SourceRef'.",
+      "test/product/wp11/coverage-access.test.ts(77,63): error TS2322: Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "test/product/wp13/sensitivity-units-boundary.test.ts(218,211): error TS2722: Cannot invoke an object which is possibly 'undefined'.",
+      "test/product/wp13/sensitivity-units-boundary.test.ts(230,25): error TS2722: Cannot invoke an object which is possibly 'undefined'.",
+      "test/product/wp13/sensitivity-units-boundary.test.ts(230,25): error TS18048: 'store.transactionAll' is possibly 'undefined'.",
+      "test/product/wp14/source-access-atlas.test.ts(56,57): error TS2353: Object literal may only specify known properties, and 'cases' does not exist in type '{ host: DomainPortHost; state: SfProductStatePort; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; authorizeEvidence: (refs: readonly BusinessEvidenceRef[], call: TrustedDomainContext, ancestors: ReadonlySet<...>) => Promise<...>; }'.",
+      "test/product/wp14/source-access-procurement.test.ts(10,43): error TS2305: Module '\"../../../product/procurement/sources.ts\"' has no exported member 'procurementSourceSelector'.",
+      "test/product/wp14/source-access-procurement.test.ts(11,33): error TS2724: '\"../../../product/procurement/port.ts\"' has no exported member named 'isCurrentProcurementSource'. Did you mean 'projectProcurementSource'?",
+      "test/product/wp14/source-access-procurement.test.ts(31,54): error TS2741: Property 'scopedSources' is missing in type '{ host: DomainPortHost; contextFor: () => Promise<{ status: \"ok\"; value: { installationId: string; projectId: string; principalRef: string; accessRevision: string; policyVersion: string; ... 4 more ...; capabilities: never[]; }; }>; }' but required in type '{ host: DomainPortHost; scopedSources: SfScopedSourcePort; contextFor: (binding: TrustedDomainContext) => Promise<PortResult<ProductContext>>; }'.",
+      "test/product/wp14/source-access-procurement.test.ts(32,51): error TS2322: Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.",
+      "test/product/wp14/source-access-procurement.test.ts(32,83): error TS2322: Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.",
+      "test/product/wp14/source-access-procurement.test.ts(33,25): error TS2349: This expression is not callable."
+    ],
+    "spawnImports": "PASS",
+    "guards": {
+      "status": "PASS_WITH_WARNINGS",
+      "rules": 78,
+      "changedPaths": 571,
+      "gate": 0,
+      "warn": 11,
+      "errors": 0
+    },
+    "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "artifact": {
+      "id": 14107868905,
+      "name": "astra-wp12-check-1",
+      "size_in_bytes": 8170,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14107868905",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14107868905/zip",
+      "expired": false,
+      "created_at": "2026-11-14T09:33:06Z",
+      "expires_at": "2026-11-28T09:33:05Z",
+      "updated_at": "2026-11-14T09:33:06Z",
+      "digest": "sha256:fb918229f793f92442861309cd6ee1b95f056f74f27e8ddfd8da83230956c761",
+      "workflow_run": {
+        "id": 43580980934,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "astra-check-wp12",
+        "head_sha": "f7e70a2dccc82567a901b646be64695251392d5b"
+      }
+    },
+    "product": {
+      "sha": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "tree": "432fcdbd97cc6e653be3af32554c63f2d1ae6e5e"
+    },
+    "snapshot": {
+      "sha": "f7e70a2dccc82567a901b646be64695251392d5b",
+      "tree": "b102e41d8c403e0ca5f72467cf92eaed4124bae3",
+      "branch": "astra-check-wp12",
+      "product": {
+        "sha": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+        "tree": "432fcdbd97cc6e653be3af32554c63f2d1ae6e5e"
+      },
+      "envelope": {
+        "productSha": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "previousSnapshot": "4ea1711bc425a2de53c40ffb8db1697c1f379b88"
+    }
+  },
+  "native_loads": {
+    "scope": "registration-and-load-only",
+    "receipts": [
+      {
+        "runId": "wp12-load-sf-enquadrar-decisao",
+        "nativeSessionId": "ses_e269b9db0ffeAXjR39ee4TTImA",
+        "profileId": "sf_maestro",
+        "profileVersion": "1.0.0",
+        "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+        "skillId": "sf-enquadrar-decisao",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "0fd53b0f08deef41253462578105b5571dd055c140120ba7045a4893a75422e4",
+        "instructionsDigest": "cc342bb2b520a8ae37220bf600508d085553308ead08eb6e1b0843e52cb8f464",
+        "loadedMessageId": "msg_1d96464190018rIG5LwK1AEXnP",
+        "loadedAt": "2026-11-14T09:29:57.536Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-preparar-revisao-executiva",
+        "nativeSessionId": "ses_e269b9bd7ffeI2p7nI6r76fcG9",
+        "profileId": "sf_maestro",
+        "profileVersion": "1.0.0",
+        "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+        "skillId": "sf-preparar-revisao-executiva",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6",
+        "instructionsDigest": "acaae8c302cfe934e9a9b1d6e31784090ac96fa48e66dc5859d4f81cbbb4e801",
+        "loadedMessageId": "msg_1d964643c0014ZGGwF15BSgXQU",
+        "loadedAt": "2026-11-14T09:29:57.568Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-coordenar-perguntas",
+        "nativeSessionId": "ses_e269b9bbfffeKvQ5wS0MxnxHaw",
+        "profileId": "sf_maestro",
+        "profileVersion": "1.0.0",
+        "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+        "skillId": "sf-coordenar-perguntas",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "4768df83520cafc5492d13d4d5c6ca9c0900916930726904e92c35ca70108f33",
+        "instructionsDigest": "9dd6da0563e59248ba5dca0ffd2c26437a0a6bafb5abeae5a0f77aacef82fafa",
+        "loadedMessageId": "msg_1d964645b001ZW21An5s7lZIA4",
+        "loadedAt": "2026-11-14T09:29:57.599Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-explicar-forecast",
+        "nativeSessionId": "ses_e269b9b9fffe93R9MLHeefh5VU",
+        "profileId": "sf_finance",
+        "profileVersion": "1.0.0",
+        "profileDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+        "skillId": "sf-explicar-forecast",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740",
+        "instructionsDigest": "ba80c66c9a4b41677c0e2ffb94f94cc63b5e2a3c81e8a4a230739d80f0ff9227",
+        "loadedMessageId": "msg_1d9646475001wSlQOH03IwTmmQ",
+        "loadedAt": "2026-11-14T09:29:57.632Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-comparar-cenarios",
+        "nativeSessionId": "ses_e269b9b7effeKPoxJs3abE45Sj",
+        "profileId": "sf_finance",
+        "profileVersion": "1.0.0",
+        "profileDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+        "skillId": "sf-comparar-cenarios",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "65f975cbfa6e7f78528b58d3bdea90f4991357378667e4a6e3ba41b8b52b7cd2",
+        "instructionsDigest": "4a5ee94713eb474032dcc089f5cac3a073ea089479dba7ea0f90aebeb67c8ef9",
+        "loadedMessageId": "msg_1d964649c001hiWoi1s2XOv9R0",
+        "loadedAt": "2026-11-14T09:29:57.664Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-avaliar-sensibilidade",
+        "nativeSessionId": "ses_e269b9b5fffemvB8imAiVZKmc9",
+        "profileId": "sf_finance",
+        "profileVersion": "1.0.0",
+        "profileDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+        "skillId": "sf-avaliar-sensibilidade",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "e55e50dbc3a108570c59c432b50382ac3a8d5f38281fe76cfcdf27a99626b9e5",
+        "instructionsDigest": "fc415d2d3c3e7ca205e9ba92b34537f69a1a3f036ddfc0274785349d56d0e9f0",
+        "loadedMessageId": "msg_1d96464b6001uRHntnzUiBFr7b",
+        "loadedAt": "2026-11-14T09:29:57.695Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-comparar-sourcing",
+        "nativeSessionId": "ses_e269b9b3fffeEBvhy9UKfD4MD1",
+        "profileId": "sf_procurement",
+        "profileVersion": "1.0.0",
+        "profileDigest": "65f339bb5c3394c9cba7b5da5a702b3d94f61a378aee3d1067a3635ad5ceef3a",
+        "skillId": "sf-comparar-sourcing",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "be1605aea670cae00db5c63c4592cdedc0acf8ec70775b721dfe08715d637553",
+        "instructionsDigest": "bd851ccc61d93d5978b7f5068f51b7f774458e70b3a6a8caee9b9076667fb050",
+        "loadedMessageId": "msg_1d96464d6001wXmrEV7SnVIQXA",
+        "loadedAt": "2026-11-14T09:29:57.727Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-revisar-condicoes-contratuais",
+        "nativeSessionId": "ses_e269b9b1fffePUV09iheVRIHbo",
+        "profileId": "sf_procurement",
+        "profileVersion": "1.0.0",
+        "profileDigest": "65f339bb5c3394c9cba7b5da5a702b3d94f61a378aee3d1067a3635ad5ceef3a",
+        "skillId": "sf-revisar-condicoes-contratuais",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "7bcddfa9054f8d7c2f53428631106c8dc717ed246956cdf6aa58349fc491bbdb",
+        "instructionsDigest": "f170a1a4cf8fadd83716d70428425446b33b0849c9eac7af476df44c1b863fd1",
+        "loadedMessageId": "msg_1d96464f6001Jl2MGJ3AZXPLxO",
+        "loadedAt": "2026-11-14T09:29:57.759Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-preparar-compra",
+        "nativeSessionId": "ses_e269b9afeffeJpm8n7lv6T4X2M",
+        "profileId": "sf_procurement",
+        "profileVersion": "1.0.0",
+        "profileDigest": "65f339bb5c3394c9cba7b5da5a702b3d94f61a378aee3d1067a3635ad5ceef3a",
+        "skillId": "sf-preparar-compra",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "7134f86374e622e82353c93c68504462f6d75dab85d496c74a1c9d0294510cf0",
+        "instructionsDigest": "6b5a139ed88269b55c86f711c922cb7ec16ddaef7d9285e0891514319e125213",
+        "loadedMessageId": "msg_1d9646514001QjWwBaSv7tUAbA",
+        "loadedAt": "2026-11-14T09:29:57.782Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-revisar-dependencias",
+        "nativeSessionId": "ses_e269b9ae8ffexXx7OhQsMsED1k",
+        "profileId": "sf_portfolio",
+        "profileVersion": "1.0.0",
+        "profileDigest": "249ec91f7d1a76fef83c4408795b66953589d3b3f45e91c64ca691c60c8c2b83",
+        "skillId": "sf-revisar-dependencias",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "6adbeb96f182706d6125cfad31f679801a24becd9589231121ff54d62d476005",
+        "instructionsDigest": "bc18710e773e2ef7902e2899886ffd4081e6553be7bc2b076204f826b74bbdf0",
+        "loadedMessageId": "msg_1d9646532001SbN56j7e5fg80d",
+        "loadedAt": "2026-11-14T09:29:57.813Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-compor-portfolio",
+        "nativeSessionId": "ses_e269b9ac9ffedYeBFWS4Uw6cdd",
+        "profileId": "sf_portfolio",
+        "profileVersion": "1.0.0",
+        "profileDigest": "249ec91f7d1a76fef83c4408795b66953589d3b3f45e91c64ca691c60c8c2b83",
+        "skillId": "sf-compor-portfolio",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "8910dd159591b5849f60a734ed27549e57ec3de6d05c125b004202c217166642",
+        "instructionsDigest": "0f6f8d575fd60b062fe2b700cde10fadd9e93bcb47409a0b8b362f028629cd07",
+        "loadedMessageId": "msg_1d9646553001e8odloNkQHn5mF",
+        "loadedAt": "2026-11-14T09:29:57.847Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-reavaliar-compromissos",
+        "nativeSessionId": "ses_e269b9aa7ffevyE0sZjqQoChjR",
+        "profileId": "sf_portfolio",
+        "profileVersion": "1.0.0",
+        "profileDigest": "249ec91f7d1a76fef83c4408795b66953589d3b3f45e91c64ca691c60c8c2b83",
+        "skillId": "sf-reavaliar-compromissos",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "a7f8d1b51ab0d5ac5182a4f9bbf8035c9227be27f45c50d85e76318919d356d6",
+        "instructionsDigest": "a8f4ee47edb3c6d51ae9494ffee887af9c9d2072679f663583dbcc8ed30f6ea1",
+        "loadedMessageId": "msg_1d9646575001pHfDHJuCRNOUJf",
+        "loadedAt": "2026-11-14T09:29:57.881Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-contestar-decisao",
+        "nativeSessionId": "ses_e269b9a86ffer0n0mBUlWyidcx",
+        "profileId": "sf_reviewer",
+        "profileVersion": "1.0.0",
+        "profileDigest": "cd0f89c9a1342101bf00a74c8ab794098889775773a7fe4cef120d28cf6f6391",
+        "skillId": "sf-contestar-decisao",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "9d0a00c76ce8064f87eeb325eb0bc5c252bc9119d25e2047b78a55803b735696",
+        "instructionsDigest": "ea13087b54f1c8e8d94974cba313f407c6fbb21bc825e4452aa57c7789e81def",
+        "loadedMessageId": "msg_1d96465960018F7WAB8j0eZaD9",
+        "loadedAt": "2026-11-14T09:29:57.913Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-revisar-evidencias",
+        "nativeSessionId": "ses_e269b9a65ffek3Oaq53MYik6dR",
+        "profileId": "sf_reviewer",
+        "profileVersion": "1.0.0",
+        "profileDigest": "cd0f89c9a1342101bf00a74c8ab794098889775773a7fe4cef120d28cf6f6391",
+        "skillId": "sf-revisar-evidencias",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "eda2166e5a588ba51888b1b7968544f05debb7179be8959c24cf681c4d1f0be8",
+        "instructionsDigest": "8f407777a68965d86469eb1ce1554a231ac1b546af0e4d8e080734984f7f9a1d",
+        "loadedMessageId": "msg_1d96465b1001OOKtNYsFj291Tf",
+        "loadedAt": "2026-11-14T09:29:57.946Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-extrair-evidencias",
+        "nativeSessionId": "ses_e269b9a45ffe4pgCSHE5410DGG",
+        "profileId": "sf_maestro",
+        "profileVersion": "1.0.0",
+        "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+        "skillId": "sf-extrair-evidencias",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "344827329b05b260be70c2dfbdbfcee22e329b090e38af82863bacfc2a610a1f",
+        "instructionsDigest": "e5097d33f0505ab51088100b25bae02dc830bdcdd55eb4bf4c54acd976bf558b",
+        "loadedMessageId": "msg_1d96465d2001K4gRWFte9dK5DI",
+        "loadedAt": "2026-11-14T09:29:57.980Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-produzir-bi-contextual",
+        "nativeSessionId": "ses_e269b9a23ffe9ezE0b04s4T46E",
+        "profileId": "sf_maestro",
+        "profileVersion": "1.0.0",
+        "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+        "skillId": "sf-produzir-bi-contextual",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "db1f3b552ea8d317ce8c27cc7e69f7912630ec314f1adfdb789137fccd48dfd7",
+        "instructionsDigest": "4b0f8eda17125e40a9458f9390328419f9460a34f291c0d7ab9636ed89686bd0",
+        "loadedMessageId": "msg_1d96465f3001VfQq9iF0my2WeF",
+        "loadedAt": "2026-11-14T09:29:58.014Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-produzir-material-reuniao",
+        "nativeSessionId": "ses_e269b9a00ffeHighHlrOgHkmrg",
+        "profileId": "sf_maestro",
+        "profileVersion": "1.0.0",
+        "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+        "skillId": "sf-produzir-material-reuniao",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "d5389ae1fa4cebab61ddf53cc75a1d25c5a293182fff7b5d03bce5f90ac1a7bb",
+        "instructionsDigest": "a18bc877c2b0abc80836667342f53833446c1328a6464edc2dcac05ed8a56879",
+        "loadedMessageId": "msg_1d9646615001rLdsStTa9zGiaC",
+        "loadedAt": "2026-11-14T09:29:58.049Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      },
+      {
+        "runId": "wp12-load-sf-consultar-memoria-decisoria",
+        "nativeSessionId": "ses_e269b99deffeR3sMMRRABInHpB",
+        "profileId": "sf_maestro",
+        "profileVersion": "1.0.0",
+        "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+        "skillId": "sf-consultar-memoria-decisoria",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "46912ccaacbcd9488f36ed8258f0780c4451412967e79506558f8aee68c64db2",
+        "instructionsDigest": "67d4166705d222b9d654f4e32d0b804ae0fdf7a157755545fde5ed7da92629a6",
+        "loadedMessageId": "msg_1d9646636001qEjC7VPw3TFveq",
+        "loadedAt": "2026-11-14T09:29:58.080Z",
+        "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+      }
+    ],
+    "loaded_skills": 18,
+    "distinct_sessions": 18,
+    "distinct_messages": 18,
+    "inference_witnesses": 0,
+    "durable_provider_admission_witnesses": 0,
+    "consumer_after_reload_witnesses": 0
+  },
+  "source_pins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "blob_sha": "f97ff2c8ddf7ae856f3259020998867892e61306",
+      "sha256": "fa97219ee0a3e501d854f9ca947c4a504bac781447a41779d8e2386ce5fc0da3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "blob_sha": "5f0cb57b7b9263d68e743165828fd75bc9df076d",
+      "sha256": "ca281bee934a8d219e028cfdf1702708ac0f17d14263f63af4f5020238ec1b4f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/continuation.ts",
+      "blob_sha": "fa0e6dce5d63c7a1f9fadb20005b77e2e4c0a227",
+      "sha256": "717c8ca3b67112aea7bc6b652536413a93619ae7b65422287777c0d43eb17357"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-builder.ts",
+      "blob_sha": "19599d970f22eeab98fffd57d78629de914f8bf9",
+      "sha256": "15282fc31ac2e56ebd0b305fccad6535df6cc2cd7d9f6ba3afdd265bab37b67b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "blob_sha": "e21faab024f4f908b3578f561c063f48c3c786c3",
+      "sha256": "6d57a9e6d075b529923783caafa01c7e3d3a8446825af268e46e85fc4a603fb2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/native-probe.json",
+      "blob_sha": "4e257c2bc83968759619a3698df0bee55b4c274b",
+      "sha256": "c21f7e493e5a48e5f21ceaf49834a384519ce5f9267bec5eb14b435b2449a106"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "blob_sha": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "sha256": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_finance.json",
+      "blob_sha": "3f6c6d59ef7374f7ede0c6f21f9c652ee8019e25",
+      "sha256": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_maestro.json",
+      "blob_sha": "77421be809ca53f5e4ef9d8f1dc719137ab1d406",
+      "sha256": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_portfolio.json",
+      "blob_sha": "744918076fa510339a3216487da8f59b06fe45e8",
+      "sha256": "249ec91f7d1a76fef83c4408795b66953589d3b3f45e91c64ca691c60c8c2b83"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_procurement.json",
+      "blob_sha": "5c1b3c641396c3ab7ee61b1314c3f945d7231b9e",
+      "sha256": "65f339bb5c3394c9cba7b5da5a702b3d94f61a378aee3d1067a3635ad5ceef3a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_reviewer.json",
+      "blob_sha": "e90c2e04fe618c361b595882c4d1ff25a2e835f8",
+      "sha256": "cd0f89c9a1342101bf00a74c8ab794098889775773a7fe4cef120d28cf6f6391"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+      "blob_sha": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+      "sha256": "7de5f0c1630a547fcfae4de691d96d1d138a983955b31622194689b24067b27a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-provenance.ts",
+      "blob_sha": "b303ef7a4968ffb2cc2f51e6318e165a07ac3c73",
+      "sha256": "c0c0538f71fb15b12df0d6e2e3feab662c49b0966d41b3d2cc394e7a41d8ac8f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "blob_sha": "3e0b32af1d5e4350d619a6db975551d6fde5c80a",
+      "sha256": "2f5a71abbb9f7ff7557a2d155e00cf7de1b85591e3c2fa9977d9448b70a960a0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-avaliar-sensibilidade/SKILL.md",
+      "blob_sha": "4a31425aa1b87b6cd9f4127951cdd355c9948761",
+      "sha256": "e55e50dbc3a108570c59c432b50382ac3a8d5f38281fe76cfcdf27a99626b9e5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
+      "blob_sha": "8cccc31aaf8b304da167dfd11895ee3f1e8a4c16",
+      "sha256": "65f975cbfa6e7f78528b58d3bdea90f4991357378667e4a6e3ba41b8b52b7cd2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-sourcing/SKILL.md",
+      "blob_sha": "7efc33c59e5545caa38b7bf3b51749699c398e4f",
+      "sha256": "be1605aea670cae00db5c63c4592cdedc0acf8ec70775b721dfe08715d637553"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md",
+      "blob_sha": "255226879e40d87bfba55a644b67fd7bc7371115",
+      "sha256": "8910dd159591b5849f60a734ed27549e57ec3de6d05c125b004202c217166642"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-consultar-memoria-decisoria/SKILL.md",
+      "blob_sha": "2ee966afb19228329610bd4f468bcd57c6dd0ad0",
+      "sha256": "46912ccaacbcd9488f36ed8258f0780c4451412967e79506558f8aee68c64db2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-contestar-decisao/SKILL.md",
+      "blob_sha": "886d0666c5ae5c2cfa48316d99f3cd3f75521ed5",
+      "sha256": "9d0a00c76ce8064f87eeb325eb0bc5c252bc9119d25e2047b78a55803b735696"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md",
+      "blob_sha": "71214d50fc1d51400ad5a2b2b277fe819c460e17",
+      "sha256": "4768df83520cafc5492d13d4d5c6ca9c0900916930726904e92c35ca70108f33"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+      "blob_sha": "7a6ee1ca2baad915ab2c21b35001d3e49103ba9e",
+      "sha256": "0fd53b0f08deef41253462578105b5571dd055c140120ba7045a4893a75422e4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+      "blob_sha": "f22c114e97ceea6d8839efe892f57b2c1dcb58ae",
+      "sha256": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-extrair-evidencias/SKILL.md",
+      "blob_sha": "15b2ad72102d0da92a626315852c6dc1c4e556e6",
+      "sha256": "344827329b05b260be70c2dfbdbfcee22e329b090e38af82863bacfc2a610a1f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-compra/SKILL.md",
+      "blob_sha": "88ce0b23673866e82485b970d3a2a559091d277f",
+      "sha256": "7134f86374e622e82353c93c68504462f6d75dab85d496c74a1c9d0294510cf0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+      "blob_sha": "b331ec5ba4c55aae7387c22ff5c0d3532766cb4f",
+      "sha256": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-bi-contextual/SKILL.md",
+      "blob_sha": "313d50dca7c9ca78e57ca2818f778e5c2680177e",
+      "sha256": "db1f3b552ea8d317ce8c27cc7e69f7912630ec314f1adfdb789137fccd48dfd7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-material-reuniao/SKILL.md",
+      "blob_sha": "d9eb1442a99334424431614942ab98304d196596",
+      "sha256": "d5389ae1fa4cebab61ddf53cc75a1d25c5a293182fff7b5d03bce5f90ac1a7bb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-reavaliar-compromissos/SKILL.md",
+      "blob_sha": "e287b51c600f512895b8fe70b47059c0e6cd5369",
+      "sha256": "a7f8d1b51ab0d5ac5182a4f9bbf8035c9227be27f45c50d85e76318919d356d6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-condicoes-contratuais/SKILL.md",
+      "blob_sha": "af90ae46fd08f976780ee9ce470ddda93cdd0780",
+      "sha256": "7bcddfa9054f8d7c2f53428631106c8dc717ed246956cdf6aa58349fc491bbdb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-dependencias/SKILL.md",
+      "blob_sha": "b73080dc07de0f1a2298f17354b25e0ecae081c5",
+      "sha256": "6adbeb96f182706d6125cfad31f679801a24becd9589231121ff54d62d476005"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-evidencias/SKILL.md",
+      "blob_sha": "f993b283c94df093c158dbc06acc80ef9395d4b6",
+      "sha256": "eda2166e5a588ba51888b1b7968544f05debb7179be8959c24cf681c4d1f0be8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "blob_sha": "839354e9b0c51a7c919539dbf246edd723194a9c",
+      "sha256": "23e964f18eb821be65f9f6a4dd278c25b559a5c6729c3bb9977508d460f0a985"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "blob_sha": "bc76ac585880bb3d160aa5156878b62234cd4c3b",
+      "sha256": "e2dc7aebc99aa2b22bb4b66840c9df453f7d718e8382e71efc0bd6c56d9d058c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/continuation.test.ts",
+      "blob_sha": "4a4191b7b7b556d5e3c0fd6b66f96bb042f375df",
+      "sha256": "e4e6c37477ca534e1f022fad78532380c16f4940f2af317bf4b9f55a24e2dff9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "blob_sha": "0ff0519df135fb971dc49822e28849ea3d97aadb",
+      "sha256": "4248d5feffb8b88e022e24d9c93e313ffc8b84e7f63f492c73a02d848cc6e433"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+      "blob_sha": "d481eb6824b062da49d56e2608a51f90bbdb248c",
+      "sha256": "423e2a6cf681bf6964aa1c3f89b91c8f74acba0c1999f0f3ed41bdf776deed7a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts",
+      "blob_sha": "8daf1d4de7432504250a4d44cddc2eaa3b661a59",
+      "sha256": "e3e834bba16a72f56e0b5d38cdbecf2e6584faee12073e32a5a76c6a29a65233"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-authority.test.ts",
+      "blob_sha": "81840ce2745a2d970f8bacb4878a9b537a2f96b6",
+      "sha256": "1eadaeaa8486eaf1cfd4ed37b002854de79d0e980693cc45fe1b4b01ae0f2774"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native-fixture.ts",
+      "blob_sha": "3b5b19e78a3dfe04c445e098841d488d36d5a51a",
+      "sha256": "ceabe739a68283e65900e2523e8dc30340a6f82a42efb2217726b6d5565c5c8c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+      "blob_sha": "dcca1255b1a05ed082a72367419d6469907bd4d2",
+      "sha256": "0f85d439cd36684c78e0737de6f2f3c126f6ed0ab867f956df73ce8fd65d78ce"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident.test.ts",
+      "blob_sha": "6b83c09abb8a65ca109f31d953de30e8f9f955d3",
+      "sha256": "9ff26698a3c7cedd8f048475b45d227ad6133829cd40713889ac6b364ecde10c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-fixture.ts",
+      "blob_sha": "423095899a5080f69df14120dfacd2b809e26dd8",
+      "sha256": "3e54b6f938ad87287e073eb94965bcec293587bc0a220f901ab9e2dd76a11b3c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "blob_sha": "542403e347b2cf09282bfde4f3c9078ccccebeeb",
+      "sha256": "562eb23be859b1f4eacd0d2f09e68ca7c938b7d7a89751dfe3a44708fb7dcee9"
+    }
+  ],
+  "intake": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "baseBlob": "dbaa8dd7a57134769aa12d4e196db1013cb278cb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/normative-contracts.json",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "a59ecb7ea7315504cb78ced5c6b6dd828e238730",
+      "baseBlob": "daabdfc6fdd3f20a262e51cb25b8d12288df6cc2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "0d9fc51d26a0ca726d32e74605b555f871d99af6",
+      "baseBlob": "dae3f65d645a80ab319498f9c50743a0141706fa"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "4db2e631bd83ccda67442824557881c2ed990c92",
+      "baseBlob": "428c3c4cc1fdb5d674549b000179c0e06bb0ceb2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "baseBlob": "61099006a0312f2cabc1e42fb5b625c859d0eb15"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state-layout.ts",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "c3a6e039badc5ed49b20caa7153cb01979ebec9a",
+      "baseBlob": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "baseBlob": "d1e3ed1cdb64e38f6770ea5e864f80b41b05b688"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "1d3229d717ac490a2727cc30df65cedd77d52a57",
+      "baseBlob": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "0ac4c11d4eddb6e4a67c2c41efe40a7ff34fa47e",
+      "baseBlob": "ac158b0a4be9f6062339c37fb0a386eb9a11de10"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/evidence-order.ts",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "6b3f78f6d8f4037829db6b83259edb76dc2436a5",
+      "baseBlob": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "0a26a1ed086b9ce0a4a1907a233b705e6061e659",
+      "baseBlob": "0998a00b1564b865d7a77f46f585c7b07416ba3c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "baseBlob": "b7988a2963a2797a96ea19ab2b3a481564548213"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/routines/decision.ts",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "53b2a0b5ba689dc8364e94713fd6ddbee2fdd891",
+      "baseBlob": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "d2860d3b241c90ecd5dc45bb4010de3c85449a27",
+      "baseBlob": "299f248af3ffce806803c7c97adf3267628b7152"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "11922bec60a7b9223f6f11043b02a63885b55b31",
+      "baseBlob": "d48adc4225f522fcb159db905e5832cd32e80fe8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "eb14812f4e3e6545b9732a3930da6c2cececa81c",
+      "baseBlob": "b5664a9dc2e85cd5f94bad40d81df99c0ae59a75"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+      "sourceBlob": "4d162bd19de53d61e85880ccd975d2549276a79b",
+      "baseBlob": "3cff741ce7dd96b7fdec8ac803e3b27c6170a463"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+      "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+      "sourceBlob": "7c1b3dd08dc663e9dfa406b09dc2af5920281131",
+      "baseBlob": "2b2271834edf3be7ddb3e16885a9a1861d5561f6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+      "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+      "sourceBlob": "6c4c972fb678ca31fc09606008feef5090602b1f",
+      "baseBlob": "84b66e7f7737b291510bee7f746323654415986a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/routines/result-access.ts",
+      "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+      "sourceBlob": "2695f4d4564b071a92529e55910e7edd54599392",
+      "baseBlob": null
+    }
+  ],
+  "publication_chain": {
+    "W0": {
+      "sha": "c9d0bbc0499bd2e5ebdefb777b25379548302647",
+      "tree": "9ed64f569fc9c5894a67d229a1e2476baf810d95"
+    },
+    "W1": {
+      "sha": "7cdcadbbba77b90e129fdac414c318121aaf1515",
+      "tree": "811b2d39c86c279122ea18b830012967f91bda16"
+    },
+    "W2": {
+      "sha": "378e17c0ba8c1f87c51a1957f9efd5e47711851f",
+      "tree": "a7e8b5ad2dd0edb04b3052cc2bc16972df4c2c02"
+    },
+    "W3": {
+      "sha": "b284a1c4fb54536b54bd4c2eb2adf2d947504725",
+      "tree": "58d8b9f59cf206fecea78c55d05b57c1bfdce8db"
+    },
+    "W4": {
+      "sha": "ac3b5b53e65fbf251b6d3a95d6abef98d46a272a",
+      "tree": "432fcdbd97cc6e653be3af32554c63f2d1ae6e5e"
+    }
+  },
+  "prior_runs": [
+    {
+      "product": {
+        "sha": "378e17c0ba8c1f87c51a1957f9efd5e47711851f",
+        "tree": "a7e8b5ad2dd0edb04b3052cc2bc16972df4c2c02"
+      },
+      "snapshot": {
+        "sha": "fbe4666f73bbf1f1d0a1ef88f615c66c2523c126",
+        "tree": "0503abf4fff834f2a7fcbd57732f64c244fddee7",
+        "branch": "ci-run-linux-astra-wp12-378e17c0-6a0d9e45-1",
+        "product": {
+          "sha": "378e17c0ba8c1f87c51a1957f9efd5e47711851f",
+          "tree": "a7e8b5ad2dd0edb04b3052cc2bc16972df4c2c02"
+        },
+        "requestSha256": "6a0d9e4517be5447b511d0fe0d9550caa6dce70b5029004c9a4cddef7bf50ea3"
+      },
+      "run": 43580201805,
+      "job": 132403088780,
+      "status": "FAIL",
+      "pass": 45,
+      "fail": 3,
+      "assertions": 220
+    },
+    {
+      "product": {
+        "sha": "378e17c0ba8c1f87c51a1957f9efd5e47711851f",
+        "tree": "a7e8b5ad2dd0edb04b3052cc2bc16972df4c2c02"
+      },
+      "snapshot": {
+        "sha": "a0d50566f48e7f0fd26a9f4db3565daa986faaee",
+        "tree": "60b0d1884351d0a336ebd04bf9e8de38141899d9",
+        "branch": "astra-check-wp12",
+        "product": {
+          "sha": "378e17c0ba8c1f87c51a1957f9efd5e47711851f",
+          "tree": "a7e8b5ad2dd0edb04b3052cc2bc16972df4c2c02"
+        },
+        "envelope": {
+          "productSha": "378e17c0ba8c1f87c51a1957f9efd5e47711851f",
+          "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+        }
+      },
+      "run": 43580209152,
+      "job": 132403109658,
+      "status": "FAIL",
+      "typecheckDiagnostics": 141,
+      "ownDiagnostics": 1,
+      "artifact": {
+        "id": 14107927179,
+        "name": "astra-wp12-check-1",
+        "size_in_bytes": 8222,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14107927179",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14107927179/zip",
+        "expired": false,
+        "created_at": "2026-11-14T09:23:41Z",
+        "expires_at": "2026-11-28T09:23:40Z",
+        "updated_at": "2026-11-14T09:23:41Z",
+        "digest": "sha256:6dec776a6f5db4a9f61855df8fc9bad9e947fb97f45601e1bca35a557edbc248",
+        "workflow_run": {
+          "id": 43580209152,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp12",
+          "head_sha": "a0d50566f48e7f0fd26a9f4db3565daa986faaee"
+        }
+      }
+    },
+    {
+      "product": {
+        "sha": "b284a1c4fb54536b54bd4c2eb2adf2d947504725",
+        "tree": "58d8b9f59cf206fecea78c55d05b57c1bfdce8db"
+      },
+      "snapshot": {
+        "sha": "4ea1711bc425a2de53c40ffb8db1697c1f379b88",
+        "tree": "1dcfbd7971dfd546c0b285d9a8e362871136371d",
+        "branch": "astra-check-wp12",
+        "product": {
+          "sha": "b284a1c4fb54536b54bd4c2eb2adf2d947504725",
+          "tree": "58d8b9f59cf206fecea78c55d05b57c1bfdce8db"
+        },
+        "envelope": {
+          "productSha": "b284a1c4fb54536b54bd4c2eb2adf2d947504725",
+          "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+        },
+        "previousSnapshot": "a0d50566f48e7f0fd26a9f4db3565daa986faaee"
+      },
+      "run": 43580762953,
+      "job": 132404813401,
+      "status": "FAIL",
+      "typecheckDiagnostics": 141,
+      "ownDiagnostics": 1,
+      "artifact": {
+        "id": 14108675787,
+        "name": "astra-wp12-check-1",
+        "size_in_bytes": 8252,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14108675787",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14108675787/zip",
+        "expired": false,
+        "created_at": "2026-11-14T09:30:39Z",
+        "expires_at": "2026-11-28T09:30:38Z",
+        "updated_at": "2026-11-14T09:30:39Z",
+        "digest": "sha256:2e2ec437bde2370b299ba9f0b3b7e61488f22d0835516395d5179dacc893abb8",
+        "workflow_run": {
+          "id": 43580762953,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp12",
+          "head_sha": "4ea1711bc425a2de53c40ffb8db1697c1f379b88"
+        }
+      }
+    }
+  ],
+  "delivery_guard": "Evidence-only delivery is checked separately. The delivery commit/run cannot self-identify in this file; exact refs are published in PR39 and the final handoff message.",
+  "limitations": [
+    "No local product test was run.",
+    "No 18-skill provider inference proof, native Relay positive proof, AM01-AM06, GNATIVE, G7 or G8 acceptance is claimed.",
+    "The full package typecheck is not green. Zero own-path diagnostics does not mean typecheck PASS.",
+    "No target/base/other owner branch, dev or deployment was merged or edited."
+  ]
+}

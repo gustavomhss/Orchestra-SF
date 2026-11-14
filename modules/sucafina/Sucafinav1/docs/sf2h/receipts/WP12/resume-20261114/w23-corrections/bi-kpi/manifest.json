@@ -1,0 +1,73 @@
+{
+  "schema": "wp12-own-increment-manifest-v1",
+  "status": "FROZEN_STATIC_REVIEWED_NOT_RUN",
+  "base_product": {
+    "head": "5c148a16b76f98dfe194823c0e10ed2ef7685a69",
+    "tree": "42bc4bbb0662ad74a4974a4e6165274f50cc32fa"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-kpi.test.ts",
+      "frozen_path": "resume-input/criteria/bi-kpi/frozen/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-kpi.test.ts",
+      "blob": "32c71d3c8c9645e6957eca6f3e4afa64727b71a5",
+      "sha256": "7a480dec22dfe740e1ee7cf237019589f31e7b03d25750b474f10460451f326b",
+      "bytes": 29289,
+      "kind": "own-test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-kpi-route/README.md",
+      "frozen_path": "resume-input/criteria/bi-kpi/frozen/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-kpi-route/README.md",
+      "blob": "fba2bbce6ace6834e4808723e951c6eb71c300ca",
+      "sha256": "8041aa8e3855a01f945bb8bb85388ae51ecbae065f7d06a2a899c6c51708e0c2",
+      "bytes": 4313,
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-kpi-route/implementation.json",
+      "frozen_path": "resume-input/criteria/bi-kpi/frozen/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-kpi-route/implementation.json",
+      "blob": "cc37f847c89e6953897036f9606e9b496d51ab7a",
+      "sha256": "7adcd8deded8467a0de299ec472135da7bea9cc15f88dc96d066e1fedc154123",
+      "bytes": 6693,
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-kpi-route/independent-review.json",
+      "frozen_path": "resume-input/criteria/bi-kpi/frozen/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-kpi-route/independent-review.json",
+      "blob": "197fdce8fca1c24d6d62e70d4aa643acd3e0abd5",
+      "sha256": "a78c814f4d2acb49570a6cec837dc973a78e231c528947d2a17f202728760d3c",
+      "bytes": 12520,
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-kpi-route/source-pins.json",
+      "frozen_path": "resume-input/criteria/bi-kpi/frozen/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-kpi-route/source-pins.json",
+      "blob": "5a9d1780f85a48dfe9322f5b77602d5532ae16c0",
+      "sha256": "1954cc7937305104d9b2f0c88293f1bba7a298cad7c39f273ec5c0e5e514926a",
+      "bytes": 7230,
+      "kind": "own-document"
+    }
+  ],
+  "counts": {
+    "files": 5,
+    "own_tests": 1,
+    "own_documents": 4,
+    "source_pins": 15,
+    "acceptance_upgrades": 0
+  },
+  "independent_review": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-kpi-route/independent-review.json",
+    "sha256": "a78c814f4d2acb49570a6cec837dc973a78e231c528947d2a17f202728760d3c",
+    "status": "PASS_STATIC"
+  },
+  "selection": {
+    "test_file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-kpi.test.ts",
+    "test_name": "native contextual BI01 discovers its auxiliary KPI source through the real case and preserves separate chart and tool provenance after reload",
+    "timeout_ms": 360000,
+    "hosted_status": "NOT_RUN"
+  },
+  "scope": "Required sf_kpi_explain of sf-produzir-bi-contextual; does not substitute Forecast AM02 or create the missing artifact identity discovery port.",
+  "foreign_edits": false,
+  "local_product_tests": false,
+  "local_typecheck": false,
+  "new_provider_or_credentials": false
+}

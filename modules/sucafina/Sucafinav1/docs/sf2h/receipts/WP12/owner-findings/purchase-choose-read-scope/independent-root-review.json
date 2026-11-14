@@ -1,0 +1,72 @@
+{
+  "schema": "sf-wp12-independent-source-review-v1",
+  "reviewer": "Astra root",
+  "status": "PASS_BOUNDED_APPLICABILITY_REVIEW",
+  "reviewedManifest": {
+    "bytes": 1737,
+    "sha256": "bda64536bc020dd2eb6bf52228ea1b1ac7c2b4dccb753a4376e567ffe1c28a11",
+    "blob": "3ac86b10369a71fa6507f14585c75659732b5612"
+  },
+  "reviewedAudit": {
+    "bytes": 18614,
+    "sha256": "1df3ed382ac39f456057c141b1e2a312010552182dfe5c879e9aaf8706524195",
+    "blob": "b4d17033ec5d631b6add211e55dce569640b1e73"
+  },
+  "verifiedMcpPayloads": 32,
+  "uniqueBlobs": 29,
+  "frozenDocuments": 4,
+  "scope": "Whether the exact published WP10 read scopes constitute a relevant fix for the observed first-choice refusal. This is a source review, not an execution or approval of the whole host closure.",
+  "findings": [
+    {
+      "claim": "Case read scope is ineligible before C12 preparation",
+      "evidence": [
+        "b5cebd6362b14b5b81fda7b80ff1e0f7bd85a3d6:54-56",
+        "20c02e25b9c26b34b9cbecf407027bd80de48dae:129-138"
+      ],
+      "reviewed": "The nonempty planned preparedChanges gate and owner fallback test agree. WP12 has no prepared change at its first decision-choose."
+    },
+    {
+      "claim": "Evidence wrapper does not enclose the current PR reader",
+      "evidence": [
+        "c851f877970b18927bb2bcab96de5699fd8eaada:135-143",
+        "bf571da17ad2cae7bd970697efdaaf541d00b1cc:92-111",
+        "23d9291b3dcedda36edc4aa4f38856024e3c58f4:255-260,284-288",
+        "5cca27ce239c92a8e3c9f9f92f816f5224562904:263-265"
+      ],
+      "reviewed": "Missing C12 archive returns undefined from the wrapped historical resolver. BCS awaits that result, then calls currentProcurement outside the wrapper. This is bounded off-path coverage, not a claim that the wrapper is globally ineffective."
+    },
+    {
+      "claim": "Other candidate scopes do not establish a benefit for this choice",
+      "evidence": [
+        "907d1a0c48389af4b32cc958d53d2b1a7ae1fcc3",
+        "2ebb518403bc463dddd645f77af12cb877bce3e1",
+        "f83b79d838deb2fcdd09300903d2469b3de6d32e",
+        "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18"
+      ],
+      "reviewed": "No recall observation, duplicate Procurement scenario or outer active source scope is demonstrated in the actual mixed Planner/PR first-choice flow. No performance gain is inferred."
+    },
+    {
+      "claim": "The first inner refusing subgate is still unknown",
+      "evidence": [
+        "c434de513cb7ceae4acad1fc595e776785ec85af:64",
+        "f04ace251e94b623169df4460971ec3f7fabc168"
+      ],
+      "reviewed": "The terminal HTTP authority check can replace an inner result. Static metric/units fanout is a diagnostic lead, not measured runtime attribution."
+    },
+    {
+      "claim": "Structural closure and prior live-lease hold remain separate",
+      "evidence": [
+        "c851f877970b18927bb2bcab96de5699fd8eaada",
+        "206271d33bcfb7786ee80ef0dfad50eb80e4fee2"
+      ],
+      "reviewed": "Seven direct blobs are described, none applied. This review does not certify transitive host compatibility or resolve the previously published final-await lease fence."
+    }
+  ],
+  "authority": "No additional user permission is required for authorized routine WP12 work. Audit references to code approval mean technical review before changing the failed fixture, not a new user approval flow.",
+  "productTests": false,
+  "localTypecheck": false,
+  "foreignEdits": false,
+  "intakeApplied": false,
+  "equivalentRerunReleased": false,
+  "result": "Publish and forward the exact diagnostic delta to WP10/WP11. Do not re-run the equivalent Purchase merely because unrelated scopes were published."
+}

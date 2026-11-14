@@ -1,0 +1,107 @@
+{
+  "schema": "wp12-independent-static-review-v1",
+  "reviewer": "/root/own_review_resume",
+  "status": "PASS_STATIC",
+  "source": {
+    "path": "repo/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+    "blob": "40ea061443542c42a4b27a6f9f602a97d05442b9",
+    "sha256": "6c52720f88a5e77f0db8232c3f8510a44b943d0466febf2b514d88fdbf10df65",
+    "bytes": 33956
+  },
+  "reviewedManifest": {
+    "path": "resume-input/own-missions/document-selection-renewal/manifest.json",
+    "blob": "508a280f6950e99403b3bdb28a34e1f5baf96f64",
+    "sha256": "c43cfc6307147ecf30fbb27e6c6576eeaeb325832847d81707c6eb7cca0e45a4",
+    "bytes": 976
+  },
+  "findings": [],
+  "checks": [
+    {
+      "area": "Actual period registry",
+      "result": "The published business-services source requires an authenticated UI sf_work_list intent and revalidation to create the period selection. It uses an identity-keyed five-minute entry and checks entry identity during each contextFor call. The existing helper renews both actual business instances through these public create methods; no clock, TTL or authority modification is made."
+    },
+    {
+      "area": "Boundary ordering",
+      "result": "Fresh selections occur between completed operations, before preparations, native entry and case-backed consumers. They do not run concurrently with an in-flight authority check, retry a denied call or replace a Request. No captured source/document/skill input is manufactured."
+    },
+    {
+      "area": "Error and timing behavior",
+      "result": "documentPhase calls its supplied operation once, returns the original value, records passive begin/return/failure timing, and rethrows the original error. Generic return inference preserves Response|undefined and native witness narrowing."
+    },
+    {
+      "area": "Preservation",
+      "result": "All 73 prior expect lines are byte-equivalent after whitespace normalization and remain in order. Document/schema selection, extraction and independent review, ContractReview boundary, confirmation/scenario consumer, two reloads and 600000ms deadline remain."
+    },
+    {
+      "area": "Cross-increment helper default",
+      "result": "The separately reviewed Purchase helper adds an opt-in withChoiceParameter. This Documents driver still calls selected:complete/includeContract:true without that option; its empty scenario operations and all-confirmed component checks are preserved."
+    }
+  ],
+  "sourcePinsVerified": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "97cde4dce2858f47b57b446c9c20bad77d367591",
+      "verified": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-host-services.ts",
+      "blob": "9b21d9f7d4b115bb690ab82256b2cef0590c6afe",
+      "verified": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-services.ts",
+      "blob": "900f199800b683503267b011af2c255be841a3a1",
+      "verified": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-registry.ts",
+      "blob": "04e191874652e15b5647ab67d61156a30bf8dffb",
+      "verified": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/document-analysis.ts",
+      "blob": "fbec7b20cfe236d3f729b364b8f35b40bdc4c8ab",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+      "blob": "f1433397246117886e109d32b171345ec1992066",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+      "blob": "549225d0b82054ebacd0087b39bc6a8a46bc93db",
+      "verified": true
+    }
+  ],
+  "priorExpectLines": 72,
+  "currentExpectLines": 72,
+  "limits": [
+    "The earlier 305385ms aggregate failure and absent refresh are compatible with expiration, but do not isolate the exact first failed subgate or duration of extraction preparation.",
+    "A single operation can still expire or exceed its deadline; corrected runtime and performance require the next distinct hosted CI snapshot.",
+    "No native inference, contract producer closure, reviewer claims or missing provider is promoted to PASS by this static fix."
+  ],
+  "validation": {
+    "productTests": false,
+    "typecheck": false,
+    "localProductImports": false,
+    "remoteMutation": false,
+    "sourceModifiedByReviewer": false,
+    "deadlineMs": 600000
+  }
+}

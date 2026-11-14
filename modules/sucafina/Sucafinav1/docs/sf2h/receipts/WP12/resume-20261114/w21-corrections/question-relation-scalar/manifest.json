@@ -1,0 +1,74 @@
+{
+  "schema": "wp12-own-source-increment-v1",
+  "status": "FROZEN_REVIEWED_READY_FOR_ROOT_PUBLICATION",
+  "owner": "WP12",
+  "writer": "compose_typecheck",
+  "baseProduct": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+      "beforeBlob": "50303355860a26718686f5daf7dddad8978434c3",
+      "blob": "b334b77248ab887647a7b4a15d2362fb769f5c4c",
+      "sha256": "957231db289d9d1610c146e13153282008a20e035539a1d9dc031c497cbfde1e",
+      "bytes": 31379
+    }
+  ],
+  "observedFailure": {
+    "run": 43604476634,
+    "job": 132476041608,
+    "snapshot": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+    "log": "evidence/resume-15-questions.log",
+    "logSha256": "9c41d2557d77b625e2cd5dea31794695fbe1034681f299c8e523b48937bc91ef",
+    "logBytes": 87010,
+    "line": 874,
+    "endpointObservationLine": 866,
+    "testDurationMs": 1973.21,
+    "reason": "relation-source-fence-unavailable",
+    "nativeInferenceExecuted": false
+  },
+  "cause": {
+    "classification": "OWN_DRIVER_SELECTED_UNREADABLE_NON_SCALAR_FIELD",
+    "input": "Both the actual Project and unrelated homonymous Project selected name and milestones; their raw milestones is an array.",
+    "gate": "dashboard/sources.ts resolveCurrent/issue validates the record projection keys; read subsequently refuses any non-null field that is neither string, boolean nor finite number with non-scalar-record-field.",
+    "propagation": "createSfDashboardRecordSourceAccess refuses the unreadable DomainProjection; current BCS cannot provide a fresh resolution. Collaboration authorizePair requires every selected evidence source fresh, so mutationFence.prepare refuses before its first capture and relation-create reports relation-source-fence-unavailable.",
+    "validInputsPreserved": "C06 pmo-capex endpoint kinds, current Project observation period 2026, selected CAPEX and Planner financial horizon 2027, real source refs and additional Planner evidence are unchanged.",
+    "sourceFenceHypothesis": "No change to readSourceFences is required by this concrete failure: the current-record path calls records.resolve/read and the current Planner path calls projectPlannerEvidence.readEvidence. The business source-fence reader is not a caller in this initial authorization path; the named mutation fence is a separate module. A later unrelated nested-read failure is not ruled out or claimed fixed."
+  },
+  "change": {
+    "selection": "Use the scalar name field for both legitimate C06 Project endpoint and homonymous outside-case negative. The raw source data including milestones array remains unchanged.",
+    "additionalWitness": "Read both actual endpoint projections and the homonym through the canonical Dashboard reader; assert scalar values, original evidence refs and endpoint drilldown before relation creation/negative preparation.",
+    "priorAssertLinesPreserved": 80,
+    "newAssertLines": 7,
+    "assertsRemoved": 0,
+    "deadlineMsUnchanged": 300000,
+    "unchanged": [
+      "raw Dashboard/Planner source data",
+      "relation kind and endpoint identities",
+      "current and financial periods",
+      "real HTTP relation creation and mutation version",
+      "Planner evidence and pending-condition semantics",
+      "native skill grants, prompt, Session and consumer branches",
+      "outside-case/homonym negative and all prior assertions"
+    ]
+  },
+  "sourcePins": "source-pins.json",
+  "incrementDiff": "increment.diff",
+  "verification": {
+    "sourceBlobsComparedToMcp": 10,
+    "nodeStripAndSyntaxCheck": "PASS",
+    "productModuleImported": false,
+    "productTestsLocal": false,
+    "typecheckLocal": false,
+    "foreignSourceEdited": false,
+    "ciDispatched": false,
+    "runtimeSuccess": "NOT_RUN_ON_CHANGED_BLOB"
+  },
+  "requiredHostedScope": "Only the QuestionPlanningInput test after publication; do not repeat the already green Intent test on unchanged sources. Root controls selection and final evidence.",
+  "independentReview": {
+    "path": "resume-input/own-missions/question-relation-scalar/independent-review-own.json",
+    "sha256": "cf9537b4375aaf0c8f8cdbcd7060430cf3ff4e32cd7843552f3afe9502bcf101",
+    "blob": "82fc4321d3d1ba587d390777517f5538f3f2f41f",
+    "status": "PASS_STATIC",
+    "findings": []
+  }
+}

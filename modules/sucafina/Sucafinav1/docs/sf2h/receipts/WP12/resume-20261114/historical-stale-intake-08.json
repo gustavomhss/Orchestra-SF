@@ -1,0 +1,50 @@
+{
+  "schema": "wp12-published-historical-stale-intake-v1",
+  "status": "consumed-in-next-candidate",
+  "sourceCommit": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+  "sourcePR": 32,
+  "count": 2,
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "sourceCommit": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+      "sourceBlob": "299979047340dd76d7cc2db667b826da675a1e2e",
+      "baseBlob": "f40a30aca8668f3ef7636ca8af4bf65d4e987217",
+      "sourceFile": "resume-input/stale-calculation/source/apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "reason": "Reopens only captured historical Planner calculations for the same physical case and at most the original analysis case version through a separate human read lease. Requires exact request, principal, policy/access binding, protected BCS historical resolution, closed private leases, and a snapshot identity captured before awaits. Consumes the already selected W18 business history APIs without upgrading the active selector.",
+      "sha256": "291deebb5dcb128ed8aa7bba35cdda68203f838c33c3afbb4a4bfacd77708013"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "sourceCommit": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+      "sourceBlob": "727997f3fb0554c44056a7e2930888a28e6184ca",
+      "baseBlob": null,
+      "sourceFile": "resume-input/stale-calculation/source/modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "reason": "Published owner counterproofs exercise actual C08, human authority, Planner calculation persistence, ledger capture and Atlas scanner. Covers settlement after case advance and restart, cross-case/later-producer/missing-capture/source-drift refusals, request substitution, first/last authorization loss, private lease closure, and shared snapshot mutation. The existing WP12 deterministic run fixture is explicitly not native inference evidence.",
+      "sha256": "3d1d9c7ce776303f65b200a7b2ab5731bdf73f66f97a380635b21984301d6360"
+    }
+  ],
+  "closure": {
+    "newProductionImports": [],
+    "allRelativeImportsResolved": true,
+    "relativeImportsChecked": 31,
+    "additionalForeignFiles": [],
+    "usesExistingPins": {
+      "business-services.ts": "97cde4dce2858f47b57b446c9c20bad77d367591",
+      "planner-calculation-history.ts": "9805676b50cb5d12f37a4a91350f01ba227a168f",
+      "host-binding/business-context.ts": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "analysis-run-context.ts": "5b0f9e394f433bc904724019678d08555078dc0b"
+    }
+  },
+  "verification": {
+    "exactPublishedBlobs": true,
+    "syntax": "Node stripTypeScriptTypes transform followed by node --check on emitted JavaScript: PASS both files; no product execution",
+    "productTests": "not-run-locally; pending root-controlled GitHub Actions",
+    "typecheck": "not-run-locally; pending root-controlled GitHub Actions",
+    "ownFilesWritten": []
+  },
+  "remainingLimitations": [
+    "Host markStale wrapper remains three-argument and does not forward the optional SfStaleRunObservation. This intake does not close the ready-to-stale observation CAS seam.",
+    "The owner test uses explicit deterministic lifecycle bytes and an explicit pending forecast coverage fixture. It proves historical/lifecycle authority boundaries, not provider inference or GNATIVE acceptance."
+  ]
+}

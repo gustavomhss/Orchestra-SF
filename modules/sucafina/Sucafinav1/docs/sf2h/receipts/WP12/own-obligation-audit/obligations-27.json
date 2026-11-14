@@ -1,0 +1,1179 @@
+{
+  "schema": "wp12-own-obligation-audit-v1",
+  "status": "AUDITED_ACTIONS_SEPARATED_NO_ACCEPTANCE_UPGRADE",
+  "supersedes": "Only classifications expressly changed here; the D21 map remains immutable, including its literal text and acceptance statuses.",
+  "published_map": {
+    "commit": "551ff6c1684ae09704cfce85c12690e8369b2d0c",
+    "tree": "58cf100628778a54d9ea4e74d662bd3e6cb1f78e",
+    "criteria": 108,
+    "inherited_criteria": 50,
+    "profiles": 5,
+    "skills": 18,
+    "named_am02_routes": 39
+  },
+  "inspected_product": {
+    "commit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "tree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e"
+  },
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "counts": {
+    "missing_obligations": 27,
+    "required_operation_obligations": 12,
+    "missing_named_am02_routes": 15,
+    "groups": {
+      "routine": 12,
+      "work": 2,
+      "forecast-kpi": 2,
+      "purchase": 4,
+      "bi-kpi": 1,
+      "meeting-review": 1,
+      "handoff": 1,
+      "contract": 2,
+      "executive-report": 2
+    },
+    "native_execution_witnesses_added": 0,
+    "acceptance_upgrades": 0
+  },
+  "interpretation": [
+    "Twenty-seven obligations include duplicate requirements for the same operation in a required-skill list and a named AM02 route. They are not twenty-seven distinct operations.",
+    "Driver code, real UI/domain preparation, Session.skill loading, native inference, output publication and consumer execution remain separate evidence levels.",
+    "No absence of provider is used to stop implementable UI/domain/source/consumer work. No synthetic model, receipt, contribution or permissive authority is substituted.",
+    "An owner prerequisite does not erase the subsequent WP12 witness and consumer obligation. Every row records that remaining own action.",
+    "Latest owner sources and a consumed product are distinct; compatible intake requires exact pins and owner publication before a new hosted result can alter acceptance."
+  ],
+  "obligations": [
+    {
+      "index_in_d21": 0,
+      "kind": "SKILL_REQUIRED_OPERATION",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "profile_id": null,
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_routine_catalog",
+      "canonical_pointer": "/resident_ui_consumption/skills/1/required_operations/3",
+      "criterion_refs": [
+        "WP12.CMP.40",
+        "WP12.T02.CHK.11",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "d21_classification": "OWNER_CAPABILITY_REQUIRED",
+      "group": "routine",
+      "classification": "OWNER_NATIVE_C07_MOUNT_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 1,
+      "kind": "SKILL_REQUIRED_OPERATION",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "profile_id": null,
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_routine_prepare",
+      "canonical_pointer": "/resident_ui_consumption/skills/1/required_operations/4",
+      "criterion_refs": [
+        "WP12.CMP.40",
+        "WP12.T02.CHK.11",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "d21_classification": "OWNER_CAPABILITY_REQUIRED",
+      "group": "routine",
+      "classification": "OWNER_NATIVE_C07_MOUNT_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 2,
+      "kind": "SKILL_REQUIRED_OPERATION",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "profile_id": null,
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_routine_result",
+      "canonical_pointer": "/resident_ui_consumption/skills/1/required_operations/7",
+      "criterion_refs": [
+        "WP12.CMP.40",
+        "WP12.T02.CHK.11",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "d21_classification": "OWNER_CAPABILITY_REQUIRED",
+      "group": "routine",
+      "classification": "OWNER_NATIVE_C07_MOUNT_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 3,
+      "kind": "SKILL_REQUIRED_OPERATION",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "profile_id": null,
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_routine_run",
+      "canonical_pointer": "/resident_ui_consumption/skills/1/required_operations/5",
+      "criterion_refs": [
+        "WP12.CMP.40",
+        "WP12.T02.CHK.11",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "d21_classification": "OWNER_CAPABILITY_REQUIRED",
+      "group": "routine",
+      "classification": "OWNER_NATIVE_C07_MOUNT_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 4,
+      "kind": "SKILL_REQUIRED_OPERATION",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "profile_id": null,
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_routine_status",
+      "canonical_pointer": "/resident_ui_consumption/skills/1/required_operations/6",
+      "criterion_refs": [
+        "WP12.CMP.40",
+        "WP12.T02.CHK.11",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "d21_classification": "OWNER_CAPABILITY_REQUIRED",
+      "group": "routine",
+      "classification": "OWNER_NATIVE_C07_MOUNT_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 5,
+      "kind": "SKILL_REQUIRED_OPERATION",
+      "skill_id": "sf-coordenar-perguntas",
+      "profile_id": null,
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_work_list",
+      "canonical_pointer": "/resident_ui_consumption/skills/2/required_operations/3",
+      "criterion_refs": [
+        "WP12.CMP.40",
+        "WP12.T02.CHK.11",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "d21_classification": "OWNER_WORK_SIGNALS_MOUNT_THEN_OWN_NATIVE_WITNESS",
+      "group": "work",
+      "classification": "OWNER_WORK_MOUNT_AND_NATIVE_SELECTION_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 6,
+      "kind": "SKILL_REQUIRED_OPERATION",
+      "skill_id": "sf-explicar-forecast",
+      "profile_id": null,
+      "allowed_profiles": [
+        "sf_finance"
+      ],
+      "operation": "sf_kpi_explain",
+      "canonical_pointer": "/resident_ui_consumption/skills/3/required_operations/1",
+      "criterion_refs": [
+        "WP12.CMP.40",
+        "WP12.T02.CHK.11",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "d21_classification": "OWNER_TYPED_METRIC_SELECTION_REQUIRED",
+      "group": "forecast-kpi",
+      "classification": "OWNER_FORECAST_TO_METRIC_BINDING_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 7,
+      "kind": "SKILL_REQUIRED_OPERATION",
+      "skill_id": "sf-preparar-compra",
+      "profile_id": null,
+      "allowed_profiles": [
+        "sf_procurement"
+      ],
+      "operation": "sf_change_prepare",
+      "canonical_pointer": "/resident_ui_consumption/skills/8/required_operations/1",
+      "criterion_refs": [
+        "WP12.CMP.40",
+        "WP12.T02.CHK.11",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "d21_classification": "OWNER_INPUT_AND_DOMAIN_CONSUMER_REQUIRED",
+      "group": "purchase",
+      "classification": "OWNER_CURRENT_CHANGE_TARGET_AND_RECEIPT_PATH_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 8,
+      "kind": "SKILL_REQUIRED_OPERATION",
+      "skill_id": "sf-preparar-compra",
+      "profile_id": null,
+      "allowed_profiles": [
+        "sf_procurement"
+      ],
+      "operation": "sf_receipt_get",
+      "canonical_pointer": "/resident_ui_consumption/skills/8/required_operations/2",
+      "criterion_refs": [
+        "WP12.CMP.40",
+        "WP12.T02.CHK.11",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "d21_classification": "OWNER_INPUT_AND_DOMAIN_CONSUMER_REQUIRED",
+      "group": "purchase",
+      "classification": "OWNER_CURRENT_CHANGE_TARGET_AND_RECEIPT_PATH_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 9,
+      "kind": "SKILL_REQUIRED_OPERATION",
+      "skill_id": "sf-reavaliar-compromissos",
+      "profile_id": null,
+      "allowed_profiles": [
+        "sf_portfolio"
+      ],
+      "operation": "sf_watch_prepare",
+      "canonical_pointer": "/resident_ui_consumption/skills/11/required_operations/3",
+      "criterion_refs": [
+        "WP12.CMP.40",
+        "WP12.T02.CHK.11",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "d21_classification": "OWNER_CAPABILITY_REQUIRED",
+      "group": "routine",
+      "classification": "OWNER_NATIVE_C07_MOUNT_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 10,
+      "kind": "SKILL_REQUIRED_OPERATION",
+      "skill_id": "sf-produzir-bi-contextual",
+      "profile_id": null,
+      "allowed_profiles": [
+        "sf_finance",
+        "sf_portfolio",
+        "sf_maestro"
+      ],
+      "operation": "sf_kpi_explain",
+      "canonical_pointer": "/resident_ui_consumption/skills/15/required_operations/1",
+      "criterion_refs": [
+        "WP12.CMP.40",
+        "WP12.T02.CHK.11",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "d21_classification": "OWNER_TYPED_METRIC_SELECTION_REQUIRED",
+      "group": "bi-kpi",
+      "classification": "OWN_BI01_KPI_DRIVER_AUTHORIZED_NOT_YET_IMPLEMENTED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 11,
+      "kind": "SKILL_REQUIRED_OPERATION",
+      "skill_id": "sf-produzir-material-reuniao",
+      "profile_id": null,
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_review_prepare",
+      "canonical_pointer": "/resident_ui_consumption/skills/16/required_operations/0",
+      "criterion_refs": [
+        "WP12.CMP.40",
+        "WP12.T02.CHK.11",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "d21_classification": "OWNER_AGENDA_SELECTION_REQUIRED",
+      "group": "meeting-review",
+      "classification": "OWNER_PUBLIC_AGENDA_RELATION_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 12,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-explicar-forecast",
+      "profile_id": "sf_finance",
+      "allowed_profiles": [
+        "sf_finance"
+      ],
+      "operation": "sf_kpi_explain",
+      "canonical_pointer": "/resident_ai/operation_call_routes/1",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_TYPED_METRIC_SELECTION_REQUIRED",
+      "group": "forecast-kpi",
+      "classification": "OWNER_FORECAST_TO_METRIC_BINDING_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 13,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-preparar-compra",
+      "profile_id": "sf_procurement",
+      "allowed_profiles": [
+        "sf_procurement"
+      ],
+      "operation": "sf_change_prepare",
+      "canonical_pointer": "/resident_ai/operation_call_routes/16",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_INPUT_AND_DOMAIN_CONSUMER_REQUIRED",
+      "group": "purchase",
+      "classification": "OWNER_CURRENT_CHANGE_TARGET_AND_RECEIPT_PATH_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 14,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-preparar-compra",
+      "profile_id": "sf_procurement",
+      "allowed_profiles": [
+        "sf_procurement"
+      ],
+      "operation": "sf_receipt_get",
+      "canonical_pointer": "/resident_ai/operation_call_routes/17",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_INPUT_AND_DOMAIN_CONSUMER_REQUIRED",
+      "group": "purchase",
+      "classification": "OWNER_CURRENT_CHANGE_TARGET_AND_RECEIPT_PATH_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 15,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "profile_id": "sf_maestro",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_work_list",
+      "canonical_pointer": "/resident_ai/operation_call_routes/18",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_WORK_SIGNALS_MOUNT_THEN_OWN_NATIVE_WITNESS",
+      "group": "work",
+      "classification": "OWNER_WORK_MOUNT_AND_NATIVE_SELECTION_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 16,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-coordenar-perguntas",
+      "profile_id": "sf_maestro",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_handoff_prepare",
+      "canonical_pointer": "/resident_ai/operation_call_routes/22",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_CURRENT_ACTION_SELECTION_THEN_OWN_NATIVE_WITNESS",
+      "group": "handoff",
+      "classification": "OWN_DRIVER_IMPLEMENTED_STATIC_REVIEW_PASSED_HOSTED_CI_NOT_RUN",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 17,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-revisar-condicoes-contratuais",
+      "profile_id": "sf_procurement",
+      "allowed_profiles": [
+        "sf_procurement"
+      ],
+      "operation": "sf_document_extract",
+      "canonical_pointer": "/resident_ai/operation_call_routes/23",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_DOCUMENT_INPUT_GATE_THEN_OWN_REQUIRED_TOOL_WITNESS",
+      "group": "contract",
+      "classification": "OWNER_CONTRACT_SURFACE_AND_DOCUMENT_SCHEMA_BINDING_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 18,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "profile_id": "sf_maestro",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_report_prepare",
+      "canonical_pointer": "/resident_ai/operation_call_routes/26",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_PRESERVED_REVIEW_SELECTION_REQUIRED",
+      "group": "executive-report",
+      "classification": "OWNER_PUBLIC_PRESERVED_REVIEW_RELATION_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 19,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "profile_id": "sf_maestro",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_artifact_get",
+      "canonical_pointer": "/resident_ai/operation_call_routes/27",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_PRESERVED_REVIEW_SELECTION_REQUIRED",
+      "group": "executive-report",
+      "classification": "OWNER_PUBLIC_PRESERVED_REVIEW_RELATION_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 20,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-revisar-condicoes-contratuais",
+      "profile_id": "sf_procurement",
+      "allowed_profiles": [
+        "sf_procurement"
+      ],
+      "operation": "sf_knowledge_search",
+      "canonical_pointer": "/resident_ai/operation_call_routes/29",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_DOCUMENT_INPUT_GATE_THEN_OWN_REQUIRED_TOOL_WITNESS",
+      "group": "contract",
+      "classification": "OWNER_CONTRACT_SURFACE_AND_DOCUMENT_SCHEMA_BINDING_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 21,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "profile_id": "sf_maestro",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_routine_catalog",
+      "canonical_pointer": "/resident_ai/operation_call_routes/33",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_CAPABILITY_REQUIRED",
+      "group": "routine",
+      "classification": "OWNER_NATIVE_C07_MOUNT_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 22,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "profile_id": "sf_maestro",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_routine_prepare",
+      "canonical_pointer": "/resident_ai/operation_call_routes/34",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_CAPABILITY_REQUIRED",
+      "group": "routine",
+      "classification": "OWNER_NATIVE_C07_MOUNT_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 23,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "profile_id": "sf_maestro",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_routine_run",
+      "canonical_pointer": "/resident_ai/operation_call_routes/35",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_CAPABILITY_REQUIRED",
+      "group": "routine",
+      "classification": "OWNER_NATIVE_C07_MOUNT_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 24,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "profile_id": "sf_maestro",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_routine_status",
+      "canonical_pointer": "/resident_ai/operation_call_routes/36",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_CAPABILITY_REQUIRED",
+      "group": "routine",
+      "classification": "OWNER_NATIVE_C07_MOUNT_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 25,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "profile_id": "sf_maestro",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_routine_result",
+      "canonical_pointer": "/resident_ai/operation_call_routes/37",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_CAPABILITY_REQUIRED",
+      "group": "routine",
+      "classification": "OWNER_NATIVE_C07_MOUNT_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    },
+    {
+      "index_in_d21": 26,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-reavaliar-compromissos",
+      "profile_id": "sf_portfolio",
+      "allowed_profiles": [
+        "sf_portfolio"
+      ],
+      "operation": "sf_watch_prepare",
+      "canonical_pointer": "/resident_ai/operation_call_routes/38",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_CAPABILITY_REQUIRED",
+      "group": "routine",
+      "classification": "OWNER_NATIVE_C07_MOUNT_REQUIRED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false
+    }
+  ],
+  "action_groups": {
+    "routine": {
+      "classification": "OWNER_NATIVE_C07_MOUNT_REQUIRED",
+      "owners": [
+        "WP09.T06",
+        "WP10",
+        "WP14",
+        "WP00/integration"
+      ],
+      "own_missing_code": "The native route witness and its factual result consumer must be completed after real C07 admission is mounted. No WP12 profile edit can manufacture that admission.",
+      "blocking_fact": "The consumed host constructs createSfRoutineServices without native and does not append its descriptors. routine-services resolves recipes through input.native; absence returns native-routine-plan-reader-unavailable. Catalog permission is distinct from a callable runtime route.",
+      "own_action_now": "Keep actual unavailable observations and prepare exact route assertions against published recipe/admission outputs; do not substitute a local scheduler/provider or the generic Session fixture.",
+      "external_delta": "Publish the actual native recipe/admission/run/status/result/watch port, mount its descriptors with current principal/case/occurrence/source authority, then publish the minimal compatible closure for integration.",
+      "consumer_after_delta": "C07 factual result/readers, ExecutiveReviewInput or commitment watch consumer with actual current admission; no approval or domain application attributed to WP12.",
+      "pins": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "blob": "834b3c967d73411771e1f5aa82b683c6427e6769"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-services.ts",
+          "blob": "8b76b7591bf3ce0312108faafcda6b244a2d5e89"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+          "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db"
+        }
+      ],
+      "latest_owner_scope": "This is a finding about the consumed W20 composition. The separate W20 stale-reconciliation owner finding distinguishes newly published publication/authoring from the still missing native port. No uninspected later head is declared broken."
+    },
+    "work": {
+      "classification": "OWNER_WORK_MOUNT_AND_NATIVE_SELECTION_REQUIRED",
+      "owners": [
+        "WP10",
+        "WP08",
+        "WP13",
+        "WP00/integration"
+      ],
+      "own_missing_code": "A real sf_work_list call remains to be added under each named/required skill after a mounted source and a publicly bound selection are available to that mission.",
+      "blocking_fact": "The consumed business composition does not supply work signals. The existing human probe has a real case-work selection but is not a native witness. That private UI selection is absent from the current QuestionPlanningInput and ExecutiveReviewInput.",
+      "own_action_now": "Retain the real selection/UI availability observation and exact negative; inspect published work closure before intake. Do not insert a UI-owned selection ID into the model objective or satisfy the executive AM02 route with the question skill.",
+      "external_delta": "Mount the owner-produced work signals and publish the legitimate relation from the mission's typed input/current case to the authorized work selection. WP10 W20 work changes are being reviewed separately; they are not silently inherited.",
+      "consumer_after_delta": "Current Meu Trabalho items for the same question/action, including one item after consume/retry and retained recipient/source access.",
+      "pins": [
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "blob": "97cde4dce2858f47b57b446c9c20bad77d367591"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+          "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db"
+        }
+      ]
+    },
+    "forecast-kpi": {
+      "classification": "OWNER_FORECAST_TO_METRIC_BINDING_REQUIRED",
+      "owners": [
+        "WP00",
+        "WP10",
+        "Dashboard/Planner source owners"
+      ],
+      "own_missing_code": "The exact sf_finance/sf-explicar-forecast KPI call and consumer assertion remain to be added when an authorized metric for that Forecast comparison is supplied.",
+      "blocking_fact": "ForecastExplainInput contains Planner comparisons, sources and registered reasons. The mounted KPI operation resolves a DashboardMetric; it has no producer-issued binding to this Planner comparison. An unrelated Budget or milestone metric is not a substitute for this named route.",
+      "own_action_now": "Keep Forecast and BI route claims separate. Inspect only a published same-case/period Dashboard metric relation or a real Planner KPI interpretation; no policy or engine changes.",
+      "external_delta": "Publish the legitimate metric selection/binding in the owner input/domain contract, preserving source incarnation, fields, version, period and current authorization.",
+      "consumer_after_delta": "Forecast explanation retains the actual comparison and the related KPI evidence under the required Finance skill.",
+      "pins": [
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-services-inputs.ts",
+          "blob": "7f4ccee85c4eeaec82d932a69ba93c5fe6d59eff"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+          "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+          "blob": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811"
+        }
+      ]
+    },
+    "bi-kpi": {
+      "classification": "OWN_BI01_KPI_DRIVER_AUTHORIZED_NOT_YET_IMPLEMENTED",
+      "owners": [
+        "WP12"
+      ],
+      "own_missing_code": "The BI08 milestone driver cannot exercise a budget KPI. A separate BI01 mission with two real public selections is statically viable and root-authorized; its new driver is the next own increment.",
+      "blocking_fact": "BI01 requires budgetSeries while total-budget requires budgetMetrics, so one selector cannot be reused. Two real same-case/same-period selections can supply the chart and auxiliary annual-total check. The current closed verifier permits only the BI source in ContextualBIProposal; the additional KPI source must remain attached to its own actual tool output/receipt in Session.",
+      "own_action_now": "Implement native-execution-bi-kpi.test.ts separately, issuing both real sources and discovering the KPI source through actual sf_case_read. Require the four normative BI operations and audit the native KPI result/receipt and its equality to twelve monthly effective values. Preserve the existing BI08 files and all contracts.",
+      "external_delta": "No source-selection change is required for this auxiliary check. The separately published missing artifact-handle discovery finding still limits full native ContextualBIProposal production; no private artifact/table identifier is supplied to the model.",
+      "consumer_after_delta": "WP05 consumes the actual BI01 proposal/table using its own source only. The KPI is an auxiliary model check retained in Session, not a new WP05 KPI consumer or a new numerical field in the proposal. This does not satisfy the separate Forecast AM02 KPI route.",
+      "independent_static_review": {
+        "sha256": "d239bc08a13a8fb9a33ae532190f2d834f44d848c7e0d903c6948d059e4faee2",
+        "scope": "Seven exact W21 source pins and viability only; no new driver or runtime result.",
+        "original_audit_path": "resume-input/independent-review/bi01-kpi-viability/review.json",
+        "file": "bi01-kpi-viability.json"
+      },
+      "pins": [
+        {
+          "path": "apps/cli/src/sucafina-product/input-producer-bi.ts",
+          "blob": "a5cd14609db80287e6f122cfb199338df53a8b50"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+          "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+          "blob": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811"
+        }
+      ]
+    },
+    "purchase": {
+      "classification": "OWNER_CURRENT_CHANGE_TARGET_AND_RECEIPT_PATH_REQUIRED",
+      "owners": [
+        "WP10",
+        "WP04",
+        "WP11",
+        "WP00/integration"
+      ],
+      "own_missing_code": "Add a separate PreparedChangeSet mission and an actual receipt consumer after an authorized target and recorded choice-linked change exist. The existing DossierDraft driver is not that path.",
+      "blocking_fact": "The consumed ordinary request projection exposes no SourceRef target. The input producer requires nonempty human targets resolved only from actual request context.sourceRefs or existing choice-linked preparedChanges. The verifier also requires the real change proposal store for PreparedChangeSet.",
+      "own_action_now": "Keep the actual choice/request/ranking/target-selection branch executable and report its observed result. Do not build a SourceRef from an ID, inject PreparedChange/receipt rows or apply an unauthorized choice to seed the test.",
+      "external_delta": "Publish the real allowed-change-target issuer or the existing legitimate C12 route that supplies choice-linked targets; retain exact field/incarnation/version/source authority and the human apply/review boundary.",
+      "consumer_after_delta": "Actual change-proposal readSet and prepared human review/apply/receipt path, followed by sf_receipt_get under the exact required skill. Native preparation itself never applies or approves.",
+      "pins": [
+        {
+          "path": "apps/cli/src/sucafina-product/input-producer-purchase.ts",
+          "blob": "afb1e6005ef8fcfe16b7c04605611f32a63bfd63"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+          "blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "blob": "97cde4dce2858f47b57b446c9c20bad77d367591"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+          "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db"
+        }
+      ]
+    },
+    "handoff": {
+      "classification": "OWN_DRIVER_IMPLEMENTED_STATIC_REVIEW_PASSED_HOSTED_CI_NOT_RUN",
+      "owners": [
+        "WP12"
+      ],
+      "own_missing_code": "The previously absent exact AM02 route now has a new isolated own driver. This closes code preparation only; no runtime or native claim is made.",
+      "blocking_fact": "No new host field is needed for this variant. Actual C06 handoff-create publishes the Hot Topic reference and confirmed relation; the existing QuestionPlanningInput producer includes the relation's full endpoints. The old D21 requirement for an additional owner current-action selector is superseded for this public route.",
+      "own_action_now": "Publish the independently reviewed new file, run only its hosted test and package typecheck/guards. Require actual Session/receipt/tool output when an installed model exists; otherwise retain UI/domain/input/reload observations only.",
+      "external_delta": "None for source/action/consumer composition identified statically. A provider is still required for native inference; this route does not remove sf_work_list or answer-scope dependencies from other missions.",
+      "consumer_after_delta": "Actual human handoff-link reauthorizes the prepared values and keeps the existing action/relation single after retry/reload; it does not store the native receipt. Actual C11 QuestionProposal consumer creates one C06 thread retaining contribution provenance when native output exists.",
+      "code": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts",
+        "blob": "b2d80e6bbfc05ea11bae9bd10490aeb2ea4711b5",
+        "sha256": "64d1c85c19e313b348d2844cc6ff7c924d165bd158a4771d7d44c5807222a810",
+        "runtime": "NOT_RUN",
+        "native_inference": "NOT_OBSERVED"
+      },
+      "pins": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/relation-catalog.ts",
+          "blob": "bf3f09f5cbc23ad81b65cfd1de97ff608dd075d8"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+          "blob": "de499e6d34af826add34bee4125bcfba4e57ddb8"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/composition.ts",
+          "blob": "6ebbe23c3788d4dbd91521af823917796262f0c9"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/handoff.ts",
+          "blob": "a9c796045e3b329ff62736405d1939477dd7ce87"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
+          "blob": "4a1ebe9298dd62d2846a45f294aa1b6331343040"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/input-producer-question.ts",
+          "blob": "10d95e014c71c6c6f9600a2c1c52fa3532aee68a"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-collaboration.ts",
+          "blob": "d37b26367f9f2670d6187e253c5c5ed14348a330"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/question-consumer.ts",
+          "blob": "ddccfdf46810117fb49e123140c8411373b387e9"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts",
+          "blob": "ef4bcc991553eebff18153499a10714ac04de0e0"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+          "blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6"
+        }
+      ],
+      "independent_static_review": {
+        "file": "handoff-independent-review.json",
+        "sha256": "f3bb0bfdfe6ae93ffae553c97f943ebf82dbf12f4d71163e9d342929a3e49668",
+        "scope": "Static API/type/authority review of b2d80e6b and eleven source pins. No hosted execution or timeout outcome."
+      }
+    },
+    "contract": {
+      "classification": "OWNER_CONTRACT_SURFACE_AND_DOCUMENT_SCHEMA_BINDING_REQUIRED",
+      "owners": [
+        "WP10",
+        "WP06",
+        "WP00/integration"
+      ],
+      "own_missing_code": "The ContractReview skill still needs its own required extraction/search calls and EvidenceCandidate consumer after the genuine input can be produced. Extraction performed by a different skill does not fill this named route.",
+      "blocking_fact": "The consumed contract producer selects surface procurement while the real contract record is Dashboard. With populated documents it also compares the bare resolved schema id to the full schema:<id>:<version> selector. The existing own asset/document setup is real; these producer gates are external.",
+      "own_action_now": "Preserve the real document parser/registered schema/contract-issued source composition and explicit unavailable input observation. Consume a minimal owner-published correction before adding exact-skill extraction/search assertions.",
+      "external_delta": "Reconcile actual contract surface and canonical schema reference while preserving readDocumentEvidence/current-source/claim authority. Publish real knowledge-search capability if the installed surface remains Held; no permissive substitute.",
+      "consumer_after_delta": "ContractReviewInput with actual linked document evidence, native sf_document_extract/sf_knowledge_search under sf-revisar-condicoes-contratuais and verified ContractCondition/CommercialGap/EvidenceCandidate consumer.",
+      "pins": [
+        {
+          "path": "apps/cli/src/sucafina-product/input-producer-contract.ts",
+          "blob": "2df4656bc5aa750182827fa62c37ae01e88711ff"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+          "blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+          "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db"
+        }
+      ]
+    },
+    "executive-report": {
+      "classification": "OWNER_PUBLIC_PRESERVED_REVIEW_RELATION_REQUIRED",
+      "owners": [
+        "WP10",
+        "WP07",
+        "WP00"
+      ],
+      "own_missing_code": "Executive skill must call report/artifact using an actual preserved review admitted for that same mission; current Meeting skill calls cannot be relabelled as this AM02 route.",
+      "blocking_fact": "ExecutiveReviewInput contains a live agenda selection and review_prepare returns only its preview. It does not expose a preserved review id. The preserved-review selection is currently supplied to MeetingMaterialInput under a different skill.",
+      "own_action_now": "Retain actual WP07 preserve/report/download/reload coverage and current Executive input. Do not inject an unrelated/private preserved review identity through the objective merely to trigger requiredTools.",
+      "external_delta": "Publish an explicit producer-owned relation between the selected executive agenda and its authorized preserved review, then expose that public selection to the mission.",
+      "consumer_after_delta": "Real WP07 report preparation and authorized DOCX/PPTX artifact retrieval under sf_maestro/sf-preparar-revisao-executiva, retaining source and review pins.",
+      "pins": [
+        {
+          "path": "apps/cli/src/sucafina-product/input-producer-executive.ts",
+          "blob": "39cd47fda0547ad74f7c2193b3a11d8e0f112c65"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/input-producer-meeting.ts",
+          "blob": "672a24c3fd9e48bbef106720d63ee29225f8a9d3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+          "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db"
+        }
+      ]
+    },
+    "meeting-review": {
+      "classification": "OWNER_PUBLIC_AGENDA_RELATION_REQUIRED",
+      "owners": [
+        "WP10",
+        "WP07",
+        "WP00"
+      ],
+      "own_missing_code": "Meeting skill requires its own review_prepare call once its preserved review has a publicly admitted live agenda selection; its report/artifact paths already have a driver.",
+      "blocking_fact": "MeetingMaterialInput contains preservedReviewRef and authorizedSections but no live agenda selectionRef for ReviewPrepareRequest. Loss of an ephemeral agenda after reload does not imply failure of the durable C11/WP07 output consumer.",
+      "own_action_now": "Preserve output/reload tests and report/artifact witnesses, and do not manufacture a live agenda selection from the preserved review id.",
+      "external_delta": "Publish the actual authorized relation/reentry selector from preserved review to current agenda with unchanged source access and revocation semantics.",
+      "consumer_after_delta": "Actual sf_review_prepare preview for the same current review selection followed by the already mounted meeting report consumer.",
+      "pins": [
+        {
+          "path": "apps/cli/src/sucafina-product/input-producer-meeting.ts",
+          "blob": "672a24c3fd9e48bbef106720d63ee29225f8a9d3"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/input-producer-executive.ts",
+          "blob": "39cd47fda0547ad74f7c2193b3a11d8e0f112c65"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+          "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db"
+        }
+      ]
+    }
+  },
+  "own_product_audit": {
+    "files_read": [
+      "resident.ts",
+      "run-provenance.ts",
+      "contribution-reader.ts",
+      "analysis-host.ts",
+      "run-store.ts"
+    ],
+    "new_concrete_product_bug_identified": false,
+    "scope": "Bounded static review only; resident/provenance initial read by own_review. No claim that all possible defects are excluded.",
+    "foreign_sources_edited": false,
+    "local_product_tests_or_typecheck": false
+  },
+  "source_pins": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "sha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+      "bytes": 74908,
+      "published_product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "publication_evidence": "foreign-pins-15.json",
+      "origin_commit": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/apps/cli/src/sucafina-product/host-context.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "97cde4dce2858f47b57b446c9c20bad77d367591",
+      "sha256": "217ce1f268ae119bd38292f9b6697c6f6c1bfb08e31be3e25a434c5cf91d6b48",
+      "bytes": 62972,
+      "published_product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "publication_evidence": "foreign-pins-15.json",
+      "origin_commit": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/apps/cli/src/sucafina-product/business-services.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-services.ts",
+      "blob": "8b76b7591bf3ce0312108faafcda6b244a2d5e89",
+      "sha256": "03c79b31b4b9e8345dada415a0c7ff4b499eb0bb6b6de0c0b6b8bcfd822ffd60",
+      "bytes": 22455,
+      "published_product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "publication_evidence": "foreign-pins-15.json",
+      "origin_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/apps/cli/src/sucafina-product/routine-services.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-purchase.ts",
+      "blob": "afb1e6005ef8fcfe16b7c04605611f32a63bfd63",
+      "sha256": "864a8903e7bb632a375c46cf0640e41109ade82ca88652e85e3c3c5972f20c5b",
+      "bytes": 8081,
+      "published_product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "publication_evidence": "foreign-pins-15.json",
+      "origin_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/apps/cli/src/sucafina-product/input-producer-purchase.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-contract.ts",
+      "blob": "2df4656bc5aa750182827fa62c37ae01e88711ff",
+      "sha256": "7e033b8407de66a59786968d45bbdc09cafbdaf6037f3680092feec99ca96f36",
+      "bytes": 7565,
+      "published_product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "publication_evidence": "foreign-pins-15.json",
+      "origin_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/apps/cli/src/sucafina-product/input-producer-contract.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-executive.ts",
+      "blob": "39cd47fda0547ad74f7c2193b3a11d8e0f112c65",
+      "sha256": "d4801b0d7fc254cd2a7872c948e60248db768dacd533ec5e5bc05f79bc6cdcc7",
+      "bytes": 9060,
+      "published_product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "publication_evidence": "foreign-pins-15.json",
+      "origin_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/apps/cli/src/sucafina-product/input-producer-executive.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-meeting.ts",
+      "blob": "672a24c3fd9e48bbef106720d63ee29225f8a9d3",
+      "sha256": "441265919dfc5ecaf622f1877720ad03873a343e78e2486a08fb447918aabaf1",
+      "bytes": 8118,
+      "published_product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "publication_evidence": "foreign-pins-15.json",
+      "origin_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/apps/cli/src/sucafina-product/input-producer-meeting.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-bi.ts",
+      "blob": "a5cd14609db80287e6f122cfb199338df53a8b50",
+      "sha256": "a05bfb22661637e99d436552f5e914b2aec55e590a16a09b2aad82197415c6f7",
+      "bytes": 5853,
+      "published_product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "publication_evidence": "foreign-pins-15.json",
+      "origin_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/apps/cli/src/sucafina-product/input-producer-bi.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-services-inputs.ts",
+      "blob": "7f4ccee85c4eeaec82d932a69ba93c5fe6d59eff",
+      "sha256": "3185107d8da80d5a1db0e5c74c1bf93eae04a7c0fbb58e98d7755a50e556fe55",
+      "bytes": 8253,
+      "published_product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "publication_evidence": "foreign-pins-15.json",
+      "origin_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/apps/cli/src/sucafina-product/analysis-services-inputs.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+      "blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695",
+      "sha256": "f1feef5bb8149f62494969a0d8b405f2c33caf6fe6abc45eb571146348552e6f",
+      "bytes": 18359,
+      "published_product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "publication_evidence": "foreign-pins-15.json",
+      "origin_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/apps/cli/src/sucafina-product/analysis-verifier-documents.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+      "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db",
+      "sha256": "db1081f488c897caf6ed10b02d1389326a02f0edd124c657e9c4ffc805b1abc7",
+      "bytes": 7402,
+      "published_product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "publication_evidence": "GitHub MCP fetch_file at W20, independently matched to local bytes",
+      "origin_commit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+      "blob": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811",
+      "sha256": "e3774ecdbc161eb827bf60a9c13bf7247ef0fcb2c86fada534a5456df6fb18fd",
+      "bytes": 38355,
+      "published_product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "publication_evidence": "foreign-pins-15.json",
+      "origin_commit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/modules/sucafina/Sucafinav1/product/dashboard/port.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+      "blob": "fdc378d5f251511f66bb256b78240f472f1d566c",
+      "sha256": "c9004825a4da66cfe2af7b733478ccf6e9a303b5d765dae2427cec51b86ae9de",
+      "bytes": 8123,
+      "published_product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "publication_evidence": "foreign-pins-15.json",
+      "origin_commit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts"
+    }
+  ],
+  "other_missing_output_drivers": [
+    {
+      "skill_id": "sf-enquadrar-decisao",
+      "output_kind": "AnalysisPlan",
+      "owner_prerequisite": "WP10's consumed Intent verifier accepts IntentFrame only.",
+      "source": {
+        "path": "apps/cli/src/sucafina-product/analysis-verifier-intent.ts",
+        "blob": "43324e0873dd8db0442d34003ae3d57a6d7cf2b7"
+      },
+      "own_action_after_prerequisite": "Add a real AnalysisPlan mission and the WP11/WP01 consumer after the owner publishes validation/consumption for that canonical output; do not relabel IntentFrame."
+    },
+    {
+      "skill_id": "sf-revisar-condicoes-contratuais",
+      "output_kind": "EvidenceCandidate",
+      "owner_prerequisite": "Contract surface and populated document-schema bindings in the contract group above.",
+      "own_action_after_prerequisite": "Require a real admitted document/parser result and canonical EvidenceCandidate under this exact contract skill, followed by its source/promotion consumer."
+    },
+    {
+      "skill_id": "sf-preparar-compra",
+      "output_kind": "PreparedChangeSet",
+      "owner_prerequisite": "Actual allowed target and choice-linked change proposal store in the purchase group above.",
+      "own_action_after_prerequisite": "Implement a separate prepared-change mission and actual human review/receipt consumer; keep DossierDraft claims separate."
+    },
+    {
+      "skill_id": "sf-contestar-decisao",
+      "output_kind": "UnresolvedCondition",
+      "owner_prerequisite": "WP10's consumed critique verifier accepts CritiqueReport only; standalone UnresolvedCondition is distinct from a condition embedded in that report.",
+      "source": {
+        "path": "apps/cli/src/sucafina-product/analysis-verifier-review.ts",
+        "blob": "7b0bb3bbe0ef44f3e5c4babe431d9b37e2a22c4a"
+      },
+      "own_action_after_prerequisite": "Add a standalone condition mission with an actual independent author/reviewer run and condition consumer after owner validation supports it. Preserve the current reviewer independence fences."
+    },
+    {
+      "skill_id": "sf-consultar-memoria-decisoria",
+      "output_kind": "MatchExplanation",
+      "owner_prerequisite": "WP10/WP14 must mount real candidateAccess for an authorized prior case outside the native current-case binding and real memory recall sources.",
+      "source": {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+        "blob": "fdc378d5f251511f66bb256b78240f472f1d566c"
+      },
+      "own_action_after_prerequisite": "Add a genuine previous-case recall/MatchExplanation mission and reopen current authorized references; the empty-scope recall driver is not a precedent match."
+    }
+  ]
+}

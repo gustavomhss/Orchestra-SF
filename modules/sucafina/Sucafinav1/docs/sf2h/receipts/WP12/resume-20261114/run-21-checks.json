@@ -1,0 +1,99 @@
+{
+  "schema": "sf-wp12-exact-hosted-check-result-v1",
+  "phase": "resume-21",
+  "product": {
+    "sha": "6880666b15dc18bf400c908a8457580526b70f4d",
+    "tree": "258bc03adf6343a10847f80060b6983cfc65ad43"
+  },
+  "check": {
+    "snapshot": "c4100053f54e5349cb3745deb9fb5db0793b2bcb",
+    "tree": "8fb5e310300ad4bfdb20ef9010a7f0420b266acf",
+    "directParent": "6880666b15dc18bf400c908a8457580526b70f4d",
+    "onlyEnvelopePath": ".astra-wp12-check.json",
+    "branch": "astra-check-wp12",
+    "runId": 43614850352,
+    "jobId": 132507556297,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43614850352",
+    "status": "completed",
+    "conclusion": "success",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "envelope": {
+      "sha256": "c7f5d35d6d9a5a3a84f99c50c3b65772544feecdf15358e92a3db4d6f2e88086",
+      "blob": "c5850ba77fe9e02c81f63fdb96cd9b4edbc219c2",
+      "candidateShaOmitted": true
+    },
+    "typecheck": {
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "status": "success",
+      "diagnostics": 0
+    },
+    "spawnImports": {
+      "command": "bun run check:spawn-imports",
+      "status": "success",
+      "filesChecked": 4618,
+      "allowListedSites": 66
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "status": "success",
+      "rules": 78,
+      "changedPaths": 1099,
+      "gate": 0,
+      "warn": 15,
+      "errors": 0
+    }
+  },
+  "log": {
+    "bytes": 64744,
+    "sha256": "5237978ec16d77a20e26e34e51229f40d82a7838dd226b4e348bdea7e021b51d",
+    "source": "GitHub Actions job log132507556297",
+    "verifiedFrom": "evidence/resume-21-check.log"
+  },
+  "artifact": {
+    "id": 14122085292,
+    "name": "astra-wp12-check-1",
+    "bytes": 1423,
+    "digest": "sha256:8f4affc5a9e4b85d93f466046cce865a1ac513d1a95926e6c30e8aa2a6277cbc",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43614850352/artifacts/14122085292",
+    "qualification": "Digest and byte size agree between GitHub artifact metadata and the job upload log; no ZIP member inspection is asserted."
+  },
+  "validatedOwnSources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+      "bytes": 46720,
+      "sha256": "cb26d5358dc10b8f303301b2d49708eff3a0b192730fb745cacd5fc2d8b76fbf",
+      "blob": "d305c89fcbf42eef0290e744880342b3b017b48d",
+      "kind": "own-test"
+    }
+  ],
+  "foreignSourceChanges": 0,
+  "sourceReceipt": "preparation-21.json",
+  "provenance": {
+    "runAndTreeMetadata": "GitHub MCP terminal run/jobs/artifacts; C directly parents the exact product and changes only the check envelope.",
+    "log": "Exact decoded job log, transported without newline change; checkout pins, commands and summaries checked."
+  },
+  "limits": [
+    "This full package check validates exact W26 types and guards, not runtime of the two new Work tests.",
+    "Procurement3 remains a separate W24 product flight; the already prepared W25 Review crossroutes and then W26 Work must respect one own product run at a time.",
+    "Handoff and BI KPI domain/UI/reopen results belong to their recorded W24 snapshot, with empty installed model catalogs; no native inference is inferred.",
+    "Planner normalization intake, Scenarios preparation cost, answer scope, Executive historical period, the real Procurement Choice producer and approved native provider binding remain separately recorded gates."
+  ],
+  "localProductTests": false,
+  "localTypecheck": false,
+  "fullWp12": false,
+  "resolvedPreviousDiagnostics": [
+    {
+      "run": 43609369186,
+      "diagnostics": 3,
+      "correctionProduct": "c571d47bf356e26944d6980bad37a73992751a20",
+      "status": "ABSENT"
+    },
+    {
+      "run": 43609973039,
+      "diagnostics": 2,
+      "correctionProduct": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+      "status": "ABSENT"
+    }
+  ]
+}

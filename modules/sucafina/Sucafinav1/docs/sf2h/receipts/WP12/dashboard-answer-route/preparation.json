@@ -1,0 +1,154 @@
+{
+  "schema": "sf-wp12-dashboard-answer-preparation-v2",
+  "status": "FROZEN_WITH_TWO_INDEPENDENT_STATIC_REVIEWS_NOT_RUN",
+  "source": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dashboard-answer.test.ts",
+    "bytes": 40732,
+    "sha256": "94e0aa7f90cf50da056fb444970ebb282024ca56f94b008e0964a3caba7acfa8",
+    "blob": "e7bdf4d8e2da41b8f3bdf05aa8f1384873d2d7a0",
+    "lines": 501,
+    "expect_lines": 103,
+    "test_name": "native question reads the same-case public CAPEX answer without confirming pending training and reopens its real thread consumer",
+    "deadline_ms": 360000
+  },
+  "base_product": {
+    "sha": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+    "tree": "60950d5e873a4f5a05a2284ffbd56d5f041f013b"
+  },
+  "planned_parent_documentation": {
+    "sha": "43de2cd106757ef867b5fdf33c2197bbaaa3a4ce",
+    "tree": "bfe0c0e7d75fac600fd9860b7180a0d96dafcfe6"
+  },
+  "profile": "sf_maestro",
+  "skill": "sf-coordenar-perguntas",
+  "required_native_calls": [
+    "sf_case_read",
+    "sf_answer_read",
+    "sf_relation_read",
+    "sf_question_prepare"
+  ],
+  "purpose": "A real human-selected CAPEX conversation supplies an unconfirmed answer relevant to the same pending training condition. The question follows that actual answer; it does not turn the conversation into confirmed cost evidence.",
+  "same_case_chain": [
+    "Actual Planner 2027 source and one real C09/C10 alternative preserve 96 observed components for the eight non-training categories (12 months each), known subtotal 210000, conditioned comparison and null full total.",
+    "Actual public current-year Project and CAPEX2027 scalar-name record selections enter one confirmed pmo-capex relation, with the Planner evidence, and the same real case.",
+    "A real review thread on exactly the CAPEX2027 record receives a human reply through C06. The actual sf_answer_read port must return its real thread ID, one exact CAPEX evidence ref and state unconfirmed.",
+    "A human baseline-coverage classification names that real thread as questionRef on the still-pending training entry; actual decision-promote preserves it. No stored case, result, choice, receipt or contribution is seeded.",
+    "The real QuestionPlanningInput carries the same case/condition/thread/relation and authorized recipient. Its condition evidenceRefs remain empty.",
+    "The human mission explicitly selects only that same CAPEX record as the conversation context; the QuestionProposal subset is allowed by the closed verifier and remains inside the case/relation. No private handle or authority is inserted."
+  ],
+  "consumer_boundaries": {
+    "without_model": "Actual UI sf_question_prepare receipt -> canonical human question-consume -> idempotent retry -> human reply -> independent host reload -> actual thread and unconfirmed answer reader. This is UI proof only.",
+    "with_model": "Actual native Session/SkillLoadReceipt and completed tool receipts -> C11 QuestionProposal -> reloaded C11 reader -> human question-consume -> actual reply -> independent third host -> canonical thread/answer reader. No UI proposal substitutes for the native output.",
+    "period": "Consumer source and thread periods both equal the public CAPEX2027 period, which lies inside the same case2027 horizon. The current-year Project source remains relation context, never the selected thread source.",
+    "reply_state": "Unconfirmed reply never resolves coverage, confirms a price, adds training components, changes the case or applies the domain.",
+    "source_withdrawal": "After positive consumers, remove only the selected CAPEX raw record. Both predecessor and consumed-thread answer/HTTP reads must refuse; the homonymous other CAPEX source remains readable. A real native output is reauthorized and must refuse regardless of current model availability."
+  },
+  "native_audit": [
+    "Only actual completed Session tool-call IDs already tied by the harness to run/session/principal/SkillLoadReceipt are accepted.",
+    "For every witnessed completed call, the real receipt must bind operation, callId, run, native session and principal; its inputDigest and resultDigest must equal the actual persisted tool input and structured result. The case and predecessor inputs are exact; the question input is reconstructed from the real typed output. No ordering is imposed on relation recordRefs.",
+    "The real sf_answer_read result must match the predecessor, answer text, unconfirmed state and exact CAPEX ref.",
+    "ASC Session messages require that answer result in an earlier assistant message than the completed sf_question_prepare matching the native payload.",
+    "C11 consumer takes the actual native outputRef/outputDigest/run provenance, then reopens the same canonical thread."
+  ],
+  "negatives": [
+    "Homonymous CAPEX source outside the case is refused by sf_question_prepare as denied/source-access-unavailable, without a new thread.",
+    "Unadmitted HTTP cannot read the actual predecessor thread or reveal its answer.",
+    "Selected source withdrawal refuses both real answer lineages and HTTP consumers while the other homonymous source remains readable.",
+    "Any completed native output remains subject to the current source fence even if models later disappear."
+  ],
+  "preserved": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-preparation.ts",
+      "bytes": 10795,
+      "sha256": "1ff25c69a32523eed1d1aadaf9f94d42c54ca416f345dfe309254b7d5d83aa04",
+      "blob": "c3c2efe6004c513370ab04077f7d2c79a704d9c6",
+      "unchanged": true,
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "bytes": 20042,
+      "sha256": "050238396e5f12c067de3ab488f1dc207350cb636fc68d71fc72ef2d8a1b59bc",
+      "blob": "49300a78a44ac0739791d10a11c386b317f4b51a",
+      "unchanged": true,
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+      "bytes": 31379,
+      "sha256": "957231db289d9d1610c146e13153282008a20e035539a1d9dc031c497cbfde1e",
+      "blob": "b334b77248ab887647a7b4a15d2362fb769f5c4c",
+      "unchanged": true,
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-consumer.test.ts",
+      "bytes": 17827,
+      "sha256": "6f48df4d168413eb75cab5786e26239d25d2f93ac2358fbea42c2f213076aaa3",
+      "blob": "01021c133717c73a58b7940b9179b62ac89cc7fe",
+      "unchanged": true,
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+      "bytes": 49745,
+      "sha256": "a71fba2c0ebcb2e1f73cf2b9abe9ef83434e86a54701d63f619ce69510f80b15",
+      "blob": "c146fe374294f07f38c5beae9d34147d97c94968",
+      "unchanged": true,
+      "sourceCommit": "f2cbdb30c1673bc89426db6618d19cb65601c8ef"
+    }
+  ],
+  "scope_limits": {
+    "not_a_fix_for_planner_answer_scope": true,
+    "planner_helper_original_assertion_preserved": true,
+    "pending_origin": "explicit human classification, not derived omitted-category proof",
+    "no_confirmed_answer_reuse": true,
+    "no_c07_or_work_list_or_handoff_acceptance": true,
+    "no_all_required_operations_acceptance": true,
+    "no_native_inference_observed": true,
+    "gnative": false,
+    "no_runtime_observed": true,
+    "deadline_is_not_a_measured_runtime_bound": true,
+    "source_withdrawal_is_not_principal_acl_revocation": true
+  },
+  "verification": {
+    "source_payloads": 21,
+    "source_bytes_hashed": true,
+    "only_one_new_own_test": true,
+    "shared_helpers_edited": false,
+    "foreign_sources_edited": false,
+    "local_product_tests": false,
+    "local_typecheck": false,
+    "ci_dispatched": false,
+    "author_syntax_or_transpile_execution": false,
+    "independent_node_type_stripping_and_syntax_review": true,
+    "independent_syntax_review_product_imports": false
+  },
+  "independent_review": {
+    "status": "PASS_BOUNDED_STATIC_ONLY",
+    "receipts": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/dashboard-answer-route/independent-semantic-review.json",
+        "bytes": 11698,
+        "sha256": "73ee2006eba5643b0566e9809acfaf0d4c4e0211bc9b6c1264fe000ab9d6a8b2",
+        "blob": "8fd77e50abe79348496a925c9fd141707ab6c714",
+        "original_audit_path": "resume-input/own-review/dashboard-answer/independent-review.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/dashboard-answer-route/independent-types-review.json",
+        "bytes": 10161,
+        "sha256": "e6d9c2c7687e67599ffc416c1cf365079dfbd5a50bb9c53c9e836f0ef5333a99",
+        "blob": "83a3724dbb89429e264c3f33677847aaa8dcf6e6",
+        "original_audit_path": "resume-input/criteria/dashboard-answer/independent-types-review-compose.json"
+      }
+    ],
+    "source_blob": "e7bdf4d8e2da41b8f3bdf05aa8f1384873d2d7a0",
+    "runtime_observed": false
+  },
+  "prior_freeze": {
+    "source_blob": "299dea684036477b50dceb7650286334743e589f",
+    "manifest_sha256": "c4a5a53402d86325b33045bdb79aab00a85b353efcdea80256eb936759a6e5cc",
+    "original_audit_path": "resume-input/criteria/dashboard-answer/v1",
+    "status": "SUPERSEDED_BY_DIGEST_BINDING_ASSERTIONS_ONLY_AND_DOCUMENTARY_PRECISION"
+  }
+}

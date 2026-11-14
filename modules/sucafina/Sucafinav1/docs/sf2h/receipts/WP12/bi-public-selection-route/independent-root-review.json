@@ -1,0 +1,80 @@
+{
+  "schema": "sf-wp12-independent-driver-review-v1",
+  "reviewer": "Astra root",
+  "status": "PASS_BOUNDED_STATIC_REVIEW",
+  "candidate": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+    "bytes": 29409,
+    "sha256": "36fea4c59715b3e45aaa435fd5321a8623dc9180dad668f5cc2b243da5c4b123",
+    "blob": "a3fa276e8824affe75842cec6a8a11c224366f71",
+    "deadlineMs": 360000
+  },
+  "authorManifest": {
+    "bytes": 2588,
+    "sha256": "7bebba5268219ddb635bded79f4519aba2bc6f8de17a32abd43186c54c7c3b26",
+    "blob": "179b0805c0185e6ebf2cb65b527f2a25020b5e47"
+  },
+  "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+  "verifiedMcpPayloads": 21,
+  "readScope": "Complete candidate read. Public choice HTTP, choice services, artifacts, contextual reader and relevant host binding branches reviewed; full payload hash verification is not a global semantic review of every host file.",
+  "checks": [
+    {
+      "id": "public-handle-provenance",
+      "status": "PASS_STATIC",
+      "detail": "The human saves a real BI01 artifact through bi-artifact-save. Both identifiers come from that authenticated HTTP response, are selected through bi-selection-set, and are re-read via bi-selection-read before being included in the human mission objective. C08 reads return only CAS revisions; they do not extract private identifiers, tables or outputs."
+    },
+    {
+      "id": "actual-installed-input",
+      "status": "PASS_STATIC",
+      "detail": "The explicit selectionKey:bi branch in analysis-host-services reads the persisted human selection through the mounted binding. It is distinct from the direct dashboardSelection branch. Its artifact-backed catalog allows an empty filter list. The original BI01/KPI driver remains unchanged and is excluded from this new execution."
+    },
+    {
+      "id": "same-case-isolation",
+      "status": "PASS_STATIC",
+      "detail": "A different real case is drafted using real sources; attempting to bind the first artifact pair to it must return denied/bi-selection-scope-mismatch without a preferences revision change. The original choice is re-read and the other case must remain unselected. Both actual case digests are checked."
+    },
+    {
+      "id": "data-and-financial-boundaries",
+      "status": "PASS_STATIC",
+      "detail": "Effective monthly values, explicit zero, absent actual/forecast, source provenance and producer currency unspecified are checked against real producer outputs. The case currency USD is not used to convert these numbers. The auxiliary KPI is kept outside the ContextualBIProposal source list and is not claimed to be consumed by the WP05 chart."
+    },
+    {
+      "id": "real-consumers",
+      "status": "PASS_STATIC",
+      "detail": "Actual bi-artifact-read opens both projection and table identifiers and verifies stored digests/rows. The existing WP05 bi-data and bi-source HTTP consumers are read before and after host reload. Native output identifiers, when available, are opened directly rather than substituted with test-generated artifacts."
+    },
+    {
+      "id": "native-session",
+      "status": "PASS_STATIC",
+      "detail": "The installed execution helper demands the real Session, SkillLoadReceipt, contribution and operation call IDs. The new audit rereads the same Session in ascending order, matches completed tool parts to attested call IDs, verifies run/session/principal/input/result digests, decodes actual operation outputs and checks the exact public case, source selectors, BI request and KPI scope."
+    },
+    {
+      "id": "closed-output",
+      "status": "PASS_STATIC",
+      "detail": "ContextualBIProposal must retain the exact approved view, public projection/table handles, empty filters and sole canonical series source. No contract field, foreign producer, profile grant, generated fixture contribution or alternative output type is introduced."
+    },
+    {
+      "id": "reload-withdrawal",
+      "status": "PASS_STATIC",
+      "detail": "A fresh host must reopen choice, artifact, input and consumer. Removing the selected raw source then makes artifact, choice and input unavailable. A completed native output must be reauthorized even if the new host lacks a model. This is current-source withdrawal, not a claim of installation/ACL/session-revocation coverage."
+    },
+    {
+      "id": "scope-and-authority",
+      "status": "PASS_STATIC",
+      "detail": "Request admission is real; an unadmitted request is refused. The installed Finance profile, contextual BI skill and actual mounted operation IDs are checked. No engine, host, state contract, financial policy, identity, provider configuration, trust gate, lease or deadline is changed."
+    }
+  ],
+  "findings": [],
+  "limitations": [
+    "Product execution and package bun typecheck remain required on GitHub Actions.",
+    "Static review gives no runtime or performance guarantee for the 360000ms declaration.",
+    "Human selection supplies public handles; autonomous discovery is not claimed.",
+    "An empty installed catalog yields UI/input observations only; it cannot satisfy Session inference, native contribution or GNATIVE acceptance.",
+    "Cross-case and selected-source negatives do not replace the full independent isolation/revocation matrix."
+  ],
+  "localProductTests": false,
+  "localTypecheck": false,
+  "foreignEdits": false,
+  "nativeInferenceObserved": false,
+  "gnativeAccepted": false
+}

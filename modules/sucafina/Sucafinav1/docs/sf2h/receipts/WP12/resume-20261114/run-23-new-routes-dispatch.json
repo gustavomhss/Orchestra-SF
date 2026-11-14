@@ -1,0 +1,160 @@
+{
+  "schema": "sf-wp12-append-only-check-eligibility-and-dispatch-proof-v1",
+  "status": "DISPATCHED_ONCE_BY_ROOT_PRODUCT_TERMINAL_NOT_OBSERVED",
+  "capturedAt": "2026-11-14T17:10:36Z",
+  "immutableRequestManifest": {
+    "path": "resume-input/w28-ci/manifest.json",
+    "bytes": 9303,
+    "sha256": "a7879fc64e7d21e3b3dfdd400c37d946327f236566299cabc3e93de020735f78",
+    "blob": "7024f5e936e18f88d6d660bb65a9162205ca5748"
+  },
+  "immutableCheckManifest": {
+    "path": "resume-input/w28-check/manifest.json",
+    "bytes": 1154,
+    "sha256": "f27e78bd544d76801e245ae19cd8e656424105b4f2f85f33c6288402f7752c6a",
+    "blob": "6214170a2e21fddc0e143017a56038eafc841a34"
+  },
+  "authorFreezeUnchanged": {
+    "path": "resume-input/own-missions/bi-public-selection/manifest.json",
+    "bytes": 2588,
+    "sha256": "7bebba5268219ddb635bded79f4519aba2bc6f8de17a32abd43186c54c7c3b26",
+    "blob": "179b0805c0185e6ebf2cb65b527f2a25020b5e47"
+  },
+  "product": {
+    "sha": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+    "tree": "60950d5e873a4f5a05a2284ffbd56d5f041f013b"
+  },
+  "checkGate": {
+    "status": "PASSED",
+    "runId": 43619106397,
+    "jobId": 132520532225,
+    "snapshot": "6479e6e746388948b48698761899c9f0aa135575",
+    "tree": "4e6cc81d39521eba22dfc9863f421856c61c9961",
+    "receipt": {
+      "path": "resume-input/w28-check/run-23-checks.json",
+      "bytes": 5911,
+      "sha256": "8b983a87c47727044733f84e36687b3a0ebcd5affef137bb537cd6b3b8bf649c",
+      "blob": "c7409ec9bfd36f568f85210321408e03a07fd0a7"
+    }
+  },
+  "request": {
+    "path": "resume-input/w28-ci/new-forecast-bi-question.ci-run.json",
+    "bytes": 730,
+    "sha256": "fdf783b550ff5843b129a14e50c68a66d97d443b8bb86833136cfb100864ab50",
+    "blob": "3a7936b3f26b1db1e120195ba8714582c7a00b4c",
+    "bytesUnchangedFromValidatedW27Request": true,
+    "actualValidatorPreviouslyExecuted": true,
+    "validatorRerun": false,
+    "reason": "The exact request and 42 validator inputs are unchanged; publication pins were rebound to W28, which passed full-package C28.",
+    "selectedFiles": [
+      {
+        "file": "native-execution-forecast-kpi.test.ts",
+        "name": "native Finance checks a human-selected budget KPI without replacing forecast delta or inventing comparable currency",
+        "timeoutMs": 360000
+      },
+      {
+        "file": "native-execution-bi-public-selection.test.ts",
+        "name": "native contextual BI uses publicly saved and selected artifact handles with real case isolation and consumers after reload",
+        "timeoutMs": 360000
+      },
+      {
+        "file": "native-execution-work-list.test.ts",
+        "name": "native question work list uses a public Procurement selection for its own pending case and reopens its real consumers",
+        "timeoutMs": 360000
+      }
+    ],
+    "ordering": "Forecast, public BI, Question last; no claim of complete process isolation.",
+    "timeoutQualification": "The sum is only the nominal sum of declared per-test deadlines, not an upper bound or prediction of actual runtime. Hosted tests can overrun their declared deadlines; setup and teardown also consume job time. The 35-minute metadata threshold is a selection-budget rule, not a runtime guarantee; --timeout does not replace explicit per-test deadlines."
+  },
+  "dispatch": {
+    "actor": "root",
+    "runId": 43619631569,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619631569",
+    "snapshot": "b5eb330f9b914953bf19fa7e265e9db11762cfd2",
+    "tree": "6894c48cb770f558dea28fc534098862f0c92848",
+    "directParent": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+    "onlyAddedPath": ".ci-run.json",
+    "branch": "ci-run-linux-astra-wp12-f2cbdb30-fdf783b5-1",
+    "createdAt": "2026-11-14T17:10:16Z",
+    "runAttempt": 1,
+    "statusAtCapture": "in_progress",
+    "conclusionAtCapture": null,
+    "terminalObserved": false,
+    "mcpProof": {
+      "path": "resume-input/w28-ci/dispatch-mcp-proof.json",
+      "bytes": 142087,
+      "sha256": "2b404772e13ddf69e0a62bc5e6d9b342ed065acbba608a004428d5522e41afed",
+      "blob": "96c73695b7e3f53c91acbd3b90bdc0d3646ba453"
+    }
+  },
+  "dedup": {
+    "status": "ROOT_FRESH_GLOBAL_CHECK_VERIFIED_FROM_SAVED_CAPSULE",
+    "beforeDispatchActiveRuns": [
+      {
+        "id": 43619530864,
+        "head_sha": "b31d8df5011a7e8307e80d79366253c16620c585",
+        "head_branch": "ci-run-linux-compose-resume-r04-e1a1888-f89a393e-1",
+        "status": "in_progress"
+      },
+      {
+        "id": 43619479808,
+        "head_sha": "4650ebf5948747a49f04120070765aa6317e6fd8",
+        "head_branch": "ci-run-linux-astra-wp10-a1434e7e-f6f9f060-01",
+        "status": "in_progress"
+      }
+    ],
+    "queuedRunCount": 0,
+    "otherRequests": [
+      {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "./Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "./Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "./Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+          "./Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "./Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+        }
+      }
+    ],
+    "equivalentWp12RequestFound": false,
+    "qualifiedScope": "The two active requests in the captured global response select S0 WP01/WP02 and WP10 portfolio threshold files, with no WP12 selected. This is the captured pre-dispatch state, not a future global guarantee."
+  },
+  "superseded": "W27 request remained byte-preserved and was never dispatched; W28 is its one exact successor. Do not dispatch either prepared request again.",
+  "acceptance": {
+    "hostedTypecheckAndGuards": true,
+    "productPassClaimed": false,
+    "nativeInferenceClaimed": false,
+    "fullWp12Claimed": false
+  },
+  "reviewerActions": {
+    "localProductExecution": false,
+    "localTypecheck": false,
+    "remoteRequests": 0,
+    "remoteMutation": false,
+    "ciDispatch": false,
+    "originalManifestsModified": false
+  }
+}

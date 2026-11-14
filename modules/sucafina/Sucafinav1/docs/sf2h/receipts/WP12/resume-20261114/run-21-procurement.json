@@ -1,0 +1,636 @@
+{
+  "schema": "sf-wp12-surgical-product-result-v1",
+  "phase": "run-21-procurement",
+  "scope": "procurement-failures: Documents and both Purchase variants; prior passing Sourcing excluded",
+  "product": {
+    "sha": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+    "tree": "f859e3b62b1de24234025002459045ae6d3df328"
+  },
+  "snapshot": {
+    "sha": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+    "tree": "e56b89ceae4080757f9827d993c0e7bc0f7e3132",
+    "directParent": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+    "onlyEnvelopePath": ".ci-run.json",
+    "branch": "ci-run-linux-astra-wp12-2ef423f0-8e6c7287-1",
+    "deltaPaths": [
+      ".ci-run.json"
+    ]
+  },
+  "request": {
+    "sha256": "8e6c7287a8afaf957807bf840c6380e92182a37d3f3a94b68c9911c36e9c9372",
+    "gitBlob": "de64053f9e86d3d0aebd8d67bd454986e758540b",
+    "bytes": 663,
+    "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/.ci-run.json",
+    "body": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+        "./Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+        "--timeout",
+        "120000",
+        "-t",
+        "^(native document extraction uses real private bytes and schema; contract review retains the actual issued source surface|native purchase observes preparation boundaries and reopens the pending human choice without approval or source mutation|native purchase observes preparation boundaries and reopens the complete human choice without approval or source mutation)$"
+      ],
+      "env": {}
+    },
+    "namedSourcePins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+        "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+        "blob": "40ea061443542c42a4b27a6f9f602a97d05442b9",
+        "sha256": "6c52720f88a5e77f0db8232c3f8510a44b943d0466febf2b514d88fdbf10df65",
+        "bytes": 33956,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+        "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+        "blob": "2a3a788a56da8d53392f564e95dad168df670c84",
+        "sha256": "cd6e1478c7724a32036e8ed20a2aee834870ae5f35ac33995827990d970a96ed",
+        "bytes": 16762,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts"
+      }
+    ],
+    "supportingSourcePins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-choice-preparation.ts",
+        "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+        "blob": "ce7e079d3abcc8af0fc881483addfa2ca337ae9c",
+        "sha256": "9b60a4ecde5f616d187a323447b81ba3bbc6c982b5e62351965f7ef5935609de",
+        "bytes": 6289,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/modules/sucafina/Sucafinav1/test/product/wp12/native-choice-preparation.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+        "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+        "blob": "78331ae620b34f0fa1c5923a8b769415c5bdaaff",
+        "sha256": "979e285e285699f9ea5e3b0f61acaad280bbfbc7670726bd5445b873a3e2a196",
+        "bytes": 20548,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+        "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+        "blob": "49300a78a44ac0739791d10a11c386b317f4b51a",
+        "sha256": "050238396e5f12c067de3ab488f1dc207350cb636fc68d71fc72ef2d8a1b59bc",
+        "bytes": 20042,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-document-preparation.ts",
+        "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+        "blob": "37a997aa782d1cb695238a5fbe6aeaddfcceb00d",
+        "sha256": "bb86514c2a85a351d29120246d17b8ed5fc6e09ec1f786d7ffe7773e2a89be66",
+        "bytes": 4654,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/modules/sucafina/Sucafinav1/test/product/wp12/native-document-preparation.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+        "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+        "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+        "sha256": "0cca19827cfe6793207441d493561d76830d6903383701b9d84230380561a701",
+        "bytes": 11922,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+        "blob": "97cde4dce2858f47b57b446c9c20bad77d367591",
+        "sha256": "217ce1f268ae119bd38292f9b6697c6f6c1bfb08e31be3e25a434c5cf91d6b48",
+        "bytes": 62972,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/apps/cli/src/sucafina-product/business-services.ts"
+      }
+    ],
+    "sourceIntegrity": "Nine exact MCP payloads, including the request, verified by Git blob SHA1 and SHA256. No test module imported.",
+    "deadlinePolicy": {
+      "requestDefaultMs": 120000,
+      "documentsExplicitMs": 600000,
+      "purchaseEachExplicitMs": 360000,
+      "changed": false
+    }
+  },
+  "run": {
+    "id": 43612149925,
+    "job": 132499298207,
+    "cleanupJob": 132509068409,
+    "attempt": 1,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "cleanup": "success",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43612149925",
+    "startedAt": "2026-11-14T15:48:26Z",
+    "updatedAt": "2026-11-14T16:23:37Z",
+    "testJobStartedAt": "2026-11-14T15:48:28Z",
+    "testJobCompletedAt": "2026-11-14T16:23:30Z",
+    "testStep": {
+      "name": "Run tests",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 20,
+      "started_at": "2026-11-14T15:50:15Z",
+      "completed_at": "2026-11-14T16:23:28Z"
+    },
+    "artifacts": [],
+    "artifactCountVerified": 0
+  },
+  "summary": {
+    "pass": 1,
+    "fail": 2,
+    "errors": 1,
+    "filteredOut": 0,
+    "assertions": 239,
+    "files": 2,
+    "tests": 3,
+    "durationSeconds": 1993.76,
+    "logLines": [
+      1002,
+      1003,
+      1004,
+      1005,
+      1006
+    ],
+    "aggregateAccepted": false
+  },
+  "cases": [
+    {
+      "name": "native document extraction uses real private bytes and schema; contract review retains the actual issued source surface",
+      "result": "PASS_SCOPED_UI_AND_BOUNDARIES",
+      "bunResult": "PASS",
+      "resultLine": 907,
+      "durationMs": 597835.2,
+      "declaredTestDeadlineMs": 600000,
+      "scope": "Real attachment/schema/input preparation, explicit empty-catalog observation, real UI parser/confirmation/scenario preview and reload consumers; no native inference.",
+      "observations": {
+        "extractionInput": {
+          "line": 844,
+          "inputDigest": "0f22933409ebba383bed4256d02e442bbeb0cbd711f172d1f5f0b5f60b41cf00",
+          "schemaRef": "schema:schema_7fa25f2652e25b337cd4598002c645fb15ab6298:1",
+          "documentRevision": 1,
+          "uploadExercised": false,
+          "scannerQualification": false
+        },
+        "contractBoundary": {
+          "line": 843,
+          "status": "unavailable",
+          "reason": "analysis-source-unavailable",
+          "sourceSurface": "dashboard",
+          "sourceType": "contracts",
+          "inputPrepared": false,
+          "knownBoundary": "mounted-contract-producer-requires-procurement-but-contract-issuer-uses-dashboard"
+        },
+        "reviewBoundary": {
+          "line": 847,
+          "currentClaimCount": 0,
+          "status": "needs-input",
+          "reason": "current-case-has-no-persisted-claim-selector",
+          "inputPrepared": false,
+          "authorRunRef": null
+        },
+        "uiExtraction": {
+          "line": 849,
+          "candidateOrigin": "ui",
+          "candidateId": "doc_857edfd85dc202b0440b0325232246682153dbfd",
+          "candidateDigest": "5ac05ad1c4bd31420c1305c3839df8d407c1b490feb66aeabf2bd498fbc1606b"
+        },
+        "humanConsumer": {
+          "line": 883,
+          "candidateOrigin": "ui",
+          "consumerRefs": [
+            "createSfDocumentHttp:document-confirm",
+            "createSfDocumentScenarioHttp:document-scenario-preview"
+          ],
+          "confirmedDigest": "21f44f513fa37d4405e3a3ae386b916ad84bfb8c47c5d414c33da4a7f2efa8bc",
+          "scenarioRequestDigest": "dbd1ff04963d2e5d5c094a64417838a3d3542c230bcf44a63a515839ae97c319",
+          "scenarioResultDigest": "c1d79aa1c4052b795fb35da7b8e418f5f02709b4e24c89f3dbbd6ba6b325543c",
+          "sourceUsedByScenario": true,
+          "caseUnchanged": true,
+          "caseClaimsCreated": 0,
+          "domainApplied": false,
+          "coverageState": "pending"
+        },
+        "reopenedConfirmation": {
+          "line": 906,
+          "confirmationVersion": 1,
+          "confirmedDigest": "21f44f513fa37d4405e3a3ae386b916ad84bfb8c47c5d414c33da4a7f2efa8bc",
+          "consumerRefs": [
+            "createSfDocumentHttp:document-candidates",
+            "createSfDocumentHttp:document-open"
+          ],
+          "caseUnchanged": true,
+          "originalContributionsUnchanged": true
+        }
+      },
+      "nativeSessionExecutionObserved": false,
+      "nativeOutputsObserved": 0,
+      "gnativeAccepted": false
+    },
+    {
+      "name": "native purchase observes preparation boundaries and reopens the pending human choice without approval or source mutation",
+      "variant": "pending",
+      "result": "FAIL_TIMEOUT",
+      "durationMs": 693420.93,
+      "declaredTestDeadlineMs": 360000,
+      "resultLine": 946,
+      "timeoutLine": 947,
+      "prepareCase": {
+        "result": "RETURNED_OK",
+        "line": 932,
+        "durationMs": 117105,
+        "scope": "Actual case/alternatives/coverage assertions completed before choice. This does not assert that the later ChoiceRecord was committed."
+      },
+      "phases": [
+        {
+          "phase": "read-current-case",
+          "startLine": 934,
+          "endLine": 935,
+          "state": "complete",
+          "selectionAgeAtActionStartSinceReturnMs": 0,
+          "publicSelectionAndActionMs": 10141,
+          "actionSinceSelectionReturnMs": 9311
+        },
+        {
+          "phase": "decision-sensitivity-units",
+          "startLine": 937,
+          "endLine": 938,
+          "state": "complete",
+          "selectionAgeAtActionStartSinceReturnMs": 0,
+          "publicSelectionAndActionMs": 228555,
+          "actionSinceSelectionReturnMs": 227721
+        },
+        {
+          "phase": "decision-criteria",
+          "startLine": 940,
+          "endLine": 941,
+          "state": "complete",
+          "selectionAgeAtActionStartSinceReturnMs": 0,
+          "publicSelectionAndActionMs": 31227,
+          "actionSinceSelectionReturnMs": 30367
+        },
+        {
+          "phase": "decision-choose",
+          "startLine": 943,
+          "endLine": 944,
+          "state": "failed",
+          "selectionAgeAtActionStartSinceReturnMs": 0,
+          "publicSelectionAndActionMs": 300933,
+          "actionSinceSelectionReturnMs": 300063,
+          "reportedError": "Real decision-choose failed: decision-authority-changed"
+        }
+      ],
+      "observedRefusal": {
+        "line": 944,
+        "reason": "decision-authority-changed",
+        "sourceProbeLine": 945,
+        "selectionRenewedBeforeProbe": false,
+        "probeScope": "real-companion-business-without-selection-renewal",
+        "requestProbe": {
+          "status": "unavailable",
+          "reason": "procurement-context-unavailable"
+        },
+        "contextProbe": [
+          {
+            "state": "unavailable",
+            "refId": "sf-procurement:c245683d-190d-4c81-97d2-e8cb6aee7135:1",
+            "currentRefMatches": false
+          }
+        ]
+      },
+      "notReached": [
+        "success of decision-choose or read-chosen-case",
+        "PurchasePreparationInput producer and target boundary",
+        "native mission execution",
+        "choice or contribution reopen consumer"
+      ],
+      "gnativeAccepted": false
+    },
+    {
+      "name": "native purchase observes preparation boundaries and reopens the complete human choice without approval or source mutation",
+      "variant": "complete",
+      "result": "FAIL_TIMEOUT",
+      "durationMs": 701285.72,
+      "declaredTestDeadlineMs": 360000,
+      "resultLine": 998,
+      "timeoutLine": 999,
+      "prepareCase": {
+        "result": "RETURNED_OK",
+        "line": 984,
+        "durationMs": 115106,
+        "scope": "Actual case/alternatives/coverage assertions completed before choice. This does not assert that the later ChoiceRecord was committed."
+      },
+      "phases": [
+        {
+          "phase": "read-current-case",
+          "startLine": 986,
+          "endLine": 987,
+          "state": "complete",
+          "selectionAgeAtActionStartSinceReturnMs": 0,
+          "publicSelectionAndActionMs": 10531,
+          "actionSinceSelectionReturnMs": 9665
+        },
+        {
+          "phase": "decision-sensitivity-units",
+          "startLine": 989,
+          "endLine": 990,
+          "state": "complete",
+          "selectionAgeAtActionStartSinceReturnMs": 0,
+          "publicSelectionAndActionMs": 237773,
+          "actionSinceSelectionReturnMs": 236903
+        },
+        {
+          "phase": "decision-criteria",
+          "startLine": 992,
+          "endLine": 993,
+          "state": "complete",
+          "selectionAgeAtActionStartSinceReturnMs": 0,
+          "publicSelectionAndActionMs": 31996,
+          "actionSinceSelectionReturnMs": 31117
+        },
+        {
+          "phase": "decision-choose",
+          "startLine": 995,
+          "endLine": 996,
+          "state": "failed",
+          "selectionAgeAtActionStartSinceReturnMs": 0,
+          "publicSelectionAndActionMs": 301040,
+          "actionSinceSelectionReturnMs": 300137,
+          "reportedError": "Real decision-choose failed: decision-authority-changed"
+        }
+      ],
+      "observedRefusal": {
+        "line": 996,
+        "reason": "decision-authority-changed",
+        "sourceProbeLine": 997,
+        "selectionRenewedBeforeProbe": false,
+        "probeScope": "real-companion-business-without-selection-renewal",
+        "requestProbe": {
+          "status": "unavailable",
+          "reason": "procurement-context-unavailable"
+        },
+        "contextProbe": [
+          {
+            "state": "unavailable",
+            "refId": "sf-procurement:4f32bea6-dd5f-4d63-9b6b-461df6bf80a1:1",
+            "currentRefMatches": false
+          }
+        ]
+      },
+      "notReached": [
+        "success of decision-choose or read-chosen-case",
+        "PurchasePreparationInput producer and target boundary",
+        "native mission execution",
+        "choice or contribution reopen consumer"
+      ],
+      "gnativeAccepted": false
+    }
+  ],
+  "unhandledError": {
+    "count": 1,
+    "lines": [
+      949,
+      960
+    ],
+    "messageLine": 958,
+    "message": "Real decision-choose failed: decision-authority-changed",
+    "source": "native-choice-preparation.ts:36:70",
+    "qualification": "Reported between tests after the pending timeout; not a fourth selected test."
+  },
+  "omni": {
+    "line": 1000,
+    "verdict": "pass",
+    "mode": "focused: no declaring test ran",
+    "spawns": 149,
+    "delegated": 0,
+    "nativeMissionProof": false
+  },
+  "log": {
+    "path": "evidence/resume-21-procurement.log",
+    "bytes": 102302,
+    "sha256": "3ebfd4f7284d7a8e290042aa4da08cd0b63ebdb207293e5886a20d5cda1e4a2e",
+    "lines": 1029,
+    "source": "Single decoded job log already downloaded by root via GitHub MCP; reused locally without another log download."
+  },
+  "markers": {
+    "count": 70,
+    "distinctPrefixes": 14,
+    "method": "One parsed JSON payload per SF_WP12_* marker line in the exact log; all 70 githubSha fields equal the CI snapshot.",
+    "byPrefix": {
+      "SF_WP12_NATIVE_MISSION_CATALOG": {
+        "count": 5,
+        "lines": [
+          833,
+          871,
+          903,
+          929,
+          981
+        ]
+      },
+      "SF_WP12_DOCUMENT_PHASE": {
+        "count": 24,
+        "lines": [
+          834,
+          835,
+          836,
+          838,
+          839,
+          840,
+          841,
+          842,
+          846,
+          848,
+          850,
+          851,
+          872,
+          873,
+          875,
+          876,
+          877,
+          878,
+          879,
+          880,
+          881,
+          882,
+          904,
+          905
+        ]
+      },
+      "SF_WP12_CONTRACT_SOURCE": {
+        "count": 1,
+        "lines": [
+          837
+        ]
+      },
+      "SF_WP12_NATIVE_CONTRACT_BOUNDARY": {
+        "count": 1,
+        "lines": [
+          843
+        ]
+      },
+      "SF_WP12_NATIVE_DOCUMENT_INPUT": {
+        "count": 1,
+        "lines": [
+          844
+        ]
+      },
+      "SF_WP12_NATIVE_MISSION": {
+        "count": 1,
+        "lines": [
+          845
+        ]
+      },
+      "SF_WP12_NATIVE_EVIDENCE_REVIEW_BOUNDARY": {
+        "count": 1,
+        "lines": [
+          847
+        ]
+      },
+      "SF_WP12_DOCUMENT_UI_EXTRACTION": {
+        "count": 1,
+        "lines": [
+          849
+        ]
+      },
+      "SF_WP12_NATIVE_DOCUMENT_CONSUMER": {
+        "count": 1,
+        "lines": [
+          874
+        ]
+      },
+      "SF_WP12_DOCUMENT_HUMAN_CONSUMER": {
+        "count": 1,
+        "lines": [
+          883
+        ]
+      },
+      "SF_WP12_DOCUMENT_CONFIRMATION_REOPEN": {
+        "count": 1,
+        "lines": [
+          906
+        ]
+      },
+      "SF_WP12_PURCHASE_PHASE": {
+        "count": 4,
+        "lines": [
+          930,
+          932,
+          982,
+          984
+        ]
+      },
+      "SF_WP12_PURCHASE_PARAMETER": {
+        "count": 2,
+        "lines": [
+          931,
+          983
+        ]
+      },
+      "SF_WP12_PURCHASE_CHOICE_PHASE": {
+        "count": 26,
+        "lines": [
+          933,
+          934,
+          935,
+          936,
+          937,
+          938,
+          939,
+          940,
+          941,
+          942,
+          943,
+          944,
+          945,
+          985,
+          986,
+          987,
+          988,
+          989,
+          990,
+          991,
+          992,
+          993,
+          994,
+          995,
+          996,
+          997
+        ]
+      }
+    },
+    "catalogObservations": {
+      "count": 5,
+      "states": [
+        "empty"
+      ],
+      "available": [],
+      "supported": [],
+      "published": [],
+      "intersection": [],
+      "lines": [
+        833,
+        871,
+        903,
+        929,
+        981
+      ]
+    },
+    "allExplicitInferenceExecutedFalse": true,
+    "allExplicitGnativeAcceptedFalse": true,
+    "fullParsedCapsule": "resume-input/own-missions/run-21-procurement/markers.json (scratch, not bundled)"
+  },
+  "findings": [
+    {
+      "id": "R21-UI-DOCUMENTS",
+      "status": "OBSERVED_PASS_SCOPED",
+      "fact": "Documents completed the real UI confirmation, preview and reopen consumers while preserving the case and original contributions. Native extraction, contract review and independent evidence-review execution remain unobserved."
+    },
+    {
+      "id": "R21-PURCHASE-PARAMETER",
+      "status": "OBSERVED_PREREQUISITE_PROGRESS",
+      "fact": "Both helpers completed strict C10 and same-value explicit Planner parameter assertions. The real decision-sensitivity-units and decision-criteria calls returned successfully in each variant. This closes the previously observed unsupported-sensitivity-parameter frontier for these fixture variants, not the Purchase mission.",
+      "sourceBlob": "78331ae620b34f0fa1c5923a8b769415c5bdaaff",
+      "sourceLines": [
+        188,
+        232
+      ],
+      "logLines": [
+        931,
+        932,
+        938,
+        941,
+        983,
+        984,
+        990,
+        993
+      ]
+    },
+    {
+      "id": "R21-PURCHASE-CHOOSE",
+      "status": "OBSERVED_FAILURE",
+      "fact": "Both choices return decision-authority-changed after a new public selection completed immediately before the action; observed action intervals are 300063ms and 300137ms. A separate companion-business probe without renewal then reports procurement-context-unavailable.",
+      "causalLimit": "These observations are consistent with loss of a bounded authority/source context during a long action. They do not identify the first internal refusal or establish which lease expired. No renewal within an action, TTL extension or deadline change is proposed."
+    }
+  ],
+  "acceptance": {
+    "fullWp12": false,
+    "aggregatePass": false,
+    "nativeMissionExecution": false,
+    "nativeOutputConsumers": false,
+    "documentsUiConsumerObserved": true,
+    "purchaseInputPrepared": false,
+    "purchaseChoiceConsumerObserved": false,
+    "canonicalCriteriaAutomaticallyUpgraded": false
+  },
+  "followup": {
+    "documentsEquivalentRerunNeeded": false,
+    "purchaseRetest": "HOLD pending relevant source/cost correction and review; no equivalent rerun from this receipt.",
+    "nextInspection": "Published WP10 business c851f877, procurement-case-read-scope b5cebd63 and procurement-evidence-read-scope bf571da1, plus decision-choose/leases and latest WP11. No foreign source applied or code change authorized by this receipt."
+  },
+  "localProductTests": false,
+  "localTypecheck": false,
+  "remoteCITriggeredByThisAudit": false,
+  "productionSourceEdited": false
+}

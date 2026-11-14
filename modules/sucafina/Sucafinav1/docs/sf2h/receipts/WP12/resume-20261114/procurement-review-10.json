@@ -1,0 +1,46 @@
+{
+  "schema": "sf-wp12-independent-review-v1",
+  "reviewer": "compose_typecheck",
+  "status": "NO_NEW_STATIC_BLOCKER_FOUND_EXISTING_C10_BOUNDARY_RETAINED_HOSTED_PENDING",
+  "baseProduct": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+  "ownFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+      "blob": "a0146eb1e5e06eba5eca8007252206b2164e36fa"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+      "blob": "fd42dc367637ff8be90d04547ea4f73158747451"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+      "blob": "d66dafd96a04837f6b10d5e859271d153e1bd72d"
+    }
+  ],
+  "foreignClosure": {
+    "path": "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+    "sourceCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+    "sourceBlob": "3e8830c3dddc8b9609f583f877b2fe7458eccd28",
+    "baseBlob": "08fdfb878f6f9282f70ec71b3e66122f1b95f6f5",
+    "existingDependency": {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "blob": "ab9814817d11c0b477636ee54d1b2763d365f405"
+    },
+    "count": 1,
+    "verification": "Exact base/new/dependency blobs independently fetched via GitHub MCP. SfSourceScope has the same structural parameter fields as the former inline signature. Current source issuer supplies the period/currency and owner field list required by the delegate.",
+    "scope": "Preserves principal/role-map/domain visibility and dependency digest; delegates current request fields including approvalStage and permits the owner-defined legacy field set. No author-written foreign change or additional source is required."
+  },
+  "reviewedInvariants": [
+    "Baseline240000 and candidate210000/250000 remain exact known subtotals; all no-op simulations retain total null, conditioned comparison and scenario-is-hypothetical/preview-not-applied.",
+    "Complete coverage is independently asserted as nine included categories and108 confirmed non-null monthly components. Candidate training is either absent or exactly12 observations, with40000 once and zero11times.",
+    "Pending variant still demands derivedMissingCategoryIds training and a missing-category pending entry; explicit category completeness never substitutes for this origin assertion.",
+    "New source assertions bind actual record type/id, selected period and request approvalStage field. Source unavailable continues to throw.",
+    "No changes to raw input, submitted FX, domain ranking, human selection, threshold20000, commitments, native/consumer gates, negative cases or deadlines."
+  ],
+  "existingKnownBoundary": "The previously reported foreign C10 baseline.entries roundtrip can still erase derived missing-category origin. These own deltas retain the strict assertion and do not constitute a fix or acceptance of that boundary.",
+  "productTestsLocally": false,
+  "typecheckLocally": false,
+  "runtimeEvidenceAdded": false,
+  "foreignSourceEditedByReviewer": false,
+  "ownSourceEditedByReviewer": false
+}

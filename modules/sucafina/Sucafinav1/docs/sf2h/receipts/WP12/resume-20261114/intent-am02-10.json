@@ -1,0 +1,67 @@
+{
+  "schema": "wp12-owned-mission-increment-v1",
+  "status": "FROZEN_INDEPENDENT_STATIC_REVIEW_COMPLETE_HOSTED_PENDING",
+  "base_product": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+  "base_tree": "99def04f22a5e4c998baeef5a28f47be2aa1ca19",
+  "base_blob": "58ab20a7fbe517c832efb6e9688fc66a12389eae",
+  "intended_increment": "W15",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+      "blob": "ac815d5b6175a7147497fd548776a5f83be0e007",
+      "sha256": "2a6c3192ebd963b400b3e465b20a63caf93e6f554f56ecda733a4ee3dc3f68d3",
+      "bytes": 23853
+    }
+  ],
+  "scope": "Only native-execution-intent.test.ts; preserve prior domain and C04 import witnesses. No helper or production edits.",
+  "canonical_required_operations": [
+    "sf_context_get",
+    "sf_case_read",
+    "sf_case_draft",
+    "sf_import_preview"
+  ],
+  "additional_am02_named_routes": [
+    {
+      "profile": "sf_maestro",
+      "skill": "sf-enquadrar-decisao",
+      "operation": "sf_freshness_check",
+      "handler": "checkSfFreshness"
+    },
+    {
+      "profile": "sf_maestro",
+      "skill": "sf-enquadrar-decisao",
+      "operation": "sf_question_prepare",
+      "handler": "prepareQuestion"
+    }
+  ],
+  "real_preconditions": [
+    "Existing real issued Planner sources and persisted cases",
+    "Actual UI freshness and unassigned question preparation to verify selection; UI receipts remain UI",
+    "Existing installed catalog only; model absence remains availability observation"
+  ],
+  "negative": "A real issued source outside the selected case is refused by sf_question_prepare; no fabricated ACL/state/receipt.",
+  "native_witness": "Bound successful native receipts in the actual Session plus decoded operation results for selected sources and current case; model creates its own question.",
+  "consumer_limit": "IntentFrame is persisted and reopened by existing real HTTP consumer. The intermediate QuestionProposal is not claimed as a persisted native question contribution or human C06 consumption.",
+  "product_tests_local": false,
+  "typecheck_local": false,
+  "hosted_tests": "NOT_RUN",
+  "new_native_execution_evidence": false,
+  "independent_review": {
+    "reviewer": "/root/own_review_resume",
+    "verdict": "NO_CONCRETE_TYPE_API_AUTHORITY_DEFECT_FOUND_IN_REVIEWED_DELTA",
+    "observations": [
+      "Grants/scope and handler exports match actual capabilities.",
+      "Outside-case real source is refused by source-access-unavailable.",
+      "UI question preparation uses private Map and cases, requires no threads namespace or sending.",
+      "Native tool callIds are filtered by harness-attested run/session/principal receipts.",
+      "Decoded freshness covers both real selected references; question preserves case/version/source selection and no recipient.",
+      "Canonical required_operations remains the four-operation subset; the two additional routes are explicitly AM02."
+    ],
+    "product_or_typecheck_executed": false
+  },
+  "syntax": {
+    "method": "Node stripTypeScriptTypes and node --check on stripped JavaScript",
+    "result": "PASS",
+    "product_imported": false
+  }
+}

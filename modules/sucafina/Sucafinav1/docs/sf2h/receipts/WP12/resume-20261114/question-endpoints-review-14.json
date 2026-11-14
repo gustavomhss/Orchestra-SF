@@ -1,0 +1,95 @@
+{
+  "schema": "wp12-question-endpoint-independent-review-v1",
+  "reviewer": "/root/compose_typecheck",
+  "created_at": "2026-11-14T14:01:06.143564+00:00",
+  "status": "PASS_STATIC",
+  "file": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+    "beforeBlob": "afb4f2bbb9669455e07fceb18cc7bd6a45b7457f",
+    "afterBlob": "50303355860a26718686f5daf7dddad8978434c3",
+    "sha256": "ead473b33a552a090e142d9eb4a2a06ce2b91955a98ee375b89dc15db9bd7786",
+    "bytes": 30092
+  },
+  "findings": [],
+  "checks": {
+    "beforeAndAfterHashesVerified": true,
+    "previousExpectLinesPreserved": 70,
+    "addedExpectLines": 10,
+    "nativeBranchAndDeadlineUnchanged": true,
+    "rawSourceDataAndGrantsUnchanged": true,
+    "dispatchReplacementsPreserveOperationAndPayload": true
+  },
+  "review": [
+    "Project and homonymous negative source selections now use the real context.at UTC year, satisfying the published current-record Dashboard scope. The CAPEX record retains its explicit2027 source period; no endpoint is relabeled to force equality.",
+    "Published publicRecord includes both name and milestones, so retaining these fields is correct. Current project observation and future milestone/financial content are separate source facts.",
+    "The pmo-capex catalogue requires the exact dashboard/projects and dashboard/capexProjects endpoints, installation/project identity and valid digests. Collaboration authority resolves every source independently. Neither catalogue nor the published QuestionPlanningInput producer requires matching endpoint periods.",
+    "Ten additional assertions verify exact source identities, surface/type and periods. Existing on-case, homonym, directory, injected-condition, human-pending/derived distinction, real predecessor and consumer assertions remain.",
+    "Relation and answer use the shared authentic UI admission helper. Direct source issuers continue to use context.ui; no private context, receipt or reference is manufactured.",
+    "The new date helper accepts Pick<Wp12NativeMissionContext,\"at\"> and returns the concrete Period shape. The issuer status guards narrow project/capex values before access; no concrete type or API mismatch was found."
+  ],
+  "sourcePinsReviewed": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/scope.ts",
+      "commit": "1878f1a513c99d95d4640faa042fa10ead947884",
+      "blob": "f53d0509b6f727947ec9b00888bce9dae1420094"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "commit": "1878f1a513c99d95d4640faa042fa10ead947884",
+      "blob": "c28a167575bf2713590f97798e463ccb33dc50c8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+      "commit": "1878f1a513c99d95d4640faa042fa10ead947884",
+      "blob": "4ddee38662690ce5284cc46ef04d315cb3fb4f6c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+      "commit": "1878f1a513c99d95d4640faa042fa10ead947884",
+      "blob": "f4ccf580aafef9789b9c9acba2f861f05d1c8b08"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+      "commit": "1878f1a513c99d95d4640faa042fa10ead947884",
+      "blob": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+      "commit": "1878f1a513c99d95d4640faa042fa10ead947884",
+      "blob": "2232a2626148ab7833f9db027e7bcc4413b35479"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+      "commit": "1878f1a513c99d95d4640faa042fa10ead947884",
+      "blob": "20b6153642a43ffcf0158061a27b302d6e08280c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/relation-catalog.ts",
+      "commit": "1878f1a513c99d95d4640faa042fa10ead947884",
+      "blob": "bf3f09f5cbc23ad81b65cfd1de97ff608dd075d8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "commit": "1878f1a513c99d95d4640faa042fa10ead947884",
+      "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+      "commit": "1878f1a513c99d95d4640faa042fa10ead947884",
+      "blob": "afb4f2bbb9669455e07fceb18cc7bd6a45b7457f"
+    }
+  ],
+  "additionalSourcePin": {
+    "path": "apps/cli/src/sucafina-product/input-producer-question.ts",
+    "commit": "1878f1a513c99d95d4640faa042fa10ead947884",
+    "blob": "10d95e014c71c6c6f9600a2c1c52fa3532aee68a",
+    "retrieval": "GitHub MCP github_fetch_file exact failing snapshot",
+    "finding": "The producer requires exact on-case issued references, fresh per-reference projections and confirmed relation/directory identity; it does not require endpoint periods to equal one another or the financial horizon."
+  },
+  "limits": [
+    "The old aggregate endpoint error establishes failure, not corrected success. Hosted execution is still required.",
+    "The pinned Dashboard year range2024–2027 is unchanged; this correction covers the observed2026 runtime.",
+    "No native inference, model availability or full mission acceptance is inferred.",
+    "No product/typecheck/CI execution or source edit was performed by this reviewer."
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "previous_W15_failure": {
+    "schema": "sf-wp12-hosted-check-result-v1",
+    "phase": "resume-10",
+    "product": {
+      "sha": "aebf95b980c461b6330d030ac5f4991ee96d8f88",
+      "tree": "964c6bb84a7002c58660ba27d3a574517990b0ed"
+    },
+    "check": {
+      "snapshot": "61b1a4a89a9f6b0040e3e75aefa48f1e26dfaa9d",
+      "tree": "221cd027fbb97f703edbbe218eaee52ec4393eb6",
+      "runId": 43600168125,
+      "jobId": 132463010548,
+      "conclusion": "failure",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43600168125",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "typecheck": {
+        "command": "bun typecheck",
+        "cwd": "modules/sucafina",
+        "exitCode": 2,
+        "diagnostics": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+            "line": 73,
+            "column": 78,
+            "code": "TS2769",
+            "message": "The type readonly BusinessEvidenceRef[] is readonly and cannot be assigned to the mutable type BusinessEvidenceRef[].",
+            "scope": "owned assertion type inference",
+            "fixReceipt": "intent-typefix-11.json"
+          }
+        ]
+      },
+      "spawnImports": {
+        "conclusion": "success",
+        "checkedFiles": 4618,
+        "allowListedSites": 66
+      },
+      "guards": {
+        "conclusion": "success",
+        "rules": 78,
+        "changedPaths": 897,
+        "gate": 0,
+        "warn": 15,
+        "errors": 0
+      }
+    },
+    "log": {
+      "bytes": 63729,
+      "sha256": "a2b576d4164464a841371cf4ad08901a5f1dddf2daee050de75baaea76fcfbff"
+    },
+    "artifact": {
+      "id": 14116037888,
+      "name": "astra-wp12-check-1",
+      "digest": "sha256:dcb0efa471eecbd7b3dc62a659a446d0a28d42d53aedfca14e063da67180b2d8",
+      "bytes": 1593
+    },
+    "limits": [
+      "No product test was triggered against W15 before this diagnostic was corrected.",
+      "Passing guards do not change the failed typecheck verdict.",
+      "The correction changes a generic assertion type only; a fresh hosted check is still required."
+    ],
+    "localProductTests": false,
+    "localTypecheck": false,
+    "fullWp12Acceptance": false
+  },
+  "W16_check": {
+    "schema": "sf-wp12-hosted-check-result-v1",
+    "phase": "resume-11",
+    "product": {
+      "sha": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "tree": "f875b3a78ee8123c959bad5c7c5d4c9fb4f978df"
+    },
+    "check": {
+      "snapshot": "b44a28cace5e9cff526718abf2eaa4d3b06b12b1",
+      "tree": "47cbdb2f15d5bee571f13fd93dd374f68649e750",
+      "runId": 43600551809,
+      "jobId": 132464148364,
+      "conclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43600551809",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "typecheck": {
+        "command": "bun typecheck",
+        "cwd": "modules/sucafina",
+        "exitCode": 0,
+        "diagnostics": 0
+      },
+      "spawnImports": {
+        "conclusion": "success",
+        "checkedFiles": 4618,
+        "allowListedSites": 66
+      },
+      "guards": {
+        "conclusion": "success",
+        "rules": 78,
+        "changedPaths": 899,
+        "gate": 0,
+        "warn": 15,
+        "errors": 0
+      }
+    },
+    "log": {
+      "bytes": 63792,
+      "sha256": "3cbdfb19e0139aee3f9de28e94f0d19424e889d8b6ca505e02595bc0d0f108b6"
+    },
+    "artifact": {
+      "id": 14116421477,
+      "name": "astra-wp12-check-1",
+      "digest": "sha256:ec5baa6ec32e373bfde6fa26a8788e1ab6dc99ef6848ee1ceed59032fdfa6a7e",
+      "bytes": 1422
+    },
+    "typeCorrection": {
+      "receipt": "intent-typefix-11.json",
+      "blob": "bcd35e803b8a00e6ddabef03c10885279e427870",
+      "emittedJavaScriptUnchanged": true
+    },
+    "limits": [
+      "Typecheck and guards are not product execution or native inference.",
+      "W16 Procurement product run43600564160 was in progress at this receipt cutoff; its result requires a separate terminal receipt."
+    ],
+    "localProductTests": false,
+    "localTypecheck": false,
+    "fullWp12Acceptance": false
+  },
+  "current_product": {
+    "name": "W20",
+    "sha": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "tree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e",
+    "parent": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+    "check_status": "PASS",
+    "check_snapshot": "71894701b187aaca938bfe97a8b6c6b8508de4ab",
+    "check_run": 43603981195,
+    "check_job": 132474528320,
+    "check_snapshot_tree": "5070d3b096c7b997d065a6d6a7257eb04f84fbbd",
+    "mission_tests_status": "C10_DERIVED_ORIGIN_RUNTIME_PENDING; QUESTIONS_RETEST_FAILED_1_PASS_2_FAIL; PROCUREMENT_RETEST_IN_PROGRESS; W16_BI_EXECUTIVE_FAILED_1_PASS_1_FAIL_RETAINS_W16_SHA",
+    "last_completed_check": {
+      "product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "run_id": 43603981195,
+      "job_id": 132474528320,
+      "result": "PASS"
+    },
+    "metadata_source": "Root W20 WP12 publication/preparation-15.json:one exact C10 owner blob,zero own source changes,six own docs,339 foreign pins. This is distinct from the source owner WP10 W20."
+  },
+  "current_product_checked_by_this_run": false,
+  "current_check_file": "w20-validation.json",
+  "rule": "The W16 check is not transferred to W17 source changes, and a check is never mission execution."
+}

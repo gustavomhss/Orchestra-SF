@@ -1,0 +1,63 @@
+{
+  "product": {
+    "name": "W19",
+    "sha": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+    "tree": "33edf29551a88ca93f8258e913f3ce127bfc88d4",
+    "parent": "e8ae326420eae2d51247fcab5730e82e5d3b8d39",
+    "check_status": "PASS",
+    "check_snapshot": "fa0a52716877dd513e32d59a43c9652b50fe2821",
+    "check_run": 43602925189,
+    "check_job": 132471348121,
+    "mission_tests_status": "OWN_UI_SELECTION_FIXES_PUBLISHED_NOT_RUN_AT_W19; W16_BI_EXECUTIVE_FAILURE_RETAINS_W16_SHA",
+    "last_completed_check": {
+      "product": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+      "run_id": 43602925189,
+      "job_id": 132471348121,
+      "result": "PASS"
+    },
+    "metadata_source": "Root W19 publication/preparation-14.json:13 own sources,17 own docs, zero foreign deltas;338 foreign pins. Prior CI retains its original SHA."
+  },
+  "check_ref": "W19.CHECKS",
+  "product_execution": "W20_RETEST_IN_PROGRESS_NO_TERMINAL_RESULT",
+  "paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-choice-preparation.ts",
+      "blob": "ce7e079d3abcc8af0fc881483addfa2ca337ae9c",
+      "sha256": "9b60a4ecde5f616d187a323447b81ba3bbc6c982b5e62351965f7ef5935609de",
+      "bytes": 6289,
+      "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-14.json",
+      "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "working_tree": {
+        "blob": "ce7e079d3abcc8af0fc881483addfa2ca337ae9c",
+        "sha256": "9b60a4ecde5f616d187a323447b81ba3bbc6c982b5e62351965f7ef5935609de",
+        "bytes": 6289
+      },
+      "working_tree_matches_published_candidate": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+      "blob": "4c303604768e8a2e750aee8ea8f35d7f17302742",
+      "sha256": "7e771637454be08e1392b39f2a0965391ae280f96230f8aacfcf220febc2f6cd",
+      "bytes": 16735,
+      "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-14.json",
+      "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "working_tree": {
+        "blob": "4c303604768e8a2e750aee8ea8f35d7f17302742",
+        "sha256": "7e771637454be08e1392b39f2a0965391ae280f96230f8aacfcf220febc2f6cd",
+        "bytes": 16735
+      },
+      "working_tree_matches_published_candidate": true
+    }
+  ],
+  "publication_receipt": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/purchase-selection-14.json",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35954072193ee08e0cdefd63c8ec03474d0b5bc5/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/purchase-selection-14.json"
+  },
+  "scope": "Optional typed pre-action hook; complete purchase renews both real public period selections before each human step. Error probes do not renew, original error is rethrown,360second deadline and all financial assertions are preserved.",
+  "independent_review": {
+    "reviewer": "/root/own_review_resume",
+    "verdict": "PASS_STATIC",
+    "original_audit_sha256": "7f592dfff5d3601a9cccab1fc4d6c8da518b60a6dbec86f39bd5672b5da1fe7b"
+  },
+  "third_forecast": "UNCHANGED_NO_PERFORMANCE_REDUCTION_CLAIM"
+}

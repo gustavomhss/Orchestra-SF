@@ -1,0 +1,109 @@
+{
+  "schema": "sf-wp12-serial-product-dispatch-v1",
+  "status": "IN_PROGRESS_AT_OBSERVATION_NO_RESULT_CLAIM",
+  "product": {
+    "sha": "6880666b15dc18bf400c908a8457580526b70f4d",
+    "tree": "258bc03adf6343a10847f80060b6983cfc65ad43",
+    "checkRun": 43614850352,
+    "checkResult": "PASS"
+  },
+  "snapshot": {
+    "sha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+    "tree": "3113a6c8c57dda0cd8ec740faaa3862ca1117a09",
+    "directParent": "6880666b15dc18bf400c908a8457580526b70f4d",
+    "onlyDeltaPath": ".ci-run.json",
+    "branch": "ci-run-linux-astra-wp12-6880666b-f70f8bd7-1"
+  },
+  "request": {
+    "bytes": 666,
+    "sha256": "f70f8bd781179de5d2bddda44c66a00975ddcc9ed394ee13b4ad9d96932794a9",
+    "blob": "7da6158d86bb67894540a3da08b9cc8fa46e6d96",
+    "body": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts",
+        "./Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+        "--timeout",
+        "120000",
+        "-t",
+        "^(native executive report routes and meeting review preparation consume real public human selections without changing either output contract|native question work list uses a public Procurement selection for its own pending case and reopens its real consumers|native executive work list matches its selected real Hot Topic review and reopens the existing human action)$"
+      ],
+      "env": {}
+    }
+  },
+  "run": {
+    "id": 43615955284,
+    "job": 132510939072,
+    "attempt": 1,
+    "createdAt": "2026-11-14T16:30:21Z",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615955284",
+    "observedStatus": "in_progress",
+    "observedStep": "Run tests"
+  },
+  "scope": {
+    "selectedFiles": 2,
+    "selectedExactTests": 3,
+    "selectedTestsPreviouslyExecuted": false,
+    "declaredDeadlineSumMs": 1140000,
+    "deadlineMeaning": "Nominal sum of 420000+360000+360000ms declarations only, not an upper bound or prediction of actual duration.",
+    "sourceBlobs": [
+      "33a8103345de3addbd5dd75ed1303d3ff9826095",
+      "d305c89fcbf42eef0290e744880342b3b017b48d"
+    ]
+  },
+  "metadataValidation": {
+    "actualValidator": "PASS",
+    "validatorSourceFiles": 42,
+    "currentPublicationPins": 13,
+    "productModulesImportedLocally": 0
+  },
+  "serialAndDedup": {
+    "ownProductFlightsAtDispatch": 1,
+    "previousRun": 43612149925,
+    "previousTerminal": "failure",
+    "previousCleanup": "success",
+    "equivalentGreenFound": false,
+    "equivalentActiveFound": false,
+    "globalQueuedCount": 0,
+    "otherActiveRequestsRead": [
+      {
+        "run": 43615428441,
+        "owner": "WP13",
+        "snapshot": "4c84847a885f09bdb1fee936244b73d7129f764a",
+        "requestBlob": "6b144df0ee5b38481996e89c899a910ffa8ada6b",
+        "files": 2,
+        "wp12Files": 0
+      },
+      {
+        "run": 43615877759,
+        "owner": "Interface",
+        "snapshot": "60bdbe5b1d9978d1880c48319064ab889335ee0c",
+        "requestBlob": "4823434363194a9b6b38e0ae8e52cbefbc14d08b",
+        "files": 7,
+        "wp12Files": 0
+      }
+    ]
+  },
+  "superseded": [
+    {
+      "requestSha256": "65752c52ed3942e97a8fecef41562d79b4eb69b365820062eb3e002a3378fa95",
+      "snapshot": "8f742efc9841afb55caeabd65b369f67c68b71a5",
+      "branchCreated": false,
+      "runId": null
+    },
+    {
+      "requestSha256": "b751182caa5044605896022e3ac3874cdad6af53d88f57c39f10eb054536c6b1",
+      "snapshot": null,
+      "branchCreated": false,
+      "runId": null
+    }
+  ],
+  "requestMustNotBeDispatchedAgain": true,
+  "localProductTests": false,
+  "localTypecheck": false,
+  "nativeAcceptance": false,
+  "fullWp12": false
+}

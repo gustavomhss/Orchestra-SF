@@ -1,0 +1,129 @@
+{
+  "schema": "wp12-independent-static-review-v1",
+  "reviewer": "/root/compose_typecheck",
+  "status": "PASS_STATIC",
+  "source": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+    "blob": "d418d5d462842ebfb0ddc3d890098eb00abc5653",
+    "sha256": "249961ad4c5b067b1b16863cc6774235c67be9b27f4eb8369f8071ff25be64a9",
+    "bytes": 21320
+  },
+  "reviewedManifestSha256": "5b703a2e2ae0d53a7d0a172ca2417fb1f671f516f35dd886abd2de7302e5ef6e",
+  "findings": [],
+  "resolvedDuringReview": [
+    {
+      "issue": "New aliased import violated AGENTS.md explicit never-alias rule.",
+      "resolution": "Final source imports/calls compareScenarios by its exported name; no other delta."
+    }
+  ],
+  "checks": [
+    {
+      "area": "UI admission and instance identity",
+      "result": "context.ui performs the real one-time admission validation. withCase, Planner, receipt factory and calculations.persist all belong to context.business, so the resolver sees the authenticated UI case scope. The installed native dispatcher is not called or rebound."
+    },
+    {
+      "area": "Types and narrowings",
+      "result": "The CapabilityResult is narrowed inside the withCase callback and returned as PortResult.value. The outer status is checked before use. StoredDecisionResult is narrowed to kind comparison before its comparison fields are consumed; no cast or fabricated receipt is introduced."
+    },
+    {
+      "area": "Real result persistence",
+      "result": "Published compareScenarios validates the operation input and receipt, invokes Planner, persists using the admitted call identity, then obtains the final bound receipt. calculations.persist delegates comparisons to the real createPlannerResultPersistence, whose resolveCase and repeated replay/current-case checks remain active."
+    },
+    {
+      "area": "Consumer and reload",
+      "result": "The exact outputRef is read from the real C09 result store while writing scope is active, and the same records are reopened after a new host. Comparison reads independently authorize the stored case, principal/policy/access identity and sources; they do not require reusing the expired write scope."
+    },
+    {
+      "area": "Preservation",
+      "result": "All 48 former expect lines remain; 10 assertions add receipt/request/result/case/persistence checks. Native execution block is byte-identical, the two scenario variants and missing-category proof remain, and deadline 720000 ms is unchanged."
+    }
+  ],
+  "priorExpectLines": 48,
+  "currentExpectLines": 58,
+  "nativeExecutionBlockByteIdentical": true,
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "sourceCommit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "blob": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts",
+      "sourceCommit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "blob": "3f02a1ad9ee2985b4094690bd32c16e22a0dda75"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "sourceCommit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "blob": "49300a78a44ac0739791d10a11c386b317f4b51a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "sourceCommit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "blob": "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "sourceCommit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "blob": "63b7b60dcb8a3f6fe491106280f95d04d482c2da"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "sourceCommit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "sourceCommit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "blob": "1c371738c80789cfc6d0d52d482c9c09a3757b0b"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "sourceCommit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "blob": "834b3c967d73411771e1f5aa82b683c6427e6769"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "sourceCommit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "blob": "97cde4dce2858f47b57b446c9c20bad77d367591"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "sourceCommit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "blob": "c434de513cb7ceae4acad1fc595e776785ec85af"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "sourceCommit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-choice-http.ts",
+      "sourceCommit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "blob": "ade98212eba04a8fe35624ea7e96214ec00a92ce"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "sourceCommit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "blob": "bc32bfb39e8b6012230ee0d136bed142340e5d89"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "sourceCommit": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2"
+    }
+  ],
+  "validation": {
+    "metadataHashesChecked": 14,
+    "productTestsExecutedLocally": false,
+    "typecheckExecutedLocally": false,
+    "productImportedLocally": false,
+    "remoteMutation": false,
+    "newRuntimePassClaimed": false,
+    "GNATIVEClaimed": false
+  },
+  "limits": [
+    "This review does not establish that the full test or an individual case-scoped capability fits its existing deadlines. The active earlier snapshot does not contain this fix.",
+    "The read consumer uses the already published C09 authorizer, not a new native receipt or authority fixture."
+  ]
+}

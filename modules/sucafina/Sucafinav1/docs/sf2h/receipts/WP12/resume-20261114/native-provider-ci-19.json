@@ -1,0 +1,177 @@
+{
+  "schema": "sf-wp12-owner-finding-v1",
+  "id": "WP12-NATIVE-PROVIDER-CI-19",
+  "status": "EXTERNAL_INPUT_REQUIRED_NOT_CONFIGURED_BY_WP12",
+  "observedAtProduct": {
+    "sha": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+    "tree": "33edf29551a88ca93f8258e913f3ce127bfc88d4"
+  },
+  "title": "The published CI lane does not bind an authorized model connection to Core",
+  "conclusion": "No already-published CI bootstrap was found that the WP12 driver omitted. The installed Core supports real environment connections and its existing credential database; the current test lane does not provide either. A WP12 driver change cannot establish that external authorization.",
+  "sourceToPrecondition": [
+    {
+      "source": "packages/core/src/plugin/models-dev.ts",
+      "behavior": "For provider metadata that declares environment names, register real key and environment integration methods. Catalog metadata is not a connection.",
+      "precondition": "A real owner-authorized integration connection must be present in the runner process."
+    },
+    {
+      "source": "packages/core/src/integration.ts",
+      "behavior": "resolveConnections combines stored credentials with declared environment methods whose process environment value exists; resolving an env connection reads that value.",
+      "precondition": "Existing provider connection or explicitly provisioned runner credential. No environment value was inspected in this investigation."
+    },
+    {
+      "source": "packages/core/src/credential.ts",
+      "behavior": "Core reads its own credential database and, where allowed, an existing release database. It does not obtain credentials from the GitHub connection used to publish this branch.",
+      "precondition": "An authorized Core credential database must already exist in the actual runner environment. The published dependency cache does not restore it."
+    },
+    {
+      "source": ".github/workflows/test-ci.yml",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "behavior": "GitHub-hosted runner, dependency setup and exact test request. No provider credential, model account, Core credential database or trust provisioning step is declared.",
+      "precondition": "CI/host owner must publish or identify an approved binding before a real native execution can be attempted."
+    },
+    {
+      "source": "script/test-ci-request.ts",
+      "behavior": "The only request environment keys are ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER and ORCHESTRA_CHANNEL. config is accepted only for the named Playwright configurations.",
+      "precondition": "The existing .ci-run.json interface cannot carry a model credential or Core provider configuration."
+    },
+    {
+      "source": "packages/core/src/catalog.ts",
+      "behavior": "model.available filters by provider availability and enabled model. The driver queries this before runner support filtering and the C15 intersection.",
+      "precondition": "At least one actual available, supported model must also be published by services.models()."
+    }
+  ],
+  "installedMechanismsExamined": [
+    {
+      "mechanism": "Standard Integration environment method",
+      "exists": true,
+      "usableInCurrentPublishedCi": false,
+      "reason": "No provider variable is forwarded by the workflow, and the request validator rejects additional environment keys."
+    },
+    {
+      "mechanism": "Existing Core/release credential storage",
+      "exists": true,
+      "usableInCurrentPublishedCi": false,
+      "reason": "No published setup, volume or cache restores that installation-owned database to the GitHub-hosted process; actual credentials were not probed."
+    },
+    {
+      "mechanism": "Named live-provider workflow",
+      "existsInCurrentSnapshot": false,
+      "reason": "Exact W19 workflows directory contains only astra-wp12-check.yml and test-ci.yml. At pinned dev a1d37698 the product-test lane also has no provider injection."
+    },
+    {
+      "mechanism": "Anonymous built-in OpenCode models",
+      "usableInCurrentPublishedCi": false,
+      "reason": "ModelsDevPlugin deliberately excludes zero-input-cost OpenCode models; Catalog rejects the public-key path and OpencodePlugin loads provider config only from a real connection."
+    }
+  ],
+  "currentDriver": {
+    "path": "test/product/wp12/native-mission-harness.ts",
+    "blob": "49300a78a44ac0739791d10a11c386b317f4b51a",
+    "facts": [
+      "Uses the Location returned by createSfHostRuntime.",
+      "Location service construction waits for installed plugin boot.",
+      "Observes actual available and supported models and intersects with actual host-published models.",
+      "Fails a supported-versus-published mismatch; does not inject a provider or synthesize an accepted receipt."
+    ]
+  },
+  "observedExecution": {
+    "runId": 43601627208,
+    "jobId": 132467402304,
+    "snapshot": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+    "logSHA256": "a786e440ea86a17b65740d9082e6638786bf854251e8d88b1a0c60cc58d5e669",
+    "observation": "Both initial and reopened verifier-negative harness observations have available=[], supported=[], published=[], intersection=[].",
+    "scope": "Existing W18 runtime observation, not a W19 or W20 execution result.",
+    "inferenceExecuted": false
+  },
+  "ownerAction": {
+    "owner": "S0 / CI and host integration",
+    "request": "Identify or publish an approved CI execution binding to an existing real provider/account for the actual Core Location, using the provider's normal integration mechanism and retaining the existing test/authority guardrails. Provide the source pin and the runner input contract without publishing secret values.",
+    "wp12Continuation": "Consume the published binding, then run the exact outstanding native mission scopes. Reuse the existing real Session/SkillLoadReceipt/output/consumer paths; preserve unavailable as unavailable until that execution is observed.",
+    "completionBoundary": "A connection only unlocks execution attempts. It does not itself satisfy 18 skills, five profiles, 39 routes, contribution verification or real consumer acceptance."
+  },
+  "excludedActions": {
+    "providerConfigured": false,
+    "credentialsCreatedOrRead": false,
+    "trustCreated": false,
+    "hostEdited": false,
+    "workflowEdited": false,
+    "alternateProviderInjected": false,
+    "modelAllEnumerated": false,
+    "productExecutedLocally": false,
+    "remoteMutation": false
+  },
+  "sources": [
+    {
+      "path": "packages/core/src/catalog.ts",
+      "sourceCommit": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+      "blob": "86acb93f550bc2b941e85d42cc4d62d73cbf64ba"
+    },
+    {
+      "path": "packages/core/src/integration.ts",
+      "sourceCommit": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+      "blob": "d6d9a85e8c9b2737b1f09f95700c05663735e6e4"
+    },
+    {
+      "path": "packages/core/src/plugin/models-dev.ts",
+      "sourceCommit": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+      "blob": "180400771a2dfdc0f69f7705be8d33db69748f7a"
+    },
+    {
+      "path": "packages/core/src/credential.ts",
+      "sourceCommit": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+      "blob": "3161ca0d7f1e4c68a372acb97234eab80a9024b2"
+    },
+    {
+      "path": "packages/core/src/database/database.ts",
+      "sourceCommit": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+      "blob": "aa519134efff085e960affd9be376b0dc92456e1"
+    },
+    {
+      "path": "packages/core/src/plugin/internal.ts",
+      "sourceCommit": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+      "blob": "f7d43af0a7d12df1fa5feb445ebe7e760887413c"
+    },
+    {
+      "path": "packages/core/src/config/plugin/provider.ts",
+      "sourceCommit": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+      "blob": "acbdf36fa7c16f4adf46603c1051a824b1da701a"
+    },
+    {
+      "path": ".github/actions/setup-bun/action.yml",
+      "sourceCommit": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+      "blob": "e2cda5b54676d4d1c35785aaef7aa69d66944597"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "sourceCommit": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+    },
+    {
+      "path": "modules/sucafina/bunfig.toml",
+      "sourceCommit": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+      "blob": "7000633db2c4f11e3f1aff351cd28c0df9affeca"
+    },
+    {
+      "path": ".orchestra/orchestra.jsonc",
+      "sourceCommit": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+      "blob": "9421004e51e5b007a7d291fa24ed94c14e1f156d"
+    }
+  ],
+  "additionalSources": [
+    {
+      "path": "packages/core/src/plugin/provider/opencode.ts",
+      "blob": "58664b340b4cf20a68c495251e613cc6c1bc4729"
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "sourceCommit": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "blob": "66bfff98e0081bb96f37e75add44780aafa9b204"
+    }
+  ],
+  "limits": [
+    "The observations do not prove the raw metadata catalog is empty or name a missing secret.",
+    "No repository-secret, organization-secret, actual credential store or environment-secret value was read.",
+    "This finding does not authorize changing identity, finance, deployment, CI secrets or provider trust."
+  ]
+}

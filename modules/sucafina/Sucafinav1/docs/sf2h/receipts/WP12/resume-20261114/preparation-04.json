@@ -1,0 +1,101 @@
+{
+  "schema": "sf-wp12-increment-preparation-v1",
+  "baseProduct": "c68f4522e910071c7cb236ed908a19994c71d97b",
+  "status": "READY_FOR_HOSTED_VERIFICATION",
+  "changes": [
+    "Reconcile own PR36 output-error classification: invalid model shape/schema/kind fails the admitted run; invalid native authority, receipt or reviewer target remains denied. C08 lifecycle tests are preserved unchanged.",
+    "Repair eight TypeScript diagnostics in new analysis tests with a literal-preserving satisfies annotation and explicit output union guards; keep every existing assertion.",
+    "Remove the remaining false expectSpawn declaration from temporary-source Session.skill(resume:false) loading. That real load and its negative source/authority checks require no subprocess. Native repository-loading controls and provider execution declarations remain.",
+    "Exercise the real Finance source issuer, persisted case and ForecastExplainInput producer before checking provider availability. Assert domain calculation -240, period, currency and source references; record input digest separately from native inference."
+  ],
+  "ownFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-builder.ts",
+      "blob": "e0f70be52df22cac36dbaa88aa1ca7404f4abecc",
+      "sha256": "c0c8f5fee78ca93d98d4968e3507bee36ed62ba47756c4e86eab7e142b97b0f8",
+      "bytes": 5823
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "blob": "de910bfb01cc7a0044a85c9c35a33ecaf62abf76",
+      "sha256": "21840048902f5b39e5dbe4618a1ec77eddf60df2a27591e95c4ae9df0f6ce7e8",
+      "bytes": 9282
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "blob": "f4bd15b2bcc7d0bbe43b8581102210d656c29f02",
+      "sha256": "784a53c9ac7ec618856e3f495d2df54fe026c6aee7b82d3ef04f8f10474be059",
+      "bytes": 46648
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-authority.test.ts",
+      "blob": "c49afce4a463d07d6a0f5f853ac30a5bdd3316a1",
+      "sha256": "7d0f2bf3fbbebb52c62061b3947ce8c62aaa536026a1edafc2c4211a273a5e6f",
+      "bytes": 7307
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+      "blob": "bb212b96ea795aa9d121c06a9609f8931d9dbbca",
+      "sha256": "813008f486e2a2d9cfccdf2022d27b06b6e91a32ac836380f0b3408179d94abd",
+      "bytes": 20242
+    }
+  ],
+  "foreignFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+      "why": "Hosted W8 TS2339/TS2353 at collaboration/dispatch:24/80; producer exposes and records recordQuestionPreparation against the bound receipt.",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "c0bd1afe946a79a906c4f29c4afbd31a992daa68",
+      "baseBlob": "d85db7fbde8b56783c2a929b5c5812a9177aae0b",
+      "sha256": "464f647062b04c4bbe7a5ab79c370d1a91d6986e854e6d5abf69941359fafb3a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/cycle-view.ts",
+      "why": "Hosted W8 TS2353 at collaboration/host:226; cycle-view accepts resolveCase and fences case-work-selection identity.",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "6faf57943149d92ad1ce3335a78bc41784debc65",
+      "baseBlob": "2b700d01959334aee14b6715065bcf876a9b93dc",
+      "sha256": "231cd06fb5cde92ba6d165ec46fbc39b20cb3ac5f400dcbbc851bcb4b5563c74"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+      "why": "Hosted W8 TS2554 at reviews/capabilities:77; published caller supplies both projection and chart to renderReviewSensitivity.",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "fd79690c368087f48276e0cb21198f91f59d5e63",
+      "baseBlob": "58f34b81a21a9c87d21c55fec4dc7f7dd318e2d3",
+      "sha256": "ab7c67a412e366bf7242d3ae55763fc2c1fb5e3c2a3fa244cc359077cd953f74"
+    }
+  ],
+  "validation": {
+    "testRequest": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+        "./Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+        "./Sucafinav1/test/product/wp12/analysis.test.ts",
+        "./Sucafinav1/test/product/wp12/resident-native.test.ts",
+        "./Sucafinav1/test/product/wp12/resident-authority.test.ts",
+        "./Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "requestSha256": "82a19fb76f5b70e84349f7a8ff80d17f42bfe4b103f04b652497f24dcba21526",
+    "canonicalValidatorBlobs": 42,
+    "omniScope": "declared",
+    "changedOrDirectlyAffectedFiles": 6,
+    "previousRound": "run-03.json",
+    "localProductExecution": false
+  },
+  "availability": {
+    "observedInW8": "installed-host-catalog-empty",
+    "inferenceExecuted": false,
+    "noNewProviderOrCredential": true
+  },
+  "completeWp12": false,
+  "independentReview": "Finance producer-before-model flow and in-process authority-load declaration reviewed against exact blobs. Builder review moved kind-independent authority gates before malformed candidate classification."
+}

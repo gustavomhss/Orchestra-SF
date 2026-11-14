@@ -1,0 +1,164 @@
+{
+  "schema": "wp12-document-selection-renewal-v1",
+  "status": "IMPLEMENTED_STATIC_REVIEW_PENDING_HOSTED_CI",
+  "source": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+    "baseCommit": "efa940962023523848661d795856002d29510b19",
+    "baseBlob": "549225d0b82054ebacd0087b39bc6a8a46bc93db",
+    "blob": "40ea061443542c42a4b27a6f9f602a97d05442b9",
+    "sha256": "6c52720f88a5e77f0db8232c3f8510a44b943d0466febf2b514d88fdbf10df65",
+    "bytes": 33956,
+    "originalExpectLines": 73,
+    "currentExpectLines": 73,
+    "allOriginalExpectLinesPreservedInOrder": true,
+    "deadlineMs": 600000,
+    "syntaxOnly": "PASS node --check",
+    "productExecutedLocally": false,
+    "typecheckExecutedLocally": false,
+    "sharedHelperEdited": false,
+    "foreignEdited": false
+  },
+  "observedFailure": {
+    "runId": 43605021421,
+    "productSha": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "snapshotSha": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+    "logOriginalAuditPath": "evidence/resume-15-procurement.log",
+    "logSha256": "091fef5dad0d33440b1f70d7aed21943c81bcaf3f74092f3b1e249a50c4eccb3",
+    "logBytes": 91289,
+    "testDurationMs": 305385.01,
+    "reason": "analysis-source-or-authority-changed",
+    "site": "native-execution-documents-contract.test.ts: first HTTP analysis.prepare",
+    "contractMarkerAt": "2026-11-14T14:30:33.4028488Z",
+    "failureAt": "2026-11-14T14:35:35.6383720Z",
+    "inferenceExecuted": false
+  },
+  "diagnosis": {
+    "provenOwnOmission": "prepareWp12ProcurementCase creates the human Procurement period before issuing sources and preparing two annual alternatives; the document driver previously reused that selection for the first analysis.prepare without renewing it.",
+    "publishedGate": "business-services contextFor refuses selected.expiresAt <= Date.now(); procurementSelections.create sets a real five-minute expiry. C08 case.read checks all referenced evidence through BCS, including the selected Procurement request.",
+    "returnedReason": "analysis-services uses analysis-source-or-authority-changed both for post-verifier current-case/input checks and for the final prepare gate. The exact failing conjunct was not logged.",
+    "authorityDistinction": "The HTTP human/UI admission is created after case preparation. The enclosing host preparation and withCase wrappers revalidate it after the inner call and would replace the result if that admission were no longer valid. This supports a source-selection failure rather than proving expiry of the HTTP admission itself.",
+    "timingLimit": "The contract marker precedes annual Planner issuance, coverage and alternative promotion. The 305385.01 ms test duration cannot be attributed to the first analysis.prepare alone.",
+    "inference": "Expiry of the older Procurement selection is consistent with the real five-minute gate and failure timing. This is a source-supported diagnosis, not a newly executed runtime counterproof."
+  },
+  "changes": [
+    "Renew the same authorized Procurement period through the existing public selection helper immediately before each analysis prepare or case-dependent consumer action.",
+    "Retain the originally issued evidence references, case identity/version, document bytes/schema, complete coverage, annual sources, cost assertions and all native requirements.",
+    "Add passive begin/returned/failed phase markers around case preparation, first input preparation and later consumers; retain original errors and perform each action once."
+  ],
+  "preserved": {
+    "expectLines": 73,
+    "expectLinesIdenticalInOrder": true,
+    "deadlineMs": 600000,
+    "domainFixturesUnchanged": true,
+    "sourceReferencesNotRecaptured": true,
+    "ttlUnchanged": true,
+    "noSilentRetry": true,
+    "noSharedHelperEdit": true,
+    "noForeignEdit": true,
+    "humanConfirmationAndScenarioPreviewRetained": true,
+    "nativeAcceptanceStillRequiresRealModelSessionReceiptAndOutput": true
+  },
+  "sourcePins": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "sourceCommit": "efa940962023523848661d795856002d29510b19",
+      "sha": "97cde4dce2858f47b57b446c9c20bad77d367591",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/apps/cli/src/sucafina-product/business-services.ts",
+      "toolError": false,
+      "localSha256": "217ce1f268ae119bd38292f9b6697c6f6c1bfb08e31be3e25a434c5cf91d6b48",
+      "bytes": 62972
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-host-services.ts",
+      "sourceCommit": "efa940962023523848661d795856002d29510b19",
+      "sha": "9b21d9f7d4b115bb690ab82256b2cef0590c6afe",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/apps/cli/src/sucafina-product/analysis-host-services.ts",
+      "toolError": false,
+      "localSha256": "1a19441f5f9c5a28a464f9edcb74af72a22477637663be10d4d867f44a35bc98",
+      "bytes": 25306
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-services.ts",
+      "sourceCommit": "efa940962023523848661d795856002d29510b19",
+      "sha": "900f199800b683503267b011af2c255be841a3a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/apps/cli/src/sucafina-product/analysis-services.ts",
+      "toolError": false,
+      "localSha256": "cf5596f0600053b4d7f88d05102365d62b0f9d185f39581fdb7d7863a450080e",
+      "bytes": 20244
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-registry.ts",
+      "sourceCommit": "efa940962023523848661d795856002d29510b19",
+      "sha": "04e191874652e15b5647ab67d61156a30bf8dffb",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/apps/cli/src/sucafina-product/analysis-registry.ts",
+      "toolError": false,
+      "localSha256": "f2f67b42fbc5c6bfac8fe30b8347acff5865f8b7f3faf1ef7cc592e720bbe67e",
+      "bytes": 2573
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/document-analysis.ts",
+      "sourceCommit": "efa940962023523848661d795856002d29510b19",
+      "sha": "fbec7b20cfe236d3f729b364b8f35b40bdc4c8ab",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/apps/cli/src/sucafina-product/document-analysis.ts",
+      "toolError": false,
+      "localSha256": "f63eea31ef229aece1ec89c165fbb1f2cd1e10787d81d7c9de81f0f978debbec",
+      "bytes": 5011
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "sourceCommit": "efa940962023523848661d795856002d29510b19",
+      "sha": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "toolError": false,
+      "localSha256": "a34b014aead5afe68cb6b45edf8a7981588b5b80fae99af9a0c082ce6986d47a",
+      "bytes": 16654
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "sourceCommit": "efa940962023523848661d795856002d29510b19",
+      "sha": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "toolError": false,
+      "localSha256": "b6e875b8fc9ff731d225af16f84966bf78f6c1f65aefb852ef52a2983c6ec93e",
+      "bytes": 6876
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "sourceCommit": "efa940962023523848661d795856002d29510b19",
+      "sha": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "toolError": false,
+      "localSha256": "9e9c6a91d75479a65f6fa09775d45a8b360c52cb60523773f28e9799b6e4f495",
+      "bytes": 4062
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+      "sourceCommit": "efa940962023523848661d795856002d29510b19",
+      "sha": "f1433397246117886e109d32b171345ec1992066",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+      "toolError": false,
+      "localSha256": "56cb1681ed5f52b4ed306231cb9650240218e89d73c1e4929a3f1ae26831eb43",
+      "bytes": 16037
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+      "sourceCommit": "efa940962023523848661d795856002d29510b19",
+      "sha": "549225d0b82054ebacd0087b39bc6a8a46bc93db",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+      "toolError": false,
+      "localSha256": "2230d3d90c1c50c2a84e57701836fb264b30826a4ce49f8ca55b4f46a07168ca",
+      "bytes": 31576
+    }
+  ],
+  "validation": {
+    "syntax": "PASS node --check on TypeScript-stripped source; no import executed",
+    "localProductTests": false,
+    "localTypecheck": false,
+    "hostedProductRetest": "NOT_RUN",
+    "runtimeAcceptance": "NOT_CLAIMED"
+  },
+  "residualRisk": [
+    "A single action may still exceed the real source/admission deadline, and the full test may still exceed 600 seconds. Phase telemetry is included to measure this without changing either boundary.",
+    "The known contract input surface and evidence-review claim-selection limitations remain strict and explicitly scoped; this fix does not resolve or accept them."
+  ]
+}

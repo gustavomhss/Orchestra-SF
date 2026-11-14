@@ -1,0 +1,96 @@
+{
+  "schema": "wp12-own-route-increment-v1",
+  "status": "IMPLEMENTED_STATIC_REVIEW_ONLY_NOT_RUN",
+  "map_base_commit": "551ff6c1684ae09704cfce85c12690e8369b2d0c",
+  "canonical": {
+    "profile_id": "sf_maestro",
+    "skill_id": "sf-coordenar-perguntas",
+    "operation": "sf_handoff_prepare",
+    "pointer": "/resident_ai/operation_call_routes/22",
+    "criterion_refs": [
+      "WP12.T02.CHK.60",
+      "WP12.T02.DOD.60",
+      "WP12.T02.INV.60",
+      "WP12.T02.QLT.60",
+      "WP12.T02.CMP.60",
+      "WP12.T02.SUC.60"
+    ]
+  },
+  "code": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts",
+    "blob": "b2d80e6bbfc05ea11bae9bd10490aeb2ea4711b5",
+    "sha256": "64d1c85c19e313b348d2844cc6ff7c924d165bd158a4771d7d44c5807222a810",
+    "runtime": "NOT_RUN",
+    "native_inference": "NOT_OBSERVED"
+  },
+  "new_own_file_only": true,
+  "data_origin": "Explicit synthetic raw Planner rows in an isolated installation and one explicit synthetic authenticated principal. Source identities, C10 pending coverage, case, Hot Topic, relation, input and receipts are produced by existing installed services.",
+  "producer_chain": [
+    "real Planner source issuance",
+    "human collaboration-handoff-create",
+    "actual Hot Topic status source and confirmed relation",
+    "case draft retaining the two producer-issued refs",
+    "real QuestionPlanningInput with those full relation endpoints"
+  ],
+  "operations": {
+    "ui_positive": [
+      "sf_handoff_prepare",
+      "sf_relation_read"
+    ],
+    "native_required": [
+      "sf_handoff_prepare",
+      "sf_question_prepare",
+      "sf_relation_read"
+    ],
+    "native_discovery": "Current actionRef is the actual Hot Topic endpoint in the prepared input/relation, not a private or fabricated prompt ID."
+  },
+  "consumer_chain": [
+    "reopen installed host and reprepare the identical input",
+    "real human handoff-link consumes exact preparation values and reauthorizes source/action/recipient",
+    "same-link retry keeps the original action/relation and storage version",
+    "when real native output exists: C11 question-output then C06 question-consume creates one thread retaining contribution provenance",
+    "second reload reopens the link and optional native-origin thread"
+  ],
+  "provenance_limit": "handoff-link validates the human-confirmed domain command but does not persist the native tool receipt. The actual tool result and its bound receipt are inspected in the real Session. The C11 QuestionProposal consumer separately retains output/run provenance in the canonical thread.",
+  "negative_cases": [
+    "Planner record selected as actionRef",
+    "actual action omitted from sourceRefs",
+    "unselected recipient",
+    "human link target equals the source instead of the action"
+  ],
+  "retained_invariants": [
+    "one real action and one confirmed relation",
+    "Planner raw source unchanged",
+    "case unchanged by preparatory/native analysis",
+    "no thread created by preparation",
+    "idempotent real human link and optional contribution consumption",
+    "no external messaging, approval or domain application by the skill"
+  ],
+  "not_claimed": [
+    "native inference without an installed model",
+    "complete question skill required-operation coverage",
+    "sf_work_list",
+    "sf_answer_read or confirmed answer reuse",
+    "resolution of the separate Planner answer-scope owner finding",
+    "GNATIVE acceptance",
+    "hosted pass or timeout success"
+  ],
+  "hosted_selection": {
+    "files": [
+      "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts"
+    ],
+    "test_name": "native question handoff uses a real selected Hot Topic and its human consumer preserves one action after reload",
+    "test_timeout_ms": 300000,
+    "status": "NOT_RUN"
+  },
+  "independent_review": {
+    "file": "handoff-independent-review.json",
+    "sha256": "f3bb0bfdfe6ae93ffae553c97f943ebf82dbf12f4d71163e9d342929a3e49668",
+    "claim": "PASS_STATIC only"
+  },
+  "source_pins": "source-pins.json",
+  "local_product_tests": false,
+  "local_typecheck": false,
+  "foreign_edits": false,
+  "acceptance_upgrades": 0
+}

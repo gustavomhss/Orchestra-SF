@@ -1,0 +1,22 @@
+{
+  "schema": "wp12-owner-proposal-v1",
+  "finding": "WP12-STALE-HOST-01",
+  "status": "NOT_APPLIED_NOT_RUN",
+  "owner": "WP10",
+  "base": {
+    "ref": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+    "path": "apps/cli/src/sucafina-product/host-context.ts",
+    "blob": "28046172e5a540c8418aff0b968b2e098888c432"
+  },
+  "patchSha256": "a47c010e773e92ceed55595ddd07a54070052377cd4a06d47cdd1a24b12a6e1f",
+  "expectedAppliedBlob": "ab9af9f3f5bb0b750da81178223b1eee911c4190",
+  "ownProducerBase": "0f3a312b709da8012fdac8b077a1525e6c0fc220",
+  "requiredOwnDelta": "product/ai/analysis-host.ts + analysis-port.ts optional withLifecycleContext, published in next WP12 increment",
+  "notIncluded": [
+    "Historical payload/capture release",
+    "Retaining an unpublished AlternativeDraft",
+    "Restarting/resuming a provider",
+    "Source ACL or C17 bypass",
+    "Azure/deploy/engines"
+  ]
+}

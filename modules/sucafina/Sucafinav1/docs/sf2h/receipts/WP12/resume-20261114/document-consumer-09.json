@@ -1,0 +1,44 @@
+{
+  "status": "frozen-for-root-publication",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+  "blob": "9147d1550f34d066c55f1692dcceaf168cbe9ed6",
+  "sha256": "de3af0a2bbb88e2e7dc3de7ae23d4d72a5a8630cac9cb66c6af03c68c9b8cdde",
+  "baseAfterRootWitnessBlob": "fb3d096ddbc48891e6c3a7ccb212e943eba7dfc9",
+  "publishedSourceCommit": "ede812eaf2644cde161f2360b2e4762d9c942146",
+  "sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/document-http.ts",
+      "blob": "fbb76f54c1ebfa475189a92ecad6092e22733c81"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/document-scenario-http.ts",
+      "blob": "d6926db6f770692e4d2ccbe9f425bf389a9f5c95"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/scenario-inputs.ts",
+      "blob": "566776cda673751c1b6fe78f55ef53f573e83b37"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "blob": "d654b13aafcf1e0b29d410e916c1a09b4fa19963"
+    }
+  ],
+  "consumerFlow": [
+    "Native candidate when a real model exists; actual HTTP parser when none exists, logged explicitly as ui origin.",
+    "Fresh host reopens exact extracted candidate before any human confirmation.",
+    "POST document-confirm receives that complete candidate and returns the versioned confirmed reference.",
+    "GET document-scenario-targets produces the actual Planner destination; POST preview passes only returned reference and target, with no caller-supplied amount/assumption.",
+    "Scenario result must retain confirmed source/value and pending inventory-unavailable coverage; domainApplied stays false.",
+    "Another fresh host reopens the confirmed candidate and source; original contributions, case and raw Planner/Procurement/Dashboard data stay unchanged."
+  ],
+  "humanActionAdded": "planner.preview",
+  "newSharedHelpers": [],
+  "staticTsParse": "passed",
+  "emittedJavascriptNodeCheck": "passed",
+  "independentStaticReviewer": "own_review_resume: no concrete type/authority defect found",
+  "productExecuted": false,
+  "typecheckExecuted": false,
+  "ciDispatched": false,
+  "nativeExecutionClaimed": false,
+  "caseAssumptionsCreated": 0
+}

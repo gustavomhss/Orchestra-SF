@@ -1,0 +1,18 @@
+{
+  "schema": "wp12-owner-delta-v1",
+  "owner": "WP10 with WP07/Finance integration as needed",
+  "findingId": "WP12-EXECUTIVE-HISTORICAL-PERIOD",
+  "status": "READY_TO_FORWARD_NOT_APPLIED",
+  "subject": "January preserved review: annual Planner cell evidence cannot pass the historical period match after source revision",
+  "message": "WP12 run43608377719 on W21 efa94096 / S3bb3d004 completes real Executive/Meeting inputs, two Office exports with44 selected value-ID occurrences, reopening and current-input equality. It then fails overall0/1 (2245assertions,116.24s) at the first review-read after +777 in the candidate January source, receiving403 in1.73s. The request is a fresh public GET, not a retained UI admission. Installed Planner port3a9eaaa0 sets SourceRef.period to the selected January period, but planner-sources8a320127 issues annual BusinessEvidenceRefs retained in the cells. review-history0c9a6822 matchesRecord128–131 requires capturedSource.period to contain that entire annual evidence period, which is false. HTTP3411fe33 collapses inner failure to403, so the first failing subgate remains unobserved. The same historical predicate and public issuerba502349 remain at latestPR29 4bc9c722; the new pure evidence constructor6230f22e also stays annual. Please publish a safe reconciliation that authorizes only the immutable captured month under current source/ACL/receipt authority. Do not widen the returned historical projection or permit it as current analysis input.",
+  "requiredProofs": [
+    "same-incarnation source content changes preserve authorized access to the immutable captured January review and original report bytes",
+    "current authorization, policy/accessRevision, Request identity/abort and authentic C08 capture receipt remain mandatory",
+    "replaced/revoked/missing sources, forged capture or altered receipt still refuse",
+    "a January historical read cannot expose February–December values or claim annual completeness",
+    "new analysis from the changed historical source remains unavailable/stale",
+    "original 200 expectation and source-mutation counterproof pass under the existing420000ms deadline in one changed surgical run"
+  ],
+  "ownAction": "Driver remains unchanged with strict200/historical/archive assertions. No monthly EvidenceRef is fabricated. No equivalent rerun is justified solely by this diagnostic report.",
+  "noPatchReason": "The scope reconciliation belongs to the installed Review/source contract. A naive reversal or removal of the period inequality could widen historical evidence access."
+}

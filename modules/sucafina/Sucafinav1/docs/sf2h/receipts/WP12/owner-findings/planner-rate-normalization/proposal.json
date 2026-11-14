@@ -1,0 +1,44 @@
+{
+  "schema": "wp12-planner-rate-normalization-proposal-v1",
+  "status": "NOT_APPLIED_NOT_RUN_UNPUBLISHED",
+  "owner": "WP03/Planner; WP10 may consume only subsequently published complete compatible blobs",
+  "design": "A narrow runtime export delegates to the exact existing versionOf(row).hc. Port qualification uses that canonical normalized result only internally; no forged role, raw private publication, duplicate rate-selection rule, formula or policy change.",
+  "runtimeBaseline": "c487332777d4053be7a2b177ea598efb77ca0d66",
+  "portBaseline": "8389709232225424b5905638d0951d8cdbb71dd7",
+  "testBaseline": "68d049f957257e089810ae0f9be230a157dba70c",
+  "sourceEditsApplied": false,
+  "productImports": false,
+  "productTests": false,
+  "typecheck": false,
+  "derivedCandidates": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "before": "c487332777d4053be7a2b177ea598efb77ca0d66",
+      "unpublishedProposedBlob": "8168c4b8fea256d0dbf4a961c4b14284d4999dec",
+      "bytesBefore": 102784,
+      "bytesAfter": 102983
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "before": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "unpublishedProposedBlob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+      "bytesBefore": 26150,
+      "bytesAfter": 26118
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/port-hr.test.ts",
+      "before": "68d049f957257e089810ae0f9be230a157dba70c",
+      "unpublishedProposedBlob": "e6c559bdda26f62c130a0fa8eeed5bf078fe66aa",
+      "bytesBefore": 5129,
+      "bytesAfter": 7990
+    }
+  ],
+  "preservation": [
+    "All runtime bytes except the new delegating export remain identical to c487.",
+    "All port bytes except the new import and replacement of raw qualification hc remain identical to 838.",
+    "All existing HR assertions remain; a new real-issuer/Planner boundary test is only proposed.",
+    "Current actor/grants, source/projection/coverage rechecks, private-position redaction and C09 lease remain.",
+    "The proposal requires owner publication and a fresh compatibility review; these local derived hashes are not eligible intake sources."
+  ],
+  "publicationRequirement": "Do not overwrite the owner's later c90 work or import its broad UI/runtime changes by convenience. The owner must publish a complete compatible runtime output for this integration baseline, or an equivalently reviewed published solution that shares canonical normalization. No current production file is changed by this patch artifact."
+}

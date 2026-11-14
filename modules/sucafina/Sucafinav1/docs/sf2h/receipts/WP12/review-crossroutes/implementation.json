@@ -1,0 +1,350 @@
+{
+  "schema": "wp12-own-operation-route-increment-v1",
+  "status": "IMPLEMENTED_NOT_EXECUTED",
+  "publicationParent": {
+    "sha": "24bae062742ad51abe80c2f50f62f9e5fe1049d1",
+    "tree": "ce638631fc58a5c1f89fa7907f9d3069bcf5681b"
+  },
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "immutablePriorMaps": {
+    "d21": "551ff6c1684ae09704cfce85c12690e8369b2d0c",
+    "w22Addendum": "5c148a16b76f98dfe194823c0e10ed2ef7685a69",
+    "edited": false
+  },
+  "test": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts",
+    "blob": "33a8103345de3addbd5dd75ed1303d3ff9826095",
+    "sha256": "65563a4d9499c410720a97efef55e0d96222e3307a4d2229032d1836ea35b742",
+    "bytes": 33596,
+    "testName": "native executive report routes and meeting review preparation consume real public human selections without changing either output contract",
+    "deadlineMs": 420000,
+    "lexicalExpectCalls": 76,
+    "status": "IMPLEMENTED_NOT_EXECUTED"
+  },
+  "classificationCorrections": [
+    {
+      "index_in_d21": 11,
+      "kind": "SKILL_REQUIRED_OPERATION",
+      "skill_id": "sf-produzir-material-reuniao",
+      "profile_id": null,
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_review_prepare",
+      "canonical_pointer": "/resident_ui_consumption/skills/16/required_operations/0",
+      "criterion_refs": [
+        "WP12.CMP.40",
+        "WP12.T02.CHK.11",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "d21_classification": "OWNER_AGENDA_SELECTION_REQUIRED",
+      "group": "meeting-review",
+      "classification": "OWN_PUBLIC_HUMAN_SELECTION_DRIVER_IMPLEMENTED_NOT_EXECUTED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false,
+      "priorPublishedClassification": "OWNER_PUBLIC_AGENDA_RELATION_REQUIRED",
+      "reason": "Missing a typed cross-reference field does not forbid a human from explicitly selecting the actual public reference in the existing objective. The new driver obtains both selections through WP07 before creating the case and retains every installed authority check.",
+      "code": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts",
+      "codeBlob": "33a8103345de3addbd5dd75ed1303d3ff9826095"
+    },
+    {
+      "index_in_d21": 18,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "profile_id": "sf_maestro",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_report_prepare",
+      "canonical_pointer": "/resident_ai/operation_call_routes/26",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_PRESERVED_REVIEW_SELECTION_REQUIRED",
+      "group": "executive-report",
+      "classification": "OWN_PUBLIC_HUMAN_SELECTION_DRIVER_IMPLEMENTED_NOT_EXECUTED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false,
+      "priorPublishedClassification": "OWNER_PUBLIC_PRESERVED_REVIEW_RELATION_REQUIRED",
+      "reason": "Missing a typed cross-reference field does not forbid a human from explicitly selecting the actual public reference in the existing objective. The new driver obtains both selections through WP07 before creating the case and retains every installed authority check.",
+      "code": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts",
+      "codeBlob": "33a8103345de3addbd5dd75ed1303d3ff9826095"
+    },
+    {
+      "index_in_d21": 19,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "profile_id": "sf_maestro",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_artifact_get",
+      "canonical_pointer": "/resident_ai/operation_call_routes/27",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "d21_classification": "OWNER_PRESERVED_REVIEW_SELECTION_REQUIRED",
+      "group": "executive-report",
+      "classification": "OWN_PUBLIC_HUMAN_SELECTION_DRIVER_IMPLEMENTED_NOT_EXECUTED",
+      "operation_execution_observed": false,
+      "acceptance_status_changed": false,
+      "priorPublishedClassification": "OWNER_PUBLIC_PRESERVED_REVIEW_RELATION_REQUIRED",
+      "reason": "Missing a typed cross-reference field does not forbid a human from explicitly selecting the actual public reference in the existing objective. The new driver obtains both selections through WP07 before creating the case and retains every installed authority check.",
+      "code": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts",
+      "codeBlob": "33a8103345de3addbd5dd75ed1303d3ff9826095"
+    }
+  ],
+  "canonicalMeetingSkill": {
+    "pointer": "/resident_ui_consumption/skills/16",
+    "value": {
+      "id": "sf-produzir-material-reuniao",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "work_entry": "Preparar material/relatório da revisão selecionada.",
+      "typed_inputs": [
+        "C05 PreservedReviewRef",
+        "C09 DecisionRefs",
+        "C07 FactualResult",
+        "AuthorizedSections"
+      ],
+      "authorized_operations": [
+        "sf_artifact_get",
+        "sf_report_prepare",
+        "sf_review_prepare",
+        "sf_work_list"
+      ],
+      "output_types": [
+        "MeetingMaterialProposal"
+      ],
+      "producer_tasks": [
+        "WP12.T02",
+        "WP09.T02",
+        "WP07.T02"
+      ],
+      "consumer_tasks": [
+        "WP07.T02",
+        "WP07.T04",
+        "WP01.T05"
+      ],
+      "visible_consumption": "Seleção/seções/pauta propostas tornam-se revisão e DOCX/PPTX gerados pelo WP07, com cobertura integral e links. Resultado persistido abre o arquivo real e a revisão correspondente.",
+      "missing_or_failure": "Seção vazia/omitida ou export falho informa cobertura/erro; fatos preservados continuam recuperáveis sem síntese de modelo. Não declarar arquivo criado sem artifactRef.",
+      "stale_or_access_change": "Revisão preservada não recebe valores correntes silenciosamente; acesso é revalidado no download/export e nas referências.",
+      "adendum_proof_numbers": [
+        1,
+        2,
+        3,
+        6
+      ],
+      "negative_discriminator": "Texto no chat não substitui material real; arquivo truncado em12 linhas não passa; narrativa não inventa decisão nem reescreve a reunião.",
+      "status": "NOT_RUN",
+      "existing_schema_mapping": {
+        "MeetingMaterialProposal": "{reviewSelectionRef, orderedResultRefs, coverage, gaps}; WP07 gera revisão e arquivos completos."
+      },
+      "required_operations": [
+        "sf_review_prepare",
+        "sf_report_prepare",
+        "sf_artifact_get"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host."
+    }
+  },
+  "canonicalAm02Routes": [
+    {
+      "pointer": "/resident_ai/operation_call_routes/25",
+      "value": {
+        "operation_id": "sf_review_prepare",
+        "pack_id": "documents_reports",
+        "profile_id": "sf_maestro",
+        "skill_id": "sf-preparar-revisao-executiva",
+        "entry_mode": "interactive",
+        "input_schema": "ReviewPrepareRequest",
+        "output_type": "ReviewDraft",
+        "producer_task": "WP07.T02",
+        "consumer_tasks": [
+          "WP07.T01",
+          "WP07.T02",
+          "WP01.T05",
+          "WP09.T01",
+          "WP09.T02",
+          "WP09.T07"
+        ],
+        "requires_loaded_skill_receipt": true,
+        "requires_current_c07_admission": false,
+        "proof_id": "AM02",
+        "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+        "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+      }
+    },
+    {
+      "pointer": "/resident_ai/operation_call_routes/26",
+      "value": {
+        "operation_id": "sf_report_prepare",
+        "pack_id": "documents_reports",
+        "profile_id": "sf_maestro",
+        "skill_id": "sf-preparar-revisao-executiva",
+        "entry_mode": "interactive",
+        "input_schema": "ReportPrepareRequest",
+        "output_type": "MeetingMaterialProposal",
+        "producer_task": "WP07.T04",
+        "consumer_tasks": [
+          "WP07.T01",
+          "WP07.T02",
+          "WP01.T05",
+          "WP09.T01",
+          "WP09.T02",
+          "WP09.T07"
+        ],
+        "requires_loaded_skill_receipt": true,
+        "requires_current_c07_admission": false,
+        "proof_id": "AM02",
+        "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+        "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+      }
+    },
+    {
+      "pointer": "/resident_ai/operation_call_routes/27",
+      "value": {
+        "operation_id": "sf_artifact_get",
+        "pack_id": "documents_reports",
+        "profile_id": "sf_maestro",
+        "skill_id": "sf-preparar-revisao-executiva",
+        "entry_mode": "interactive",
+        "input_schema": "ArtifactGetRequest",
+        "output_type": "AuthorizedArtifact",
+        "producer_task": "WP07.T04",
+        "consumer_tasks": [
+          "WP07.T01",
+          "WP07.T02",
+          "WP01.T05",
+          "WP09.T01",
+          "WP09.T02",
+          "WP09.T07"
+        ],
+        "requires_loaded_skill_receipt": true,
+        "requires_current_c07_admission": false,
+        "proof_id": "AM02",
+        "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+        "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+      }
+    }
+  ],
+  "publicReferenceFlow": [
+    "Issue two actual authenticated annual Planner references from explicit synthetic raw records.",
+    "Human selects the January comparison through review-agenda; review-preview returns the admitted ReviewDraft.",
+    "Human preserves those exact sections through review-preserve, obtaining the public PreservedReview id/version.",
+    "Create the case only after both selections exist; its objective explicitly contains the human-selected public preservedReviewRef and reviewSelection.",
+    "Prepare the two existing closed input schemas through the installed workbench HTTP route. No field is added to ExecutiveReviewInput or MeetingMaterialInput.",
+    "With a real available model, require Session execution, SkillLoadReceipt, exact input/result digests and actual review/report/artifact tool results.",
+    "Download the artifactRef returned by that completed native report call, then consume the actual contribution through WP07 review-contribution and reopen it after host reload."
+  ],
+  "nativeAssertions": {
+    "profile": "sf_maestro",
+    "executive": {
+      "skill": "sf-preparar-revisao-executiva",
+      "requiredByThisDriver": [
+        "sf_review_prepare",
+        "sf_case_read",
+        "sf_source_get",
+        "sf_report_prepare",
+        "sf_artifact_get"
+      ],
+      "output": "DecisionBrief remains closed; generated report stays an auxiliary Session tool result, outside orderedResultRefs/runRef/resultRef."
+    },
+    "meeting": {
+      "skill": "sf-produzir-material-reuniao",
+      "requiredByThisDriver": [
+        "sf_review_prepare",
+        "sf_report_prepare",
+        "sf_artifact_get"
+      ],
+      "output": "MeetingMaterialProposal equals the actual native report result; artifact evidence equals its real artifact_get result."
+    },
+    "receipts": "Real completed Session messages in ascending order; callIds already bound by the shared harness; run/session/principal/call/input/result checks retained.",
+    "artifactDataFlow": "The report assistant message must precede the artifact_get assistant message. A UI artifact never substitutes for the actual native result.",
+    "previewParity": "Native review_prepare must equal the actual UI preview and preserve the selected review sections, evidence set and producer gaps.",
+    "docxParity": "For each selected section and occurrence, compare all three rendered cells: captured id/value or unavailable/unit/currency; selected period; actual source refIds. Check headings/order and the full44-ID multiset, with38 distinct identities.",
+    "stateLimit": "The renderer has no separate evidenceState column. Null-to-unavailable is checked; no nonexistent state column is claimed."
+  },
+  "consumerMap": [
+    {
+      "name": "WP07 report generation and authorized artifact read",
+      "entry": "sf_report_prepare / sf_artifact_get",
+      "kind": "actual installed capabilities",
+      "nativeBranch": "Requires native tool results and receipts; not a replay with synthetic bindings.",
+      "noModelBranch": "Actual UI dispatcher receipts only."
+    },
+    {
+      "name": "WP07 report download",
+      "entry": "GET /sucafina/dashboard?sf=review-download&artifactRef=<actual returned ref>",
+      "kind": "actual public HTTP consumer",
+      "nativeBranch": "Uses the artifactRef returned by the completed native report call; checks bytes and all captured cells.",
+      "noModelBranch": "Uses the separately labeled UI artifact; no native attribution."
+    },
+    {
+      "name": "WP07 C11 contribution",
+      "entry": "POST /sucafina/dashboard?sf=review-contribution",
+      "kind": "actual output consumer",
+      "nativeBranch": "Exact output digest; Meeting review/artifact links; DecisionBrief remains strict with no routine or report inserted as a routine result.",
+      "noModelBranch": "Not called because no real contribution exists."
+    },
+    {
+      "name": "Durable reopening",
+      "entry": "Real host reopen, review-read, Meeting input, Session audit, contribution/output and artifact download",
+      "kind": "persistent real consumer composition",
+      "limit": "Does not recreate an ephemeral agenda or claim a new Executive prepare after reload."
+    }
+  ],
+  "knownUnresolvedBoundaries": [
+    "Provider availability and positive native execution remain unobserved for this new test. Empty installed catalog records availability and actual UI work only.",
+    "C07 routine catalog/admission/run/status/result obligations remain distinct and are not exercised as successful routine execution.",
+    "No autonomous discovery of public agenda/preservedReviewRef is claimed; the human explicitly selects both through supported public actions.",
+    "The existing Executive monthly historical-source mutation403 is separate and its strict assertion remains unchanged in its original test.",
+    "A new Executive preparation after host reload still requires a valid current agenda; durable existing output consumption does not prove agenda reconstruction.",
+    "AM02 includes authority/refusal requirements beyond this new positive path. Written driver and static review do not accept any AM02 route without the exact hosted execution and applicable refusal evidence."
+  ],
+  "proof": {
+    "hostedProductRun": null,
+    "hostedTypecheckRun": null,
+    "staticReview": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/review-crossroutes/independent-review.json",
+      "blob": "a176f96b6a2f065fbfec7c823afdaaffdd54560b",
+      "sha256": "0f168275653f89a619b9a8d94838b09afdc59370da05054d2d9b7b96fca07daa",
+      "bytes": 16032,
+      "status": "PASS_STATIC_ONLY"
+    },
+    "localProductTests": false,
+    "localTypecheck": false,
+    "nativeInferenceExecutionsObserved": 0,
+    "nativeContributionsObserved": 0,
+    "nativeConsumersAccepted": 0,
+    "am02RoutesAccepted": 0,
+    "gnativeAccepted": false
+  },
+  "ownership": {
+    "sourceFilesAdded": [
+      "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+    ],
+    "existingSourceFilesEdited": [],
+    "foreignSourceEdits": [],
+    "otherBranchesEdited": false
+  }
+}

@@ -4,6 +4,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
+import { createChangeProposalStore } from "../../../product/decisions/change-proposal-store.ts"
 import { createDecisionChoiceResultLookup } from "../../../product/decisions/choice-result-lookup.ts"
 import { createDecisionCasePort, encodeCaseRef, parseCaseRef } from "../../../product/decisions/case-port.ts"
 import { createDecisionCapabilities, encodeReceiptRef } from "../../../product/decisions/capabilities.ts"
@@ -22,7 +23,7 @@ test("case draft survives a real store reopen, exact retry is idempotent and rev
   const open = async () => {
     const store = await openLocalStore(directory)
     const state = createSfProductState({ persistence: store, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: "installation-incarnation" }), authorize: async () => access.allowed ? { principalRef: "principal", policyVersion: "policy", accessRevision: "access" } : undefined })
-    const cases = createDecisionCasePort({ state, host: { requestFor: () => new Request("https://example.test/"), revalidate: async () => access.allowed }, creationTarget: { ref: "installation:install:cases", incarnation: "installation-incarnation" }, operationIdentity: () => "operation-1", authorizeCase: async () => access.allowed, evidence, createId: () => `id-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
+    const cases = createDecisionCasePort({ state, host: { requestFor: () => new Request("https://example.test/"), revalidate: async () => access.allowed }, creationTarget: { ref: "installation:install:cases", incarnation: "installation-incarnation" }, operationIdentity: () => "operation-1", authorizeCase: async () => access.allowed, verifyScenarioOperations: async () => access.allowed, evidence, createId: () => `id-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
     return { store, cases }
   }
   try {
@@ -175,7 +176,7 @@ test("revoked source suppresses an otherwise authorized case", async () => {
     const evidence: BusinessContextService = { context: async ({ refs }) => refs.map((item) => ({ ref: item, state: source.fresh ? "fresh" as const : "revoked" as const, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" })).reverse(), resolve: async () => { throw new Error("unused") }, recall: async () => [], emitFromLedger: async () => { throw new Error("unused") } }
     const state = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async (_request, _snapshot, _namespace, targetRef) => ({ incarnation: targetRef === "installation:install:cases" ? "installation-inc" : "source-case-2" }), authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
     const ids = { n: 0 }
-    const cases = createDecisionCasePort({ state, host: { requestFor: () => new Request("https://example.test/"), revalidate: async () => true }, creationTarget: { ref: "installation:install:cases", incarnation: "installation-inc" }, operationIdentity: () => "operation", authorizeCase: async () => true, evidence, createId: () => `source-case-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
+    const cases = createDecisionCasePort({ state, host: { requestFor: () => new Request("https://example.test/"), revalidate: async () => true }, creationTarget: { ref: "installation:install:cases", incarnation: "installation-inc" }, operationIdentity: () => "operation", authorizeCase: async () => true, verifyScenarioOperations: async () => true, evidence, createId: () => `source-case-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
     const draft = await cases.draft({ objective: "source-bound", currency: "USD", horizon: { start: "2027-01-01", end: "2027-12-31" }, criteria: ["cost"], sourceRefs: [ref] }, binding)
     expect(draft.status).toBe("ok")
     if (draft.status !== "ok") return
@@ -222,7 +223,7 @@ test("partial domain execution reconciles a durable receipt and never repeats it
         return result
       },
     }
-    const execute = createPreparedExecution({ state, host: { requestFor: () => new Request("https://example.test"), revalidate: async () => true }, apply, authorizeCase: async () => true, authorizeApplication: async () => domain.authorized, confirmApplication: async () => { if (domain.revokeOnConfirm) domain.authorized = false; return domain.confirmed }, operationIdentity: () => "operation", classifyReceipt: async () => ({ state: "applied", evidence: { schema: "sf-evidence-v1", refId: "receipt-ref", installationId: "install", projectId: "project", refDigest: "d".repeat(64), evidenceLevel: "observed", kind: "receipt", target: { surface: "planner", receiptId: "receipt", idempotencyKey: "key", targetIncarnation: "target-inc", commandDigest: "a".repeat(64), version: 1 } } }) })
+    const execute = createPreparedExecution({ state, host: { requestFor: () => new Request("https://example.test"), revalidate: async () => true }, apply, reviewDigestFor: () => "a".repeat(64), revalidateProducer: async () => ({ status: "ok", value: { reviewDigest: "a".repeat(64) } }), authorizeCase: async () => true, authorizeApplication: async () => domain.authorized, confirmApplication: async () => { if (domain.revokeOnConfirm) domain.authorized = false; return domain.confirmed }, operationIdentity: () => "operation", classifyReceipt: async () => ({ state: "applied", evidence: { schema: "sf-evidence-v1", refId: "receipt-ref", installationId: "install", projectId: "project", refDigest: "d".repeat(64), evidenceLevel: "observed", kind: "receipt", target: { surface: "planner", receiptId: "receipt", idempotencyKey: "key", targetIncarnation: "target-inc", commandDigest: "a".repeat(64), version: 1 } } }) })
     const request = { caseRef: { id: "case", incarnation: "case-inc", version: 1 }, changeId: "change", choiceId: "choice" }
     expect((await execute(request, binding)).status).toBe("unavailable")
     expect(domain.calls).toBe(0)
@@ -237,12 +238,11 @@ test("partial domain execution reconciles a durable receipt and never repeats it
     domain.revokeOnConfirm = false
     expect((await execute(request, binding)).status).toBe("unavailable")
     domain.loseResponse = false
-    expect((await execute(request, binding)).status).toBe("ok")
-    expect((await execute(request, binding)).status).toBe("ok")
+    expect(await execute(request, binding)).toMatchObject({ status: "unavailable", reason: "review-proof-unbound" })
     expect(domain.calls).toBe(1)
     const result = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
     expect(result.status).toBe("ok")
-    if (result.status === "ok") expect(result.value).toMatchObject({ state: "partially-applied", version: 2 })
+    if (result.status === "ok") expect(result.value).toMatchObject({ state: "chosen", version: 1 })
   } finally {
     await store.dispose()
     await rm(directory, { recursive: true, force: true })
@@ -258,10 +258,13 @@ test("human choice persists a versioned snapshot and ledger using the planner co
     const binding = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "principal", requestId: "request", policyVersion: "policy", accessRevision: "access", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedUiContext
     const horizon = { start: "2027-01-01", end: "2027-12-31" }
     const plannerRef = { schema: "sf-evidence-v1", kind: "record", refId: "planner", installationId: "install", projectId: "project", refDigest: "a".repeat(64), evidenceLevel: "observed", target: { surface: "planner", recordType: "planner-version", recordId: "base", incarnation: "base-inc", version: 1, fields: ["amount"], period: horizon, projectionDigest: "b".repeat(64) } } as const
-    const scenario = { id: "result", version: 1, components: [], currency: "USD", horizon, sourceRefs: [plannerRef], unresolvedConditions: ["training:missing-category"], restrictions: [], comparisonStatus: "conditioned", costCoverage: { basisId: "renewal", basisVersion: 1, alternativeId: "a", alternativeVersion: 1, currency: "USD", horizon, issues: [], evaluatedSourceRefs: [plannerRef], coverageState: "pending", entries: [{ status: "pending", categoryId: "training", reason: "missing-category" }], derivedMissingCategoryIds: ["training"] }, knownSubtotal: 210000, total: null } as const
+    // This persistence fixture supplies a conditioned comparison; canonical amounts are covered separately.
+    const chosenOperation = { kind: "include", targetRef: "target" } as const
+    const scenario = { id: "result", version: 1, components: [], currency: "USD", horizon, sourceRefs: [plannerRef], unresolvedConditions: ["training:missing-category"], restrictions: ["preview-not-applied"], comparisonStatus: "conditioned", costCoverage: { basisId: "renewal", basisVersion: 1, alternativeId: "a", alternativeVersion: 1, currency: "USD", horizon, issues: [], evaluatedSourceRefs: [plannerRef], coverageState: "pending", entries: [{ status: "pending", categoryId: "training", reason: "missing-category" }], derivedMissingCategoryIds: ["training"] }, knownSubtotal: 210000, total: null } as const
     const comparison = { baselineResultRef: "base", alternativeResultRef: "result", costCoverageRefs: ["coverage"], criterionResults: [], unresolvedConditions: ["training:missing-category"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null } as const
-    const decision = { id: "case", incarnation: "inc", version: 1, state: "comparing", objective: "transition", currency: "USD", horizon, criteria: [{ id: "cost", description: "cost", required: true }], participants: ["principal"], sourceRefs: [plannerRef], alternatives: [{ id: "a", version: 1, title: "replace", scenario: { baseRef: "base", operations: [], assumptions: [] }, result: scenario }], costCoverageBases: [{ id: "renewal", version: 1, decisionType: "unknown", categoryIds: [], additionalCategoryIds: [], sourceRefs: [] }], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] } as const
-    const state = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "inc" }), authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
+    const decision = { id: "case", incarnation: "inc", version: 1, state: "comparing", objective: "transition", currency: "USD", horizon, criteria: [{ id: "cost", description: "cost", required: true }], participants: ["principal"], sourceRefs: [plannerRef], alternatives: [{ id: "a", version: 1, title: "replace", scenario: { baseRef: "base", operations: [chosenOperation], assumptions: [] }, result: scenario }], costCoverageBases: [{ id: "renewal", version: 1, decisionType: "unknown", categoryIds: [], additionalCategoryIds: [], sourceRefs: [] }], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] } as const
+    const proposalCoverageWrites = new WeakSet<object>()
+    const state = createSfProductState({ persistence: store, proposalCoverageWrites, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "inc" }), authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
     await state.transaction(new Request("https://example.test"), { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed", commandDigest: "b".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (staged) => { staged.cases.case = decision; staged.decisionResults = { result: { schema: "sf-decision-result-v1", kind: "scenario", resultRef: "result", caseRef: { id: "case", incarnation: "inc", version: 1 }, principalRef: "principal", accessRevision: "access", policyVersion: "policy", requestDigest: digestSfValue(decision.alternatives[0].scenario), resultDigest: digestSfValue(scenario), sourceRefs: [plannerRef], createdAt: "2026-11-13T00:00:00Z", result: scenario } }; return { commit: true, value: true } })
     const revised = { ...scenario, id: "result-2", version: 2, costCoverage: { ...scenario.costCoverage, alternativeVersion: 2 } } as const
     const simulation: { value: import("../../../product/contracts/decisions.ts").ScenarioResult } = { value: revised }
@@ -270,7 +273,7 @@ test("human choice persists a versioned snapshot and ledger using the planner co
     const { createDecisionProposalService } = await import("../../../product/decisions/proposals.ts")
     const evidence: BusinessContextService = { context: async ({ refs }) => refs.map((ref) => ({ ref, state: "fresh" as const, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" })), resolve: async () => { throw new Error("unused") }, recall: async () => [], emitFromLedger: async () => { throw new Error("unused") } }
     const host = { requestFor: () => new Request("https://example.test"), revalidate: async () => true }
-    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "case", incarnation: "inc" }, operationIdentity: () => "operation", authorizeCase: async () => true, evidence, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
+    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "case", incarnation: "inc" }, operationIdentity: () => "operation", authorizeCase: async () => true, verifyScenarioOperations: async () => true, evidence, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
     const alternative = createDecisionProposalService({ cases, host, planner: { compareForecast: unavailable, simulateScenario: async () => ({ status: "ok", value: simulation.value }), compareScenarios: async () => ({ status: "ok", value: comparison }), evaluateSensitivity: unavailable }, sources: { resolveForecastSource: unavailable, resolveForecastCoverage: async () => ({ status: "ok", value: { coverageRef: "coverage-2", basis: decision.costCoverageBases[0], assessment: simulation.value.costCoverage } }) }, resolveAlternative: async () => ({ status: "ok", value: { scenario: { baseRef: "base", operations: [], assumptions: [] }, coverageRef: "coverage-2" } }), authorizeProposal: async () => true })
     const descriptors = createDecisionCapabilities({ cases, alternative, requiredAuthority: { read: [], draft: [], receipt: [], alternative: [], change: [] }, createReceipt: (_context, operation, inputDigest, resultDigest) => ({ kind: "ui", operation, handlerExport: "draftAlternative", inputDigest, resultDigest, principalRef: "principal", callId: "call", requestId: "request", accessRevision: "access", at: "2026-11-13T00:00:00Z" }) })
     expect(descriptors.some((item) => item.id === "sf_alternative_draft")).toBe(true)
@@ -298,21 +301,36 @@ test("human choice persists a versioned snapshot and ledger using the planner co
     const targetEvidence = { schema: "sf-evidence-v1", refId: "target-ref", installationId: "install", projectId: "project", refDigest: "f".repeat(64), evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "forecast", recordId: "target", incarnation: "target-inc", version: 1, fields: ["amount"], period: horizon, projectionDigest: "a".repeat(64) } } as const
     const results = createSfDecisionResultStore({ state, host, authorizeCase: async () => true, verifySources: async (_value, refs, context) => (await evidence.context({ refs }, context)).every((item) => item.state === "fresh"), createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
     const resolvePreview = createDecisionChoiceResultLookup({ cases, state, results, host })
-    const change = createChangeProposalService({ cases, host, resolvePreview, resolveChanges: async () => ({ status: "ok", value: { changes: [{ command: { id: "domain-command", target, expectedVersion: 0, idempotencyKey: "domain-key", commandDigest: "c".repeat(64), requiredAuthority: ["planner"], command: { page: "planner", action: "edit", version: 0, values: {} }, preview: {} as import("../../../product/contracts/context.ts").DomainProjection }, preview: scenario, targetEvidence }], conditions: [] } }), authorizeProposal: async () => true })
+    const proposalStore = createChangeProposalStore({ state, host, authorizeCase: async () => true, authorizeProposal: async () => true, verifySources: async () => true, verifySnapshot: () => true, operationIdentity: () => "proposal-operation", proposalCoverageWrites, now: () => "2026-11-13T00:00:00Z" })
+    const change = createChangeProposalService({ cases, host, store: proposalStore, resolvePreview, resolveChanges: async () => ({ status: "ok", value: { changes: [{ command: { id: "domain-command", target, expectedVersion: 0, idempotencyKey: "domain-key", commandDigest: "c".repeat(64), requiredAuthority: ["planner"], command: { page: "planner", action: "edit", version: 0, values: {} }, preview: {} as import("../../../product/contracts/context.ts").DomainProjection }, preview: scenario, targetEvidence }], conditions: [] } }), authorizeProposal: async () => true })
     const changeDescriptors = createDecisionCapabilities({ cases, change, requiredAuthority: { read: [], draft: [], receipt: [], alternative: [], change: [] }, createReceipt: (_context, operation, inputDigest, resultDigest) => ({ kind: "ui", operation, handlerExport: "prepareChange", inputDigest, resultDigest, principalRef: "principal", callId: "call", requestId: "request", accessRevision: "access", at: "2026-11-13T00:00:00Z" }) })
-    const changeProposal = await changeDescriptors.find((item) => item.id === "sf_change_prepare")!.handler({ caseRef: encodeCaseRef(decision), choiceRef: "choice-event", operations: [{ kind: "include", targetRef: "target" }] }, binding)
+    const changeProposal = await changeDescriptors.find((item) => item.id === "sf_change_prepare")!.handler({ caseRef: encodeCaseRef(decision), choiceRef: "choice-event", operations: [chosenOperation] }, binding)
     expect(changeProposal.status).toBe("ok")
+    const replayedProposal = await change({ caseRef: encodeCaseRef(decision), choiceRef: "choice-event", operations: [chosenOperation] }, binding)
+    expect(replayedProposal.status).toBe("ok")
+    if (replayedProposal.status === "ok") {
+      const refs = replayedProposal.value.changes.map((item) => item.changeRef)
+      const set = await proposalStore.readSet({ caseRef: { id: "case", incarnation: "inc", version: 2 }, changeRefs: refs }, binding)
+      expect(set.status).toBe("ok")
+      if (set.status === "ok") expect(set.value.output).toEqual(replayedProposal.value)
+      expect((await proposalStore.readSet({ caseRef: { id: "case", incarnation: "inc", version: 2 }, changeRefs: [...refs, "unrelated"] }, binding)).status).toBe("unavailable")
+    }
     const afterProposal = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
     if (afterProposal.status === "ok") expect(afterProposal.value?.version).toBe(2)
     admission.confirmed = false
     expect(await mutations.recordChoice(request, binding)).toEqual(chosen)
     expect((await mutations.recordChoice({ ...request, reason: "different" }, binding)).status).toBe("conflict")
     const persisted = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
-    if (persisted.status === "ok") expect(persisted.value).toMatchObject({ version: 2, state: "chosen", choices: [{ result: { knownSubtotal: 210000 }, comparison: { knownDifference: 30000 } }], ledger: [{ kind: "choice-recorded", principalRef: "principal" }] })
+    if (persisted.status === "ok") expect(persisted.value).toMatchObject({ version: 2, state: "chosen", choices: [{ scenario: { operations: [chosenOperation] }, result: { knownSubtotal: 210000, total: null, comparisonStatus: "conditioned", restrictions: ["preview-not-applied"] }, comparison: { knownDifference: 30000, completeDifference: null } }], ledger: [{ kind: "choice-recorded", principalRef: "principal" }] })
     const question = await mutations.addQuestion({ caseRef: { id: "case", incarnation: "inc", version: 2 }, questionRef: "choice-event" }, binding)
     expect(question.status).toBe("ok")
     expect((await mutations.answerQuestion({ caseRef: { id: "case", incarnation: "inc", version: 3 }, questionId: "choice-event", answerRef: "answer" }, binding)).status).toBe("denied")
-    const prepared = await mutations.prepareChanges({ caseRef: { id: "case", incarnation: "inc", version: 3 }, choiceId: "choice-event", operations: [{ kind: "include", targetRef: "target" }] }, binding)
+    const unchosen = await mutations.prepareChanges({ caseRef: { id: "case", incarnation: "inc", version: 3 }, choiceId: "choice-event", operations: [{ kind: "include", targetRef: "unselected-target" }] }, binding)
+    expect(unchosen).toEqual({ status: "conflict", reason: "operation-not-in-choice" })
+    const afterUnchosen = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
+    if (afterUnchosen.status !== "ok") throw new Error("case unavailable after rejected operation")
+    expect(afterUnchosen.value).toMatchObject({ version: 3, preparedChanges: [], receipts: [], choices: [{ scenario: { operations: [chosenOperation] }, result: { total: null, comparisonStatus: "conditioned" } }] })
+    const prepared = await mutations.prepareChanges({ caseRef: { id: "case", incarnation: "inc", version: 3 }, choiceId: "choice-event", operations: [chosenOperation] }, binding)
     expect(prepared.status).toBe("ok")
     const after = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
     if (after.status === "ok") expect(after.value).toMatchObject({ version: 4, preparedChanges: [{ state: "planned", choiceId: "choice-event", expectedVersion: 0, target: { incarnation: "target-inc", version: 1 } }] })
@@ -331,7 +349,7 @@ test("human choice persists a versioned snapshot and ledger using the planner co
       expect(await mutations.addAlternative({ caseRef: { id: "case", incarnation: "inc", version: 4 }, title: "revised", scenario: { baseRef: "base", operations: [], assumptions: [] }, coverageRef: "coverage-2", alternativeRef: { id: "a", version: 1 } }, binding)).toEqual(updated)
     }
     const reconsidered = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
-    if (reconsidered.status === "ok") expect(reconsidered.value).toMatchObject({ version: 5, state: "reconsidering", alternatives: [{ id: "a", version: 2 }], choices: [{ alternativeVersion: 1, result: { knownSubtotal: 210000 } }] })
+    if (reconsidered.status === "ok") expect(reconsidered.value).toMatchObject({ version: 5, state: "reconsidering", alternatives: [{ id: "a", version: 2 }], choices: [{ alternativeVersion: 1, scenario: { operations: [chosenOperation] }, result: { knownSubtotal: 210000, total: null, comparisonStatus: "conditioned" } }] })
   } finally {
     await store.dispose()
     await rm(directory, { recursive: true, force: true })

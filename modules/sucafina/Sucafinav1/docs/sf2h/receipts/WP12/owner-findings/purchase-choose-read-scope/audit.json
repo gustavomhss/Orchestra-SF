@@ -1,0 +1,297 @@
+{
+  "schema": "sf-wp12-purchase-choice-scope-applicability-v1",
+  "status": "FROZEN_FOR_INDEPENDENT_REVIEW_NOT_APPLIED",
+  "observedAt": "2026-11-14T16:39:07Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "scope": "Static applicability of the exact published WP10 Procurement read scopes to the failed real WP12 decision-choose calls. This is not a global approval of WP10 composition, a product execution, or a performance measurement.",
+  "runtimeEvidence": {
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-21-procurement.json",
+    "receiptPublication": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+    "receiptBlob": "f04ace251e94b623169df4460971ec3f7fabc168",
+    "review": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-21-procurement-independent-compose.json",
+    "reviewBlob": "214df0f516669267c37638d96c9db387eba8b5da",
+    "runId": 43612149925,
+    "jobId": 132499298207,
+    "cleanupJobId": 132509068409,
+    "product": {
+      "head": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+      "tree": "f859e3b62b1de24234025002459045ae6d3df328"
+    },
+    "snapshot": {
+      "head": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+      "tree": "e56b89ceae4080757f9827d993c0e7bc0f7e3132"
+    },
+    "log": {
+      "path": "evidence/resume-21-procurement.log",
+      "sha256": "3ebfd4f7284d7a8e290042aa4da08cd0b63ebdb207293e5886a20d5cda1e4a2e",
+      "bytes": 102302
+    },
+    "outcome": {
+      "pass": 1,
+      "fail": 2,
+      "error": 1,
+      "expectCalls": 239,
+      "elapsedSeconds": 1993.76
+    },
+    "purchases": [
+      {
+        "variant": "pending",
+        "prepareCaseMs": 117105,
+        "sensitivityActionMs": 227721,
+        "criterionActionMs": 30367,
+        "chooseActionMs": 300063,
+        "chooseReason": "decision-authority-changed",
+        "reportedTestMs": 693420.93,
+        "lines": [
+          932,
+          938,
+          941,
+          944,
+          945,
+          946,
+          947
+        ]
+      },
+      {
+        "variant": "complete",
+        "prepareCaseMs": 115106,
+        "sensitivityActionMs": 236903,
+        "criterionActionMs": 31117,
+        "chooseActionMs": 300137,
+        "chooseReason": "decision-authority-changed",
+        "reportedTestMs": 701285.72,
+        "lines": [
+          984,
+          990,
+          993,
+          996,
+          997,
+          998,
+          999
+        ]
+      }
+    ],
+    "limits": [
+      "Both actions began after a new public Procurement period selection returned. No renewal occurred during either action.",
+      "The outer HTTP route overwrites the inner result after its final host revalidation fails. The first internal refusing port and the exact expensive substage are not logged.",
+      "The post-failure probes use the companion business instance, without renewal. They establish procurement-context-unavailable there, not the first failing inner port in the installed choice route.",
+      "No successful ChoiceRecord, PurchasePreparationInput, native Session execution or purchase reload consumer was observed. No inference is made about a partially committed choice from the outer refusal alone.",
+      "The Documents test passed with actual UI extraction, confirmation, scenario preview and reopen; its catalog was empty and this is not native inference acceptance."
+    ]
+  },
+  "ownerPins": {
+    "wp10": {
+      "pr": 29,
+      "inspectedHead": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "parent": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+      "note": "The latest commit changes documentation and the LocalStore fixture callback type in procurement-case-read-scope.test.ts. The three requested production blobs are byte-identical to abb9."
+    },
+    "wp11": {
+      "pr": 40,
+      "inspectedHead": "e8949be0e31952d5be4987c099003cd0b46e2add",
+      "mutations": "e0840d775274ea73c6b938711764c69593dadca0",
+      "casePort": "206271d33bcfb7786ee80ef0dfad50eb80e4fee2"
+    }
+  },
+  "actualChain": [
+    {
+      "step": 1,
+      "source": "c434de513cb7ceae4acad1fc595e776785ec85af",
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "lines": [
+        38,
+        67
+      ],
+      "fact": "decision-choose receives a new real human admission, enters business.withCase and invokes mutations.recordChoice. The final check at line64 maps a failed host.revalidate to decision-authority-changed regardless of the inner result."
+    },
+    {
+      "step": 2,
+      "source": "97cde4dce2858f47b57b446c9c20bad77d367591",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "lines": [
+        224,
+        241
+      ],
+      "fact": "withCase reads the current case before installing a request-bound private case selection. It does not hold an all-domain persistence transaction around the action. After the action it revalidates the same Request, binding, selected case and scope, then releases the scope."
+    },
+    {
+      "step": 3,
+      "source": "e0840d775274ea73c6b938711764c69593dadca0",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "lines": [
+        180,
+        212
+      ],
+      "fact": "recordChoice checks real human intent/replay, loads C08, compares the real two stored scenarios with the registered criterion, verifies the selected alternative and baseline, obtains domain choice values, then saves the actual ChoiceRecord. It does not accept a caller-supplied comparison output or a fabricated metric."
+    },
+    {
+      "step": 4,
+      "source": "6facc71b1351aea04ed3e7d51d1d0ed5d81c24d9",
+      "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "lines": [
+        74,
+        96
+      ],
+      "fact": "The installed criterion registry only accepts planner:known-subtotal-difference with a real sensitivity binding, its issued unit, source evidence, current case and stored baseline. Omitting sensitivity would fail the installed contract."
+    },
+    {
+      "step": 5,
+      "source": "13a6b9e12dfdc336cdf79cf83337c37cae53963a",
+      "path": "modules/sucafina/Sucafinav1/product/planner/criterion-metric.ts",
+      "lines": [
+        20,
+        33
+      ],
+      "fact": "Each completed metric read issues real sensitivity units, computes the real preview, then resolves the rule and issues the units again before returning. No earlier HTTP units result is accepted as authority for this new action."
+    },
+    {
+      "step": 6,
+      "source": "a661aaa134e046b093b300c260870e38c967aa10",
+      "path": "apps/cli/src/sucafina-product/portfolio-preparation.ts",
+      "lines": [
+        60,
+        86
+      ],
+      "fact": "resolveChoiceValues reopens the case, resolves the rule and reads the metric twice, then reopens the case and human authority. Thus this stage alone would require at least four units.issue calls for the one criterion if it completed. This is static fanout, not proof that the failed run reached this stage or a measured duration."
+    },
+    {
+      "step": 7,
+      "source": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "lines": [
+        20,
+        51
+      ],
+      "fact": "The private UI admission uses a fixed five-minute expiry. current(), requestFor() and revalidate() require the live real admission. Renewal of the public Procurement period before a route does not renew that route's separate UI lease."
+    }
+  ],
+  "applicability": [
+    {
+      "id": "CASE_SCOPE",
+      "path": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "blob": "b5cebd6362b14b5b81fda7b80ff1e0f7bd85a3d6",
+      "verdict": "EXPLICITLY_OUTSIDE_ELIGIBLE_SCOPE",
+      "evidence": "Lines54–56 require a nonempty preparedChanges collection, all planned Procurement changes and no receipts. Our real case is before its first ChoiceRecord and before C12 prepare; it has no prepared changes. It returns to the canonical reader outside the scope. The published owner test20c02e25, lines129–138, explicitly preserves this fallback for a chosen case without a prepared change (canonical1, inside0, contexts2, resolutions4). That test source was inspected, not run here."
+    },
+    {
+      "id": "EVIDENCE_SCOPE",
+      "path": "apps/cli/src/sucafina-product/procurement-evidence-read-scope.ts",
+      "blob": "bf571da17ad2cae7bd970697efdaaf541d00b1cc",
+      "verdict": "WRAPS_ARCHIVE_PROBE_NOT_FRESH_PR_READER",
+      "evidence": "The sf-procurement record is in the wrapper's possible entry scope, so this is not labeled entirely off-path. business c851 lines135–143 passes only decisionEvidence.resolveEvidence as its canonical resolver. decision-host23d9 lines255–260/284–288 reads a protected archive; missing archive returns undefined. That archive is produced by captureSource in prepareDomainCommands, which this fixture has not called. BCS5cca lines263–265 then calls currentProcurement after the wrapper promise resolves. The wrapper permits undefined as canonical fresh-source fallthrough (lines98–107). It therefore does not enclose the current PR revalidation or the entire mixed case/criterion chain. Its extra scope checks have no measured benefit here."
+    },
+    {
+      "id": "MEMORY_SCOPE",
+      "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "blob": "907d1a0c48389af4b32cc958d53d2b1a7ae1fcc3",
+      "verdict": "NO_RECALL_OBSERVATION_IN_CHOICE",
+      "evidence": "Completed observations are scoped to actual recall/observe invocations with exact Request/binding/selection/reader/snapshot fences. decision-choose is not a recall invocation. Its eligibility also excludes the mixed Planner and PR alternative bases used here. Ordinary reads delegate to procurementCaseRead, which falls back as above."
+    },
+    {
+      "id": "SCENARIO_DUPLICATES",
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "blob": "f83b79d838deb2fcdd09300903d2469b3de6d32e",
+      "verdict": "PROCUREMENT_DUPLICATE_PROOF_DOES_NOT_MATCH",
+      "evidence": "The new invocation-local completed-proof branch is restricted to duplicated scenarios backed by exact Procurement record refs and createSfScenarioProcurementProofScope2ebb. Our candidate operation addresses the genuine Planner service component and Planner base; the baseline has no operation. It retains the canonical Planner branch. It cannot be made eligible by substituting a PR reference for the Planner target."
+    },
+    {
+      "id": "SOURCE_FENCE",
+      "path": "apps/cli/src/sucafina-product/source-fence-read.ts",
+      "blob": "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18",
+      "verdict": "FAST_PATH_REQUIRES_ACTUAL_ALREADY_ACTIVE_SCOPE",
+      "evidence": "This reader borrows currentSnapshots only inside a real active provider transaction, retaining full snapshot, source, Request and authority fences after awaits. Outside a provider scope it retains transactionAll. withCase does not establish such a transaction around choice, and the candidate case scope is ineligible. No runtime evidence establishes that this helper would shorten the failed choice."
+    }
+  ],
+  "importClosure": {
+    "status": "DESCRIBED_NOT_APPLIED_NOT_RECOMMENDED_AS_THIS_FAILURE_FIX",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "from": "97cde4dce2858f47b57b446c9c20bad77d367591",
+        "to": "c851f877970b18927bb2bcab96de5699fd8eaada"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+        "from": null,
+        "to": "b5cebd6362b14b5b81fda7b80ff1e0f7bd85a3d6"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/procurement-evidence-read-scope.ts",
+        "from": null,
+        "to": "bf571da17ad2cae7bd970697efdaaf541d00b1cc"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+        "from": null,
+        "to": "907d1a0c48389af4b32cc958d53d2b1a7ae1fcc3"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/source-fence-read.ts",
+        "from": null,
+        "to": "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/scenario-procurement-proof-scope.ts",
+        "from": null,
+        "to": "2ebb518403bc463dddd645f77af12cb877bce3e1"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+        "from": "aa1be4cfb8f501b3fccddb269efce5567bcdd447",
+        "to": "f83b79d838deb2fcdd09300903d2469b3de6d32e"
+      }
+    ],
+    "reason": "Taking only the requested business/case/evidence trio is not a complete new-relative-import/API closure: c851 imports memory/source-fence/scenario-proof helpers and passes procurementProof to scenario-operation-access. The seven exact blobs describe that direct structural closure. This does not certify every transitive type/runtime dependency, other host mounting, or the full owner's safety and performance.",
+    "semanticDeltasBesidesRequestedScope": [
+      "Case recall and memory reads gain invocation-local completed-observation scopes.",
+      "Scenario operation access gains duplicate fresh Procurement proofs under a full material witness.",
+      "Work bridge binding/destination and a request-bound withProcurementWorkPeriod entry are exposed; the old host does not bind the new bridge merely by taking business-services.",
+      "Source-fence reads may borrow real active atomic scopes but preserve final authority and full snapshot observations.",
+      "Existing withCase/withCalculationCase/withHistoricalCalculationCase implementations are unchanged in the full business diff; neither the global public period TTL nor UI admission TTL is extended."
+    ],
+    "fencesObserved": [
+      "Request object, URL/method/headers, call kind/binding and immutable incoming digest remain fixed across awaits.",
+      "Selection object identity, period/digest, actual expiry and current reader identity are checked.",
+      "Real C08/domain/source snapshots, current actor/roles/policy/access revision and environment are checked before/after canonical work.",
+      "No canonical refusal or nested writer is retried outside the scope after canonical execution begins.",
+      "The completed duplicate proofs are invocation-local, not reusable authority or pending promises.",
+      "No reference, grant, model, output or domain result is synthesized."
+    ],
+    "productOrTypecheckExecuted": false
+  },
+  "wp11Lease": {
+    "currentBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+    "ownerBlob": "206271d33bcfb7786ee80ef0dfad50eb80e4fee2",
+    "verdict": "EXISTING_FINAL_LEASE_HOLD_REMAINS",
+    "fact": "The latest owner case port adds valuable full case/reference digest fencing and a final C08 reread, but host.revalidate remains before that final await. After the reread it checks digests and abort, without the same live requestFor(context) identity/lease fence. This is the previously published case-read-lease finding, not a newly executed exploit. Do not replace the current port as a latency shortcut; any future reconciliation must preserve both material and final authority checks.",
+    "priorFinding": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/case-read-lease/finding.json",
+    "mutationPortUnchanged": true
+  },
+  "ownCorrectionAssessment": {
+    "status": "NO_OWN_CODE_CHANGE_APPLIED",
+    "usefulExistingCorrections": "The same-value real Planner parameter, strict one-hypothetical-component assertions and a fresh public Procurement selection before each action are exercised successfully up to units and criterion registration. Do not remove them.",
+    "rejected": [
+      "Removing sensitivity or using empty criteria changes or violates the real criterion/choice contract.",
+      "Reusing a units or comparison receipt as current authority, constructing a ChoiceRecord, replacing Planner targetRef by a PR ref, or inserting an archive/prepared change would fabricate the missing prerequisite.",
+      "Renewing inside an in-flight action, extending TTL/deadline or caching authority suppresses the actual refusal.",
+      "Selecting a smaller period or fewer cost categories changes the current annual mission's tested coverage inventory and is not a correction for this refusal.",
+      "Switching to a direct private mutation path would bypass the installed route under examination and would not validate the public choice consumer."
+    ],
+    "boundedFixtureObservation": "initializeWp12ScenarioSources materializes three raw Forecast versions; each Purchase case selects only baseline plus its one variant and promotes exactly two. The third raw version is unselected in that variant, so a future separate fixture-only reduction could omit it while preserving selected data, annual period and assertions. This does not remove a selected case read or the mandatory metric fanout, and there is no evidence that it resolves the approximately300-second choice. It is not recommended as justification for another equivalent run.",
+    "codeApprovalNeededBeforeAnyChange": true
+  },
+  "nextAction": {
+    "verdict": "HOLD_EQUIVALENT_PURCHASE_RERUN_NO_RELEVANT_PUBLISHED_FIX_ESTABLISHED",
+    "ownerRequest": "WP10/WP11 should add passive per-stage observations to the real mixed Planner+PR choice path and publish a bounded correction for its repeated case/source/criterion reads, preserving every current material/authority fence. Diagnose withCase, stored scenario reads, criterion evaluation, units.issue, preview and resolveChoiceValues; report the first failed inner port before the HTTP final refusal without changing that final refusal.",
+    "requiredDemonstration": [
+      "The same real two-alternative annual fixture, no preseeded ChoiceRecord/archive/prepared changes, completes the public decision-choose under its original360000ms test declaration and original authority windows.",
+      "Pending training remains genuinely omitted and C10-derived; complete training, zero-valued months, source/result numeric digests and exactly one hypothetical selected component remain intact.",
+      "Different principal/project/policy/access, altered Request/body/reference, source or case changes and expired/revoked leases still fail at the relevant boundary.",
+      "A public successful choice is re-read after reload; subsequent purchase input/target and downstream consumer assertions remain required.",
+      "No native acceptance is inferred while the real catalog is empty."
+    ],
+    "noFinancialPolicyChange": true,
+    "noIntakeApplied": true,
+    "noNewCi": true
+  }
+}

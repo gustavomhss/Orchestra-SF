@@ -1,0 +1,87 @@
+{
+  "schema": "wp12-owner-reconciliation-request-v1",
+  "findingId": "WP12-PLANNER-ANSWER-SCOPE-MOUNT-AND-MANIFEST",
+  "status": "PROPOSED_NOT_APPLIED_NO_EXECUTABLE_PATCH",
+  "baseOwner": {
+    "sha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+    "businessBlob": "520a71460ba69a9c8a07fd1b7db838ca13108c32",
+    "label": "WP10 W21 published source/doc head"
+  },
+  "reasonNoPatch": "The two published scope definitions disagree. A callback-only patch would still refuse the genuine source; changing fields or a manifest without producer-owned proof would weaken the intended boundary.",
+  "requiredSequence": [
+    {
+      "step": 1,
+      "owners": [
+        "WP10",
+        "WP08/C06",
+        "Planner producer",
+        "WP00 if contract delta needed"
+      ],
+      "action": "Reconcile the meaning of confirmation scope with the real actor-scoped Planner EvidenceRef and its published field set. Decide and publish a producer-owned scope/manifest pairing that the unchanged exact source identity/fields/period/dependency checks can validate.",
+      "constraints": [
+        "Do not rewrite an existing EvidenceRef to summary or alter refDigest/projectionDigest to force acceptance.",
+        "Do not broadly admit arbitrary fields or relax equality in C06.",
+        "Do not substitute a Dashboard thread, fixture answer, fabricated confirmation baseline or private source identity for the requested Planner-backed consumer."
+      ]
+    },
+    {
+      "step": 2,
+      "owners": [
+        "WP10 host mounting"
+      ],
+      "action": "Only after the producer contract is coherent, mount resolveAnswerScope from the genuine authorized producer. Preserve the current Dashboard behavior and reject unsupported source/dependency shapes. Pin the current request, actor, installation/project, original evidence, source incarnation/version, period and access/policy according to the existing host boundary.",
+      "constraints": [
+        "The resolver selects a scope; it is not an authorization grant.",
+        "Retain C06 verification of source identity, fields, period, exact dependency membership and verifyManifest.",
+        "Keep current observation, physical incarnation and material fingerprint/fence checks."
+      ]
+    },
+    {
+      "step": 3,
+      "owners": [
+        "WP10",
+        "WP08/C06",
+        "Planner producer"
+      ],
+      "action": "Publish owner tests demonstrating real Planner answer read before/after reload and the appropriate unconfirmed state when no confirmation baseline exists, together with genuine confirmed reuse after explicit confirmation.",
+      "negativeDiscriminators": [
+        "revoked access or changed principal/request",
+        "replaced source incarnation",
+        "changed source/period/field selection",
+        "unsupported or omitted material dependency",
+        "changed answer/ref/digest or another question",
+        "material change after confirmation",
+        "unavailable domain observation remains unavailable rather than becoming unconfirmed"
+      ],
+      "constraints": [
+        "No mutation of engine results, totals, financial policies or historical thread provenance.",
+        "No synthetic SkillLoadReceipt or fabricated native run for this UI/domain boundary."
+      ]
+    },
+    {
+      "step": 4,
+      "owners": [
+        "S0/integration",
+        "WP12 consumer"
+      ],
+      "action": "Provide published head/tree, exact changed blobs and dependency closure. After source compatibility review, rerun only the failed human consumer and affected native-question preparation path on that candidate; keep green Intent excluded. Require native tool/run/output/consumer receipts separately when a real provider exists.",
+      "constraints": [
+        "No wholesale W21 snapshot intake.",
+        "No equivalent green replay or local product tests.",
+        "The proposed scalar Question fix and owner answer-scope fix have independent provenance and must not borrow each other’s runtime evidence."
+      ]
+    }
+  ],
+  "requestedPublicationEvidence": {
+    "exactOwnerPins": true,
+    "scopeManifestTests": true,
+    "sameCandidateConsumption": true,
+    "uiPreparedVersusNativeProvenanceSeparated": true,
+    "baselineUnconfirmedStatePreserved": true
+  },
+  "retestState": "ON_HOLD_FOR_PUBLISHED_OWNER_SCOPE_RECONCILIATION",
+  "runtimeSuccess": false,
+  "localProductTests": false,
+  "localTypecheck": false,
+  "foreignSourceEdits": false
+}

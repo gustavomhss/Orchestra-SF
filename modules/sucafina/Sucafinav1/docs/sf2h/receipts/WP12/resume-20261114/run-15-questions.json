@@ -1,0 +1,623 @@
+{
+  "schema": "sf-wp12-surgical-product-result-v1",
+  "phase": "resume-15",
+  "scope": "questions-retest",
+  "product": {
+    "sha": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "tree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e"
+  },
+  "snapshot": {
+    "sha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+    "tree": "f2a50e56effd6d7a9f767949bd340e01a8a7aecf",
+    "directParent": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "onlyEnvelopePath": ".ci-run.json",
+    "branch": "ci-run-linux-astra-wp12-71cbf64f-126ebb9a-1"
+  },
+  "request": {
+    "sha256": "126ebb9ab7e116751bd0a829b6ea0c51e8745c9efe11dcc8fa91cd5174cf46ff",
+    "gitBlob": "76e57f3d774c30c8d8a7227f1af5b3d2059fa32c",
+    "validation": "PASS_METADATA_PUBLISHED_PINS",
+    "sourcePins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+        "blob": "3d0fac5384b433dde3eab26b011679031218fc2f",
+        "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+        "sha256": "01be9041b41247ac1a3e5dbaaba70a49759391f4e91d755a00018307b43a1e6d",
+        "tests": [
+          {
+            "name": "Maestro frames two real case selections and its native contribution reopens with the selected evidence",
+            "timeoutMs": 420000
+          },
+          {
+            "name": "Maestro frames a real admitted import selection and reopens its C04 source without applying it",
+            "timeoutMs": 300000
+          }
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+        "blob": "50303355860a26718686f5daf7dddad8978434c3",
+        "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+        "sha256": "ead473b33a552a090e142d9eb4a2a06ce2b91955a98ee375b89dc15db9bd7786",
+        "tests": [
+          {
+            "name": "QuestionPlanningInput carries real C06 support and its native proposal is consumed once after reload when a model exists",
+            "timeoutMs": 300000
+          }
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-consumer.test.ts",
+        "blob": "1323c71bab9055e40a7f8d95b0cc94f097a1a1c9",
+        "sourceCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+        "sha256": "a1fa4893693567010c86cc3f38a29b18ee6a9d243e87e2c39ba3553d825fab83",
+        "tests": [
+          {
+            "name": "a focused human pending question is consumed once and its unconfirmed answer reopens through the canonical thread",
+            "timeoutMs": 180000
+          }
+        ]
+      }
+    ],
+    "selectedNames": [
+      {
+        "file": "native-execution-intent.test.ts",
+        "name": "Maestro frames two real case selections and its native contribution reopens with the selected evidence",
+        "timeoutMs": 420000
+      },
+      {
+        "file": "native-execution-questions.test.ts",
+        "name": "QuestionPlanningInput carries real C06 support and its native proposal is consumed once after reload when a model exists",
+        "timeoutMs": 300000
+      },
+      {
+        "file": "native-question-consumer.test.ts",
+        "name": "a focused human pending question is consumed once and its unconfirmed answer reopens through the canonical thread",
+        "timeoutMs": 180000
+      }
+    ],
+    "excludedNames": [
+      {
+        "file": "native-execution-intent.test.ts",
+        "name": "Maestro frames a real admitted import selection and reopens its C04 source without applying it",
+        "timeoutMs": 300000
+      }
+    ],
+    "body": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+        "./Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+        "./Sucafinav1/test/product/wp12/native-question-consumer.test.ts",
+        "--timeout",
+        "120000",
+        "-t",
+        "^(Maestro frames two real case selections and its native contribution reopens with the selected evidence|QuestionPlanningInput carries real C06 support and its native proposal is consumed once after reload when a model exists|a focused human pending question is consumed once and its unconfirmed answer reopens through the canonical thread)$"
+      ],
+      "env": {}
+    }
+  },
+  "run": {
+    "id": 43604476634,
+    "job": 132476041608,
+    "cleanupJob": 132477039650,
+    "status": "completed",
+    "conclusion": "failure",
+    "cleanup": "success",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43604476634",
+    "artifacts": []
+  },
+  "summary": {
+    "pass": 1,
+    "fail": 2,
+    "filteredOut": 1,
+    "assertions": 171,
+    "files": 3,
+    "tests": 3,
+    "durationSeconds": 112.8
+  },
+  "cases": [
+    {
+      "line": 841,
+      "status": "pass",
+      "name": "Maestro frames two real case selections and its native contribution reopens with the selected evidence",
+      "elapsedMs": 10710.77
+    },
+    {
+      "line": 880,
+      "status": "fail",
+      "name": "QuestionPlanningInput carries real C06 support and its native proposal is consumed once after reload when a model exists",
+      "elapsedMs": 1973.21
+    },
+    {
+      "line": 945,
+      "status": "fail",
+      "name": "a focused human pending question is consumed once and its unconfirmed answer reopens through the canonical thread",
+      "elapsedMs": 98977.07
+    }
+  ],
+  "omni": {
+    "status": "pass",
+    "qualification": "focused: no declaring test ran",
+    "spawns": 111,
+    "delegated": 0,
+    "nonce": "d16c9519c1519564eea899bdeb52bbc3"
+  },
+  "log": {
+    "bytes": 87010,
+    "sha256": "9c41d2557d77b625e2cd5dea31794695fbe1034681f299c8e523b48937bc91ef",
+    "source": "GitHub Actions job log 132476041608",
+    "scratch": "evidence/resume-15-questions.log"
+  },
+  "observations": [
+    {
+      "case": "Intent",
+      "state": "PASS_SCOPED_INPUT_AND_UI",
+      "details": "Two actual case selections have different canonical input digests; actual UI freshness/question preparation and outside-case/changed-authorized-request negatives passed. No model, native output or native contribution reopen was observed."
+    },
+    {
+      "case": "Native QuestionPlanningInput",
+      "state": "FAIL_AT_RELATION_CREATION",
+      "details": "The actual Project snapshot observed in 2026 and CAPEX selection for 2027 both issued correctly. Real relation-create then returned relation-source-fence-unavailable before focused C10 preparation and native input completion. The earlier endpoint period defect is corrected; the newly reached fence gate is under source diagnosis."
+    },
+    {
+      "case": "Human question consumer",
+      "state": "FAIL_AT_ANSWER_READER_AFTER_PARTIAL_REOPEN",
+      "details": "Real C10 human-pending condition, bound UI preparation, canonical consume, same-receipt retry, tamper refusal, human reply and provenance retention completed. Reopened public thread-read and canonical retry with unchanged storageVersion completed before sf_answer_read returned unavailable at line142. The full answer-reader cycle did not pass."
+    },
+    {
+      "case": "Work consumer",
+      "state": "UNAVAILABLE",
+      "details": "Initial actual case-work selection succeeded; work-list returned work-signals-unavailable. No work-list consumer acceptance."
+    }
+  ],
+  "markers": [
+    {
+      "line": 833,
+      "name": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "intent",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 834,
+      "name": "SF_WP12_INTENT_AM02_INPUT",
+      "value": {
+        "scope": "real-ui-source-freshness-and-question-preparation",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "caseRef": {
+          "id": "15e9cb26-47b3-4efe-8d44-1866c4066f02",
+          "incarnation": "4d70c642-4b4f-44fc-8cd0-b16b3b353f13",
+          "version": 1
+        },
+        "sourceRefIds": [
+          "planner-version:wp12-intent-forecast-0:b1374378-07ee-447b-836d-17892aa3197d:1",
+          "planner-version:wp12-intent-forecast-1:93c95932-2948-46dc-8ac3-9ce88125f047:1"
+        ],
+        "freshnessDigest": "20e9fe69fbf144abd1e46ca013b44ccf6e293267bf001c777c03309a283514c3",
+        "questionDigest": "ae8fc3d74fd87887cbbbcb6c46de9a6e91bd3f6f9d1872dce2e1271555cb742c",
+        "receiptKind": "ui",
+        "outsideCaseQuestion": "denied",
+        "questionSent": false,
+        "inferenceExecuted": false,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 835,
+      "name": "SF_WP12_NATIVE_INTENT_INPUT",
+      "value": {
+        "scope": "real-host-http-input-producer",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "route": "workbench-analysis:prepare",
+        "skillId": "sf-enquadrar-decisao",
+        "profileId": "sf_maestro",
+        "caseRef": {
+          "id": "15e9cb26-47b3-4efe-8d44-1866c4066f02",
+          "incarnation": "4d70c642-4b4f-44fc-8cd0-b16b3b353f13",
+          "version": 1
+        },
+        "inputDigest": "9000cfbeea62ffcb859fd428cccd24003bc1bf013905a9b6953fadcadd179b33",
+        "sourceRefIds": [
+          "planner-version:wp12-intent-forecast-0:b1374378-07ee-447b-836d-17892aa3197d:1",
+          "planner-version:wp12-intent-forecast-1:93c95932-2948-46dc-8ac3-9ce88125f047:1"
+        ],
+        "inferenceExecuted": false
+      }
+    },
+    {
+      "line": 836,
+      "name": "SF_WP12_INTENT_AM02_INPUT",
+      "value": {
+        "scope": "real-ui-source-freshness-and-question-preparation",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "caseRef": {
+          "id": "e8cd434c-d749-4b63-baec-bc1073e4306c",
+          "incarnation": "c886f414-99a2-4a94-8791-14f44c42f771",
+          "version": 1
+        },
+        "sourceRefIds": [
+          "planner-version:wp12-intent-forecast-0:b1374378-07ee-447b-836d-17892aa3197d:1",
+          "planner-version:wp12-intent-forecast-2:67ba4bc9-eae7-4546-80b5-d7b8ab50edd2:1"
+        ],
+        "freshnessDigest": "88ad14297cea776719bcef6b50532df38d4a1014ab086cc873c17812669e643e",
+        "questionDigest": "605ea4f6e2d27d3c4c3ee9a376faa07d34d49bf089a6d3044106284de3cb41a3",
+        "receiptKind": "ui",
+        "outsideCaseQuestion": "denied",
+        "questionSent": false,
+        "inferenceExecuted": false,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 837,
+      "name": "SF_WP12_NATIVE_INTENT_INPUT",
+      "value": {
+        "scope": "real-host-http-input-producer",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "route": "workbench-analysis:prepare",
+        "skillId": "sf-enquadrar-decisao",
+        "profileId": "sf_maestro",
+        "caseRef": {
+          "id": "e8cd434c-d749-4b63-baec-bc1073e4306c",
+          "incarnation": "c886f414-99a2-4a94-8791-14f44c42f771",
+          "version": 1
+        },
+        "inputDigest": "5b50662564e272df591e24239898163750640b3c40a285f426e31f965fc1a8c3",
+        "sourceRefIds": [
+          "planner-version:wp12-intent-forecast-0:b1374378-07ee-447b-836d-17892aa3197d:1",
+          "planner-version:wp12-intent-forecast-2:67ba4bc9-eae7-4546-80b5-d7b8ab50edd2:1"
+        ],
+        "inferenceExecuted": false
+      }
+    },
+    {
+      "line": 838,
+      "name": "SF_WP12_NATIVE_INTENT_NEGATIVES",
+      "value": {
+        "scope": "real-host-input-admission",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "outsideCase": "unavailable",
+        "changedAuthorizedRequest": "denied",
+        "inferenceExecuted": false
+      }
+    },
+    {
+      "line": 839,
+      "name": "SF_WP12_NATIVE_MISSION",
+      "value": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "profileId": "sf_maestro",
+        "skillId": "sf-enquadrar-decisao",
+        "caseRef": {
+          "id": "15e9cb26-47b3-4efe-8d44-1866c4066f02",
+          "incarnation": "4d70c642-4b4f-44fc-8cd0-b16b3b353f13",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "9000cfbeea62ffcb859fd428cccd24003bc1bf013905a9b6953fadcadd179b33",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 840,
+      "name": "SF_WP12_NATIVE_MISSION",
+      "value": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "profileId": "sf_maestro",
+        "skillId": "sf-enquadrar-decisao",
+        "caseRef": {
+          "id": "e8cd434c-d749-4b63-baec-bc1073e4306c",
+          "incarnation": "c886f414-99a2-4a94-8791-14f44c42f771",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "5b50662564e272df591e24239898163750640b3c40a285f426e31f965fc1a8c3",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 863,
+      "name": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "question-coordination",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 864,
+      "name": "SF_WP12_FOCUSED_QUESTION_PHASE",
+      "value": {
+        "stage": "source-start",
+        "at": "2026-11-14T14:24:02.051Z"
+      }
+    },
+    {
+      "line": 865,
+      "name": "SF_WP12_FOCUSED_QUESTION_PHASE",
+      "value": {
+        "stage": "source-ready",
+        "at": "2026-11-14T14:24:02.149Z"
+      }
+    },
+    {
+      "line": 866,
+      "name": "SF_WP12_NATIVE_QUESTION_RELATION_ENDPOINTS",
+      "value": {
+        "scope": "actual-current-project-and-selected-capex-year",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "observedAt": "2026-11-14T14:24:00.395Z",
+        "projectObservationPeriod": {
+          "start": "2026-01-01",
+          "end": "2026-12-31"
+        },
+        "financialHorizon": {
+          "start": "2027-01-01",
+          "end": "2027-12-31"
+        },
+        "endpoints": [
+          {
+            "sourceRef": "sf-source:33beed4c-ae9e-44a2-9384-a7cf954b7d62:1",
+            "recordType": "projects",
+            "recordId": "wp12-question-project",
+            "fields": [
+              "milestones",
+              "name"
+            ],
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            }
+          },
+          {
+            "sourceRef": "sf-source:14239afc-16c4-400e-9664-68910e62dee2:1",
+            "recordType": "capexProjects",
+            "recordId": "wp12-question-capex",
+            "fields": [
+              "name"
+            ],
+            "period": {
+              "start": "2027-01-01",
+              "end": "2027-12-31"
+            }
+          }
+        ],
+        "inferenceExecuted": false,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 902,
+      "name": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "question-human-consumer",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 903,
+      "name": "SF_WP12_FOCUSED_QUESTION_PHASE",
+      "value": {
+        "stage": "source-start",
+        "at": "2026-11-14T14:24:04.252Z"
+      }
+    },
+    {
+      "line": 904,
+      "name": "SF_WP12_FOCUSED_QUESTION_PHASE",
+      "value": {
+        "stage": "source-ready",
+        "at": "2026-11-14T14:24:04.301Z"
+      }
+    },
+    {
+      "line": 905,
+      "name": "SF_WP12_FOCUSED_QUESTION_PHASE",
+      "value": {
+        "stage": "support-ready",
+        "at": "2026-11-14T14:24:04.301Z"
+      }
+    },
+    {
+      "line": 906,
+      "name": "SF_WP12_FOCUSED_QUESTION_PHASE",
+      "value": {
+        "stage": "coverage-ready",
+        "at": "2026-11-14T14:24:06.515Z"
+      }
+    },
+    {
+      "line": 907,
+      "name": "SF_WP12_FOCUSED_QUESTION_PHASE",
+      "value": {
+        "stage": "promotion-ready",
+        "at": "2026-11-14T14:24:14.889Z"
+      }
+    },
+    {
+      "line": 908,
+      "name": "SF_WP12_FOCUSED_QUESTION_PREPARATION",
+      "value": {
+        "scope": "one-real-alternative-with-explicit-human-pending-coverage",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "caseRef": {
+          "id": "4675e76e-feed-400d-9cbd-4547c9d364a2",
+          "incarnation": "b654dbb0-3f8a-4975-82d2-a3a1a08386d4",
+          "version": 2
+        },
+        "sourceRef": "planner-version:wp12-question-source:622f0aab-0e4b-4d23-bfa6-03352595efaf:1",
+        "alternativeId": "e86867ea-72c8-41fe-9cb8-2bca3e764e43",
+        "resultRef": "decision-result:3106d271d01383c4d12cfbe37ed1ce1c1da758cd2f22e2c81967fe89ef9cac94",
+        "coverageRef": "baseline-coverage:cfd84a6278f7407793633799b49b2590803162ca22289222ae57ac7abd1f377d",
+        "pendingReason": "human-awaiting-training-confirmation",
+        "questionRef": null,
+        "plannerSourceCount": 1,
+        "alternativeCount": 1,
+        "derivedMissingCategoryIds": [],
+        "conditionOrigin": "human-classification",
+        "derivedOmissionProof": false,
+        "total": null,
+        "inferenceExecuted": false,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 909,
+      "name": "SF_WP12_HUMAN_QUESTION_CONSUMER",
+      "value": {
+        "scope": "real-ui-preparation-and-canonical-thread",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "caseRef": {
+          "id": "4675e76e-feed-400d-9cbd-4547c9d364a2",
+          "incarnation": "b654dbb0-3f8a-4975-82d2-a3a1a08386d4",
+          "version": 2
+        },
+        "threadId": "4336eed0-a97c-4129-9e3f-68aa619879e2",
+        "sourceRefIds": [
+          "planner-version:wp12-question-source:622f0aab-0e4b-4d23-bfa6-03352595efaf:1"
+        ],
+        "recipientRef": "wp12-synthetic-question-human-consumer-principal",
+        "preparationCallId": "a4a80ca7-1954-4491-9cf6-5f10afcb06f0",
+        "preparationDigest": "6f13115c67b831d86e6458b4e5a1d15d288385537882433536d3215b13a82822",
+        "canonicalOriginDigest": "f3cc7530c0b5a590c0c35a8fc9f7994f588a43e50221272183c49effe839efa2",
+        "conditionCategory": "training",
+        "conditionReason": "human-awaiting-training-confirmation",
+        "conditionFrom": "human-classified-pending-in-real-c10",
+        "derivedOmissionProof": false,
+        "route": "collaboration-question-consume",
+        "observedActions": [
+          "create",
+          "same-receipt-retry",
+          "changed-preparation-refused",
+          "human-reply"
+        ],
+        "threadCountFromThisPreparation": 1,
+        "messages": 2,
+        "provenanceKind": "prepared",
+        "workProjection": {
+          "status": "unavailable",
+          "reason": "work-signals-unavailable",
+          "consumerAccepted": false
+        },
+        "inferenceExecuted": false,
+        "nativeOutputRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 929,
+      "name": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "question-human-consumer",
+        "phase": "reopened",
+        "scope": "host-installed-catalog",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    }
+  ],
+  "limits": {
+    "catalogObservations": [
+      {
+        "label": "intent",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      },
+      {
+        "label": "question-coordination",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      },
+      {
+        "label": "question-human-consumer",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      },
+      {
+        "label": "question-human-consumer",
+        "phase": "reopened",
+        "scope": "host-installed-catalog",
+        "githubSha": "a5d28a0642e848c8f8bfd2ea3ef49c1fc6bd5e4c",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    ],
+    "inferenceExecuted": false,
+    "nativeOutput": false,
+    "nativeOutputConsumer": false,
+    "derivedOmissionProof": false,
+    "questionConditionOrigin": "human-classification",
+    "allWp12CriteriaComplete": false
+  },
+  "changesFromFailedW16": {
+    "admissionHelper": "Actual UI freshness/question dispatch now works without double consumption, observed by Intent and the human consumer.",
+    "projectObservationPeriod": "Actual endpoints now issue, as shown by the canonical marker; financial CAPEX horizon remains2027.",
+    "remaining": "C06 source-fence and post-reload answer lookup require diagnosis; no exception, assertion or proof was bypassed."
+  },
+  "localProductTests": false,
+  "localTypecheck": false
+}

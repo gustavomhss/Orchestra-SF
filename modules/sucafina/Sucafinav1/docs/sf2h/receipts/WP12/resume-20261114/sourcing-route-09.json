@@ -1,0 +1,49 @@
+{
+  "schema": "wp12-sourcing-normative-route-v1",
+  "status": "FROZEN_INDEPENDENT_STATIC_REVIEW_COMPLETE_HOSTED_PENDING",
+  "baseProduct": "ede812eaf2644cde161f2360b2e4762d9c942146",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+      "blob": "9d07048be0b79123ffb590b0c5b1ff808f0df10d",
+      "sha256": "2076edfae273c1edb74dd9ad172a30d2dea4fe76974f715b29482c7d9413fcaa",
+      "bytes": 16849
+    }
+  ],
+  "operations": [
+    "sf_contract_read",
+    "sf_evidence_get"
+  ],
+  "route": {
+    "profile": "sf_procurement",
+    "skill": "sf-comparar-sourcing"
+  },
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/contracts.ts",
+      "commit": "ede812eaf2644cde161f2360b2e4762d9c942146",
+      "blob": "8bfd7345072e40512fd9e8805cdd93b22db25ccb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+      "commit": "ede812eaf2644cde161f2360b2e4762d9c942146",
+      "blob": "0332b118846cc8a45399aa24e4694fb6bf055719"
+    }
+  ],
+  "changes": [
+    "Human-selected actual Dashboard contract is issued/read/resolved through public domain and capability ports, then attached through case draft.",
+    "Source ref and selected fields in objective are public human selection, not private verifier output identities.",
+    "Required native operations include contract_read and evidence_get with current bound receipts.",
+    "Out-of-selection field is refused; submitted FX, native typed comparison replay and ranking assertions stay unchanged.",
+    "Raw procurement and contract records must remain unchanged."
+  ],
+  "syntax": "Node stripTypeScriptTypes + node --check; no imports or product execution",
+  "productTestsExecuted": false,
+  "typecheckExecuted": false,
+  "fullMissionAccepted": false,
+  "independentReview": {
+    "reviewer": "/root/own_review_resume",
+    "result": "No concrete grant/shape issue found in bounded source review; real public contract source attached through case draft; field refusal and request FX/ranking preservation retained",
+    "productExecuted": false
+  }
+}

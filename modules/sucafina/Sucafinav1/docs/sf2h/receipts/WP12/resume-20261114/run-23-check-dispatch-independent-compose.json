@@ -1,0 +1,86 @@
+{
+  "schema": "sf-wp12-terminal-receipt-review-manifest-v1",
+  "status": "PASS_BOUNDED_METADATA_AND_LOG_REVIEW",
+  "reviewer": "/root/compose_typecheck",
+  "scope": "Exact C28 hosted check, unchanged W28 request and root dispatch binding; no product-result review.",
+  "sources": [
+    {
+      "path": "resume-input/check-23-terminal-mcp.json",
+      "bytes": 37705,
+      "sha256": "949635abeefceb1f885af343f131e91492aa770899bf3367501d31fba72fad78",
+      "blob": "f0890c20d2dadc7bec03108944e0c4c98b9f1d50"
+    },
+    {
+      "path": "resume-input/check-23-log-transport.json",
+      "bytes": 66690,
+      "sha256": "cbd724b105bef4b032f52ab97c9f9083d4b591a216e1c73b379a1bab0fd0c76c",
+      "blob": "9108f008020a25234bdd148fb33a2ff649de713d"
+    },
+    {
+      "path": "evidence/resume-23-check.log",
+      "bytes": 64996,
+      "sha256": "6ada5a2ec22f8902ff4d40f3a78f2464e63da2e336d4fe111ba5eccaca8124fd",
+      "blob": "06dc7ca86a64da540308814c497a6a347cf15846"
+    },
+    {
+      "path": "resume-input/w28-ci/published-mcp-proof.json",
+      "bytes": 36943,
+      "sha256": "bbd4b79813ae95f132a0b35232102fa43eecea3c1cdec6e871ca12e457ab3536",
+      "blob": "7afa9a1ff9c798579856e4f62bc280d9fb03b1e5"
+    },
+    {
+      "path": "resume-input/w28-ci/dispatch-mcp-proof.json",
+      "bytes": 142087,
+      "sha256": "2b404772e13ddf69e0a62bc5e6d9b342ed065acbba608a004428d5522e41afed",
+      "blob": "96c73695b7e3f53c91acbd3b90bdc0d3646ba453"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "resume-input/w28-check/run-23-checks.json",
+      "bytes": 5911,
+      "sha256": "8b983a87c47727044733f84e36687b3a0ebcd5affef137bb537cd6b3b8bf649c",
+      "blob": "c7409ec9bfd36f568f85210321408e03a07fd0a7"
+    },
+    {
+      "path": "resume-input/w28-ci/eligibility-and-dispatch-proof.json",
+      "bytes": 6676,
+      "sha256": "9586b1985892722dd86c45980b0541a59f79e1c8cc73032090372906770bb9c0",
+      "blob": "f7f150516c3ffcd990b0911c79c73a0947bbab61"
+    }
+  ],
+  "frozenManifestsPreserved": [
+    {
+      "path": "resume-input/w28-check/manifest.json",
+      "bytes": 1154,
+      "sha256": "f27e78bd544d76801e245ae19cd8e656424105b4f2f85f33c6288402f7752c6a",
+      "blob": "6214170a2e21fddc0e143017a56038eafc841a34"
+    },
+    {
+      "path": "resume-input/w28-ci/manifest.json",
+      "bytes": 9303,
+      "sha256": "a7879fc64e7d21e3b3dfdd400c37d946327f236566299cabc3e93de020735f78",
+      "blob": "7024f5e936e18f88d6d660bb65a9162205ca5748"
+    },
+    {
+      "path": "resume-input/own-missions/bi-public-selection/manifest.json",
+      "bytes": 2588,
+      "sha256": "7bebba5268219ddb635bded79f4519aba2bc6f8de17a32abd43186c54c7c3b26",
+      "blob": "179b0805c0185e6ebf2cb65b527f2a25020b5e47"
+    }
+  ],
+  "checks": [
+    "Run/job successful with exact C SHA/tree, parent W28 and one envelope path.",
+    "Log transport matches all 64,996 saved bytes and its SHA256; compiler has no TS diagnostic, spawn/guard summaries match.",
+    "Artifact ID/size/digest match both terminal API and upload log; no ZIP content claim.",
+    "Root product S parents W28 and only adds exact validated request blob; one run attempt captured.",
+    "Global pre-dispatch active/queued state and actual other request scopes show no equivalent WP12 request.",
+    "All original manifests and own author freeze remain byte-identical."
+  ],
+  "findings": [],
+  "limits": [
+    "This is author verification of the new metadata receipt, not an independent runtime or product audit.",
+    "W28 product terminal and any model availability/native outcomes are unobserved at this receipt cutoff.",
+    "No local product execution/typecheck, new network request, retry or CI dispatch."
+  ]
+}

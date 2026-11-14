@@ -1,0 +1,75 @@
+{
+  "schema": "sf-wp12-hosted-check-v1",
+  "phase": "resume-08",
+  "product": "ede812eaf2644cde161f2360b2e4762d9c942146",
+  "productTree": "bdaa8c2f327b87f7f713a739fd284e40e2b6dd55",
+  "snapshot": "9c6e812b1a473c4ad359212df50861445af2c2dc",
+  "snapshotTree": "9ee7e935c810e666cf1decfe6cdf7bb3ca7d2309",
+  "runId": 43595299404,
+  "jobId": 132448394143,
+  "conclusion": "failure",
+  "typecheck": {
+    "command": "bun typecheck",
+    "workingDirectory": "modules/sucafina",
+    "exitCode": 2,
+    "ownDiagnostics": 3,
+    "foreignDiagnostics": 0,
+    "diagnostics": [
+      {
+        "code": "TS2339",
+        "file": "test/product/wp12/native-choice-preparation.ts",
+        "lines": [
+          41,
+          44
+        ],
+        "reason": "BusinessContextRequest has selectionRefs, not refs; the intended structural EvidenceRef[] check must use the canonical sf_freshness_check.evidenceRefs decoder."
+      },
+      {
+        "code": "TS2769",
+        "file": "test/product/wp12/native-execution-reevaluation.test.ts",
+        "line": 79,
+        "reason": "Deep comparison of typed ChangeImpact with a raw HTTP Record needs an explicit assertion generic; runtime equality unchanged."
+      }
+    ]
+  },
+  "spawnImports": {
+    "conclusion": "success",
+    "files": 4618,
+    "allowListedSites": 66
+  },
+  "guards": {
+    "conclusion": "success",
+    "rules": 78,
+    "changedPaths": 860,
+    "gate": 0,
+    "warn": 15,
+    "errors": 0
+  },
+  "log": {
+    "file": "evidence/resume-08-checks.log",
+    "sha256": "803bfc59fc6c55ff143308ac0e59e20ad9e2aecfde7ff8108406668bbc77c77b",
+    "bytes": 64939
+  },
+  "artifact": {
+    "id": 14114013697,
+    "digest": "sha256:1f21ee70b9f71f8ea064a6c0d25b3eab55ef01ba0f50d08a5f06621496f10cd8",
+    "expiresAt": "2026-11-28T12:33:51Z"
+  },
+  "fixes": [
+    {
+      "path": "test/product/wp12/native-choice-preparation.ts",
+      "blob": "206212ffb8afd5ce1f0da70e1e4111b9482a3eb2",
+      "runtimeChanged": true,
+      "assertionsPreserved": true
+    },
+    {
+      "path": "test/product/wp12/native-execution-reevaluation.test.ts",
+      "blob": "ee1da7e0c0912a63dcc881a6a57e10456620b9d8",
+      "runtimeChanged": false,
+      "emittedJavaScriptIdentical": true,
+      "emittedJavaScriptSHA256": "bf9a0ee22444403794fa4d00ac3fc510a883777b8dea0a58a2daef7f562b5f87"
+    }
+  ],
+  "productTests": "Not dispatched for W13 while the W11 flight remained active.",
+  "fullWp12Acceptance": false
+}

@@ -1,0 +1,471 @@
+{
+  "check": {
+    "schema": "sf-wp12-hosted-check-result-v1",
+    "phase": "resume-13",
+    "product": {
+      "sha": "e8ae326420eae2d51247fcab5730e82e5d3b8d39",
+      "tree": "4475ca36282141b4ec00212736fd9831cfc5f0e2"
+    },
+    "check": {
+      "snapshot": "804421e364d1392ead32c954f9d87adc38b9f027",
+      "tree": "d24914f6cf744136dddf26c8add62c313d968704",
+      "runId": 43601239454,
+      "jobId": 132466234270,
+      "conclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43601239454",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "typecheck": {
+        "command": "bun typecheck",
+        "cwd": "modules/sucafina",
+        "exitCode": 0,
+        "diagnostics": 0
+      },
+      "spawnImports": {
+        "conclusion": "success",
+        "checkedFiles": 4618,
+        "allowListedSites": 66
+      },
+      "guards": {
+        "conclusion": "success",
+        "rules": 78,
+        "changedPaths": 910,
+        "gate": 0,
+        "warn": 15,
+        "errors": 0
+      }
+    },
+    "log": {
+      "bytes": 65514,
+      "sha256": "88e0575a99934c970d9c3c940a260fc6fbef03fd14b8f7934c422e3564e9e4e7"
+    },
+    "artifact": {
+      "id": 14116930017,
+      "name": "astra-wp12-check-1",
+      "digest": "sha256:bc1fe965fe41396808f41745f24583a7e9b3d11a63774080b0bd75e0d98b5e29",
+      "bytes": 1421
+    },
+    "validatedOwnedDeltas": [
+      {
+        "path": "product/ai/analysis-port.ts",
+        "blob": "47e25de4ed1e743a2366c234a56baf2633c805bb"
+      },
+      {
+        "path": "test/product/wp12/run-store.test.ts",
+        "blob": "d12d8702f5914c94475b3ad1205718ecf1899fe9"
+      },
+      {
+        "path": "test/product/wp12/native-verifier-negatives.test.ts",
+        "blob": "7656809cc7e610d6427cb5df64355d29ecee30a6"
+      }
+    ],
+    "pendingProduct": {
+      "scope": "cancellation-verifier",
+      "requestSha256": "61988b5d8f0841c193c82abf8e8aee56fe7fd0616b668c1199f26e88434f9ba1",
+      "state": "PREPARED_NOT_DISPATCHED_AT_CUTOFF",
+      "reason": "One product flight at a time; ProcurementW16 still running."
+    },
+    "localProductTests": false,
+    "localTypecheck": false,
+    "fullWp12Acceptance": false
+  },
+  "boundary_run": {
+    "product": "e8ae326420eae2d51247fcab5730e82e5d3b8d39",
+    "snapshot": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+    "snapshot_tree": "aaba49d5ba755ba906345bc088e767a647e2171d",
+    "run_id": 43601627208,
+    "job_id": 132467402304,
+    "status": "COMPLETED",
+    "result": "PASS",
+    "log_path": "evidence/resume-13-boundary.log",
+    "expected_log_sha256": "a786e440ea86a17b65740d9082e6638786bf854251e8d88b1a0c60cc58d5e669",
+    "summary": {
+      "pass": 9,
+      "fail": 0,
+      "tests": 9,
+      "files": 3,
+      "assertions": 274,
+      "elapsedSeconds": 10.08,
+      "excludedByName": 38,
+      "completedBunSummary": true
+    },
+    "omni": {
+      "verdict": "PASS",
+      "scope": "focused: no declaring test ran",
+      "declaringTests": 0,
+      "spawns": 49,
+      "delegated": 0,
+      "nonce": "5ea573f406f198da39af219c43cbb586"
+    },
+    "request": {
+      "sha256": "61988b5d8f0841c193c82abf8e8aee56fe7fd0616b668c1199f26e88434f9ba1",
+      "blob": "36abe0c10518b10774993bdc740ee92f74ecd707",
+      "bytes": 1188,
+      "body": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp12/analysis.test.ts",
+          "./Sucafinav1/test/product/wp12/run-store.test.ts",
+          "./Sucafinav1/test/product/wp12/native-verifier-negatives.test.ts",
+          "--timeout",
+          "120000",
+          "-t",
+          "^(?:cancellation refuses a session different from the loaded skill receipt|cancellation persists before interrupting and permits a source-stale run under current authority|revocation after durable cancellation prevents interruption through an expired authority|real C08 host cancels an independent review using its durable target even when its source becomes stale|durable cancellation wins a publication that is still validating its source|review cancellation validates its durable target before committing even without an attached native runtime|real C08 cancellation pins its command and observed run across authorization and interruption scopes|real C08 progress refuses retained run and output aliases changed after a scope returns|real Forecast verifier refuses a false total, an out-of-schema operation and an invented source while preserving Planner and C08)$"
+        ],
+        "env": {}
+      }
+    },
+    "cleanup": {
+      "job_id": 132467887851,
+      "result": "PASS"
+    },
+    "scope": "Eight cancellation/progress boundary tests and one actual UI/Planner/domain-verifier counterexample with reopen. Empty model catalog; no inference or adversarial private-publisher attempt.",
+    "log_sha256": "a786e440ea86a17b65740d9082e6638786bf854251e8d88b1a0c60cc58d5e669",
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43601627208",
+    "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43601627208/job/132467402304"
+  },
+  "tests": {
+    "W18.T001": {
+      "name": "cancellation refuses a session different from the loaded skill receipt",
+      "result": "PASS",
+      "path": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "duration_ms": 9.78,
+      "log_line": 811,
+      "run_ref": "W18.BOUNDARIES",
+      "source_pin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+        "blob": "f4bd15b2bcc7d0bbe43b8581102210d656c29f02",
+        "sha256": "784a53c9ac7ec618856e3f495d2df54fe026c6aee7b82d3ef04f8f10474be059",
+        "bytes": 46648,
+        "pin_source": "resume-input/criteria/w9-published-preparation.json",
+        "observed_product": "e8ae326420eae2d51247fcab5730e82e5d3b8d39"
+      },
+      "scope": "Exact branch at its product/snapshot. No model inference, native output or native consumer is inferred.",
+      "candidate_transfer": "Keep original run and source SHA. Component ports are not an installed native admission witness."
+    },
+    "W18.T002": {
+      "name": "cancellation persists before interrupting and permits a source-stale run under current authority",
+      "result": "PASS",
+      "path": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "duration_ms": 2.3,
+      "log_line": 812,
+      "run_ref": "W18.BOUNDARIES",
+      "source_pin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+        "blob": "f4bd15b2bcc7d0bbe43b8581102210d656c29f02",
+        "sha256": "784a53c9ac7ec618856e3f495d2df54fe026c6aee7b82d3ef04f8f10474be059",
+        "bytes": 46648,
+        "pin_source": "resume-input/criteria/w9-published-preparation.json",
+        "observed_product": "e8ae326420eae2d51247fcab5730e82e5d3b8d39"
+      },
+      "scope": "Exact branch at its product/snapshot. No model inference, native output or native consumer is inferred.",
+      "candidate_transfer": "Keep original run and source SHA. Component ports are not an installed native admission witness."
+    },
+    "W18.T003": {
+      "name": "revocation after durable cancellation prevents interruption through an expired authority",
+      "result": "PASS",
+      "path": "Sucafinav1/test/product/wp12/analysis.test.ts",
+      "duration_ms": 0.78,
+      "log_line": 813,
+      "run_ref": "W18.BOUNDARIES",
+      "source_pin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+        "blob": "f4bd15b2bcc7d0bbe43b8581102210d656c29f02",
+        "sha256": "784a53c9ac7ec618856e3f495d2df54fe026c6aee7b82d3ef04f8f10474be059",
+        "bytes": 46648,
+        "pin_source": "resume-input/criteria/w9-published-preparation.json",
+        "observed_product": "e8ae326420eae2d51247fcab5730e82e5d3b8d39"
+      },
+      "scope": "Exact branch at its product/snapshot. No model inference, native output or native consumer is inferred.",
+      "candidate_transfer": "Keep original run and source SHA. Component ports are not an installed native admission witness."
+    },
+    "W18.T004": {
+      "name": "real C08 host cancels an independent review using its durable target even when its source becomes stale",
+      "result": "PASS",
+      "path": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "duration_ms": 103.79,
+      "log_line": 816,
+      "run_ref": "W18.BOUNDARIES",
+      "source_pin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+        "blob": "d12d8702f5914c94475b3ad1205718ecf1899fe9",
+        "sha256": "4bcc5ae386a1700e7ce987777d6e102441cf8cbb1d351e31a3f178d9bc183731",
+        "bytes": 52814,
+        "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-12.json",
+        "observed_product": "e8ae326420eae2d51247fcab5730e82e5d3b8d39"
+      },
+      "scope": "Exact branch at its product/snapshot. No model inference, native output or native consumer is inferred.",
+      "candidate_transfer": "Keep original run and source SHA. Component ports are not an installed native admission witness."
+    },
+    "W18.T005": {
+      "name": "durable cancellation wins a publication that is still validating its source",
+      "result": "PASS",
+      "path": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "duration_ms": 36.86,
+      "log_line": 817,
+      "run_ref": "W18.BOUNDARIES",
+      "source_pin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+        "blob": "d12d8702f5914c94475b3ad1205718ecf1899fe9",
+        "sha256": "4bcc5ae386a1700e7ce987777d6e102441cf8cbb1d351e31a3f178d9bc183731",
+        "bytes": 52814,
+        "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-12.json",
+        "observed_product": "e8ae326420eae2d51247fcab5730e82e5d3b8d39"
+      },
+      "scope": "Exact branch at its product/snapshot. No model inference, native output or native consumer is inferred.",
+      "candidate_transfer": "Keep original run and source SHA. Component ports are not an installed native admission witness."
+    },
+    "W18.T006": {
+      "name": "review cancellation validates its durable target before committing even without an attached native runtime",
+      "result": "PASS",
+      "path": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "duration_ms": 31.42,
+      "log_line": 818,
+      "run_ref": "W18.BOUNDARIES",
+      "source_pin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+        "blob": "d12d8702f5914c94475b3ad1205718ecf1899fe9",
+        "sha256": "4bcc5ae386a1700e7ce987777d6e102441cf8cbb1d351e31a3f178d9bc183731",
+        "bytes": 52814,
+        "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-12.json",
+        "observed_product": "e8ae326420eae2d51247fcab5730e82e5d3b8d39"
+      },
+      "scope": "Exact branch at its product/snapshot. No model inference, native output or native consumer is inferred.",
+      "candidate_transfer": "Keep original run and source SHA. Component ports are not an installed native admission witness."
+    },
+    "W18.T007": {
+      "name": "real C08 cancellation pins its command and observed run across authorization and interruption scopes",
+      "result": "PASS",
+      "path": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "duration_ms": 209.03,
+      "log_line": 819,
+      "run_ref": "W18.BOUNDARIES",
+      "source_pin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+        "blob": "d12d8702f5914c94475b3ad1205718ecf1899fe9",
+        "sha256": "4bcc5ae386a1700e7ce987777d6e102441cf8cbb1d351e31a3f178d9bc183731",
+        "bytes": 52814,
+        "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-12.json",
+        "observed_product": "e8ae326420eae2d51247fcab5730e82e5d3b8d39"
+      },
+      "scope": "Exact branch at its product/snapshot. No model inference, native output or native consumer is inferred.",
+      "candidate_transfer": "Keep original run and source SHA. Component ports are not an installed native admission witness."
+    },
+    "W18.T008": {
+      "name": "real C08 progress refuses retained run and output aliases changed after a scope returns",
+      "result": "PASS",
+      "path": "Sucafinav1/test/product/wp12/run-store.test.ts",
+      "duration_ms": 154.75,
+      "log_line": 820,
+      "run_ref": "W18.BOUNDARIES",
+      "source_pin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+        "blob": "d12d8702f5914c94475b3ad1205718ecf1899fe9",
+        "sha256": "4bcc5ae386a1700e7ce987777d6e102441cf8cbb1d351e31a3f178d9bc183731",
+        "bytes": 52814,
+        "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-12.json",
+        "observed_product": "e8ae326420eae2d51247fcab5730e82e5d3b8d39"
+      },
+      "scope": "Exact branch at its product/snapshot. No model inference, native output or native consumer is inferred.",
+      "candidate_transfer": "Keep original run and source SHA. Component ports are not an installed native admission witness."
+    },
+    "W18.T009": {
+      "name": "real Forecast verifier refuses a false total, an out-of-schema operation and an invented source while preserving Planner and C08",
+      "result": "PASS",
+      "path": "Sucafinav1/test/product/wp12/native-verifier-negatives.test.ts",
+      "duration_ms": 8392.92,
+      "log_line": 871,
+      "run_ref": "W18.BOUNDARIES",
+      "source_pin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-verifier-negatives.test.ts",
+        "blob": "7656809cc7e610d6427cb5df64355d29ecee30a6",
+        "sha256": "72a90a73eddac162a5b5e347c139bec6beb3df6c05336bead869f73dbd60cd7c",
+        "bytes": 18104,
+        "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-13.json",
+        "observed_product": "e8ae326420eae2d51247fcab5730e82e5d3b8d39"
+      },
+      "scope": "Exact branch at its product/snapshot. No model inference, native output or native consumer is inferred.",
+      "candidate_transfer": "Keep original run and source SHA. Component ports are not an installed native admission witness."
+    }
+  },
+  "markers": {
+    "SF_WP12_NATIVE_MISSION_CATALOG": [
+      {
+        "log_line": 845,
+        "value": {
+          "label": "verifier-negatives",
+          "phase": "initial",
+          "scope": "host-installed-catalog",
+          "githubSha": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+          "state": "empty",
+          "available": [],
+          "supported": [],
+          "published": [],
+          "intersection": []
+        }
+      },
+      {
+        "log_line": 869,
+        "value": {
+          "label": "verifier-negatives",
+          "phase": "reopened",
+          "scope": "host-installed-catalog",
+          "githubSha": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+          "state": "empty",
+          "available": [],
+          "supported": [],
+          "published": [],
+          "intersection": []
+        }
+      }
+    ],
+    "SF_WP12_VERIFIER_NEGATIVE": [
+      {
+        "log_line": 846,
+        "value": {
+          "criterion": "WP12.T03.CHK.02",
+          "attack": "false-monthly-total",
+          "scope": "real-domain-verifier-with-adversarial-body",
+          "githubSha": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+          "authentication": "real-ui-authority-over-explicit-synthetic-principal",
+          "candidateProvenance": "none",
+          "caseRef": {
+            "id": "f0708f60-b4b4-44d8-a2eb-1ac617b80d4a",
+            "incarnation": "5ac6776f-278d-4e05-912a-906daae95126",
+            "version": 1
+          },
+          "inputDigest": "586a4cac36bede8dba51b09abbf92dfa0f79bbb355825f5c5e1ea9f1f2a2c2b0",
+          "candidateDigest": "7149e98fa98dd6688500d5a640b720e47b59008d1748d1fa6a7c17faab218d66",
+          "schemaAdmitted": true,
+          "semanticResult": {
+            "status": "unavailable",
+            "reason": "analysis-output-unverified"
+          },
+          "engineDigestBefore": "c8225767ffba34d0dc031f92101eceae4c28f3964674bda022c7727a9b39059a",
+          "engineDigestAfter": "c8225767ffba34d0dc031f92101eceae4c28f3964674bda022c7727a9b39059a",
+          "plannerStoreDigest": "f7fa34b903b9fa025f833c5182f4669fc5351bafe738002fd08732e1f05fa90e",
+          "caseUnchanged": true,
+          "c08Unchanged": true,
+          "envelopeAdmissionExecuted": false,
+          "malformedPublicationAttemptExecuted": false,
+          "inferenceExecuted": false,
+          "gnativeAccepted": false
+        }
+      },
+      {
+        "log_line": 847,
+        "value": {
+          "criterion": "WP12.T03.CHK.02",
+          "attack": "operation-outside-schema",
+          "scope": "real-domain-verifier-with-adversarial-body",
+          "githubSha": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+          "authentication": "real-ui-authority-over-explicit-synthetic-principal",
+          "candidateProvenance": "none",
+          "caseRef": {
+            "id": "f0708f60-b4b4-44d8-a2eb-1ac617b80d4a",
+            "incarnation": "5ac6776f-278d-4e05-912a-906daae95126",
+            "version": 1
+          },
+          "inputDigest": "586a4cac36bede8dba51b09abbf92dfa0f79bbb355825f5c5e1ea9f1f2a2c2b0",
+          "candidateDigest": "819ffc020fa971c7a41f25104d2d060ccb4f8e89a5121d7f86cf5f4b51955943",
+          "schemaAdmitted": false,
+          "semanticResult": {
+            "status": "unavailable",
+            "reason": "analysis-output-unverified"
+          },
+          "engineDigestBefore": "c8225767ffba34d0dc031f92101eceae4c28f3964674bda022c7727a9b39059a",
+          "engineDigestAfter": "c8225767ffba34d0dc031f92101eceae4c28f3964674bda022c7727a9b39059a",
+          "plannerStoreDigest": "f7fa34b903b9fa025f833c5182f4669fc5351bafe738002fd08732e1f05fa90e",
+          "caseUnchanged": true,
+          "c08Unchanged": true,
+          "envelopeAdmissionExecuted": false,
+          "malformedPublicationAttemptExecuted": false,
+          "inferenceExecuted": false,
+          "gnativeAccepted": false
+        }
+      },
+      {
+        "log_line": 848,
+        "value": {
+          "criterion": "WP12.T03.CHK.02",
+          "attack": "invented-source-reference",
+          "scope": "real-domain-verifier-with-adversarial-body",
+          "githubSha": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+          "authentication": "real-ui-authority-over-explicit-synthetic-principal",
+          "candidateProvenance": "none",
+          "caseRef": {
+            "id": "f0708f60-b4b4-44d8-a2eb-1ac617b80d4a",
+            "incarnation": "5ac6776f-278d-4e05-912a-906daae95126",
+            "version": 1
+          },
+          "inputDigest": "586a4cac36bede8dba51b09abbf92dfa0f79bbb355825f5c5e1ea9f1f2a2c2b0",
+          "candidateDigest": "82c6e3450e5f998439e5277bcdd57fb5aba124f36abc8bd5c94bdbb26bb9f975",
+          "schemaAdmitted": true,
+          "semanticResult": {
+            "status": "unavailable",
+            "reason": "analysis-output-unverified"
+          },
+          "engineDigestBefore": "c8225767ffba34d0dc031f92101eceae4c28f3964674bda022c7727a9b39059a",
+          "engineDigestAfter": "c8225767ffba34d0dc031f92101eceae4c28f3964674bda022c7727a9b39059a",
+          "plannerStoreDigest": "f7fa34b903b9fa025f833c5182f4669fc5351bafe738002fd08732e1f05fa90e",
+          "caseUnchanged": true,
+          "c08Unchanged": true,
+          "envelopeAdmissionExecuted": false,
+          "malformedPublicationAttemptExecuted": false,
+          "inferenceExecuted": false,
+          "gnativeAccepted": false
+        }
+      }
+    ],
+    "SF_WP12_NATIVE_MISSION": [
+      {
+        "log_line": 849,
+        "value": {
+          "scope": "real-host-input-preparation-and-availability",
+          "status": "unavailable",
+          "reason": "installed-host-catalog-empty",
+          "catalogState": "empty",
+          "githubSha": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+          "profileId": "sf_finance",
+          "skillId": "sf-explicar-forecast",
+          "caseRef": {
+            "id": "f0708f60-b4b4-44d8-a2eb-1ac617b80d4a",
+            "incarnation": "5ac6776f-278d-4e05-912a-906daae95126",
+            "version": 1
+          },
+          "inputPrepared": true,
+          "inputDigest": "586a4cac36bede8dba51b09abbf92dfa0f79bbb355825f5c5e1ea9f1f2a2c2b0",
+          "inferenceExecuted": false,
+          "outputRef": null,
+          "consumerRef": null,
+          "gnativeAccepted": false
+        }
+      }
+    ],
+    "SF_WP12_VERIFIER_NEGATIVE_REOPEN": [
+      {
+        "log_line": 870,
+        "value": {
+          "criterion": "WP12.T03.CHK.02",
+          "githubSha": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+          "caseRef": {
+            "id": "f0708f60-b4b4-44d8-a2eb-1ac617b80d4a",
+            "incarnation": "5ac6776f-278d-4e05-912a-906daae95126",
+            "version": 1
+          },
+          "plannerStoreDigest": "f7fa34b903b9fa025f833c5182f4669fc5351bafe738002fd08732e1f05fa90e",
+          "comparisonDigest": "c8225767ffba34d0dc031f92101eceae4c28f3964674bda022c7727a9b39059a",
+          "domainAndC08Preserved": true,
+          "nativePublicationObserved": false,
+          "malformedPublicationAttemptExecuted": false,
+          "remainingBoundary": "The installed host exposes no external candidate-publication port; these negatives observe schema/domain refusal, not an adversarial native completion reaching its private publisher.",
+          "gnativeAccepted": false
+        }
+      }
+    ]
+  },
+  "scope": "Nine hosted cases; component cancellation/progress plus real UI/domain predicate/reopen. No inference or adversarial native publisher observation.",
+  "newer_W19_changes_are_not_covered_by_this_W18_run": true
+}

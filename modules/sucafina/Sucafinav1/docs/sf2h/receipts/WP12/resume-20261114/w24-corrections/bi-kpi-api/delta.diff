@@ -1,0 +1,14 @@
+--- before/native-execution-bi-kpi.test.ts
++++ after/native-execution-bi-kpi.test.ts
+@@ -266,8 +266,9 @@
+ }
+ 
+ async function budgetDataDigest(context: Wp12NativeMissionContext) {
+-  return context.persistence.read("dashboard", (snapshot) => digestSfValue({ opexOwners: snapshot.data.opexOwners, opexEntries: snapshot.data.opexEntries,
+-    capexProjects: snapshot.data.capexProjects, capexEntries: snapshot.data.capexEntries }))
++  return context.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: digestSfValue({
++    opexOwners: snapshot.data.opexOwners, opexEntries: snapshot.data.opexEntries,
++    capexProjects: snapshot.data.capexProjects, capexEntries: snapshot.data.capexEntries }) }))
+ }
+ 
+ async function readProducedArtifact(context: Wp12NativeMissionContext, caseRef: SfBiArtifact["caseRef"]) {

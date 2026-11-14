@@ -1,0 +1,206 @@
+{
+  "schema": "wp12-forecast-kpi-author-freeze-v1",
+  "status": "FROZEN_FOR_INDEPENDENT_STATIC_REVIEW_NOT_RUN",
+  "source": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+    "blob": "5ff043a8d9d2cd932020aa6074864b16e36f49b9",
+    "sha256": "35d4f8573f1e5ece274ca29fc6e4a4f2f8c70851e206cd529de957213bf762ce",
+    "bytes": 29693,
+    "lines": 372,
+    "expects": 83,
+    "deadlineMs": 360000
+  },
+  "sources": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-services-inputs.ts",
+      "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "blob": "7f4ccee85c4eeaec82d932a69ba93c5fe6d59eff",
+      "sha256": "3185107d8da80d5a1db0e5c74c1bf93eae04a7c0fbb58e98d7755a50e556fe55",
+      "bytes": 8253,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6880666b15dc18bf400c908a8457580526b70f4d/apps/cli/src/sucafina-product/analysis-services-inputs.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier.ts",
+      "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "blob": "9c62b6a375e4894f1d487b7eb12ab1c1bba9dd17",
+      "sha256": "014140d2be17d22053b66fc13923b8252c5b0b5a3fef8825a55446152bb8f142",
+      "bytes": 5502,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6880666b15dc18bf400c908a8457580526b70f4d/apps/cli/src/sucafina-product/analysis-verifier.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "blob": "97cde4dce2858f47b57b446c9c20bad77d367591",
+      "sha256": "217ce1f268ae119bd38292f9b6697c6f6c1bfb08e31be3e25a434c5cf91d6b48",
+      "bytes": 62972,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6880666b15dc18bf400c908a8457580526b70f4d/apps/cli/src/sucafina-product/business-services.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+      "sha256": "fe44de260ce2d30d3ae48308517437c9a7b68681f702e536e16b7a1a9233ad61",
+      "bytes": 16016,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6880666b15dc18bf400c908a8457580526b70f4d/modules/sucafina/Sucafinav1/product/dashboard/sources.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+      "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "blob": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811",
+      "sha256": "e3774ecdbc161eb827bf60a9c13bf7247ef0fcb2c86fada534a5456df6fb18fd",
+      "bytes": 38355,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6880666b15dc18bf400c908a8457580526b70f4d/modules/sucafina/Sucafinav1/product/dashboard/port.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+      "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "blob": "4ddee38662690ce5284cc46ef04d315cb3fb4f6c",
+      "sha256": "af0164cbb864b16e4cc813e1f49fdb6711a705a3722bad6e1b61c75e794333e8",
+      "bytes": 8314,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6880666b15dc18bf400c908a8457580526b70f4d/modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+      "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "blob": "eb14812f4e3e6545b9732a3930da6c2cececa81c",
+      "sha256": "530e5f1a44ee48e17c7aedf9a9ca1bce47b1b7ef80cb18547ca9d1e52dbd1e5f",
+      "bytes": 10922,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6880666b15dc18bf400c908a8457580526b70f4d/modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "sha256": "4f7effda926f72b7c6a61b944e5e9a9acd6dce4a39d0780e735ab6efed3471b1",
+      "bytes": 9660,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6880666b15dc18bf400c908a8457580526b70f4d/modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "sha256": "4b4dea78486ca436a03725e44d98951333ca15f353bdf02e204e8a0914f58527",
+      "bytes": 50543,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6880666b15dc18bf400c908a8457580526b70f4d/modules/sucafina/Sucafinav1/product/contracts/operations.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "sha256": "a703d59373a826021214617867191e0a8bba920cef9ead22dc064e0f018e6517",
+      "bytes": 6977,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6880666b15dc18bf400c908a8457580526b70f4d/modules/sucafina/Sucafinav1/product/contracts/context.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+      "sha256": "d865cfc49b1d8cf079bc2dafbfd0815215671b0602d26e43ad26e4fe1cf71513",
+      "bytes": 10134,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6880666b15dc18bf400c908a8457580526b70f4d/modules/sucafina/Sucafinav1/product/interface/analysis-http.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "blob": "49300a78a44ac0739791d10a11c386b317f4b51a",
+      "sha256": "050238396e5f12c067de3ab488f1dc207350cb636fc68d71fc72ef2d8a1b59bc",
+      "bytes": 20042,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6880666b15dc18bf400c908a8457580526b70f4d/modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+      "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "blob": "4424cea6540a61131741ea0a1cf7aaa5aa54e337",
+      "sha256": "5e09d78e38f9cec2bf774fe8f2db0e9a0c8c8948bc7580463e7eddde74608282",
+      "bytes": 11241,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6880666b15dc18bf400c908a8457580526b70f4d/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-kpi.test.ts",
+      "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "blob": "7ddbda1cbc79857768ead729ed70dfe67dd5ae64",
+      "sha256": "a9f5e7fa7eb63c06e41f021cf66a000d66c02747f9f1f571c422372073a06136",
+      "bytes": 29334,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6880666b15dc18bf400c908a8457580526b70f4d/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-kpi.test.ts"
+    },
+    {
+      "path": "packages/core/src/session.ts",
+      "sourceCommit": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "blob": "00b276d8f2c9e634ae55a37e800fae388eb595e6",
+      "sha256": "58ced98737a77e8bb5affbd618ab57a02b83cba83983a354bdb0b694a7a1310f",
+      "bytes": 38090,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6880666b15dc18bf400c908a8457580526b70f4d/packages/core/src/session.ts"
+    }
+  ],
+  "canonicalCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "original27Indices": [
+    6,
+    12
+  ],
+  "profile": "sf_finance",
+  "skill": "sf-explicar-forecast",
+  "nativeOperationsRequired": [
+    "sf_context_get",
+    "sf_kpi_explain",
+    "sf_forecast_compare",
+    "sf_source_get"
+  ],
+  "uncoveredRequiredOperation": "sf_import_preview (separate existing mission)",
+  "nativeInferenceObserved": false,
+  "nativeReceiptObserved": false,
+  "productTests": false,
+  "localTypecheck": false,
+  "foreignSourceEdits": false,
+  "helperOrExistingDriverEdits": false,
+  "proofScope": "Actual public same-case/period human-selected auxiliary Budget KPI; real producer comparison refusal for unspecified currency; native Session auxiliary results/receipts when available; unchanged closed replay/outputRefs and actual HTTP FinancialAnalysis consumer after reload. No autonomous discovery or financial cross-producer equivalence.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+      "blob": "5ff043a8d9d2cd932020aa6074864b16e36f49b9",
+      "sha256": "35d4f8573f1e5ece274ca29fc6e4a4f2f8c70851e206cd529de957213bf762ce",
+      "bytes": 29693,
+      "lines": 372,
+      "expects": 83,
+      "deadlineMs": 360000,
+      "kind": "own-test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/README.md",
+      "bytes": 2718,
+      "sha256": "8d76031fe04cdf5d35e83b41280eff864b1dab7d465c1ee8cbcfea0844252c28",
+      "blob": "ba6847274b3d3793fa58d0ce881cf075aa4e2151",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/preparation.json",
+      "bytes": 8056,
+      "sha256": "f3887d9aa11ef1e09d1c0d7244924fa482566c03c31534a1ee2cf90848daec30",
+      "blob": "e60d27ff5131131111a7ef77ee44b32880009b53",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/source-pins.json",
+      "bytes": 8033,
+      "sha256": "8727f9bcba9dfa3a01d7071db9824656a76ae013b4437ab75199b168dd9ed09f",
+      "blob": "8ad043d0e1dff17a00fbc2aac28cee923a98cc7a",
+      "kind": "own-document"
+    }
+  ],
+  "independentReview": "PENDING",
+  "priorReviewSource": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+    "blob": "cfd54796c005ba3970226c3345f50e8151644064",
+    "sha256": "f49ea335c4c8ccf34a0c6c9efc010aeefc60a56eae2fb3e9f3432b324ba4b5af",
+    "bytes": 29548,
+    "lines": 372,
+    "expects": 83,
+    "deadlineMs": 360000
+  },
+  "reviewFindingCorrection": {
+    "scope": "Two exact refusal pairs only",
+    "wrongProducer": "needs-input / invalid-dashboard-source-selector",
+    "wrongPeriod": "denied / source-unavailable",
+    "source": "dashboard sources c32c973 / capabilities e86b1ca / dispatch6ba1b02"
+  }
+}

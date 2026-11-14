@@ -1,0 +1,684 @@
+{
+  "schema": "wp12-historical-receipt-audit-v1",
+  "audit_observed_at": "2026-11-14T11:35:48.188799+00:00",
+  "status": "BOUNDED_SEARCH_COMPLETE_MISSING_HISTORICAL_EVIDENCE",
+  "product_execution": "NOT_RUN",
+  "remote_mutations": "NONE",
+  "source_edits": "NONE",
+  "worker_or_lease_reactivation": "NONE",
+  "sources": {
+    "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "handoff": "1480ed801d0961ba4448ef3cde0d2d75c9ef45a3",
+    "wp12_snapshot": "574841e2409a9523000c4c1976c81804c9a86fde",
+    "wp12_snapshot_tree": "4d86e00c574658b38f6c3659ab49445a6afce142"
+  },
+  "canonical_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "milestone_name_correction": "T+13 is AI-NATIVE (Finance native-probe); AI-CATALOG-PORT is T+25; AI-CATALOG aliases AI-FULL at T+42.",
+  "output_results": [
+    {
+      "output_id": "AI-NATIVE",
+      "ready_minute": 13,
+      "expected_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/ai-native.json",
+      "status": "HISTORICAL_RECEIPT_NOT_FOUND_IN_AUDITED_RECORDS",
+      "source_snapshot": "574841e2409a9523000c4c1976c81804c9a86fde",
+      "observed_receipt_directory_blob": "37f8876c1cdd7fa59a25c28e9b0f39cb8f027268",
+      "directory_files": [
+        "stop-handoff.json"
+      ],
+      "history_query_result": [],
+      "proof_limit": "No on-time publication or CONSUMED proof is inferred from later code/manifests or commit dates."
+    },
+    {
+      "output_id": "AI-CATALOG-PORT",
+      "ready_minute": 25,
+      "expected_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/ai-catalog.json",
+      "status": "HISTORICAL_RECEIPT_NOT_FOUND_IN_AUDITED_RECORDS",
+      "source_snapshot": "574841e2409a9523000c4c1976c81804c9a86fde",
+      "observed_receipt_directory_blob": "37f8876c1cdd7fa59a25c28e9b0f39cb8f027268",
+      "directory_files": [
+        "stop-handoff.json"
+      ],
+      "history_query_result": [],
+      "proof_limit": "No on-time publication or CONSUMED proof is inferred from later code/manifests or commit dates."
+    },
+    {
+      "output_id": "SKILLS-FINANCE-PORTFOLIO",
+      "ready_minute": 29,
+      "expected_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/skills-finance-portfolio.json",
+      "status": "HISTORICAL_RECEIPT_NOT_FOUND_IN_AUDITED_RECORDS",
+      "source_snapshot": "574841e2409a9523000c4c1976c81804c9a86fde",
+      "observed_receipt_directory_blob": "37f8876c1cdd7fa59a25c28e9b0f39cb8f027268",
+      "directory_files": [
+        "stop-handoff.json"
+      ],
+      "history_query_result": [],
+      "proof_limit": "No on-time publication or CONSUMED proof is inferred from later code/manifests or commit dates."
+    },
+    {
+      "output_id": "SKILLS-MAESTRO-REVIEWER",
+      "ready_minute": 38,
+      "expected_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/skills-maestro-reviewer.json",
+      "status": "HISTORICAL_RECEIPT_NOT_FOUND_IN_AUDITED_RECORDS",
+      "source_snapshot": "574841e2409a9523000c4c1976c81804c9a86fde",
+      "observed_receipt_directory_blob": "37f8876c1cdd7fa59a25c28e9b0f39cb8f027268",
+      "directory_files": [
+        "stop-handoff.json"
+      ],
+      "history_query_result": [],
+      "proof_limit": "No on-time publication or CONSUMED proof is inferred from later code/manifests or commit dates."
+    },
+    {
+      "output_id": "AI-FULL",
+      "ready_minute": 42,
+      "expected_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/handoffs/ai-full.json",
+      "status": "HISTORICAL_RECEIPT_NOT_FOUND_IN_AUDITED_RECORDS",
+      "source_snapshot": "574841e2409a9523000c4c1976c81804c9a86fde",
+      "observed_receipt_directory_blob": "37f8876c1cdd7fa59a25c28e9b0f39cb8f027268",
+      "directory_files": [
+        "stop-handoff.json"
+      ],
+      "history_query_result": [],
+      "proof_limit": "No on-time publication or CONSUMED proof is inferred from later code/manifests or commit dates."
+    }
+  ],
+  "source_results": [
+    {
+      "skill_id": "sf-explicar-forecast",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T01",
+      "writer": "S1",
+      "writer_session": "S1",
+      "branch": "sf2-skills-finance",
+      "active_windows": [
+        [
+          10,
+          13
+        ]
+      ],
+      "exclusive_lease_until": 29,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": 13,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "TRANSFER_RECEIPT_NOT_FOUND_IN_AUDITED_RECORDS",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-comparar-cenarios",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S1",
+      "writer_session": "S1",
+      "branch": "sf2-skills-finance",
+      "active_windows": [
+        [
+          16,
+          29
+        ]
+      ],
+      "exclusive_lease_until": 29,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "TRANSFER_RECEIPT_NOT_FOUND_IN_AUDITED_RECORDS",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-avaliar-sensibilidade",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-avaliar-sensibilidade/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S1",
+      "writer_session": "S1",
+      "branch": "sf2-skills-finance",
+      "active_windows": [
+        [
+          16,
+          29
+        ]
+      ],
+      "exclusive_lease_until": 29,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "TRANSFER_RECEIPT_NOT_FOUND_IN_AUDITED_RECORDS",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-revisar-dependencias",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-dependencias/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S1",
+      "writer_session": "S1",
+      "branch": "sf2-skills-finance",
+      "active_windows": [
+        [
+          16,
+          29
+        ]
+      ],
+      "exclusive_lease_until": 29,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "TRANSFER_RECEIPT_NOT_FOUND_IN_AUDITED_RECORDS",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-compor-portfolio",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S1",
+      "writer_session": "S1",
+      "branch": "sf2-skills-finance",
+      "active_windows": [
+        [
+          16,
+          29
+        ]
+      ],
+      "exclusive_lease_until": 29,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "TRANSFER_RECEIPT_NOT_FOUND_IN_AUDITED_RECORDS",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-reavaliar-compromissos",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-reavaliar-compromissos/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S1",
+      "writer_session": "S1",
+      "branch": "sf2-skills-finance",
+      "active_windows": [
+        [
+          16,
+          29
+        ]
+      ],
+      "exclusive_lease_until": 29,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "TRANSFER_RECEIPT_NOT_FOUND_IN_AUDITED_RECORDS",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-enquadrar-decisao",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S3",
+      "writer_session": "S3",
+      "branch": "sf2-skills-maestro",
+      "active_windows": [
+        [
+          23,
+          38
+        ]
+      ],
+      "exclusive_lease_until": 38,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "TRANSFER_RECEIPT_NOT_FOUND_IN_AUDITED_RECORDS",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-preparar-revisao-executiva",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S3",
+      "writer_session": "S3",
+      "branch": "sf2-skills-maestro",
+      "active_windows": [
+        [
+          23,
+          38
+        ]
+      ],
+      "exclusive_lease_until": 38,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "TRANSFER_RECEIPT_NOT_FOUND_IN_AUDITED_RECORDS",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-coordenar-perguntas",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S3",
+      "writer_session": "S3",
+      "branch": "sf2-skills-maestro",
+      "active_windows": [
+        [
+          23,
+          38
+        ]
+      ],
+      "exclusive_lease_until": 38,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "TRANSFER_RECEIPT_NOT_FOUND_IN_AUDITED_RECORDS",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-contestar-decisao",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-contestar-decisao/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S3",
+      "writer_session": "S3",
+      "branch": "sf2-skills-maestro",
+      "active_windows": [
+        [
+          23,
+          38
+        ]
+      ],
+      "exclusive_lease_until": 38,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "TRANSFER_RECEIPT_NOT_FOUND_IN_AUDITED_RECORDS",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-revisar-evidencias",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-evidencias/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S3",
+      "writer_session": "S3",
+      "branch": "sf2-skills-maestro",
+      "active_windows": [
+        [
+          23,
+          38
+        ]
+      ],
+      "exclusive_lease_until": 38,
+      "handoff_to": "S4-B",
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "TRANSFER_RECEIPT_NOT_FOUND_IN_AUDITED_RECORDS",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-comparar-sourcing",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-sourcing/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S4-B",
+      "writer_session": "S4",
+      "branch": "sf2-ai",
+      "active_windows": [
+        [
+          25,
+          42
+        ]
+      ],
+      "exclusive_lease_until": 120,
+      "handoff_to": null,
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "PLAN_DIRECT_WRITER_NO_DELEGATED_TRANSFER_REQUIRED",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-revisar-condicoes-contratuais",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-condicoes-contratuais/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S4-B",
+      "writer_session": "S4",
+      "branch": "sf2-ai",
+      "active_windows": [
+        [
+          25,
+          42
+        ]
+      ],
+      "exclusive_lease_until": 120,
+      "handoff_to": null,
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "PLAN_DIRECT_WRITER_NO_DELEGATED_TRANSFER_REQUIRED",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-preparar-compra",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-compra/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S4-B",
+      "writer_session": "S4",
+      "branch": "sf2-ai",
+      "active_windows": [
+        [
+          25,
+          42
+        ]
+      ],
+      "exclusive_lease_until": 120,
+      "handoff_to": null,
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "PLAN_DIRECT_WRITER_NO_DELEGATED_TRANSFER_REQUIRED",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-extrair-evidencias",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-extrair-evidencias/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S4-B",
+      "writer_session": "S4",
+      "branch": "sf2-ai",
+      "active_windows": [
+        [
+          25,
+          42
+        ]
+      ],
+      "exclusive_lease_until": 120,
+      "handoff_to": null,
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "PLAN_DIRECT_WRITER_NO_DELEGATED_TRANSFER_REQUIRED",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-produzir-bi-contextual",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-bi-contextual/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S4-B",
+      "writer_session": "S4",
+      "branch": "sf2-ai",
+      "active_windows": [
+        [
+          25,
+          42
+        ]
+      ],
+      "exclusive_lease_until": 120,
+      "handoff_to": null,
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "PLAN_DIRECT_WRITER_NO_DELEGATED_TRANSFER_REQUIRED",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-produzir-material-reuniao",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-material-reuniao/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S4-B",
+      "writer_session": "S4",
+      "branch": "sf2-ai",
+      "active_windows": [
+        [
+          25,
+          42
+        ]
+      ],
+      "exclusive_lease_until": 120,
+      "handoff_to": null,
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "PLAN_DIRECT_WRITER_NO_DELEGATED_TRANSFER_REQUIRED",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    },
+    {
+      "skill_id": "sf-consultar-memoria-decisoria",
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-consultar-memoria-decisoria/SKILL.md",
+      "logical_owner": "WP12",
+      "owner_task": "WP12.T02",
+      "writer": "S4-B",
+      "writer_session": "S4",
+      "branch": "sf2-ai",
+      "active_windows": [
+        [
+          25,
+          42
+        ]
+      ],
+      "exclusive_lease_until": 120,
+      "handoff_to": null,
+      "handoff_rule": "Anterior fecha lease no SHA exato; S4-B acusa recebimento antes de qualquer edição futura. Ler e empacotar fonte publicada não transfere autoria nem autoriza edição simultânea.",
+      "early_output_minute": null,
+      "actual_closure_receipt": null,
+      "actual_acceptance_receipt": null,
+      "status": "PLAN_DIRECT_WRITER_NO_DELEGATED_TRANSFER_REQUIRED",
+      "limitation": "Planned lease/allocation is not a record of actual exclusive writing, source commit receipt or timely completion."
+    }
+  ],
+  "found_other_leases": [
+    {
+      "source_commit": "1480ed801d0961ba4448ef3cde0d2d75c9ef45a3",
+      "source_blob": "e34ae1d99ab4d713012e88da1420639753ec7d86",
+      "record": {
+        "event_id": "wp12-cli-verifiers-e4",
+        "target_actor": "S4-B",
+        "lease_epoch": 4,
+        "new_paths": [
+          "apps/cli/src/sucafina-product/analysis-verifier-intent.ts",
+          "apps/cli/src/sucafina-product/analysis-verifier-review.ts",
+          "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+          "apps/cli/src/sucafina-product/analysis-verifier-memory.ts",
+          "apps/cli/src/sucafina-product/analysis-verifier-collaboration.ts",
+          "apps/cli/src/sucafina-product/analysis-verifier-bi.ts",
+          "apps/cli/src/sucafina-product/analysis-verifier-routines.ts"
+        ],
+        "excluded": [
+          "analysis-verifier.ts",
+          "host-context.ts",
+          "native-execution.ts",
+          "native-host.ts",
+          "analysis-verifier-scenarios.ts",
+          "analysis-verifier-procurement.ts"
+        ],
+        "at": "2026-11-13T18:21:33.367573+00:00"
+      },
+      "supports": "historical scoped verifier/fixture writing authority",
+      "does_not_support": [
+        "SKILL.md source transfer closure/acceptance",
+        "AI-NATIVE/AI-CATALOG-PORT/AI-FULL delivery or deadlines",
+        "current writer authority after stop revocation"
+      ]
+    },
+    {
+      "source_commit": "1480ed801d0961ba4448ef3cde0d2d75c9ef45a3",
+      "source_blob": "94bb307086e4803bddd91bc73566831b3d6f1d15",
+      "record": {
+        "event_id": "wp12-portfolio-sensitivity-e5",
+        "target_actor": "S4-B",
+        "lease_epoch": 5,
+        "new_paths": [
+          "apps/cli/src/sucafina-product/analysis-verifier-portfolio.ts",
+          "apps/cli/src/sucafina-product/analysis-verifier-sensitivity.ts"
+        ],
+        "excluded": [
+          "analysis-verifier.ts",
+          "host-context.ts",
+          "native-execution.ts",
+          "native-host.ts",
+          "analysis-verifier-scenarios.ts",
+          "analysis-verifier-procurement.ts"
+        ],
+        "source": "S0 approval; S0-B confirmed no writer",
+        "at": "2026-11-13T18:35:25.719749+00:00"
+      },
+      "supports": "historical scoped verifier/fixture writing authority",
+      "does_not_support": [
+        "SKILL.md source transfer closure/acceptance",
+        "AI-NATIVE/AI-CATALOG-PORT/AI-FULL delivery or deadlines",
+        "current writer authority after stop revocation"
+      ]
+    },
+    {
+      "source_commit": "1480ed801d0961ba4448ef3cde0d2d75c9ef45a3",
+      "source_blob": "88d307da28234f749f1162b1bcfe90fc1460d99a",
+      "record": {
+        "event_id": "wp12-verifier-extension-e5-root-confirmed",
+        "source_authority": "S0 explicit approval in current thread",
+        "target_actor": "S4-B",
+        "lease_epoch": 5,
+        "paths": [
+          "apps/cli/src/sucafina-product/analysis-verifier-portfolio.ts",
+          "apps/cli/src/sucafina-product/analysis-verifier-sensitivity.ts"
+        ],
+        "authority": "SOLEwriter; S0-B excluded until accepted source handoff",
+        "at": "2026-11-13T18:41:30.892373+00:00"
+      },
+      "supports": "historical scoped verifier/fixture writing authority",
+      "does_not_support": [
+        "SKILL.md source transfer closure/acceptance",
+        "AI-NATIVE/AI-CATALOG-PORT/AI-FULL delivery or deadlines",
+        "current writer authority after stop revocation"
+      ]
+    },
+    {
+      "source_commit": "1480ed801d0961ba4448ef3cde0d2d75c9ef45a3",
+      "source_blob": "2a51185af24753e363f9bbf25b92629323aa32b3",
+      "record": {
+        "event_id": "wp10-fixtures-transfer-e7",
+        "at": "2026-11-13T17:39:02.488969+00:00",
+        "source_actor": "S4-B",
+        "source_status": "native idle confirmed",
+        "target_actor": "S0-B",
+        "lease_epoch": 7,
+        "write_paths": [
+          "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts"
+        ],
+        "reason": "Update new-admission intentDigest fixtures and explicit legacy fail-closed cases, no other WP12 source authority"
+      },
+      "supports": "historical scoped verifier/fixture writing authority",
+      "does_not_support": [
+        "SKILL.md source transfer closure/acceptance",
+        "AI-NATIVE/AI-CATALOG-PORT/AI-FULL delivery or deadlines",
+        "current writer authority after stop revocation"
+      ]
+    }
+  ],
+  "historical_stop": {
+    "source_commit": "1480ed801d0961ba4448ef3cde0d2d75c9ef45a3",
+    "source_blob": "51e633e896d7fd45b77838a146f50d9181bb021b",
+    "at": "2026-11-13T20:42:14.934674+00:00",
+    "T0": "2026-11-13T04:01:10Z",
+    "state": "PAUSED_BY_USER_STOPPED_INCOMPLETE",
+    "all_writer_authorities": "REVOKED",
+    "automatic_resume": false
+  },
+  "historical_wp12": {
+    "source_commit": "1480ed801d0961ba4448ef3cde0d2d75c9ef45a3",
+    "source_blob": "9c9b9a87cbfd20741c92063eaa0c9768457c0633",
+    "status": "STOPPED_INCOMPLETE",
+    "tasks": {
+      "T01": "partial",
+      "T02": "partial",
+      "T03": "partial",
+      "T04": "partial; latest interrupted lifecycle edits saved without review"
+    },
+    "validations": {
+      "hosted_tests": "NOT_RUN",
+      "typecheck": "NOT_RUN",
+      "guardrails": "NOT_RUN",
+      "real_provider_and_18_skill_runs": "NOT_RUN",
+      "relay_body_consumption": "NOT_RUN"
+    },
+    "recorded_at": "2026-11-13T20:31:06.914715+00:00"
+  },
+  "remote_branch_observations": {
+    "sf2-ai": "404 branch not found at audit time",
+    "sf2-skills-finance": "404 branch not found at audit time",
+    "sf2-skills-maestro": "404 branch not found at audit time",
+    "limit": "Current 404s do not prove past nonexistence, deletion time, or contents of unpublished local histories."
+  },
+  "search_scope": [
+    "Immutable handoff WP12.json, README.md, STOP-STATE.json and operational directory listings",
+    "All WP12-named leases and lease-transfers-wave1.json in immutable handoff",
+    "Immutable operational accepted-inputs/shared.json and TASK-OWNERSHIP-v3.json",
+    "Immutable control/checkpoint.json and retained rev20/rev21 snapshots",
+    "Immutable control/operational-allocation.json, all 18 S4-B skill lease definitions compared with canonical plan",
+    "Published WP12 snapshot docs/sf2h/receipts/WP12 listing and stop-handoff.json",
+    "GitHub commit-history query bounded to published WP12 snapshot and canonical handoffs directory",
+    "Read-only current branch existence probes for three canonical source branch names"
+  ],
+  "search_limits": [
+    "Not an exhaustive search of every repository commit, pull-request discussion, local unpublished checkout, private transcript or external archive.",
+    "Handoff explicitly says local commit ancestry was not published as the same Git objects; those unpublished histories were not available in this audit.",
+    "No inference that a source transfer violated ownership; only the required historical proof was not located.",
+    "The planned 18-source table contains 11 delegated sources requiring transfer to S4-B and 7 direct S4-B sources with no planned handoff_to.",
+    "Later product correctness and presently verified manifest hashes cannot retroactively establish T+13/T+25/T+42 or historical lease closure/acceptance.",
+    "Do not amend the approved plan or create backdated closure/acceptance fields to fill these gaps."
+  ],
+  "needed_to_resolve": [
+    "An immutable contemporaneous OUTPUT_READY/CONSUMED receipt identifying exact producer and consumer commits, hashes, event identity and observed behavior for each missing handoff.",
+    "For the 11 delegated sources, actual transfer records containing the canonical received_sha, previous_writer/new_writer, source_branch, last_write_at, lease_closed_at and lease_accepted_at plus path_set_hash, owner, tasks and proof_owner.",
+    "If held only in original local/session archives, S0 must recover and publish those original records with explicit provenance; a newly written summary is a new observation, not a historical receipt."
+  ],
+  "fetched_record_count": 29,
+  "verified_remote_source_blobs": 15,
+  "remote_source_blob_mismatches": [],
+  "evidence_index": "historical-retrieval-index.json",
+  "canonical_extract": "historical-canonical-extract.json",
+  "related_criteria": [
+    "WP12.DOD.40",
+    "WP12.INV.40",
+    "WP12.T01.DOD.40",
+    "WP12.T02.CHK.41",
+    "WP12.T02.INV.40"
+  ],
+  "original_audit_references": {
+    "evidence_index": "fetch-index.json",
+    "canonical_extract": "canonical-extract.json",
+    "original_audit_directory": "resume-input/history-audit",
+    "scope": "Original scratch audit paths are metadata, not links to files included under those old names."
+  }
+}

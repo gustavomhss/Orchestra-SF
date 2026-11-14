@@ -1,0 +1,52 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp03/port-hr.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp03/port-hr.test.ts
+@@ -1,5 +1,6 @@
+ import { expect, test } from "bun:test"
+ import { object, rows } from "../../../runtime/contract.ts"
++import { domain } from "../../../runtime/planner.ts"
+ import { projectPlannerSource } from "../../../product/planner/port.ts"
+ import { plannerFixture, plannerPeriod, plannerSnapshot } from "./planner-fixture.ts"
+ 
+@@ -53,3 +54,42 @@
+     expect((await fixture.readSnapshot()).data).toEqual(snapshot.data)
+   } finally { await fixture.close() }
+ })
++
++test("numeric explicit missing HR rate stays absent instead of selecting an automatic card", async () => {
++  const snapshot = plannerSnapshot()
++  const version = rows(snapshot.data.versions)[0]!
++  version.closed = 0
++  version.lines = []
++  version.hc = { positions: [{ id: "legacy-position", name: "Legacy position", include: true, fte: 1,
++    start: 1, end: 12, domain: "IT", type: "Employee", location: "Brazil", rateId: 999 }],
++    rates: [{ id: "auto-compatible", name: "Employee", locs: "Brazil", annual: 120000, cur: "USD" }], hrAF: {} }
++  const fixture = await plannerFixture(snapshot)
++  try {
++    const before = await fixture.readSnapshot()
++    for (const principal of ["finance", "viewer"]) {
++      const context = await fixture.admit("sf-human:planner.read", {}, principal, true)
++      const request = fixture.host.requestFor(context)
++      if (!request) throw new Error("The real UI admission has no current request")
++      const environment = await fixture.host.environment(request)
++      const observed = domain.view(before, { id: principal, roles: [principal], canWrite: principal === "finance" }, environment)
++      const current = rows(observed.data.versions).find((entry) => entry.id === "v0")!
++      expect(rows(object(current.summary).positions)[0]?.hasRate).toBe(false)
++      expect(rows(object(current.summary).lines).find((line) => line.id === "HR:IT")?.budget).toEqual(Array(12).fill(0))
++      const source = await fixture.issueSource("v0", context)
++      if (source.status !== "ok") throw new Error("The real issuer refused the readable legacy source")
++      const comparison = await fixture.planner.compareForecast({ baseRef: source.value.evidence.refId,
++        candidateRef: source.value.evidence.refId, period: plannerPeriod, currency: "USD" }, context)
++      if (comparison.status !== "ok") throw new Error("The real comparison did not return its qualified source")
++      const projection = comparison.value.baseline
++      expect(projection.values.find((value) => value.id === "HR:IT:1:budget-usd")).toMatchObject({ value: null, evidenceState: "absent" })
++      expect(projection.components.find((component) => component.id === "HR:IT:1")).toMatchObject({ amount: null, evidenceState: "absent" })
++      expect(projection.missing).toContainEqual({ field: "HR:IT:1:budget", reason: "missing-rate" })
++      expect(comparison.value.knownDifference).toBeNull()
++      if (principal === "viewer") {
++        const publicSource = projectPlannerSource(before, { id: principal, roles: [principal], canWrite: false }, "v0")!
++        for (const hidden of ['"rateId"', '"rates"', '"annualCost"', '"rateOverride"']) expect(JSON.stringify(publicSource)).not.toContain(hidden)
++      }
++    }
++    expect(await fixture.readSnapshot()).toEqual(before)
++  } finally { await fixture.close() }
++}, 60000)

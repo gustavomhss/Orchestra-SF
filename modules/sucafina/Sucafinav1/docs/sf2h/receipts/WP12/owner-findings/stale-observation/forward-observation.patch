@@ -1,0 +1,6 @@
+*** Begin Patch
+*** Update File: apps/cli/src/sucafina-product/analysis-stale-commit.ts
+@@
+-        markStale: (runRef, reason, call) => prepare(runRef, call, undefined, undefined, () => store.markStale(runRef, reason, call)),
++        markStale: (runRef, reason, call, observation) => prepare(runRef, call, undefined, undefined, () => store.markStale(runRef, reason, call, observation)),
+*** End Patch

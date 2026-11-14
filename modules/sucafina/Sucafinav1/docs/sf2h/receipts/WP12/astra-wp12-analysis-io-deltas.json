@@ -1,0 +1,96 @@
+{
+  "schema": "sf-owner-delta-v1",
+  "owner": "WP12",
+  "source_repository": "gustavomhss/Orchestra-SF",
+  "input_pins": {
+    "wp12_checkpoint": "574841e2409a9523000c4c1976c81804c9a86fde",
+    "wp12_continuation": "2fb7e9c792327725384d99d656cc44b232ddc485",
+    "wp10_composition": "5866bcb2ed610f80138aaabc261acac4acf709cd"
+  },
+  "implemented_changes": [
+    {
+      "paths": ["modules/sucafina/Sucafinav1/product/ai/analysis-port.ts"],
+      "change": "Retain the narrowed non-executing outcome across the host callback and declare the progress read result with an optional ready envelope. Explicitly reject a non-ready envelope from the ready-result path.",
+      "prior_evidence": {"run_id": 43577846910, "job_id": 132395914997, "owner_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/wp12-ff7a997-typecheck.patch"},
+      "validation": "NOT_RUN_ON_THIS_CANDIDATE"
+    },
+    {
+      "paths": ["modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts", "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts"],
+      "change": "A native caller must be bound to the currently selected case, incarnation and version before historical source verification. Current ACL, two source verifications and persisted original output digests remain mandatory. The regression extends the real SQLite reopen test with three mismatches and a same-case positive control.",
+      "validation": "NOT_RUN_ON_THIS_CANDIDATE",
+      "limit": "The test's authority callback is injected; this is not a native provider execution or AM01 proof."
+    },
+    {
+      "paths": ["modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts", "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts"],
+      "change": "Replace incomplete case casts with complete DecisionCase values in both reader fixtures.",
+      "prior_evidence": {"run_id": 43578750317, "job_id": 132398715843, "diagnostics": ["test/product/wp12/author-reader.test.ts(32,26) TS2352", "test/product/wp12/historical-reader.test.ts(35,28) TS2352"]},
+      "validation": "NOT_RUN_ON_THIS_CANDIDATE"
+    },
+    {
+      "paths": ["modules/sucafina/Sucafinav1/product/ai/run-store.ts", "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts"],
+      "change": "Pin mutation inputs before asynchronous preflight and use the same digest for C08 command identity. Reject a verifier that mutates run, output or captured alternative; preserve the existing snapshot immutability check. Validate read/egress values against the same immutable inputs.",
+      "regressions": ["Preflight cannot rewrite the stored run or an uncommitted admission.", "Commit verifier cannot replace the output after its provenance/schema validation.", "A real SQLite/C08 cancellation committed during publication preflight wins the version race; no contribution is stored and replay cannot publish the cancelled run."],
+      "ci_followup": {"run_id": 43580201805, "job_id": 132403088780, "candidate_sha": "378e17c0ba8c1f87c51a1957f9efd5e47711851f", "finding": "Cancellation and publication both target the run:run:4 idempotency key. C08 legitimately reports conflict/idempotency-content-changed before checking storage versions. W3 fixes the exact expected reason, retaining the strict conflict status and durable cancelled/no-output/late-failure assertions. The W2 assertion failure did not reach those subsequent assertions; W3 must run them."},
+      "validation": "NOT_RUN_ON_THIS_CANDIDATE",
+      "limit": "Uses real C08 and SQLite with injected authorization/verification callbacks. It does not claim native provider execution."
+    },
+    {
+      "paths": ["modules/sucafina/Sucafinav1/product/ai/analysis-port.ts", "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts"],
+      "change": "Forward the independent review target when cancelling a review run. Host revalidation continues comparing it with the stored target; altered targets remain denied. The run orchestrator forwards its target when processing a native cancelled outcome.",
+      "regression": "Real C08/SQLite review run refuses another author target, then persists cancellation for the matching target. The unattached native interrupt returns unavailable explicitly; it is not simulated as successful.",
+      "validation": "NOT_RUN_ON_THIS_CANDIDATE"
+    },
+    {
+      "paths": ["modules/sucafina/Sucafinav1/product/ai/analysis-port.ts", "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts", "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts"],
+      "change": "After native collection, persist final publication failures and unavailable/needs-input outcomes under a fresh authority scope. Return denied, conflict and already-handled stale outcomes unchanged. Existing store CAS and legal-transition checks remain mandatory; concurrent ready/cancelled results cannot be overwritten.",
+      "regressions": ["The existing orchestration harness records failure settlement for a bad digest and unavailable/needs-input settlement from the publication writer while denied/conflict trigger neither.", "Real SQLite/C08 refuses late failure after cancellation and refuses late failure or unavailable settlement after ready publication, preserving the original output."],
+      "validation": "NOT_RUN_ON_THIS_CANDIDATE",
+      "limit": "The orchestration harness is explicitly injected. Durable terminal-state checks use real C08/SQLite; neither claims provider execution."
+    },
+    {
+      "paths": ["modules/sucafina/Sucafinav1/product/ai/run-store.ts", "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts"],
+      "change": "Pin run/output/alternative mutation inputs on entry, before requestFor and the first asynchronous authority check. Reject caller changes made while authorization is pending, retaining all existing preflight and commit digest guards. Recheck immutable inputs after the final authorization await in both read and mutate before returning their values.",
+      "regressions": ["A real C08/SQLite publication pauses at mutation authorization after run/output matching. The caller replaces actualModel and recalculates the output digest. Publication is denied and neither the running run nor the output namespace is changed.", "A preflight retains a real C08 read result and changes its objective during the final authorization wait. The reader returns denied and the persisted objective/version remain original."],
+      "validation": "NOT_RUN_ON_THIS_CANDIDATE",
+      "limit": "The authority callback supplies a controlled wait; this exercises the real durable store and does not claim native provider execution."
+    }
+  ],
+  "consumer_review": {
+    "source_pin": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+    "paths": ["apps/cli/src/sucafina-product/host-context.ts", "apps/cli/src/sucafina-product/native-execution.ts"],
+    "finding": "Interactive host cancellation uses nativeExecution.cancelRun and cancelAdmitted/readForCancellation; it does not call cancelSfAnalysis. It reads the persisted run and checks the exact native session and skill receipt before the terminal C08 transition. No host callsite adaptation is needed for the new optional reviewTarget argument in the WP12 helper at this pin. The orchestration call to that helper now forwards its target.",
+    "validation": "SOURCE_REVIEW_ONLY"
+  },
+  "external_deltas": [
+    {
+      "id": "WP12-STALE-HOST-01",
+      "owner": "WP10",
+      "status": "SOURCE_REVIEW_REQUIRES_HOST_FIX_AND_PROOF",
+      "source_pin": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "source_path": "apps/cli/src/sucafina-product/host-context.ts",
+      "functions": ["withRunContext", "createSfRunStore preflight", "createSfRunStore revalidateForCommit"],
+      "finding": "The active host scopes withRunContext to baseRequest.caseRef. Its commit validator permits a special terminal branch only for cancelled; stale still requires the previously captured source fences. createSfRunStore deliberately skips ordinary source preflight for stale transitions. When a source changes during inference, markStale or preserveStale reaches the old-fence check and cannot commit the terminal state. A case-version change can additionally fail the exact-case scope before the terminal callback runs. Source preflight returning unavailable/needs-input also blocks host.settle because store.read and the transition repeat that preflight. W2/W3 settle final publication outcomes only when the existing host can authorize them; source-unavailable runs can therefore remain running pending this host-owned terminal path.",
+      "required_delta": "Provide a host-owned fresh-authority terminal path which checks the current principal and case incarnation/participant membership, accepts only legal forward case versions and the exact prior run/session/receipt, and can atomically settle stale/unavailable/needs-input without pretending the original inputs are current. Historical output retention additionally requires current source access; it must not authorize a fresh domain effect or reuse an expired native grant. Keep normal publication on the exact current-source fence. Do not bypass source or ACL guards in the ordinary store to conceal terminal-path unavailability.",
+      "required_proof": [
+        "Real host admission and native wait; change a material Planner source; old result does not become current and the stored run becomes stale.",
+        "Advance the case version during inference; retain original caseRef and output provenance only when current access permits it.",
+        "Revoke source/case access before terminal handling; no restricted result is returned or newly made readable.",
+        "Reopen storage; stale progress is available to a freshly authenticated permitted reader; the old execution ticket cannot resume.",
+        "A required source becomes unavailable or requires input after native collection; persist the explicit terminal reason under fresh case/principal authority without storing an unverified output or returning source data."
+      ],
+      "criterion_ids": ["WP12.T04.CHK.01", "WP12.T04.CHK.10", "WP12.T04.DOD.10", "WP12.T04.CMP.01", "WP12.T04.CMP.10"],
+      "proof_status": "NOT_RUN"
+    },
+    {
+      "id": "WP12-STALE-ALTERNATIVE-02",
+      "owners": ["WP10", "WP11", "WP12"],
+      "status": "SAFE_REFUSAL_PRESERVED_PENDING_COMPOSED_HISTORY_CONTRACT",
+      "source_paths": ["modules/sucafina/Sucafinav1/product/ai/run-store.ts", "modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts", "apps/cli/src/sucafina-product/alternative-captures.ts"],
+      "finding": "preserveStale explicitly refuses AlternativeDraft, whereas current publication requires an exact private C16 capture persisted atomically with the output. Removing that check alone would store an alternative whose provenance and replay requirements are unproved.",
+      "required_delta": "Agree and implement a read-only historical alternative path that preserves the original verified capture and output identity while revalidating current source access. It must never promote a stale alternative or reconstruct its capture from model fields. Consume the host/decision owners' published path before expanding WP12 stale retention.",
+      "required_proof": ["Alter the case/source after a real sf_alternative_draft call; current publication is refused, historical retention is either verified and readable under current ACL or explicitly unavailable.", "Historical replay cannot apply, approve or silently replace the current alternative; revoked access blocks all historical payloads."],
+      "proof_status": "NOT_RUN"
+    }
+  ],
+  "publication_policy": "This receipt is source review and implementation provenance, not acceptance. Root must bind hosted runs and actual candidate SHAs separately. No local product tests or external branch writes were performed by this reviewer."
+}

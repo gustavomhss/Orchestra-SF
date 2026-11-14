@@ -1,0 +1,73 @@
+{
+  "schema": "wp12-minimal-owner-intake-proposal-v1",
+  "status": "NOT_APPLIED_NOT_RUN",
+  "source": {
+    "pr": 29,
+    "head": "4bc9c7220f04f113609393aaba38934a7e69878b"
+  },
+  "resolveMany": {
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+        "before": "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b",
+        "after": "fca509789efd2bf1b7d9453d09a3a460ee778feb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "before": "d3098aa94cdeee71193c94ae906f6fafd14bda9b",
+        "after": "1782c2094239c3712d3a895a6a25f4160fb429c7"
+      }
+    ],
+    "runtimeDependencyClosure": "Two mutually compatible published blobs. The optional resolveMany interface and its helper are exported by scenario-comparison-port; stored-scenarios consumes that type. Other imports already exist. No host, authority, case-port or contract replacement is required for this pair.",
+    "preserves": [
+      "each result is authenticated and reread, including repeated references",
+      "initial and final case observations are distinct maps",
+      "case grouping includes id, incarnation and producer version",
+      "fresh cloned result per output and comparison phase",
+      "legacy resolve fallback and a new batch for each later phase"
+    ],
+    "benefitBoundary": "Only sibling results with identical stored.caseRef can share a case observation within one phase.",
+    "actualMissionLimit": {
+      "producer": "product/decisions/mutations.ts@e0840d775274ea73c6b938711764c69593dadca0",
+      "lines": [
+        253,
+        254,
+        267,
+        272
+      ],
+      "fact": "saveCase increments case.version and stores each scenario with that new caseRef. The own helper performs three sequential promotions; the stored producer versions are 2, 3 and 4.",
+      "consequence": "The baseline/pending and baseline/complete pairs have different group keys. This pair alone does not eliminate their per-case observations and is not proposed as a demonstrated latency fix."
+    },
+    "recommendation": "DO_NOT_CONSUME_AS_THE_FIX_FOR_THIS_FAILURE. Keep as a bounded published candidate for independent review and separate measured applicability."
+  },
+  "selfComparison": {
+    "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+    "before": "3a9eaaa0f52c22f68f6e889af66b970fb51197b9",
+    "after": "8389709232225424b5905638d0951d8cdbb71dd7",
+    "status": "PUBLISHED_RELEVANT_CANDIDATE_CLOSURE_NOT_COMPLETED_NOT_CONSUMED_NOT_RUN",
+    "relevance": "Stored scenario resolution compares the selected Planner source with itself. Published readPair observes an identical source only once per phase, with fresh later phases; the same-source projection is also produced once per read.",
+    "limit": "The complete published blob also changes financial projection/admission behavior, adds headcount-months/actual-presence dependencies and a scenario qualifier. It must not be installed as a one-file performance patch or copied partially into foreign source without the owner's exact compatible composition and review. No timing improvement is inferred."
+  },
+  "unchangedCritical": {
+    "analysisHttp": "06522fa4a2eaa0841af8aabead799d9d56a8ada7",
+    "analysisServices": "900f199800b683503267b011af2c255be841a3a1",
+    "scenarioLookup": "40c78dee5908cd8af58cc3d58435f3cfb4542045",
+    "casePort": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322"
+  },
+  "otherInspected": {
+    "analysisInputs": "47681b3ec907c33073755342817bcd288e951e89 only adds the exported producer type; scenario preparation body unchanged",
+    "analysisHostServices": "6b5f44ef8eb4d969cfc43fbbad4d0f2e923d5c1b adds Memory observation composition, not a scenario input observation",
+    "businessServices": "da80511814c86214a963fc721fda4a3a891df147 includes published Memory/Work/source-fence changes; no measured performance result is assigned to them here",
+    "hostContext": "bdf6d4e2014cc9b2a492b6ae304948c249221e39 remains outside this proposal and subject to the separate AI/stale/C07 composition hold"
+  },
+  "requiredValidation": [
+    "exact request/case/source/result digest preservation through every await",
+    "expired/revoked/aborted or identity-changed admissions remain denied",
+    "fresh later observations detect changed source, case or stored result",
+    "different producer versions remain independent and valid",
+    "same fixture and unchanged deadline in a newly changed surgical Actions composition; no equivalent rerun for the latent UI patch alone"
+  ],
+  "testsExecuted": false,
+  "typecheckExecuted": false,
+  "foreignFilesApplied": 0
+}

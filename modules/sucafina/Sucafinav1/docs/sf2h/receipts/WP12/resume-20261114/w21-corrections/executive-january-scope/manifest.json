@@ -1,0 +1,251 @@
+{
+  "schema": "wp12-executive-january-scope-increment-v1",
+  "status": "FROZEN_REVIEWED_FOR_PARENT_PUBLICATION",
+  "owner": "WP12",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+      "beforeBlob": "811b91fc94e73689518fff8092ff8d10dd59fa56",
+      "beforePublishedW16Blob": "1df012698094f318d5c745d73ffceaf56e0f9ee3",
+      "afterBlob": "fbac0c8e04cdab45ecf3be21810b48e57b102b83",
+      "sha256": "f131290842537426ad0ab24d9b13a80bf24c5224db57dbc38381fd238d04dce6",
+      "bytes": 33393
+    }
+  ],
+  "combinedPublication": "Publish this final file together with part1; combined-from-W16.diff includes ordering and January scope changes.",
+  "failureEvidence": {
+    "runId": 43602247803,
+    "log": "evidence/resume-11-bi-executive.log",
+    "logSha256": "bf4b2d19af97ce7f2acef4a99071afb9bb04104d707d6b636d20f77bb7ce3034",
+    "priorDiagnosis": "resume-input/own-missions/executive-preparation-order/terminal-diagnosis.json",
+    "productCommit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+    "ciSnapshot": "d43f1ca70ba2031bbfe56eeff824c3c7da228e0e",
+    "productTree": "f875b3a78ee8123c959bad5c7c5d4c9fb4f978df",
+    "ciSnapshotTree": "66b5739f7c96dc1608379ceb81e66a4835272a82",
+    "jobId": 132469301705
+  },
+  "changes": [
+    "Separate annual case horizon from the explicit January review period using existing public selection and preparation APIs.",
+    "Retain the two annual source lines with all twelve monthly entries unchanged; the real Planner selects January itself.",
+    "Require two sections with all 22 actual captured values each, 44 total, and every section, projection, component and value period in January.",
+    "Require the exact multiset of 44 captured-value first-table-cell occurrences (38 distinct IDs) in each actual DOCX/PPTX archive; refuse canonical monthly IDs for February–December.",
+    "Log selected-period completeness explicitly; preserve prior reorder, all refusals, fresh execution preparation, reload/currentInput/historical/download consumers."
+  ],
+  "countDerivation": {
+    "sourceLinesPerSide": 2,
+    "lineMeasuresPerMonth": [
+      "budget",
+      "actual",
+      "forecast",
+      "currency-declared",
+      "budget-usd",
+      "actual-usd",
+      "outlook-usd",
+      "variance-usd"
+    ],
+    "aggregateMeasuresPerMonth": [
+      "fte",
+      "hr-budget",
+      "budget",
+      "actual",
+      "outlook"
+    ],
+    "currencyRateValues": 1,
+    "formula": "(2 * 8 + 5) * 1 + 1",
+    "valuesPerSection": 22,
+    "sections": 2,
+    "totalValues": 44,
+    "oldAnnualValuesPerSection": 253,
+    "oldAnnualTotalValues": 506,
+    "nature": "Static arithmetic from published loops and the unchanged fixture; no product execution."
+  },
+  "sourceCommit": "f06e784ca574651680f07f566be11958e3844006",
+  "plan": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "pointers": [
+      "/resident_ai/skills/1",
+      "/resident_ai/skills/16",
+      "/resident_ui_consumption/skills/1",
+      "/resident_ui_consumption/skills/16",
+      "/work_packages/7/tasks/0/checks/2"
+    ],
+    "interpretation": "Executive and Meeting require authorized selection, its period and complete material. No annual requirement was found in these skills. WP07 specifically requires each section to retain its own competence."
+  },
+  "sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "gitBlob": "3a9eaaa0f52c22f68f6e889af66b970fb51197b9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/adapter.ts",
+      "gitBlob": "d6886477c1069a85221da673149ec8f67dd7666c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/source-issuer.ts",
+      "gitBlob": "ba5023491e7aa7e2591e25e4f17f06f4292c77d4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/selection.ts",
+      "gitBlob": "90e42fbf42c07b11d7a1546a3e828d2de5e970fd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+      "gitBlob": "1b93fd89a1f544808455c15d12f9c06cc18e21f3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "gitBlob": "c487332777d4053be7a2b177ea598efb77ca0d66"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/planner-accounts.ts",
+      "gitBlob": "6ca9b19e8b54e3279c2c16667e92ad7df748b3ea"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-executive.ts",
+      "gitBlob": "39cd47fda0547ad74f7c2193b3a11d8e0f112c65"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+      "gitBlob": "e57131cc3c5b03ca894d57437b22040cf69dd3db"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+      "gitBlob": "44e79b3009076e9fae595e79a8c72a8f3918f14b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+      "gitBlob": "b86ae1f0c012922610a9567a3ef6a4af1fd5e050"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/report-layout.ts",
+      "gitBlob": "ed6d3f5342d06fac2782ae4ae63c1158e6b1c2fb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/bi.ts",
+      "gitBlob": "4e2aa318ec7ee98fb0cb43c4c3d604f0e746c0f6"
+    }
+  ],
+  "validation": {
+    "syntax": "PASS node --check; no imports executed",
+    "sourceBlobsVerified": 13,
+    "preservation": {
+      "preserved": {
+        "rawAnnualFixture": true,
+        "missionRequest": true,
+        "hostPreparation": true,
+        "downloadsAndNativeConsumer": true,
+        "phaseRecorder": true
+      },
+      "previousExpectLines": 79,
+      "currentExpectLines": 95,
+      "preservedExpectLinesAfterPeriodRename": 79,
+      "deadlineMs": 420000,
+      "rawAnnualSourceLinesPerSide": 2,
+      "rawMonthsPerLine": 12,
+      "newSelectedValuesPerSection": 22,
+      "newSelectedValueCount": 44,
+      "productRun": false,
+      "typecheckRun": false,
+      "archiveOccurrenceProof": {
+        "actualTableFirstCellsOnly": true,
+        "selectedOccurrences": 44,
+        "distinctIds": 38,
+        "multisetMatchesActualCapturedIds": true,
+        "substringPrefixCannotReplaceFullId": true,
+        "bothFormats": true,
+        "executed": false
+      }
+    },
+    "localProductTests": false,
+    "localTypecheck": false,
+    "ciDispatched": false,
+    "independentReview": {
+      "status": "PASS_STATIC",
+      "reviewer": "/root/compose_typecheck",
+      "file": "independent-review-compose.json",
+      "sha256": "502fb75e540efbc06d0a495c9c5ddd0de4262ec5677a873eba13cf5293d05545",
+      "gitBlob": "45fcf143678c182ef99af12d33bd08b3392acbc9",
+      "bytes": 4237
+    }
+  },
+  "limits": [
+    "This is the complete explicit January selection, not a full annual material proof.",
+    "No corrected hosted run has executed this increment.",
+    "The observed annual full-state/read amplification remains an open product performance finding; this narrower legitimate mission is not a global product fix.",
+    "Actual provider availability, C07 admitted execution and native acceptance remain separate.",
+    "The exact occurrence check reads the ZIP XML tables for this short-value fixture. It has not yet run in GitHub Actions; no runtime archive acceptance is claimed."
+  ],
+  "acceptance": {
+    "hostedPassForIncrement": false,
+    "GNATIVE": false,
+    "fullWP12": false
+  },
+  "artifacts": {
+    "beforePart1": {
+      "path": "resume-input/own-missions/executive-january-scope/native-execution-executive.part1.ts",
+      "sha256": "44afda399441a661394a641d665be8c2e6d6d626503da162983bfb326469947a",
+      "gitBlob": "811b91fc94e73689518fff8092ff8d10dd59fa56",
+      "bytes": 30121
+    },
+    "part2Diff": {
+      "path": "resume-input/own-missions/executive-january-scope/increment.diff",
+      "sha256": "774ed017acf717e18a8669117862307476c56cc5c375a4ee73525227c510cd2e",
+      "gitBlob": "8a3b8020fe72ccc8eea62565dd236ec6a7e1926f",
+      "bytes": 11940
+    },
+    "combinedDiff": {
+      "path": "resume-input/own-missions/executive-january-scope/combined-from-W16.diff",
+      "sha256": "787447179128a1098e3e038b22496b6626ef5c63560dd74c4ed0706827d131db",
+      "gitBlob": "896a18ee6f404c5a5828dc6d6e4dc547817cf09f",
+      "bytes": 22333
+    },
+    "proposal": {
+      "path": "resume-input/own-missions/executive-january-scope/proposal.json",
+      "sha256": "eaceb34e375f905203751e5f2218afd39c695b31c763d404227eb27619626d7b",
+      "gitBlob": "b32566cc1234f25b9ce5548318927105bd1278df",
+      "bytes": 5147
+    },
+    "sourceBytes": {
+      "path": "resume-input/own-missions/executive-january-scope/source-bytes.json",
+      "sha256": "6dc213e3ca28c28536d6c7cda9f1aceedd62cb6ec7aa4dd1d9dab5a2322ac443",
+      "gitBlob": "33688657bec3fa8a0156bbbe29be0909481b68e8",
+      "bytes": 269851
+    },
+    "preservation": {
+      "path": "resume-input/own-missions/executive-january-scope/preservation-check.json",
+      "sha256": "ead7036cb7b428686b1c783663817d4e634a67f11cb28eabecdf54f47c6c0213",
+      "gitBlob": "f493b27995c58cf6a028b498cfe480f4e0fb614b",
+      "bytes": 753
+    },
+    "independentReview": {
+      "path": "resume-input/own-missions/executive-january-scope/independent-review-compose.json",
+      "sha256": "502fb75e540efbc06d0a495c9c5ddd0de4262ec5677a873eba13cf5293d05545",
+      "gitBlob": "45fcf143678c182ef99af12d33bd08b3392acbc9",
+      "bytes": 4237
+    }
+  },
+  "publicationFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+      "gitBlob": "fbac0c8e04cdab45ecf3be21810b48e57b102b83",
+      "sha256": "f131290842537426ad0ab24d9b13a80bf24c5224db57dbc38381fd238d04dce6",
+      "bytes": 33393,
+      "kind": "owned-code"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/review-export-read-amplification/finding.json",
+      "gitBlob": "6fda0a38ea3eaa05333d1e88a3a3bb26cfbbe9a4",
+      "sha256": "46a7988f633c0e970d0094151fbc7d3d65c4da34ce57f8ff47e0b474d4752d3c",
+      "bytes": 7620,
+      "kind": "owned-finding"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/review-export-read-amplification/source-pins.json",
+      "gitBlob": "7c07160f15df5b73dfc6b344ef308c91dbc99e37",
+      "sha256": "ddeab4df4cb0e689a2d5c31e048894ae74f2fefde9fa3904440c7f621f1152b4",
+      "bytes": 6101,
+      "kind": "owned-finding"
+    }
+  ]
+}

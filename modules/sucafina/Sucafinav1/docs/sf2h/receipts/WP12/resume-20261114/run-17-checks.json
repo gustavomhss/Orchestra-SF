@@ -1,0 +1,104 @@
+{
+  "schema": "sf-wp12-exact-hosted-check-result-v1",
+  "phase": "resume-17",
+  "product": {
+    "sha": "5c148a16b76f98dfe194823c0e10ed2ef7685a69",
+    "tree": "42bc4bbb0662ad74a4974a4e6165274f50cc32fa"
+  },
+  "check": {
+    "snapshot": "7e07631d6cb5ce3ba6896653dcc56b43ce7f4f93",
+    "tree": "3f3a632498d4db7f0324f8356f384281ccea1f23",
+    "directParent": "5c148a16b76f98dfe194823c0e10ed2ef7685a69",
+    "onlyEnvelopePath": ".astra-wp12-check.json",
+    "branch": "astra-check-wp12",
+    "runId": 43609369186,
+    "jobId": 132490822394,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43609369186",
+    "status": "completed",
+    "conclusion": "failure",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "envelope": {
+      "sha256": "40cd49e3764b62b2ddea8b099836eba291577ed395f88d734e99b001d58f6aa9",
+      "blob": "0a61951e81a6cadfe88e8021e476b3c39bfc2364",
+      "candidateShaOmitted": true
+    },
+    "typecheck": {
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "status": "failure",
+      "exitCode": 2,
+      "ownDiagnostics": 3,
+      "foreignDiagnostics": 0,
+      "diagnostics": [
+        "2026-11-14T15:18:59.3192302Z ##[error]test/product/wp12/native-execution-question-handoff.test.ts(240,50): error TS2769: No overload matches this call.",
+        "2026-11-14T15:18:59.3203105Z ##[error]test/product/wp12/native-execution-scenarios-review.test.ts(69,42): error TS2769: No overload matches this call.",
+        "2026-11-14T15:18:59.3206316Z ##[error]test/product/wp12/native-procurement-preparation.ts(186,193): error TS2769: No overload matches this call."
+      ]
+    },
+    "spawnImports": {
+      "command": "bun run check:spawn-imports",
+      "status": "success",
+      "filesChecked": 4618,
+      "allowListedSites": 66
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "status": "success",
+      "rules": 78,
+      "changedPaths": 1034,
+      "gate": 0,
+      "warn": 15,
+      "errors": 0
+    }
+  },
+  "log": {
+    "bytes": 66358,
+    "sha256": "d0611cbc573393cc3d7762c40ef392bb60cf39224148d72f1e3bce1b7cf9c1d1",
+    "source": "GitHub Actions job log132490822394",
+    "verifiedFrom": "evidence/resume-17-check.log"
+  },
+  "artifact": {
+    "id": 14118594161,
+    "name": "astra-wp12-check-1",
+    "bytes": 1678,
+    "digest": "sha256:7e881af1ff7aff94734c056378a2f41721fb39da9b2057a7ef083503ef7fc61b",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43609369186/artifacts/14118594161",
+    "qualification": "GitHub artifact metadata and upload-log digest/size checked. No ZIP member inspection asserted."
+  },
+  "scope": {
+    "ownSourceChanges": 5,
+    "foreignSourceChanges": 0,
+    "effectiveForeignPins": 339,
+    "preparation": "preparation-17.json",
+    "productTestsDispatchedOnThisProduct": false
+  },
+  "diagnosis": [
+    {
+      "path": "test/product/wp12/native-execution-question-handoff.test.ts",
+      "line": 240,
+      "code": "TS2769",
+      "reason": "Unknown raw object status supplied to the typed primitive matcher; validate the real producer status as string first."
+    },
+    {
+      "path": "test/product/wp12/native-execution-scenarios-review.test.ts",
+      "line": 69,
+      "code": "TS2769",
+      "reason": "outputRef narrowing inside the case scope does not survive the returned object type; revalidate the actual outputRef after the awaited scope."
+    },
+    {
+      "path": "test/product/wp12/native-procurement-preparation.ts",
+      "line": 186,
+      "code": "TS2769",
+      "reason": "Map.get retains undefined in the declared type; require the actual canonical source digest before the unchanged equality assertion."
+    }
+  ],
+  "followup": "Publish the three own narrowing guards with independent review; execute a single new full-package check at the corrected product. Do not dispatch Handoff or Procurement product tests on this failed-check snapshot.",
+  "limits": [
+    "This is a failed hosted typecheck, not a product run.",
+    "No assertion, data, contract, TTL or deadline is weakened to repair typing.",
+    "No native inference or integrated WP12 acceptance is inferred."
+  ],
+  "localProductTests": false,
+  "localTypecheck": false,
+  "fullWp12": false
+}

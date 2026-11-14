@@ -1,0 +1,41 @@
+{
+  "schema": "sf-wp12-owner-finding-v1",
+  "id": "WP12-C10-DERIVED-CATEGORY-ROUNDTRIP",
+  "status": "STATIC_REPRODUCER_READY_HOSTED_PENDING",
+  "owner": "WP10 / integration",
+  "affectedCriteria": [
+    "WP12.T03.CHK.20",
+    "WP12.QLT.20",
+    "WP12.CMP.20",
+    "WP12.T03.QLT.20",
+    "WP12.T03.CMP.20"
+  ],
+  "source": {
+    "product": "6b417034e6c80eb7eb5cf55ef51ed82addf9e7f2",
+    "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+    "blob": "d8a668281ea9cac6a3a04c6bea19811ee8954808"
+  },
+  "alsoObservedIn": {
+    "commit": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+    "blob": "ec824f54d67630edce6ef218e2e1301193362f3c"
+  },
+  "trigger": {
+    "mutatorCommit": "65509f0b8c435b88fb0ec9949299571f011d2347",
+    "mutatorPath": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+    "mutatorBlob": "e0840d775274ea73c6b938711764c69593dadca0",
+    "behavior": "Always reassess through the proof producer, including matching coverage, so C08 receives a proof tied to the real alternative identity."
+  },
+  "finding": "The host proof producer passes the normalized baseline.entries into reassessScenarioCoverage. An originally omitted category already has a canonical synthetic pending/missing-category entry there. The reassessment interprets that entry as supplied and removes the category from derivedMissingCategoryIds. Pending remains, but the distinction between omitted and explicitly pending is lost.",
+  "proposedChange": "Strip only canonical pending/missing-category entries whose categoryId is declared in baseline.derivedMissingCategoryIds before reusing the supplied entries as reassessment input. Preserve explicit pending entries, included/zero evidence and all authority/source/C08 proof fences.",
+  "patch": "preserve-derived-missing-category.patch",
+  "implementationStatus": "NOT_APPLIED_TO_OWNER_SOURCE",
+  "localProductExecution": false,
+  "sourceAuthorship": "No host or financial-policy file edited",
+  "reproducer": "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts",
+  "expectedChecks": [
+    "Human classification omits training while the common basis includes it; the engine produces derivedMissingCategoryIds=['training'] and canonical pending/missing-category entry.",
+    "After real baseline-coverage and decision-promote routes, the persisted scenario still retains that derived identity and conditioned status.",
+    "A later source with an observed 40000 training component and an included classification yields complete coverage and no derived missing category.",
+    "An explicitly supplied pending category remains explicitly pending, and observed zero remains evidence-backed zero; neither is silently reclassified."
+  ]
+}

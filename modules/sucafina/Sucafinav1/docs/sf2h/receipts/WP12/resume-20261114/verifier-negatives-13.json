@@ -1,0 +1,151 @@
+{
+  "schema": "wp12-verifier-negative-increment-v1",
+  "status": "TWO_STATIC_REVIEWS_COMPLETE_HOSTED_PENDING",
+  "owner": "WP12",
+  "baseProduct": {
+    "sha": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+    "tree": "f875b3a78ee8123c959bad5c7c5d4c9fb4f978df"
+  },
+  "criteria": [
+    "WP12.T03.CHK.02"
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-verifier-negatives.test.ts",
+      "blob": "7656809cc7e610d6427cb5df64355d29ecee30a6",
+      "sha256": "72a90a73eddac162a5b5e347c139bec6beb3df6c05336bead869f73dbd60cd7c",
+      "bytes": 18104,
+      "change": "new own test only"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier.ts",
+      "publishedProduct": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "blob": "9c62b6a375e4894f1d487b7eb12ab1c1bba9dd17",
+      "owner": "WP10",
+      "sha256": "014140d2be17d22053b66fc13923b8252c5b0b5a3fef8825a55446152bb8f142",
+      "bytes": 5502
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "publishedProduct": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "sourceCommit": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+      "blob": "97cde4dce2858f47b57b446c9c20bad77d367591",
+      "owner": null,
+      "sha256": "217ce1f268ae119bd38292f9b6697c6f6c1bfb08e31be3e25a434c5cf91d6b48",
+      "bytes": 62972
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "publishedProduct": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "sourceCommit": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "owner": null,
+      "sha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+      "bytes": 74908
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "publishedProduct": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "blob": "3a9eaaa0f52c22f68f6e889af66b970fb51197b9",
+      "verification": "GitHub MCP exact source read at W15; W16 only changes Intent assertion type"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "publishedProduct": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "blob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+      "sha256": "bdd708ed81e9f96efb7de872ff4085444fb3b58ee5711e1b678d3fb79d6df171",
+      "bytes": 6143
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "publishedProduct": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "sourceCommit": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+      "blob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "owner": null,
+      "sha256": "9791fd4c605693711a4508b3b496c0fb67a407c1009d734408659ed10664fefc",
+      "bytes": 46099
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "publishedProduct": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "blob": "9f61ae11b0f1b630427cda98ff44f229bd72d2b5",
+      "sha256": "a89d46560331bc067e0e236da7a45de9d83fa13a90a6876d9158e5f01108b8d5",
+      "bytes": 19397
+    }
+  ],
+  "counterexamples": [
+    {
+      "id": "false-monthly-total",
+      "schema": "Expected structurally admitted FinancialAnalysis with a forged monthly outlook total; actual Planner replay must refuse."
+    },
+    {
+      "id": "operation-outside-schema",
+      "schema": "An unsolicited set-financial-total operation in FinancialAnalysis must fail closed schema admission and the actual verifier."
+    },
+    {
+      "id": "invented-source-reference",
+      "schema": "An unissued record ref with recomputed integrity digest remains structurally valid but lacks source authority; actual BCS and verifier must refuse."
+    }
+  ],
+  "proofScope": {
+    "actualComponents": [
+      "installed host and private Request authentication",
+      "human/UI authority and current case scope",
+      "mounted HTTP ForecastExplainInput producer",
+      "real Planner computation and source resolvers",
+      "createSfForecastVerifier body predicate",
+      "real C08 read-only before/after",
+      "fresh host reopening same store"
+    ],
+    "candidate": "Adversarial body is explicitly synthetic, no provenance/receipt/run/model fabricated. Reflect.apply deliberately crosses only the predicate static envelope signature.",
+    "providerBranch": "When an installed model exists, real mission admission/Session/tools/receipt/output execute; mutated clones of that actual envelope are rejected by the real verifier and the original output is consumed after reopen.",
+    "notClaimed": [
+      "No adversarial model completion reaches the private installed publisher in this test.",
+      "No native publication/execution claim on empty or unsupported catalog.",
+      "No full CHK.02 acceptance or GNATIVE acceptance before hosted observations.",
+      "C08 unchanged is scoped to the selected case plus contributions/nativeRuns and Planner raw/projections; no assertion covers every namespace or a global storageVersion."
+    ],
+    "malformedPublicationAttemptExecuted": false
+  },
+  "validation": {
+    "syntaxOnly": "PASS Node stripTypeScriptTypes + node --check; no imports or evaluation",
+    "typecheck": "NOT_RUN_LOCAL_HOSTED_REQUIRED",
+    "product": "NOT_RUN_LOCAL_HOSTED_REQUIRED",
+    "newTestName": "real Forecast verifier refuses a false total, an out-of-schema operation and an invented source while preserving Planner and C08",
+    "explicitDeadlineMs": 420000
+  },
+  "localProductTests": false,
+  "localTypecheck": false,
+  "remoteOperations": false,
+  "independentReview": {
+    "file": "independent-review.json",
+    "sha256": "9e99209828fcaa873c2d31ba783ff6897bf86c83e5edf00960d5552ba8c6f493",
+    "verdict": "PASS_STATIC",
+    "reviewer": "/root/compose_typecheck",
+    "sourcePins": "independent-source-pins.json"
+  },
+  "publicationBase": {
+    "sha": "7fe43d5b12f27f714a2c3208f49568c1013ba7fa",
+    "tree": "646e1fa06eaf8b5081c72c12c29d514e6240dfe1"
+  },
+  "publicationParent": "7fe43d5b12f27f714a2c3208f49568c1013ba7fa",
+  "complementaryReview": {
+    "reviewer": "own_review_resume",
+    "result": "NO_CONCRETE_API_TYPE_OR_SEMANTIC_BLOCKER_FOUND",
+    "sourceVerified": {
+      "commit": "7fe43d5b12f27f714a2c3208f49568c1013ba7fa",
+      "plannerPortBlob": "3a9eaaa0f52c22f68f6e889af66b970fb51197b9"
+    },
+    "scope": [
+      "False-total body reaches actual Planner replay comparison.",
+      "Closed schema rejects the extra operation.",
+      "Resealed invented record ref is structurally valid but lacks source authority and is checked by real BCS.",
+      "Published-model branch alone uses a real native envelope; private malformed publisher attempt remains unobserved."
+    ],
+    "localProductTests": false,
+    "localTypecheck": false
+  }
+}

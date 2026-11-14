@@ -1,0 +1,53 @@
+{
+  "schema": "sf-wp12-independent-purchase-boundary-review-v1",
+  "status": "PASS_STATIC_NO_COUNTER_FINDING",
+  "reviewer": "Astra / criteria_resume",
+  "subject": {
+    "path": "audit.json",
+    "bytes": 24438,
+    "sha256": "f1342d397e6ef7919f92a3d0533d483063089f46939812ffecca6c4959df008b",
+    "git_blob": "4ae32da0959c1a601c27ccf1ab144874a5679911"
+  },
+  "scope": "Short independent review of the bounded public-choice producer gap and preservation of downstream C12 proof; not a universal search or a full review of unrelated owner deltas.",
+  "source_integrity": {
+    "capsule": "source-bytes.json",
+    "full_payload_blob_hashes_verified": 36,
+    "mismatches": 0
+  },
+  "conclusions": [
+    {
+      "area": "Installed public producer",
+      "evidence": [
+        "decisions/mutations.ts@e0840d775274ea73c6b938711764c69593dadca0 addAlternative 90-125; prepareChanges127-152; recordChoice180-210",
+        "planner/scenario.ts@52b09da8ee31f6681bdc2c29a69bc76755f9d232 7-56",
+        "procurement/scenario-preparation.ts@c17f594d74569bf7fa7fc87b81f0646aeddce7ff 13-40"
+      ],
+      "conclusion": "The inspected promotion produces Planner scenarios, while real Procurement preparation requires the exact selected PR replace and matching PR evidence inside the stored choice. Merely adding a target to the human objective or to case sourceRefs does not create that operation/result. No own legitimate composition was identified in these inspected routes."
+    },
+    {
+      "area": "Downstream owner test",
+      "evidence": [
+        "wp04/host-integration.test.ts@a71839833d50fa3da37f18b2c1fca4597032a5b7 760-781"
+      ],
+      "conclusion": "The source explicitly persists a synthetic typed ScenarioResult/Alternative/Choice before using actual preparation HTTP. This does not supply the absent public producer; it also does not invalidate the real downstream preparation/review/apply/receipt checks."
+    },
+    {
+      "area": "Admitted native preparation",
+      "evidence": [
+        "decision-change-services.ts@46c95ba57b1daf726cdd4c1576d73e782827580d 38-57 and121-167"
+      ],
+      "conclusion": "The admitted route keeps exact choice/operation/allowed-target checks and retains conditioned facts through choiceConditions. The audit correctly avoids imposing a blanket complete-preview gate from a separate fallback."
+    }
+  ],
+  "findings": [],
+  "limits": {
+    "product_tests": false,
+    "typecheck": false,
+    "remote_ci": false,
+    "code_or_audit_edits": false,
+    "runtime_counterexample_observed": false,
+    "native_acceptance": false,
+    "all_owner_deltas_independently_read_in_full": false,
+    "absence_scope": "Only installed/public routes and sources identified in the subject audit; future/other owner factories remain eligible for inspection."
+  }
+}

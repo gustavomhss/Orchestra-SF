@@ -1,0 +1,112 @@
+{
+  "schema": "wp12-purchase-choice-parameter-correction-v1",
+  "status": "FROZEN_REVIEWED_READY_FOR_ROOT_PUBLICATION",
+  "owner": "WP12",
+  "writer": "root",
+  "baseCommit": "373f1d5997e8ea17bd493521d28d5781e9364015",
+  "baseProduct": "efa940962023523848661d795856002d29510b19",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+      "before": {
+        "bytes": 16037,
+        "sha256": "56cb1681ed5f52b4ed306231cb9650240218e89d73c1e4929a3f1ae26831eb43",
+        "blob": "f1433397246117886e109d32b171345ec1992066"
+      },
+      "after": {
+        "bytes": 20388,
+        "sha256": "879cca9345a218ec7c581383bc92f4616cbb9ab5398d06a6f58dc0437660d04b",
+        "blob": "e3b9d1634b916cce45e9750b96b5a88deaf81fae"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+      "before": {
+        "bytes": 16735,
+        "sha256": "7e771637454be08e1392b39f2a0965391ae280f96230f8aacfcf220febc2f6cd",
+        "blob": "4c303604768e8a2e750aee8ea8f35d7f17302742"
+      },
+      "after": {
+        "bytes": 16762,
+        "sha256": "cd6e1478c7724a32036e8ed20a2aee834870ae5f35ac33995827990d970a96ed",
+        "blob": "2a3a788a56da8d53392f564e95dad168df670c84"
+      }
+    }
+  ],
+  "observedFailure": {
+    "run": 43605021421,
+    "job": 132477707865,
+    "product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "snapshot": "4c141b559b84b98aa8be742a7690eb2abc3b92d5",
+    "reason": "unsupported-sensitivity-parameter",
+    "variants": [
+      "pending",
+      "complete"
+    ],
+    "logSha256": "091fef5dad0d33440b1f70d7aed21943c81bcaf3f74092f3b1e249a50c4eccb3",
+    "logPath": "evidence/resume-15-procurement.log"
+  },
+  "staticCause": {
+    "sourceOnlyGuard": "sensitivity-units ed685632 requires source-scenario: for empty operations/assumptions.",
+    "actualProducer": "scenario-port e4a21957 returns preview: for the simulated alternatives created by this helper.",
+    "supportedContract": "The other sensitivity branch requires one explicit replace with finite amount/currency and current independently declared source units.",
+    "classification": "Own mission selected no supported parameter operation; no foreign gate is weakened."
+  },
+  "change": {
+    "selection": "An explicit optional flag is enabled only by the two Purchase variants. The candidate selects its uniquely confirmed January service component and the actual forecast/currency declarations returned by the canonical projection.",
+    "operation": "Propose replace with exactly that current value, currency and period. This is a genuine human-selected simulated operation, not a source-only observation or application.",
+    "numericProof": "Compare full id/amount/currency/period component digests from both canonical source projections with both persisted results. Existing subtotals, null totals, horizons, category counts, derived training and explicit training zeros stay checked.",
+    "stateProof": "Planner marks every explicit operation target hypothetical, including a same-value replacement. For the new candidate require exactly that one hypothetical component, every other component confirmed and all values finite. Baseline and default callers retain the original all-confirmed assertion.",
+    "defaultCallers": "No option means original empty operations and same selected component. Documents and other existing callers do not opt in. No additional domain calls or awaits are added.",
+    "caller": "The Purchase driver changes exactly one call argument. All actions, renewal/probe flow, input/output/consumer assertions and360000ms deadline remain."
+  },
+  "preservation": {
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+        "beforeExpectLines": 31,
+        "afterExpectLines": 43,
+        "allOldExpectLinesRetained": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+        "beforeExpectLines": 35,
+        "afterExpectLines": 35,
+        "allOldExpectLinesRetained": true
+      }
+    ],
+    "allMonetaryValuesFromCanonicalSource": true,
+    "rawFixtureUnchanged": true,
+    "financialHorizonUnchanged": true,
+    "caseCurrencyUnchanged": true,
+    "categoryInventoryUnchanged": true,
+    "sourceRefsAndAuthorityUnchanged": true,
+    "ttlUnchanged": true,
+    "deadlineMs": 360000,
+    "grantsUnchanged": true,
+    "hypotheticalStateChangeExplicit": true,
+    "oldCandidateAllConfirmedAssertQualifiedOnlyForExplicitOperation": true
+  },
+  "sources": "source-pins.json",
+  "sourceCount": 9,
+  "diff": "increment.diff",
+  "validation": {
+    "syntax": "PASS node --check, no imports executed",
+    "productTestsLocal": false,
+    "typecheckLocal": false,
+    "foreignSourcesEdited": false,
+    "hostedResult": "NOT_RUN_ON_CORRECTED_FILES",
+    "independentReview": {
+      "status": "PASS_STATIC",
+      "path": "independent-review-own.json",
+      "sha256": "98400ac37fc07cae1dd8761bb8edce68a8ff30845e9e216ce3477aee2804baee",
+      "blob": "995a490abfa17b11edc826345688b9a0bf681e63"
+    }
+  },
+  "limits": [
+    "No source-only sensitivity or observed-source alternative acceptance is claimed.",
+    "This input correction does not prove performance or authority continuity through the full choice/input/native/consumer path; that remains a hosted requirement.",
+    "No model, Session, receipt, output, cost or financial policy is fabricated or changed."
+  ],
+  "fullWp12": false
+}

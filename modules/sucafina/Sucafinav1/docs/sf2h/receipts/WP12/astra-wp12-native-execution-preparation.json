@@ -1,0 +1,235 @@
+{
+  "schema": "sf-wp12-native-execution-preparation-v1",
+  "ownership": "WP12 tests and evidence only",
+  "sourceHead": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+  "inspectedHostPin": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+  "state": "PREPARED_FOR_HOSTED_VALIDATION",
+  "frozenFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-admission.test.ts",
+      "blob": "7525801e2706e6e71e0a8e3dce53c35079992859",
+      "sha256": "e7040d11a6b7d667a9259d62623497f5f994afa97171abe8ea5a229a6c40248b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+      "blob": "dd60cd6f0ed63cdfd89cdfff0de001e35588473a",
+      "sha256": "50c16b9e99478a69188779e6d54735bf50f80189ed28ee225fb58f4f6c7694fe"
+    }
+  ],
+  "directImportsAtHostPin": [
+    {
+      "path": "apps/cli/src/host.ts",
+      "blob": "cc89adc3a11e2bd3e7d779642382ed86dfceab31"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "28046172e5a540c8418aff0b968b2e098888c432"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "dbddde16519d6fa4342d3e942c58f4533f011619"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "blob": "920fda293db553096f4d8ab7004fcd9652a69291"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329"
+    },
+    {
+      "path": "modules/atlas/boundary/package.json",
+      "blob": "6a5e7bddf5b9ea31dd0fb795f38be4fc98a231b7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "blob": "5cc315a2fb88118dbfa9ed5259e0fdf792dbf6b7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "blob": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "blob": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "blob": "ddc5323d714c58de2d5b47eed2563176099f15b5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "b753e3ffbfcdc06de373388845c686afac26dec8"
+    },
+    {
+      "path": "packages/core/test/fixture/omni-expect.ts",
+      "blob": "067fbf7a21e008caacfab46a2eaeb878ac7bcaac"
+    }
+  ],
+  "auditedRuntimeDependencies": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-host.ts",
+      "blob": "f43e9ae216a94f16daf985bac32f2c9e2627a2b7",
+      "fact": "Admit, real C15 gate, actual Location catalog and private source capability precede Session.create, real loadSfSkill, SessionStore.narrow, binding and token registration. execute admits prompt with resume:false and calls Session.resume."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-execution.ts",
+      "blob": "2423138831dbac9eaf65eb44485499e5c9475027",
+      "fact": "Reads completed durable assistant messages, validates model candidate, builds host provenance and publishes through WP12 store."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/token-gate.ts",
+      "blob": "4d7b395aa29a03a8311d8dec87cb1e69e0a4ab30",
+      "fact": "Requires openai-responses protocol and http-json transport, canonical location/model identity, live session ticket and current authority. No test override."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/contribution.ts",
+      "blob": "8d44320acedc4afec9ffc100f5f6a171cdf26993",
+      "fact": "Tools.Service.register keys are exactly descriptor.id. sf_forecast_compare is not prefixed with a pack or MCP provider name."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "blob": "bc00a2fe70bb37d6132369c3767388e544e18510",
+      "fact": "Private call uses operation unchanged and checks native receipt against actual lease, run, session, principal, call ID, digests and generation."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "fact": "The harness calls actual draft with source authorization, IDs generated by service, protected C08 commit and readback. No seeded case or native run."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/source-issuer.ts",
+      "blob": "ba5023491e7aa7e2591e25e4f17f06f4292c77d4",
+      "fact": "Actual issuer authenticates Request and issues scoped current source references; no hand-constructed evidence refs."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "e365ac59376482dfcc6f81aed045b0153f911038",
+      "fact": "FinancialAnalysis.knownDifference is returned in complete and conditioned results; completeDifference remains null for uncovered input. Synthetic monthly USD120 vs USD100 yields known delta -240 for 12 months."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+      "blob": "9084d0d376a5135aa5804b002d8068ac09f89f83",
+      "fact": "Nested dispose clears selections only."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "blob": "23d9291b3dcedda36edc4aa4f38856024e3c58f4",
+      "fact": "Nested dispose clears reviews only; business.dispose does not close shared persistence."
+    }
+  ],
+  "coreReadPin": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+  "coreAudit": [
+    {
+      "path": "packages/core/src/session/runner/model.ts",
+      "blob": "188abc7053f9a02b8dd84ce7bdc30e0e7c001b3b",
+      "fact": "Real resolver; exact typed ModelNotSelectedError tag; @ai-sdk/openai maps to OpenAI Responses. reference reads actual resolved model association."
+    },
+    {
+      "path": "packages/core/src/location-services.ts",
+      "blob": "b6eaefbc8dd8df2be112371c69b7791f462cf82e",
+      "fact": "Location map includes real Catalog, SessionRunnerModel, PluginInternal and execution services."
+    },
+    {
+      "path": "packages/schema/src/session-message.ts",
+      "blob": "62aeee3e61a1a2c3dcb0b6de15711357093f7e79",
+      "fact": "AssistantTool fields name/id/state; completed state structured is the returned tool structured payload."
+    }
+  ],
+  "hostedObservation": {
+    "runId": 43587356544,
+    "jobId": 132424604604,
+    "snapshot": "f3719c13f982e88c82d78e8dd288ce0b6ed174cb",
+    "runConclusion": "failure",
+    "counts": {
+      "pass": 55,
+      "fail": 1
+    },
+    "scope": "The actual model-admission observation is narrower than the failed overall selection. It does not certify the frozen declaration update or Finance test.",
+    "observation": {
+      "scope": "native-model-admission-only",
+      "githubSha": "f3719c13f982e88c82d78e8dd288ce0b6ed174cb",
+      "nativeSessionId": "ses_e264ddc9affeJDCSjnywYA5ywj",
+      "receipt": {
+        "runId": "wp12-admission-ses_e264ddc9affeJDCSjnywYA5ywj",
+        "nativeSessionId": "ses_e264ddc9affeJDCSjnywYA5ywj",
+        "profileId": "sf_finance",
+        "profileVersion": "1.0.0",
+        "profileDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+        "skillId": "sf-explicar-forecast",
+        "skillVersion": "1.0.0",
+        "sourceDigest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740",
+        "instructionsDigest": "ba80c66c9a4b41677c0e2ffb94f94cc63b5e2a3c81e8a4a230739d80f0ff9227",
+        "loadedMessageId": "msg_1d9b22516001jlgXRkm7hnfJfn",
+        "loadedAt": "2026-11-14T10:54:53.210Z",
+        "manifestDigest": "c21f7e493e5a48e5f21ceaf49834a384519ce5f9267bec5eb14b435b2449a106"
+      },
+      "candidates": [],
+      "inferenceExecuted": false,
+      "outputRef": null,
+      "consumerRef": null,
+      "gnativeAccepted": false,
+      "status": "unavailable",
+      "reason": "SessionRunnerModel.ModelNotSelectedError"
+    },
+    "omni": {
+      "result": "pass",
+      "spawns": 240,
+      "declared": false,
+      "note": "Frozen tests now call expectSpawn(import.meta.path) before runtime boot; declaration change awaits the next hosted run."
+    }
+  },
+  "preparedFinanceBranches": {
+    "emptyCatalog": "Reports catalog-observation unavailable, inferenceExecuted false, no output or consumer, no GNATIVE acceptance. This is not proof of inference.",
+    "configuredCatalog": "Prefers a currently configured model that resolves to C15's Responses transport; if only other Core-supported protocols exist, attempts the real gate and fails rather than replacing it.",
+    "positiveRequirements": [
+      "Actual createSfHostRuntime / ProductHost contribution graph publishes host/project identity before the test work begins.",
+      "Private WeakSet<Request> authenticator and explicit synthetic principal are test data, never reported as enterprise authentication.",
+      "Planner data alone is seeded; real source issuer, case draft, input producer and verifier are called.",
+      "Actual analyses.start creates the persisted run, Session and SkillLoadReceipt, and the installed C15 gate performs model admission and execution.",
+      "Requires ready FinancialAnalysis, the numeric known delta, current skill/source digests and observed actual model.",
+      "Requires a completed sf_forecast_compare tool with status ok and private native receipt matching handler compareForecast, run, session, principal and tool call ID.",
+      "Closes the first host scope and SQLite driver, reopens both, and calls the real handleSfAnalysis output consumer. Requires HTTP200, rendered HTML, exact outputRef and unchanged outputDigest."
+    ],
+    "clock": "environment.at uses current test-start UTC time; forecast comparison period remains 2027.",
+    "limits": [
+      "One Finance skill only; not the full18 matrix.",
+      "No independent GNATIVE review or browser interaction is claimed by the HTTP consumer assertion.",
+      "No inference/output/consumer is claimed until the configured branch actually completes in GitHub Actions."
+    ]
+  },
+  "ciProtocol": {
+    "workflowBlob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "requestValidatorBlob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "setupBunBlob": "e2cda5b54676d4d1c35785aaef7aa69d66944597",
+    "providerSecretsAdded": false,
+    "allowedRequestEnv": [
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER=1|strict",
+      "ORCHESTRA_CHANNEL=prod"
+    ],
+    "localProductTestsExecuted": false,
+    "staticSyntaxOnly": "node --check parsed both test sources without executing imports or product code; this is not a typecheck."
+  },
+  "separateC07Dependency": {
+    "owner": "WP10/native integration",
+    "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-composition/c07-native-api-findings.md",
+    "blob": "cdaa89d79929f8dbbb47b7610995d284dbab97be",
+    "fact": "Current owner receipt says C07 plan/admission/run/artifact adapter absent. This affects routine/AM06, and does not by itself block the existing interactive Finance host route."
+  }
+}

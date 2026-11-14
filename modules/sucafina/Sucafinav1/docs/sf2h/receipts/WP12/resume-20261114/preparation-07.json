@@ -1,0 +1,152 @@
+{
+  "schema": "sf-wp12-increment-v1",
+  "phase": "resume-07",
+  "parentProduct": "70219282bc9f458c41fd670936e793da44d18363",
+  "immutablePlan": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "ownFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "sha256": "296e85bbeb97370706294baedfe0b04a826adc003a6058c110168d4810de31f2",
+      "bytes": 27602
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "blob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+      "sha256": "655c545bc8bd5efe4e597c2f030835be0f0df06a14fb7a1776ad3647ead06769",
+      "bytes": 5212
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "blob": "4b57c6e0bbfae95d28ab1f90c723b1dd14eb02be",
+      "sha256": "ac29d906a9b1d7e6a663a5de8e7e276ff0c954e0ed6caabde55a723e5bb93afe",
+      "bytes": 33241
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "blob": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee",
+      "sha256": "f0e7ccad88ad4d2ab0fd66f1d4963f090782d68abe24bb4720826f8b6c6cebca",
+      "bytes": 12059
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "blob": "282255c3f34ac9df7f14c913e5698d0d6146a71a",
+      "sha256": "831ea75381cdaaa79896d9e7850746890842f5e2eb2f4abc8f5901fd920f4b6c",
+      "bytes": 43194
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "blob": "655e187da43b3f6da02e9ffa644145f4259fe94f",
+      "sha256": "ff2fd5b1071e161246e3242e3badc56f637ef1cc513867b4f4e3bffe9ffe55a7",
+      "bytes": 29432
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "blob": "ab321fb2d1562255cf987571477233767c5240e3",
+      "sha256": "93d52c3a86b34f2cb4002e78134f05c5832c0e1ac37de3c7e511b9c5b40939d7",
+      "bytes": 46772
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+      "blob": "f8305eeb2dae22565dbb27e21137cbd1237afae3",
+      "sha256": "cd3de9b4607140883fd07af999ff15c1448702e6a74e62f5a846749e1eea0089",
+      "bytes": 16702
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts",
+      "blob": "6806a786ac9e41a6b87c539ab7e2eccc38871cb4",
+      "sha256": "cd1b230dd1395ee2aa0b431dc1b7ef17090bb487a6c4dbe58e80cb29f45a718a",
+      "bytes": 8578
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts",
+      "blob": "894009c373724a6f68a975ecede289346ff208e1",
+      "sha256": "3ba6fd9a9913bbdcc44f103c81aa07c4ec1e6293e920f88edb4fe75ff920ef2e",
+      "bytes": 10629
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+      "blob": "404423ec030ce36c658f7848907b0075a07f3ff4",
+      "sha256": "b4f3f3f227949d0f6543c14e75a08cf0938f9d6ef75e385be68ca914582fa231",
+      "bytes": 13933
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-consumer.test.ts",
+      "blob": "52aba99e4b5ae4d8c0e03b8e2cd85a4ab00910f2",
+      "sha256": "059b0e167059a49e8fb0de96a087c01984adba114f9f1fea2e0e1bce47bafeed",
+      "bytes": 15633
+    }
+  ],
+  "foreignFilesChanged": [],
+  "changes": [
+    "Selective reconciliation of own published PR36 e5b3adf215939e9a5c16cbcaf3ad028475e0a693; retained W8/W9 publication and reader identity/egress pins.",
+    "Observation-bound metadata-only stale transition refuses changed or replaced publication and concurrent cancellation; no model content or private AlternativeDraft capture supplied through fallback.",
+    "Cancellation rereads durable independent-review target. Caller reviewTarget remains optional consistency assertion.",
+    "Current and historical readers retain request selection, binding value/identity, lease identity and Request across awaits; private returned copies and previous mutation negatives retained.",
+    "Added sourcing real-input/native-execution/reload driver and C06 prepared-question HTTP consume/reply/reload driver; latter explicitly not native contribution proof.",
+    "Two hosted TS diagnostics in native-scenario-preparation corrected by explicit array type; emitted JavaScript byte-identical."
+  ],
+  "validation": {
+    "currentCandidateProductTests": "not-run",
+    "currentCandidateTypecheck": "not-run",
+    "localProductTests": false,
+    "localTypecheck": false,
+    "previous": {
+      "product": "70219282bc9f458c41fd670936e793da44d18363",
+      "tests": {
+        "runId": 43592776338,
+        "jobId": 132440838567,
+        "snapshot": "799d7113a8d9c4c34e16a7ea70cff8c5c6768fd1",
+        "status": "in-progress-at-preparation"
+      },
+      "checks": {
+        "runId": 43592781617,
+        "jobId": 132440855945,
+        "snapshot": "3345b7c740ea7d97e2cb5e136e738f374709c7f1",
+        "conclusion": "failure",
+        "typecheck": {
+          "diagnostics": 2,
+          "ownDiagnostics": 2,
+          "foreignDiagnostics": 0,
+          "code": [
+            "TS7034",
+            "TS7005"
+          ],
+          "file": "test/product/wp12/native-scenario-preparation.ts"
+        },
+        "spawnImports": {
+          "conclusion": "success",
+          "files": 4618,
+          "allowListedSites": 66
+        },
+        "guards": {
+          "conclusion": "success",
+          "rules": 78,
+          "changedPaths": 826,
+          "gate": 0,
+          "warn": 15,
+          "errors": 0
+        }
+      }
+    }
+  },
+  "sourceRunNotTransferred": {
+    "commit": "e5b3adf215939e9a5c16cbcaf3ad028475e0a693",
+    "runId": 43592159275,
+    "pass": 82,
+    "fail": 0,
+    "assertions": 1004,
+    "files": 13,
+    "nativeInference": false
+  },
+  "boundaries": [
+    "Host wrapper observation forwarding is a proposed WP10 delta only, not an applied foreign source change.",
+    "Installed host has no separately mounted metadata-only authority scope; injected C08 tests do not prove revoked-source installed-host settlement.",
+    "Model availability and eighteen real mission outputs remain independently required. No fixture, input-preparation event, catalog or loaded receipt is labeled GNATIVE.",
+    "C10 missing-category roundtrip owner finding remains open; the published driver retains its derived-category assertion."
+  ],
+  "fullWp12Acceptance": false
+}

@@ -1,0 +1,66 @@
+{
+  "schema": "sf-wp12-product-preparation-v1",
+  "phase": 23,
+  "increment": "W28",
+  "base": {
+    "sha": "5e768df0473a75b2436e3208350155c96708b1c6",
+    "tree": "61d375b8e61a8af181937bfdec0e811399b10921"
+  },
+  "status": "PREPARED_FOR_FRESH_HOSTED_CHECK",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+      "bytes": 29702,
+      "sha256": "fe0c909f2c53da5147ca59cab68cc80f24dbfafa292c904042720e15dfb7da5a",
+      "blob": "749063953007e4e0d216dcaf278337de45ef6e3d",
+      "kind": "own-test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-22-checks.json",
+      "bytes": 3206,
+      "sha256": "2badd5e41aca7dd490d4c150d20ee687dfe323deb16cf1742c496c2751a6c40c",
+      "blob": "9611422f1699f0fda20b78f50f7244ddec0817bf",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-23-typefix-review.json",
+      "bytes": 2867,
+      "sha256": "a2155a8619c04af54fc136f6e89da83f5e50ae0a630be8ca7f2c6b7adf67421b",
+      "blob": "e59526a08339d5a2432a7d25aa35c678486423d3",
+      "kind": "own-document"
+    }
+  ],
+  "scope": "One literal-preserving type annotation in the new Forecast negative table; no runtime behavior, fixture, assertion, deadline, grant or foreign source changes.",
+  "supersedes": {
+    "product": "W27",
+    "sha": "5e768df0473a75b2436e3208350155c96708b1c6",
+    "failedCheck": 43618678972,
+    "productRun": null
+  },
+  "unchanged": {
+    "biPublic": "a3fa276e8824affe75842cec6a8a11c224366f71",
+    "work": "c146fe374294f07f38c5beae9d34147d97c94968",
+    "allOtherSourceBlobs": true,
+    "allEarlierReceipts": true
+  },
+  "intendedCI": {
+    "requestSha256": "fdf783b550ff5843b129a14e50c68a66d97d443b8bb86833136cfb100864ab50",
+    "requestBytesUnchanged": true,
+    "bindingChangesToNewProduct": true,
+    "names": [
+      "Forecast auxiliary KPI",
+      "BI public selection",
+      "Question Work only"
+    ],
+    "order": "Forecast then BI then Question",
+    "tests": 3,
+    "greenExecutiveExcluded": true,
+    "noEquivalentRuntimeRunAlreadyExists": true,
+    "freshCheckAndGlobalDedupRequired": true
+  },
+  "foreignSourceChanges": 0,
+  "localTypecheck": false,
+  "localProductTests": false,
+  "noRuntimeProofTransferred": true,
+  "fullWp12": false
+}

@@ -1,0 +1,72 @@
+{
+  "schema": "sf-wp12-increment-preparation-v1",
+  "increment": "W17",
+  "phase": "resume-12",
+  "baseCommit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+  "baseTree": "f875b3a78ee8123c959bad5c7c5d4c9fb4f978df",
+  "owner": "WP12",
+  "ownCodeCount": 2,
+  "foreignChangeCount": 0,
+  "foreignEffectiveCount": 338,
+  "foreignPinsReceipt": "foreign-pins-10.json",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "blob": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+      "sha256": "24e3adae61412737721c26b7115af965236d34a183ba9b1c0a6f7f7bb997ff79",
+      "bytes": 33852
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "blob": "d12d8702f5914c94475b3ad1205718ecf1899fe9",
+      "sha256": "4bcc5ae386a1700e7ce987777d6e102441cf8cbb1d351e31a3f178d9bc183731",
+      "bytes": 52814
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/cancellation-intake-12.json",
+      "blob": "70ccf3e02c69cb05ab3f3b9f4f89dd9f57c9c06f",
+      "sha256": "05f300c3cd59d843ec32e2669cb2ec03242cfca9b51d5fa3e7e47c35c11187ac",
+      "bytes": 5582
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/cancellation-review-12.json",
+      "blob": "d3a23f32d202860f01d12b64b01b760dd7c30d21",
+      "sha256": "c89cf9948fd2a13b50b64b79e1b309dbe759d91b35ea7a7e538e5aa1d195f327",
+      "bytes": 4310
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-11-checks.json",
+      "blob": "e5d38122dcd629871164ce6809f4aa83087bc58a",
+      "sha256": "f831338aa062fee4e22af391e18c46bc95a0b11148cf3353c4655afe08ff62e5",
+      "bytes": 1747
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/surgical-selections-11.json",
+      "blob": "7f969f957a284ea5402afe90f0d1ad46b74f2e1a",
+      "sha256": "45f8749992f81683024d28267d1ab8792ce634ea2d56a728e7b4df98bb94ca41",
+      "bytes": 40714
+    }
+  ],
+  "changes": [
+    "Retain command identity, original observed run and clone, and every cancellation/interrupt scope through all asynchronous boundaries.",
+    "Add two real C08/SQLite component counterproofs with explicit unavailable native interrupt; preserve all22 previous run-store tests and every implementation byte outside cancelSfAnalysis."
+  ],
+  "validation": {
+    "independentReview": "PASS_STATIC",
+    "localSyntax": "PASS",
+    "localProductTests": false,
+    "localTypecheck": false,
+    "hostedTypecheck": "PENDING",
+    "hostedProductTests": "PENDING",
+    "priorCheck": {
+      "runId": 43600551809,
+      "product": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "result": "PASS"
+    }
+  },
+  "limits": [
+    "Component C08 fixtures do not prove installed native admission, Session inference or provider behavior.",
+    "Durable cancellation is not undone when a later interruption boundary refuses authority."
+  ],
+  "fullWp12Acceptance": false
+}

@@ -1,0 +1,17 @@
+diff --git a/apps/cli/src/sucafina-product/portfolio-coverage.ts b/apps/cli/src/sucafina-product/portfolio-coverage.ts
+--- a/apps/cli/src/sucafina-product/portfolio-coverage.ts
++++ b/apps/cli/src/sucafina-product/portfolio-coverage.ts
+@@ -87,7 +87,12 @@ export function createSfPortfolioCoverage(input: {
+         !same(coverage.value.basis, classification.value.basis) || classification.value.source.refId !== held.value.scenario.baseRef ||
+         baseline.entries.some((entry) => entry.status === "not-applicable") || baseline.entries.some((entry) => entry.status === "included" &&
+           !classification.value.mappings.some((mapping) => same(mapping.entry, entry)))) return unavailable()
+-      const entries: readonly CostCoverageEntry[] = structuredClone(baseline.entries)
++      // Normalization adds synthetic pending entries for categories the human
++      // classification omitted. Reassess the supplied entries, so C10 derives
++      // that omission again instead of treating it as an explicit pending input.
++      const entries: readonly CostCoverageEntry[] = structuredClone(baseline.entries.filter((entry) =>
++        !(entry.status === "pending" && entry.reason === "missing-category" &&
++          baseline.derivedMissingCategoryIds.includes(entry.categoryId))))
+       for (const entry of entries) if (entry.status !== "pending") classifications.set(entry, classification.value)
+       const refs = refsFor(scenario, classification.value, entries)
+       const resolved = await fresh(refs, call)

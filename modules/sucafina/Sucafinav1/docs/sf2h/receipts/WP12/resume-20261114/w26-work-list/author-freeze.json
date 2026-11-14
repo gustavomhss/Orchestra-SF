@@ -1,0 +1,98 @@
+{
+  "schema": "sf-wp12-own-increment-manifest-v1",
+  "status": "FROZEN_REVIEWED_NOT_RUN",
+  "owner": "WP12",
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "source_inspection_cutoff": "dc8f3b19d40f52c19aabd219544c291460592b99",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+      "bytes": 46720,
+      "sha256": "cb26d5358dc10b8f303301b2d49708eff3a0b192730fb745cacd5fc2d8b76fbf",
+      "git_blob": "d305c89fcbf42eef0290e744880342b3b017b48d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/work-list-route/source-pins.json",
+      "bytes": 18424,
+      "sha256": "7c279ea070b2dab6238ae4251b39342348bab21ff7e871e82a8ef448f672ab0e",
+      "git_blob": "8a27ceeabf9d0532152f257e93befdba4d5ae80f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/work-list-route/preparation.json",
+      "bytes": 9808,
+      "sha256": "a7b9ce3b54028b02004fce2add058aa826a83ec09905631fba2c644f5ae3322d",
+      "git_blob": "a2d847f2a5ea19af718b70c2abb026ace429bbb0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/work-list-route/README.md",
+      "bytes": 3767,
+      "sha256": "ee7de6dbfa8176200b4ffa3640cf3e17783ab4cd27ef4122b9e1dce454341967",
+      "git_blob": "619ac359b6e0c7779f3068eec62b0c8bd85c3a99"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/work-list-route/independent-review.json",
+      "bytes": 17938,
+      "sha256": "884097a2f177fe9bcc3e6e9c6d1dd14d4b90a608d2d9f91f1a86dadab208aad0",
+      "git_blob": "836b8675a5f1baa2f96c02f081a3de6f3fad671c"
+    }
+  ],
+  "source_files": 1,
+  "documentation_files": 4,
+  "tests": [
+    {
+      "name": "native question work list uses a public Procurement selection for its own pending case and reopens its real consumers",
+      "profile": "sf_maestro",
+      "skill": "sf-coordenar-perguntas",
+      "timeout_ms": 360000,
+      "requested_operations": [
+        "sf_case_read",
+        "sf_work_list",
+        "sf_relation_read",
+        "sf_question_prepare"
+      ],
+      "native_consumer": "Actual QuestionProposal C08 -> C11 question-output -> human C06 question-consume -> durable unanswered thread -> Workbench My work.",
+      "ui_consumer": "Actual Workbench My work HTML and idempotent C06 handoff-link to the existing action; no QuestionProposal is manufactured when the catalog is empty.",
+      "full_skill_required_operations_accepted": false,
+      "unexercised_required_operations": [
+        "sf_answer_read"
+      ]
+    },
+    {
+      "name": "native executive work list matches its selected real Hot Topic review and reopens the existing human action",
+      "profile": "sf_maestro",
+      "skill": "sf-preparar-revisao-executiva",
+      "timeout_ms": 360000,
+      "requested_operations": [
+        "sf_case_read",
+        "sf_work_list",
+        "sf_review_prepare",
+        "sf_source_get"
+      ],
+      "native_consumer": "Actual DecisionBrief C08 -> C11 review-contribution; native sf_work_list and sf_review_prepare results/receipts remain independently audited.",
+      "ui_consumer": "Actual Workbench My work HTML, C06 handoff-link, and preserved Hot Topics review reader after reopening.",
+      "full_skill_required_operations_accepted": false,
+      "unexercised_required_operations": [
+        "sf_routine_catalog",
+        "sf_routine_prepare",
+        "sf_routine_run",
+        "sf_routine_status",
+        "sf_routine_result"
+      ]
+    }
+  ],
+  "foreign_files": [],
+  "local_product_tests": false,
+  "local_typecheck": false,
+  "hosted_result": "NOT_RUN",
+  "independent_review": {
+    "path": "independent-review.json",
+    "status": "PASS_STATIC",
+    "runtime_status": "NOT_RUN",
+    "bytes": 17938,
+    "sha256": "884097a2f177fe9bcc3e6e9c6d1dd14d4b90a608d2d9f91f1a86dadab208aad0",
+    "git_blob": "836b8675a5f1baa2f96c02f081a3de6f3fad671c"
+  }
+}

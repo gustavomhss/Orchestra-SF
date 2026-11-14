@@ -1,0 +1,225 @@
+{
+  "schema": "wp12-owner-finding-v1",
+  "id": "WP12-SCENARIO-ANALYSIS-PREPARE-COST",
+  "status": "OBSERVED_FAILURE_OWNER_DIAGNOSIS_REQUIRED",
+  "ownership": {
+    "reporter": "WP12",
+    "installedPreparation": "WP10",
+    "domainDependencies": [
+      "WP03/Finance Planner",
+      "WP11/decision case/result"
+    ],
+    "integration": "WP00"
+  },
+  "summary": "The first real ScenarioComparisonInput HTTP preparation returns analysis-authority-changed after the three real C09/C10 alternatives have been prepared. The final authority fence remains mandatory. The run does not reach the explicit scenario comparison or native Session.",
+  "observed": {
+    "product": {
+      "sha": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "tree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e"
+    },
+    "ciSnapshot": {
+      "sha": "24126b776427dfc6560456d921c7b8f1398afd1c",
+      "tree": "3969e7577dba71e21a5912ed76790ade3c480eb3"
+    },
+    "runId": 43606961039,
+    "testJobId": 132483561647,
+    "testConclusion": "failure",
+    "cleanupJobId": 132487115526,
+    "cleanupConclusion": "success",
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43606961039",
+    "log": {
+      "localPath": "evidence/resume-15-scenarios.log",
+      "sha256": "ddd8faf5975532c29a93c9ee976c424cc95106c9d73afb4faac973262962c7fe",
+      "bytes": 73572
+    },
+    "request": {
+      "sha256": "e4fe9b7243476212b20ee84e4e6844e20977918398f06b2cde94561d4b467645",
+      "blob": "3077f502c093481a4b31d0f9a8a186e41e00fc99"
+    },
+    "test": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "blob": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06",
+      "passes": 0,
+      "failures": 1,
+      "expectCalls": 101,
+      "testDurationMs": 718291.49,
+      "bunDurationSeconds": 720.08,
+      "declaredDeadlineMs": 720000,
+      "error": "Real scenario input preparation failed: analysis-authority-changed",
+      "sourceLine": 38,
+      "logErrorLine": 842
+    },
+    "timeline": [
+      {
+        "line": 833,
+        "at": "2026-11-14T14:52:08.0112530Z",
+        "event": "Installed model catalog observed empty",
+        "models": [],
+        "inferenceExecuted": false
+      },
+      {
+        "line": 834,
+        "at": "2026-11-14T14:59:02.3607610Z",
+        "event": "Three real scenario promotions, strict C10 assertions and Planner preservation complete",
+        "caseVersion": 4
+      },
+      {
+        "line": 842,
+        "at": "2026-11-14T15:04:02.6858459Z",
+        "event": "First analysis.prepare returned authority refusal"
+      }
+    ],
+    "intervals": {
+      "catalogToPreparationMarkerSeconds": 414.349508,
+      "preparationMarkerToErrorSeconds": 300.3250849,
+      "qualification": "Intervals between log timestamps. The POST itself was not separately instrumented; only synchronous request construction appears between the preparation marker and that first POST."
+    },
+    "completedScope": {
+      "kind": "real category coverage and hypothetical C09 promotions",
+      "knownSubtotals": [
+        240000,
+        210000,
+        250000
+      ],
+      "totals": [
+        null,
+        null,
+        null
+      ],
+      "coverageStates": [
+        "complete",
+        "pending",
+        "complete"
+      ],
+      "derivedMissingCategoryIds": [
+        [],
+        [
+          "training"
+        ],
+        []
+      ],
+      "restrictions": "preview-not-applied",
+      "plannerSourcesUnchanged": true,
+      "inferenceExecuted": false,
+      "gnativeAccepted": false
+    },
+    "notReached": [
+      "decoded ScenarioComparisonInput",
+      "explicit UI scenario comparison and C09 comparison persistence",
+      "second comparison variant",
+      "native Finance Session/SkillLoadReceipt execution",
+      "independent native Reviewer",
+      "native output reload consumer"
+    ],
+    "overallAcceptance": "FAIL. Completed category-coverage assertions are scoped observations only; they do not accept the mission, ScenarioComparisonInput, native execution or the whole WP12 criterion."
+  },
+  "boundary": {
+    "observedGate": {
+      "path": "apps/cli/src/sucafina-product/analysis-http.ts",
+      "blob": "06522fa4a2eaa0841af8aabead799d9d56a8ada7",
+      "lines": [
+        56,
+        59,
+        60
+      ],
+      "fact": "A new analysis.prepare admission is created for this POST. After await runtime.inputs.prepare, human.authorize is checked again and a failed final check becomes analysis-authority-changed/403."
+    },
+    "lease": {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "lines": [
+        20,
+        26,
+        45,
+        66,
+        70
+      ],
+      "durationMs": 300000,
+      "fact": "current() requires an unexpired, un-aborted admission; expiry is fixed at admission. Revalidation, matchesIntent and requestFor retain that requirement."
+    },
+    "supportedInference": "The approximately 300.325 second marker-to-error interval is compatible with a newly admitted operation consuming its five-minute lifetime. This differs from reusing an old Procurement page selection before a new action.",
+    "notEstablished": [
+      "The log does not identify the first inner port that failed or its duration.",
+      "The outer HTTP final-authority failure can replace an earlier non-ok input result.",
+      "No profiler measurement attributes the cost to a particular clone, source read, lock or callback.",
+      "No claim is made that the latest owner source already reproduces or resolves this elapsed time."
+    ],
+    "requiredPreservation": [
+      "final authority check",
+      "current Request identity and abort",
+      "principal/policy/accessRevision",
+      "case id/incarnation/version and full case/evidence digests",
+      "fresh source and per-result proofs",
+      "separate later observations; no authority cache across awaits or calls"
+    ]
+  },
+  "staticPath": [
+    {
+      "source": "host-context.ts@834b3c96",
+      "operation": "analysisInputs.prepare delegates to the actual analysisServices.registry after request/scope checks"
+    },
+    {
+      "source": "analysis-host-services.ts@9b21d9f7",
+      "operation": "fresh authorization -> business.withCase -> bound.prepare -> final authorization/digests"
+    },
+    {
+      "source": "analysis-services.ts@900f1998",
+      "operation": "selection authorization, currentCase, producer registry/selection scope, fresh currentCase and final checks"
+    },
+    {
+      "source": "analysis-inputs.ts@ddb8c540",
+      "operation": "read current case; two scenario lookups; real planner.compareScenarios; current evidence context; read case again; two scenario lookups again; revalidate and authorize selected request"
+    },
+    {
+      "source": "scenario-lookup.ts@40c78dee",
+      "operation": "each successful lookup reads the case twice and the historical result twice"
+    },
+    {
+      "source": "stored-scenarios.ts@5433cb05",
+      "operation": "each successful resolution reads/authenticates the stored result, case and source self-comparison, then reads result and case again"
+    },
+    {
+      "source": "scenario-comparison-port.ts@d3098aa9",
+      "operation": "resolve both scenarios; validate sources/coverage; compare; resolve both again; source/coverage and final authority checks"
+    }
+  ],
+  "staticCountLimit": "Counts describe reachable successful source paths, not measured runtime counts. The log does not show which nested phase completed before denial.",
+  "ownPreparationReview": {
+    "verdict": "No removable own preparation was identified that preserves the same three alternatives, annual scope, inventory, strict assertions and case version.",
+    "retained": [
+      "three distinct raw Planner sources",
+      "annual 2027 horizon with explicit monthly zero values",
+      "training category absent in Candidate A and present at 40000 plus eleven zeros in Candidate B",
+      "three real coverage registrations and three real human promotions",
+      "strict final case and raw-source preservation reads"
+    ],
+    "rejectedShortcuts": [
+      "Moving the third promotion after preparing the first input changes the case version and invalidates the selected input/author/reviewer bindings.",
+      "Reducing the horizon to January or omitting categories/sources changes the selected business question; this producer has no separate January selection like the executive review.",
+      "Moving an independent UI comparison ahead of input preparation could observe an additional partial boundary but cannot repair the failing input preparation.",
+      "Extending the test deadline, extending the lease, renewing during the admitted operation or caching authority would change the invariant rather than close the observed failure."
+    ]
+  },
+  "latestPublishedOwner": {
+    "head": "4bc9c7220f04f113609393aaba38934a7e69878b",
+    "pr": 29,
+    "updatedAt": "2026-11-14T15:09:22Z",
+    "status": "INSPECTED_NOT_CONSUMED_NOT_RUN",
+    "assessment": "Direct scenario producer logic, HTTP final gate, scenario lookup and canonical case port are unchanged. resolveMany and self-comparison optimizations are published downstream; their exact limits are recorded in minimal-intake-proposal.json."
+  },
+  "ownLatentFix": {
+    "publishedHead": "5c148a16b76f98dfe194823c0e10ed2ef7685a69",
+    "tree": "42bc4bbb0662ad74a4974a4e6165274f50cc32fa",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+    "blob": "d418d5d462842ebfb0ddc3d890098eb00abc5653",
+    "scope": "public UI comparison with same-instance case scope, real receipt and C09 persistence/reload",
+    "relationToObservedFailure": "NOT REACHED in the failed snapshot. This fix alone does not justify another equivalent mission run."
+  },
+  "retest": {
+    "status": "HOLD",
+    "releaseCondition": "A reviewed, published change that addresses the observed input-preparation path, with exact minimal dependency pins and preserved fences; then a new surgical Actions run on the changed composition.",
+    "productTestsExecutedByThisAudit": false,
+    "localTypecheck": false,
+    "foreignSourceEdits": false
+  }
+}

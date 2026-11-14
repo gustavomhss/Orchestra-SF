@@ -1,0 +1,950 @@
+{
+  "schema": "wp12-exact-owner-dependencies-v2",
+  "candidate": {
+    "name": "W20",
+    "sha": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "tree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e",
+    "parent": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+    "check_status": "PASS",
+    "check_snapshot": "71894701b187aaca938bfe97a8b6c6b8508de4ab",
+    "check_run": 43603981195,
+    "check_job": 132474528320,
+    "check_snapshot_tree": "5070d3b096c7b997d065a6d6a7257eb04f84fbbd",
+    "mission_tests_status": "C10_DERIVED_ORIGIN_RUNTIME_PENDING; QUESTIONS_RETEST_FAILED_1_PASS_2_FAIL; PROCUREMENT_RETEST_IN_PROGRESS; W16_BI_EXECUTIVE_FAILED_1_PASS_1_FAIL_RETAINS_W16_SHA",
+    "last_completed_check": {
+      "product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "run_id": 43603981195,
+      "job_id": 132474528320,
+      "result": "PASS"
+    },
+    "metadata_source": "Root W20 WP12 publication/preparation-15.json:one exact C10 owner blob,zero own source changes,six own docs,339 foreign pins. This is distinct from the source owner WP10 W20."
+  },
+  "historical_owner_head_review": {
+    "file": "owner-head-refresh.json",
+    "published_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/owner-refresh-13.json",
+    "scope": "Nine owner heads inspected before WP10 W20. The prior C10 no-delta conclusion is superseded by the source-only C10 review below; historical pins and other scoped findings remain preserved. Own cancellation was selectively recovered in W17.",
+    "source_only_review": true,
+    "prior_ci_pass_transferred": false
+  },
+  "latest_c10_source_review": {
+    "file": "owner-c10-source-review.json",
+    "owner_product": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+    "scope": "One exact compatible published C10 blob09097eaba preserves omitted-category origin. Five imports and API match W19; root static review agrees. Consumed by WP12 W20, no WP12 runtime result yet. Source W20 WP10 check failed; no source-CI pass transferred."
+  },
+  "historical_general_actions": [
+    {
+      "id": "DEP-MODEL",
+      "classification": "RUNTIME_CAPABILITY_OBSERVED",
+      "owner": "WP10 / ambiente já autorizado",
+      "state": "OBSERVED_EMPTY_IN_COMPOSED_HOST_W8_W9_W11_W14; NO_NATIVE_MISSION_INFERENCE",
+      "evidence": [
+        "W9.MODEL_EMPTY",
+        "W11.PARTIAL",
+        "W14.FINANCE_INPUT",
+        "W14.BI_DOMAIN_CONSUMER"
+      ],
+      "finding": "W9 construiu caso persistido e input Finance por produtor real, com duas fontes e diferença -240. O host instalado continuou com available/supported/published/intersection vazios. Zero inferência/output/consumer.",
+      "next_action": "Usar somente modelo/configuração existente autorizada quando disponibilizada pelo owner. Não fabricar provider, credencial, output ou GNATIVE.",
+      "published_source_pins": []
+    },
+    {
+      "id": "DEP-C07",
+      "classification": "OWNER_INTEGRATION",
+      "owner": "WP10 / WP09",
+      "state": "ABSENT_IN_PINNED_HOST",
+      "source_paths": [
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "apps/cli/src/sucafina-product/routine-services.ts"
+      ],
+      "finding": "host-context monta createSfRoutineServices sem native e declara ausência das portas públicas C07. Nenhum adaptador instalado prova admissão, execução e retorno Relay reais.",
+      "next_action": "Owner instala adaptador nativo/publicação com versão pinada e recibos canônicos; WP12 consome fatos/perguntas/retorno sem executar engine alternativo.",
+      "published_source_pins": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "source_commit": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+          "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+          "published_at": "e10864d5a51c859611e72c881aa243f181d2f304"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-services.ts",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "blob": "8b76b7591bf3ce0312108faafcda6b244a2d5e89",
+          "published_at": "e10864d5a51c859611e72c881aa243f181d2f304"
+        }
+      ]
+    },
+    {
+      "id": "DEP-LIFECYCLE",
+      "classification": "OWNER_INTEGRATION",
+      "owner": "WP10",
+      "state": "W14_CORE_C08_BOUNDARIES_PASS; INSTALLED_HOST_REENTRY_FAILURE_OBSERVED_W11",
+      "source_paths": [
+        "apps/cli/src/sucafina-product/host-context.ts"
+      ],
+      "finding": "Own metadata-only CAS, stale publication and durable cancellation boundaries passed in W14. The W11 owner reentry case failed, and installed current-auth metadata/source-revocation behavior is not proved by injected ports or the standalone C08 fixture.",
+      "next_action": "Consume an exact owner correction with installed-host proof; do not transfer the W14 boundary pass to the foreign mounting path.",
+      "published_source_pins": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "source_commit": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+          "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+          "published_at": "e10864d5a51c859611e72c881aa243f181d2f304"
+        }
+      ]
+    },
+    {
+      "id": "DEP-OUTPUT-PLAN",
+      "classification": "OWNER_INTEGRATION",
+      "owner": "WP10 + WP11/WP01 consumidor",
+      "state": "ADVERTISED_OUTPUT_HAS_NO_HOST_ACCEPTANCE",
+      "source_paths": [
+        "apps/cli/src/sucafina-product/analysis-verifier-intent.ts"
+      ],
+      "finding": "sf-enquadrar-decisao anuncia IntentFrame e AnalysisPlan, mas o verifier pinado aceita apenas IntentFrame.",
+      "next_action": "Owner implementa aceitação/replay determinísticos e consumidor do plano; não remover o output do catálogo nem declarar texto como plano aplicado.",
+      "published_source_pins": [
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-intent.ts",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "blob": "43324e0873dd8db0442d34003ae3d57a6d7cf2b7",
+          "published_at": "e10864d5a51c859611e72c881aa243f181d2f304"
+        }
+      ]
+    },
+    {
+      "id": "DEP-OUTPUT-CONDITION",
+      "classification": "OWNER_INTEGRATION",
+      "owner": "WP10 + WP11/WP08 consumidor",
+      "state": "ADVERTISED_OUTPUT_HAS_NO_HOST_ACCEPTANCE",
+      "source_paths": [
+        "apps/cli/src/sucafina-product/analysis-verifier-review.ts"
+      ],
+      "finding": "sf-contestar-decisao anuncia CritiqueReport e UnresolvedCondition standalone, mas o verifier pinado aceita só CritiqueReport. A proveniência independente própria já foi adicionada; isso não cria aceitação host.",
+      "next_action": "Owner aceita/verifica condição standalone e a entrega ao caso/pergunta, preservando targetRun/targetSession independentes.",
+      "published_source_pins": [
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-review.ts",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "blob": "7b0bb3bbe0ef44f3e5c4babe431d9b37e2a22c4a",
+          "published_at": "e10864d5a51c859611e72c881aa243f181d2f304"
+        }
+      ]
+    },
+    {
+      "id": "DEP-CONTINUATION-MOUNT",
+      "classification": "OWNER_INTEGRATION",
+      "owner": "WP10 + WP08/WP11",
+      "state": "OWN_FACTORY_HAS_NO_PRODUCT_CALLER",
+      "source_paths": [
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts"
+      ],
+      "finding": "createSfAnalysisContinuation só aparece na própria definição e testes. A rota de análise aceita prepare/start/read/cancel/list/output e não monta retomada ligada à resposta humana.",
+      "next_action": "Owner monta entrada autorizada de continuação que resolve resposta canônica e produz outro run/session com lineage, após restart; WP12 fornece fábrica e contrato próprios.",
+      "published_source_pins": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "source_commit": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+          "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+          "published_at": "e10864d5a51c859611e72c881aa243f181d2f304"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "source_commit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+          "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "published_at": "e10864d5a51c859611e72c881aa243f181d2f304"
+        }
+      ]
+    },
+    {
+      "id": "DEP-HISTORICAL-MOUNT",
+      "classification": "OWNER_INTEGRATION",
+      "owner": "WP10",
+      "state": "OWN_FACTORY_HAS_NO_PRODUCT_CALLER",
+      "source_paths": [
+        "apps/cli/src/sucafina-product/host-context.ts"
+      ],
+      "finding": "createSfHistoricalContributionReader não é chamado pelo host. createSfContributionReader é importado apenas como type; o host tem leitores próprios. O endpoint atual pode ler fontes históricas, mas isso não prova adoção da fábrica histórica/resultado stale.",
+      "next_action": "Owner monta ou prova porta equivalente com caso atual, ACL/fonte/replay e retorno histórico seguro. Não mapear teste da fábrica como prova HTTP.",
+      "published_source_pins": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "source_commit": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+          "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+          "published_at": "e10864d5a51c859611e72c881aa243f181d2f304"
+        }
+      ]
+    },
+    {
+      "id": "DEP-CONSUMERS",
+      "classification": "OWNER_INTEGRATION_AND_SHARED_PROOF",
+      "owner": "WP01/WP05/WP06/WP07/WP08/WP09/WP10/WP11/WP13/WP14 conforme skill",
+      "state": "REAL_ACTIONS_AFTER_RELOAD_NOT_OBSERVED",
+      "finding": "A matriz normativa exige efeitos diferentes por skill: frame editável/plano, cenário/cobertura, pergunta/resposta, artefato, portfólio, precedente etc. Abrir JSON/HTML genérico não substitui o efeito de domínio especificado.",
+      "next_action": "Usar a matriz18 literal para ligar cada input/output à ação real observada; encaminhar consumidores ausentes ao owner e consumir novos blobs por pin.",
+      "published_source_pins": []
+    }
+  ],
+  "question_recall_findings": {
+    "schema": "wp12-pinned-owner-deltas-v1",
+    "scope": "Static source findings and their exact positive prerequisites. Hosted observations are added separately; an unexecuted branch is never called a failure witness.",
+    "product_tests_local": false,
+    "findings": [
+      {
+        "id": "DEP-RECALL-HISTORICAL-VERIFIER",
+        "owner": [
+          "WP10",
+          "WP14"
+        ],
+        "state": "PINNED_SOURCE_REJECTION_NOT_YET_REAL_NATIVE_OBSERVED",
+        "skill": "sf-consultar-memoria-decisoria",
+        "pins": [
+          {
+            "product": "e10864d5a51c859611e72c881aa243f181d2f304",
+            "path": "apps/cli/src/sucafina-product/analysis-verifier-memory.ts",
+            "blob": "cedf7b3e3e0758a56aa03f40e13927a622dd13f3",
+            "retrieval": "GitHub MCP immutable fetch_file; metadata retained in w9-mission-component-pins.json"
+          }
+        ],
+        "finding": "The installed verifier immediately returns unavailable/historical-memory-unavailable when recallScope.includeHistorical is true. A valid historical scope supported by input/memory ports cannot reach native acceptance through this branch.",
+        "requested_owner_delta": "Publish the historical verifier path that replays actual memory authority/current differences and preserves revocation, original source provenance and case isolation. Do not substitute current-only empty recall for the canonical authorized precedent witness.",
+        "owned_progress": "W11 own driver fa6316fd4e961df8ccfc961302e6d57c835542b0 covers explicit-empty current scope, real preparation, selection refusals and a model-dependent native result/consumer; it explicitly does not claim a precedent or Atlas read witness."
+      },
+      {
+        "id": "DEP-QUESTION-CONDITION-SOURCE-TRAIL",
+        "owner": [
+          "WP10",
+          "WP08"
+        ],
+        "state": "PINNED_SOURCE_INCOMPATIBILITY_REAL_PENDING_INPUT_DRIVER_AWAITING_CI",
+        "skill": "sf-coordenar-perguntas",
+        "pins": [
+          {
+            "product": "e10864d5a51c859611e72c881aa243f181d2f304",
+            "path": "apps/cli/src/sucafina-product/input-producer-question.ts",
+            "blob": "10d95e014c71c6c6f9600a2c1c52fa3532aee68a"
+          },
+          {
+            "product": "e10864d5a51c859611e72c881aa243f181d2f304",
+            "path": "apps/cli/src/sucafina-product/analysis-verifier-collaboration.ts",
+            "blob": "d37b26367f9f2670d6187e253c5c5ed14348a330"
+          },
+          {
+            "product": "6b417034e6c80eb7eb5cf55ef51ed82addf9e7f2",
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
+            "blob": "4a1ebe9298dd62d2846a45f294aa1b6331343040"
+          },
+          {
+            "product": "6b417034e6c80eb7eb5cf55ef51ed82addf9e7f2",
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/relation-catalog.ts",
+            "blob": "bf3f09f5cbc23ad81b65cfd1de97ff608dd075d8"
+          }
+        ],
+        "finding": "pendingConditions derives actual C10 pending categories with evidenceRefs:[]; with no selected relation, the verifier's admissible reference set is empty. sf_question_prepare requires nonempty actual case sourceRefs and returns them in QuestionProposal. Its real domain output therefore cannot satisfy that verifier in this Planner-only pending-cost context. The relation catalogue does not offer a Planner-version pair that could legitimately supply the missing proof.",
+        "requested_owner_delta": "Publish a supported, verified source trail for a question arising from the actual unresolved cost condition, or an explicit authorized source selection that the input producer and verifier replay. Preserve nonempty source requirements, case membership, current authority and known recipient checks; do not invent a relation or accept unbound refs.",
+        "owned_progress": "W11 own driver derives the category via real C09/C10; a separate next increment tests actual human preparation/consumer with the real issued source. UI preparation is explicitly not a native QuestionProposal contribution."
+      },
+      {
+        "id": "DEP-CASE-WORK-SIGNALS-COMPOSITION",
+        "owner": [
+          "WP10",
+          "WP08",
+          "WP13"
+        ],
+        "state": "PINNED_SOURCE_COMPOSITION_GAP_HOSTED_HTTP_PROBE_NOT_YET_OBSERVED",
+        "skill": "sf-coordenar-perguntas",
+        "pins": [
+          {
+            "product": "70219282bc9f458c41fd670936e793da44d18363",
+            "path": "apps/cli/src/sucafina-product/business-services.ts",
+            "blob": "97cde4dce2858f47b57b446c9c20bad77d367591",
+            "retrieval": "GitHub MCP immutable fetch_file metadata and local byte equality"
+          },
+          {
+            "product": "70219282bc9f458c41fd670936e793da44d18363",
+            "path": "modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+            "blob": "22a2a7fab04757667fcfed82147b7676d6928fee",
+            "retrieval": "GitHub MCP immutable fetch_file metadata; source reviewed statically"
+          }
+        ],
+        "finding": "createSfBusinessServices constructs createCollaborationHost without workSignals. The actual work-port.collect requires signals when the selectionRef starts sf:case-work-selection: and otherwise returns unavailable/work-signals-unavailable before listing case questions.",
+        "requested_owner_delta": "Compose the real authorized case work-signal reader with collaboration's case selection, or publish the supported producer path. A fabricated empty signals callback is not proof of the actual portfolio/memory consumer.",
+        "owned_progress": "Next own native-question-consumer.test.ts increment uses the real selection-create/work-list HTTP routes and records either an observed item or the exact unavailable reason. Canonical question creation/retry/reply/reload remains independently asserted; no My Work acceptance is inferred from a thread alone."
+      }
+    ]
+  },
+  "native_recall_candidate_access": {
+    "schema": "wp12-native-recall-candidate-access-static-finding-v1",
+    "id": "WP12-RECALL-NATIVE-CANDIDATE-ACCESS",
+    "status": "STATIC_MOUNTING_GAP_NOT_A_RUNTIME_LEAK_OR_EXECUTED_PRECEDENT",
+    "owners": [
+      "WP10 installed business/analysis mounting",
+      "WP14 protected precedent scope"
+    ],
+    "currentProduct": {
+      "sha": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "tree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e"
+    },
+    "sourceOwner": {
+      "sha": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+      "pr": 29
+    },
+    "skill": "sf-consultar-memoria-decisoria",
+    "literalCriteria": [
+      "WP12.T02.CHK.11",
+      "WP12.T02.CMP.40",
+      "WP12.T02.CHK.60",
+      "WP12.T02.SUC.60"
+    ],
+    "canonicalSkillPointer": "/resident_ai/skills/17",
+    "findings": [
+      {
+        "boundary": "createSfCaseRecall",
+        "observation": "A native call requesting any candidate outside its bound current case requires a host candidateAccess result. Without it, the read stage returns undefined and the operation reports unavailable before ranking or returning precedent content.",
+        "scope": "The refusal correctly preserves native case isolation."
+      },
+      {
+        "boundary": "installed createSfBusinessServices",
+        "observation": "The current consumed97cde4d and source WP10 W20 89881259 instantiate createSfCaseRecall without candidateAccess. Explicit recall scope selects eligible participant cases but is not itself a grant to cross a native case binding."
+      },
+      {
+        "boundary": "WP12 current driver",
+        "observation": "The driver deliberately selects an empty recall scope. Its observed empty input/reopen does not prove a real prior decision, protected Atlas record or cross-case native consumption. The companion business instance initializes Atlas without a scanner; inventing an emit success there would not solve installed proof."
+      }
+    ],
+    "impact": "A meaningful positive precedent branch requires authenticated, selection-scoped host access to the protected prior case/memory under the original native run authority. Adding only a second case fixture cannot make the current native path positive.",
+    "proposedOwnerDelta": "Supply a host-owned candidateAccess implementation bound to exact currentCase, ExplicitRecallScope, original Request, principal, profile, run, current access/policy and case versions. Reauthorize each prior case and protected Atlas read before and at egress. Do not rewrite the native binding or turn recorded IDs into authority.",
+    "proposedWp12FollowOn": "After a published compatible mount exists, prepare a genuine prior decision/outbox/Atlas emit through real APIs, select it explicitly in a distinct current case, require native receipt operations, reopen the same persisted CaseRecall and consume its authorized previous-case link. Preserve revoked/incarnation/owner negatives.",
+    "sources": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+        "sha": "fdc378d5f251511f66bb256b78240f472f1d566c",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "sha": "97cde4dce2858f47b57b446c9c20bad77d367591",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/apps/cli/src/sucafina-product/business-services.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "sha": "89881259b635344d626ed5f90d60bfbd31488b79",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3b02c7693c1ff3b702596c7c8458f913972a404/apps/cli/src/sucafina-product/business-services.ts"
+      }
+    ],
+    "verification": {
+      "method": "Full relevant functions and constructors read; exact blobs independently fetched via GitHub MCP. No product execution, typecheck, foreign edit or hypothesis relabeled as observed runtime.",
+      "nativePositiveExecuted": false,
+      "leakObserved": false
+    }
+  },
+  "question_own_follow_on": {
+    "status": "W20_ENDPOINT_ISSUANCE_AND_UI_PRECONDITIONS_PASSED; RELATION_FENCE_AND_REOPENED_ANSWER_READ_FAILED",
+    "writer": "WP12",
+    "verifier_blob": "d37b26367f9f2670d6187e253c5c5ed14348a330",
+    "scope": "The prior condition-source finding is limited to no-relation Planner input. Published verifier accepts a genuine selected relation as authorized source, but W20 creation of that relation failed source fence after valid endpoints. Human preparation/thread/reply and partial reopened retry were observed before answer_read unavailable. Native input/mission and complete answer/work consumers remain unproved. No condition.evidenceRefs was altered."
+  },
+  "procurement_document_findings": {
+    "schema": "sf-wp12-owner-delta-v1",
+    "id": "WP12-NATIVE-PROCUREMENT-DOCUMENT-INPUTS",
+    "observedProduct": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+    "inspection": "STATIC_ONLY",
+    "productTests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "foreignSourceEdited": false,
+    "proposalStatus": "NOT_APPLIED",
+    "gnativeAccepted": false,
+    "findings": [
+      {
+        "id": "CONTRACT-SOURCE-SURFACE",
+        "owner": "WP10 host composition",
+        "classification": "statically-confirmed-mounted-producer-and-verifier-mismatch",
+        "sourcePins": [
+          {
+            "path": "apps/cli/src/sucafina-product/input-producer-contract.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "2df4656bc5aa750182827fa62c37ae01e88711ff"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/procurement/contracts.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "8bfd7345072e40512fd9e8805cdd93b22db25ccb"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/analysis-host-services.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "9b21d9f7d4b115bb690ab82256b2cef0590c6afe"
+          }
+        ],
+        "finding": "createProcurementContractSource issues Dashboard Vendor Contracts and readContractSource accepts only dashboard/contracts. Mounted createSfContractInputProducer and createSfContractReviewVerifier require target.surface=procurement. ContractReviewInput's canonical contractProjectionRef is BusinessEvidenceRef and imposes no Procurement-only surface restriction.",
+        "proposedDelta": "Use the actual dashboard/contracts source selector in the mounted producer and verifier, retaining case membership, exact source digest, current resolution, allowed fields and readContract revalidation. Do not rewrite a returned ref or broaden source access.",
+        "reproducer": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+        "actualDriverInputs": "Actual dashboard contract source issuance/read; complete C09/C10 alternative; canonical registered document schema; documentIds=[]; missing notice observed through readContract.",
+        "readyOutputScope": "CommercialGap for an actual missing contract field. Other CommercialGap categories and EvidenceCandidate are not certified by this driver.",
+        "requiredTests": [
+          "Genuine dashboard/contracts source linked to current case prepares successfully.",
+          "Procurement request masquerading as contract is refused.",
+          "Source outside current case, stale version and changed fields are refused.",
+          "The actual output verifier accepts only the currently missing or unavailable field and linked source."
+        ]
+      },
+      {
+        "id": "CONTRACT-SCHEMA-REF-ID",
+        "owner": "WP10 host composition",
+        "classification": "statically-confirmed-mounted-contract-document-branch-mismatch",
+        "sourcePins": [
+          {
+            "path": "apps/cli/src/sucafina-product/input-producer-contract.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "2df4656bc5aa750182827fa62c37ae01e88711ff"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "50e20b20e927f30b5b24e0e3c622c2c8a6b19a76"
+          }
+        ],
+        "finding": "The actual schema resolver accepts schema:<id>:<version> and returns the bare id plus string version. Contract producer compares schema.value.id with the full selected fieldSchemaRef, so every legitimate populated documentIds branch fails that equality.",
+        "proposedDelta": "Compare the human-selected canonical reference with schema:${schema.value.id}:${schema.value.version}; continue verifying the persisted document's schemaRef and schemaVersion against that resolved identity.",
+        "requiredTests": [
+          "Real admitted document, registered schema, stored extraction and linked current case source use the full canonical schema ref.",
+          "Bare id, changed schema version, different document binding and forged DocumentEvidence are refused."
+        ],
+        "exclusions": "Do not label the unused createSfExtractionInputProducer equality as an installed extraction failure: analysis-host-services mounts createSfDocumentAnalysisInput, which correctly resolves canonical refs.",
+        "reproducerStatus": "Document-producing prerequisites implemented; populated contract-document branch remains NOT_RUN and requires an actual source promotion/claim consumer."
+      },
+      {
+        "id": "PURCHASE-ALLOWED-TARGET",
+        "owner": "WP10 with the Procurement source/C12 owner",
+        "classification": "statically-confirmed-ordinary-path-prerequisite-gap-not-proof-that-all-C12-paths-are-unavailable",
+        "sourcePins": [
+          {
+            "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/input-producer-purchase.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "afb1e6005ef8fcfe16b7c04605611f32a63bfd63"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "0332b118846cc8a45399aa24e4694fb6bf055719"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/business-services.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "97cde4dce2858f47b57b446c9c20bad77d367591"
+          }
+        ],
+        "finding": "The mounted business context for an individually issued Procurement source contains sourceRefs=[]. Procurement read preserves that context. Purchase preparation requires a nonempty human targets selection and resolves targets only from purchase.context.sourceRefs or existing choice-linked preparedChanges. A real human choice with an ordinary request and no prior preparedChanges therefore has no selectable allowed target.",
+        "proposedDelta": "Publish or consume the real current allowed-change-target issuer, with exact case/source/field/version/authority binding, or expose the existing legitimate C12 preparation route that supplies those targets. An observed row reference alone must not be treated as authorization to change it.",
+        "reproducer": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+        "actualDriverInputs": "Two separate installations/tests: real complete or category-omitted Planner alternatives, issued units, registered human criterion, stored ChoiceRecord, actual Procurement request projection and actual sourcing ranking. The human target selector uses observed request id/fields only; no SourceRef is injected into the input.",
+        "requiredTests": [
+          "Ordinary current request and real choice obtain the explicitly authorized target through the owner route.",
+          "Outside-case request, changed target fields, stale choice and changed source fail preparation.",
+          "DossierDraft reopens without changing the chosen case or Procurement store.",
+          "PreparedChangeSet requires the real change proposal store and its exact choice-linked prepared output; not covered by this DossierDraft driver."
+        ]
+      },
+      {
+        "id": "PURCHASE-COMMERCIAL-BINDING",
+        "owner": "WP10 input/output composition",
+        "classification": "explicitly-unsupported-installed-input-mode",
+        "sourcePins": [
+          {
+            "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/input-producer-purchase.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "afb1e6005ef8fcfe16b7c04605611f32a63bfd63"
+          }
+        ],
+        "finding": "includeCommercialComparisons=true is explicitly unavailable with commercial-comparison-binding-unavailable; the verifier also refuses nonempty commercialComparisons. The driver obtains a genuine domain ranking separately and never calls the empty-array mode a full commercial comparison binding.",
+        "requiredDelta": "Expose the owner-approved stored CommercialComparison binding with current source pins before treating that mode as available.",
+        "nativeInferenceObserved": false
+      },
+      {
+        "id": "EVIDENCE-REVIEW-CLAIM-SELECTOR",
+        "owner": "WP11 claim/acceptance consumer and WP10 input composition; WP00 if a new shared contract is required",
+        "classification": "observed-source-design-prerequisite-gap-with-bounded-writer-inspection",
+        "sourcePins": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "440fdb53772e871cadc2703bad991b1517120b89"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/input-producer-evidence-review.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "a965fd2d366e14cda8d71531392bda63d8159706"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/analysis-verifier-review.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "7b0bb3bbe0ef44f3e5c4babe431d9b37e2a22c4a"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "commit": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+            "blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322"
+          }
+        ],
+        "finding": "The mounted EvidenceReviewInput producer requires nonempty claimIds found in current.case.assumptions. Real case draft initializes assumptions=[]; the inspected analysis acceptance implementation increments version and appends ledger/outbox without materializing assumptions. Native extraction is a candidate and does not create a case claim. This inspection does not assert that every possible external producer was searched.",
+        "reproducer": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+        "actualDriverBehavior": "Select only current case assumptions; empty set is submitted to the mounted preparer and recorded as needs-input, without synthetic C08 claims. The independent native branch uses only an actual extraction author run/output digest, the same exact caseRef, and asserts a distinct run and native Session.",
+        "requiredDelta": "Provide and exercise a real human claim/source adoption producer. Preserve the author's exact run/output target and current case version; do not insert claims directly into C08.",
+        "installedReadyOutputSubset": [
+          "ClaimIssue unsupported for a current claim with no source refs.",
+          "ClaimIssue contradiction only through two real confirmed claim-field bindings with current distinct values."
+        ],
+        "notCertified": [
+          "ClaimIssue stale",
+          "ClaimIssue missing-category",
+          "ClaimIssue invalid-digest",
+          "ClaimIssue access-unavailable",
+          "Document candidate confirmation or financial application by the reviewer"
+        ]
+      }
+    ],
+    "documentFixtureScope": {
+      "actual": [
+        "private local-store blob persistence",
+        "asset metadata tied to real domain contract",
+        "host document discovery/admission",
+        "private parser/index",
+        "human schema registration",
+        "mounted extraction input",
+        "native Session/tools/receipt/output if an installed model exists",
+        "schema and native output/source consumers after host reload"
+      ],
+      "notClaimed": [
+        "asset upload flow",
+        "malware scanner qualification",
+        "human document confirmation",
+        "financial application"
+      ],
+      "scanner": "Fail-closed unused scan service; no accepting scanner stub.",
+      "extractedCandidateResolver": {
+        "blob": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7",
+        "finding": "No bug asserted. The current resolver verifies extracted candidate bytes/range/RAG proof and may return fresh; BCS confirmation restrictions are separate."
+      }
+    }
+  },
+  "procurement_projector_intake": {
+    "source_closure": {
+      "schema": "wp12-exact-foreign-closure-v1",
+      "status": "PROPOSED_FOR_PARENT_INTAKE_NOT_EDITED_BY_WRITER",
+      "baseCommit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+          "owner": "WP00/integration; existing projector delegates to WP04 source authority",
+          "sourceCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+          "sourceBlob": "3e8830c3dddc8b9609f583f877b2fe7458eccd28",
+          "baseBlob": "08fdfb878f6f9282f70ec71b3e66122f1b95f6f5",
+          "sha256": "4be293f1b2ab1ea2deefa7ebbef633cb71b9c9a6abe4a4d83a99929e5b6259cc",
+          "bytes": 233,
+          "why": "W14 issuer emits approvalStage in exact request fields; W14 legacy integration projector omits it and returns undefined before source issuance. Exact published delegation uses the already consumed owner projector.",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/d357de0b1f58abc33e86e79ad3f93b8715ba0e83/modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts"
+        }
+      ],
+      "count": 1,
+      "existing_dependency": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+        "blob": "ab9814817d11c0b477636ee54d1b2763d365f405"
+      },
+      "observed_failure": {
+        "run": 43597537890,
+        "job": 132455165334,
+        "snapshot": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+        "log": "evidence/resume-09-inputs.log",
+        "log_sha256": "fbbc981aa52def2e0351072f374f51cfccbfca016dea241d69e1ab1edf56bca7",
+        "affected": "sourcing, documents-contract, purchase pending, purchase complete"
+      },
+      "cause": "Incomplete exact intake; fixture raw request wrappers, admin visibility and period selection match published adapters.",
+      "not_included": [
+        "source-inventory.ts",
+        "source-projections.ts",
+        "host, contracts, engines, financial policies"
+      ],
+      "validation": "GitHub MCP confirms exact blob on current PR29 source d357de0b and PR32 source39972fd; historical W7 source also matches. Static import closure only; no product or typecheck locally."
+    },
+    "consumed_in": {
+      "name": "W15",
+      "sha": "aebf95b980c461b6330d030ac5f4991ee96d8f88",
+      "tree": "964c6bb84a7002c58660ba27d3a574517990b0ed",
+      "check_run": 43600168125,
+      "check_job": 132463010548,
+      "check_status": "FAIL_ONE_OWN_TYPE_DIAGNOSTIC",
+      "product_tests_status": "NOT_DISPATCHED_TYPE_ONLY_FIX_BEFORE_W16"
+    },
+    "current_blob": "3e8830c3dddc8b9609f583f877b2fe7458eccd28",
+    "runtime": "W16 now passed actual request issuance and failed at later contract/C10/choice boundaries. W14 remains the earlier failed run, not retrospectively relabeled."
+  },
+  "c10_origin_loss_runtime": {
+    "file": "owner-c10-runtime-finding.json",
+    "scope": "Observed W16 final result loses the omitted training category origin after actual C09/C10 promotion. An exact owner correction is consumed in WP12 W20; strict pending tests require new hosted observation. This historical failure does not describe source WP10 W20 or consumer WP12 W20 behavior."
+  },
+  "bi_finding": {
+    "schema": "sf-wp12-owner-delta-v1",
+    "id": "WP12-BI-MODEL-ARTIFACT-IDENTITIES",
+    "owners": [
+      "WP10",
+      "WP00 if shared contract revision is needed"
+    ],
+    "classification": "statically-confirmed-input-output-composition-gap-not-observed-inference-failure",
+    "observedProduct": "8d0092bbc82d2c5e0c8432c2a1a0f77b6ddb7dfd",
+    "sourcePins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+        "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/input-producer-bi.ts",
+        "blob": "a5cd14609db80287e6f122cfb199338df53a8b50"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/analysis-bi-bindings.ts",
+        "blob": "4f21e442aebcc2151b3d07ee5b78595d2322e67f"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/analysis-verifier-bi.ts",
+        "blob": "7fccb6aad336a780267d776bf06e7c2a4cc81457"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/capabilities.ts",
+        "blob": "87e36883d92f6982cc8765337f8802ffacd6e52c"
+      }
+    ],
+    "finding": "The real producer persists canonical projection/table artifact identities in the private human-selection material. ContextualBIInput contains businessQuestion, approvedViews, projectionRefs (BusinessEvidenceRef[]), authorizedFilters and dashboardSelection, but no canonicalProjectionRefs (string[]) or tableRef. sf_bi_view returns DomainProjection and does not publish these artifact identities. The installed verifier requires exact stored canonicalProjectionRefs and tableRef in ContextualBIProposal.",
+    "requiredDelta": "Expose the already-authorized persisted artifact identities to the real native execution through an owner-approved input/read contract, with case, source, selection and current-authority pins. Keep the verifier strict. Do not derive identifiers from model fields, infer a latest artifact, or supply private expected output through a test objective.",
+    "reproducer": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi.test.ts",
+    "testSemantics": "Driver first produces a real Dashboard source, case, input and C08 artifacts; reads WP05 presentation/drilldown before and after host reload. If a model exists it requires actual tools and matching ContextualBIProposal. Read-only C08 artifact observations are separate from consumer proof and never supplied to the model.",
+    "foreignSourceEdited": false,
+    "nativeInferenceObserved": false,
+    "gnativeAccepted": false
+  },
+  "forecast_kpi_finding": {
+    "schema": "sf-wp12-owner-finding-v1",
+    "id": "WP12-FORECAST-KPI-SELECTION",
+    "classification": "published-input-and-source-composition-gap",
+    "status": "NOT_APPLIED",
+    "validation": "NOT_RUN",
+    "base": {
+      "repository": "gustavomhss/Orchestra-SF",
+      "commit": "ede812eaf2644cde161f2360b2e4762d9c942146",
+      "tree": "bdaa8c2f327b87f7f713a739fd284e40e2b6dd55"
+    },
+    "normative": {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "path": "resident_ui_consumption.skills[id=sf-explicar-forecast].required_operations",
+      "requiredOperation": "sf_kpi_explain"
+    },
+    "route": {
+      "profileId": "sf_finance",
+      "skillId": "sf-explicar-forecast",
+      "producer": "createSfAnalysisBusinessInputs / createSfImportForecastAnalysis",
+      "outputKind": "FinancialAnalysis"
+    },
+    "finding": "The installed Forecast input supplies actual Planner source selectors. sf_kpi_explain requires a DashboardMetric selector resolved from a separately issued Dashboard page and a supported metric. No mapping or public selected metric is present in the closed Forecast input or its mounted selection producer. Passing the Planner selector is invalid; manufacturing an unrelated DashboardMetric solely for a tool witness would not establish this mission's authorized context.",
+    "scopeLimits": [
+      "This is not a claim that sf_kpi_explain is absent: its concrete Dashboard implementation exists.",
+      "The exported dashboardMetricSelector is a formatter; it does not issue a Dashboard scope or prove its relationship to the selected Forecast case.",
+      "The gap was checked statically against pinned published sources; no product run or model execution was performed for this finding.",
+      "Other skill/profile combinations do not witness the Finance/sf-explicar-forecast route."
+    ],
+    "sources": [
+      {
+        "path": "apps/cli/src/sucafina-product/analysis-services-inputs.ts",
+        "blob": "7f4ccee85c4eeaec82d932a69ba93c5fe6d59eff",
+        "proof": "createSfAnalysisBusinessInputs rejects selection keys beyond caseRef/baseRef/candidateRef/period/currency, or the corresponding import fields; emits ForecastExplainInput with Planner comparison sources."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+        "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db",
+        "proof": "ForecastExplainInput has forecastComparison, selectedPeriod, currency, sourceRefs, registeredReasons and optional importPreview; no Dashboard metric selector."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+        "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+        "proof": "KpiExplainRequest requires metricRef and period; optional comparisonRef."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+        "blob": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811",
+        "proof": "explain resolves DashboardMetric before reading its Dashboard source and supported field/valuePrefix."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+        "blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+        "proof": "resolveDashboardMetric requires dashboard-metric:<encoded sf-source>:<encoded metric>; only total-budget, Executive Dashboard monthly measures and active-headcount are currently mapped."
+      }
+    ],
+    "owners": [
+      "WP00 integration/shared contracts",
+      "WP10 installed producer composition",
+      "Dashboard/Planner source owners for any authorized cross-surface metric relationship"
+    ],
+    "proposal": {
+      "applied": false,
+      "decisionRequiredFromOwners": "Publish a typed optional KPI selection that is issued and bound to the same authorized case and period, or publish a Planner KPI interpretation with an actual source issuer and verifier. Retain explicit input absence when no relation exists.",
+      "requiredProperties": [
+        "Public selector returned by a real producer, not reconstructed from private store identifiers.",
+        "Same installation, project, principal, access revision, case membership and selected period as the analysis.",
+        "Verifier re-resolves the metric/source immediately before execution and output/read egress.",
+        "No expansion of profile or skill grants; no calculation from restricted aggregate or unrelated Dashboard values.",
+        "If contracts change, publish pins for additive schema, validators, source issuer, preparer and verifier before WP12 consumes them."
+      ],
+      "wp12FollowOn": "Consume the published typed selector, add sf_kpi_explain to this Finance mission's requested scope and required native tool receipts, assert the returned source/period relationship, and reopen the actual FinancialAnalysis consumer."
+    },
+    "proposedNegatives": [
+      "Planner selector supplied as metricRef must not succeed.",
+      "Metric source outside the selected case/period must be refused.",
+      "Source version change or revoked authority must refuse the metric and hide stale interpretation.",
+      "Same prompt with another valid linked metric must change the verified input/output; no expected numerical answer belongs in the prompt."
+    ],
+    "ownImplementedDeltas": [
+      "sf_source_get native receipt witness added to ordinary Finance and forecast variants.",
+      "sf_context_get native receipt witness added to Intent.",
+      "Separate real C04 import missions for Finance and Intent use installed scanner, real file admission, preview input producers and reopened consumers; scanner/model absence remains explicit."
+    ],
+    "independentStaticReview": {
+      "reviewer": "/root/compose_typecheck",
+      "finding": "No public Forecast Planner to DashboardMetric selection route found; the same missing selector exists for the current BI milestone slice."
+    }
+  },
+  "rejected_owner_intake": {
+    "applied": false,
+    "introduced_in_wp12": false,
+    "current_foreign_pin_count": 339,
+    "documentation_head": {
+      "name": "D14",
+      "sha": "caa2e9602d0369a1425429e2d910de62450cff8b",
+      "tree": "a6b4fcd9c8eee314d10e854495d714142991a8f1",
+      "parent_product": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+      "scope": "Historical five-document increment between W14 and W15; not the current branch head.",
+      "owner_notifications": [
+        {
+          "pr": 40,
+          "comment_id": 6877788431
+        },
+        {
+          "pr": 29,
+          "comment_id": 6877788609
+        }
+      ]
+    },
+    "finding": {
+      "schema": "sf-wp12-owner-delta-v1",
+      "id": "WP12-C09-FINAL-READ-LEASE-FENCE",
+      "owners": [
+        "WP11",
+        "WP10 for the composed authority regression test"
+      ],
+      "classification": "statically-confirmed-revocation-window-not-an-executed-product-counterexample",
+      "status": "NOT_APPLIED_OWNER_PUBLICATION_REQUIRED",
+      "observedProduct": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+      "rejectedIntake": {
+        "sourcePR": 40,
+        "sourceCommit": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "beforeBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+        "proposedBlob": "e646386af209978f2a931a10a070061ba0c97cbe",
+        "testPath": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+        "testBlob": "67b8b179a3fba332933d8ad00820df82b7ab258e",
+        "dependencyClosure": "The two published files have no new imports requiring a third source. The exported interface is unchanged. The blocker is a lifecycle regression, not a missing dependency."
+      },
+      "sourcePins": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+          "commit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+          "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+          "relevantSymbols": [
+            "current",
+            "requestFor",
+            "revalidate",
+            "finish",
+            "createSfDomainAuthority"
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+          "commit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+          "blob": "18a9d4dbfa4bd8b3421685482f431fa6b5b1469f",
+          "relevantSymbols": [
+            "current",
+            "active",
+            "requestFor",
+            "revalidate",
+            "finish",
+            "revoke",
+            "invalidateGeneration"
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "commit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+          "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+          "relevantSymbols": [
+            "principal",
+            "state.authorize",
+            "host.requestFor",
+            "host.revalidate"
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "commit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+          "blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+          "relevantSymbols": [
+            "createSfProductState.read",
+            "sameAuthority"
+          ]
+        }
+      ],
+      "finding": "The proposed case-port moves its final asynchronous host revalidation before the second asynchronous C08 read. It checks the case/reference digests and Request.signal after that read, but never checks that the same UI/native lease is still live. C08's production authorizer reauthenticates the Request principal and namespace, not that lease. A lease can finish, expire, or be revoked while C08 authorization awaits, with the Request still un-aborted and principal/case bytes unchanged. The proposed port then returns an AuthorizedCaseProjection after its lease has ceased to authorize the call.",
+      "staticInterleaving": [
+        "Admit and consume a real UI or native call. Preserve the same authenticated Request, principal, policy, access revision and case contents throughout.",
+        "The first C08 read, both case/evidence/operation verification passes, and the last host.revalidate return successfully.",
+        "The proposed port starts its second C08 read. The real state provider awaits input.authorize before and after its read callback; the production authorizer awaits principal resolution against the installation authenticator.",
+        "While either of those awaits is outstanding, finish the UI admission, or finish/revoke the native lease/binding, or invalidate its native provider generation. Expiry during this interval is another possible trigger.",
+        "These registry changes do not abort the retained Request or change the principal's grants/accessRevision. The production C08 authorizer can still return the same SfStateAuthority; C08 returns the unchanged case successfully.",
+        "The proposed port sees equal complete-case/reference digests and source.signal.aborted === false. Without a final registry lookup it returns status ok with a projection. Its previous final host.revalidate, placed after that read in blob 67203e0, would reject this particular interleaving."
+      ],
+      "whyPublishedTestsDoNotDiscriminate": [
+        "The two published tests mutate membership/version or same-version case contents during the final host revalidation. They correctly distinguish the old case-snapshot race and must be retained.",
+        "Their fixture injects await ui.revalidate(context) into createSfProductState.authorize. The production composition's state authorizer does not call UI/native registries. A lease-ending race during the last read would therefore be suppressed by the fixture's stronger authorization, concealing the production regression."
+      ],
+      "proposedDelta": {
+        "path": "retain-live-lease.NOT_APPLIED.patch",
+        "appliesToBlob": "e646386af209978f2a931a10a070061ba0c97cbe",
+        "description": "Retain context kind, binding identity/value and lease identity before the first await. After the second C08 read and existing digest/abort checks, synchronously require host.requestFor(context) === the originally retained Request and unchanged retained context pins. Keep the new final complete-case observation and do not reintroduce an asynchronous gap after it.",
+        "boundedRationale": "For the pinned real UI/native registries, requestFor synchronously checks consumed/live admission, expiry, abort, lease finish, binding revocation and invalid provider generation as applicable. Thus the proposed lookup closes the documented registry-lifecycle window without another C08 read or any interface change. The current real context/binding objects are frozen; identity/value pins additionally make the retained admission explicit.",
+        "notClaimed": "This lookup is not a substitute for the existing asynchronous authorization, source verification, C08 authority checks or a complete proof of all external source races. Retaining Request identity does not freeze its headers. Hosted counterexamples against the production authority composition are required before accepting a replacement owner publication."
+      },
+      "requiredOwnerChecks": [
+        "Retain both published case-mutation counterexamples and the positive unchanged-case read.",
+        "Exercise lease finish during the second C08 authorization with the real product-authority composition, or an explicitly equivalent state authorizer that checks Request/principal/namespace and does not add UI revalidation. Assert the lease did end, the Request remains un-aborted, the case/principal are unchanged, and no projection/value escapes.",
+        "Cover UI expiry and native finish/revoke/provider-generation invalidation at the same boundary using the actual registries; assert their requestFor returns undefined and that the final port result is not ok.",
+        "Keep exactly two case observations and preserve membership, source coverage, evidence, operation and complete-case digest guards. Verify no additional asynchronous callback occurs after the final registry/identity fence."
+      ],
+      "consumerScope": "WP12 input producers and verifiers consume business.cases.read. This finding is at the C09 port boundary; it does not claim that every outer HTTP/native consumer lacks its own additional egress validation or that a network disclosure was observed.",
+      "verification": {
+        "source": "Exact owner intake payload and four published composition blobs verified via GitHub MCP; local bytes match their blob IDs.",
+        "review": "Static read and interleaving analysis only.",
+        "productTestsLocally": false,
+        "typecheckLocally": false,
+        "hostedCounterexampleExecuted": false,
+        "foreignSourceEdited": false,
+        "remotePublicationByReviewer": false
+      }
+    },
+    "scope": "The proposed e646386af209978f2a931a10a070061ba0c97cbe owner blob was rejected statically and was never consumed. Its reported race is not labeled an introduced WP12 regression or an executed leak."
+  },
+  "consumed_foreign_delta": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "299979047340dd76d7cc2db667b826da675a1e2e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "727997f3fb0554c44056a7e2930888a28e6184ca"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/scope.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f53d0509b6f727947ec9b00888bce9dae1420094"
+    }
+  ],
+  "latest_consumed_foreign_delta": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "bytes": 11922,
+      "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "sha256": "0cca19827cfe6793207441d493561d76830d6903383701b9d84230380561a701"
+    }
+  ],
+  "current_foreign_pin_count": 339,
+  "current_foreign_pins_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json",
+  "current_increment_foreign_change_count": 1,
+  "rules": [
+    "Pinned static rejection is not automatically an executed failure.",
+    "A prepared input or UI operation is not GNATIVE.",
+    "Latest exact owner intake may resolve a source finding; only observed hosted behavior closes its runtime proof."
+  ],
+  "review_selection_cross_route": {
+    "id": "WP12-REVIEW-SELECTION-CROSS-ROUTE",
+    "status": "STATIC_PUBLISHED_SELECTION_GAP_NOT_AN_EXECUTED_NATIVE_FAILURE",
+    "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "owners": [
+      "WP00 shared input contracts",
+      "WP10 mounted input composition",
+      "WP07 actual review producers"
+    ],
+    "findings": [
+      "ExecutiveReviewInput has live agenda selectionRef/sections but no preservedReviewRef. sf_review_prepare returns a preview and does not persist a review; report_prepare requires a real preserved review identity.",
+      "MeetingMaterialInput has preservedReviewRef/sections but no agenda selectionRef for its required sf_review_prepare. A preview called under another skill is not this named native witness.",
+      "The existing human UI may prepare/preserve both forms; that does not establish an exposed typed linkage inside either native input. No standalone ID is injected into the model objective to hide the missing selection."
+    ],
+    "sources": [
+      {
+        "path": "apps/cli/src/sucafina-product/input-producer-executive.ts",
+        "blob": "39cd47fda0547ad74f7c2193b3a11d8e0f112c65",
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/apps/cli/src/sucafina-product/input-producer-executive.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/input-producer-meeting.ts",
+        "blob": "672a24c3fd9e48bbef106720d63ee29225f8a9d3",
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/apps/cli/src/sucafina-product/input-producer-meeting.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+        "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db",
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+        "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/modules/sucafina/Sucafinav1/product/contracts/operations.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+        "blob": "4db2e631bd83ccda67442824557881c2ed990c92",
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/modules/sucafina/Sucafinav1/product/contracts/outputs.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+        "blob": "fd79690c368087f48276e0cb21198f91f59d5e63",
+        "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/71cbf64ffa10111b53ee00774aa625332dc4d295/modules/sucafina/Sucafinav1/product/reviews/capabilities.ts"
+      }
+    ],
+    "independent_review": {
+      "reviewer": "/root/compose_typecheck",
+      "verdict": "No public path linking both selectors found in reviewed published sources; exact AM02 routes remain separate."
+    },
+    "next_delta": "Publish an authenticated current relation/typed optional selection between the actual agenda and preserved review; then WP12 can require the corresponding native tool receipts and original consumer."
+  }
+}

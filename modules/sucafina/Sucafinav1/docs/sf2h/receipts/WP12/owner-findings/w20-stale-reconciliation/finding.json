@@ -1,0 +1,104 @@
+{
+  "schema": "wp12-owner-finding-v1",
+  "id": "WP12-W20-STALE-RECONCILIATION",
+  "owner": "WP10",
+  "integrationOwner": "WP00/S0",
+  "reporter": "WP12",
+  "status": "OWNER_ACTION_REQUIRED_NOT_APPLIED_NOT_RUN",
+  "source": {
+    "commit": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+    "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+    "blob": "9f574a7573538c2a46796dfd650fadbac052dc80",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3b02c7693c1ff3b702596c7c8458f913972a404/apps/cli/src/sucafina-product/analysis-stale-commit.ts"
+  },
+  "current": {
+    "commit": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+    "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+    "blob": "299979047340dd76d7cc2db667b826da675a1e2e",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35954072193ee08e0cdefd63c8ec03474d0b5bc5/apps/cli/src/sucafina-product/analysis-stale-commit.ts"
+  },
+  "summary": "The full W20 stale adapter removes later published historical-calculation and snapshot identity fences. Preserve current 29997904 and add only W20 lifecycle/observation support.",
+  "findings": [
+    {
+      "id": "F1",
+      "kind": "STATIC_COMPATIBILITY_REGRESSION",
+      "currentLine": 55,
+      "fact": "W20 removes exact stored scenario result/case-incarnation/version validation plus the independently admitted historical calculation read lease. The current code leaves the active selector unchanged and finishes the private lease.",
+      "impact": "The existing late historical-calculation path is not preserved by a whole-file W20 replacement. No new runtime reproduction or exploit is claimed."
+    },
+    {
+      "id": "F2",
+      "kind": "STATIC_FENCE_REGRESSION",
+      "currentLine": 39,
+      "fact": "W20 deletes the digest of captured snapshots fixed before asynchronous authorization/source reads and compares two values at the end instead.",
+      "impact": "This loses the published anti-alias fence for retained snapshots across awaits. The proposed merge retains the original digest comparison. Runtime alias reachability was not executed in this audit."
+    },
+    {
+      "id": "F3",
+      "kind": "STATIC_FENCE_REGRESSION",
+      "currentLine": 50,
+      "fact": "W20 removes the current case id equality check while reading the entry by case key.",
+      "impact": "Retain id, incarnation, participant and integer/version checks together; no reason exists to weaken them for lifecycle support."
+    },
+    {
+      "id": "F4",
+      "kind": "REQUIRED_W20_INCREMENT",
+      "w20Line": 145,
+      "fact": "The current wrapper drops the fourth stale observation argument. W20 captures/freezes/forwards it and routes lifecycle markStale/terminal transitions through the lifecycle commit authority, while refusing preserveStale content on a lifecycle frame.",
+      "impact": "These deltas are required; retaining the old adapter unchanged would not install the intended stale observation/lifecycle semantics."
+    }
+  ],
+  "proposal": {
+    "status": "NOT_APPLIED",
+    "targetPath": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+    "baseBlob": "299979047340dd76d7cc2db667b826da675a1e2e",
+    "candidateBlob": "392442a4ea55579953ce439aff76d549723e4891",
+    "candidateSha256": "c897748ddc5543027c5f16e6370356df191d0695024422e6a6c247cd21ad4823",
+    "patch": "reconcile-stale.NOT_APPLIED.patch",
+    "diff": "current-to-w20.diff",
+    "ownerPublicationRequired": true,
+    "invariants": [
+      "Only lifecycle import/optional argument plus W20 final wrapStore block differ from 29997904.",
+      "Historical calculations, private temporary read lease, snapshot digest, case identity, source access/revocation and cancellation code remain byte-identical.",
+      "Lifecycle does not accept fresh output, AlternativeDraft, ready/running/admission, human approval or cancellation authority.",
+      "markStale observation is cloned/frozen before awaited store work and exact durable run/output CAS remains owned by the current run-store."
+    ]
+  },
+  "requiredVerification": [
+    "W20 lifecycle after source loss/case advance: terminal metadata can settle under current authority; output read, fresh content publication, AlternativeDraft, preparing/ready and analysis.start cancellation remain denied.",
+    "Observation forwarding: mutate caller observation during await; exactly the originally observed ready run may become stale, stored output bytes remain unchanged; missing/wrong digest/version/cancelled predecessor is refused.",
+    "Historical calculation: preserve same-case original-version late result through real BCS/C08 without updating the active selector; refuse other case/incarnation and result created after original case version.",
+    "Captured snapshot mutation or replacement during async authorization/source reads must fail the pinned snapshot digest before commit.",
+    "Revoked membership, host lease, request, source permission and cancellation provenance must remain refusals. Use existing real authority/persistence boundaries and no permissive source verifier.",
+    "Current own analysis-port47e25de4, readerdb9faeec and all current cancellation/egress tests remain preserved; no old owner test snapshot replacement."
+  ],
+  "criteriaAffected": [
+    {
+      "ids": [
+        "WP12.T04.CHK.01",
+        "WP12.T04.CHK.02",
+        "WP12.T04.CHK.10",
+        "WP12.T04.DOD.10",
+        "WP12.T04.INV.01",
+        "WP12.T02.CMP.10"
+      ],
+      "disposition": "Potential boundary evidence after owner publication and hosted tests only. No criterion is marked PASS by this static finding; T04.CHK.01 still needs a true inference race."
+    },
+    {
+      "ids": [
+        "WP12.T02.INV.60",
+        "WP12.T02.CMP.60"
+      ],
+      "disposition": "C07 installed publication can gain real installation evidence; absent native port/knowledge/model remains outside acceptance."
+    }
+  ],
+  "minimumClosure": "minimum-closure.json",
+  "verification": {
+    "remoteSource": "GitHub MCP exact commits; all 49 copied source contents recomputed to their declared Git blob hashes.",
+    "productTestsRun": false,
+    "typecheckRun": false,
+    "ciDispatched": false,
+    "foreignRepoSourcesChanged": false,
+    "claim": "Static source comparison and exact patch preservation only; source and hosted proof are distinct."
+  }
+}

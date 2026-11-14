@@ -1,0 +1,85 @@
+{
+  "schema": "wp12-own-driver-increment-v1",
+  "status": "FROZEN_REVIEWED_FOR_PARENT_PUBLICATION",
+  "owner": "WP12",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "beforeBlob": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06",
+      "afterBlob": "d418d5d462842ebfb0ddc3d890098eb00abc5653",
+      "sha256": "249961ad4c5b067b1b16863cc6774235c67be9b27f4eb8369f8071ff25be64a9",
+      "bytes": 21320
+    }
+  ],
+  "base": {
+    "runId": 43606961039,
+    "productCommit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "productTree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e",
+    "ciSnapshot": "24126b776427dfc6560456d921c7b8f1398afd1c",
+    "ciSnapshotTree": "3969e7577dba71e21a5912ed76790ade3c480eb3",
+    "terminalResult": "NOT_YET_OBSERVED_BY_THIS_REVIEW",
+    "oldDriverBlob": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06"
+  },
+  "validation": {
+    "syntax": "PASS node --check; no imports executed",
+    "sourceBlobsVerified": 14,
+    "priorExpectLines": 48,
+    "currentExpectLines": 58,
+    "allPriorExpectLinesPreserved": true,
+    "nativeExecutionBlockByteIdentical": true,
+    "deadlineMs": 720000,
+    "localProductTests": false,
+    "localTypecheck": false,
+    "ciDispatched": false,
+    "independentReview": "PASS_STATIC /root/compose_typecheck; no remaining findings",
+    "styleCorrection": "Independent reviewer requested direct import name compareScenarios per root AGENTS.md; alias removed before freeze."
+  },
+  "changes": [
+    "Use the existing real UI admission and single validation through context.ui.",
+    "Select the already-created case with the same business instance own withCase method; this method authenticates and checks its real current case and Request.",
+    "Invoke the public Planner capability handler with that instance real Planner, receipt factory and calculation persistence. No context, receipt or output is constructed by the test.",
+    "Assert the real UI receipt, request/result digests, outputRef and stored comparison under the selected case; reopen the exact stored records after host reload."
+  ],
+  "preserved": [
+    "All original 48 expect lines, raw scenario preparation and missing-category discriminator.",
+    "Requested native scopes and the Finance/Reviewer execution block remain byte-identical.",
+    "No new grants, deadlines, foreign source edits, provider, native receipt or synthetic contribution."
+  ],
+  "acceptance": {
+    "correctedRuntimePass": false,
+    "GNATIVE": false,
+    "fullWP12": false
+  },
+  "artifacts": {
+    "before": {
+      "path": "resume-input/own-missions/scenario-comparison-case-scope/native-execution-scenarios-review.before.ts",
+      "sha256": "aa89749cba692f244a357d60efebf831933ee0e85590605f7d0f85d1707d1580",
+      "gitBlob": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06",
+      "bytes": 18456
+    },
+    "diff": {
+      "path": "resume-input/own-missions/scenario-comparison-case-scope/increment.diff",
+      "sha256": "b6db2d3ea6ed805e277a31468abb20e1559a106b1874e5657241944199171105",
+      "gitBlob": "2b6cc433b3e3f0989a291593cdcc52edd4ee06f0",
+      "bytes": 9257
+    },
+    "finding": {
+      "path": "resume-input/own-missions/scenario-comparison-case-scope/finding.json",
+      "sha256": "d97515f4536886e41fedcb77e0b37f37d4223fe22e75321f2205425a2dd4d84a",
+      "gitBlob": "d934442eb779c4dbf3b3482e4a507fa22d8ab3a7",
+      "bytes": 6074
+    },
+    "sources": {
+      "path": "resume-input/own-missions/scenario-comparison-case-scope/source-bytes.json",
+      "sha256": "eb09510074964959c80b4931e98a77baa0e418ed849273cdcef64734dee5058f",
+      "gitBlob": "3c870133ae1d8e16fb7e7d53eb2d5fd637e891e3",
+      "bytes": 293629
+    },
+    "independentReview": {
+      "path": "resume-input/own-missions/scenario-comparison-case-scope/independent-review-compose.json",
+      "sha256": "5b612e2841a1cab1d3a8950f8dca909099fe323fc00be2bc1516db86cce1674a",
+      "gitBlob": "b643f6c612bfd5b597a9506266603f24a10c2bf0",
+      "bytes": 6229
+    }
+  }
+}

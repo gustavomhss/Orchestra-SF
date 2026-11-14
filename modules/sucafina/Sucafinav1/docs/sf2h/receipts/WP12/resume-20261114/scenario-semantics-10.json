@@ -1,0 +1,65 @@
+{
+  "schema": "sf-wp12-increment-v1",
+  "status": "FROZEN_FOR_PARENT_PUBLICATION",
+  "owner": "WP12",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts",
+      "beforeBlob": "894009c373724a6f68a975ecede289346ff208e1",
+      "blob": "3f02a1ad9ee2985b4094690bd32c16e22a0dda75",
+      "sha256": "09013a33b61063928df974b1c90f814c4c042d8017d65f79bfb4f8fbd3f607f1",
+      "bytes": 12693,
+      "syntax": "PASS node --check only"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "beforeBlob": "dd7cad24d578c0f0c841e2882ee8f29f3025d5b6",
+      "blob": "32c5da596893d0810879bd7912be9986a1127af3",
+      "sha256": "6f0c6864015a865814a8aa2d9e131beb773c6e8039418bf458c2ff4b0e8d6725",
+      "bytes": 18522,
+      "syntax": "PASS node --check only"
+    }
+  ],
+  "basis": "W11 real hosted failure at scenario helper line109: baseline knownSubtotal240000 but totalnull; current published scenario semantics preserve conditioned independently of category coverage.",
+  "changes": [
+    "Keep all scenario totals null and comparisons conditioned, preserving scenario-is-hypothetical and preview-not-applied.",
+    "Require positive complete category coverage, complete explicit category inventories and confirmed finite source components for baseline and fully observed candidate.",
+    "Keep strict derivedMissingCategoryIds training and missing-category pending row for wholly omitted training.",
+    "Discriminate twelve observed zero training values from no training components and a real 40000 observed component.",
+    "Compute real UI comparison from the two actual C09 result references: knownDifference -30000/+10000, completeDifference null, current coverage refs and hypothetical conditions.",
+    "Native outputs must match this canonical comparison exactly; existing native required operation witnesses and reviewer independence unchanged.",
+    "Always reopen the real case and Planner data even when model catalog is empty; no native output claim for that branch."
+  ],
+  "unchanged": [
+    "All deadlines unchanged.",
+    "No provider, receipt, output, source, coverage assessment or comparison is fabricated.",
+    "No host/contracts/engines/foreign branches edited.",
+    "Training input classification remains entirely omitted; derived-category assertion is not relaxed.",
+    "No scenario delta or expected cost is added to prompts."
+  ],
+  "collaborationRecall": "Read-only checked; third test consumes pending entry/derived preparation and requires no complete scenario total; no edit necessary.",
+  "verification": {
+    "syntax": "PASS",
+    "productTests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "ci": "NOT_RUN",
+    "remoteWrites": "NONE"
+  },
+  "independentReview": {
+    "agent": "/root/compose_typecheck",
+    "status": "STATIC_REVIEW_NO_REMAINING_CONCRETE_FINDING_IN_REVIEWED_SCOPE",
+    "notes": [
+      "UI ScenarioCompareRequest/dispatch/grants verified.",
+      "Native comparison equality is valid; output contains no observation timestamp.",
+      "Alternative-minus-baseline known differences and both hypothetical conditions match comparison.ts.",
+      "Strict training-derived gap, explicit zeros and real 40000 source are preserved."
+    ],
+    "localProductExecution": false,
+    "localTypecheck": false
+  },
+  "limits": [
+    "Known foreign normalized-baseline entries roundtrip still must preserve derivedMissingCategoryIds; this increment will continue to fail that strict discriminator until actual owner fix is consumed.",
+    "This semantic correction does not establish native inference, GNATIVE or sequential human resolution/re-review required by the complete T03.CHK.20.",
+    "The W11 timeout has no exact subphase timing; do not label the semantic correction a measured timeout fix."
+  ]
+}

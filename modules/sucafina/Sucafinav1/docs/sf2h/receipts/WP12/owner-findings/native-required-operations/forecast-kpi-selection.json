@@ -1,0 +1,90 @@
+{
+  "schema": "sf-wp12-owner-finding-v1",
+  "id": "WP12-FORECAST-KPI-SELECTION",
+  "classification": "published-input-and-source-composition-gap",
+  "status": "NOT_APPLIED",
+  "validation": "NOT_RUN",
+  "base": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "commit": "ede812eaf2644cde161f2360b2e4762d9c942146",
+    "tree": "bdaa8c2f327b87f7f713a739fd284e40e2b6dd55"
+  },
+  "normative": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "path": "resident_ui_consumption.skills[id=sf-explicar-forecast].required_operations",
+    "requiredOperation": "sf_kpi_explain"
+  },
+  "route": {
+    "profileId": "sf_finance",
+    "skillId": "sf-explicar-forecast",
+    "producer": "createSfAnalysisBusinessInputs / createSfImportForecastAnalysis",
+    "outputKind": "FinancialAnalysis"
+  },
+  "finding": "The installed Forecast input supplies actual Planner source selectors. sf_kpi_explain requires a DashboardMetric selector resolved from a separately issued Dashboard page and a supported metric. No mapping or public selected metric is present in the closed Forecast input or its mounted selection producer. Passing the Planner selector is invalid; manufacturing an unrelated DashboardMetric solely for a tool witness would not establish this mission's authorized context.",
+  "scopeLimits": [
+    "This is not a claim that sf_kpi_explain is absent: its concrete Dashboard implementation exists.",
+    "The exported dashboardMetricSelector is a formatter; it does not issue a Dashboard scope or prove its relationship to the selected Forecast case.",
+    "The gap was checked statically against pinned published sources; no product run or model execution was performed for this finding.",
+    "Other skill/profile combinations do not witness the Finance/sf-explicar-forecast route."
+  ],
+  "sources": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-services-inputs.ts",
+      "blob": "7f4ccee85c4eeaec82d932a69ba93c5fe6d59eff",
+      "proof": "createSfAnalysisBusinessInputs rejects selection keys beyond caseRef/baseRef/candidateRef/period/currency, or the corresponding import fields; emits ForecastExplainInput with Planner comparison sources."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+      "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db",
+      "proof": "ForecastExplainInput has forecastComparison, selectedPeriod, currency, sourceRefs, registeredReasons and optional importPreview; no Dashboard metric selector."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "proof": "KpiExplainRequest requires metricRef and period; optional comparisonRef."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+      "blob": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811",
+      "proof": "explain resolves DashboardMetric before reading its Dashboard source and supported field/valuePrefix."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+      "proof": "resolveDashboardMetric requires dashboard-metric:<encoded sf-source>:<encoded metric>; only total-budget, Executive Dashboard monthly measures and active-headcount are currently mapped."
+    }
+  ],
+  "owners": [
+    "WP00 integration/shared contracts",
+    "WP10 installed producer composition",
+    "Dashboard/Planner source owners for any authorized cross-surface metric relationship"
+  ],
+  "proposal": {
+    "applied": false,
+    "decisionRequiredFromOwners": "Publish a typed optional KPI selection that is issued and bound to the same authorized case and period, or publish a Planner KPI interpretation with an actual source issuer and verifier. Retain explicit input absence when no relation exists.",
+    "requiredProperties": [
+      "Public selector returned by a real producer, not reconstructed from private store identifiers.",
+      "Same installation, project, principal, access revision, case membership and selected period as the analysis.",
+      "Verifier re-resolves the metric/source immediately before execution and output/read egress.",
+      "No expansion of profile or skill grants; no calculation from restricted aggregate or unrelated Dashboard values.",
+      "If contracts change, publish pins for additive schema, validators, source issuer, preparer and verifier before WP12 consumes them."
+    ],
+    "wp12FollowOn": "Consume the published typed selector, add sf_kpi_explain to this Finance mission's requested scope and required native tool receipts, assert the returned source/period relationship, and reopen the actual FinancialAnalysis consumer."
+  },
+  "proposedNegatives": [
+    "Planner selector supplied as metricRef must not succeed.",
+    "Metric source outside the selected case/period must be refused.",
+    "Source version change or revoked authority must refuse the metric and hide stale interpretation.",
+    "Same prompt with another valid linked metric must change the verified input/output; no expected numerical answer belongs in the prompt."
+  ],
+  "ownImplementedDeltas": [
+    "sf_source_get native receipt witness added to ordinary Finance and forecast variants.",
+    "sf_context_get native receipt witness added to Intent.",
+    "Separate real C04 import missions for Finance and Intent use installed scanner, real file admission, preview input producers and reopened consumers; scanner/model absence remains explicit."
+  ],
+  "independentStaticReview": {
+    "reviewer": "/root/compose_typecheck",
+    "finding": "No public Forecast Planner to DashboardMetric selection route found; the same missing selector exists for the current BI milestone slice."
+  }
+}

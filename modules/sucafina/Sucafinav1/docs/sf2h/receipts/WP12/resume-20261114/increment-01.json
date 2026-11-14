@@ -1,0 +1,101 @@
+{
+  "schema": "sf-wp12-resume-increment-v1",
+  "base": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+  "sourcePlan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "scope": "WP12 own implementations and hosted proof preparation; no foreign source authored",
+  "changes": [
+    "Reconcile readLifecycle and exact ready-to-stale C08 preservation without replacing captured contributions.",
+    "Require an independent host-owned review target for every reviewer output, including UnresolvedCondition.",
+    "Exercise refusal before skill prompt for each of the 18 skills in a non-authorized registered profile.",
+    "Observe actual configured Catalog/SessionRunnerModel availability after real Session/Skill loading; never label it inference."
+  ],
+  "terminal": {
+    "schema": "wp12-terminal-history-increment-v1",
+    "base": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+        "bytes": 5044,
+        "sha256": "b1cf2969c4fd4848d9ac6982e83c1f689993028d95ff5d523cd8e9dcef4cfdce",
+        "blob": "19dff03569cbf8007895fcd82c479344d9ccb9ea",
+        "baselineBlob": "f97ff2c8ddf7ae856f3259020998867892e61306"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+        "bytes": 25606,
+        "sha256": "6911a4ead08b112ed45379673a4ee3f1d520dae872e02c97d9d314fa2e0e63f2",
+        "blob": "800e0c4ae6dd10e5389236837fb54f0d77a0b447",
+        "baselineBlob": "5f0cb57b7b9263d68e743165828fd75bc9df076d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+        "bytes": 23545,
+        "sha256": "ecca23f4efe3c9250168a6fe58ca66df25c656878d2c6c3ba9b589d6daf25b06",
+        "blob": "0c2021133e2398ecf33fdcc5ddb567ab3ebbc64b",
+        "baselineBlob": "3e0b32af1d5e4350d619a6db975551d6fde5c80a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+        "bytes": 8492,
+        "sha256": "fe68fa9765b1b69eae258cbb84c762a136be38c5d561af45f6e25cc167df36ad",
+        "blob": "f04cb12b5fcbef10f3d4bdd0eccfe846905a90d2",
+        "baselineBlob": "e21faab024f4f908b3578f561c063f48c3c786c3"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+        "bytes": 30145,
+        "sha256": "b654976c12834700f0edffc63f7746e9439e153ee4446d337eaaaf967d8992d3",
+        "blob": "725bc5150243c56ca26552610e78e5b58b05a434",
+        "baselineBlob": "839354e9b0c51a7c919539dbf246edd723194a9c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+        "bytes": 29772,
+        "sha256": "4f057871184189b77da9bd4cafc71b3779dd9eccce2e312d494aabc1617635bf",
+        "blob": "55d1e6f122e37e7021ae0de13b5a65c427faa020",
+        "baselineBlob": "542403e347b2cf09282bfde4f3c9078ccccebeeb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts",
+        "bytes": 6648,
+        "sha256": "004b649a212cf2c7aa76ac2507d7341808aa173b5195f13eb2e9dbe651c1a2dd",
+        "blob": "c763e3c203fdc0bd585b4c90573a40526a862bc7",
+        "baselineBlob": "8daf1d4de7432504250a4d44cddc2eaa3b661a59"
+      }
+    ],
+    "recoveredOwnInput": {
+      "ref": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "blob": "460ea7d043351f1b401b005d0cc383ff2e876a86",
+      "mode": "selective-reconciliation-with-additional-owned-fixes"
+    },
+    "hostInputRequired": [
+      {
+        "ref": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "28046172e5a540c8418aff0b968b2e098888c432"
+      },
+      {
+        "ref": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+        "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+        "blob": "f40a30aca8668f3ef7636ca8af4bf65d4e987217"
+      }
+    ],
+    "validation": "NOT_RUN; no local product tests",
+    "openHostDeltas": [
+      "withRunContext still scopes old baseRequest.caseRef before terminal callback",
+      "failed/unavailable/needs-input require host current-case terminal commit path; existing host handles stale/cancelled only",
+      "AlternativeDraft unpublished capture cannot be retained or reconstructed; no authenticated historical private-capture reader published"
+    ]
+  },
+  "validation": {
+    "local": "TypeScript syntax parsing and byte hashing only; no product tests/typecheck run locally",
+    "hosted": "NOT_RUN at publication; immutable follow-up evidence will identify product W and request-only S"
+  },
+  "limits": [
+    "Actual provider inference and public consumer proof remain separate from registration/loading/model selection.",
+    "Published host inputs are being composed with exact pins; host-specific terminal callbacks still own current Request/C17 authority.",
+    "The full 108 canonical criteria are preserved; this increment does not claim whole-WP acceptance."
+  ]
+}

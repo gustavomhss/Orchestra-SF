@@ -1,0 +1,381 @@
+{
+  "schema": "wp12-purchase-public-choice-audit-v1",
+  "status": "READ_ONLY_NO_LEGITIMATE_PUBLIC_CHOICE_PRODUCER_IDENTIFIED_IN_INSPECTED_CLOSURE",
+  "baseProduct": {
+    "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+    "tree": "6e81c0e51f3fa5fb9fef7d88456020e061ca2c7b"
+  },
+  "question": "Can sf-preparar-compra obtain PreparedChangeSet from a public installed producer of a genuine Procurement ChoiceRecord without seeded cases, invented operations, grants or outputs?",
+  "answer": {
+    "identifiedExecutableOwnComposition": false,
+    "publicTargetIssuerExists": true,
+    "publicHumanPreparationReviewApplyExists": true,
+    "missingEdge": "A persisted Alternative/ScenarioResult/ChoiceRecord whose exact selected replace operation targets the real sf-procurement request reference; the inspected public promotion/proposal paths produce Planner scenarios.",
+    "scope": "Inspected installed W25 paths plus relevant published PR29, PR34 and PR40 source deltas. This is not a universal absence claim about every branch or factory.",
+    "currentProcurementFlightChanged": false
+  },
+  "baselineAudit": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/progress-w24.json",
+    "commit": "dd92b67fa836bb40bbe74d9076ff7e967d764dd5",
+    "blob": "672806e2daa10d0e632c767c2314ec7215671d53",
+    "bytes": 56437,
+    "sha256": "b100a45566dd8c816f99aae6fec51294f3fb003e29fe5e38f950269159eb0c8b",
+    "group": {
+      "indices": [
+        7,
+        8,
+        13,
+        14
+      ],
+      "ownership": [
+        "WP04/WP11/WP10 producers",
+        "WP00 integration",
+        "WP12 witness after producer"
+      ],
+      "implementation": "REAL_TARGET_ROUTE_TRACED_CHOICE_PRODUCER_PREREQUISITE",
+      "runtime": "NO_NEW_OBSERVATION",
+      "native": "NOT_OBSERVED",
+      "blocking_fact": "PurchaseInput accepts real choice-linked preparedChanges targets, so a public C12 preparation could legitimately supply the target. The actual Procurement C12 bridge accepts a recorded choice whose exact operation replaces a Procurement-request amount. The inspected C09 addAlternative route calls the Planner scenario producer, whose base must resolve as a Planner forecast. The existing Purchase fixture choice therefore cannot supply that Procurement operation by merely adding a public target string.",
+      "next_own_action": "Inspect any owner-published public producer for a Procurement Alternative/ScenarioResult/ChoiceRecord. Once available, use decision-prepare-changes, the actual prepared-change target, exact Purchase skill and human review/apply/receipt consumer. Keep the currently active Procurement run and frozen sources unchanged.",
+      "remaining_external_prerequisite": "A legitimate producer of the Procurement choice/operation, or a compatible owner-published allowed-target path, is not identified in the inspected installed closure. A fabricated ChoiceRecord or raw preparedChanges/receipt row is not admissible.",
+      "scope_limit": "This is a bounded finding about the inspected public routes, not a claim that the C12 implementation lacks a target issuer or that no future owner route can supply one.",
+      "source_paths": [
+        "apps/cli/src/sucafina-product/input-producer-purchase.ts",
+        "modules/sucafina/Sucafinav1/product/procurement/c12.ts",
+        "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+        "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+        "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts"
+      ]
+    },
+    "obligationIndices": [
+      7,
+      8,
+      13,
+      14
+    ],
+    "criterionStatusChanged": false
+  },
+  "route": [
+    {
+      "stage": "Create public decision case",
+      "available": true,
+      "evidence": {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+        "blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+        "lines": "26-50",
+        "claim": "The admitted case draft resolves real sources, initializes alternatives/choices/preparedChanges empty and persists through C08. The public draft cannot seed a ChoiceRecord.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+      }
+    },
+    {
+      "stage": "Issue Procurement target source",
+      "available": true,
+      "evidence": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+        "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+        "blob": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e",
+        "lines": "32-81",
+        "claim": "The individual resolver issues sf-procurement:<incarnation>:<version> and re-resolves it under current authority. Its evidence names procurement-request and carries exact fields, currency/period and digest.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/modules/sucafina/Sucafinav1/product/procurement/sources.ts"
+      }
+    },
+    {
+      "stage": "Promote Procurement alternative",
+      "available": false,
+      "evidence": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+          "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+          "blob": "e0840d775274ea73c6b938711764c69593dadca0",
+          "lines": "90-125",
+          "claim": "Public addAlternative calls input.planner.simulateScenario and Planner coverage before storing the alternative; no supplied result bypass.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+          "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+          "blob": "83c525e733b2cb21637734e3b1e07950e72f4f97",
+          "lines": "33-49",
+          "claim": "Installed C09 receives registries.planner and business.plannerSources.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/apps/cli/src/sucafina-product/portfolio-services.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+          "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+          "blob": "138238ca9273e84f39f8e1db484378a3e62d41d4",
+          "lines": "83-87",
+          "claim": "The registered planner overrides comparison only; simulation remains business.planner.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/apps/cli/src/sucafina-product/portfolio-authority.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+          "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+          "blob": "8a3201272fddf48b25d137886dcdd290e2d2db3e",
+          "lines": "23-30",
+          "claim": "A Procurement reference used as baseRef fails the planner-version selector gate.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/modules/sucafina/Sucafinav1/product/integration/planner-sources.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+          "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+          "blob": "52b09da8ee31f6681bdc2c29a69bc76755f9d232",
+          "lines": "7-24,42-54",
+          "claim": "With a valid Planner base, operations address actual Planner line:month cells and execute the Planner command on an isolated snapshot. Copying a PR reference into a Planner line identity is not a legitimate same-target producer.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/modules/sucafina/Sucafinav1/product/planner/scenario.ts"
+        }
+      ]
+    },
+    {
+      "stage": "Use native AlternativeDraft or portfolio proposal instead",
+      "available": false,
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/decision-alternative-services.ts",
+          "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+          "blob": "328893225e338bc2f6d806874156bc5eef7b97b3",
+          "lines": "253-260",
+          "claim": "The installed AlternativeDraft service still receives business.planner and business.plannerSources.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/apps/cli/src/sucafina-product/decision-alternative-services.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/proposals.ts",
+          "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+          "blob": "b74c0d1699f64b5675517632f898ca318f8f67d8",
+          "lines": "26-67",
+          "claim": "The proposal recreates the scenario through planner.simulateScenario, checks coverage and case, and returns domainApplied=false; it does not create an independent Procurement result.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/modules/sucafina/Sucafinav1/product/decisions/proposals.ts"
+        }
+      ]
+    },
+    {
+      "stage": "Record choice",
+      "available": "ONLY_FOR_A_REAL_EXISTING_ALTERNATIVE",
+      "evidence": {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+        "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+        "blob": "e0840d775274ea73c6b938711764c69593dadca0",
+        "lines": "180-210",
+        "claim": "recordChoice requires the stored alternative, real comparison/results, criterion values and human authority; it snapshots the exact existing scenario. It cannot append a different PR operation to a Planner choice.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+      }
+    },
+    {
+      "stage": "Prepare human C12 target and command",
+      "available": "CONDITIONAL_ON_MISSING_CHOICE",
+      "evidence": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+          "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+          "blob": "e169d335f091c446bb380ee73f450083f917946f",
+          "lines": "26-55,59-68",
+          "claim": "The public Procurement endpoint accepts caseRef, choiceId and operations, admits complete human intent, installs withCase and delegates preparation. Review and apply are separate human requests.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+          "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+          "blob": "e0840d775274ea73c6b938711764c69593dadca0",
+          "lines": "127-152",
+          "claim": "Preparation rejects any operation not exactly in the chosen scenario before calling the domain producer; target evidence is appended only after valid preparation.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+          "blob": "23d9291b3dcedda36edc4aa4f38856024e3c58f4",
+          "lines": "96-123",
+          "claim": "prepareDomainCommands loads the persisted choice, invokes the bridge and preserves original evidence. This factory exposes preparation only and explicitly disables choice confirmation/creation.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+          "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+          "blob": "c17f594d74569bf7fa7fc87b81f0646aeddce7ff",
+          "lines": "13-40",
+          "claim": "The bridge requires explicit replace, no replacementRef, a real Procurement-request target, matching operation/choice/context currency and period, and the exact request evidence in choice.result.sourceRefs.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts"
+        }
+      ]
+    },
+    {
+      "stage": "Prepare Purchase input",
+      "available": "CONDITIONAL_ON_REAL_CHOICE_AND_ALLOWED_TARGET",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/input-producer-purchase.ts",
+          "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+          "blob": "afb1e6005ef8fcfe16b7c04605611f32a63bfd63",
+          "lines": "24-43,67-102",
+          "claim": "Input requires a real stored choice and nonempty targets; allowed targets come from procurement context sourceRefs or preparedChanges for that choice, with fresh case-evidence binding.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/apps/cli/src/sucafina-product/input-producer-purchase.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+          "blob": "97cde4dce2858f47b57b446c9c20bad77d367591",
+          "lines": "91-110",
+          "claim": "Installed contextFor returns sourceRefs=[]; there is no existing request-context target to select before legitimate preparedChanges.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/apps/cli/src/sucafina-product/business-services.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "commit": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+          "blob": "c851f877970b18927bb2bcab96de5699fd8eaada",
+          "lines": "93-112",
+          "claim": "The inspected newer host publication still returns sourceRefs=[]; its read-scope additions do not introduce the missing Choice producer.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9/apps/cli/src/sucafina-product/business-services.ts"
+        }
+      ]
+    },
+    {
+      "stage": "Native sf_change_prepare and PreparedChangeSet verification",
+      "available": "CONDITIONAL_ON_REAL_ADMITTED_PURCHASE_INPUT",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+          "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+          "lines": "268-292",
+          "claim": "For an admitted native input context, the installed descriptor selects decisionDomain.change; legacy fallback is separate.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/apps/cli/src/sucafina-product/host-context.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/decision-change-services.ts",
+          "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+          "blob": "46c95ba57b1daf726cdd4c1576d73e782827580d",
+          "lines": "38-57,121-167",
+          "claim": "The native route requires exact membership in the selected choice, real PR preparation and allowedChangeTargets. It preserves conditioned choice facts through choiceConditions; a blanket complete-preview requirement from the separate legacy fallback must not be imposed here.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/apps/cli/src/sucafina-product/decision-change-services.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+          "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+          "blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695",
+          "lines": "101-138",
+          "claim": "Ready PreparedChangeSet must match real changeProposals.readSet for the admitted choice and targets. A model-generated or manually assembled set does not pass this verifier.",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/apps/cli/src/sucafina-product/analysis-verifier-documents.ts"
+        }
+      ]
+    }
+  ],
+  "alternativesRejected": [
+    {
+      "path": "decision-preparation4545",
+      "reason": "Read-only purchase/dossier material; reads request and sourcing comparison, never prepares a command, ScenarioResult or ChoiceRecord.",
+      "evidence": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+        "commit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+        "blob": "454524fc49ec61c1b8984e7bfe8c1e0a765a242b",
+        "lines": "7-22",
+        "claim": "Explicit read-only producer.",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc8f3b19d40f52c19aabd219544c291460592b99/modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts"
+      }
+    },
+    {
+      "path": "Direct prepareDomainCommands or createProcurementScenarioPreparation",
+      "reason": "The installed composition reloads and authorizes an existing choice. Calling a factory with a fabricated ChoiceRecord would not supply the missing public producer."
+    },
+    {
+      "path": "Change ChoiceRecord operations or add a target after selection",
+      "reason": "Mutation and native preparation compare exact operation digests; the human choice remains immutable. Adding a request to case sourceRefs does not create the missing chosen operation."
+    },
+    {
+      "path": "Select a nonempty target string in the objective",
+      "reason": "Typed Purchase input, real source scope and choice membership gates remain mandatory."
+    },
+    {
+      "path": "Promote a no-op source observation after Planner optimization",
+      "reason": "Even the separately inspected future source-only branch requires operations=[]; it cannot provide the nonempty PR replacement required by C12. The Planner normalization HOLD is independent and is not an intake prerequisite to claim this route works."
+    }
+  ],
+  "ownerTests": {
+    "evidence": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "commit": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "blob": "a71839833d50fa3da37f18b2c1fca4597032a5b7",
+      "lines": "760-780",
+      "claim": "prepareChange builds a typed synthetic ScenarioResult and Alternative, creates the ChoiceSnapshot, writes it directly into state.cases, then invokes the real preparation HTTP and verifies domain preservation.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts"
+    },
+    "classification": "VALID_DOWNSTREAM_C12_FIXTURE_PROOF_NOT_PUBLIC_CHOICE_PRODUCER_PROOF",
+    "preservedMeaning": "This does not invalidate the reported real preparation/review/apply/receipt consumers, CAS, revocation or idempotency assertions. It only prevents reusing the seeded setup as the absent native mission producer.",
+    "newExecutionClaim": false
+  },
+  "publishedDeltas": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "currentBlob": "c17f594d74569bf7fa7fc87b81f0646aeddce7ff",
+      "publishedBlob": "8c83680aaffa06c7b265f17e612118b1e008615a",
+      "at": [
+        "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9"
+      ],
+      "change": "Clone the whole requestSelection before awaits instead of only operation; exact PR/choice gates unchanged.",
+      "closesMissingProducer": false,
+      "intakeRecommendedForThisTask": false,
+      "diff": "owner-scenario-preparation.diff"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "ownerCommit": "e8949be0e31952d5be4987c099003cd0b46e2add",
+      "blob": "e0840d775274ea73c6b938711764c69593dadca0",
+      "change": "Byte-identical to installed C09; no new PR choice route."
+    },
+    {
+      "paths": [
+        "apps/cli/src/sucafina-product/input-producer-purchase.ts",
+        "apps/cli/src/sucafina-product/decision-alternative-services.ts",
+        "apps/cli/src/sucafina-product/decision-change-services.ts",
+        "apps/cli/src/sucafina-product/portfolio-authority.ts"
+      ],
+      "ownerCommit": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+      "change": "Byte-identical to installed files; no producer closure."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+      "currentBlob": "0332b118846cc8a45399aa24e4694fb6bf055719",
+      "publishedBlob": "4f94c3355074db43dcc4acaab09e14be9150767c",
+      "change": "Inspected public producer still exposes request/sourcing/domain projections, not Alternative/Choice creation. The native target gate remains backed by unchanged context sourceRefs or preparedChanges.",
+      "fullUnrelatedDeltaReview": false,
+      "intakeRecommendedForThisTask": false
+    }
+  ],
+  "ownerExit": {
+    "responsibilities": [
+      "WP04 supplies authenticated Procurement simulation/preparation semantics and target evidence.",
+      "WP11 supplies or selects a public promotion/comparison/choice path preserving C09/C10 and immutable human selection.",
+      "WP10/WP00 mounts compatible producers and publishes the exact integration closure.",
+      "WP12 implements the exact skill/operation witnesses and consumers once the real path exists."
+    ],
+    "requiredPublishedInterface": "Public human selection must yield a stored Alternative/ScenarioResult and a ChoiceRecord whose scenario.operations contains the exact real Procurement request replace, result.sourceRefs includes that evidence, and currency/horizon match its authorized context. C09 comparison/criteria/replay must accept that domain-produced result without replacing Planner formulas or seeding C08.",
+    "reuseAfterOwnerOutput": [
+      "Use the existing public decision-prepare-changes to obtain actual choice-linked target/command, then re-read the updated case.",
+      "Prepare PurchasePreparationInput from the real request and exactly returned target id/fields.",
+      "With an installed model, execute sf_procurement/sf-preparar-compra through Session and SkillLoadReceipt, witness sf_request_read/sf_change_prepare and verify the stored PreparedChangeSet.",
+      "Exercise the real human review/apply/reopen/receipt path with exact current case/source authority; sf_receipt_get needs its own accepted native invocation. The present audit does not prove the post-apply mission/replay sequence."
+    ],
+    "requiredNegatives": [
+      "Different PR or an operation absent from the recorded choice.",
+      "Amount, currency, period or source identity changed after choice.",
+      "Revoked authority or removed/changed source at preparation, publication and reload.",
+      "No domain application during proposal; confirmation remains human, idempotency and receipts remain real."
+    ],
+    "noProposedForeignCode": true
+  },
+  "limits": {
+    "sourceInspectionOnly": true,
+    "runtimeCounterexampleExecuted": false,
+    "nativeInferenceObserved": false,
+    "canonicalAcceptanceUpgrades": 0,
+    "productTests": false,
+    "typecheck": false,
+    "ciTriggered": false,
+    "foreignEdits": false,
+    "ownCodeEdits": false,
+    "activeProcurementChanged": false,
+    "noLeaseDeadlineGrantRelaxation": true,
+    "notAssessed": "No claim that the UI C12 path directly adopts an entire native PreparedChangeSet; its public body is choiceId+operations. The native output binding/reload and human adoption chain still require their actual consumer witness."
+  }
+}

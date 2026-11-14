@@ -1,0 +1,80 @@
+{
+  "schema": "sf-wp12-owner-delta-v1",
+  "id": "WP12-C09-FINAL-READ-LEASE-FENCE",
+  "owners": ["WP11", "WP10 for the composed authority regression test"],
+  "classification": "statically-confirmed-revocation-window-not-an-executed-product-counterexample",
+  "status": "NOT_APPLIED_OWNER_PUBLICATION_REQUIRED",
+  "observedProduct": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+  "rejectedIntake": {
+    "sourcePR": 40,
+    "sourceCommit": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+    "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+    "beforeBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+    "proposedBlob": "e646386af209978f2a931a10a070061ba0c97cbe",
+    "testPath": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+    "testBlob": "67b8b179a3fba332933d8ad00820df82b7ab258e",
+    "dependencyClosure": "The two published files have no new imports requiring a third source. The exported interface is unchanged. The blocker is a lifecycle regression, not a missing dependency."
+  },
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "commit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+      "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "relevantSymbols": ["current", "requestFor", "revalidate", "finish", "createSfDomainAuthority"]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+      "commit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+      "blob": "18a9d4dbfa4bd8b3421685482f431fa6b5b1469f",
+      "relevantSymbols": ["current", "active", "requestFor", "revalidate", "finish", "revoke", "invalidateGeneration"]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "commit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+      "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "relevantSymbols": ["principal", "state.authorize", "host.requestFor", "host.revalidate"]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "commit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+      "blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "relevantSymbols": ["createSfProductState.read", "sameAuthority"]
+    }
+  ],
+  "finding": "The proposed case-port moves its final asynchronous host revalidation before the second asynchronous C08 read. It checks the case/reference digests and Request.signal after that read, but never checks that the same UI/native lease is still live. C08's production authorizer reauthenticates the Request principal and namespace, not that lease. A lease can finish, expire, or be revoked while C08 authorization awaits, with the Request still un-aborted and principal/case bytes unchanged. The proposed port then returns an AuthorizedCaseProjection after its lease has ceased to authorize the call.",
+  "staticInterleaving": [
+    "Admit and consume a real UI or native call. Preserve the same authenticated Request, principal, policy, access revision and case contents throughout.",
+    "The first C08 read, both case/evidence/operation verification passes, and the last host.revalidate return successfully.",
+    "The proposed port starts its second C08 read. The real state provider awaits input.authorize before and after its read callback; the production authorizer awaits principal resolution against the installation authenticator.",
+    "While either of those awaits is outstanding, finish the UI admission, or finish/revoke the native lease/binding, or invalidate its native provider generation. Expiry during this interval is another possible trigger.",
+    "These registry changes do not abort the retained Request or change the principal's grants/accessRevision. The production C08 authorizer can still return the same SfStateAuthority; C08 returns the unchanged case successfully.",
+    "The proposed port sees equal complete-case/reference digests and source.signal.aborted === false. Without a final registry lookup it returns status ok with a projection. Its previous final host.revalidate, placed after that read in blob 67203e0, would reject this particular interleaving."
+  ],
+  "whyPublishedTestsDoNotDiscriminate": [
+    "The two published tests mutate membership/version or same-version case contents during the final host revalidation. They correctly distinguish the old case-snapshot race and must be retained.",
+    "Their fixture injects await ui.revalidate(context) into createSfProductState.authorize. The production composition's state authorizer does not call UI/native registries. A lease-ending race during the last read would therefore be suppressed by the fixture's stronger authorization, concealing the production regression."
+  ],
+  "proposedDelta": {
+    "path": "retain-live-lease.NOT_APPLIED.patch",
+    "appliesToBlob": "e646386af209978f2a931a10a070061ba0c97cbe",
+    "description": "Retain context kind, binding identity/value and lease identity before the first await. After the second C08 read and existing digest/abort checks, synchronously require host.requestFor(context) === the originally retained Request and unchanged retained context pins. Keep the new final complete-case observation and do not reintroduce an asynchronous gap after it.",
+    "boundedRationale": "For the pinned real UI/native registries, requestFor synchronously checks consumed/live admission, expiry, abort, lease finish, binding revocation and invalid provider generation as applicable. Thus the proposed lookup closes the documented registry-lifecycle window without another C08 read or any interface change. The current real context/binding objects are frozen; identity/value pins additionally make the retained admission explicit.",
+    "notClaimed": "This lookup is not a substitute for the existing asynchronous authorization, source verification, C08 authority checks or a complete proof of all external source races. Retaining Request identity does not freeze its headers. Hosted counterexamples against the production authority composition are required before accepting a replacement owner publication."
+  },
+  "requiredOwnerChecks": [
+    "Retain both published case-mutation counterexamples and the positive unchanged-case read.",
+    "Exercise lease finish during the second C08 authorization with the real product-authority composition, or an explicitly equivalent state authorizer that checks Request/principal/namespace and does not add UI revalidation. Assert the lease did end, the Request remains un-aborted, the case/principal are unchanged, and no projection/value escapes.",
+    "Cover UI expiry and native finish/revoke/provider-generation invalidation at the same boundary using the actual registries; assert their requestFor returns undefined and that the final port result is not ok.",
+    "Keep exactly two case observations and preserve membership, source coverage, evidence, operation and complete-case digest guards. Verify no additional asynchronous callback occurs after the final registry/identity fence."
+  ],
+  "consumerScope": "WP12 input producers and verifiers consume business.cases.read. This finding is at the C09 port boundary; it does not claim that every outer HTTP/native consumer lacks its own additional egress validation or that a network disclosure was observed.",
+  "verification": {
+    "source": "Exact owner intake payload and four published composition blobs verified via GitHub MCP; local bytes match their blob IDs.",
+    "review": "Static read and interleaving analysis only.",
+    "productTestsLocally": false,
+    "typecheckLocally": false,
+    "hostedCounterexampleExecuted": false,
+    "foreignSourceEdited": false,
+    "remotePublicationByReviewer": false
+  }
+}

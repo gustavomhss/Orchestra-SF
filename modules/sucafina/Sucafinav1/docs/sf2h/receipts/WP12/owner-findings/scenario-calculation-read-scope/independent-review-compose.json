@@ -1,0 +1,105 @@
+{
+  "schema": "sf-wp12-independent-applicability-review-v1",
+  "status": "CONFIRMED_NOT_ON_OBSERVED_PREPARATION_PATH",
+  "reviewer": "Astra / compose_typecheck",
+  "createdAt": "2026-11-14T16:24:14.983690+00:00",
+  "audit": {
+    "path": "audit.json",
+    "blob": "51cdafc4a3efd479638bce30a144e6d1c5f46500",
+    "sha256": "f4871bcefb9e7e91522f5e0d1674656ddcb4ddfd8ca6c8cc2622caac5f738718"
+  },
+  "authorManifest": {
+    "path": "manifest.json",
+    "blob": "3a7437bc0c667f5891aaad8fdbdcd54b80faa283",
+    "sha256": "692b089ebdfc8426e2aab3a097867d2a081e9fbc7a99649b5d87684cdb5fdc50"
+  },
+  "sourcePins": {
+    "path": "source-pins.json",
+    "blob": "372c6ab2782dff0758ae87feda9309c0642d5f55",
+    "sha256": "aa4a053da0c5b9099659888d496f989efb57ae5645eb160ed1fd554072182450",
+    "fullMcpPayloadsAndLocalCopiesVerified": 19
+  },
+  "scope": "Applicability only to the first ScenarioComparisonInput HTTP preparation in W20 snapshot 24126b776427dfc6560456d921c7b8f1398afd1c, run 43606961039. This is neither a global safety review nor approval to activate the candidate trio.",
+  "candidate": {
+    "sourceCommit": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+        "blob": "5dfca7fad55453672986fbb3b29d6c68a9e1afa9"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+        "blob": "dbf13c657c7d5e93837367eae7bb7b704f7577c4"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-read-scope.ts",
+        "blob": "547cb64992eecf81d8a39735a7eccf53ad69f193"
+      }
+    ]
+  },
+  "confirmedTrace": [
+    {
+      "gate": "Fixture sources",
+      "pins": [
+        "3f02a1ad9ee2985b4094690bd32c16e22a0dda75",
+        "e0840d775274ea73c6b938711764c69593dadca0",
+        "67203e058f6e08d9e32e0c51e0b1a01e5fadf322"
+      ],
+      "finding": "The helper issues actual Planner record refs and promotes three empty-operation/empty-assumption alternatives. Draft initializes choices/ledger empty; addAlternative stores a C09 scenario result directly through saveCase. No calculation ref, calculation issuance, persisted scenario-request registration or historical calculation capture is introduced by this branch."
+    },
+    {
+      "gate": "Input reads",
+      "pins": [
+        "ddb8c540f734ae9492cc471fde2df00606396f03",
+        "40c78dee5908cd8af58cc3d58435f3cfb4542045",
+        "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b"
+      ],
+      "finding": "The first input prepares through case reads, two scenario lookups, Planner comparison, current source context and repeated case/lookups. Both scenario lookup and the stored-scenario resolver use readHistoricalScenario. The comparison proof calls compareForecast on a real Planner record against itself, not a calculation evidence resolver."
+    },
+    {
+      "gate": "Result-store branch",
+      "pins": [
+        "bc32bfb39e8b6012230ee0d136bed142340e5d89"
+      ],
+      "finding": "readResult defaults calculation=false. readHistoricalScenario passes historical=true without overriding calculation; only readForCalculation and readHistoricalCalculation pass true. Therefore the calculation verifier callback is not invoked by the observed historical-scenario read. The word historical in this method name does not select historical calculation evidence."
+    },
+    {
+      "gate": "Mounted BCS routing",
+      "pins": [
+        "97cde4dce2858f47b57b446c9c20bad77d367591",
+        "5cca27ce239c92a8e3c9f9f92f816f5224562904"
+      ],
+      "finding": "The installed generic result verifySources resolves the actual reference list through BCS. Planner record refs go to the Planner record reader; kind=calculation alone enters the current/historical calculation resolver. Creating calculation services and registering those callbacks does not call them. Record-history fallback remains a separate reader."
+    },
+    {
+      "gate": "Candidate activation boundary",
+      "pins": [
+        "5dfca7fad55453672986fbb3b29d6c68a9e1afa9",
+        "dbf13c657c7d5e93837367eae7bb7b704f7577c4",
+        "547cb64992eecf81d8a39735a7eccf53ad69f193"
+      ],
+      "finding": "The new select/open observation is entered by issueObserved, reached by calculation issue or resolveEvidence. The historical resolver rejects non-calculation refs and additionally selects a real ledger/capture. The load wrappers only observe an already-active calculation frame; they do not replace the generic scenario readers. verifyCalculationSources declaration and body are byte-identical between the base and candidate service."
+    }
+  ],
+  "decision": {
+    "intakeForObservedFailure": [],
+    "newScenariosRunJustifiedByTrio": false,
+    "existingScenariosHoldPreserved": true,
+    "fullDependencyClosureApproved": false,
+    "globalSecurityApproved": false
+  },
+  "limits": [
+    "The terminal analysis-authority-changed reason and approximately 300-second input interval do not identify the inner cause. This static routing result does not diagnose performance or prove any time reduction.",
+    "A different case carrying actual calculation or ledger evidence can invoke these files; the conclusion applies only to the reviewed record-only fixture and first preparation.",
+    "The own latent UI comparison scope fix occurs after the failed prepare and remains separate from this triage.",
+    "No foreign source was applied, no product source was edited, and no product test, typecheck, CI or remote mutation was performed."
+  ],
+  "verification": {
+    "method": "Read relevant producer, selector, result-store, BCS and candidate entry-point source paths; verify full GitHub MCP payloads against 19 declared blobs/local copies; compare calculation verifier body as text.",
+    "productTestsRun": false,
+    "typecheckRun": false,
+    "CIStarted": false,
+    "foreignSourceApplied": false,
+    "authorAuditEdited": false
+  }
+}

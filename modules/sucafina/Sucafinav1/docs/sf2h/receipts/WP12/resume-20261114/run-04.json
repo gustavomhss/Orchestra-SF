@@ -1,0 +1,200 @@
+{
+  "schema": "sf-wp12-hosted-run-v1",
+  "round": 4,
+  "product": {
+    "sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+    "tree": "64673eb03a894b22b403cf56eff669a91f4cdc51"
+  },
+  "productTests": {
+    "status": "PASS_SCOPED",
+    "runId": 43590407696,
+    "jobId": 132433723902,
+    "snapshot": "c75d17405e303b3d0ff1b387de9529392f54be4c",
+    "tree": "b32ffbd1e25dfd0f8803e8018f8bafdd4d7087c4",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43590407696",
+    "requestSha256": "82a19fb76f5b70e84349f7a8ff80d17f42bfe4b103f04b652497f24dcba21526",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+        "./Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+        "./Sucafinav1/test/product/wp12/analysis.test.ts",
+        "./Sucafinav1/test/product/wp12/resident-native.test.ts",
+        "./Sucafinav1/test/product/wp12/resident-authority.test.ts",
+        "./Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "testBlobs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+        "blob": "de910bfb01cc7a0044a85c9c35a33ecaf62abf76"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+        "blob": "e3e3dacbb3af4c62cc5c3f57582dfaac5581ae3c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+        "blob": "f4bd15b2bcc7d0bbe43b8581102210d656c29f02"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+        "blob": "b95e8b8b5c281872b07164f7faa47f21f64de684"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-authority.test.ts",
+        "blob": "c49afce4a463d07d6a0f5f853ac30a5bdd3316a1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+        "blob": "bb212b96ea795aa9d121c06a9609f8931d9dbbca"
+      }
+    ],
+    "passed": 44,
+    "failed": 0,
+    "assertions": 532,
+    "files": 6,
+    "omni": {
+      "status": "PASS",
+      "nonce": "435615487965fc6c09886ee171c85c6f",
+      "declaringTests": 1,
+      "spawns": 232,
+      "delegated": 0
+    },
+    "logSha256": "646c9736ba0262242c79895aa3c2f611433f2c3126bdfddeea9f738596b50282",
+    "artifacts": [],
+    "scope": "Real in-process Session/SkillLoadReceipt loading plus output/lifecycle tests and real host input preparation. No provider inference occurred."
+  },
+  "check": {
+    "status": "FAIL",
+    "runId": 43590416732,
+    "jobId": 132433751230,
+    "snapshot": "cdb38cdae11020d9e2fd660690cbc18137a0e17e",
+    "tree": "b0b3d6491e3a507e5e6f574bb2597088eb03aede",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43590416732",
+    "typecheck": {
+      "diagnostics": 1,
+      "own": 1,
+      "foreign": 0,
+      "files": [
+        "test/product/wp12/contribution-builder.test.ts"
+      ],
+      "code": "TS2322",
+      "message": "reviewRun fixture explicit full-union return annotation widened the native-bearing discriminant"
+    },
+    "spawnImports": {
+      "status": "PASS",
+      "files": 4614,
+      "allowListedSites": 66
+    },
+    "guards": {
+      "status": "PASS",
+      "base": "origin/dev",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "rules": 78,
+      "changedPaths": 804,
+      "gates": 0,
+      "warnings": 15,
+      "errors": 0
+    },
+    "logSha256": "451f9c839c901c6aebea9dcea1943c0c45245b54786a025d74d25664cc3b3093",
+    "artifacts": [
+      {
+        "id": 14112475316,
+        "name": "astra-wp12-check-1",
+        "size_in_bytes": 1854,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14112475316",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14112475316/zip",
+        "expired": false,
+        "created_at": "2026-11-14T11:32:41Z",
+        "expires_at": "2026-11-28T11:32:40Z",
+        "updated_at": "2026-11-14T11:32:41Z",
+        "digest": "sha256:d1d743889f02593160993ea3a50763f4372159856953e56fb00a444036240f43",
+        "workflow_run": {
+          "id": 43590416732,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp12",
+          "head_sha": "cdb38cdae11020d9e2fd660690cbc18137a0e17e"
+        }
+      }
+    ]
+  },
+  "observations": {
+    "SF_WP12_NATIVE_FINANCE_CATALOG": [
+      {
+        "scope": "host-installed-catalog",
+        "phase": "initial",
+        "githubSha": "c75d17405e303b3d0ff1b387de9529392f54be4c",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    ],
+    "SF_WP12_NATIVE_FINANCE_INPUT": [
+      {
+        "scope": "real-host-input-producer",
+        "githubSha": "c75d17405e303b3d0ff1b387de9529392f54be4c",
+        "profileId": "sf_finance",
+        "skillId": "sf-explicar-forecast",
+        "caseRef": {
+          "id": "7cb2604c-4798-4f71-bcf7-12f153dc3c38",
+          "incarnation": "16d0a9bd-dbdf-4436-8039-2bad6cccbecd",
+          "version": 1
+        },
+        "inputDigest": "33e627dfa969c9e1d2a719551b5af817bf7962e570064185fe42e87d0e724a72",
+        "sourceRefIds": [
+          "planner-version:wp12-forecast-0:a8db4758-e347-4f47-b18b-297270606944:1",
+          "planner-version:wp12-forecast-1:1633d66a-e68d-4e59-a6eb-f48ba1ae8100:1"
+        ],
+        "knownDifference": -240,
+        "inferenceExecuted": false
+      }
+    ],
+    "SF_WP12_NATIVE_FINANCE": [
+      {
+        "scope": "host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "classification": "catalog-observation",
+        "catalogState": "empty",
+        "inputPrepared": true,
+        "inputDigest": "33e627dfa969c9e1d2a719551b5af817bf7962e570064185fe42e87d0e724a72",
+        "caseRef": {
+          "id": "7cb2604c-4798-4f71-bcf7-12f153dc3c38",
+          "incarnation": "16d0a9bd-dbdf-4436-8039-2bad6cccbecd",
+          "version": 1
+        },
+        "githubSha": "c75d17405e303b3d0ff1b387de9529392f54be4c",
+        "candidates": [],
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    ]
+  },
+  "acceptance": {
+    "nativeLoads": 18,
+    "nativeRejections": 18,
+    "nativeInferenceExecuted": false,
+    "typedOutputProduced": false,
+    "actualConsumerAfterReloadObserved": false,
+    "completeWp12": false
+  },
+  "boundaries": {
+    "localProductTests": false,
+    "localTypecheck": false,
+    "epicRun": false,
+    "newProvider": false,
+    "foreignAuthoring": false
+  }
+}

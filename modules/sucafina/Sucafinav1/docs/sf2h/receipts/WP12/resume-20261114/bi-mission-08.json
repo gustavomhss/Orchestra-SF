@@ -1,0 +1,22 @@
+{
+  "scope": "own-native-mission-driver",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi.test.ts",
+  "blob": "927d24805e18ae16149449d9f4ac4e8ef6816c2e",
+  "sha256": "cdb6259966d113920bc73452eee8fad897bcdcf6cc59ca0d198860b922af8a95",
+  "bytes": 14077,
+  "dependencies": [
+    "native-mission-harness.ts optional GET request support, default POST unchanged"
+  ],
+  "review": {
+    "reviewer": "compose_typecheck",
+    "kind": "static",
+    "findings": [
+      "GNATIVE acceptance boolean changed to false; native output/consumer observation separate.",
+      "Private artifact IDs are absent from current model-visible input/tools and are not injected into the objective."
+    ],
+    "fixtures": "Raw Dashboard projects/milestones use published runtime domain enums; no projections/artifacts/contributions are seeded."
+  },
+  "localProductTests": false,
+  "localTypecheck": false,
+  "hostedValidation": "pending"
+}

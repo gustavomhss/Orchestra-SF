@@ -1,0 +1,116 @@
+{
+  "schema": "sf-wp12-minimal-public-document-bundle-v1",
+  "publicationRound": "D27",
+  "state": "PREPARED_FOR_ROOT_PUBLICATION",
+  "topic": "purchase-public-choice",
+  "repository": "gustavomhss/Orchestra-SF",
+  "authoredFilesRewritten": false,
+  "payloads": [
+    {
+      "file": "README.md",
+      "originalScratchPath": "resume-input/own-missions/purchase-public-choice-audit/README.md",
+      "bytes": 2130,
+      "sha256": "b0088cd1415a531823236337686a9356dc29a85a2b81cef26cfc7a3ae248570b",
+      "blob": "b8b99f9235b9d2f2f2d826c48833d9e2241a1424",
+      "preservation": "BYTE_IDENTICAL"
+    },
+    {
+      "file": "audit.json",
+      "originalScratchPath": "resume-input/own-missions/purchase-public-choice-audit/audit.json",
+      "bytes": 24438,
+      "sha256": "f1342d397e6ef7919f92a3d0533d483063089f46939812ffecca6c4959df008b",
+      "blob": "4ae32da0959c1a601c27ccf1ab144874a5679911",
+      "preservation": "BYTE_IDENTICAL"
+    },
+    {
+      "file": "source-pins.json",
+      "originalScratchPath": "resume-input/own-missions/purchase-public-choice-audit/source-pins.json",
+      "bytes": 18604,
+      "sha256": "41d6462c9c1566bf7b5d1baba8c96fc8ce1bcc89deb6dae421e9c60eab82e840",
+      "blob": "f2f21ea36f3420be00992eea61a1edafaed3f70e",
+      "preservation": "BYTE_IDENTICAL"
+    },
+    {
+      "file": "owner-scenario-preparation.diff",
+      "originalScratchPath": "resume-input/own-missions/purchase-public-choice-audit/owner-scenario-preparation.diff",
+      "bytes": 1419,
+      "sha256": "9cd1a1bf3c2184622e10537aedefcb67bb1b060ed18c1e256816d3c61441a0db",
+      "blob": "776fb008e777b380307b04461d61ea752cd4b19d",
+      "preservation": "BYTE_IDENTICAL"
+    },
+    {
+      "file": "independent-review-criteria.json",
+      "originalScratchPath": "resume-input/own-missions/purchase-public-choice-audit/independent-review-criteria.json",
+      "bytes": 2794,
+      "sha256": "9e483d68e2f3d0b57deeb4e55171f63e89c8430c08080c2e8b60ae148b2e0f7d",
+      "blob": "244099775d3eb5dbb2db4222aa9950c22925416f",
+      "preservation": "BYTE_IDENTICAL"
+    }
+  ],
+  "reproduction": {
+    "index": "source-pins.json",
+    "sourceCount": 36,
+    "mechanism": "Retrieve each path at its immutable commit through GitHub MCP fetch_file; verify the exact UTF-8 bytes against the source SHA256 and Git blob SHA1 in the index. The url field is the corresponding immutable GitHub permalink.",
+    "urlTemplate": "https://github.com/gustavomhss/Orchestra-SF/blob/{commit}/{path}",
+    "gitBlobDefinition": "SHA1(UTF8(\"blob \" + byteLength + NUL) + originalBytes)",
+    "newlinePolicy": "Use the retrieved original bytes; do not pretty-print or normalize line endings."
+  },
+  "scratchMetadata": {
+    "bundled": false,
+    "originalManifest": {
+      "path": "resume-input/own-missions/purchase-public-choice-audit/manifest.json",
+      "sha256": "efc760e6217f0a9ca385ffaa5569e3e235108c0f150b94bdf8dae41ebf9e9de8",
+      "blob": "d9491f1b313edffe69db05d74891d4184cc29b44"
+    },
+    "meaning": "References in the frozen audit, README or independent review to local capsules, source files, logs and scratch manifests describe the original audit workspace. They are not additional bundled files or published source paths. Source evidence can be reproduced from the immutable index; original audit hashes remain unchanged.",
+    "excluded": [
+      "source-bytes.json",
+      "path-source-bytes.json",
+      "progress-source.json",
+      "observed-heads-and-directory.json",
+      "base/",
+      "owner/",
+      "path/",
+      "manifest.json (original scratch manifest)"
+    ],
+    "localFields": "Any local path in source-pins.json is provenance metadata from scratch, not a path required in this repository bundle."
+  },
+  "limits": {
+    "documentationOnly": true,
+    "productionSourceIncluded": false,
+    "sourceIntakeApplied": false,
+    "newRuntimeEvidence": false,
+    "productTestsRun": false,
+    "typecheckRun": false,
+    "ciRun": false,
+    "canonicalCriteriaUpgraded": false
+  },
+  "additionalImmutableEvidence": [
+    {
+      "kind": "published-obligation-audit",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/progress-w24.json",
+      "commit": "dd92b67fa836bb40bbe74d9076ff7e967d764dd5",
+      "blob": "672806e2daa10d0e632c767c2314ec7215671d53",
+      "sha256": "b100a45566dd8c816f99aae6fec51294f3fb003e29fe5e38f950269159eb0c8b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dd92b67fa836bb40bbe74d9076ff7e967d764dd5/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/progress-w24.json",
+      "bundled": false,
+      "usedIndices": [
+        7,
+        8,
+        13,
+        14
+      ]
+    }
+  ],
+  "independentReview": {
+    "file": "independent-review-criteria.json",
+    "status": "PASS_STATIC_NO_COUNTER_FINDING",
+    "scope": "Bounded absence of the public Procurement Choice producer in inspected routes; downstream C12 evidence remains valid."
+  },
+  "diff": {
+    "file": "owner-scenario-preparation.diff",
+    "kind": "Comparison of two already published owner blobs; not a proposal to apply or an intake instruction.",
+    "baseBlob": "c17f594d74569bf7fa7fc87b81f0646aeddce7ff",
+    "ownerBlob": "8c83680aaffa06c7b265f17e612118b1e008615a"
+  }
+}

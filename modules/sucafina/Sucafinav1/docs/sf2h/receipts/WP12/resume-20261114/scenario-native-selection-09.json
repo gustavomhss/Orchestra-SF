@@ -1,0 +1,26 @@
+{
+  "schema": "sf-wp12-native-selection-preparation-v1",
+  "baseProduct": "ede812eaf2644cde161f2360b2e4762d9c942146",
+  "file": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+    "blob": "dd7cad24d578c0f0c841e2882ee8f29f3025d5b6",
+    "sha256": "d3b05b6d5b6f06a8ca617ad5d5559338c0460cc48dfb51eeca8d3fe755000bbb",
+    "bytes": 15302
+  },
+  "changes": [
+    "Before each model-backed Finance run, call the real five-field decision-select-portfolio HTTP route using expected preference version and actual alternatives; analysis.start obtains its private AlternativeDraft capture through installed composition.",
+    "Require actual sf_alternative_draft receipts for Finance and sf_case_read/sf_evidence_get/sf_scenario_simulate/sf_scenario_compare receipts for the fresh Reviewer.",
+    "Do not supply private capture IDs or expected financial conclusions in the user objective; original author output remains unchanged."
+  ],
+  "independentReview": "compose_typecheck static source and grant review found no concrete defect in the modified driver",
+  "validation": {
+    "syntax": "PASS",
+    "hostedTests": "PENDING",
+    "hostedTypecheck": "PENDING"
+  },
+  "limits": [
+    "W11 failed before native preparation on the shared scenario helper expecting complete total from a hypothetical result. This driver change does not claim to fix that independent preparation defect.",
+    "Provider model was absent in W11; no native execution or GNATIVE claim."
+  ],
+  "fullWp12Acceptance": false
+}

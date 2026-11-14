@@ -1,0 +1,70 @@
+{
+  "schema": "sf-wp12-question-work-cost-fix-v1",
+  "status": "FROZEN_ROOT_REQUESTED_RAW_SOURCE_ASSERTION_APPLIED_NOT_RUN",
+  "source": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+    "bytes": 49745,
+    "sha256": "a71fba2c0ebcb2e1f73cf2b9abe9ef83434e86a54701d63f619ce69510f80b15",
+    "blob": "c146fe374294f07f38c5beae9d34147d97c94968"
+  },
+  "before": {
+    "bytes": 46720,
+    "sha256": "cb26d5358dc10b8f303301b2d49708eff3a0b192730fb745cacd5fc2d8b76fbf",
+    "blob": "d305c89fcbf42eef0290e744880342b3b017b48d"
+  },
+  "changed_scope": "Only Question test body; imports/constants, Executive test and every shared helper are byte-identical.",
+  "unchanged_tail": {
+    "starts": "/** The selected review",
+    "before_line": 148,
+    "after_line": 183,
+    "bytes": 33949,
+    "sha256": "36e1c479f527a68d9b61bb538d5d389f443f4c32e7435746b94060e0e70cb029",
+    "blob": "0b6e677ce85e0292b0efd1f2e4a5f976fd967b7c"
+  },
+  "question_deadline_ms": 360000,
+  "executive_deadline_ms": 360000,
+  "observed_failure": {
+    "run": 43615955284,
+    "job": 132510939072,
+    "product": "6880666b15dc18bf400c908a8457580526b70f4d",
+    "snapshot": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+    "log_sha256": "bacf25008bb8c9a5ab330211851a652462a294a126cc90a93536a25584a808a0",
+    "test_elapsed_ms": 448134.68,
+    "reason": "Bun timeout after360000ms; no assertion failure in the observed Question case",
+    "post_timeout_source_refusal_is_not_pass": true
+  },
+  "removed_redundancy": [
+    "Identical QuestionPlanningInput re-preparation after reload; this driver no longer claims that extra producer witness.",
+    "Initial duplicate Workbench HTML traversal; actual typed UI producer remains initially and actual typed UI plus HTML consumer remains after reload.",
+    "Third host in the no-native-output branch, where it only repeated the same existing human action/work state."
+  ],
+  "preserved": [
+    "Actual C09/C10 pending case, source linkage and initial QuestionPlanningInput producer",
+    "All real Work dispatcher/source/receipt checks and explicit public reselection after host reload",
+    "Actual HTML My work consumer after reload, unrelated-homonym and unauthenticated refusal",
+    "Actual idempotent C06 existing-action consumption after reload",
+    "Native Session/skill/tool/output/consumer path unchanged; new native thread still gets independent third host, retry/read and source refusal",
+    "Selected source deletion UI+HTML refusal and any existing native output reauthorization regardless of reopened model availability",
+    "All current authority/lease/source gates; no TTL, grant, hidden retry or deadline change",
+    "Planner raw source digest is asserted in the first reopened host for both availability branches, before selected-source removal; the native-thread third-host assertion also remains."
+  ],
+  "measurement": "New started/returned/failed phase markers; no improved duration is claimed before hosted CI.",
+  "next_ci": "Exact Question test name only; exclude green Executive and Review.",
+  "local_product_tests": false,
+  "local_typecheck": false,
+  "foreign_edits": false,
+  "before_root_raw_planner_fix": {
+    "bytes": 49644,
+    "sha256": "39564705509e1d1833f6d7b54c658945ff8be3843bd80b7f416ad50ee7293499",
+    "blob": "291d2a815edd94ca0fc0280ca1e6c8358b1850c7",
+    "preserved_file": "before-root-raw-planner-fix.ts",
+    "reviewed_manifest": "manifest-291d-reviewed.json"
+  },
+  "root_review_delta": {
+    "finding": "The no-native branch lost its final Planner raw source digest after the unconditional third host was removed.",
+    "change": "Add wp12QuestionSourceDigest equality in the first reopened host, next to caseDigest and workSourceDigest, before selected-source removal.",
+    "scope": "Exactly one assertion added to the already reviewed Question body; no rematerialization, timing, grants or helpers changed.",
+    "review_status": "Root approved the remainder statically and requested this assertion; exact final hash awaits root confirmation."
+  },
+  "test_name": "native question work list uses a public Procurement selection for its own pending case and reopens its real consumers"
+}

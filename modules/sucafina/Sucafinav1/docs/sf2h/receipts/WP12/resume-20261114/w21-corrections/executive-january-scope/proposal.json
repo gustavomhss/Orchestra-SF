@@ -1,0 +1,122 @@
+{
+  "schema": "wp12-source-only-proposal-v1",
+  "status": "PROPOSED_NOT_APPLIED_NOT_RUN",
+  "candidateBefore": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+    "gitBlob": "811b91fc94e73689518fff8092ff8d10dd59fa56"
+  },
+  "sourceCommit": "f06e784ca574651680f07f566be11958e3844006",
+  "plan": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "pointers": [
+      "/resident_ai/skills/1",
+      "/resident_ai/skills/16",
+      "/resident_ui_consumption/skills/1",
+      "/resident_ui_consumption/skills/16",
+      "/work_packages/7/tasks/0/checks/2"
+    ],
+    "interpretation": "Executive and Meeting require authorized selection, its period and complete material. No annual requirement was found in these skills. WP07 specifically requires each section to retain its own competence."
+  },
+  "proposedScope": {
+    "caseHorizon": {
+      "start": "2027-01-01",
+      "end": "2027-12-31"
+    },
+    "reviewPeriod": {
+      "start": "2027-01-01",
+      "end": "2027-01-31"
+    },
+    "rawFixture": "Keep exactly two source lines per side, all twelve stored monthly entries, closed=0, USD, no HC positions/rates/AF. No domain engine, financial policy, source issuance or authority changes.",
+    "producer": "Use the existing forecast-comparison item period; Planner compares whole selected months within the source year. Annual evidence legitimately covers January. Selection captures the full returned projection without a slice."
+  },
+  "countDerivation": {
+    "sourceLinesPerSide": 2,
+    "lineMeasuresPerMonth": [
+      "budget",
+      "actual",
+      "forecast",
+      "currency-declared",
+      "budget-usd",
+      "actual-usd",
+      "outlook-usd",
+      "variance-usd"
+    ],
+    "aggregateMeasuresPerMonth": [
+      "fte",
+      "hr-budget",
+      "budget",
+      "actual",
+      "outlook"
+    ],
+    "currencyRateValues": 1,
+    "formula": "(2 * 8 + 5) * 1 + 1",
+    "valuesPerSection": 22,
+    "sections": 2,
+    "totalValues": 44,
+    "oldAnnualValuesPerSection": 253,
+    "oldAnnualTotalValues": 506,
+    "nature": "Static arithmetic from published loops and the unchanged fixture; no product execution."
+  },
+  "plannedAssertions": [
+    "Keep every existing >12 assertion and both DOCX/PPTX archive completeness checks.",
+    "Assert exactly 2 sections, 22 values per section, 44 total; assert every section/projection/value period equals January.",
+    "Require all 22 actual producer value IDs in both archives, including entries beyond the preview boundary.",
+    "Assert no exact line-month measure IDs for months 2..12 appear in captured values or either archive; raw months 2..12 remain present.",
+    "Keep annual issued source coverage and annual case horizon distinct from selected review period.",
+    "Keep currentInput after reopen, original input digest checks, source-revision refusal, historical downloads, unauthorized download and every prior negative."
+  ],
+  "preserved": [
+    "420000ms deadline",
+    "real host/canonical producers",
+    "raw two-by-twelve fixture",
+    "two sections",
+    "both complete formats",
+    "fresh prepare immediately before native execution if a real model exists",
+    "catalog unavailable does not imply native execution",
+    "complete saved-review and download consumers"
+  ],
+  "performanceLimit": "The scoped mission may reduce material size, but no performance result is claimed before hosted execution. The observed annual full-snapshot amplification remains a separate product finding; narrowing the legitimate mission does not close that finding.",
+  "sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "gitBlob": "3a9eaaa0f52c22f68f6e889af66b970fb51197b9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/adapter.ts",
+      "gitBlob": "d6886477c1069a85221da673149ec8f67dd7666c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/source-issuer.ts",
+      "gitBlob": "ba5023491e7aa7e2591e25e4f17f06f4292c77d4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/selection.ts",
+      "gitBlob": "90e42fbf42c07b11d7a1546a3e828d2de5e970fd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+      "gitBlob": "1b93fd89a1f544808455c15d12f9c06cc18e21f3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "gitBlob": "c487332777d4053be7a2b177ea598efb77ca0d66"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/planner-accounts.ts",
+      "gitBlob": "6ca9b19e8b54e3279c2c16667e92ad7df748b3ea"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-executive.ts",
+      "gitBlob": "39cd47fda0547ad74f7c2193b3a11d8e0f112c65"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+      "gitBlob": "e57131cc3c5b03ca894d57437b22040cf69dd3db"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+      "gitBlob": "44e79b3009076e9fae595e79a8c72a8f3918f14b"
+    }
+  ]
+}

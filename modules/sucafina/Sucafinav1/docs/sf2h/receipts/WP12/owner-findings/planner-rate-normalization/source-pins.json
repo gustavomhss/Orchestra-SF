@@ -1,0 +1,102 @@
+{
+  "schema": "wp12-planner-rate-normalization-source-pins-v1",
+  "finding": "WP12-OWNER-PLANNER-NUMERIC-RATE-IDENTITY-01",
+  "sourceOnlyNotRuntimeEvidence": true,
+  "pins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "blob": "c487332777d4053be7a2b177ea598efb77ca0d66",
+      "sha256": "8a1bf8c5a1ed5becf1b18af489eec49379f78629c4a20100dc0de6ba80faeea0",
+      "bytes": 102784,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/5c148a16b76f98dfe194823c0e10ed2ef7685a69/modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "verification": "full GitHub MCP source bytes and Git blob digest"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "sha256": "8c51fdb91dc3c35bd6ff075488f3d393711b2d16e411085960fa3728c1fe5bd1",
+      "bytes": 26150,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/ec052c2c3bef96f492512f3d5f663919580f25c8/modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "verification": "full GitHub MCP source bytes and Git blob digest"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/headcount-months.ts",
+      "blob": "789615d49e519c742cef9c55d36362ec413a9fbe",
+      "sha256": "0f496bf2cf2ed5b1558e28b9b9144aaa688eb49c8f491f4f61af55196b05ba6d",
+      "bytes": 4447,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/5c148a16b76f98dfe194823c0e10ed2ef7685a69/modules/sucafina/Sucafinav1/product/planner/headcount-months.ts",
+      "verification": "full GitHub MCP source bytes and Git blob digest"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/planner-accounts.ts",
+      "blob": "6ca9b19e8b54e3279c2c16667e92ad7df748b3ea",
+      "sha256": "b01d564a146fc3211ae85b15f597bf8935b4386fc3f8206afacb4b0ba67440ce",
+      "bytes": 12385,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/5c148a16b76f98dfe194823c0e10ed2ef7685a69/modules/sucafina/Sucafinav1/src/planner-accounts.ts",
+      "verification": "full GitHub MCP source bytes and Git blob digest"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/planner-role.ts",
+      "blob": "15ff3391a6bde761e0c176b37d88ec3dd000e72d",
+      "sha256": "7eb52f7b373020a3ae2327db489b7d952954b21ea204d65dd6f6a838b2d9508a",
+      "bytes": 4485,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/5c148a16b76f98dfe194823c0e10ed2ef7685a69/modules/sucafina/Sucafinav1/src/planner-role.ts",
+      "verification": "full GitHub MCP source bytes and Git blob digest"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/port-hr.test.ts",
+      "blob": "68d049f957257e089810ae0f9be230a157dba70c",
+      "sha256": "8346e63ae0c41634c87224ec3c4206ac3d77411973bfa870fbd9a779577fc328",
+      "bytes": 5129,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/ec052c2c3bef96f492512f3d5f663919580f25c8/modules/sucafina/Sucafinav1/test/product/wp03/port-hr.test.ts",
+      "verification": "full GitHub MCP source bytes and Git blob digest"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+      "blob": "19cb4262ca02a680b06cdd4db54d5bb9d33a1219",
+      "sha256": "ce0483cee32f81c4616ae51369152618da94784ea195f5f8c6c3bcdabf038a5f",
+      "bytes": 6477,
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/ec052c2c3bef96f492512f3d5f663919580f25c8/modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+      "verification": "full GitHub MCP source bytes and Git blob digest"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "blob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "commit": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+      "functions": [
+        "text",
+        "object",
+        "rows"
+      ],
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2ef423f09e0297fd9edb3c3e3f703d00410033bd/modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "verification": "Independent full review source plus direct GitHub MCP by own_review_resume; text() rejects non-strings at92–93"
+    }
+  ],
+  "independentReview": {
+    "blob": "9b25b0db91520ecf1dafdccadb87dc2befab42a4",
+    "sha256": "4bfe8a748b8affea57835dc6ed290b03730ebdd14f4727128d30ff8b0edc73b3"
+  },
+  "history": {
+    "status": "NO_COMPATIBLE_READPAIR_WHOLE_FILE_IN_INSPECTED_ORIGIN_HISTORY",
+    "latestOrigin": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "scope": "Four readPair-bearing commits in the 14-entry port.ts history reported for the PR35 origin; three distinct whole blobs. The three projectPlannerSource implementations have the same rawHc qualification and lack numeric position rateId normalization.",
+    "wholeBlobs": [
+      {
+        "commit": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+        "blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+        "alsoAtOrigin": "ec052c2c3bef96f492512f3d5f663919580f25c8"
+      },
+      {
+        "commit": "c52f7eed38cefd58962251a8d27a41777af18f6d",
+        "blob": "e365ac59376482dfcc6f81aed045b0153f911038",
+        "alsoCommit": "9913b0c622aa09da7914f231bd9f2ff54d872634"
+      },
+      {
+        "commit": "df29a62e5ede5b9ff9344b4f5b51eba4102e2093",
+        "blob": "8c922385eaeba66ba5b302a8387b627ca607f495"
+      }
+    ],
+    "evidence": "Full bytes of the two older distinct ports were fetched independently through GitHub MCP into independent-readpair-history-sources.json; current838 is in origin-source-bytes.json. All three exact projector preambles were inspected.",
+    "limit": "This is a bounded ancestry search, not a claim about every repository branch. No synthetic foreign hunk combination, runtime snapshot or policy change is proposed."
+  }
+}

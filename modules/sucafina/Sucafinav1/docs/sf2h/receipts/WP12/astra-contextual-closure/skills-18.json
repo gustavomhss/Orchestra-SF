@@ -1,0 +1,3515 @@
+{
+  "schema": "wp12-skill-mission-map-v3",
+  "plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "candidate": {
+    "name": "W20",
+    "sha": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+    "tree": "6d10d1b664040c8bb68413e778dbc1dfd53fd73e",
+    "parent": "35954072193ee08e0cdefd63c8ec03474d0b5bc5",
+    "check_status": "PASS",
+    "check_snapshot": "71894701b187aaca938bfe97a8b6c6b8508de4ab",
+    "check_run": 43603981195,
+    "check_job": 132474528320,
+    "check_snapshot_tree": "5070d3b096c7b997d065a6d6a7257eb04f84fbbd",
+    "mission_tests_status": "C10_DERIVED_ORIGIN_RUNTIME_PENDING; QUESTIONS_RETEST_FAILED_1_PASS_2_FAIL; PROCUREMENT_RETEST_IN_PROGRESS; W16_BI_EXECUTIVE_FAILED_1_PASS_1_FAIL_RETAINS_W16_SHA",
+    "last_completed_check": {
+      "product": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+      "run_id": 43603981195,
+      "job_id": 132474528320,
+      "result": "PASS"
+    },
+    "metadata_source": "Root W20 WP12 publication/preparation-15.json:one exact C10 owner blob,zero own source changes,six own docs,339 foreign pins. This is distinct from the source owner WP10 W20."
+  },
+  "profile_count": 5,
+  "skill_count": 18,
+  "profiles": [
+    {
+      "id": "sf_maestro",
+      "name": "Maestro SF",
+      "version": "1.0.0",
+      "mission": "Enquadrar intenção, coordenar especialistas pertinentes e preparar revisão/perguntas.",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_maestro.json",
+      "owner_task": "WP12.T01",
+      "registration_task": "WP10.T06",
+      "allowed_skills": [
+        "sf-enquadrar-decisao",
+        "sf-preparar-revisao-executiva",
+        "sf-coordenar-perguntas",
+        "sf-extrair-evidencias",
+        "sf-produzir-bi-contextual",
+        "sf-produzir-material-reuniao",
+        "sf-consultar-memoria-decisoria"
+      ],
+      "allowed_operations": [
+        "sf_answer_read",
+        "sf_artifact_get",
+        "sf_bi_view",
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_dashboard_read",
+        "sf_decision_recall",
+        "sf_document_extract",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_handoff_prepare",
+        "sf_import_preview",
+        "sf_knowledge_search",
+        "sf_kpi_explain",
+        "sf_question_prepare",
+        "sf_relation_read",
+        "sf_report_prepare",
+        "sf_review_prepare",
+        "sf_routine_catalog",
+        "sf_routine_prepare",
+        "sf_routine_result",
+        "sf_routine_run",
+        "sf_routine_status",
+        "sf_source_get",
+        "sf_watch_prepare",
+        "sf_work_list"
+      ],
+      "output_types": [
+        "IntentFrame",
+        "AnalysisPlan",
+        "DecisionBrief",
+        "QuestionProposal",
+        "DocumentEvidence",
+        "ContextualBIProposal",
+        "MeetingMaterialProposal",
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "context_budget_tokens": 24000,
+      "max_steps": 12,
+      "max_delegations": 4,
+      "model_class": "reasoning",
+      "resume_policy": "Nova sessão por job/caso; retomada cria continuação versionada, não reaproveita histórico alheio.",
+      "proof_ids": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "evidence_packages": [
+        "E01",
+        "E10",
+        "E11",
+        "E12",
+        "E13",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "native_engine": "orchestra",
+      "permission_floor": "deny *; allow only listed sf_* operations and own reserved skill resources; deny shell/edit/engineering Atlas/Maestro approval tools",
+      "actual_model_policy": "Resolver classe entre modelos já configurados; gravar provider/model efetivos e indisponibilidade; não presumir nova conta."
+    },
+    {
+      "id": "sf_finance",
+      "name": "Finance",
+      "version": "1.0.0",
+      "mission": "Reconciliar forecast, comparar cenários e calcular sensibilidade pelo motor canônico.",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_finance.json",
+      "owner_task": "WP12.T01",
+      "registration_task": "WP10.T06",
+      "allowed_skills": [
+        "sf-explicar-forecast",
+        "sf-comparar-cenarios",
+        "sf-avaliar-sensibilidade",
+        "sf-produzir-bi-contextual",
+        "sf-consultar-memoria-decisoria"
+      ],
+      "allowed_operations": [
+        "sf_alternative_draft",
+        "sf_bi_view",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_dashboard_read",
+        "sf_decision_recall",
+        "sf_evidence_get",
+        "sf_forecast_compare",
+        "sf_freshness_check",
+        "sf_import_preview",
+        "sf_knowledge_search",
+        "sf_kpi_explain",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_sensitivity_evaluate",
+        "sf_source_get"
+      ],
+      "output_types": [
+        "FinancialAnalysis",
+        "ScenarioComparison",
+        "SensitivityResult",
+        "ContextualBIProposal",
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "context_budget_tokens": 20000,
+      "max_steps": 10,
+      "max_delegations": 0,
+      "model_class": "reasoning",
+      "resume_policy": "Retomar somente após nova validação de referências/base e skill pinada.",
+      "proof_ids": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "evidence_packages": [
+        "E01",
+        "E10",
+        "E11",
+        "E12",
+        "E13",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "native_engine": "orchestra",
+      "permission_floor": "deny *; allow only listed sf_* operations and own reserved skill resources; deny shell/edit/engineering Atlas/Maestro approval tools",
+      "actual_model_policy": "Resolver classe entre modelos já configurados; gravar provider/model efetivos e indisponibilidade; não presumir nova conta."
+    },
+    {
+      "id": "sf_procurement",
+      "name": "Compras e Contratos",
+      "version": "1.0.0",
+      "mission": "Comparar propostas e condições e preparar dossiê sem aprovar compra.",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_procurement.json",
+      "owner_task": "WP12.T01",
+      "registration_task": "WP10.T06",
+      "allowed_skills": [
+        "sf-comparar-sourcing",
+        "sf-revisar-condicoes-contratuais",
+        "sf-preparar-compra",
+        "sf-extrair-evidencias",
+        "sf-consultar-memoria-decisoria"
+      ],
+      "allowed_operations": [
+        "sf_alternative_draft",
+        "sf_case_read",
+        "sf_change_prepare",
+        "sf_context_get",
+        "sf_contract_read",
+        "sf_decision_recall",
+        "sf_document_extract",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search",
+        "sf_receipt_get",
+        "sf_request_read",
+        "sf_source_get",
+        "sf_sourcing_compare",
+        "sf_supplier_read"
+      ],
+      "output_types": [
+        "CommercialComparison",
+        "CommercialGap",
+        "EvidenceCandidate",
+        "PreparedChangeSet",
+        "DossierDraft",
+        "DocumentEvidence",
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "context_budget_tokens": 20000,
+      "max_steps": 10,
+      "max_delegations": 0,
+      "model_class": "reasoning",
+      "resume_policy": "Documento/solicitação alterados exigem nova leitura; candidato antigo fica stale.",
+      "proof_ids": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "evidence_packages": [
+        "E01",
+        "E10",
+        "E11",
+        "E12",
+        "E13",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "native_engine": "orchestra",
+      "permission_floor": "deny *; allow only listed sf_* operations and own reserved skill resources; deny shell/edit/engineering Atlas/Maestro approval tools",
+      "actual_model_policy": "Resolver classe entre modelos já configurados; gravar provider/model efetivos e indisponibilidade; não presumir nova conta."
+    },
+    {
+      "id": "sf_portfolio",
+      "name": "Portfólio e Entrega",
+      "version": "1.0.0",
+      "mission": "Examinar dependências, restrições e combinações com fontes confirmadas.",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_portfolio.json",
+      "owner_task": "WP12.T01",
+      "registration_task": "WP10.T06",
+      "allowed_skills": [
+        "sf-revisar-dependencias",
+        "sf-compor-portfolio",
+        "sf-reavaliar-compromissos",
+        "sf-produzir-bi-contextual",
+        "sf-consultar-memoria-decisoria"
+      ],
+      "allowed_operations": [
+        "sf_alternative_draft",
+        "sf_bi_view",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_dashboard_read",
+        "sf_decision_recall",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search",
+        "sf_kpi_explain",
+        "sf_portfolio_evaluate",
+        "sf_relation_read",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_source_get",
+        "sf_watch_prepare"
+      ],
+      "output_types": [
+        "DeliveryAssessment",
+        "DependencyConflict",
+        "PortfolioComparison",
+        "ReconsiderationProposal",
+        "ContextualBIProposal",
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "context_budget_tokens": 20000,
+      "max_steps": 10,
+      "max_delegations": 0,
+      "model_class": "reasoning",
+      "resume_policy": "Mudança material cria nova análise ligada à escolha preservada.",
+      "proof_ids": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM05",
+        "AM06"
+      ],
+      "evidence_packages": [
+        "E01",
+        "E11",
+        "E12",
+        "E13",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "native_engine": "orchestra",
+      "permission_floor": "deny *; allow only listed sf_* operations and own reserved skill resources; deny shell/edit/engineering Atlas/Maestro approval tools",
+      "actual_model_policy": "Resolver classe entre modelos já configurados; gravar provider/model efetivos e indisponibilidade; não presumir nova conta."
+    },
+    {
+      "id": "sf_reviewer",
+      "name": "Revisor de Decisões",
+      "version": "1.0.0",
+      "mission": "Contestar a proposta e testar a sustentação em execução própria.",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_reviewer.json",
+      "owner_task": "WP12.T01",
+      "registration_task": "WP10.T06",
+      "allowed_skills": [
+        "sf-contestar-decisao",
+        "sf-revisar-evidencias",
+        "sf-consultar-memoria-decisoria"
+      ],
+      "allowed_operations": [
+        "sf_case_read",
+        "sf_context_get",
+        "sf_decision_recall",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_sensitivity_evaluate",
+        "sf_source_get"
+      ],
+      "output_types": [
+        "CritiqueReport",
+        "UnresolvedCondition",
+        "ClaimIssue",
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "context_budget_tokens": 24000,
+      "max_steps": 12,
+      "max_delegations": 0,
+      "model_class": "reasoning-review",
+      "resume_policy": "Sempre sessão nova e run próprio; nunca fork/reuso da sessão analítica; expiração pede novo contexto.",
+      "proof_ids": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM05",
+        "AM06"
+      ],
+      "evidence_packages": [
+        "E01",
+        "E11",
+        "E12",
+        "E13",
+        "E14",
+        "E15",
+        "E16"
+      ],
+      "native_engine": "orchestra",
+      "permission_floor": "deny *; allow only listed sf_* operations and own reserved skill resources; deny shell/edit/engineering Atlas/Maestro approval tools",
+      "actual_model_policy": "Resolver classe entre modelos já configurados; gravar provider/model efetivos e indisponibilidade; não presumir nova conta."
+    }
+  ],
+  "published_profiles": [
+    {
+      "id": "sf_maestro",
+      "version": "1.0.0",
+      "mission": "Enquadrar intenção, coordenar especialistas pertinentes e preparar revisão/perguntas.",
+      "allowedSkills": [
+        "sf-enquadrar-decisao",
+        "sf-preparar-revisao-executiva",
+        "sf-coordenar-perguntas",
+        "sf-extrair-evidencias",
+        "sf-produzir-bi-contextual",
+        "sf-produzir-material-reuniao",
+        "sf-consultar-memoria-decisoria"
+      ],
+      "allowedOperations": [
+        "sf_answer_read",
+        "sf_artifact_get",
+        "sf_bi_view",
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_dashboard_read",
+        "sf_decision_recall",
+        "sf_document_extract",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_handoff_prepare",
+        "sf_import_preview",
+        "sf_knowledge_search",
+        "sf_kpi_explain",
+        "sf_question_prepare",
+        "sf_relation_read",
+        "sf_report_prepare",
+        "sf_review_prepare",
+        "sf_routine_catalog",
+        "sf_routine_prepare",
+        "sf_routine_result",
+        "sf_routine_run",
+        "sf_routine_status",
+        "sf_source_get",
+        "sf_watch_prepare",
+        "sf_work_list"
+      ],
+      "outputTypes": [
+        "IntentFrame",
+        "AnalysisPlan",
+        "DecisionBrief",
+        "QuestionProposal",
+        "DocumentEvidence",
+        "ContextualBIProposal",
+        "MeetingMaterialProposal",
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "contextBudgetTokens": 24000,
+      "maxSteps": 12,
+      "maxDelegations": 4,
+      "modelClass": "reasoning",
+      "resumePolicy": "Nova sessão por job/caso; retomada cria continuação versionada, não reaproveita histórico alheio.",
+      "sourcePath": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_maestro.json",
+      "sourceDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb"
+    },
+    {
+      "id": "sf_finance",
+      "version": "1.0.0",
+      "mission": "Reconciliar forecast, comparar cenários e calcular sensibilidade pelo motor canônico.",
+      "allowedSkills": [
+        "sf-explicar-forecast",
+        "sf-comparar-cenarios",
+        "sf-avaliar-sensibilidade",
+        "sf-produzir-bi-contextual",
+        "sf-consultar-memoria-decisoria"
+      ],
+      "allowedOperations": [
+        "sf_alternative_draft",
+        "sf_bi_view",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_dashboard_read",
+        "sf_decision_recall",
+        "sf_evidence_get",
+        "sf_forecast_compare",
+        "sf_freshness_check",
+        "sf_import_preview",
+        "sf_knowledge_search",
+        "sf_kpi_explain",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_sensitivity_evaluate",
+        "sf_source_get"
+      ],
+      "outputTypes": [
+        "FinancialAnalysis",
+        "ScenarioComparison",
+        "SensitivityResult",
+        "ContextualBIProposal",
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "contextBudgetTokens": 20000,
+      "maxSteps": 10,
+      "maxDelegations": 0,
+      "modelClass": "reasoning",
+      "resumePolicy": "Retomar somente após nova validação de referências/base e skill pinada.",
+      "sourcePath": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_finance.json",
+      "sourceDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793"
+    },
+    {
+      "id": "sf_procurement",
+      "version": "1.0.0",
+      "mission": "Comparar propostas e condições e preparar dossiê sem aprovar compra.",
+      "allowedSkills": [
+        "sf-comparar-sourcing",
+        "sf-revisar-condicoes-contratuais",
+        "sf-preparar-compra",
+        "sf-extrair-evidencias",
+        "sf-consultar-memoria-decisoria"
+      ],
+      "allowedOperations": [
+        "sf_alternative_draft",
+        "sf_case_read",
+        "sf_change_prepare",
+        "sf_context_get",
+        "sf_contract_read",
+        "sf_decision_recall",
+        "sf_document_extract",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search",
+        "sf_receipt_get",
+        "sf_request_read",
+        "sf_source_get",
+        "sf_sourcing_compare",
+        "sf_supplier_read"
+      ],
+      "outputTypes": [
+        "CommercialComparison",
+        "CommercialGap",
+        "EvidenceCandidate",
+        "PreparedChangeSet",
+        "DossierDraft",
+        "DocumentEvidence",
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "contextBudgetTokens": 20000,
+      "maxSteps": 10,
+      "maxDelegations": 0,
+      "modelClass": "reasoning",
+      "resumePolicy": "Documento/solicitação alterados exigem nova leitura; candidato antigo fica stale.",
+      "sourcePath": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_procurement.json",
+      "sourceDigest": "65f339bb5c3394c9cba7b5da5a702b3d94f61a378aee3d1067a3635ad5ceef3a"
+    },
+    {
+      "id": "sf_portfolio",
+      "version": "1.0.0",
+      "mission": "Examinar dependências, restrições e combinações com fontes confirmadas.",
+      "allowedSkills": [
+        "sf-revisar-dependencias",
+        "sf-compor-portfolio",
+        "sf-reavaliar-compromissos",
+        "sf-produzir-bi-contextual",
+        "sf-consultar-memoria-decisoria"
+      ],
+      "allowedOperations": [
+        "sf_alternative_draft",
+        "sf_bi_view",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_dashboard_read",
+        "sf_decision_recall",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search",
+        "sf_kpi_explain",
+        "sf_portfolio_evaluate",
+        "sf_relation_read",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_source_get",
+        "sf_watch_prepare"
+      ],
+      "outputTypes": [
+        "DeliveryAssessment",
+        "DependencyConflict",
+        "PortfolioComparison",
+        "AlternativeDraft",
+        "ReconsiderationProposal",
+        "ContextualBIProposal",
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "contextBudgetTokens": 20000,
+      "maxSteps": 10,
+      "maxDelegations": 0,
+      "modelClass": "reasoning",
+      "resumePolicy": "Mudança material cria nova análise ligada à escolha preservada.",
+      "sourcePath": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_portfolio.json",
+      "sourceDigest": "249ec91f7d1a76fef83c4408795b66953589d3b3f45e91c64ca691c60c8c2b83"
+    },
+    {
+      "id": "sf_reviewer",
+      "version": "1.0.0",
+      "mission": "Contestar a proposta e testar a sustentação em execução própria.",
+      "allowedSkills": [
+        "sf-contestar-decisao",
+        "sf-revisar-evidencias",
+        "sf-consultar-memoria-decisoria"
+      ],
+      "allowedOperations": [
+        "sf_case_read",
+        "sf_context_get",
+        "sf_decision_recall",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_sensitivity_evaluate",
+        "sf_source_get"
+      ],
+      "outputTypes": [
+        "CritiqueReport",
+        "UnresolvedCondition",
+        "ClaimIssue",
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "contextBudgetTokens": 24000,
+      "maxSteps": 12,
+      "maxDelegations": 0,
+      "modelClass": "reasoning-review",
+      "resumePolicy": "Sempre sessão nova e run próprio; nunca fork/reuso da sessão analítica; expiração pede novo contexto.",
+      "sourcePath": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_reviewer.json",
+      "sourceDigest": "cd0f89c9a1342101bf00a74c8ab794098889775773a7fe4cef120d28cf6f6391"
+    }
+  ],
+  "published_manifest_pin": {
+    "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+    "blob": "453c6f3a5b48c081223909af8293f854ad31d7c8"
+  },
+  "normative_common_consumption": {
+    "routing": "Entradas principais são ações de trabalho; cada execução convoca apenas os perfis necessários. Catálogo Equipe SF é descoberta/configuração opcional, nunca etapa obrigatória de escolher manualmente cinco agentes.",
+    "persistence": "Toda saída relevante tem outputRef, outputVersion, caseId/caseVersion ou review/resultRef, sourceRefs, scope e provenance. Persiste no namespace canônico C09/C08 composto por WP10; não nasce ledger por persona e a conversa não é o único local do resultado.",
+    "receipt": "Para cada uma das 18 skills, provar profileId/profileVersion, skillId/skillVersion/skillDigest carregados, run nativo/modelo efetivo, entrada autorizada, operações exercidas, outputRef/schemaVersion e consumidor real com ação observada após reload. Campo de catálogo ou consumerRef nunca aberto não satisfaz consumo.",
+    "states": "C11 fornece queued/running/needs-input/ready/stale/cancelled/failed; erro de feature/acesso/scanner mantém motivo autorizado. Nenhum estado ausente/falha é objeto de sucesso fabricado. Cancelar conserva trabalho confirmado; retry respeita correlação/versionamento.",
+    "presentation": "Visão principal mostra contribuição, condição, fonte e próximo passo. Perfil/modelo/skill/digest/run aparecem no detalhe de proveniência. Progresso descreve resultado concluído ou pendência, sem percentual inventado.",
+    "specialists": "No mesmo caso pertinente, Finance produz composição/limiar, Compras confronta condição comercial/fonte e Portfólio explica compromisso/dependência. Revisor usa execução/instruções próprias, mesmo escopo autorizado e vínculo à análise que revisa. Não executar todos os perfis em toda interação.",
+    "shared_skills": "Grants são explícitos por perfil nesta matriz; compartilhada não significa acesso universal. Qualquer ajuste técnico mantém as mesmas saídas e a matriz efetiva C15 congelada por WP00.",
+    "verification": "As seis provas integradas podem cobrir várias skills na mesma execução; manter18 witnesses de carga+saída+consumo e contribuição dos 5 perfis. Fixtures e nomes no manifest não fecham os witnesses. implementation_test_status permanece NOT_RUN.",
+    "allowlist_source": "resident_ai.skills[].allowed_operations é a allowlist normativa; o consumidor declara as operações mínimas da contribuição sem conceder autoridade adicional."
+  },
+  "historical_receipts": "historical-handoffs.json",
+  "actual_execution_note": "Eighteen real Session/SkillLoadReceipt loads at W9 are separate from inference. New driver code and prepared inputs are not native execution proof.",
+  "skills": [
+    {
+      "id": "sf-enquadrar-decisao",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T02",
+      "planned_source_writer": "S3",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "input_type": "DecisionIntentInput",
+      "output_types": [
+        "IntentFrame",
+        "AnalysisPlan"
+      ],
+      "published_output_types": [
+        "IntentFrame",
+        "AnalysisPlan"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_import_preview",
+        "sf_question_prepare"
+      ],
+      "required_operations": [
+        "sf_context_get",
+        "sf_case_read",
+        "sf_case_draft",
+        "sf_import_preview"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP06.T02"
+      ],
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM02"
+      ],
+      "source_digest": "0fd53b0f08deef41253462578105b5571dd055c140120ba7045a4893a75422e4",
+      "instructions_digest": "cc342bb2b520a8ae37220bf600508d085553308ead08eb6e1b0843e52cb8f464",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-enquadrar-decisao",
+          "nativeSessionId": "ses_e262abcbfffe8VmM549yJzOviz",
+          "profileId": "sf_maestro",
+          "profileVersion": "1.0.0",
+          "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+          "skillId": "sf-enquadrar-decisao",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "0fd53b0f08deef41253462578105b5571dd055c140120ba7045a4893a75422e4",
+          "instructionsDigest": "cc342bb2b520a8ae37220bf600508d085553308ead08eb6e1b0843e52cb8f464",
+          "loadedMessageId": "msg_1d9d54502001zY75oR46PaJlep",
+          "loadedAt": "2026-11-14T11:33:15.152Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-enquadrar-decisao",
+        "profileId": "sf_finance",
+        "nativeSessionId": "ses_e262abaeeffei2hjc0KyV05qs1",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/input-producer-intent.ts",
+          "symbol": "createSfIntentInputProducer",
+          "blob_sha": "f9801347f3c48fa6a9e24de7f6fd1f62dcf6f4b7",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-intent.ts",
+          "blob_sha": "43324e0873dd8db0442d34003ae3d57a6d7cf2b7",
+          "accepted_kinds_observed_in_source": [
+            "IntentFrame"
+          ],
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+            "blob": "3d0fac5384b433dde3eab26b011679031218fc2f",
+            "sha256": "01be9041b41247ac1a3e5dbaaba70a49759391f4e91d755a00018307b43a1e6d",
+            "bytes": 23692,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-14.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "3d0fac5384b433dde3eab26b011679031218fc2f",
+              "sha256": "01be9041b41247ac1a3e5dbaaba70a49759391f4e91d755a00018307b43a1e6d",
+              "bytes": 23692
+            },
+            "working_tree_matches_published_candidate": true
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_maestro"
+        ],
+        "native_output_kinds_implemented": [
+          "IntentFrame"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_context_get",
+          "sf_case_read",
+          "sf_case_draft",
+          "sf_import_preview",
+          "sf_freshness_check",
+          "sf_question_prepare"
+        ],
+        "domain_preparation_implemented": "Two current cases use the same human objective and different real issued Planner sources; actual HTTP preparation and outside-case/authority refusals. W14 adds real C04 multipart admission, preview and selected import input when an installed scanner exists. W15 adds exact AM02 freshness and unassigned question preparation with selected source refs; W16 changes only the readonly assertion type, preserving emitted JavaScript.",
+        "consumers_implemented": [
+          "handleSfAnalysis output/HTML after reload",
+          "readCaseAnalysisProjection source/objective/horizon check",
+          "createSfImportHttp import-reference/import-detail after reload"
+        ],
+        "limits": [
+          "No persisted AnalysisPlan.",
+          "W11 observed only input preparation with empty models; no output consumer ran.",
+          "Reopening matching fields does not prove a subsequent human edit or specialized plan consumption.",
+          "Import mission requires actual installed scanner and model. AM02 source/question witnesses are published; no provider receipt or output is inferred from implementation.",
+          "W19 corrects own UI dispatch admission consumption through the actual shared dispatcher; direct business-port authority helpers remain unchanged. Source changes are not a passing runtime witness.",
+          "W20 passed two current selections, real UI freshness/unassigned question preparation and outside-case/changed-request refusals. The empty-catalog branch returns before any native output/reopen; the named test alone is not a native mission witness."
+        ],
+        "historical_observation_stage": "W11_INPUT_OBSERVED_W14_CONTEXT_IMPORT_WITNESSES_NOT_RUN",
+        "latest_hosted_stage": "W20_TWO_REAL_INPUTS_UI_FRESHNESS_QUESTION_AND_NEGATIVES_PASS_ZERO_NATIVE",
+        "latest_hosted_evidence_ref": "W20.INTENT_INPUT_UI_PASS"
+      },
+      "required_operations_without_driver_witness": [],
+      "output_kinds_without_positive_driver": [
+        "AnalysisPlan"
+      ],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-enquadrar-decisao",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-preparar-revisao-executiva",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T02",
+      "planned_source_writer": "S3",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "input_type": "ExecutiveReviewInput",
+      "output_types": [
+        "DecisionBrief"
+      ],
+      "published_output_types": [
+        "DecisionBrief"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_artifact_get",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_report_prepare",
+        "sf_review_prepare",
+        "sf_routine_catalog",
+        "sf_routine_prepare",
+        "sf_routine_result",
+        "sf_routine_run",
+        "sf_routine_status",
+        "sf_source_get",
+        "sf_work_list"
+      ],
+      "required_operations": [
+        "sf_review_prepare",
+        "sf_case_read",
+        "sf_source_get",
+        "sf_routine_catalog",
+        "sf_routine_prepare",
+        "sf_routine_run",
+        "sf_routine_status",
+        "sf_routine_result"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP09.T02",
+        "WP10.T06",
+        "WP12.T02",
+        "WP09.T01",
+        "WP09.T07"
+      ],
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM06",
+        "AM02"
+      ],
+      "source_digest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6",
+      "instructions_digest": "acaae8c302cfe934e9a9b1d6e31784090ac96fa48e66dc5859d4f81cbbb4e801",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-preparar-revisao-executiva",
+          "nativeSessionId": "ses_e262abad8ffeB6fMqp5g4pLJ1r",
+          "profileId": "sf_maestro",
+          "profileVersion": "1.0.0",
+          "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+          "skillId": "sf-preparar-revisao-executiva",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6",
+          "instructionsDigest": "acaae8c302cfe934e9a9b1d6e31784090ac96fa48e66dc5859d4f81cbbb4e801",
+          "loadedMessageId": "msg_1d9d54542001u4M54iFg6vpfmj",
+          "loadedAt": "2026-11-14T11:33:15.206Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-preparar-revisao-executiva",
+        "profileId": "sf_finance",
+        "nativeSessionId": "ses_e262abab8ffeNDVePid3pNe7HM",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/input-producer-executive.ts",
+          "symbol": "createSfExecutiveInputProducer",
+          "blob_sha": "39cd47fda0547ad74f7c2193b3a11d8e0f112c65",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-routines.ts",
+          "blob_sha": "9bab28aada4fd5ddfd0a437e81c183db30f2eced",
+          "accepted_kinds_observed_in_source": [
+            "DecisionBrief"
+          ],
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+            "blob": "1df012698094f318d5c745d73ffceaf56e0f9ee3",
+            "sha256": "e855029b8586842a7aa7ac182699c87795150475e3997d0651a1ac01572f6ade",
+            "bytes": 29354,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-10.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "811b91fc94e73689518fff8092ff8d10dd59fa56",
+              "sha256": "44afda399441a661394a641d665be8c2e6d6d626503da162983bfb326469947a",
+              "bytes": 30121
+            },
+            "working_tree_matches_published_candidate": false
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_maestro"
+        ],
+        "native_output_kinds_implemented": [
+          "DecisionBrief"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_case_read",
+          "sf_source_get",
+          "sf_review_prepare"
+        ],
+        "domain_preparation_implemented": "Real WP07 agenda, preview and preservation from issued forecast sources; real executive input; routine-result selection is separately refused. W15 adds phase observations and bounds raw forecasts to two lines while preserving the full beyond-12-row export discriminator and existing deadline.",
+        "consumers_implemented": [
+          "createReviewHttp review-contribution",
+          "review-read and preserved review after reload"
+        ],
+        "limits": [
+          "Native C07 catalog/admission/run/status/result cycle is not implemented by this driver.",
+          "The agenda selector is ephemeral for a new prepare/start after reopening. This alone does not imply failure to consume a durable DecisionBrief: WP07 reads it through the C08 author reader without rerunning the verifier.",
+          "The shared W14 driver timed out after the initial catalog observation, with no subsequent phase log. This does not identify the blocked await or prove any input, output or download branch.",
+          "W16 returned18 phases, prepared both typed inputs and their selector negatives, preserved506 review values, and inspected18271 DOCX/5115149 PPTX bytes before the failed420000ms timeout. No reopened review/report/source-change branch or native consumer was observed; the test remains FAIL."
+        ],
+        "hosted_flight_ref": "W14.MISSIONS",
+        "historical_observation_stage": "W14_EXECUTIVE_PREPARATION_TIMEOUT_AFTER_CATALOG_NO_INPUT_PROOF",
+        "latest_hosted_stage": "W16_INITIAL_INPUTS_REVIEW_AND_COMPLETE_ARCHIVES_OBSERVED_TEST_TIMED_OUT_BEFORE_REOPEN",
+        "latest_hosted_evidence_ref": "W16.EXECUTIVE_PARTIAL_INPUT_EXPORT"
+      },
+      "required_operations_without_driver_witness": [
+        "sf_routine_catalog",
+        "sf_routine_prepare",
+        "sf_routine_result",
+        "sf_routine_run",
+        "sf_routine_status"
+      ],
+      "output_kinds_without_positive_driver": [],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-preparar-revisao-executiva",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-coordenar-perguntas",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T02",
+      "planned_source_writer": "S3",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "input_type": "QuestionPlanningInput",
+      "output_types": [
+        "QuestionProposal"
+      ],
+      "published_output_types": [
+        "QuestionProposal"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_answer_read",
+        "sf_case_read",
+        "sf_handoff_prepare",
+        "sf_question_prepare",
+        "sf_relation_read",
+        "sf_work_list"
+      ],
+      "required_operations": [
+        "sf_question_prepare",
+        "sf_answer_read",
+        "sf_relation_read",
+        "sf_work_list"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP08.T06",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumer_tasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM06",
+        "AM02"
+      ],
+      "source_digest": "4768df83520cafc5492d13d4d5c6ca9c0900916930726904e92c35ca70108f33",
+      "instructions_digest": "9dd6da0563e59248ba5dca0ffd2c26437a0a6bafb5abeae5a0f77aacef82fafa",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-coordenar-perguntas",
+          "nativeSessionId": "ses_e262abaa4ffePKdqpqi6TPf8a5",
+          "profileId": "sf_maestro",
+          "profileVersion": "1.0.0",
+          "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+          "skillId": "sf-coordenar-perguntas",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "4768df83520cafc5492d13d4d5c6ca9c0900916930726904e92c35ca70108f33",
+          "instructionsDigest": "9dd6da0563e59248ba5dca0ffd2c26437a0a6bafb5abeae5a0f77aacef82fafa",
+          "loadedMessageId": "msg_1d9d54576001hrYwHB2To0rqep",
+          "loadedAt": "2026-11-14T11:33:15.259Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-coordenar-perguntas",
+        "profileId": "sf_finance",
+        "nativeSessionId": "ses_e262aba83ffeTrHK08shYopeo0",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/input-producer-question.ts",
+          "symbol": "createSfQuestionInputProducer",
+          "blob_sha": "10d95e014c71c6c6f9600a2c1c52fa3532aee68a",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-collaboration.ts",
+          "blob_sha": "d37b26367f9f2670d6187e253c5c5ed14348a330",
+          "accepted_kinds_observed_in_source": [
+            "QuestionProposal"
+          ],
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+            "blob": "50303355860a26718686f5daf7dddad8978434c3",
+            "sha256": "ead473b33a552a090e142d9eb4a2a06ce2b91955a98ee375b89dc15db9bd7786",
+            "bytes": 30092,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-14.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "b334b77248ab887647a7b4a15d2362fb769f5c4c",
+              "sha256": "957231db289d9d1610c146e13153282008a20e035539a1d9dc031c497cbfde1e",
+              "bytes": 31379
+            },
+            "working_tree_matches_published_candidate": false
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-consumer.test.ts",
+            "blob": "1323c71bab9055e40a7f8d95b0cc94f097a1a1c9",
+            "sha256": "a1fa4893693567010c86cc3f38a29b18ee6a9d243e87e2c39ba3553d825fab83",
+            "bytes": 17177,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-14.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "1323c71bab9055e40a7f8d95b0cc94f097a1a1c9",
+              "sha256": "a1fa4893693567010c86cc3f38a29b18ee6a9d243e87e2c39ba3553d825fab83",
+              "bytes": 17177
+            },
+            "working_tree_matches_published_candidate": true
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+            "blob": "12d52cdc872e64cf3265a3f5b09cbe0d5f07d57f",
+            "sha256": "b594964e7d9fdaa6398823251aee771dce228b06ab9601e71635584d292cb53b",
+            "bytes": 20117,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-14.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "12d52cdc872e64cf3265a3f5b09cbe0d5f07d57f",
+              "sha256": "b594964e7d9fdaa6398823251aee771dce228b06ab9601e71635584d292cb53b",
+              "bytes": 20117
+            },
+            "working_tree_matches_published_candidate": true
+          }
+        ],
+        "stage": "PUBLISHED_W20_UNCHANGED_FROM_W19; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_maestro"
+        ],
+        "native_output_kinds_implemented": [
+          "QuestionProposal"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_question_prepare",
+          "sf_answer_read",
+          "sf_relation_read"
+        ],
+        "domain_preparation_implemented": "Focused current input from a genuine confirmed C06 relation, explicit human pending training condition and an actual answered predecessor thread. The condition evidenceRefs remains empty; relation evidence is additional authorized support. The older omitted-category driver remains separate.",
+        "consumers_implemented": [
+          "C11 question-output after host reload",
+          "C06 question-consume idempotently",
+          "real reply/read after second reload",
+          "human UI consumer with UI receipt",
+          "work-list availability probe"
+        ],
+        "limits": [
+          "No native result has been observed. A UI prepared QuestionProposal remains human-origin evidence.",
+          "The predecessor answer is unconfirmed; this does not prove confirmed-answer reuse.",
+          "sf_work_list needs mounted work signals; sf_handoff_prepare still lacks a genuine selected action. No private or fabricated selector is injected.",
+          "Explicit human training pending is separate from the C10 omitted-category derivation; that strict test was not relaxed.",
+          "W19 corrects own UI dispatch admission consumption through the actual shared dispatcher; direct business-port authority helpers remain unchanged. Source changes are not a passing runtime witness.",
+          "W20 corrected period and UI admission preconditions. The native question branch issued current Project2026/Capex2027 endpoints then failed relation-source-fence-unavailable before QuestionPlanningInput. The human branch created one thread, retried idempotently, rejected changed preparation, received a real reply and reopened/read/retried the stored thread; sf_answer_read then returned unavailable. Its overall test remains FAIL; no completed answer consumption, confirmed answer, omitted-category proof, native output or work projection is accepted."
+        ],
+        "latest_hosted_stage": "W20_ENDPOINTS_ISSUED_RELATION_FENCE_FAILED; HUMAN_THREAD_CREATE_RETRY_REPLY_PERSISTED_PARTIAL_REOPEN_ANSWER_READ_UNAVAILABLE",
+        "latest_hosted_evidence_ref": "W20.QUESTION_PARTIAL_CONSUMER_FAILURES"
+      },
+      "required_operations_without_driver_witness": [
+        "sf_work_list"
+      ],
+      "output_kinds_without_positive_driver": [],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-coordenar-perguntas",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-explicar-forecast",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+      "owner_task": "WP12.T01",
+      "execution_task": "WP12.T02",
+      "planned_source_writer": "S1",
+      "allowed_profiles": [
+        "sf_finance"
+      ],
+      "input_type": "ForecastExplainInput",
+      "output_types": [
+        "FinancialAnalysis"
+      ],
+      "published_output_types": [
+        "FinancialAnalysis"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_context_get",
+        "sf_forecast_compare",
+        "sf_freshness_check",
+        "sf_import_preview",
+        "sf_kpi_explain",
+        "sf_source_get"
+      ],
+      "required_operations": [
+        "sf_forecast_compare",
+        "sf_kpi_explain",
+        "sf_source_get",
+        "sf_import_preview"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP09.T03",
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP06.T02"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM06",
+        "AM02"
+      ],
+      "source_digest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740",
+      "instructions_digest": "ba80c66c9a4b41677c0e2ffb94f94cc63b5e2a3c81e8a4a230739d80f0ff9227",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-explicar-forecast",
+          "nativeSessionId": "ses_e262aba6fffeUEHr2NY7ZMcrbP",
+          "profileId": "sf_finance",
+          "profileVersion": "1.0.0",
+          "profileDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+          "skillId": "sf-explicar-forecast",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740",
+          "instructionsDigest": "ba80c66c9a4b41677c0e2ffb94f94cc63b5e2a3c81e8a4a230739d80f0ff9227",
+          "loadedMessageId": "msg_1d9d545ac0017aUvjs98AaHRws",
+          "loadedAt": "2026-11-14T11:33:15.311Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-explicar-forecast",
+        "profileId": "sf_maestro",
+        "nativeSessionId": "ses_e262aba4fffellxI66n30dWW1N",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/analysis-services-inputs.ts",
+          "symbol": "createSfAnalysisBusinessInputs.forecast",
+          "blob_sha": "7f4ccee85c4eeaec82d932a69ba93c5fe6d59eff",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier.ts",
+          "blob_sha": "9c62b6a375e4894f1d487b7eb12ab1c1bba9dd17",
+          "accepted_kinds_observed_in_source": [
+            "FinancialAnalysis"
+          ],
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+            "blob": "15f64ede1ffcfae7a9ba35592b9a4dbaf3442097",
+            "sha256": "64139c5921705979a4296140b005a18d0e82dd1a956e6c642c9f7f453c0e8834",
+            "bytes": 28316,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-09.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "15f64ede1ffcfae7a9ba35592b9a4dbaf3442097",
+              "sha256": "64139c5921705979a4296140b005a18d0e82dd1a956e6c642c9f7f453c0e8834",
+              "bytes": 28316
+            },
+            "working_tree_matches_published_candidate": true
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+            "blob": "4424cea6540a61131741ea0a1cf7aaa5aa54e337",
+            "sha256": "5e09d78e38f9cec2bf774fe8f2db0e9a0c8c8948bc7580463e7eddde74608282",
+            "bytes": 11241,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-09.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "4424cea6540a61131741ea0a1cf7aaa5aa54e337",
+              "sha256": "5e09d78e38f9cec2bf774fe8f2db0e9a0c8c8948bc7580463e7eddde74608282",
+              "bytes": 11241
+            },
+            "working_tree_matches_published_candidate": true
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_finance"
+        ],
+        "native_output_kinds_implemented": [
+          "FinancialAnalysis"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_forecast_compare",
+          "sf_source_get",
+          "sf_import_preview"
+        ],
+        "domain_preparation_implemented": "Real source issuers, persisted case and ForecastExplainInput; six materially different source variants observed in W11. W14 adds source receipts and real C04 admitted import input when an installed scanner exists.",
+        "consumers_implemented": [
+          "handleSfAnalysis output/HTML after reload",
+          "real forecast comparison/domain projection",
+          "C04 import-reference/import-detail, changed-base refusal"
+        ],
+        "limits": [
+          "W9 and W11 observed empty model catalogs; no inference or output executed.",
+          "Required sf_kpi_explain lacks a legitimately linked DashboardMetric in the Forecast input; exact owner finding is recorded.",
+          "New source/import native witnesses are not observed execution.",
+          "W14 observed the real Finance input and six variants/reopens; C04 import returned unavailable before file admission because no installed configuration was selected. No model output ran."
+        ],
+        "hosted_flight_ref": "W14.MISSIONS",
+        "historical_observation_stage": "W14_REAL_INPUT_AND_SIX_DOMAIN_REOPENS_PASS_IMPORT_CONFIGURATION_UNAVAILABLE"
+      },
+      "required_operations_without_driver_witness": [
+        "sf_kpi_explain"
+      ],
+      "output_kinds_without_positive_driver": [],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-explicar-forecast",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-comparar-cenarios",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T02",
+      "planned_source_writer": "S1",
+      "allowed_profiles": [
+        "sf_finance"
+      ],
+      "input_type": "ScenarioComparisonInput",
+      "output_types": [
+        "ScenarioComparison"
+      ],
+      "published_output_types": [
+        "ScenarioComparison"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_alternative_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_scenario_compare",
+        "sf_scenario_simulate"
+      ],
+      "required_operations": [
+        "sf_scenario_simulate",
+        "sf_scenario_compare",
+        "sf_alternative_draft"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP03.T01",
+        "WP10.T06",
+        "WP11.T02",
+        "WP12.T02"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM04",
+        "AM02"
+      ],
+      "source_digest": "65f975cbfa6e7f78528b58d3bdea90f4991357378667e4a6e3ba41b8b52b7cd2",
+      "instructions_digest": "4a5ee94713eb474032dcc089f5cac3a073ea089479dba7ea0f90aebeb67c8ef9",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-comparar-cenarios",
+          "nativeSessionId": "ses_e262aba38ffePhHDylGFxWejif",
+          "profileId": "sf_finance",
+          "profileVersion": "1.0.0",
+          "profileDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+          "skillId": "sf-comparar-cenarios",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "65f975cbfa6e7f78528b58d3bdea90f4991357378667e4a6e3ba41b8b52b7cd2",
+          "instructionsDigest": "4a5ee94713eb474032dcc089f5cac3a073ea089479dba7ea0f90aebeb67c8ef9",
+          "loadedMessageId": "msg_1d9d545e1001zPTFRlwk7tAdoI",
+          "loadedAt": "2026-11-14T11:33:15.365Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-comparar-cenarios",
+        "profileId": "sf_maestro",
+        "nativeSessionId": "ses_e262aba19ffe6tf4V4p3OATgTP",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/analysis-services-inputs.ts",
+          "symbol": "createSfAnalysisBusinessInputs.scenario -> createSfScenarioComparisonInput",
+          "blob_sha": "7f4ccee85c4eeaec82d932a69ba93c5fe6d59eff",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-scenarios.ts",
+          "blob_sha": "b22dd01ddc365a5c9d3ba67819b13b2b706c17fe",
+          "accepted_kinds_observed_in_source": [
+            "ScenarioComparison"
+          ],
+          "included_in_W7_by_intake": "NOT_CHECKED_IN_THIS_AUDIT",
+          "published_at": "e10864d5a51c859611e72c881aa243f181d2f304",
+          "pin_verified_by": "GitHub MCP immutable fetch_file"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+            "blob": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06",
+            "sha256": "aa89749cba692f244a357d60efebf831933ee0e85590605f7d0f85d1707d1580",
+            "bytes": 18456,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-14.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06",
+              "sha256": "aa89749cba692f244a357d60efebf831933ee0e85590605f7d0f85d1707d1580",
+              "bytes": 18456
+            },
+            "working_tree_matches_published_candidate": true
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_finance"
+        ],
+        "native_output_kinds_implemented": [
+          "ScenarioComparison"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_case_read",
+          "sf_scenario_simulate",
+          "sf_scenario_compare",
+          "sf_alternative_draft"
+        ],
+        "domain_preparation_implemented": "Real issued Planner sources, human coverage and C09 alternatives including omitted training and later explicit evidence; W14 adds exact human alternative selection for installed native draft capture.",
+        "consumers_implemented": [
+          "handleSfAnalysis output/HTML",
+          "readCaseAnalysisProjection persisted alternatives after reload"
+        ],
+        "limits": [
+          "W11 failed on an owned total assertion before native input/Reviewer; W15 corrects the owned hypothetical-total assertion; its runtime remains pending.",
+          "No missing-category C10 failure was observed in W11, and no synthetic ScenarioResult is substituted.",
+          "W19 corrects own UI dispatch admission consumption through the actual shared dispatcher; direct business-port authority helpers remain unchanged. Source changes are not a passing runtime witness."
+        ],
+        "historical_observation_stage": "W11_OWN_PRECONDITION_FAILED_W15_FIX_IN_PROGRESS"
+      },
+      "required_operations_without_driver_witness": [],
+      "output_kinds_without_positive_driver": [],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-comparar-cenarios",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-avaliar-sensibilidade",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-avaliar-sensibilidade/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T02",
+      "planned_source_writer": "S1",
+      "allowed_profiles": [
+        "sf_finance"
+      ],
+      "input_type": "SensitivityInput",
+      "output_types": [
+        "SensitivityResult"
+      ],
+      "published_output_types": [
+        "SensitivityResult"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_case_read",
+        "sf_scenario_simulate",
+        "sf_sensitivity_evaluate",
+        "sf_source_get"
+      ],
+      "required_operations": [
+        "sf_sensitivity_evaluate",
+        "sf_scenario_simulate"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T03"
+      ],
+      "consumer_tasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM02"
+      ],
+      "source_digest": "e55e50dbc3a108570c59c432b50382ac3a8d5f38281fe76cfcdf27a99626b9e5",
+      "instructions_digest": "fc415d2d3c3e7ca205e9ba92b34537f69a1a3f036ddfc0274785349d56d0e9f0",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-avaliar-sensibilidade",
+          "nativeSessionId": "ses_e262aba01ffejcNQZWUfyYG1sC",
+          "profileId": "sf_finance",
+          "profileVersion": "1.0.0",
+          "profileDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+          "skillId": "sf-avaliar-sensibilidade",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "e55e50dbc3a108570c59c432b50382ac3a8d5f38281fe76cfcdf27a99626b9e5",
+          "instructionsDigest": "fc415d2d3c3e7ca205e9ba92b34537f69a1a3f036ddfc0274785349d56d0e9f0",
+          "loadedMessageId": "msg_1d9d546160015J8UQNymtIaArn",
+          "loadedAt": "2026-11-14T11:33:15.418Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-avaliar-sensibilidade",
+        "profileId": "sf_maestro",
+        "nativeSessionId": "ses_e262ab9e4ffegrO34CdFU1KH2Q",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/input-producer-sensitivity.ts",
+          "symbol": "createSfSensitivityInputProducer",
+          "blob_sha": "49f0c73c52669723573a8964e333692780c696c9",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-sensitivity.ts",
+          "blob_sha": "dfcb340f4f32994928de1cc077ad59fbe9365709",
+          "accepted_kinds_observed_in_source": [
+            "SensitivityResult"
+          ],
+          "included_in_W7_by_intake": "NOT_CHECKED_IN_THIS_AUDIT",
+          "published_at": "e10864d5a51c859611e72c881aa243f181d2f304",
+          "pin_verified_by": "GitHub MCP immutable fetch_file"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+            "blob": "fbfc8cc7948ddd607188bbea2bf40a0b98c51007",
+            "sha256": "4071395d2b217eca175f717a182b947718da825d1917b02929f6c7968e493e2e",
+            "bytes": 21685,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-08.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "fbfc8cc7948ddd607188bbea2bf40a0b98c51007",
+              "sha256": "4071395d2b217eca175f717a182b947718da825d1917b02929f6c7968e493e2e",
+              "bytes": 21685
+            },
+            "working_tree_matches_published_candidate": true
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_finance"
+        ],
+        "native_output_kinds_implemented": [
+          "SensitivityResult"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_sensitivity_evaluate",
+          "sf_scenario_simulate",
+          "sf_source_get"
+        ],
+        "domain_preparation_implemented": "Real hypothetical Planner operations, coverage/C09 results, units, human criterion/choice, calculated sensitivity samples and selected persisted result.",
+        "consumers_implemented": [
+          "createSfPortfolioHttp decision-sensitivity-read",
+          "sensitivity-selection-read",
+          "handleSfAnalysis output/HTML after reload"
+        ],
+        "limits": [
+          "Hypothetical comparisons retain null totals and unresolved conditions; no exact threshold is fabricated."
+        ]
+      },
+      "required_operations_without_driver_witness": [],
+      "output_kinds_without_positive_driver": [],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-avaliar-sensibilidade",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-comparar-sourcing",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-sourcing/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T02",
+      "planned_source_writer": "S4-B",
+      "allowed_profiles": [
+        "sf_procurement"
+      ],
+      "input_type": "SourcingComparisonInput",
+      "output_types": [
+        "CommercialComparison"
+      ],
+      "published_output_types": [
+        "CommercialComparison"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_alternative_draft",
+        "sf_contract_read",
+        "sf_evidence_get",
+        "sf_request_read",
+        "sf_source_get",
+        "sf_sourcing_compare",
+        "sf_supplier_read"
+      ],
+      "required_operations": [
+        "sf_request_read",
+        "sf_supplier_read",
+        "sf_sourcing_compare",
+        "sf_source_get"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP09.T04",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM02"
+      ],
+      "source_digest": "be1605aea670cae00db5c63c4592cdedc0acf8ec70775b721dfe08715d637553",
+      "instructions_digest": "bd851ccc61d93d5978b7f5068f51b7f774458e70b3a6a8caee9b9076667fb050",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-comparar-sourcing",
+          "nativeSessionId": "ses_e262ab9cfffe8hibUG032jBszY",
+          "profileId": "sf_procurement",
+          "profileVersion": "1.0.0",
+          "profileDigest": "65f339bb5c3394c9cba7b5da5a702b3d94f61a378aee3d1067a3635ad5ceef3a",
+          "skillId": "sf-comparar-sourcing",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "be1605aea670cae00db5c63c4592cdedc0acf8ec70775b721dfe08715d637553",
+          "instructionsDigest": "bd851ccc61d93d5978b7f5068f51b7f774458e70b3a6a8caee9b9076667fb050",
+          "loadedMessageId": "msg_1d9d5464c001mo0wzv1cB06zd2",
+          "loadedAt": "2026-11-14T11:33:15.472Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-comparar-sourcing",
+        "profileId": "sf_maestro",
+        "nativeSessionId": "ses_e262ab9aeffe5yQhgQqDM1EKVV",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/analysis-services-inputs.ts",
+          "symbol": "createSfAnalysisBusinessInputs.sourcing -> createSfSourcingInput",
+          "blob_sha": "7f4ccee85c4eeaec82d932a69ba93c5fe6d59eff",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-procurement.ts",
+          "blob_sha": "8843617fcab07d6da320cc5935aee563e740e4dd",
+          "accepted_kinds_observed_in_source": [
+            "CommercialComparison"
+          ],
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+            "blob": "a38c64dfbf2d27143c756677e49171c4d0cadbfd",
+            "sha256": "64309a96c54c1a2f7892bbe287fda02f50c3898484d7e8fb8c5beaeef9bc9f0c",
+            "bytes": 17059,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-14.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "a38c64dfbf2d27143c756677e49171c4d0cadbfd",
+              "sha256": "64309a96c54c1a2f7892bbe287fda02f50c3898484d7e8fb8c5beaeef9bc9f0c",
+              "bytes": 17059
+            },
+            "working_tree_matches_published_candidate": true
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_procurement"
+        ],
+        "native_output_kinds_implemented": [
+          "CommercialComparison"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_request_read",
+          "sf_supplier_read",
+          "sf_sourcing_compare",
+          "sf_source_get",
+          "sf_contract_read",
+          "sf_evidence_get"
+        ],
+        "domain_preparation_implemented": "Real request/supplier issuers, explicit period/FX and canonical sourcing comparison; W14 adds the human-selected issued contract attached to the case and actual evidence resolution.",
+        "consumers_implemented": [
+          "WP04 real comparison and selected source reads",
+          "handleSfAnalysis output/HTML after reload"
+        ],
+        "limits": [
+          "AM02 contract/evidence routes are now required under this exact Procurement skill, but hosted native execution has not occurred.",
+          "Human-selected contract does not invent a supplier association or replace offer ranking/FX.",
+          "W14 stopped before native input at the actual Procurement issuer. A later exact source comparison found an incomplete intake: issuer includes approvalStage but the published legacy integration projector omits it. Raw fixture records and period selection were valid; the exact owner delegation was consumed in W15; its changed runtime has not yet completed hosted observation.",
+          "W19 corrects own UI dispatch admission consumption through the actual shared dispatcher; direct business-port authority helpers remain unchanged. Source changes are not a passing runtime witness."
+        ],
+        "hosted_flight_ref": "W14.MISSIONS",
+        "historical_observation_stage": "W14_PREPARATION_FAILED_AT_PROCUREMENT_SOURCE_ISSUANCE",
+        "latest_hosted_stage": "W16_REAL_REQUEST_ISSUANCE_PASSED_CONTRACT_ISSUANCE_FAILED_BEFORE_ANALYSIS_INPUT",
+        "latest_hosted_evidence_ref": "W16.PROCUREMENT_FAILURES"
+      },
+      "required_operations_without_driver_witness": [],
+      "output_kinds_without_positive_driver": [],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-comparar-sourcing",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-revisar-condicoes-contratuais",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-condicoes-contratuais/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T02",
+      "planned_source_writer": "S4-B",
+      "allowed_profiles": [
+        "sf_procurement"
+      ],
+      "input_type": "ContractReviewInput",
+      "output_types": [
+        "CommercialGap",
+        "EvidenceCandidate"
+      ],
+      "published_output_types": [
+        "CommercialGap",
+        "EvidenceCandidate"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_contract_read",
+        "sf_document_extract",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search",
+        "sf_source_get"
+      ],
+      "required_operations": [
+        "sf_contract_read",
+        "sf_evidence_get",
+        "sf_source_get"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP06.T05",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumer_tasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM05",
+        "AM02"
+      ],
+      "source_digest": "7bcddfa9054f8d7c2f53428631106c8dc717ed246956cdf6aa58349fc491bbdb",
+      "instructions_digest": "f170a1a4cf8fadd83716d70428425446b33b0849c9eac7af476df44c1b863fd1",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-revisar-condicoes-contratuais",
+          "nativeSessionId": "ses_e262ab999ffeTsTeyy4bIwyX5i",
+          "profileId": "sf_procurement",
+          "profileVersion": "1.0.0",
+          "profileDigest": "65f339bb5c3394c9cba7b5da5a702b3d94f61a378aee3d1067a3635ad5ceef3a",
+          "skillId": "sf-revisar-condicoes-contratuais",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "7bcddfa9054f8d7c2f53428631106c8dc717ed246956cdf6aa58349fc491bbdb",
+          "instructionsDigest": "f170a1a4cf8fadd83716d70428425446b33b0849c9eac7af476df44c1b863fd1",
+          "loadedMessageId": "msg_1d9d54682001yy87Hoz6nImq4J",
+          "loadedAt": "2026-11-14T11:33:15.525Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-revisar-condicoes-contratuais",
+        "profileId": "sf_maestro",
+        "nativeSessionId": "ses_e262ab979ffeML6LGTuN5vk2x9",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/input-producer-contract.ts",
+          "symbol": "createSfContractInputProducer",
+          "blob_sha": "2df4656bc5aa750182827fa62c37ae01e88711ff",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+          "blob_sha": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695",
+          "accepted_kinds_observed_in_source": [
+            "CommercialGap",
+            "EvidenceCandidate"
+          ],
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+            "blob": "549225d0b82054ebacd0087b39bc6a8a46bc93db",
+            "sha256": "2230d3d90c1c50c2a84e57701836fb264b30826a4ce49f8ca55b4f46a07168ca",
+            "bytes": 31576,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-10.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "549225d0b82054ebacd0087b39bc6a8a46bc93db",
+              "sha256": "2230d3d90c1c50c2a84e57701836fb264b30826a4ce49f8ca55b4f46a07168ca",
+              "bytes": 31576
+            },
+            "working_tree_matches_published_candidate": true
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_procurement"
+        ],
+        "native_output_kinds_implemented": [
+          "CommercialGap"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_contract_read",
+          "sf_evidence_get",
+          "sf_source_get"
+        ],
+        "domain_preparation_implemented": "Real Dashboard contract issuer/read, actual cost coverage and registered document schema; mounted input refusal is observed separately if returned.",
+        "consumers_implemented": [
+          "handleSfAnalysis output/HTML after reload"
+        ],
+        "limits": [
+          "Published contract producer/verifier require a different surface from the actual contract issuer; owner patch is proposed, not applied.",
+          "EvidenceCandidate and populated document/schema branch remain separate.",
+          "The document extraction/search named routes are not required by this contract native branch; source/evidence receipt requirements were added in W14.",
+          "W14 stopped before native input at the actual Procurement issuer. A later exact source comparison found an incomplete intake: issuer includes approvalStage but the published legacy integration projector omits it. Raw fixture records and period selection were valid; the exact owner delegation was consumed in W15; its changed runtime has not yet completed hosted observation."
+        ],
+        "hosted_flight_ref": "W14.MISSIONS",
+        "historical_observation_stage": "W14_PREPARATION_FAILED_AT_PROCUREMENT_SOURCE_ISSUANCE",
+        "latest_hosted_stage": "W16_REAL_REQUEST_ISSUANCE_PASSED_CONTRACT_ISSUANCE_FAILED_BEFORE_ANALYSIS_INPUT",
+        "latest_hosted_evidence_ref": "W16.PROCUREMENT_FAILURES"
+      },
+      "required_operations_without_driver_witness": [],
+      "output_kinds_without_positive_driver": [
+        "EvidenceCandidate"
+      ],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-revisar-condicoes-contratuais",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-preparar-compra",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-compra/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T02",
+      "planned_source_writer": "S4-B",
+      "allowed_profiles": [
+        "sf_procurement"
+      ],
+      "input_type": "PurchasePreparationInput",
+      "output_types": [
+        "PreparedChangeSet",
+        "DossierDraft"
+      ],
+      "published_output_types": [
+        "PreparedChangeSet",
+        "DossierDraft"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_case_read",
+        "sf_change_prepare",
+        "sf_receipt_get",
+        "sf_request_read",
+        "sf_sourcing_compare"
+      ],
+      "required_operations": [
+        "sf_request_read",
+        "sf_change_prepare",
+        "sf_receipt_get"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP09.T04",
+        "WP10.T06",
+        "WP11.T03",
+        "WP12.T02"
+      ],
+      "consumer_tasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM04",
+        "AM06",
+        "AM02"
+      ],
+      "source_digest": "7134f86374e622e82353c93c68504462f6d75dab85d496c74a1c9d0294510cf0",
+      "instructions_digest": "6b5a139ed88269b55c86f711c922cb7ec16ddaef7d9285e0891514319e125213",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-preparar-compra",
+          "nativeSessionId": "ses_e262ab963ffeaCTbHL21OhsvV2",
+          "profileId": "sf_procurement",
+          "profileVersion": "1.0.0",
+          "profileDigest": "65f339bb5c3394c9cba7b5da5a702b3d94f61a378aee3d1067a3635ad5ceef3a",
+          "skillId": "sf-preparar-compra",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "7134f86374e622e82353c93c68504462f6d75dab85d496c74a1c9d0294510cf0",
+          "instructionsDigest": "6b5a139ed88269b55c86f711c922cb7ec16ddaef7d9285e0891514319e125213",
+          "loadedMessageId": "msg_1d9d546b8001wo7EFOLLzE6q6w",
+          "loadedAt": "2026-11-14T11:33:15.579Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-preparar-compra",
+        "profileId": "sf_maestro",
+        "nativeSessionId": "ses_e262ab943ffeIOyz7p7US3Q057",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/input-producer-purchase.ts",
+          "symbol": "createSfPurchaseInputProducer",
+          "blob_sha": "afb1e6005ef8fcfe16b7c04605611f32a63bfd63",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+          "blob_sha": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695",
+          "accepted_kinds_observed_in_source": [
+            "PreparedChangeSet",
+            "DossierDraft"
+          ],
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+            "blob": "4c303604768e8a2e750aee8ea8f35d7f17302742",
+            "sha256": "7e771637454be08e1392b39f2a0965391ae280f96230f8aacfcf220febc2f6cd",
+            "bytes": 16735,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-14.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "4c303604768e8a2e750aee8ea8f35d7f17302742",
+              "sha256": "7e771637454be08e1392b39f2a0965391ae280f96230f8aacfcf220febc2f6cd",
+              "bytes": 16735
+            },
+            "working_tree_matches_published_candidate": true
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_procurement"
+        ],
+        "native_output_kinds_implemented": [
+          "DossierDraft"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_case_read",
+          "sf_request_read",
+          "sf_sourcing_compare"
+        ],
+        "domain_preparation_implemented": "Real complete/conditioned choice, issued units, human criterion, request projection and ranking; actual input target gap is recorded without injecting authority.",
+        "consumers_implemented": [
+          "readCaseAnalysisProjection chosen case after reload",
+          "handleSfAnalysis DossierDraft HTML if native execution becomes possible"
+        ],
+        "limits": [
+          "Ordinary request exposes no allowed target in the inspected composition; true commercial comparison binding is explicitly unavailable.",
+          "PreparedChangeSet, change_prepare and receipt_get are not covered by the DossierDraft branch.",
+          "W14 stopped before native input at the actual Procurement issuer. A later exact source comparison found an incomplete intake: issuer includes approvalStage but the published legacy integration projector omits it. Raw fixture records and period selection were valid; the exact owner delegation was consumed in W15; its changed runtime has not yet completed hosted observation.",
+          "Pending training origin loss is now observed after real promotion; its strict discriminator remains unchanged.",
+          "The complete units failure occurred at about300seconds after catalog discovery. Expired public Procurement selection is strongly supported by the source trace but not the exclusive cause established by the aggregated error. W19 publishes public-selection renewal before each human action; runtime remains unobserved."
+        ],
+        "hosted_flight_ref": "W14.MISSIONS",
+        "historical_observation_stage": "W14_PREPARATION_FAILED_AT_PROCUREMENT_SOURCE_ISSUANCE",
+        "latest_hosted_stage": "W16_C09_COVERAGE_PREPARED_PENDING_DERIVATION_FAILED_COMPLETE_UNITS_CASE_EVIDENCE_FAILED",
+        "latest_hosted_evidence_ref": "W16.PROCUREMENT_FAILURES"
+      },
+      "required_operations_without_driver_witness": [
+        "sf_change_prepare",
+        "sf_receipt_get"
+      ],
+      "output_kinds_without_positive_driver": [
+        "PreparedChangeSet"
+      ],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-preparar-compra",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-revisar-dependencias",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-dependencias/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T02",
+      "planned_source_writer": "S1",
+      "allowed_profiles": [
+        "sf_portfolio"
+      ],
+      "input_type": "DependencyReviewInput",
+      "output_types": [
+        "DeliveryAssessment",
+        "DependencyConflict"
+      ],
+      "published_output_types": [
+        "DeliveryAssessment",
+        "DependencyConflict"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_relation_read",
+        "sf_source_get"
+      ],
+      "required_operations": [
+        "sf_relation_read",
+        "sf_context_get",
+        "sf_source_get"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T01"
+      ],
+      "consumer_tasks": [
+        "WP13.T01",
+        "WP01.T05",
+        "WP08.T06"
+      ],
+      "proof_ids": [
+        "AM01"
+      ],
+      "source_digest": "6adbeb96f182706d6125cfad31f679801a24becd9589231121ff54d62d476005",
+      "instructions_digest": "bc18710e773e2ef7902e2899886ffd4081e6553be7bc2b076204f826b74bbdf0",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-revisar-dependencias",
+          "nativeSessionId": "ses_e262ab91dffebwyIpm7hM4fT4m",
+          "profileId": "sf_portfolio",
+          "profileVersion": "1.0.0",
+          "profileDigest": "249ec91f7d1a76fef83c4408795b66953589d3b3f45e91c64ca691c60c8c2b83",
+          "skillId": "sf-revisar-dependencias",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "6adbeb96f182706d6125cfad31f679801a24becd9589231121ff54d62d476005",
+          "instructionsDigest": "bc18710e773e2ef7902e2899886ffd4081e6553be7bc2b076204f826b74bbdf0",
+          "loadedMessageId": "msg_1d9d547140015gfKPmD96X837X",
+          "loadedAt": "2026-11-14T11:33:15.680Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-revisar-dependencias",
+        "profileId": "sf_maestro",
+        "nativeSessionId": "ses_e262ab8ddfferGXCZrC6X3dYiu",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/input-producer-dependency.ts",
+          "symbol": "createSfDependencyInputProducer",
+          "blob_sha": "2ce702d9924f98b1fd2752963f8317d57d2fa732",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-collaboration.ts",
+          "blob_sha": "d37b26367f9f2670d6187e253c5c5ed14348a330",
+          "accepted_kinds_observed_in_source": [
+            "DeliveryAssessment",
+            "DependencyConflict"
+          ],
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+            "blob": "4fe9d9c1caf31f918d3e791af587fdf0b0d2834f",
+            "sha256": "a61868af7744e329fc60842992a4df234b9b2903ecbdb3e6f23a81e1b5fb0d7a",
+            "bytes": 14665,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-14.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "4fe9d9c1caf31f918d3e791af587fdf0b0d2834f",
+              "sha256": "a61868af7744e329fc60842992a4df234b9b2903ecbdb3e6f23a81e1b5fb0d7a",
+              "bytes": 14665
+            },
+            "working_tree_matches_published_candidate": true
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_portfolio"
+        ],
+        "native_output_kinds_implemented": [
+          "DeliveryAssessment",
+          "DependencyConflict"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_relation_read",
+          "sf_context_get",
+          "sf_source_get"
+        ],
+        "domain_preparation_implemented": "Actual identity-based C06 relation, real human choice, issued Dashboard milestone; homonym/unknown choice/capacity injection negatives.",
+        "consumers_implemented": [
+          "sf_relation_read confirmed relation after reload",
+          "real dependency input reprepare",
+          "handleSfAnalysis outputs/HTML"
+        ],
+        "limits": [
+          "Human March/FTE declarations stay unverified. Expected conflict state/date/generated ID is not supplied in the objective.",
+          "No official date or capacity changes are applied.",
+          "W19 corrects own UI dispatch admission consumption through the actual shared dispatcher; direct business-port authority helpers remain unchanged. Source changes are not a passing runtime witness."
+        ]
+      },
+      "required_operations_without_driver_witness": [],
+      "output_kinds_without_positive_driver": [],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-revisar-dependencias",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-compor-portfolio",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T02",
+      "planned_source_writer": "S1",
+      "allowed_profiles": [
+        "sf_portfolio"
+      ],
+      "input_type": "PortfolioCompositionInput",
+      "output_types": [
+        "PortfolioComparison"
+      ],
+      "published_output_types": [
+        "PortfolioComparison",
+        "AlternativeDraft"
+      ],
+      "published_additive_output_types": [
+        "AlternativeDraft"
+      ],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_alternative_draft",
+        "sf_context_get",
+        "sf_portfolio_evaluate",
+        "sf_scenario_compare",
+        "sf_scenario_simulate"
+      ],
+      "required_operations": [
+        "sf_portfolio_evaluate",
+        "sf_scenario_simulate",
+        "sf_alternative_draft"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T01",
+        "WP13.T02"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP13.T04"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM02"
+      ],
+      "source_digest": "8910dd159591b5849f60a734ed27549e57ec3de6d05c125b004202c217166642",
+      "instructions_digest": "0f6f8d575fd60b062fe2b700cde10fadd9e93bcb47409a0b8b362f028629cd07",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-compor-portfolio",
+          "nativeSessionId": "ses_e262ab8c3ffeUfBZ2GUFAcuPvv",
+          "profileId": "sf_portfolio",
+          "profileVersion": "1.0.0",
+          "profileDigest": "249ec91f7d1a76fef83c4408795b66953589d3b3f45e91c64ca691c60c8c2b83",
+          "skillId": "sf-compor-portfolio",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "8910dd159591b5849f60a734ed27549e57ec3de6d05c125b004202c217166642",
+          "instructionsDigest": "0f6f8d575fd60b062fe2b700cde10fadd9e93bcb47409a0b8b362f028629cd07",
+          "loadedMessageId": "msg_1d9d54758001E45xOW13l03kfu",
+          "loadedAt": "2026-11-14T11:33:15.740Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-compor-portfolio",
+        "profileId": "sf_maestro",
+        "nativeSessionId": "ses_e262ab8a2ffeJuWKA44pGKbVSh",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/input-producer-portfolio.ts",
+          "symbol": "createSfPortfolioInputProducer",
+          "blob_sha": "1a6e7ca3e6b93bb93b179031d7c3fda616b5dfc6",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-portfolio.ts",
+          "blob_sha": "9f4783771674d00ebd395b834e10a0283f3efb92",
+          "accepted_kinds_observed_in_source": [
+            "PortfolioComparison",
+            "AlternativeDraft"
+          ],
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+            "blob": "fbfc8cc7948ddd607188bbea2bf40a0b98c51007",
+            "sha256": "4071395d2b217eca175f717a182b947718da825d1917b02929f6c7968e493e2e",
+            "bytes": 21685,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-08.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "fbfc8cc7948ddd607188bbea2bf40a0b98c51007",
+              "sha256": "4071395d2b217eca175f717a182b947718da825d1917b02929f6c7968e493e2e",
+              "bytes": 21685
+            },
+            "working_tree_matches_published_candidate": true
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_portfolio"
+        ],
+        "native_output_kinds_implemented": [
+          "PortfolioComparison",
+          "AlternativeDraft"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_portfolio_evaluate",
+          "sf_scenario_simulate",
+          "sf_alternative_draft"
+        ],
+        "domain_preparation_implemented": "Real human choices and candidate refs, bounded domain combinations, duplicate-target refusal and exact human alternative selection.",
+        "consumers_implemented": [
+          "decision-portfolio-read after reload",
+          "actual alternative-selection-set",
+          "handleSfAnalysis PortfolioComparison and AlternativeDraft"
+        ],
+        "limits": [
+          "Selection preparation is not human acceptance/application of the later native AlternativeDraft.",
+          "No global optimum or complete total is asserted for hypothetical operations."
+        ]
+      },
+      "required_operations_without_driver_witness": [],
+      "output_kinds_without_positive_driver": [],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-compor-portfolio",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-reavaliar-compromissos",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-reavaliar-compromissos/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T02",
+      "planned_source_writer": "S1",
+      "allowed_profiles": [
+        "sf_portfolio"
+      ],
+      "input_type": "CommitmentReevaluationInput",
+      "output_types": [
+        "ReconsiderationProposal"
+      ],
+      "published_output_types": [
+        "ReconsiderationProposal"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_relation_read",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_watch_prepare"
+      ],
+      "required_operations": [
+        "sf_freshness_check",
+        "sf_context_get",
+        "sf_scenario_compare",
+        "sf_watch_prepare"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP14.T01"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP08.T04",
+        "WP09.T07"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM06",
+        "AM02"
+      ],
+      "source_digest": "a7f8d1b51ab0d5ac5182a4f9bbf8035c9227be27f45c50d85e76318919d356d6",
+      "instructions_digest": "a8f4ee47edb3c6d51ae9494ffee887af9c9d2072679f663583dbcc8ed30f6ea1",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-reavaliar-compromissos",
+          "nativeSessionId": "ses_e262ab88dffe5HbSuxJDuDfBLb",
+          "profileId": "sf_portfolio",
+          "profileVersion": "1.0.0",
+          "profileDigest": "249ec91f7d1a76fef83c4408795b66953589d3b3f45e91c64ca691c60c8c2b83",
+          "skillId": "sf-reavaliar-compromissos",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "a7f8d1b51ab0d5ac5182a4f9bbf8035c9227be27f45c50d85e76318919d356d6",
+          "instructionsDigest": "a8f4ee47edb3c6d51ae9494ffee887af9c9d2072679f663583dbcc8ed30f6ea1",
+          "loadedMessageId": "msg_1d9d5478d00177YHtVQA2P8608",
+          "loadedAt": "2026-11-14T11:33:15.792Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-reavaliar-compromissos",
+        "profileId": "sf_maestro",
+        "nativeSessionId": "ses_e262ab86effehPXcaCKRbwu4sz",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/input-producer-reevaluation.ts",
+          "symbol": "createSfReevaluationInputProducer",
+          "blob_sha": "a9b9204ad9cbf85c5de50d3eebd586acef8289c4",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-collaboration.ts",
+          "blob_sha": "d37b26367f9f2670d6187e253c5c5ed14348a330",
+          "accepted_kinds_observed_in_source": [
+            "ReconsiderationProposal"
+          ],
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+            "blob": "dc3ac4d4b02e392170059911b7c8a5fba171c7b4",
+            "sha256": "35ef6568bdbe66e6fe03de86a08692bdb7af18f72164c078db1de7f08c70bb30",
+            "bytes": 13917,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-14.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "dc3ac4d4b02e392170059911b7c8a5fba171c7b4",
+              "sha256": "35ef6568bdbe66e6fe03de86a08692bdb7af18f72164c078db1de7f08c70bb30",
+              "bytes": 13917
+            },
+            "working_tree_matches_published_candidate": true
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_portfolio"
+        ],
+        "native_output_kinds_implemented": [
+          "ReconsiderationProposal"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_freshness_check",
+          "sf_context_get",
+          "sf_scenario_compare"
+        ],
+        "domain_preparation_implemented": "Actual chosen case, registered source-bound material condition, public registry/materiality read and current input; real routine catalog availability observed separately.",
+        "consumers_implemented": [
+          "createSfMemoryHttp memory-conditions and memory-materiality after reload",
+          "handleSfAnalysis output/HTML"
+        ],
+        "limits": [
+          "sf_watch_prepare is NOT_EXECUTED: no human recipe or admission selected; static native-watch-admission-port-unavailable finding is not labeled an executed failure.",
+          "Narrow native analysis is not full watch/Relay acceptance.",
+          "W19 corrects own UI dispatch admission consumption through the actual shared dispatcher; direct business-port authority helpers remain unchanged. Source changes are not a passing runtime witness."
+        ]
+      },
+      "required_operations_without_driver_witness": [
+        "sf_watch_prepare"
+      ],
+      "output_kinds_without_positive_driver": [],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-reavaliar-compromissos",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-contestar-decisao",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-contestar-decisao/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T03",
+      "planned_source_writer": "S3",
+      "allowed_profiles": [
+        "sf_reviewer"
+      ],
+      "input_type": "DecisionCritiqueInput",
+      "output_types": [
+        "CritiqueReport",
+        "UnresolvedCondition"
+      ],
+      "published_output_types": [
+        "CritiqueReport",
+        "UnresolvedCondition"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_case_read",
+        "sf_context_get",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_sensitivity_evaluate"
+      ],
+      "required_operations": [
+        "sf_case_read",
+        "sf_evidence_get",
+        "sf_scenario_simulate",
+        "sf_scenario_compare"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP08.T06"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM03"
+      ],
+      "source_digest": "9d0a00c76ce8064f87eeb325eb0bc5c252bc9119d25e2047b78a55803b735696",
+      "instructions_digest": "ea13087b54f1c8e8d94974cba313f407c6fbb21bc825e4452aa57c7789e81def",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-contestar-decisao",
+          "nativeSessionId": "ses_e262ab859ffeDxUX0BYl0jHXOY",
+          "profileId": "sf_reviewer",
+          "profileVersion": "1.0.0",
+          "profileDigest": "cd0f89c9a1342101bf00a74c8ab794098889775773a7fe4cef120d28cf6f6391",
+          "skillId": "sf-contestar-decisao",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "9d0a00c76ce8064f87eeb325eb0bc5c252bc9119d25e2047b78a55803b735696",
+          "instructionsDigest": "ea13087b54f1c8e8d94974cba313f407c6fbb21bc825e4452aa57c7789e81def",
+          "loadedMessageId": "msg_1d9d547c1001O80FjQbrzQ0BZt",
+          "loadedAt": "2026-11-14T11:33:15.845Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-contestar-decisao",
+        "profileId": "sf_maestro",
+        "nativeSessionId": "ses_e262ab839ffeRpB8BJQgI7iv11",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/input-producer-critique.ts",
+          "symbol": "createSfCritiqueInputProducer -> createSfAnalysisReviewServices",
+          "blob_sha": "ae08c7cf34231be1c8d8fd85080c891fe6f439e8",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-review.ts",
+          "blob_sha": "7b0bb3bbe0ef44f3e5c4babe431d9b37e2a22c4a",
+          "accepted_kinds_observed_in_source": [
+            "CritiqueReport"
+          ],
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+            "blob": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06",
+            "sha256": "aa89749cba692f244a357d60efebf831933ee0e85590605f7d0f85d1707d1580",
+            "bytes": 18456,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-14.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06",
+              "sha256": "aa89749cba692f244a357d60efebf831933ee0e85590605f7d0f85d1707d1580",
+              "bytes": 18456
+            },
+            "working_tree_matches_published_candidate": true
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_reviewer"
+        ],
+        "native_output_kinds_implemented": [
+          "CritiqueReport"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_case_read",
+          "sf_evidence_get",
+          "sf_scenario_simulate",
+          "sf_scenario_compare"
+        ],
+        "domain_preparation_implemented": "Real author ScenarioComparison is required before independent review input/run; missing author remains explicit when no model exists.",
+        "consumers_implemented": [
+          "handleSfAnalysis critique output/HTML after reload",
+          "readCaseAnalysisProjection preserved alternatives"
+        ],
+        "limits": [
+          "Standalone UnresolvedCondition lacks installed host acceptance in the reviewed verifier.",
+          "W11 failed on the owned author-scenario precondition before any Reviewer input or model execution.",
+          "No actual human correction/continuation is inferred from a critique read.",
+          "W19 corrects own UI dispatch admission consumption through the actual shared dispatcher; direct business-port authority helpers remain unchanged. Source changes are not a passing runtime witness."
+        ],
+        "historical_observation_stage": "W11_AUTHOR_PRECONDITION_FAILED_W15_FIX_IN_PROGRESS"
+      },
+      "required_operations_without_driver_witness": [],
+      "output_kinds_without_positive_driver": [
+        "UnresolvedCondition"
+      ],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-contestar-decisao",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-revisar-evidencias",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-evidencias/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T03",
+      "planned_source_writer": "S3",
+      "allowed_profiles": [
+        "sf_reviewer"
+      ],
+      "input_type": "EvidenceReviewInput",
+      "output_types": [
+        "ClaimIssue"
+      ],
+      "published_output_types": [
+        "ClaimIssue"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_case_read",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search",
+        "sf_source_get"
+      ],
+      "required_operations": [
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_source_get",
+        "sf_knowledge_search"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP11.T02"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM03",
+        "AM05"
+      ],
+      "source_digest": "eda2166e5a588ba51888b1b7968544f05debb7179be8959c24cf681c4d1f0be8",
+      "instructions_digest": "8f407777a68965d86469eb1ce1554a231ac1b546af0e4d8e080734984f7f9a1d",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-revisar-evidencias",
+          "nativeSessionId": "ses_e262ab822ffegs1wYKH7j6R6hG",
+          "profileId": "sf_reviewer",
+          "profileVersion": "1.0.0",
+          "profileDigest": "cd0f89c9a1342101bf00a74c8ab794098889775773a7fe4cef120d28cf6f6391",
+          "skillId": "sf-revisar-evidencias",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "eda2166e5a588ba51888b1b7968544f05debb7179be8959c24cf681c4d1f0be8",
+          "instructionsDigest": "8f407777a68965d86469eb1ce1554a231ac1b546af0e4d8e080734984f7f9a1d",
+          "loadedMessageId": "msg_1d9d547f50013LRd1n7gLL8BWh",
+          "loadedAt": "2026-11-14T11:33:15.897Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-revisar-evidencias",
+        "profileId": "sf_maestro",
+        "nativeSessionId": "ses_e262ab805ffe2S7lT4xEXkQLm5",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/input-producer-evidence-review.ts",
+          "symbol": "createSfEvidenceReviewInputProducer",
+          "blob_sha": "a965fd2d366e14cda8d71531392bda63d8159706",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-review.ts",
+          "blob_sha": "7b0bb3bbe0ef44f3e5c4babe431d9b37e2a22c4a",
+          "accepted_kinds_observed_in_source": [
+            "ClaimIssue"
+          ],
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+            "blob": "549225d0b82054ebacd0087b39bc6a8a46bc93db",
+            "sha256": "2230d3d90c1c50c2a84e57701836fb264b30826a4ce49f8ca55b4f46a07168ca",
+            "bytes": 31576,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-10.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "549225d0b82054ebacd0087b39bc6a8a46bc93db",
+              "sha256": "2230d3d90c1c50c2a84e57701836fb264b30826a4ce49f8ca55b4f46a07168ca",
+              "bytes": 31576
+            },
+            "working_tree_matches_published_candidate": true
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_reviewer"
+        ],
+        "native_output_kinds_implemented": [
+          "ClaimIssue"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_case_read",
+          "sf_evidence_get",
+          "sf_freshness_check",
+          "sf_source_get",
+          "sf_knowledge_search"
+        ],
+        "domain_preparation_implemented": "Select only claims actually present in current case assumptions; empty claims submit to the real producer and remain needs-input. A native branch requires a real independent extraction author.",
+        "consumers_implemented": [
+          "handleSfAnalysis ClaimIssue HTML if a real claim/author becomes available"
+        ],
+        "limits": [
+          "The inspected real case/acceptance path does not create a claim selector; no C08 claim is seeded.",
+          "W14 requires all five native operations, but the actual claim prerequisite and positive model execution remain unobserved.",
+          "W14 stopped before native input at the actual Procurement issuer. A later exact source comparison found an incomplete intake: issuer includes approvalStage but the published legacy integration projector omits it. Raw fixture records and period selection were valid; the exact owner delegation was consumed in W15; its changed runtime has not yet completed hosted observation."
+        ],
+        "hosted_flight_ref": "W14.MISSIONS",
+        "historical_observation_stage": "W14_PREPARATION_FAILED_AT_PROCUREMENT_SOURCE_ISSUANCE",
+        "latest_hosted_stage": "W16_REAL_REQUEST_ISSUANCE_PASSED_CONTRACT_ISSUANCE_FAILED_BEFORE_ANALYSIS_INPUT",
+        "latest_hosted_evidence_ref": "W16.PROCUREMENT_FAILURES"
+      },
+      "required_operations_without_driver_witness": [],
+      "output_kinds_without_positive_driver": [],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-revisar-evidencias",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-extrair-evidencias",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-extrair-evidencias/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T02",
+      "planned_source_writer": "S4-B",
+      "allowed_profiles": [
+        "sf_procurement",
+        "sf_maestro"
+      ],
+      "input_type": "EvidenceExtractionInput",
+      "output_types": [
+        "DocumentEvidence"
+      ],
+      "published_output_types": [
+        "DocumentEvidence"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_document_extract",
+        "sf_evidence_get",
+        "sf_freshness_check"
+      ],
+      "required_operations": [
+        "sf_document_extract",
+        "sf_evidence_get"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP06.T05",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP11.T02",
+        "WP09.T04"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM05"
+      ],
+      "source_digest": "344827329b05b260be70c2dfbdbfcee22e329b090e38af82863bacfc2a610a1f",
+      "instructions_digest": "e5097d33f0505ab51088100b25bae02dc830bdcdd55eb4bf4c54acd976bf558b",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-extrair-evidencias",
+          "nativeSessionId": "ses_e262ab7f4ffehVd3CF2vDXdOz2",
+          "profileId": "sf_maestro",
+          "profileVersion": "1.0.0",
+          "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+          "skillId": "sf-extrair-evidencias",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "344827329b05b260be70c2dfbdbfcee22e329b090e38af82863bacfc2a610a1f",
+          "instructionsDigest": "e5097d33f0505ab51088100b25bae02dc830bdcdd55eb4bf4c54acd976bf558b",
+          "loadedMessageId": "msg_1d9d5481c001EAF4TDQKyisMic",
+          "loadedAt": "2026-11-14T11:33:15.941Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-extrair-evidencias",
+        "profileId": "sf_finance",
+        "nativeSessionId": "ses_e262ab7d9ffeg80iVqUA3C0UDe",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/document-analysis.ts",
+          "symbol": "createSfDocumentAnalysisInput (host-composed wrapper; not unused extraction shortcut)",
+          "blob_sha": "fbec7b20cfe236d3f729b364b8f35b40bdc4c8ab",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+          "blob_sha": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695",
+          "accepted_kinds_observed_in_source": [
+            "DocumentEvidence"
+          ],
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+            "blob": "549225d0b82054ebacd0087b39bc6a8a46bc93db",
+            "sha256": "2230d3d90c1c50c2a84e57701836fb264b30826a4ce49f8ca55b4f46a07168ca",
+            "bytes": 31576,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-10.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "549225d0b82054ebacd0087b39bc6a8a46bc93db",
+              "sha256": "2230d3d90c1c50c2a84e57701836fb264b30826a4ce49f8ca55b4f46a07168ca",
+              "bytes": 31576
+            },
+            "working_tree_matches_published_candidate": true
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_procurement"
+        ],
+        "native_output_kinds_implemented": [
+          "DocumentEvidence"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_document_extract",
+          "sf_evidence_get"
+        ],
+        "domain_preparation_implemented": "Private real persisted attachment bytes, actual document admission/parser/schema registry and mounted extraction input; wrong-file/schema refusals. W14 adds human confirmation and actual document-backed Planner preview.",
+        "consumers_implemented": [
+          "createSfDocumentHttp document-schemas/candidate after reload",
+          "document-open actual source",
+          "document-confirm and document-scenario-targets/preview",
+          "confirmed document source after a second reload",
+          "handleSfAnalysis DocumentEvidence after a real native run"
+        ],
+        "limits": [
+          "No upload/scanner qualification is claimed.",
+          "When no model exists the consumer uses the real HTTP parser and records origin=ui; that path is never labeled native execution.",
+          "The newly implemented human consumer has not run in hosted CI.",
+          "W14 stopped before native input at the actual Procurement issuer. A later exact source comparison found an incomplete intake: issuer includes approvalStage but the published legacy integration projector omits it. Raw fixture records and period selection were valid; the exact owner delegation was consumed in W15; its changed runtime has not yet completed hosted observation.",
+          "W15 removed knowledge_search from this extractor scope to match its actual allowlist and canonical required_operations; independent review confirmed no required operation was removed."
+        ],
+        "hosted_flight_ref": "W14.MISSIONS",
+        "historical_observation_stage": "W14_PREPARATION_FAILED_AT_PROCUREMENT_SOURCE_ISSUANCE",
+        "latest_hosted_stage": "W16_REAL_REQUEST_ISSUANCE_PASSED_CONTRACT_ISSUANCE_FAILED_BEFORE_ANALYSIS_INPUT",
+        "latest_hosted_evidence_ref": "W16.PROCUREMENT_FAILURES"
+      },
+      "required_operations_without_driver_witness": [],
+      "output_kinds_without_positive_driver": [],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-extrair-evidencias",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-produzir-bi-contextual",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-bi-contextual/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T02",
+      "planned_source_writer": "S4-B",
+      "allowed_profiles": [
+        "sf_finance",
+        "sf_portfolio",
+        "sf_maestro"
+      ],
+      "input_type": "ContextualBIInput",
+      "output_types": [
+        "ContextualBIProposal"
+      ],
+      "published_output_types": [
+        "ContextualBIProposal"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_bi_view",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_dashboard_read",
+        "sf_kpi_explain",
+        "sf_source_get"
+      ],
+      "required_operations": [
+        "sf_bi_view",
+        "sf_kpi_explain",
+        "sf_source_get",
+        "sf_dashboard_read"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP05.T05",
+        "WP10.T06",
+        "WP12.T02",
+        "WP02.T01"
+      ],
+      "consumer_tasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM02"
+      ],
+      "source_digest": "db1f3b552ea8d317ce8c27cc7e69f7912630ec314f1adfdb789137fccd48dfd7",
+      "instructions_digest": "4b0f8eda17125e40a9458f9390328419f9460a34f291c0d7ab9636ed89686bd0",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-produzir-bi-contextual",
+          "nativeSessionId": "ses_e262ab7cdffeoHrHbj3BJL10k2",
+          "profileId": "sf_maestro",
+          "profileVersion": "1.0.0",
+          "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+          "skillId": "sf-produzir-bi-contextual",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "db1f3b552ea8d317ce8c27cc7e69f7912630ec314f1adfdb789137fccd48dfd7",
+          "instructionsDigest": "4b0f8eda17125e40a9458f9390328419f9460a34f291c0d7ab9636ed89686bd0",
+          "loadedMessageId": "msg_1d9d54849001YHK6DoNNxdoeIx",
+          "loadedAt": "2026-11-14T11:33:15.980Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-produzir-bi-contextual",
+        "profileId": "sf_procurement",
+        "nativeSessionId": "ses_e262ab7b2ffeB8Y1arfoWgtaVY",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/input-producer-bi.ts",
+          "symbol": "createSfBiInputProducer",
+          "blob_sha": "a5cd14609db80287e6f122cfb199338df53a8b50",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-bi.ts",
+          "blob_sha": "7fccb6aad336a780267d776bf06e7c2a4cc81457",
+          "accepted_kinds_observed_in_source": [
+            "ContextualBIProposal"
+          ],
+          "included_in_W7_by_intake": "NOT_CHECKED_IN_THIS_AUDIT",
+          "published_at": "e10864d5a51c859611e72c881aa243f181d2f304",
+          "pin_verified_by": "GitHub MCP immutable fetch_file"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi.test.ts",
+            "blob": "7e29eba6598ce78fe1a8e7416220e229ea4b219c",
+            "sha256": "b66980f040afc09dad0b1c680b0b58a581693ca7b08e89bfbbd4e48fe27fafbb",
+            "bytes": 15791,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-10.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "7e29eba6598ce78fe1a8e7416220e229ea4b219c",
+              "sha256": "b66980f040afc09dad0b1c680b0b58a581693ca7b08e89bfbbd4e48fe27fafbb",
+              "bytes": 15791
+            },
+            "working_tree_matches_published_candidate": true
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_finance",
+          "sf_maestro"
+        ],
+        "native_output_kinds_implemented": [
+          "ContextualBIProposal"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_dashboard_read",
+          "sf_bi_view",
+          "sf_source_get"
+        ],
+        "domain_preparation_implemented": "Real Dashboard milestone projection, canonical BI08 human selection and C08 chart/table artifacts; absent date/source deletion negatives.",
+        "consumers_implemented": [
+          "WP05 bi-data/bi-source before and after reload",
+          "handleSfAnalysis optional ContextualBIProposal"
+        ],
+        "limits": [
+          "Private canonicalProjectionRefs/tableRef are absent from model-visible input/tools in the inspected composition; expected IDs are never inserted into the objective.",
+          "sf_kpi_explain is not required by the selected BI08 milestone branch.",
+          "W14 corrects the exact named Finance AM02 route; this is implementation, not native execution.",
+          "W14 proved the real WP05 UI/artifact consumer and source-deletion refusal, with an empty model catalog. No native ContextualBIProposal was created or consumed.",
+          "W15 adds the exact named Maestro AM02 route. The completed W16 request selected Maestro and executive only, excluding the already observed equivalent Finance BI branch; its domain-only pass is separately identified below.",
+          "The distinct W16 Maestro branch passed with real input, durable artifacts, UI consumer/reload and source-deletion refusal. Finance was filtered out. No native operation or ContextualBIProposal was observed, so this does not close the named AM02 model route."
+        ],
+        "hosted_flight_ref": "W14.MISSIONS",
+        "historical_observation_stage": "W14_REAL_BI_PRODUCER_C08_ARTIFACT_HTTP_REOPEN_AND_SOURCE_REMOVAL_PASS",
+        "latest_hosted_stage": "W16_MAESTRO_BI_INPUT_C08_ARTIFACT_WP05_REOPEN_AND_SOURCE_DELETION_PASS_ZERO_NATIVE",
+        "latest_hosted_evidence_ref": "W16.BI_MAESTRO_DOMAIN_CONSUMER"
+      },
+      "required_operations_without_driver_witness": [
+        "sf_kpi_explain"
+      ],
+      "output_kinds_without_positive_driver": [],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-produzir-bi-contextual",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-produzir-material-reuniao",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-material-reuniao/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T02",
+      "planned_source_writer": "S4-B",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "input_type": "MeetingMaterialInput",
+      "output_types": [
+        "MeetingMaterialProposal"
+      ],
+      "published_output_types": [
+        "MeetingMaterialProposal"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_artifact_get",
+        "sf_report_prepare",
+        "sf_review_prepare",
+        "sf_work_list"
+      ],
+      "required_operations": [
+        "sf_review_prepare",
+        "sf_report_prepare",
+        "sf_artifact_get"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP07.T02",
+        "WP09.T02",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumer_tasks": [
+        "WP07.T02",
+        "WP07.T04",
+        "WP01.T05"
+      ],
+      "proof_ids": [
+        "AM01"
+      ],
+      "source_digest": "d5389ae1fa4cebab61ddf53cc75a1d25c5a293182fff7b5d03bce5f90ac1a7bb",
+      "instructions_digest": "a18bc877c2b0abc80836667342f53833446c1328a6464edc2dcac05ed8a56879",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-produzir-material-reuniao",
+          "nativeSessionId": "ses_e262ab7a0ffeCJ3ToQm2sw7Cb9",
+          "profileId": "sf_maestro",
+          "profileVersion": "1.0.0",
+          "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+          "skillId": "sf-produzir-material-reuniao",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "d5389ae1fa4cebab61ddf53cc75a1d25c5a293182fff7b5d03bce5f90ac1a7bb",
+          "instructionsDigest": "a18bc877c2b0abc80836667342f53833446c1328a6464edc2dcac05ed8a56879",
+          "loadedMessageId": "msg_1d9d54871001nK0XuGdwlcbc8C",
+          "loadedAt": "2026-11-14T11:33:16.025Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-produzir-material-reuniao",
+        "profileId": "sf_finance",
+        "nativeSessionId": "ses_e262ab785ffemE5iMavF0wQc8q",
+        "boundary": "profile-allowlist",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/input-producer-meeting.ts",
+          "symbol": "createSfMeetingInputProducer",
+          "blob_sha": "672a24c3fd9e48bbef106720d63ee29225f8a9d3",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-routines.ts",
+          "blob_sha": "9bab28aada4fd5ddfd0a437e81c183db30f2eced",
+          "accepted_kinds_observed_in_source": [
+            "MeetingMaterialProposal"
+          ],
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+            "blob": "1df012698094f318d5c745d73ffceaf56e0f9ee3",
+            "sha256": "e855029b8586842a7aa7ac182699c87795150475e3997d0651a1ac01572f6ade",
+            "bytes": 29354,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-10.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "811b91fc94e73689518fff8092ff8d10dd59fa56",
+              "sha256": "44afda399441a661394a641d665be8c2e6d6d626503da162983bfb326469947a",
+              "bytes": 30121
+            },
+            "working_tree_matches_published_candidate": false
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_maestro"
+        ],
+        "native_output_kinds_implemented": [
+          "MeetingMaterialProposal"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_report_prepare",
+          "sf_artifact_get"
+        ],
+        "domain_preparation_implemented": "Actual preserved WP07 forecast review and complete real DOCX/PPTX producer/download, explicit empty C09/routine-result selections. W15 adds phase observations and bounds raw forecasts to two lines while preserving the full beyond-12-row export discriminator and existing deadline.",
+        "consumers_implemented": [
+          "createReviewHttp review-contribution",
+          "review-download before/after reload and source change"
+        ],
+        "limits": [
+          "sf_review_prepare is exercised as domain preparation but not required in this skill's native execution.",
+          "No C07 factual result or C09 decision-result link is inferred from forecast-only material.",
+          "The shared W14 driver timed out after the initial catalog observation, with no subsequent phase log. This does not identify the blocked await or prove any input, output or download branch.",
+          "W16 returned18 phases, prepared both typed inputs and their selector negatives, preserved506 review values, and inspected18271 DOCX/5115149 PPTX bytes before the failed420000ms timeout. No reopened review/report/source-change branch or native consumer was observed; the test remains FAIL."
+        ],
+        "hosted_flight_ref": "W14.MISSIONS",
+        "historical_observation_stage": "W14_EXECUTIVE_PREPARATION_TIMEOUT_AFTER_CATALOG_NO_INPUT_PROOF",
+        "latest_hosted_stage": "W16_INITIAL_INPUTS_REVIEW_AND_COMPLETE_ARCHIVES_OBSERVED_TEST_TIMED_OUT_BEFORE_REOPEN",
+        "latest_hosted_evidence_ref": "W16.EXECUTIVE_PARTIAL_INPUT_EXPORT"
+      },
+      "required_operations_without_driver_witness": [
+        "sf_review_prepare"
+      ],
+      "output_kinds_without_positive_driver": [],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-produzir-material-reuniao",
+      "full_mission_acceptance": false
+    },
+    {
+      "id": "sf-consultar-memoria-decisoria",
+      "version": "1.0.0",
+      "source_path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-consultar-memoria-decisoria/SKILL.md",
+      "owner_task": "WP12.T02",
+      "execution_task": "WP12.T02",
+      "planned_source_writer": "S4-B",
+      "allowed_profiles": [
+        "sf_maestro",
+        "sf_finance",
+        "sf_procurement",
+        "sf_portfolio",
+        "sf_reviewer"
+      ],
+      "input_type": "DecisionRecallInput",
+      "output_types": [
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "published_output_types": [
+        "CaseRecall",
+        "MatchExplanation"
+      ],
+      "published_additive_output_types": [],
+      "output_contract_note": "Immutable plan primary outputs remain above. Published additive outputs, including Portfolio AlternativeDraft, are retained as separate required current behavior.",
+      "allowed_operations": [
+        "sf_context_get",
+        "sf_decision_recall",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search"
+      ],
+      "required_operations": [
+        "sf_decision_recall",
+        "sf_knowledge_search",
+        "sf_context_get",
+        "sf_freshness_check"
+      ],
+      "operation_semantics": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "producer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP14.T02",
+        "WP14.T05"
+      ],
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP11.T01",
+        "WP09.T07"
+      ],
+      "proof_ids": [
+        "AM01",
+        "AM03",
+        "AM05",
+        "AM02"
+      ],
+      "source_digest": "46912ccaacbcd9488f36ed8258f0780c4451412967e79506558f8aee68c64db2",
+      "instructions_digest": "67d4166705d222b9d654f4e32d0b804ae0fdf7a157755545fde5ed7da92629a6",
+      "load_evidence": {
+        "product_sha": "e10864d5a51c859611e72c881aa243f181d2f304",
+        "run_id": 43590407696,
+        "job_id": 132433723902,
+        "log_line": 898,
+        "scope": "registration-and-load-only",
+        "receipt": {
+          "runId": "wp12-load-sf-consultar-memoria-decisoria",
+          "nativeSessionId": "ses_e262ab778ffefNxLRKf9diDB2m",
+          "profileId": "sf_maestro",
+          "profileVersion": "1.0.0",
+          "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+          "skillId": "sf-consultar-memoria-decisoria",
+          "skillVersion": "1.0.0",
+          "sourceDigest": "46912ccaacbcd9488f36ed8258f0780c4451412967e79506558f8aee68c64db2",
+          "instructionsDigest": "67d4166705d222b9d654f4e32d0b804ae0fdf7a157755545fde5ed7da92629a6",
+          "loadedMessageId": "msg_1d9d5489f001JG3S5fSHvLMHYX",
+          "loadedAt": "2026-11-14T11:33:16.066Z",
+          "manifestDigest": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430"
+        }
+      },
+      "pre_prompt_negative": {
+        "skillId": "sf-consultar-memoria-decisoria",
+        "profileId": "sf_maestro",
+        "nativeSessionId": "ses_e262ab75cffe1GjEdS5Um08ya4",
+        "boundary": "manifest-digest",
+        "state": "Failure",
+        "reason": "resident-source-capability-invalid",
+        "messageCount": 0
+      },
+      "bindings": {
+        "input_producer": {
+          "path": "apps/cli/src/sucafina-product/input-producer-memory.ts",
+          "symbol": "createSfMemoryInputProducer",
+          "blob_sha": "e7fbaa6f4480b2aff4625c7cd8b0f2da4b050f29",
+          "source_commit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+          "published_at": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+          "pin_verified_by": "GitHub MCP immutable fetch_file",
+          "pin_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/foreign-pins-15.json"
+        },
+        "output_verifier": {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier-memory.ts",
+          "blob_sha": "cedf7b3e3e0758a56aa03f40e13927a622dd13f3",
+          "accepted_kinds_observed_in_source": [
+            "CaseRecall",
+            "MatchExplanation"
+          ],
+          "included_in_W7_by_intake": "NOT_CHECKED_IN_THIS_AUDIT",
+          "published_at": "e10864d5a51c859611e72c881aa243f181d2f304",
+          "pin_verified_by": "GitHub MCP immutable fetch_file"
+        }
+      },
+      "driver": {
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+            "blob": "12d52cdc872e64cf3265a3f5b09cbe0d5f07d57f",
+            "sha256": "b594964e7d9fdaa6398823251aee771dce228b06ab9601e71635584d292cb53b",
+            "bytes": 20117,
+            "pin_source": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-14.json",
+            "published_candidate": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+            "working_tree": {
+              "blob": "12d52cdc872e64cf3265a3f5b09cbe0d5f07d57f",
+              "sha256": "b594964e7d9fdaa6398823251aee771dce228b06ab9601e71635584d292cb53b",
+              "bytes": 20117
+            },
+            "working_tree_matches_published_candidate": true
+          }
+        ],
+        "stage": "PUBLISHED_W20; MISSION_RESULTS_RETAIN_ORIGINAL_RUN_SHA",
+        "profiles_exercised_if_model_exists": [
+          "sf_maestro"
+        ],
+        "native_output_kinds_implemented": [
+          "CaseRecall"
+        ],
+        "native_operations_required_by_driver": [
+          "sf_decision_recall",
+          "sf_knowledge_search",
+          "sf_context_get",
+          "sf_freshness_check"
+        ],
+        "domain_preparation_implemented": "Actual producer with explicitly empty current recall scope, strict query/source selection negatives and reprepare after reload.",
+        "consumers_implemented": [
+          "createSfAnalysisHttp prepare after reload",
+          "handleSfAnalysis empty related-decisions result if native execution exists"
+        ],
+        "limits": [
+          "Empty recall is not authorized historical precedent/Atlas consumption.",
+          "MatchExplanation and an actual precedent opening remain unproved; historical verifier has a separately pinned rejection.",
+          "W19 corrects own UI dispatch admission consumption through the actual shared dispatcher; direct business-port authority helpers remain unchanged. Source changes are not a passing runtime witness.",
+          "At both the consumed business-services97cde4d and published WP10 W20 business-services89881259, createSfCaseRecall is mounted without candidateAccess. Native reads of a selected prior case outside the current binding therefore lack the required host-owned grant; this is a static mounting gap, not an observed leak or precedent mission."
+        ],
+        "historical_observation_stage": "W11_EMPTY_SCOPE_INPUT_AND_REOPEN_OBSERVED_NO_NATIVE_EXECUTION"
+      },
+      "required_operations_without_driver_witness": [],
+      "output_kinds_without_positive_driver": [
+        "MatchExplanation"
+      ],
+      "actual_provider_execution": null,
+      "persisted_provider_output": null,
+      "actual_native_consumer_after_reload": null,
+      "consumer_matrix_ref": "sf-consultar-memoria-decisoria",
+      "full_mission_acceptance": false
+    }
+  ]
+}

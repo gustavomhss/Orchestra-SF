@@ -1,0 +1,104 @@
+{
+  "schema": "sf-wp12-document-publication-v1",
+  "increment": "D24",
+  "baseCommit": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+  "baseTree": "f859e3b62b1de24234025002459045ae6d3df328",
+  "productUnchanged": true,
+  "productionChanges": 0,
+  "testChanges": 0,
+  "foreignSourceChanges": 0,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-16-executive.json",
+      "bytes": 28770,
+      "sha256": "c14b706d0847f5b9b50e258086b191be65cdf7fbd2754bdca005f8bfec8beb72",
+      "blob": "fd54d8894f51a645690b59104833eb2b00a90f8b",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/executive-historical-period/README.md",
+      "bytes": 2257,
+      "sha256": "17faf07f696907fb2f7ebe03e845c9566cababf004e4f47eb156e74e5d37535e",
+      "blob": "9488fc9751f7a437dc573e6372b6420540ab3b07",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/executive-historical-period/finding.json",
+      "bytes": 10278,
+      "sha256": "4333bb1be5d6e9e9c921360d72838ca1da2d7dd14cac589ef8746a077e35f10f",
+      "blob": "56c07a0c5dc6d370d8be66ede472c2fad2ee219b",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/executive-historical-period/owner-delta.json",
+      "bytes": 2584,
+      "sha256": "1c1f1b5c30b3aa58027405a6824db9459e5e26a9f6b6cfaca5bae08023c3c9eb",
+      "blob": "75a78f8929cbd7f523dc1d1713cde01d506bee36",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/executive-historical-period/source-pins.json",
+      "bytes": 7665,
+      "sha256": "8bb2a0bffff324adab4aa40054e658557d4701d7f0bfbf61fbc6c32710852df7",
+      "blob": "91e16983cc2ae2f74253584b39fd4d996bc9ae1c",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/executive-historical-period/independent-review-criteria.json",
+      "bytes": 7286,
+      "sha256": "00d6d1fb7f4204d65fa3e71d6e4e745ff56b4fe5735d6c4a79de483310039e0c",
+      "blob": "a2894a84771988aa3a7aee1d6536a6d325c2b747",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-19-checks.json",
+      "bytes": 3784,
+      "sha256": "222408a3116372a6174c4703c752e66209e38f55191a9d9a9bc66c20a3ed2f85",
+      "blob": "5357d6bca66bc253338deb6351acb569e12cc1bb",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/d24/executive-author-freeze-before-review.json",
+      "bytes": 8274,
+      "sha256": "5f847f02f7ffe3b7605524ab2b86654a24e44432240b827b4c9881220a060a10",
+      "blob": "1b7d1f8644ffa5aa43ca000aeea8d01a6c259a3a",
+      "kind": "own-document"
+    }
+  ],
+  "executiveReview": {
+    "status": "PASS_STATIC_NO_COUNTER_FINDING",
+    "reviewer": "/root/criteria_resume",
+    "sha256": "00d6d1fb7f4204d65fa3e71d6e4e745ff56b4fe5735d6c4a79de483310039e0c",
+    "publishedPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/executive-historical-period/independent-review-criteria.json",
+    "sourcePins": 23,
+    "rootPublicationBoundary": "The author manifest was frozen before independent review and is archived literally. This wrapper and the separately published reviewer receipt provide the final reviewed state without rewriting the historical author artifact."
+  },
+  "check": {
+    "product": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+    "run": 43610836150,
+    "snapshot": "35e3fc2cf34132d34acb1db607ad24028f26ed35",
+    "result": "PASS full package typecheck/spawn/guards",
+    "notClaimedOnDocumentHead": true
+  },
+  "executiveTerminal": {
+    "product": "efa940962023523848661d795856002d29510b19",
+    "run": 43608377719,
+    "snapshot": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+    "summary": "0 pass /1 fail /2245 assertions /116.24s",
+    "completed": "Real selected January44value-ID occurrences in DOCX/PPTX and host reopen progressed; current Meeting input re-prepared. No independent numeric-cell reconciliation or full annual material claim.",
+    "failure": "Post-source-change historical review GET returned403 where the strict driver requires200. Aggregate reason does not reveal first subgate.",
+    "staticFinding": "Captured SourceRef period is January while the real Planner BusinessEvidenceRef is annual; historical matchesRecord requires the captured period to contain that annual ref. No public monthly Planner source issuer exists in the inspected composition.",
+    "held": "No driver expectation was changed and no unchanged Executive rerun was dispatched."
+  },
+  "activeProduct": {
+    "run": 43611121344,
+    "product": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+    "snapshot": "270d8d28ae02771c6af079f87d3bd881159c3173",
+    "scope": "Combined new Handoff and BI KPI,2tests",
+    "statusAtPublication": "in_progress",
+    "resultNotYetClaimed": true
+  },
+  "fullWp12": false,
+  "localProductTests": false,
+  "localTypecheck": false
+}

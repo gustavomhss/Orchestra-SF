@@ -1,0 +1,88 @@
+{
+  "schema": "wp12-own-increment-manifest-v1",
+  "status": "FROZEN_STATIC_REVIEWED_NOT_RUN",
+  "map_base_commit": "551ff6c1684ae09704cfce85c12690e8369b2d0c",
+  "inspected_product_commit": "71cbf64ffa10111b53ee00774aa625332dc4d295",
+  "independent_review": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/handoff-independent-review.json",
+    "sha256": "f3bb0bfdfe6ae93ffae553c97f943ebf82dbf12f4d71163e9d342929a3e49668",
+    "status": "PASS_STATIC_ONLY"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts",
+      "frozen_path": "resume-input/criteria/question-handoff/frozen/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts",
+      "blob": "b2d80e6bbfc05ea11bae9bd10490aeb2ea4711b5",
+      "sha256": "64d1c85c19e313b348d2844cc6ff7c924d165bd158a4771d7d44c5807222a810",
+      "bytes": 25475,
+      "kind": "own-test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/README.md",
+      "frozen_path": "resume-input/criteria/question-handoff/frozen/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/README.md",
+      "blob": "ae75595dab836dc882b922a37bbfdf9f2808abbb",
+      "sha256": "ed54c9c96b0fcef4c0a83a2675b984e6c15861660deaadbaa3c0f6ddcd91426c",
+      "bytes": 6746,
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/bi01-kpi-viability.json",
+      "frozen_path": "resume-input/criteria/question-handoff/frozen/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/bi01-kpi-viability.json",
+      "blob": "30be058c02506ffd911894af0d32dd5c0592ec11",
+      "sha256": "d239bc08a13a8fb9a33ae532190f2d834f44d848c7e0d903c6948d059e4faee2",
+      "bytes": 7000,
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/handoff-independent-review.json",
+      "frozen_path": "resume-input/criteria/question-handoff/frozen/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/handoff-independent-review.json",
+      "blob": "53353a563cbaaa1b3a159806b869a27db3a6b413",
+      "sha256": "f3bb0bfdfe6ae93ffae553c97f943ebf82dbf12f4d71163e9d342929a3e49668",
+      "bytes": 6345,
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/obligations-27.json",
+      "frozen_path": "resume-input/criteria/question-handoff/frozen/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/obligations-27.json",
+      "blob": "ecdc82bd3520d988702dea8587aaad5d77aed771",
+      "sha256": "3f1244dfd2701faf62336023eb90ed4ad6fdea2ffb87a679bc76396b50bde529",
+      "bytes": 60362,
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/question-handoff-route.json",
+      "frozen_path": "resume-input/criteria/question-handoff/frozen/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/question-handoff-route.json",
+      "blob": "0db00d5e91fa66402239fca3100dd8921f87db79",
+      "sha256": "b39e9c9702a3bea9c31fc920347218598a0fa71592846d16e9bef26e9eb3c0d1",
+      "bytes": 4179,
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/source-pins.json",
+      "frozen_path": "resume-input/criteria/question-handoff/frozen/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/source-pins.json",
+      "blob": "325b39b83ae44110441e3b4a5c8d10386edc94b0",
+      "sha256": "73874149c3a965b8b11518015ec4fd6a5fecf46f979c10a2ddc521babc087a7b",
+      "bytes": 16524,
+      "kind": "own-document"
+    }
+  ],
+  "counts": {
+    "files": 7,
+    "own_tests": 1,
+    "own_documents": 6,
+    "obligations_preserved": 27,
+    "am02_rows": 15,
+    "required_operation_rows": 12,
+    "source_pins": 30,
+    "acceptance_upgrades": 0
+  },
+  "local_product_tests": false,
+  "local_typecheck": false,
+  "foreign_edits": false,
+  "hosted_ci": "NOT_RUN",
+  "notes": [
+    "D21 unchanged; this package is a separate addendum.",
+    "Handoff UI and native provenance boundaries are explicit.",
+    "BI01 KPI driver is only authorized/plausible at this cutoff and is a future separate file."
+  ]
+}
