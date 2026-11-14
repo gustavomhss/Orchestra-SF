@@ -71,7 +71,7 @@ test("artifact retry preserves the first bytes across ZIP timestamps, conflicts 
   const renewed = { ...context, binding: { ...context.binding, accessRevision: access.revision, policyVersion: access.policy } } as TrustedDomainContext
   expect((await storage.download(saved.value.artifactRef, context)).status).toBe(403)
   expect((await storage.read(saved.value.artifactRef, renewed)).status).toBe("ok")
-  expect(new Uint8Array(await (await storage.download(saved.value.artifactRef, renewed)).arrayBuffer())).toEqual(first.bytes)
+  expect([...new Uint8Array(await (await storage.download(saved.value.artifactRef, renewed)).arrayBuffer())]).toEqual([...first.bytes])
   const documents = (persistence.state.dashboard.data.__sfProductV1 as SfProductState).documents
   const originalArtifact = structuredClone(documents[saved.value.artifactRef]!)
   if (!originalArtifact || typeof originalArtifact !== "object" || Array.isArray(originalArtifact)) throw new Error("Stored artifact unavailable")

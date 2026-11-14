@@ -266,9 +266,16 @@ export async function runSfAnalysis(input: {
     return { status: "stale", reason: "analysis-base-changed" } as const
   }
   const published = await publishSfContribution({ host: input.host, output: collected.value, skillReceipt: admission.skillReceipt, runRef: admission.runRef, reviewTarget: input.reviewTarget })
-  if (published.status !== "failed") return published
-  const failed = await input.host.withRunContext(admission.runRef, (context) => input.host.fail(admission.runRef, published.reason, context))
-  return failed.status === "ok" ? published : failed
+  if (published.status === "failed") {
+    const failed = await input.host.withRunContext(admission.runRef, (context) => input.host.fail(admission.runRef, published.reason, context))
+    return failed.status === "ok" ? published : failed
+  }
+  if (published.status === "unavailable" || published.status === "needs-input") {
+    const state = published.status
+    const settled = await input.host.withRunContext(admission.runRef, (context) => input.host.settle(admission.runRef, state, published.reason, context))
+    return settled.status === "ok" ? published : settled
+  }
+  return published
 }
 
 /** Cancel the durable run before interrupting its matching native session. */

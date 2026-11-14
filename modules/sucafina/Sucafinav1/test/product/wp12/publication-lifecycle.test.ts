@@ -28,7 +28,7 @@ async function fixture(options?: { alternative?: boolean }) {
     const profile = { ...material.profile, id: "sf_portfolio" as const, allowedSkills: ["sf-compor-portfolio"], outputTypes: ["AlternativeDraft" as const] }
     const skill = { ...material.skill, id: "sf-compor-portfolio", allowedProfiles: ["sf_portfolio" as const], outputSchemaRefs: ["AlternativeDraft"] }
     material.receipt = { ...material.receipt, profileId: profile.id, skillId: skill.id }
-    material.run = { ...material.run, skillId: skill.id, selection: { ...material.run.selection, profile, skills: [skill] }, native: { sessionID: "session", skillReceipt: material.receipt } }
+    material.run = { ...material.run, state: "running", skillId: skill.id, selection: { ...material.run.selection, profile, skills: [skill] }, native: { sessionID: "session", skillReceipt: material.receipt } }
     const horizon = { start: "2027-01-01", end: "2027-12-31" }
     const output: ContributionEnvelope = { ...material.output, kind: "AlternativeDraft", state: "ready", runProvenance: { ...material.output.runProvenance, ...material.receipt }, payload: {
       caseRef: encodeCaseRef(material.caseRef), proposal: { id: "alternative", version: 1, title: "Unconfirmed alternative", scenario: { baseRef: "base", operations: [], assumptions: [] },
@@ -49,6 +49,8 @@ async function fixture(options?: { alternative?: boolean }) {
     afterReadyCommit?: () => Promise<void>
     collect?: (context: TrustedDomainContext) => Promise<PortResult<ContributionEnvelope>>
     denyStaleCommit?: boolean
+    publicationOutcome?: { status: "unavailable" | "needs-input" | "denied" | "conflict"; reason: string }
+    outcomeAfterCommit?: boolean
   } = {}
   const observations = { readyObservedBeforeChange: false, captureReads: 0 }
   const rawState = createSfProductState({ persistence, createId: () => "store", resolveTarget: async () => ({ incarnation: "inc" }), authorize: async () => access.allowed ? authority : undefined })
@@ -113,7 +115,9 @@ async function fixture(options?: { alternative?: boolean }) {
   const host: SfAnalysisHost = { ...hostBase, result: { write: async (incoming, call) => {
     const before = hooks.beforeWrite
     if (before) { delete hooks.beforeWrite; await before() }
-    return hostBase.result.write(incoming, call)
+    if (hooks.publicationOutcome && !hooks.outcomeAfterCommit) return hooks.publicationOutcome
+    const written = await hostBase.result.write(incoming, call)
+    return written.status === "ok" && hooks.publicationOutcome ? hooks.publicationOutcome : written
   } } }
   const publish = () => publishSfContribution({ host, output: material.output, skillReceipt: material.receipt, runRef: "run" })
   const run = () => runSfAnalysis({ host, request: { caseRef: material.caseRef, profileId: material.receipt.profileId, profileVersion: material.receipt.profileVersion,
@@ -253,4 +257,43 @@ test("invalid collected model output cannot settle through revoked authority", a
   const persisted = await f.stored()
   expect(persisted.nativeRuns?.run).toMatchObject({ state: "running", version: 3 })
   expect(persisted.contributions["invalid-output"]).toBeUndefined()
+})
+
+test("publication unavailable or needs-input settles through a fresh C08 authority, and revocation prevents it", async () => {
+  for (const state of ["unavailable", "needs-input"] as const) {
+    for (const revoke of [false, true]) {
+      await using f = await fixture()
+      f.hooks.publicationOutcome = { status: state, reason: `publication-${state}` }
+      if (revoke) f.hooks.beforeWrite = async () => { f.access.allowed = false }
+      expect(await f.run()).toEqual(revoke ? { status: "denied", reason: "access-revoked" } : f.hooks.publicationOutcome)
+      const persisted = await f.stored()
+      expect(persisted.nativeRuns?.run).toMatchObject({ state: revoke ? "running" : state, version: revoke ? 3 : 4 })
+      expect(persisted.contributions.output).toBeUndefined()
+      expect(new Set(f.scopes).size).toBe(revoke ? 4 : 5)
+    }
+  }
+})
+
+test("a late unavailable or needs-input signal cannot overwrite a committed ready output", async () => {
+  for (const state of ["unavailable", "needs-input"] as const) {
+    await using f = await fixture()
+    f.hooks.publicationOutcome = { status: state, reason: `publication-${state}` }
+    f.hooks.outcomeAfterCommit = true
+    expect(await f.run()).toEqual({ status: "conflict", reason: "invalid-run-transition" })
+    const persisted = await f.stored()
+    expect(persisted.nativeRuns?.run).toMatchObject({ state: "ready", version: 4, outputRef: "output" })
+    expect(digestSfValue(persisted.contributions.output)).toBe(digestSfValue(f.material.output))
+  }
+})
+
+test("publication denied or conflict does not create a terminal lifecycle write", async () => {
+  for (const state of ["denied", "conflict"] as const) {
+    await using f = await fixture()
+    f.hooks.publicationOutcome = { status: state, reason: `publication-${state}` }
+    expect(await f.run()).toEqual(f.hooks.publicationOutcome)
+    const persisted = await f.stored()
+    expect(persisted.nativeRuns?.run).toMatchObject({ state: "running", version: 3 })
+    expect(persisted.contributions.output).toBeUndefined()
+    expect(new Set(f.scopes).size).toBe(4)
+  }
 })

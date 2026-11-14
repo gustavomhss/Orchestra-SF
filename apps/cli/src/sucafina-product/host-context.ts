@@ -54,6 +54,7 @@ import { createSfAnalysisHttp } from "./analysis-http.ts"
 import { createSfForecastInputAdapter } from "./forecast-input-adapter.ts"
 import { sfAnalysisSourceNamespaces } from "./analysis-namespaces.ts"
 import { createSfStaleAnalysisAccess } from "./analysis-stale-commit.ts"
+import { createSfAnalysisRunContext } from "./analysis-run-context.ts"
 import type { SfAnalysisStartInput } from "./analysis-http.ts"
 import type { SfProductHtml } from "../../../../modules/sucafina/Sucafinav1/product/integration/host-presentation.ts"
 import { createSfRoutinePublicationContribution } from "./routine-publication.ts"
@@ -416,13 +417,8 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       const baseRequest = captured.request
       const verifiedInput = structuredClone(skillInput)
       const selectedRuntime = structuredClone(chosen)
-      const withRunContext = async <T>(id: string, action: (call: TrustedDomainContext) => Promise<PortResult<T>>): Promise<PortResult<T>> => {
-        if (id !== runRef || request.signal.aborted || !identity()) return { status: "denied", reason: "analysis-authority-unavailable" }
-        const admitted = await authority.human.admit(request, "analysis.start", captured)
-        if (admitted.status !== "ok") return admitted
-        replayContexts.set(admitted.value, runRef)
-        try { return await business.withCase(admitted.value, baseRequest.caseRef, {}, () => action(admitted.value)) } finally { replayContexts.delete(admitted.value); authority.human.finish(admitted.value) }
-      }
+      const withRunContext = createSfAnalysisRunContext({ authority, business, request, runRef, caseRef: baseRequest.caseRef,
+        start: captured, active: () => !!identity(), replayContexts })
       const verify = async (call: TrustedDomainContext) => {
         const result = await withMaterialSelection(call, "analysis.start", captured, () => verifier.verify(verifiedInput, baseRequest, call))
         if (result.status !== "ok" || digestSfValue(result.value.input) !== digestSfValue(verifiedInput) ||

@@ -13,17 +13,13 @@ import { createSfSourceScopeProjector } from "../../../product/integration/sourc
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import { createDashboardRecordSourceIssuer, createDashboardSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
 import { createDashboardRecordEvidenceHost, createDashboardSourceHost } from "../../../product/dashboard/sources.ts"
-import { createDashboardPort } from "../../../product/dashboard/port.ts"
-import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
 import { createChoiceSnapshot } from "../../../product/decisions/choice.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import type { BusinessContextService } from "../../../product/contracts/business-context.ts"
 import type { DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import type { SfHumanAction } from "../../../product/integration/human-authority.ts"
 import type { HotTopicDraftRequest } from "../../../product/decisions/hot-topic-draft.ts"
-import { createSfDashboardServices } from "../../../../../../apps/cli/src/sucafina-product/dashboard-services.ts"
-import { createSfDashboardDecisions } from "../../../../../../apps/cli/src/sucafina-product/dashboard-decisions.ts"
+import { createFixtureBusiness } from "./business-services-fixture.ts"
 import { createSfDashboardHttp } from "../../../../../../apps/cli/src/sucafina-product/dashboard-http.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
@@ -34,7 +30,7 @@ async function fixture() {
   const store = await openLocalStore(directory)
   const clock = { at: "2026-11-13T00:00:00Z", active: true }
   const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => clock.at) })
-  await persistence.initializeSources("dashboard")
+  for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
   await persistence.transaction("dashboard", async (snapshot) => {
     snapshot.data.roleMap = [{ surface: "dashboard", role: "admin", entra: "admins", version: 1, by: "admin" }]
     snapshot.data.hotTopics = [{ id: "topic", action: "Original action", owner: "owner", due: "2026-12-01", status: "open", priority: "normal", notes: "" }]
@@ -54,23 +50,13 @@ async function fixture() {
       humanActions: ["reviews.preserve", "decisions.edit", "decisions.choose", "decisions.prepare-changes", "decisions.apply"] }] })
   const records = createDashboardRecordEvidenceHost({ host: authority.host, scopedSources: persistence, issueRecord: createDashboardRecordSourceIssuer({ host: authority.host, scopedSources: persistence }) })
   const sources = createDashboardSourceHost({ host: authority.host, scopedSources: persistence })
-  const port = createDashboardPort({ host: authority.host, sources, recordEvidence: records })
-  const dashboard = createSfDashboardServices({ authority, scopedSources: persistence, dashboard: port, sources, records, dashboardHostWrites })
-  const evidence: BusinessContextService = {
-    resolve: async (ref, context) => {
-      if (ref.kind === "record" && ref.target.surface === "dashboard") {
-        const current = await records.resolve(ref.refId, context)
-        const projection = await records.read(ref.refId, context)
-        if (current.status === "ok" && projection.status === "ok" && digestSfValue(ref) === digestSfValue(current.value))
-          return { state: "fresh", ref, currentRef: current.value, authorizedProjection: projection.value, accessRevision: context.binding.accessRevision, checkedAt: clock.at }
-      }
-      return { state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: clock.at }
-    }, context: (request, context) => Promise.all(request.refs.map((ref) => evidence.resolve(ref, context))), recall: async () => [],
-    emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "test-does-not-publish-memory" }) }
-  const cases = createDecisionCasePort({ state: authority.state, host: authority.host, creationTarget: authority.creationTarget,
-    operationIdentity: (context) => context.kind === "ui" ? authority.ui.operationIdentity(context) : undefined,
-    authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await authority.host.revalidate(context), evidence, createId: randomUUID, now: () => clock.at })
-  const decisions = createSfDashboardDecisions({ authority, cases, records, issue: dashboard.issue, proposalCoverageWrites, dashboardHostWrites })
+  const business = await createFixtureBusiness({ authority, persistence, proposalCoverageWrites, dashboardHostWrites }).catch(async (error: unknown) => {
+    const failures: unknown[] = [error]
+    try { await store.dispose() } catch (failure) { failures.push(failure) }
+    try { await rm(directory, { recursive: true, force: true }) } catch (failure) { failures.push(failure) }
+    throw failures.length === 1 ? error : new AggregateError(failures, "Business fixture setup and cleanup failed")
+  })
+  const dashboard = business.dashboardServices, decisions = business.dashboardDecisions
   const http = createSfDashboardHttp({ origin: "https://example.test", mount: "/sucafina", runtime: () => ({ authority, dashboard, decisions }) })
   const request = (mode: string, payload?: unknown, key: string = randomUUID()) => new Request(`https://example.test/sucafina/dashboard?sf=${mode}`, payload === undefined ? undefined :
     { method: "POST", headers: { origin: "https://example.test", "content-type": "application/json", "Idempotency-Key": key }, body: JSON.stringify(payload) })
@@ -96,7 +82,7 @@ async function fixture() {
   expect(seeded.status).toBe("ok")
   return { clock, persistence, authority, records, sources, dashboard, decisions, http, request, read, human,
     issuePage: createDashboardSourceIssuer({ host: authority.host, scopedSources: persistence }),
-    close: async () => { dashboard.dispose(); await store.dispose(); await rm(directory, { recursive: true, force: true }) } }
+    close: async () => { business.dispose(); await store.dispose(); await rm(directory, { recursive: true, force: true }) } }
 }
 
 test("real host protects metadata writes and captures under the all-surface C08 lock", async () => {

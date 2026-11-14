@@ -5,13 +5,13 @@ import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { plannerComponentDigest } from "../../../product/planner/comparison.ts"
 import { portfolioCandidateRef } from "../../../product/portfolio/candidates.ts"
 import { createProductionPortfolio } from "../../../product/portfolio/production.ts"
-import { createWp13SensitivityFixture } from "./sensitivity-fixture.ts"
+import { createWp13PortfolioFixture } from "./sensitivity-fixture.ts"
 
 // These witnesses exercise the production portfolio adapter and real Planner math.
 // The installation policy is the explicit fixture policy; native/UI/MCP acceptance is separate.
 test("real portfolio composes shared-source operations once and retains omitted or priced training", async () => {
   for (const training of [undefined, 40000] as const) {
-    const world = await createWp13SensitivityFixture({ renewal: training === undefined ? {} : { training } })
+    const world = await createWp13PortfolioFixture({ renewal: training === undefined ? {} : { training } })
     try {
       const plannerBefore = await world.store.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))
       const firstRequest: ScenarioRequest = { ...world.scenario, operations: world.scenario.operations.filter((operation) => ["service:11", "implementation:11"].includes(operation.targetRef)) }
@@ -30,8 +30,14 @@ test("real portfolio composes shared-source operations once and retains omitted 
       const seeded = await world.state.transaction(world.request, { namespace: "cases", expectedStorageVersion: prior.storageVersion, idempotencyKey: "seed-portfolio-parts", commandDigest: digestSfValue(parts), targetRef: encodeCaseRef(world.caseRef), targetIncarnation: world.caseRef.incarnation }, async (state) => {
         const decision = state.cases[world.caseRef.id]
         if (!decision) return { commit: false, value: false }
-        decision.alternatives = [...decision.alternatives, ...parts.map((part) => ({ ...part, version: 1, title: part.id,
-          result: { ...part.result, costCoverage: { ...part.result.costCoverage, alternativeId: part.id, alternativeVersion: 1 } } }))]
+        decision.alternatives = [...decision.alternatives, ...parts.map((part) => {
+          const result = structuredClone(part.result)
+          if (result.comparisonStatus !== "conditioned") throw new Error("expected conditioned real Planner part")
+          // Explicit category inputs qualify the real Planner components through the
+          // coverage producer; the preview alone cannot infer an omitted training cost.
+          result.costCoverage = world.classifyFixtureCoverage(result, part.id, false)
+          return { id: part.id, scenario: part.scenario, version: 1, title: part.id, result }
+        })]
         return { commit: true, value: true }
       })
       expect(seeded.status).toBe("ok")

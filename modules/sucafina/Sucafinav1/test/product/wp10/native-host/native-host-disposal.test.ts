@@ -166,6 +166,7 @@ test.each(["dispose", "interrupt-failure", "abort-attach", "revoke-attach", "thr
             // Core Session, skill observation, opaque binding and token ownership are real.
             const persistence: ReturnType<typeof createSfRunStore> = {
               create: async () => ({ status: "ok", value: record }), read: async () => ({ status: "unavailable", reason: "not-exercised" }),
+              readLifecycle: async () => ({ status: "unavailable", reason: "not-exercised" }),
               markStale: async () => ({ status: "unavailable", reason: "not-exercised" }), preserveStale: async () => ({ status: "unavailable", reason: "not-exercised" }),
               publish: async () => ({ status: "unavailable", reason: "not-exercised" }), transition: async () => ({ status: "denied", reason: "revoked-transition" }),
               attach: async (_run, _version, sessionID, skillReceipt) => {

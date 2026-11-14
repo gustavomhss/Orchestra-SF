@@ -34,7 +34,7 @@ export function createScopedConfirmationIndex(input: {
     const read = async (values: readonly ConfirmationScope[]) => Promise.all(values.map((scope) => input.confirmation.readScope!(structuredClone(scope), context)))
     const found = await read(scopes)
     const error = found.find((result) => result.status !== "ok")
-    if (error && error.status !== "ok") return error
+    if (error) return error
     if (found.some((result) => result.status === "ok" && result.value?.state === "unavailable")) return { status: "unavailable", reason: "confirmation-source-unavailable" }
     if (found.some((result) => result.status === "ok" && result.value !== null && !validConfirmation(result.value))) return { status: "unavailable", reason: "confirmation-projection-invalid" }
     const coverage: ForecastConfirmationCoverage = { scopes: found.flatMap((result, index) => result.status === "ok" ? [{ scope: scopes[index]!, confirmation: structuredClone(result.value) }] : []) }
@@ -44,7 +44,7 @@ export function createScopedConfirmationIndex(input: {
     if (!currentScopes || digestSfValue(currentScopes.map(forecastConfirmationScopeIdentity)) !== digestSfValue(scopes.map(forecastConfirmationScopeIdentity))) return { status: "stale", reason: "confirmation-scope-changed" }
     const again = await read(currentScopes)
     const changed = again.find((result) => result.status !== "ok")
-    if (changed && changed.status !== "ok") return changed
+    if (changed) return changed
     if (again.some((result) => result.status === "ok" && result.value?.state === "unavailable")) return { status: "unavailable", reason: "confirmation-source-unavailable" }
     if (again.some((result) => result.status === "ok" && result.value !== null && !validConfirmation(result.value))) return { status: "unavailable", reason: "confirmation-projection-invalid" }
     const currentCoverage: ForecastConfirmationCoverage = { scopes: again.flatMap((result, index) => result.status === "ok" ? [{ scope: currentScopes[index]!, confirmation: structuredClone(result.value) }] : []) }
@@ -127,10 +127,10 @@ export function forecastConfirmationCoverageDigest(coverage: ForecastConfirmatio
 }
 
 function uniqueScopes(scopes: readonly ConfirmationScope[]): ConfirmationScope[] | undefined {
-  if (!Array.isArray(scopes) || scopes.some((scope) => !keys(scope, ["sourceRef", "fields", "period", "materialDependencies", "scopeDefinitionVersion"]) || !keys(scope.sourceRef, ["surface", "type", "id", "incarnation"]) || !["dashboard", "planner", "procurement"].includes(scope.sourceRef.surface) ||
+  if (!Array.isArray(scopes) || scopes.some((scope: ConfirmationScope) => !keys(scope, ["sourceRef", "fields", "period", "materialDependencies", "scopeDefinitionVersion"]) || !keys(scope.sourceRef, ["surface", "type", "id", "incarnation"]) || !["dashboard", "planner", "procurement"].includes(scope.sourceRef.surface) ||
     ![scope.sourceRef.type, scope.sourceRef.id, scope.sourceRef.incarnation, scope.scopeDefinitionVersion].every((part) => typeof part === "string" && !!part.trim()) ||
     !Array.isArray(scope.fields) || !scope.fields.length || scope.fields.some((field) => typeof field !== "string" || !field.trim()) || new Set(scope.fields).size !== scope.fields.length || !keys(scope.period, ["start", "end"]) || !isSfPeriod(scope.period) ||
-    !Array.isArray(scope.materialDependencies) || scope.materialDependencies.some((source) => !keys(source, ["surface", "type", "id", "incarnation", "version", "fields", "period", "observedAt"]) || !["dashboard", "planner", "procurement"].includes(source.surface) || ![source.type, source.id, source.incarnation].every((part) => typeof part === "string" && !!part.trim()) ||
+    !Array.isArray(scope.materialDependencies) || scope.materialDependencies.some((source: ConfirmationScope["materialDependencies"][number]) => !keys(source, ["surface", "type", "id", "incarnation", "version", "fields", "period", "observedAt"]) || !["dashboard", "planner", "procurement"].includes(source.surface) || ![source.type, source.id, source.incarnation].every((part) => typeof part === "string" && !!part.trim()) ||
       !Number.isSafeInteger(source.version) || source.version < 1 || typeof source.observedAt !== "string" || !Number.isFinite(Date.parse(source.observedAt)) ||
       !Array.isArray(source.fields) || source.fields.some((field) => typeof field !== "string" || !field.trim()) || new Set(source.fields).size !== source.fields.length || !keys(source.period, ["start", "end"]) || !isSfPeriod(source.period)))) return undefined
   return [...new Map(scopes.map((scope) => [digestSfValue(forecastConfirmationScopeIdentity(scope)), structuredClone(scope)])).entries()]

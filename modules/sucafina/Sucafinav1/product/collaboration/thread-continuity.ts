@@ -19,7 +19,7 @@ export function createThreadSourceContinuity(input: {
   authorizeHistorical: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
 }) {
   return async (basis: ThreadSourceContext, selected: readonly SourceRef[], context: TrustedDomainContext): Promise<boolean> => {
-    if (!validThreadSourceContext(basis) || !Array.isArray(selected) || !selected.length || selected.some((source) => !source || !Array.isArray(source.fields) || !source.fields.length || source.fields.some((field) => typeof field !== "string" || !field) || !isSfPeriod(source.period) || !Number.isSafeInteger(source.version) || source.version < 1) || !await input.host.revalidate(context)) return false
+    if (!validThreadSourceContext(basis) || !Array.isArray(selected) || !selected.length || selected.some((source) => !source || !Array.isArray(source.fields) || !source.fields.length || source.fields.some((field: unknown) => typeof field !== "string" || !field) || !isSfPeriod(source.period) || !Number.isSafeInteger(source.version) || source.version < 1) || !await input.host.revalidate(context)) return false
     const records = basis.evidenceRefs.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.kind === "record")
     const supplements = basis.evidenceRefs.filter((ref) => ref.kind !== "record")
     if (records.length !== selected.length || supplements.length && !await input.authorizeHistorical(supplements, context)) return false

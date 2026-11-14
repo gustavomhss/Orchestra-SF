@@ -16,7 +16,7 @@ async function fixture(options: { initializedDocuments?: boolean } = {}) {
       targetRef: state.authority.creationTarget.ref, targetIncarnation: state.authority.creationTarget.incarnation,
       idempotencyKey: "fixture-empty-document-catalog", commandDigest: digestSfValue({ fixture: "empty-document-catalog" }),
     }, async () => ({ commit: true, value: null }))
-    if (initialized.status !== "ok") throw new Error(`Document catalog fixture failed: ${initialized.reason}`)
+    if (initialized.status !== "ok") throw new Error(`Document catalog fixture failed: ${"reason" in initialized ? initialized.reason : initialized.status}`)
   }
   const business = createSfBusinessServices({ authority: state.authority, persistence: state.store,
     proposalCoverageWrites: new WeakSet(), documentRead: state.documents.documents.reader })
