@@ -1,0 +1,28 @@
+{
+  "id": "OPS-HOST-01B",
+  "extends": "OPS-HOST-01",
+  "owner": "astra-compose",
+  "status": "CONFIRMED_SOURCE_GAP_PATCH_PROPOSED_NOT_APPLIED",
+  "candidate_commit": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+  "candidate_tree": "e7c36171c132009e34d4f870e5d300bab4a1c82a",
+  "path": "apps/cli/src/sucafina-product/business-services.ts",
+  "base_blob": "41a795e5a2c05600741e694efca19f0ab329db55",
+  "proposed_blob": "9aee116a091c684ba467f81316d2fb915b3f8758",
+  "gap": "business.procurementDossier uses createProcurementDecisionPreparation, whose return has request/comparison/limitations only; optional sourcing is never populated. WP09 therefore always reports proposalTerms unavailable on this path even with current Request proposal facts. OPS-HOST-01 existing patch covers separate dossier-services/workbench paths only.",
+  "proposal": "Add a dossier-only wrapper that calls real sourcingEvidence, requires exact request version, context, all projection evidence refs and comparison equality, returns sourcing: source.value, and rereads the wrapper at both WP09 material egress checks. Existing stable comparison includes whole sourcing through object spread; only clock-derived ageDays remains excluded.",
+  "preservation": "Leave createProcurementDecisionPreparation and its C12/other callers unchanged; do not alter scoring, FX, policy, status semantics or projection values.",
+  "qualification": "Static read/patch only. Not applied to product and not executed. Owner must reconcile its current head, integrate and run affected hosted tests. No native/human/global claim.",
+  "recommended_owner_validation": [
+    "Current real Request with at least two proposals returns available proposalTerms and exact producer source ref through business.procurementDossier.",
+    "Stage, negotiated terms, submitted FX, weights, comparison or source-ref change between preparation and egress rejects stale material.",
+    "Current ACL revocation and document source/selection changes still reject; unrelated Request fields do not bypass version/ref fences.",
+    "C12 createProcurementDecisionPreparation callers retain their previous semantics."
+  ],
+  "source_refs": [
+    "apps/cli/src/sucafina-product/business-services.ts:prepareProcurement and procurementDossier",
+    "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts:createProcurementDecisionPreparation",
+    "modules/sucafina/Sucafinav1/product/procurement/sourcing-evidence.ts:createProcurementSourcingEvidence",
+    "modules/sucafina/Sucafinav1/product/routines/dossier.ts:ProcurementPreparation/commercialSources.proposalTerms/draft.sourceRefs",
+    "audit-wp06/patches/astra-compose-dossier-consumers.patch"
+  ]
+}
