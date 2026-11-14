@@ -1,0 +1,180 @@
+{
+  "schema": "sf-wp12-work-list-preparation-v1",
+  "status": "REVIEWED_STATIC_NOT_RUN",
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "source": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+    "bytes": 46720,
+    "sha256": "cb26d5358dc10b8f303301b2d49708eff3a0b192730fb745cacd5fc2d8b76fbf",
+    "git_blob": "d305c89fcbf42eef0290e744880342b3b017b48d"
+  },
+  "source_pin_file": "source-pins.json",
+  "source_inspection_cutoff": "dc8f3b19d40f52c19aabd219544c291460592b99",
+  "publication": {
+    "product_commit": null,
+    "tree": null,
+    "check_run": null,
+    "product_run": null
+  },
+  "tests": [
+    {
+      "name": "native question work list uses a public Procurement selection for its own pending case and reopens its real consumers",
+      "profile": "sf_maestro",
+      "skill": "sf-coordenar-perguntas",
+      "timeout_ms": 360000,
+      "requested_operations": [
+        "sf_case_read",
+        "sf_work_list",
+        "sf_relation_read",
+        "sf_question_prepare"
+      ],
+      "native_consumer": "Actual QuestionProposal C08 -> C11 question-output -> human C06 question-consume -> durable unanswered thread -> Workbench My work.",
+      "ui_consumer": "Actual Workbench My work HTML and idempotent C06 handoff-link to the existing action; no QuestionProposal is manufactured when the catalog is empty.",
+      "full_skill_required_operations_accepted": false,
+      "unexercised_required_operations": [
+        "sf_answer_read"
+      ]
+    },
+    {
+      "name": "native executive work list matches its selected real Hot Topic review and reopens the existing human action",
+      "profile": "sf_maestro",
+      "skill": "sf-preparar-revisao-executiva",
+      "timeout_ms": 360000,
+      "requested_operations": [
+        "sf_case_read",
+        "sf_work_list",
+        "sf_review_prepare",
+        "sf_source_get"
+      ],
+      "native_consumer": "Actual DecisionBrief C08 -> C11 review-contribution; native sf_work_list and sf_review_prepare results/receipts remain independently audited.",
+      "ui_consumer": "Actual Workbench My work HTML, C06 handoff-link, and preserved Hot Topics review reader after reopening.",
+      "full_skill_required_operations_accepted": false,
+      "unexercised_required_operations": [
+        "sf_routine_catalog",
+        "sf_routine_prepare",
+        "sf_routine_run",
+        "sf_routine_status",
+        "sf_routine_result"
+      ]
+    }
+  ],
+  "obligations": [
+    {
+      "index_in_d21": 5,
+      "kind": "SKILL_REQUIRED_OPERATION",
+      "skill_id": "sf-coordenar-perguntas",
+      "profile_id": null,
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_work_list",
+      "canonical_pointer": "/resident_ui_consumption/skills/2/required_operations/3",
+      "criterion_refs": [
+        "WP12.CMP.40",
+        "WP12.T02.CHK.11",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "authorized_operations espelha o teto de permissões do manifesto; required_operations é o subconjunto necessário para esta contribuição. Cada chamada também revalida perfil, skill, caso, usuário e escopo no host.",
+      "group": "work",
+      "prior_classification": "OWNER_WORK_MOUNT_AND_NATIVE_SELECTION_REQUIRED",
+      "implementation": "OWN_DRIVER_WRITTEN_PENDING_HOSTED_VERIFICATION",
+      "runtime": "NOT_RUN",
+      "native_operation_execution_observed": false,
+      "native_acceptance": "NOT_ACCEPTED",
+      "human_ui_observation": "NOT_RUN",
+      "canonical_criterion_status_changed": false,
+      "action_group": "work",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+      "source_blob": "d305c89fcbf42eef0290e744880342b3b017b48d"
+    },
+    {
+      "index_in_d21": 15,
+      "kind": "NAMED_AM02_ROUTE",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "profile_id": "sf_maestro",
+      "allowed_profiles": [
+        "sf_maestro"
+      ],
+      "operation": "sf_work_list",
+      "canonical_pointer": "/resident_ai/operation_call_routes/18",
+      "criterion_refs": [
+        "WP12.T02.CHK.60",
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60"
+      ],
+      "literal_obligation": "Cada uma das 39 operações deve possuir ao menos uma rota positiva perfil+skill+operação, com SkillLoadReceipt válido, consumidor e prova AM02; nenhuma chamada direta dispensa a interseção C16. Concessão de catálogo não é prova de alcançabilidade.",
+      "group": "work",
+      "prior_classification": "OWNER_WORK_MOUNT_AND_NATIVE_SELECTION_REQUIRED",
+      "implementation": "OWN_DRIVER_WRITTEN_PENDING_HOSTED_VERIFICATION",
+      "runtime": "NOT_RUN",
+      "native_operation_execution_observed": false,
+      "native_acceptance": "NOT_ACCEPTED",
+      "human_ui_observation": "NOT_RUN",
+      "canonical_criterion_status_changed": false,
+      "action_group": "work",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+      "source_blob": "d305c89fcbf42eef0290e744880342b3b017b48d"
+    }
+  ],
+  "same_business_subject": {
+    "request": "A raw draft service request for the renewal, owned by the explicitly authenticated synthetic principal; one homonymous unrelated raw request is present.",
+    "action": "Created by the actual C06 handoff-create human route, then read through the actual confirmed relation and selected as a Hot Topic; no action, relation or assignment row is seeded.",
+    "question": "The actual C09/C10 pending training coverage is produced from the Planner source; that same Planner evidence, selected PR and created action are all case sources and relation evidence.",
+    "executive": "The actual selected Hot Topic agenda/review captures the very action returned by that PR handoff. The financial horizon is 2027; the current Hot Topic observation day is kept separate and explicit."
+  },
+  "public_selection": {
+    "issuer": "Actual createSfWorkbenchHttp workbench-work-select GET on Procurement.",
+    "discovery": "Parse the emitted workbench-work href; use its selectionRef and period as an explicit human selection in the mission objective.",
+    "auxiliary_business_instance": "Select its period through its own public procurementSelections.create port; never reuse its private registry handle in mounted services.",
+    "reload": "Old registry token must be refused. A newly emitted public HTML selector is used to read the same durable request/action/relation identities.",
+    "autonomous_discovery_claimed": false,
+    "private_selector_injected": false
+  },
+  "observations_required_by_driver": [
+    "UI dispatch returns the actual canonical AuthorizedWorkList and a UI receipt with exact input/result digests.",
+    "My work HTML displays only the selected assigned action, preserving title, status and actionRef; the unrelated homonymous request is absent.",
+    "With a real installed supported model, actual Session/SkillLoadReceipt/run/tool receipts are required; native work result must equal the observed UI result for the same selection and authority.",
+    "Native QuestionProposal is consumed through actual C11/C06 after reload; it remains an unanswered thread, with idempotence and another reopen.",
+    "Native DecisionBrief is read through the actual contribution consumer; its closed conditions/evidence/results remain those of the real review.",
+    "Unadmitted HTTP requests cannot read work. Deleting the selected request makes the real UI work/HTML unavailable and forces refusal of any already completed native output, regardless of later model availability.",
+    "Raw Procurement/Hot Topic and Planner state and the case remain unchanged before the explicit deletion negative; source issuance metadata is not asserted to be unchanged."
+  ],
+  "limits": [
+    "This preparation is not an executed test, accepted native route, full skill mission or canonical criterion PASS.",
+    "An empty/unsupported installed catalog records availability only; no model, output, run record or receipt is fabricated.",
+    "The original case-work-selection path still requires its owner workSignals mount; this increment uses the separately supported public Procurement selection path for related real work.",
+    "No predecessor answer or confirmed answer reuse is exercised. The current Planner/Procurement answer-scope gates remain external and are not converted to unconfirmed success.",
+    "Executive C07 routine operations remain outside this driver. The closed DecisionBrief schema is unchanged.",
+    "A Workbench Open work click/destination is not claimed; the tested consumers are rendered My work, the actual existing-action C06 route, and conditional native output consumers.",
+    "The two test deadlines are fixed at 360000ms. No clock, TTL, retry policy, engine, grant contract or owner source is changed."
+  ],
+  "markers": [
+    "SF_WP12_QUESTION_WORK_INPUT",
+    "SF_WP12_QUESTION_WORK_CONSUMER",
+    "SF_WP12_EXECUTIVE_WORK_INPUT",
+    "SF_WP12_EXECUTIVE_WORK_REOPEN",
+    "SF_WP12_WORK_SOURCE_REFUSAL"
+  ],
+  "native_execution_observed": false,
+  "canonical_criterion_upgrades": [],
+  "am02_accepted_routes": [],
+  "local_product_tests": false,
+  "local_typecheck": false,
+  "foreign_edits": [],
+  "other_frozen_sources_edited": [],
+  "independent_review": {
+    "path": "independent-review.json",
+    "status": "PASS_STATIC",
+    "runtime_status": "NOT_RUN",
+    "bytes": 17938,
+    "sha256": "884097a2f177fe9bcc3e6e9c6d1dd14d4b90a608d2d9f91f1a86dadab208aad0",
+    "git_blob": "836b8675a5f1baa2f96c02f081a3de6f3fad671c"
+  }
+}

@@ -1,0 +1,141 @@
+{
+  "schema": "sf-wp12-increment-preparation-v1",
+  "phase": "resume-21",
+  "increment": "W26",
+  "baseCommit": "dd92b67fa836bb40bbe74d9076ff7e967d764dd5",
+  "baseTree": "0b8db57224c1f9643f89dd7e397b7c338d5f2437",
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+      "bytes": 46720,
+      "sha256": "cb26d5358dc10b8f303301b2d49708eff3a0b192730fb745cacd5fc2d8b76fbf",
+      "blob": "d305c89fcbf42eef0290e744880342b3b017b48d",
+      "kind": "own-test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/work-list-route/source-pins.json",
+      "bytes": 18424,
+      "sha256": "7c279ea070b2dab6238ae4251b39342348bab21ff7e871e82a8ef448f672ab0e",
+      "blob": "8a27ceeabf9d0532152f257e93befdba4d5ae80f",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/work-list-route/preparation.json",
+      "bytes": 9808,
+      "sha256": "a7b9ce3b54028b02004fce2add058aa826a83ec09905631fba2c644f5ae3322d",
+      "blob": "a2d847f2a5ea19af718b70c2abb026ace429bbb0",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/work-list-route/README.md",
+      "bytes": 3767,
+      "sha256": "ee7de6dbfa8176200b4ffa3640cf3e17783ab4cd27ef4122b9e1dce454341967",
+      "blob": "619ac359b6e0c7779f3068eec62b0c8bd85c3a99",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/work-list-route/independent-review.json",
+      "bytes": 17938,
+      "sha256": "884097a2f177fe9bcc3e6e9c6d1dd14d4b90a608d2d9f91f1a86dadab208aad0",
+      "blob": "836b8675a5f1baa2f96c02f081a3de6f3fad671c",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/w26-work-list/author-freeze.json",
+      "bytes": 4043,
+      "sha256": "4e53791587a687d4937840d84daec9c35c214de54351c286b323518cd6abd0fd",
+      "blob": "2778b8b1dfe963dd8fc5cb405b70264736c7fcb0",
+      "kind": "own-document"
+    }
+  ],
+  "sourceFiles": 1,
+  "foreignSourceChanges": 0,
+  "foreignPinsUnchangedFrom": "foreign-pins-15.json",
+  "change": "Add two exact-skill Work list missions using the installed public Procurement selection, actual related C06 action/case, rendered My work and conditional native contribution consumers.",
+  "tests": [
+    {
+      "name": "native question work list uses a public Procurement selection for its own pending case and reopens its real consumers",
+      "profile": "sf_maestro",
+      "skill": "sf-coordenar-perguntas",
+      "timeout_ms": 360000,
+      "requested_operations": [
+        "sf_case_read",
+        "sf_work_list",
+        "sf_relation_read",
+        "sf_question_prepare"
+      ],
+      "native_consumer": "Actual QuestionProposal C08 -> C11 question-output -> human C06 question-consume -> durable unanswered thread -> Workbench My work.",
+      "ui_consumer": "Actual Workbench My work HTML and idempotent C06 handoff-link to the existing action; no QuestionProposal is manufactured when the catalog is empty.",
+      "full_skill_required_operations_accepted": false,
+      "unexercised_required_operations": [
+        "sf_answer_read"
+      ]
+    },
+    {
+      "name": "native executive work list matches its selected real Hot Topic review and reopens the existing human action",
+      "profile": "sf_maestro",
+      "skill": "sf-preparar-revisao-executiva",
+      "timeout_ms": 360000,
+      "requested_operations": [
+        "sf_case_read",
+        "sf_work_list",
+        "sf_review_prepare",
+        "sf_source_get"
+      ],
+      "native_consumer": "Actual DecisionBrief C08 -> C11 review-contribution; native sf_work_list and sf_review_prepare results/receipts remain independently audited.",
+      "ui_consumer": "Actual Workbench My work HTML, C06 handoff-link, and preserved Hot Topics review reader after reopening.",
+      "full_skill_required_operations_accepted": false,
+      "unexercised_required_operations": [
+        "sf_routine_catalog",
+        "sf_routine_prepare",
+        "sf_routine_run",
+        "sf_routine_status",
+        "sf_routine_result"
+      ]
+    }
+  ],
+  "review": {
+    "status": "PASS_STATIC",
+    "reviewer": "compose_typecheck",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/work-list-route/independent-review.json",
+    "sha256": "884097a2f177fe9bcc3e6e9c6d1dd14d4b90a608d2d9f91f1a86dadab208aad0",
+    "blob": "836b8675a5f1baa2f96c02f081a3de6f3fad671c",
+    "runtime": "NOT_RUN"
+  },
+  "canonicalObligationDelta": {
+    "original27Indices": [
+      5,
+      15
+    ],
+    "implementedEntriesIncludingPrior": 7,
+    "priorUiConsumerReopenPass": 2,
+    "remainingWithoutNewWitness": 20,
+    "nativeAcceptanceUpgrades": 0
+  },
+  "preservation": [
+    "No existing Procurement, Review, Handoff, BI, Questions or security driver changed.",
+    "Public HTML-issued selector and auxiliary service registry remain distinct; reopen obtains a new current public selector.",
+    "Related Procurement request, C06 action/relation and case evidence are created through the actual domain routes; no QuestionProposal or DecisionBrief is substituted when the model catalog is empty.",
+    "Question condition remains explicit human pending C10; no confirmed answer reuse or derived omission is claimed.",
+    "Actual native Session/SkillLoadReceipt/tool results and receipts remain required for native evidence and consumers.",
+    "Unadmitted HTTP, unrelated homonymous request and source removal are scoped negatives; these do not substitute for every ACL/installation/session counterproof.",
+    "Current 300000ms selector TTL and two360000ms deadlines remain; no renewal inside an action or hidden retry."
+  ],
+  "ci": {
+    "check": "PENDING exact hosted bun typecheck, spawn imports and guards",
+    "product": "NOT_RUN",
+    "nextOwnFlight": "Existing prepared W25 Review crossroutes follows current Procurement terminal; new Work follows exact W26 check and serial dedup.",
+    "requestSha256": "b751182caa5044605896022e3ac3874cdad6af53d88f57c39f10eb054536c6b1",
+    "selectedFiles": 1,
+    "selectedTests": 2,
+    "totalExplicitDeadlinesMs": 720000,
+    "existingGreenScopesExcluded": true
+  },
+  "fullWp12": false,
+  "localProductTests": false,
+  "localTypecheck": false
+}
