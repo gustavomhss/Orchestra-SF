@@ -40,9 +40,13 @@ As três jornadas aprovadas no run43621603578 foram reanexadas sem repetição: 
 | [Colaboração W6:43623257640](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43623257640) | dc21cd389de67c2e7fac996b663d9c0aa7d8cae5 /72848c2122b68e15341baa41e5beef4e9237562a | 7pass/3fail; consultado antes da escrita. Sete provas scoped reanexadas; timeout e falhas históricas preservados. |
 | [Colaboração W7:43625515062](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625515062) | 9e1f44af7689946d27d37ed48b9f5e9849417121 /a4f8c7bd673de3e4092f20185f4c3ea2d10d0ec3 | 5pass/0fail,62assertions. Corrige testes de C05/R10 e divide a cadeia longa; nenhum delta de produto. Omni não aplicável. Não é prova de UI/attachment. |
 
-A correção das duas anotações TS7006 é somente de tipo: o JavaScript emitido por stripTypeScriptTypes é byte a byte igual ao W1. A próxima seleção própria é **somente static-gates.test.ts**, em [request-02.json](request-02.json), para verificar a correção sem duplicar a jornada. Resultado ainda pendente neste checkpoint.
+A correção das duas anotações TS7006 é somente de tipo: o JavaScript emitido por stripTypeScriptTypes é byte a byte igual ao W1. O [R02 estático43626770240](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626770240), job132544283579, confirmou **zero diagnósticos próprios e os mesmos nove externos**. O package continua FAIL. Guards **PASS**,78 regras/943 paths/0gate/53avisos; Omni **PASS**,3spawns. A seleção executou somente static-gates.test.ts; a jornada de browser não foi repetida. [run-02.json](run-02.json) registra o resultado completo.
 
 Em cada par W/S registrado, a comparação contém somente .ci-run.json. W1 tree456f62ed8689ebeb6db7d874826be4849dca2c5a; S1 tree2cda9823b600b73565ccb97b968fe938bf3002c3.
+
+A rechecagem de encerramento encontrou Colaboração em9ec98ac9cdc807d2b95040274f4312df768d932d, tree34c5197f92afe1a773a3c87e2f3397bf89f2abb2:63 arquivos de recibos após W7, sem alterar produto ou testes. A composição continua no SHAad7fcdef7739e1bc471e42fac082452799de751b. [validation.json](validation.json) reúne W/S, blobs consumidos, equivalência e critérios de aceite.
+
+W2 testado: fc700e3127596171cd81eea1aa3cf630a19d9985, treeba77e073f3aa7b136dd8c1b1ee64ef88bbc69d92. S2: aa207b331b6a64549ab41130ed879619ecc2593e, tree0c69c3993779b9441219a86128110bf7ecf0f4a9. O commit final acrescenta somente recibos de encerramento; head/tree finais constam na PR61.
 
 ## Autoridade e critérios
 

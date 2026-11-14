@@ -182,5 +182,20 @@
       "read": 7
     }
   },
-  "evidence_policy": "Reattach the existing W6/W7 producer runs as their exact scoped observations. A timing run on retained UI79eb measures that retained producer only; it cannot prove the post-intake W6 behavior or backport speedup."
+  "evidence_policy": "Reattach the existing W6/W7 producer runs as their exact scoped observations. A timing run on retained UI79eb measures that retained producer only; it cannot prove the post-intake W6 behavior or backport speedup.",
+  "delivery_head_readback": {
+    "head": "9ec98ac9cdc807d2b95040274f4312df768d932d",
+    "tree": "34c5197f92afe1a773a3c87e2f3397bf89f2abb2",
+    "readback_utc": "2026-11-14T18:32:48Z",
+    "since_W7": {
+      "files": 63,
+      "receipts_only": true,
+      "product_changes": 0,
+      "test_changes": 0
+    },
+    "product_W6": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+    "test_W7": "9e1f44af7689946d27d37ed48b9f5e9849417121",
+    "W7_run": 43625515062,
+    "W7_conclusion": "success"
+  }
 }
