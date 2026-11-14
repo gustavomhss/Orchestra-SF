@@ -11,8 +11,8 @@ import { createCollaborationHttp } from "../../../product/collaboration/http.ts"
 import { createSfHumanAuthority, sfHumanReadActions } from "../../../product/integration/human-authority.ts"
 import type { SfHumanAction } from "../../../product/integration/human-authority.ts"
 
-test("C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL", async () => {
-  const mark = checkpoints("preserved-answer")
+test("C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen", async () => {
+  const mark = checkpoints("confirmation-reopen")
   const f = await createReviewAnswersFixture()
   mark("fixture-ready")
   try {
@@ -93,6 +93,26 @@ test("C05 answers confirm only the preserved review, suppress one work item, and
     expect(available(await port.storageVersion("threads", f.recipient))).toBe(version)
     mark("reopened-storage-unchanged")
 
+  } finally { await f.dispose(); mark("disposed") }
+}, 120000)
+
+test("C05 edited answers after SQLite reopen create one stale item and reconfirm the same original review", async () => {
+  const mark = checkpoints("edit-reconfirm")
+  const f = await createReviewAnswersFixture()
+  mark("fixture-ready")
+  try {
+    let port = f.port
+    if (!port.recipientActions || !port.answerReuse || !port.threadHistory) throw new Error("Review answer consumers unavailable")
+    const { thread, replied, body, answerRef } = await setupReviewAnswer(f, "review-edit", mark)
+    const workSelection = await f.select("reader-b", f.recipient)
+    const confirmation = await confirmReviewAnswer(f, port, thread.id, answerRef, "review-edit-initial-confirm")
+    const version = available(await port.storageVersion("threads", f.recipient))
+    const confirm = async () => port.answerReuse!.confirm(thread.id, answerRef, confirmation, await f.admit("reader-b", "collaboration.answer.confirm", { questionId: thread.id, answerRef, mutation: confirmation }))
+    // This journey retains the original causal link: editing uses a new
+    // consumer over the reopened real SQLite baseline, not a seeded record.
+    port = (await f.reopenConsumers()).port
+    if (!port.recipientActions || !port.answerReuse || !port.threadHistory) throw new Error("Reopened review consumers unavailable")
+    mark("real-confirmation-and-sqlite-reopen")
     // Changing the answer invalidates its confirmation, while its preserved
     // source stays exact. My Work reopens one communication item with the C05 pin.
     const message = replied.messages[1]!
@@ -118,6 +138,29 @@ test("C05 answers confirm only the preserved review, suppress one work item, and
     expect(available(await port.answerReuse.read(thread.id, f.recipient))).toMatchObject({ answer: edit.body, reviewContext: f.basis.reviewContext })
     mark("reconfirmation-history-and-resolution")
 
+  } finally { await f.dispose(); mark("disposed") }
+}, 120000)
+
+test("a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer", async () => {
+  const mark = checkpoints("distinct-current-revocation")
+  const f = await createReviewAnswersFixture()
+  mark("fixture-ready")
+  try {
+    const port = f.port
+    if (!port.recipientActions || !port.answerReuse) throw new Error("Review answer consumers unavailable")
+    const { thread, body, answerRef } = await setupReviewAnswer(f, "review-distinct", mark)
+    const workSelection = await f.select("reader-b", f.recipient)
+    await confirmReviewAnswer(f, port, thread.id, answerRef, "review-distinct-confirm")
+    // The current-source question deliberately repeats exactly the body of
+    // this independently created and genuinely confirmed C05 response.
+    const edit = { body }
+    const currentAnswerRef = answerRef
+    mark("real-c05-confirmation")
+    const dispatch = async (questionRef: string) => {
+      const payload = { questionRef }
+      const admitted = available(await f.ui.admit(f.request("reader-b"), "sf_answer_read", digestSfValue(payload)))
+      return dispatchSfCapability({ operation: "sf_answer_read", payload, context: admitted, descriptors: port.capabilities, authority: f.domainAuthority, validateInput: (_descriptor, value) => decodeSfOperationInput("sf_answer_read", value).ok, validateOutput: (_descriptor, value) => value.status !== "ok" || decodeSfOperationOutput("sf_answer_read", value.result).ok })
+    }
     // Current-source answers cannot inherit the C05 confirmation by text, ID
     // proximity or a still-current project selector.
     const source = await f.issueProject(f.recipient)
@@ -213,6 +256,33 @@ test("C05 confirmation refuses a lease revoked at commit and cannot revive a rep
     mark("physical-replacement-denied")
   } finally { await f.dispose(); mark("disposed") }
 }, 120000)
+
+type ReviewAnswerFixture = Awaited<ReturnType<typeof createReviewAnswersFixture>>
+
+/** Each caller owns a fresh real fixture and starts its120s budget before setup. */
+async function setupReviewAnswer(f: ReviewAnswerFixture, correlation: string, mark: (stage: string) => void) {
+  const port = f.port
+  if (!port.recipientActions || !port.answerReuse) throw new Error("Review answer consumers unavailable")
+  const draft = { kind: "clarification" as const, ...f.basis, recipientRef: "reader-b", body: "Why was this project In Progress in the preserved review?" }
+  const mutation = { expectedStorageVersion: available(await port.storageVersion("threads", f.author)), idempotencyKey: `${correlation}-question` }
+  const thread = available(await port.threads.create(draft, mutation, await f.admit("person", "collaboration.thread.create", { draft, mutation })))
+  const before = await f.snapshots()
+  await f.mutate("dashboard", DashboardPortfolio.domain, { page: "All Projects", action: "save", id: "project", version: before.dashboard.versions["projects:project"]!.version, values: { status: "On Hold" } })
+  const body = "C05-ANSWER: the old review preceded the later project pause."
+  const replyMutation = { expectedStorageVersion: available(await port.storageVersion("threads", f.recipient)), idempotencyKey: `${correlation}-answer` }
+  const replied = available(await port.recipientActions.reply(thread.id, body, replyMutation, await f.admit("reader-b", "collaboration.thread.reply", { id: thread.id, body, mutation: replyMutation })))
+  const answerRef = available(await port.answerEvidence.issue(thread.id, replied.messages[1]!.id, f.recipient)).refId
+  mark("real-question-source-change-and-answer")
+  return { thread, replied, body, answerRef }
+}
+
+async function confirmReviewAnswer(f: ReviewAnswerFixture, port: ReviewAnswerFixture["port"], questionId: string, answerRef: string, idempotencyKey: string) {
+  if (!port.answerReuse) throw new Error("Review answer consumer unavailable")
+  const observed = available(await port.answerReuse.prepare(questionId, answerRef, f.recipient))
+  const mutation = { expectedStorageVersion: available(await port.storageVersion("threads", f.recipient)), idempotencyKey, observationRef: observed.observationRef, observedSourceVersion: observed.observedSourceVersion, expectedScopeFingerprint: observed.expectedScopeFingerprint }
+  available(await port.answerReuse.confirm(questionId, answerRef, mutation, await f.admit("reader-b", "collaboration.answer.confirm", { questionId, answerRef, mutation })))
+  return mutation
+}
 
 function checkpoints(scenario: string) {
   const started = performance.now()

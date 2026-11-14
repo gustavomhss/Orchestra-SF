@@ -43,7 +43,7 @@ import { createThreadAnswerEvidence } from "./evidence.ts"
 import { createThreadHistory } from "./thread-history.ts"
 import { createThreadSourceContinuity } from "./thread-continuity.ts"
 import { threadMessageContext } from "./thread-context.ts"
-import type { ReviewThreadContextAuthorizer } from "./thread-context.ts"
+import type { ReviewThreadContextAuthorizer, ThreadSourceContext } from "./thread-context.ts"
 import type { createReviewAnswerSource } from "../reviews/review-answer-source.ts"
 import { createHistoricalThreadSourceRefresh } from "./thread-source-refresh.ts"
 import { createAnswerReusePort } from "./answer-reuse.ts"
@@ -188,6 +188,21 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   // from a thread already returned by the authenticated reader, then keep the
   // canonical reread and answer-reuse source/commit fences below.
   const answerReference = (questionId: string, message: { id: string; incarnation: string; version: number }) => `sf-thread-answer:${encodeURIComponent(questionId)}:${encodeURIComponent(message.id)}:${encodeURIComponent(message.incarnation)}:${message.version}`
+  // C05 membership is an identity check, not a source grant. The answer reader
+  // authenticates exposure; resolve/observe and their protected fences authorize
+  // the complete preserved review and all sources before any successful result.
+  const answerBelongsToQuestion = async (questionId: string, answerRef: string, context: TrustedDomainContext) => {
+    const request = input.host.requestFor(context)
+    if (!request || !await input.host.revalidate(context)) return false
+    const loaded = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[questionId] : undefined)
+    if (loaded.status !== "ok" || !isThread(loaded.value) || loaded.value.id !== questionId || !await input.host.revalidate(context)) return false
+    const thread = loaded.value
+    if (!thread.messages[0]?.sourceContext?.reviewContext) return answerEvidence.belongsToQuestion(questionId, answerRef, context)
+    if (thread.kind === "comment" || thread.recipientRef !== context.binding.principalRef && !thread.messages.some((message) => message.authorRef === context.binding.principalRef)) return false
+    const message = thread.messages.findLast((entry, index) => index > 0 && entry.authorRef === thread.recipientRef)
+    const basis = message ? threadMessageContext(thread, message) : undefined
+    return !!message && !!basis?.reviewContext && basis.evidenceRefs.every((ref) => ref.installationId === context.binding.installationId && ref.projectId === context.binding.projectId) && answerReference(questionId, message) === answerRef && await input.host.revalidate(context)
+  }
   const answerReuse = input.confirmationSource ? createAnswerReusePort<T>({
     host: input.host,
     state: input.state,
@@ -205,22 +220,24 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
       if (raw.status !== "ok" || !isThread(raw.value) || raw.value.id !== questionId || raw.value.recipientRef !== visible.value.recipientRef || raw.value.kind !== visible.value.kind || raw.value.state !== visible.value.state || digestSfValue(raw.value.messages) !== digestSfValue(visible.value.messages) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "answer-unavailable" }
       return { status: "ok", value: { id: message.id, ref: answerReference(questionId, message), authorRef: message.authorRef, questionId, body: message.body, digest: digestSfValue({ questionId, ...message }), threadDigest: digestSfValue(raw.value) } }
     },
-    belongsToQuestion: answerEvidence.belongsToQuestion,
+    belongsToQuestion: answerBelongsToQuestion,
     scopeForAnswer: async (questionId, answerRef, context) => {
-      // The display reader may pair current refs with an original observedVersion.
-      // Scope comes from the authorized canonical message basis, never that mixed
-      // display projection. Compare the entire deterministic answer reference.
-      const thread = await threadReads.readHistorical(questionId, context)
+      // Current-domain answers keep the actor-scoped source issued by the
+      // authenticated reader. Its observedVersion remains historical; do not
+      // replace its current scope with a different page's original incarnation.
+      const thread = await threadReads.read(questionId, context)
       if (thread.status !== "ok" || thread.value.kind === "comment" || thread.value.id !== questionId) return { status: "unavailable", reason: "answer-scope-unavailable" }
       const message = thread.value.messages.find((entry, index) => index > 0 && entry.authorRef === thread.value.recipientRef && answerReference(thread.value.id, entry) === answerRef)
       if (!message) return { status: "unavailable", reason: "answer-scope-unavailable" }
-      const basis = threadMessageContext(thread.value, message)
-      if (!basis) return { status: "unavailable", reason: "answer-scope-unavailable" }
-      if (basis.reviewContext) {
+      const basis: ThreadSourceContext = message.sourceContext ?? thread.value
+      if (basis.reviewContext || thread.value.messages[0]?.sourceContext?.reviewContext) {
+        // C05 has an explicit immutable message basis. It must satisfy the full
+        // canonical check and cannot fall through to current-domain confirmation.
+        const pinned = threadMessageContext(thread.value, message)
         const source = input.reviewAnswerSource
         const resolve = source?.resolve
-        if (!source || !resolve || !await authority.historicalSources(basis.evidenceRefs, context)) return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
-        const reviewBasis = { ...basis, reviewContext: basis.reviewContext }
+        if (!pinned?.reviewContext || !source || !resolve || !await authority.historicalSources(pinned.evidenceRefs, context)) return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
+        const reviewBasis = { ...pinned, reviewContext: pinned.reviewContext }
         const current = () => input.reviewAnswerSource === source && source.resolve === resolve
         if (!current()) return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
         // resolve performs the producer's two current C05 reads. Repeating the

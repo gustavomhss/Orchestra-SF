@@ -8,6 +8,7 @@ import type { SfProductStatePort } from "../contracts/state.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { AvailableConfirmationScopeObservation, ConfirmationObserver } from "./confirmation.ts"
 import { answerReuseBaselineKey } from "./answer-reuse.ts"
+import { createAnswerStateFence } from "./answer-state-fence.ts"
 import type { AnswerReuseBaseline } from "./answer-reuse.ts"
 import { isThread } from "./threads.ts"
 import { threadMessageContext } from "./thread-context.ts"
@@ -37,6 +38,7 @@ export function createAnswerWorkPort<T extends AvailableConfirmationScopeObserva
   authorizeHistoricalSources?: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
   authorizeSources: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
 }) {
+  const capture = createAnswerStateFence(input.host)
   return { project: async (questionId: string, context: TrustedDomainContext): Promise<PortResult<AnswerWork>> => {
     const request = input.host.requestFor(context)
     if (!request || typeof questionId !== "string" || !questionId.trim() || !await input.host.revalidate(context)) return { status: "denied", reason: "answer-work-unavailable" }
@@ -52,6 +54,7 @@ export function createAnswerWorkPort<T extends AvailableConfirmationScopeObserva
     const { thread, answer, baseline } = loaded.value
     if (thread.kind === "comment" || !answer || baseline === undefined) return { status: "ok", value: { state: "unconfirmed" } }
     if (!isBaseline(baseline) || baseline.questionId !== questionId || baseline.answerId !== answer.id || baseline.installationId !== context.binding.installationId || baseline.projectId !== context.binding.projectId) return { status: "unavailable", reason: "answer-work-unavailable" }
+    const expectedState = { questionId, threadDigest: digestSfValue(thread), baseline: { key: answerReuseBaselineKey(questionId, answer.id, context), digest: digestSfValue(baseline) } }
     const scope = baseline.scope
     const basis = threadMessageContext(thread, answer)
     if (!basis) return { status: "unavailable", reason: "answer-work-unavailable" }
@@ -60,22 +63,22 @@ export function createAnswerWorkPort<T extends AvailableConfirmationScopeObserva
       const authorize = input.authorizeHistoricalSources
       const reviewed = baseline.reviewBasis
       if (!source || !authorize || !reviewed || !basis.reviewContext || digestSfValue(reviewed) !== digestSfValue(basis)) return { status: "unavailable", reason: "answer-work-unavailable" }
-      const resolve = source.resolve
       const observe = source.observe
       const fence = source.fence
       const host = input.host
       const revalidate = host.revalidate
       const persistence = host.persistence
       const transactionAll = persistence.transactionAll
-      const current = () => input.reviewSource === source && source.resolve === resolve && source.observe === observe && source.fence === fence && input.authorizeHistoricalSources === authorize && input.host === host && host.revalidate === revalidate && host.persistence === persistence && persistence.transactionAll === transactionAll
+      const current = () => input.reviewSource === source && source.observe === observe && source.fence === fence && input.authorizeHistoricalSources === authorize && input.host === host && host.revalidate === revalidate && host.persistence === persistence && persistence.transactionAll === transactionAll
       if (!transactionAll) return { status: "unavailable", reason: "answer-work-unavailable" }
-      const derived = await resolve.call(source, reviewed, context)
-      if (!current() || derived.status !== "ok" || digestSfValue(derived.value.scope) !== digestSfValue(scope) || !await authorize(reviewed.evidenceRefs, context) || !current()) return { status: "unavailable", reason: "answer-work-unavailable" }
+      if (!current() || !await authorize(reviewed.evidenceRefs, context) || !current()) return { status: "unavailable", reason: "answer-work-unavailable" }
+      // observe itself derives and compares the exact material scope from two
+      // authenticated C05 reads before issuing its private source lease.
       const observation = await observe.call(source, scope, reviewed, context)
       if (!current() || observation.state !== "available" || observation.physicalIncarnation !== baseline.physicalIncarnation || observation.incarnation !== scope.sourceRef.incarnation || observation.sourceFingerprint !== baseline.sourceFingerprint || observation.dependencyFingerprint !== baseline.dependencyFingerprint || observation.scopeFingerprint !== baseline.scopeFingerprint || observation.sourceVersion !== baseline.observedVersion) return { status: "unavailable", reason: "answer-work-unavailable" }
       const again = await read()
       if (!current() || again.status !== "ok" || !again.value || digestSfValue(again.value.thread) !== digestSfValue(thread) || digestSfValue(again.value.baseline) !== digestSfValue(baseline) || !await authorize(reviewed.evidenceRefs, context) || !current() || !await revalidate.call(host, context) || !current()) return { status: "unavailable", reason: "answer-work-unavailable" }
-      if (!await transactionAll.call(persistence, async () => ({ commit: false, value: current() && await fence.call(source, scope, observation, reviewed, context) && current() })).catch(() => false) || !current()) return { status: "unavailable", reason: "answer-work-unavailable" }
+      if (!await capture(expectedState, async () => current() && await fence.call(source, scope, observation, reviewed, context) && current()) || !current()) return { status: "unavailable", reason: "answer-work-unavailable" }
       const changed = baseline.answerDigest !== digestSfValue({ questionId, ...answer })
       return { status: "ok", value: { state: changed ? "stale" : "valid", sourceRefs: reviewed.evidenceRefs, period: scope.period, observedVersion: baseline.observedVersion, sourceVersion: observation.sourceVersion, reviewContext: reviewed.reviewContext, ...(changed ? { reason: "answer-changed" } : {}) } }
     }
@@ -94,8 +97,7 @@ export function createAnswerWorkPort<T extends AvailableConfirmationScopeObserva
           : observation.scopeFingerprint !== baseline.scopeFingerprint ? "material-change" as const : undefined
     const again = await read()
     if (again.status !== "ok" || !again.value || digestSfValue(again.value.thread) !== digestSfValue(thread) || digestSfValue(again.value.baseline) !== digestSfValue(baseline) || !await input.authorizeSources([current], context) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "answer-work-unavailable" }
-    const transactionAll = input.host.persistence.transactionAll
-    if (!transactionAll || !await transactionAll(async () => ({ commit: false, value: await input.source.fenceManifest(scope, context) && await input.source.fence(scope, observation, context) })).catch(() => false)) return { status: "unavailable", reason: "answer-work-unavailable" }
+    if (!await capture(expectedState, async () => await input.source.fenceManifest(scope, context) && await input.source.fence(scope, observation, context))) return { status: "unavailable", reason: "answer-work-unavailable" }
     return { status: "ok", value: { state: reason ? "stale" : "valid", sourceRefs: [current], period: scope.period, observedVersion: baseline.observedVersion, sourceVersion: observation.sourceVersion, ...(reason ? { reason } : {}) } }
   } }
 }

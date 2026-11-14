@@ -11,7 +11,7 @@ test("answer reuse delegates cross-actor scope and authorization to producer", a
   let authorized = false
   let state: Record<string, unknown> = { threads: { q1: { message: "thread" } } }
   const port = createAnswerReusePort({
-    host: { requestFor: () => new Request("https://local.invalid"), revalidate: async () => true, persistence: { transactionAll: async (work: (snapshots: never) => Promise<{ commit: boolean; value: unknown }>) => (await work({} as never)).value, currentSnapshots: () => ({}) } as never },
+    host: { requestFor: () => new Request("https://local.invalid"), revalidate: async () => true, persistence: { transactionAll: async (work: (snapshots: never) => Promise<{ commit: boolean; value: unknown }>) => (await work({} as never)).value, currentSnapshots: () => ({ dashboard: { data: { __sfProductV1: state } } }) } as never },
     state: {
       transaction: async (_request: Request, _command: unknown, work: (value: never, authority: never) => Promise<{ commit: boolean; value: boolean }>) => { const result = await work(state as never, { principalRef: "reviewer", accessRevision: "a", policyVersion: "v" } as never); return { status: "ok" as const, storageVersion: 1, aggregateRevision: 1, incarnation: "i", value: result.value } },
       read: async (_request: Request, _namespace: string, read: (value: never, authority: never) => unknown) => ({ status: "ok" as const, storageVersion: 1, aggregateRevision: 1, incarnation: "i", value: read(state as never, { principalRef: "reviewer", accessRevision: "a", policyVersion: "v" } as never) }),

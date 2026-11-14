@@ -1,0 +1,124 @@
+{
+  "schema": "sf2h.collab-resume.increment.v1",
+  "increment": "W6",
+  "origin_pr": 33,
+  "delivery_pr": 41,
+  "base_sha": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+  "base_tree": "39cec0a91dc5ebc2dde012d4d1d8b63166074373",
+  "status": "IMPLEMENTED_PENDING_HOSTED_VALIDATION",
+  "trigger": {
+    "run_id": 43619790251,
+    "job_id": 132522634877,
+    "product_sha": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+    "snapshot_sha": "49e83715497e221350a8c221f45968debb566bea",
+    "conclusion": "failure",
+    "counts": {
+      "pass": 8,
+      "fail": 2,
+      "expect_calls": 235
+    },
+    "findings": [
+      "The complete first C05 journey exceeded its unchanged 120000ms deadline (253128.15ms); this failure is retained.",
+      "Generic fresh scope incorrectly used the original All Projects incarnation where the current issuer used Portfolio Dashboard.",
+      "Independent review additionally confirmed R10: a real message edit after the final external read could leave old reuse/Work output valid because the protected fence checked only sources."
+    ]
+  },
+  "changes": [
+    "Restore the proven current-domain message/source basis from the authenticated reader; apply strict immutable threadMessageContext only to the pinned C05 branch.",
+    "Use a private canonical membership check for C05; it proves recipient participation, latest response and the full answer reference, and is never a source grant.",
+    "Remove only C05 Work resolve duplicated by observe's exact scope derivation; retain independent authority, all real source leases and protected source checks.",
+    "Bind the complete thread and absent/exact baseline to the protected snapshot before and after the producer fence for answer egress and Work, on both generic and C05 paths.",
+    "Retain all58 C05 assertion sites and all23 existing unit assertions. Split the original long journey into three independent full causal cases, preserving actual SQLite reopen before edit; keep the fourth revocation/physical-replacement chain whole.",
+    "Add two real SQLite/human-edit R10 counterexamples after the final external read, with unchanged source, review, baseline and ACL and no outer collector that could mask the old valid result."
+  ],
+  "manifest_sha256": "6a2f86bd94d3e1fa62e1f3fcd1e48b8b6bdb274a219868e8162464f72da9aeef",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "preimage_blob": "d80d441aa5775a3747303a60161e5a049f84ac16",
+      "postimage_blob": "1678fc9d46c36a7da962aeca3b782b395e129c51",
+      "postimage_sha256": "59ceaf1a3910ff31ef366184bd31b8e5611e0e42edc9d97640e41c963dc3b808"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-work.ts",
+      "preimage_blob": "a6984795460b51d685b820fba1823df1d56930f4",
+      "postimage_blob": "f1e638546518f35aef1dcd053ae0f2a202cdadd3",
+      "postimage_sha256": "1ee46cf4b39ab7e7c7dab1206f8b762d4c7c050d0682cb50884f1e0dec1c7075"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+      "preimage_blob": "6cc84fa9ac2be269893225d3ae0e6e119fb3f42e",
+      "postimage_blob": "012175e4acc2be40547089b43f248144beb6c712",
+      "postimage_sha256": "0415729de4175fd746f417917d3b57eeb6ec627e81506b46d45458f69a10c288"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-state-fence.ts",
+      "preimage_blob": null,
+      "postimage_blob": "7b19cf14f220adb3a01530515ec5ad1657bc8f11",
+      "postimage_sha256": "a7dc5ff1dc4039ebe8fefb81a8315b1e1273d3d7203d21da831c019f36d22607"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "preimage_blob": "16b38f72bcbb6046647a7c0dde90b67d51e95029",
+      "postimage_blob": "5570584303752e8e95159e21d78dccaa63832110",
+      "postimage_sha256": "0e0cfaf5fdfe48ac7f11852c9bb137ad7fe52006c98cb2460534dd0417c19936"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+      "preimage_blob": "d03e3444c85391f5b801396dfee4eca84ba6e686",
+      "postimage_blob": "506127c65b0e86c5e69303589f3d42102e62fefc",
+      "postimage_sha256": "15430dbcfe2f14cc55029637e2a2604b84ca9255f2207f5b4f48f84965546d08"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+      "preimage_blob": null,
+      "postimage_blob": "dab12a75873f435243911957ce681fb251916c51",
+      "postimage_sha256": "0d2e07044e63926659a03b53a83d7ddf42d42d2cca3bc9f924a315f5e83a8ebf"
+    }
+  ],
+  "oracle_map_sha256": "8d3ee96824f4179b4a1fd1689e90ffbe83c775ce590eaae8b99ed3c9afbdb8be",
+  "diagnosis_sha256": "863e915815b92d2f0e5c4f0412737ce0ecd1d07a37988a1b4128a86a6e56e063",
+  "independent_review": {
+    "reviewer": "wp09_audit",
+    "status": "APPROVED_FOR_HOSTED_VALIDATION",
+    "prior_approval": "Suspended when R10 was confirmed; no W6 publication occurred under that approval.",
+    "prepublication_correction": "Two sfSourceIdentity calls in the new counterexample corrected to the existing (snapshot,type,id) signature.",
+    "runtime_or_native_success_claimed": false,
+    "approved_manifest_sha256": "6a2f86bd94d3e1fa62e1f3fcd1e48b8b6bdb274a219868e8162464f72da9aeef",
+    "scope": "Seven postimages independently reviewed; only publication and the six-file hosted validation are approved. Runtime/native claims remain pending."
+  },
+  "next_selection": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "./Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+      "./Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "./Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts",
+      "./Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+      "./Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "request_sha256": "05443c8b6ad0e91d18b1aae3e92864d7be9016d1779ac2b9f533500655f7ac69",
+  "retained_scoped_previous_pass": [
+    "W5 WP07 review-thread-context3cases; unchanged producer",
+    "W5 case-selection-cas; unchanged G03 product/test",
+    "W5 review-recipient-authority including R09: executed threads.create, threadReads.read and authority.reviewRecipientSources; none of the host answer callbacks or answerWork/answerReuse changed by W6 were exercised. This is path equivalence, not whole-host blob equivalence.",
+    "W2 review-port14cases and Dashboard agenda1case; unchanged consumers"
+  ],
+  "unchanged_limits": {
+    "human_observation_expiry_ms": 300000,
+    "test_deadline_ms": 120000,
+    "local_product_tests": false,
+    "foreign_paths_edited": false,
+    "global_DONE": false,
+    "native_relay_proof": false
+  },
+  "performance_limit": "The prior253128.15ms failure remains evidence of excessive full-journey latency. Partitioning the tests is not performance acceptance; measure new phase timings and record the limit."
+}

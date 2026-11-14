@@ -1,4 +1,5 @@
 import { digestSfValue } from "../contracts/canonical.ts"
+import { createAnswerStateFence } from "./answer-state-fence.ts"
 import type { ConfirmationScope } from "../contracts/context.ts"
 import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
@@ -48,7 +49,7 @@ export function createAnswerReusePort<T extends AvailableConfirmationScopeObserv
     const observation = await input.observe(scope, context)
     return { value: observation, fence: async () => observation.state === "available" && await input.fence(scope, observation, context) }
   }
-  const capture = async (bound: { fence: () => Promise<boolean> }) => snapshots.transactionAll ? snapshots.transactionAll(async () => ({ commit: false, value: await bound.fence() })) : false
+  const capture = createAnswerStateFence(input.host)
   const now = input.now ?? Date.now
   const identity = (context: TrustedDomainContext) => digestSfValue({ installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion })
   const observations = new Map<string, { authority: string; issuedAt: number; expiresAt: number; answer: Answer; scope: ConfirmationScope; reviewBasis?: ReviewAnswerBasis; observation: AvailableConfirmationScopeObservation }>()
@@ -66,7 +67,7 @@ export function createAnswerReusePort<T extends AvailableConfirmationScopeObserv
       const observation = bound.value
       if (observation.state !== "available" || !Number.isSafeInteger(observation.sourceVersion) || observation.sourceVersion < 1 || !observation.scopeFingerprint || !observation.physicalIncarnation || !observation.sourceFingerprint || !observation.dependencyFingerprint || observation.incarnation !== scope.sourceRef.incarnation) return { status: "unavailable" as const, reason: "answer-scope-unavailable" }
       const again = await input.answer(questionId, context)
-      if (again.status !== "ok" || answerIdentity(again.value) !== answerIdentity(answer.value) || !await input.belongsToQuestion(questionId, answerRef, context) || !await input.host.revalidate(context) || !await capture(bound)) return { status: "stale" as const, reason: "answer-observation-changed" }
+      if (again.status !== "ok" || answerIdentity(again.value) !== answerIdentity(answer.value) || !await input.belongsToQuestion(questionId, answerRef, context) || !await input.host.revalidate(context) || !await capture({ questionId, threadDigest: again.value.threadDigest }, bound.fence)) return { status: "stale" as const, reason: "answer-observation-changed" }
       const issuedAt = now()
       const expiresAt = issuedAt + 5 * 60 * 1000
       if (!Number.isFinite(issuedAt) || !Number.isFinite(expiresAt)) return { status: "unavailable" as const, reason: "answer-observation-clock-unavailable" }
@@ -107,7 +108,7 @@ export function createAnswerReusePort<T extends AvailableConfirmationScopeObserv
       if ("reason" in saved) return { status: saved.status === "conflict" ? "stale" : saved.status, reason: saved.reason }
       if (saved.status === "preview") return { status: "conflict", reason: "answer-confirmation-not-committed" }
       if (!saved.value || !await input.host.revalidate(context)) return { status: "unavailable", reason: "answer-confirmation-unavailable" }
-      if (!await capture(bound)) return { status: "stale", reason: "answer-scope-changed" }
+      if (!await capture({ questionId, threadDigest: answer.value.threadDigest, baseline: { key: key(questionId, answer.value.id, context), digest: digestSfValue(baseline) } }, bound.fence)) return { status: "stale", reason: "answer-scope-changed" }
       return { status: "ok", value: { answerRef: answer.value.ref, observedVersion: observed.observation.sourceVersion } }
     },
     read: async (questionId: string, context: TrustedDomainContext): Promise<PortResult<{ answerRef: string; answer: string; authorRef: string; observedVersion: number; reviewContext?: ReviewThreadContext }>> => {
@@ -129,7 +130,7 @@ export function createAnswerReusePort<T extends AvailableConfirmationScopeObserv
         const current = unconfirmed.value
         if (current.state !== "available" || current.incarnation !== scope.sourceRef.incarnation || !current.physicalIncarnation || !current.sourceFingerprint || !current.dependencyFingerprint || !current.scopeFingerprint) return { status: "unavailable", reason: "answer-reuse-unavailable" }
         const answer = await input.answer(questionId, context)
-        if (answer.status !== "ok" || answerIdentity(answer.value) !== answerIdentity(candidate.value) || !await input.belongsToQuestion(questionId, answer.value.ref, context) || !await input.host.revalidate(context) || !await capture(unconfirmed)) return { status: "unavailable", reason: "answer-reuse-unavailable" }
+        if (answer.status !== "ok" || answerIdentity(answer.value) !== answerIdentity(candidate.value) || !await input.belongsToQuestion(questionId, answer.value.ref, context) || !await input.host.revalidate(context) || !await capture({ questionId, threadDigest: answer.value.threadDigest, baseline: { key: baselineKey, digest: digestSfValue(undefined) } }, unconfirmed.fence)) return { status: "unavailable", reason: "answer-reuse-unavailable" }
         return { status: "needs-input", reason: "answer-unconfirmed" }
       }
       if (!baseline || baseline.questionId !== questionId || baseline.answerId !== candidate.value.id || baseline.answerRef !== candidate.value.ref || baseline.answerDigest !== candidate.value.digest || baseline.installationId !== context.binding.installationId || baseline.projectId !== context.binding.projectId || digestSfValue(scopeIdentity(baseline.scope)) !== digestSfValue(scopeIdentity(scope)) || digestSfValue(baseline.reviewBasis) !== digestSfValue(derived.value.reviewBasis)) return { status: "unavailable", reason: "answer-reuse-unavailable" }
@@ -137,13 +138,14 @@ export function createAnswerReusePort<T extends AvailableConfirmationScopeObserv
       const observation = bound.value
       if (observation.state === "access-unavailable" || observation.state === "dependency-unavailable") return { status: "unavailable", reason: "answer-reuse-unavailable" }
       if (observation.state !== "available" || observation.physicalIncarnation !== baseline.physicalIncarnation || observation.sourceFingerprint !== baseline.sourceFingerprint || observation.dependencyFingerprint !== baseline.dependencyFingerprint || observation.scopeFingerprint !== baseline.scopeFingerprint || observation.incarnation !== scope.sourceRef.incarnation) return { status: "stale", reason: "answer-scope-changed" }
-      const fenced = await capture(bound)
+      const expectedBaseline = { key: baselineKey, digest: digestSfValue(baseline) }
+      const fenced = await capture({ questionId, threadDigest: candidate.value.threadDigest, baseline: expectedBaseline }, bound.fence)
       if (!fenced || !await input.host.revalidate(context)) return { status: "stale", reason: "answer-scope-changed" }
       const again = await input.answer(questionId, context)
       if (again.status !== "ok" || again.value.id !== candidate.value.id || again.value.ref !== candidate.value.ref || again.value.digest !== candidate.value.digest || again.value.authorRef !== candidate.value.authorRef || !await input.belongsToQuestion(questionId, again.value.ref, context) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "answer-reuse-unavailable" }
       const latest = await readBaseline()
       if (latest.status !== "ok" || !latest.value?.baseline || digestSfValue(latest.value.baseline) !== digestSfValue(baseline) || !await input.host.revalidate(context)) return { status: "stale", reason: "answer-baseline-changed" }
-      if (!await capture(bound)) return { status: "stale", reason: "answer-scope-changed" }
+      if (!await capture({ questionId, threadDigest: again.value.threadDigest, baseline: expectedBaseline }, bound.fence)) return { status: "stale", reason: "answer-scope-changed" }
       return { status: "ok", value: { answerRef: again.value.ref, answer: again.value.body, authorRef: again.value.authorRef, observedVersion: baseline.observedVersion, ...(baseline.reviewBasis ? { reviewContext: baseline.reviewBasis.reviewContext } : {}) } }
     },
   }
