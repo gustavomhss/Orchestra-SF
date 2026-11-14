@@ -12,6 +12,7 @@ import type { Period } from "../contracts/context.ts"
 import type { SfSourceScope } from "./source-lifecycle.ts"
 import { projectSfProcurementScope } from "./procurement-projections.ts"
 import { normalizeDashboardRecords } from "../dashboard/records.ts"
+import { dashboardPerformanceAgendaRecords } from "../dashboard/agenda.ts"
 import { projectDashboardSource } from "../dashboard/port.ts"
 import { publicSfData } from "./public-state.ts"
 
@@ -48,6 +49,14 @@ export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope
     if (scope.recordType === "dashboard-page" && scope.recordId === selector.page) return projectDashboardScope(snapshot, actor, { page: selector.page, fields: selector.fields, period: selector.period as Period }, asOf)
     // Record scopes are admitted only through a page the same actor can view.
     if (scope.recordType === "dashboard-page" || scope.recordId === "__singleton__") return undefined
+    if (scope.recordType === "itperf-item") {
+      if (selector.page !== "IT Performance Contract" || !dashboardPerformanceAgendaRecords(snapshot.data.itperf)) return undefined
+      const projection = projectDashboardScope(snapshot, actor, { page: selector.page, fields: ["itperf"], period: selector.period as Period }, asOf)
+      const records = projection && dashboardPerformanceAgendaRecords(projection.selected.itperf)
+      const matches = records?.filter((record) => String(record.id) === scope.recordId)
+      if (!matches || matches.length !== 1 || selector.fields.some((field) => !Object.hasOwn(matches[0]!, field))) return undefined
+      return Object.fromEntries([...selector.fields].sort().map((field) => [field, matches[0]![field]]))
+    }
     const logical = ["budgetYtd", "deviations", "budgetCurrentMonth", "revenueByYear"].includes(scope.recordType)
     const visible = logical ? projectDashboardSource(snapshot, actor, { at: asOf, id: () => "", directory: [] }, selector.page) : undefined
     const projection = logical ? undefined : projectDashboardScope(snapshot, actor, { page: selector.page, fields: [scope.recordType], period: selector.period as Period }, asOf)

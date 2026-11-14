@@ -1,0 +1,22 @@
+{
+  "base_commit": "dc6bf9e4e8f3d2fa01d01c76d5575892a8ced82f",
+  "status": "PROPOSED_NOT_APPLIED_NOT_TESTED",
+  "owner": "WP10",
+  "requires_wp02_export": "product/dashboard/agenda.ts#dashboardPerformanceAgendaRecords",
+  "source_blobs": {
+    "source-inventory.ts": "1b183b82758f8f49954a5038b675bb784fc89915",
+    "source-projections.ts": "c28a167575bf2713590f97798e463ccb33dc50c8",
+    "business-services.ts": "c4f4811234948daa04394e2dc82b58fd86622b16"
+  },
+  "effects": [
+    "Registers existing itperf item IDs in the existing source lifecycle; malformed or duplicate IDs never create aliases",
+    "Projects only currently authorized IT Performance Contract item fields and rejects periods outside the current observation",
+    "Composes Dashboard agenda from existing authenticated host services; does not add another store or HTTP route"
+  ],
+  "remaining_consumer_work": [
+    "WP07/WP10 wire dashboardAgenda to ReviewHost.select using authorized persisted selections; no concrete review-services consumer exists in observed host",
+    "Executive recordCount counts signal-source records, not aggregate cells. Copy coverage to a review section title/detail so total, selection and aggregatesIncluded remain visible",
+    "Execute full/selected/empty it-performance selection after applying this lifecycle patch, then permission loss, deletion/reimport, duplicate IDs, malformed rows, stale record, and changed observation day"
+  ],
+  "proof_limit": "Local tests are forbidden. This patch is a reviewable owner handoff, not integrated/native proof."
+}

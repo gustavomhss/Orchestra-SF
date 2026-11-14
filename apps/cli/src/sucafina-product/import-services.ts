@@ -1,6 +1,8 @@
 import type { CreateSfHostRuntime } from "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
 import type { CapabilityDescriptor, CapabilityResult, TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+import type { Period } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { sfOperationInputSchemas } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
 import { sfOperationOutputSchemas } from "../../../../modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts"

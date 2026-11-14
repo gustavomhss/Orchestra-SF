@@ -6,6 +6,7 @@ import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfNativeRunRecord, SfProductStatePort } from "../contracts/state.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
+import { object } from "../../runtime/contract.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type Request = { caseRef: CaseRef; outputRef: string; runRef: string; rationale: string }
@@ -43,8 +44,9 @@ export function createAnalysisAcceptance(input: {
       const saved = prior.value
       if (!saved || typeof saved !== "object" || !("id" in saved) || !("incarnation" in saved) || !("version" in saved) || saved.id !== decision.id || saved.incarnation !== decision.incarnation || !Number.isSafeInteger(saved.version) || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "invalid-acceptance-receipt" }
       if (!("ledger" in saved) || !Array.isArray(saved.ledger)) return { status: "unavailable", reason: "invalid-acceptance-receipt" }
-      const events = (saved as unknown as DecisionCase).ledger.filter((event) => event.kind === "analysis-accepted" && event.analysisRunId === request.runRef && event.caseRef.id === decision.id && event.caseRef.incarnation === decision.incarnation && event.caseRef.version === saved.version && event.principalRef === context.binding.principalRef)
-      if (events.length !== 1 || !/^[a-f0-9]{64}$/.test(events[0]!.outputDigest) || decision.ledger.filter((event) => event.id === events[0]!.id && digestSfValue(event) === digestSfValue(events[0])).length !== 1 || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "acceptance-event-unavailable" }
+      const ledger: readonly unknown[] = saved.ledger
+      const events = ledger.map(object).filter((event) => event.kind === "analysis-accepted" && event.analysisRunId === request.runRef && object(event.caseRef).id === decision.id && object(event.caseRef).incarnation === decision.incarnation && object(event.caseRef).version === saved.version && event.principalRef === context.binding.principalRef)
+      if (events.length !== 1 || typeof events[0]!.outputDigest !== "string" || !/^[a-f0-9]{64}$/.test(events[0]!.outputDigest) || decision.ledger.filter((event) => event.id === events[0]!.id && digestSfValue(event) === digestSfValue(events[0])).length !== 1 || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "acceptance-event-unavailable" }
       return { status: "ok", value: { caseRef: { id: decision.id, incarnation: decision.incarnation, version: Number(saved.version) } } }
     }
     if (decision.version !== request.caseRef.version) return { status: "stale", reason: "case-changed" }

@@ -213,13 +213,13 @@ export function createSfProcurementSourceAccess(input: { host: DomainPortHost; r
       if (!request || request.signal.aborted || !await input.host.revalidate(call)) return unavailable()
       const now = await input.host.environment(request)
       if (!Number.isFinite(Date.parse(now.at))) return unavailable()
-      const current = await input.resolve(ref.refId, call)
+      const current = await input.resolve.resolve(ref.refId, call)
       if (current.status !== "ok" || digestSfValue(current.value.evidence) !== digestSfValue(ref) || !await input.host.revalidate(call)) return unavailable(now.at)
       const projection = ref.target.recordType === "procurement-request"
         ? await input.procurement.read({ requestRef: ref.refId }, call)
         : await input.procurement.readSupplier({ supplierRef: ref.refId, fields: ref.target.fields }, call)
       if (projection.status !== "ok" || projection.value.context.installationId !== call.binding.installationId || projection.value.context.projectId !== call.binding.projectId || projection.value.context.principalRef !== call.binding.principalRef || projection.value.context.accessRevision !== call.binding.accessRevision || projection.value.context.policyVersion !== call.binding.policyVersion) return unavailable(now.at)
-      const again = await input.resolve(ref.refId, call)
+      const again = await input.resolve.resolve(ref.refId, call)
       if (again.status !== "ok" || digestSfValue(again.value.evidence) !== digestSfValue(ref) || request.signal.aborted || !await input.host.revalidate(call)) return unavailable(now.at)
       return { state: "fresh", ref, currentRef: again.value.evidence, authorizedProjection: projection.value, accessRevision: call.binding.accessRevision, checkedAt: now.at }
     } catch {

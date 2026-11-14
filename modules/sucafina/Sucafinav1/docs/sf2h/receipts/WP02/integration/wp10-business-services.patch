@@ -1,0 +1,33 @@
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -18,6 +18,9 @@
+ import { createDashboardPort } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/port.ts"
+ import { createDashboardRecordEvidenceHost, createDashboardSourceHost } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/sources.ts"
+ import { createDashboardRecordSourceIssuer, createDashboardSourceIssuer } from "../../../../modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts"
++import { createDashboardConfirmationIssuer, createDashboardConfirmationProjectionReader } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts"
++import { createDashboardConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts"
++import { createDashboardPreparedReview } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/prepared-review.ts"
+ import { createDashboardCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts"
+ import { createDecisionCasePort, encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+ import { createSfDecisionResultStore } from "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
+@@ -92,6 +95,11 @@
+   const dashboardRecords = createDashboardRecordEvidenceHost({ host, scopedSources: input.persistence,
+     issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: input.persistence }) })
+   const dashboard = createDashboardPort({ host, sources: dashboardSources, recordEvidence: dashboardRecords })
++  const dashboardConfirmationIssuer = createDashboardConfirmationIssuer({ host, scopedSources: input.persistence })
++  const dashboardConfirmations = createDashboardConfirmationObserver({ host, scopedSources: input.persistence,
++    readProjection: createDashboardConfirmationProjectionReader({ dashboard, records: dashboardRecords }) })
++  const bindDashboardPreparedReview = (verifyPreparedBinding: Parameters<typeof createDashboardPreparedReview>[0]["verifyPreparedBinding"]) =>
++    createDashboardPreparedReview({ host, issueSource: dashboardConfirmationIssuer, verifyPreparedBinding })
+   const evidence: { current?: BusinessContextService } = {}
+   const context: BusinessContextService = {
+     resolve: (ref, call) => evidence.current ? evidence.current.resolve(ref, call) : Promise.resolve({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }),
+@@ -261,7 +269,7 @@
+     return { status: "ok" as const, value: { forecastComparison: result.value, selectedPeriod: wanted.period, currency: wanted.currency, sourceRefs: refs, registeredReasons: [] } }
+     })
+   } }
+-  return { dashboard, procurement, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, forecastInputs, initializeAtlas,
++  return { dashboard, dashboardRecords, dashboardConfirmationIssuer, dashboardConfirmations, bindDashboardPreparedReview, procurement, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, forecastInputs, initializeAtlas,
+     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
+     dispose: () => { periods.clear(); evidence.current = undefined; descriptors.splice(baseCount) } }
+ }

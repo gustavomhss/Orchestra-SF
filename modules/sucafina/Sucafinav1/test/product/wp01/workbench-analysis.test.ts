@@ -3,7 +3,7 @@ import path from "node:path"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { randomBytes, randomUUID } from "node:crypto"
-import { createEmbeddedRoutes } from "@orchestra/server/routes"
+import { createEmbeddedRoutes } from "../../../../../../packages/server/src/routes.ts"
 import { Context, Layer } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
 import { ProductHost } from "../../../../../../apps/cli/src/host.ts"
@@ -14,6 +14,7 @@ import { createSfSourcePersistence } from "../../../product/integration/source-l
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
+import { digestSfValue } from "../../../product/contracts/canonical.ts"
 
 test("Workbench analysis HTTP enforces human authority and hides forged run references", async () => {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-analysis-http-"))
@@ -60,6 +61,15 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
 
     const services = runtime.services?.()
     if (!services) throw new Error("host services unavailable after host startup")
+    expect(services.selected).toHaveLength(5)
+    for (const selected of services.selected) {
+      expect(selected.skills.length).toBeGreaterThan(0)
+      expect(selected.operationIds.length).toBeGreaterThan(0)
+      for (const operation of selected.operationIds) {
+        expect(selected.profile.allowedOperations).toContain(operation)
+        expect(selected.skills.some((skill) => skill.allowedOperations.includes(operation))).toBe(true)
+      }
+    }
     const model = (await services.models().catch(() => []))[0]
     const selection = services.selected.find((item) => item.skills.some((skill) => skill.id === "sf-explicar-forecast"))
     const skill = selection?.skills.find((item) => item.id === "sf-explicar-forecast")
@@ -77,8 +87,22 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
       headers: { origin, "sec-fetch-site": "same-origin", "content-type": "application/json", "idempotency-key": randomUUID() },
       body: JSON.stringify({ action: "read", runRef: "sf-run-forged-reference" }) })
     expect(unauthenticated.status).toBe(403)
+    const uninitialized = await post({ action: "read", runRef: "sf-run-forged-reference" })
+    expect(uninitialized.status).toBe(503)
+    expect(await uninitialized.json()).toEqual({ status: "unavailable" })
+    // C06 source initialization does not create C08. Initialize through the real
+    // authenticated state port before testing the missing-run authorization path.
+    const stateRequest = new Request(`${origin}/sucafina/dashboard`, { method: "POST",
+      headers: { cookie: cookie ?? "", origin, "sec-fetch-site": "same-origin", "idempotency-key": "analysis-c08-initialize" } })
+    const initialized = await services.state.transaction(stateRequest, { namespace: "cases", expectedStorageVersion: 0,
+      targetRef: services.creationTarget.ref, targetIncarnation: services.creationTarget.incarnation,
+      idempotencyKey: "analysis-c08-initialize", commandDigest: digestSfValue({ purpose: "initialize-analysis-state" }) },
+    async () => ({ commit: true, value: true }))
+    expect(initialized.status).toBe("ok")
     expect((await post({ action: "read", runRef: "sf-run-forged-reference" })).status).toBe(403)
-    expect((await post({ action: "output", runRef: "sf-run-forged-reference" })).status).toBe(403)
+    const missingOutput = await post({ action: "output", runRef: "sf-run-forged-reference" })
+    expect(missingOutput.status).toBe(503)
+    expect(await missingOutput.json()).toEqual({ status: "unavailable" })
     const forgedList = await post({ action: "list", caseRef: { id: "missing", incarnation: "missing", version: 1 } })
     expect(forgedList.status).toBe(403)
     expect(await forgedList.text()).not.toContain("nativeSessionId")
@@ -92,6 +116,8 @@ test("Workbench analysis HTTP enforces human authority and hides forged run refe
     expect(crossSite.status).toBe(403)
     const missingIdempotency = await post({ action: "read", runRef: "sf-run-forged-reference" }, { "idempotency-key": "" })
     expect(missingIdempotency.status).toBe(400)
+    const unchanged = await services.state.read(stateRequest, "contributions", (state) => ({ runs: Object.keys(state.nativeRuns ?? {}), outputs: Object.keys(state.contributions) }))
+    expect(unchanged.status === "ok" && unchanged.value).toEqual({ runs: [], outputs: [] })
   } finally {
     await web?.dispose()
     await server.stop(true)

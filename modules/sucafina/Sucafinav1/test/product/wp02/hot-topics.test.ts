@@ -63,3 +63,30 @@ test("action input is fixed before asynchronous host authorization", async () =>
   request.sourceRefs.length = 0
   expect(await pending).toMatchObject({ status: "ok", value: { topic: { action: "Original" } } })
 })
+
+test("ambiguous normalized topic IDs cannot be read or updated", async () => {
+  const state: Snapshot = { data: { hotTopics: [
+    { id: 7, action: "First", owner: "one", due: "2026-12-01", status: "open", priority: "high", notes: "" },
+    { id: "7", action: "Second", owner: "two", due: "2026-12-02", status: "open", priority: "normal", notes: "" },
+  ] }, versions: { "hotTopics:7": { version: 1, by: "leader" } }, sequences: {}, audit: [], notices: [] }
+  const actor = { id: "leader", roles: ["domain leader"], canWrite: true }
+  const correlations: Record<string, { digest: string; id: string; result?: HotTopic }> = {}
+  const host: HotTopicHost = { transact: async (_binding, _refs, work) => {
+    const snapshot = structuredClone(state)
+    const pending = structuredClone(correlations)
+    const result = work(snapshot, actor, { at: "2026-11-13T00:00:00Z", id: () => "unused", directory: [] }, pending)
+    if (result.commit) {
+      Object.assign(state, snapshot)
+      Object.assign(correlations, pending)
+    }
+    return result.value
+  } }
+  const port = createHotTopicPort(host)
+  expect(await port.read("7", [source], binding)).toMatchObject({ status: "unavailable" })
+  expect(await port.update({ id: "7", version: 1, idempotencyKey: "ambiguous", sourceRefs: [source], values: { status: "done" } }, binding)).toMatchObject({ status: "unavailable", reason: "action-ambiguous" })
+  expect(state.data.hotTopics).toEqual([
+    { id: 7, action: "First", owner: "one", due: "2026-12-01", status: "open", priority: "high", notes: "" },
+    { id: "7", action: "Second", owner: "two", due: "2026-12-02", status: "open", priority: "normal", notes: "" },
+  ])
+  expect(correlations).toEqual({})
+})

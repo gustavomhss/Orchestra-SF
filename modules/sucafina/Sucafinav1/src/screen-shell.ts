@@ -45,10 +45,65 @@ async function valuesOf(form) {
   function compact(value) { if (Array.isArray(value)) return value.filter((entry) => entry !== undefined).map(compact); if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, compact(entry)])); return value }
   return compact(values)
 }
-function showResult(result, attempt) {
+function offerLatestVersion(form) {
+  if (!form || !form.isConnected) return
+  form.querySelector("[data-reload-draft]")?.remove()
+  const button = document.createElement("button")
+  button.type = "button"
+  button.dataset.reloadDraft = "true"
+  button.textContent = "Load current version and keep my edits"
+  button.addEventListener("click", async () => {
+    button.disabled = true
+    try {
+      const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store" })
+      if (!response.ok) { notice("The current record is unavailable. Your edits are still here."); return }
+      const next = new DOMParser().parseFromString(await response.text(), "text/html")
+      const identity = (candidate) => ["year", "month"].map((name) => {
+        const input = [...candidate.elements].find((element) => element.name === name)
+        return input ? input.defaultValue ?? input.value : null
+      })
+      const candidates = [...next.querySelectorAll("form[data-command]")].filter((candidate) =>
+        candidate.dataset.page === form.dataset.page && candidate.dataset.command === form.dataset.command && candidate.dataset.record === form.dataset.record && JSON.stringify(identity(candidate)) === JSON.stringify(identity(form)))
+      const current = candidates.length === 1 ? candidates[0] : null
+      if (!form.isConnected || !current || !Number.isSafeInteger(Number(current.dataset.version)) || Number(current.dataset.version) < 0 || current.querySelector('button[type="submit"]')?.disabled) {
+        notice("This record can no longer be updated in this context. Your edits are still here.")
+        return
+      }
+      const stored = await valuesOf(current)
+      delete stored.versions
+      const details = document.createElement("section")
+      details.dataset.currentRevision = "true"
+      const heading = document.createElement("h3")
+      heading.textContent = "Current record — review before saving your edits"
+      details.append(heading)
+      const list = document.createElement("ul")
+      for (const [name, value] of Object.entries(stored)) {
+        const item = document.createElement("li")
+        item.textContent = name + ": " + (value == null ? "Not provided" : typeof value === "object" ? JSON.stringify(value) : String(value))
+        list.append(item)
+      }
+      details.append(list)
+      form.dataset.version = current.dataset.version
+      const versions = form.querySelector('input[name="versions"]'), latestVersions = current.querySelector('input[name="versions"]')
+      if (versions && latestVersions) versions.value = latestVersions.value
+      form.dataset.previewRevision = String(Number(form.dataset.previewRevision || "0") + 1)
+      form.querySelector("[data-preview]")?.remove()
+      form.querySelector("[data-current-revision]")?.remove()
+      form.append(details)
+      button.remove()
+      notice("Current version loaded. Your edits are still here; review the current values, then save again.")
+      heading.tabIndex = -1
+      heading.focus()
+    } catch { notice("The current record could not be loaded. Your edits are still here.") }
+    finally { button.disabled = false }
+  })
+  form.append(button)
+}
+function showResult(result, attempt, form) {
   if (result && result.status === 409) {
     const describe = (value) => value && typeof value === "object" ? Object.entries(value).map(([key, item]) => key + ": " + (item == null ? "Not provided" : typeof item === "object" ? JSON.stringify(item) : String(item))).join(" · ") : String(value ?? "Not available")
     notice("This record changed since you opened it. Your edits are still here. Current: " + describe(result.stored) + ". Your attempt: " + describe(attempt) + ". Review the current record before retrying.")
+    offerLatestVersion(form)
     return
   }
   notice(result && result.errors ? result.errors.join(" · ") : unsaved)
@@ -59,12 +114,12 @@ function beginWrite() {
   pending.html = null
   return () => { pending.writing--; pending.generation++; pending.html = null }
 }
-async function send(command) {
+async function send(command, form) {
   const finish = beginWrite()
   try {
   const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify(command) })
   const result = await response.json()
-  if (!response.ok || !result || result.ok !== true) { showResult(result, command.values); return false }
+  if (!response.ok || !result || result.ok !== true) { showResult(result, command.values, form); return false }
   notice(result.warnings && result.warnings.length ? result.warnings.join(" · ") : "Saved.")
   return true
   } finally { finish() }
@@ -85,6 +140,39 @@ function attach() {
     target.searchParams.delete("own")
     anchor.href = target.toString()
     if (target.searchParams.get("page") === document.querySelector("main")?.dataset.page) anchor.setAttribute("aria-current", "page")
+  })
+  document.querySelectorAll("[data-dashboard-signal-link]").forEach((anchor) => {
+    const target = new URL(anchor.href)
+    for (const key of stateKeys) if (current.searchParams.has(key)) target.searchParams.set(key, current.searchParams.get(key))
+    anchor.href = target.toString()
+  })
+  document.querySelectorAll("[data-dashboard-signals]").forEach((section) => {
+    if (section.dataset.bound) return
+    section.dataset.bound = "true"
+    const records = [...section.querySelectorAll("[data-signal-priority]")].map((button, index) => ({ button, row: button.closest("tr"), id: button.dataset.signalPriority, index }))
+    const authorized = new Set(records.map((item) => item.id))
+    const pinned = new Set(current.searchParams.getAll("signalPriority").filter((id) => authorized.has(id)))
+    const order = () => {
+      const sorted = [...records].sort((a, b) => Number(pinned.has(b.id)) - Number(pinned.has(a.id)) || a.index - b.index)
+      for (const item of sorted) {
+        item.row.parentElement.append(item.row)
+        item.button.setAttribute("aria-pressed", String(pinned.has(item.id)))
+        item.button.textContent = pinned.has(item.id) ? "Remove priority" : "Prioritize"
+        item.button.setAttribute("aria-label", (pinned.has(item.id) ? "Remove priority for " : "Prioritize ") + item.button.dataset.signalLabel)
+      }
+      section.querySelector("[data-signal-order]").textContent = pinned.size + " of " + records.length + " signals prioritized by you. Your priorities first, then recorded date; undated records follow. Priorities belong to this view and do not change the records."
+    }
+    for (const item of records) item.button.addEventListener("click", () => {
+      if (pinned.has(item.id)) pinned.delete(item.id)
+      else pinned.add(item.id)
+      const url = new URL(location.href)
+      url.searchParams.delete("signalPriority")
+      for (const id of pinned) url.searchParams.append("signalPriority", id)
+      history.replaceState(history.state, "", url)
+      order()
+      item.button.focus()
+    })
+    order()
   })
   document.querySelectorAll("[data-notifications]").forEach((menu) => {
     if (menu.dataset.bound) return
@@ -156,7 +244,10 @@ function attach() {
     button.dataset.bound = "true"
     const dialog = button.closest("td").querySelector("dialog")
     const form = dialog.querySelector("form[data-command]")
-    button.dataset.editorKey = form ? JSON.stringify([form.dataset.page, form.dataset.command, form.dataset.record]) : ""
+    button.dataset.editorKey = form ? JSON.stringify([form.dataset.page, form.dataset.command, form.dataset.record, ...["year", "month"].map((name) => {
+      const input = [...form.elements].find((element) => element.name === name)
+      return input ? input.defaultValue ?? input.value : null
+    })]) : ""
     button.addEventListener("click", () => dialog.showModal())
     dialog.addEventListener("cancel", (event) => {
       const dirty = dialog.querySelectorAll("form[data-dirty]")
@@ -273,15 +364,15 @@ function attach() {
       const buttons = [...form.querySelectorAll("button")]
       buttons.forEach((button) => button.disabled = true)
       try {
+        const revision = form.dataset.previewRevision || "0"
         const values = await valuesOf(form)
         const command = { page: form.dataset.page, action: form.dataset.command, id: form.dataset.record || undefined, version: Number(form.dataset.version), values, confirmed: confirmed || values.confirmed === true }
         if (document.body.dataset.surface === "dashboard" && ["OPEX Detail", "CAPEX Projects"].includes(command.page) && ["year-amount", "annual-entry", "save-entry"].includes(command.action)) {
-          const revision = form.dataset.previewRevision || "0"
           const finish = beginWrite()
           try {
             const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ page: command.page, action: "preview-change", version: 0, values: { command: { ...command, confirmed: false } } }) })
             const result = await response.json()
-            if (!response.ok || !result?.ok || result.value?.status !== "preview") { showResult(result, values); return }
+            if (!response.ok || !result?.ok || result.value?.status !== "preview") { showResult(result, values, form); return }
             if ((form.dataset.previewRevision || "0") !== revision) { notice("The draft changed. Review a new preview."); return }
             const preview = result.value
             const panel = document.createElement("section")
@@ -307,7 +398,7 @@ function attach() {
               try {
                 const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ page: command.page, action: "apply-preview", version: 0, values: { previewRef: preview.previewRef } }) })
                 const result = await response.json()
-                if (!response.ok || !result?.ok || result.value?.applied !== true) { showResult(result, values); if (response.status === 409) panel.remove(); return }
+                if (!response.ok || !result?.ok || result.value?.applied !== true) { showResult(result, values, form); if (response.status === 409) panel.remove(); return }
                 if ((form.dataset.previewRevision || "0") !== revision) { panel.remove(); notice("The reviewed changes were saved. New edits remain unsaved; review them before applying."); return }
                 delete form.dataset.dirty
                 const dialog = form.closest("dialog")
@@ -325,8 +416,13 @@ function attach() {
           } finally { finish() }
           return
         }
-        const saved = await send(command)
+        const saved = await send(command, form)
         if (saved) {
+          if ((form.dataset.previewRevision || "0") !== revision) {
+            form.dataset.dirty = "true"
+            notice("The submitted changes were saved. New edits remain unsaved; review them before saving again.")
+            return
+          }
           delete form.dataset.dirty
           const dialog = form.closest("dialog")
           if (dialog) {
@@ -353,7 +449,7 @@ function attach() {
   }) })
 }
 function applyRefresh() {
-  if (!pending.html || document.querySelector("form[data-dirty], dialog[open]") || document.activeElement && document.activeElement.closest("form")) return
+  if (!pending.html || document.querySelector("form[data-dirty], dialog[open], [data-sf-retain-view]") || document.activeElement && document.activeElement.closest("form")) return
   const next = new DOMParser().parseFromString(pending.html, "text/html")
   const main = next.querySelector("main")
   if (!main) { pending.html = null; return }
@@ -390,7 +486,7 @@ const businessTimer = setInterval(() => { if (!document.hidden) void refresh(tru
 window.addEventListener("pagehide", () => { pending.closed = true; clearInterval(businessTimer); pending.controller?.abort() })
 window.addEventListener("beforeunload", (event) => { if (document.querySelector("form[data-dirty]")) { event.preventDefault(); event.returnValue = "" } })
 window.addEventListener("pageshow", (event) => { if (event.persisted) location.reload() })
-window.sucafinaRefresh = refresh
+window.sucafinaRefresh = async () => { pending.generation++; pending.html = null; await refresh() }
 document.addEventListener("focusout", () => setTimeout(applyRefresh, 0))
 attach()
 `
