@@ -1,0 +1,56 @@
+{
+  "schema": "sf2-mission37-authority-v1",
+  "mission": 37,
+  "actor": "S2-A",
+  "lease_epoch": "procurement-decision-browser37",
+  "state": "IN_PROGRESS",
+  "model_declared": "GPT-6 Astra Pro",
+  "backend_session_id": null,
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z",
+  "mission_source": "acd92cb0cb6a931bfb2a6d33ef13ae572334a209",
+  "source_head": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+  "source_tree": "9b18919a7bab9510dde3ead0176ed007ce13dd78",
+  "reconciliation": {
+    "observed_head_matches_expected": true,
+    "terminal24": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/HANDOFF.md",
+      "blob": "db119c0f9306619c47cf5258417c5ad961478231",
+      "authority_ended": true
+    },
+    "later_source_authority_observed": false,
+    "pr23_comments": 0,
+    "bundle_observed": "9b51c8ee132541ed837eac909611b70c1b991bc3",
+    "bundle_input_C9": "c1bd1c91b0e0d32db3074408e815e36107384073",
+    "Decisions31": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+    "C12_readonly": "8b7497a271c5afbd8604927f75b2a86a4f960bae"
+  },
+  "authority": "Explicit mission37 continuation after terminal24; root sole remote writer on existing astra-wp04/PR23; session33 sole integrator. Local helpers own disjoint source/test paths and do not publish remotely.",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts (new)",
+    "modules/sucafina/Sucafinav1/product/ui/procurement-alternatives.ts (new)",
+    "apps/cli/src/sucafina-product/procurement-scenario-services.ts (new)",
+    "modules/sucafina/Sucafinav1/test/product/procurement-decision-producer/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/"
+  ],
+  "read_closure": {
+    "root_AGENTS": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "START": "522782bb7e113124a937d7ef17313032be9d6850",
+    "WORKFLOW": "043205bee6031b4517a98591b3588fca0ab12925",
+    "COMMON": "d61f32af03fe10747a50274233f953af044decf6",
+    "S2_A_complete": "7327be5449328c356a0f5b242ddc9d2014175e41",
+    "method": "Root plus delegated sections read completely; all pack sections assigned without omission. Mandatory appendices read by helpers; actual code read before each edit."
+  },
+  "limits": {
+    "remote": "GitHub MCP CAS only; no force",
+    "tests": "Only existing surgical GitHub Actions protocol, deduplicated",
+    "local_product_tests": 0,
+    "shared_product_writes": 0,
+    "financial_policy_changes": 0,
+    "extra_apply": 0
+  }
+}
