@@ -9,7 +9,7 @@ import type { createSfBusinessServices } from "./business-services.ts"
  * selector stays at the original version, so fresh domain execution still refuses drift. */
 export function createSfAnalysisRunContext(input: {
   authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "human">
-  business: Pick<ReturnType<typeof createSfBusinessServices>, "withCase">
+  business: Pick<ReturnType<typeof createSfBusinessServices>, "withAnalysisCase">
   request: Request
   runRef: string
   caseRef: SfNativeRunRecord["caseRef"]
@@ -27,10 +27,15 @@ export function createSfAnalysisRunContext(input: {
     const call = admitted.value
     input.replayContexts.set(call, input.runRef)
     try {
-      const result = await input.business.withCase(call, selected, { allowHistoricalRetry: true }, () => action(call))
-      const current = await input.authority.human.authorize(call, "analysis.start", start)
-      return current && !input.request.signal.aborted && input.active() && input.authority.host.requestFor(call) === input.request &&
-        input.replayContexts.get(call) === input.runRef ? result : denied()
+      const current = () => !input.request.signal.aborted && input.active() && input.authority.host.requestFor(call) === input.request &&
+        input.replayContexts.get(call) === input.runRef
+      const result = await input.business.withAnalysisCase(call, selected, async () => {
+        const value = await action(call)
+        const authorized = await input.authority.human.authorize(call, "analysis.start", start)
+        return authorized && current() ? value : denied()
+      })
+      // Lifecycle membership is fenced after the final asynchronous intent check.
+      return current() ? result : denied()
     } finally {
       input.replayContexts.delete(call)
       input.authority.human.finish(call)

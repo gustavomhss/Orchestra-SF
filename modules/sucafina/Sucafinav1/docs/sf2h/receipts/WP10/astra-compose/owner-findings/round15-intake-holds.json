@@ -1,0 +1,407 @@
+{
+  "schema": "sf2-astra-bounded-intake-review-v1",
+  "candidate": {
+    "head": "9a475b5fb28655f1c4309cd3e68b6e4d76269a2e",
+    "tree": "2bedbc721d0b402b41c942b770c49bf36e6a9e0b"
+  },
+  "finance": {
+    "schema": "astra-finance-final-readonly-intake-v1",
+    "generated_at": "2026-11-14T13:33:02.329159+00:00",
+    "review": "READ_ONLY_STATIC_INTAKE_NOT_INDEPENDENT_GLOBAL_REVIEW",
+    "source": {
+      "pr": 35,
+      "head": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "tree": "052583ce35edbadd4b7ec68ffe021bb59e05a20f",
+      "previous_cut_head": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "base": "sf2-stack",
+      "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "metadata_cut": "2026-11-14T13:23–13:26Z",
+      "published_delta": {
+        "commits": 5,
+        "paths": 56,
+        "sources": 2,
+        "tests_helpers": 7,
+        "docs": 47
+      }
+    },
+    "compose": {
+      "head": "9a475b5fb28655f1c4309cd3e68b6e4d76269a2e",
+      "tree": "2bedbc721d0b402b41c942b770c49bf36e6a9e0b",
+      "catalog": "evidence/candidate-w14-catalogs/modules_sucafina.json"
+    },
+    "small_group": {
+      "decision": "STATICALLY_CLOSED_CANDIDATE_FOR_ROOT_INTAKE_NOT_QUALIFIED_GREEN",
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "owner_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+          "compose_blob": "e365ac59376482dfcc6f81aed045b0153f911038",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+          "owner_blob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+          "compose_blob": null,
+          "status": "new"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+          "owner_blob": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+          "compose_blob": null,
+          "status": "new"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+          "owner_blob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+          "compose_blob": null,
+          "status": "new"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+          "owner_blob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+          "compose_blob": null,
+          "status": "new"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+          "owner_blob": "75a2cbcd0c3907fc2d14f18f2b35f131331ecfb2",
+          "compose_blob": null,
+          "status": "new"
+        }
+      ],
+      "preconditions": [
+        "Consume only these six exact source-head blobs; retain the W10 restores and held renewal-choice/human/restart/coverage fixtures unchanged.",
+        "All direct relative imports outside these six files exist in the complete W14 module tree. The five new files are absent from that complete catalog; remote MCP reads confirmed source/operation/trace helpers absent at W14.",
+        "W14 LocalStore already supplies transactionAll, nested read scopes, poisoned root rejection after attempted nested writes and outstanding-reader checks (runtime/local-store.ts:81–94,163–197,263–265,277–292).",
+        "Planner port change is an exact extraction of existing authenticated actor construction into plannerSourceActor, without changing compareForecast behavior.",
+        "Before READY for this group, attach exact composed W/S surgical Actions evidence and package bun typecheck/required guards through the root CI protocol. No flight was started here."
+      ],
+      "coverage": "New regression sources cover two authenticated projections; static synthetic reference after real Planner edit; source/revalidation/authentication revocation races; scope/fields/digest/period mismatch; nonempty canonical operation checks; grouped alternative read-only state stability; swallowed nested-write rejection; fresh next-call observation; source callback revocation.",
+      "limits": [
+        "Five files support fixture admission; the production source change exports the same actor mapper. The existing composed Renewal consumers remain unchanged, so this isolated group does not claim to fix their timeout/performance pipeline.",
+        "Sources are explicitly synthetic declarations; Planner projections/CAS, SQLite and UI admission use real implementations. No native capture, physical replacement proof, financial completeness or C17/global acceptance is implied.",
+        "No product tests/typecheck/guards were executed locally or dispatched by this review."
+      ]
+    },
+    "held_group": {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "owner_blob": "38f82f4b931682e255a18d52856e192f2ee43390",
+      "compose_blob": "d19f735539df9b9b4fa637367f58fa0c0b674562",
+      "decision": "HOLD_FINAL_LEASE_FENCE_AND_UNCONSUMED_ANCESTRY",
+      "reason": "Full blob delta against W14 includes earlier reader/producer/binding validation and mandatory verifySources input; it is broader than the latest compare patch of +9/-3. The new read-fence regression is absent from W14 and alone does not qualify the broader current-choice lifecycle.",
+      "finding": {
+        "id": "FINANCE_CURRENT_CHOICE_FINAL_C08_LEASE",
+        "kind": "STATIC_OBSERVATION_GAP_NOT_EXECUTED_BYPASS",
+        "owner": "Finance / PR35",
+        "locations": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+            "lines": "114–123"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+            "lines": "28–38"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+            "lines": "125–131"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+            "lines": "54,91–120"
+          }
+        ],
+        "mechanism": "Last host.revalidate at line114 precedes preferences and final cases state.read. C08 read awaits authorize after its callback (state-provider line36). Production namespace authorization authenticates principal/grants but does not consult the private UI/native lease registry. Finishing the UI lease during the final C08 authorization can leave principal, authority, snapshots and un-aborted Request unchanged; current-choice line122 checks those only and line123 returns binding without checking live retained Request/lease. The comment that no callback follows the final fence does not cover the provider egress authorization.",
+        "test_gap": "The new reader test injects membership/preferences revocation at authorizeCase. Its C08 authorize explicitly calls ui.revalidate, unlike the production namespace authority composition. It does not end/replace the private lease during the last C08 authorize.",
+        "bounded_next_action": "Owner supplies a real-provider late ui.finish/request-replacement counterproof and final lease/Request identity protection while preserving the protected case/result/producer/binding fence. Do not simply append an unconstrained asynchronous callback after the data fence."
+      }
+    },
+    "check12_baseline": {
+      "run": 43597922666,
+      "S": "86d7fd4c195809305a7b4fa412adfb43e6c13b4e",
+      "diagnostics": 14,
+      "own_cli": 0,
+      "source": "evidence/check12-diagnostics.json",
+      "affected_by_this_delta": false,
+      "detail": "Diagnostics are sourcing-analysis/forecast-analysis export; WP04 procurement resolve shape plus case verifier; WP06 native import narrowing/arity; WP08/WP09/WP14 case verifier omissions; WP13 source projector. Neither new source fixes these consumers."
+    },
+    "source_receipts": {
+      "status": "PREDECESSOR_ONLY_NO_RESULT_TRANSFER",
+      "body_work_head": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+      "body_work_tree": "485a3ac2ac1322d03d7421a17eb1791153f11c1b",
+      "reported_not_reread_in_this_subreview": [
+        {
+          "name": "S22",
+          "run": 43597449806,
+          "S": "ef218e5c436f8518ee582232a820cd41048f8d3b",
+          "reported_result": "failure; 14 pass / 2 historical timeouts; 195 assertions"
+        },
+        {
+          "name": "S23",
+          "run": 43597452709,
+          "S": "bdc5494e612353cc5d80bd32353dc9df6e20f450",
+          "reported_result": "BI 1 pass / 86 assertions"
+        },
+        {
+          "name": "S24",
+          "run": 43597456215,
+          "S": "b791d889a6f14ea0b9f9ff2b950bf10da4fe5090",
+          "reported_result": "4 WP03 files; 7 pass / 247 assertions"
+        },
+        {
+          "name": "Check15",
+          "run": 43597458293,
+          "reported_result": "W32 package failure: 0 own / 131 foreign; guard report 0 errors"
+        }
+      ],
+      "current_head_proof": "Not established by this review; parent performs live run metadata reconciliation. PR title/draft/body and predecessor greens do not qualify 87e5164 or Compose W14."
+    },
+    "actions": {
+      "product_or_fixture_edits": false,
+      "remote_mutations": false,
+      "tests_or_ci": false,
+      "native_evidence_created": false,
+      "ready": false,
+      "global_release": false
+    },
+    "raw_sources": [
+      "incoming-cache/heads-final-readonly-compare-35.json",
+      "incoming-cache/heads-final-readonly-raw.json",
+      "incoming-cache/owner-final-compare-35.json",
+      "incoming-cache/round14-payload.json",
+      "incoming-cache/final-readonly-finance-source/"
+    ],
+    "next_owners": [
+      "Root Astra decides the isolated six-path intake and its eventual exact-SHA surgical qualification.",
+      "Finance addresses final C08 lease finding and supplies complete Renewal pipeline closure separately."
+    ]
+  },
+  "intelligence": {
+    "schema": "independent-readonly-intake.v1",
+    "reviewer": "/root/review_runtime_final",
+    "no_author_overlap": true,
+    "scope": "Leitura independente de intake PR36 contra ComposeW14; não altera nem substitui a revisão independente W14.",
+    "target": {
+      "head": "9a475b5fb28655f1c4309cd3e68b6e4d76269a2e",
+      "tree": "2bedbc721d0b402b41c942b770c49bf36e6a9e0b"
+    },
+    "source": {
+      "pr": 36,
+      "head": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "tree": "7c445488ea55c1c6d8d31cf91cb61b01665dac7b",
+      "parent": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+      "latest_delta_paths": 22
+    },
+    "verdict": "THREE_FILE_READER_GROUP_STATICALLY_COMPOSABLE; OTHER_REVIEWED_GROUPS_HOLD",
+    "consumed": false,
+    "execution": "Apenas leitura MCP por pins, comparação de texto e hashes locais. Nenhum produto/teste/typecheck/guard executado; nenhuma mutação remota, branch, produto, fixture ou CI.",
+    "path_prefix": "modules/sucafina/Sucafinav1/",
+    "recommended_group": {
+      "status": "CONSUMABLE_FOR_SCOPED_COMPOSITION_PENDING_EXACT_CANDIDATE_CI",
+      "files": [
+        {
+          "path": "product/ai/contribution-reader.ts",
+          "source_blob": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee",
+          "target_blob": "98ed7307c8970ecb35f2eedb8427b37dd9ceeb5d"
+        },
+        {
+          "path": "test/product/wp12/historical-reader.test.ts",
+          "source_blob": "27783a6de704414b263b056786eb25d84594ba75",
+          "target_blob": "5445b432c30e233e33d77dc950388f7aa5249985"
+        },
+        {
+          "path": "test/product/wp12/contribution-reader.test.ts",
+          "source_blob": "5ec69851b6f94dd20804ba1e69ea4178edf97204",
+          "target_blob": "d481eb6824b062da49d56e2608a51f90bbdb248c"
+        }
+      ],
+      "rationale": [
+        "O blob completo do produto contém endurecimento dos leitores corrente e histórico além do pequeno delta novo. As duas regressões publicadas pertencem ao grupo mínimo revisado; não recomendar apenas produto+histórico.",
+        "Sem novo import/API de produto. run-fixture.ts é idêntico na origem e no alvo. createSfRunStore/sfRunSourceFence, estado C08, persistência, canonical e provenance já existem no W14 exato.",
+        "O leitor histórico vincula id/incarnation/version do caso nativo e observa identidade logo após cases.read e contributions.read. Ambos os leitores preservam Request/context/binding/lease e seletores, conferem digests/provas após awaits e devolvem clones.",
+        "Regressões cobrem aliases mutáveis/ciclos/egress, troca de selector/binding/lease, revogação e isolamento das respostas. São fixtures sintéticas sobre C08/SQLite, não prova de provider ou host instalado."
+      ],
+      "limits": [
+        "Nenhum novo blocker estático identificado nesse grupo; não é aprovação funcional ou green do candidato composto.",
+        "Exige composição dos três blobs exatos e CI cirúrgica no novo W/S conforme CI.md, sem duplicar run equivalente.",
+        "Não depende de analysis-port novo, lifecycle/run-store novo, Atlas source-access, Portfolio sensitivity ou snapshots completos.",
+        "Não demonstra resolver os seis timeouts Planner/C17, grant final Atlas, provider C07, AM ou prova nativa."
+      ],
+      "verified_target_dependencies": {
+        "test/product/wp12/run-fixture.ts": "5d528e810ab79fb1e3beb571dcb216192d551e91",
+        "product/ai/run-store.ts": "a3c306b720fd7f82e32340682e5001b1e6f4ef8e",
+        "product/ai/run-provenance.ts": "b303ef7a4968ffb2cc2f51e6318e165a07ac3c73",
+        "product/host-binding/state-provider.ts": "2fd55c7304add0829d7434917c80664fe86356b9",
+        "test/fixture/persistence.ts": "b33c8f41fb719266e6100e8dc307c53ec66cdcff",
+        "runtime/local-store.ts": "b753e3ffbfcdc06de373388845c686afac26dec8",
+        "product/contracts/canonical.ts": "1769271386cdda1017c38023b0988ce2d64423d2",
+        "product/contracts/schema-admission.ts": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+        "product/contracts/ports.ts": "88b6efb4840b8731f707862a8baf14683526c7a9",
+        "product/contracts/state.ts": "755639b2a16265fe164ba2e6343738c1362d168c",
+        "product/contracts/sf-execution.ts": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+        "product/contracts/resident-ai.ts": "38e3d664f4dedb56f3e614bde41d51548e44f805",
+        "product/contracts/decisions.ts": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+      }
+    },
+    "holds": [
+      {
+        "id": "PR36-48486-ANALYSIS-LIFECYCLE-CLOSURE",
+        "owner": "PR36 / WP12",
+        "path": "product/ai/analysis-port.ts",
+        "source_blob": "f1127503cf3d25a44d76c766d6d52fcd3c41bd1d",
+        "status": "HOLD",
+        "finding": "Importa observeSfStaleRun e SfStaleRunObservation, ausentes no run-store W14 a3c306b720fd7f82e32340682e5001b1e6f4ef8e confirmado via MCP. O delta não remove a dependência de lifecycle mais novo.",
+        "next_action": "Owner fornecer closure seletiva completa compatível; não ampliar run-store por conveniência."
+      },
+      {
+        "id": "PR36-48486-ATLAS-FINAL-CANDIDATE-GRANT",
+        "owner": "PR36 / WP14",
+        "path": "product/decision-memory/source-access.ts",
+        "source_blob": "e4e648feecb4e12ace3da41e1b91c45b527c7247",
+        "target_blob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+        "status": "HOLD_PREVIOUS_FINDING_UNCHANGED",
+        "finding": "Fonte mais nova conserva exatamente o produtor e4e648fe já retido; source-access nem integra os 22 paths novos. Grant do candidato B é observado antes do último await de evidence; revalidação final do caller/current A não substitui a observação final de B.",
+        "counterproof_required": "Revogar grant de B durante o último await mantendo caller A, Request e host ainda válidos; exigir negação final sem efeito ou reuso de autoridade anterior.",
+        "limits": "Contraprova estática; nenhuma execução. Esse blob da origem não está no W14: não atribuir sua janela ao produtor W14.",
+        "next_action": "Owner corrigir e publicar produtor+regressão final; não reutilizar green de outro SHA ou suite como prova do grant ausente."
+      },
+      {
+        "id": "PR36-48486-SENSITIVITY-LAST-OPERATION-AWAIT",
+        "owner": "PR36 / WP13",
+        "path": "product/portfolio/sensitivity-store.ts",
+        "source_blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+        "target_blob": "4919ebc3367bb388974839382ff220a94667ad21",
+        "status": "HOLD",
+        "finding": "Retry conclui current = await read(...) na linha 80, depois await sameOperation() na 83 e retorna current na 84 apenas com sameAuthority síncrono. Caminho normal repete read na 108, await na 110 e retorno na 111. sameOperation linha 66 compara chave e identidade de binding/lease; não reobserva caso/fonte depois desse último await.",
+        "counterproof_required": "Pausar idempotencyKey após o bound read final; revogar participante do caso ou alterar fonte real C08 mantendo Request, chave, lease, principal/policy/access. Ao liberar callback com a mesma chave, exigir negação/reprova final em vez de retornar current anterior.",
+        "test_gap": "Regressão source 674fae533af967f87e49a5a79d25ac1a6a925e3a cobre identidade/binding/lease, mutation e key change, mas não case/source revocation durante o último idempotencyKey. Revogação UI publicada ocorre antes do bound read.",
+        "supporting_adapter": "portfolio-services.ts composto 83c525e733b2cb21637734e3b1e07950e72f4f97, linhas 52–54: callback de chave await authority.host.revalidate(call). Revalidação global não comprova participante/fonte física após o await.",
+        "limits": "Finding por análise estática, não vulnerabilidade reproduzida ou execução de produto.",
+        "next_action": "Owner fechar janela final e publicar contraprova precisa; não consumir store/retry pelo ganho de custo."
+      },
+      {
+        "id": "PR36-48486-THRESHOLD-VERIFICATION-API-CLOSURE",
+        "owner": "PR36 / WP13",
+        "status": "HOLD",
+        "source_blobs": {
+          "product/portfolio/threshold-proof.ts": "89ba60857babe8a5c80f409de39b7e0598695b96",
+          "product/portfolio/verification.ts": "b2ac17f210886353d3596fc6a891242c7ea40f0a",
+          "test/product/wp13/threshold-recertification.test.ts": "42ddb74c93873d0dec1e9d255ba90a2ae71cab7d",
+          "test/product/wp13/sensitivity-fixture.ts": "5b868fdcb3cc9371a6592b000f33ba0b357329c5"
+        },
+        "findings": [
+          "verification.ts linha 44 indexa Parameters<typeof createPlannerSensitivity>[0][coveragePreview], ausente na declaração de entrada W14 (planner-sensitivity.ts 604d2a7806dcd7594e03207bf3011d6c1dc801b8, linhas 39–46).",
+          "verification.ts linha 178 fornece verifyCoverageQualification ao evaluator; SensitivityHost W14 (sensitivity.ts 6c08aae11dd559553d5f9274d1aa5750686ff8fc, linhas 12–17) não declara esse membro. O blob completo traz anteriores caminhos coveragePreview além do pequeno delta recente.",
+          "Regressão nova importa createWp13SensitivityRuntimeFixture, ausente na fixture W14 ab00e903d0d263fddaf7aa481c201627b9835b1d. Fixture source também refatora setup, exports, comparação eager, seed e campos retornados; não há closure de apenas proof+teste."
+        ],
+        "available_shared_dependencies": {
+          "product/planner/interval-proof.ts": "55a701b7be49fb3f550a0b52b580e6f7dc819b31",
+          "product/decisions/coverage-interval.ts": "351aa6cf8702c759da3c35cbf531f355d04ba742",
+          "product/planner/stored-scenarios.ts": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+          "product/planner/sensitivity-units.ts": "1673c86995cf71b61e288d91492ae7b691934171"
+        },
+        "limits": "Ausências verificadas no conteúdo remoto exato; não inferidas de worktree sparse. Não se recomenda ampliar a closure a todas as fontes WP13.",
+        "next_action": "Owner fornecer grupo completo compatível e regressões publicadas; proof isolado sem sua regressão compatível não é o grupo recomendado."
+      }
+    ],
+    "ci_and_global_limits": {
+      "claims": "Nenhum resultado de CI é prova deste grupo ainda não composto. Não transferir green de source WP14 nem resultado CI7 de ComposeW14 para o futuro W/S.",
+      "unchanged": "Revisão W14 permanece CHANGES_REQUIRED; oito seleções finais, AM01–AM06, três revisões aceitas, C/G7 e D/G8 preservados. D/G8 NOT_QUALIFIED; nenhum native witness ou GLOBAL_RELEASE.",
+      "grant_and_cost": "Nenhum delta revisado resolve comprovadamente grant final C17 ou os seis timeouts Planner/calculations."
+    },
+    "preserved_reports": [
+      {
+        "path": "independent-review-staging/runtime-authority/final-9a475b5fb286.json",
+        "sha256": "ae32cf6c6646c8bf769cb493f2a7f1572e0aa638497da32030db5034f97347c2"
+      },
+      {
+        "path": "independent-review-staging/runtime-authority/final-9a475b5fb286.md",
+        "sha256": "9550ddb1f8835f09e36ef8a9054e7a9deb032f6b8412bf4785c21378878161cd"
+      },
+      {
+        "path": "independent-review-staging/runtime-authority/final-9a475b5fb286-identity.json",
+        "sha256": "1e98f85a6ef1b28e171003279b7d2a96f5a7fa826da845e583121313742b095f"
+      }
+    ],
+    "evidence": [
+      "incoming-cache/heads-final-readonly-compare-36.json",
+      "incoming-cache/heads-final-readonly-raw.json",
+      "incoming-cache/owner-final-compare-36.json",
+      "independent-review-staging/runtime-authority/pr36-48486-head.json",
+      "independent-review-staging/runtime-authority/pr36-48486-reads.json",
+      "independent-review-staging/runtime-authority/pr36-48486-dependencies.json",
+      "independent-review-staging/runtime-authority/pr36-48486-target-dependencies.json",
+      "independent-review-staging/runtime-authority/pr36-48486-extra-dependencies.json",
+      "independent-review-staging/runtime-authority/pr36-48486/verified-blobs.json"
+    ]
+  },
+  "forwarded": [
+    {
+      "pr": 35,
+      "finding": "FINANCE_CURRENT_CHOICE_FINAL_C08_LEASE",
+      "result": {
+        "id": 6878061695
+      }
+    },
+    {
+      "pr": 36,
+      "finding": "PR36-48486-SENSITIVITY-LAST-OPERATION-AWAIT",
+      "result": {
+        "id": 6878061890
+      }
+    },
+    {
+      "pr": 33,
+      "finding": "WP07_CHROME_TRANSPORT_CI7_BI_RETURN",
+      "result": {
+        "id": 6878062059
+      }
+    }
+  ],
+  "own_decisions": [
+    {
+      "group": "BI fixture refinement",
+      "status": "ACCEPT_OWN_CHANGE_PENDING_EXACT_ACTIONS",
+      "manifest_sha256": "f1c0bcd07a1c388852b23fdeb1e20db94a6a1e54204739a2e5716ef5c5871936",
+      "limit": "No asserted runtime fix until CI8; no canonical shell or WP07 source changed."
+    },
+    {
+      "group": "Analysis lifecycle-only admission",
+      "status": "ACCEPT_REVIEWED_V2_PENDING_EXACT_ACTIONS",
+      "author": "/root/c17_timeout_diagnosis",
+      "independent_preintake_reviewer": "/root/review_runtime_final",
+      "manifest_sha256": "8ef7488763059edab7139e7799f2f1fdc456417b7e358c0e0723668cd99ff410",
+      "patch_sha256": "bada9a473b9ce7cf113be334e21bbb1120cc7d273c77c3ee08f971180bf9b6fc",
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "baseBlob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+          "newFile": false,
+          "proposedBlob": "b3595989d0c08159c96484d96bd40a149a9721e6",
+          "sha256": "87f1c486e6e37f7a928cc5473c1a727611b4267d4261fef1e83b4f3260addf9f",
+          "proposedPath": "/workspace/scratch/4c48b09c5c29/evidence/ci7-stale-reentry-proposal/proposed/apps/cli/src/sucafina-product/business-services.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+          "baseBlob": "5b0f9e394f433bc904724019678d08555078dc0b",
+          "newFile": false,
+          "proposedBlob": "70ff3cd88d5f8ae2137c17a3750f72d94f3d969e",
+          "sha256": "bde93af7e7b0fe3062644104861afb2687bbdcf24b5065dc6b36e962a8af8d07",
+          "proposedPath": "/workspace/scratch/4c48b09c5c29/evidence/ci7-stale-reentry-proposal/proposed/apps/cli/src/sucafina-product/analysis-run-context.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts",
+          "baseBlob": null,
+          "newFile": true,
+          "proposedBlob": "d4f8162b24dd9c4e97aff176e2dc4410b079271a",
+          "sha256": "dd1cdc50535356eb80709a63db50badb3c65edc8c6d730887e4d4f980204c5c4",
+          "proposedPath": "/workspace/scratch/4c48b09c5c29/evidence/ci7-stale-reentry-proposal/proposed/modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts"
+        }
+      ],
+      "v1": "HOLD: asynchronous authorization followed case observation; never applied. V2 puts human authorization before final C08 and compares held snapshot synchronously.",
+      "limit": "Static composability only, no claim that two or six timeouts have passed. Root/author do not count as independent reviewers."
+    }
+  ],
+  "retained": "W12 Atlas and W13 Finance comparison fixture restores, W14 six consumed owner blobs, original source/contract authority and frozen rev10 are preserved. No held branch snapshot or custom foreign hunk is imported.",
+  "local_product_execution": false
+}

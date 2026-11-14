@@ -181,7 +181,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const dashboardDecisions = createSfDashboardDecisions({ authority: input.authority, cases, records: dashboardRecords, issue: dashboardServices.issue,
     proposalCoverageWrites: input.proposalCoverageWrites, dashboardHostWrites })
   type CaseRef = { id: string; incarnation: string; version: number }
-  type CaseScope = { selected: CaseRef; request: Request; bindingDigest: string; retainers: number }
+  type CaseScope = { selected: CaseRef; request: Request; bindingDigest: string; retainers: number; lifecycleOnly?: true }
   const caseBindings = new WeakMap<TrustedDomainContext, CaseScope>()
   const callBindingDigest = (call: TrustedDomainContext) => digestSfValue([call.kind, call.binding])
   const currentCaseAuthority = (call: TrustedDomainContext, request: Request, bindingDigest: string) =>
@@ -194,6 +194,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   // It proves current C08 membership and identity; each producer still authorizes its sources.
   const selectedCase = async (call: TrustedDomainContext): Promise<PortResult<CaseRef>> => {
     const scope = caseBindings.get(call)
+    if (scope?.lifecycleOnly) return { status: "unavailable", reason: "case-selection-unavailable" }
     const selected = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : scope?.selected
     const request = host.requestFor(call)
     const binding = callBindingDigest(call)
@@ -213,6 +214,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       ? { status: "ok", value: captured } : { status: "unavailable", reason: "case-selection-unavailable" }
   }
   const resolveCase = async (call: TrustedDomainContext): Promise<PortResult<CaseRef>> => {
+    if (caseBindings.get(call)?.lifecycleOnly) return { status: "unavailable", reason: "case-selection-unavailable" }
     const selected = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : caseBindings.get(call)?.selected
     if (!selected) return { status: "unavailable", reason: "case-selection-unavailable" }
     const current = await cases.read({ caseRef: encodeCaseRef(selected) }, call)
@@ -231,11 +233,62 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     caseBindings.set(call, scope)
     try { return await action() } finally { releaseCaseScope(call, scope) }
   }
+  // Analysis lifecycle admission returns no case projection or source grant.
+  // A superseded selection remains read-only; each lifecycle reader and stale
+  // publication still owns its actual C08/C17 source and commit authorization.
+  const withAnalysisCase = async <T>(call: TrustedDomainContext, selected: CaseRef, action: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
+    const request = host.requestFor(call), binding = callBindingDigest(call), captured = structuredClone(selected)
+    const selectionDigest = digestSfValue(captured)
+    const denied = (): PortResult<T> => ({ status: "denied", reason: "case-selection-unavailable" })
+    const current = () => !!request && currentCaseAuthority(call, request, binding) && digestSfValue(selected) === selectionDigest
+    if (call.kind !== "ui" || !request || caseBindings.has(call) || !Number.isSafeInteger(captured.version) || captured.version < 1 ||
+      !captured.id.trim() || !captured.incarnation.trim() || !current()) return denied()
+    const read = async () => {
+      try {
+        if (!current() || !await host.revalidate(call) || !current()) return undefined
+        // Hold the real dashboard snapshot through C08's post-callback authorize.
+        // Namespace/actor authorization still comes from C08; the synchronous
+        // comparison below only fences the case observed by that authorization.
+        return await input.persistence.transaction<CaseRef | undefined>("dashboard", async (snapshot) => {
+          const found = await input.authority.state.read(request, "cases", (stored, actor) => {
+            const decision = stored.cases[captured.id]
+            return actor.principalRef === call.binding.principalRef && actor.policyVersion === call.binding.policyVersion &&
+              actor.accessRevision === call.binding.accessRevision && decision?.id === captured.id && decision.incarnation === captured.incarnation &&
+              Number.isSafeInteger(decision.version) && decision.version >= captured.version && decision.participants.includes(actor.principalRef)
+              ? { selected: { id: decision.id, incarnation: decision.incarnation, version: decision.version }, caseDigest: digestSfValue(decision),
+                incarnation: stored.incarnation, revision: stored.revision, casesVersion: stored.versions.cases } : undefined
+          })
+          if (found.status !== "ok" || !found.value || !current()) return { commit: false, value: undefined }
+          // No asynchronous authority boundary follows this observation.
+          const stored = object(snapshot.data.__sfProductV1), decision = object(object(stored.cases)[captured.id])
+          const sameCase = stored.incarnation === found.value.incarnation && stored.revision === found.value.revision &&
+            object(stored.versions).cases === found.value.casesVersion && digestSfValue(decision) === found.value.caseDigest &&
+            decision.id === captured.id && decision.incarnation === captured.incarnation && decision.version === found.value.selected.version &&
+            Array.isArray(decision.participants) && decision.participants.includes(call.binding.principalRef)
+          return { commit: false, value: sameCase && current() ? found.value.selected : undefined }
+        }, { signal: request.signal })
+      } catch { return undefined }
+    }
+    const first = await read()
+    if (!first || caseBindings.has(call)) return denied()
+    // Current-case execution retains the complete original projection path.
+    if (first.version === captured.version) return withCase(call, captured, {}, action)
+    const second = await read()
+    if (!second || digestSfValue(second) !== digestSfValue(first) || !current() || caseBindings.has(call)) return denied()
+    const scope: CaseScope = { selected: captured, request, bindingDigest: binding, retainers: 1, lifecycleOnly: true }
+    caseBindings.set(call, scope)
+    try {
+      const result = await action()
+      const final = await read()
+      return final && current() && caseBindings.get(call) === scope ? result : denied()
+    } finally { releaseCaseScope(call, scope) }
+  }
   // This private entry receives a case from authenticated calculation stores
   // or the recall's current C08 selection. Avoid cases.read: that projection
   // can itself cite the calculation currently being resolved by the BCS.
   const withCalculationCase = async <T>(call: TrustedDomainContext, selected: CaseRef, work: () => Promise<PortResult<T>>,
     egress?: (result: PortResult<T>) => Promise<PortResult<T>>): Promise<PortResult<T>> => {
+    if (caseBindings.get(call)?.lifecycleOnly) return { status: "denied", reason: "calculation-case-scope-mismatch" }
     const source = host.requestFor(call)
     const binding = callBindingDigest(call)
     const captured = structuredClone(selected)
@@ -260,7 +313,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
         scope = caseBindings.get(call)
       }
       if (scope) {
-        if (scope.request !== source || scope.bindingDigest !== binding || digestSfValue(scope.selected) !== selectedDigest)
+        if (scope.lifecycleOnly || scope.request !== source || scope.bindingDigest !== binding || digestSfValue(scope.selected) !== selectedDigest)
           return { status: "denied", reason: "calculation-case-scope-mismatch" }
         scope.retainers++
       } else {
@@ -558,7 +611,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       return current.status === "ok" && digestSfValue(stable(current.value)) === digestSfValue(stable(material)) && await host.revalidate(call)
     },
   }) }
-  return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
+  return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, withAnalysisCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
     projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain,
     bindForecastCoverage: (reader: PlannerSourceHost["resolveForecastCoverage"]) => {
       if (forecastCoverage.current && forecastCoverage.current !== reader) throw new Error("SF_FORECAST_COVERAGE_ALREADY_BOUND")

@@ -1,0 +1,70 @@
+{
+  "schema": "sf2-ci7-stale-reentry-proposal-v2",
+  "finding": "CI7-WP10-STALE-LIFECYCLE-ADMISSION-01",
+  "state": "PROPOSED_NOT_APPLIED_NOT_TESTED",
+  "baseHead": "9a475b5fb28655f1c4309cd3e68b6e4d76269a2e",
+  "baseTree": "2bedbc721d0b402b41c942b770c49bf36e6a9e0b",
+  "run": 43598770529,
+  "testJob": 132458824188,
+  "S": "be9c1606e8a4bc0a3fe52814cd2089aabc284bc7",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "baseBlob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+      "newFile": false,
+      "proposedBlob": "b3595989d0c08159c96484d96bd40a149a9721e6",
+      "sha256": "87f1c486e6e37f7a928cc5473c1a727611b4267d4261fef1e83b4f3260addf9f",
+      "proposedPath": "/workspace/scratch/4c48b09c5c29/evidence/ci7-stale-reentry-proposal/proposed/apps/cli/src/sucafina-product/business-services.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+      "baseBlob": "5b0f9e394f433bc904724019678d08555078dc0b",
+      "newFile": false,
+      "proposedBlob": "70ff3cd88d5f8ae2137c17a3750f72d94f3d969e",
+      "sha256": "bde93af7e7b0fe3062644104861afb2687bbdcf24b5065dc6b36e962a8af8d07",
+      "proposedPath": "/workspace/scratch/4c48b09c5c29/evidence/ci7-stale-reentry-proposal/proposed/apps/cli/src/sucafina-product/analysis-run-context.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts",
+      "baseBlob": null,
+      "newFile": true,
+      "proposedBlob": "d4f8162b24dd9c4e97aff176e2dc4410b079271a",
+      "sha256": "dd1cdc50535356eb80709a63db50badb3c65edc8c6d730887e4d4f980204c5c4",
+      "proposedPath": "/workspace/scratch/4c48b09c5c29/evidence/ci7-stale-reentry-proposal/proposed/modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts"
+    }
+  ],
+  "changes": [
+    "Use separate analysis lifecycle admission only when the physical case has already advanced.",
+    "Keep strict complete withCase projection for current-case execution.",
+    "Admit stale lifecycle through two current C08 case/namespace/actor/Request/binding reads and recheck on exit.",
+    "Hold the dashboard snapshot through C08 post-callback authorization and compare it synchronously afterward. Move final human authorization into the callback protected by that final case fence.",
+    "Keep original selection marked lifecycleOnly so selectedCase/resolveCase and nested current calculation selection remain unavailable, including post-await joins.",
+    "Preserve every C17 historical read, source fence, snapshot comparison, private lease and commit check."
+  ],
+  "counterproofs": {
+    "literalTestCount": 3,
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts",
+    "executed": false,
+    "provider": "Real human/UI admission, C08 state provider and SQLite via existing financialCompositionFixture.",
+    "cases": [
+      "Analysis lifecycle admission keeps strict fresh projection and refuses fresh work after stale case rollback or changed selection",
+      "Analysis lifecycle egress refuses membership revoked during the final real human authorization",
+      "Analysis lifecycle admission and egress reject snapshot mutation or finished lease after C08 projection"
+    ],
+    "faults": [
+      "Actual membership removal committed through C08 after the final human authorization; no nested write under the final observation lock.",
+      "Held outer snapshot deliberately changed after C08 projection and before the actual post-callback authorize; commit:false rollback explicitly checked.",
+      "Actual admitted UI lease finished at the same C08 boundary with unchanged binding, live un-aborted Request and actor/namespace authorization still ok. Admission callback must not run; egress result must be denied."
+    ],
+    "deadlines": "Each new case uses unchanged compositionTestDeadline default105000ms and Bun120000ms; all existing scenario deadlines unchanged."
+  },
+  "limitations": [
+    "Prototype for root assessment, not an applied fix.",
+    "No product/test/typecheck/guard/CI execution.",
+    "C08 lifecycle metadata admission is narrower than evidence projection; consumers must retain actual source authorization.",
+    "No independent-review credit, native AM proof or READY."
+  ],
+  "worktreeChanged": false,
+  "producerFilesChanged": false,
+  "patchSha256": "bada9a473b9ce7cf113be334e21bbb1120cc7d273c77c3ee08f971180bf9b6fc"
+}

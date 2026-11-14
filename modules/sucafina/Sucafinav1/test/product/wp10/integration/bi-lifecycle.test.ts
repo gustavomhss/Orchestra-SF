@@ -244,6 +244,14 @@ async function prepareBiLifecycle(deadline: ReturnType<typeof compositionTestDea
   }
 }
 
+async function closeBiLifecycle(deadline: ReturnType<typeof compositionTestDeadline>, failures: unknown[]) {
+  // Cleanup is still mandatory and still fails the test. Preserve a preceding
+  // action/assertion failure instead of replacing it with the finally error.
+  try { await deadline.close() } catch (error) { failures.push(error) }
+  if (failures.length === 1) throw failures[0]
+  if (failures.length) throw new AggregateError(failures, "BI lifecycle body and cleanup failed")
+}
+
 test("BI keeps the canonical shell, refreshes on manual focus and timer, and signs out once while discarding a held genuine success", async () => {
   const deadline = compositionTestDeadline("bi-lifecycle-controls")
   try {
@@ -291,12 +299,24 @@ test("BI keeps the canonical shell, refreshes on manual focus and timer, and sig
 
 test("the canonical shell still polls authority while BI awaits a held result and revocation prevents every late render", async () => {
   const deadline = compositionTestDeadline("bi-lifecycle-authority")
+  const failures: unknown[] = []
   try {
     const world = await deadline.phase("browser.setup", () => prepareBiLifecycle(deadline))
     const { page } = world
-    // Keep the BI read's own 30s deadline after the shell's first interval.
-    // The clock stays paused while real HTTP work completes.
+    // Observe an actual completed interval before using its next 30s window.
+    // The initial document's timer origin is not inferred from clock.install.
+    const [anchorShell, anchorData] = await deadline.phase("interval-anchor.http", () => Promise.all([
+      page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi"),
+      page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data"),
+      deadline.phase("interval-anchor.tick", () => page.clock.runFor(30_000)),
+    ]))
+    expect(anchorShell.status()).toBe(200)
+    expect(anchorData.status()).toBe(200)
+    await deadline.phase("interval-anchor.dom", () => page.getByText("Dados atualizados.", { exact: true }).waitFor())
+    // Start the held read one second into that interval. Its original 30s
+    // deadline must still be in the future when the shell observes revocation.
     await page.clock.runFor(1000)
+    const heldReadAt = await page.evaluate(() => performance.now())
     const success = world.holdNext("bi-data")
     await page.getByRole("button", { name: "Atualizar visualização", exact: true }).click()
     expect((await deadline.phase("hold-real-data", () => success.reached.promise)).status).toBe(200)
@@ -309,8 +329,13 @@ test("the canonical shell still polls authority while BI awaits a held result an
       headers: { origin: world.origin, cookie: cookies.map((cookie) => `${cookie.name}=${cookie.value}`).join("; ") }, redirect: "manual" })
     expect(revoked.status).toBe(204)
     expect(world.aborted).not.toContain("bi-data")
-    await page.clock.runFor(29_000)
-    await page.locator("[data-access-unavailable]").waitFor()
+    const [shell] = await deadline.phase("revoked-shell.http", () => Promise.all([
+      page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi"),
+      deadline.phase("revoked-shell.tick", () => page.clock.runFor(29_000)),
+    ]))
+    expect(shell.status()).toBe(403)
+    expect(await page.evaluate((started) => performance.now() - started, heldReadAt)).toBeLessThan(30_000)
+    await deadline.phase("revoked-shell.dom", () => page.locator("[data-access-unavailable]").waitFor())
     expect(world.count("bi")).toBeGreaterThan(beforeShell)
     expect(world.observations.some((entry) => entry.mode === "bi" && entry.status === 403)).toBe(true)
     expect(await page.locator("[data-sf-bi]").count()).toBe(0)
@@ -324,7 +349,10 @@ test("the canonical shell still polls authority while BI awaits a held result an
     await page.clock.runFor(60_000)
     expect(world.observations.length).toBe(after)
     expect(world.failures).toEqual([])
-  } finally { await deadline.close() }
+  } catch (error) {
+    failures.push(error)
+    console.error("SF_BI_LIFECYCLE_BODY_FAILURE", { fixture: "bi-lifecycle-authority", error })
+  } finally { await closeBiLifecycle(deadline, failures) }
 }, 120_000)
 
 test("clearing the BI selection while genuine authorized options are delayed prevents restoration of the previous selection", async () => {
@@ -353,37 +381,53 @@ test("clearing the BI selection while genuine authorized options are delayed pre
 
 test("BI returns from a real source with the same human filters, version pair, currency and mark focus after current reauthorization", async () => {
   const deadline = compositionTestDeadline("bi-return-context")
+  const failures: unknown[] = []
   try {
     const world = await deadline.phase("browser.setup", () => prepareBiLifecycle(deadline))
     const { page } = world
-    await page.getByLabel("Visualização", { exact: true }).selectOption("BI02")
+    // This case proves navigation and current reauthorization, not timer order.
+    // Let document loading, animation frames and history restoration run normally.
+    await deadline.phase("navigation-clock.resume", () => page.clock.resume())
+    await deadline.phase("filters.view", () => page.getByLabel("Visualização", { exact: true }).selectOption("BI02"))
     await page.waitForFunction(() => [...(document.querySelector('select[aria-label="Versão base"]') as HTMLSelectElement).options].filter((item) => item.value).length === 2)
     await page.getByLabel("Fim", { exact: true }).fill("2026-03-31")
-    await page.getByLabel("Fim", { exact: true }).dispatchEvent("change")
+    await deadline.phase("filters.period", () => page.getByLabel("Fim", { exact: true }).dispatchEvent("change"))
     await page.waitForFunction(() => [...(document.querySelector('select[aria-label="Versão base"]') as HTMLSelectElement).options].filter((item) => item.value).length === 2)
     await page.getByLabel("Dados para visualizar", { exact: true }).selectOption("planner")
     const versions = await page.getByLabel("Versão base", { exact: true }).locator("option").evaluateAll((options) => options.map((option) => (option as HTMLOptionElement).value).filter(Boolean))
     await page.getByLabel("Versão base", { exact: true }).selectOption(versions[0]!)
     await page.getByLabel("Versão candidata", { exact: true }).selectOption(versions[1]!)
     await page.getByLabel("Moeda da comparação", { exact: true }).fill("USD")
-    const data = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data")
-    await page.getByRole("button", { name: "Atualizar visualização", exact: true }).click()
-    expect((await data).status()).toBe(200)
-    await page.getByText("Dados atualizados.", { exact: true }).waitFor()
+    const [data] = await deadline.phase("comparison.http", () => Promise.all([
+      page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data"),
+      page.getByRole("button", { name: "Atualizar visualização", exact: true }).click(),
+    ]))
+    expect(data.status()).toBe(200)
+    await deadline.phase("comparison.dom", () => page.getByText("Dados atualizados.", { exact: true }).waitFor())
     const marker = page.locator("[data-sf-bi] table button[data-bi-origin]").first()
     const valueId = await marker.getAttribute("data-bi-focus")
     expect(valueId).toBeTruthy()
-    const source = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-source")
-    await marker.click()
-    expect((await source).status()).toBe(200)
+    const [source] = await deadline.phase("source.http", () => Promise.all([
+      page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-source"),
+      marker.click(),
+    ]))
+    expect(source.status()).toBe(200)
     const saved = await page.evaluate(() => history.state.sfExtendedBi)
     expect(saved).toMatchObject({ viewId: "BI02", start: "2026-01-01", end: "2026-03-31", selection: "planner", baseline: versions[0], candidate: versions[1], currency: "USD", focus: valueId, ready: true })
-    await page.getByRole("navigation", { name: "Origens autorizadas do valor", exact: true }).locator("a").first().click()
-    await page.waitForURL((url) => url.pathname === `${world.mount}/planner`)
+    await deadline.phase("source.navigation", () => Promise.all([
+      // Keep the original navigation deadline and readiness check. The click
+      // owns actionability; this explicit waiter owns the resulting navigation.
+      page.waitForURL((url) => url.pathname === `${world.mount}/planner`),
+      page.getByRole("navigation", { name: "Origens autorizadas do valor", exact: true }).locator("a").first().click({ noWaitAfter: true }),
+    ]))
     expect(await page.locator("[data-sf-bi]").count()).toBe(0)
     const beforeReturn = world.count("bi-data")
-    await page.goBack({ waitUntil: "domcontentloaded" })
-    await page.getByText("Dados atualizados.", { exact: true }).waitFor()
+    const [returned] = await deadline.phase("return.http", () => Promise.all([
+      page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data"),
+      deadline.phase("return.navigation", () => page.goBack({ waitUntil: "domcontentloaded" })),
+    ]))
+    expect(returned.status()).toBe(200)
+    await deadline.phase("return.dom", () => page.getByText("Dados atualizados.", { exact: true }).waitFor())
     expect(world.count("bi-data")).toBeGreaterThan(beforeReturn)
     expect(await page.getByLabel("Visualização", { exact: true }).inputValue()).toBe("BI02")
     expect(await page.getByLabel("Fim", { exact: true }).inputValue()).toBe("2026-03-31")
@@ -393,7 +437,10 @@ test("BI returns from a real source with the same human filters, version pair, c
     expect(await page.getByLabel("Moeda da comparação", { exact: true }).inputValue()).toBe("USD")
     expect(await page.evaluate(() => document.activeElement?.getAttribute("data-bi-focus"))).toBe(valueId)
     expect(world.failures).toEqual([])
-  } finally { await deadline.close() }
+  } catch (error) {
+    failures.push(error)
+    console.error("SF_BI_LIFECYCLE_BODY_FAILURE", { fixture: "bi-return-context", error })
+  } finally { await closeBiLifecycle(deadline, failures) }
 }, 120_000)
 
 test("BI origin digests select only an explicit source of the real current Planner difference and never choose A or B implicitly", async () => {
