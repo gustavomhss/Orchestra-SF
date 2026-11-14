@@ -1,0 +1,1376 @@
+--- a/modules/sucafina/Sucafinav1/runtime/local-store.ts
++++ b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+@@ -78,6 +78,30 @@
+     initial.close()
+   }
+ 
++  // This is a memo of the pure v1 decoder, not of a transaction or authority.
++  // Every caller still observes SQL under the existing lock. Only immutable
++  // strings survive requests; each demanded surface gets a fresh object graph.
++  const materializations = new Map<Surface, SnapshotMaterialization>()
++  const observeSnapshot = (surface: Surface, payload?: string): (() => Snapshot) => {
++    const prior = materializations.get(surface)
++    if (payload !== undefined && prior?.payload === payload) return () => materializeSnapshot(prior)
++    materializations.delete(surface)
++    if (payload === undefined) return () => ({ data: {}, versions: {}, sequences: {}, audit: [], notices: [] })
++    const snapshot = decodeSnapshot(payload)
++    const plan = planSnapshotMaterialization(snapshot, payload)
++    if (plan) {
++      const retained = { units: [...materializations.values()].reduce((sum, entry) => sum + entry.units, 0) }
++      for (const [name, entry] of materializations) {
++        if (retained.units + plan.units <= SNAPSHOT_MATERIALIZATION_UNITS && materializations.size < 3) break
++        materializations.delete(name)
++        retained.units -= entry.units
++      }
++      materializations.set(surface, plan)
++    }
++    return () => snapshot
++  }
++  const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload)()
++
+   type ReadScope = {
+     root: { db: Database; snapshots: Partial<Record<Surface, Snapshot>>; poisoned: boolean; readers: number }
+     parent?: ReadScope
+@@ -170,7 +194,7 @@
+         const staged = parent.root.snapshots[surface]
+         const row = staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+         const snapshot = staged ? decodeSnapshot(encodeSnapshot(staged)) :
+-          row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
++          loadSnapshot(surface, row?.payload)
+         const blobs: BlobTransaction = {
+           get: async (key) => {
+             requireScope(scope)
+@@ -199,9 +223,23 @@
+       return operation(true, async (db) => {
+         const read = (name: Surface) => {
+           const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(name)
+-          return row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+-        }
+-        const snapshots = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
++          // Observe and validate changed bytes now, including unrequested surfaces.
++          // The captured materializer never consults SQL or the shared memo again.
++          const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: observeSnapshot(name, row?.payload) }
++          return () => {
++            if (observed.value) return observed.value
++            observed.value = observed.materialize!()
++            observed.materialize = undefined
++            return observed.value
++          }
++        }
++        const observed = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
++        // This container is private to one live root scope. The callback receives
++        // only its normal target snapshot; nested/current reads still clone.
++        const snapshots = {
++          get dashboard() { return observed.dashboard() }, get planner() { return observed.planner() },
++          get procurement() { return observed.procurement() },
++        }
+         const snapshot = snapshots[surface]
+         const generations = new Map(Object.entries(snapshot.sfBlobGenerations ?? {}))
+         const checkGenerations = () => {
+@@ -279,7 +317,7 @@
+         const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
+         const read = (surface: Surface) => {
+           const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+-          return row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
++          return loadSnapshot(surface, row?.payload)
+         }
+         const snapshots = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
+         const generations = Object.fromEntries(surfaces.map((surface) => [surface, structuredClone(snapshots[surface].sfBlobGenerations ?? {})]))
+@@ -330,7 +368,7 @@
+     dispose: () => {
+       if (context.getStore()) return Promise.reject(new Error("Cannot dispose a store from its transaction scope"))
+       lifecycle.closed = true
+-      lifecycle.disposing ??= Promise.allSettled([...active]).then(() => undefined)
++      lifecycle.disposing ??= Promise.allSettled([...active]).then(() => { materializations.clear() })
+       return lifecycle.disposing
+     },
+   }
+@@ -453,3 +491,76 @@
+ export function encodeSnapshot(snapshot: Snapshot): string {
+   return JSON.stringify(["sucafina-snapshot", 1, encode(snapshot)])
+ }
++
++// The shared memo retains at most three entries and 16 MiB of UTF-16 strings.
++// A live root may temporarily retain observed plans evicted during admission;
++// their combined content is bounded by one additional memo budget until used.
++// These are optimization limits only: larger/deeper valid v1 snapshots keep
++// using the original decoder. No new persisted format or acceptance limit.
++const SNAPSHOT_MATERIALIZATION_UNITS = 8 * 1024 * 1024
++type SnapshotMaterialization = Readonly<{ payload: string; json: string; missing: string; units: number }>
++
++function planSnapshotMaterialization(snapshot: Snapshot, payload: string): SnapshotMaterialization | undefined {
++  if (payload.length > SNAPSHOT_MATERIALIZATION_UNITS) return
++  const parts: string[] = []
++  const missing: string[] = []
++  const path: string[] = []
++  const budget = { units: payload.length + 2, nodes: 0 }
++  const append = (text: string) => {
++    budget.units += text.length
++    if (budget.units > SNAPSHOT_MATERIALIZATION_UNITS) return false
++    parts.push(text)
++    return true
++  }
++  // The input has just passed decodeSnapshot: all nodes are normalized own
++  // data, with no getters, custom prototypes, functions, aliases or cycles.
++  // Emit JSON directly so a data property called toJSON is never invoked.
++  const visit = (value: unknown): boolean => {
++    if (++budget.nodes > 200000 || path.length > 128) return false
++    if (value === undefined) {
++      if (missing.length >= 4096) return false
++      const location = JSON.stringify(path)
++      budget.units += location.length + (missing.length ? 1 : 0)
++      if (budget.units > SNAPSHOT_MATERIALIZATION_UNITS) return false
++      missing.push(location)
++      return append("null")
++    }
++    if (Object.is(value, -0)) return append("-0")
++    if (value === null || typeof value !== "object") {
++      const encoded = JSON.stringify(value)
++      return typeof encoded === "string" && append(encoded)
++    }
++    const array = Array.isArray(value)
++    if (!append(array ? "[" : "{")) return false
++    const keys = Object.keys(value)
++    for (let index = 0; index < keys.length; index++) {
++      const key = keys[index]!
++      if (index && !append(",")) return false
++      if (!array && (!append(JSON.stringify(key)) || !append(":"))) return false
++      path.push(key)
++      const accepted = visit((value as Record<string, unknown>)[key])
++      path.pop()
++      if (!accepted) return false
++    }
++    return append(array ? "]" : "}")
++  }
++  if (!visit(snapshot)) return
++  const json = parts.join("")
++  const absent = "[" + missing.join(",") + "]"
++  return Object.freeze({ payload, json, missing: absent, units: payload.length + json.length + absent.length })
++}
++
++function materializeSnapshot(plan: SnapshotMaterialization): Snapshot {
++  const snapshot = JSON.parse(plan.json) as Snapshot
++  // Null placeholders preserve property order and array density. Only these
++  // known own paths need repair; -0 is preserved by its native JSON literal.
++  if (plan.missing !== "[]") {
++    const paths = JSON.parse(plan.missing) as string[][]
++    for (const path of paths) {
++      let parent: Record<string, unknown> = snapshot
++      for (let index = 0; index < path.length - 1; index++) parent = parent[path[index]!] as Record<string, unknown>
++      Object.defineProperty(parent, path[path.length - 1]!, { value: undefined, enumerable: true, writable: true, configurable: true })
++    }
++  }
++  return snapshot
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts
+@@ -0,0 +1,200 @@
++import { expect, spyOn, test } from "bun:test"
++import { Database } from "bun:sqlite"
++import { join } from "node:path"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import type { SfProductState } from "../../../product/contracts/state.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { decodeSnapshot, encodeSnapshot, openLocalStore } from "../../../runtime/local-store.ts"
++import { createRenewalChoiceHistory } from "../wp11/renewal-choice-fixture.ts"
++
++type Mode = "decode" | "transaction" | "currentSnapshots" | "nestedRead"
++type Work = () => Snapshot | Promise<Snapshot>
++
++// Pass-through spies count real codec work only. Keep these out of timing samples
++// and restore before assertions; no persistence, identity or result is mocked.
++async function countWork(work: Work) {
++  const parse = spyOn(JSON, "parse")
++  const entries = spyOn(Object, "fromEntries")
++  const descriptors = spyOn(Object, "getOwnPropertyDescriptors")
++  try {
++    const value = await work()
++    const tagged = parse.mock.calls.filter((call) => typeof call[0] === "string" && call[0].startsWith('["sucafina-snapshot",'))
++    return { value, counts: {
++      parseCalls: parse.mock.calls.length,
++      parsedCharacters: parse.mock.calls.reduce((sum, call) => sum + (typeof call[0] === "string" ? call[0].length : 0), 0),
++      taggedParseCalls: tagged.length,
++      taggedCharacters: tagged.reduce((sum, call) => sum + call[0].length, 0),
++      objectAssemblies: entries.mock.calls.length,
++      entryTuples: entries.mock.calls.reduce((sum, call) => sum + (Array.isArray(call[0]) ? call[0].length : 0), 0),
++      encodedObjectDescriptorReads: descriptors.mock.calls.length,
++    } }
++  } finally {
++    descriptors.mockRestore()
++    entries.mockRestore()
++    parse.mockRestore()
++  }
++}
++
++async function timeWork(work: Work) {
++  const start = performance.now()
++  const value = await work()
++  return { value, elapsedMs: performance.now() - start }
++}
++
++test("FIN-IND-005 persistence profile isolates real SQLite decode and staged snapshot work", async () => {
++  const history = await createRenewalChoiceHistory()
++  try {
++    const chosen = await history.choose()
++    const phase = await history.resolveTraining()
++    expect(phase.selectedResult).toMatchObject({ total: 250000, comparisonStatus: "complete" })
++    expect(phase.advantageComparison.completeDifference).toBe(-10000)
++    const decision = await history.readCase()
++    expect(digestSfValue(decision.choices[0])).toBe(digestSfValue(chosen.choice))
++    const database = new Database(join(history.fixture.directory, "installation.sqlite"), { readonly: true, strict: true })
++    try {
++      const persisted = database.query<{ surface: string; payload: string }, []>("SELECT surface, payload FROM snapshots ORDER BY surface").all()
++      const payload = persisted.find((row) => row.surface === "dashboard")?.payload
++      if (!payload) throw new Error("Representative SQLite dashboard snapshot unavailable")
++      const original = decodeSnapshot(payload)
++      const state = original.data.__sfProductV1 as SfProductState
++      const sizes = {
++        stateBytes: new TextEncoder().encode(JSON.stringify(state)).length,
++        payloadBytes: new TextEncoder().encode(payload).length,
++        payloadCharacters: payload.length,
++        caseBytes: new TextEncoder().encode(JSON.stringify(state.cases[decision.id])).length,
++        cases: Object.keys(state.cases).length,
++        results: Object.keys(state.decisionResults ?? {}).length,
++        transactions: Object.keys(state.transactions).length,
++        surfaces: persisted.map((row) => ({ surface: row.surface, payloadBytes: new TextEncoder().encode(row.payload).length })),
++      }
++      expect(sizes.stateBytes).toBeGreaterThan(800000)
++      expect(sizes.caseBytes).toBeGreaterThan(100000)
++      expect(encodeSnapshot(original)).toBe(payload)
++      // A separate store starts with no materialization history. The two reads
++      // observe exactly the same real SQL rows, with distinct callback outputs.
++      const fresh = await openLocalStore(history.fixture.directory)
++      const coldWarm = await (async () => {
++        try {
++          const readFresh = () => fresh.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot }))
++          const cold = await countWork(readFresh)
++          expect(encodeSnapshot(cold.value)).toBe(payload)
++          cold.value.data.__sfProductV1 = { corrupted: true }
++          const warm = await countWork(readFresh)
++          expect(encodeSnapshot(warm.value)).toBe(payload)
++          expect(warm.value).not.toBe(cold.value)
++          expect(warm.value.data).not.toBe(cold.value.data)
++          return { cold: cold.counts, warm: warm.counts }
++        } finally { await fresh.dispose() }
++      })()
++      const plannerPayload = persisted.find((row) => row.surface === "planner")?.payload
++      if (!plannerPayload) throw new Error("Representative SQLite Planner snapshot unavailable")
++      const demandStore = await openLocalStore(history.fixture.directory)
++      const surfaceDemand = await (async () => {
++        try {
++          if (!demandStore.transactionAll) throw new Error("All-surface SQLite transactions unavailable")
++          const all = demandStore.transactionAll
++          const readPlanner = () => demandStore.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot }))
++          const readAll = () => all(async (snapshots) => ({ commit: false, value: snapshots.planner }))
++          // Both arms observe every SQL row. The cold admission must still
++          // decode/validate all new payloads before invoking the Planner callback.
++          const coldPlanner = await countWork(readPlanner)
++          expect(encodeSnapshot(coldPlanner.value)).toBe(plannerPayload)
++          coldPlanner.value.data["retained-planner-only"] = { corrupted: true }
++          const warmPlanner = await countWork(readPlanner)
++          const eagerAll = await countWork(readAll)
++          expect(encodeSnapshot(warmPlanner.value)).toBe(plannerPayload)
++          expect(encodeSnapshot(eagerAll.value)).toBe(plannerPayload)
++          expect(warmPlanner.value).not.toBe(coldPlanner.value)
++          expect(warmPlanner.value.data).not.toBe(coldPlanner.value.data)
++          expect(eagerAll.value).not.toBe(warmPlanner.value)
++          expect(eagerAll.value.data).not.toBe(warmPlanner.value.data)
++          expect(coldPlanner.counts.taggedParseCalls).toBe(persisted.length)
++          expect(coldPlanner.counts.taggedCharacters).toBe(persisted.reduce((sum, row) => sum + row.payload.length, 0))
++          expect(warmPlanner.counts.taggedParseCalls).toBe(0)
++          expect(warmPlanner.counts.encodedObjectDescriptorReads).toBe(0)
++          expect(eagerAll.counts.taggedParseCalls).toBe(0)
++          expect(eagerAll.counts.encodedObjectDescriptorReads).toBe(0)
++          // This is skipped parse work on the same representative Finance state,
++          // not a wall-clock ratio or a claim about the full journey.
++          expect(eagerAll.counts.parsedCharacters - warmPlanner.counts.parsedCharacters).toBeGreaterThan(800000)
++          const timings: { mode: "planner" | "all"; elapsedMs: number }[] = []
++          for (let round = 0; round < 6; round++) {
++            for (const mode of round % 2 ? ["all", "planner"] as const : ["planner", "all"] as const) {
++              const measured = await timeWork(mode === "planner" ? readPlanner : readAll)
++              expect(encodeSnapshot(measured.value)).toBe(plannerPayload)
++              timings.push({ mode, elapsedMs: measured.elapsedMs })
++            }
++          }
++          warmPlanner.value.data["retained-planner-only"] = { corrupted: true }
++          const afterMutation = await readPlanner()
++          expect(encodeSnapshot(afterMutation)).toBe(plannerPayload)
++          expect(afterMutation).not.toBe(warmPlanner.value)
++          expect(afterMutation.data).not.toBe(warmPlanner.value.data)
++          return { coldPlanner: coldPlanner.counts, warmPlanner: warmPlanner.counts, eagerAll: eagerAll.counts, timings }
++        } finally { await demandStore.dispose() }
++      })()
++      const store = history.fixture.store
++      const read = () => store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot }))
++      const current = () => {
++        const snapshots = store.currentSnapshots?.()
++        if (!snapshots) throw new Error("Active SQLite snapshots unavailable")
++        return snapshots.dashboard
++      }
++      const observe = <T>(mode: Mode, measure: (work: Work) => Promise<T>) => {
++        if (mode === "decode") return measure(() => decodeSnapshot(payload))
++        if (mode === "transaction") return measure(read)
++        // Admission and the requested Dashboard load are outside this measurement.
++        // currentSnapshots may first demand sibling graphs inside it. These are
++        // scoped call timings, not end-to-end transaction timings.
++        return store.transaction("dashboard", async () => ({ commit: false, value: await measure(mode === "currentSnapshots" ? current : read) }))
++      }
++      const modes: readonly Mode[] = ["decode", "transaction", "currentSnapshots", "nestedRead"]
++      const counts: { mode: Mode; counts: Awaited<ReturnType<typeof countWork>>["counts"] }[] = []
++      for (const mode of modes) {
++        const observed = await observe(mode, countWork)
++        expect(encodeSnapshot(observed.value)).toBe(payload)
++        expect(observed.value).not.toBe(original)
++        expect(observed.value.data).not.toBe(original.data)
++        counts.push({ mode, counts: observed.counts })
++      }
++      const timings: { mode: Mode; elapsedMs: number }[] = []
++      for (let round = 0; round < 6; round++) {
++        for (const mode of round % 2 ? [...modes].reverse() : modes) {
++          const sample = await observe(mode, timeWork)
++          expect(encodeSnapshot(sample.value)).toBe(payload)
++          timings.push({ mode, elapsedMs: sample.elapsedMs })
++        }
++      }
++      const retained = await read()
++      retained.data.__sfProductV1 = { corrupted: true }
++      retained.versions["profile-private"] = { version: 99, by: "uncommitted" }
++      const afterMutation = await read()
++      expect(encodeSnapshot(afterMutation)).toBe(payload)
++      expect(afterMutation).not.toBe(retained)
++      expect(afterMutation.data).not.toBe(retained.data)
++      expect(database.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get("dashboard")?.payload).toBe(payload)
++      const summary = modes.map((mode) => {
++        const values = timings.filter((sample) => sample.mode === mode).map((sample) => sample.elapsedMs).sort((a, b) => a - b)
++        return { mode, samples: values.length, medianMs: (values[2]! + values[3]!) / 2, minimumMs: values[0], maximumMs: values.at(-1) }
++      })
++      console.log("FIN_PERSISTENCE_PROFILE " + JSON.stringify({
++        sizes, counts, timings, summary, coldWarm, surfaceDemand,
++        interpretation: "Direct codec and transaction timings overlap; scoped modes exclude outer admission and target load, while currentSnapshots may first demand sibling graphs. Do not add these categories or extrapolate a whole-journey speedup.",
++        surfaceInterpretation: "Cold Planner admission validates all three new SQL payloads. Warm Planner needs only its own fresh graph; transactionAll is the unchanged eager materialization control on the same Finance state. Both retain fresh SQL observations. Their timing samples are separate from the four original modes.",
++        disclosure: "Existing real Finance/C08/SQLite fixture with synthetic source grants. No short result closes FIN-IND-005; original journey budgets and assertions remain unchanged.",
++      }))
++      expect(counts.find((item) => item.mode === "decode")?.counts.taggedParseCalls).toBe(1)
++      expect(counts.find((item) => item.mode === "decode")?.counts.taggedCharacters).toBe(payload.length)
++      expect(counts.find((item) => item.mode === "decode")?.counts.entryTuples).toBeGreaterThan(1000)
++      expect(coldWarm.cold.taggedParseCalls).toBe(persisted.length)
++      expect(coldWarm.cold.taggedCharacters).toBe(persisted.reduce((sum, row) => sum + row.payload.length, 0))
++      expect(coldWarm.warm.taggedParseCalls).toBe(0)
++      expect(coldWarm.warm.encodedObjectDescriptorReads).toBe(0)
++      expect(coldWarm.warm.objectAssemblies).toBeLessThanOrEqual(3)
++      expect(counts.find((item) => item.mode === "transaction")?.counts.taggedParseCalls).toBe(0)
++      expect(counts.find((item) => item.mode === "transaction")?.counts.encodedObjectDescriptorReads).toBe(0)
++      expect(counts.find((item) => item.mode === "transaction")?.counts.objectAssemblies).toBeLessThanOrEqual(3)
++    } finally { database.close() }
++  } finally { await history.cleanup() }
++}, 120000)
++
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts
+@@ -0,0 +1,312 @@
++import { expect, test } from "bun:test"
++import { Database } from "bun:sqlite"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import type { BlobTransaction } from "../../../runtime/assets.ts"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import type { LocalStore } from "../../../runtime/local-contract.ts"
++import { decodeSnapshot, encodeSnapshot, openLocalStore } from "../../../runtime/local-store.ts"
++
++async function fixture(work: (directory: string, open: () => Promise<LocalStore>) => Promise<void>) {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-persistence-isolation-"))
++  await chmod(directory, 0o700)
++  const stores: LocalStore[] = []
++  try {
++    await work(directory, async () => {
++      const store = await openLocalStore(directory)
++      stores.push(store)
++      return store
++    })
++  } finally {
++    await Promise.all(stores.map((store) => store.dispose()))
++    await rm(directory, { recursive: true, force: true })
++  }
++}
++
++function read(store: LocalStore) {
++  // Return the actual callback object: retaining a hidden shared snapshot would
++  // let the mutations below contaminate later callbacks or persisted state.
++  return store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot }))
++}
++
++function replace(directory: string, payload: string | undefined) {
++  const database = new Database(join(directory, "installation.sqlite"), { strict: true })
++  try {
++    if (payload === undefined) {
++      database.query("DELETE FROM snapshots WHERE surface = ?").run("dashboard")
++      return
++    }
++    database.query("INSERT INTO snapshots (surface, payload) VALUES (?, ?) ON CONFLICT (surface) DO UPDATE SET payload=excluded.payload").run("dashboard", payload)
++  } finally { database.close() }
++}
++
++async function seed(store: LocalStore) {
++  await store.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
++    snapshot.data.record = { name: "one", nested: { value: 1 }, optional: undefined }
++    snapshot.versions.record = { version: 7, by: "original" }
++    snapshot.sequences.record = 7
++    snapshot.audit.push({ who: "original", at: "2026-11-14", record: "record", was: undefined, became: "one" })
++    await blobs.put("document", new Uint8Array([1, 255, 0]), "binary")
++    return { commit: true, value: undefined }
++  })
++  return read(store)
++}
++
++test("snapshot materialization preserves v1 values, property order and owned undefined across warm reads and reopen", async () => {
++  await fixture(async (_directory, open) => {
++    const store = await open()
++    const special = Object.create(null) as Record<string, unknown>
++    special["10"] = "ten"
++    special["2"] = "two"
++    special[""] = undefined
++    special["__proto__"] = { own: undefined, negative: -0 }
++    Object.defineProperty(special, "constructor", { value: "ordinary-data", enumerable: true })
++    special.toJSON = { ordinary: "not a hook" }
++    special.prototype = [undefined, -0, ["undefined"], ["number", "-0"]]
++    Object.defineProperty(special, "hidden", { value: undefined, enumerable: false })
++    const holes = new Array<unknown>(3)
++    holes[1] = -0
++    await store.transaction("dashboard", async (snapshot) => {
++      snapshot.data.special = special
++      snapshot.data.holes = holes
++      snapshot.data.protoUndefined = Object.fromEntries([["__proto__", undefined]])
++      snapshot.data["escaped/key~"] = { "\u0000\"\\": undefined, text: "a\ud800b\u0000" }
++      snapshot.audit.push({ who: "actor", at: "2026-11-14", record: "special", was: undefined, became: -0 })
++      return { commit: true, value: undefined }
++    })
++    const first = await read(store)
++    const payload = encodeSnapshot(first)
++    const expected = decodeSnapshot(payload)
++    for (let index = 0; index < 3; index++) {
++      const current = await read(store)
++      expect(current).not.toBe(first)
++      expect(encodeSnapshot(current)).toBe(payload)
++      expect(current).toEqual(expected)
++      const value = current.data.special as Record<string, unknown>
++      expect(Object.getPrototypeOf(value)).toBe(Object.prototype)
++      expect(Object.keys(value)).toEqual(["2", "10", "", "__proto__", "constructor", "toJSON", "prototype", "hidden"])
++      expect(Object.hasOwn(value, "__proto__")).toBe(true)
++      expect(Object.hasOwn(value, "hidden")).toBe(true)
++      expect(Object.hasOwn(value, "")).toBe(true)
++      expect(value.hidden).toBeUndefined()
++      expect(Object.is((value["__proto__"] as Record<string, unknown>).negative, -0)).toBe(true)
++      expect(Object.hasOwn(value["__proto__"] as object, "own")).toBe(true)
++      expect(Object.hasOwn(current.data.holes as object, "0")).toBe(true)
++      expect(Object.hasOwn(current.data.holes as object, "2")).toBe(true)
++      expect(Object.is((current.data.holes as unknown[])[1], -0)).toBe(true)
++      expect(Object.is(current.audit[0]!.became, -0)).toBe(true)
++      expect(Object.getPrototypeOf(current.data.protoUndefined)).toBe(Object.prototype)
++      expect(Object.hasOwn(current.data.protoUndefined as object, "__proto__")).toBe(true)
++      expect((current.data.protoUndefined as Record<string, unknown>)["__proto__"]).toBeUndefined()
++    }
++    await store.dispose()
++    expect(encodeSnapshot(await read(await open()))).toBe(payload)
++  })
++})
++
++test("warm snapshot outputs and declined callbacks never become the next observation", async () => {
++  await fixture(async (_directory, open) => {
++    const store = await open()
++    const before = encodeSnapshot(await seed(store))
++    const retained = await read(store)
++    ;(retained.data.record as Record<string, unknown>).name = "retained mutation"
++    retained.audit[0]!.became = "retained mutation"
++    retained.versions.record!.version = 99
++    const declined = await store.transaction("dashboard", async (snapshot) => {
++      expect(encodeSnapshot(snapshot)).toBe(before)
++      snapshot.data.record = { name: "declined" }
++      return { commit: false, value: snapshot }
++    })
++    declined.data.record = { name: "late declined mutation" }
++    expect(encodeSnapshot(await read(store))).toBe(before)
++    const committed = await store.transaction("dashboard", async (snapshot) => {
++      snapshot.data.record = { name: "committed", optional: undefined }
++      return { commit: true, value: snapshot }
++    })
++    const after = encodeSnapshot(await read(store))
++    committed.data.record = { name: "late committed mutation" }
++    expect(encodeSnapshot(await read(store))).toBe(after)
++    await store.dispose()
++    expect(encodeSnapshot(await read(await open()))).toBe(after)
++  })
++})
++
++test("warm materialization observes changed SQL bytes with identical versions and payload length, deletion and restoration", async () => {
++  await fixture(async (directory, open) => {
++    const store = await open()
++    const first = await seed(store)
++    const original = encodeSnapshot(first)
++    expect(encodeSnapshot(await read(store))).toBe(original)
++    ;(first.data.record as Record<string, unknown>).name = "two"
++    const changed = encodeSnapshot(first)
++    expect(changed.length).toBe(original.length)
++    expect(changed).not.toBe(original)
++    replace(directory, changed)
++    const observed = await read(store)
++    expect(encodeSnapshot(observed)).toBe(changed)
++    expect(observed.versions).toEqual({ record: { version: 7, by: "original" } })
++    replace(directory, undefined)
++    expect(await read(store)).toEqual({ data: {}, versions: {}, sequences: {}, audit: [], notices: [] })
++    replace(directory, original)
++    expect(encodeSnapshot(await read(store))).toBe(original)
++  })
++})
++
++test("changed malformed payloads reject before callback after a valid warm observation", async () => {
++  await fixture(async (directory, open) => {
++    const store = await open()
++    const original = encodeSnapshot(await seed(store))
++    const duplicate = JSON.parse(original) as [string, number, [string, [string, unknown][]]]
++    duplicate[2][1].push(duplicate[2][1][0]!)
++    const invalid = decodeSnapshot(original)
++    invalid.versions.record!.version = -1
++    for (const payload of ["[", '["sucafina-snapshot",2,["null"]]', JSON.stringify(duplicate), encodeSnapshot(invalid)]) {
++      expect(encodeSnapshot(await read(store))).toBe(original)
++      replace(directory, payload)
++      const calls: string[] = []
++      await expect(store.transaction("dashboard", async () => {
++        calls.push("unexpected")
++        return { commit: false, value: undefined }
++      })).rejects.toThrow()
++      expect(calls).toEqual([])
++      replace(directory, original)
++    }
++    expect(encodeSnapshot(await read(store))).toBe(original)
++  })
++})
++
++for (const mode of ["abort", "throw", "invalid"] as const) {
++  test(`warm snapshot ${mode} rolls back snapshot and blob mutations without publishing a materialization`, async () => {
++    await fixture(async (_directory, open) => {
++      const store = await open()
++      const original = encodeSnapshot(await seed(store))
++      const controller = new AbortController()
++      await expect(store.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
++        snapshot.data.record = { name: "must roll back" }
++        await blobs.remove("document")
++        await blobs.put("orphan", new Uint8Array([9]), "binary")
++        if (mode === "throw") throw new Error("callback failure")
++        if (mode === "abort") controller.abort()
++        if (mode === "invalid") snapshot.versions.record!.version = -1
++        return { commit: true, value: undefined }
++      }, { signal: controller.signal })).rejects.toThrow()
++      expect(encodeSnapshot(await read(store))).toBe(original)
++      await store.transaction("dashboard", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
++        expect(await blobs.get("document")).toEqual(new Uint8Array([1, 255, 0]))
++        expect(await blobs.get("orphan")).toBeUndefined()
++        return { commit: false, value: undefined }
++      })
++      await store.dispose()
++      expect(encodeSnapshot(await read(await open()))).toBe(original)
++    })
++  })
++}
++
++test("warm nested reads copy staged values and nested write poison survives a caught child rejection", async () => {
++  await fixture(async (_directory, open) => {
++    const store = await open()
++    const original = encodeSnapshot(await seed(store))
++    await store.transaction("dashboard", async (snapshot) => {
++      snapshot.data.record = { name: "parent stage", optional: undefined }
++      await store.transaction("dashboard", async (child) => {
++        expect(child.data.record).toEqual({ name: "parent stage", optional: undefined })
++        child.data.record = { name: "child mutation" }
++        return { commit: false, value: child }
++      })
++      const copy = store.currentSnapshots!()
++      expect(copy!.dashboard.data.record).toEqual({ name: "parent stage", optional: undefined })
++      copy!.dashboard.data.record = { name: "current mutation" }
++      expect(snapshot.data.record).toEqual({ name: "parent stage", optional: undefined })
++      return { commit: false, value: undefined }
++    })
++    expect(encodeSnapshot(await read(store))).toBe(original)
++    await expect(store.transaction("dashboard", async (snapshot) => {
++      snapshot.data.record = { name: "poisoned parent" }
++      await expect(store.transaction("dashboard", async (child) => {
++        child.data.record = { name: "forbidden child" }
++        return { commit: true, value: undefined }
++      })).rejects.toThrow("Nested local writes")
++      return { commit: true, value: undefined }
++    })).rejects.toThrow("Nested local write attempted")
++    expect(encodeSnapshot(await read(store))).toBe(original)
++  })
++})
++
++test("warm observations cannot validate later accessor or inherited-prototype writes", async () => {
++  await fixture(async (_directory, open) => {
++    const store = await open()
++    const original = encodeSnapshot(await seed(store))
++    const reads = { count: 0 }
++    await expect(store.transaction("dashboard", async (snapshot) => {
++      Object.defineProperty(snapshot.data, "record", { enumerable: true,
++        get: () => { reads.count++; return { name: "must not execute" } } })
++      return { commit: true, value: undefined }
++    })).rejects.toThrow("accessor")
++    expect(reads.count).toBe(0)
++    await expect(store.transaction("dashboard", async (snapshot) => {
++      snapshot.data.record = Object.assign(Object.create({ inherited: "not persistible" }), { own: "also rejected" })
++      return { commit: true, value: undefined }
++    })).rejects.toThrow("plain objects")
++    expect(encodeSnapshot(await read(store))).toBe(original)
++  })
++})
++
++test("independently warmed stores serialize fresh same-version CAS and never replay callbacks", async () => {
++  await fixture(async (_directory, open) => {
++    const first = await open()
++    await seed(first)
++    const second = await open()
++    expect(encodeSnapshot(await read(second))).toBe(encodeSnapshot(await read(first)))
++    const ready = Promise.withResolvers<void>()
++    const release = Promise.withResolvers<void>()
++    const calls: string[] = []
++    const one = first.transaction("dashboard", async (snapshot) => {
++      calls.push("first")
++      ready.resolve()
++      await release.promise
++      snapshot.versions.record = { version: 8, by: "first" }
++      snapshot.data.record = { name: "winner" }
++      return { commit: true, value: true }
++    })
++    await ready.promise
++    const two = second.transaction("dashboard", async (snapshot) => {
++      calls.push("second")
++      if (snapshot.versions.record!.version !== 7) return { commit: false, value: false }
++      snapshot.data.record = { name: "stale overwrite" }
++      return { commit: true, value: true }
++    })
++    const finished = Promise.allSettled([one, two])
++    try {
++      await Bun.sleep(10)
++      expect(calls).toEqual(["first"])
++      release.resolve()
++      expect(await one).toBe(true)
++      expect(await two).toBe(false)
++    } finally { release.resolve(); await finished }
++    expect(calls).toEqual(["first", "second"])
++    expect((await read(second)).data.record).toEqual({ name: "winner" })
++    expect((await read(first)).versions.record).toEqual({ version: 8, by: "first" })
++  })
++})
++
++test("warm snapshots do not cache credential reads, expiry or returned secret byte arrays", async () => {
++  await fixture(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    await store.secrets.put("session", new Uint8Array([1]), 200)
++    await store.transaction("dashboard", async () => {
++      const value = await store.secrets.get("session", 199)
++      expect(value).toEqual(new Uint8Array([1]))
++      value![0] = 9
++      expect(await store.secrets.get("session", 199)).toEqual(new Uint8Array([1]))
++      expect(await store.secrets.get("session", 200)).toBeUndefined()
++      return { commit: false, value: undefined }
++    })
++    const other = await open()
++    await other.secrets.put("session", new Uint8Array([2]), 300)
++    expect(await store.secrets.get("session", 299)).toEqual(new Uint8Array([2]))
++    await other.secrets.remove("session")
++    expect(await store.secrets.get("session", 0)).toBeUndefined()
++  })
++})
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts
+@@ -0,0 +1,139 @@
++import { expect, spyOn, test } from "bun:test"
++import { Database } from "bun:sqlite"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import type { LocalStore } from "../../../runtime/local-contract.ts"
++import { encodeSnapshot, openLocalStore } from "../../../runtime/local-store.ts"
++
++async function fixture(work: (store: LocalStore, reopen: () => Promise<LocalStore>, directory: string) => Promise<void>) {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-persistence-bounds-"))
++  const stores: LocalStore[] = []
++  await chmod(directory, 0o700)
++  const reopen = async () => {
++    const store = await openLocalStore(directory)
++    stores.push(store)
++    return store
++  }
++  try { await work(await reopen(), reopen, directory) }
++  finally {
++    await Promise.all(stores.map((store) => store.dispose()))
++    await rm(directory, { recursive: true, force: true })
++  }
++}
++
++function rows(directory: string) {
++  const database = new Database(join(directory, "installation.sqlite"), { readonly: true, strict: true })
++  try { return database.query<{ surface: string; payload: string }, []>("SELECT surface, payload FROM snapshots ORDER BY surface").all() }
++  finally { database.close() }
++}
++
++async function countedRead(store: LocalStore) {
++  const parse = spyOn(JSON, "parse")
++  try {
++    const snapshot = await store.transaction("dashboard", async (value) => ({ commit: false, value }))
++    const tagged = parse.mock.calls.filter((call) => call[0].startsWith('["sucafina-snapshot",'))
++    return { snapshot, taggedParseCalls: tagged.length, taggedCharacters: tagged.reduce((sum, call) => sum + call[0].length, 0) }
++  } finally { parse.mockRestore() }
++}
++
++test("snapshot materialization bypasses oversized payloads without changing their bytes or special values", async () => {
++  await fixture(async (store, reopen, directory) => {
++    await store.transaction("dashboard", async (snapshot) => {
++      snapshot.data.large = "x".repeat(9 * 1024 * 1024)
++      snapshot.data.optional = undefined
++      snapshot.data.negativeZero = -0
++      return { commit: true, value: undefined }
++    })
++    const payload = rows(directory)[0]!.payload
++    const fresh = await reopen()
++    const observed = []
++    for (let attempt = 0; attempt < 3; attempt++) {
++      const result = await countedRead(fresh)
++      expect(encodeSnapshot(result.snapshot)).toBe(payload)
++      expect(Object.hasOwn(result.snapshot.data, "optional")).toBe(true)
++      expect(result.snapshot.data.optional).toBeUndefined()
++      expect(Object.is(result.snapshot.data.negativeZero, -0)).toBe(true)
++      expect(result.taggedParseCalls).toBe(1)
++      expect(result.taggedCharacters).toBe(payload.length)
++      observed.push({ taggedParseCalls: result.taggedParseCalls, taggedCharacters: result.taggedCharacters })
++      result.snapshot.data.large = "retained output only"
++    }
++    expect(rows(directory)[0]!.payload).toBe(payload)
++    console.log("FIN_PERSISTENCE_OVERSIZE " + JSON.stringify({ payloadCharacters: payload.length, reads: observed }))
++  })
++}, 30000)
++
++test("snapshot materialization enforces its aggregate bound across all three SQLite surfaces", async () => {
++  await fixture(async (store, reopen, directory) => {
++    if (!store.transactionAll) throw new Error("All-surface transactions unavailable")
++    await store.transactionAll(async (snapshots) => {
++      for (const surface of ["dashboard", "planner", "procurement"] as const) {
++        snapshots[surface].data.large = surface + ":" + "y".repeat(2 * 1024 * 1024)
++        snapshots[surface].data.optional = undefined
++      }
++      return { commit: true, value: undefined }
++    })
++    const persisted = rows(directory)
++    expect(persisted).toHaveLength(3)
++    const dashboard = persisted.find((row) => row.surface === "dashboard")!.payload
++    const total = persisted.reduce((sum, row) => sum + row.payload.length, 0)
++    const fresh = await reopen()
++    const observed = []
++    // One admission reads dashboard/planner/procurement in that order. Their
++    // combined immutable strings exceed the total bound: cycling all three
++    // must evict, even though each individual snapshot fits by itself.
++    for (let attempt = 0; attempt < 3; attempt++) {
++      const result = await countedRead(fresh)
++      expect(encodeSnapshot(result.snapshot)).toBe(dashboard)
++      expect(result.taggedParseCalls).toBe(3)
++      expect(result.taggedCharacters).toBe(total)
++      observed.push({ taggedParseCalls: result.taggedParseCalls, taggedCharacters: result.taggedCharacters })
++    }
++    expect(rows(directory)).toEqual(persisted)
++    console.log("FIN_PERSISTENCE_AGGREGATE_BOUND " + JSON.stringify({
++      surfaces: persisted.map((row) => ({ surface: row.surface, payloadCharacters: row.payload.length })), reads: observed,
++    }))
++  })
++}, 30000)
++
++for (const mode of ["depth", "fixups", "nodes"] as const) {
++  test(`snapshot materialization ${mode} limit falls back to the valid legacy decoder`, async () => {
++    await fixture(async (store, reopen, directory) => {
++      await store.transaction("dashboard", async (snapshot) => {
++        if (mode === "depth") {
++          const root: Record<string, unknown> = {}
++          const current = { node: root }
++          for (let index = 0; index < 140; index++) {
++            const child: Record<string, unknown> = {}
++            current.node.next = child
++            current.node = child
++          }
++          current.node.optional = undefined
++          current.node.negativeZero = -0
++          snapshot.data.value = root
++        }
++        if (mode === "fixups") snapshot.data.value = Array.from({ length: 4100 }, () => undefined)
++        if (mode === "nodes") snapshot.data.value = Array.from({ length: 200010 }, () => 1)
++        snapshot.data.optional = undefined
++        snapshot.data.negativeZero = -0
++        return { commit: true, value: undefined }
++      })
++      const payload = rows(directory)[0]!.payload
++      const fresh = await reopen()
++      const observed = []
++      for (let attempt = 0; attempt < 2; attempt++) {
++        const result = await countedRead(fresh)
++        expect(encodeSnapshot(result.snapshot)).toBe(payload)
++        expect(Object.hasOwn(result.snapshot.data, "optional")).toBe(true)
++        expect(result.snapshot.data.optional).toBeUndefined()
++        expect(Object.is(result.snapshot.data.negativeZero, -0)).toBe(true)
++        expect(result.taggedParseCalls).toBe(1)
++        expect(result.taggedCharacters).toBe(payload.length)
++        observed.push({ taggedParseCalls: result.taggedParseCalls, taggedCharacters: result.taggedCharacters })
++      }
++      expect(rows(directory)[0]!.payload).toBe(payload)
++      console.log("FIN_PERSISTENCE_TRAVERSAL_BOUND " + JSON.stringify({ mode, payloadCharacters: payload.length, reads: observed }))
++    })
++  }, 30000)
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts
+@@ -0,0 +1,220 @@
++import { expect, test } from "bun:test"
++import { Database } from "bun:sqlite"
++import { AsyncLocalStorage } from "node:async_hooks"
++import { join } from "node:path"
++import type { BlobTransaction } from "../../../runtime/assets.ts"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import type { LocalStore } from "../../../runtime/local-contract.ts"
++import type { Surface } from "../../../src/identity.ts"
++import type { SfProductState } from "../../../product/contracts/state.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createPlannerSensitivity, plannerSensitivityScenario } from "../../../product/portfolio/planner-sensitivity.ts"
++import { decodeSnapshot, encodeSnapshot } from "../../../runtime/local-store.ts"
++import { createRenewalChoiceHistory } from "../wp11/renewal-choice-fixture.ts"
++
++function operationCounts() {
++  return { calls: 0, callbacks: 0, completed: 0, rejected: 0, inclusiveElapsedMs: 0 }
++}
++
++function parseCounts() {
++  return { calls: 0, characters: 0, taggedCalls: 0, taggedCharacters: 0 }
++}
++
++function sample(label: string) {
++  const surfaces = () => ({ dashboard: operationCounts(), planner: operationCounts(), procurement: operationCounts(), all: operationCounts() })
++  return {
++    label, elapsedMs: 0, outcome: "pending" as "pending" | "resolved" | "rejected", maximumDepth: 0,
++    root: surfaces(), nested: surfaces(), currentSnapshots: { insideTransaction: 0, outsideTransaction: 0 },
++    parse: { root: parseCounts(), nested: parseCounts(), outsideTransaction: parseCounts() },
++  }
++}
++
++// Decorate the real instance and delegate every call once with its original
++// arguments/results. AsyncLocalStorage follows ancestry across awaits without a
++// process-global nesting counter. Only numeric aggregates are retained: neither
++// JSON text nor callbacks, snapshots, authorities or operation results enter a log.
++function observeStore(store: LocalStore) {
++  const phases = new AsyncLocalStorage<ReturnType<typeof sample>>()
++  const scopes = new AsyncLocalStorage<{ depth: number }>()
++  const observations: ReturnType<typeof sample>[] = []
++  const transaction = store.transaction
++  const transactionAll = store.transactionAll
++  const currentSnapshots = store.currentSnapshots
++  const parse = JSON.parse
++  const invoke = <T>(surface: Surface | "all", work: (counts?: ReturnType<typeof operationCounts>) => Promise<T>) => {
++    const phase = phases.getStore()
++    if (!phase) return work()
++    const depth = (scopes.getStore()?.depth ?? 0) + 1
++    const counts = (depth === 1 ? phase.root : phase.nested)[surface]
++    counts.calls++
++    phase.maximumDepth = Math.max(phase.maximumDepth, depth)
++    const started = performance.now()
++    return scopes.run({ depth }, async () => {
++      try {
++        const result = await work(counts)
++        counts.completed++
++        return result
++      } catch (error) {
++        counts.rejected++
++        throw error
++      } finally { counts.inclusiveElapsedMs += performance.now() - started }
++    })
++  }
++  store.transaction = (surface, work, options) => invoke(surface, (counts) => transaction(surface, async (snapshot: Snapshot, blobs: BlobTransaction) => {
++    if (counts) counts.callbacks++
++    return work(snapshot, blobs)
++  }, options))
++  if (transactionAll) store.transactionAll = (work, options) => invoke("all", (counts) => transactionAll(async (snapshots) => {
++    if (counts) counts.callbacks++
++    return work(snapshots)
++  }, options))
++  if (currentSnapshots) store.currentSnapshots = () => {
++    const phase = phases.getStore()
++    if (phase) {
++      if (scopes.getStore()) phase.currentSnapshots.insideTransaction++
++      else phase.currentSnapshots.outsideTransaction++
++    }
++    return currentSnapshots()
++  }
++  // A pass-through wrapper avoids spyOn's argument retention for large payloads.
++  // Its lifetime is this serial test only and it is restored before cleanup.
++  JSON.parse = (text, reviver) => {
++    const phase = phases.getStore()
++    if (phase) {
++      const depth = scopes.getStore()?.depth ?? 0
++      const counts = depth === 0 ? phase.parse.outsideTransaction : depth === 1 ? phase.parse.root : phase.parse.nested
++      counts.calls++
++      if (typeof text === "string") {
++        counts.characters += text.length
++        if (text.startsWith('["sucafina-snapshot",')) {
++          counts.taggedCalls++
++          counts.taggedCharacters += text.length
++        }
++      }
++    }
++    return parse(text, reviver)
++  }
++  return {
++    observations,
++    measure: async <T>(label: string, work: () => Promise<T>) => {
++      const observation = sample(label)
++      observations.push(observation)
++      const started = performance.now()
++      try {
++        const result = await phases.run(observation, work)
++        observation.outcome = "resolved"
++        return result
++      } catch (error) {
++        observation.outcome = "rejected"
++        throw error
++      } finally { observation.elapsedMs = performance.now() - started }
++    },
++    restore: () => {
++      store.transaction = transaction
++      if (transactionAll) store.transactionAll = transactionAll
++      if (currentSnapshots) store.currentSnapshots = currentSnapshots
++      JSON.parse = parse
++      scopes.disable()
++      phases.disable()
++    },
++  }
++}
++
++test("FIN-IND-005 real confirmed witness classifies SQLite root and nested materialization work", async () => {
++  const started = performance.now()
++  const history = await createRenewalChoiceHistory()
++  const fixtureCreateMs = performance.now() - started
++  const observation = observeStore(history.fixture.store)
++  try {
++    const before = history.before
++    expect(before.baselineResult.knownSubtotal).toBe(240000)
++    expect(before.selectedResult).toMatchObject({ knownSubtotal: 210000, total: null, comparisonStatus: "conditioned", costCoverage: { coverageState: "pending", derivedMissingCategoryIds: ["training"] } })
++    expect(before.selectedResult.components.some((component) => component.id.startsWith("training:"))).toBe(false)
++    const priorEvaluate = createPlannerSensitivity({
++      results: before.results, resolve: before.issuer.resolve, revalidate: before.issuer.revalidate,
++      preview: before.preview, exactThreshold: (request, binding, context) => before.exact(request, binding.baselineRef, context),
++      idempotencyKey: async () => "wp13-before-training",
++    })
++    const priorRequest = { ...before.sensitivityRequest, parameterBounds: { ...before.sensitivityRequest.parameterBounds, steps: 1 } }
++    const prior = await observation.measure("omitted.evaluate", () => priorEvaluate(priorRequest, history.fixture.context))
++    if (prior.status !== "ok") throw new Error(`Omitted training analysis unavailable: ${JSON.stringify(prior)}`)
++    expect(prior.value.threshold).toBeCloseTo(55000, 8)
++    expect(prior.value.thresholdEvidence.state).toBe("exact")
++    expect(prior.value.comparisonStatus).toBe("conditioned")
++    expect(prior.value.unresolvedConditions.some((condition) => condition.id === "known-components-threshold" && condition.reason.includes("known components"))).toBe(true)
++    expect(prior.value.unresolvedConditions.some((condition) => condition.reason === "missing-category:training")).toBe(true)
++    expect(before.selectedResult.costCoverage.derivedMissingCategoryIds).toContain("training")
++    const chosen = await observation.measure("choice.record", history.choose)
++    const originalChoice = digestSfValue(chosen.choice)
++    expect(chosen.choice).toMatchObject({ alternativeId: "selected", alternativeVersion: before.selectedResult.costCoverage.alternativeVersion, basisVersion: before.basis.version, comparisonStatus: "conditioned", result: { knownSubtotal: 210000, total: null }, costCoverage: { coverageState: "pending", derivedMissingCategoryIds: ["training"] } })
++    const after = await observation.measure("training.confirm", history.resolveTraining)
++    expect(after.caseRef.id).toBe(before.caseRef.id)
++    expect(after.caseRef.incarnation).toBe(before.caseRef.incarnation)
++    expect(after.caseRef.version).toBeGreaterThan(chosen.caseRef.version)
++    expect(after.scenario.operations).toEqual([])
++    expect(after.selectedResult).toMatchObject({ knownSubtotal: 250000, total: 250000, comparisonStatus: "complete", costCoverage: { coverageState: "complete", derivedMissingCategoryIds: [] } })
++    expect(after.selectedResult.components.find((component) => component.id === "training:11")).toMatchObject({ amount: 40000, currency: "USD", evidenceState: "confirmed" })
++    expect(after.advantageComparison.completeDifference).toBe(-10000)
++    expect(after.comparison.criterionResults).toMatchObject([{ criterionId: "renewal-difference", state: "failed" }])
++    const database = new Database(join(history.fixture.directory, "installation.sqlite"), { readonly: true, strict: true })
++    try {
++      const persisted = database.query<{ surface: string; payload: string }, []>("SELECT surface, payload FROM snapshots ORDER BY surface").all()
++      const payload = persisted.find((row) => row.surface === "dashboard")?.payload
++      if (!payload) throw new Error("Confirmed SQLite dashboard snapshot unavailable")
++      const state = decodeSnapshot(payload).data.__sfProductV1 as SfProductState
++      const sizes = {
++        stateBytes: new TextEncoder().encode(JSON.stringify(state)).length,
++        payloadCharacters: payload.length,
++        caseBytes: new TextEncoder().encode(JSON.stringify(state.cases[after.caseRef.id])).length,
++        cases: Object.keys(state.cases).length, results: Object.keys(state.decisionResults ?? {}).length,
++        transactions: Object.keys(state.transactions).length,
++        surfaces: persisted.map((row) => ({ surface: row.surface, payloadCharacters: row.payload.length })),
++      }
++      expect(sizes.stateBytes).toBeGreaterThan(800000)
++      expect(sizes.caseBytes).toBeGreaterThan(100000)
++      console.log("FIN_PERSISTENCE_SCOPE_STATE " + JSON.stringify(sizes))
++      const request = { ...after.sensitivityRequest, parameterBounds: { ...after.sensitivityRequest.parameterBounds, steps: 1 } }
++      const binding = await observation.measure("confirmed.issuer.resolve", () => after.issuer.resolve(request, history.fixture.context))
++      if (binding.status !== "ok") throw new Error("Current source parameter unavailable")
++      expect(binding.value.parameterOperation).toMatchObject({ targetRef: "implementation:11", amount: 45000, currency: "USD" })
++      const preview = await observation.measure("confirmed.witness.15000", () => after.preview({
++        baselineRef: after.baselineRef, scenario: plannerSensitivityScenario(binding.value, "implementation:11", 15000),
++      }, history.fixture.context))
++      if (preview.status !== "ok") throw new Error(`Source-only threshold witness unavailable: ${JSON.stringify(preview)}`)
++      expect(preview.value.metric.value).toBe(-20000)
++      expect(preview.value.sample.total).toBeNull()
++      if (preview.value.metric.value === null) throw new Error("Threshold witness has no metric")
++      expect(preview.value.metric.value <= request.criterion.value).toBe(true)
++      const decision = await observation.measure("history.read", history.readCase)
++      expect(decision.choices).toHaveLength(1)
++      expect(digestSfValue(decision.choices[0])).toBe(originalChoice)
++      expect(decision.state).toBe("reconsidering")
++      expect(decision.preparedChanges).toEqual([])
++      expect(decision.receipts).toEqual([])
++      const originalDecision = digestSfValue(decision)
++      expect(Reflect.set(decision.choices, "length", 0)).toBe(true)
++      const freshDecision = await observation.measure("isolation.history.read", history.readCase)
++      expect(digestSfValue(freshDecision)).toBe(originalDecision)
++      expect(freshDecision).not.toBe(decision)
++      expect(freshDecision.choices).not.toBe(decision.choices)
++      const readSnapshot = () => history.fixture.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot }))
++      const retained = await observation.measure("isolation.snapshot.first", readSnapshot)
++      expect(encodeSnapshot(retained)).toBe(payload)
++      retained.data.__sfProductV1 = { corrupted: true }
++      retained.versions["scope-profile-private"] = { version: 99, by: "uncommitted" }
++      const fresh = await observation.measure("isolation.snapshot.fresh", readSnapshot)
++      expect(encodeSnapshot(fresh)).toBe(payload)
++      expect(fresh).not.toBe(retained)
++      expect(fresh.data).not.toBe(retained.data)
++      expect(database.query<{ surface: string; payload: string }, []>("SELECT surface, payload FROM snapshots ORDER BY surface").all()).toEqual(persisted)
++    } finally { database.close() }
++  } finally {
++    observation.restore()
++    console.log("FIN_PERSISTENCE_SCOPE_PROFILE " + JSON.stringify({
++      fixtureCreateMs, observations: observation.observations,
++      interpretation: "Ancestry follows real store calls across awaits. Surface labels name requested transaction surfaces; all means transactionAll. Timings are inclusive and may overlap. JSON sizes count UTF-16 code units; payloads are never retained by the observer. Counts classify observed work, not expected product behavior.",
++      disclosure: "Unchanged real Finance/C08/SQLite fixture and original omitted.evaluate preparation, with synthetic grants. The confirmed operation is issuer.resolve plus witness 15000 only. This does not rerun confirmed sensitivity, witness 15001, replay, restart or access and cannot close FIN-IND-005.",
++    }))
++    await history.cleanup()
++  }
++}, 120000)
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts
+@@ -0,0 +1,326 @@
++import { expect, test } from "bun:test"
++import { Database } from "bun:sqlite"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import type { LocalStore } from "../../../runtime/local-contract.ts"
++import type { Surface } from "../../../src/identity.ts"
++import { decodeSnapshot, encodeSnapshot, openLocalStore } from "../../../runtime/local-store.ts"
++
++const dashboardMarker = "demand-dashboard-persisted"
++const empty: Snapshot = { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
++
++async function fixture(work: (directory: string, open: () => Promise<LocalStore>) => Promise<void>) {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-surface-demand-"))
++  const stores: LocalStore[] = []
++  await chmod(directory, 0o700)
++  try {
++    await work(directory, async () => {
++      const store = await openLocalStore(directory)
++      stores.push(store)
++      return store
++    })
++  } finally {
++    await Promise.all(stores.map((store) => store.dispose()))
++    await rm(directory, { recursive: true, force: true })
++  }
++}
++
++async function seed(store: LocalStore, large = false) {
++  if (!store.transactionAll) throw new Error("All-surface transactions unavailable")
++  await store.transactionAll(async (snapshots) => {
++    for (const surface of ["dashboard", "planner", "procurement"] as const) {
++      snapshots[surface].data.record = { marker: surface === "dashboard" ? dashboardMarker : surface, value: "persisted", optional: undefined, negativeZero: -0 }
++      snapshots[surface].versions.record = { version: 7, by: "original" }
++    }
++    if (large) snapshots.dashboard.data.large = "x".repeat(2 * 1024 * 1024)
++    return { commit: true, value: undefined }
++  })
++}
++
++function rows(directory: string) {
++  const database = new Database(join(directory, "installation.sqlite"), { readonly: true, strict: true })
++  try { return database.query<{ surface: Surface; payload: string }, []>("SELECT surface, payload FROM snapshots ORDER BY surface").all() }
++  finally { database.close() }
++}
++
++function replace(directory: string, surface: Surface, payload?: string) {
++  const database = new Database(join(directory, "installation.sqlite"), { strict: true })
++  try {
++    if (payload === undefined) database.query("DELETE FROM snapshots WHERE surface = ?").run(surface)
++    else database.query("UPDATE snapshots SET payload = ? WHERE surface = ?").run(payload, surface)
++  } finally { database.close() }
++}
++
++function read(store: LocalStore, surface: Surface = "planner") {
++  return store.transaction(surface, async (snapshot) => ({ commit: false, value: snapshot }))
++}
++
++// Observe real parse work without retaining its arguments or replacing results.
++// The marker distinguishes Dashboard materialization from tiny sibling surfaces.
++async function countParses<T>(work: () => Promise<T>) {
++  const parse = JSON.parse
++  const counts = { calls: 0, characters: 0, taggedCalls: 0, taggedCharacters: 0, nativeDashboard: 0, taggedDashboard: 0 }
++  JSON.parse = (text, reviver) => {
++    counts.calls++
++    if (typeof text === "string") {
++      counts.characters += text.length
++      const tagged = text.startsWith('["sucafina-snapshot",')
++      if (tagged) { counts.taggedCalls++; counts.taggedCharacters += text.length }
++      if (text.includes(dashboardMarker)) {
++        if (tagged) counts.taggedDashboard++
++        else counts.nativeDashboard++
++      }
++    }
++    return parse(text, reviver)
++  }
++  try { return { value: await work(), counts } }
++  finally { JSON.parse = parse }
++}
++
++function decoderError(payload: string) {
++  try { decodeSnapshot(payload) }
++  catch (error) { if (error instanceof Error) return error.message; throw error }
++  throw new Error("Invalid-payload control unexpectedly decoded")
++}
++
++test("warm root Planner skips unrequested Dashboard materialization while cold admission and transactionAll retain validation", async () => {
++  await fixture(async (directory, open) => {
++    await seed(await open(), true)
++    const persisted = rows(directory)
++    const planner = persisted.find((row) => row.surface === "planner")!.payload
++    const store = await open()
++    const cold = await countParses(() => read(store))
++    expect(cold.counts.taggedCalls).toBe(3)
++    expect(cold.counts.taggedCharacters).toBe(persisted.reduce((sum, row) => sum + row.payload.length, 0))
++    expect(encodeSnapshot(cold.value)).toBe(planner)
++    cold.value.data.record = { value: "retained output" }
++    const warm = await countParses(() => read(store))
++    expect(encodeSnapshot(warm.value)).toBe(planner)
++    expect(warm.value).not.toBe(cold.value)
++    expect(warm.value.data).not.toBe(cold.value.data)
++    expect(warm.counts.taggedCalls).toBe(0)
++    expect(warm.counts.nativeDashboard).toBe(0)
++    if (!store.transactionAll) throw new Error("All-surface transactions unavailable")
++    const all = store.transactionAll
++    const eager = await countParses(() => all(async (snapshots) => ({ commit: false, value: snapshots.planner })))
++    expect(encodeSnapshot(eager.value)).toBe(planner)
++    expect(eager.counts.taggedCalls).toBe(0)
++    expect(eager.counts.nativeDashboard).toBe(1)
++    expect(eager.counts.characters - warm.counts.characters).toBeGreaterThan(2 * 1024 * 1024)
++    expect(rows(directory)).toEqual(persisted)
++    console.log("FIN_PERSISTENCE_SURFACE_DEMAND " + JSON.stringify({ cold: cold.counts, warmPlanner: warm.counts, eagerAll: eager.counts }))
++  })
++})
++
++test("new invalid unrequested SQL payloads reject before root Planner callback on cold and warm stores", async () => {
++  await fixture(async (directory, open) => {
++    const store = await open()
++    await seed(store)
++    const persisted = rows(directory)
++    const planner = persisted.find((row) => row.surface === "planner")!.payload
++    await read(store)
++    for (const surface of ["dashboard", "procurement"] as const) {
++      const original = persisted.find((row) => row.surface === surface)!.payload
++      const invalidShape = decodeSnapshot(original)
++      Reflect.set(invalidShape, "audit", null)
++      const invalidContent = decodeSnapshot(original)
++      invalidContent.versions.record!.version = -1
++      for (const payload of ["[", '["sucafina-snapshot",2,["null"]]', encodeSnapshot(invalidShape), encodeSnapshot(invalidContent)]) {
++        replace(directory, surface, payload)
++        const expected = decoderError(payload)
++        const calls: string[] = []
++        for (const target of [store, await open()]) {
++          await expect(target.transaction("planner", async () => {
++            calls.push("unexpected")
++            return { commit: false, value: undefined }
++          })).rejects.toThrow(expected)
++        }
++        expect(calls).toEqual([])
++        replace(directory, surface, original)
++        expect(encodeSnapshot(await read(store))).toBe(planner)
++      }
++    }
++    expect(rows(directory)).toEqual(persisted)
++  })
++})
++
++test("one root materializes a demanded sibling once while nested and current snapshots remain independent staged copies", async () => {
++  await fixture(async (directory, open) => {
++    const store = await open()
++    await seed(store)
++    await read(store)
++    const persisted = rows(directory)
++    const dashboard = persisted.find((row) => row.surface === "dashboard")!.payload
++    const observed = await countParses(() => store.transaction("planner", async (parent) => {
++      parent.data.record = { value: "parent stage", optional: undefined, negativeZero: -0 }
++      const child = await read(store, "dashboard")
++      expect(encodeSnapshot(child)).toBe(dashboard)
++      child.data.record = { value: "child mutation" }
++      const sibling = await read(store, "dashboard")
++      expect(encodeSnapshot(sibling)).toBe(dashboard)
++      expect(sibling).not.toBe(child)
++      expect(sibling.data).not.toBe(child.data)
++      const first = store.currentSnapshots?.()
++      if (!first) throw new Error("Current snapshots unavailable")
++      expect(encodeSnapshot(first.dashboard)).toBe(dashboard)
++      expect(first.planner.data.record).toEqual(parent.data.record)
++      expect(first.planner).not.toBe(parent)
++      expect(first.planner.data).not.toBe(parent.data)
++      first.dashboard.data.record = { value: "current Dashboard mutation" }
++      first.planner.data.record = { value: "current Planner mutation" }
++      const second = store.currentSnapshots?.()
++      if (!second) throw new Error("Current snapshots unavailable")
++      expect(encodeSnapshot(second.dashboard)).toBe(dashboard)
++      expect(second.planner.data.record).toEqual({ value: "parent stage", optional: undefined, negativeZero: -0 })
++      expect(second.dashboard).not.toBe(first.dashboard)
++      expect(second.planner).not.toBe(first.planner)
++      expect(second.dashboard.data).not.toBe(first.dashboard.data)
++      expect(second.planner.data).not.toBe(first.planner.data)
++      expect(Object.is((second.planner.data.record as Record<string, unknown>).negativeZero, -0)).toBe(true)
++      expect(Object.hasOwn(second.planner.data.record as object, "optional")).toBe(true)
++      return { commit: false, value: first }
++    }))
++    expect(observed.counts.nativeDashboard).toBe(1)
++    observed.value.dashboard.data.record = { value: "after-scope output mutation" }
++    expect(encodeSnapshot(await read(store, "dashboard"))).toBe(dashboard)
++    expect(rows(directory)).toEqual(persisted)
++  })
++})
++
++test("ended root scopes reject deferred sibling access before any lazy materialization", async () => {
++  await fixture(async (directory, open) => {
++    const store = await open()
++    await seed(store)
++    await read(store)
++    const planner = rows(directory).find((row) => row.surface === "planner")!.payload
++    const release = Promise.withResolvers<void>()
++    const late: Promise<unknown>[] = []
++    const callbacks: string[] = []
++    try {
++      const parent = await countParses(() => store.transaction("planner", async (snapshot) => {
++        late.push(release.promise.then(() => store.currentSnapshots?.()))
++        late.push(release.promise.then(() => store.transaction("dashboard", async () => {
++          callbacks.push("unexpected")
++          return { commit: false, value: undefined }
++        })))
++        for (const pending of late) void pending.catch(() => undefined)
++        return { commit: false, value: snapshot }
++      }))
++      expect(parent.counts.nativeDashboard).toBe(0)
++      expect(encodeSnapshot(parent.value)).toBe(planner)
++      const after = await countParses(async () => {
++        parent.value.data.record = { value: "retained ordinary snapshot" }
++        encodeSnapshot(parent.value)
++        release.resolve()
++        const settled = await Promise.allSettled(late)
++        for (const result of settled) {
++          expect(result.status).toBe("rejected")
++          if (result.status !== "rejected") throw new Error("Expired scope unexpectedly succeeded")
++          expect(result.reason).toBeInstanceOf(Error)
++          expect(String(result.reason)).toContain("scope has ended")
++        }
++      })
++      expect(after.counts.calls).toBe(0)
++      expect(callbacks).toEqual([])
++      expect(store.currentSnapshots?.()).toBeUndefined()
++      expect(encodeSnapshot(await read(store))).toBe(planner)
++    } finally { release.resolve(); await Promise.allSettled(late) }
++  })
++})
++
++test("a captured Dashboard plan survives eviction while other surfaces are observed during the same admission", async () => {
++  await fixture(async (directory, open) => {
++    const writer = await open()
++    await seed(writer, true)
++    const reader = await open()
++    await read(reader)
++    const dashboard = rows(directory).find((row) => row.surface === "dashboard")!.payload
++    if (!writer.transactionAll) throw new Error("All-surface transactions unavailable")
++    await writer.transactionAll(async (snapshots) => {
++      snapshots.planner.data.large = "p".repeat(2 * 1024 * 1024)
++      snapshots.procurement.data.large = "q".repeat(2 * 1024 * 1024)
++      return { commit: true, value: undefined }
++    })
++    // Dashboard hits its original plan first. The two new sibling plans each
++    // fit, but their aggregate with Dashboard exceeds the immutable-string bound.
++    // Demand occurs after admission; it must use that captured plan after eviction.
++    const result = await countParses(() => read(reader, "dashboard"))
++    expect(encodeSnapshot(result.value)).toBe(dashboard)
++    expect(result.counts.taggedCalls).toBe(2)
++    expect(result.counts.taggedDashboard).toBe(0)
++    expect(result.counts.nativeDashboard).toBe(1)
++    expect(Object.is((result.value.data.record as Record<string, unknown>).negativeZero, -0)).toBe(true)
++    expect(Object.hasOwn(result.value.data.record as object, "optional")).toBe(true)
++    console.log("FIN_PERSISTENCE_CAPTURED_PLAN " + JSON.stringify(result.counts))
++  })
++})
++
++test("missing sibling rows invalidate old plans and restore only after a fresh SQL observation", async () => {
++  await fixture(async (directory, open) => {
++    const store = await open()
++    await seed(store)
++    await read(store)
++    const dashboard = rows(directory).find((row) => row.surface === "dashboard")!.payload
++    replace(directory, "dashboard")
++    await store.transaction("planner", async () => {
++      const first = await read(store, "dashboard")
++      expect(first).toEqual(empty)
++      first.data.record = { value: "missing output mutation" }
++      expect(await read(store, "dashboard")).toEqual(empty)
++      expect(store.currentSnapshots?.()?.dashboard).toEqual(empty)
++      return { commit: false, value: undefined }
++    })
++    expect(rows(directory).some((row) => row.surface === "dashboard")).toBe(false)
++    const database = new Database(join(directory, "installation.sqlite"), { strict: true })
++    try { database.query("INSERT INTO snapshots (surface, payload) VALUES (?, ?)").run("dashboard", dashboard) }
++    finally { database.close() }
++    expect(encodeSnapshot(await read(store, "dashboard"))).toBe(dashboard)
++  })
++})
++
++test("independent writers cannot replace an admitted sibling observation and the next root sees their commit", async () => {
++  await fixture(async (_directory, open) => {
++    const first = await open()
++    await seed(first)
++    const second = await open()
++    await read(first)
++    await read(second)
++    const ready = Promise.withResolvers<void>()
++    const release = Promise.withResolvers<void>()
++    const calls: string[] = []
++    const one = first.transaction("planner", async () => {
++      calls.push("first")
++      ready.resolve()
++      await release.promise
++      const current = first.currentSnapshots?.()
++      if (!current) throw new Error("Current snapshots unavailable")
++      expect((current.dashboard.data.record as Record<string, unknown>).value).toBe("persisted")
++      return { commit: false, value: undefined }
++    })
++    await ready.promise
++    const two = second.transaction("dashboard", async (snapshot) => {
++      calls.push("second")
++      snapshot.data.record = { marker: dashboardMarker, value: "other store commit" }
++      snapshot.versions.record = { version: 8, by: "second" }
++      return { commit: true, value: undefined }
++    })
++    const finished = Promise.allSettled([one, two])
++    try {
++      await Bun.sleep(10)
++      expect(calls).toEqual(["first"])
++      release.resolve()
++      await one
++      await two
++    } finally { release.resolve(); await finished }
++    expect(calls).toEqual(["first", "second"])
++    await first.transaction("planner", async () => {
++      const current = first.currentSnapshots?.()
++      if (!current) throw new Error("Current snapshots unavailable")
++      expect((current.dashboard.data.record as Record<string, unknown>).value).toBe("other store commit")
++      expect(current.dashboard.versions.record).toEqual({ version: 8, by: "second" })
++      return { commit: false, value: undefined }
++    })
++  })
++})

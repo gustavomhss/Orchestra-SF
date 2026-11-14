@@ -1,0 +1,733 @@
+{
+  "schema": "sf2h.finance-persistence-performance.ci-ledger.v1",
+  "mission": 34,
+  "terminal": true,
+  "repository": "gustavomhss/Orchestra-SF",
+  "sourceBranch": "finance-resume",
+  "pr": 42,
+  "entries": [
+    {
+      "stage": "P0",
+      "source": {
+        "commit": "2671d4f87b4c3f48b1685be84c5ccb1f5e5d72a8",
+        "tree": "22d3dfc65ac1b559680aafe67a09289c46b58be2"
+      },
+      "snapshot": {
+        "commit": "a4d632bcb08d7dd5f9ae64f8eb09ae85af27aec2",
+        "tree": "6a4c37215e12fc33a9e5148a8dbe90095e5f7649",
+        "soleParent": "2671d4f87b4c3f48b1685be84c5ccb1f5e5d72a8",
+        "onlyChangedPath": ".ci-run.json",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        }
+      },
+      "run": {
+        "id": 43643802811,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43643802811",
+        "branch": "ci-run-linux-finance-persistence-2671d4f8-profile",
+        "headSha": "a4d632bcb08d7dd5f9ae64f8eb09ae85af27aec2",
+        "status": "completed",
+        "conclusion": "success",
+        "attempt": 1,
+        "createdAt": "2026-11-14T21:37:29Z",
+        "startedAt": "2026-11-14T21:37:29Z",
+        "updatedAt": "2026-11-14T21:40:17Z"
+      },
+      "jobs": [
+        {
+          "id": 132596942830,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-14T21:37:31Z",
+          "completedAt": "2026-11-14T21:40:12Z"
+        },
+        {
+          "id": 132597690922,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-14T21:40:14Z",
+          "completedAt": "2026-11-14T21:40:16Z"
+        }
+      ],
+      "testStep": {
+        "startedAt": "2026-11-14T21:39:04Z",
+        "completedAt": "2026-11-14T21:40:08Z",
+        "conclusion": "success"
+      },
+      "result": {
+        "pass": 1,
+        "fail": 0,
+        "expectCalls": 48,
+        "totalSeconds": 63.82
+      },
+      "omni": {
+        "nonce": "c15031b0abb6ae865d48133e0a6bb83c",
+        "verdictLine": "omni positive control [c15031b0abb6ae865d48133e0a6bb83c]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+        "nativeProof": false
+      }
+    },
+    {
+      "stage": "S1",
+      "source": {
+        "commit": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+        "tree": "5b100ef54c5a3574a4d4ceebd54eaa6ac816efd4"
+      },
+      "snapshot": {
+        "commit": "88fe413d104e7f6d45af4118ca572a216770463c",
+        "tree": "eaba7206e7fa4a3de3841be749a0260793248ed4",
+        "soleParent": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+        "onlyChangedPath": ".ci-run.json",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+            "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+            "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+            "Sucafinav1/test/local-store.test.ts",
+            "Sucafinav1/test/local-backups.test.ts",
+            "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+            "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+            "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+            "Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+            "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        }
+      },
+      "run": {
+        "id": 43644438895,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644438895",
+        "branch": "ci-run-linux-finance-persistence-0b4c6338-short",
+        "headSha": "88fe413d104e7f6d45af4118ca572a216770463c",
+        "status": "completed",
+        "conclusion": "failure",
+        "attempt": 1,
+        "createdAt": "2026-11-14T21:44:56Z",
+        "startedAt": "2026-11-14T21:44:56Z",
+        "updatedAt": "2026-11-14T21:47:22Z"
+      },
+      "jobs": [
+        {
+          "id": 132598944546,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "failure",
+          "startedAt": "2026-11-14T21:44:58Z",
+          "completedAt": "2026-11-14T21:47:12Z"
+        },
+        {
+          "id": 132599565274,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-14T21:47:14Z",
+          "completedAt": "2026-11-14T21:47:22Z"
+        }
+      ],
+      "testStep": {
+        "startedAt": "2026-11-14T21:46:28Z",
+        "completedAt": "2026-11-14T21:47:09Z",
+        "conclusion": "failure"
+      },
+      "result": {
+        "pass": 112,
+        "fail": 1,
+        "skip": 3,
+        "expectCalls": 1061,
+        "totalSeconds": 40.74,
+        "ownedPass": 17
+      },
+      "omni": {
+        "nonce": "82bbb6ead63203f9389abe3820060596",
+        "verdictLine": "omni positive control [82bbb6ead63203f9389abe3820060596]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+        "nativeProof": false
+      }
+    },
+    {
+      "stage": "B1",
+      "source": {
+        "commit": "2671d4f87b4c3f48b1685be84c5ccb1f5e5d72a8",
+        "tree": "22d3dfc65ac1b559680aafe67a09289c46b58be2"
+      },
+      "snapshot": {
+        "commit": "36f5f7f5f44b848990d247f846bde4e49e496111",
+        "tree": "c47a7137f4c20bc282121bfc496fbc0a160ddf85",
+        "soleParent": "2671d4f87b4c3f48b1685be84c5ccb1f5e5d72a8",
+        "onlyChangedPath": ".ci-run.json",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/local-store.test.ts",
+            "--timeout",
+            "120000",
+            "-t",
+            "^surface namespaces isolate identical blob keys and snapshots$"
+          ],
+          "env": {}
+        }
+      },
+      "run": {
+        "id": 43644706454,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644706454",
+        "branch": "ci-run-linux-finance-persistence-2671d4f8-blob-control",
+        "headSha": "36f5f7f5f44b848990d247f846bde4e49e496111",
+        "status": "completed",
+        "conclusion": "failure",
+        "attempt": 1,
+        "createdAt": "2026-11-14T21:47:58Z",
+        "startedAt": "2026-11-14T21:47:58Z",
+        "updatedAt": "2026-11-14T21:49:33Z"
+      },
+      "jobs": [
+        {
+          "id": 132599773810,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "failure",
+          "startedAt": "2026-11-14T21:48:00Z",
+          "completedAt": "2026-11-14T21:49:28Z"
+        },
+        {
+          "id": 132600164956,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-14T21:49:30Z",
+          "completedAt": "2026-11-14T21:49:32Z"
+        }
+      ],
+      "testStep": {
+        "startedAt": "2026-11-14T21:49:25Z",
+        "completedAt": "2026-11-14T21:49:25Z",
+        "conclusion": "failure"
+      },
+      "result": {
+        "pass": 0,
+        "fail": 1,
+        "filtered": 35,
+        "expectCalls": 3,
+        "totalSeconds": 0.207
+      },
+      "omni": {
+        "nonce": "4ad193e3f1e5714fff8b6d5d187abdfd",
+        "verdictLine": "omni positive control [4ad193e3f1e5714fff8b6d5d187abdfd]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+        "nativeProof": false
+      }
+    },
+    {
+      "stage": "K1",
+      "source": {
+        "commit": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+        "tree": "5b100ef54c5a3574a4d4ceebd54eaa6ac816efd4"
+      },
+      "snapshot": null,
+      "run": {
+        "id": 43644855386,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644855386",
+        "branch": "astra-check-fresume",
+        "headSha": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+        "status": "completed",
+        "conclusion": "failure",
+        "attempt": 1,
+        "createdAt": "2026-11-14T21:49:43Z",
+        "startedAt": "2026-11-14T21:49:43Z",
+        "updatedAt": "2026-11-14T21:51:10Z"
+      },
+      "jobs": [
+        {
+          "id": 132600234407,
+          "name": "finance-checks",
+          "status": "completed",
+          "conclusion": "failure",
+          "startedAt": "2026-11-14T21:49:45Z",
+          "completedAt": "2026-11-14T21:51:09Z"
+        }
+      ],
+      "testStep": null,
+      "result": {
+        "typecheckDiagnostics": 115,
+        "newDiagnostics": 0,
+        "guards": {
+          "gates": 43,
+          "warnings": 15,
+          "errors": 0
+        }
+      },
+      "omni": null
+    },
+    {
+      "stage": "S2",
+      "source": {
+        "commit": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+        "tree": "5b100ef54c5a3574a4d4ceebd54eaa6ac816efd4"
+      },
+      "snapshot": {
+        "commit": "87dc2789bfb746902f779f47a0ec9ab19e42d0f6",
+        "tree": "b29f99ccb43d2fa0702835747e95fc6f64585393",
+        "soleParent": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+        "onlyChangedPath": ".ci-run.json",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts",
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/persisted-recertification.test.ts",
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts",
+            "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+            "Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+            "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+            "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+            "Sucafinav1/test/product/wp11/result-store.test.ts",
+            "Sucafinav1/test/product/finance-journey-closure/units-batch.test.ts",
+            "Sucafinav1/test/product/finance-journey-closure/original-authority.test.ts",
+            "Sucafinav1/test/product/finance-journey-closure/result-receipt.test.ts",
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+            "--timeout",
+            "120000",
+            "-t",
+            "^(Finance sensitivity|units resolution|persisted Finance candidates|historical scenario batch|historical batch|sensitivity retains the admitted request|sensitivity detects a provider|each sensitivity verification reads a fresh|a failed sensitivity scope cannot retain|real Planner sensitivity keeps EUR|one sibling batch|units emit the identical binding|comparison starts independent batches|different cases and historical|ledger, alternative|authority revoked after result rereads|a real Planner source change|retained store and case|batch refusals|decision result persistence|Finance units|FIN-IND-005 result receipt|coverage refuses its original predicate|FIN-IND-005 Finance performance)"
+          ],
+          "env": {}
+        }
+      },
+      "run": {
+        "id": 43645018624,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43645018624",
+        "branch": "ci-run-linux-finance-persistence-0b4c6338-journey",
+        "headSha": "87dc2789bfb746902f779f47a0ec9ab19e42d0f6",
+        "status": "completed",
+        "conclusion": "failure",
+        "attempt": 1,
+        "createdAt": "2026-11-14T21:51:37Z",
+        "startedAt": "2026-11-14T21:51:37Z",
+        "updatedAt": "2026-11-14T22:01:26Z"
+      },
+      "jobs": [
+        {
+          "id": 132600738071,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "failure",
+          "startedAt": "2026-11-14T21:51:39Z",
+          "completedAt": "2026-11-14T22:01:17Z"
+        },
+        {
+          "id": 132603294591,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-14T22:01:19Z",
+          "completedAt": "2026-11-14T22:01:26Z"
+        }
+      ],
+      "testStep": {
+        "startedAt": "2026-11-14T21:53:22Z",
+        "completedAt": "2026-11-14T22:01:14Z",
+        "conclusion": "failure"
+      },
+      "result": {
+        "pass": 43,
+        "fail": 1,
+        "filtered": 4,
+        "expectCalls": 368,
+        "totalSeconds": 472.35,
+        "journeyMilliseconds": 180019.5,
+        "fixtureDeadlineMilliseconds": 180000
+      },
+      "omni": {
+        "nonce": "e4cb5f4c1746b354dde382645755935b",
+        "verdictLine": "omni positive control [e4cb5f4c1746b354dde382645755935b]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+        "nativeProof": false
+      }
+    },
+    {
+      "stage": "S3",
+      "source": {
+        "commit": "17bab9f471a818be1631652d3ec0adcec00d52bf",
+        "tree": "42fd3ef9e92b3f6f8928810856684c060a8932d7"
+      },
+      "snapshot": {
+        "commit": "c602dba542a6d4d862df53960930bb1ed4699b3d",
+        "tree": "d1eaaf9c4a56ec9d723be09c3cae41607b5871b5",
+        "soleParent": "17bab9f471a818be1631652d3ec0adcec00d52bf",
+        "onlyChangedPath": ".ci-run.json",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        }
+      },
+      "run": {
+        "id": 43646928826,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646928826",
+        "branch": "ci-run-linux-finance-persistence-17bab9f4-scope",
+        "headSha": "c602dba542a6d4d862df53960930bb1ed4699b3d",
+        "status": "completed",
+        "conclusion": "success",
+        "attempt": 1,
+        "createdAt": "2026-11-14T22:13:11Z",
+        "startedAt": "2026-11-14T22:13:11Z",
+        "updatedAt": "2026-11-14T22:15:52Z"
+      },
+      "jobs": [
+        {
+          "id": 132606687358,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-14T22:13:14Z",
+          "completedAt": "2026-11-14T22:15:46Z"
+        },
+        {
+          "id": 132607382586,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-14T22:15:48Z",
+          "completedAt": "2026-11-14T22:15:51Z"
+        }
+      ],
+      "testStep": {
+        "startedAt": "2026-11-14T22:14:53Z",
+        "completedAt": "2026-11-14T22:15:43Z",
+        "conclusion": "success"
+      },
+      "result": {
+        "pass": 1,
+        "fail": 0,
+        "expectCalls": 38,
+        "totalSeconds": 49.29
+      },
+      "omni": {
+        "nonce": "9f8108a550d8c1432cf4dbf0636214d2",
+        "verdictLine": "omni positive control [9f8108a550d8c1432cf4dbf0636214d2]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+        "nativeProof": false
+      }
+    },
+    {
+      "stage": "S4",
+      "source": {
+        "commit": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+        "tree": "e1ec7c748bd094585dfdbdf0cfbd019782ade908"
+      },
+      "snapshot": {
+        "commit": "ab67e9059f194199fdd10652bb054d50d883914e",
+        "tree": "1cc4e371accada47a9ae4f319d487d57c71aedd9",
+        "soleParent": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+        "onlyChangedPath": ".ci-run.json",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+            "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+            "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+            "Sucafinav1/test/local-store.test.ts",
+            "Sucafinav1/test/local-backups.test.ts",
+            "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+            "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+            "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+            "Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+            "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+            "Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+            "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        }
+      },
+      "run": {
+        "id": 43647736006,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43647736006",
+        "branch": "ci-run-linux-finance-persistence-ebbc90dd-short",
+        "headSha": "ab67e9059f194199fdd10652bb054d50d883914e",
+        "status": "completed",
+        "conclusion": "failure",
+        "attempt": 1,
+        "createdAt": "2026-11-14T22:22:15Z",
+        "startedAt": "2026-11-14T22:22:15Z",
+        "updatedAt": "2026-11-14T22:25:18Z"
+      },
+      "jobs": [
+        {
+          "id": 132609151438,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "failure",
+          "startedAt": "2026-11-14T22:22:17Z",
+          "completedAt": "2026-11-14T22:25:12Z"
+        },
+        {
+          "id": 132609955236,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-14T22:25:14Z",
+          "completedAt": "2026-11-14T22:25:17Z"
+        }
+      ],
+      "testStep": {
+        "startedAt": "2026-11-14T22:24:05Z",
+        "completedAt": "2026-11-14T22:25:11Z",
+        "conclusion": "failure"
+      },
+      "result": {
+        "pass": 120,
+        "fail": 1,
+        "skip": 3,
+        "expectCalls": 1221,
+        "totalSeconds": 65.09,
+        "ownedPass": 25
+      },
+      "omni": {
+        "nonce": "52e001987496d85e96cabc50773469c6",
+        "verdictLine": "omni positive control [52e001987496d85e96cabc50773469c6]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+        "nativeProof": false
+      }
+    },
+    {
+      "stage": "K2",
+      "source": {
+        "commit": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+        "tree": "e1ec7c748bd094585dfdbdf0cfbd019782ade908"
+      },
+      "snapshot": null,
+      "run": {
+        "id": 43648098991,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43648098991",
+        "branch": "astra-check-fresume",
+        "headSha": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+        "status": "completed",
+        "conclusion": "failure",
+        "attempt": 1,
+        "createdAt": "2026-11-14T22:26:23Z",
+        "startedAt": "2026-11-14T22:26:23Z",
+        "updatedAt": "2026-11-14T22:28:05Z"
+      },
+      "jobs": [
+        {
+          "id": 132610276531,
+          "name": "finance-checks",
+          "status": "completed",
+          "conclusion": "failure",
+          "startedAt": "2026-11-14T22:26:25Z",
+          "completedAt": "2026-11-14T22:28:04Z"
+        }
+      ],
+      "testStep": null,
+      "result": {
+        "typecheckDiagnostics": 115,
+        "newDiagnostics": 0,
+        "guards": {
+          "gates": 43,
+          "warnings": 15,
+          "errors": 0
+        }
+      },
+      "omni": null
+    },
+    {
+      "stage": "S5",
+      "source": {
+        "commit": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+        "tree": "e1ec7c748bd094585dfdbdf0cfbd019782ade908"
+      },
+      "snapshot": {
+        "commit": "858caef12e133425d036867b6333496691856e9a",
+        "tree": "c3163564314315c35a64cf91ef9b3ea35636de32",
+        "soleParent": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+        "onlyChangedPath": ".ci-run.json",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts",
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/persisted-recertification.test.ts",
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts",
+            "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+            "Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+            "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+            "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+            "Sucafinav1/test/product/wp11/result-store.test.ts",
+            "Sucafinav1/test/product/finance-journey-closure/units-batch.test.ts",
+            "Sucafinav1/test/product/finance-journey-closure/original-authority.test.ts",
+            "Sucafinav1/test/product/finance-journey-closure/result-receipt.test.ts",
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+            "--timeout",
+            "120000",
+            "-t",
+            "^(Finance sensitivity|units resolution|persisted Finance candidates|historical scenario batch|historical batch|sensitivity retains the admitted request|sensitivity detects a provider|each sensitivity verification reads a fresh|a failed sensitivity scope cannot retain|real Planner sensitivity keeps EUR|one sibling batch|units emit the identical binding|comparison starts independent batches|different cases and historical|ledger, alternative|authority revoked after result rereads|a real Planner source change|retained store and case|batch refusals|decision result persistence|Finance units|FIN-IND-005 result receipt|coverage refuses its original predicate|FIN-IND-005 Finance performance)"
+          ],
+          "env": {}
+        }
+      },
+      "run": {
+        "id": 43648344709,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43648344709",
+        "branch": "ci-run-linux-finance-persistence-ebbc90dd-journey",
+        "headSha": "858caef12e133425d036867b6333496691856e9a",
+        "status": "completed",
+        "conclusion": "success",
+        "attempt": 1,
+        "createdAt": "2026-11-14T22:29:23Z",
+        "startedAt": "2026-11-14T22:29:23Z",
+        "updatedAt": "2026-11-14T22:37:12Z"
+      },
+      "jobs": [
+        {
+          "id": 132611055130,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-14T22:29:25Z",
+          "completedAt": "2026-11-14T22:37:05Z"
+        },
+        {
+          "id": 132613136744,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success",
+          "startedAt": "2026-11-14T22:37:07Z",
+          "completedAt": "2026-11-14T22:37:12Z"
+        }
+      ],
+      "testStep": {
+        "startedAt": "2026-11-14T22:30:55Z",
+        "completedAt": "2026-11-14T22:37:03Z",
+        "conclusion": "success"
+      },
+      "result": {
+        "pass": 44,
+        "fail": 0,
+        "filtered": 4,
+        "expectCalls": 396,
+        "totalSeconds": 368.12,
+        "journeyMilliseconds": 137976.36
+      },
+      "omni": {
+        "nonce": "fa7b967a7aafa9f675cd883ac4dec08d",
+        "verdictLine": "omni positive control [fa7b967a7aafa9f675cd883ac4dec08d]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+        "nativeProof": false
+      }
+    }
+  ],
+  "sequence": [
+    {
+      "previous": "P0",
+      "next": "S1",
+      "previousCompletedAt": "2026-11-14T21:40:17Z",
+      "nextCreatedAt": "2026-11-14T21:44:56Z",
+      "nonOverlapping": true
+    },
+    {
+      "previous": "S1",
+      "next": "B1",
+      "previousCompletedAt": "2026-11-14T21:47:22Z",
+      "nextCreatedAt": "2026-11-14T21:47:58Z",
+      "nonOverlapping": true
+    },
+    {
+      "previous": "B1",
+      "next": "K1",
+      "previousCompletedAt": "2026-11-14T21:49:33Z",
+      "nextCreatedAt": "2026-11-14T21:49:43Z",
+      "nonOverlapping": true
+    },
+    {
+      "previous": "K1",
+      "next": "S2",
+      "previousCompletedAt": "2026-11-14T21:51:10Z",
+      "nextCreatedAt": "2026-11-14T21:51:37Z",
+      "nonOverlapping": true
+    },
+    {
+      "previous": "S2",
+      "next": "S3",
+      "previousCompletedAt": "2026-11-14T22:01:26Z",
+      "nextCreatedAt": "2026-11-14T22:13:11Z",
+      "nonOverlapping": true
+    },
+    {
+      "previous": "S3",
+      "next": "S4",
+      "previousCompletedAt": "2026-11-14T22:15:52Z",
+      "nextCreatedAt": "2026-11-14T22:22:15Z",
+      "nonOverlapping": true
+    },
+    {
+      "previous": "S4",
+      "next": "K2",
+      "previousCompletedAt": "2026-11-14T22:25:18Z",
+      "nextCreatedAt": "2026-11-14T22:26:23Z",
+      "nonOverlapping": true
+    },
+    {
+      "previous": "K2",
+      "next": "S5",
+      "previousCompletedAt": "2026-11-14T22:28:05Z",
+      "nextCreatedAt": "2026-11-14T22:29:23Z",
+      "nonOverlapping": true
+    }
+  ],
+  "allRunsTerminal": true,
+  "allCleanupsSucceeded": true,
+  "pendingRuns": [],
+  "policy": {
+    "interface": "Existing .ci-run.json snapshot protocol and existing astra-check-fresume checks branch; no workflow/dispatcher changes.",
+    "deduplication": "Unique candidate/request/config runs; branch lookup before dispatch and one run per stage.",
+    "oneActiveMissionRunAtATime": true,
+    "longW1AndW3AreDifferentProductCandidates": true,
+    "unchangedFailedLongRepeated": false,
+    "localTests": false,
+    "localServers": false,
+    "epicOrFullSuite": false,
+    "engineChanges": false,
+    "orchestraRestart": false,
+    "sourceRefCAS": true,
+    "force": false
+  },
+  "finalResult": {
+    "finding": "FIN-IND-005",
+    "sourceStatus": "SOURCE_LONG_JOURNEY_PASS_PENDING_BUNDLE_INTEGRATION",
+    "packageChecks": "FAIL_INHERITED",
+    "bundle": "NOT_APPLIED_NOT_TESTED",
+    "globalAcceptanceGranted": false
+  }
+}

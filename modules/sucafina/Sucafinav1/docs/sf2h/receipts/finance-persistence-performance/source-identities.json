@@ -1,0 +1,221 @@
+{
+  "schema": "sf2h.finance-persistence-performance.source-identities.v2",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "finance-resume",
+  "pr": 42,
+  "receivedHead": "5e3073bceca683adc5663108832094421b43325e",
+  "productCandidate": {
+    "commit": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+    "tree": "e1ec7c748bd094585dfdbdf0cfbd019782ade908",
+    "parent": "17bab9f471a818be1631652d3ec0adcec00d52bf"
+  },
+  "product": {
+    "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "preimage": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+    "W1": "1eaf5b42230829466d29a82ac0d5361e98b1a64d",
+    "postimage": "02365b6a87b4726aefb4292555fc5ae5ac085bb7",
+    "bytes": 29961,
+    "sha256": "385541d3c293ce1b7dff4e8e4a9ceb1eddcbb25e0437bd4846d247eb3a951431"
+  },
+  "unchangedContract": {
+    "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+    "blob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5"
+  },
+  "ownTests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "blob": "5336cce8cf2e61722d6a14c8a9665c6a983b5622",
+      "mode": "100644",
+      "preimageAtReceivedHead": "absent"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "blob": "0492b09ed2c7ef2d56c3ef0a7138dbb922231b46",
+      "mode": "100644",
+      "preimageAtReceivedHead": "absent"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+      "blob": "c4fc07221d7273c6f0cd50180180b362dff30cb0",
+      "mode": "100644",
+      "preimageAtReceivedHead": "absent"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+      "blob": "f63caa1f12c5efe8cbfc12067734f4c3c1a30c8b",
+      "mode": "100644",
+      "preimageAtReceivedHead": "absent"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "blob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+      "mode": "100644",
+      "preimageAtReceivedHead": "absent"
+    }
+  ],
+  "originalJourney": {
+    "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+    "blob": "6395a5dc529acadfb0d9c1e2d8dca0664f40a39e",
+    "fixturePath": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+    "fixtureBlob": "0dc89d86866620a8109051c68bc2d2b4d92c508f",
+    "requestBlob": "8dffaaa4f504376c952f9d927ee0cbde76c9fc6e",
+    "fixtureBudget": 180000,
+    "bunTestBudget": 300000,
+    "unchanged": true
+  },
+  "candidateDiff": {
+    "base": "5e3073bceca683adc5663108832094421b43325e",
+    "head": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+    "totalCommits": 5,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/B1-request.json",
+        "status": "added",
+        "blob": "13af0896ba7dc25de5ab7c4123c5aa276673b08f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/B1-result.json",
+        "status": "added",
+        "blob": "e5ea6630f043ef78c005c11ad6b578be48abf099"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/K1-result.json",
+        "status": "added",
+        "blob": "a3d6a09b7fdb369f59ed52c38303f6944e0aa7f9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/P0-result.json",
+        "status": "added",
+        "blob": "f7aeeac94079fe4117f20082d181cd28edbf48b7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S1-request.json",
+        "status": "added",
+        "blob": "a40ba69f3a588c093b57078abd8da1a48b31156f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S1-result.json",
+        "status": "added",
+        "blob": "e64605e0c04e8c5442b30b122d2450a4a021b71a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S2-request.json",
+        "status": "added",
+        "blob": "8dffaaa4f504376c952f9d927ee0cbde76c9fc6e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S2-summary.json",
+        "status": "added",
+        "blob": "a42673287ad2a58eed48d728df31c6629f901daf"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S3-request.json",
+        "status": "added",
+        "blob": "16be43bed410e3a1858be9eca60cb3b4e457f6f5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/S3-result.json",
+        "status": "added",
+        "blob": "5e9feffbabc0f26ed44f22495268cc10320eb469"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/authority-01.json",
+        "status": "added",
+        "blob": "e7d80137cbabe9075cfc4c3abaa34c3b7bea03b4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/implementation-01.json",
+        "status": "added",
+        "blob": "11720b83e1c5a19a0ba11b782b575c496a793d35"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/implementation-02.json",
+        "status": "added",
+        "blob": "ddf7f88447f9fa30be5638c6a289be32b423476d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "status": "modified",
+        "blob": "02365b6a87b4726aefb4292555fc5ae5ac085bb7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+        "status": "added",
+        "blob": "5336cce8cf2e61722d6a14c8a9665c6a983b5622"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+        "status": "added",
+        "blob": "0492b09ed2c7ef2d56c3ef0a7138dbb922231b46"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+        "status": "added",
+        "blob": "c4fc07221d7273c6f0cd50180180b362dff30cb0"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+        "status": "added",
+        "blob": "f63caa1f12c5efe8cbfc12067734f4c3c1a30c8b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "status": "added",
+        "blob": "8a81665075aab6f8afa37105d3174d698f18bb9e"
+      }
+    ],
+    "onlyOneProductPath": true
+  },
+  "bundleObservation": {
+    "observedAt": "2026-11-14 22:38:32 UTC",
+    "repository": "gustavomhss/Orchestra-SF",
+    "pr": 65,
+    "branch": "sf2-stack",
+    "head": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+    "tree": "8da2223f2809a08b2c7169981c1d815ad0d7453a",
+    "localStoreBlob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+    "contractBlob": "9e9bac976b503409de65868a366f352ca1e65071",
+    "testParentListingCount": 32,
+    "testParentNames": [
+      "c12-composed-compatibility",
+      "c12-receipt-recovery",
+      "decisions-functional-closure",
+      "decisions-initial-alternatives",
+      "diagnostics",
+      "finance-journey-closure",
+      "finance-state-read-performance",
+      "forecast-cancel-visibility",
+      "operations-consumers",
+      "operations-fixes",
+      "operations-functional-closure",
+      "procurement-exports",
+      "review-fixes",
+      "routine-native-admission",
+      "ui-ack-completion",
+      "ui-split",
+      "work-split",
+      "wp00",
+      "wp01",
+      "wp02",
+      "wp03",
+      "wp04",
+      "wp05",
+      "wp06",
+      "wp07",
+      "wp08",
+      "wp09",
+      "wp10",
+      "wp11",
+      "wp12",
+      "wp13",
+      "wp14"
+    ],
+    "ownTestNamespaceAbsent": true,
+    "patchStillMatchesRecordedProductPreimages": true,
+    "patchApplied": false,
+    "targetTested": false,
+    "nextOwner": "session33",
+    "requireFreshReconciliationBeforeWrite": true
+  },
+  "terminalReceiptCommit": "Identified externally in PR42 and final completion message; only own receipt paths are added/updated after W3."
+}

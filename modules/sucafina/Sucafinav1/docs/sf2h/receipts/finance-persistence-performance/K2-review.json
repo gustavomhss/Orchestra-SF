@@ -1,0 +1,413 @@
+{
+  "schema": "sf2h.finance-persistence-performance.checks-review.v1",
+  "mission": 34,
+  "selection": "K2",
+  "status": "COMPLETE",
+  "conclusion": "FAIL",
+  "finding": "FIN-IND-005",
+  "findingStatus": "OPEN",
+  "author": "/root/persistence_review",
+  "reviewScope": "Independent parse/comparison of executed K2 logs and immutable source identities; no local test or check execution.",
+  "W": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+  "tree": "e1ec7c748bd094585dfdbdf0cfbd019782ade908",
+  "productBlob": "02365b6a87b4726aefb4292555fc5ae5ac085bb7",
+  "run": {
+    "id": 43648098991,
+    "head_sha": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+    "head_branch": "astra-check-fresume",
+    "path": ".github/workflows/astra-finance-resume-check.yml",
+    "event": "push",
+    "run_attempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-14T22:26:23Z",
+    "updated_at": "2026-11-14T22:28:05Z",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43648098991"
+  },
+  "job": {
+    "id": 132610276531,
+    "head_sha": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+    "run_id": 43648098991,
+    "status": "completed",
+    "conclusion": "failure",
+    "started_at": "2026-11-14T22:26:25Z",
+    "completed_at": "2026-11-14T22:28:04Z",
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1,
+        "started_at": "2026-11-14T22:26:25Z",
+        "completed_at": "2026-11-14T22:26:28Z"
+      },
+      {
+        "name": "Checkout exact product commit",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2,
+        "started_at": "2026-11-14T22:26:28Z",
+        "completed_at": "2026-11-14T22:26:46Z"
+      },
+      {
+        "name": "Record product and guard base",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3,
+        "started_at": "2026-11-14T22:26:46Z",
+        "completed_at": "2026-11-14T22:26:47Z"
+      },
+      {
+        "name": "Setup Bun",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4,
+        "started_at": "2026-11-14T22:26:47Z",
+        "completed_at": "2026-11-14T22:27:38Z"
+      },
+      {
+        "name": "Typecheck Sucafina package",
+        "status": "completed",
+        "conclusion": "failure",
+        "number": 5,
+        "started_at": "2026-11-14T22:27:38Z",
+        "completed_at": "2026-11-14T22:27:52Z"
+      },
+      {
+        "name": "Guardrails against origin/dev",
+        "status": "completed",
+        "conclusion": "failure",
+        "number": 6,
+        "started_at": "2026-11-14T22:27:52Z",
+        "completed_at": "2026-11-14T22:28:02Z"
+      },
+      {
+        "name": "Upload exact check evidence",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 7,
+        "started_at": "2026-11-14T22:28:02Z",
+        "completed_at": "2026-11-14T22:28:03Z"
+      },
+      {
+        "name": "Post Setup Bun",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 13,
+        "started_at": "2026-11-14T22:28:03Z",
+        "completed_at": "2026-11-14T22:28:03Z"
+      },
+      {
+        "name": "Post Checkout exact product commit",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 14,
+        "started_at": "2026-11-14T22:28:03Z",
+        "completed_at": "2026-11-14T22:28:03Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 15,
+        "started_at": "2026-11-14T22:28:03Z",
+        "completed_at": "2026-11-14T22:28:03Z"
+      }
+    ]
+  },
+  "source": {
+    "productSha": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+    "productTree": "e1ec7c748bd094585dfdbdf0cfbd019782ade908",
+    "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "recovery": "ec052c2c3bef96f492512f3d5f663919580f25c8"
+  },
+  "identityChecks": {
+    "run_head_matches_W3": true,
+    "job_head_matches_W3": true,
+    "logged_product_sha_matches_W3": true,
+    "logged_product_tree_matches_MCP_commit": true,
+    "all_jobs_terminal": true,
+    "artifact_matches_run_and_W3": true,
+    "workflow_blob_unchanged_from_K1_and_baseline": true,
+    "package_blob_unchanged_from_K1": true,
+    "tsconfig_blob_unchanged_from_K1": true,
+    "guard_base_equal_to_K1_and_baseline": true,
+    "merge_base_equal_to_K1_and_baseline": true,
+    "recovery_equal_to_K1_and_baseline": true,
+    "normalized_diagnostic_multiset_equal_to_K1": true,
+    "normalized_diagnostic_multiset_equal_to_baseline": true,
+    "guards_findings_sequence_equal_to_K1": true,
+    "guards_findings_sequence_equal_to_baseline": true,
+    "preview_message_variation_file_blob_unchanged": true,
+    "wp06_message_variation_file_blob_unchanged": true,
+    "baseline_local_bytes_match_previously_verified_blob": true,
+    "independent_parser_matches_root_diagnostics": true,
+    "independent_parser_matches_root_findings": true
+  },
+  "comparisons": {
+    "K1": {
+      "selection": "K1",
+      "W": "0b4c633809166ff7165ad8440c3c08b5d25c727d",
+      "runId": 43644855386,
+      "jobId": 132600234407,
+      "receipt": {
+        "path": "mission34/review/checks-review.json",
+        "bytes": 12604,
+        "sha256": "9bbc2414d19b475ff9722262bca427b4a8968ee36bf9147e91c46ecda174b647",
+        "gitBlob": "9999240943ec765a79bde5a38b4e215465808668"
+      },
+      "log": {
+        "path": "mission34/review/k1-job-log.txt",
+        "bytes": 142946,
+        "sha256": "a6a5a3a12274e2702f5b88e1c4f3d2d566528dc632a7b5e6b53311e373a95484",
+        "gitBlob": "2e9506ad38bfe0481d750b88d9893e494f8357a8"
+      },
+      "diagnostics": {
+        "beforeCount": 115,
+        "afterCount": 115,
+        "keyMultisetsEqual": true,
+        "new": [],
+        "removed": [],
+        "messageDifferences": [
+          {
+            "key": [
+              "product/imports/dashboard-preview.ts",
+              38,
+              75,
+              "TS2345"
+            ],
+            "before": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'.",
+            "after": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }>'."
+          }
+        ]
+      }
+    },
+    "mission22K2": {
+      "selection": "K2",
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "tree": "1ebd1ee9d0e95253526d0ee73cf2353a71ccbe58",
+      "runId": 43639846168,
+      "jobId": 132584756877,
+      "receiptPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/K2-result.json",
+      "receipt": {
+        "path": "mission34/inputs/baseline-K2-result.json",
+        "bytes": 67256,
+        "sha256": "c7259b57bf868d54e5c15adcf3ee7dc5a930a57948d2ec444312befd8337a0d8",
+        "gitBlob": "68494c4bccbf31ac57eed6493353c63fcdc71c57"
+      },
+      "diagnostics": {
+        "beforeCount": 115,
+        "afterCount": 115,
+        "keyMultisetsEqual": true,
+        "new": [],
+        "removed": [],
+        "messageDifferences": [
+          {
+            "key": [
+              "test/product/wp06/imports/end-to-end.test.ts",
+              56,
+              72,
+              "TS2345"
+            ],
+            "before": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { ...; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+            "after": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }>'."
+          },
+          {
+            "key": [
+              "product/imports/dashboard-preview.ts",
+              38,
+              75,
+              "TS2345"
+            ],
+            "before": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'.",
+            "after": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }>'."
+          }
+        ]
+      }
+    }
+  },
+  "typecheck": {
+    "conclusion": "FAIL",
+    "stepExitCode": 2,
+    "invocation": "bun typecheck",
+    "workingDirectory": "modules/sucafina",
+    "packageScript": "bun --cwd Sucafinav1 typecheck",
+    "innerScript": "tsgo --noEmit",
+    "packageBlob": "18911fee9313f8fb57c1a972bc70eec2f7864c55",
+    "tsconfigBlob": "51895f3c254e6020d116ca73d4a1c690f7562169",
+    "tsconfigInclude": [
+      "installation.ts",
+      "src/**/*.ts",
+      "test/**/*.ts",
+      "../porta/act.ts",
+      "runtime/**/*.ts",
+      "index.ts",
+      "local/**/*.ts"
+    ],
+    "runtimeAndMissionTestNamespaceIncluded": true,
+    "diagnosticCount": 115,
+    "K1DiagnosticCount": 115,
+    "baselineDiagnosticCount": 115,
+    "ownedDiagnosticCount": 0,
+    "ownedDiagnostics": [],
+    "inheritedDiagnosticIdentities": 115,
+    "newDiagnosticKeys": [],
+    "removedDiagnosticKeys": [],
+    "normalization": "Strip GitHub timestamps, actual/literal ANSI color and the leading ##[error] annotation. Compare exact path, 1-based line, column and TS code as a multiset, including multiplicity. No path, line, column or code adjustment is applied. Compare first-line messages separately; no byte-identical multiline compiler-output claim.",
+    "normalizedKeyMultisetSha256": "069540217d3633ed10472d5b28b7acd168353e2760230c665aa28ff5f985adda",
+    "canonicalEncoding": "Sorted [path,line,column,code] tuples encoded as compact UTF-8 JSON with no trailing newline.",
+    "messageDifferenceCountVsK1": 1,
+    "messageDifferencesVsK1": [
+      {
+        "key": [
+          "product/imports/dashboard-preview.ts",
+          38,
+          75,
+          "TS2345"
+        ],
+        "before": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'.",
+        "after": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }>'."
+      }
+    ],
+    "messageDifferenceCountVsMission22K2": 2,
+    "messageDifferencesVsMission22K2": [
+      {
+        "key": [
+          "test/product/wp06/imports/end-to-end.test.ts",
+          56,
+          72,
+          "TS2345"
+        ],
+        "before": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { ...; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+        "after": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }>'."
+      },
+      {
+        "key": [
+          "product/imports/dashboard-preview.ts",
+          38,
+          75,
+          "TS2345"
+        ],
+        "before": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'.",
+        "after": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }>'."
+      }
+    ],
+    "messageVariationSourceBlobs": {
+      "product/imports/dashboard-preview.ts": "1ef975cc87f5ee31b3b8c742cd073035fa0b7ed9",
+      "test/product/wp06/imports/end-to-end.test.ts": "a52f968be176a250436e89eb19f61ec7728cba5c"
+    },
+    "messageDifferenceDisposition": "The diagnostic locations and TS2345 codes are unchanged. dashboard-preview.ts is byte-identical at W3, W1 and mission22 K2; wp06 is byte-identical and its separate variation was already recorded at K1. Preserve both text changes; do not infer their cause or call compiler output byte-identical."
+  },
+  "guards": {
+    "conclusion": "FAIL",
+    "stepExitCode": 1,
+    "invocation": "bun run check:guards --base origin/dev",
+    "workingDirectory": "repository root",
+    "rules": 78,
+    "changedPaths": 1597,
+    "K1ChangedPaths": 1586,
+    "baselineChangedPaths": 1547,
+    "changedPathDeltaVsK1": 11,
+    "changedPathDeltaVsBaseline": 50,
+    "gateCount": 43,
+    "warnCount": 15,
+    "engineErrors": 0,
+    "findingCount": 58,
+    "ownedFindingCount": 0,
+    "ownedFindings": [],
+    "findingsEqualToK1InSameOrder": true,
+    "findingsEqualToBaselineInSameOrder": true,
+    "findingsCanonicalJsonSha256": "9fd04235fd92b15ba6dbc7a70dd3d47d082ecab2fd9a8416bd36fbb0773c6eea",
+    "canonicalEncoding": "Findings in observed order, each object with sorted keys, compact UTF-8 JSON and no trailing newline; matches the K1 review encoding.",
+    "newFindings": [],
+    "removedFindings": [],
+    "summary": "guards: 78 rules, 1597 changed paths, 43 gate and 15 warn findings, 0 errors.",
+    "disposition": "All 43 gates and 15 warnings remain. No ignore, label, suppression, waiver, workflow change or rule relaxation was used. A zero delta is not a PASS."
+  },
+  "ownedScope": {
+    "product": [
+      "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "modules/sucafina/Sucafinav1/runtime/contract.ts"
+    ],
+    "tests": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/",
+    "receipts": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/"
+  },
+  "workflow": {
+    "path": ".github/workflows/astra-finance-resume-check.yml",
+    "blob": "e2dfcc92f92030f3d7849aa262e2f9d29cb4e4fb",
+    "branch": "astra-check-fresume",
+    "unchangedFromK1AndBaseline": true
+  },
+  "artifacts": [
+    {
+      "id": 14135050931,
+      "node_id": "MDg6QXJ0aWZhY3QxNDEzNTA1MDkzMQ==",
+      "name": "finance-resume-checks-ebbc90dd3a325e2e8367f4e915ddd193a78b9220-1",
+      "size_in_bytes": 8198,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14135050931",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14135050931/zip",
+      "expired": false,
+      "digest": "sha256:a3aef188f4e3e45277fac4040ce00b4c52e55866924aaace3683ab766f3b9262",
+      "created_at": "2026-11-14T22:28:03Z",
+      "updated_at": "2026-11-14T22:28:03Z",
+      "expires_at": "2026-11-28T22:28:02Z",
+      "workflow_run": {
+        "id": 43648098991,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "astra-check-fresume",
+        "head_sha": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220"
+      }
+    }
+  ],
+  "log": {
+    "path": "mission34/inputs/K2-job.txt",
+    "bytes": 142829,
+    "sha256": "8a8cc2f3cd27289e168d0709423e2ad72b1c2202493f5c96d7c4d06e1a0b5bb8",
+    "gitBlob": "3ba1129d42822fad170b82081c40eac610215373",
+    "retrieval": "Complete GitHub MCP job log supplied by root; parsed independently by this reviewer.",
+    "jobId": 132610276531
+  },
+  "evidence": {
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43648098991",
+    "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43648098991/job/132610276531",
+    "primaryMetadataAndSourceReadThroughMCP": true,
+    "MCPIdentityRecord": {
+      "path": "mission34/review/K2-mcp-identities.json",
+      "bytes": 24135,
+      "sha256": "2df95b711539de4afff18fb02a4f3737b2a5ce5c1cf1889cc879491c6c7e51b1",
+      "gitBlob": "5f8c6a0bd3a036607abdab39260bde918af6b60b"
+    },
+    "independentParseRecord": {
+      "path": "mission34/review/K2-parsed-independent.json",
+      "bytes": 118145,
+      "sha256": "ebd46f703dc97e7bab90e335935648d0bdc690feb91999e03cc128010549dc2a",
+      "gitBlob": "fb30df96de8e5b15f1c625f26f6026ee226b9682"
+    },
+    "rootMetadataRecord": {
+      "path": "mission34/inputs/K2-metadata.json",
+      "bytes": 75348,
+      "sha256": "3150178509a20b9681fc69cedf8e40033c4db06a6223ca2650adab34b2516c5e",
+      "gitBlob": "f6f8589600597d4d3a1ad8001f97d0029d428a07"
+    },
+    "artifactPayloadDownloaded": false
+  },
+  "limits": [
+    "Global package typecheck and repository guards remain FAIL. Zero new/owned diagnostics and findings do not waive inherited failures or establish global release.",
+    "This review covers exact source W3, not an integrated bundle or installed native runtime.",
+    "Diagnostic comparison preserves exact heading keys and first-line message differences. Multiline explanatory expansions are not claimed byte-identical.",
+    "Immutable file identity plus existing diagnostic identity does not prove why the compiler printed a different union expansion.",
+    "Artifact metadata/digest were verified, but the ZIP payload was not downloaded; the complete supplied job log is the parsed execution evidence.",
+    "No godfile gate or separate check was executed by this reviewer.",
+    "S4 short evidence and the original journey remain separate receipts. K2 cannot close FIN-IND-005."
+  ],
+  "newTestsDispatched": false,
+  "localTestsExecuted": false,
+  "localTypecheckExecuted": false,
+  "localGuardsExecuted": false,
+  "productEdits": false,
+  "remoteMutations": false,
+  "waiversOrSuppressions": false,
+  "globalRelease": false
+}

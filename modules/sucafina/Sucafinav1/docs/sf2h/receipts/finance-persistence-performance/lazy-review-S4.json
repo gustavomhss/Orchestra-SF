@@ -1,0 +1,932 @@
+{
+  "schema": "finance-persistence-performance-lazy-execution-v1",
+  "mission": 34,
+  "finding": "FIN-IND-005",
+  "status": "OWNED_SHORT_PROOFS_PASS_SELECTION_FAIL",
+  "findingStatus": "OPEN",
+  "preExecutionReview": {
+    "path": "mission34/review/lazy-review.json",
+    "bytes": 30161,
+    "gitBlob": "8c07ec4a5dd04345a49fa3ae1e084d96c1606a51",
+    "sha256": "d4f2cfcb7ede7f5b0b55580d494f154d14baf1d15421ec3b9955c527e3cb11f4"
+  },
+  "preExecutionReviewPreserved": true,
+  "candidate": {
+    "W": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+    "productBlob": "02365b6a87b4726aefb4292555fc5ae5ac085bb7"
+  },
+  "execution": {
+    "selection": "S4",
+    "status": "completed",
+    "result": "FAIL",
+    "W": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+    "WTree": "e1ec7c748bd094585dfdbdf0cfbd019782ade908",
+    "S": "ab67e9059f194199fdd10652bb054d50d883914e",
+    "STree": "1cc4e371accada47a9ae4f319d487d57c71aedd9",
+    "runId": 43647736006,
+    "jobId": 132609151438,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43647736006",
+    "branch": "ci-run-linux-finance-persistence-ebbc90dd-short",
+    "observed": {
+      "pass": 120,
+      "fail": 1,
+      "skip": 3,
+      "expectCalls": 1221,
+      "tests": 124,
+      "files": 12,
+      "totalSeconds": 65.09,
+      "ownedNewTestsPass": 25,
+      "ownedNewTestsFail": 0,
+      "processExitCode": 1,
+      "omni": "not applicable; focused selection made no omni spawn"
+    },
+    "selectedFiles": [
+      "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "modules/sucafina/Sucafinav1/test/local-backups.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts"
+    ],
+    "request": {
+      "runner": "bun",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "timeoutMs": 120000,
+      "env": {},
+      "requestBlob": "66fd046d046705d6a7338d27922595057d3c7584"
+    },
+    "skipped": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+        "name": "rejects foreign UID directory (requires root fixture privileges)",
+        "status": "SKIP"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+        "name": "rejects foreign UID database (requires root fixture privileges)",
+        "status": "SKIP"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/local-backups.test.ts",
+        "name": "foreign-owned existing root rejects (requires root fixture privileges)",
+        "status": "SKIP"
+      }
+    ],
+    "failure": {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "line": 276,
+      "name": "surface namespaces isolate identical blob keys and snapshots",
+      "actualExtraProperty": {
+        "sfBlobGenerations": {
+          "document": 1
+        }
+      },
+      "classification": "INHERITED_REPRODUCED_ON_PREIMAGE",
+      "control": {
+        "selection": "B1",
+        "W": "2671d4f87b4c3f48b1685be84c5ccb1f5e5d72a8",
+        "S": "36f5f7f5f44b848990d247f846bde4e49e496111",
+        "tree": "c47a7137f4c20bc282121bfc496fbc0a160ddf85",
+        "runId": 43644706454,
+        "jobId": 132599773810,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644706454",
+        "result": "FAIL",
+        "status": "completed",
+        "counts": {
+          "pass": 0,
+          "fail": 1,
+          "filtered": 35,
+          "expectCalls": 3,
+          "tests": 1,
+          "files": 1,
+          "totalMs": 207,
+          "testMs": 20.14
+        },
+        "productBlob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+        "unchangedTestBlob": "e1dbb391c53a56c3261554383356eb1c64ea77af",
+        "failure": {
+          "name": "surface namespaces isolate identical blob keys and snapshots",
+          "line": 276,
+          "actualExtraProperty": {
+            "sfBlobGenerations": {
+              "document": 1
+            }
+          }
+        },
+        "classification": "INHERITED_REPRODUCED_ON_PREIMAGE",
+        "verification": "This author fetched B1 metadata, full job logs, snapshot commit parent/tree and both product/test blobs through GitHub MCP. B1 executes the previous local-store.ts blob and the same unchanged failing test.",
+        "limits": "B1 proves this exact failure exists without mission34 product changes. It does not convert either B1 or S1 into PASS, waive the failure, or close any long-journey obligation."
+      },
+      "unchangedTestBlobAtS4": "e1dbb391c53a56c3261554383356eb1c64ea77af",
+      "oracleEdited": false
+    },
+    "log": {
+      "path": "mission34/inputs/S4-job.txt",
+      "bytes": 115236,
+      "gitBlob": "e7b94c4767e9ef2163f0d79a5729e94654e976d5",
+      "sha256": "f5ac794a63c3b035ea5902b1719ed1745401d0b987eb36c10a9cb736ba052338"
+    },
+    "identityVerification": {
+      "checkoutLogMatchesS": true,
+      "SParentMatchesW3": true,
+      "SParentAndTreeReadThroughGitHubMCP": true,
+      "productBlobAtS": "02365b6a87b4726aefb4292555fc5ae5ac085bb7",
+      "profileBlobAtS": "c4fc07221d7273c6f0cd50180180b362dff30cb0",
+      "surfaceDemandBlobAtS": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+      "threeReviewedBlobsMatchExecutionSnapshot": true,
+      "testOracleBlobMatchesPreimageControl": true
+    }
+  },
+  "reviewProvenance": {
+    "author": "/root/persistence_review",
+    "method": "Read and parsed complete saved S4 log; read snapshot commit, exact product/test blobs, request and inherited failing oracle through GitHub MCP. No test, typecheck, guard or CI dispatch executed by this reviewer.",
+    "localTestsExecuted": false,
+    "remoteMutations": false,
+    "S3MetricsNowReadFromSavedLog": true,
+    "S3Log": {
+      "path": "mission34/inputs/S3-job.txt",
+      "bytes": 86875,
+      "gitBlob": "60f8bd0468e14ede47445fcb44e9de71db0c082f",
+      "sha256": "a3250ade601311131f193a51ce9eef8edaeb0d42a0c6b4308838f5d6649e3dba"
+    }
+  },
+  "newTestOutcomes": [
+    {
+      "id": "D01",
+      "name": "warm root Planner skips unrequested Dashboard materialization while cold admission and transactionAll retain validation",
+      "coverage": [
+        "MATERIAL-REDUCTION",
+        "FRESH-SQL",
+        "CALLBACK-OUTPUT-ISOLATION",
+        "STATE-VALIDATION"
+      ],
+      "oracle": "Cold Planner parses all three persisted tagged payloads and their exact total characters. Warm Planner performs zero tagged parses and zero native Dashboard parses. Eager transactionAll performs one native Dashboard parse and parses over 2 MiB more characters. Planner outputs re-encode identically; retained output mutation does not persist; all SQL rows remain unchanged.",
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "driver": "real SQLite",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "executionStatus": "PASS",
+      "preExecutionStatus": "NOT_RUN_YET",
+      "observed": [
+        {
+          "name": "warm root Planner skips unrequested Dashboard materialization while cold admission and transactionAll retain validation",
+          "status": "PASS",
+          "durationMs": 18.35
+        }
+      ]
+    },
+    {
+      "id": "D02",
+      "name": "new invalid unrequested SQL payloads reject before root Planner callback on cold and warm stores",
+      "coverage": [
+        "FRESH-SQL",
+        "STATE-VALIDATION",
+        "ABORT-ERROR-NOCOMMIT"
+      ],
+      "oracle": "Independent SQL replaces Dashboard and Procurement with malformed JSON, unsupported envelope, invalid shape and negative-version content. Both the warm instance and a new instance reject with the unchanged decoder's error before any Planner callback. Restoring bytes permits the same Planner result; final SQL rows match.",
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "driver": "real SQLite",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "executionStatus": "PASS",
+      "preExecutionStatus": "NOT_RUN_YET",
+      "observed": [
+        {
+          "name": "new invalid unrequested SQL payloads reject before root Planner callback on cold and warm stores",
+          "status": "PASS",
+          "durationMs": 27.12
+        }
+      ]
+    },
+    {
+      "id": "D03",
+      "name": "one root materializes a demanded sibling once while nested and current snapshots remain independent staged copies",
+      "coverage": [
+        "CALLBACK-OUTPUT-ISOLATION",
+        "NESTED-READ-POISON",
+        "V1-STRUCTURAL-EQUIVALENCE"
+      ],
+      "oracle": "Two nested Dashboard reads and two currentSnapshots calls in one Planner root produce exactly one native Dashboard parse. Nested and current outputs are distinct graphs, mutations do not alter siblings or the parent, Planner staged values remain visible, own undefined and -0 survive, and durable rows do not change.",
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "driver": "real SQLite",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "executionStatus": "PASS",
+      "preExecutionStatus": "NOT_RUN_YET",
+      "observed": [
+        {
+          "name": "one root materializes a demanded sibling once while nested and current snapshots remain independent staged copies",
+          "status": "PASS",
+          "durationMs": 4.4
+        }
+      ]
+    },
+    {
+      "id": "D04",
+      "name": "ended root scopes reject deferred sibling access before any lazy materialization",
+      "coverage": [
+        "CLOSED-SCOPES-DISPOSE",
+        "CALLBACK-OUTPUT-ISOLATION"
+      ],
+      "oracle": "An untouched Dashboard stays unmaterialized during a Planner root. Deferred currentSnapshots and nested Dashboard callbacks reject after root completion, before any JSON.parse or nested callback. The retained Planner snapshot remains an ordinary detached value; later SQL read is unchanged.",
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "driver": "real SQLite",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "executionStatus": "PASS",
+      "preExecutionStatus": "NOT_RUN_YET",
+      "observed": [
+        {
+          "name": "ended root scopes reject deferred sibling access before any lazy materialization",
+          "status": "PASS",
+          "durationMs": 4.5
+        }
+      ]
+    },
+    {
+      "id": "D05",
+      "name": "a captured Dashboard plan survives eviction while other surfaces are observed during the same admission",
+      "coverage": [
+        "BOUNDED-RETENTION",
+        "FRESH-SQL",
+        "V1-STRUCTURAL-EQUIVALENCE"
+      ],
+      "oracle": "A reader captures its warm 2 MiB Dashboard plan before changed 2 MiB Planner and Procurement payloads force eviction. Demand after admission yields the original Dashboard bytes via one native Dashboard parse, zero tagged Dashboard parses and exactly two tagged sibling parses, preserving own undefined and -0.",
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "driver": "real SQLite",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "executionStatus": "PASS",
+      "preExecutionStatus": "NOT_RUN_YET",
+      "observed": [
+        {
+          "name": "a captured Dashboard plan survives eviction while other surfaces are observed during the same admission",
+          "status": "PASS",
+          "durationMs": 31.94
+        }
+      ]
+    },
+    {
+      "id": "D06",
+      "name": "missing sibling rows invalidate old plans and restore only after a fresh SQL observation",
+      "coverage": [
+        "FRESH-SQL",
+        "CALLBACK-OUTPUT-ISOLATION",
+        "V1-STRUCTURAL-EQUIVALENCE"
+      ],
+      "oracle": "Deleting the warmed Dashboard SQL row makes nested/current reads inside Planner return isolated empty snapshots. A missing-row output mutation does not become another observation. Re-insertion is observed by the next root, which re-encodes the restored original bytes.",
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "driver": "real SQLite",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "executionStatus": "PASS",
+      "preExecutionStatus": "NOT_RUN_YET",
+      "observed": [
+        {
+          "name": "missing sibling rows invalidate old plans and restore only after a fresh SQL observation",
+          "status": "PASS",
+          "durationMs": 8.23
+        }
+      ]
+    },
+    {
+      "id": "D07",
+      "name": "independent writers cannot replace an admitted sibling observation and the next root sees their commit",
+      "coverage": [
+        "TX-LOCK-CAS",
+        "FRESH-SQL"
+      ],
+      "oracle": "An admitted Planner root holds its existing write lock while Dashboard remains undemanded. An independent Dashboard writer cannot enter its callback until release. The first root sees persisted Dashboard, the second commits, and the next first-store Planner root sees the new content/version. This supplements rather than replaces existing same-version CAS tests.",
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "driver": "real SQLite",
+      "staticReview": "NO_BLOCKER_FOUND",
+      "executionStatus": "PASS",
+      "preExecutionStatus": "NOT_RUN_YET",
+      "observed": [
+        {
+          "name": "independent writers cannot replace an admitted sibling observation and the next root sees their commit",
+          "status": "PASS",
+          "durationMs": 26.34
+        }
+      ]
+    }
+  ],
+  "modifiedProfile": {
+    "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+    "name": "FIN-IND-005 persistence profile isolates real SQLite decode and staged snapshot work",
+    "driver": "real SQLite; unchanged Finance/C08 fixture with synthetic source grants",
+    "executionStatus": "PASS",
+    "observed": [
+      {
+        "name": "FIN-IND-005 persistence profile isolates real SQLite decode and staged snapshot work",
+        "status": "PASS",
+        "durationMs": 21918.55
+      }
+    ],
+    "priorW1ExecutionStatus": "PASS",
+    "execution": {
+      "selection": "S4",
+      "runId": 43647736006,
+      "jobId": 132609151438
+    }
+  },
+  "scopeProfile": {
+    "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+    "name": "FIN-IND-005 real confirmed witness classifies SQLite root and nested materialization work",
+    "driver": "real Finance/C08/SQLite with synthetic authority",
+    "executionStatus": "PASS",
+    "observed": [
+      {
+        "name": "FIN-IND-005 real confirmed witness classifies SQLite root and nested materialization work",
+        "status": "PASS",
+        "durationMs": 36278.23
+      }
+    ]
+  },
+  "metrics": {
+    "profile": {
+      "sizes": {
+        "stateBytes": 1241296,
+        "payloadBytes": 2094712,
+        "payloadCharacters": 2094712,
+        "caseBytes": 115925,
+        "cases": 1,
+        "results": 10,
+        "transactions": 18,
+        "surfaces": [
+          {
+            "surface": "dashboard",
+            "payloadBytes": 2094712
+          },
+          {
+            "surface": "planner",
+            "payloadBytes": 10375
+          },
+          {
+            "surface": "procurement",
+            "payloadBytes": 162
+          }
+        ]
+      },
+      "counts": [
+        {
+          "mode": "decode",
+          "counts": {
+            "parseCalls": 1,
+            "parsedCharacters": 2094712,
+            "taggedParseCalls": 1,
+            "taggedCharacters": 2094712,
+            "objectAssemblies": 7457,
+            "entryTuples": 36324,
+            "encodedObjectDescriptorReads": 0
+          }
+        },
+        {
+          "mode": "transaction",
+          "counts": {
+            "parseCalls": 1,
+            "parsedCharacters": 1241376,
+            "taggedParseCalls": 0,
+            "taggedCharacters": 0,
+            "objectAssemblies": 1,
+            "entryTuples": 0,
+            "encodedObjectDescriptorReads": 0
+          }
+        },
+        {
+          "mode": "currentSnapshots",
+          "counts": {
+            "parseCalls": 6,
+            "parsedCharacters": 2109236,
+            "taggedParseCalls": 3,
+            "taggedCharacters": 2105249,
+            "objectAssemblies": 7499,
+            "entryTuples": 36506,
+            "encodedObjectDescriptorReads": 7499
+          }
+        },
+        {
+          "mode": "nestedRead",
+          "counts": {
+            "parseCalls": 1,
+            "parsedCharacters": 2094712,
+            "taggedParseCalls": 1,
+            "taggedCharacters": 2094712,
+            "objectAssemblies": 7457,
+            "entryTuples": 36324,
+            "encodedObjectDescriptorReads": 7457
+          }
+        }
+      ],
+      "timings": [
+        {
+          "mode": "decode",
+          "elapsedMs": 14.90994800000044
+        },
+        {
+          "mode": "transaction",
+          "elapsedMs": 4.98337100000208
+        },
+        {
+          "mode": "currentSnapshots",
+          "elapsedMs": 28.470015999999305
+        },
+        {
+          "mode": "nestedRead",
+          "elapsedMs": 38.40870700000232
+        },
+        {
+          "mode": "nestedRead",
+          "elapsedMs": 34.1243089999989
+        },
+        {
+          "mode": "currentSnapshots",
+          "elapsedMs": 30.817561999996542
+        },
+        {
+          "mode": "transaction",
+          "elapsedMs": 4.805999999996857
+        },
+        {
+          "mode": "decode",
+          "elapsedMs": 15.484742000000551
+        },
+        {
+          "mode": "decode",
+          "elapsedMs": 13.116539000002376
+        },
+        {
+          "mode": "transaction",
+          "elapsedMs": 4.847748000000138
+        },
+        {
+          "mode": "currentSnapshots",
+          "elapsedMs": 34.72574899999745
+        },
+        {
+          "mode": "nestedRead",
+          "elapsedMs": 28.285406000002695
+        },
+        {
+          "mode": "nestedRead",
+          "elapsedMs": 33.947761000003084
+        },
+        {
+          "mode": "currentSnapshots",
+          "elapsedMs": 33.66925900000206
+        },
+        {
+          "mode": "transaction",
+          "elapsedMs": 4.604374000002281
+        },
+        {
+          "mode": "decode",
+          "elapsedMs": 14.753371999999217
+        },
+        {
+          "mode": "decode",
+          "elapsedMs": 13.341841000001295
+        },
+        {
+          "mode": "transaction",
+          "elapsedMs": 4.861687000004167
+        },
+        {
+          "mode": "currentSnapshots",
+          "elapsedMs": 35.4044619999986
+        },
+        {
+          "mode": "nestedRead",
+          "elapsedMs": 34.963379000000714
+        },
+        {
+          "mode": "nestedRead",
+          "elapsedMs": 29.330332000005
+        },
+        {
+          "mode": "currentSnapshots",
+          "elapsedMs": 32.32878000000346
+        },
+        {
+          "mode": "transaction",
+          "elapsedMs": 4.716032000003906
+        },
+        {
+          "mode": "decode",
+          "elapsedMs": 15.982224999999744
+        }
+      ],
+      "summary": [
+        {
+          "mode": "decode",
+          "samples": 6,
+          "medianMs": 14.831659999999829,
+          "minimumMs": 13.116539000002376,
+          "maximumMs": 15.982224999999744
+        },
+        {
+          "mode": "transaction",
+          "samples": 6,
+          "medianMs": 4.826873999998497,
+          "minimumMs": 4.604374000002281,
+          "maximumMs": 4.98337100000208
+        },
+        {
+          "mode": "currentSnapshots",
+          "samples": 6,
+          "medianMs": 32.99901950000276,
+          "minimumMs": 28.470015999999305,
+          "maximumMs": 35.4044619999986
+        },
+        {
+          "mode": "nestedRead",
+          "samples": 6,
+          "medianMs": 34.03603500000099,
+          "minimumMs": 28.285406000002695,
+          "maximumMs": 38.40870700000232
+        }
+      ],
+      "coldWarm": {
+        "cold": {
+          "parseCalls": 3,
+          "parsedCharacters": 2105249,
+          "taggedParseCalls": 3,
+          "taggedCharacters": 2105249,
+          "objectAssemblies": 7500,
+          "entryTuples": 36506,
+          "encodedObjectDescriptorReads": 0
+        },
+        "warm": {
+          "parseCalls": 1,
+          "parsedCharacters": 1241376,
+          "taggedParseCalls": 0,
+          "taggedCharacters": 0,
+          "objectAssemblies": 1,
+          "entryTuples": 0,
+          "encodedObjectDescriptorReads": 0
+        }
+      },
+      "surfaceDemand": {
+        "coldPlanner": {
+          "parseCalls": 3,
+          "parsedCharacters": 2105249,
+          "taggedParseCalls": 3,
+          "taggedCharacters": 2105249,
+          "objectAssemblies": 7500,
+          "entryTuples": 36506,
+          "encodedObjectDescriptorReads": 0
+        },
+        "warmPlanner": {
+          "parseCalls": 2,
+          "parsedCharacters": 3923,
+          "taggedParseCalls": 0,
+          "taggedCharacters": 0,
+          "objectAssemblies": 1,
+          "entryTuples": 0,
+          "encodedObjectDescriptorReads": 0
+        },
+        "eagerAll": {
+          "parseCalls": 4,
+          "parsedCharacters": 1245363,
+          "taggedParseCalls": 0,
+          "taggedCharacters": 0,
+          "objectAssemblies": 1,
+          "entryTuples": 3,
+          "encodedObjectDescriptorReads": 0
+        },
+        "timings": [
+          {
+            "mode": "planner",
+            "elapsedMs": 1.1848119999995106
+          },
+          {
+            "mode": "all",
+            "elapsedMs": 4.366651999996975
+          },
+          {
+            "mode": "all",
+            "elapsedMs": 10.105447000001732
+          },
+          {
+            "mode": "planner",
+            "elapsedMs": 1.120020000002114
+          },
+          {
+            "mode": "planner",
+            "elapsedMs": 1.924564000000828
+          },
+          {
+            "mode": "all",
+            "elapsedMs": 4.744407999998657
+          },
+          {
+            "mode": "all",
+            "elapsedMs": 4.812669999999343
+          },
+          {
+            "mode": "planner",
+            "elapsedMs": 1.5695080000004964
+          },
+          {
+            "mode": "planner",
+            "elapsedMs": 1.7172569999966072
+          },
+          {
+            "mode": "all",
+            "elapsedMs": 4.811419999998179
+          },
+          {
+            "mode": "all",
+            "elapsedMs": 5.964673000002222
+          },
+          {
+            "mode": "planner",
+            "elapsedMs": 0.9934889999931329
+          }
+        ]
+      },
+      "interpretation": "Direct codec and transaction timings overlap; scoped modes exclude outer admission and target load, while currentSnapshots may first demand sibling graphs. Do not add these categories or extrapolate a whole-journey speedup.",
+      "surfaceInterpretation": "Cold Planner admission validates all three new SQL payloads. Warm Planner needs only its own fresh graph; transactionAll is the unchanged eager materialization control on the same Finance state. Both retain fresh SQL observations. Their timing samples are separate from the four original modes.",
+      "disclosure": "Existing real Finance/C08/SQLite fixture with synthetic source grants. No short result closes FIN-IND-005; original journey budgets and assertions remain unchanged."
+    },
+    "surfaceDemand": {
+      "cold": {
+        "calls": 3,
+        "characters": 2098360,
+        "taggedCalls": 3,
+        "taggedCharacters": 2098360,
+        "nativeDashboard": 0,
+        "taggedDashboard": 1
+      },
+      "warmPlanner": {
+        "calls": 2,
+        "characters": 215,
+        "taggedCalls": 0,
+        "taggedCharacters": 0,
+        "nativeDashboard": 0,
+        "taggedDashboard": 0
+      },
+      "eagerAll": {
+        "calls": 6,
+        "characters": 2097831,
+        "taggedCalls": 0,
+        "taggedCharacters": 0,
+        "nativeDashboard": 1,
+        "taggedDashboard": 0
+      }
+    },
+    "capturedPlan": {
+      "calls": 4,
+      "characters": 6292527,
+      "taggedCalls": 2,
+      "taggedCharacters": 4195130,
+      "nativeDashboard": 1,
+      "taggedDashboard": 0
+    },
+    "scopeState": {
+      "stateBytes": 1311209,
+      "payloadCharacters": 2213251,
+      "caseBytes": 115925,
+      "cases": 1,
+      "results": 12,
+      "transactions": 20,
+      "surfaces": [
+        {
+          "surface": "dashboard",
+          "payloadCharacters": 2213251
+        },
+        {
+          "surface": "planner",
+          "payloadCharacters": 10375
+        },
+        {
+          "surface": "procurement",
+          "payloadCharacters": 162
+        }
+      ]
+    },
+    "scopeComparisons": [
+      {
+        "label": "confirmed.issuer.resolve",
+        "operationShapeIdentical": true,
+        "root": {
+          "dashboard": {
+            "calls": 41,
+            "callbacks": 41,
+            "completed": 41,
+            "rejected": 0,
+            "inclusiveElapsedMs": 433.69061800002237
+          },
+          "planner": {
+            "calls": 68,
+            "callbacks": 68,
+            "completed": 68,
+            "rejected": 0,
+            "inclusiveElapsedMs": 130.68424299999606
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 72,
+            "callbacks": 72,
+            "completed": 72,
+            "rejected": 0,
+            "inclusiveElapsedMs": 38.22976699999708
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "S3RootParse": {
+          "calls": 436,
+          "characters": 143365084,
+          "taggedCalls": 0,
+          "taggedCharacters": 0
+        },
+        "S4RootParse": {
+          "calls": 177,
+          "characters": 54029613,
+          "taggedCalls": 0,
+          "taggedCharacters": 0
+        },
+        "nestedParseIdentical": true,
+        "nestedParse": {
+          "calls": 72,
+          "characters": 747000,
+          "taggedCalls": 72,
+          "taggedCharacters": 747000
+        },
+        "rootCharactersAvoided": 89335471,
+        "rootCharacterReductionPercent": 62.31326938712637,
+        "S3ElapsedMs": 1353.8751269999993,
+        "S4ElapsedMs": 838.2360429999972
+      },
+      {
+        "label": "confirmed.witness.15000",
+        "operationShapeIdentical": true,
+        "root": {
+          "dashboard": {
+            "calls": 54,
+            "callbacks": 54,
+            "completed": 54,
+            "rejected": 0,
+            "inclusiveElapsedMs": 652.6757960000105
+          },
+          "planner": {
+            "calls": 56,
+            "callbacks": 56,
+            "completed": 56,
+            "rejected": 0,
+            "inclusiveElapsedMs": 106.1682039999796
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "nested": {
+          "dashboard": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "planner": {
+            "calls": 48,
+            "callbacks": 48,
+            "completed": 48,
+            "rejected": 0,
+            "inclusiveElapsedMs": 30.475237000006018
+          },
+          "procurement": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          },
+          "all": {
+            "calls": 0,
+            "callbacks": 0,
+            "completed": 0,
+            "rejected": 0,
+            "inclusiveElapsedMs": 0
+          }
+        },
+        "currentSnapshots": {
+          "insideTransaction": 0,
+          "outsideTransaction": 0
+        },
+        "S3RootParse": {
+          "calls": 440,
+          "characters": 144680360,
+          "taggedCalls": 0,
+          "taggedCharacters": 0
+        },
+        "S4RootParse": {
+          "calls": 166,
+          "characters": 71029294,
+          "taggedCalls": 0,
+          "taggedCharacters": 0
+        },
+        "nestedParseIdentical": true,
+        "nestedParse": {
+          "calls": 48,
+          "characters": 498000,
+          "taggedCalls": 48,
+          "taggedCharacters": 498000
+        },
+        "rootCharactersAvoided": 73651066,
+        "rootCharacterReductionPercent": 50.90605663408634,
+        "S3ElapsedMs": 1340.1648350000032,
+        "S4ElapsedMs": 908.6077269999951
+      }
+    ]
+  },
+  "scopeInterpretation": {
+    "operationShapeIdentical": true,
+    "nestedRoundtripWorkIdentical": true,
+    "rootCallsPreserved": 219,
+    "rootPlannerCallsPreserved": 124,
+    "rootDashboardCallsPreserved": 95,
+    "S3RootParsedCharacters": 288045444,
+    "S4RootParsedCharacters": 125058907,
+    "nativeWorkDecomposition": {
+      "dashboardParsesPerRoot": 1,
+      "dashboardCharactersPerRoot": 1311289,
+      "plannerParsesPerRoot": 2,
+      "plannerCharactersPerRoot": 3923,
+      "procurementCharactersOmittedPerRoot": 64
+    },
+    "causalSourceIdentityReview": "Exact scope-profile source identity between S3 and S4 belongs to the separate S4 proof review; this overlay independently confirms logged operation shapes and work counters.",
+    "scopeProfileLimits": "Short fixture proves issuer.resolve and witness 15000, not full confirmed.evaluate, witness 15001, replay, restart or access. No timing ratio is a gate."
+  },
+  "unresolved": {
+    "originalJourney": "NOT_RUN_YET_ON_W3_AT_THIS_REVIEW",
+    "packageChecks": "K2 terminal result is under separate independent review; global FAIL is not waived.",
+    "FIN_IND_005": "OPEN",
+    "bundleExecution": "NOT_PROVEN"
+  },
+  "originalFilesPreserved": [
+    {
+      "path": "mission34/review/lazy-review.json",
+      "bytes": 30161,
+      "gitBlob": "8c07ec4a5dd04345a49fa3ae1e084d96c1606a51",
+      "sha256": "d4f2cfcb7ede7f5b0b55580d494f154d14baf1d15421ec3b9955c527e3cb11f4"
+    },
+    {
+      "path": "mission34/review/semantics-matrix.json",
+      "bytes": 63959,
+      "gitBlob": "284bd608c73dd24c6f83bfea1810ae59f9fc2087",
+      "sha256": "fb24a7c9fcc2da4dae15c05d5f80f4cf70cdd1ae183ac93bd02a7688262ff557"
+    }
+  ]
+}

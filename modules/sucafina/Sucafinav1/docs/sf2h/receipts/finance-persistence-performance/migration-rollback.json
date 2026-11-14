@@ -1,0 +1,41 @@
+{
+  "schema": "finance-persistence-migration-rollback-v2",
+  "migrationRequired": false,
+  "persistedFormat": "sucafina-snapshot/v1 unchanged",
+  "schemaChange": false,
+  "publicCodecChanged": false,
+  "startup": "Each openLocalStore starts with an empty private materialization map. It reads the existing SQLite tables and validates a changed payload with the unchanged decoder.",
+  "coldPath": "Every changed or previously unseen payload is decoded and validated immediately during admission, even when its surface is not requested. The fresh decoded tree belongs to this root only. Optional bounded representation planning occurs before the callback as before W1.",
+  "warmPath": "Fresh SELECT of all three surfaces still precedes the callback. Exact complete payload equality captures an immutable validated plan for this root. Its ordinary graph is materialized once on first demand; no other request receives that graph. transactionAll remains eager. Nested/current outputs still use the original cloning.",
+  "bounds": {
+    "entriesPerStore": 3,
+    "totalRetainedUTF16Units": 8388608,
+    "stringContentBytesAtTwoBytesPerUnit": 16777216,
+    "maximumPlanningDepth": 128,
+    "maximumVisitedNodes": 200000,
+    "maximumUndefinedPaths": 4096,
+    "doesNotBound": [
+      "total heap/RSS",
+      "SQLite page cache",
+      "transient planning allocations",
+      "live callback graphs",
+      "other open stores",
+      "retained async scopes after closure",
+      "additional root-captured pre-admission immutable plans until demanded"
+    ],
+    "overflow": "Valid payloads still use the original decoder. Bounds apply only to this optimization. Cold/miss planning adds bounded work; oversized/deep/over-fixup/over-node fallback states have no performance claim.",
+    "boundScope": "Shared immutable-plan Map only; not a total process bound.",
+    "activeRootCapturedPlanStringContentBytes": 16777216,
+    "activeRootRetention": "A root captures at most the pre-admission shared memo set (one additional string budget) while new plans may replace or evict entries. Captured plans survive eviction until demand. A successful materialization clears its loader reference. Cold trees and caller-retained AsyncLocalStorage scopes are separate allocations.",
+    "evidence": "Five real SQLite optimization-limit tests cover oversized payload, aggregate entries, depth, undefined fixups and visited nodes; the demand test additionally forces captured-plan eviction. Runtime results are in S1/S4 receipts; candidate static review is in lazy-review.json."
+  },
+  "dispose": "No new operations admitted; existing active work drains through the unchanged lifecycle, then the map is cleared.",
+  "rollback": "Source: revert only the mission34 local-store.ts delta to eefc1ed550a455abc4952430ec3b57a5abd5c9ee. Bundle: reverse only the compatible patch against its recorded preimage, preserving existing cloneSnapshot, validateSnapshot and contractResult additions. The original decoder reads identical v1 bytes; no data rewrite. Session33 owns any bundle write and this handoff grants no release authority.",
+  "backupCompatibility": "Capture/restore continue through the same exported v1 codec and exact payload bytes. Existing real SQLite backup regressions passed; no rewrite of archives.",
+  "crashScope": "WAL, synchronous=FULL, transaction/commit/rollback and blob writes are untouched. The tests cover rollback and reopen, not induced machine power loss.",
+  "newPersistenceData": false,
+  "externalServicesChanged": false,
+  "orchestraRestarted": false,
+  "productCommit": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+  "productBlob": "02365b6a87b4726aefb4292555fc5ae5ac085bb7"
+}
