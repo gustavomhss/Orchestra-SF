@@ -1,0 +1,56 @@
+{
+  "schema": "sf-c12-composed-request-v1",
+  "mission": 32,
+  "label": "validation-04",
+  "sourceImplementation": "a20f8701f8e8d8a5e75a1dc66e47de1ef8a2dfe1",
+  "bundleBase": "2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0",
+  "W": "ba731ff646d8ed7a1c7fb15bf82f4e8c5a2ef81a",
+  "W_tree": "c46c6dbb4d0e1bdc84da7ab21812f16e4bcc9b04",
+  "S": "114b1c3ff83a038b515f4afcf5db0fc795d59b6d",
+  "S_tree": "3978a370af7a9da7ffee4db1eaf8ba137162df60",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+      "./Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+      "./Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+      "./Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts",
+      "./Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts",
+      "./Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts",
+      "./Sucafinav1/test/product/c12-composed-compatibility/duplicate-choice.test.ts",
+      "./Sucafinav1/test/product/review-fixes/procurement-apply/real-apply.test.ts",
+      "./Sucafinav1/test/product/review-fixes/procurement-apply/refusals.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "ref": "ci-run-linux-astra-c12-32-ba731ff6-c9-04",
+  "run": 43646007759,
+  "job": 132603819490,
+  "statusAtRecord": "in_progress",
+  "snapshotDelta": [
+    ".ci-run.json"
+  ],
+  "dedup": {
+    "sameSelectionRunsBeforeDispatch": 0,
+    "previousOwnRunsCompleted": true,
+    "queuedRunsBeforeDispatch": 0,
+    "otherRunObserved": {
+      "id": 43645747336,
+      "differentOwnerAndSelection": true,
+      "untouched": true
+    },
+    "rerunReason": "Material publication of C08 selector/case-port and shared composition dependencies changed the executed closure; own fixture now preserves selector identity on reads without an armed retention hook. Repeat only the 22 affected C12/OPS scenarios.",
+    "unaffectedTestReused": {
+      "run": 43643559235,
+      "path": "test/product/wp04/finance-prepared-alias.test.ts",
+      "selectedAgain": false
+    }
+  },
+  "timeoutBudgetChanged": false,
+  "globalAcceptance": false
+}

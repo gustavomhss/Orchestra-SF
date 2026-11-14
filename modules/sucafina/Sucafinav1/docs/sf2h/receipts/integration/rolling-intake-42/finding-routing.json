@@ -1,0 +1,54 @@
+{
+  "schema": "sf2h.rolling-intake-42.finding-routing.v1",
+  "mission": 42,
+  "candidate": "C12",
+  "channel": "Published repository handoff files only",
+  "externalMessagesSent": false,
+  "items": [
+    {
+      "id": "M35-C17-ORIGINAL-REVALIDATION",
+      "owner": "Memory40 / WP10 / PR29",
+      "state": "MANDATORY_OPEN_SOURCE_RUNTIME_FAIL",
+      "sourceRelease": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+      "sourceW": "32bcb308059283a0f2d80f70b5b06f75fba1f427",
+      "sourceS": "fd9cb75b89456798e48c1f8e84ca4f3e4c6e524c",
+      "run": 43645747336,
+      "evidencePath": "source-outputs/atlas35/runs/attempt-2.json",
+      "evidenceBlob": "4c8975f25770ea654277e82271ebb6e4340c91f2",
+      "snippet": "expect(await ui(\"sf_evidence_get\", { evidenceRef: documentRef }, (call) => atlas.memory.readOriginal(caseRef, documentRef.refDigest, call))).toBeUndefined()",
+      "actual": "Canonical context.resolve withheld changed document evidence; public readOriginal returned old documentRef.",
+      "requiredCorrection": "Reauthorize public original-reference egress against current case/evidence authorization, immutable capture integrity and independent matching observations. Preserve valid historical access and the unchanged C17 oracle. Release qualified minimal changes from Memory40; no blind proposal35 application.",
+      "laterRecallReplayAssertions": "NOT_REACHED_IN_SOURCE_RUN",
+      "settledReplayConcern": "Separate static owner finding; not a second observed failure or a PASS."
+    },
+    {
+      "id": "M40-PROPOSAL35-RECURSION",
+      "owner": "Memory40 / PR29",
+      "state": "PUBLISHED_OWNER_STATIC_FINDING",
+      "source": "be2766b119d213e83781884c130dc3dae6867462",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/memory-original-reauthorization/AUTHORITY.json",
+      "blob": "335a0f1f8bf8844db0969ace630c1610d74ba2ec",
+      "snippets": [
+        "Proposal would recurse through installed caseForEvidence -> public readOriginal",
+        "Public egress requires full case/evidence authorization, immutable captures and matching independent observations",
+        "Settled replay must reauthorize current sources and integrity without new append/scanner/effect"
+      ],
+      "requiredCorrection": "Adapt the private integrity/continuity path to avoid caseForEvidence -> public readOriginal recursion; public egress and settled replay require current authorization without a new append/scanner/effect. Prove with an exact qualified owner release.",
+      "proposal35Applied": false,
+      "reproducedBy42": false
+    },
+    {
+      "id": "M36-REVIEW-DISCUSSION-ATOMIC-DEPENDENCY",
+      "owner": "Reports36 / PR27 with Agenda39 and integrator42",
+      "state": "PROPOSED_DEPENDENCY_NOT_A_RELEASE_NOT_RUNTIME_REPRODUCED",
+      "source": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/shared-patches/review-discussion-binding/README.md",
+      "blob": "d5f49424f48b55ade41c399ed125d136cd914a81",
+      "snippet": "New client on unpatched C6 | Its mandatory read-only recipients preflight cannot verify the missing echo. It must purge/close before any mutation.",
+      "requiredCorrection": "After explicit Reports36 release, consume collaboration-client.ts/collaboration-view.ts atomically with collaboration/http.ts, reviews/http.ts, collaboration/thread-history.ts and apps/cli/src/sucafina-product/extended-browser.ts. Reconcile C6 preimages and Agenda39 deltas against one actual candidate; preserve X-SF-Review-Binding exact echo and fail-closed admission.",
+      "sourceAuthority": "IN_PROGRESS",
+      "patchState": "PROPOSED_NOT_APPLIED",
+      "applied": false
+    }
+  ]
+}

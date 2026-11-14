@@ -1,4 +1,6 @@
 import { randomUUID } from "node:crypto"
+import assert from "node:assert/strict"
+import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { KNOWN_SCANNERS } from "@orchestra/atlas-boundary/native-memory"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { roleMap } from "../../../runtime/admin.ts"
@@ -23,9 +25,9 @@ import type { TrustedDomainContext, TrustedUiLease } from "../../../product/cont
 
 // A fresh process reconstructs production ports against the actual SQLite store.
 // Identities and membership are explicitly synthetic; this is not a SessionV2 witness.
-const [directory, scannerPath, scannerVersion] = process.argv.slice(2)
+const [directory, scannerPath, scannerVersion, challenge] = process.argv.slice(2)
 const pinned = KNOWN_SCANNERS.find((item) => item.name === "gitleaks")
-if (!directory || !scannerPath || !scannerVersion || !pinned) throw new Error("Restart probe arguments are incomplete")
+if (!directory || !scannerPath || !scannerVersion || !challenge || !pinned) throw new Error("Restart probe arguments are incomplete")
 const startedAt = performance.now()
 const cancellation = new AbortController()
 const counts = { caseReads: 0, evidenceReads: 0, atlasReads: 0, originalReads: 0, rankings: 0 }
@@ -43,7 +45,7 @@ try {
     if (session.id === "bob" && session.evidence) authorizedStages[stage] = { status: result.status, ...(result.reason ? { reason: result.reason } : {}) }
   }
   const time = "2026-11-13T12:00:00Z"
-  const call = (): TrustedDomainContext => ({ kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: session.id, requestId: "restart", policyVersion: "1", accessRevision: "1", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as TrustedUiLease })
+  const call = (): TrustedDomainContext => ({ kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: session.id, requestId: challenge, policyVersion: "1", accessRevision: "1", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as TrustedUiLease })
   const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => time) })
   const requests = new WeakMap<TrustedDomainContext, Request>()
   const requestFor = (context: TrustedDomainContext) => {
@@ -96,12 +98,14 @@ try {
   const eventProof = createSfSourceContinuityProof({ host, readOriginal, readCurrent: eventAccess })
   const proveContinuity = (original: BusinessEvidenceRef, current: BusinessEvidenceRef, context: TrustedDomainContext) => original.kind === "record" && original.target.surface === "dashboard" ? dashboardProof(original, current, context) : original.kind === "case-event" ? eventProof(original, current, context) : Promise.resolve(false)
   const atlas = createSfAtlasMemory({ state, cases, authorizeCase, host, evidence, scanner: createSfAtlasScanner({ scanners: [{ ...pinned, command: scannerPath }] }), scannerVersion, now: () => time, proveContinuity })
+  const observed: Array<Extract<Awaited<ReturnType<typeof atlas.recall>>, { status: "ok" }>["records"][number]> = []
   memory = { ...atlas, recall: async (...args: Parameters<typeof atlas.recall>) => {
     counts.atlasReads += 1
     trace("atlas-read:start")
     const result = await atlas.recall(...args)
     trace("atlas-read:done", result.status)
     recordStage("atlasRead", result)
+    if (session.id === "bob" && session.evidence && result.status === "ok") observed.push(...result.records)
     return result
   } }
   const recall = createSfCaseRecall({ host, cases, memory, selectCandidates: async () => [caseRef], featuresForCase: async (value, context) => deriveAuthorizedRecallFeatures(value, context), runtimeVersions: { boundaryVersion: "1", schemaVersion: "1", manifestVersion: "1", skillVersion: "1" }, proveContinuity, rank: async (request) => {
@@ -114,19 +118,49 @@ try {
   } })
   const request = { caseRef, limit: 10, scope: { query: "renewal", recallScope: { cases: [caseRef], period: { start: "2026-01-01", end: "2026-12-31" }, includeHistorical: false } } }
   trace("authorized-recall:start")
-  const authorized = await recall(request, call())
+  const authorizedCall = call()
+  const authorized = await recall(request, authorizedCall)
   trace("authorized-recall:done", authorized.status)
+  assert.equal(authorized.status, "ok", "The canonical consumer must authorize the persisted case")
+  if (authorized.status !== "ok") throw new Error("Actual Atlas case recall unavailable")
+  assert.equal(authorized.matches.length, 1)
+  assert.deepEqual(authorized.matches[0]?.explanation.candidateCaseRef, caseRef)
+  const record = observed.at(-1)
+  assert.ok(record, "The consumer must use the canonical Atlas reader")
+  assert.ok(observed.every((item) => item.recordDigest === record.recordDigest && digestSfValue(item.envelope) === digestSfValue(record.envelope)))
+  assert.equal(authorized.matches[0]?.memoryRecordRef, record.envelope.eventId)
+  assert.deepEqual(authorized.matches[0]?.evidenceRefs, record.envelope.evidenceRefs)
+  assert.deepEqual(record.envelope.caseRef, caseRef)
+  assert.equal(record.envelope.scannerReceipt.digest, record.recordDigest)
+  const capturedSource = record.envelope.dependencies.find((ref) => ref.kind === "record" && ref.target.surface === "dashboard")
+  assert.ok(capturedSource, "The persisted record must retain its original source dependency")
+  const originalCapture = await atlas.readOriginalCapture(caseRef, capturedSource.refDigest, authorizedCall)
+  assert.ok(originalCapture, "The canonical protected reader must validate the persisted capture")
+  assert.deepEqual(originalCapture.ref, capturedSource)
+  const persisted = { eventId: record.envelope.eventId, recordDigest: record.recordDigest, envelope: record.envelope,
+    originalCapture, captureDigest: digestSfValue(originalCapture) }
+  trace("canonical-record-and-capture:verified")
   session.id = "carol"
   trace("outsider-recall:start")
   const outsider = await recall(request, call())
   trace("outsider-recall:done", outsider.status)
+  assert.deepEqual(outsider, { status: "unavailable" }, "Outsider must receive no matches or derived metadata")
+  assert.equal(await atlas.readOriginalCapture(caseRef, capturedSource.refDigest, call()), undefined)
   session.id = "bob"
   session.evidence = false
   trace("revoked-recall:start")
   const revoked = await recall(request, call())
   trace("revoked-recall:done", revoked.status)
-  console.log(`SF_ATLAS_RESTART_PROBE:${JSON.stringify({ pid: process.pid, authorized: authorized.status, matches: authorized.status === "ok" ? authorized.matches.length : null, candidateCaseRef: authorized.status === "ok" ? authorized.matches[0]?.explanation.candidateCaseRef : null, outsider: outsider.status, revoked: revoked.status, authorizedStages, counts, elapsedMs: Math.round(performance.now() - startedAt) })}`)
+  assert.deepEqual(revoked, { status: "unavailable" }, "Revoked evidence must suppress the entire consumer result")
+  const deniedSource = await resolveEvidence(capturedSource, call())
+  assert.equal(deniedSource.state, "unavailable")
+  assert.equal(deniedSource.authorizedProjection, undefined)
+  assert.equal(deniedSource.currentRef, undefined)
   if (cancellation.signal.aborted) throw new Error("SF_ATLAS_RESTART_DEADLINE")
+  console.log(`SF_ATLAS_RESTART_PROBE:${JSON.stringify({ schema: "sf-atlas-process-restart-v1", nativeSessionWitness: false,
+    challenge, pid: process.pid, binding: { kind: authorizedCall.kind, principalRef: authorizedCall.binding.principalRef, requestId: authorizedCall.kind === "ui" ? authorizedCall.binding.requestId : undefined },
+    authorized: authorized.status, matches: authorized.matches.length, candidateCaseRef: authorized.matches[0]?.explanation.candidateCaseRef,
+    persisted, consumer: authorized, outsider: outsider.status, revoked: revoked.status, authorizedStages, counts, elapsedMs: Math.round(performance.now() - startedAt) })}`)
 } finally {
   clearTimeout(deadline)
   trace("store-dispose:start")

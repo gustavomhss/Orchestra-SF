@@ -1,0 +1,76 @@
+diff --git a/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts b/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts
+--- a/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts
++++ b/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts
+@@ -417,8 +417,43 @@
+   const context = assembled.service
+   resolveAncestry = assembled.resolveAncestry
+   const canonicalMemory = createSfAtlasMemory({ state: input.state, cases: input.cases, authorizeCase: input.authorizeCase, host: input.host, evidence: context, proveContinuity: router.proveContinuity, scanner: createSfAtlasScanner({ scanners: input.scanner ? [input.scanner.spec] : [] }), scannerVersion: input.scanner?.version ?? "", now: input.now })
+-  const memory = { ...canonicalMemory, recall: (ref: { id: string; incarnation: string }, call: TrustedDomainContext) =>
+-    recallScope ? recallScope.recall(ref, call, () => canonicalMemory.recall(ref, call)) : canonicalMemory.recall(ref, call) }
++  const memory = {
++    ...canonicalMemory,
++    recall: (ref: { id: string; incarnation: string }, call: TrustedDomainContext) =>
++      recallScope ? recallScope.recall(ref, call, () => canonicalMemory.recall(ref, call)) : canonicalMemory.recall(ref, call),
++    /** Public original references require current source authority. The private
++     * capture reader stays integrity-only so historical resolution cannot recurse. */
++    async readOriginal(ref: { id: string; incarnation: string }, digest: string, call: TrustedDomainContext): Promise<BusinessEvidenceRef | undefined> {
++      try {
++        const selected = structuredClone(ref)
++        const request = input.host.requestFor(call)
++        const binding = digestSfValue([call.kind, call.binding])
++        const headers = request && digestSfValue([...request.headers.entries()])
++        const stable = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request &&
++          headers === digestSfValue([...request.headers.entries()]) &&
++          binding === digestSfValue([call.kind, call.binding]) && digestSfValue(ref) === digestSfValue(selected)
++        if (!stable() || !await input.host.revalidate(call) || !stable()) return undefined
++        const capture = await canonicalMemory.readOriginalCapture(selected, digest, call)
++        if (!capture || !stable()) return undefined
++        const identity = digestSfValue(capture)
++        const authorized = async () => {
++          const source = await context.resolve(capture.ref, call)
++          return stable() && identity === digestSfValue(capture) &&
++            digestSfValue(source.ref) === digestSfValue(capture.ref) &&
++            source.accessRevision === call.binding.accessRevision && !!source.currentRef && !!source.authorizedProjection &&
++            (source.state === "fresh" || source.state === "historical" && source.differences !== undefined &&
++              digestSfValue(source.authorizedProjection) === digestSfValue(capture.projection))
++        }
++        if (!await authorized()) return undefined
++        const current = await canonicalMemory.readOriginalCapture(selected, digest, call)
++        if (!current || digestSfValue(current) !== identity || !await authorized() ||
++          !await input.host.revalidate(call) || !stable() || identity !== digestSfValue(capture)) return undefined
++        return structuredClone(capture.ref)
++      } catch {
++        return undefined
++      }
++    },
++  }
+   const readContext = context.context
+   context.context = async (selection, call) => {
+     const request = input.host.requestFor(call)
+diff --git a/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts b/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts
+--- a/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts
++++ b/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts
+@@ -112,12 +112,17 @@
+             ? { item: state.outbox[key], value } : undefined
+         }).catch(() => undefined)
+         if (!replay || replay.status !== "ok" || !replay.value || digestSfValue(replay.value.item) !== digestSfValue(captured.value.item)) return unavailable("outbox-unavailable")
+-        const authorized = input.authorizeCase ? await input.authorizeCase(replay.value.value, call) :
+-          (await input.cases.read({ caseRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }) }, call)).status === "ok"
+-        if (!authorized || !await input.host.revalidate(call)) return unavailable("case-unavailable")
+-        const current = await input.state.read(request, "cases", (state) => ({ value: state.cases[ref.target.caseId], item: state.outbox[key] })).catch(() => undefined)
+-        if (!current || current.status !== "ok" || digestSfValue(current.value) !== digestSfValue(replay.value) ||
+-          (input.authorizeCase && !await input.authorizeCase(current.value.value!, call)) || !await input.host.revalidate(call)) return unavailable("case-unavailable")
++        // Recovery must reauthorize the case's current evidence even when a
++        // lightweight case ACL is supplied. This never appends or reruns scanning.
++        const readable = await input.cases.read({ caseRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }) }, call)
++        if (readable.status !== "ok" || (input.authorizeCase && !await input.authorizeCase(replay.value.value, call)) ||
++          !await input.host.revalidate(call)) return unavailable("case-unavailable")
++        const current = await input.state.read(request, "cases", (state) => ({ value: state.cases[ref.target.caseId], item: state.outbox[key] })).catch(() => undefined)
++        if (!current || current.status !== "ok" || digestSfValue(current.value) !== digestSfValue(replay.value) ||
++          (input.authorizeCase && !await input.authorizeCase(current.value.value!, call)) || !await input.host.revalidate(call)) return unavailable("case-unavailable")
++        const rechecked = await input.cases.read({ caseRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }) }, call)
++        if (rechecked.status !== "ok" || digestSfValue(rechecked.value.case) !== digestSfValue(readable.value.case) ||
++          request.signal.aborted || input.host.requestFor(call) !== request || !await input.host.revalidate(call)) return unavailable("case-unavailable")
+         return captured.value.item.receipt.status === "committed" ? { ...captured.value.item.receipt, status: "already-committed" } : captured.value.item.receipt
+       }
+       const found = await input.cases.read({ caseRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }) }, call)

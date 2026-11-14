@@ -1,0 +1,1092 @@
+{
+  "schema": "sf2h.mission35.result.v1",
+  "attempt": 2,
+  "status": "COMPONENT_PASS_SELECTION_FAIL",
+  "requests": {
+    "schema": "sf2h.mission35.validation-requests.v1",
+    "mission": 35,
+    "state": "TERMINAL_RESULTS_RECORDED",
+    "logicalSession": "/root",
+    "leaseEpoch": "atlas-restart-browser35",
+    "publication": {
+      "P": "5fa1ef92608cfbd315f5d753bd27eee5bdec39bf",
+      "tree": "62fb11d740756893873babe4cc4d9a313176b601"
+    },
+    "test": {
+      "W": "32bcb308059283a0f2d80f70b5b06f75fba1f427",
+      "tree": "4943a243d28c15e41b5b47ce1828e91898e0dc7d",
+      "parent": "b19606b73f1ffc5a9e58702e939f1aa788dabfa1",
+      "S": "fd9cb75b89456798e48c1f8e84ca4f3e4c6e524c",
+      "snapshotTree": "f38ae2f98e4c29434f078c13ce96c98ade0af987",
+      "branch": "ci-run-linux-astra-wp14-m35-32bcb308-3f35ec91-02",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "3f35ec9118fcbebf663c87f9024c8dfcca1bad489eb7c029cb9ca1347a7dbfd9",
+      "runId": 43645747336,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43645747336",
+      "jobId": 132602998463,
+      "equalProductTestBlobs": true,
+      "composedDiffOnly": [
+        "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts"
+      ],
+      "snapshotDiffOnly": [
+        ".ci-run.json"
+      ],
+      "dedup": {
+        "inFlightWp14Before": 0,
+        "equivalentRecentRun": false,
+        "hostedQueueBefore": 0,
+        "recentRunWindow": 100,
+        "reason": "Attempt 1 terminal; actual helper and matcher corrections change product/test blobs; no exact snapshot exists in checked runs"
+      },
+      "result": "runs/attempt-2.json"
+    },
+    "check": {
+      "productSha": "5fa1ef92608cfbd315f5d753bd27eee5bdec39bf",
+      "snapshotSha": "31b49d7bc9ee59feb4407d4229a155f81fd330d1",
+      "tree": "7673fc8b729f7eb77e84e5947698dab00ce1ebcf",
+      "additionalParent": "177c7bb87b5c608ad96e4489cba6f78b809ddf7d",
+      "additionalParentPurpose": "Fast-forward operational check history only; exact product tree plus canonical envelope. Product first parent and validator preserved.",
+      "branch": "astra-check-wp14",
+      "config": {
+        "productSha": "5fa1ef92608cfbd315f5d753bd27eee5bdec39bf",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "workflowBlob": "2b0b36f3b9277a17cc22c3bab8144303d7c77830",
+      "runId": 43645751452,
+      "composedClosure": "NOT_RUN: pinned composed input does not contain astra-wp14-check workflow; no workflow edits or epic authorized. This check examines P, not W.",
+      "jobId": 132603011172,
+      "result": "runs/attempt-2.json"
+    },
+    "staticValidation": {
+      "patchAppliesToExactComposedPreimages": true,
+      "method": "git apply --check on downloaded texts only; no product execution",
+      "c17PreservedByteForByte": true,
+      "review": "read-only auxiliary /root/atlas_review; no final independent acceptance"
+    },
+    "constraints": {
+      "nativeSessionWitness": false,
+      "AM05": "OPEN",
+      "localProductTests": 0,
+      "force": false,
+      "sourceRuntimeEdits": 0,
+      "sf2StackRefWrites": 0,
+      "desktopOrServerRestarts": 0
+    },
+    "previousAttempt": {
+      "receipt": "runs/attempt-1.json",
+      "testRunId": 43645127480,
+      "checkRunId": 43645173216
+    }
+  },
+  "test": {
+    "runId": 43645747336,
+    "jobId": 132602998463,
+    "head": "fd9cb75b89456798e48c1f8e84ca4f3e4c6e524c",
+    "conclusion": "failure",
+    "passed": 1,
+    "failed": 1,
+    "expectCalls": 89,
+    "elapsedSeconds": 44.97,
+    "cases": [
+      {
+        "name": "protected Atlas original binds cross-principal continuity after store reopen",
+        "status": "PASS",
+        "durationMs": 34716.3,
+        "coverage": [
+          "closed producer SQLite",
+          "separate child PID from approved spawn handle",
+          "canonical Atlas read of exact persisted envelope/capture/digests",
+          "real createSfCaseRecall authorized result",
+          "outsider and revoked evidence unavailable in child",
+          "revoked principal and forged source refused in parent",
+          "actual C08 incarnation replacement refused",
+          "Atlas/outbox unchanged after child and denials"
+        ]
+      },
+      {
+        "name": "confirmed C17 document is published and recalled by real Atlas, then withheld after blob revocation",
+        "status": "FAIL",
+        "durationMs": 9957.16,
+        "preservedByteForByte": true,
+        "failedLine": 444,
+        "failedAssertion": "await atlas.memory.readOriginal(caseRef, documentRef.refDigest, call) must be undefined after actual document bytes change",
+        "observed": "old documentRef returned",
+        "priorNegative": "context.resolve returned non-fresh, no authorizedProjection/currentRef",
+        "laterAssertions": "NOT_REACHED; no inferred PASS for recall/replay/no-change assertions following line444"
+      }
+    ],
+    "omni": {
+      "status": "PASS",
+      "nonce": "a5f763a7d6bed39d9b4897290ed14384",
+      "declaredTests": 2,
+      "spawns": 5,
+      "delegated": 0
+    },
+    "artifacts": [],
+    "artifactRequirement": "This unchanged test-ci selection has no artifact upload step. Exact full process receipt is preserved under runs/attempt-2-process-proof.json; no nonexistent SQLite archive or ZIP is claimed.",
+    "cleanup": {
+      "jobId": 132603866132,
+      "status": "success",
+      "temporaryBranchDeletedByExistingWorkflow": true
+    }
+  },
+  "process": {
+    "receiptPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-process-restart/runs/attempt-2-process-proof.json",
+    "receiptIdentity": {
+      "sha256": "19012e8e29d28ec0433062c4d900b1df0684cab2966db539857e0c685ef0e270",
+      "bytes": 174318,
+      "gitBlob": "503cdb1e39c4d6186a69c790b67fca76342222d9"
+    },
+    "parentPid": 4089,
+    "spawnedPidFromHandle": 4140,
+    "childPid": 4140,
+    "exitCode": 0,
+    "challenge": "f1704d77-7c9e-43a8-868f-84e0f76f016e",
+    "scanner": {
+      "name": "gitleaks",
+      "version": "gitleaks version 8.30.1",
+      "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+    },
+    "committed": {
+      "status": "committed",
+      "sourceEventId": "event",
+      "eventId": "9ba87da71e9cd482e4d24e4768a793a1c2b72984fce838d5c30e92350e1e4ebe",
+      "recordDigest": "01a282dd6a3f15e82a577566a296d2e859a51273fcedd93a8036f811f6a887c8",
+      "committedRevision": 2,
+      "scanner": {
+        "name": "gitleaks",
+        "version": "gitleaks version 8.30.1",
+        "status": "clean"
+      }
+    },
+    "replayed": {
+      "status": "already-committed",
+      "sourceEventId": "event",
+      "eventId": "9ba87da71e9cd482e4d24e4768a793a1c2b72984fce838d5c30e92350e1e4ebe",
+      "recordDigest": "01a282dd6a3f15e82a577566a296d2e859a51273fcedd93a8036f811f6a887c8",
+      "committedRevision": 2,
+      "scanner": {
+        "name": "gitleaks",
+        "version": "gitleaks version 8.30.1",
+        "status": "clean"
+      }
+    },
+    "eventId": "9ba87da71e9cd482e4d24e4768a793a1c2b72984fce838d5c30e92350e1e4ebe",
+    "recordDigest": "01a282dd6a3f15e82a577566a296d2e859a51273fcedd93a8036f811f6a887c8",
+    "captureDigest": "8aaf67cb6af2838c560b1a5d181077c7983fa0babaef025ad1561aabdc1cd7a8",
+    "envelopeProjectionDigest": "58dea01f487c68baa814b8668d1cdde672e1899d40fe1108cd30ec914d3481a7",
+    "sourceProjectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee",
+    "consumerStatus": "ok",
+    "matches": 1,
+    "outsider": "unavailable",
+    "revoked": "unavailable",
+    "replaced": "unavailable",
+    "childElapsedMs": 15226,
+    "counts": {
+      "caseReads": 16,
+      "evidenceReads": 50,
+      "atlasReads": 5,
+      "originalReads": 72,
+      "rankings": 2
+    },
+    "independentParentAssertions": "Handle PID equals receipt PID and differs from parent; unique challenged receipt and exit 0; entire child envelope/capture equals producer's protected-state readback and scanner committed digest; parent SQLite reopen proves Atlas/outbox byte-equivalent. The stdout success label alone is never an oracle.",
+    "nativeSessionWitness": false
+  },
+  "check": {
+    "runId": 43645751452,
+    "jobId": 132603011172,
+    "snapshotSha": "31b49d7bc9ee59feb4407d4229a155f81fd330d1",
+    "productSha": "5fa1ef92608cfbd315f5d753bd27eee5bdec39bf",
+    "envelopeValidation": "PASS",
+    "exactCheckout": "PASS",
+    "typecheck": {
+      "status": "FAIL",
+      "diagnostics": 152,
+      "inWp14": 13,
+      "outsideWp14": 139,
+      "outsideDiagnosticsIdenticalToAttempt1": true,
+      "mission35CodeDefectsRemoved": [
+        "source duplicate declaration and dependent errors",
+        "expect envelope overload"
+      ],
+      "remainingWp14Diagnostics": [
+        "2026-11-14T22:01:46.9017439Z ##[error]test/product/wp14/atlas-restart-reader.ts(137,39): error TS2339: Property 'readOriginalCapture' does not exist on type '{ emitFromLedger(ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<MemoryWriteReceipt>; recall(caseRef: { ...; }, call: TrustedDomainContext): Promise<...>; readOriginal(caseRef: { ...; }, digest: string, call: TrustedDomainContext): Promise<...>; }'.",
+        "2026-11-14T22:01:46.9019753Z ##[error]test/product/wp14/atlas-restart-reader.ts(148,28): error TS2339: Property 'readOriginalCapture' does not exist on type '{ emitFromLedger(ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<MemoryWriteReceipt>; recall(caseRef: { ...; }, call: TrustedDomainContext): Promise<...>; readOriginal(caseRef: { ...; }, digest: string, call: TrustedDomainContext): Promise<...>; }'.",
+        "2026-11-14T22:01:46.9021175Z ##[error]test/product/wp14/source-access-atlas.test.ts(229,46): error TS2307: Cannot find module '../wp06/runtime-fixture.ts' or its corresponding type declarations.",
+        "2026-11-14T22:01:46.9023516Z ##[error]test/product/wp14/source-access-atlas.test.ts(255,76): error TS2353: Object literal may only specify known properties, and 'procurementEvidenceWrites' does not exist in type '{ identity: () => Readonly<{ installationId: string; hostId: string; projectId: string; location: Ref; }> | undefined; installationId: string; origin: string; policyVersion: string; ... 12 more ...; authorizeDocument: (request: Request, snapshot: Snapshot, assetId: string, principal: string, authority: SfStateAuthor...'.",
+        "2026-11-14T22:01:46.9026559Z ##[error]test/product/wp14/source-access-atlas.test.ts(269,117): error TS2353: Object literal may only specify known properties, and 'procurementEvidenceWrites' does not exist in type '{ authority: { state: SfProductStatePort; ui: { admit(request: Request, operation: string, inputDigest: string): Promise<PortResult<TrustedUiContext>>; ... 6 more ...; finish(context: TrustedUiContext): void; }; ... 7 more ...; authorizeInterrupt: (value: Readonly<...>, binding: Readonly<...>, request: Request) => P...'.",
+        "2026-11-14T22:01:46.9028770Z ##[error]test/product/wp14/source-access-atlas.test.ts(277,69): error TS2339: Property 'resolveProcurement' does not exist on type '{ dashboard: DashboardPort & { explain: (request: KpiExplainRequest, binding: TrustedDomainContext) => Promise<PortResult<DomainProjection>>; }; ... 24 more ...; dispose: () => void; }'.",
+        "2026-11-14T22:01:46.9029903Z ##[error]test/product/wp14/source-access-atlas.test.ts(315,55): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+        "2026-11-14T22:01:46.9030703Z ##[error]test/product/wp14/source-access-atlas.test.ts(320,72): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+        "2026-11-14T22:01:46.9031521Z ##[error]test/product/wp14/source-access-atlas.test.ts(320,82): error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+        "2026-11-14T22:01:46.9032335Z ##[error]test/product/wp14/source-access-atlas.test.ts(323,100): error TS7006: Parameter 'role' implicitly has an 'any' type.",
+        "2026-11-14T22:01:46.9033142Z ##[error]test/product/wp14/source-access-atlas.test.ts(323,146): error TS7006: Parameter 'role' implicitly has an 'any' type.",
+        "2026-11-14T22:01:46.9033975Z ##[error]test/product/wp14/source-access-atlas.test.ts(436,55): error TS7006: Parameter '_snapshot' implicitly has an 'any' type.",
+        "2026-11-14T22:01:46.9034759Z ##[error]test/product/wp14/source-access-atlas.test.ts(436,66): error TS7006: Parameter 'blobs' implicitly has an 'any' type."
+      ],
+      "classification": "2 missing readOriginalCapture; 1 absent wp06 fixture; 3 absent C17 API surfaces; 7 implicit-any diagnostics downstream of absent fixture. Source P lacks composed runtime dependencies; not a composed typecheck."
+    },
+    "guards": {
+      "status": "FAIL",
+      "rules": 78,
+      "changedPaths": 661,
+      "gates": 2,
+      "warnings": 11,
+      "errors": 0,
+      "findings": [
+        "2026-11-14T22:01:47.9917109Z GATE modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/owner-findings/consumer-audit/0cf10879/job-132403235716.log [agent-scratch] Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "2026-11-14T22:01:47.9918693Z GATE modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/owner-findings/consumer-audit/0cf10879/planner-final-evidence.log [agent-scratch] Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "2026-11-14T22:01:47.9927622Z guards: 78 rules, 661 changed paths, 2 gate and 11 warn findings, 0 errors."
+      ],
+      "preexistingGateBlobs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/owner-findings/consumer-audit/0cf10879/job-132403235716.log",
+          "blob": "a2bd084de895f9c9e662887144fcf8887c1d458d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/owner-findings/consumer-audit/0cf10879/planner-final-evidence.log",
+          "blob": "6358018dc6245633b9dda7ed561099f7f8cf4f88"
+        }
+      ],
+      "action": "Preserved as existing history outside mission35 scope; no ignore or authorization fabricated"
+    },
+    "artifacts": [
+      {
+        "id": 14133912318,
+        "name": "astra-wp14-check-1",
+        "size_in_bytes": 8509,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14133912318",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14133912318/zip",
+        "expired": false,
+        "created_at": "2026-11-14T22:01:48Z",
+        "expires_at": "2026-11-28T22:01:48Z",
+        "updated_at": "2026-11-14T22:01:48Z",
+        "digest": "sha256:c7b8ad82deff3f6f74a00d453a31c91fff2c6869b558731f5c4de3dc6a4314a0",
+        "workflow_run": {
+          "id": 43645751452,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp14",
+          "head_sha": "31b49d7bc9ee59feb4407d4229a155f81fd330d1"
+        }
+      }
+    ],
+    "artifactArchiveDownloaded": false,
+    "composedCompilerAndGuards": "NOT_RUN: W2 lacks existing scoped workflow and its strict envelope permits no additional workflow blob. No epic or new workflow authorized."
+  },
+  "evidence": {
+    "logHashes": {
+      "test-43645747336.txt": {
+        "sha256": "bca1802ef47f31c919b745e1ab8e20302d7c2f887da96698aabca492ec54dc36",
+        "bytes": 182234
+      },
+      "check-43645751452.txt": {
+        "sha256": "5e760aec3f0d15a661ea9b86e37022f14db2546a09910956ef1d20e08566e3e4",
+        "bytes": 147315
+      },
+      "process-proof.json": {
+        "sha256": "19012e8e29d28ec0433062c4d900b1df0684cab2966db539857e0c685ef0e270",
+        "bytes": 174318,
+        "gitBlob": "503cdb1e39c4d6186a69c790b67fca76342222d9"
+      }
+    },
+    "testSummary": [
+      "2026-11-14T22:03:01.9966169Z (pass) protected Atlas original binds cross-principal continuity after store reopen [34716.30ms]",
+      "2026-11-14T22:03:11.8948806Z (fail) confirmed C17 document is published and recalled by real Atlas, then withheld after blob revocation [9957.16ms]",
+      "2026-11-14T22:03:11.8949818Z omni positive control [a5f763a7d6bed39d9b4897290ed14384]: pass (declared: 2 test(s) in Sucafinav1/test/product/wp14/source-access-atlas.test.ts); 5 omni spawn(s), 0 delegated.",
+      "2026-11-14T22:03:11.8950400Z  1 pass",
+      "2026-11-14T22:03:11.8950537Z  1 fail",
+      "2026-11-14T22:03:11.8950684Z  89 expect() calls",
+      "2026-11-14T22:03:11.8950876Z Ran 2 tests across 1 file. [44.97s]"
+    ],
+    "C17FailureExcerpt": [
+      "2026-11-14T22:03:11.8934128Z 439 |     })",
+      "2026-11-14T22:03:11.8934678Z 440 |     const revoked = await ui(\"sf_evidence_get\", { evidenceRef: documentRef }, (call) => product.context.resolve(documentRef, call))",
+      "2026-11-14T22:03:11.8935278Z 441 |     expect(revoked.state).not.toBe(\"fresh\")",
+      "2026-11-14T22:03:11.8935670Z 442 |     expect(revoked.authorizedProjection).toBeUndefined()",
+      "2026-11-14T22:03:11.8936128Z 443 |     expect(revoked.currentRef).toBeUndefined()",
+      "2026-11-14T22:03:11.8936810Z 444 |     expect(await ui(\"sf_evidence_get\", { evidenceRef: documentRef }, (call) => atlas.memory.readOriginal(caseRef, documentRef.refDigest, call))).toBeUndefined()",
+      "2026-11-14T22:03:11.8937539Z                                                                                                                                                        ^",
+      "2026-11-14T22:03:11.8938241Z error: expect(received).toBeUndefined()",
+      "2026-11-14T22:03:11.8938424Z ",
+      "2026-11-14T22:03:11.8938508Z Received: {",
+      "2026-11-14T22:03:11.8938730Z   schema: \"sf-evidence-v1\",",
+      "2026-11-14T22:03:11.8939029Z   refId: \"doc_d67f20e3c8781bc88236bba52998fea33c7880dc\",",
+      "2026-11-14T22:03:11.8939429Z   installationId: \"27a6357f-f927-4c5a-8cd0-85c86abb2d71\",",
+      "2026-11-14T22:03:11.8939911Z   projectId: \"project\",",
+      "2026-11-14T22:03:11.8940164Z   kind: \"document\",",
+      "2026-11-14T22:03:11.8940406Z   evidenceLevel: \"claim\",",
+      "2026-11-14T22:03:11.8940649Z   target: {",
+      "2026-11-14T22:03:11.8940873Z     documentId: \"atlas-terms\",",
+      "2026-11-14T22:03:11.8941207Z     incarnation: \"3b709bbd-52aa-426c-8f21-3c45d8f6b153\",",
+      "2026-11-14T22:03:11.8941509Z     revision: 1,",
+      "2026-11-14T22:03:11.8941723Z     blobDigest: {",
+      "2026-11-14T22:03:11.8941921Z       algorithm: \"sha256\",",
+      "2026-11-14T22:03:11.8942338Z       value: \"6edfd89ef8ea301e80df2247df8d6dead13c2598549a77b94d963a950c60683b\",",
+      "2026-11-14T22:03:11.8942703Z     },",
+      "2026-11-14T22:03:11.8942886Z     segment: {",
+      "2026-11-14T22:03:11.8943065Z       start: 7,",
+      "2026-11-14T22:03:11.8943232Z       end: 9,",
+      "2026-11-14T22:03:11.8943457Z       unit: \"utf16\",",
+      "2026-11-14T22:03:11.8943650Z       textDigest: {",
+      "2026-11-14T22:03:11.8943849Z         algorithm: \"sha256\",",
+      "2026-11-14T22:03:11.8944229Z         value: \"73475cb40a568e8da8a045ced110137e159f890ac4da883b6b17dc651b3a8049\",",
+      "2026-11-14T22:03:11.8944614Z       },",
+      "2026-11-14T22:03:11.8944795Z     },",
+      "2026-11-14T22:03:11.8945221Z     ragSourceId: \"src_32ae6e555c297a8c4e3c8cd98510df1e\",",
+      "2026-11-14T22:03:11.8945478Z     ragRevisionId: \"rev_1\",",
+      "2026-11-14T22:03:11.8945657Z     ragSourceHash: {",
+      "2026-11-14T22:03:11.8945825Z       algorithm: \"blake3\",",
+      "2026-11-14T22:03:11.8946115Z       value: \"a167ee0d4ebc581625db87552a3c5ced9dc2bac95d9c9fa43c0b4303702d6e4a\",",
+      "2026-11-14T22:03:11.8946404Z     },",
+      "2026-11-14T22:03:11.8946642Z     fieldCandidateId: \"doc_d67f20e3c8781bc88236bba52998fea33c7880dc\",",
+      "2026-11-14T22:03:11.8946959Z     confirmationVersion: 1,",
+      "2026-11-14T22:03:11.8947133Z   },",
+      "2026-11-14T22:03:11.8947393Z   refDigest: \"f5f5378e137f3873e27c0b2ad46457a3a0c32a2f6a6358d7bfbbf1c5f93c32c0\",",
+      "2026-11-14T22:03:11.8947670Z }",
+      "2026-11-14T22:03:11.8947749Z ",
+      "2026-11-14T22:03:11.8948126Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts:444:146)",
+      "2026-11-14T22:03:11.8948806Z (fail) confirmed C17 document is published and recalled by real Atlas, then withheld after blob revocation [9957.16ms]"
+    ],
+    "stages": [
+      {
+        "pid": 4140,
+        "stage": "store-open:start",
+        "elapsedMs": 0,
+        "counts": {
+          "caseReads": 0,
+          "evidenceReads": 0,
+          "atlasReads": 0,
+          "originalReads": 0,
+          "rankings": 0
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "store-open:done",
+        "elapsedMs": 9,
+        "counts": {
+          "caseReads": 0,
+          "evidenceReads": 0,
+          "atlasReads": 0,
+          "originalReads": 0,
+          "rankings": 0
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "authorized-recall:start",
+        "elapsedMs": 233,
+        "counts": {
+          "caseReads": 0,
+          "evidenceReads": 0,
+          "atlasReads": 0,
+          "originalReads": 0,
+          "rankings": 0
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:start",
+        "elapsedMs": 238,
+        "counts": {
+          "caseReads": 1,
+          "evidenceReads": 0,
+          "atlasReads": 0,
+          "originalReads": 0,
+          "rankings": 0
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:done",
+        "status": "ok",
+        "elapsedMs": 479,
+        "counts": {
+          "caseReads": 1,
+          "evidenceReads": 2,
+          "atlasReads": 0,
+          "originalReads": 0,
+          "rankings": 0
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:start",
+        "elapsedMs": 479,
+        "counts": {
+          "caseReads": 2,
+          "evidenceReads": 2,
+          "atlasReads": 0,
+          "originalReads": 0,
+          "rankings": 0
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:done",
+        "status": "ok",
+        "elapsedMs": 680,
+        "counts": {
+          "caseReads": 2,
+          "evidenceReads": 4,
+          "atlasReads": 0,
+          "originalReads": 0,
+          "rankings": 0
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "rank:start",
+        "elapsedMs": 682,
+        "counts": {
+          "caseReads": 2,
+          "evidenceReads": 4,
+          "atlasReads": 0,
+          "originalReads": 0,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "atlas-read:start",
+        "elapsedMs": 683,
+        "counts": {
+          "caseReads": 2,
+          "evidenceReads": 4,
+          "atlasReads": 1,
+          "originalReads": 0,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:start",
+        "elapsedMs": 685,
+        "counts": {
+          "caseReads": 3,
+          "evidenceReads": 4,
+          "atlasReads": 1,
+          "originalReads": 0,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:done",
+        "status": "ok",
+        "elapsedMs": 886,
+        "counts": {
+          "caseReads": 3,
+          "evidenceReads": 6,
+          "atlasReads": 1,
+          "originalReads": 0,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:start",
+        "elapsedMs": 1766,
+        "counts": {
+          "caseReads": 4,
+          "evidenceReads": 8,
+          "atlasReads": 1,
+          "originalReads": 4,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:done",
+        "status": "ok",
+        "elapsedMs": 1967,
+        "counts": {
+          "caseReads": 4,
+          "evidenceReads": 10,
+          "atlasReads": 1,
+          "originalReads": 4,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "atlas-read:done",
+        "status": "ok",
+        "elapsedMs": 2872,
+        "counts": {
+          "caseReads": 4,
+          "evidenceReads": 12,
+          "atlasReads": 1,
+          "originalReads": 8,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "atlas-read:start",
+        "elapsedMs": 3713,
+        "counts": {
+          "caseReads": 4,
+          "evidenceReads": 12,
+          "atlasReads": 2,
+          "originalReads": 16,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:start",
+        "elapsedMs": 3715,
+        "counts": {
+          "caseReads": 5,
+          "evidenceReads": 12,
+          "atlasReads": 2,
+          "originalReads": 16,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:done",
+        "status": "ok",
+        "elapsedMs": 3908,
+        "counts": {
+          "caseReads": 5,
+          "evidenceReads": 14,
+          "atlasReads": 2,
+          "originalReads": 16,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:start",
+        "elapsedMs": 4775,
+        "counts": {
+          "caseReads": 6,
+          "evidenceReads": 16,
+          "atlasReads": 2,
+          "originalReads": 20,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:done",
+        "status": "ok",
+        "elapsedMs": 4966,
+        "counts": {
+          "caseReads": 6,
+          "evidenceReads": 18,
+          "atlasReads": 2,
+          "originalReads": 20,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "atlas-read:done",
+        "status": "ok",
+        "elapsedMs": 5844,
+        "counts": {
+          "caseReads": 6,
+          "evidenceReads": 20,
+          "atlasReads": 2,
+          "originalReads": 24,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "rank:done",
+        "status": "ok",
+        "elapsedMs": 6679,
+        "counts": {
+          "caseReads": 6,
+          "evidenceReads": 20,
+          "atlasReads": 2,
+          "originalReads": 32,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "atlas-read:start",
+        "elapsedMs": 6679,
+        "counts": {
+          "caseReads": 6,
+          "evidenceReads": 20,
+          "atlasReads": 3,
+          "originalReads": 32,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:start",
+        "elapsedMs": 6680,
+        "counts": {
+          "caseReads": 7,
+          "evidenceReads": 20,
+          "atlasReads": 3,
+          "originalReads": 32,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:done",
+        "status": "ok",
+        "elapsedMs": 6879,
+        "counts": {
+          "caseReads": 7,
+          "evidenceReads": 22,
+          "atlasReads": 3,
+          "originalReads": 32,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:start",
+        "elapsedMs": 7747,
+        "counts": {
+          "caseReads": 8,
+          "evidenceReads": 24,
+          "atlasReads": 3,
+          "originalReads": 36,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:done",
+        "status": "ok",
+        "elapsedMs": 7950,
+        "counts": {
+          "caseReads": 8,
+          "evidenceReads": 26,
+          "atlasReads": 3,
+          "originalReads": 36,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "atlas-read:done",
+        "status": "ok",
+        "elapsedMs": 8813,
+        "counts": {
+          "caseReads": 8,
+          "evidenceReads": 28,
+          "atlasReads": 3,
+          "originalReads": 40,
+          "rankings": 1
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "rank:start",
+        "elapsedMs": 8813,
+        "counts": {
+          "caseReads": 8,
+          "evidenceReads": 28,
+          "atlasReads": 3,
+          "originalReads": 40,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "atlas-read:start",
+        "elapsedMs": 8813,
+        "counts": {
+          "caseReads": 8,
+          "evidenceReads": 28,
+          "atlasReads": 4,
+          "originalReads": 40,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:start",
+        "elapsedMs": 8815,
+        "counts": {
+          "caseReads": 9,
+          "evidenceReads": 28,
+          "atlasReads": 4,
+          "originalReads": 40,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:done",
+        "status": "ok",
+        "elapsedMs": 9008,
+        "counts": {
+          "caseReads": 9,
+          "evidenceReads": 30,
+          "atlasReads": 4,
+          "originalReads": 40,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:start",
+        "elapsedMs": 9869,
+        "counts": {
+          "caseReads": 10,
+          "evidenceReads": 32,
+          "atlasReads": 4,
+          "originalReads": 44,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:done",
+        "status": "ok",
+        "elapsedMs": 10066,
+        "counts": {
+          "caseReads": 10,
+          "evidenceReads": 34,
+          "atlasReads": 4,
+          "originalReads": 44,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "atlas-read:done",
+        "status": "ok",
+        "elapsedMs": 10946,
+        "counts": {
+          "caseReads": 10,
+          "evidenceReads": 36,
+          "atlasReads": 4,
+          "originalReads": 48,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "atlas-read:start",
+        "elapsedMs": 11808,
+        "counts": {
+          "caseReads": 10,
+          "evidenceReads": 36,
+          "atlasReads": 5,
+          "originalReads": 56,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:start",
+        "elapsedMs": 11810,
+        "counts": {
+          "caseReads": 11,
+          "evidenceReads": 36,
+          "atlasReads": 5,
+          "originalReads": 56,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:done",
+        "status": "ok",
+        "elapsedMs": 12003,
+        "counts": {
+          "caseReads": 11,
+          "evidenceReads": 38,
+          "atlasReads": 5,
+          "originalReads": 56,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:start",
+        "elapsedMs": 12877,
+        "counts": {
+          "caseReads": 12,
+          "evidenceReads": 40,
+          "atlasReads": 5,
+          "originalReads": 60,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:done",
+        "status": "ok",
+        "elapsedMs": 13077,
+        "counts": {
+          "caseReads": 12,
+          "evidenceReads": 42,
+          "atlasReads": 5,
+          "originalReads": 60,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "atlas-read:done",
+        "status": "ok",
+        "elapsedMs": 13960,
+        "counts": {
+          "caseReads": 12,
+          "evidenceReads": 44,
+          "atlasReads": 5,
+          "originalReads": 64,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "rank:done",
+        "status": "ok",
+        "elapsedMs": 14792,
+        "counts": {
+          "caseReads": 12,
+          "evidenceReads": 44,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:start",
+        "elapsedMs": 14792,
+        "counts": {
+          "caseReads": 13,
+          "evidenceReads": 44,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:done",
+        "status": "ok",
+        "elapsedMs": 14994,
+        "counts": {
+          "caseReads": 13,
+          "evidenceReads": 46,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:start",
+        "elapsedMs": 14994,
+        "counts": {
+          "caseReads": 14,
+          "evidenceReads": 46,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:done",
+        "status": "ok",
+        "elapsedMs": 15189,
+        "counts": {
+          "caseReads": 14,
+          "evidenceReads": 48,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "authorized-recall:done",
+        "status": "ok",
+        "elapsedMs": 15191,
+        "counts": {
+          "caseReads": 14,
+          "evidenceReads": 48,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "canonical-record-and-capture:verified",
+        "elapsedMs": 15211,
+        "counts": {
+          "caseReads": 14,
+          "evidenceReads": 48,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "outsider-recall:start",
+        "elapsedMs": 15211,
+        "counts": {
+          "caseReads": 14,
+          "evidenceReads": 48,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:start",
+        "elapsedMs": 15213,
+        "counts": {
+          "caseReads": 15,
+          "evidenceReads": 48,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:done",
+        "status": "denied",
+        "elapsedMs": 15216,
+        "counts": {
+          "caseReads": 15,
+          "evidenceReads": 48,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "outsider-recall:done",
+        "status": "unavailable",
+        "elapsedMs": 15216,
+        "counts": {
+          "caseReads": 15,
+          "evidenceReads": 48,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "revoked-recall:start",
+        "elapsedMs": 15220,
+        "counts": {
+          "caseReads": 15,
+          "evidenceReads": 48,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:start",
+        "elapsedMs": 15221,
+        "counts": {
+          "caseReads": 16,
+          "evidenceReads": 48,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "case-read:done",
+        "status": "unavailable",
+        "elapsedMs": 15226,
+        "counts": {
+          "caseReads": 16,
+          "evidenceReads": 49,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "revoked-recall:done",
+        "status": "unavailable",
+        "elapsedMs": 15226,
+        "counts": {
+          "caseReads": 16,
+          "evidenceReads": 49,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "store-dispose:start",
+        "elapsedMs": 15226,
+        "counts": {
+          "caseReads": 16,
+          "evidenceReads": 50,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      },
+      {
+        "pid": 4140,
+        "stage": "store-dispose:done",
+        "elapsedMs": 15226,
+        "counts": {
+          "caseReads": 16,
+          "evidenceReads": 50,
+          "atlasReads": 5,
+          "originalReads": 72,
+          "rankings": 2
+        }
+      }
+    ]
+  },
+  "acceptance": {
+    "M29_ATLAS_003": "RESTART_COMPONENT_VERIFIED; FINAL_ACCEPTANCE_NOT_GRANTED",
+    "fullSelectedTestGate": "FAIL_C17_OWNER_ACTION_REQUIRED",
+    "AM05": "OPEN_NATIVE_SESSION_BINDING_SKILL_AND_CONSUMER_REQUIRED",
+    "nativeSessionWitness": false,
+    "globalRelease": false
+  },
+  "constraints": {
+    "nativeSessionWitness": false,
+    "AM05": "OPEN",
+    "localProductTests": 0,
+    "force": false,
+    "sourceRuntimeEdits": 0,
+    "sf2StackRefWrites": 0,
+    "desktopOrServerRestarts": 0,
+    "ownerRuntimePatch": "PROPOSED_NOT_APPLIED_NOT_RUN"
+  }
+}

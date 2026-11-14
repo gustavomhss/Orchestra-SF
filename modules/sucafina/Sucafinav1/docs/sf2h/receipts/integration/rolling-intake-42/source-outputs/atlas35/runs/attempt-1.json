@@ -1,0 +1,217 @@
+{
+  "schema": "sf2h.mission35.result.v1",
+  "attempt": 1,
+  "state": "FAILED_REQUIRES_CORRECTION",
+  "requests": {
+    "schema": "sf2h.mission35.validation-requests.v1",
+    "mission": 35,
+    "state": "IN_PROGRESS",
+    "logicalSession": "/root",
+    "leaseEpoch": "atlas-restart-browser35",
+    "publication": {
+      "P": "0ea218715eda33efc7eaeb1f9139265777920b82",
+      "tree": "703802ccc1ac5df6bfd51729aeaba2b7c67b6ac9"
+    },
+    "test": {
+      "W": "bf0ae438bc19da6ac4ba248f202c2395f0d89544",
+      "tree": "8258adea46b276808c91a4c83f5f300461a87748",
+      "parent": "b19606b73f1ffc5a9e58702e939f1aa788dabfa1",
+      "S": "38bba07aedb1aabbad62e814ba2bd1342864ac63",
+      "snapshotTree": "5a6d6ca2b253844de09c9a5d1812cf9261cd03c8",
+      "branch": "ci-run-linux-astra-wp14-m35-bf0ae438-3f35ec91-01",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "3f35ec9118fcbebf663c87f9024c8dfcca1bad489eb7c029cb9ca1347a7dbfd9",
+      "runId": 43645127480,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43645127480",
+      "jobId": 132601067130,
+      "equalProductTestBlobs": true,
+      "composedDiffOnly": [
+        "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts"
+      ],
+      "snapshotDiffOnly": [
+        ".ci-run.json"
+      ],
+      "dedup": {
+        "inFlightWp14Before": 0,
+        "equivalentRecentRun": false,
+        "hostedQueueBefore": 0
+      }
+    },
+    "check": {
+      "productSha": "0ea218715eda33efc7eaeb1f9139265777920b82",
+      "snapshotSha": "177c7bb87b5c608ad96e4489cba6f78b809ddf7d",
+      "tree": "616d9b337df072f493c9d302c29e5fcaddfde969",
+      "additionalParent": "760cf0549a5432819f3a3d4a42f87fdbedfb1ece",
+      "additionalParentPurpose": "Fast-forward operational check history only; exact product tree plus canonical envelope. Product first parent and validator preserved.",
+      "branch": "astra-check-wp14",
+      "config": {
+        "productSha": "0ea218715eda33efc7eaeb1f9139265777920b82",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "workflowBlob": "2b0b36f3b9277a17cc22c3bab8144303d7c77830",
+      "runId": 43645173216,
+      "composedClosure": "NOT_RUN: pinned composed input does not contain astra-wp14-check workflow; no workflow edits or epic authorized. This check examines P, not W."
+    },
+    "staticValidation": {
+      "patchAppliesToExactComposedPreimages": true,
+      "method": "git apply --check on downloaded texts only; no product execution",
+      "c17PreservedByteForByte": true,
+      "review": "read-only auxiliary /root/atlas_review; no final independent acceptance"
+    },
+    "constraints": {
+      "nativeSessionWitness": false,
+      "AM05": "OPEN",
+      "localProductTests": 0,
+      "force": false,
+      "sourceRuntimeEdits": 0,
+      "sf2StackRefWrites": 0,
+      "desktopOrServerRestarts": 0
+    }
+  },
+  "test": {
+    "runId": 43645127480,
+    "jobId": 132601067130,
+    "conclusion": "failure",
+    "passed": 0,
+    "failed": 2,
+    "expectCalls": 53,
+    "elapsedSeconds": 14.78,
+    "processProof": "NOT_ESTABLISHED: child parsed but failed before opening persisted state",
+    "ownFailure": {
+      "path": "test/product/wp14/atlas-restart-reader.ts",
+      "lines": [
+        64,
+        135
+      ],
+      "cause": "duplicate block-scoped source declaration introduced in mission35",
+      "fix": "rename persisted dependency capturedSource; no authorization changes"
+    },
+    "preservedC17Failure": {
+      "line": 444,
+      "assertion": "memory.readOriginal(caseRef,documentRef.refDigest,call) is undefined after changed document bytes",
+      "observed": "original documentRef returned",
+      "classification": "composed runtime boundary gap; assertion preserved byte-for-byte",
+      "afterFailure": "later C17 assertions NOT_REACHED"
+    },
+    "omni": {
+      "status": "pass",
+      "nonce": "9d4a8ad5be211eb983e8ed63871f6789",
+      "declaredTests": 2,
+      "spawns": 5,
+      "delegated": 0
+    },
+    "artifacts": []
+  },
+  "check": {
+    "runId": 43645173216,
+    "jobId": 132601203925,
+    "productSha": "0ea218715eda33efc7eaeb1f9139265777920b82",
+    "snapshotSha": "177c7bb87b5c608ad96e4489cba6f78b809ddf7d",
+    "envelopeValidation": "PASS",
+    "typecheck": {
+      "status": "FAIL",
+      "diagnostics": 158,
+      "inWp14": 19,
+      "outsideWp14": 139,
+      "ownCorrections": [
+        "duplicate source declaration and dependent errors",
+        "type matcher as expect<unknown>; same deep equality"
+      ],
+      "dependencyGaps": [
+        "source product lacks composed readOriginalCapture",
+        "source product lacks wp06 runtime fixture and C17 procurement API"
+      ],
+      "remainingCausality": "No green transferred from source P to composed W; complete dependency closure pinned in INPUTS-AND-PATCH."
+    },
+    "guards": {
+      "status": "FAIL",
+      "rules": 78,
+      "changedPaths": 659,
+      "gates": 2,
+      "warnings": 11,
+      "errors": 0,
+      "gatesAt": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/owner-findings/consumer-audit/0cf10879/job-132403235716.log",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/owner-findings/consumer-audit/0cf10879/planner-final-evidence.log"
+      ],
+      "reason": "Existing agent-scratch files outside mission35 write paths; no unauthorized deletion or ignore added"
+    },
+    "artifacts": [
+      {
+        "id": 14132809976,
+        "name": "astra-wp14-check-1",
+        "size_in_bytes": 8660,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14132809976",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14132809976/zip",
+        "expired": false,
+        "created_at": "2026-11-14T21:54:55Z",
+        "expires_at": "2026-11-28T21:54:54Z",
+        "updated_at": "2026-11-14T21:54:55Z",
+        "digest": "sha256:7e6522c10f34025462dfacb49a79c87d03ac64f9a61c6ef6f1951775311b4911",
+        "workflow_run": {
+          "id": 43645173216,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp14",
+          "head_sha": "177c7bb87b5c608ad96e4489cba6f78b809ddf7d"
+        }
+      }
+    ],
+    "artifactArchiveDownloaded": false
+  },
+  "evidence": {
+    "test-43645127480.txt": {
+      "sha256": "78212bcbb27a4aba24b61331ff0702602d61fad9c3571a6ca0a933a73ce71368",
+      "bytes": 75738
+    },
+    "check-43645173216.txt": {
+      "sha256": "e2df0003b666526d175770f2a45f2d8d46e34a45fb030d9cf37554442329317c",
+      "bytes": 150190
+    },
+    "logAccess": "GitHub MCP decoded job logs; full hosted logs referenced by exact run/job IDs",
+    "testSummary": [
+      "2026-11-14T21:54:30.4198854Z (fail) protected Atlas original binds cross-principal continuity after store reopen [1756.41ms]",
+      "2026-11-14T21:54:43.0157969Z (fail) confirmed C17 document is published and recalled by real Atlas, then withheld after blob revocation [12594.24ms]",
+      "2026-11-14T21:54:43.0158629Z  0 pass",
+      "2026-11-14T21:54:43.0158828Z  2 fail",
+      "2026-11-14T21:54:43.0159037Z  53 expect() calls",
+      "2026-11-14T21:54:43.0159317Z Ran 2 tests across 1 file. [14.78s]",
+      "2026-11-14T21:54:43.0160292Z omni positive control [9d4a8ad5be211eb983e8ed63871f6789]: pass (declared: 2 test(s) in Sucafinav1/test/product/wp14/source-access-atlas.test.ts); 5 omni spawn(s), 0 delegated."
+    ],
+    "wp14Diagnostics": [
+      "2026-11-14T21:54:53.2225983Z ##[error]test/product/wp14/atlas-restart-reader.ts(64,9): error TS2451: Cannot redeclare block-scoped variable 'source'.",
+      "2026-11-14T21:54:53.2227847Z ##[error]test/product/wp14/atlas-restart-reader.ts(135,9): error TS2451: Cannot redeclare block-scoped variable 'source'.",
+      "2026-11-14T21:54:53.2231491Z ##[error]test/product/wp14/atlas-restart-reader.ts(137,39): error TS2339: Property 'readOriginalCapture' does not exist on type '{ emitFromLedger(ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<MemoryWriteReceipt>; recall(caseRef: { ...; }, call: TrustedDomainContext): Promise<...>; readOriginal(caseRef: { ...; }, digest: string, call: TrustedDomainContext): Promise<...>; }'.",
+      "2026-11-14T21:54:53.2234633Z ##[error]test/product/wp14/atlas-restart-reader.ts(137,75): error TS2339: Property 'refDigest' does not exist on type '(ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>'.",
+      "2026-11-14T21:54:53.2238698Z ##[error]test/product/wp14/atlas-restart-reader.ts(148,28): error TS2339: Property 'readOriginalCapture' does not exist on type '{ emitFromLedger(ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<MemoryWriteReceipt>; recall(caseRef: { ...; }, call: TrustedDomainContext): Promise<...>; readOriginal(caseRef: { ...; }, digest: string, call: TrustedDomainContext): Promise<...>; }'.",
+      "2026-11-14T21:54:53.2241871Z ##[error]test/product/wp14/atlas-restart-reader.ts(148,64): error TS2339: Property 'refDigest' does not exist on type '(ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>'.",
+      "2026-11-14T21:54:53.2244697Z ##[error]test/product/wp14/atlas-restart-reader.ts(155,46): error TS2345: Argument of type '(ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>' is not assignable to parameter of type 'BusinessEvidenceRef'.",
+      "2026-11-14T21:54:53.2246691Z ##[error]test/product/wp14/source-access-atlas.test.ts(175,49): error TS2769: No overload matches this call.",
+      "2026-11-14T21:54:53.2250221Z ##[error]test/product/wp14/source-access-atlas.test.ts(229,46): error TS2307: Cannot find module '../wp06/runtime-fixture.ts' or its corresponding type declarations.",
+      "2026-11-14T21:54:53.2254798Z ##[error]test/product/wp14/source-access-atlas.test.ts(255,76): error TS2353: Object literal may only specify known properties, and 'procurementEvidenceWrites' does not exist in type '{ identity: () => Readonly<{ installationId: string; hostId: string; projectId: string; location: Ref; }> | undefined; installationId: string; origin: string; policyVersion: string; ... 12 more ...; authorizeDocument: (request: Request, snapshot: Snapshot, assetId: string, principal: string, authority: SfStateAuthor...'.",
+      "2026-11-14T21:54:53.2260667Z ##[error]test/product/wp14/source-access-atlas.test.ts(269,117): error TS2353: Object literal may only specify known properties, and 'procurementEvidenceWrites' does not exist in type '{ authority: { state: SfProductStatePort; ui: { admit(request: Request, operation: string, inputDigest: string): Promise<PortResult<TrustedUiContext>>; ... 6 more ...; finish(context: TrustedUiContext): void; }; ... 7 more ...; authorizeInterrupt: (value: Readonly<...>, binding: Readonly<...>, request: Request) => P...'.",
+      "2026-11-14T21:54:53.2264997Z ##[error]test/product/wp14/source-access-atlas.test.ts(277,69): error TS2339: Property 'resolveProcurement' does not exist on type '{ dashboard: DashboardPort & { explain: (request: KpiExplainRequest, binding: TrustedDomainContext) => Promise<PortResult<DomainProjection>>; }; ... 24 more ...; dispose: () => void; }'.",
+      "2026-11-14T21:54:53.2267798Z ##[error]test/product/wp14/source-access-atlas.test.ts(315,55): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+      "2026-11-14T21:54:53.2269482Z ##[error]test/product/wp14/source-access-atlas.test.ts(320,72): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+      "2026-11-14T21:54:53.2271042Z ##[error]test/product/wp14/source-access-atlas.test.ts(320,82): error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+      "2026-11-14T21:54:53.2272568Z ##[error]test/product/wp14/source-access-atlas.test.ts(323,100): error TS7006: Parameter 'role' implicitly has an 'any' type.",
+      "2026-11-14T21:54:53.2274081Z ##[error]test/product/wp14/source-access-atlas.test.ts(323,146): error TS7006: Parameter 'role' implicitly has an 'any' type.",
+      "2026-11-14T21:54:53.2275611Z ##[error]test/product/wp14/source-access-atlas.test.ts(436,55): error TS7006: Parameter '_snapshot' implicitly has an 'any' type.",
+      "2026-11-14T21:54:53.2277355Z ##[error]test/product/wp14/source-access-atlas.test.ts(436,66): error TS7006: Parameter 'blobs' implicitly has an 'any' type."
+    ]
+  },
+  "nativeSessionWitness": false,
+  "AM05": "OPEN",
+  "localProductTests": 0
+}

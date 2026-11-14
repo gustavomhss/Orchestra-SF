@@ -1,0 +1,54 @@
+{
+  "schema": "sf-c12-composed-request-v1",
+  "mission": 32,
+  "label": "validation-02",
+  "sourceImplementation": "614e5c06b380fa671c3aed57ffe1172a31665ab3",
+  "bundleBase": "402a091485e11d60dff433049c7dedd7fcead687",
+  "W": "9cf37f42eefb080940c7c71e4c2b1c5539459295",
+  "W_tree": "28877563a208d3db3e0f96c761ce357fcc2703b0",
+  "S": "26cb97baa6ff8be3a4f020cad9ccfccbb1a6d860",
+  "S_tree": "b18ae30f95192771e10605da50fe451cec905879",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+      "./Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+      "./Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+      "./Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts",
+      "./Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts",
+      "./Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts",
+      "./Sucafinav1/test/product/c12-composed-compatibility/duplicate-choice.test.ts",
+      "./Sucafinav1/test/product/review-fixes/procurement-apply/real-apply.test.ts",
+      "./Sucafinav1/test/product/review-fixes/procurement-apply/refusals.test.ts",
+      "./Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "ref": "ci-run-linux-astra-c12-32-9cf37f42-fixed-02",
+  "workflow": {
+    "path": ".github/workflows/test-ci.yml",
+    "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+  },
+  "run": 43643559235,
+  "job": 132596171206,
+  "statusAtRecord": "in_progress",
+  "dedup": {
+    "sameBranchRunsBeforeDispatch": 0,
+    "queuedBeforeDispatch": 0,
+    "inProgressBeforeDispatch": 0,
+    "W1Completed": true,
+    "reasonForRerun": "Helper syntax materially fixed and new product cardinality guards added; C12 and affected OPS/alias regressions require observation on W2."
+  },
+  "snapshotDelta": [
+    ".ci-run.json"
+  ],
+  "localTests": false,
+  "epicOrFullSuite": false,
+  "timeoutBudgetChanged": false,
+  "globalAcceptance": false
+}

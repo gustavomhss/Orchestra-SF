@@ -1,0 +1,522 @@
+{
+  "schema": "sf2h.rolling-intake-42.increment.v1",
+  "mission": 42,
+  "increment": 1,
+  "candidateId": "C12",
+  "candidateMeaning": "Next material sf2-stack candidate after C11; not contract C12 acceptance.",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "authority": {
+    "epoch": "S0-C-e8-browser42",
+    "ackCommit": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+    "ackBlob": "3033ac3c98b4bf0bac07a44ff78708a6c071cc6e",
+    "soleIntegrator": "/root",
+    "finalDispatcherAndAcceptance": "S0"
+  },
+  "target": {
+    "branch": "sf2-stack",
+    "pr": 65,
+    "observedHead": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+    "materialParentCandidate": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+    "parent": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+    "baseTree": "8da2223f2809a08b2c7169981c1d815ad0d7453a",
+    "publication": "The commit containing this manifest is material candidate C12. Actual commit/tree readback will be recorded in candidate-C12.json and consumer-acks.json."
+  },
+  "controlReconciliation": {
+    "initial": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+    "latestObserved": "db02b5133e0ed9abbbc3914d9bc64fedb6b8e5a2",
+    "delta": "One added mission44 planning file, read in full.",
+    "mission44": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/decisions-composed-qualification.json",
+      "blob": "2b57f9dc70c8325fb8685ee9bd9c0f47a1931fe4",
+      "state": "PREPARED_NOT_STARTED",
+      "epoch": "decisions-composed-browser44",
+      "sourceBranch": "astra-wp11",
+      "sourcePR": 40,
+      "expectedHead": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+      "soleIntegratorPreserved": 42
+    },
+    "controlMerged": false,
+    "authoritySuperseded": false
+  },
+  "sourceReleases": {
+    "atlas35": {
+      "branch": "astra-wp14",
+      "pr": 38,
+      "leaseEpoch": "atlas-restart-browser35",
+      "status": "TERMINAL_DELIVERED_WITH_BLOCKERS",
+      "release": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+      "tree": "4c6fcc7be6a7068794ac6320ba96c2ec523e92c9",
+      "productCommit": "5fa1ef92608cfbd315f5d753bd27eee5bdec39bf",
+      "productTree": "62fb11d740756893873babe4cc4d9a313176b601",
+      "handoffPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-process-restart/HANDOFF-TERMINAL.json",
+      "handoffBlob": "dd8de4d0453220a0b6cd58ae9d3b2fad778f47a0",
+      "authorityCommit": "aa382fe3fa532006fe0923b58f2aa496a365edc2",
+      "authorityBlob": "421d698d37d65e7fdb4e12c9f229795c7e945d24",
+      "materialDelta": "Two WP14 test/helper postimages; runtime source unchanged.",
+      "compositionBase": "b19606b73f1ffc5a9e58702e939f1aa788dabfa1",
+      "compositionBaseTree": "561700c145767a16d42e8b2103bd0ea81d0b379f"
+    },
+    "c12_32": {
+      "branch": "procurement-apply",
+      "pr": 60,
+      "leaseEpoch": "c12-browser32",
+      "status": "EXPLICIT_TERMINAL_DELIVERED",
+      "release": "fd36f14b042f59dbace36f50a698c66f80f98abf",
+      "tree": "8180d5f9750d09c42f83515d8d6e69b698f03e39",
+      "checksProductCommit": "00a4eca86f69fd186094bd7a698328a9a4f5fbc7",
+      "checksProductTree": "798eae81136ec91cce23a178a93a8898feadddac",
+      "implementationHead": "a20f8701f8e8d8a5e75a1dc66e47de1ef8a2dfe1",
+      "implementationTree": "b0b38c1d96bd8a64afc972c0ff3632d6bab7edaf",
+      "handoffPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/HANDOFF.md",
+      "handoffBlob": "5057835c483ac04fbff0d5c85d6c12324c1e7c51",
+      "ackBlob": "d9d299ef886a1a81cc822845fb8d971b36137ed8",
+      "previousIntegratedTerminal": "8b7497a271c5afbd8604927f75b2a86a4f960bae",
+      "compositionBase": "2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0",
+      "compositionBaseTree": "2dba7fd244afcd39b837b1e61406de1e43450bb5",
+      "newMaterialDelta": "Only fixture callback identity preservation. Ten other composed postimages already exact in target.",
+      "excludedSourceSnapshotApplyBlob": "605ad1fbd9167b8234aa614a01638724e87f36f5",
+      "retainedComposedApplyBlob": "65d2a0518427b1454aa665ef744bce7564ed8049"
+    }
+  },
+  "materialChanges": [
+    {
+      "owner": "atlas35",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "preimage": "d7d2a69837560f42438d470b83724c1a61939a73",
+      "postimage": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9",
+      "sourceRelease": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+      "mode": "100644",
+      "type": "blob",
+      "sourcePath": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "currentTargetBlob": "d7d2a69837560f42438d470b83724c1a61939a73",
+      "identities": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "pre": {
+          "bytes": 34388,
+          "gitBlob": "d7d2a69837560f42438d470b83724c1a61939a73",
+          "sha256": "eb069a16f091733d7fda481ed9e05f339dace99b496a2c16fe3050c06412c85f"
+        },
+        "post": {
+          "bytes": 43863,
+          "gitBlob": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9",
+          "sha256": "5b5cababd46f64fc8b7187df3a24da7cab832276f843a2f4b314e0a7b27dd4ef"
+        }
+      },
+      "patchReconstruction": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "hunks": 6,
+        "exactReconstruction": true,
+        "currentBlob": "d7d2a69837560f42438d470b83724c1a61939a73",
+        "postBlob": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9"
+      },
+      "consumer": "WP14 actual Atlas restart/ACL/C17 selection; AM05 native acceptance still open"
+    },
+    {
+      "owner": "atlas35",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "preimage": "6194f415573636efd47751f977cd157c9396f17d",
+      "postimage": "65c5fd04f6af34a241e6cc0bd40cd968cdc6e353",
+      "sourceRelease": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+      "mode": "100644",
+      "type": "blob",
+      "sourcePath": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "currentTargetBlob": "6194f415573636efd47751f977cd157c9396f17d",
+      "identities": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+        "pre": {
+          "bytes": 11421,
+          "gitBlob": "6194f415573636efd47751f977cd157c9396f17d",
+          "sha256": "509fc4423f0d74c130a5ead0c8744548f578109a6c50ac3095089f5e6dc801d4"
+        },
+        "post": {
+          "bytes": 14203,
+          "gitBlob": "65c5fd04f6af34a241e6cc0bd40cd968cdc6e353",
+          "sha256": "87915c7647c66d457be91176bbc8a2d566ce7e1bb1afe1f643e8033c1e6ce1ce"
+        }
+      },
+      "patchReconstruction": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+        "hunks": 5,
+        "exactReconstruction": true,
+        "currentBlob": "6194f415573636efd47751f977cd157c9396f17d",
+        "postBlob": "65c5fd04f6af34a241e6cc0bd40cd968cdc6e353"
+      },
+      "consumer": "WP14 actual Atlas restart/ACL/C17 selection; AM05 native acceptance still open"
+    },
+    {
+      "owner": "c12-32-supplement",
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+      "preimage": "cfab781aee9064d94c98ab784d1bafdfd985ae92",
+      "postimage": "33650407123163ea881eca9d4940fde364b27c54",
+      "sourceRelease": "fd36f14b042f59dbace36f50a698c66f80f98abf",
+      "mode": "100644",
+      "type": "blob",
+      "sourcePath": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+      "currentTargetBlob": "cfab781aee9064d94c98ab784d1bafdfd985ae92",
+      "identities": {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+        "pre": {
+          "bytes": 22110,
+          "gitBlob": "cfab781aee9064d94c98ab784d1bafdfd985ae92",
+          "sha256": "ea84988e1a612e763f5c495810a2e2d74ff28ffac292d5b36e91fec50632e8e9"
+        },
+        "post": {
+          "bytes": 22399,
+          "gitBlob": "33650407123163ea881eca9d4940fde364b27c54",
+          "sha256": "eab64a6bd7fe87aa3a8d5178c2af42b78dd559899f1a3a482a7040851cb0247c"
+        }
+      },
+      "patchReconstruction": {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+        "hunks": 2,
+        "exactReconstruction": true,
+        "currentBlob": "cfab781aee9064d94c98ab784d1bafdfd985ae92",
+        "postBlob": "33650407123163ea881eca9d4940fde364b27c54"
+      },
+      "consumer": "C12 receipt recovery + seven OPS-REV-02 tests; final runtime qualifier remains S0"
+    }
+  ],
+  "alreadyIntegratedKeepCurrent": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "preimage": "6ad51e47b22eca073a0a81731575c463d98673e4",
+      "postimage": "65d2a0518427b1454aa665ef744bce7564ed8049",
+      "status": "modified",
+      "targetBlob": "65d2a0518427b1454aa665ef744bce7564ed8049",
+      "disposition": "ALREADY_EXACT_KEEP_NO_TREE_ENTRY"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "preimage": "14e41977752f48fc0f204dc5e5893521a5bd1d30",
+      "postimage": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635",
+      "status": "modified",
+      "targetBlob": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635",
+      "disposition": "ALREADY_EXACT_KEEP_NO_TREE_ENTRY"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts",
+      "preimage": null,
+      "postimage": "c9a7fc6ee875a2ec6e9ac2a02307fe1d1c41124a",
+      "status": "added",
+      "targetBlob": "c9a7fc6ee875a2ec6e9ac2a02307fe1d1c41124a",
+      "disposition": "ALREADY_EXACT_KEEP_NO_TREE_ENTRY"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/duplicate-choice.test.ts",
+      "preimage": null,
+      "postimage": "e8b6d8a9c0c02670269f38336e4a9446b8133647",
+      "status": "added",
+      "targetBlob": "e8b6d8a9c0c02670269f38336e4a9446b8133647",
+      "disposition": "ALREADY_EXACT_KEEP_NO_TREE_ENTRY"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts",
+      "preimage": null,
+      "postimage": "c45757c67769a7654f9ae1ecbbeb2f55f93e6acd",
+      "status": "added",
+      "targetBlob": "c45757c67769a7654f9ae1ecbbeb2f55f93e6acd",
+      "disposition": "ALREADY_EXACT_KEEP_NO_TREE_ENTRY"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts",
+      "preimage": null,
+      "postimage": "c2fca3a7aed03776072cd059cd361df98ac9cf28",
+      "status": "added",
+      "targetBlob": "c2fca3a7aed03776072cd059cd361df98ac9cf28",
+      "disposition": "ALREADY_EXACT_KEEP_NO_TREE_ENTRY"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts",
+      "preimage": "80e4b8f5eba72f95ba94f906c982e4d4ad902907",
+      "postimage": "fc9b0e4d52fca55921aa619687f41b8953954c7e",
+      "status": "modified",
+      "targetBlob": "fc9b0e4d52fca55921aa619687f41b8953954c7e",
+      "disposition": "ALREADY_EXACT_KEEP_NO_TREE_ENTRY"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+      "preimage": "f1b39878522b5c154b6e250bb2fd1c93e2428025",
+      "postimage": "4528a2c390110b3bf010cc77884e204139b50c09",
+      "status": "modified",
+      "targetBlob": "4528a2c390110b3bf010cc77884e204139b50c09",
+      "disposition": "ALREADY_EXACT_KEEP_NO_TREE_ENTRY"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+      "preimage": "15aaff1ae0406f9b495c9f60b81b18d9c8174e64",
+      "postimage": "76bf7963d30dde72eb369616dfcd0fee61948803",
+      "status": "modified",
+      "targetBlob": "76bf7963d30dde72eb369616dfcd0fee61948803",
+      "disposition": "ALREADY_EXACT_KEEP_NO_TREE_ENTRY"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+      "preimage": "5bad0ed7698de7a75ce394773e7ec6d629ea3c10",
+      "postimage": "65876bfc65f8682ad19723cd3bc1589803118b9b",
+      "status": "modified",
+      "targetBlob": "65876bfc65f8682ad19723cd3bc1589803118b9b",
+      "disposition": "ALREADY_EXACT_KEEP_NO_TREE_ENTRY"
+    }
+  ],
+  "patches": {
+    "atlas": {
+      "sourceRelease": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-process-restart/0001-restore-atlas-process-proof.patch",
+      "bytes": 29056,
+      "gitBlob": "0145865bd2aedad8588f4b83e7193c9f2b537e5f",
+      "sha256": "88b469dfcde4b68fadcf09012cf9ecc186a41fd1e5385b2dca87a03b21327cfb",
+      "appliedScope": "Both complete diffs:6+5 hunks exact."
+    },
+    "c12Tests": {
+      "sourceRelease": "fd36f14b042f59dbace36f50a698c66f80f98abf",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/patches/bundle-tests.patch",
+      "bytes": 42379,
+      "gitBlob": "0a0a0fadd3497f710dd0d38f9521a360bf8fdb61",
+      "sha256": "32c2af29218e696992d42a67884d4b8d7ac64f68a2868872fe26642644c816ca",
+      "appliedScope": "Only2fixture hunks. Other offered postimages already present; do not replay full patch."
+    }
+  },
+  "dependencies": {
+    "path": "dependency-closure-01.json",
+    "count": 58,
+    "criticalRuntimeCount": 30,
+    "criticalRuntimeAllExact": true,
+    "ciCount": 10,
+    "ciAllExact": true,
+    "rootMetadataCount": 5,
+    "rootMetadataAllExact": true,
+    "atlasExplicitRuntimeCount": 2,
+    "atlasExplicitRuntimeAllExact": true,
+    "baseTestHelpersCount": 11,
+    "helpersAlreadyAdvancedToC12Postimages": 4,
+    "oneFixtureSelected": true,
+    "noUnknownDependencyDriftInEnumeratedClosure": true,
+    "scope": "Enumerated dependency identities only. Complete proof root trees differ from target; no transfer of hosted PASS."
+  },
+  "sourceReceipts": {
+    "path": "source-receipts-01.json",
+    "count": 45,
+    "atlas35": 24,
+    "c12_32": 21,
+    "newNamespaceOnly": true,
+    "originalNamespacesUnchanged": true
+  },
+  "c17Preservation": {
+    "unchanged": true,
+    "bytes": 20558,
+    "gitBlob": "fb742163bd102cb455b669f2e9f200ed4a56fda3",
+    "sha256": "ba60a5d4d8ffd8bbc743d3030db473ad9350b03a001a5f0a9a07eb93e876cc1c",
+    "extraction": "Preceding newline before second C17 test through EOF; same exact bytes at target and Atlas35 release.",
+    "sourceFailureRun": 43645747336,
+    "sourceFailureLine": 444,
+    "originalTargetStartLine": 127,
+    "postStartLine": 228,
+    "failurePreserved": "Public atlas.memory.readOriginal returns old documentRef after actual blob replacement; preceding canonical resolve refuses. Later recall/replay/no-change assertions NOT_REACHED.",
+    "semanticOwner": "Memory40 / WP10 PR29",
+    "requiredCorrection": "Owner must qualify public original-reference current-source reauthorization and replay current case/evidence gates, preserving private capture primitive and valid historical access; no altered C17 oracle.",
+    "newOwnerAcceptance": false
+  },
+  "runtimeProposal": {
+    "status": "INERT_EVIDENCE_ONLY",
+    "applied": false,
+    "owner": "Memory40",
+    "required": "Qualified explicit Memory40 release with real pre/postimages and coherent dependencies; no direct application of proposal35.",
+    "patchBlob": "631006f834a8a023e83d5af6f6e65355d9be2171",
+    "patchSha256": "22b2878b3790e69651b567ce4ddbae13fd223bb45dbfa8900530745ef7dd0765",
+    "heldRuntime": [
+      "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
+    ]
+  },
+  "review": {
+    "exactPatchReconstruction": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "hunks": 6,
+        "exactReconstruction": true,
+        "currentBlob": "d7d2a69837560f42438d470b83724c1a61939a73",
+        "postBlob": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+        "hunks": 5,
+        "exactReconstruction": true,
+        "currentBlob": "6194f415573636efd47751f977cd157c9396f17d",
+        "postBlob": "65c5fd04f6af34a241e6cc0bd40cd968cdc6e353"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+        "hunks": 2,
+        "exactReconstruction": true,
+        "currentBlob": "cfab781aee9064d94c98ab784d1bafdfd985ae92",
+        "postBlob": "33650407123163ea881eca9d4940fde364b27c54"
+      }
+    ],
+    "c17Unchanged": true,
+    "materialPostimagesReadInFull": true,
+    "scope": "Read source/test/helper/fixture and source handoff/patch/manifests, computed Git blob/SHA256 and hunk reconstruction as text only; no product/TypeScript/test execution.",
+    "newMandatorySemanticConflictFound": false,
+    "knownFailureRoutedTo": "Memory40 qualified delivery; source proposal35 remains inert",
+    "root": "Read all three postimages, both Atlas diffs, C12 fixture diff, releases, manifests and evidence; root independently matched target material preimages and in-module dependency blobs.",
+    "productExecuted": false
+  },
+  "evidence": {
+    "rule": "All results below belong to their exact source W/S. They are not executions of candidate C12.",
+    "atlas35": {
+      "release": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+      "epoch": "atlas-restart-browser35",
+      "W": "32bcb308059283a0f2d80f70b5b06f75fba1f427",
+      "W_tree": "4943a243d28c15e41b5b47ce1828e91898e0dc7d",
+      "S": "fd9cb75b89456798e48c1f8e84ca4f3e4c6e524c",
+      "S_tree": "f38ae2f98e4c29434f078c13ce96c98ade0af987",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "3f35ec9118fcbebf663c87f9024c8dfcca1bad489eb7c029cb9ca1347a7dbfd9",
+      "run": 43645747336,
+      "job": 132602998463,
+      "aggregate": "FAIL",
+      "passed": 1,
+      "failed": 1,
+      "assertions": 89,
+      "restartComponent": "PASS",
+      "process": {
+        "parentPid": 4089,
+        "childPid": 4140,
+        "exitCode": 0
+      },
+      "C17": "FAIL_PUBLIC_ORIGINAL_RETURNED_STALE_DOCUMENT_REF",
+      "laterAssertions": "NOT_REACHED",
+      "processProofBlob": "503cdb1e39c4d6186a69c790b67fca76342222d9",
+      "nativeSessionWitness": false,
+      "AM05": "OPEN",
+      "sourceChecks": {
+        "run": 43645751452,
+        "S": "31b49d7bc9ee59feb4407d4229a155f81fd330d1",
+        "productSha": "5fa1ef92608cfbd315f5d753bd27eee5bdec39bf",
+        "typecheck": "FAIL",
+        "diagnostics": 152,
+        "guards": "FAIL",
+        "gates": 2,
+        "composedChecks": "NOT_RUN"
+      }
+    },
+    "c12_32": {
+      "release": "fd36f14b042f59dbace36f50a698c66f80f98abf",
+      "epoch": "c12-browser32",
+      "compositionBase": "2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0",
+      "W": "ba731ff646d8ed7a1c7fb15bf82f4e8c5a2ef81a",
+      "W_tree": "c46c6dbb4d0e1bdc84da7ab21812f16e4bcc9b04",
+      "S": "114b1c3ff83a038b515f4afcf5db0fc795d59b6d",
+      "S_tree": "3978a370af7a9da7ffee4db1eaf8ba137162df60",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+          "./Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+          "./Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+          "./Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts",
+          "./Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts",
+          "./Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts",
+          "./Sucafinav1/test/product/c12-composed-compatibility/duplicate-choice.test.ts",
+          "./Sucafinav1/test/product/review-fixes/procurement-apply/real-apply.test.ts",
+          "./Sucafinav1/test/product/review-fixes/procurement-apply/refusals.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "run": 43646007759,
+      "job": 132603819490,
+      "result": "PASS",
+      "summary": {
+        "pass": 22,
+        "fail": 0,
+        "expectCalls": 570,
+        "tests": 22,
+        "files": 9,
+        "seconds": 402.01
+      },
+      "scope": "15 C12 + 7 OPS-REV-02 on pinned C9 composition. WP04 alias is separate historical evidence.",
+      "earlierEvidence": {
+        "W2": {
+          "W": "9cf37f42eefb080940c7c71e4c2b1c5539459295",
+          "S": "26cb97baa6ff8be3a4f020cad9ccfccbb1a6d860",
+          "run": 43643559235,
+          "result": "FAIL",
+          "passed": 22,
+          "failed": 1
+        },
+        "W3": {
+          "W": "796f7d75310eba98a847a5ad9a5d4a5cec7e3de7",
+          "S": "0a316164ce059b113e966810dc0c09cf47e0f76b",
+          "run": 43644467464,
+          "result": "PASS",
+          "passed": 1,
+          "failed": 0,
+          "filtered": 4
+        }
+      },
+      "oneGreenRunOf23": false,
+      "sourceChecks": {
+        "W": "00a4eca86f69fd186094bd7a698328a9a4f5fbc7",
+        "W_tree": "798eae81136ec91cce23a178a93a8898feadddac",
+        "S": "ee217e8a7e4b5c5fe99f0ed693c0cf712bfbb56c",
+        "S_tree": "42d3b76db4c847fba7be4d212eee9cc51b5ad6c5",
+        "run": 43646929233,
+        "job": 132606688777,
+        "aggregate": "FAIL",
+        "Sucafina": "FAIL_INHERITED_WP14_TS2741",
+        "CLI": "PASS",
+        "guards": "PASS",
+        "bundleChecksRun": false
+      }
+    },
+    "candidateC12": {
+      "tests": "NOT_RUN",
+      "typecheck": "NOT_RUN",
+      "guards": "NOT_RUN",
+      "CI": "NOT_RUN",
+      "AM": "NOT_RUN",
+      "C_G7": "NOT_ACCEPTED",
+      "D_G8": "NOT_RUN_NOT_CLAIMED",
+      "globalRelease": false,
+      "finalDispatcher": "S0",
+      "finalAcceptance": "S0"
+    }
+  },
+  "preservation": [
+    "No source snapshots; exactly 3 selected material postimages with exact target preimages.",
+    "Atlas restart PASS preserved together with C17 FAIL.",
+    "Runtime owner proposal35 copied only as inert receipt evidence until qualified Memory40 delivery.",
+    "C12 existing 10 exact postimages preserved; one new fixture delta.",
+    "All historical receipt namespaces remain unchanged.",
+    "No GLOBAL_RELEASE; S0 retains final acceptance and dispatcher."
+  ],
+  "publicationPolicy": {
+    "remote": "GitHub MCP Git Data",
+    "expectedHeadCAS": true,
+    "force": false,
+    "additionalParents": [],
+    "testsExecuted": 0,
+    "workflowFilesChanged": 0,
+    "workflowRefsMoved": 0,
+    "devMerged": false,
+    "deploy": false,
+    "enginesChanged": false,
+    "restart": false
+  }
+}

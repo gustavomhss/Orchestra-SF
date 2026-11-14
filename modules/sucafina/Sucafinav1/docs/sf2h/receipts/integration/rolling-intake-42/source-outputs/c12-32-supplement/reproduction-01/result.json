@@ -1,0 +1,55 @@
+{
+  "schema": "sf2h-c12-composed-result-v1",
+  "mission": 32,
+  "W": "7fd76f647a57e9b9bc1415a4d516791e13b719b4",
+  "W_tree": "cc0f152ea021431b5f27562a01f5311876d31ec6",
+  "S": "ca03f3f48e19b16acdea15e2b46976180208c139",
+  "run": 43642218184,
+  "job": 132592073292,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43642218184",
+  "conclusion": "failure",
+  "test_summary": {
+    "pass": 0,
+    "fail": 3,
+    "assertions": 30,
+    "files": 2,
+    "seconds": 38.46
+  },
+  "observations": [
+    {
+      "test": "normal-retry.test.ts normal Apply",
+      "expected_status": 409,
+      "observed_status": 200,
+      "classification": "ORACLE_INTERLEAVING_MISMATCH; unrelated objective edit can reconcile current case"
+    },
+    {
+      "test": "normal-retry.test.ts recovery CAS",
+      "expected_status": 409,
+      "observed_status": 200,
+      "classification": "INITIAL_INTERLEAVING_MISMATCH; never reached intended second-race assertion"
+    },
+    {
+      "test": "material-race.test.ts",
+      "expected_status": 409,
+      "observed_status": 200,
+      "classification": "PRODUCT_DEFECT_REPRODUCED",
+      "effect_count": 1,
+      "authoritative_receipt_count": 1,
+      "linked_receipt_count": 1,
+      "domain_amount": 150,
+      "choice_operation_amount": 900,
+      "case_version_before": 3,
+      "case_version_after": 5,
+      "receipt_id": "c06698b6-02ff-42a4-bdf6-98bef9bdfea5"
+    }
+  ],
+  "omni": {
+    "nonce": "352172468a664213294fe5997211e0c7",
+    "verdict": "not applicable",
+    "spawns": 0,
+    "delegated": 0
+  },
+  "evidence_policy": "Original failure remains failure. No source green transferred. Workflow log remains hosted, not committed as raw log.",
+  "next": "Repair original choice binding; introduce genuine postcommit interruption and post-capture CAS race. Preserve assertions and add legitimate fresh-reconciliation/first-dispatch controls.",
+  "global_release": false
+}

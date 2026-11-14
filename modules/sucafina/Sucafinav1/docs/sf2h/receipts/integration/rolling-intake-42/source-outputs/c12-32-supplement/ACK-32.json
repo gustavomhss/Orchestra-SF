@@ -1,0 +1,42 @@
+{
+  "schema": "sf2h-c12-composed-compatibility-ack-v1",
+  "mission": 32,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "actor": "S4-A C12 producer continuation",
+  "lease_epoch": "c12-browser32",
+  "branch": "procurement-apply",
+  "pr": 60,
+  "observed_source": "c8a03c4f689025ca70a1c815fd292af22b6261cd",
+  "observed_source_tree": "be3c58d939dbc98336f8d4e0206a0b41e4740296",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_sha": "86dfe5cd709a4d1701a21b877c2feb92924b08c8",
+  "predecessor": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/HANDOFF.md",
+    "blob": "f4fe7dafe006297ec4fe8644ac9ecd0f88945152",
+    "state": "TERMINAL_SOURCE_HANDOFF_READ",
+    "reconciliation": "Explicit mission32 continues the same branch; PR60 head unchanged, no newer comment authority; predecessor implementation and evidence remain preserved."
+  },
+  "bundle": {
+    "sha": "402a091485e11d60dff433049c7dedd7fcead687",
+    "tree": "006339cc3a61de9bf99d2ba17069181bd5d8a02e",
+    "parent": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+    "executor": {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "blob": "6ad51e47b22eca073a0a81731575c463d98673e4"
+    }
+  },
+  "work": "First reproduce unchanged C12 normal-retry oracles plus a discriminating material-choice race on a snapshot derived from the exact composed tree. No Finance/host substitution. W snapshots may add only authorized test/product files and are identified here/receipts; S adds the existing CI request only. Source branch keeps original implementation until concrete fixes are qualified.",
+  "capabilities": {
+    "model": "GPT-6 Astra Pro",
+    "native_session_id": null,
+    "collaboration": "root plus three bounded read-only analysis helpers; no native session/Goal/controller started",
+    "remote": "GitHub MCP only",
+    "test_runtime": "GitHub Actions only"
+  },
+  "consumers": {
+    "integration": "session23 sole sf2-stack writer",
+    "final_dispatcher_and_acceptance": "S0"
+  },
+  "status": "IN_PROGRESS_NO_ACCEPTANCE"
+}

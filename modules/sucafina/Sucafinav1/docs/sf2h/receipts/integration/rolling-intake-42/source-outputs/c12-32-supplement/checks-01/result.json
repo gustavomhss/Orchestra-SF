@@ -1,0 +1,128 @@
+{
+  "schema": "sf-c12-source-checks-v1",
+  "mission": 32,
+  "label": "checks-01",
+  "W": "067b5cd37c09b2066dbd1a847942f8cac2ff8c40",
+  "W_tree": "bd1e44cbd05e3f55b716a77a8c5ab7d91a85c15c",
+  "S": "e94f8ba7a91a1f384f96cd5f02b5e25d0caec428",
+  "S_tree": "c76e58678bf3ce936ee6faf91b3cef2a499e2923",
+  "request": {
+    "productSha": "067b5cd37c09b2066dbd1a847942f8cac2ff8c40",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+  },
+  "request_identity": {
+    "sha256": "56c7e7dc84872334bb2a67d6c03c7341e88378ef30a93f024e9e814dc77ba1f5",
+    "blob": "46fc462ca037406c88a444ad88c277f3151d508b",
+    "bytes": 109
+  },
+  "ref": "astra-check-operations-c12-m32-067b5cd3-56c7e7dc-01",
+  "workflow": {
+    "path": ".github/workflows/astra-operations-check.yml",
+    "blob": "ec63fc5e1a355ada4f1b73cc518c225719e9b08e",
+    "mode": "all",
+    "unchanged": true
+  },
+  "run": 43644816495,
+  "job": 132600114060,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644816495",
+  "attempt": 1,
+  "conclusion": "failure",
+  "commands": [
+    {
+      "directory": "modules/sucafina",
+      "command": "bun typecheck",
+      "conclusion": "failure",
+      "exitCode": 2,
+      "diagnostics": [
+        {
+          "code": "TS2741",
+          "path": "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "line": 167,
+          "column": 41,
+          "message": "Property procurementEvidenceWrites is missing",
+          "blob": "fbe627ffde443ff7e2d3b1204bbcf67523404f41",
+          "inherited": true,
+          "owner": "WP14 / source composition owner",
+          "c12WriteAuthority": false
+        }
+      ]
+    },
+    {
+      "directory": "apps/cli",
+      "command": "bun typecheck",
+      "conclusion": "success"
+    },
+    {
+      "directory": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 880,
+      "gates": 0,
+      "warnings": 11,
+      "errors": 0
+    }
+  ],
+  "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+  "guardWarningClassification": {
+    "identicalToMission19": true,
+    "priorRun": 43637454132,
+    "priorJob": 132577282295,
+    "warnings": [
+      "WARN apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "WARN modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "WARN modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "WARN modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "WARN modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "WARN modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "WARN modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "WARN modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "WARN modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "WARN modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+      "WARN modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts:82 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer."
+    ],
+    "noNewC12Warning": true,
+    "noIgnoresApprovalsOrBudgetChanges": true,
+    "skill": {
+      "path": ".orchestra/skills/guardrail-usage/SKILL.md",
+      "sha": "067b5cd37c09b2066dbd1a847942f8cac2ff8c40",
+      "blob": "c2333f8b46d780f6b52bba2ae9f6696e840d18a0",
+      "interpretation": "WARN is advisory; zero GATE/ERROR and 78 actual rules constitutes a passing guard run. Existing warnings remain attributed to their owners."
+    }
+  },
+  "artifact": {
+    "id": 14132869022,
+    "name": "astra-operations-check-1",
+    "bytes": 1578,
+    "files": 5,
+    "sha256": "eee122db140edc28d012bf3470d428f271b131170e3f3233ef69160921e70fa9",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644816495/artifacts/14132869022",
+    "expiresAt": "2026-11-28T21:51:45Z",
+    "downloadedThroughGitHubMCP": true,
+    "rawLogsCommitted": false
+  },
+  "bundleQualification": {
+    "W": "796f7d75310eba98a847a5ad9a5d4a5cec7e3de7",
+    "checksRunOnBundle": false,
+    "reason": "The existing Operations check workflow is absent from this composed closure; no workflow imported, dispatcher replaced or epic/full suite invoked.",
+    "wp14CallerAlreadyFixed": true,
+    "wp14Blob": "d7d2a69837560f42438d470b83724c1a61939a73",
+    "existingPatch": "ba8a09e371ce8d93eb917eabb102caaee5affaf4:modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/OPS-CONSUMER-02.patch",
+    "existingPatchBlob": "2ab9a6b6f18709d5bad95f58247c70ba286a00aa",
+    "reapplyToBundle": false,
+    "actualBundleTypecheckNotInferred": true
+  },
+  "dedup": {
+    "equivalentRunsBeforeDispatch": 0,
+    "otherOperationsCheckInFlight": false,
+    "onlyOneChecksRunDispatched": true,
+    "supersededUndispatchedEnvelope": {
+      "W": "036c519d0b8f49f2af1fb8b60d2e108b9ed99e84",
+      "S": "ab004e334a74e4a2f9ba0cf15f5a7f4049064e11",
+      "dispatched": false,
+      "reason": "A subsequently observed oracle mismatch required an additional test-only change before the final source checks."
+    }
+  },
+  "finalDocumentaryDelta": "The subsequent terminal commit adds this receipt and HANDOFF.md, qualifies a historical source citation and disambiguates base versus W3 subtrees in closure.json. No product/test/CI delta or new execution is attributed to that documentary commit.",
+  "globalAcceptance": false
+}
