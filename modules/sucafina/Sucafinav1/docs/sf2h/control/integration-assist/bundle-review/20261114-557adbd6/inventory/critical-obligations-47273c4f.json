@@ -1,0 +1,756 @@
+[
+  {
+    "id": "ACK_EXACT",
+    "pr": 41,
+    "paths": [
+      "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+      "modules/sucafina/Sucafinav1/product/collaboration/authority.ts"
+    ],
+    "owner": "Colaboração / WP08; integrador session14",
+    "criterion": "WP10.DOD.40; composed-bundle-verification steps[1]",
+    "requirement": "Preserve persisted saved.value mutationReceipt, intention/principal/key/thread/message identity, real self lease and final fences. Source producer does not prove browser reload.",
+    "source_sha": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+    "composed_sha": "47273c4f20c7c1af9b08537d26618901c36725e3",
+    "status": "PENDING_SOURCE_INTAKE_NOT_AN_INTEGRATION_LOSS_FINDING",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+        "expected": {
+          "sha": "22c6309c61b27b89914086a7602bf3bea61a988b",
+          "type": "blob",
+          "mode": "100644",
+          "size": 19141
+        },
+        "observed": {
+          "sha": "c5180b37faf42878d694f8743ac3aaa1439053bd",
+          "type": "blob",
+          "mode": "100644",
+          "size": 6356
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+        "expected": {
+          "sha": "71c4de09b06ebae3ae5a317ab67443b1221db281",
+          "type": "blob",
+          "mode": "100644",
+          "size": 11868
+        },
+        "observed": {
+          "sha": "448cfd56634e59ace90b3e7baa289ceaaa593530",
+          "type": "blob",
+          "mode": "100644",
+          "size": 4373
+        }
+      }
+    ]
+  },
+  {
+    "id": "ACK_UI_CONSUMER",
+    "pr": 47,
+    "paths": [
+      "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/browser-fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/ordinary-thread.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/producer/recipient-actions.ts.fixture",
+      "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/producer-loader.ts",
+      "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/proof-helpers.ts",
+      "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts"
+    ],
+    "owner": "ui-work; integrador session14",
+    "criterion": "WP10.DOD.40; composed-bundle-verification steps[1]",
+    "requirement": "Preserve mutationReceipt exact comparison, saved original payload/key/version and current reauthorization. Do not take old inherited recipient-actions from this UI branch or text/author-only UI from PR54/61. Attempt02 was pending at frozen head.",
+    "source_sha": "359ab99db8aaec23e885b492876bc0a3df3d0a33",
+    "composed_sha": "47273c4f20c7c1af9b08537d26618901c36725e3",
+    "status": "PENDING_SOURCE_INTAKE_NOT_AN_INTEGRATION_LOSS_FINDING",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "expected": {
+          "sha": "d9362a92e0bc71c8068790bf308e2a88adcb3243",
+          "type": "blob",
+          "mode": "100644",
+          "size": 46515
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/browser-fixture.ts",
+        "expected": {
+          "sha": "142e39c63f22f2d43f8746c891a098d38162de50",
+          "type": "blob",
+          "mode": "100644",
+          "size": 13090
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/ordinary-thread.test.ts",
+        "expected": {
+          "sha": "c440ee01904089d463e664aa59eec352d60fe5e1",
+          "type": "blob",
+          "mode": "100644",
+          "size": 3964
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/producer/recipient-actions.ts.fixture",
+        "expected": {
+          "sha": "22c6309c61b27b89914086a7602bf3bea61a988b",
+          "type": "blob",
+          "mode": "100644",
+          "size": 19141
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/producer-loader.ts",
+        "expected": {
+          "sha": "7757d684426e4b3e06746be23b3b482afdc38e7d",
+          "type": "blob",
+          "mode": "100644",
+          "size": 3965
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/proof-helpers.ts",
+        "expected": {
+          "sha": "3ff1151386fcb5014e6726530103b215078fa139",
+          "type": "blob",
+          "mode": "100644",
+          "size": 3583
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+        "expected": {
+          "sha": "1e963676b366382fe7b5e2f984083df47dd9641d",
+          "type": "blob",
+          "mode": "100644",
+          "size": 10437
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+        "expected": {
+          "sha": "a5d4d5ad97bc23d0a952ff4217af73ab6b84e6f3",
+          "type": "blob",
+          "mode": "100644",
+          "size": 15223
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+        "expected": {
+          "sha": "9cc4b52c3b6748e1d3e311a39ea103facab9649e",
+          "type": "blob",
+          "mode": "100644",
+          "size": 2599
+        },
+        "observed": null
+      }
+    ]
+  },
+  {
+    "id": "MEMORY_PREFLIGHT",
+    "pr": 29,
+    "paths": [
+      "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/identity.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/preflight.test.ts"
+    ],
+    "owner": "WP10; integrador session14",
+    "criterion": "WP10.DOD.40; WP10.INV.02; composed-bundle-verification steps[1]",
+    "requirement": "Preserve real recall capture membership, original Request, identity/header/all-surface fences and original historical-memory oracle. IMPLEMENTATION_PREPARED_NOT_RUN is not functional acceptance.",
+    "source_sha": "f511f30b73289c2f21c843254569d31c02eb9608",
+    "composed_sha": "47273c4f20c7c1af9b08537d26618901c36725e3",
+    "status": "PENDING_SOURCE_INTAKE_NOT_AN_INTEGRATION_LOSS_FINDING",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+        "expected": {
+          "sha": "f3e7c88000f47018a6b3bb0f6e65ddac1a948e45",
+          "type": "blob",
+          "mode": "100644",
+          "size": 15760
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+        "expected": {
+          "sha": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+          "type": "blob",
+          "mode": "100644",
+          "size": 48710
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+        "expected": {
+          "sha": "09c1e9720ab1df63369601a769a39895bdcbea65",
+          "type": "blob",
+          "mode": "100644",
+          "size": 6487
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts",
+        "expected": {
+          "sha": "352efd3fa2aefefa7fbdf88e6ef2d0886a669737",
+          "type": "blob",
+          "mode": "100644",
+          "size": 17764
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/identity.test.ts",
+        "expected": {
+          "sha": "ea72668c00f4bd9d4fd4f902c803f3631b2268e3",
+          "type": "blob",
+          "mode": "100644",
+          "size": 4955
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/preflight.test.ts",
+        "expected": {
+          "sha": "4e61e3a87f2f944f4282c840450c36c8bbb6c7a1",
+          "type": "blob",
+          "mode": "100644",
+          "size": 5268
+        },
+        "observed": null
+      }
+    ]
+  },
+  {
+    "id": "ATLAS_TWO_SCENARIOS",
+    "pr": 34,
+    "paths": [
+      "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts"
+    ],
+    "owner": "Operations / WP14; integrador session14",
+    "criterion": "WP10.DOD.60; WP10.INV.02; composed-bundle-verification steps[1]",
+    "requirement": "Preserve both original scenarios and same WeakSet for authority and BusinessServices. Do not apply older isolated WeakSet proposal or one-scenario snapshot.",
+    "source_sha": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+    "composed_sha": "47273c4f20c7c1af9b08537d26618901c36725e3",
+    "status": "PENDING_SOURCE_INTAKE_NOT_AN_INTEGRATION_LOSS_FINDING",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "expected": {
+          "sha": "d7d2a69837560f42438d470b83724c1a61939a73",
+          "type": "blob",
+          "mode": "100644",
+          "size": 34388
+        },
+        "observed": {
+          "sha": "259cdbcdb90627d57a6ad10b6b323fe0b14bcdb1",
+          "type": "blob",
+          "mode": "100644",
+          "size": 11080
+        }
+      }
+    ]
+  },
+  {
+    "id": "PROCUREMENT_EXPORTS",
+    "pr": 57,
+    "paths": [
+      "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-exports/attempt-01/files/EXPORT-01/PO-2026-0001.html",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-exports/attempt-01/files/EXPORT-01/procurement-register.csv",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-exports/attempt-01/files/EXPORT-02/PO-2026-0001.html",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-exports/attempt-01/files/EXPORT-02/procurement-register.csv",
+      "modules/sucafina/Sucafinav1/test/product/procurement-exports/artifacts.ts",
+      "modules/sucafina/Sucafinav1/test/product/procurement-exports/export-controls.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/procurement-exports/export-regressions.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/procurement-exports/fixture.ts"
+    ],
+    "owner": "sourcing-money / downloads; integrador session14",
+    "criterion": "WP04.T03.CHK.03; WP04.T03.CHK.05; WP10.INV.02",
+    "requirement": "Preserve own PO estimate/row values and exact evidence output files; reconcile runtime/procurement.ts from Operations instead of replacing whole Operations tree with this inherited branch.",
+    "source_sha": "717efbbef27de70b382db2aa734605c779228947",
+    "composed_sha": "47273c4f20c7c1af9b08537d26618901c36725e3",
+    "status": "PENDING_SOURCE_INTAKE_NOT_AN_INTEGRATION_LOSS_FINDING",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+        "expected": {
+          "sha": "7fa9c254c7c08b894d8b4c3336653c32b6270126",
+          "type": "blob",
+          "mode": "100644",
+          "size": 14313
+        },
+        "observed": {
+          "sha": "3a18d541dd402fde0eb2be25de281b289189c537",
+          "type": "blob",
+          "mode": "100644",
+          "size": 10977
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+        "expected": {
+          "sha": "c9a224b12c13b7cec506be90527300caa7e984fd",
+          "type": "blob",
+          "mode": "100644",
+          "size": 6142
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-exports/attempt-01/files/EXPORT-01/PO-2026-0001.html",
+        "expected": {
+          "sha": "2a82c49ff4f662828ce5fef72b2ab812fe55d746",
+          "type": "blob",
+          "mode": "100644",
+          "size": 1870
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-exports/attempt-01/files/EXPORT-01/procurement-register.csv",
+        "expected": {
+          "sha": "1a6c63ad0cf24463b9d1bd4d4b20937a61a16630",
+          "type": "blob",
+          "mode": "100644",
+          "size": 749
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-exports/attempt-01/files/EXPORT-02/PO-2026-0001.html",
+        "expected": {
+          "sha": "7b8aebc76a1820ced61c8163a053a3df842169d2",
+          "type": "blob",
+          "mode": "100644",
+          "size": 1996
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-exports/attempt-01/files/EXPORT-02/procurement-register.csv",
+        "expected": {
+          "sha": "1a6c63ad0cf24463b9d1bd4d4b20937a61a16630",
+          "type": "blob",
+          "mode": "100644",
+          "size": 749
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-exports/artifacts.ts",
+        "expected": {
+          "sha": "4439d59c6114ce83caa3f5a880357da49712fd41",
+          "type": "blob",
+          "mode": "100644",
+          "size": 4048
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-exports/export-controls.test.ts",
+        "expected": {
+          "sha": "30173580d07036ea97fef6d9caf0c7dac2e085f8",
+          "type": "blob",
+          "mode": "100644",
+          "size": 12653
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-exports/export-regressions.test.ts",
+        "expected": {
+          "sha": "e97b8bd1984a5a87bfb2f2704ce004bcba5735b7",
+          "type": "blob",
+          "mode": "100644",
+          "size": 3496
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-exports/fixture.ts",
+        "expected": {
+          "sha": "a14accbfe4a089ccb37cb281663ada538a92bc57",
+          "type": "blob",
+          "mode": "100644",
+          "size": 4672
+        },
+        "observed": null
+      }
+    ]
+  },
+  {
+    "id": "FINANCE_PERFORMANCE",
+    "pr": 42,
+    "paths": [
+      "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts"
+    ],
+    "owner": "Finance; integrador session14",
+    "criterion": "WP10.DOD.02; WP10.INV.02",
+    "requirement": "Keep six owned performance/fence files or justified reconciliation; FIN-IND-005 and S6 failure remain open. Old Compose/WP10 Finance snapshots cannot silently override them.",
+    "source_sha": "454b97daf614176507711df889bd45743467f7af",
+    "composed_sha": "47273c4f20c7c1af9b08537d26618901c36725e3",
+    "status": "PENDING_SOURCE_INTAKE_NOT_AN_INTEGRATION_LOSS_FINDING",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "expected": {
+          "sha": "fe4ab56201fd1898905ac7bc810f0495a64f8602",
+          "type": "blob",
+          "mode": "100644",
+          "size": 19250
+        },
+        "observed": {
+          "sha": "31f327a784316f4f099f83e901d443531340bb63",
+          "type": "blob",
+          "mode": "100644",
+          "size": 14591
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+        "expected": {
+          "sha": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+          "type": "blob",
+          "mode": "100644",
+          "size": 8265
+        },
+        "observed": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "expected": {
+          "sha": "46a04597df74205add4531465f35d8a55ca1f8dd",
+          "type": "blob",
+          "mode": "100644",
+          "size": 24748
+        },
+        "observed": {
+          "sha": "6723576021e0c8b7df91c0823fe0448aa58f4972",
+          "type": "blob",
+          "mode": "100644",
+          "size": 14138
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+        "expected": {
+          "sha": "d2ae9e7b53fe3a86b356f8453814b2b7d7b2615e",
+          "type": "blob",
+          "mode": "100644",
+          "size": 23015
+        },
+        "observed": {
+          "sha": "9864986073a92603edf21e8a7c4e2a09c539c6ae",
+          "type": "blob",
+          "mode": "100644",
+          "size": 17330
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "expected": {
+          "sha": "33a99c9fc0d1c22b9dee21ee37274988c72736ba",
+          "type": "blob",
+          "mode": "100644",
+          "size": 26350
+        },
+        "observed": {
+          "sha": "ec7d45cc5e3827a1c59057fb994600cab1af235f",
+          "type": "blob",
+          "mode": "100644",
+          "size": 12719
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+        "expected": {
+          "sha": "d39d52bc2b04d7b4864539c78a002232628ad2c7",
+          "type": "blob",
+          "mode": "100644",
+          "size": 6933
+        },
+        "observed": {
+          "sha": "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b",
+          "type": "blob",
+          "mode": "100644",
+          "size": 3864
+        }
+      }
+    ]
+  },
+  {
+    "id": "FINAL_CI_PREPARATION",
+    "pr": 32,
+    "paths": [
+      ".github/workflows/sf2-epic.yml",
+      "script/sf2h/final-bundle/README.md",
+      "script/sf2h/final-bundle/build-artifact.py",
+      "script/sf2h/final-bundle/requests.json",
+      "script/sf2h/final-bundle/validate-requests.mjs",
+      "script/sf2h/final-bundle/verify-bun-report.py",
+      "script/sf2h/final-bundle/verify-runtime.mjs"
+    ],
+    "owner": "S0-C final preparation; integrador session14 / S0",
+    "criterion": "WP10.DOD.02; WP10.INV.02",
+    "requirement": "Preserve eight requests/workflow/builders/validators/procedure; do not dispatch. Static readiness and skipped Bun/typechecks do not satisfy final gates.",
+    "source_sha": "5c41125e7ef17a6c7eff9c9fb2329fe8f85ce982",
+    "composed_sha": "47273c4f20c7c1af9b08537d26618901c36725e3",
+    "status": "PENDING_SOURCE_INTAKE_NOT_AN_INTEGRATION_LOSS_FINDING",
+    "files": [
+      {
+        "path": ".github/workflows/sf2-epic.yml",
+        "expected": {
+          "sha": "4e92e4960e2bc371aa712d95e08acd76a5cc1ff2",
+          "type": "blob",
+          "mode": "100644",
+          "size": 52724
+        },
+        "observed": null
+      },
+      {
+        "path": "script/sf2h/final-bundle/README.md",
+        "expected": {
+          "sha": "8080b880846de8b6ac881fee45804c62b4afa344",
+          "type": "blob",
+          "mode": "100644",
+          "size": 11585
+        },
+        "observed": null
+      },
+      {
+        "path": "script/sf2h/final-bundle/build-artifact.py",
+        "expected": {
+          "sha": "c78e91620042c18adc09ecf68050d55d95f4c78c",
+          "type": "blob",
+          "mode": "100755",
+          "size": 14048
+        },
+        "observed": null
+      },
+      {
+        "path": "script/sf2h/final-bundle/requests.json",
+        "expected": {
+          "sha": "3ff28507d6ae6b874f021fb8acf5088d61442c80",
+          "type": "blob",
+          "mode": "100644",
+          "size": 2111
+        },
+        "observed": null
+      },
+      {
+        "path": "script/sf2h/final-bundle/validate-requests.mjs",
+        "expected": {
+          "sha": "a287ac05bd87428bdcf92172c56cabc3e252be26",
+          "type": "blob",
+          "mode": "100755",
+          "size": 2024
+        },
+        "observed": null
+      },
+      {
+        "path": "script/sf2h/final-bundle/verify-bun-report.py",
+        "expected": {
+          "sha": "9cef4f356f3b93c58f8b21ef9b1d76f342396851",
+          "type": "blob",
+          "mode": "100755",
+          "size": 4615
+        },
+        "observed": null
+      },
+      {
+        "path": "script/sf2h/final-bundle/verify-runtime.mjs",
+        "expected": {
+          "sha": "1b9648c412caf1bb51c79907651e2ee263da7ebe",
+          "type": "blob",
+          "mode": "100644",
+          "size": 5268
+        },
+        "observed": null
+      }
+    ]
+  },
+  {
+    "id": "DECISIONS_E2E",
+    "pr": 40,
+    "paths": [
+      "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+      "packages/app-shell/e2e/sucafina/decisions.spec.ts"
+    ],
+    "owner": "S4-A / Decisions; integrador session14",
+    "criterion": "WP10.DOD.02; WP10.INV.02",
+    "requirement": "Preserve nominal spec and helpers. Source run had zero PASS/three FAIL at bootstrap; collection/file existence is not complete CI-UI-DECISIONS.",
+    "source_sha": "8645fadbce014ce870e3485ae1de6cf7d76bf1c3",
+    "composed_sha": "47273c4f20c7c1af9b08537d26618901c36725e3",
+    "status": "PENDING_SOURCE_INTAKE_NOT_AN_INTEGRATION_LOSS_FINDING",
+    "files": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+        "expected": {
+          "sha": "171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4",
+          "type": "blob",
+          "mode": "100644",
+          "size": 7825
+        },
+        "observed": null
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+        "expected": {
+          "sha": "c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e",
+          "type": "blob",
+          "mode": "100644",
+          "size": 2019
+        },
+        "observed": null
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+        "expected": {
+          "sha": "2fa77a69a28ae399f30f4d0e7642c05e7f029077",
+          "type": "blob",
+          "mode": "100644",
+          "size": 11049
+        },
+        "observed": null
+      }
+    ]
+  },
+  {
+    "id": "OPERATIONS_E2E",
+    "pr": 23,
+    "paths": [
+      "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts",
+      "packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts",
+      "packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts",
+      "packages/app-shell/e2e/sucafina/operations-support/procurement.ts",
+      "packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+      "packages/app-shell/e2e/sucafina/operations-support/selection.check.ts",
+      "packages/app-shell/e2e/sucafina/operations.spec.ts"
+    ],
+    "owner": "Operations E2E; integrador session14",
+    "criterion": "WP10.DOD.02; WP10.INV.02",
+    "requirement": "Preserve nominal operations spec plus all support files, reconcile shared config/fixtures by source provenance.",
+    "source_sha": "70255998e3310652c4b7fce33f498e592be0bda9",
+    "composed_sha": "47273c4f20c7c1af9b08537d26618901c36725e3",
+    "status": "PENDING_SOURCE_INTAKE_NOT_AN_INTEGRATION_LOSS_FINDING",
+    "files": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+        "expected": {
+          "sha": "21e00319151989a4c2337fe20d9c7de1d8374fa9",
+          "type": "blob",
+          "mode": "100644",
+          "size": 15187
+        },
+        "observed": null
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+        "expected": {
+          "sha": "20a9978c41697ac135a91d5229abc295d6c71375",
+          "type": "blob",
+          "mode": "100644",
+          "size": 15964
+        },
+        "observed": null
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts",
+        "expected": {
+          "sha": "6ddccf1af1119c4eec6b45c568caf3f45d8c62bc",
+          "type": "blob",
+          "mode": "100644",
+          "size": 2996
+        },
+        "observed": null
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts",
+        "expected": {
+          "sha": "079af7db0ade65464aa31e564d82209527f75b5f",
+          "type": "blob",
+          "mode": "100644",
+          "size": 6129
+        },
+        "observed": null
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts",
+        "expected": {
+          "sha": "7af501a9567f1311983e80265ebb9c1d47cf3989",
+          "type": "blob",
+          "mode": "100644",
+          "size": 7105
+        },
+        "observed": null
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/procurement.ts",
+        "expected": {
+          "sha": "c750821955cb56e7e6549c808d3c8e1cf5ee6e2a",
+          "type": "blob",
+          "mode": "100644",
+          "size": 5507
+        },
+        "observed": null
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+        "expected": {
+          "sha": "08296858b237881f29432c1cb982c91a4284c51a",
+          "type": "blob",
+          "mode": "100644",
+          "size": 4220
+        },
+        "observed": null
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/selection.check.ts",
+        "expected": {
+          "sha": "691ddedf779cb18d115dfd816732fe93ccea3ed9",
+          "type": "blob",
+          "mode": "100644",
+          "size": 6182
+        },
+        "observed": null
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+        "expected": {
+          "sha": "bab6a804e5f082cc60eb6f27209070b552981035",
+          "type": "blob",
+          "mode": "100644",
+          "size": 2356
+        },
+        "observed": null
+      }
+    ]
+  }
+]
