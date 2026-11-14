@@ -49,12 +49,14 @@
     "Original P03 unchanged with72expect lines and180000 budgets failed on actualFinance34 C18",
     "First omitted portfolio result did not return before deadline; later250000 semantic assertions not reached",
     "Original history fixture prepared omitted input in5545ms; remaining work amplifies canonical reads/revalidations",
-    "A new C08 comparison write occurred; late stale reason is not independent proof of binding corruption"
+    "A new C08 comparison write occurred; late stale reason is not independent proof of binding corruption",
+    "Planner persistence masks an unsuccessful bind as comparison-persisted-but-binding-unavailable. R1 instead reports a direct read-binding stale reason; post-bind reread is supported, exact ordinal is not yet instrumented."
   ],
   "telemetry_limits": [
     "Counters wrap history.state; composePortfolio uses another state. preferences transaction count3 cannot prove no binding commit.",
     "Counts/elapsed of overlapping operations are cumulative and not disjoint wall-time attribution.",
-    "No exact microprofile of currentSnapshots/clone costs yet; these are static mechanism hypotheses."
+    "No exact microprofile of currentSnapshots/clone costs yet; these are static mechanism hypotheses.",
+    "R1 late comparison-rule-or-source-changed is a read-binding rejection after the guard; read-policy checks still execute. It is not a demonstrated semantic corruption or proof that the binding was never committed."
   ],
   "causal_boundary": {
     "file": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
