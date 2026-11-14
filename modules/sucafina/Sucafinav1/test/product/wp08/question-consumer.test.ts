@@ -21,10 +21,13 @@ import { available, createRelationsFixture } from "./relations-fixture.ts"
 const january = { start: "2026-01-01", end: "2026-01-31" }
 const february = { start: "2026-02-01", end: "2026-02-28" }
 
-async function fixture(annualSource = false) {
+async function fixture(narrowCase = false) {
   const f = await createRelationsFixture()
   try {
-    const source = available(await f.records.issue({ page: "All Projects", recordType: "projects", recordId: "project", fields: ["status"], period: annualSource ? f.period : january }, f.read))
+    // The canonical projects producer admits whole-year records, not invented monthly observations.
+    const source = available(await f.records.issue({ page: "All Projects", recordType: "projects", recordId: "project", fields: ["status"], period: f.period }, f.read))
+    expect(source.target.period).toEqual(f.period)
+    const horizon = narrowCase ? january : f.period
     let at = Date.parse("2026-11-13T00:00:00Z")
     const now = () => new Date(at++).toISOString()
     let race: (() => Promise<void>) | undefined
@@ -39,7 +42,7 @@ async function fixture(annualSource = false) {
       return context
     }
     const cases = createDecisionCasePort({ host: f.host, state, creationTarget: f.creationTarget, operationIdentity: (context) => context.kind === "ui" ? f.ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await f.host.revalidate(context), evidence: f.evidence, createId: randomUUID, now })
-    const draft = { objective: "Review January delivery", horizon: january, currency: "USD", criteria: ["Delivery is understood"], sourceRefs: [source] }
+    const draft = { objective: "Review delivery in the selected cycle", horizon, currency: "USD", criteria: ["Delivery is understood"], sourceRefs: [source] }
     const decision = available(await cases.draft(draft, await readContext("sf_case_draft", draft)))
     const caseRef = encodeCaseRef(decision)
     const contextFor = async (context: TrustedDomainContext) => ({ status: "ok" as const, value: { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, surface: "procurement" as const, period: f.period, currency: "USD", sourceRefs: [], capabilities: [] } })
@@ -47,7 +50,7 @@ async function fixture(annualSource = false) {
     const procurement = createProcurementPort({ ...f.host, ...collections, resolveSupplierSource: f.suppliers.resolve, isCurrentSupplierSource: f.suppliers.isCurrent, readContractSource: async () => ({ status: "unavailable", reason: "not-selected" }) })
     const compose = () => createCollaborationHost({ host: f.host, state, creationTarget: f.creationTarget, scopedSources: f.persistence, evidence: f.evidence, cases, procurement, collections, human: f.human, authority, requiredAuthority: { sf_work_list: [], sf_question_prepare: [], sf_answer_read: [], sf_relation_read: [], sf_handoff_prepare: [] }, createId: randomUUID, now })
     const host = compose()
-    const prepare = async (question = "What changes January delivery?"): Promise<PreparedQuestion> => {
+    const prepare = async (question = "What changes delivery in this cycle?"): Promise<PreparedQuestion> => {
       const payload = { caseRef, question: { text: question, criterionRef: decision.criteria[0]!.id }, recipientRef: f.person.id, sourceRefs: [source] }
       const context = available(await f.ui.admit(f.request(), "sf_question_prepare", digestSfValue(payload)))
       const prepared = await dispatchSfCapability({ operation: "sf_question_prepare", payload, context, descriptors: host.capabilities, authority, validateInput: (_descriptor, value) => decodeSfOperationInput("sf_question_prepare", value).ok, validateOutput: (_descriptor, value) => value.status !== "ok" || decodeSfOperationOutput("sf_question_prepare", value.result).ok })
@@ -56,7 +59,7 @@ async function fixture(annualSource = false) {
       if (!decoded.ok) throw new Error("actual prepared output invalid")
       return { kind: "prepared", result: decoded.value, receipt: prepared.receipt }
     }
-    const command = (proposal: PreparedQuestion, key = "consume-question"): QuestionConsumption => ({ proposal, sourceRef: source.refId, period: january, mutation: { expectedStorageVersion: 0, idempotencyKey: key } })
+    const command = (proposal: PreparedQuestion, key = "consume-question"): QuestionConsumption => ({ proposal, sourceRef: source.refId, period: horizon, mutation: { expectedStorageVersion: 0, idempotencyKey: key } })
     const consume = async (value: QuestionConsumption) => host.questions.consume(value, await f.admit("collaboration.question.confirm", value))
     const stored = async () => {
       const found = await state.read(f.request(), "threads", (value) => Object.values(value.threads).filter(isConsumedQuestion))
@@ -91,8 +94,8 @@ test("real prepared QuestionProposal becomes one canonical thread with case prov
     const before = await f.snapshots()
     const protectedBefore = await f.state.read(f.request(), "cases", (state) => ({ cases: state.cases, contributions: state.contributions, nativeRuns: state.nativeRuns }))
     const created = available(await f.consume(command))
-    expect(created).toMatchObject({ kind: "clarification", sourceRef: f.source.refId, sourceIncarnation: f.source.target.incarnation, observedVersion: f.source.target.version, period: january, recipientRef: prepared.result.recipientRef, state: "open", evidenceRefs: prepared.result.evidenceRefs, messages: [{ authorRef: f.person.id, body: prepared.result.question }] })
-    expect(created.questionOrigin).toMatchObject({ schema: "sf-question-origin-v1", caseRef: { id: f.decision.id, incarnation: f.decision.incarnation, version: prepared.result.expectedCaseVersion }, caseDigest: digestSfValue(f.decision), proposalDigest: digestSfValue(prepared.result), criterionRef: prepared.result.criterionRef, horizon: january, provenance: { kind: "prepared", callId: prepared.receipt.callId, receiptDigest: digestSfValue(prepared.receipt) } })
+    expect(created).toMatchObject({ kind: "clarification", sourceRef: f.source.refId, sourceIncarnation: f.source.target.incarnation, observedVersion: f.source.target.version, period: f.period, recipientRef: prepared.result.recipientRef, state: "open", evidenceRefs: prepared.result.evidenceRefs, messages: [{ authorRef: f.person.id, body: prepared.result.question }] })
+    expect(created.questionOrigin).toMatchObject({ schema: "sf-question-origin-v1", caseRef: { id: f.decision.id, incarnation: f.decision.incarnation, version: prepared.result.expectedCaseVersion }, caseDigest: digestSfValue(f.decision), proposalDigest: digestSfValue(prepared.result), criterionRef: prepared.result.criterionRef, horizon: f.period, provenance: { kind: "prepared", callId: prepared.receipt.callId, receiptDigest: digestSfValue(prepared.receipt) } })
     expect(available(await f.host.resolveQuestion(created.id, f.read))).toEqual({ id: created.id, text: prepared.result.question, evidenceRefs: prepared.result.evidenceRefs })
     expect(available(await f.consume(command))).toEqual(created)
     f.advance(301_000)
@@ -105,7 +108,7 @@ test("real prepared QuestionProposal becomes one canonical thread with case prov
     // Ordinary source-authorized thread readers/actions do not disclose private case/output metadata.
     expect("questionOrigin" in available(await f.host.threads.read(created.id, f.read))).toBe(false)
     const replyMutation = { expectedStorageVersion: 1, idempotencyKey: "reply-to-consumed-question" }
-    const body = "The January condition is understood"
+    const body = "The cycle condition is understood"
     const reply = available(await f.host.threads.reply(created.id, body, replyMutation, await f.admit("collaboration.thread.reply", { id: created.id, body, mutation: replyMutation })))
     expect("questionOrigin" in reply).toBe(false)
     const resolveMutation = { expectedStorageVersion: 2, idempotencyKey: "resolve-consumed-question" }
@@ -161,7 +164,7 @@ test("question consumption requires current source access and an explicit period
   try {
     const prepared = await f.prepare()
     const command = f.command(prepared)
-    expect(f.source.target.period).toEqual(january)
+    expect(f.source.target.period).toEqual(f.period)
     expect(await f.consume({ ...command, period: february })).toEqual({ status: "needs-input", reason: "question-context-selection-required" })
     f.gate.dashboard = false
     expect(await f.consume(command)).toEqual({ status: "unavailable", reason: "question-case-or-source-changed" })
