@@ -54,9 +54,9 @@ function authorComparison(output: ContributionEnvelope) {
 
 export function createSfCritiqueInputProducer(dependencies: SfAnalysisDependencies & {
   readAuthorAnalysis: (runRef: string, outputDigest: string, call: TrustedDomainContext) => Promise<PortResult<{ run: SfNativeRunRecord; output: ContributionEnvelope }>>
-  readHistoricalAuthor: (runRef: string, outputDigest: string, selection: { caseRef: SfAnalysisRequest["caseRef"]; responseRef: string }, call: TrustedDomainContext) => Promise<PortResult<{ run: SfNativeRunRecord; output: ContributionEnvelope }>>
+  readHistoricalAuthor?: (runRef: string, outputDigest: string, selection: { caseRef: SfAnalysisRequest["caseRef"]; responseRef: string }, call: TrustedDomainContext) => Promise<PortResult<{ run: SfNativeRunRecord; output: ContributionEnvelope }>>
   readAnswerEffectSelection: (caseRef: SfAnalysisRequest["caseRef"], call: TrustedDomainContext) => Promise<PortResult<{ state: "none" } | { state: "selected"; request: Parameters<ReturnType<typeof createDecisionAnswerEffect>>[0] }>>
-  answerEffect: ReturnType<typeof createDecisionAnswerEffect>
+  answerEffect?: ReturnType<typeof createDecisionAnswerEffect>
 }): SfInputProducer {
   return {
     skillIds: ["sf-contestar-decisao"],
@@ -77,9 +77,9 @@ export function createSfCritiqueInputProducer(dependencies: SfAnalysisDependenci
 async function load(
   dependencies: SfAnalysisDependencies & {
     readAuthorAnalysis: (runRef: string, outputDigest: string, call: TrustedDomainContext) => Promise<PortResult<{ run: SfNativeRunRecord; output: ContributionEnvelope }>>
-    readHistoricalAuthor: (runRef: string, outputDigest: string, selection: { caseRef: SfAnalysisRequest["caseRef"]; responseRef: string }, call: TrustedDomainContext) => Promise<PortResult<{ run: SfNativeRunRecord; output: ContributionEnvelope }>>
+    readHistoricalAuthor?: (runRef: string, outputDigest: string, selection: { caseRef: SfAnalysisRequest["caseRef"]; responseRef: string }, call: TrustedDomainContext) => Promise<PortResult<{ run: SfNativeRunRecord; output: ContributionEnvelope }>>
     readAnswerEffectSelection: (caseRef: SfAnalysisRequest["caseRef"], call: TrustedDomainContext) => Promise<PortResult<{ state: "none" } | { state: "selected"; request: Parameters<ReturnType<typeof createDecisionAnswerEffect>>[0] }>>
-    answerEffect: ReturnType<typeof createDecisionAnswerEffect>
+    answerEffect?: ReturnType<typeof createDecisionAnswerEffect>
   },
   human: CritiqueSelection,
   request: SfAnalysisRequest,
@@ -96,6 +96,7 @@ async function load(
   if (selectedAnswer.value.state === "none" && human.responseRef) return undefined
   const effect = await (async () => {
     if (selectedAnswer.value.state === "none") return null
+    if (!dependencies.answerEffect || !dependencies.readHistoricalAuthor) return undefined
     const asked = selectedAnswer.value.request
     if (!human.responseRef || !same(asked.caseRef, request.caseRef) || !human.choiceRefs.includes(asked.choiceId) || !human.alternativeRefs.includes(asked.baselineAlternativeId) || !human.alternativeRefs.includes(asked.alternativeId)) return undefined
     const produced = await dependencies.answerEffect(asked, call)
@@ -104,7 +105,7 @@ async function load(
   })()
   if (effect === undefined) return undefined
   const author = effect
-    ? await dependencies.readHistoricalAuthor(human.authorRunRef, human.outputDigest, { caseRef: request.caseRef, responseRef: effect.answerRef }, call)
+    ? await dependencies.readHistoricalAuthor!(human.authorRunRef, human.outputDigest, { caseRef: request.caseRef, responseRef: effect.answerRef }, call)
     : await dependencies.readAuthorAnalysis(human.authorRunRef, human.outputDigest, call)
   if (author.status !== "ok" || author.value.run.state !== "ready" || !author.value.run.native || author.value.run.runRef !== human.authorRunRef || author.value.output.state !== "ready" || author.value.run.outputRef !== author.value.output.id || author.value.output.outputDigest !== human.outputDigest || digestSfContribution(author.value.output) !== human.outputDigest) return undefined
   if (author.value.run.caseRef.id !== request.caseRef.id || author.value.run.caseRef.incarnation !== request.caseRef.incarnation || (effect ? author.value.run.caseRef.version >= request.caseRef.version : author.value.run.caseRef.version !== request.caseRef.version)) return undefined

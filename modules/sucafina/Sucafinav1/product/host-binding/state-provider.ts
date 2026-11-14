@@ -16,6 +16,7 @@ export function createSfProductState(input: {
   proposalCoverageWrites?: WeakSet<object>
   signalRegistryWrites?: WeakSet<object>
   caseSelectionWrites?: WeakSet<object>
+  analysisSelectionWrites?: WeakSet<object>
   threadHistoryWrites?: WeakSet<object>
   dashboardHostWrites?: WeakSet<object>
   procurementEvidenceWrites?: WeakSet<object>
@@ -103,6 +104,9 @@ export function createSfProductState(input: {
         if (!input.signalRegistryWrites?.has(work) && digestSfValue(signalMetadata(staged.preferences)) !== digestSfValue(signalMetadata(state.preferences)))
           return { commit: false, value: { status: "denied", reason: "signal-registry-write-outside-authority" } }
         const caseSelectionMetadata = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:case-work-selection:")))
+        const analysisSelectionMetadata = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:analysis-selection:")))
+        if (!input.analysisSelectionWrites?.has(work) && digestSfValue(analysisSelectionMetadata(staged.preferences)) !== digestSfValue(analysisSelectionMetadata(state.preferences)))
+          return { commit: false, value: { status: "denied", reason: "analysis-selection-writer-required" } }
         if (!input.caseSelectionWrites?.has(work) && digestSfValue(caseSelectionMetadata(staged.preferences)) !== digestSfValue(caseSelectionMetadata(state.preferences)))
           return { commit: false, value: { status: "denied", reason: "case-selection-write-outside-authority" } }
         if (!input.threadHistoryWrites?.has(work) && Object.entries(state.threads).some(([id, value]) => {

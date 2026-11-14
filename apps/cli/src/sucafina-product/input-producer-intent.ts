@@ -22,8 +22,8 @@ export type SfIntentInputBindings = {
     selection: { readonly evidenceRefIds: readonly string[] },
     call: TrustedDomainContext,
   ) => Promise<PortResult<SfIntentSelectionContext>>
-  selectedPreviewRef: (caseRef: SfAnalysisRequest["caseRef"], call: TrustedDomainContext) => Promise<PortResult<{ previewRef: string }>>
-  imports: Pick<ReturnType<typeof createSfImportHost>, "readPreviewForAnalysis">
+  selectedPreviewRef?: (caseRef: SfAnalysisRequest["caseRef"], call: TrustedDomainContext) => Promise<PortResult<{ previewRef: string }>>
+  imports?: Pick<ReturnType<typeof createSfImportHost>, "readPreviewForAnalysis">
 }
 
 type HumanIntentSelection = { readonly evidenceRefIds: readonly string[]; readonly importPreview?: unknown }
@@ -69,6 +69,7 @@ export function createSfIntentInputProducer(dependencies: SfAnalysisDependencies
       if (parsed && !parsed.ok) return { status: "needs-input", reason: "invalid-analysis-input" }
       const importPreview = parsed?.ok ? parsed.value : undefined
       if (importPreview) {
+        if (!dependencies.imports || !dependencies.selectedPreviewRef) return { status: "unavailable", reason: "intent-import-selection-unavailable" }
         const previewRef = await dependencies.selectedPreviewRef(request.caseRef, call)
         if (previewRef.status !== "ok" || !previewRef.value.previewRef.trim()) return { status: "unavailable", reason: "analysis-input-producer-unavailable" }
         const preview = await dependencies.imports.readPreviewForAnalysis({ previewRef: previewRef.value.previewRef, request: importPreview }, call)

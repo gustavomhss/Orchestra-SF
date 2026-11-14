@@ -15,9 +15,9 @@ import { withoutObservationTimes } from "./analysis-verifier.ts"
 
 export function createSfDecisionCritiqueVerifier(dependencies: SfAnalysisDependencies & {
   readAuthorAnalysis: (runRef: string, outputDigest: string, call: TrustedDomainContext) => Promise<PortResult<{ run: SfNativeRunRecord; output: ContributionEnvelope }>>
-  readHistoricalAuthor: (runRef: string, outputDigest: string, selection: { caseRef: SfAnalysisRequest["caseRef"]; responseRef: string }, call: TrustedDomainContext) => Promise<PortResult<{ run: SfNativeRunRecord; output: ContributionEnvelope }>>
+  readHistoricalAuthor?: (runRef: string, outputDigest: string, selection: { caseRef: SfAnalysisRequest["caseRef"]; responseRef: string }, call: TrustedDomainContext) => Promise<PortResult<{ run: SfNativeRunRecord; output: ContributionEnvelope }>>
   readAnswerEffectSelection: (caseRef: SfAnalysisRequest["caseRef"], call: TrustedDomainContext) => Promise<PortResult<{ state: "none" } | { state: "selected"; request: Parameters<ReturnType<typeof createDecisionAnswerEffect>>[0] }>>
-  answerEffect: ReturnType<typeof createDecisionAnswerEffect>
+  answerEffect?: ReturnType<typeof createDecisionAnswerEffect>
 }): SfAnalysisVerifier {
   return {
     skillIds: ["sf-contestar-decisao"],
@@ -37,6 +37,7 @@ export function createSfDecisionCritiqueVerifier(dependencies: SfAnalysisDepende
         if (selectedAnswer.status !== "ok") return undefined
         const effect = await (async () => {
           if (selectedAnswer.value.state === "none") return null
+          if (!dependencies.answerEffect || !dependencies.readHistoricalAuthor) return undefined
           const selection = selectedAnswer.value.request
           if (digestSfValue(selection.caseRef) !== digestSfValue(request.caseRef) || !value.choiceRefs.includes(selection.choiceId) || !value.alternativeRefs.includes(selection.baselineAlternativeId) || !value.alternativeRefs.includes(selection.alternativeId)) return undefined
           const result = await dependencies.answerEffect(selection, currentCall)
@@ -44,7 +45,7 @@ export function createSfDecisionCritiqueVerifier(dependencies: SfAnalysisDepende
           return result.value
         })()
         if (effect === undefined) return undefined
-        const author = effect ? await dependencies.readHistoricalAuthor(value.authorAnalysis.runRef, value.authorAnalysis.outputDigest, { caseRef: request.caseRef, responseRef: effect.answerRef }, currentCall) : await dependencies.readAuthorAnalysis(value.authorAnalysis.runRef, value.authorAnalysis.outputDigest, currentCall)
+        const author = effect ? await dependencies.readHistoricalAuthor!(value.authorAnalysis.runRef, value.authorAnalysis.outputDigest, { caseRef: request.caseRef, responseRef: effect.answerRef }, currentCall) : await dependencies.readAuthorAnalysis(value.authorAnalysis.runRef, value.authorAnalysis.outputDigest, currentCall)
         if (author.status !== "ok" || author.value.run.state !== "ready" || !author.value.run.native || author.value.run.runRef !== value.authorAnalysis.runRef ||
           author.value.run.outputRef !== author.value.output.id || author.value.output.state !== "ready" ||
           author.value.output.runProvenance.runId !== author.value.run.runRef || author.value.output.runProvenance.nativeSessionId !== author.value.run.native.sessionID ||

@@ -52,7 +52,7 @@ Este é o roteiro de homologação a executar após resolver os deltas de consum
 
 Uma revisão preservada mantém o conteúdo selecionado. Mudanças posteriores pertencem à revisão seguinte e à comparação explícita. Relatórios devem conservar a cobertura selecionada e limitações, sem ampliar dados permitidos à pessoa.
 
-O host compõe as portas publicadas de revisão, comentários e BI no mesmo store. Registra Dashboard BI01/BI07/BI08 e Procurement BI05/BI06. Demais rotas e leitores de seleção contextual pendentes constam nos deltas. `sf_bi_view` não demonstra os onze views nem a skill de BI. Teste de registro não substitui observação de gráfico, download ou uso por uma pessoa.
+O host compõe as portas publicadas de revisão, comentários e BI no mesmo store. Registra Dashboard BI01/BI07/BI08 e Procurement BI05/BI06. A preparação da skill contextual usa artefatos persistidos e seleção humana explícita para BI01/BI07/BI08; aceita o período exato, sem atribuir outros filtros a esses produtores. Demais rotas pendentes constam nos deltas. `sf_bi_view` não demonstra os onze views nem execução da skill. Teste de registro não substitui observação de gráfico, download ou uso por uma pessoa.
 
 ### Documentos, importação e exportação
 
@@ -95,6 +95,12 @@ Dados de fixture, markup, catálogo e autoridade fabricada não contam como jorn
 
 O host compõe autenticação, ambiente, fontes, casos, domínios, documentos/imports, colaboração, revisões, BI e runtime residente. UI, ponte MCP privada e consumers usam contratos compartilhados e revalidam identidade, política e revisão de acesso.
 
+A composição de análise registra até 15 dos 18 pares de produtor/verificador, condicionada aos serviços documentais. Inclui enquadramento sem import, BI contextual, memória atual, dossiê de compra e contestação atual. Sensibilidade, portfólio e reavaliação dependem dos produtores de proof, critérios e materialidade ainda em composição. Discovery relata bindings disponíveis; não relata execuções nativas. PreparedChangeSet, histórico de memória/contestação e resultados C07 mantêm suas recusas explícitas quando falta a porta real.
+
+Seleções humanas de BI, memória e contestação são persistidas por request e digest exatos, com principal, projeto, política, revisão de acesso e versão do caso. Não existe escolha mais recente implícita. O prefixo privado só aceita o writer de preparação; leitores revalidam fontes e autoridade. A validade padrão é de uma hora, com até 4096 seleções e 1024 artefatos BI; expiração, capacidade ou mudança material retornam indisponibilidade/conflito. A renovação de uma seleção expirada ainda requer implementação própria.
+
+Procurement compartilha a mesma instância de colaboração, observador C06, fila, preparação de dossiê e leitores de evidência/recibo C12. O CI do incremento W4 comprovou C06/dossiê e recusas de HTTP; a aplicação C12 permanece bloqueada pela incompatibilidade de callbacks WP04/WP11 e por timeouts observados. Montagem do handler não equivale a uma aplicação concluída.
+
 C08 conserva doze namespaces, versões, migração, CAS, transações entre superfícies e proteção de escritas privadas. [runtime/local-store.ts](runtime/local-store.ts) fornece SQLite durável. Dados/BLOBs/auditoria/notificações relacionados confirmam juntos; callbacks transacionais não são repetidos cegamente.
 
 A instalação fornece `authenticate`, `environment`, `persistence` e limites positivos. Corpo, query e header actor não criam identidade. Não presumir Microsoft, aplicação registrada, scanner, servidor macOS ou transporte corporativo a partir do repositório.
@@ -117,6 +123,8 @@ Três revisores independentes examinam candidato congelado e recibos. Triagem e 
 - Operações residentes intersectadas com skills selecionadas; inventário MCP lido sem conectar provedores.
 - Serviços de Dashboard/colaboração/revisão/BI ligados; reinicialização Atlas conserva os demais descriptors.
 - Produtor e verificador de análise registrados juntos; bindings ausentes explicitamente indisponíveis.
+- Seleções humanas duráveis para revalidação de análise; writer privado, CAS de caso e isolamento de principal.
+- Contestação nativa exige author e reviewer em runs e sessões distintos, receipt da skill e reviewTarget exato; prova de execução nativa permanece pendente.
 - Schema documental vinculado ao documento autorizado; ajustes de tipos/consumidores restritos aos paths próprios.
 - Atlas protegido por source fence, recuperação durável, revogação, proteção de outbox e orçamento de ancestralidade.
 - Guia, matriz e deltas rastreáveis sem atribuir aceite nativo/global à implementação.

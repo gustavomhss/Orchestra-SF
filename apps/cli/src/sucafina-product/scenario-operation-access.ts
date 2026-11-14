@@ -46,7 +46,7 @@ export function createSfScenarioOperationAccess(input: {
         const first = await read()
         if (first.some((result, index) => (result.state !== "fresh" && result.state !== "historical") || !result.authorizedProjection || !result.currentRef ||
           digestSfValue(result.ref) !== digestSfValue(unique[index]) || result.accessRevision !== call.binding.accessRevision ||
-          !("context" in result.authorizedProjection) || result.authorizedProjection.context.currency !== item.result.currency ||
+          !("context" in result.authorizedProjection) || !("currency" in result.authorizedProjection.context) || !("period" in result.authorizedProjection.context) || result.authorizedProjection.context.currency !== item.result.currency ||
           digestSfValue(result.authorizedProjection.context.period) !== digestSfValue(item.result.horizon))) return false
         const second = await read()
         const material = (results: typeof first) => results.map(({ checkedAt: _at, ...value }) => value)

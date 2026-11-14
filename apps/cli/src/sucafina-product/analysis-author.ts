@@ -9,16 +9,26 @@ import { withoutObservationTimes } from "./analysis-verifier.ts"
 export function createSfAnalysisAuthorReader(input: { authority: ReturnType<typeof createSfProductAuthority>; context: BusinessContextService;
   resolveCase: (call: TrustedDomainContext) => Promise<PortResult<{ id: string; incarnation: string; version: number }>> }) {
   return async (runRef: string, outputDigest: string, call: TrustedDomainContext) => {
+    const binding = digestSfValue([call.kind, call.binding])
     const request = input.authority.host.requestFor(call)
     const selected = await input.resolveCase(call)
-    if (call.kind !== "ui" || !request || selected.status !== "ok" || !/^[a-f0-9]{64}$/.test(outputDigest) || !await input.authority.host.revalidate(call))
+    if (!request || selected.status !== "ok" || !/^[a-f0-9]{64}$/.test(outputDigest) || !await input.authority.host.revalidate(call) ||
+      call.kind === "native" && (call.binding.profileId !== "sf_reviewer" || call.binding.runId === runRef ||
+        call.binding.caseId !== selected.value.id || call.binding.caseIncarnation !== selected.value.incarnation || call.binding.caseVersion !== selected.value.version ||
+        call.binding.skillReceipts.filter((receipt) => receipt.skillId === "sf-contestar-decisao" && receipt.runId === call.binding.runId && receipt.nativeSessionId === call.binding.nativeSessionId).length !== 1))
       return { status: "denied" as const, reason: "author-analysis-unavailable" }
     const read = () => input.authority.state.read(request, "contributions", (state, actor) => {
       const run = state.nativeRuns?.[runRef]
+      const reviewer = call.kind === "native" ? state.nativeRuns?.[call.binding.runId] : undefined
       const current = run && state.cases[run.caseRef.id]
       const output = run?.outputRef && state.contributions[run.outputRef]
       return run?.state === "ready" && run.native && output && current && current.participants.includes(actor.principalRef) &&
         run.principalRef === actor.principalRef && run.accessRevision === actor.accessRevision && run.policyVersion === actor.policyVersion &&
+        (call.kind !== "native" || run.native.sessionID !== call.binding.nativeSessionId && reviewer?.native?.sessionID === call.binding.nativeSessionId &&
+          ["queued", "running", "ready"].includes(reviewer.state) && reviewer.skillId === "sf-contestar-decisao" &&
+          reviewer.reviewTarget?.targetRunId === runRef && reviewer.reviewTarget.targetSessionId === run.native.sessionID && reviewer.reviewTarget.targetOutputDigest === outputDigest &&
+          digestSfValue(reviewer.reviewTarget.caseRef) === digestSfValue(selected.value) && digestSfValue(reviewer.caseRef) === digestSfValue(selected.value) &&
+          reviewer.principalRef === actor.principalRef && reviewer.accessRevision === actor.accessRevision && reviewer.policyVersion === actor.policyVersion) &&
         digestSfValue(run.caseRef) === digestSfValue(selected.value) && current.incarnation === run.caseRef.incarnation && current.version === run.caseRef.version
         ? { run, output } : undefined
     })
@@ -40,7 +50,7 @@ export function createSfAnalysisAuthorReader(input: { authority: ReturnType<type
       digestSfValue(item.ref) !== digestSfValue(decoded.value.evidenceRefs[index]) || digestSfValue(item.currentRef) !== digestSfValue(item.ref)) ||
       digestSfValue(withoutObservationTimes(resolutions)) !== digestSfValue(withoutObservationTimes(checked)) || again.status !== "ok" ||
       digestSfValue(again.value) !== digestSfValue(found.value) || selectedAgain.status !== "ok" || digestSfValue(selectedAgain.value) !== digestSfValue(selected.value) ||
-      !await input.authority.host.revalidate(call)) return { status: "stale" as const, reason: "author-analysis-changed" }
+      binding !== digestSfValue([call.kind, call.binding]) || !await input.authority.host.revalidate(call)) return { status: "stale" as const, reason: "author-analysis-changed" }
     return { status: "ok" as const, value: { run, output: decoded.value } }
   }
 }

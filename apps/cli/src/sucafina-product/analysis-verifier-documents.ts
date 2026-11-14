@@ -92,7 +92,7 @@ export function createSfContractReviewVerifier(dependencies: SfAnalysisDependenc
   }
 }
 
-export function createSfPurchasePreparationVerifier(dependencies: SfAnalysisDependencies & { changeProposals: Pick<ReturnType<typeof createChangeProposalStore>, "readSet"> }): SfAnalysisVerifier {
+export function createSfPurchasePreparationVerifier(dependencies: SfAnalysisDependencies & { changeProposals?: Pick<ReturnType<typeof createChangeProposalStore>, "readSet"> }): SfAnalysisVerifier {
   return {
     skillIds: ["sf-preparar-compra"],
     verify: async (input, request, call) => {
@@ -124,6 +124,7 @@ export function createSfPurchasePreparationVerifier(dependencies: SfAnalysisDepe
         const current = await read(currentCall)
         if (!current) return { status: "unavailable", reason: "analysis-output-unverified" }
         if (output.kind === "PreparedChangeSet") {
+          if (!dependencies.changeProposals) return { status: "unavailable", reason: "purchase-change-store-unavailable" }
           const changes = output.payload
           if (changes.caseRef !== encodeCaseRef(request.caseRef) || changes.caseVersion !== request.caseRef.version || !changes.changes.length || new Set(changes.changes.map((item) => item.changeRef)).size !== changes.changes.length || changes.changes.some((item) => !current.refs.some((ref) => digestSfValue(ref) === digestSfValue(item.targetRef)) || !value.allowedChangeTargets.some((target) => item.targetRef.kind === "record" && item.targetRef.target.surface === target.surface && item.targetRef.target.recordType === target.type && item.targetRef.target.recordId === target.id && item.targetRef.target.incarnation === target.incarnation && item.targetRef.target.version === target.version && item.targetRef.target.period?.start === target.period.start && item.targetRef.target.period.end === target.period.end && item.targetRef.target.fields.every((field) => target.fields.includes(field)))) || changes.conditions.some((item) => item.evidenceRefs.some((ref) => !current.refs.some((allowed) => digestSfValue(allowed) === digestSfValue(ref)))) || output.evidenceRefs.some((ref) => !current.refs.some((allowed) => digestSfValue(allowed) === digestSfValue(ref))) || changes.changes.some((item) => !output.evidenceRefs.some((ref) => digestSfValue(ref) === digestSfValue(item.targetRef)))) return { status: "unavailable", reason: "analysis-output-unverified" }
           const stored = await dependencies.changeProposals.readSet({ caseRef: request.caseRef, changeRefs: changes.changes.map((item) => item.changeRef) }, currentCall)

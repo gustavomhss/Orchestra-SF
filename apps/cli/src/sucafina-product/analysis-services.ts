@@ -35,6 +35,7 @@ import { createSfQuestionVerifier, createSfDependencyVerifier, createSfCommitmen
 import { createSfCritiqueInputProducer } from "./input-producer-critique.ts"
 import { createSfEvidenceReviewInputProducer } from "./input-producer-evidence-review.ts"
 import { createSfDecisionCritiqueVerifier, createSfEvidenceReviewVerifier } from "./analysis-verifier-review.ts"
+import type { SfAnalysisSelectionScope } from "./analysis-selection-scope.ts"
 
 type Bindings<T> = Omit<T, keyof SfAnalysisDependencies>
 export type SfAnalysisPair = { producer: SfInputProducer; verifier: SfAnalysisVerifier }
@@ -72,6 +73,7 @@ export function createSfAnalysisServices(input: {
   dependencies: SfAnalysisDependencies
   selected: readonly SfSelectedRuntime[]
   bindings: SfAnalysisServiceBindings
+  selectionScope?: SfAnalysisSelectionScope
   authorizeSelection: (call: TrustedUiContext, input: SfAnalysisPreparation) => Promise<boolean>
 }) {
   const selected = structuredClone(input.selected)
@@ -155,7 +157,8 @@ export function createSfAnalysisServices(input: {
     const binding = analysisAuthority(call)
     const before = await currentCase(captured.request, call)
     if (!before) return { status: "unavailable", reason: "analysis-case-unavailable" }
-    const proof = await pair.verifier.verify(captured.value, captured.request, call)
+    const verify = () => pair.verifier.verify(captured.value, captured.request, call)
+    const proof = input.selectionScope ? await input.selectionScope.verify(captured.value, captured.request, call, verify) : await verify()
     if (proof.status !== "ok") return proof
     const after = await currentCase(captured.request, call)
     if (digestSfValue(captured) !== digest || analysisAuthority(call) !== binding || digestSfValue(proof.value.input) !== digestSfValue(captured.value) || !after || digestSfValue(before) !== digestSfValue(after) || digestSfValue(proof.value.current) !== digestSfValue(after)) return { status: "unavailable", reason: "analysis-source-or-authority-changed" }
@@ -163,7 +166,8 @@ export function createSfAnalysisServices(input: {
       if (analysisAuthority(currentCall) !== binding || !await currentCase(captured.request, currentCall)) return { status: "unavailable", reason: "analysis-output-authority-unavailable" }
       const wanted = structuredClone(output)
       const outputDigest = digestSfValue(wanted)
-      const result = await proof.value.acceptsOutput(wanted, currentCall)
+      const accept = () => proof.value.acceptsOutput(wanted, currentCall)
+      const result = input.selectionScope ? await input.selectionScope.verify(captured.value, captured.request, currentCall, accept) : await accept()
       if (result.status !== "ok") return result
       return digestSfValue(wanted) === outputDigest && analysisAuthority(currentCall) === binding && await currentCase(captured.request, currentCall)
         ? { status: "ok", value: true } : { status: "unavailable", reason: "analysis-output-authority-unavailable" }
@@ -182,7 +186,8 @@ export function createSfAnalysisServices(input: {
       if (!await input.authorizeSelection(call, captured)) return { status: "denied", reason: "analysis-input-authority-unavailable" }
       if (!ids.includes(captured.request.skillId)) return { status: "unavailable", reason: "analysis-skill-binding-unavailable" }
       if (!await currentCase(captured.request, call)) return { status: "unavailable", reason: "analysis-case-unavailable" }
-      const result = await registry.prepare(captured.selection, captured.request, call)
+      const prepare = () => registry.prepare(captured.selection, captured.request, call)
+      const result = input.selectionScope ? await input.selectionScope.prepare(captured, call, prepare) : await prepare()
       if (result.status !== "ok") return result
       return digestSfValue(captured) === digest && analysisAuthority(call) === binding && await currentCase(captured.request, call) && await input.authorizeSelection(call, captured)
         ? result : { status: "unavailable", reason: "analysis-source-or-authority-changed" }
