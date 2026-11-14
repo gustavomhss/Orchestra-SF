@@ -1,0 +1,26 @@
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -39,6 +39,7 @@
+ import { createPlannerCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/planner/capabilities.ts"
+ import { rankSfAtlasRecall } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
+ import { createSfCaseRecall } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts"
++import { deriveAuthorizedRecallFeatures } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/case-features.ts"
+ import { createSfAtlasBusiness } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+ import type { probeSfAtlasScanner } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts"
+ import { createSfDashboardServices } from "./dashboard-services.ts"
+@@ -354,14 +355,7 @@
+       const refreshed = await cases.read({ caseRef: encodeCaseRef(value.case) }, call)
+       if (refreshed.status !== "ok" || digestSfValue(refreshed.value.case) !== digestSfValue(value.case) ||
+         digestSfValue(refreshed.value.evidenceRefs) !== digestSfValue(value.evidenceRefs) || !await host.revalidate(call)) return undefined
+-      const types = [...refreshed.value.evidenceRefs.flatMap((ref) => ref.kind === "record" ? [`${ref.target.surface}:${ref.target.recordType}`] : []),
+-        ...refreshed.value.case.preparedChanges.map((change) => `${change.target.surface}:${change.target.type}`)]
+-      if (!types.length) return undefined
+-      return { decisionType: [...new Set(types)].sort().join("|"), horizon: digestSfValue(value.case.horizon),
+-        components: [...new Set(value.case.alternatives.flatMap((alternative) => alternative.result.components.map((component) => component.id)))].sort(),
+-        restrictions: [...new Set(value.case.criteria.filter((criterion) => criterion.required).map((criterion) => criterion.description))].sort(),
+-        resultAvailable: value.case.alternatives.some((alternative) => alternative.result.comparisonStatus === "complete" && alternative.result.total !== null) ||
+-          value.case.choices.some((choice) => choice.result.comparisonStatus === "complete" && choice.result.total !== null) }
++      return deriveAuthorizedRecallFeatures(refreshed.value, call)
+     }
+     const caseForEvidence = async (digest: string, call: TrustedDomainContext) => {
+       const request = host.requestFor(call)

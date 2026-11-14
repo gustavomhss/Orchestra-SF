@@ -1,0 +1,37 @@
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -57,7 +57,7 @@
+ import { resolveSfDocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
+ import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
+ 
+-export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; dashboardHostWrites?: WeakSet<object>; procurementEvidenceWrites?: WeakSet<object>; caseSelectionWrites?: WeakSet<object>; threadHistoryWrites?: WeakSet<object>; readQuestionContribution?: ReturnType<typeof createSfContributionReader>; documentEvidenceList?: (documentRef: string, call: TrustedDomainContext) => Promise<PortResult<readonly DocumentEvidence[]>>; extraDescriptors?: readonly CapabilityDescriptor[]; documentRead?: SfDocumentReader }) {
++export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; dashboardHostWrites?: WeakSet<object>; procurementEvidenceWrites?: WeakSet<object>; caseSelectionWrites?: WeakSet<object>; threadHistoryWrites?: WeakSet<object>; readQuestionContribution?: ReturnType<typeof createSfContributionReader>; documentEvidenceList?: (documentRef: string, call: TrustedDomainContext) => Promise<PortResult<readonly DocumentEvidence[]>>; extraDescriptors?: readonly CapabilityDescriptor[]; recallCandidateAccess?: Parameters<typeof createSfCaseRecall>[0]["candidateAccess"]; documentRead?: SfDocumentReader }) {
+   const host = input.authority.host
+   const dashboardHostWrites = input.dashboardHostWrites ?? new WeakSet<object>()
+   const periods = new Map<string, { period: Period; expiresAt: number }>()
+@@ -341,7 +341,7 @@
+     ...createDecisionCapabilities({ cases, createReceipt: receipt, requiredAuthority: { read: ["cases:read"], draft: ["cases:write"], receipt: ["cases:read"], alternative: ["cases:read"], change: ["cases:read"] } }),
+   ]
+   const atlasDescriptors = new Set<(typeof descriptors)[number]>()
+-  const atlasState: { current?: { memory: ReturnType<typeof createSfAtlasBusiness>["memory"]; proveContinuity: ReturnType<typeof createSfAtlasBusiness>["proveContinuity"]; featuresForCase: (value: AuthorizedCaseProjection, call: TrustedDomainContext) => Promise<import("../../../../modules/sucafina/Sucafinav1/product/decision-memory/recall.ts").RecallFeatures | undefined>; runtimeVersions: { boundaryVersion: string; schemaVersion: string; manifestVersion: string; skillVersion: string } } } = {}
++  const atlasState: { current?: { candidateAccess?: Parameters<typeof createSfCaseRecall>[0]["candidateAccess"]; memory: ReturnType<typeof createSfAtlasBusiness>["memory"]; proveContinuity: ReturnType<typeof createSfAtlasBusiness>["proveContinuity"]; featuresForCase: (value: AuthorizedCaseProjection, call: TrustedDomainContext) => Promise<import("../../../../modules/sucafina/Sucafinav1/product/decision-memory/recall.ts").RecallFeatures | undefined>; runtimeVersions: { boundaryVersion: string; schemaVersion: string; manifestVersion: string; skillVersion: string } } } = {}
+   const clearAtlasDescriptors = () => {
+     for (let index = descriptors.length - 1; index >= 0; index--) if (atlasDescriptors.has(descriptors[index]!)) descriptors.splice(index, 1)
+     atlasDescriptors.clear()
+@@ -426,6 +426,7 @@
+     originalMemory.current = atlas.memory
+     evidence.current = atlas.context
+     recall.current = createSfCaseRecall({ host, cases, memory: atlas.memory, featuresForCase, runtimeVersions: versions,
++      candidateAccess: input.recallCandidateAccess,
+       proveContinuity: atlas.proveContinuity, rank: rankSfAtlasRecall,
+       selectCandidates: async (_source, call, scope) => {
+         const request = host.requestFor(call)
+@@ -440,7 +441,7 @@
+         return selected.status === "ok" && await host.revalidate(call) ? selected.value : undefined
+       },
+     })
+-    atlasState.current = { memory: atlas.memory, proveContinuity: atlas.proveContinuity, featuresForCase, runtimeVersions: structuredClone(versions) }
++    atlasState.current = { candidateAccess: input.recallCandidateAccess, memory: atlas.memory, proveContinuity: atlas.proveContinuity, featuresForCase, runtimeVersions: structuredClone(versions) }
+     clearAtlasDescriptors()
+     for (const descriptor of atlas.capabilities) { descriptors.push(descriptor); atlasDescriptors.add(descriptor) }
+     return atlas
