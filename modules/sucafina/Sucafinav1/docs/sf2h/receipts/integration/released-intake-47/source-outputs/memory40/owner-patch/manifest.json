@@ -1,0 +1,171 @@
+{
+  "schema": "sf-memory-original-owner-patch-v1",
+  "mission": 40,
+  "finding": "M35-C17-ORIGINAL-REVALIDATION",
+  "consumer": "session33",
+  "state": "IMPLEMENTED_TESTED_HANDOFF",
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "sourceBase": "539a3c7f95174190f783debc74e3694d84ca8653",
+  "sourceProductW": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+  "sourceTree": "f80bf7b2bc24966a9709ed2ab16bae6c93d24b94",
+  "compatibleCompositionBase": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+  "compatibleCompositionTree": "d34dba1f7eca5a1bce546a0b6fab9d9ec5aef5b7",
+  "patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/memory-original-reauthorization/owner-patch/0001-original-and-replay-reauthorization.patch",
+    "sha256": "08968ae49b79e5833520b69eb6ec63c871df34c57c3840e673ba7984276be8f2",
+    "bytes": 46715,
+    "format": "complete unified two-file diff with exact pre/post blob index"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitBlob": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993",
+        "sha256": "d6df55fbe2ebf1868c3279eb2196108228a1dcd695f8af36fe65429419c7ec65",
+        "bytes": 56590
+      },
+      "postimage": {
+        "gitBlob": "390bce2594e39a28defce1d47fafa0d7291e940e",
+        "sha256": "72e649b0022b590f406dc5e29ad9b92e51d8a939067b4cbb1095897c0c3ee09a",
+        "bytes": 63436
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "mode": "100644",
+      "preimage": {
+        "gitBlob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+        "sha256": "62e0ab3ada8792c84b91c2e2b6ef9181fb9290292277485e7b18176090287a00",
+        "bytes": 34119
+      },
+      "postimage": {
+        "gitBlob": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d",
+        "sha256": "254ca1eff93c4da9850680ed16415dbd97e7afbfe5cefe2519d5c38b62eece1f",
+        "bytes": 43049
+      }
+    }
+  ],
+  "preimagesIdenticalOnSourceAndC10": true,
+  "completePostimagesAvailableAt": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+  "proposal35": {
+    "delivery": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+    "sha256": "22b2878b3790e69651b567ce4ddbae13fd223bb45dbfa8900530745ef7dd0765",
+    "status": "PROPOSED_NOT_TESTED_INPUT_REVIEWED_NOT_APPLIED_AS_IS",
+    "adaptations": [
+      "Factory-local AsyncLocalStorage restricts the private capture callback to the active same call/digest; installed initializeAtlas lookup can complete without recursive public authorization.",
+      "Canonical record selection verifies all sources and immutable captures for the requested original/event, preserving settled history with a later pending event. Public recall retains its existing pending gate.",
+      "Settled replay reopens the complete case even with a lightweight authorizeCase callback and verifies the exact durable event/record/receipt.",
+      "Committed replay closes with case, outbox, partition, full C08 state and all three source snapshot fences including blob generations.",
+      "Request identity, headers, binding, opaque lease identity, abort, incoming payload and retained observations stay pinned across awaits; final authority await remains inside the protected C08 read.",
+      "Only fresh DomainProjection observedAt metadata is normalized across observations. Historical projections and immutable captures remain exact.",
+      "Scanner-refused receipts keep read-only source reauthorization without requiring a nonexistent committed Atlas event."
+    ]
+  },
+  "integrationRules": [
+    "Reconcile session33 current branch/head/authority and compare both exact preimages before applying; no force and no unrelated replacements.",
+    "Apply only the complete two-file patch or exact product postimages. Own tests and receipts are separately enumerated.",
+    "Do not transplant mission40 dispatch envelopes or source branch history onto sf2-stack.",
+    "Preserve exact published35 test/helper blobs when constructing its proof closure; neither file is edited by mission40.",
+    "Source Actions results do not replace composed/compiler/global gates. MI07 long history and AM05 native remain open."
+  ],
+  "validation": {
+    "sourceS": "33d829f96c2f4cad74d7610da089c4aa1162d4ba",
+    "sourceRun": 43650471583,
+    "checkS": "3022e0945a79f5bd9faf26c4f6a4f3be903e428a",
+    "checkRun": 43649819285,
+    "composedW": "9902a8f2a3c3ca0b11bae17c7c369fdb0ed22732",
+    "composedS": "57882fd8ecabb9b3a9e458ea644c81260fbf514a",
+    "composedRun": 43651719591,
+    "sourceConclusion": "18_PASS_0_FAIL_311_EXPECTS",
+    "composedConclusion": "2_PASS_0_FAIL_95_EXPECTS",
+    "composedWtree": "856c1913e383d48d9392ac089722b45cde41a49b",
+    "composedStree": "7fc0b5cd838251166cdcdca8094efdcf0e9c5c34",
+    "sourceStree": "210c902a04fc114f3f917685ae7f16c31d226715",
+    "checkConclusion": "FULL_SUCAFINA_FAIL_13_INHERITED_0_OWN; other checks PASS",
+    "composedCompilerAndGuards": "NOT_RUN",
+    "runIndex": "../RUN-INDEX.json"
+  },
+  "currentBundleObservation": {
+    "head": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+    "tree": "d6cc2b9f562ddc390e13a0645aae510bb5bd4e13",
+    "observedAt": "2026-11-14T22:55:01Z",
+    "runtimePreimagesMatchC10": true,
+    "notModified": true,
+    "reconcileAgainBeforeIntegration": true
+  },
+  "ownTests": {
+    "root": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/document-fixture.ts",
+        "mode": "100644",
+        "blob": "fadeb3063fa26a586957947802781ac2b64ff546",
+        "bytes": 20846,
+        "sha256": "050c7d2bfa767ce287d5d37dd548a76acb859dcb5af8648abd2b8ede9b726306",
+        "preimage": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts",
+        "mode": "100644",
+        "blob": "d135761aae1ab1323859e0f92f441555fa61b634",
+        "bytes": 7518,
+        "sha256": "8bdd44a50a0f78152ad1224bec1c0abed20ab6958670d8ce1c2cbe40b1602184",
+        "preimage": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+        "mode": "100644",
+        "blob": "3bc4442bd2fdd52867ed25d4f321689c1cffe274",
+        "bytes": 17487,
+        "sha256": "081d39ad7799d7bdc088be274988dff3285e552365764ec8803b624e8ba90b56",
+        "preimage": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/replay-fences.test.ts",
+        "mode": "100644",
+        "blob": "5cecd0a6b33c712ef393afe9a11c28e0a5782d5a",
+        "bytes": 13095,
+        "sha256": "b98f950826989c1c611e2f17b4ffbaee31c58aa1b17db5663ee2025a79ec6e6b",
+        "preimage": null
+      }
+    ],
+    "patch": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/memory-original-reauthorization/owner-patch/0002-mission40-tests.patch",
+      "sha256": "9d479f9b4edd2d509633e89da4555b6c551774ae9009675ed4371332222a7d99",
+      "bytes": 61598
+    },
+    "rule": "All four are new files on the pinned composition. Reconcile absence/exact postimage before adding; preserve foreign fixtures."
+  },
+  "findingStatus": "RESOLVED_ON_RECORDED_CLOSURE",
+  "immutable35Dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "ref": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+      "blob": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9",
+      "sha256": "5b5cababd46f64fc8b7187df3a24da7cab832276f843a2f4b314e0a7b27dd4ef",
+      "bytes": 43863
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "ref": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+      "blob": "65c5fd04f6af34a241e6cc0bd40cd968cdc6e353",
+      "sha256": "87915c7647c66d457be91176bbc8a2d566ce7e1bb1afe1f643e8033c1e6ce1ce",
+      "bytes": 14203
+    }
+  ],
+  "processProof": {
+    "path": "../runs/M40-35-process-proof.json",
+    "sha256": "bb902845df2fc79427873210085458ff3c6ece0f637a81d593ec1fe08108138a",
+    "parentPid": 4120,
+    "spawnedPid": 4170,
+    "childPid": 4170,
+    "exitCode": 0,
+    "nativeSessionWitness": false
+  },
+  "delivery": {
+    "rule": "Containing documentary commit is a direct child of sourceProductW and changes only mission40 receipt files. Its exact SHA is recorded in PR29 and Git history, not self-embedded.",
+    "sourceWriterActive": false,
+    "authority": "HANDOFF / ENDED"
+  }
+}

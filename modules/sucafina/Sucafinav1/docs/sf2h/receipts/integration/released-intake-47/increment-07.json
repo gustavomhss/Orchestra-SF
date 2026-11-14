@@ -1,0 +1,962 @@
+{
+  "schema": "sf2h.released-intake-47.increment.v1",
+  "mission": 47,
+  "epoch": "S0-C-e9-browser47",
+  "increment": 7,
+  "candidate_symbol": "C19",
+  "candidate_identity": "Containing commit/tree; exact resolved identity in terminal47 checkpoint and PR65.",
+  "expected_parent": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+  "prior_material": {
+    "symbol": "C18",
+    "sha": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+    "tree": "8563e04f8751ed786ccdbc086ed6566c410af3fe",
+    "parent": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c",
+    "increment": 6,
+    "sources": [
+      43
+    ]
+  },
+  "authority_ack": "657ddd81e8f8cc6709ea82e7a8acb40c04851d7b",
+  "input": {
+    "mission": 40,
+    "branch": "astra-wp10",
+    "pr": 29,
+    "release": "1136abe85d0dee1e5d43d7c3ebaaa3dd5932fd90",
+    "release_tree": "d4205024bef7dde26fb1b883ea3403f2fd2c40e2",
+    "product_W": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+    "product_tree": "f80bf7b2bc24966a9709ed2ab16bae6c93d24b94",
+    "terminal_blob": "0e05680b848171f29fd95952b718dd3d5f9431e7",
+    "handoff_blob": "21b24b096fc55f09c35c74254514745ba273235b",
+    "owner_patch_manifest_blob": "d064cde845832c0255270f574a2c60d4445805f2",
+    "delivery_manifest_blob": "81e526e2ef03b0e17e157e04f8c38ff307cacc25",
+    "state": "HANDOFF / ENDED",
+    "active_mission40_source_writer": false,
+    "explicit_release": true,
+    "release_rule_verified": "Direct documentary child of product W, exactly23 added receipt paths, no product/test change",
+    "old_consumer_label": "session33",
+    "current_consumer": "session47",
+    "succession_resolution": "Root mission47 and control f2383d1248a130e05a9e6667516023ecea70389e authorize47 as sole stack writer. Do not let stale source consumer33 label or active successor51 waive current stack CAS.",
+    "product": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+    "lease": "memory-original-browser40",
+    "authority": "EXPLICIT_TERMINAL_HANDOFF_ENDED",
+    "source_consumer": 33,
+    "reconciled_consumer": 47
+  },
+  "decision": "ACCEPTED_SIX_COMPLETE_RELEASED_MEMORY40_POSTIMAGES",
+  "material_paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "mode": "100644",
+      "source_commit": "1136abe85d0dee1e5d43d7c3ebaaa3dd5932fd90",
+      "source_product": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+      "source_path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "source_blob": "390bce2594e39a28defce1d47fafa0d7291e940e",
+      "preimage": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993",
+      "postimage": "390bce2594e39a28defce1d47fafa0d7291e940e",
+      "postimage_sha256": "72e649b0022b590f406dc5e29ad9b92e51d8a939067b4cbb1095897c0c3ee09a",
+      "postimage_bytes": 63436,
+      "disposition": "APPLY_COMPLETE_RELEASED_POSTIMAGE",
+      "adapted": false,
+      "full_patch_reconstruction_exact": true,
+      "hunks": 5
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "mode": "100644",
+      "source_commit": "1136abe85d0dee1e5d43d7c3ebaaa3dd5932fd90",
+      "source_product": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+      "source_path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "source_blob": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d",
+      "preimage": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "postimage": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d",
+      "postimage_sha256": "254ca1eff93c4da9850680ed16415dbd97e7afbfe5cefe2519d5c38b62eece1f",
+      "postimage_bytes": 43049,
+      "disposition": "APPLY_COMPLETE_RELEASED_POSTIMAGE",
+      "adapted": false,
+      "full_patch_reconstruction_exact": true,
+      "hunks": 8
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/document-fixture.ts",
+      "mode": "100644",
+      "source_commit": "1136abe85d0dee1e5d43d7c3ebaaa3dd5932fd90",
+      "source_product": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/document-fixture.ts",
+      "source_blob": "fadeb3063fa26a586957947802781ac2b64ff546",
+      "preimage": null,
+      "postimage": "fadeb3063fa26a586957947802781ac2b64ff546",
+      "postimage_sha256": "050c7d2bfa767ce287d5d37dd548a76acb859dcb5af8648abd2b8ede9b726306",
+      "postimage_bytes": 20846,
+      "disposition": "ADD_RELEASED_NEW_FILE",
+      "adapted": false,
+      "full_patch_reconstruction_exact": true,
+      "hunks": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts",
+      "mode": "100644",
+      "source_commit": "1136abe85d0dee1e5d43d7c3ebaaa3dd5932fd90",
+      "source_product": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts",
+      "source_blob": "d135761aae1ab1323859e0f92f441555fa61b634",
+      "preimage": null,
+      "postimage": "d135761aae1ab1323859e0f92f441555fa61b634",
+      "postimage_sha256": "8bdd44a50a0f78152ad1224bec1c0abed20ab6958670d8ce1c2cbe40b1602184",
+      "postimage_bytes": 7518,
+      "disposition": "ADD_RELEASED_NEW_FILE",
+      "adapted": false,
+      "full_patch_reconstruction_exact": true,
+      "hunks": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "mode": "100644",
+      "source_commit": "1136abe85d0dee1e5d43d7c3ebaaa3dd5932fd90",
+      "source_product": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "source_blob": "3bc4442bd2fdd52867ed25d4f321689c1cffe274",
+      "preimage": null,
+      "postimage": "3bc4442bd2fdd52867ed25d4f321689c1cffe274",
+      "postimage_sha256": "081d39ad7799d7bdc088be274988dff3285e552365764ec8803b624e8ba90b56",
+      "postimage_bytes": 17487,
+      "disposition": "ADD_RELEASED_NEW_FILE",
+      "adapted": false,
+      "full_patch_reconstruction_exact": true,
+      "hunks": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/replay-fences.test.ts",
+      "mode": "100644",
+      "source_commit": "1136abe85d0dee1e5d43d7c3ebaaa3dd5932fd90",
+      "source_product": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/replay-fences.test.ts",
+      "source_blob": "5cecd0a6b33c712ef393afe9a11c28e0a5782d5a",
+      "preimage": null,
+      "postimage": "5cecd0a6b33c712ef393afe9a11c28e0a5782d5a",
+      "postimage_sha256": "b98f950826989c1c611e2f17b4ffbaee31c58aa1b17db5663ee2025a79ec6e6b",
+      "postimage_bytes": 13095,
+      "disposition": "ADD_RELEASED_NEW_FILE",
+      "adapted": false,
+      "full_patch_reconstruction_exact": true,
+      "hunks": 1
+    }
+  ],
+  "source_receipts": {
+    "source_commit": "1136abe85d0dee1e5d43d7c3ebaaa3dd5932fd90",
+    "source_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/memory-original-reauthorization",
+    "source_tree": "7d152322bfc6ab90d8dafa854ff255d9a704961d",
+    "target_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/memory40",
+    "count": 24,
+    "files": [
+      {
+        "path": "AUTHORITY.json",
+        "sha": "335a0f1f8bf8844db0969ace630c1610d74ba2ec",
+        "mode": "100644",
+        "size": 2944
+      },
+      {
+        "path": "DELIVERY-MANIFEST.json",
+        "sha": "81e526e2ef03b0e17e157e04f8c38ff307cacc25",
+        "mode": "100644",
+        "size": 7857
+      },
+      {
+        "path": "HANDOFF-TERMINAL.json",
+        "sha": "0e05680b848171f29fd95952b718dd3d5f9431e7",
+        "mode": "100644",
+        "size": 11527
+      },
+      {
+        "path": "HANDOFF.md",
+        "sha": "21b24b096fc55f09c35c74254514745ba273235b",
+        "mode": "100644",
+        "size": 18250
+      },
+      {
+        "path": "READING-AND-CRITERIA.json",
+        "sha": "58efa08b5e3f5010233bdfa64297d8fc2b0e2d8b",
+        "mode": "100644",
+        "size": 23120
+      },
+      {
+        "path": "RUN-INDEX.json",
+        "sha": "47c625ab11300b8ebc313b841ba1567f4239488c",
+        "mode": "100644",
+        "size": 3862
+      },
+      {
+        "path": "checks/CHECK40-1.json",
+        "sha": "262ca14a60900453e2d2d2f31b3c42cc91a98c5d",
+        "mode": "100644",
+        "size": 11870
+      },
+      {
+        "path": "checks/CHECK40-2.json",
+        "sha": "6dc377f1ddd5745448d7fdbfd71773af9e2957ea",
+        "mode": "100644",
+        "size": 10761
+      },
+      {
+        "path": "logs/M40-35.txt",
+        "sha": "fd64c746a74fc6f9343e0bbb1e2e478bf3540e28",
+        "mode": "100644",
+        "size": 464
+      },
+      {
+        "path": "logs/M40-B01.txt",
+        "sha": "2a24280dd262ff7e398ec0b8e9e0a72ee7343c08",
+        "mode": "100644",
+        "size": 826
+      },
+      {
+        "path": "logs/M40-F01.txt",
+        "sha": "9ee5d219a0cab0f090f95acfb1a92a85833fa6bb",
+        "mode": "100644",
+        "size": 5602
+      },
+      {
+        "path": "logs/M40-F02.txt",
+        "sha": "4d5de3e6b32febadf901ac1897f0cc1c4c046085",
+        "mode": "100644",
+        "size": 6512
+      },
+      {
+        "path": "owner-patch/0001-original-and-replay-reauthorization.patch",
+        "sha": "5d7237afc2b58ea200bb1ec1b8b55c1a199d0fd5",
+        "mode": "100644",
+        "size": 46715
+      },
+      {
+        "path": "owner-patch/0002-mission40-tests.patch",
+        "sha": "7f013c999122c681dc3faa99f6a7e4be6e7ec42f",
+        "mode": "100644",
+        "size": 61598
+      },
+      {
+        "path": "owner-patch/manifest.json",
+        "sha": "d064cde845832c0255270f574a2c60d4445805f2",
+        "mode": "100644",
+        "size": 8565
+      },
+      {
+        "path": "requests/M40-35.json",
+        "sha": "9dc6a822c8dd0bb53303c2cf7b80ddcb080a699c",
+        "mode": "100644",
+        "size": 166
+      },
+      {
+        "path": "requests/M40-B01.json",
+        "sha": "7f4215b475771ab779e0c90441a3dc9e1270b8ef",
+        "mode": "100644",
+        "size": 286
+      },
+      {
+        "path": "requests/M40-F01.json",
+        "sha": "3d8782d25a84dc5c8d5f762869f8e9454d793ad1",
+        "mode": "100644",
+        "size": 465
+      },
+      {
+        "path": "requests/M40-F02.json",
+        "sha": "e296390f5957d045be74a49e1b3f7061f64016fe",
+        "mode": "100644",
+        "size": 544
+      },
+      {
+        "path": "runs/M40-35-process-proof.json",
+        "sha": "841a3dea68332ef182e0e25e07623670b1731b0f",
+        "mode": "100644",
+        "size": 98367
+      },
+      {
+        "path": "runs/M40-35.json",
+        "sha": "402404663241390703cac9cee453f6ed5bcee03a",
+        "mode": "100644",
+        "size": 5497
+      },
+      {
+        "path": "runs/M40-B01.json",
+        "sha": "3218c09402ede95959aff4c931a84b86bea7266e",
+        "mode": "100644",
+        "size": 2108
+      },
+      {
+        "path": "runs/M40-F01.json",
+        "sha": "ab7e9ae3e2788739ec9203efba23e09e1e5b3ad8",
+        "mode": "100644",
+        "size": 10137
+      },
+      {
+        "path": "runs/M40-F02.json",
+        "sha": "0f31af516ef32fc0907b96fea2c4263ab1154f86",
+        "mode": "100644",
+        "size": 12127
+      }
+    ],
+    "original_bytes_preserved": true
+  },
+  "patches": [
+    {
+      "kind": "runtime",
+      "gitBlob": "5d7237afc2b58ea200bb1ec1b8b55c1a199d0fd5",
+      "sha256": "08968ae49b79e5833520b69eb6ec63c871df34c57c3840e673ba7984276be8f2",
+      "bytes": 46715
+    },
+    {
+      "kind": "tests",
+      "gitBlob": "7f013c999122c681dc3faa99f6a7e4be6e7ec42f",
+      "sha256": "9d479f9b4edd2d509633e89da4555b6c551774ae9009675ed4371332222a7d99",
+      "bytes": 61598
+    }
+  ],
+  "patch_integrity": {
+    "schema": "memory40.static-text-integrity.v1",
+    "target": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+    "source": "1136abe85d0dee1e5d43d7c3ebaaa3dd5932fd90",
+    "entries": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "preimage": {
+          "gitBlob": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993",
+          "sha256": "d6df55fbe2ebf1868c3279eb2196108228a1dcd695f8af36fe65429419c7ec65",
+          "bytes": 56590
+        },
+        "postimage": {
+          "gitBlob": "390bce2594e39a28defce1d47fafa0d7291e940e",
+          "sha256": "72e649b0022b590f406dc5e29ad9b92e51d8a939067b4cbb1095897c0c3ee09a",
+          "bytes": 63436
+        },
+        "hunks": 5,
+        "contextLines": 29,
+        "deletedLines": 4,
+        "addedLines": 96,
+        "fullPatchReconstructionExact": true,
+        "targetPreimageExact": true,
+        "targetAbsenceObserved": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "preimage": {
+          "gitBlob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+          "sha256": "62e0ab3ada8792c84b91c2e2b6ef9181fb9290292277485e7b18176090287a00",
+          "bytes": 34119
+        },
+        "postimage": {
+          "gitBlob": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d",
+          "sha256": "254ca1eff93c4da9850680ed16415dbd97e7afbfe5cefe2519d5c38b62eece1f",
+          "bytes": 43049
+        },
+        "hunks": 8,
+        "contextLines": 70,
+        "deletedLines": 87,
+        "addedLines": 201,
+        "fullPatchReconstructionExact": true,
+        "targetPreimageExact": true,
+        "targetAbsenceObserved": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/document-fixture.ts",
+        "preimage": null,
+        "postimage": {
+          "gitBlob": "fadeb3063fa26a586957947802781ac2b64ff546",
+          "sha256": "050c7d2bfa767ce287d5d37dd548a76acb859dcb5af8648abd2b8ede9b726306",
+          "bytes": 20846
+        },
+        "hunks": 1,
+        "contextLines": 0,
+        "deletedLines": 0,
+        "addedLines": 241,
+        "fullPatchReconstructionExact": true,
+        "targetPreimageExact": false,
+        "targetAbsenceObserved": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts",
+        "preimage": null,
+        "postimage": {
+          "gitBlob": "d135761aae1ab1323859e0f92f441555fa61b634",
+          "sha256": "8bdd44a50a0f78152ad1224bec1c0abed20ab6958670d8ce1c2cbe40b1602184",
+          "bytes": 7518
+        },
+        "hunks": 1,
+        "contextLines": 0,
+        "deletedLines": 0,
+        "addedLines": 114,
+        "fullPatchReconstructionExact": true,
+        "targetPreimageExact": false,
+        "targetAbsenceObserved": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+        "preimage": null,
+        "postimage": {
+          "gitBlob": "3bc4442bd2fdd52867ed25d4f321689c1cffe274",
+          "sha256": "081d39ad7799d7bdc088be274988dff3285e552365764ec8803b624e8ba90b56",
+          "bytes": 17487
+        },
+        "hunks": 1,
+        "contextLines": 0,
+        "deletedLines": 0,
+        "addedLines": 277,
+        "fullPatchReconstructionExact": true,
+        "targetPreimageExact": false,
+        "targetAbsenceObserved": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/replay-fences.test.ts",
+        "preimage": null,
+        "postimage": {
+          "gitBlob": "5cecd0a6b33c712ef393afe9a11c28e0a5782d5a",
+          "sha256": "b98f950826989c1c611e2f17b4ffbaee31c58aa1b17db5663ee2025a79ec6e6b",
+          "bytes": 13095
+        },
+        "hunks": 1,
+        "contextLines": 0,
+        "deletedLines": 0,
+        "addedLines": 213,
+        "fullPatchReconstructionExact": true,
+        "targetPreimageExact": false,
+        "targetAbsenceObserved": true
+      }
+    ],
+    "patches": [
+      {
+        "kind": "runtime",
+        "gitBlob": "5d7237afc2b58ea200bb1ec1b8b55c1a199d0fd5",
+        "sha256": "08968ae49b79e5833520b69eb6ec63c871df34c57c3840e673ba7984276be8f2",
+        "bytes": 46715
+      },
+      {
+        "kind": "tests",
+        "gitBlob": "7f013c999122c681dc3faa99f6a7e4be6e7ec42f",
+        "sha256": "9d479f9b4edd2d509633e89da4555b6c551774ae9009675ed4371332222a7d99",
+        "bytes": 61598
+      }
+    ],
+    "immutable35": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "gitBlob": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9",
+        "sha256": "5b5cababd46f64fc8b7187df3a24da7cab832276f843a2f4b314e0a7b27dd4ef",
+        "bytes": 43863,
+        "preserved": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+        "gitBlob": "65c5fd04f6af34a241e6cc0bd40cd968cdc6e353",
+        "sha256": "87915c7647c66d457be91176bbc8a2d566ce7e1bb1afe1f643e8033c1e6ce1ce",
+        "bytes": 14203,
+        "preserved": true
+      }
+    ],
+    "totals": {
+      "hunks": 17,
+      "contextLines": 99,
+      "deletedLines": 91,
+      "addedLines": 1142
+    },
+    "testAbsenceEvidence": "GitHub MCP GET contents/memory-original-reauthorization?ref=C18 returned 404 NOT_FOUND",
+    "runtimeExecuted": false,
+    "testsExecuted": false,
+    "typecheckOrGuardsExecuted": false
+  },
+  "behavior": [
+    {
+      "topic": "Public C17 original",
+      "result": "REAUTHORIZATION_PRESERVED_AND_STRENGTHENED",
+      "detail": "Public memory.readOriginal opens the complete current case and canonical records linked to the captured digest, resolves every linked dependency, requires fresh/historical authorized projections, compares capture/ref/record integrity, rereads current case and sources, recaptures the original, then compares Atlas partition/outbox/case/product state and all three source fences before returning a cloned reference. It does not rewrite historical projection bytes."
+    },
+    {
+      "topic": "Settled receipt replay",
+      "result": "NO_SCANNER_APPEND_OR_NEW_RECEIPT_BRANCH",
+      "detail": "The settled branch reopens cases.read even when lightweight authorizeCase exists; validates exact outbox/ledger event, committed record/eventId/recordDigest, capture and every source; repeats case and source observations; places final host revalidation inside the protected state.read callback. It returns the existing receipt as already-committed and exits before the new-emission scanner/state.transaction branch."
+    },
+    {
+      "topic": "Installed wrapper recursion",
+      "result": "PRIVATE_LOOKUP_SCOPE_WITHOUT_PUBLIC_AUTHORITY_CACHE",
+      "detail": "A factory-local AsyncLocalStorage scope surrounds only caseForEvidence. The shortcut requires active scope, identical call/digest, stable Request, headers, binding and opaque lease. Its finally clears active. It calls canonicalMemory.readOriginalCapture directly, so the existing installed caseForEvidence -> memory.readOriginal callback does not reenter the full public authorization wrapper. Independent public calls outside that async scope execute the complete reader; late inherited scope calls fail closed."
+    },
+    {
+      "topic": "Independent observations",
+      "result": "RETAINED",
+      "detail": "createSfRecordHistory keeps observe -> recapture -> observe -> finalCapture/finalLineage; proveContinuity retains two complete resolve calls. rankSfAtlasRecall retains a fresh protected recall per candidate after intervening awaits. Public original/replay add further post-case source rounds. Existing per-context duplicate-source sharing remains confined to one authorization pass; no new cached positive authority is added."
+    },
+    {
+      "topic": "Snapshot fences and legitimate history",
+      "result": "RETAINED_WITH_EXPLICIT_SELECTED_HISTORY",
+      "detail": "Current snapshots remain actual host persistence snapshots. Final replay/original reads compare sfRunSourceFence across dashboard/planner/procurement plus complete product-state digest. Public recall retains its pending-outbox refusal. Internal digest/event selection may read already captured A while later B is pending, but still validates canonical case/source/capture and stable outbox; it does not treat pending history as blanket permission."
+    },
+    {
+      "topic": "New tests and declared fixture scope",
+      "result": "ADDITIVE_ORACLES_ONLY",
+      "detail": "Four new paths add15 cases using real installed services/C08/SQLite/C12 or real document extraction/confirmation/Atlas scanner, with explicit synthetic fixture premises. Positive intact/history/A-before-pending-B cases pair with byte/capture/identity/source-B deletion+reincarnation/revocation/late-request fences. State, scanner, outbox and receipt counters compare unchanged egress. No old test/assertion/deadline is changed; none executed here."
+    },
+    {
+      "topic": "Earlier C12/Apply and long-history behavior",
+      "result": "PRESERVE_CURRENT_AND_KEEP_PROOF_OPEN",
+      "detail": "Memory40 alters no Finance store, state/case provider, C12, Apply, scanner engine, host or foreign writer path. Current dependency deltas are retained. Existing source timings do not predict the composed candidate or close MI07; no timeout or assertion budget is changed."
+    }
+  ],
+  "proof_limits": {
+    "qualification": "SOURCE_OR_RECORDED_C10_CLOSURE_ONLY_NOT_C18_PLUS_MEMORY40",
+    "F02": {
+      "W": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+      "S": "33d829f96c2f4cad74d7610da089c4aa1162d4ba",
+      "runId": 43650471583,
+      "jobId": 132617571523,
+      "pass": 18,
+      "fail": 0,
+      "expects": 311,
+      "seconds": 710.19,
+      "omni": {
+        "status": "pass",
+        "declared": 18,
+        "spawns": 36,
+        "delegated": 0
+      },
+      "receipt": "runs/M40-F02.json"
+    },
+    "original35": {
+      "base": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+      "W": "9902a8f2a3c3ca0b11bae17c7c369fdb0ed22732",
+      "Wtree": "856c1913e383d48d9392ac089722b45cde41a49b",
+      "S": "57882fd8ecabb9b3a9e458ea644c81260fbf514a",
+      "Stree": "7fc0b5cd838251166cdcdca8094efdcf0e9c5c34",
+      "runId": 43651719591,
+      "jobId": 132621440454,
+      "pass": 2,
+      "fail": 0,
+      "expects": 95,
+      "seconds": 75.19,
+      "omni": {
+        "status": "pass",
+        "declared": 2,
+        "spawns": 5,
+        "delegated": 0
+      },
+      "receipt": "runs/M40-35.json",
+      "onlyFourOverlays": true,
+      "original35TestAndHelperBytesUnchanged": true
+    },
+    "process35": {
+      "parentPid": 4120,
+      "spawnedPid": 4170,
+      "childPid": 4170,
+      "exitCode": 0,
+      "authorized": "ok",
+      "matches": 1,
+      "outsider": "unavailable",
+      "revoked": "unavailable",
+      "replaced": "unavailable",
+      "durableAtlasUnchangedAfterChild": true,
+      "durableAtlasUnchangedAfterDenials": true,
+      "nativeSessionWitness": false,
+      "raw": "runs/M40-35-process-proof.json",
+      "rawSha256": "bb902845df2fc79427873210085458ff3c6ece0f637a81d593ec1fe08108138a"
+    },
+    "counterproof_B01": {
+      "runId": 43648633283,
+      "receipt": "runs/M40-B01.json",
+      "expectedFailure": true,
+      "pass": 0,
+      "fail": 2,
+      "expects": 37
+    },
+    "intermediate_F01": "15PASS0FAIL260expects688.05s on ecbc9b8; retained documentary evidence, superseded by F02 at1b2",
+    "CHECK1": "13 inherited plus3 own diagnostics, preserved; own3 corrected before1b2",
+    "CHECK2": {
+      "W": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+      "S": "3022e0945a79f5bd9faf26c4f6a4f3be903e428a",
+      "runId": 43649819285,
+      "jobId": 132615552942,
+      "conclusion": "failure",
+      "fullSucafina": "FAIL",
+      "inheritedDiagnostics": 13,
+      "newRuntimeDiagnostics": 0,
+      "newOwnTestDiagnostics": 0,
+      "identicalToTerminal13": true,
+      "passing": [
+        "CLI consumer types",
+        "WP10 consumer types",
+        "canonical Atlas generation/check/diff",
+        "Atlas boundary types",
+        "subprocess import guard",
+        "product guards against origin/dev"
+      ],
+      "receipt": "checks/CHECK40-2.json"
+    },
+    "run_metadata_independently_read": [
+      {
+        "run": 43650471583,
+        "head_sha": "33d829f96c2f4cad74d7610da089c4aa1162d4ba",
+        "conclusion": "success",
+        "jobs": [
+          {
+            "id": 132617571523,
+            "conclusion": "success"
+          },
+          {
+            "id": 132621213750,
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "run": 43651719591,
+        "head_sha": "57882fd8ecabb9b3a9e458ea644c81260fbf514a",
+        "conclusion": "success",
+        "jobs": [
+          {
+            "id": 132621440454,
+            "conclusion": "success"
+          },
+          {
+            "id": 132622221412,
+            "conclusion": "success"
+          }
+        ]
+      },
+      {
+        "run": 43649819285,
+        "head_sha": "3022e0945a79f5bd9faf26c4f6a4f3be903e428a",
+        "conclusion": "failure",
+        "jobs": [
+          {
+            "id": 132615552942,
+            "conclusion": "failure"
+          }
+        ]
+      }
+    ],
+    "W_S_comparisons": "F02 and35 envelopes each direct child with only.ci-run.json; C10→35W exactly4 overlays verified",
+    "original35_republished_tests_changed": false,
+    "source_green_transferred": false,
+    "source_terminal_proof": {
+      "source": {
+        "W": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+        "S": "33d829f96c2f4cad74d7610da089c4aa1162d4ba",
+        "runId": 43650471583,
+        "jobId": 132617571523,
+        "pass": 18,
+        "fail": 0,
+        "expects": 311,
+        "seconds": 710.19,
+        "omni": {
+          "status": "pass",
+          "declared": 18,
+          "spawns": 36,
+          "delegated": 0
+        },
+        "receipt": "runs/M40-F02.json"
+      },
+      "composed": {
+        "base": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+        "W": "9902a8f2a3c3ca0b11bae17c7c369fdb0ed22732",
+        "Wtree": "856c1913e383d48d9392ac089722b45cde41a49b",
+        "S": "57882fd8ecabb9b3a9e458ea644c81260fbf514a",
+        "Stree": "7fc0b5cd838251166cdcdca8094efdcf0e9c5c34",
+        "runId": 43651719591,
+        "jobId": 132621440454,
+        "pass": 2,
+        "fail": 0,
+        "expects": 95,
+        "seconds": 75.19,
+        "omni": {
+          "status": "pass",
+          "declared": 2,
+          "spawns": 5,
+          "delegated": 0
+        },
+        "receipt": "runs/M40-35.json",
+        "onlyFourOverlays": true,
+        "original35TestAndHelperBytesUnchanged": true
+      },
+      "process": {
+        "parentPid": 4120,
+        "spawnedPid": 4170,
+        "childPid": 4170,
+        "exitCode": 0,
+        "authorized": "ok",
+        "matches": 1,
+        "outsider": "unavailable",
+        "revoked": "unavailable",
+        "replaced": "unavailable",
+        "durableAtlasUnchangedAfterChild": true,
+        "durableAtlasUnchangedAfterDenials": true,
+        "nativeSessionWitness": false,
+        "raw": "runs/M40-35-process-proof.json",
+        "rawSha256": "bb902845df2fc79427873210085458ff3c6ece0f637a81d593ec1fe08108138a"
+      },
+      "fullRunIndex": "RUN-INDEX.json",
+      "requests": "requests/",
+      "logExcerpts": "logs/",
+      "counterproof": {
+        "runId": 43648633283,
+        "receipt": "runs/M40-B01.json",
+        "expectedFailure": true,
+        "pass": 0,
+        "fail": 2,
+        "expects": 37
+      },
+      "historicalIntermediateProofsPreserved": [
+        "runs/M40-F01.json",
+        "checks/CHECK40-1.json"
+      ]
+    },
+    "source_checks": {
+      "source": {
+        "W": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+        "S": "3022e0945a79f5bd9faf26c4f6a4f3be903e428a",
+        "runId": 43649819285,
+        "jobId": 132615552942,
+        "conclusion": "failure",
+        "fullSucafina": "FAIL",
+        "inheritedDiagnostics": 13,
+        "newRuntimeDiagnostics": 0,
+        "newOwnTestDiagnostics": 0,
+        "identicalToTerminal13": true,
+        "passing": [
+          "CLI consumer types",
+          "WP10 consumer types",
+          "canonical Atlas generation/check/diff",
+          "Atlas boundary types",
+          "subprocess import guard",
+          "product guards against origin/dev"
+        ],
+        "receipt": "checks/CHECK40-2.json"
+      },
+      "composedCompilerAndGuards": "NOT_RUN; C10 lacks astra-wp10-check workflow; no workflow transplant or epic dispatch authorized.",
+      "sourceChecksQualifyComposed": false
+    },
+    "remaining_limits": {
+      "MI07": {
+        "status": "INHERITED_FAIL_NOT_CLOSED",
+        "run": 43637227753,
+        "W": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+        "S": "e63511737be687a2e42f9a15706a229db42a31c1",
+        "reason": "Original historical test reached unchanged225000 deadline before corruption and final revocation assertions; short40 PASS cannot relabel it"
+      },
+      "AM05": "OPEN; real native Session/binding/provider or Task/SkillLoadReceipt/consumer still required",
+      "fullNativeSession": false,
+      "fullFinanceJourney": "NOT_CLAIMED",
+      "directStalePreflightPreserve": "NOT_CLAIMED",
+      "fullSuite": "NOT_RUN_NOT_CLAIMED",
+      "fullSucafinaTypecheck": "FAIL_13_INHERITED",
+      "composedCompilerAndGuards": "NOT_RUN",
+      "independentCampaignFinalReviews": "NOT_CLAIMED",
+      "globalRelease": false
+    }
+  },
+  "findings": [
+    {
+      "id": "M35-C17-ORIGINAL-REVALIDATION",
+      "source_disposition": "RESOLVED_ON_RECORDED_CLOSURE",
+      "candidate_disposition": "MATERIAL_FIX_RECOMMENDED_FOR_C19; composed qualification NOT_RUN",
+      "route": "Root47 records integrated candidate; Compiler45 owns authorized checks; S0 retains acceptance."
+    },
+    {
+      "id": "MI07",
+      "state": "INHERITED_FAIL_NOT_CLOSED",
+      "route": "Memory51 successor per root-read control; no51snapshot or proof consumed",
+      "evidence": {
+        "status": "INHERITED_FAIL_NOT_CLOSED",
+        "run": 43637227753,
+        "W": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+        "S": "e63511737be687a2e42f9a15706a229db42a31c1",
+        "reason": "Original historical test reached unchanged225000 deadline before corruption and final revocation assertions; short40 PASS cannot relabel it"
+      }
+    },
+    {
+      "id": "AM05",
+      "state": "OPEN_REAL_NATIVE_WITNESS_REQUIRED",
+      "route": "Native owner/S0; private admission HOLD remains"
+    },
+    {
+      "id": "M47-M40-COMPOSITION",
+      "state": "NOT_RUN",
+      "detail": "Source F02 and original35 C10 PASS do not qualify C18 plus this six-file release; no runtime/compiler/guard execution was performed in intake."
+    }
+  ],
+  "independent_static_review": {
+    "schema": "sf2h-m47-memory40-independent-semantic-review-v1",
+    "reviewer": "/root/proc_native_intake",
+    "scope": "Independent STATIC semantic review of the two runtime postimages and three changed caller dependencies. Not E17, FINAL, compiler proof or campaign acceptance.",
+    "source_release": "1136abe85d0dee1e5d43d7c3ebaaa3dd5932fd90",
+    "target": {
+      "candidate": "C18",
+      "commit": "ee1a3ea147ab7d7f4f6b231217e623456e294c84"
+    },
+    "recommendation": "NO_SEMANTIC_BLOCKER_FOUND_FOR_TWO_FILE_INTAKE; PRESERVE_CURRENT_DEPENDENCIES; COMPOSED_QUALIFICATION_PENDING",
+    "runtime": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "preimage": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993",
+        "postimage": "390bce2594e39a28defce1d47fafa0d7291e940e",
+        "independent_hashes_match": true,
+        "full_postimage_read": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "preimage": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+        "postimage": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d",
+        "independent_hashes_match": true,
+        "full_postimage_read": true
+      }
+    ],
+    "semantic_observations": [
+      {
+        "topic": "Public C17 original",
+        "result": "REAUTHORIZATION_PRESERVED_AND_STRENGTHENED",
+        "detail": "Public memory.readOriginal opens the complete current case and canonical records linked to the captured digest, resolves every linked dependency, requires fresh/historical authorized projections, compares capture/ref/record integrity, rereads current case and sources, recaptures the original, then compares Atlas partition/outbox/case/product state and all three source fences before returning a cloned reference. It does not rewrite historical projection bytes."
+      },
+      {
+        "topic": "Settled receipt replay",
+        "result": "NO_SCANNER_APPEND_OR_NEW_RECEIPT_BRANCH",
+        "detail": "The settled branch reopens cases.read even when lightweight authorizeCase exists; validates exact outbox/ledger event, committed record/eventId/recordDigest, capture and every source; repeats case and source observations; places final host revalidation inside the protected state.read callback. It returns the existing receipt as already-committed and exits before the new-emission scanner/state.transaction branch."
+      },
+      {
+        "topic": "Installed wrapper recursion",
+        "result": "PRIVATE_LOOKUP_SCOPE_WITHOUT_PUBLIC_AUTHORITY_CACHE",
+        "detail": "A factory-local AsyncLocalStorage scope surrounds only caseForEvidence. The shortcut requires active scope, identical call/digest, stable Request, headers, binding and opaque lease. Its finally clears active. It calls canonicalMemory.readOriginalCapture directly, so the existing installed caseForEvidence -> memory.readOriginal callback does not reenter the full public authorization wrapper. Independent public calls outside that async scope execute the complete reader; late inherited scope calls fail closed."
+      },
+      {
+        "topic": "Independent observations",
+        "result": "RETAINED",
+        "detail": "createSfRecordHistory keeps observe -> recapture -> observe -> finalCapture/finalLineage; proveContinuity retains two complete resolve calls. rankSfAtlasRecall retains a fresh protected recall per candidate after intervening awaits. Public original/replay add further post-case source rounds. Existing per-context duplicate-source sharing remains confined to one authorization pass; no new cached positive authority is added."
+      },
+      {
+        "topic": "Snapshot fences and legitimate history",
+        "result": "RETAINED_WITH_EXPLICIT_SELECTED_HISTORY",
+        "detail": "Current snapshots remain actual host persistence snapshots. Final replay/original reads compare sfRunSourceFence across dashboard/planner/procurement plus complete product-state digest. Public recall retains its pending-outbox refusal. Internal digest/event selection may read already captured A while later B is pending, but still validates canonical case/source/capture and stable outbox; it does not treat pending history as blanket permission."
+      }
+    ],
+    "unchanged_regions_verified_by_local_text_comparison": [
+      "business-context.ts: createSfRecordHistory and helpers through end of file (excluding terminal blank line only)",
+      "business-context.ts: existing context.context/readSfMemoryCaptureIntegrity capture-observation wrapper",
+      "atlas-memory.ts: rankSfAtlasRecall complete function/tail (excluding terminal blank line only)"
+    ],
+    "retained_callers": [
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "source40_blob": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+        "retain_C18_blob": "6bb862ce96d3ca2b6478e5f00c257e0b38c1bfee",
+        "reason": "Entire initializeAtlas block is byte-identical source40->C18, including originalMemory/caseForEvidence, calculationHistorical, real case/authority/source inputs and recall scope wiring. Current disjoint collaboration/Procurement additions remain. No caller adaptation required."
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "source40_blob": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+        "retain_C18_blob": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+        "reason": "Current host still probes the existing Atlas scanner and calls business.initializeAtlas with installed runtime versions; memory service/HTTP wiring remains. Existing conditional native owner seam and Procurement HTTP addition do not bypass Memory40 authorization. Never replace this file with older source40 dependency."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+        "source40_blob": "23d9291b3dcedda36edc4aa4f38856024e3c58f4",
+        "retain_C18_blob": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635",
+        "reason": "Full reader block from readOriginal through physicalContinuity, resolveHistoricalSource, resolveReceipt, resolveEvidence and proveContinuity is byte-identical source40->C18. Current accepted C12 reservation/recovery additions are outside that reader block and remain intact. Existing historicalProofs stores captured material, then rereads actual source/physical lineage; it is not a granted-authority cache."
+      }
+    ],
+    "immutable35": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "blob": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9",
+        "independent_content_hash_match": true,
+        "review": "Original positive receipt replay/original/recall assertions and negative changed-blob original/replay assertions remain exact; no weakening."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+        "blob": "65c5fd04f6af34a241e6cc0bd40cd968cdc6e353",
+        "independent_content_hash_match": true,
+        "review": "Exact published separate-process helper retained; this review did not execute it or claim native Session proof."
+      }
+    ],
+    "new_blocking_findings": [],
+    "limits": [
+      "Primary intake owner covers complete six-path patch/test/dependency manifests and source run evidence. This independent pass reviews the two runtime semantics and specified caller deltas.",
+      "Other differing dependencies case-port/state-provider/decision-memory recall/case-recall are reviewed by finance34_intake and must remain current; this pass does not replace its recorded closure.",
+      "Source F02 and original35 closure PASS do not become C18-plus-Memory40 PASS. No new composed execution performed.",
+      "MI07 long-history qualification remains open and later mission51-owned; short cases and added reauthorization do not close its performance/tail proof.",
+      "AM05 native witness and final campaign acceptance remain open. Existing Reports36 and native admission HOLD are unaffected."
+    ],
+    "input_artifacts": [
+      "memory40-audit-input.json",
+      "memory40-changed-dependencies-input.json",
+      "memory40-procurement-decision-host-target.json",
+      "proc37-inputs.json",
+      "finance34-review.json"
+    ],
+    "execution": {
+      "remote_reads": 0,
+      "remote_writes": 0,
+      "product_execution": 0,
+      "tests": 0,
+      "typechecks": 0,
+      "guards": 0,
+      "CI_dispatches": 0,
+      "local_only": "Text reads, byte comparisons and Git blob hashing of already supplied contents."
+    }
+  },
+  "verification": {
+    "target": {
+      "parent": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+      "preimages": 2,
+      "new_paths_absent": 4,
+      "immutable35": 2,
+      "source": "Complete baseline42 tree plus verified C13-C18 commit file lists; no conflicting intermediate target edit."
+    },
+    "previous_commit": {
+      "commit": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+      "files": 89,
+      "exact_paths_and_known_blobs": true,
+      "unexpected": [],
+      "missing": [],
+      "deletions": 0,
+      "adapted_README_exact": true,
+      "complete_adapted_patch_exact": true
+    },
+    "all_patches": "17hunks across6paths reconstructed exactly;99context lines91deleted1142added; full source/test postimages matched."
+  },
+  "keep_current": {
+    "immutable35": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "gitBlob": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9",
+        "sha256": "5b5cababd46f64fc8b7187df3a24da7cab832276f843a2f4b314e0a7b27dd4ef",
+        "bytes": 43863,
+        "preserved": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+        "gitBlob": "65c5fd04f6af34a241e6cc0bd40cd968cdc6e353",
+        "sha256": "87915c7647c66d457be91176bbc8a2d566ce7e1bb1afe1f643e8033c1e6ce1ce",
+        "bytes": 14203,
+        "preserved": true
+      }
+    ],
+    "Apply": "65d2a0518427b1454aa665ef744bce7564ed8049",
+    "Finance34_runtime": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+    "contract": "9e9bac976b503409de65868a366f352ca1e65071",
+    "eight_different_dependencies": "Retained current C18, individually reconciled in dependency-closure-07.json.",
+    "native_host": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c; no admission activation",
+    "Reports36": "HOLD; no old bundle activation"
+  },
+  "consumer_ack": {
+    "id": "ACK47-07",
+    "source_release": "1136abe85d0dee1e5d43d7c3ebaaa3dd5932fd90",
+    "status": "CONSUMED_IN_CONTAINING_C19_COMPOSED_QUALIFICATION_PENDING",
+    "original_source_consumer": 33,
+    "current_consumer": 47,
+    "original_source_receipts_unchanged": true,
+    "M35_C17": "RESOLVED_ON_SOURCE_RECORDED_CLOSURE; integrated fix unqualified",
+    "next_owner": "45 candidate checks;51 full MI07 preserving225000/240000 budgets;S0 AM05 and final acceptance."
+  },
+  "checks": {
+    "tests": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "AM": "NOT_RUN",
+    "source_green_transferred": false
+  },
+  "final_acceptance": "S0",
+  "GLOBAL_RELEASE": false
+}

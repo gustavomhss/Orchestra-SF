@@ -1,0 +1,31 @@
+SF_MEMORY_ORIGINAL_C17_DISCRIMINATOR {"originalReturned":false,"replayStatus":"unavailable","corruptedCaptureOriginalReturned":false,"corruptedCaptureReplayStatus":"unavailable","sameOutboxKeyAndPayload":true,"sameRequestKey":true,"lightCaseAcl":true,"scans":1,"nativeSessionWitness":false}
+SF_MEMORY_ORIGINAL_C17_PROOF {"scenario":"bytes-capture-principal","auditDigest":"dbe45e9be4333773bded7a3685273bb2c93eda3c61b862ba6d723cca68bfdebe","counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"intactCaptureRestored":true,"lightCaseAcl":true,"nativeSessionWitness":false}
+(pass) C17 original and settled replay with light case ACL revalidate bytes and immutable captures without effects [57865.11ms]
+SF_MEMORY_ORIGINAL_ALL_DEPENDENCIES_PROOF {"requestedSource":"A","removedAndRecreatedSource":"B","sameAssetId":true,"incarnationChanged":true,"independentARead":"fresh","counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"auditDigest":"dbb71f57efaa21464aaae3eef0f746f52aff3edd5db56e900fc18c6880e7baaf","lightCaseAcl":true,"nativeSessionWitness":false}
+(pass) C17 original A and light replay require every current dependency after B deletion and same-ID reincarnation [101018.92ms]
+(pass) Installed original accepts intact sources and the real initializeAtlas continuity callback without recursion [24536.27ms]
+SF_MEMORY_ORIGINAL_INSTALLED_PROOF {"scenario":"historical-corrupt","historical":"accepted","corrupted":"refused","immutableCapture":true,"auditDigest":"db2691cbc5b47bbc431d6c13856e3f2ec1d1a405d7fce44d4441aec6aa09a732","nativeSessionWitness":false}
+(pass) Installed original keeps legitimate C12 history and refuses a corrupted immutable capture [15948.75ms]
+SF_MEMORY_ORIGINAL_INSTALLED_PROOF {"scenario":"committed-A-pending-B","originalA":"accepted","replayA":"already-committed","recall":"unavailable","eventB":"pending","atlasUnchanged":true,"outboxUnchanged":true,"auditDigest":"81455a3f637183790e2bae125191ae76dd150040d36b72f95c80800f262ffa84","nativeSessionWitness":false}
+(pass) Installed original and exact replay retain committed event A while later event B remains pending [33390.54ms]
+(pass) Installed original reauthorizes the same admitted call after principal revocation [23395.33ms]
+(pass) Installed original rejects substituted binding, principal, lease, case and incarnation while retaining the authentic positive [22750.68ms]
+(pass) Installed original fences headers after the final real revalidation [32851.66ms]
+(pass) Installed original fences request after the final real revalidation [32277.96ms]
+(pass) Installed original fences abort after the final real revalidation [32235.87ms]
+(pass) Installed original fences finished-lease after the final real revalidation [32313.80ms]
+(pass) Installed original refuses revocation after the last real source resolution before egress [31630.59ms]
+SF_MEMORY_REPLAY_LATE_FENCE {"mutation":"headers","result":"unavailable","realRevalidations":2897,"mutationAfterLastRevalidation":true,"sameReferenceAndKey":true,"counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+SF_MEMORY_REPLAY_LATE_FENCE {"mutation":"request","result":"unavailable","realRevalidations":2897,"mutationAfterLastRevalidation":true,"sameReferenceAndKey":true,"counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+SF_MEMORY_REPLAY_LATE_FENCE {"mutation":"abort","result":"unavailable","realRevalidations":2897,"mutationAfterLastRevalidation":true,"sameReferenceAndKey":true,"counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+SF_MEMORY_REPLAY_LATE_FENCE {"mutation":"finished-lease","result":"unavailable","realRevalidations":2897,"mutationAfterLastRevalidation":true,"sameReferenceAndKey":true,"counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+(pass) Settled replay fences late headers, Request identity, abort and finished lease after real revalidation [167750.75ms]
+SF_MEMORY_REPLAY_LATE_CREDENTIAL_REVOCATION {"result":"unavailable","realDocumentResolutions":3,"sourceWasFreshBeforeRevocation":true,"credentialRevokedAfterLastResolution":true,"sameReferenceAndKey":true,"auditDigest":"f7c061ec86820dfcb4197c27dd9215f1901888a560afef5b9104a023462f15d3","counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+(pass) Settled replay refuses actual credential revocation after the last real document resolution [34225.98ms]
+SF_MEMORY_REPLAY_LATE_CAPTURE_CORRUPTION {"result":"unavailable","realDocumentResolutions":3,"corruptionAfterLastResolution":true,"captureDigestsPreserved":true,"noAutomaticRepair":true,"restoredReplay":"already-committed","corruptedAuditDigest":"50e06f6c6d78b544aeb97718b0d5878e405f0075d6a46a1bf2d67351c9847ea7","counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+(pass) Settled replay refuses capture corruption after the last real source resolution without repairing it [45308.14ms]
+ 15 pass
+ 0 fail
+omni positive control [594d82fdf388eaa84f9f27088dd0a04e]: pass (declared: 15 test(s) in Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts, Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts, Sucafinav1/test/product/memory-original-reauthorization/replay-fences.test.ts); 30 omni spawn(s), 0 delegated.
+ 260 expect() calls
+Ran 15 tests across 3 files. [688.05s]

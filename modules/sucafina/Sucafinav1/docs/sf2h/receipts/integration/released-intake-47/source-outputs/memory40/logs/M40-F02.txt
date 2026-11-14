@@ -1,0 +1,37 @@
+SF_MEMORY_ORIGINAL_C17_DISCRIMINATOR {"originalReturned":false,"replayStatus":"unavailable","corruptedCaptureOriginalReturned":false,"corruptedCaptureReplayStatus":"unavailable","sameOutboxKeyAndPayload":true,"sameRequestKey":true,"lightCaseAcl":true,"scans":1,"nativeSessionWitness":false}
+SF_MEMORY_ORIGINAL_C17_PROOF {"scenario":"bytes-capture-principal","auditDigest":"9e078e8bc055c88400f82b16d33430c1a63071e5d52921e2f77b166fb4d9e914","counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"intactCaptureRestored":true,"lightCaseAcl":true,"nativeSessionWitness":false}
+(pass) C17 original and settled replay with light case ACL revalidate bytes and immutable captures without effects [52616.75ms]
+SF_MEMORY_ORIGINAL_ALL_DEPENDENCIES_PROOF {"requestedSource":"A","removedAndRecreatedSource":"B","sameAssetId":true,"incarnationChanged":true,"independentARead":"fresh","counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"auditDigest":"5810ae52051196b94f2c417315254fc77534cb978bfa6e7a304c305134254312","lightCaseAcl":true,"nativeSessionWitness":false}
+(pass) C17 original A and light replay require every current dependency after B deletion and same-ID reincarnation [90299.04ms]
+(pass) Installed original accepts intact sources and the real initializeAtlas continuity callback without recursion [21441.40ms]
+SF_MEMORY_ORIGINAL_INSTALLED_PROOF {"scenario":"historical-corrupt","historical":"accepted","corrupted":"refused","immutableCapture":true,"auditDigest":"70b4c801ea624eea0aacea04e8ccd4e20cb9edc992e3554ba0a5df6709aa08c2","nativeSessionWitness":false}
+(pass) Installed original keeps legitimate C12 history and refuses a corrupted immutable capture [14203.48ms]
+SF_MEMORY_ORIGINAL_INSTALLED_PROOF {"scenario":"committed-A-pending-B","originalA":"accepted","replayA":"already-committed","recall":"unavailable","eventB":"pending","atlasUnchanged":true,"outboxUnchanged":true,"auditDigest":"34709cf476c82d34ca4af984248600e9c0778e4a7ec1639b1790379376577907","nativeSessionWitness":false}
+(pass) Installed original and exact replay retain committed event A while later event B remains pending [29382.83ms]
+(pass) Installed original reauthorizes the same admitted call after principal revocation [20317.94ms]
+(pass) Installed original rejects substituted binding, principal, lease, case and incarnation while retaining the authentic positive [20254.58ms]
+(pass) Installed original fences headers after the final real revalidation [29135.68ms]
+(pass) Installed original fences request after the final real revalidation [28632.13ms]
+(pass) Installed original fences abort after the final real revalidation [28474.68ms]
+(pass) Installed original fences finished-lease after the final real revalidation [28486.46ms]
+(pass) Installed original refuses revocation after the last real source resolution before egress [28312.54ms]
+SF_MEMORY_REPLAY_LATE_FENCE {"mutation":"headers","result":"unavailable","realRevalidations":2897,"mutationAfterLastRevalidation":true,"sameReferenceAndKey":true,"counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+SF_MEMORY_REPLAY_LATE_FENCE {"mutation":"request","result":"unavailable","realRevalidations":2897,"mutationAfterLastRevalidation":true,"sameReferenceAndKey":true,"counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+SF_MEMORY_REPLAY_LATE_FENCE {"mutation":"abort","result":"unavailable","realRevalidations":2897,"mutationAfterLastRevalidation":true,"sameReferenceAndKey":true,"counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+SF_MEMORY_REPLAY_LATE_FENCE {"mutation":"finished-lease","result":"unavailable","realRevalidations":2897,"mutationAfterLastRevalidation":true,"sameReferenceAndKey":true,"counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+(pass) Settled replay fences late headers, Request identity, abort and finished lease after real revalidation [150451.45ms]
+SF_MEMORY_REPLAY_LATE_CREDENTIAL_REVOCATION {"result":"unavailable","realDocumentResolutions":3,"sourceWasFreshBeforeRevocation":true,"credentialRevokedAfterLastResolution":true,"sameReferenceAndKey":true,"auditDigest":"aed710d4075e2bc2dec7ae7e04dd676b981e471badb8a5870f3ebe8bc0634199","counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+(pass) Settled replay refuses actual credential revocation after the last real document resolution [30790.01ms]
+SF_MEMORY_REPLAY_LATE_CAPTURE_CORRUPTION {"result":"unavailable","realDocumentResolutions":3,"corruptionAfterLastResolution":true,"captureDigestsPreserved":true,"noAutomaticRepair":true,"restoredReplay":"already-committed","corruptedAuditDigest":"90239b760128dff20d1af48dfdbfbd0e5049b00f9d66821ade41a600ecb61c56","counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+(pass) Settled replay refuses capture corruption after the last real source resolution without repairing it [40166.24ms]
+SF_MEMORY_INTEGRITY_REVOCATION_TAIL {"boundary":"producer.prepare","positive":"ok","revoked":"unavailable","completedCanonicalReads":2,"nativeExecution":false}
+(pass) Memory integrity revocation tail refuses producer preparation after an authorized historical positive [24578.88ms]
+SF_MEMORY_INTEGRITY_REVOCATION_TAIL {"boundary":"verifier.verify","positive":"ok","revoked":"unavailable","completedCanonicalReads":2,"nativeExecution":false}
+(pass) Memory integrity revocation tail refuses verification after an authorized historical positive [25042.15ms]
+SF_MEMORY_INTEGRITY_REVOCATION_TAIL {"boundary":"proof.acceptsOutput","positive":"ok","revoked":"unavailable","completedCanonicalReads":4,"nativeExecution":false}
+(pass) Memory integrity revocation tail refuses the same output proof after authorized historical acceptance [47084.18ms]
+omni positive control [6f0493ed950e4b02ff70887bf93b3c5f]: pass (declared: 18 test(s) in Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts, Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts, Sucafinav1/test/product/memory-original-reauthorization/replay-fences.test.ts, Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts); 36 omni spawn(s), 0 delegated.
+ 18 pass
+ 0 fail
+ 311 expect() calls
+Ran 18 tests across 4 files. [710.19s]

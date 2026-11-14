@@ -1,0 +1,571 @@
+{
+  "schema": "sf2h.mission40.reading-and-criteria.v1",
+  "mission": 40,
+  "finding": "M35-C17-ORIGINAL-REVALIDATION",
+  "state": "HANDOFF",
+  "consumer": "session33; sole sf2-stack integrator",
+  "campaign": {
+    "id": "sf2h-integral-20261112",
+    "T0": "2026-11-13T04:01:10Z",
+    "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "fullScopePreserved": {
+      "workPackages": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "criteria": 1610
+    },
+    "globalAcceptance": "NOT_GRANTED"
+  },
+  "readCoverage": {
+    "provenance": "Team coverage recorded by root in AUTHORITY.json; auxiliary reading and static review do not constitute independent FINAL acceptance.",
+    "authorityRecord": {
+      "ref": "0706b084e87bd78758f445e6283541d8eb79e783",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/memory-original-reauthorization/AUTHORITY.json",
+      "blob": "335a0f1f8bf8844db0969ace630c1610d74ba2ec"
+    },
+    "rootAgents": {
+      "path": "AGENTS.md",
+      "ref": "539a3c7f95174190f783debc74e3694d84ca8653",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    "nestedAgents": "No AGENTS.md found at modules/, modules/sucafina/, Sucafinav1/, test/, or test/product/ on the received source head.",
+    "planningRoot": "modules/sucafina/Sucafinav1/docs/sf2h-plan/",
+    "planningFiles": [
+      {
+        "path": "START.md",
+        "blob": "522782bb7e113124a937d7ef17313032be9d6850"
+      },
+      {
+        "path": "WORKFLOW.md",
+        "blob": "043205bee6031b4517a98591b3588fca0ab12925"
+      },
+      {
+        "path": "execution/COMMON.md",
+        "blob": "d61f32af03fe10747a50274233f953af044decf6"
+      },
+      {
+        "path": "execution/actors/S0-B.json",
+        "blob": "7597a7e508228ac2878a9061887ac77fc70ad009",
+        "bytes": 488411
+      },
+      {
+        "path": "specs/product-acceptance.md",
+        "blob": "ded082688fce327def0b48968fa3b89a5831029c"
+      },
+      {
+        "path": "specs/resident-runtime.md",
+        "blob": "033737b1051b23443e633df7874c550629bf55a1"
+      }
+    ],
+    "fullActorPackTeamCoverage": {
+      "root": "All keys except the explicitly delegated contents",
+      "pack_completeness": [
+        "resident",
+        "resident_ui",
+        "numeric_oracles",
+        "execution_proofs",
+        "mandatory_appendices"
+      ]
+    },
+    "mission": {
+      "ref": "98e6c9c4847d0f3239a0f9cf1fcc1afd6fbb338b",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/memory-original-reauthorization.json",
+      "blob": "412a17f0af27ba66d4a8d8c79823752db3bf67d6",
+      "continuationCommonBlob": "7839082081554eb288758460bdd8ce52529ba7da"
+    },
+    "mission13Terminal": {
+      "ref": "539a3c7f95174190f783debc74e3694d84ca8653",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/HANDOFF.md",
+      "blob": "fa98e8cbf022258750171d38628dae2fd59e2451"
+    },
+    "mission35": {
+      "ref": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+      "root": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-process-restart/",
+      "files": [
+        {
+          "path": "HANDOFF-TERMINAL.json",
+          "blob": "dd8de4d0453220a0b6cd58ae9d3b2fad778f47a0"
+        },
+        {
+          "path": "HANDOFF-TERMINAL.md",
+          "blob": "9d520f2540df5e83cf771a3480dcca4fc5b7ff9a"
+        },
+        {
+          "path": "INPUTS-AND-PATCH.json",
+          "blob": "3bec7adc60eacbfe3732912e19ca7648c92c0830"
+        },
+        {
+          "path": "VALIDATION-REQUESTS.json",
+          "blob": "f1689971140942918c21357abc49902aebeddc6a"
+        },
+        {
+          "path": "owner-proposal/manifest.json",
+          "blob": "a3f6f89f34f56870ec34a59f07ed575abec9fba7"
+        },
+        {
+          "path": "owner-proposal/0001-public-original-and-replay-reauthorization.patch",
+          "blob": "631006f834a8a023e83d5af6f6e65355d9be2171",
+          "sha256": "22b2878b3790e69651b567ce4ddbae13fd223bb45dbfa8900530745ef7dd0765"
+        }
+      ],
+      "proposalStatus": "PROPOSED_NOT_APPLIED_NOT_RUN; requires owner adaptation and proof",
+      "staticDesignFinding": "Installed initializeAtlas.caseForEvidence calls memory.readOriginal. Public current-source authorization must preserve a private integrity lookup and avoid recursive historical resolution."
+    }
+  },
+  "candidateIdentity": {
+    "source": {
+      "branch": "astra-wp10",
+      "pr": 29,
+      "receivedHead": "539a3c7f95174190f783debc74e3694d84ca8653",
+      "receivedTree": "6e10a83bb6d63664aa729dc6f3f2bcbc7ff92ceb",
+      "W": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+      "tree": "f80bf7b2bc24966a9709ed2ab16bae6c93d24b94",
+      "S": "33d829f96c2f4cad74d7610da089c4aa1162d4ba",
+      "rule": "Exact final source product/runtime/tests. The delivery is a documentation-only direct child; no product PASS is transferred across changed bytes.",
+      "Stree": "210c902a04fc114f3f917685ae7f16c31d226715"
+    },
+    "composed": {
+      "base": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+      "baseTree": "d34dba1f7eca5a1bce546a0b6fab9d9ec5aef5b7",
+      "record": "9b51c8ee132541ed837eac909611b70c1b991bc3",
+      "W": "9902a8f2a3c3ca0b11bae17c7c369fdb0ed22732",
+      "tree": "856c1913e383d48d9392ac089722b45cde41a49b",
+      "S": "57882fd8ecabb9b3a9e458ea644c81260fbf514a",
+      "rule": "Unreferenced proof candidate over the entire pinned C10 tree with exactly four overlays: the two identical source runtime postimages and exact published35 test/helper blobs. No own tests in this composed candidate and no sf2-stack ref write.",
+      "Stree": "7fc0b5cd838251166cdcdca8094efdcf0e9c5c34"
+    },
+    "runtimePreimagesEqualOnSourceAndC10": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "blob": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993",
+        "postimageBlob": "390bce2594e39a28defce1d47fafa0d7291e940e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "blob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+        "postimageBlob": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d"
+      }
+    ],
+    "immutable35Dependencies": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "ref": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+        "blob": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9",
+        "sha256": "5b5cababd46f64fc8b7187df3a24da7cab832276f843a2f4b314e0a7b27dd4ef",
+        "bytes": 43863
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+        "ref": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+        "blob": "65c5fd04f6af34a241e6cc0bd40cd968cdc6e353",
+        "sha256": "87915c7647c66d457be91176bbc8a2d566ce7e1bb1afe1f643e8033c1e6ce1ce",
+        "bytes": 14203
+      }
+    ]
+  },
+  "testMatrix": {
+    "state": "PASS",
+    "expectedOwnCaseCount": 15,
+    "root": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/",
+    "cases": [
+      {
+        "id": "I01",
+        "file": "installed-original.test.ts",
+        "scope": "Intact source and event originals; real installed initializeAtlas callback and continuity complete without recursion",
+        "result": "PASS",
+        "run": 43650471583
+      },
+      {
+        "id": "I02",
+        "file": "installed-original.test.ts",
+        "scope": "Legitimate C12 historical capture remains readable; corrupted Atlas projection with unchanged digest is refused without rewriting",
+        "result": "PASS",
+        "run": 43650471583
+      },
+      {
+        "id": "I03",
+        "file": "installed-original.test.ts",
+        "scope": "Committed A original and exact replay survive later pending B; public whole-case recall keeps its pending gate; Atlas/outbox unchanged",
+        "result": "PASS",
+        "run": 43650471583
+      },
+      {
+        "id": "I04",
+        "file": "installed-original.test.ts",
+        "scope": "Same-call principal revocation refuses original; old lease stays invalid and a new real admission restores access",
+        "result": "PASS",
+        "run": 43650471583
+      },
+      {
+        "id": "I05",
+        "file": "installed-original.test.ts",
+        "scope": "Frozen real bindings; forged principal/accessRevision/lease/case/incarnation refused while authentic call remains valid",
+        "result": "PASS",
+        "run": 43650471583
+      },
+      {
+        "id": "I06",
+        "file": "installed-original.test.ts",
+        "scope": "Headers mutate after the final real revalidation",
+        "result": "PASS",
+        "run": 43650471583
+      },
+      {
+        "id": "I07",
+        "file": "installed-original.test.ts",
+        "scope": "Request identity changes after final real revalidation, with equal header values",
+        "result": "PASS",
+        "run": 43650471583
+      },
+      {
+        "id": "I08",
+        "file": "installed-original.test.ts",
+        "scope": "Abort after final real revalidation",
+        "result": "PASS",
+        "run": 43650471583
+      },
+      {
+        "id": "I09",
+        "file": "installed-original.test.ts",
+        "scope": "Lease finishes after final real revalidation",
+        "result": "PASS",
+        "run": 43650471583
+      },
+      {
+        "id": "I10",
+        "file": "installed-original.test.ts",
+        "scope": "Principal revocation after final real source resolution, before egress",
+        "result": "PASS",
+        "run": 43650471583
+      },
+      {
+        "id": "D01",
+        "file": "document-replay.test.ts",
+        "scope": "Real C17 bytes/capture integrity and principal/case/incarnation negatives; exact replay with light case ACL and unchanged append/scanner/receipt counts",
+        "result": "PASS",
+        "run": 43650471583
+      },
+      {
+        "id": "D02",
+        "file": "document-replay.test.ts",
+        "scope": "A remains independently fresh but original/replay require dependency B after physical deletion and same-ID reincarnation",
+        "result": "PASS",
+        "run": 43650471583
+      },
+      {
+        "id": "R01",
+        "file": "replay-fences.test.ts",
+        "scope": "Settled replay fences headers, Request identity, abort and lease after last real revalidation; new valid admissions retain exact receipt",
+        "result": "PASS",
+        "run": 43650471583
+      },
+      {
+        "id": "R02",
+        "file": "replay-fences.test.ts",
+        "scope": "Real credential logout after final authorized document resolution refuses settled replay without effect",
+        "result": "PASS",
+        "run": 43650471583
+      },
+      {
+        "id": "R03",
+        "file": "replay-fences.test.ts",
+        "scope": "Capture corrupted after final real document resolution; immutable digest/ref retained, no read-side effect, same-call positive after explicit test restoration",
+        "result": "PASS",
+        "run": 43650471583
+      }
+    ],
+    "acceptanceMap": [
+      {
+        "criterion": "Current case/source/authority/integrity before original egress",
+        "cases": [
+          "I01",
+          "I02",
+          "I04",
+          "I05",
+          "D01",
+          "D02",
+          "R03"
+        ],
+        "status": "PASS",
+        "run": 43650471583
+      },
+      {
+        "criterion": "Preserve legitimate history and immutable originals; avoid installed callback recursion",
+        "cases": [
+          "I01",
+          "I02",
+          "I03"
+        ],
+        "status": "PASS",
+        "run": 43650471583
+      },
+      {
+        "criterion": "Already-committed replay reauthorizes all sources without append/scanner/new receipt/effect",
+        "cases": [
+          "I03",
+          "D01",
+          "D02",
+          "R01",
+          "R02",
+          "R03"
+        ],
+        "status": "PASS",
+        "run": 43650471583
+      },
+      {
+        "criterion": "Retain Request/headers/binding/lease/abort and await fences, including late revocation",
+        "cases": [
+          "I04",
+          "I05",
+          "I06",
+          "I07",
+          "I08",
+          "I09",
+          "I10",
+          "R01",
+          "R02",
+          "R03"
+        ],
+        "status": "PASS",
+        "run": 43650471583
+      },
+      {
+        "criterion": "Original35 full file on coherent composition; assertions and process proof unchanged",
+        "file": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "expectedCases": 2,
+        "status": "PASS",
+        "run": 43651719591
+      }
+    ],
+    "fixtureBoundary": {
+      "installed": "Unmodified withMemoryIntegrityFixture: real installed business services, C08/SQLite, C12, source issuance, BCS, Atlas and Gitleaks; synthetic case/identity/lifecycle premises declared by inherited fixture.",
+      "documents": "Real local credentials, document extraction/confirmation, C08/SQLite, outbox and Atlas with real Gitleaks; WP06 fixture substitutes ingress asset scan and uses declared synthetic supplier/ledger premises.",
+      "faultHooks": "Delegate to real readers and revalidators, then inject faults; no permissive replacement grant.",
+      "nativeSessionWitness": false
+    },
+    "additionalPreservationProof": {
+      "run": 43650471583,
+      "cases": 3,
+      "result": "PASS",
+      "source": "wp10/memory-integrity/revocation-tail.test.ts",
+      "doesNotClose": [
+        "MI07",
+        "AM05",
+        "full finance journey",
+        "direct stale.preflight/preserve"
+      ]
+    }
+  },
+  "validationProtocol": {
+    "interface": {
+      "ref": "98e6c9c4847d0f3239a0f9cf1fcc1afd6fbb338b",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
+      "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb"
+    },
+    "dispatcherBlobs": {
+      ".github/workflows/test-ci.yml": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "script/test-ci.ts": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "script/test-ci-request.ts": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "script/test-ci-location.ts": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee"
+    },
+    "transport": "GitHub MCP only; CAS expected head; fast-forward; no force or git/gh remote operations",
+    "dedup": "Before dispatch compare product tree, normalized selection, config/env/fixtures and attempt against recent/in-flight runs. Reattach equivalent run; at most one WP10 test run in flight.",
+    "snapshot": "S descends from exact W with only .ci-run.json added. Create ci-run-linux-astra-wp10-* directly at S; compare W/S and record exact branch/head_sha/run/jobs.",
+    "results": "Read actual selection, jobs/logs/artifacts and nonce-bound Omni verdict. Failure/cancellation/empty selection is not PASS. Do not transfer green across material changes.",
+    "order": [
+      "Surgical real positive/negative discriminators",
+      "Unmodified35 full file on coherent composed closure after material fix"
+    ],
+    "budgets": {
+      "installedFixtureMs": 105000,
+      "installedBunMs": 120000,
+      "newDocumentAndReplayBunMs": 180000,
+      "original35TestMs": 180000,
+      "original35ChildCooperativeMs": 90000,
+      "original35ChildBoundMs": 120000,
+      "historicalMI07CooperativeMs": 225000,
+      "historicalMI07BunMs": 240000,
+      "existingBudgetsIncreased": false
+    },
+    "typecheck": {
+      "workflow": ".github/workflows/astra-wp10-check.yml",
+      "blob": "56ccb98dd74d3acbfdb43645bd9d54c9bf18816d",
+      "branch": "astra-check-wp10",
+      "envelope": ".astra-wp10-check.json with productSha and current devSha; first parent exact product, operational previous check may be second parent to preserve fast-forward history",
+      "newTestsIncludedBy": "modules/sucafina/Sucafinav1/tsconfig.json includes test/**/*.ts; blob51895f3c254e6020d116ca73d4a1c690f7562169",
+      "supplementalWp10Limit": "test/product/wp10/tsconfig.json includes only that older subtree; its PASS alone cannot prove the new namespace",
+      "documentaryModeLimit": "Do not use candidateSha mode: its permitted receipt path is WP10/, whereas mission40 owns receipts/memory-original-reauthorization/",
+      "sourceResult": "CHECK2: FULL_SUCAFINA_FAIL_13_INHERITED_0_OWN; exact diagnostic baseline preserved; CLI/WP10/Atlas generation/boundary/spawn/guards PASS",
+      "composedResult": "NOT_RUN; C10 has no wp10-check workflow and mission40 did not add workflows or dispatch epic. Source typechecks do not qualify this composed closure.",
+      "guards": "Existing package bun typecheck, generation, spawn imports and check:guards --base origin/dev; retain inherited failures, no ignores/approval fabrication"
+    },
+    "runs": [
+      {
+        "name": "M40-B01",
+        "file": "runs/M40-B01.json",
+        "W": "0706b084e87bd78758f445e6283541d8eb79e783",
+        "Wtree": "fbdc07df366bac4e0e81133cbb12f61e7285ab1d",
+        "S": "e8c8916b859e2cbfc281948f225dce223a4b8926",
+        "Stree": "ac91bb7311fdb87f86a322f3e926b2779f34d4e8",
+        "runId": 43648633283,
+        "jobId": 132611922461,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43648633283",
+        "conclusion": "failure",
+        "pass": 0,
+        "fail": 2,
+        "expects": 37,
+        "seconds": 13.88,
+        "omni": "pass",
+        "expectedCounterproof": true
+      },
+      {
+        "name": "M40-F01",
+        "file": "runs/M40-F01.json",
+        "W": "ecbc9b8b5902e3d43891631cd90d70faa340e6c4",
+        "Wtree": "714d43c0a9e7153c26d8c4aefa55a8a479e8e628",
+        "S": "02108777fcd4f4e01beb5ec9bdd41a4e4bd419b3",
+        "Stree": "c84625c3e87324201c40971e16a4b14fb3b99071",
+        "runId": 43649218257,
+        "jobId": 132613718305,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649218257",
+        "conclusion": "success",
+        "pass": 15,
+        "fail": 0,
+        "expects": 260,
+        "seconds": 688.05,
+        "omni": {
+          "status": "pass",
+          "declared": 15,
+          "spawns": 30,
+          "delegated": 0
+        }
+      },
+      {
+        "name": "CHECK40-1",
+        "file": "checks/CHECK40-1.json",
+        "W": "ecbc9b8b5902e3d43891631cd90d70faa340e6c4",
+        "Wtree": "714d43c0a9e7153c26d8c4aefa55a8a479e8e628",
+        "S": "0fe6fa076a2bfa8b33fa5442c47627f3073645aa",
+        "Stree": "e5ca45266b1f02c97337d54b7f2ebf40554b1907",
+        "runId": 43649219986,
+        "jobId": 132613723642,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649219986",
+        "conclusion": "failure"
+      },
+      {
+        "name": "CHECK40-2",
+        "file": "checks/CHECK40-2.json",
+        "W": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+        "Wtree": "f80bf7b2bc24966a9709ed2ab16bae6c93d24b94",
+        "S": "3022e0945a79f5bd9faf26c4f6a4f3be903e428a",
+        "Stree": "ecc0ea2ee48e797c747bd32234ddeacd926d3984",
+        "runId": 43649819285,
+        "jobId": 132615552942,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649819285",
+        "conclusion": "failure",
+        "fullSucafina": "FAIL_13_INHERITED_0_OWN",
+        "otherChecks": "PASS"
+      },
+      {
+        "name": "M40-F02",
+        "file": "runs/M40-F02.json",
+        "W": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+        "Wtree": "f80bf7b2bc24966a9709ed2ab16bae6c93d24b94",
+        "S": "33d829f96c2f4cad74d7610da089c4aa1162d4ba",
+        "Stree": "210c902a04fc114f3f917685ae7f16c31d226715",
+        "runId": 43650471583,
+        "jobId": 132617571523,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650471583",
+        "conclusion": "success",
+        "pass": 18,
+        "fail": 0,
+        "expects": 311,
+        "seconds": 710.19,
+        "omni": {
+          "status": "pass",
+          "declared": 18,
+          "spawns": 36,
+          "delegated": 0
+        }
+      },
+      {
+        "name": "M40-35",
+        "file": "runs/M40-35.json",
+        "W": "9902a8f2a3c3ca0b11bae17c7c369fdb0ed22732",
+        "Wtree": "856c1913e383d48d9392ac089722b45cde41a49b",
+        "S": "57882fd8ecabb9b3a9e458ea644c81260fbf514a",
+        "Stree": "7fc0b5cd838251166cdcdca8094efdcf0e9c5c34",
+        "runId": 43651719591,
+        "jobId": 132621440454,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43651719591",
+        "conclusion": "success",
+        "pass": 2,
+        "fail": 0,
+        "expects": 95,
+        "seconds": 75.19,
+        "omni": {
+          "status": "pass",
+          "declared": 2,
+          "spawns": 5,
+          "delegated": 0
+        }
+      }
+    ]
+  },
+  "preservedLimits": {
+    "MI07": {
+      "status": "INHERITED_FAIL_NOT_CLOSED",
+      "run": 43637227753,
+      "W": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+      "S": "e63511737be687a2e42f9a15706a229db42a31c1",
+      "reason": "Original historical test reached unchanged225000 deadline before corruption and final revocation assertions; short40 PASS cannot relabel it"
+    },
+    "original35": {
+      "status": "HISTORICAL_FAILURE_PRESERVED; REMAINING_C17_BLOCKER_RESOLVED_BY_M40_ON_RECORDED_CLOSURE",
+      "run": 43645747336,
+      "job": 132602998463,
+      "W": "32bcb308059283a0f2d80f70b5b06f75fba1f427",
+      "S": "fd9cb75b89456798e48c1f8e84ca4f3e4c6e524c",
+      "restart": "Component PASS: parent4089/child4140/exit0",
+      "remainingThen": "C17 readOriginal bytes-change refusal failed; replay hypothesis not reached",
+      "historicalStatus": "INHERITED_1_PASS_1_FAIL",
+      "resolution": {
+        "W": "9902a8f2a3c3ca0b11bae17c7c369fdb0ed22732",
+        "S": "57882fd8ecabb9b3a9e458ea644c81260fbf514a",
+        "runId": 43651719591,
+        "pass": 2,
+        "fail": 0,
+        "expects": 95,
+        "originalBytesUnchanged": true
+      }
+    },
+    "AM05": "OPEN; real native Session/binding/provider or Task/SkillLoadReceipt/consumer still required",
+    "nativeSessionWitness": false,
+    "independentCampaignFinalReviews": "NOT_CLAIMED",
+    "globalRelease": false
+  },
+  "writeAndHandoffBoundary": {
+    "productPaths": [
+      "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
+    ],
+    "ownTestsAndReceiptsOnly": true,
+    "persistence34": "Preserved; no local-store, persistence contract, state-provider or case-port edits",
+    "otherWriters": "Preserved; no source35 assertions/helper edits, Atlas engines/scanner boundary, CLI host, C12, Decision, Reports, Procurement or workflow changes",
+    "deliveryRequired": [
+      "Source pre/post blobs",
+      "Complete patch against exact bundle preimages",
+      "Own test blobs and unchanged35 dependency manifest",
+      "W/S/request/run/job/result evidence",
+      "Criterion dispositions and remaining proof gaps",
+      "Terminal handoff to session33"
+    ],
+    "terminalAuthority": "HANDOFF / ENDED upon publication of containing documentary commit; no active source writer; sole integration authority session33",
+    "localProductTests": 0,
+    "localTypechecks": 0,
+    "merge": false,
+    "deploy": false,
+    "restart": false
+  },
+  "findingStatus": "RESOLVED_ON_RECORDED_CLOSURE"
+}

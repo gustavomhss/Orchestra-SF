@@ -1,0 +1,343 @@
+{
+  "W": "ecbc9b8b5902e3d43891631cd90d70faa340e6c4",
+  "Wtree": "714d43c0a9e7153c26d8c4aefa55a8a479e8e628",
+  "S": "02108777fcd4f4e01beb5ec9bdd41a4e4bd419b3",
+  "Stree": "c84625c3e87324201c40971e16a4b14fb3b99071",
+  "branch": "ci-run-linux-astra-wp10-ecbc9b8b-c852e34d-m40f01",
+  "runId": 43649218257,
+  "jobId": 132613718305,
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts",
+      "./Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "./Sucafinav1/test/product/memory-original-reauthorization/replay-fences.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "requestSha256": "c852e34def094e61c83202af57f169e2b0eb6b16cc79c050385313797d5a2372",
+  "checkS": "0fe6fa076a2bfa8b33fa5442c47627f3073645aa",
+  "conclusion": "success",
+  "pass": 15,
+  "fail": 0,
+  "expects": 260,
+  "seconds": 688.05,
+  "omni": {
+    "status": "pass",
+    "declared": 15,
+    "spawns": 30,
+    "delegated": 0
+  },
+  "artifacts": [],
+  "requestValidated": true,
+  "tests": [
+    {
+      "result": "PASS",
+      "name": "C17 original and settled replay with light case ACL revalidate bytes and immutable captures without effects",
+      "milliseconds": 57865.11
+    },
+    {
+      "result": "PASS",
+      "name": "C17 original A and light replay require every current dependency after B deletion and same-ID reincarnation",
+      "milliseconds": 101018.92
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original accepts intact sources and the real initializeAtlas continuity callback without recursion",
+      "milliseconds": 24536.27
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original keeps legitimate C12 history and refuses a corrupted immutable capture",
+      "milliseconds": 15948.75
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original and exact replay retain committed event A while later event B remains pending",
+      "milliseconds": 33390.54
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original reauthorizes the same admitted call after principal revocation",
+      "milliseconds": 23395.33
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original rejects substituted binding, principal, lease, case and incarnation while retaining the authentic positive",
+      "milliseconds": 22750.68
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original fences headers after the final real revalidation",
+      "milliseconds": 32851.66
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original fences request after the final real revalidation",
+      "milliseconds": 32277.96
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original fences abort after the final real revalidation",
+      "milliseconds": 32235.87
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original fences finished-lease after the final real revalidation",
+      "milliseconds": 32313.8
+    },
+    {
+      "result": "PASS",
+      "name": "Installed original refuses revocation after the last real source resolution before egress",
+      "milliseconds": 31630.59
+    },
+    {
+      "result": "PASS",
+      "name": "Settled replay fences late headers, Request identity, abort and finished lease after real revalidation",
+      "milliseconds": 167750.75
+    },
+    {
+      "result": "PASS",
+      "name": "Settled replay refuses actual credential revocation after the last real document resolution",
+      "milliseconds": 34225.98
+    },
+    {
+      "result": "PASS",
+      "name": "Settled replay refuses capture corruption after the last real source resolution without repairing it",
+      "milliseconds": 45308.14
+    }
+  ],
+  "proofs": [
+    {
+      "marker": "SF_MEMORY_ORIGINAL_C17_DISCRIMINATOR",
+      "payload": {
+        "originalReturned": false,
+        "replayStatus": "unavailable",
+        "corruptedCaptureOriginalReturned": false,
+        "corruptedCaptureReplayStatus": "unavailable",
+        "sameOutboxKeyAndPayload": true,
+        "sameRequestKey": true,
+        "lightCaseAcl": true,
+        "scans": 1,
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_ORIGINAL_C17_PROOF",
+      "payload": {
+        "scenario": "bytes-capture-principal",
+        "auditDigest": "dbe45e9be4333773bded7a3685273bb2c93eda3c61b862ba6d723cca68bfdebe",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "intactCaptureRestored": true,
+        "lightCaseAcl": true,
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_ORIGINAL_ALL_DEPENDENCIES_PROOF",
+      "payload": {
+        "requestedSource": "A",
+        "removedAndRecreatedSource": "B",
+        "sameAssetId": true,
+        "incarnationChanged": true,
+        "independentARead": "fresh",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "auditDigest": "dbb71f57efaa21464aaae3eef0f746f52aff3edd5db56e900fc18c6880e7baaf",
+        "lightCaseAcl": true,
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_ORIGINAL_INSTALLED_PROOF",
+      "payload": {
+        "scenario": "historical-corrupt",
+        "historical": "accepted",
+        "corrupted": "refused",
+        "immutableCapture": true,
+        "auditDigest": "db2691cbc5b47bbc431d6c13856e3f2ec1d1a405d7fce44d4441aec6aa09a732",
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_ORIGINAL_INSTALLED_PROOF",
+      "payload": {
+        "scenario": "committed-A-pending-B",
+        "originalA": "accepted",
+        "replayA": "already-committed",
+        "recall": "unavailable",
+        "eventB": "pending",
+        "atlasUnchanged": true,
+        "outboxUnchanged": true,
+        "auditDigest": "81455a3f637183790e2bae125191ae76dd150040d36b72f95c80800f262ffa84",
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_FENCE",
+      "payload": {
+        "mutation": "headers",
+        "result": "unavailable",
+        "realRevalidations": 2897,
+        "mutationAfterLastRevalidation": true,
+        "sameReferenceAndKey": true,
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_FENCE",
+      "payload": {
+        "mutation": "request",
+        "result": "unavailable",
+        "realRevalidations": 2897,
+        "mutationAfterLastRevalidation": true,
+        "sameReferenceAndKey": true,
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_FENCE",
+      "payload": {
+        "mutation": "abort",
+        "result": "unavailable",
+        "realRevalidations": 2897,
+        "mutationAfterLastRevalidation": true,
+        "sameReferenceAndKey": true,
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_FENCE",
+      "payload": {
+        "mutation": "finished-lease",
+        "result": "unavailable",
+        "realRevalidations": 2897,
+        "mutationAfterLastRevalidation": true,
+        "sameReferenceAndKey": true,
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_CREDENTIAL_REVOCATION",
+      "payload": {
+        "result": "unavailable",
+        "realDocumentResolutions": 3,
+        "sourceWasFreshBeforeRevocation": true,
+        "credentialRevokedAfterLastResolution": true,
+        "sameReferenceAndKey": true,
+        "auditDigest": "f7c061ec86820dfcb4197c27dd9215f1901888a560afef5b9104a023462f15d3",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      }
+    },
+    {
+      "marker": "SF_MEMORY_REPLAY_LATE_CAPTURE_CORRUPTION",
+      "payload": {
+        "result": "unavailable",
+        "realDocumentResolutions": 3,
+        "corruptionAfterLastResolution": true,
+        "captureDigestsPreserved": true,
+        "noAutomaticRepair": true,
+        "restoredReplay": "already-committed",
+        "corruptedAuditDigest": "50e06f6c6d78b544aeb97718b0d5878e405f0075d6a46a1bf2d67351c9847ea7",
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "nativeSessionWitness": false
+      }
+    }
+  ],
+  "jobCleanup": {
+    "id": 132617135109,
+    "name": "cleanup",
+    "status": "completed",
+    "conclusion": "success",
+    "run_id": 43649218257,
+    "logs_url": null,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1
+      },
+      {
+        "name": "Delete the snapshot branch",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3
+      }
+    ]
+  },
+  "testFileCount": 3,
+  "testSkipped": 0
+}

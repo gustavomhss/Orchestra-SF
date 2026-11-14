@@ -1,0 +1,119 @@
+{
+  "schema": "sf2h.mission40.run-index.v1",
+  "mission": 40,
+  "state": "HANDOFF",
+  "finding": "M35-C17-ORIGINAL-REVALIDATION",
+  "findingStatus": "RESOLVED_ON_RECORDED_CLOSURE",
+  "runs": [
+    {
+      "name": "M40-B01",
+      "file": "runs/M40-B01.json",
+      "W": "0706b084e87bd78758f445e6283541d8eb79e783",
+      "Wtree": "fbdc07df366bac4e0e81133cbb12f61e7285ab1d",
+      "S": "e8c8916b859e2cbfc281948f225dce223a4b8926",
+      "Stree": "ac91bb7311fdb87f86a322f3e926b2779f34d4e8",
+      "runId": 43648633283,
+      "jobId": 132611922461,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43648633283",
+      "conclusion": "failure",
+      "pass": 0,
+      "fail": 2,
+      "expects": 37,
+      "seconds": 13.88,
+      "omni": "pass",
+      "expectedCounterproof": true
+    },
+    {
+      "name": "M40-F01",
+      "file": "runs/M40-F01.json",
+      "W": "ecbc9b8b5902e3d43891631cd90d70faa340e6c4",
+      "Wtree": "714d43c0a9e7153c26d8c4aefa55a8a479e8e628",
+      "S": "02108777fcd4f4e01beb5ec9bdd41a4e4bd419b3",
+      "Stree": "c84625c3e87324201c40971e16a4b14fb3b99071",
+      "runId": 43649218257,
+      "jobId": 132613718305,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649218257",
+      "conclusion": "success",
+      "pass": 15,
+      "fail": 0,
+      "expects": 260,
+      "seconds": 688.05,
+      "omni": {
+        "status": "pass",
+        "declared": 15,
+        "spawns": 30,
+        "delegated": 0
+      }
+    },
+    {
+      "name": "CHECK40-1",
+      "file": "checks/CHECK40-1.json",
+      "W": "ecbc9b8b5902e3d43891631cd90d70faa340e6c4",
+      "Wtree": "714d43c0a9e7153c26d8c4aefa55a8a479e8e628",
+      "S": "0fe6fa076a2bfa8b33fa5442c47627f3073645aa",
+      "Stree": "e5ca45266b1f02c97337d54b7f2ebf40554b1907",
+      "runId": 43649219986,
+      "jobId": 132613723642,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649219986",
+      "conclusion": "failure"
+    },
+    {
+      "name": "CHECK40-2",
+      "file": "checks/CHECK40-2.json",
+      "W": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+      "Wtree": "f80bf7b2bc24966a9709ed2ab16bae6c93d24b94",
+      "S": "3022e0945a79f5bd9faf26c4f6a4f3be903e428a",
+      "Stree": "ecc0ea2ee48e797c747bd32234ddeacd926d3984",
+      "runId": 43649819285,
+      "jobId": 132615552942,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649819285",
+      "conclusion": "failure",
+      "fullSucafina": "FAIL_13_INHERITED_0_OWN",
+      "otherChecks": "PASS"
+    },
+    {
+      "name": "M40-F02",
+      "file": "runs/M40-F02.json",
+      "W": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+      "Wtree": "f80bf7b2bc24966a9709ed2ab16bae6c93d24b94",
+      "S": "33d829f96c2f4cad74d7610da089c4aa1162d4ba",
+      "Stree": "210c902a04fc114f3f917685ae7f16c31d226715",
+      "runId": 43650471583,
+      "jobId": 132617571523,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650471583",
+      "conclusion": "success",
+      "pass": 18,
+      "fail": 0,
+      "expects": 311,
+      "seconds": 710.19,
+      "omni": {
+        "status": "pass",
+        "declared": 18,
+        "spawns": 36,
+        "delegated": 0
+      }
+    },
+    {
+      "name": "M40-35",
+      "file": "runs/M40-35.json",
+      "W": "9902a8f2a3c3ca0b11bae17c7c369fdb0ed22732",
+      "Wtree": "856c1913e383d48d9392ac089722b45cde41a49b",
+      "S": "57882fd8ecabb9b3a9e458ea644c81260fbf514a",
+      "Stree": "7fc0b5cd838251166cdcdca8094efdcf0e9c5c34",
+      "runId": 43651719591,
+      "jobId": 132621440454,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43651719591",
+      "conclusion": "success",
+      "pass": 2,
+      "fail": 0,
+      "expects": 95,
+      "seconds": 75.19,
+      "omni": {
+        "status": "pass",
+        "declared": 2,
+        "spawns": 5,
+        "delegated": 0
+      }
+    }
+  ]
+}

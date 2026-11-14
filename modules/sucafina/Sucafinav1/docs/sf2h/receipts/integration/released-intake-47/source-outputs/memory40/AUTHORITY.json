@@ -1,0 +1,77 @@
+{
+  "schema": "sf2h.mission40.authority.v1",
+  "mission": 40,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "missionCommit": "98e6c9c4847d0f3239a0f9cf1fcc1afd6fbb338b",
+  "missionBlob": "412a17f0af27ba66d4a8d8c79823752db3bf67d6",
+  "leaseEpoch": "memory-original-browser40",
+  "state": "ACTIVE_BOUNDED_CONTINUATION",
+  "actor": "S0-B",
+  "executionIdentity": "ChatGPT root mission40; not a native Session/Goal",
+  "branch": "astra-wp10",
+  "pr": 29,
+  "receivedHead": "539a3c7f95174190f783debc74e3694d84ca8653",
+  "receivedTree": "6e10a83bb6d63664aa729dc6f3f2bcbc7ff92ceb",
+  "previousAuthority": {
+    "mission": 13,
+    "terminal": "539a3c7f95174190f783debc74e3694d84ca8653",
+    "handoffBlob": "fa98e8cbf022258750171d38628dae2fd59e2451",
+    "terminalPRSectionRead": true,
+    "laterPRCommentsObserved": 0
+  },
+  "source35": {
+    "sha": "975c42ec29c15ccd0d4d6fa17aefd44d64bd1eab",
+    "terminalBlob": "dd8de4d0453220a0b6cd58ae9d3b2fad778f47a0",
+    "proposalBlob": "631006f834a8a023e83d5af6f6e65355d9be2171",
+    "status": "PROPOSED_NOT_APPLIED_NOT_RUN"
+  },
+  "readCoverage": {
+    "agents": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "start": "522782bb7e113124a937d7ef17313032be9d6850",
+    "workflow": "043205bee6031b4517a98591b3588fca0ab12925",
+    "common": "d61f32af03fe10747a50274233f953af044decf6",
+    "continuationCommon": "7839082081554eb288758460bdd8ce52529ba7da",
+    "fullActorPack": "7597a7e508228ac2878a9061887ac77fc70ad009",
+    "fullPackTeamCoverage": {
+      "root": "all keys except delegated contents",
+      "pack_completeness": [
+        "resident",
+        "resident_ui",
+        "numeric_oracles",
+        "execution_proofs",
+        "mandatory_appendices"
+      ]
+    },
+    "appendices": [
+      "ded082688fce327def0b48968fa3b89a5831029c",
+      "033737b1051b23443e633df7874c550629bf55a1"
+    ]
+  },
+  "writePaths": [
+    "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+    "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+    "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/memory-original-reauthorization/"
+  ],
+  "reviewFindings": [
+    "Proposal would recurse through installed caseForEvidence -> public readOriginal",
+    "Public egress requires full case/evidence authorization, immutable captures and matching independent observations",
+    "Settled replay must reauthorize current sources and integrity without new append/scanner/effect"
+  ],
+  "consumer": "session33; sole sf2-stack writer",
+  "constraints": {
+    "githubMcpOnly": true,
+    "CAS": true,
+    "force": false,
+    "localTests": false,
+    "workflowEdits": false,
+    "foreignProductEdits": false,
+    "merge": false,
+    "deploy": false,
+    "engineChanges": false,
+    "restart": false,
+    "globalRelease": false
+  }
+}
