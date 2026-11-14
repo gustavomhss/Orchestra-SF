@@ -118,7 +118,7 @@ export function createSfBiHttp(input: {
         const script = (await input.browserScript()).replace(/<\/script/gi, "<\\/script")
         if (!await ui.revalidate(context)) return json({ status: "denied", reason: "authority-changed" }, 403)
         const html = documentHtml("Business intelligence", "dashboard", `<a href="${input.mount}/dashboard">Dashboard</a>`,
-          pageMain({ drawn: true, key: "Business intelligence", index: 0 }, '<section data-sf-bi><p role="status">Loading analyses…</p></section>'), "").replace("</body>", `<script>${script}</script></body>`)
+          pageMain({ drawn: true, key: "Business intelligence", index: 0 }, '<section data-sf-bi><p role="status">Loading analyses…</p></section>'), "").replace("</body>", () => `<script>${script}</script></body>`)
         const policy = htmlPolicy(html).replace("; style-src", ` 'sha256-${createHash("sha256").update(script).digest("base64")}'; style-src`)
         return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": policy, "X-Content-Type-Options": "nosniff" } })
       }
@@ -136,4 +136,5 @@ export function createSfBiHttp(input: {
     } finally { ui.finish(context) }
   }
 }
+
 

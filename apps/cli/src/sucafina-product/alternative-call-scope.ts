@@ -1,3 +1,4 @@
+import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -17,8 +18,9 @@ export function createSfAlternativeCallScope<Value>(input: {
 }) {
   const host = input.authority.host
   const active = new WeakMap<TrustedDomainContext, Scope<Value>>()
+  const execution = new AsyncLocalStorage<Scope<Value>>()
   const admitted = (call: TrustedDomainContext) => call.kind === "native" || input.hasAdmittedInputContext?.(call) === true
-  const current = (call: TrustedDomainContext, scope: Scope<Value>) => active.get(call) === scope &&
+  const current = (call: TrustedDomainContext, scope: Scope<Value>) => active.get(call) === scope && execution.getStore() === scope &&
     host.requestFor(call) === scope.request && !scope.request.signal.aborted && scope.admitted === admitted(call) &&
     scope.binding === digestSfValue([call.kind, call.binding])
   const observedDay = async (request: Request) => {
@@ -59,6 +61,9 @@ export function createSfAlternativeCallScope<Value>(input: {
   }
   const read = async (call: TrustedDomainContext, produce: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
     const scope = active.get(call)
+    // A concurrent holder of the same context is outside this proof's lexical
+    // invocation. It cannot consume the proof or invalidate its owner's scope.
+    if (scope && execution.getStore() !== scope) return { status: "denied", reason: "alternative-call-authority-unavailable" }
     if (!scope) return produce()
     const before = await fence(call, scope)
     if (!before) return { status: "denied", reason: "alternative-call-authority-unavailable" }
@@ -81,7 +86,10 @@ export function createSfAlternativeCallScope<Value>(input: {
     if (active.has(call) || host.requestFor(call) !== request || request.signal.aborted) return { status: "denied", reason: "alternative-call-authority-unavailable" }
     const scope: Scope<Value> = { request, binding: digestSfValue([call.kind, call.binding]), admitted: admitted(call) }
     active.set(call, scope)
-    try { return await work() } finally { if (active.get(call) === scope) active.delete(call) }
+    return execution.run(scope, async () => {
+      try { return await work() } finally { if (active.get(call) === scope) active.delete(call) }
+    })
   }
   return { run, read }
 }
+

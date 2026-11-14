@@ -1,0 +1,99 @@
+{
+  "schema": "sf2h.compose-integration.v1",
+  "state": "IN_PROGRESS",
+  "previous_product": "711af1b7dd6d982759c99fbeaa2b7ceeea20b760",
+  "consumed": [
+    {
+      "pr": 23,
+      "head": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "implementation": "Procurement owned production and 56 executable/test paths already blob-identical in PR29; incoming delta retains monetary export semantics and adds browser journeys.",
+      "new_blobs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+          "sha": "fa365f9d350be341348ab69d789e40779c8b9756"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+          "sha": "3dd5760da92346e267a3cc767c69c4d8bb51b31c"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+          "sha": "a960a2cad432000edf51efcc6764c0c21d60ce07"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+          "sha": "7224825eb470a2f172e7dc32172f83a6b05a5787"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts",
+          "sha": "0f5c3ca429f006855fa25044017d0f8371a8c699"
+        },
+        {
+          "path": "packages/app-shell/e2e/playwright.production.config.ts",
+          "sha": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088"
+        }
+      ],
+      "source_checks": [
+        43534137756,
+        43534795463,
+        43534115446,
+        43536188749
+      ],
+      "source_checks_claim": "Source-only; not reassigned to this candidate."
+    },
+    {
+      "pr": 26,
+      "head": "e7fd8ff797441681f360e7775155a8cc2830280c",
+      "implementation": "Document/import production and services already blob-identical in PR29; consume current FORMATS. Preserve composition's planner evidence adapter and do not import unowned alternative helper.",
+      "new_blobs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/imports/FORMATS.md",
+          "sha": "bf14d63e55549231d956049080e1811ab6a05293"
+        }
+      ],
+      "source_checks": [
+        43556886355,
+        43556882437,
+        43557187051
+      ],
+      "source_checks_claim": "U20 is completed/success despite stale PR body; source proof, not current candidate proof."
+    }
+  ],
+  "owned_fixes": [
+    {
+      "paths": [
+        "apps/cli/src/sucafina-product/bi-call-scope.ts",
+        "apps/cli/src/sucafina-product/alternative-call-scope.ts"
+      ],
+      "reason": "Confine cached projection proof to its lexical invocation, deny overlapping holders and reentry without invalidating the legitimate owner."
+    },
+    {
+      "paths": [
+        "apps/cli/src/sucafina-product/extended-http.ts",
+        "modules/sucafina/Sucafinav1/product/integration/bi-http.ts"
+      ],
+      "reason": "Inject inline bundles with replacement callbacks so dollar replacement tokens remain literal and CSP hashes match emitted bytes."
+    }
+  ],
+  "checks": [],
+  "conflicts_resolved": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "decision": "Preserve published PR29/WP04 blob 4edac56; WP06 overlay would remove productView; owner receives bounded finding."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "decision": "Preserve WP10/WP04 productView+forecastInputs+sourcingInputs; do not wholesale replace with WP06 snapshot."
+    }
+  ],
+  "findings": [
+    {
+      "id": "COMPOSE-WP06-PLANNER-READER",
+      "owner": "WP03/WP06",
+      "state": "OPEN",
+      "reason": "WP06 source-fences.test imports product/planner/evidence-reader.ts absent from owner WP03 and composed head; composition already provides planner-evidence.ts. Need reconcile producer ownership/test target before consuming those two files."
+    }
+  ],
+  "next_action": "Run scoped source-consumer tests plus exact product typecheck/guards; reconcile other published PR deltas and browser journeys.",
+  "global_release": false
+}

@@ -179,6 +179,43 @@ test("BI proof starts only after real UI consumption, clones within one invocati
   } finally { await deadline.close() }
 }, 120_000)
 
+test("BI proof refuses overlapping and reentrant callers without lending or invalidating the owning invocation", async () => {
+  const deadline = compositionTestDeadline("bi-call-scope-lexical")
+  try {
+    const fixture = await prepare(deadline), scope = fixture.scope()
+    const { request, call } = await fixture.admit()
+    const ready = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
+    const pending = deadline.phase("lexical.owner", () => scope.run(request, call, async () => {
+      await fixture.consume(request, call)
+      const first = ok(await scope.read(fixture.selection, call, () => fixture.produce(request, call)), "Owning BI projection")
+      expect(await scope.run(request, call, async () => { throw new Error("Reentrant BI work must not execute") }))
+        .toEqual({ status: "denied", reason: "bi-call-already-active" })
+      ready.resolve()
+      await release.promise
+      const again = ok(await scope.read(fixture.selection, call, () => fixture.produce(request, call)), "Owner retains its proof after overlap")
+      expect(again).toEqual(first)
+      expect(again).not.toBe(first)
+      expect(fixture.counts.produced).toBe(1)
+      return { status: "ok", value: true }
+    }))
+    try {
+      await Promise.race([ready.promise, pending.then(() => { throw new Error("BI owner did not reach its completed proof") })])
+      // These continuations began outside run(), although they share its real
+      // consumed context, Request, actor, source versions and case membership.
+      const reads = await Promise.all([0, 1].map(() => scope.read(fixture.selection, call, () => fixture.produce(request, call))))
+      for (const value of reads) {
+        expect(value).toEqual({ status: "denied", reason: "bi-call-authority-changed" })
+        expect(value).not.toHaveProperty("value")
+      }
+      expect(await scope.run(request, call, async () => { throw new Error("Overlapping BI work must not execute") }))
+        .toEqual({ status: "denied", reason: "bi-call-already-active" })
+      expect(fixture.counts.produced).toBe(1)
+      release.resolve()
+      expect(await pending).toEqual({ status: "ok", value: true })
+    } finally { release.resolve(); await pending }
+  } finally { await deadline.close() }
+}, 120_000)
+
 test("BI proof rejects current case revocation, unversioned C08 result corruption and changed input without repeating a producer", async () => {
   const deadline = compositionTestDeadline("bi-call-scope-state")
   try {
@@ -314,3 +351,4 @@ test("BI egress returns denied after actor revocation, Request abort or lease re
     }
   } finally { await deadline.close() }
 }, 120_000)
+

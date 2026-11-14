@@ -170,8 +170,9 @@ export function createSfExtendedHttp(input: {
       const bootstrapHtml = data === undefined ? "" : `<script type="application/json" data-sf-review-bootstrap>${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`
       const title = mode === "review" ? "Review and reports" : "Business intelligence"
       const html = documentHtml(title, "dashboard", `<a href="${url.pathname}">Dashboard</a>`, pageMain({ drawn: true, key: title, index: 0 }, content), "")
-        .replace("</body>", `${bootstrapHtml}<script>${inline}</script></body>`)
+        .replace("</body>", () => `${bootstrapHtml}<script>${inline}</script></body>`)
       return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
     } finally { authority.ui.finish(call) }
   }
 }
+

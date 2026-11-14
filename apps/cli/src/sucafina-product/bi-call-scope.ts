@@ -1,3 +1,4 @@
+import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -22,7 +23,8 @@ export function createSfBiCallScope(input: {
 }) {
   const { authority } = input, host = authority.host
   const active = new WeakMap<TrustedDomainContext, Scope>()
-  const current = (call: TrustedDomainContext, scope: Scope) => active.get(call) === scope && !scope.invalid && call.kind === "ui" &&
+  const execution = new AsyncLocalStorage<Scope>()
+  const current = (call: TrustedDomainContext, scope: Scope) => active.get(call) === scope && execution.getStore() === scope && !scope.invalid && call.kind === "ui" &&
     scope.request !== undefined && host.requestFor(call) === scope.request && !scope.request.signal.aborted &&
     scope.binding === digestSfValue([call.kind, call.binding]) && scope.inputDigest === digestSfValue(scope.incoming) &&
     authority.ui.matchesIntent(call, "sf_bi_view", scope.inputDigest)
@@ -89,6 +91,9 @@ export function createSfBiCallScope(input: {
   const read = async (selection: StoredScenarioSelection, call: TrustedDomainContext,
     produce: () => Promise<PortResult<DomainProjection>>): Promise<PortResult<DomainProjection>> => {
     const scope = active.get(call)
+    // Context identity alone does not authorize borrowing another invocation's
+    // completed proof. Refuse overlap without invalidating its legitimate owner.
+    if (scope && execution.getStore() !== scope) return denied()
     if (!scope || scope.bypass) return produce()
     if (scope.invalid) return scope.invalid === "denied" ? denied() : changed()
     if (selection.selectionRef !== scope.selection.selectionRef || selection.scenarioResultRef !== scope.selection.scenarioResultRef ||
@@ -116,18 +121,20 @@ export function createSfBiCallScope(input: {
     const scope: Scope = { incoming: request, inputDigest: digestSfValue(request), binding: digestSfValue([call.kind, call.binding]),
       selection: { selectionRef: request.selectionRef, scenarioResultRef: selected.scenarioResultRef, comparisonRef: selected.comparisonRef } }
     active.set(call, scope)
-    try {
-      const result = await work()
-      if (result.status !== "ok" || scope.bypass || !scope.proof) return result
-      // The canonical dispatcher has its own final authorization await. Check
-      // the source/case/clock again after it, then identity after our final await.
-      const final = await fence(call, scope)
-      if (final?.kind === "denied" || !current(call, scope)) return scope.invalid === "stale" ? changed() : denied()
-      return final?.kind === "current" && final.digest === scope.proof.fence && current(call, scope) ? result : changed()
-    } catch (error) {
-      if (scope.request && !current(call, scope)) return scope.invalid === "stale" ? changed() : denied()
-      throw error
-    } finally { if (active.get(call) === scope) active.delete(call) }
+    return execution.run(scope, async () => {
+      try {
+        const result = await work()
+        if (result.status !== "ok" || scope.bypass || !scope.proof) return result
+        // The canonical dispatcher has its own final authorization await. Check
+        // the source/case/clock again after it, then identity after our final await.
+        const final = await fence(call, scope)
+        if (final?.kind === "denied" || !current(call, scope)) return scope.invalid === "stale" ? changed() : denied()
+        return final?.kind === "current" && final.digest === scope.proof.fence && current(call, scope) ? result : changed()
+      } catch (error) {
+        if (scope.request && !current(call, scope)) return scope.invalid === "stale" ? changed() : denied()
+        throw error
+      } finally { if (active.get(call) === scope) active.delete(call) }
+    })
   }
   return { run, read }
 }
@@ -148,3 +155,4 @@ function plannerDependencies(value: unknown): readonly PlannerRef[] | undefined 
   }
   return visit(value) ? [...refs.values()] : undefined
 }
+

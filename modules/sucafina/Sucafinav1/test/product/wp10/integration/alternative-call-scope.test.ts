@@ -99,3 +99,60 @@ test("an invocation confines real proof reuse to its UTC day and rejects revocat
     expect(revoked).toEqual({ status: "ok", value: true })
   } finally { authority.ui.finish(call); await fixture.dispose() }
 }, 120_000)
+
+test("alternative proof refuses overlapping and reentrant callers while its real owner retains the completed proof", async () => {
+  const fixture = await financialCompositionFixture(), call = await fixture.read()
+  const { authority, business, persistence } = fixture
+  const caseRef = { id: "lexical-proof-case", incarnation: "lexical-proof-incarnation", version: 1 }
+  const period = { start: "2026-11-14", end: "2026-11-14" }
+  try {
+    await persistence.transaction("dashboard", async (snapshot) => { snapshot.data.hotTopics = []; return { commit: true, value: undefined } })
+    const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Lexical source proof", horizon: period, currency: "USD", criteria: [],
+      participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+    const seeded = await authority.state.transaction(fixture.request("lexical-proof-case"), { namespace: "cases", expectedStorageVersion: 0,
+      targetRef: authority.creationTarget.ref, targetIncarnation: authority.creationTarget.incarnation,
+      idempotencyKey: "lexical-proof-case", commandDigest: digestSfValue(initial) }, async (state) => {
+      state.cases[initial.id] = initial
+      return { commit: true, value: true }
+    })
+    if (seeded.status !== "ok") throw new Error(`Case fixture unavailable: ${JSON.stringify(seeded)}`)
+    const issue = createDashboardSourceIssuer({ host: authority.host, scopedSources: persistence })
+    const selected = await issue({ page: "Hot Topics & Actions", fields: ["hotTopics"], period }, call)
+    if (selected.status !== "ok") throw new Error(`Actual source unavailable: ${selected.reason}`)
+    const scope = createSfAlternativeCallScope<BusinessEvidenceRef>({ authority, selectedCase: business.resolveCase, lockedSourceFences: business.lockedSourceFences })
+    let reads = 0
+    const produce = async (): Promise<PortResult<BusinessEvidenceRef>> => {
+      reads += 1
+      const current = await business.dashboardSources.resolveDashboardSource(selected.value.selectionRef, call)
+      return current.status === "ok" ? { status: "ok", value: current.value.evidence } : current
+    }
+    const ready = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
+    const pending = business.withCase(call, caseRef, {}, () => scope.run(call, async () => {
+      const first = await scope.read(call, produce)
+      expect(first.status).toBe("ok")
+      expect(await scope.run(call, async () => { throw new Error("Reentrant alternative work must not execute") }))
+        .toEqual({ status: "denied", reason: "alternative-call-authority-unavailable" })
+      ready.resolve()
+      await release.promise
+      const again = await scope.read(call, produce)
+      expect(again).toEqual(first)
+      if (again.status === "ok" && first.status === "ok") expect(again.value).not.toBe(first.value)
+      expect(reads).toBe(1)
+      return { status: "ok", value: true }
+    }))
+    try {
+      await Promise.race([ready.promise, pending.then(() => { throw new Error("Alternative owner did not reach its completed proof") })])
+      // Both reads share valid domain authority and a real case. They still
+      // cannot borrow a proof completed by another lexical invocation.
+      const overlaps = await Promise.all([scope.read(call, produce), scope.read(call, produce)])
+      for (const result of overlaps) {
+        expect(result).toEqual({ status: "denied", reason: "alternative-call-authority-unavailable" })
+        expect(result).not.toHaveProperty("value")
+      }
+      expect(reads).toBe(1)
+      release.resolve()
+      expect(await pending).toEqual({ status: "ok", value: true })
+    } finally { release.resolve(); await pending }
+  } finally { authority.ui.finish(call); await fixture.dispose() }
+}, 120_000)
+
