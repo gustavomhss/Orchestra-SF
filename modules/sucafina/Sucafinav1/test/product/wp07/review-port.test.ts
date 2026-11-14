@@ -165,6 +165,39 @@ test("preserved review survives changed projections and is denied after access r
   expect(await port.read("review-1", binding)).toEqual({ status: "unavailable", reason: "invalid-review-sources" })
 })
 
+test("review egress revalidates decision and section sources after the other authorization readers", async () => {
+  const storage = testPersistence()
+  const state = createSfProductState({ persistence: storage.persistence, createId: () => "state", resolveTarget: async () => ({ incarnation: "target" }), authorize: async () => ({ principalRef: "principal", accessRevision: "access", policyVersion: "policy" }) })
+  const binding = { kind: "ui", binding: { principalRef: "principal", installationId: "i", projectId: "p", accessRevision: "access", policyVersion: "policy" } } as unknown as TrustedDomainContext
+  const period = { start: "2026-01-01", end: "2026-12-31" }
+  const source = { surface: "planner", type: "forecast", id: "overview", incarnation: "original", version: 1, fields: ["value"], period, observedAt: "2026-11-13T00:00:00Z" } as const
+  const decisionSource = { ...source, id: "decision-component", incarnation: "decision-original" }
+  const decision: NonNullable<DomainProjection["decision"]> = {
+    kind: "scenario", scenarioResultRef: "result", comparisonRef: "comparison",
+    scenario: { id: "result", version: 1, components: [{ id: "component", amount: 100, currency: "USD", period, sourceRefs: [decisionSource], evidenceState: "confirmed" }], currency: "USD", horizon: period, sourceRefs: [], unresolvedConditions: ["training missing"], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: 100, total: null, costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1, currency: "USD", horizon: period, issues: [], evaluatedSourceRefs: [], entries: [{ status: "pending", categoryId: "training", reason: "missing-category" }], derivedMissingCategoryIds: ["training"], coverageState: "pending" } },
+    comparison: { baselineResultRef: "base", alternativeResultRef: "result", costCoverageRefs: ["coverage"], criterionResults: [], unresolvedConditions: ["training missing"], comparisonStatus: "conditioned", knownDifference: 20, completeDifference: null },
+  }
+  const access = { allowed: true, revokeDuringSensitivity: false, batches: [] as string[][] }
+  const port = createReviewPort({ state, creationTarget: { ref: "review-creation", incarnation: "target" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"), authorizeOutcomeComparison: async () => true, authorizeOutcome: async () => true, authorizeDecision: async () => true, authorizeSections: async () => true, authorizeComments: async () => true,
+    authorizeSensitivity: async () => { if (access.revokeDuringSensitivity) access.allowed = false; return true },
+    revalidate: async (_context, refs) => { access.batches.push(refs.map((ref) => ref.id)); return refs.every((ref) => ref.id !== decisionSource.id || access.allowed) },
+    revalidateEvidence: async () => true,
+    select: async () => ({ status: "ok", value: [{ id: "decision", title: "Decision", period, recordCount: 1, projection: { context: { installationId: "i", projectId: "p", principalRef: "principal", accessRevision: "access", policyVersion: "policy", surface: "planner", period, currency: "USD", sourceRefs: [source], capabilities: [] }, version: 1, engineVersion: "v1", components: [], values: [], missing: [], decision } }] }),
+  })
+  expect((await port.preserve({ id: "review", selectionRef: "selection", sectionRefs: ["decision"], expectedStorageVersion: 0, idempotencyKey: "preserve", targetIncarnation: "target" }, binding)).status).toBe("ok")
+  expect(access.batches.at(-1)).toContain(source.id)
+  expect(access.batches.at(-1)).toContain(decisionSource.id)
+  // Even when a legacy review's aggregate omits a component source, the decision
+  // projection still requires that source's current authorization at egress.
+  const stored = storage.state.dashboard.data.__sfProductV1 as SfProductState
+  stored.reviews.review!.sourceRefs = [source]
+  access.batches = []
+  expect((await port.read("review", binding)).status).toBe("ok")
+  expect(access.batches).toEqual([[source.id, decisionSource.id]])
+  access.revokeDuringSensitivity = true
+  expect(await port.read("review", binding)).toEqual({ status: "denied", reason: "access-unavailable" })
+})
+
 test("comparison requires identity and a compatible period before calculating a delta", async () => {
   const { compareReviews } = await import("../../../product/reviews/compare.ts")
   const period = { start: "2026-01-01", end: "2026-12-31" }

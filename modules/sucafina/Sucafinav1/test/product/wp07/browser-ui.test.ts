@@ -21,7 +21,7 @@ import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
 import { captureChromiumCleanup } from "./chromium-cleanup.ts"
 
-test("Chromium preserves the chosen agenda, recovers a lost response and removes revoked content", async () => {
+test("Chromium preserves the annual agenda, recovers a lost response and removes revoked content", async () => {
   const started = Date.now()
   const checkpoint = (phase: string) => console.info(`WP07 browser: ${phase} +${Date.now() - started}ms`)
   const timed = async <T>(phase: string, work: () => Promise<T>, milliseconds = 5000): Promise<T> => {
@@ -54,9 +54,9 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
       updateChecks: [] as string[], sourceNavigations: [] as { reviewRef: string; refDigest: string }[],
       reviewNavigations: [] as { reviewRef: string; sectionId: string }[],
     }
-    // Functional browser witness uses the real Planner's January slice, with every returned value.
-    // Annual runs exposed unresolved C08/WP10 snapshot-copy latency; this does not qualify annual UI performance.
-    const period = { start: "2027-01-01", end: "2027-01-31" }
+    // Exercise the complete annual projection from the real Planner through both
+    // preserved revisions. This does not substitute for native/C17 producer proof.
+    const period = { start: "2027-01-01", end: "2027-12-31" }
     const at = "2026-11-13T08:00:00Z"
     const origin = server.url.origin
     const operator = { installationId: randomUUID(), uid: process.getuid!(), name: "WP07 isolated test operator" }
@@ -219,6 +219,8 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
     await expect(view.getByText("Agenda note: Retain this agenda note", { exact: true })).toBeVisible()
     const forecast = view.getByRole("table", { name: "Second forecast · candidate · selected source values", exact: true }).getByRole("row").filter({ has: page.getByRole("cell", { name: "license:1:forecast", exact: true }) })
     await expect(forecast.getByRole("cell", { name: "110 USD", exact: true })).toBeVisible()
+    const december = view.getByRole("table", { name: "Second forecast · candidate · selected source values", exact: true }).getByRole("row").filter({ has: page.getByRole("cell", { name: "license:12:forecast", exact: true }) })
+    await expect(december.getByRole("cell", { name: "110 USD", exact: true })).toBeVisible()
     checkpoint("selection-stale-preserve")
     await changeForecast(120)
     await view.getByRole("button", { name: "Preserve this review", exact: true }).click()
@@ -266,6 +268,10 @@ test("Chromium preserves the chosen agenda, recovers a lost response and removes
     if (recovered.status !== "ok") throw new Error(recovered.reason)
     expect(recovered.value.sections.map((section) => section.id)).toEqual(["second:candidate", "first:candidate"])
     expect((recovered.value.sections[0]!.content as DomainProjection).values.find((value) => value.id === "license:1:forecast")?.value).toBe(120)
+    for (const section of recovered.value.sections) {
+      expect(section.period).toEqual(period)
+      expect((section.content as DomainProjection).values.filter((value) => /^license:\d+:forecast$/.test(value.id)).map((value) => [value.id, value.value])).toEqual(Array.from({ length: 12 }, (_, index) => [`license:${index + 1}:forecast`, 120]))
+    }
     const screenshot = fileURLToPath(new URL("../../../../../../test-ci-evidence/wp07-browser-ui.png", import.meta.url))
     await mkdir(path.dirname(screenshot), { recursive: true })
     await timed("screenshot", () => page.screenshot({ path: screenshot, timeout: 5000 }))

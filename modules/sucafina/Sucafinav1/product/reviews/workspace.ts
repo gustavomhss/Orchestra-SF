@@ -2,7 +2,7 @@ import type { PreservedReview } from "../contracts/context.ts"
 import type { MeetingMaterialProposal } from "../contracts/outputs.ts"
 import { createReviewPreparationBrowser } from "./browser.ts"
 import type { ReviewAgendaItem, ReviewAgendaPreview } from "./selection.ts"
-import type { ReviewContributionRequest } from "./contribution.ts"
+import type { ReviewContribution, ReviewContributionRequest } from "./contribution.ts"
 
 /** Mount from the host's existing Prepare review / Generate Report entry with authorized source selectors. */
 export function createReviewPreparationView(input: {
@@ -179,11 +179,12 @@ export function createReviewPreparationView(input: {
 export function createReviewContributionView(input: {
   request: ReviewContributionRequest
   client?: ReturnType<typeof createReviewPreparationBrowser>
-  openReview: (reviewRef: string) => void
-  openContribution: (outputRef: string) => void
-  openDecisionResult: (resultRef: string) => void
+  openReview: (reviewRef: string) => void | Promise<void>
+  openContribution: (outputRef: string) => void | Promise<void>
+  openDecisionResult: (resultRef: string) => void | Promise<void>
 }) {
   const client = input.client ?? createReviewPreparationBrowser()
+  const request = structuredClone(input.request)
   const root = document.createElement("section")
   root.setAttribute("aria-label", "Review contribution")
   let generation = 0
@@ -193,23 +194,40 @@ export function createReviewContributionView(input: {
     element.textContent = value
     return element
   }
-  const refresh = async () => {
+  const unavailable = (reason: string) => root.replaceChildren(text("p", `Contribution unavailable: ${reason}`))
+  const open = (label: string, run: () => void | Promise<void>) => {
+    const button = document.createElement("button")
+    button.type = "button"
+    button.textContent = label
+    button.addEventListener("click", () => { void run() })
+    return button
+  }
+  type Navigation = Extract<ReviewContribution["links"][number], { kind: "contribution" | "decision-result" | "review" }>
+  const contains = (value: ReviewContribution, target: Navigation) => value.links.some((link) => {
+    if (target.kind === "contribution") return link.kind === target.kind && link.outputRef === target.outputRef
+    if (target.kind === "decision-result") return link.kind === target.kind && link.resultRef === target.resultRef
+    return link.kind === target.kind && link.reviewRef === target.reviewRef && value.kind === "MeetingMaterialProposal" && value.review.id === target.reviewRef
+  })
+  const navigate = async (shown: ReviewContribution, target: Navigation, shownAt: number) => {
+    if (disposed || shownAt !== generation) return
     const attempt = ++generation
-    root.replaceChildren(text("p", "Checking access to the preserved contribution…"))
-    const result = await client.contribution(input.request).catch(() => undefined)
+    root.replaceChildren(text("p", "Checking access before opening the result…"))
+    const result = await client.contribution({ ...request, expectedOutputDigest: shown.output.outputDigest }).catch(() => undefined)
     if (disposed || attempt !== generation) return
-    if (!result || result.status !== "ok") {
-      root.replaceChildren(text("p", `Contribution unavailable: ${result?.reason ?? "request-failed"}`))
-      return
+    if (!result || result.status !== "ok") { unavailable(result?.reason ?? "request-failed"); return }
+    const current = result.value
+    if (current.output.id !== request.outputRef || current.output.outputDigest !== shown.output.outputDigest || current.kind !== shown.kind || !contains(current, target)) { unavailable("contribution-changed"); return }
+    render(current)
+    try {
+      if (target.kind === "contribution") await input.openContribution(target.outputRef)
+      else if (target.kind === "decision-result") await input.openDecisionResult(target.resultRef)
+      else await input.openReview(target.reviewRef)
+    } catch {
+      if (!disposed && attempt === generation) unavailable("destination-unavailable")
     }
-    const value = result.value
-    const open = (label: string, run: () => void) => {
-      const button = document.createElement("button")
-      button.type = "button"
-      button.textContent = label
-      button.addEventListener("click", run)
-      return button
-    }
+  }
+  const render = (value: ReviewContribution) => {
+    const shownAt = generation
     root.replaceChildren(text("h2", value.kind === "DecisionBrief" ? "Decision brief" : "Meeting material"), text("p", `Reference: ${value.output.id}`))
     if (value.kind === "DecisionBrief") {
       root.append(text("h3", value.output.payload.objective))
@@ -218,12 +236,12 @@ export function createReviewContributionView(input: {
       const list = document.createElement("ol")
       value.links.forEach((link) => {
         const row = text("li", "")
-        row.append(link.kind === "contribution" ? open(`Open result ${link.outputRef}`, () => input.openContribution(link.outputRef)) : open(`Open decision result ${link.resultRef}`, () => input.openDecisionResult(link.resultRef)))
+        row.append(open(link.kind === "contribution" ? `Open result ${link.outputRef}` : `Open decision result ${link.resultRef}`, () => navigate(value, link, shownAt)))
         list.append(row)
       })
-      root.append(list)
+      root.append(value.links.length ? list : text("p", "Proposed brief · No linked results."))
     } else {
-      root.append(open("Open preserved meeting", () => input.openReview(value.review.id)))
+      root.append(open("Open preserved meeting", () => navigate(value, { kind: "review", reviewRef: value.review.id }, shownAt)))
       value.output.payload.coverage.forEach((section) => root.append(text("p", `${section.sectionRef}: ${section.includedCount} of ${section.totalCount} selected records`)))
       value.output.payload.gaps.forEach((gap) => root.append(text("p", `Limitation: ${gap.reason}`)))
       value.artifacts.forEach((artifact) => {
@@ -235,7 +253,17 @@ export function createReviewContributionView(input: {
         root.append(link)
       })
     }
-    root.append(open("Refresh access", () => { void refresh() }))
+    root.append(open("Refresh access", () => { if (shownAt === generation) return refresh() }))
+  }
+  const refresh = async () => {
+    if (disposed) return
+    const attempt = ++generation
+    root.replaceChildren(text("p", "Checking access to the preserved contribution…"))
+    const result = await client.contribution(structuredClone(request)).catch(() => undefined)
+    if (disposed || attempt !== generation) return
+    if (!result || result.status !== "ok") { unavailable(result?.reason ?? "request-failed"); return }
+    if (result.value.output.id !== request.outputRef || typeof result.value.output.outputDigest !== "string" || !result.value.output.outputDigest || (request.expectedOutputDigest && result.value.output.outputDigest !== request.expectedOutputDigest)) { unavailable("contribution-changed"); return }
+    render(result.value)
   }
   root.append(text("p", "Open the contribution to check current access."))
   return { element: root, refresh, dispose: () => { disposed = true; generation++; root.replaceChildren() } }

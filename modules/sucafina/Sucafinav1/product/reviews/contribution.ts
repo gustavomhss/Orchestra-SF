@@ -1,5 +1,6 @@
 import type { createSfContributionReader } from "../ai/contribution-reader.ts"
 import type { createSfDecisionResultStore, StoredDecisionResult } from "../decisions/result-store.ts"
+import { encodeCaseRef } from "../decisions/case-port.ts"
 import { digestSfContribution, digestSfValue } from "../contracts/canonical.ts"
 import type { PreservedReview } from "../contracts/context.ts"
 import type { AuthorizedArtifact } from "../contracts/outputs.ts"
@@ -63,7 +64,9 @@ export function createReviewContributionConsumer(input: {
     const output = loaded.value
     if (output.kind === "DecisionBrief") {
       const brief = output.payload
-      if (brief.caseRef !== request.caseRef.id || brief.caseVersion !== request.caseRef.version || !brief.orderedResultRefs.length || new Set(brief.orderedResultRefs).size !== brief.orderedResultRefs.length || brief.orderedResultRefs.includes(output.id)) return { status: "unavailable", reason: "review-brief-references-unavailable" }
+      // The producer binds the physical case with encodeCaseRef. An executive brief may
+      // contain only its verified objective and conditions, without a result to open.
+      if (brief.caseRef !== encodeCaseRef(request.caseRef) || brief.caseVersion !== request.caseRef.version || brief.orderedResultRefs.some((ref) => !ref.trim()) || new Set(brief.orderedResultRefs).size !== brief.orderedResultRefs.length || brief.orderedResultRefs.includes(output.id) || (!brief.orderedResultRefs.length && (brief.runRef !== undefined || brief.resultRef !== undefined))) return { status: "unavailable", reason: "review-brief-references-unavailable" }
       const results: BriefResult[] = []
       for (const outputRef of brief.orderedResultRefs) {
         const result = await readResult(outputRef, request.caseRef, context)
@@ -89,14 +92,18 @@ export function createReviewContributionConsumer(input: {
     if (material.coverage.some((entry) => !Number.isSafeInteger(entry.includedCount) || entry.includedCount < 0 || entry.includedCount !== entry.totalCount || review.value.sections.find((section) => section.id === entry.sectionRef)?.count !== entry.includedCount)) return { status: "unavailable", reason: "review-material-coverage-mismatch" }
     const recordCount = material.coverage.reduce((total, entry) => total + entry.includedCount, 0)
     const artifacts: AuthorizedArtifact[] = []
+    const selections: (readonly string[])[] = []
     for (const artifactRef of material.orderedResultRefs) {
       const result = await input.artifacts.read(artifactRef, context)
-      if (result.status !== "ok" || result.value.reviewRef !== review.value.id || digestSfValue(result.value.sectionRefs) !== digestSfValue(sectionRefs) || result.value.artifact.artifactRef !== artifactRef || result.value.artifact.accessRevision !== context.binding.accessRevision || result.value.artifact.recordCount !== recordCount || !["docx", "pptx"].includes(result.value.artifact.format)) return { status: "denied", reason: "review-material-artifact-unavailable" }
+      // Coverage counts describe a set. The persisted artifact owns the selected
+      // section order; a proposed coverage table must not reorder that selection.
+      if (result.status !== "ok" || result.value.reviewRef !== review.value.id || result.value.sectionRefs.length !== sectionRefs.length || new Set(result.value.sectionRefs).size !== sectionRefs.length || result.value.sectionRefs.some((id) => !sectionRefs.includes(id)) || (selections.length > 0 && digestSfValue(result.value.sectionRefs) !== digestSfValue(selections[0])) || result.value.artifact.artifactRef !== artifactRef || result.value.artifact.accessRevision !== context.binding.accessRevision || result.value.artifact.recordCount !== recordCount || !["docx", "pptx"].includes(result.value.artifact.format)) return { status: "denied", reason: "review-material-artifact-unavailable" }
+      selections.push([...result.value.sectionRefs])
       artifacts.push(structuredClone(result.value.artifact))
     }
-    for (const artifact of artifacts) {
+    for (const [index, artifact] of artifacts.entries()) {
       const current = await input.artifacts.read(artifact.artifactRef, context)
-      if (current.status !== "ok" || current.value.reviewRef !== review.value.id || digestSfValue(current.value.sectionRefs) !== digestSfValue(sectionRefs) || digestSfValue(current.value.artifact) !== digestSfValue(artifact)) return { status: "denied", reason: "review-material-artifact-unavailable" }
+      if (current.status !== "ok" || current.value.reviewRef !== review.value.id || digestSfValue(current.value.sectionRefs) !== digestSfValue(selections[index]) || digestSfValue(current.value.artifact) !== digestSfValue(artifact)) return { status: "denied", reason: "review-material-artifact-unavailable" }
     }
     const currentReview = await input.reviews.read(review.value.id, context)
     if (currentReview.status !== "ok" || digestSfValue(currentReview.value) !== reviewDigest) return { status: "denied", reason: "review-material-unavailable" }
