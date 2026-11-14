@@ -1,0 +1,555 @@
+{
+  "source": {
+    "productSha": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+    "productTree": "e63f555351ec6a21402319797e044fd51e8eb4fb",
+    "snapshotSha": "0aa7ce0b6be7debc799eb51b2d066c501fae4eee",
+    "snapshotTree": "eb797fbfbf27ec8c72636a36e93b931f0a49dac0",
+    "branch": "ci-run-linux-astra-wp11-11261a5-b76f108a-c1",
+    "requestSha256": "b76f108aa3ba4f536901f0bad62c7c87129124940ab022065536b803abb2a151",
+    "requestBlob": "a207aa32047d33645f3346493ac2891300d4f5fb",
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ]
+  },
+  "run": {
+    "id": 43586946650,
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-11-14T10:47:39Z",
+    "updatedAt": "2026-11-14T11:09:38Z",
+    "headSha": "0aa7ce0b6be7debc799eb51b2d066c501fae4eee",
+    "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43586946650",
+    "runAttempt": 1
+  },
+  "jobs": [
+    {
+      "id": 132423386250,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132428551977,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "tests": {
+    "summary": {
+      "pass": 58,
+      "fail": 2,
+      "tests": 60,
+      "files": 19,
+      "durationSeconds": 1210.74
+    },
+    "ownObservedCounts": {
+      "pass": 14,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0
+    },
+    "requestedFileCount": 19,
+    "observedFileCount": 19,
+    "requestedButNotObserved": [],
+    "hasCompletedBunSummary": true,
+    "fileResults": [
+      {
+        "path": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+        "owner": "WP03",
+        "counts": {
+          "pass": 13,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 162.95,
+        "lastReportedTest": "nested C17 refuses revoked lineage after replay while the caller remains authorized",
+        "conclusion": "success"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+        "owner": "WP03",
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 102.07,
+        "lastReportedTest": "C10 keeps the 30000 apparent savings conditional until training changes 210000 to 250000",
+        "conclusion": "success"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+        "owner": "WP03",
+        "counts": {
+          "pass": 3,
+          "fail": 1,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 411362.8,
+        "lastReportedTest": "composed proof refuses duplicate and indirect writes to the varying parameter",
+        "conclusion": "failure"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+        "owner": "WP03",
+        "counts": {
+          "pass": 3,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 192279.74,
+        "lastReportedTest": "a source-only observation refuses a coverage change after the real comparison recheck",
+        "conclusion": "success"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+        "owner": "WP03",
+        "counts": {
+          "pass": 6,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 1072.75,
+        "lastReportedTest": "a self-comparison reads once per source observation and still rejects revocation at final revalidation",
+        "conclusion": "success"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+        "owner": "WP11",
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 22.93,
+        "lastReportedTest": "promotion commits the reviewed alternative, result and audit event together, and reconciles retries",
+        "conclusion": "success"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+        "owner": "WP11",
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 21.71,
+        "lastReportedTest": "human acceptance commits the existing analysis ledger event and outbox atomically",
+        "conclusion": "success"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+        "owner": "WP11",
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 47.74,
+        "lastReportedTest": "real Planner mutation and case receipt commit atomically across surfaces",
+        "conclusion": "success"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+        "owner": "WP11",
+        "counts": {
+          "pass": 2,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 16.73,
+        "lastReportedTest": "C10 complete coverage needs every category and fresh source resolution",
+        "conclusion": "success"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+        "owner": "WP11",
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 46.2,
+        "lastReportedTest": "portfolio history can retain a result at the same case version and still requires private provenance and current access",
+        "conclusion": "success"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "owner": "WP11",
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 45.75,
+        "lastReportedTest": "human-approved prepared dashboard command and receipt commit together",
+        "conclusion": "success"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+        "owner": "WP11",
+        "counts": {
+          "pass": 3,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 2.59,
+        "lastReportedTest": "reassessment uses scenario entries and keeps hypothetical totals conditioned",
+        "conclusion": "success"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+        "owner": "WP11",
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 1.8,
+        "lastReportedTest": "human classification is bound to real components, source identity and fresh evidence",
+        "conclusion": "success"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+        "owner": "WP11",
+        "counts": {
+          "pass": 2,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 20.25,
+        "lastReportedTest": "persisted comparison results are scoped to current case, principal, and source access",
+        "conclusion": "success"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+        "owner": "WP11",
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 40.14,
+        "lastReportedTest": "proposal coverage is durable, scoped, and fenced against changed sources",
+        "conclusion": "success"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "owner": "WP13",
+        "counts": {
+          "pass": 13,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 12.82,
+        "lastReportedTest": "portfolio historical provenance > rejects a binding that changes between provenance passes",
+        "conclusion": "success"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+        "owner": "WP05",
+        "counts": {
+          "pass": 3,
+          "fail": 1,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 587330.25,
+        "lastReportedTest": "source-specific revocation with a valid UI session withholds persisted BI values and coverage",
+        "conclusion": "failure"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp05/planner-origins.test.ts",
+        "owner": "WP05",
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 16496.46,
+        "lastReportedTest": "real Planner zero and nonzero contributions expose explicit A/B origins through waterfall, bars, tables and current C17 selection",
+        "conclusion": "success"
+      },
+      {
+        "path": "Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+        "owner": "WP05",
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 1317.97,
+        "lastReportedTest": "real scoped Planner capacity and cost remain numeric in aligned filtered BI panels without personal data",
+        "conclusion": "success"
+      }
+    ],
+    "failures": [
+      {
+        "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+        "status": "fail",
+        "name": "composed Planner threshold includes confirmed training once and distinguishes zero from missing price",
+        "line": 849,
+        "timestamp": "2026-11-14T10:54:23.5708090Z",
+        "durationMs": 232071.18,
+        "timeoutMs": 180000
+      },
+      {
+        "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+        "status": "fail",
+        "name": "real Planner results retain omitted training as unknown, then include its 40000 source without mutating the original result",
+        "line": 918,
+        "timestamp": "2026-11-14T11:04:50.4031532Z",
+        "durationMs": 229599.38,
+        "timeoutMs": 180000
+      }
+    ],
+    "lastReportedTest": {
+      "file": "Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+      "status": "pass",
+      "name": "real scoped Planner capacity and cost remain numeric in aligned filtered BI panels without personal data",
+      "line": 1420,
+      "timestamp": "2026-11-14T11:09:29.3117474Z",
+      "durationMs": 1317.97
+    }
+  },
+  "protocol": {
+    "nonces": [
+      "f603be0c8a928483d4523511b474bcef"
+    ],
+    "observedVerdicts": [
+      "omni positive control [f603be0c8a928483d4523511b474bcef]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [f603be0c8a928483d4523511b474bcef]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "evidence": {
+    "logFile": "wp11-W6-C1-tests.log",
+    "logBytes": 106380,
+    "logSha256": "ccdbd0f1c6aea224473a23067ff7339d9836cf9b89b268a14fb9f091ce74b1eb",
+    "parsedFile": "wp11-W6-C1-tests-observed.json",
+    "parsedSha256": "aba8f03f5ecc36422ee83373a1a279927b998eb3c7b44d8a34de51db8c717bac",
+    "parserFile": "parse-hosted-test-log.py",
+    "parserSha256": "c9e5f0ca447115dba3d00ede2350d32c1606185dcb4c763f183daafd7c3cd23a"
+  },
+  "classification": {
+    "own": "14 observed passing tests in all 10 requested WP11 files; no own failure.",
+    "foreign": "44 passing and 2 failing tests across 9 consumer files. Both failures report timeout 180000ms; no failed assertion was emitted.",
+    "timeouts": [
+      "WP03 composed-threshold confirmed-training/zero/missing price scenario reported232071.18ms.",
+      "WP05 engine-coverage real training40000/revision scenario reported229599.38ms."
+    ],
+    "unproven": [
+      "The timed-out test bodies are not proven complete.",
+      "This is W6 product evidence, not W8. W8 changed mutations/hot-topic and needs its own affected selections.",
+      "No process memory measurement, OOM, or cancellation reason is inferred from elapsed times.",
+      "Omni verdict is valid not-applicable and proves no omni spawning."
+    ]
+  },
+  "claimBoundary": "Complete hosted Bun summary for exact declared 19-file surgical selection; no local product execution. Per-file durations sum reported test wall times, not exclusive CPU time or process memory. Overall run remains failure due to two foreign timeouts."
+}

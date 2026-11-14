@@ -1,0 +1,157 @@
+{
+  "reviewer": "ci_reconciliation",
+  "status": "NO_STATIC_BLOCKER_FOUND_HOSTED_VALIDATION_PENDING",
+  "baseProductSha": "a12f29ce64018740a1c1a1135daa3fb0e37770de",
+  "baseProductTree": "1a8280cfc76c234bc7970e3709a78395b12c1c5c",
+  "publishedProducer": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "pr": 35,
+    "head": "d9b84003ed6cd6dd77b5738dbfcc6b45d57f72c8",
+    "batchCommit": "61d92392e9bded167eb2794995a623b2719cc4ba",
+    "base": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "owner": "WP03/WP05 published producer",
+      "beforeW8": {
+        "gitBlob": "d3098aa94cdeee71193c94ae906f6fafd14bda9b",
+        "sha256": "23767836ce893bfb803243830ab62bd55d3352a917d55c927157d42ca5160643",
+        "bytes": 7667
+      },
+      "reviewedCandidate": {
+        "gitBlob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+        "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+        "bytes": 8591
+      },
+      "publishedBaseMatchesW8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "owner": "WP03/WP05 published producer",
+      "beforeW8": {
+        "gitBlob": "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b",
+        "sha256": "659c483b654c54765a6f5636e44c93537f9cb0ef19ee136256515b9665f1fbc9",
+        "bytes": 3864
+      },
+      "reviewedCandidate": {
+        "gitBlob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+        "sha256": "771b060898fce1b1d851461bee7df743014ab55f9c0994a0331f2664a1c8bfd1",
+        "bytes": 6407
+      },
+      "publishedBaseMatchesW8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "owner": "WP03/WP05 published producer",
+      "beforeW8": {
+        "gitBlob": "ed68563245e406aca2dc3ce335943647fd2cb002",
+        "sha256": "2bf920cec395a7f103ea554790d0cc424f90c1a524656c5d0ac6148b452da4bf",
+        "bytes": 19910
+      },
+      "reviewedCandidate": {
+        "gitBlob": "1673c86995cf71b61e288d91492ae7b691934171",
+        "sha256": "d83e19bff860ad2a54fc3f41b3b5790d3d31cd3b2b55ea8785a61ea30aa8827b",
+        "bytes": 19887
+      },
+      "publishedBaseMatchesW8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+      "owner": "Published WP11 consumer regressions from Finance",
+      "beforeW8": null,
+      "reviewedCandidate": {
+        "gitBlob": "0bd661681e2dd3c3daafdea82851af88c772f0cf",
+        "sha256": "cec7996db6f11c3fc45de8ab768288c548e6cb7184d85da70b05b1d020ea0ac4",
+        "bytes": 10879
+      },
+      "repoPathAndBlobVerified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "owner": "Published WP11 consumer regressions from Finance",
+      "beforeW8": null,
+      "reviewedCandidate": {
+        "gitBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+        "sha256": "6a2576aa4495ec03a38c67f9c5453cd0a9cec3455f21306e435bc269cced8bce",
+        "bytes": 12865
+      },
+      "repoPathAndBlobVerified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "owner": "WP11 fixture",
+      "beforeW8": {
+        "gitBlob": "35281782202c59bb61c49e68ff206ee22183464e",
+        "sha256": "d550cf3e4c24b89f8eb224071f72f0f39bc3d7b0446eb790231fcdb3b92d7209",
+        "bytes": 24863
+      },
+      "reviewedCandidate": {
+        "gitBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+        "sha256": "36e11f7e1148d0b30fff90473f971a9183aef6b9ffeb5064f63a3034c96ee7e3",
+        "bytes": 25216
+      },
+      "scope": "Source Planner wiring only; classified calculation paths and assertions unchanged."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "owner": "WP11 fixture",
+      "beforeW8": {
+        "gitBlob": "55c04318f2196d24f9d3e94eb99dffb0915c593f",
+        "sha256": "92117e4ca3c542ed2308d42100a35f31e1cf163e5e90c08065d155a1ed737600",
+        "bytes": 14130
+      },
+      "reviewedCandidate": {
+        "gitBlob": "18d95b84d01b26048af9a442c44cb32e8f14e9f5",
+        "sha256": "bad22af33418063fdfcb23499416f20b1adf6edb7f511be892635bd37139d129",
+        "bytes": 14461
+      },
+      "scope": "Source Planner wiring only; classified calculation paths and assertions unchanged."
+    }
+  ],
+  "findings": {
+    "batchLifetime": "initialCases and finalCases maps are local to each resolveMany call, separate by observation phase, keyed by complete stored caseRef (id, incarnation, producer version). No cache survives across calls, actors or phases.",
+    "resultAndCaseFences": "Each result, including duplicate refs, retains two independent authenticated store reads and its own canonical projection. All result rereads finish before final case observations. Full case digests are compared; id/incarnation/version and exact alternative/result association are checked. Returned callback objects are detached before later callbacks.",
+    "consumerFences": "Comparison uses fresh batches for initial, recheck and final criteria observations. Sensitivity units use two fresh batches while retaining independent store, evidence, case and host validation. Legacy hosts remain supported; explicit batch refusal/cardinality mismatch never falls back.",
+    "sourceProjectionWiring": "Planner port builds the complete DomainProjection from real source projection, evidence, period, actor and environment before C10 comparison qualification. The stored scenario host consumes only FinancialAnalysis.baseline. The two WP11 fixtures now use an actual source Planner for that projection; no financial formula or output is supplied by the fixture.",
+    "coverageRemainsReal": "Persisted scenario results and bases remain untouched. The classified Planner/sources remain on mutations, baseline coverage, compareScenarios, criteria evaluation and comparePlannerPreview. Those consumers still compare the current C10 basis/assessment and revalidate source and authority. An unavailable source-only FinancialAnalysis comparison is never promoted to complete.",
+    "sourceAndActorFreshness": "Source Planner retains real source resolution, authenticated domain reads, exact projection digest, repeated source observations and final host/coverage consistency checks. No source result or authority is cached between calls.",
+    "testInvariants": "All three original replace operations, monetary assertions, source revision, choice/replay/restart and permission negatives, plus the 180000ms test/fixture deadline, remain unchanged by these two fixture patches.",
+    "typesAndDependencies": "The optional batch method and exported ResolvedScenario type are additive; imported result types exist in W8. Current Sucafinav1 configuration does not enable noUncheckedIndexedAccess. No new product dependency or static type blocker was found; no local typecheck ran."
+  },
+  "producerTestDesign": {
+    "newTests": 9,
+    "uses": "Real UI admission, scoped source issuer, canonical Planner, C08 state and case/result stores. Coverage inventory/membership remain explicit fixture inputs.",
+    "asserts": [
+      "Two case observations per sibling batch, individual result rereads and projections.",
+      "Fresh subsequent batches; detached duplicate values.",
+      "Identical units with batched versus legacy resolution; asserted case counts six versus ten await CI.",
+      "Independent actors, distinct cases and historical producer versions, stable ordering/cardinality and missing-result refusal.",
+      "Ledger, alternative and coverage drift without a version shortcut.",
+      "Authority revocation after result rereads and real Planner source changes.",
+      "Retained callback object mutation and malformed cardinality/failure without fallback."
+    ]
+  },
+  "performanceContext": {
+    "H2Run": 43588796286,
+    "H2": "Failed at 180000ms after original choice was recorded; confirmed-source preparation did not finish. Observed cumulative case reads3216, preference reads937 and source-only verifications728.",
+    "C1Run": 43586946650,
+    "C1": "All14 selected WP11 tests passed; two foreign tests timed out.",
+    "inference": "Fewer duplicate case observations and avoiding unused C10 enrichment target repeated work observed in H2. Static design does not prove a sufficient end-to-end duration or a passing lifecycle."
+  },
+  "runtimeClaims": [],
+  "requiredHostedValidation": [
+    "Published WP11 scenario-batch consumer regressions on the exact next candidate.",
+    "WP11 H3 durable financial lifecycle including 250000, both thresholds, immutable choice and true restart.",
+    "Affected own calculation/choice consumers and source/composed consumers."
+  ],
+  "reviewBoundary": "Static source review and hash comparison only. Before bytes are read from immutable W8 Git objects because producer intake occurred in the working tree during review. No repository edits, product execution, typecheck or remote mutation were performed by this reviewer.",
+  "metadataReconciliation": {
+    "correctedBeforePublication": true,
+    "reason": "Reviewer initially inferred the test directory as wp05. Producer MCP source URLs identify both exact blobs under test/product/wp11; current repository paths and blob hashes were checked before this corrected review was saved.",
+    "correctPaths": [
+      "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts"
+    ]
+  }
+}
