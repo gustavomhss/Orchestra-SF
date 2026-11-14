@@ -2,7 +2,7 @@
 
 **Estado: incrementos publicados para integração; aceite integral não concedido.** Os resultados abaixo qualificam somente os SHAs e os consumidores explicitamente observados. C/D, composição instalada, provas nativas e epic do bundle continuam com S0.
 
-PR do grupo: [#35](https://github.com/gustavomhss/Orchestra-SF/pull/35), `astra-finance` contra `sf2-stack`. Pin de produto registrado nesta edição: `6184a0d3c818fd508f05028d34428ef1c95c01a5`; tree `f30c35028acb382d2b38b7be6e105f3a98a0518c`. Uma publicação posterior apenas destes recibos não amplia o escopo dos testes.
+PR do grupo: [#35](https://github.com/gustavomhss/Orchestra-SF/pull/35), `astra-finance` contra `sf2-stack`. Pin de produto registrado nesta edição: `0c4a2545a63b4903c7eedb00d3f0989eb74ed398`; tree `8325d52877c8fdd5bf317b244b81b0bb45736fce`. Uma publicação posterior apenas destes recibos não amplia o escopo dos testes.
 
 ## Fontes e recuperação
 
@@ -15,8 +15,9 @@ Plano imutável: `dbf9547211d9b0fade619790de7c19c0869b7c7d`; campaign SHA256 `70
 | WP11 — head inicial (PR40 localizada no refresh posterior) | `ff99e4b4de56bbf6e7ef36daf5d3eb749779017a` | 1 |
 | PR #40 / WP11 — primeira atualização | `be50d42d6a2c030d57d17038dec267ebd33ea78c` | 5 |
 | PR #40 / WP11 — segunda atualização | `2bf0197c5d607b43063c36e1c8fef9e769c716ca` | 2 |
+| PR #40 / WP11 — terceira atualização | `65509f0b8c435b88fb0ec9949299571f011d2347` | 2 |
 
-A recuperação `04f3ffae53eca454b434bdab9fcb19bf0353ccc1` preserva os três heads como ancestrais e recupera os blobs próprios sobre sf2-stack `6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0`. [intake-pins.json](intake-pins.json) lista os 32 commits individuais e cada blob recuperado. W18 `92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f` adiciona o head PR40 como parent e conserva os cinco commits novos; [intake-reconciliation-pr40.json](intake-reconciliation-pr40.json) decide cada um dos 40 paths, preservando 29 receipts anteriores. W19 `d9b84003ed6cd6dd77b5738dbfcc6b45d57f72c8` consome a segunda atualização em mais um parent: [intake-reconciliation-pr40-latest.json](intake-reconciliation-pr40-latest.json) decide36paths, adota12testes/helpers e preserva17recibos novos/revisados, sem sobrescrever o recibo histórico modificado. São39commits de origem preservados, além dos incrementos próprios. As branches originais e seus recibos históricos não foram sobrescritos.
+A recuperação `04f3ffae53eca454b434bdab9fcb19bf0353ccc1` preserva os três heads como ancestrais e recupera os blobs próprios sobre sf2-stack `6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0`. [intake-pins.json](intake-pins.json) lista os 32 commits individuais e cada blob recuperado. W18 `92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f` adiciona o head PR40 como parent e conserva os cinco commits novos; [intake-reconciliation-pr40.json](intake-reconciliation-pr40.json) decide cada um dos 40 paths, preservando 29 receipts anteriores. W19 `d9b84003ed6cd6dd77b5738dbfcc6b45d57f72c8` consome a segunda atualização em mais um parent: [intake-reconciliation-pr40-latest.json](intake-reconciliation-pr40-latest.json) decide36paths, adota12testes/helpers e preserva17recibos novos/revisados, sem sobrescrever o recibo histórico modificado. W25 `c99d6dfb4f443b8f626010e78276874ae842f370` acrescenta o parent `65509f0b8c435b88fb0ec9949299571f011d2347`: [intake-reconciliation-pr40-final-65509.json](intake-reconciliation-pr40-final-65509.json) decide29paths, adota6blobs exatos e preserva18recibos novos. São41commits de origem preservados, além dos incrementos próprios. As branches originais e seus recibos históricos não foram sobrescritos.
 
 As dependências compartilhadas foram consumidas por bytes publicados, com recibos próprios: [contract-intake.json](contract-intake.json) e [host-authority-intake.json](host-authority-intake.json). Não há alteração autoral do artifact-store, host, engine, plano aprovado ou política financeira neste grupo.
 
@@ -47,6 +48,9 @@ As dependências compartilhadas foram consumidas por bytes publicados, com recib
 | W21 | `8d065831356e8a73cfd0e4fbb072c5041b95d05f` | `77bef954682387ac0fdd3c01e7dd51b9201d2aac` | Calendário confirmado da cotação40000, nova admissão após revogação e CAS atual no import; assertions reforçadas. |
 | W22 | `cfbf7c824d4351431d35533dbe2572de11084b9d` | `26843c698c3cf7b923d364434fae443a63efafaa` | Diagnóstico de current-choice conserva callbacks/outputs; nenhum comportamento do produto alterado. |
 | W23 | `6184a0d3c818fd508f05028d34428ef1c95c01a5` | `f30c35028acb382d2b38b7be6e105f3a98a0518c` | Hit area finita no timeline; origem por mouse/teclado/tabela preservada e assertion de tabela discriminante. |
+| W24 | `3ab41cbb106435635999e1417b10a087a34a5d95` | `e7974c33c9a5bbf4a20ce0c1db4a66ae04f3b8a9` | 68 arquivos documentais:303 critérios literais,14 tarefas completas, mapas auditados, histórico de CI e propostas delimitadas. |
+| W25 | `c99d6dfb4f443b8f626010e78276874ae842f370` | `d6f28f45ac55c5d345b0694d02441849a2cf27d7` | PR40 65509 consumida como parent:6 blobs exatos,18 recibos novos, Hot Topic com leitura final conjunta e projeção canônica dos fixtures. |
+| W26 | `0c4a2545a63b4903c7eedb00d3f0989eb74ed398` | `8325d52877c8fdd5bf317b244b81b0bb45736fce` | Fixtures com comparação sem sensibilidade não consumida, inicialização canônica de fontes antes de C08/apply e diagnóstico de escolha atual. |
 
 Cada captura foi publicada via GitHub MCP e confrontada com o compare remoto. Os snapshots S são descendentes do W indicado e diferem exclusivamente em `.ci-run.json`; nenhum arquivo dirty foi incluído incidentalmente. Os manifests de alteração do grupo identificam arquivos, blobs e finalidade para intake delimitado.
 
@@ -60,7 +64,7 @@ São **303 IDs e textos literais**: WP03 112, WP05 108 e WP11 83. [task-obligati
 | WP05 | [criteria.json](../../WP05/finance-20261114/criteria.json) | 108 |
 | WP11 | [criteria.json](criteria.json) | 83 |
 
-Cada linha liga implementação/consumidor, testes candidatos e observações dos runs aos critérios. Uma observação de arquivo não quita automaticamente todos os ramos do critério; a matriz mantém limites e pendências. [task-delivery-map.md](task-delivery-map.md) e [task-delivery-map.json](task-delivery-map.json) ligam as 14 tarefas aos caminhos e consumidores correntes, incluindo as novas APIs da PR40.
+Cada linha liga implementação/consumidor, testes candidatos e observações dos runs aos critérios. Uma observação de arquivo não quita automaticamente todos os ramos do critério; a matriz mantém limites e pendências. [task-delivery-map.md](task-delivery-map.md) e [task-delivery-map.json](task-delivery-map.json) preservam o snapshot auditado W21 das14tarefas e303critérios. Os incrementos posteriores e seus pins constam deste handoff e do ledger; não se apresenta o mapa W21 como auditoria de bytes posteriores.
 
 | Tarefa | Contribuição e consumidor localizado | Limite de composição/prova |
 | --- | --- | --- |
@@ -73,7 +77,7 @@ Cada linha liga implementação/consumidor, testes candidatos e observações do
 | WP05.T02 | Contribuições BI03 e painéis alinhados BI04; A/B explícito e actual null/zero. | Navegação instalada e refresh autorizado devem consumir o mesmo mount e seleção. |
 | WP05.T03 | Procurement BI05/06 usa porta canônica, incluindo etapa/aging e ausência de idade. | Falhas históricas de fixture/browser têm seleção diagnóstica própria; não são apagadas por outros greens. |
 | WP05.T04 | Dashboard BI07/08 e catálogo/export de BI; readBiDestination preserva referência/contexto/C17. | Fonte undated corrigida em outro owner não comprova o bundle atual; transporte instalado permanece pendente. |
-| WP05.T05 | C08 scenario/portfolio/sensitivity; vantagem inversa persistida e tabelas/figuras com condição. | Referência opcional precisa entrar na seleção CLI; BI11 e planos BI09/10 dependem dos produtores/composição. |
+| WP05.T05 | C08 scenario/portfolio/sensitivity; vantagem inversa persistida e tabelas/figuras com condição. | Compose ed10 já transporta a referência inversa e implementa navegação protegida; teste owner tem TS2345 e execução dos novos consumidores permanece pendente. BI09/10 ainda dependem dos planos produtores. |
 | WP11.T01 | Caso persistente/versionado, C08, case-port, capacidades e produto composto. | Reinício/reabertura de store não equivale a prova da aplicação residente instalada. |
 | WP11.T02 | Alternativas, inventário completo, shared/N/A, resultado/threshold e replay. | Shared/N/A sustentados por evidência não convertem preview hipotético em total completo. |
 | WP11.T03 | ChoiceRecord humano durável, critério e histórico; preparação com Planner real e grants. | A jornada choice-prepared-execution liga a escolha humana ao prepare/review/apply reais; sua concessão UI continua em processo e a execução Actions tem pin próprio. Não é prova instalada/nativa. |
@@ -81,9 +85,9 @@ Cada linha liga implementação/consumidor, testes candidatos e observações do
 
 ### Consumidores de produção encontrados
 
-`apps/cli/src/sucafina-product/bi-services.ts#createSfBiServices` já compõe a fábrica real: Dashboard BI01/07/08, Planner BI01/04 e diferenças BI02/03, Procurement BI05/06, decisões BI09/10/11 e portfólio BI09/10 quando disponível. O seu scenarioProjection usa o result-store e o adapter próprios. COMPOSE6 mantém as rotas estendidas que usam essa fábrica, transportam valueId/refDigest e repetem a leitura autorizada. A inspeção não demonstra todos os invariantes da seleção original no mount nem constitui prova de execução instalada.
+`apps/cli/src/sucafina-product/bi-services.ts#createSfBiServices` já compõe a fábrica real: Dashboard BI01/07/08, Planner BI01/04 e diferenças BI02/03, Procurement BI05/06, decisões BI09/10/11 e portfólio BI09/10 quando disponível. O seu scenarioProjection usa o result-store e o adapter próprios. COMPOSE ed10 mantém as rotas e acrescenta seleção inversa persistida, seis destinos autorizados e retorno de foco. Os novos consumidores não foram incluídos na seleção de produto observada do owner. A inspeção não demonstra todos os invariantes da seleção original no mount nem constitui prova de execução instalada.
 
-COMPOSE `35b9fd4f532abeb1058f00281d4ad8885ca9966f` compõe a via histórica C17 de fechamento record-only, com capture protegido prévio, vínculo ao ledger, replay e continuidade BCS. Os findings antigos de Map global e ausência genérica da via histórica foram superados em fonte. Permanecem os limites de capture prévio, fontes atuais, fechamento sem cálculo aninhado/assumptions/replacement e execução composta nos pins finais. Veja [external-reconciliation.md](external-reconciliation.md) e a revisão [COMPOSE6](reviews/review-compose6.md).
+COMPOSE `ed10a3806a4ffdf6ad5891e2065d93a4c91412cf` conserva, nos mesmos quatro blobs do COMPOSE6, a via histórica C17 de fechamento record-only, com capture protegido prévio, vínculo ao ledger, replay e continuidade BCS. Os findings antigos de Map global e ausência genérica da via histórica foram superados em fonte. Permanecem os limites de capture prévio, fontes atuais, fechamento sem cálculo aninhado/assumptions/replacement e execução composta nos pins finais. Veja [external-reconciliation.md](external-reconciliation.md) e o [último refresh independente](reviews/latest-external-refresh.md), incluindo Interface cccd e drift4bd1.
 
 AlternativeDraft permanece vinculado à captura privada do run/proposta no host e ao produtor canônico. O grupo não aceita um resumo ou draft isolado como ChoiceRecord aplicado e não substitui autoridade por identidade nominal de agente.
 
@@ -120,8 +124,10 @@ Os testes numeram cada prova no seu pin. Esta tabela conserva os oráculos e nã
 | S11 | `6016a70d7ab0c3d50f1ec2827a534a80e48a5c56` | `78f709e52a052768188343f93cd5fa36ba867da2` | [43586902727](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43586902727) | failure: 4 pass / 1 fail / 1 error |
 | S12 | `92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f` | `0faf62c7f5e10f5ae17037bb6bd8eb512396f2fd` | [43587138878](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43587138878) | failure: 17 pass / 5 fail / 0 error |
 | S13 | `8d065831356e8a73cfd0e4fbb072c5041b95d05f` | `bd50d55e7613e9571e0e9ffaf71ce7a5ba8d9531` | [43589341922](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43589341922) | failure: 0 pass / 1 fail / 0 error |
-| S14 | `cfbf7c824d4351431d35533dbe2572de11084b9d` | `ee53236037e82ab79227b5ed43874f68dc539e19` | [43589528126](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43589528126) | pending: Em andamento; sem veredicto |
-| S15 | `6184a0d3c818fd508f05028d34428ef1c95c01a5` | `a4ee14cce723ac642e48822094809eea4113e11b` | [43590340187](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43590340187) | pending: Em andamento; sem veredicto |
+| S14 | `cfbf7c824d4351431d35533dbe2572de11084b9d` | `ee53236037e82ab79227b5ed43874f68dc539e19` | [43589528126](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43589528126) | failure: 22 pass / 5 fail / 0 error |
+| S15 | `6184a0d3c818fd508f05028d34428ef1c95c01a5` | `a4ee14cce723ac642e48822094809eea4113e11b` | [43590340187](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43590340187) | failure: 0 pass / 1 fail / 1 error |
+| S16 | `c99d6dfb4f443b8f626010e78276874ae842f370` | `fad30a6e2468088c574f57689341a3731ce3e08c` | [43591377679](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43591377679) | success: 1 pass / 0 fail / 0 error |
+| S17 | `0c4a2545a63b4903c7eedb00d3f0989eb74ed398` | `2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4` | [43591635600](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43591635600) | pending: Em andamento; sem veredicto |
 
 [product-tests.json](product-tests.json) contém requests normalizados, hashes, árvores W/S, arquivos selecionados, todos os cases extraídos dos logs, expect counts, Omni e conclusões. S1 preserva suas oito falhas; S3 validou somente as quatro fixtures corrigidas. S4 preserva quatro timeouts, mesmo onde houve avanço até assertions. Sem bun test local, epic por grupo, alteração de timeout ou assertions enfraquecidas.
 
@@ -142,6 +148,7 @@ O controle Omni focado `not applicable` declara ausência de spawn/delegação; 
 | [43585498891](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43585498891) | `61d92392e9bded167eb2794995a623b2719cc4ba` | 0/0/0 | 131 | 78 regras; 13 warnings; 0 erros |
 | [43587043914](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43587043914) | `92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f` | 0/0/0 | 131 | 78 regras; 13 warnings; 0 erros |
 | [43589529625](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43589529625) | `cfbf7c824d4351431d35533dbe2572de11084b9d` | 0/0/0 | 131 | 78 regras; 13 warnings; 0 erros |
+| [43591637037](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43591637037) | `0c4a2545a63b4903c7eedb00d3f0989eb74ed398` | 0/0/0 | 131 | 78 regras; 13 warnings; 0 erros |
 
 O package typecheck continua **failure** enquanto houver diagnósticos externos. Zero diagnósticos próprios não é PASS do package. [hosted-checks.json](hosted-checks.json) inclui a base real de guards, merge-base e hashes dos ZIPs e membros baixados/conferidos; [external-typecheck-findings.json](external-typecheck-findings.json) lista cada posição externa. Os checks executam `bun typecheck` em `modules/sucafina` e `bun run check:guards --base origin/dev` na raiz, pelo workflow mínimo publicado.
 
@@ -151,13 +158,13 @@ O package typecheck continua **failure** enquanto houver diagnósticos externos.
 
 | Dependência | Delta entregue e prova ainda exigida |
 | --- | --- |
-| astra-interface / mensal | [owner-deltas.md](../../WP03/finance-20261114/owner-deltas.md), patch mensal de 3 paths e pins COMPOSE4306/INTERFACEa295. Preview canônico, annual/spread/reset, conflito/rebase explícito; preservar retry incerto, key/body e revogação. |
-| astra-compose / C17 histórico | [host-c17-proposal.md](host-c17-proposal.md): caminho histórico privado limitado já implementado em COMPOSE6; compor com as cercas finais W18 e executar caso/ledger/capture/revogação. Sem capture prévio ou fontes atuais não há histórico autenticado. |
-| astra-compose / C17 concorrente | Implementação por cadeia preservada em COMPOSE6. O patch COMPOSE4 está preservado apenas como histórico; não reaplicar. Prova do wrapper atual fica no candidato do owner. |
+| astra-interface / mensal | [owner-deltas.md](../../WP03/finance-20261114/owner-deltas.md), patch mensal de3paths; o último refresh confirma os mesmos blobs920fda/2befb1/3adef2 emComposeed10/Interfacecccd, sem mudança no drift4bd1. Preview canônico, annual/spread/reset, conflito/rebase explícito; preservar retry incerto, key/body e revogação. |
+| astra-compose / C17 histórico | [host-c17-proposal.md](host-c17-proposal.md): caminho histórico privado limitado implementado e preservado no Composeed10; compor com as cercas finais W18 e executar caso/ledger/capture/revogação. Sem capture prévio ou fontes atuais não há histórico autenticado. |
+| astra-compose / C17 concorrente | Implementação por cadeia preservada no Composeed10. O patch COMPOSE4 está preservado apenas como histórico; não reaplicar. Prova do wrapper atual fica no candidato do owner. |
 | astra-compose / WP13 | O owner já implementa parameterOperation e certificado de subtotal conhecido com validator comum writer/verifier. Validar persistência/replay de 55000/15000, null/zero e mudanças de fonte no candidato real; proposta COMPOSE4 está superada no delta central. |
-| astra-interface + compose / BI | Rotas/fábrica/lifecycle já existem. [Proposta exata de dois arquivos](../../WP05/finance-20261114/advantage-selection-proposal.md) transporta advantageComparisonRef e igualdade, sem fórmula local. Restam seleção original/C17, retorno no mount e planos produtores BI09/10. |
+| astra-interface + compose / BI | Composeed10 adotou advantageComparisonRef e acrescentou seis destinos protegidos/foco. A [proposta original](../../WP05/finance-20261114/advantage-selection-proposal.md) é histórica. Corrigir TS2345 do teste owner e executar seleção inversa/navegação no composto; persistem planos produtores BI09/10 e prova instalada. |
 | astra-compose / N/A e projeção | Consumir classificação N/A evidenciada com confirmação humana; preservar estado confirmado do source-scenario no host, mantendo previews hipotéticos. |
-| astra-compose / Procurement | S12 falhou antes do dispatch porque o projector compartilhado antigo não reconhece approvalStage do issuer. Closure canônica de4arquivos já publicada em COMPOSE6, pinada em [procurement-projection-dependency.json](procurement-projection-dependency.json); executar os3cenários de cross-domain depois do intake. |
+| astra-compose / Procurement | S12 falhou antes do dispatch porque o projector compartilhado antigo não reconhece approvalStage do issuer. Closure canônica de4arquivos permanece publicada no Composeed10, pinada em [procurement-projection-dependency.json](procurement-projection-dependency.json); executar os3cenários de cross-domain depois do intake. |
 | S0 / bundle | Reconciliar dependências, fechar diagnósticos externos, execução instalada/nativa, revisões aceitas e gates C/D, AM01–AM06 e oito seleções finais; epic só do bundle. |
 
 As propostas externas não foram aplicadas autoralmente pelo grupo. Algumas já evoluíram no owner e estão marcadas como superadas em [external-reconciliation.json](external-reconciliation.json); os manifests identificam os blobs realmente examinados. Mudança do owner após esses pins requer reconciliação. O estado final do grupo permanece aberto nos gates não demonstrados, mesmo que uma seleção cirúrgica passe.

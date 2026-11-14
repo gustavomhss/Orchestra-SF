@@ -15,8 +15,8 @@
     "head": "0881fee21f07bf8a9a1153d7d55727837cdf497a",
     "last_historical_product_sha": "8f8a1a72dec4065c4cfb798d6d48ca13ca6d5760"
   },
-  "current_product_sha": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
-  "current_tree_sha": "1ce4e9fcb2e9fb81e12dcfd773aa2daae64be39a",
+  "current_product_sha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+  "current_tree_sha": "8325d52877c8fdd5bf317b244b81b0bb45736fce",
   "current_snapshot_sha": null,
   "counts": {
     "criteria": 108,
@@ -967,10 +967,13 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
-          "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "runConclusion": "failure",
+          "pass": 1,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            24,
+            25
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -980,6 +983,36 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/composite-coverage.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -1324,10 +1357,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -1337,6 +1372,36 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -1667,11 +1732,28 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
           "fail": 0,
-          "caseIndexesInRunReceipt": [],
-          "currentCodeHeadExactlyEqualsTestedProduct": true,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         }
       ]
@@ -2017,10 +2099,13 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
-          "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "runConclusion": "failure",
+          "pass": 1,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            24,
+            25
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -2030,10 +2115,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -2043,6 +2130,49 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/composite-coverage.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+          "runConclusion": null,
+          "pass": 0,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [],
+          "currentCodeHeadExactlyEqualsTestedProduct": true,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -2374,10 +2504,13 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
-          "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "runConclusion": "failure",
+          "pass": 1,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            24,
+            25
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -2387,10 +2520,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -2400,6 +2535,49 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/composite-coverage.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+          "runConclusion": null,
+          "pass": 0,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [],
+          "currentCodeHeadExactlyEqualsTestedProduct": true,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -2751,10 +2929,13 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
-          "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "runConclusion": "failure",
+          "pass": 1,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            24,
+            25
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -2764,10 +2945,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -2777,6 +2960,49 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/composite-coverage.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+          "runConclusion": null,
+          "pass": 0,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [],
+          "currentCodeHeadExactlyEqualsTestedProduct": true,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -4131,10 +4357,13 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
-          "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "runConclusion": "failure",
+          "pass": 1,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            24,
+            25
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -4144,10 +4373,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -4157,6 +4388,49 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/composite-coverage.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+          "runConclusion": null,
+          "pass": 0,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [],
+          "currentCodeHeadExactlyEqualsTestedProduct": true,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -4708,10 +4982,13 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
-          "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "runConclusion": "failure",
+          "pass": 1,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            24,
+            25
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -4721,10 +4998,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -4734,6 +5013,49 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/composite-coverage.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+          "runConclusion": null,
+          "pass": 0,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [],
+          "currentCodeHeadExactlyEqualsTestedProduct": true,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -5016,10 +5338,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -5029,6 +5353,36 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -11126,10 +11480,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -11139,6 +11495,36 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -11481,10 +11867,13 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
-          "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "runConclusion": "failure",
+          "pass": 1,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            24,
+            25
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -11494,10 +11883,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -11507,6 +11898,49 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/composite-coverage.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+          "runConclusion": null,
+          "pass": 0,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [],
+          "currentCodeHeadExactlyEqualsTestedProduct": true,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -11861,10 +12295,13 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
-          "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "runConclusion": "failure",
+          "pass": 1,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            24,
+            25
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -11874,10 +12311,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -11887,6 +12326,49 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/composite-coverage.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+          "runConclusion": null,
+          "pass": 0,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [],
+          "currentCodeHeadExactlyEqualsTestedProduct": true,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -12092,10 +12574,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -12105,6 +12589,36 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -12390,10 +12904,13 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
-          "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "runConclusion": "failure",
+          "pass": 1,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            24,
+            25
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -12403,10 +12920,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -12416,6 +12935,49 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/composite-coverage.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+          "runConclusion": null,
+          "pass": 0,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [],
+          "currentCodeHeadExactlyEqualsTestedProduct": true,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -12658,11 +13220,27 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
+          "runConclusion": "failure",
+          "pass": 1,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            24,
+            25
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/composite-coverage.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
           "caseIndexesInRunReceipt": [],
-          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "currentCodeHeadExactlyEqualsTestedProduct": true,
           "acceptsCriterion": false
         }
       ]
@@ -12928,10 +13506,13 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
-          "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "runConclusion": "failure",
+          "pass": 1,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            24,
+            25
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -12941,10 +13522,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -12954,6 +13537,49 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/composite-coverage.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+          "runConclusion": null,
+          "pass": 0,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [],
+          "currentCodeHeadExactlyEqualsTestedProduct": true,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -13161,10 +13787,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -13174,6 +13802,36 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -13377,10 +14035,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -13390,6 +14050,36 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -13617,11 +14307,27 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
+          "runConclusion": "failure",
+          "pass": 1,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            24,
+            25
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/composite-coverage.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
           "caseIndexesInRunReceipt": [],
-          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "currentCodeHeadExactlyEqualsTestedProduct": true,
           "acceptsCriterion": false
         }
       ]
@@ -14025,10 +14731,13 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
-          "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "runConclusion": "failure",
+          "pass": 1,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            24,
+            25
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -14038,10 +14747,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -14051,6 +14762,49 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/composite-coverage.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+          "runConclusion": null,
+          "pass": 0,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [],
+          "currentCodeHeadExactlyEqualsTestedProduct": true,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -14404,10 +15158,13 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
-          "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "runConclusion": "failure",
+          "pass": 1,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            24,
+            25
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -14417,10 +15174,12 @@
           "runId": 43589528126,
           "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
           "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
-          "runConclusion": null,
+          "runConclusion": "failure",
           "pass": 0,
-          "fail": 0,
-          "caseIndexesInRunReceipt": [],
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            22
+          ],
           "currentCodeHeadExactlyEqualsTestedProduct": false,
           "acceptsCriterion": false
         },
@@ -14430,6 +15189,49 @@
           "runId": 43590340187,
           "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
           "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
+          "runConclusion": "failure",
+          "pass": 0,
+          "fail": 1,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp05/choice-history-bi.test.ts",
+          "selection": 16,
+          "runId": 43591377679,
+          "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+          "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+          "runConclusion": "success",
+          "pass": 1,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [
+            0
+          ],
+          "currentCodeHeadExactlyEqualsTestedProduct": false,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/composite-coverage.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+          "runConclusion": null,
+          "pass": 0,
+          "fail": 0,
+          "caseIndexesInRunReceipt": [],
+          "currentCodeHeadExactlyEqualsTestedProduct": true,
+          "acceptsCriterion": false
+        },
+        {
+          "file": "test/product/wp11/renewal-choice-history.test.ts",
+          "selection": 17,
+          "runId": 43591635600,
+          "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+          "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
           "runConclusion": null,
           "pass": 0,
           "fail": 0,
@@ -14441,17 +15243,11 @@
     }
   ],
   "current_limitations": [
-    "Nenhum PASS isolado torna WP05 READY ou DONE; provas native, reviews independentes e C/D continuam obrigatórias.",
-    "Classificação histórica permanece preservada. C1 está publicado emW8 e G2 DOM emW6; ambos aguardam testes cirúrgicos de browser/C17. S4backend43581792536 não substitui essa seleção.",
-    "COMPOSE4306 adotou consumidores/fences próprios W2. Os entrypoints HTTP/UI identificados continuam sem seleção completa da marca; os oito destinos instalados e retorno/foco não estão demonstrados.",
-    "BI09/10 no factory CLI observado recebem series vazias e limitação explícita de planos; tabela e marcas de período não substituem planos canônicos reconciliados.",
-    "Check hospedado W7 tem zero erros WP03/WP05/WP11 e 131 externos; package continua FAIL, guards PASS. Não se transfere esse resultado ao C1W8 posterior.",
-    "Cobertura shared/N/A e cenário source-only atual não promovem preview hipotético nem aplicam ChoiceRecord. Fixtures de mesmo caso declaram source-reference harness, sem prova instalada/native.",
-    "Owner Portfolio4306 tem novos fences de replay, mas ainda exige replace explícito e samples completos. Solver55k/15k e certificado não são automaticamente SensitivityResult persistido BI11.",
-    "Timeout W1 de engine-coverage relatado pelo coordenador permanece risco observado até reexecução do produtor otimizado. Assertions/timeouts não foram relaxados; S4 está em andamento.",
-    "Falhas históricas Full35 não são apagadas; undated tem fix no owner, e os failures browser finance/approver mantêm diagnóstico e necessidade de prova atual.",
-    "Adendo W10 encontrou C1R de foco e G2 literal só fora do DOM. C1R publicado em W12; G2 comparação inversa persistida/barra/tabela pronta como FIN05-J, sem PASS ou aceite inferido. Handoff externo da referência opcional continua obrigatório.",
-    "FIN05-J publicado em W14 fe13ee693bdcec1830190bcdb5cc7f2794942c1f / tree1ce4e9fcb2e9fb81e12dcfd773aa2daae64be39a. Captura de oito blobs confirmada pelo coordenador; check consolidado, revisão G2 e S6 planejados, nenhum resultado antecipado."
+    "303 criteria remain without integral acceptance; exact runs qualify only their selected consumer at W/S.",
+    "Compose ed10 implements advantageComparisonRef and protected navigation; new owner consumers need runtime validation and the WP10 test TS2345 remains.",
+    "BI09/10 producer presentation plans remain unavailable in the inspected host.",
+    "Monthly three-file owner proposal remains unconsumed; C17 historical capture limits, N/A gate and Procurement dependency remain separately documented.",
+    "Native installed chain, independent acceptance C/D and final bundle epic remain with S0."
   ],
   "published_increments": [
     {
@@ -14550,64 +15346,13 @@
       "own_change": "FIN05-J"
     }
   ],
-  "current_external_dependencies": [
-    {
-      "id": "EXT05-C17",
-      "owner": "astra-compose/WP10",
-      "pin": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
-      "path": "product/integration/bi-http.ts",
-      "consumer": "bi-source",
-      "observed": "selectionRef-only overview drops exact mark/context/ref/version",
-      "required": "Preserve full BiSelection and original BiViewRequest through the already-existing UI/CLI/HTTP consumers and consume readBiDestination; demonstrate all eight exact destinations/back/focus",
-      "ui_consumer_observation": {
-        "pin": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
-        "blob": "305ee63cd74658f6665a6ebbca885fe5995ea95f",
-        "path": "product/interface/bi-entry.ts",
-        "observed": "openSource emits full selection in local event but sends selectionRef only over HTTP; navigation admits page/year only",
-        "scope": "READ_PINNED_INTAKE_NOT_LATEST_REMOTE_CLAIM"
-      },
-      "latest_owner_report": {
-        "compose_pin": "4306b310e4d6dac77f9beab461adad4e8e924849",
-        "interface_pin": "a29565f763ddd90bc5bc3b8d298afb47ad84008d",
-        "document": "docs/sf2h/receipts/WP01/astra-interface/findings/bi-refresh-lifecycle.md",
-        "bi_entry_blob": "305ee63cd74658f6665a6ebbca885fe5995ea95f",
-        "bi_http_blob": "23c183666cef9d97925ba05c67fe678d9b058255",
-        "observed": "Owner report confirms same entry/HTTP blobs at compose4306; own W2 consumers adopted. The remaining issue is selection transport and authorized refresh lifecycle, not absence of consumers."
-      }
-    },
-    {
-      "id": "EXT05-DECISION-PLAN",
-      "owner": "canonical projection producer + astra-compose",
-      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
-      "path": "apps/cli/src/sucafina-product/bi-services.ts",
-      "consumer": "decisionPresentation",
-      "observed": "series empty with explicit missing waterfall/timeline plan",
-      "required": "Producer supplies reconciled presentation plans; no analytics financial inference"
-    },
-    {
-      "id": "EXT05-UNDATED",
-      "owner": "WP02/astra-interface + astra-compose",
-      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
-      "paths": [
-        "product/dashboard/scope.ts",
-        "product/dashboard/port.ts",
-        "product/dashboard/sources.ts"
-      ],
-      "consumer": "test/product/wp05/dashboard-integration.test.ts",
-      "observed": "FIX_PRESENT_IN_OWNER_PENDING_COMPOSITION_PROOF",
-      "required": "Consume compatible owner sources/contracts and run exact current consumer; preserve historical failure"
-    },
-    {
-      "id": "EXT05-SENSITIVITY",
-      "owner": "Portfolio producer + astra-compose",
-      "pin": "4306b310e4d6dac77f9beab461adad4e8e924849",
-      "path": "product/portfolio/planner-sensitivity.ts",
-      "consumer": "createPlannerSensitivity -> persistent sensitivity -> BI11",
-      "observed": "Owner current planner-sensitivity has snapshot/replay hardening, but still requires one replace operation and complete preview samples for exact threshold. Source-only persisted BI11 chain not demonstrated.",
-      "required": "Compose canonical source parameter proof and C10 interval certificate without promoting hypothetical preview; test current/replay persisted BI11 threshold",
-      "pin_scope": "EXACT_OWNER_SOURCE_READ_FROM_COMPOSE4_INTAKE"
-    }
-  ],
+  "current_external_dependencies": {
+    "receipt": "../../WP11/finance-20261114/external-reconciliation.json",
+    "compose": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+    "interface": "cccd00c568aea65bb0c1b5cb4a82c2a236c7e775",
+    "interface_drift": "4bd1f807e449d040e3db61c4d2b1e177b205ac69",
+    "qualification": "Inspected sources; no transfer of external runtime qualification"
+  },
   "review_followups": [
     {
       "reviewer": "review_consumers",
@@ -14659,106 +15404,162 @@
     }
   ],
   "current_observed_risks": [
-    {
-      "id": "WP05-ENGINE-COVERAGE-TIMEOUT",
-      "source": "coordinator observation",
-      "run_id": 43577975248,
-      "test": "test/product/wp05/engine-coverage.test.ts",
-      "observed": "Coordinator reported timeout at approximately245s; exact log adjudication remains with root.",
-      "action": "WP03 optimizes repeated self-comparison projection without caching authority/source stages. Preserve assertions and timeouts; validate changed producer and affected consumer in Actions."
-    }
+    "Package typecheck remains failure with external diagnostics.",
+    "Historical timeouts remain in the full run ledger; later passing scopes do not erase the failures.",
+    "Native proof and integration execution are separate from the focused BI browser test."
   ],
   "latest_reported_check": {
-    "schema": "sf2h-wp05-check-followup-v1",
-    "product_sha": "9913b0c622aa09da7914f231bd9f2ff54d872634",
-    "product_tree": "f43b8e39733c6d93048c4d48001af8d0f398ac5d",
-    "run_id": 43582252267,
-    "job_id": 132409273397,
-    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582252267",
-    "log_sha256": "ed3ff2b22341cd9b4efa636211c91eb5cc6f1ed81dc815096e080b84ef4d00aa",
+    "runId": 43591637037,
+    "jobId": 132437420539,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43591637037",
+    "source": {
+      "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "productTree": "8325d52877c8fdd5bf317b244b81b0bb45736fce",
+      "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "recovery": "04f3ffae53eca454b434bdab9fcb19bf0353ccc1"
+    },
+    "conclusion": "failure",
     "typecheck": {
-      "overall": "failure",
-      "diagnostics_total": 134,
-      "diagnostics_external": 131,
-      "diagnostics_wp05": 3,
-      "wp05_product_diagnostics": 0,
-      "locations": [
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "conclusion": "failure",
+      "diagnostics": 131,
+      "attribution": {
+        "WP03": 0,
+        "WP05": 0,
+        "WP11": 0,
+        "external": 131
+      }
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "directory": ".",
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 962,
+      "warnings": 13,
+      "errors": 0
+    },
+    "rawMcpLogSha256": "a5f4755871e2d5a4f8a8b31ca2b3d4c5cb6edde505c351e92b2d17a10bd91af2",
+    "artifact": {
+      "id": 14113180076,
+      "sha256": "6c0f163cd5d24199703bf9e212bcbe68038fdc5e136337c1d6eabd06d77e6555",
+      "downloadedAndHashVerified": true,
+      "members": [
         {
-          "file": "test/product/wp05/planner-origins.test.ts",
-          "line": 124,
-          "code": "TS2769"
+          "name": "guards.log",
+          "sha256": "4a7e91dd618e2a7980ba723e1cf8a9ecee35382d8c79083ab0fc83cff0195191"
         },
         {
-          "file": "test/product/wp05/planner-origins.test.ts",
-          "line": 125,
-          "code": "TS2769"
+          "name": "source.json",
+          "sha256": "d75a2300572d20d385eb43f8ce4e4402af58bc734573f01751d43be2f979a545"
         },
         {
-          "file": "test/product/wp05/planner-origins.test.ts",
-          "line": 128,
-          "code": "TS2769"
+          "name": "typecheck.log",
+          "sha256": "9d3b98c754286f19770057ade1cc4a169ed04b15bdf243eb77a8eeeab6654563"
         }
       ]
     },
-    "cause": "BiSelection.reference is nullable and generic; the fixture promises a Planner record but did not narrow that promise before equality assertions. Optional origin lookup also allowed an undefined expected ID.",
-    "fix": {
-      "file": "test/product/wp05/planner-origins.test.ts",
-      "status": "LOCAL_READY_FOR_PUBLICATION_PENDING_ACTIONS",
-      "description": "Require a non-null record reference and an existing authorized source identity with runtime guards, then retain full ref/currentRef equality and exact recordId assertion. No cast or suppression; no assertion or timeout relaxation.",
-      "product_changed": false,
-      "tests_executed_locally": false,
-      "new_ci_dispatched": false
-    },
-    "guards": {
-      "outcome": "pass",
-      "rules": 78,
-      "paths": 766,
-      "warnings": 13,
-      "gate_findings": 0,
-      "errors": 0
-    },
-    "label": "W9"
+    "productTests": false
   },
   "current_test_followup": {
-    "run_id": 43581792536,
-    "selection": "S4, seven backend files including engine-coverage.test.ts",
-    "status": "IN_PROGRESS_AS_REPORTED_BY_COORDINATOR",
-    "product_sha": null,
-    "snapshot_sha": null,
-    "sha_reconciliation": "ROOT_PENDING",
-    "does_not_validate_c1_g2_browser": true,
-    "s4_observation": {
-      "run_id": 43581792536,
-      "log": "test4-clean.log",
-      "log_sha256": "04fbd846e55b390dc73495edfbbfab788f973d7b0edaa0f9ab3746a34f1f6cd3",
-      "scope": "test/product/wp05/engine-coverage.test.ts",
-      "reported_by": "root; WP05 relê linhas de outcomes",
+    "receipt": "../../WP11/finance-20261114/product-tests.json",
+    "latest_BI_same_case": {
+      "selection": 16,
+      "runId": 43591377679,
+      "jobId": 132436624540,
+      "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+      "productTree": "d6f28f45ac55c5d345b0694d02441849a2cf27d7",
+      "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+      "snapshotTree": "562665a618a0d98ead4fc53a507c298ba500b837",
+      "conclusion": "success",
+      "branch": "ci-run-linux-astra-finance-c99d6df-fdf4ffe-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43591377679",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "fdf4ffe89aa485b6fbe3792a93e88282b62b610ba8748c5b7bcf1830135b4652",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1,
+      "logSha256": "a401b2e03f19c0eefe566a47017045ffbd982444f7aa3b26b482c9fa93da3059",
       "cases": [
         {
-          "testcase": "Planner's canonical known-subtotal solver proves the 55000 boundary; its integrated sensitivity still discloses pending coverage",
-          "outcome": "pass",
-          "duration_ms": 92737.76
-        },
-        {
-          "testcase": "real Planner results retain omitted training as unknown, then include its 40000 source without mutating the original result",
-          "outcome": "timeout",
-          "duration_ms": 219940.58,
-          "test_limit_ms": 180000
-        },
-        {
-          "testcase": "real Planner and persisted BI distinguish explicit zero training from an unresolved price",
-          "outcome": "pass",
-          "duration_ms": 167626.65
-        },
-        {
-          "testcase": "source-specific revocation with a valid UI session withholds persisted BI values and coverage",
-          "outcome": "pass",
-          "duration_ms": 83799.56
+          "file": "Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+          "status": "pass",
+          "name": "same-case BI preserves the human choice while the confirmed training revision changes its current source result and table",
+          "milliseconds": 127936.79
         }
       ],
-      "product_snapshot_binding": "ROOT_RECONCILES_EXACT_W_S",
-      "does_not_validate": "FIN05-I/FIN05-J browser and same-case assertions are not this selection"
-    }
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "error": 0
+      },
+      "expectCalls": 86,
+      "omni": {
+        "nonce": "9993b7eb7dbc25de6243c8baab577f25",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 1,
+        "files": 1,
+        "duration": 128.13,
+        "unit": "s"
+      }
+    },
+    "latest_affected_fixture_selection": {
+      "selection": 17,
+      "runId": 43591635600,
+      "jobId": null,
+      "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "productTree": "8325d52877c8fdd5bf317b244b81b0bb45736fce",
+      "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+      "snapshotTree": "073f27ef857cf3b0038124c9e3a664a5b5380720",
+      "conclusion": null,
+      "branch": "ci-run-linux-astra-finance-0c4a254-c64f56d-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43591635600",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+          "./Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+          "./Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+          "./Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "./Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+          "./Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+          "./Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+          "./Sucafinav1/test/product/wp11/implementation-quote-history.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "c64f56d6d279b287745baa9aece4182843e117c8b75ec3314fa81e48940cacca",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1
+    },
+    "accepts_criterion": false
   },
   "composition_intake": {
     "owner": "astra-compose",
@@ -14778,23 +15579,76 @@
     "no_additional_wp05_acceptance": true
   },
   "current_typecheck_followup": {
-    "receipt": "docs/sf2h/receipts/WP05/finance-20261114/check-w9-followup.json",
-    "status": "W11_FIXTURE_NARROWING_PUBLISHED_PENDING_RECONCILED_RECHECK",
-    "does_not_imply_product_test_pass": true,
-    "product_sha": "88144ff9495c4061fd1661c55e8c6d802bf197a7"
+    "runId": 43591637037,
+    "jobId": 132437420539,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43591637037",
+    "source": {
+      "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "productTree": "8325d52877c8fdd5bf317b244b81b0bb45736fce",
+      "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "recovery": "04f3ffae53eca454b434bdab9fcb19bf0353ccc1"
+    },
+    "conclusion": "failure",
+    "typecheck": {
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "conclusion": "failure",
+      "diagnostics": 131,
+      "attribution": {
+        "WP03": 0,
+        "WP05": 0,
+        "WP11": 0,
+        "external": 131
+      }
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "directory": ".",
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 962,
+      "warnings": 13,
+      "errors": 0
+    },
+    "rawMcpLogSha256": "a5f4755871e2d5a4f8a8b31ca2b3d4c5cb6edde505c351e92b2d17a10bd91af2",
+    "artifact": {
+      "id": 14113180076,
+      "sha256": "6c0f163cd5d24199703bf9e212bcbe68038fdc5e136337c1d6eabd06d77e6555",
+      "downloadedAndHashVerified": true,
+      "members": [
+        {
+          "name": "guards.log",
+          "sha256": "4a7e91dd618e2a7980ba723e1cf8a9ecee35382d8c79083ab0fc83cff0195191"
+        },
+        {
+          "name": "source.json",
+          "sha256": "d75a2300572d20d385eb43f8ce4e4402af58bc734573f01751d43be2f979a545"
+        },
+        {
+          "name": "typecheck.log",
+          "sha256": "9d3b98c754286f19770057ade1cc4a169ed04b15bdf243eb77a8eeeab6654563"
+        }
+      ]
+    },
+    "productTests": false
   },
-  "pending_product_deltas": [],
+  "pending_product_deltas": {
+    "current_source": "../../WP11/finance-20261114/group-handoff.md",
+    "historical_source": "historical_author_current_sections.pending_product_deltas",
+    "scope": "Current unresolved deltas are recorded centrally, not inferred from historical planning prose."
+  },
   "group_evidence": {
-    "product_head": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
-    "product_tree": "f30c35028acb382d2b38b7be6e105f3a98a0518c",
+    "product_head": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+    "product_tree": "8325d52877c8fdd5bf317b244b81b0bb45736fce",
     "product_runs_receipt": "../../WP11/finance-20261114/product-tests.json",
     "checks_receipt": "../../WP11/finance-20261114/hosted-checks.json",
     "literal_tasks_receipt": "../../WP11/finance-20261114/task-obligations.json",
     "latest_check": {
-      "runId": 43589529625,
+      "runId": 43591637037,
       "source": {
-        "productSha": "cfbf7c824d4351431d35533dbe2572de11084b9d",
-        "productTree": "26843c698c3cf7b923d364434fae443a63efafaa",
+        "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+        "productTree": "8325d52877c8fdd5bf317b244b81b0bb45736fce",
         "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
         "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
         "recovery": "04f3ffae53eca454b434bdab9fcb19bf0353ccc1"
@@ -14817,7 +15671,7 @@
         "directory": ".",
         "conclusion": "success",
         "rules": 78,
-        "changedPaths": 859,
+        "changedPaths": 962,
         "warnings": 13,
         "errors": 0
       }
@@ -14827,5 +15681,199 @@
     "C": null,
     "D": null,
     "scope": "Every result belongs to its recorded W/S and selected files. Later material changes require affected revalidation. Historical classifications are retained; no criterion receives integral acceptance from this ledger."
+  },
+  "evidence_precedence": {
+    "current_observation": "group_evidence and group_selected_file_observations",
+    "current_product_head": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+    "current_product_tree": "8325d52877c8fdd5bf317b244b81b0bb45736fce",
+    "prior_author_sections": "Historical observations at their recorded pins; names containing current do not supersede the consolidated group evidence.",
+    "external_current_receipt": "../../WP11/finance-20261114/external-reconciliation.json",
+    "task_map_scope": "Independent task-delivery-map audit remains fixed at W21; later deltas have separate reviews and CI.",
+    "criterion_acceptance": false
+  },
+  "historical_author_current_sections": {
+    "current_product_sha": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+    "current_tree_sha": "1ce4e9fcb2e9fb81e12dcfd773aa2daae64be39a",
+    "current_snapshot_sha": null,
+    "current_limitations": [
+      "Nenhum PASS isolado torna WP05 READY ou DONE; provas native, reviews independentes e C/D continuam obrigatórias.",
+      "Classificação histórica permanece preservada. C1 está publicado emW8 e G2 DOM emW6; ambos aguardam testes cirúrgicos de browser/C17. S4backend43581792536 não substitui essa seleção.",
+      "COMPOSE4306 adotou consumidores/fences próprios W2. Os entrypoints HTTP/UI identificados continuam sem seleção completa da marca; os oito destinos instalados e retorno/foco não estão demonstrados.",
+      "BI09/10 no factory CLI observado recebem series vazias e limitação explícita de planos; tabela e marcas de período não substituem planos canônicos reconciliados.",
+      "Check hospedado W7 tem zero erros WP03/WP05/WP11 e 131 externos; package continua FAIL, guards PASS. Não se transfere esse resultado ao C1W8 posterior.",
+      "Cobertura shared/N/A e cenário source-only atual não promovem preview hipotético nem aplicam ChoiceRecord. Fixtures de mesmo caso declaram source-reference harness, sem prova instalada/native.",
+      "Owner Portfolio4306 tem novos fences de replay, mas ainda exige replace explícito e samples completos. Solver55k/15k e certificado não são automaticamente SensitivityResult persistido BI11.",
+      "Timeout W1 de engine-coverage relatado pelo coordenador permanece risco observado até reexecução do produtor otimizado. Assertions/timeouts não foram relaxados; S4 está em andamento.",
+      "Falhas históricas Full35 não são apagadas; undated tem fix no owner, e os failures browser finance/approver mantêm diagnóstico e necessidade de prova atual.",
+      "Adendo W10 encontrou C1R de foco e G2 literal só fora do DOM. C1R publicado em W12; G2 comparação inversa persistida/barra/tabela pronta como FIN05-J, sem PASS ou aceite inferido. Handoff externo da referência opcional continua obrigatório.",
+      "FIN05-J publicado em W14 fe13ee693bdcec1830190bcdb5cc7f2794942c1f / tree1ce4e9fcb2e9fb81e12dcfd773aa2daae64be39a. Captura de oito blobs confirmada pelo coordenador; check consolidado, revisão G2 e S6 planejados, nenhum resultado antecipado."
+    ],
+    "current_external_dependencies": [
+      {
+        "id": "EXT05-C17",
+        "owner": "astra-compose/WP10",
+        "pin": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+        "path": "product/integration/bi-http.ts",
+        "consumer": "bi-source",
+        "observed": "selectionRef-only overview drops exact mark/context/ref/version",
+        "required": "Preserve full BiSelection and original BiViewRequest through the already-existing UI/CLI/HTTP consumers and consume readBiDestination; demonstrate all eight exact destinations/back/focus",
+        "ui_consumer_observation": {
+          "pin": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+          "blob": "305ee63cd74658f6665a6ebbca885fe5995ea95f",
+          "path": "product/interface/bi-entry.ts",
+          "observed": "openSource emits full selection in local event but sends selectionRef only over HTTP; navigation admits page/year only",
+          "scope": "READ_PINNED_INTAKE_NOT_LATEST_REMOTE_CLAIM"
+        },
+        "latest_owner_report": {
+          "compose_pin": "4306b310e4d6dac77f9beab461adad4e8e924849",
+          "interface_pin": "a29565f763ddd90bc5bc3b8d298afb47ad84008d",
+          "document": "docs/sf2h/receipts/WP01/astra-interface/findings/bi-refresh-lifecycle.md",
+          "bi_entry_blob": "305ee63cd74658f6665a6ebbca885fe5995ea95f",
+          "bi_http_blob": "23c183666cef9d97925ba05c67fe678d9b058255",
+          "observed": "Owner report confirms same entry/HTTP blobs at compose4306; own W2 consumers adopted. The remaining issue is selection transport and authorized refresh lifecycle, not absence of consumers."
+        }
+      },
+      {
+        "id": "EXT05-DECISION-PLAN",
+        "owner": "canonical projection producer + astra-compose",
+        "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+        "path": "apps/cli/src/sucafina-product/bi-services.ts",
+        "consumer": "decisionPresentation",
+        "observed": "series empty with explicit missing waterfall/timeline plan",
+        "required": "Producer supplies reconciled presentation plans; no analytics financial inference"
+      },
+      {
+        "id": "EXT05-UNDATED",
+        "owner": "WP02/astra-interface + astra-compose",
+        "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+        "paths": [
+          "product/dashboard/scope.ts",
+          "product/dashboard/port.ts",
+          "product/dashboard/sources.ts"
+        ],
+        "consumer": "test/product/wp05/dashboard-integration.test.ts",
+        "observed": "FIX_PRESENT_IN_OWNER_PENDING_COMPOSITION_PROOF",
+        "required": "Consume compatible owner sources/contracts and run exact current consumer; preserve historical failure"
+      },
+      {
+        "id": "EXT05-SENSITIVITY",
+        "owner": "Portfolio producer + astra-compose",
+        "pin": "4306b310e4d6dac77f9beab461adad4e8e924849",
+        "path": "product/portfolio/planner-sensitivity.ts",
+        "consumer": "createPlannerSensitivity -> persistent sensitivity -> BI11",
+        "observed": "Owner current planner-sensitivity has snapshot/replay hardening, but still requires one replace operation and complete preview samples for exact threshold. Source-only persisted BI11 chain not demonstrated.",
+        "required": "Compose canonical source parameter proof and C10 interval certificate without promoting hypothetical preview; test current/replay persisted BI11 threshold",
+        "pin_scope": "EXACT_OWNER_SOURCE_READ_FROM_COMPOSE4_INTAKE"
+      }
+    ],
+    "current_observed_risks": [
+      {
+        "id": "WP05-ENGINE-COVERAGE-TIMEOUT",
+        "source": "coordinator observation",
+        "run_id": 43577975248,
+        "test": "test/product/wp05/engine-coverage.test.ts",
+        "observed": "Coordinator reported timeout at approximately245s; exact log adjudication remains with root.",
+        "action": "WP03 optimizes repeated self-comparison projection without caching authority/source stages. Preserve assertions and timeouts; validate changed producer and affected consumer in Actions."
+      }
+    ],
+    "latest_reported_check": {
+      "schema": "sf2h-wp05-check-followup-v1",
+      "product_sha": "9913b0c622aa09da7914f231bd9f2ff54d872634",
+      "product_tree": "f43b8e39733c6d93048c4d48001af8d0f398ac5d",
+      "run_id": 43582252267,
+      "job_id": 132409273397,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582252267",
+      "log_sha256": "ed3ff2b22341cd9b4efa636211c91eb5cc6f1ed81dc815096e080b84ef4d00aa",
+      "typecheck": {
+        "overall": "failure",
+        "diagnostics_total": 134,
+        "diagnostics_external": 131,
+        "diagnostics_wp05": 3,
+        "wp05_product_diagnostics": 0,
+        "locations": [
+          {
+            "file": "test/product/wp05/planner-origins.test.ts",
+            "line": 124,
+            "code": "TS2769"
+          },
+          {
+            "file": "test/product/wp05/planner-origins.test.ts",
+            "line": 125,
+            "code": "TS2769"
+          },
+          {
+            "file": "test/product/wp05/planner-origins.test.ts",
+            "line": 128,
+            "code": "TS2769"
+          }
+        ]
+      },
+      "cause": "BiSelection.reference is nullable and generic; the fixture promises a Planner record but did not narrow that promise before equality assertions. Optional origin lookup also allowed an undefined expected ID.",
+      "fix": {
+        "file": "test/product/wp05/planner-origins.test.ts",
+        "status": "LOCAL_READY_FOR_PUBLICATION_PENDING_ACTIONS",
+        "description": "Require a non-null record reference and an existing authorized source identity with runtime guards, then retain full ref/currentRef equality and exact recordId assertion. No cast or suppression; no assertion or timeout relaxation.",
+        "product_changed": false,
+        "tests_executed_locally": false,
+        "new_ci_dispatched": false
+      },
+      "guards": {
+        "outcome": "pass",
+        "rules": 78,
+        "paths": 766,
+        "warnings": 13,
+        "gate_findings": 0,
+        "errors": 0
+      },
+      "label": "W9"
+    },
+    "current_test_followup": {
+      "run_id": 43581792536,
+      "selection": "S4, seven backend files including engine-coverage.test.ts",
+      "status": "IN_PROGRESS_AS_REPORTED_BY_COORDINATOR",
+      "product_sha": null,
+      "snapshot_sha": null,
+      "sha_reconciliation": "ROOT_PENDING",
+      "does_not_validate_c1_g2_browser": true,
+      "s4_observation": {
+        "run_id": 43581792536,
+        "log": "test4-clean.log",
+        "log_sha256": "04fbd846e55b390dc73495edfbbfab788f973d7b0edaa0f9ab3746a34f1f6cd3",
+        "scope": "test/product/wp05/engine-coverage.test.ts",
+        "reported_by": "root; WP05 relê linhas de outcomes",
+        "cases": [
+          {
+            "testcase": "Planner's canonical known-subtotal solver proves the 55000 boundary; its integrated sensitivity still discloses pending coverage",
+            "outcome": "pass",
+            "duration_ms": 92737.76
+          },
+          {
+            "testcase": "real Planner results retain omitted training as unknown, then include its 40000 source without mutating the original result",
+            "outcome": "timeout",
+            "duration_ms": 219940.58,
+            "test_limit_ms": 180000
+          },
+          {
+            "testcase": "real Planner and persisted BI distinguish explicit zero training from an unresolved price",
+            "outcome": "pass",
+            "duration_ms": 167626.65
+          },
+          {
+            "testcase": "source-specific revocation with a valid UI session withholds persisted BI values and coverage",
+            "outcome": "pass",
+            "duration_ms": 83799.56
+          }
+        ],
+        "product_snapshot_binding": "ROOT_RECONCILES_EXACT_W_S",
+        "does_not_validate": "FIN05-I/FIN05-J browser and same-case assertions are not this selection"
+      }
+    },
+    "current_typecheck_followup": {
+      "receipt": "docs/sf2h/receipts/WP05/finance-20261114/check-w9-followup.json",
+      "status": "W11_FIXTURE_NARROWING_PUBLISHED_PENDING_RECONCILED_RECHECK",
+      "does_not_imply_product_test_pass": true,
+      "product_sha": "88144ff9495c4061fd1661c55e8c6d802bf197a7"
+    },
+    "pending_product_deltas": []
   }
 }

@@ -1802,6 +1802,12 @@
       "omni": {
         "nonce": "3d21058b4e85c6534eab78778d16753a",
         "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 1,
+        "files": 1,
+        "duration": 158.76,
+        "unit": "s"
       }
     },
     {
@@ -1812,8 +1818,9 @@
       "productTree": "26843c698c3cf7b923d364434fae443a63efafaa",
       "snapshotSha": "ee53236037e82ab79227b5ed43874f68dc539e19",
       "snapshotTree": "660b1e1b331cec536e25295682a51b62d93543e4",
-      "conclusion": null,
+      "conclusion": "failure",
       "branch": "ci-run-linux-astra-finance-cfbf7c8-38f2e35-a1",
+      "artifacts": [],
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43589528126",
       "request": {
         "package": "sucafina",
@@ -1843,18 +1850,200 @@
       ],
       "productBlobEqualityVerified": true,
       "localProductTests": false,
-      "attempt": 1
+      "attempt": 1,
+      "logSha256": "e0f7acd17f9d69d2fa982921db80ed06ed9638c69f192e5df03f4a76e06d00fb",
+      "cases": [
+        {
+          "file": "Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+          "status": "pass",
+          "name": "source-only promotions prepare the exact coverage proof for both source orders and persist without creating a choice or applying commands",
+          "milliseconds": 308.12
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+          "status": "pass",
+          "name": "a changed scenario still consumes coverage proof without upgrading hypothetical total",
+          "milliseconds": 94.79
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+          "status": "pass",
+          "name": "source promotion rejects entries changes before commit without a partial alternative or result",
+          "milliseconds": 65.27
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+          "status": "pass",
+          "name": "source promotion rejects source changes before commit without a partial alternative or result",
+          "milliseconds": 99.98
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+          "status": "pass",
+          "name": "source promotion rejects case changes before commit without a partial alternative or result",
+          "milliseconds": 89.72
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+          "status": "pass",
+          "name": "source promotion rejects authority changes before commit without a partial alternative or result",
+          "milliseconds": 82.25
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+          "status": "pass",
+          "name": "source promotion rejects abort changes before commit without a partial alternative or result",
+          "milliseconds": 81.35
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+          "status": "pass",
+          "name": "Hot Topic drafts verify the Dashboard snapshot, persist once without domain application and reject a source race",
+          "milliseconds": 43.11
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "status": "fail",
+          "name": "a canonical human choice creates a reviewed Planner proposal and only a separate application grant commits it",
+          "milliseconds": 153.5
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+          "status": "pass",
+          "name": "case draft survives a real store reopen, exact retry is idempotent and revoked access is denied",
+          "milliseconds": 28.2
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+          "status": "pass",
+          "name": "an entirely omitted renewal category remains pending",
+          "milliseconds": 0.4
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+          "status": "pass",
+          "name": "coverage distinguishes a sourced zero from an omitted category",
+          "milliseconds": 1.1
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+          "status": "pass",
+          "name": "case references encode both identities without accepting ambiguous aliases",
+          "milliseconds": 0.13
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+          "status": "pass",
+          "name": "receipt reconciliation preserves partial application and rejects changed identity",
+          "milliseconds": 0.38
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+          "status": "pass",
+          "name": "a conditional human choice freezes the comparison and cost gap",
+          "milliseconds": 0.92
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+          "status": "pass",
+          "name": "preparing a change preserves the domain command and never applies it",
+          "milliseconds": 0.46
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+          "status": "pass",
+          "name": "revoked source suppresses an otherwise authorized case",
+          "milliseconds": 20.66
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+          "status": "pass",
+          "name": "partial domain execution reconciles a durable receipt and never repeats it on retry",
+          "milliseconds": 23.67
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+          "status": "pass",
+          "name": "human choice persists a versioned snapshot and ledger using the planner comparison",
+          "milliseconds": 175.69
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+          "status": "pass",
+          "name": "nested C17 calculations reopen through persisted canonical requests and replay every ancestor",
+          "milliseconds": 175664.9
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "status": "pass",
+          "name": "an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result",
+          "milliseconds": 2273.12
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+          "status": "pass",
+          "name": "real JSON import preserves the private C08 choice and cannot revive a deleted source under a reused record ID",
+          "milliseconds": 67786.54
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+          "status": "fail",
+          "name": "the same durable choice preserves omitted training while a confirmed source revision reverses cost and criterion",
+          "milliseconds": 180007.4
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+          "status": "fail",
+          "name": "new human operations replace a choice after the quote revision and retain that choice with a new reason without rewriting any history",
+          "milliseconds": 180020.78
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+          "status": "pass",
+          "name": "shared categories and supported N/A consume one real Planner contribution and retain the complete composed interval",
+          "milliseconds": 61629.59
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+          "status": "fail",
+          "name": "coverage distinguishes omitted and null training from explicit zero and a later 40000 quote",
+          "milliseconds": 204791.75
+        },
+        {
+          "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+          "status": "fail",
+          "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+          "milliseconds": 66357.82
+        }
+      ],
+      "counts": {
+        "pass": 22,
+        "fail": 5,
+        "error": 0
+      },
+      "expectCalls": 384,
+      "omni": {
+        "nonce": "2cb318d22b85b5ae37c9634e6089ad39",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 27,
+        "files": 11,
+        "duration": 940.06,
+        "unit": "s"
+      }
     },
     {
       "selection": 15,
       "runId": 43590340187,
-      "jobId": null,
+      "jobId": 132433531872,
       "productSha": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
       "productTree": "f30c35028acb382d2b38b7be6e105f3a98a0518c",
       "snapshotSha": "a4ee14cce723ac642e48822094809eea4113e11b",
       "snapshotTree": "322a7a2c62cdb1f6ef905cdbc488837561b889c9",
-      "conclusion": null,
+      "conclusion": "failure",
       "branch": "ci-run-linux-astra-finance-6184a0d-fdf4ffe-a1",
+      "artifacts": [],
       "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43590340187",
       "request": {
         "package": "sucafina",
@@ -1869,6 +2058,126 @@
         "env": {}
       },
       "requestSha256": "fdf4ffe89aa485b6fbe3792a93e88282b62b610ba8748c5b7bcf1830135b4652",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1,
+      "logSha256": "b5f98954c9224e7cea788cc4ddc2eb34140d82f76c8778ce72ed04a61d758beb",
+      "cases": [
+        {
+          "file": "Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+          "status": "fail",
+          "name": "same-case BI preserves the human choice while the confirmed training revision changes its current source result and table",
+          "milliseconds": 180017.05
+        }
+      ],
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "error": 1
+      },
+      "expectCalls": 34,
+      "omni": {
+        "nonce": "2802965767b6f7e149e5a90cbcb90457",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 1,
+        "files": 1,
+        "duration": 180.28,
+        "unit": "s"
+      }
+    },
+    {
+      "selection": 16,
+      "runId": 43591377679,
+      "jobId": 132436624540,
+      "productSha": "c99d6dfb4f443b8f626010e78276874ae842f370",
+      "productTree": "d6f28f45ac55c5d345b0694d02441849a2cf27d7",
+      "snapshotSha": "fad30a6e2468088c574f57689341a3731ce3e08c",
+      "snapshotTree": "562665a618a0d98ead4fc53a507c298ba500b837",
+      "conclusion": "success",
+      "branch": "ci-run-linux-astra-finance-c99d6df-fdf4ffe-a1",
+      "artifacts": [],
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43591377679",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "fdf4ffe89aa485b6fbe3792a93e88282b62b610ba8748c5b7bcf1830135b4652",
+      "snapshotDiff": [
+        ".ci-run.json"
+      ],
+      "productBlobEqualityVerified": true,
+      "localProductTests": false,
+      "attempt": 1,
+      "logSha256": "a401b2e03f19c0eefe566a47017045ffbd982444f7aa3b26b482c9fa93da3059",
+      "cases": [
+        {
+          "file": "Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+          "status": "pass",
+          "name": "same-case BI preserves the human choice while the confirmed training revision changes its current source result and table",
+          "milliseconds": 127936.79
+        }
+      ],
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "error": 0
+      },
+      "expectCalls": 86,
+      "omni": {
+        "nonce": "9993b7eb7dbc25de6243c8baab577f25",
+        "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      "reported": {
+        "tests": 1,
+        "files": 1,
+        "duration": 128.13,
+        "unit": "s"
+      }
+    },
+    {
+      "selection": 17,
+      "runId": 43591635600,
+      "jobId": 132437416020,
+      "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "productTree": "8325d52877c8fdd5bf317b244b81b0bb45736fce",
+      "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+      "snapshotTree": "073f27ef857cf3b0038124c9e3a664a5b5380720",
+      "conclusion": null,
+      "branch": "ci-run-linux-astra-finance-0c4a254-c64f56d-a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43591635600",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+          "./Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+          "./Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+          "./Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "./Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+          "./Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+          "./Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+          "./Sucafinav1/test/product/wp11/implementation-quote-history.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "c64f56d6d279b287745baa9aece4182843e117c8b75ec3314fa81e48940cacca",
       "snapshotDiff": [
         ".ci-run.json"
       ],

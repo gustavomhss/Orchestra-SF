@@ -1,3 +1,16 @@
+<!-- FINANCE-CURRENT-RECONCILIATION -->
+# Reconciliação atual e escopo do registro histórico
+
+Esta observação usa Finance `0c4a2545a63b4903c7eedb00d3f0989eb74ed398` e as fontes inspecionadas Compose `ed10a3806a4ffdf6ad5891e2065d93a4c91412cf`, Interface `cccd00c568aea65bb0c1b5cb4a82c2a236c7e775` e drift `4bd1f807e449d040e3db61c4d2b1e177b205ac69`. O [registro central de dependências](external-reconciliation.md) prevalece sobre diagnósticos e campos chamados “atuais” no documento histórico abaixo.
+
+Compose já adotou `advantageComparisonRef` e implementou seis destinos BI protegidos com retorno de foco. A proposta de seleção inversa abaixo é histórica; o host atual avançou além dela. Os novos consumidores ainda precisam de validação e o teste owner tem TS2345. C17 com ledger, fonte record-only e captura Atlas protegida prévia também existe; seus limites permanecem explícitos. Não reaplicar os patches COMPOSE4 superados.
+
+Mensal contrato/HTTP/UI conserva os três blobs base do patch, sem adoção. N/A exige rota/prova humana; Procurement exige a closure canônica publicada de quatro arquivos. Preservar Finance apply/result/request e os incrementos W25 de mutations/Hot Topic. O run BI S16 `43591377679`, W25, passou 1 caso/86 assertions; isso não concede aceitação nativa, C/D ou do bundle.
+
+## Documento histórico integral preservado
+
+Todo o conteúdo abaixo permanece no seu instante e pin originais, inclusive suas antigas palavras “atual”, “pendente” ou “não aplicado”. Não constitui nova instrução de intake nem resultado de execução nos heads acima.
+
 # WP11 — incremento financeiro e decisões
 
 Este recibo acompanha a PR de grupo `astra-finance` contra `sf2-stack`. O mapa em `criteria.json` conserva os **83 IDs e textos canônicos**, as quatro tasks e seus trabalhos completos. Os estados do mapa descrevem evidência observada; não são uma declaração de READY, DONE ou aceitação C/D.
