@@ -1,0 +1,365 @@
+{
+  "productSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "productTree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+  "uniqueCount": 13,
+  "ownUnique": 0,
+  "foreignUnique": 13,
+  "byLog": {
+    "sucafina-typecheck.log": {
+      "occurrences": 13,
+      "own": 0,
+      "foreign": 13
+    },
+    "cli-typecheck.log": {
+      "occurrences": 0,
+      "own": 0,
+      "foreign": 0
+    },
+    "wp10-test-typecheck.log": {
+      "occurrences": 0,
+      "own": 0,
+      "foreign": 0
+    },
+    "atlas-typecheck.log": {
+      "occurrences": 0,
+      "own": 0,
+      "foreign": 0
+    }
+  },
+  "byTriageOwner": {
+    "WP04": 3,
+    "WP06": 4,
+    "WP08": 5,
+    "WP09": 1
+  },
+  "diagnostics": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts",
+      "line": 4,
+      "column": 10,
+      "code": "TS2305",
+      "message": "Module '\"../ui/forecast-analysis.ts\"' has no exported member 'analysisHistory'.",
+      "own": false,
+      "log": "sucafina-typecheck.log",
+      "artifactLine": 3,
+      "candidateSource": {
+        "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+        "blobSha": "987f7179101ffe3db0276d9c6172b3bcf6024329",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts"
+      },
+      "producerPin": null,
+      "triageOwner": "WP04",
+      "logs": [
+        "sucafina-typecheck.log"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "line": 388,
+      "column": 65,
+      "code": "TS2322",
+      "message": "Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, \"resolve\">'.",
+      "own": false,
+      "log": "sucafina-typecheck.log",
+      "artifactLine": 4,
+      "candidateSource": {
+        "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+        "blobSha": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts"
+      },
+      "producerPin": null,
+      "triageOwner": "WP04",
+      "logs": [
+        "sucafina-typecheck.log"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "line": 394,
+      "column": 40,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "own": false,
+      "log": "sucafina-typecheck.log",
+      "artifactLine": 5,
+      "candidateSource": {
+        "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+        "blobSha": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts"
+      },
+      "producerPin": null,
+      "triageOwner": "WP04",
+      "logs": [
+        "sucafina-typecheck.log"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "line": 130,
+      "column": 47,
+      "code": "TS2339",
+      "message": "Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "own": false,
+      "log": "sucafina-typecheck.log",
+      "artifactLine": 6,
+      "candidateSource": {
+        "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+        "blobSha": "4087659570356188c546b59ba112dfd33a2a189c",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts"
+      },
+      "producerPin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+        "sourceCommit": "c9f1fee77c26b01a6ddff6b238a5914c4e4bb319",
+        "blobSha": "4087659570356188c546b59ba112dfd33a2a189c",
+        "sha256": "a127f1bf6e3754794c123e63fc3e18a41c2f207b9543a5fccf3e02d529c40113",
+        "publisher": "astra-wp06"
+      },
+      "triageOwner": "WP06",
+      "logs": [
+        "sucafina-typecheck.log"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "line": 166,
+      "column": 47,
+      "code": "TS2339",
+      "message": "Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "own": false,
+      "log": "sucafina-typecheck.log",
+      "artifactLine": 8,
+      "candidateSource": {
+        "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+        "blobSha": "4087659570356188c546b59ba112dfd33a2a189c",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts"
+      },
+      "producerPin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+        "sourceCommit": "c9f1fee77c26b01a6ddff6b238a5914c4e4bb319",
+        "blobSha": "4087659570356188c546b59ba112dfd33a2a189c",
+        "sha256": "a127f1bf6e3754794c123e63fc3e18a41c2f207b9543a5fccf3e02d529c40113",
+        "publisher": "astra-wp06"
+      },
+      "triageOwner": "WP06",
+      "logs": [
+        "sucafina-typecheck.log"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "line": 205,
+      "column": 45,
+      "code": "TS2339",
+      "message": "Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "own": false,
+      "log": "sucafina-typecheck.log",
+      "artifactLine": 10,
+      "candidateSource": {
+        "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+        "blobSha": "4087659570356188c546b59ba112dfd33a2a189c",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts"
+      },
+      "producerPin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+        "sourceCommit": "c9f1fee77c26b01a6ddff6b238a5914c4e4bb319",
+        "blobSha": "4087659570356188c546b59ba112dfd33a2a189c",
+        "sha256": "a127f1bf6e3754794c123e63fc3e18a41c2f207b9543a5fccf3e02d529c40113",
+        "publisher": "astra-wp06"
+      },
+      "triageOwner": "WP06",
+      "logs": [
+        "sucafina-typecheck.log"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "line": 324,
+      "column": 37,
+      "code": "TS2554",
+      "message": "Expected 1 arguments, but got 2.",
+      "own": false,
+      "log": "sucafina-typecheck.log",
+      "artifactLine": 12,
+      "candidateSource": {
+        "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+        "blobSha": "4087659570356188c546b59ba112dfd33a2a189c",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts"
+      },
+      "producerPin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+        "sourceCommit": "c9f1fee77c26b01a6ddff6b238a5914c4e4bb319",
+        "blobSha": "4087659570356188c546b59ba112dfd33a2a189c",
+        "sha256": "a127f1bf6e3754794c123e63fc3e18a41c2f207b9543a5fccf3e02d529c40113",
+        "publisher": "astra-wp06"
+      },
+      "triageOwner": "WP06",
+      "logs": [
+        "sucafina-typecheck.log"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+      "line": 79,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "own": false,
+      "log": "sucafina-typecheck.log",
+      "artifactLine": 13,
+      "candidateSource": {
+        "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+        "blobSha": "68dda95afd92154dc426ef40479648c21576de01",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts"
+      },
+      "producerPin": null,
+      "triageOwner": "WP08",
+      "logs": [
+        "sucafina-typecheck.log"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+      "line": 83,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "own": false,
+      "log": "sucafina-typecheck.log",
+      "artifactLine": 14,
+      "candidateSource": {
+        "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+        "blobSha": "552284d39866ad866e5f30dfdba7f765537f6507",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts"
+      },
+      "producerPin": {
+        "pr": 33,
+        "sourceCommit": "5ec1630993e4fa66684539db11af939b44ec8ecd",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+        "blobSha": "552284d39866ad866e5f30dfdba7f765537f6507",
+        "sha256": "edf3ecd65c55d882f22c04c8fa667985c9b6ed1f0eaed2943499b3e61fea404b",
+        "owner": "astra-collaboration/WP07-WP08-WP09",
+        "reason": "Exact owner regression/fixture output accompanying this producer revision; no added skip/todo/only, no selection-name filter, no WP10 counterproof replaced."
+      },
+      "triageOwner": "WP08",
+      "logs": [
+        "sucafina-typecheck.log"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "line": 79,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "own": false,
+      "log": "sucafina-typecheck.log",
+      "artifactLine": 15,
+      "candidateSource": {
+        "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+        "blobSha": "f68bb2735774adf670ab30d38dafbfbfb4d3544a",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts"
+      },
+      "producerPin": {
+        "pr": 33,
+        "sourceCommit": "5ec1630993e4fa66684539db11af939b44ec8ecd",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+        "blobSha": "f68bb2735774adf670ab30d38dafbfbfb4d3544a",
+        "sha256": "cf7e2cb0a253f54cfa257fb4e69ea0b17de67a8defbdd14d28449ea5cc998184",
+        "owner": "astra-collaboration/WP07-WP08-WP09",
+        "reason": "Exact owner regression/fixture output accompanying this producer revision; no added skip/todo/only, no selection-name filter, no WP10 counterproof replaced."
+      },
+      "triageOwner": "WP08",
+      "logs": [
+        "sucafina-typecheck.log"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+      "line": 44,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "own": false,
+      "log": "sucafina-typecheck.log",
+      "artifactLine": 16,
+      "candidateSource": {
+        "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+        "blobSha": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts"
+      },
+      "producerPin": null,
+      "triageOwner": "WP08",
+      "logs": [
+        "sucafina-typecheck.log"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+      "line": 126,
+      "column": 40,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "own": false,
+      "log": "sucafina-typecheck.log",
+      "artifactLine": 17,
+      "candidateSource": {
+        "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+        "blobSha": "77f20cb40101809b19c1f7d4d87f76db753a604a",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts"
+      },
+      "producerPin": {
+        "pr": 33,
+        "sourceCommit": "5ec1630993e4fa66684539db11af939b44ec8ecd",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+        "blobSha": "77f20cb40101809b19c1f7d4d87f76db753a604a",
+        "sha256": "8fc5ccd184d186ed168d97a7d7fb87c0ac52930235d7d36b7d5a4c6645de08a8",
+        "owner": "astra-collaboration/WP07-WP08-WP09",
+        "reason": "Exact owner regression/fixture output accompanying this producer revision; no added skip/todo/only, no selection-name filter, no WP10 counterproof replaced."
+      },
+      "triageOwner": "WP08",
+      "logs": [
+        "sucafina-typecheck.log"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+      "line": 76,
+      "column": 42,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (binding: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, binding: TrustedDomainContext) => Promise<...>; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "own": false,
+      "log": "sucafina-typecheck.log",
+      "artifactLine": 18,
+      "candidateSource": {
+        "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+        "blobSha": "712cce53626fca058f0e66dbfafb6fb09cccc9cf",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts"
+      },
+      "producerPin": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+        "blobSha": "712cce53626fca058f0e66dbfafb6fb09cccc9cf",
+        "owner": "WP09",
+        "publisher": "astra-wp09",
+        "sourceCommit": "1998acb0dcb59e68d41ee924eca4737bccbd5148"
+      },
+      "triageOwner": "WP09",
+      "logs": [
+        "sucafina-typecheck.log"
+      ]
+    }
+  ],
+  "qualification": "Each diagnostic has an exact candidate commit/path/blob. Publisher pin is supplied only when a matching effective pin exists. Counts are diagnostics, not independent causes."
+}

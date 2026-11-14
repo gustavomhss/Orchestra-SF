@@ -177,6 +177,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       if (observed.kind === "unsupported") return procurementCaseRead(request, call)
       return observed.kind === "observed" ? observed.value : { status: "unavailable", reason: "memory-case-read-changed" }
     },
+    readMemoryCanonical: (records, call, work) => memoryRecordRead(records, call, work),
     selection: selectedPeriod, readerIdentity: () => evidence.current, lockedSourceFences })
   const cases = { ...canonicalCases, read: memoryCaseScope.read }
   const withMemoryObservation: SfMemoryObservation = (request, call, work) => {

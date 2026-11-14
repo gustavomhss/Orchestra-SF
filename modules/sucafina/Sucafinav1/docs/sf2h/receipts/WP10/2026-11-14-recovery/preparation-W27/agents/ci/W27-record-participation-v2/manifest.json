@@ -1,0 +1,48 @@
+{
+  "schema": "wp10-owned-overlay-v1",
+  "revision": 2,
+  "baseCommit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "supersedes": "agents/ci/W27-record-participation/seal.json",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "owner": "WP10",
+      "base": {
+        "path": "publication/frozen-W26/repo/apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+        "bytes": 11757,
+        "sha256": "b315be0d6f0359c3cab96f4f810b05262d6e3606622d7f2bef945caf368c4edc",
+        "blobSha": "7438cac1582ec97b4e55fcef0494554a21e9e7b4"
+      },
+      "output": {
+        "path": "agents/ci/W27-record-participation-v2/package/apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+        "bytes": 18356,
+        "sha256": "83a2e8ff826eeb1c07b14ee9d90e7a465d6ca444437729ee039481ecae051906",
+        "blobSha": "64a7252089ca33d9f316a4382a0ef73fb70d8466"
+      },
+      "localPath": "agents/ci/W27-record-participation-v2/package/apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "reason": "Private qualified root participation, retained child lifetime and transaction-egress pins, actual canonical counterproofs."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "owner": "WP10",
+      "base": {
+        "path": "publication/frozen-W26/repo/modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+        "bytes": 13078,
+        "sha256": "93a104e18dbfd598b738ff02d01a28bf5abf394b4938892fc9d7f49f02dd0bda",
+        "blobSha": "77a0d6f197c215bb4e59794f65bf1e5673a4ee9f"
+      },
+      "output": {
+        "path": "agents/ci/W27-record-participation-v2/package/modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+        "bytes": 25551,
+        "sha256": "146379c5e287bac835b3529c06606a6d929d75521b2386325a6b91ce17d1f845",
+        "blobSha": "b1137e58b9800eb94587848d3e3882a87c1a11a4"
+      },
+      "localPath": "agents/ci/W27-record-participation-v2/package/modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "reason": "Private qualified root participation, retained child lifetime and transaction-egress pins, actual canonical counterproofs."
+    }
+  ],
+  "localProductExecution": false,
+  "remoteMutation": false,
+  "readyForRootComposition": true,
+  "requiresHostedCheckAndWholeFileTests": true
+}

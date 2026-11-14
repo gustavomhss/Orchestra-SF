@@ -1,0 +1,111 @@
+{
+  "schema": "wp10-own-causal-authoring-v1",
+  "status": "SEALED_DIAGNOSTIC_AUTHORING_PENDING_HOSTED_CHECK_AND_TEST",
+  "owner": "WP10",
+  "finding": "R1-W26-HOST-EXACT-THRESHOLD-01",
+  "candidateProductSha": null,
+  "basisProductSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "basisProductTree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+  "observedTerminal": {
+    "runId": 43619479808,
+    "jobId": 132521664604,
+    "snapshotSha": "4650ebf5948747a49f04120070765aa6317e6fd8",
+    "conclusion": "failure",
+    "counts": {
+      "pass": 0,
+      "fail": 1,
+      "expects": 3,
+      "tests": 1,
+      "files": 1,
+      "durationSeconds": 285.82,
+      "skip": 0,
+      "errors": 0,
+      "errorsAreAdditionalTestCases": false
+    },
+    "phase": "host.evaluate-and-store",
+    "phaseMs": 275640,
+    "elapsedMs": 285285,
+    "fixtureMs": 9640,
+    "environmentApiCallsInPhase": 1934,
+    "environmentApiCallsTotal": 2054,
+    "cleanupJob": 132523530424,
+    "cleanupConclusion": "success",
+    "artifacts": []
+  },
+  "causalFinding": "The exact terminal proves deadline during evaluation/storage, but does not locate it within initial metadata, exact search, binding proof or canonical read. A specific performance fix cannot yet be justified by this terminal.",
+  "staticMechanism": [
+    {
+      "path": "product/planner/exact-threshold.ts",
+      "fact": "The actual factory issues units, evaluates min/max, probes the analytic anchor, nearby IEEE inputs and the remaining bit interval, verifies both adjacent boundaries, and reissues units. Every probe uses actual preview."
+    },
+    {
+      "path": "product/planner/preview-comparison.ts",
+      "fact": "The lexical preview resolves baseline/source/coverage before and after the actual planner.simulateScenario producer; producer time is not the entire comparator duration."
+    },
+    {
+      "path": "product/portfolio/product.ts",
+      "fact": "Product creates separate internal units. Exposed host units wrappers do not count its lexical internal resolve/issue calls; shared scenario/result/evidence methods remain observable."
+    },
+    {
+      "path": "product/portfolio/sensitivity-store.ts",
+      "fact": "A new result passes evaluation, sample checks, persistent write/bind and canonical read. These phases can invoke fresh proof/recertification."
+    },
+    {
+      "path": "product/portfolio/verification.ts",
+      "fact": "For an exact stored certificate, current direct interval proof and adjacent boundary recertification replace a full search replay. The timeout cannot be blamed on repeated binary search without trace evidence."
+    }
+  ],
+  "instrumentation": {
+    "productPaths": [
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts"
+    ],
+    "publicObjectsOnly": true,
+    "sameArgumentsOnce": true,
+    "sameReturnedValueAndThrownError": true,
+    "numericCache": false,
+    "newProductApi": false,
+    "originalForeignFactoryUnchanged": true,
+    "scopeCorrelation": "AsyncLocalStorage parent/child IDs",
+    "criticalCalls": "Every host units issue/resolve/revalidate, planner.simulateScenario with operation amount, sensitivity binding bind/read, proof.verifySensitivity and result write.",
+    "sharedCalls": "Cases, results, scenario resolve/resolveMany, evidence and Planner sources. Counters count actual property calls; lexical bypasses are not inferred.",
+    "eventThrottling": "Shared start/end first two calls, powers of two, returns >=1500ms and refusals/errors; critical calls all. Metrics count every delegated call.",
+    "pulse": "Existing environment callback emits active frames/counters at most once per15s; no additional timer.",
+    "durations": "Inclusive wall times overlap and must not be summed as disjoint execution time.",
+    "cleanup": "Restore exact methods via owned LIFO cleanups on both host instances; finish emits after deadline.close and disables the observation ALS. Normal cleanup aborts its existing signal.",
+    "sameReceiverForwarded": true,
+    "receiverMechanism": "Normal function wrapper with explicit this:unknown, delegating through typed original.apply(this,args). This preserves the actual receiver even if an observed public method later depends on this; no unchecked cast or synthetic receiver.",
+    "lexicalLimit": "No hook is added to the lexical exact-threshold/preview callback. A factory-captured function or internal units.issue called lexically can bypass exposed method wrappers; zero wrapper calls never proves a producer was not entered. Actual shared public method crossings remain traceable.",
+    "installationTiming": "Shared objects and primary host are wrapped immediately after the real fixture factory returns, before the admitted operation and scenario setup. Recomposed host is wrapped before its first read. Methods stay installed for the operation and are restored only in owned cleanup."
+  },
+  "preservation": {
+    "originalExpects": 40,
+    "overlayExpects": 40,
+    "originalTestCases": 1,
+    "newTestCases": 0,
+    "budgetChanges": 0,
+    "fixtureInputsChanged": false,
+    "productBehaviorChanged": false,
+    "noAdditionalProducerInvocations": true,
+    "baseReconstructionByteExact": true
+  },
+  "unproven": [
+    "Performance cause within the real evaluation/storage path",
+    "Hosted typecheck of new diagnostic wrappers",
+    "Successful exact threshold production and persistence through host",
+    "Recomposed cold proof/read and same-operation retry",
+    "Revocation counterproof beyond the timeout",
+    "Native execution",
+    "Global epic acceptance",
+    "Independent final review"
+  ],
+  "requiredNext": [
+    "Compose this own full-file overlay on the frozen successor.",
+    "Keep the exact X26 full-file request and budgets for X27 after hosted CHECK.",
+    "Use trace call IDs, active frames, amounts and counts to locate the actual bottleneck before a separate functional change."
+  ],
+  "localProductExecution": false,
+  "remoteMutation": false,
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "independentReview": false
+}

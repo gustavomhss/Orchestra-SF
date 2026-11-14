@@ -1,0 +1,24 @@
+{
+  "wholeFiles": [
+    "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+    "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+    "Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+    "Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts"
+  ],
+  "newTestFilesRequiredByThisPackage": [],
+  "rootOwnsHistoricalMemoryAssertionsAndCounters": true,
+  "requiredChecks": [
+    "both independent canonical Atlas observations complete",
+    "original external writers run with currentSnapshots undefined",
+    "full case/partition/source TOCTOU changes before root work refuse without fallback",
+    "full-ref closure rejects mixed/native/unknown participation",
+    "reader/Request headers/lease/selection/principal/clock changes invalidate output",
+    "overlap/reentry/detached cannot borrow a closed or different frame",
+    "same Request in a later fresh scope performs its own canonical read",
+    "all preserved lifecycle/cancellation/output/capture tail assertions execute within unchanged 225000/240000 budgets"
+  ],
+  "dispatched": false,
+  "typecheck": "hosted CHECK required on exact published union",
+  "nativeAcceptance": false,
+  "globalAcceptance": false
+}

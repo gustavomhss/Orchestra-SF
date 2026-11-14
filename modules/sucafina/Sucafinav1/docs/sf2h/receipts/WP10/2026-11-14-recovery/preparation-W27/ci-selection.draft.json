@@ -1,0 +1,315 @@
+{
+  "schema": "wp10-scoped-hosted-ci-selection-draft-v1",
+  "createdAt": "2026-11-14T17:28:42.993117+00:00",
+  "status": "DRAFT_NOT_VALIDATED_NOT_BOUND_NOT_DISPATCHED",
+  "sourceProductSha": null,
+  "sourceProductTree": null,
+  "basisProductSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "validation": "Deferred until W27 is published and its exact commit/tree/pins are available. No product or request validator has been invoked by this data-only preparation.",
+  "executionPolicy": {
+    "rootOnlyDispatch": true,
+    "atMostOneTestCiInFlight": true,
+    "sequential": true,
+    "fullGlobalEpic": false,
+    "testNamePatterns": false,
+    "fullFilesOnly": true,
+    "canonicalTimeoutMs": 120000,
+    "existingPerTestBudgetsUnchanged": true,
+    "omniSpawner": "strict",
+    "jobLimitMinutes": 45
+  },
+  "plannedRequiredRequests": 10,
+  "plannedRequiredFileSelections": 57,
+  "optionalRequests": 2,
+  "optionalFileSelections": 10,
+  "requests": [
+    {
+      "id": "W27-A-authority-lifecycle",
+      "requestPath": "ci-validation/request-W27-A-authority-lifecycle.json",
+      "bytes": 842,
+      "sha256": "a32eb2400374c5dff4b9f8d523b5424c238b9926ea6c43dba909eb4262e64eab",
+      "gitBlob": "661cbd88494d80b48c193177137f61980b034bf8",
+      "dispatchClass": "required",
+      "fileCount": 8,
+      "files": [
+        "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+        "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+        "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+        "Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts",
+        "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+        "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+        "Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts",
+        "Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts"
+      ],
+      "inheritedRequest": "ci-validation/request-W26-A-authority-lifecycle.json",
+      "inheritedRequestByteExact": true,
+      "rationale": "Qualify the private Memory Atlas closure and nested record participation using all eight complete files. Retain existing C07/authority/lifecycle assertions and the three prior generic-scope cases; appended real participant cases exercise the changed shared reader."
+    },
+    {
+      "id": "W27-B-calculation",
+      "requestPath": "ci-validation/request-W27-B-calculation.json",
+      "bytes": 713,
+      "sha256": "d382a88cfad9129c19c1bfb861bc992d917dd03fc19dc7fdbfd5f4eccff8ac69",
+      "gitBlob": "2bbc730463bd47237b4a5e2caad92d343cd3019d",
+      "dispatchClass": "conditional",
+      "fileCount": 7,
+      "files": [
+        "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+        "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+        "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+        "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+        "Sucafinav1/test/product/wp11/scenario-batch.test.ts"
+      ],
+      "inheritedRequest": "ci-validation/request-W26-B-calculation.json",
+      "inheritedRequestByteExact": true,
+      "rationale": "B26 is already running on its exact W26 snapshot. Dispatch a W27 successor only if that terminal or a concrete changed-consumer risk requires it. The seven full files and their request remain intact; no prior result is relabeled."
+    },
+    {
+      "id": "W27-R-review-bi",
+      "requestPath": "ci-validation/request-W27-R-review-bi.json",
+      "bytes": 918,
+      "sha256": "588e0a75e6f22023a1100a1d0383b940494f1c8a1099454651d419ea7bf62690",
+      "gitBlob": "54b907f85068641160e57aa24a01ef2af94d1bdf",
+      "dispatchClass": "required",
+      "fileCount": 10,
+      "files": [
+        "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+        "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+        "Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+        "Sucafinav1/test/product/wp10/integration/bi-fallback-lifecycle.test.ts",
+        "Sucafinav1/test/product/wp10/integration/dashboard-review-history.test.ts",
+        "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+        "Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+        "Sucafinav1/test/product/wp10/integration/bi-decision-navigation.test.ts",
+        "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+        "Sucafinav1/test/product/wp05/projection.test.ts"
+      ],
+      "inheritedRequest": "ci-validation/request-W26-R-review-bi.json",
+      "inheritedRequestByteExact": true,
+      "rationale": "Keep the ten pending actual Review/BI consumers unchanged, including source egress, mounted read scope, promotion authority, navigation and lifecycle. Their prior outcomes are not relabeled as W27."
+    },
+    {
+      "id": "W27-C-browser-consumers",
+      "requestPath": "ci-validation/request-W27-C-browser-consumers.json",
+      "bytes": 1931,
+      "sha256": "208a6a8b6a0d6107b1a5e47675e506e0c943624f49bbf0d50aa17d338afa92cb",
+      "gitBlob": "6873844fa2c8c2f88de5b31d760c51160f3e3eb2",
+      "dispatchClass": "required",
+      "fileCount": 29,
+      "files": [
+        "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "Sucafinav1/test/product/wp01/preview-browser.test.ts",
+        "Sucafinav1/test/product/wp01/bi-browser.test.ts",
+        "Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+        "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+        "Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "Sucafinav1/test/product/wp01/http.test.ts",
+        "Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+        "Sucafinav1/test/product/wp01/meeting-number.test.ts",
+        "Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+        "Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+        "Sucafinav1/test/product/wp01/record-search.test.ts",
+        "Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+        "Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+        "Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+        "Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+        "Sucafinav1/test/product/wp01/view-recovery.test.ts",
+        "Sucafinav1/test/form-layout.test.ts",
+        "Sucafinav1/test/visual-layout.test.ts",
+        "Sucafinav1/test/product/wp02/host-integration.test.ts",
+        "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+        "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "Sucafinav1/test/product/wp04/ui-browser-selection.test.ts",
+        "Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+        "Sucafinav1/test/product/wp01/case-work-selection.test.ts",
+        "Sucafinav1/test/product/wp01/question-recipients.test.ts",
+        "Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+        "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+      ],
+      "inheritedRequest": "ci-validation/request-W26-C-browser-consumers.json",
+      "inheritedRequestByteExact": true,
+      "rationale": "Preserve the 29-file published browser/workbench consumer pool and its exact request order: browser-startup first, browser-lifecycle last. Includes the actual mounted Work destination, Planner, imports and preserved Review consumers."
+    },
+    {
+      "id": "W27-E-cli-composition",
+      "requestPath": "ci-validation/request-W27-E-cli-composition.json",
+      "bytes": 263,
+      "sha256": "d261c586910ded667ac089ab698c032f1d8c694cc7ffaa7cf7abbed3e5ec96e8",
+      "gitBlob": "178e3b1c11025a9d440f1c90f8cd5cbc5174299b",
+      "dispatchClass": "required",
+      "fileCount": 2,
+      "files": [
+        "test/sucafina-host-context.test.ts",
+        "test/native-execution.test.ts"
+      ],
+      "inheritedRequest": "ci-validation/request-W26-E-cli-composition.json",
+      "inheritedRequestByteExact": true,
+      "rationale": "Keep the two whole CLI host/native-execution composition files unchanged to qualify host-context assembly and terminal lifecycle admission. Native acceptance still requires actual native receipts, not merely a pass."
+    },
+    {
+      "id": "W27-D1-promotion",
+      "requestPath": "ci-validation/request-W27-D1-promotion.json",
+      "bytes": 273,
+      "sha256": "74a907086bca01eb8eb5b9e521630dfa88e220406d404dec6edfdf904199d328",
+      "gitBlob": "24ad42cb4a1c2c0ca94f99febc454454c98e552d",
+      "dispatchClass": "required",
+      "fileCount": 1,
+      "files": [
+        "Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts"
+      ],
+      "rationale": "Isolate the complete own promotion file that D22 never reached. Keep empty-operation coverage, authority fences and all promotion race cases; no previously observed foreign producer file is added.",
+      "historicalBasis": "agents/ci/W22-D-observation/cuts/plan.json",
+      "priorOutcome": "D22 did not reach this file; no previous pass/fail is inferred.",
+      "inheritedRequest": "ci-validation/request-W26-D1-promotion.json",
+      "inheritedRequestByteExact": true
+    },
+    {
+      "id": "W27-D2-alternative-selection",
+      "requestPath": "ci-validation/request-W27-D2-alternative-selection.json",
+      "bytes": 284,
+      "sha256": "847c7aa7e495b1e2452bca5eaacace24828bbd6a35e4d6e84ceb56870aab780e",
+      "gitBlob": "0fad73f3c2aa6a61db664a1bec95b9a66e3c2093",
+      "dispatchClass": "required",
+      "fileCount": 1,
+      "files": [
+        "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts"
+      ],
+      "rationale": "Isolate the complete own Alternative consumer file that D22 never reached, retaining all annual-2026 scenarios and existing budgets.",
+      "historicalBasis": "agents/ci/W22-D-observation/cuts/plan.json",
+      "priorOutcome": "D22 did not reach this file; no previous pass/fail is inferred.",
+      "inheritedRequest": "ci-validation/request-W26-D2-alternative-selection.json",
+      "inheritedRequestByteExact": true
+    },
+    {
+      "id": "W27-D3-reconciliation",
+      "requestPath": "ci-validation/request-W27-D3-reconciliation.json",
+      "bytes": 278,
+      "sha256": "b7282b8ba12479be1ea371f74ebf080735e7303b84ab38d0ebeb146787b18d48",
+      "gitBlob": "63040bad922cf8cc97ee5de4991bf7d79596ea9a",
+      "dispatchClass": "required",
+      "fileCount": 1,
+      "files": [
+        "Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts"
+      ],
+      "rationale": "Isolate the complete own reconciliation file that D22 never reached. Preserve the full durable idempotency/reconciliation path and its existing deadline.",
+      "historicalBasis": "agents/ci/W22-D-observation/cuts/plan.json",
+      "priorOutcome": "D22 did not reach this file; no previous pass/fail is inferred.",
+      "inheritedRequest": "ci-validation/request-W26-D3-reconciliation.json",
+      "inheritedRequestByteExact": true
+    },
+    {
+      "id": "W27-P-coverage-sensitivity",
+      "requestPath": "ci-validation/request-W27-P-coverage-sensitivity.json",
+      "bytes": 274,
+      "sha256": "fa6c6cd5b46dbf1b508110b75ec4d2e33ca714b80a7775cc17968aae2fb9ad34",
+      "gitBlob": "3e34c7929c1601e149a72f9485bb641ec4945e70",
+      "dispatchClass": "required",
+      "fileCount": 1,
+      "files": [
+        "Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts"
+      ],
+      "rationale": "Run the exact changed PR36 real financial coverage/sensitivity integration file by itself. D22 reached timeouts in the predecessor; this new producer intake needs direct causal measurement without withholding the three own D cuts.",
+      "producerCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "producerSelection": "agents/ci/W22-D-observation/publisher-audit/selection-manifest.json",
+      "requiresExactIntakeAdmission": true,
+      "inheritedRequest": "ci-validation/request-W26-P-coverage-sensitivity.json",
+      "inheritedRequestByteExact": true
+    },
+    {
+      "id": "W27-Q-sensitivity-proofs",
+      "requestPath": "ci-validation/request-W27-Q-sensitivity-proofs.json",
+      "bytes": 403,
+      "sha256": "568681abbcc2cdeb895d5b9d7a368aa31274d16653d7488ceae9ae84a26757ac",
+      "gitBlob": "4ddd1472b5ab4538610da6b78d400173c3fffacf",
+      "dispatchClass": "required",
+      "fileCount": 3,
+      "files": [
+        "Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+        "Sucafinav1/test/product/wp13/sensitivity-retry-boundary.test.ts",
+        "Sucafinav1/test/product/wp13/threshold-recertification.test.ts"
+      ],
+      "rationale": "Run exactly the three new PR36 recovery/retry/recertification files as the minimal published proof closure for the sensitivity-store and threshold-proof changes. They complement the real integration in P; controlled fixture proofs alone do not establish host authority.",
+      "producerCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "producerSelection": "agents/ci/W22-D-observation/publisher-audit/selection-manifest.json",
+      "requiresExactIntakeAdmission": true,
+      "inheritedRequest": "ci-validation/request-W26-Q-sensitivity-proofs.json",
+      "inheritedRequestByteExact": true
+    },
+    {
+      "id": "W27-X-exact-threshold",
+      "requestPath": "ci-validation/request-W27-X-exact-threshold.json",
+      "bytes": 279,
+      "sha256": "f6f9f060070f9a06a1798d1558c0e69f3638ea54df85304e45572e80f935b076",
+      "gitBlob": "d0cd8beb633493d4083b3d964c6df813c4090d90",
+      "dispatchClass": "required",
+      "fileCount": 1,
+      "files": [
+        "Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts"
+      ],
+      "rationale": "Measure real public units/scenario/Planner/binding/proof calls in the same complete own host exact-threshold test. W26 hit its existing deadline before the functional assertions; instrumentation does not weaken the 40 assertion sites, numeric fixture or budgets.",
+      "authorStatus": "AWAITING_SEALED_TRACE_AND_PUBLICATION",
+      "authorReportedBudgetsMs": {
+        "outer": 300000,
+        "cooperative": 285000
+      },
+      "budgetQualification": "Declared source deadlines supplied by the author, not elapsed time or a runtime prediction.",
+      "inheritedRequest": "ci-validation/request-W26-X-exact-threshold.json",
+      "inheritedRequestByteExact": true
+    },
+    {
+      "id": "W27-H-procurement-scope",
+      "requestPath": "ci-validation/request-W27-H-procurement-scope.json",
+      "bytes": 424,
+      "sha256": "ebac23255a72bd0a8e125dd6123046984aeb951af5c52641b8139881480c4e64",
+      "gitBlob": "8bddcbfdfd7659393d658905dc5cd3d616c52d01",
+      "dispatchClass": "conditional",
+      "fileCount": 3,
+      "files": [
+        "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+        "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+        "Sucafinav1/test/product/wp04/host-integration.test.ts"
+      ],
+      "inheritedRequest": "ci-validation/request-W26-H-procurement-scope.json",
+      "inheritedRequestByteExact": true,
+      "rationale": "The new nested participant changes the shared record reader. Use H only if its residual C12/Procurement risk remains unresolved by A's complete real scope proofs or a relevant failure. Preserve foreign H05 and the historical W25 result exactly."
+    }
+  ],
+  "priorEvidenceReuse": [
+    {
+      "source": "evidence/W26/normalized/check/entry.json",
+      "qualification": "W26 failure, zero own and 13 foreign diagnostics. Never relabeled as W27."
+    },
+    {
+      "source": "evidence/W26/normalized/A-authority-lifecycle/entry.json",
+      "qualification": "W26 failure, 45/1; C07 5/5, Memory deadline. W27 A must qualify its new own scope."
+    },
+    {
+      "source": "evidence/W26/normalized/X-exact-threshold/entry.json",
+      "qualification": "W26 failure, 0/1; broad evaluate/store deadline. X27 traces exact producer calls without promising success."
+    },
+    {
+      "source": "evidence/W26/initial-B-run.json",
+      "qualification": "Initial observation only. B26 is separately in flight; decide a successor B only from its terminal or a concrete changed-consumer risk."
+    },
+    {
+      "source": "evidence/W25/normalized/H-procurement-scope/entry.json",
+      "qualification": "Historical W25 failure, 35 own passes, only foreign H05 fails. H remains conditional; no acceptance transferred."
+    },
+    {
+      "source": "evidence/W22/normalized/D-portfolio-finance-partial/terminal.json",
+      "qualification": "D22 stays cancelled and partial. D1/D2/D3 were unobserved and remain required selections."
+    }
+  ],
+  "timingQualification": "No elapsed-time prediction for W27. Existing per-test budgets and the 45-minute hosted job cap are unchanged. B26 is observed separately; this plan does not infer its outcome or transfer any prior result.",
+  "publicationPrerequisites": [
+    "Publish the reviewed own W27 source and append-only preparation receipts; record its exact commit/tree.",
+    "Memory composition, Atlas scope and record participation match the author seals; all old assertion bodies and budgets remain preserved.",
+    "The exact-threshold trace wraps only real existing public producers and preserves the prior test data/assertions/budgets.",
+    "All 439 effective foreign pins remain at their published sources; W27 admits no new foreign blob.",
+    "Run only the published pure request validator against the actual W27 tree before binding an immutable snapshot.",
+    "Root dispatches each functional group only after the prior functional run and successful cleanup are terminal. Own CHECK may overlap."
+  ]
+}

@@ -1,0 +1,1113 @@
+{
+  "schema": "wp10-authority-lifecycle-terminal-triage-v1",
+  "productSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "productTree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+  "snapshotSha": "dd53af531181d1b05e5081b765dbfecc2a6ba6a9",
+  "snapshotTree": "ab3895d693c0923a8e26aebe03654cce1854149d",
+  "runId": 43618475702,
+  "jobId": 132518644009,
+  "conclusion": "failure",
+  "counts": {
+    "pass": 45,
+    "fail": 1,
+    "expects": 1904,
+    "tests": 46,
+    "files": 8,
+    "durationSeconds": 391.43,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts": {
+      "pass": 5,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts": {
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts": {
+      "pass": 4,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts": {
+      "pass": 11,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/memory-services.test.ts": {
+      "pass": 6,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts": {
+      "pass": 5,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts": {
+      "pass": 0,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts": {
+      "pass": 11,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "failures": [
+    {
+      "owner": "WP10",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "name": "historical decision recall binds original/current evidence and rejects changed proof or authority",
+      "rawLogLine": 1048,
+      "durationMs": 225029.32,
+      "cooperativeBudgetMs": 225000,
+      "outerBudgetMs": 240000,
+      "cause": "Cooperative cumulative deadline during memory.same-request-new-proof, not a comparison assertion failure. The phase started at207690ms and returned at225014ms with aborted=true.",
+      "lastCompletedNegativePhase": "memory.fence-final-request-headers",
+      "lastIncompletePhase": "memory.same-request-new-proof",
+      "unobservedTail": [
+        "The new-invocation positive retry result and its follow-up canonical-read count.",
+        "Stale lifecycle preserve/commit, output immutability and source-race checks.",
+        "Real human cancellation substituted-Request, aborted-Request, revoked-membership and successful cancellation paths.",
+        "Final modified-source refusal, corrupted Atlas capture, stale preflight refusal and revoked prepare/verify/output checks."
+      ],
+      "qualification": "Passing earlier assertions and counter observations do not make this test pass or establish the unobserved tail. No budget or assertion was modified."
+    }
+  ],
+  "memoryPhases": [
+    {
+      "rawLogLine": 996,
+      "fixture": "historical-memory",
+      "phase": "scanner.ensure",
+      "state": "returned",
+      "phaseMs": 290,
+      "elapsedMs": 298,
+      "aborted": false,
+      "apiCounters": null
+    },
+    {
+      "rawLogLine": 998,
+      "fixture": "historical-memory",
+      "phase": "scanner.version",
+      "state": "returned",
+      "phaseMs": 314,
+      "elapsedMs": 612,
+      "aborted": false,
+      "apiCounters": null
+    },
+    {
+      "rawLogLine": 1000,
+      "fixture": "historical-memory",
+      "phase": "procurement.capture-original",
+      "state": "returned",
+      "phaseMs": 115,
+      "elapsedMs": 1109,
+      "aborted": false,
+      "apiCounters": null
+    },
+    {
+      "rawLogLine": 1002,
+      "fixture": "historical-memory",
+      "phase": "atlas.emit-ledger",
+      "state": "returned",
+      "phaseMs": 1953,
+      "elapsedMs": 3062,
+      "aborted": false,
+      "apiCounters": null
+    },
+    {
+      "rawLogLine": 1005,
+      "fixture": "historical-memory",
+      "phase": "memory.resolve-original",
+      "state": "returned",
+      "phaseMs": 337,
+      "elapsedMs": 3423,
+      "aborted": false,
+      "apiCounters": {
+        "rawLogLine": 1004,
+        "phase": "memory.resolve-original",
+        "persistenceCalls": 105,
+        "rootPersistenceCalls": 25,
+        "nestedPersistenceCalls": 80,
+        "groupedEvidenceFences": 2,
+        "c08Reads": 5,
+        "caseReads": 0,
+        "caseFences": 0,
+        "evidenceContextReads": 0,
+        "groupedCaseContextReads": 0,
+        "atlasCanonicalReads": 0,
+        "atlasCanonicalCompleted": 0
+      }
+    },
+    {
+      "rawLogLine": 1008,
+      "fixture": "historical-memory",
+      "phase": "memory.prepare",
+      "state": "returned",
+      "phaseMs": 37782,
+      "elapsedMs": 41206,
+      "aborted": false,
+      "apiCounters": {
+        "rawLogLine": 1007,
+        "phase": "memory.prepare",
+        "persistenceCalls": 11030,
+        "rootPersistenceCalls": 3450,
+        "nestedPersistenceCalls": 7580,
+        "groupedEvidenceFences": 188,
+        "c08Reads": 786,
+        "caseReads": 24,
+        "caseFences": 40,
+        "evidenceContextReads": 6,
+        "groupedCaseContextReads": 4,
+        "atlasCanonicalReads": 2,
+        "atlasCanonicalCompleted": 2
+      }
+    },
+    {
+      "rawLogLine": 1011,
+      "fixture": "historical-memory",
+      "phase": "memory.verify",
+      "state": "returned",
+      "phaseMs": 37979,
+      "elapsedMs": 79186,
+      "aborted": false,
+      "apiCounters": {
+        "rawLogLine": 1010,
+        "phase": "memory.verify",
+        "persistenceCalls": 11072,
+        "rootPersistenceCalls": 3492,
+        "nestedPersistenceCalls": 7580,
+        "groupedEvidenceFences": 188,
+        "c08Reads": 798,
+        "caseReads": 36,
+        "caseFences": 52,
+        "evidenceContextReads": 6,
+        "groupedCaseContextReads": 4,
+        "atlasCanonicalReads": 2,
+        "atlasCanonicalCompleted": 2
+      }
+    },
+    {
+      "rawLogLine": 1014,
+      "fixture": "historical-memory",
+      "phase": "memory.accept-output",
+      "state": "returned",
+      "phaseMs": 37861,
+      "elapsedMs": 117079,
+      "aborted": false,
+      "apiCounters": {
+        "rawLogLine": 1013,
+        "phase": "memory.accept-output",
+        "persistenceCalls": 11072,
+        "rootPersistenceCalls": 3492,
+        "nestedPersistenceCalls": 7580,
+        "groupedEvidenceFences": 188,
+        "c08Reads": 798,
+        "caseReads": 36,
+        "caseFences": 52,
+        "evidenceContextReads": 6,
+        "groupedCaseContextReads": 4,
+        "atlasCanonicalReads": 2,
+        "atlasCanonicalCompleted": 2
+      }
+    },
+    {
+      "rawLogLine": 1017,
+      "fixture": "historical-memory",
+      "phase": "memory.exclude-history-and-isolate",
+      "state": "returned",
+      "phaseMs": 17387,
+      "elapsedMs": 134466,
+      "aborted": false,
+      "apiCounters": {
+        "rawLogLine": 1016,
+        "phase": "memory.exclude-history-and-isolate",
+        "persistenceCalls": 5074,
+        "rootPersistenceCalls": 1604,
+        "nestedPersistenceCalls": 3470,
+        "groupedEvidenceFences": 86,
+        "c08Reads": 368,
+        "caseReads": 10,
+        "caseFences": 17,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "rawLogLine": 1020,
+      "fixture": "historical-memory",
+      "phase": "memory.fence-source",
+      "state": "returned",
+      "phaseMs": 11404,
+      "elapsedMs": 145882,
+      "aborted": false,
+      "apiCounters": {
+        "rawLogLine": 1019,
+        "phase": "memory.fence-source",
+        "persistenceCalls": 3339,
+        "rootPersistenceCalls": 829,
+        "nestedPersistenceCalls": 2510,
+        "groupedEvidenceFences": 62,
+        "c08Reads": 234,
+        "caseReads": 6,
+        "caseFences": 9,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "rawLogLine": 1023,
+      "fixture": "historical-memory",
+      "phase": "memory.fence-capture",
+      "state": "returned",
+      "phaseMs": 11561,
+      "elapsedMs": 157458,
+      "aborted": false,
+      "apiCounters": {
+        "rawLogLine": 1022,
+        "phase": "memory.fence-capture",
+        "persistenceCalls": 3393,
+        "rootPersistenceCalls": 883,
+        "nestedPersistenceCalls": 2510,
+        "groupedEvidenceFences": 62,
+        "c08Reads": 237,
+        "caseReads": 6,
+        "caseFences": 10,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "rawLogLine": 1026,
+      "fixture": "historical-memory",
+      "phase": "memory.fence-principal",
+      "state": "returned",
+      "phaseMs": 10063,
+      "elapsedMs": 167545,
+      "aborted": false,
+      "apiCounters": {
+        "rawLogLine": 1025,
+        "phase": "memory.fence-principal",
+        "persistenceCalls": 2836,
+        "rootPersistenceCalls": 646,
+        "nestedPersistenceCalls": 2190,
+        "groupedEvidenceFences": 54,
+        "c08Reads": 195,
+        "caseReads": 6,
+        "caseFences": 9,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "rawLogLine": 1029,
+      "fixture": "historical-memory",
+      "phase": "memory.fence-clock",
+      "state": "returned",
+      "phaseMs": 12010,
+      "elapsedMs": 179566,
+      "aborted": false,
+      "apiCounters": {
+        "rawLogLine": 1028,
+        "phase": "memory.fence-clock",
+        "persistenceCalls": 3392,
+        "rootPersistenceCalls": 882,
+        "nestedPersistenceCalls": 2510,
+        "groupedEvidenceFences": 62,
+        "c08Reads": 237,
+        "caseReads": 6,
+        "caseFences": 10,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "rawLogLine": 1032,
+      "fixture": "historical-memory",
+      "phase": "memory.fence-lease",
+      "state": "returned",
+      "phaseMs": 10042,
+      "elapsedMs": 189618,
+      "aborted": false,
+      "apiCounters": {
+        "rawLogLine": 1031,
+        "phase": "memory.fence-lease",
+        "persistenceCalls": 2835,
+        "rootPersistenceCalls": 645,
+        "nestedPersistenceCalls": 2190,
+        "groupedEvidenceFences": 54,
+        "c08Reads": 195,
+        "caseReads": 6,
+        "caseFences": 9,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "rawLogLine": 1035,
+      "fixture": "historical-memory",
+      "phase": "memory.fence-final-request-headers",
+      "state": "returned",
+      "phaseMs": 18043,
+      "elapsedMs": 207679,
+      "aborted": false,
+      "apiCounters": {
+        "rawLogLine": 1034,
+        "phase": "memory.fence-final-request-headers",
+        "persistenceCalls": 5074,
+        "rootPersistenceCalls": 1604,
+        "nestedPersistenceCalls": 3470,
+        "groupedEvidenceFences": 86,
+        "c08Reads": 368,
+        "caseReads": 10,
+        "caseFences": 17,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "rawLogLine": 1038,
+      "fixture": "historical-memory",
+      "phase": "memory.same-request-new-proof",
+      "state": "returned",
+      "phaseMs": 17324,
+      "elapsedMs": 225014,
+      "aborted": true,
+      "apiCounters": {
+        "rawLogLine": 1037,
+        "phase": "memory.same-request-new-proof",
+        "persistenceCalls": 4896,
+        "rootPersistenceCalls": 1503,
+        "nestedPersistenceCalls": 3393,
+        "groupedEvidenceFences": 85,
+        "c08Reads": 357,
+        "caseReads": 8,
+        "caseFences": 13,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    }
+  ],
+  "rawMetricEvents": [
+    {
+      "kind": "phase",
+      "rawLogLine": 995,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "scanner.ensure",
+        "state": "started",
+        "elapsedMs": 8
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 996,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "scanner.ensure",
+        "state": "returned",
+        "phaseMs": 290,
+        "elapsedMs": 298,
+        "aborted": false
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 997,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "scanner.version",
+        "state": "started",
+        "elapsedMs": 298
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 998,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "scanner.version",
+        "state": "returned",
+        "phaseMs": 314,
+        "elapsedMs": 612,
+        "aborted": false
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 999,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "procurement.capture-original",
+        "state": "started",
+        "elapsedMs": 995
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1000,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "procurement.capture-original",
+        "state": "returned",
+        "phaseMs": 115,
+        "elapsedMs": 1109,
+        "aborted": false
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1001,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "atlas.emit-ledger",
+        "state": "started",
+        "elapsedMs": 1109
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1002,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "atlas.emit-ledger",
+        "state": "returned",
+        "phaseMs": 1953,
+        "elapsedMs": 3062,
+        "aborted": false
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1003,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.resolve-original",
+        "state": "started",
+        "elapsedMs": 3086
+      }
+    },
+    {
+      "kind": "memory-counter",
+      "rawLogLine": 1004,
+      "value": {
+        "phase": "memory.resolve-original",
+        "persistenceCalls": 105,
+        "rootPersistenceCalls": 25,
+        "nestedPersistenceCalls": 80,
+        "groupedEvidenceFences": 2,
+        "c08Reads": 5,
+        "caseReads": 0,
+        "caseFences": 0,
+        "evidenceContextReads": 0,
+        "groupedCaseContextReads": 0,
+        "atlasCanonicalReads": 0,
+        "atlasCanonicalCompleted": 0
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1005,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.resolve-original",
+        "state": "returned",
+        "phaseMs": 337,
+        "elapsedMs": 3423,
+        "aborted": false
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1006,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.prepare",
+        "state": "started",
+        "elapsedMs": 3423
+      }
+    },
+    {
+      "kind": "memory-counter",
+      "rawLogLine": 1007,
+      "value": {
+        "phase": "memory.prepare",
+        "persistenceCalls": 11030,
+        "rootPersistenceCalls": 3450,
+        "nestedPersistenceCalls": 7580,
+        "groupedEvidenceFences": 188,
+        "c08Reads": 786,
+        "caseReads": 24,
+        "caseFences": 40,
+        "evidenceContextReads": 6,
+        "groupedCaseContextReads": 4,
+        "atlasCanonicalReads": 2,
+        "atlasCanonicalCompleted": 2
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1008,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.prepare",
+        "state": "returned",
+        "phaseMs": 37782,
+        "elapsedMs": 41206,
+        "aborted": false
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1009,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.verify",
+        "state": "started",
+        "elapsedMs": 41207
+      }
+    },
+    {
+      "kind": "memory-counter",
+      "rawLogLine": 1010,
+      "value": {
+        "phase": "memory.verify",
+        "persistenceCalls": 11072,
+        "rootPersistenceCalls": 3492,
+        "nestedPersistenceCalls": 7580,
+        "groupedEvidenceFences": 188,
+        "c08Reads": 798,
+        "caseReads": 36,
+        "caseFences": 52,
+        "evidenceContextReads": 6,
+        "groupedCaseContextReads": 4,
+        "atlasCanonicalReads": 2,
+        "atlasCanonicalCompleted": 2
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1011,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.verify",
+        "state": "returned",
+        "phaseMs": 37979,
+        "elapsedMs": 79186,
+        "aborted": false
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1012,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.accept-output",
+        "state": "started",
+        "elapsedMs": 79218
+      }
+    },
+    {
+      "kind": "memory-counter",
+      "rawLogLine": 1013,
+      "value": {
+        "phase": "memory.accept-output",
+        "persistenceCalls": 11072,
+        "rootPersistenceCalls": 3492,
+        "nestedPersistenceCalls": 7580,
+        "groupedEvidenceFences": 188,
+        "c08Reads": 798,
+        "caseReads": 36,
+        "caseFences": 52,
+        "evidenceContextReads": 6,
+        "groupedCaseContextReads": 4,
+        "atlasCanonicalReads": 2,
+        "atlasCanonicalCompleted": 2
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1014,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.accept-output",
+        "state": "returned",
+        "phaseMs": 37861,
+        "elapsedMs": 117079,
+        "aborted": false
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1015,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.exclude-history-and-isolate",
+        "state": "started",
+        "elapsedMs": 117079
+      }
+    },
+    {
+      "kind": "memory-counter",
+      "rawLogLine": 1016,
+      "value": {
+        "phase": "memory.exclude-history-and-isolate",
+        "persistenceCalls": 5074,
+        "rootPersistenceCalls": 1604,
+        "nestedPersistenceCalls": 3470,
+        "groupedEvidenceFences": 86,
+        "c08Reads": 368,
+        "caseReads": 10,
+        "caseFences": 17,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1017,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.exclude-history-and-isolate",
+        "state": "returned",
+        "phaseMs": 17387,
+        "elapsedMs": 134466,
+        "aborted": false
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1018,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-source",
+        "state": "started",
+        "elapsedMs": 134478
+      }
+    },
+    {
+      "kind": "memory-counter",
+      "rawLogLine": 1019,
+      "value": {
+        "phase": "memory.fence-source",
+        "persistenceCalls": 3339,
+        "rootPersistenceCalls": 829,
+        "nestedPersistenceCalls": 2510,
+        "groupedEvidenceFences": 62,
+        "c08Reads": 234,
+        "caseReads": 6,
+        "caseFences": 9,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1020,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-source",
+        "state": "returned",
+        "phaseMs": 11404,
+        "elapsedMs": 145882,
+        "aborted": false
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1021,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-capture",
+        "state": "started",
+        "elapsedMs": 145898
+      }
+    },
+    {
+      "kind": "memory-counter",
+      "rawLogLine": 1022,
+      "value": {
+        "phase": "memory.fence-capture",
+        "persistenceCalls": 3393,
+        "rootPersistenceCalls": 883,
+        "nestedPersistenceCalls": 2510,
+        "groupedEvidenceFences": 62,
+        "c08Reads": 237,
+        "caseReads": 6,
+        "caseFences": 10,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1023,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-capture",
+        "state": "returned",
+        "phaseMs": 11561,
+        "elapsedMs": 157458,
+        "aborted": false
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1024,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-principal",
+        "state": "started",
+        "elapsedMs": 157482
+      }
+    },
+    {
+      "kind": "memory-counter",
+      "rawLogLine": 1025,
+      "value": {
+        "phase": "memory.fence-principal",
+        "persistenceCalls": 2836,
+        "rootPersistenceCalls": 646,
+        "nestedPersistenceCalls": 2190,
+        "groupedEvidenceFences": 54,
+        "c08Reads": 195,
+        "caseReads": 6,
+        "caseFences": 9,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1026,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-principal",
+        "state": "returned",
+        "phaseMs": 10063,
+        "elapsedMs": 167545,
+        "aborted": false
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1027,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-clock",
+        "state": "started",
+        "elapsedMs": 167556
+      }
+    },
+    {
+      "kind": "memory-counter",
+      "rawLogLine": 1028,
+      "value": {
+        "phase": "memory.fence-clock",
+        "persistenceCalls": 3392,
+        "rootPersistenceCalls": 882,
+        "nestedPersistenceCalls": 2510,
+        "groupedEvidenceFences": 62,
+        "c08Reads": 237,
+        "caseReads": 6,
+        "caseFences": 10,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1029,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-clock",
+        "state": "returned",
+        "phaseMs": 12010,
+        "elapsedMs": 179566,
+        "aborted": false
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1030,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-lease",
+        "state": "started",
+        "elapsedMs": 179577
+      }
+    },
+    {
+      "kind": "memory-counter",
+      "rawLogLine": 1031,
+      "value": {
+        "phase": "memory.fence-lease",
+        "persistenceCalls": 2835,
+        "rootPersistenceCalls": 645,
+        "nestedPersistenceCalls": 2190,
+        "groupedEvidenceFences": 54,
+        "c08Reads": 195,
+        "caseReads": 6,
+        "caseFences": 9,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1032,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-lease",
+        "state": "returned",
+        "phaseMs": 10042,
+        "elapsedMs": 189618,
+        "aborted": false
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1033,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-final-request-headers",
+        "state": "started",
+        "elapsedMs": 189636
+      }
+    },
+    {
+      "kind": "memory-counter",
+      "rawLogLine": 1034,
+      "value": {
+        "phase": "memory.fence-final-request-headers",
+        "persistenceCalls": 5074,
+        "rootPersistenceCalls": 1604,
+        "nestedPersistenceCalls": 3470,
+        "groupedEvidenceFences": 86,
+        "c08Reads": 368,
+        "caseReads": 10,
+        "caseFences": 17,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1035,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-final-request-headers",
+        "state": "returned",
+        "phaseMs": 18043,
+        "elapsedMs": 207679,
+        "aborted": false
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1036,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.same-request-new-proof",
+        "state": "started",
+        "elapsedMs": 207690
+      }
+    },
+    {
+      "kind": "memory-counter",
+      "rawLogLine": 1037,
+      "value": {
+        "phase": "memory.same-request-new-proof",
+        "persistenceCalls": 4896,
+        "rootPersistenceCalls": 1503,
+        "nestedPersistenceCalls": 3393,
+        "groupedEvidenceFences": 85,
+        "c08Reads": 357,
+        "caseReads": 8,
+        "caseFences": 13,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "kind": "phase",
+      "rawLogLine": 1038,
+      "value": {
+        "fixture": "historical-memory",
+        "phase": "memory.same-request-new-proof",
+        "state": "returned",
+        "phaseMs": 17324,
+        "elapsedMs": 225014,
+        "aborted": true
+      }
+    }
+  ],
+  "metricQualification": "Persistence/root/nested counts are API invocations, not physical connections or commits. No causal wall-time speedup across different hosted runs is inferred. prepare/verify/accept each observed six complete contexts, four grouped contexts and two canonical Atlas completions.",
+  "selectedSourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "owner": "WP10",
+      "productSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "bytes": 27069,
+      "sha256": "cf88744e8bc83a53ead83b253e9d1a5775e48d0b6512dfac2645db5ca0264c7b",
+      "blobSha": "9cb78aa7320e5e28fa43018cbd9ab94650523a5d",
+      "observedResult": {
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "owner": "WP10",
+      "productSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "bytes": 36271,
+      "sha256": "dc21862371a8a2e07045c48f4d5ff793e6f72e44d30d03f4f67884c673d988de",
+      "blobSha": "f643abc8cb78feabb82cde3eaea9bdae9e428ee9",
+      "observedResult": {
+        "pass": 11,
+        "fail": 0,
+        "skip": 0
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "owner": "WP10",
+      "productSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "bytes": 47804,
+      "sha256": "e43d2c13137e1ccadc42ada89b0e9e2b8514fc8412704a14e5c7fc386d5ac3fd",
+      "blobSha": "a56e9a13b84d67cf5367b3abd609989fb4e1e3b7",
+      "observedResult": {
+        "pass": 0,
+        "fail": 1,
+        "skip": 0
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts",
+      "owner": "WP10",
+      "productSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "bytes": 12264,
+      "sha256": "ddab1967ed7e9d37ff029fd41e55f3a22e00c3d5788c8a6e15a4800e768e4b65",
+      "blobSha": "f8e2886ac152eccaf4cf101475fbe49619c668eb",
+      "observedResult": {
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "owner": "WP10",
+      "productSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "bytes": 30609,
+      "sha256": "8f22b0e8ea97dbdeac42865daf37a2af85caadc98a286e09ba0e68699d4659e8",
+      "blobSha": "8a9eb8eb63274c004ef188ff46eb33f18cf215d6",
+      "observedResult": {
+        "pass": 11,
+        "fail": 0,
+        "skip": 0
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+      "owner": "WP10",
+      "productSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "bytes": 12841,
+      "sha256": "f5ffdaef044c8f40ec177690af5b6c56716690804bfc263704a8fd3571faa01f",
+      "blobSha": "5b8025565264a65d08dbbb93a0a2db211ff5a8b4",
+      "observedResult": {
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts",
+      "owner": "WP10",
+      "productSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "bytes": 10012,
+      "sha256": "ab79c13cad0e47e47d3980459550a42041900d135d6779d305adc2feb952a1fe",
+      "blobSha": "8c95f9e87d60075ae7dc0f61f5cbbd3f8f4bd0d4",
+      "observedResult": {
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "owner": "WP10",
+      "productSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "bytes": 13078,
+      "sha256": "93a104e18dbfd598b738ff02d01a28bf5abf394b4938892fc9d7f49f02dd0bda",
+      "blobSha": "77a0d6f197c215bb4e59794f65bf1e5673a4ee9f",
+      "observedResult": {
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      }
+    }
+  ],
+  "omniPositiveControl": {
+    "observedLines": [
+      "omni positive control [ce8c5d5dcea8ba2ea7a104d88c06b78a]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts); 2 omni spawn(s), 0 delegated."
+    ],
+    "nativeInferenceAcceptance": false,
+    "status": "success",
+    "spawns": 2,
+    "delegated": 0,
+    "declaredTests": 1,
+    "declaringFile": "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts"
+  },
+  "cleanup": {
+    "jobId": 132521071078,
+    "conclusion": "success",
+    "snapshotBranchDeletion": "success"
+  },
+  "artifactAbsence": "Actual GitHub artifacts API returned an empty list.",
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "independentReviewAcceptance": false,
+  "localProductExecution": false,
+  "remoteMutation": false
+}

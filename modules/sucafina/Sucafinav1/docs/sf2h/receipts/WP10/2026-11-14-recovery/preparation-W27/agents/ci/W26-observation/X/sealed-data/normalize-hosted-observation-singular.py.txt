@@ -1,0 +1,124 @@
+#!/usr/bin/env python3
+"""Normalize captured GitHub evidence only. Never import or execute product code."""
+import argparse, hashlib, json, pathlib, posixpath, re, zipfile
+from collections import Counter, defaultdict
+
+ROOT = pathlib.Path(__file__).resolve().parent
+SF = 'modules/sucafina/Sucafinav1/'
+TIMESTAMP = re.compile(r'^\d{4}-\d\d-\d\dT[\d:.]+Z ?')
+ANSI = re.compile(r'\x1b\[[0-9;]*m')
+def read(p): return json.loads((ROOT / p).read_text())
+def digest(b): return hashlib.sha256(b).hexdigest()
+def blob(b): return hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+def meta(p):
+    p=pathlib.Path(p); b=(ROOT/p).read_bytes()
+    return {'path':str(p),'bytes':len(b),'sha256':digest(b),'git_blob_sha1':blob(b)}
+def write(p,d):
+    p=ROOT/p; p.parent.mkdir(parents=True,exist_ok=True); b=(json.dumps(d,ensure_ascii=False,indent=2)+'\n').encode()
+    assert not p.exists() or p.read_bytes()==b, f'Append-only conflict: {p}'
+    p.write_bytes(b)
+def packaged(p,name): return meta(p)|{'name':name}
+def parse_tests(text,request):
+    lines=[ANSI.sub('',TIMESTAMP.sub('',x)) for x in text.splitlines()]
+    selected=[x for x in request['args'] if x.endswith('.test.ts')]
+    summary=next((i for i,x in enumerate(lines) if re.fullmatch(r'\d+ tests failed:',x)),None)
+    if summary is None: summary=next(i for i,x in enumerate(lines) if re.fullmatch(r'\s*\d+ pass',x))
+    rows=[]; current=None; headers=[]; errors=[]
+    for i,line in enumerate(lines[:summary]):
+        if line.endswith(':') and line[:-1] in selected: current=line[:-1]; headers.append(current)
+        if '# Unhandled error between tests' in line: errors.append({'rawLogLine':i+1,'file':current,'context':lines[max(0,i-2):i+22]})
+        m=re.fullmatch(r'\((pass|fail|skip)\) (.*?)(?: \[([\d.]+)ms\])?',line)
+        if not m: continue
+        status,name,duration=m.groups(); row={'status':status,'name':name,'durationMs':float(duration) if duration else None,'file':current,'rawLogLine':i+1,'kind':'named-test'}
+        if name=='(unnamed)' and any('omni positive control [' in x and 'FAIL' in x for x in lines[max(0,i-16):i]): row.update(kind='global-omni-control-hook',reportedFileContext=current,file='script/test-omni-control.ts')
+        if status=='fail':
+            row['context']=lines[max(0,i-32):i+5]
+            timeout=next((re.search(r'timed out after (\d+)ms',x) for x in lines[i:i+5] if 'timed out after' in x),None)
+            if timeout: row['timeoutMs']=int(timeout[1])
+        rows.append(row)
+    counts={}
+    for line in lines[summary:]:
+        m=re.fullmatch(r'\s*(\d+) (pass|fail|skip|errors?)',line)
+        if m: counts['errors' if m[2] in ('error','errors') else m[2]]=int(m[1])
+        m=re.fullmatch(r'\s*(\d+) expect\(\) calls',line)
+        if m: counts['expects']=int(m[1])
+        m=re.fullmatch(r'Ran (\d+) tests? across (\d+) files?\. \[([\d.]+)s\]',line)
+        if m: counts.update(tests=int(m[1]),files=int(m[2]),durationSeconds=float(m[3]))
+    for key in ('pass','fail','skip','errors'): counts.setdefault(key,0)
+    assert Counter(x['status'] for x in rows)==Counter({k:counts[k] for k in ('pass','fail','skip') if counts[k]}), 'Per-test totals differ'
+    assert len(rows)==counts['tests'] and len(errors)==counts['errors'], 'Collected test/error totals differ'
+    assert set(selected)==set(headers) and len(selected)==counts['files'], 'Selected/executed file inventory differs'
+    by_file=defaultdict(lambda:{'pass':0,'fail':0,'skip':0})
+    for row in rows: by_file[row['file']][row['status']]+=1
+    omni_lines=[x for x in lines if re.search(r'(?:^|error: )omni positive control',x)]
+    omni={'observedLines':omni_lines,'nativeInferenceAcceptance':False,'status':'not-observed','spawns':None,'delegated':None,'declaredTests':None}
+    for line in omni_lines:
+        dec=re.search(r'declared: (\d+) test\(s\) in (.*?)\)',line)
+        if dec: omni.update(declaredTests=int(dec[1]),declaringFile=dec[2])
+        spawn=re.search(r'(\d+) omni spawn\(s\), (\d+) delegated',line)
+        if spawn: omni.update(status='success',spawns=int(spawn[1]),delegated=int(spawn[2]))
+        if 'FAIL' in line: omni.update(status='failure')
+        if 'not applicable' in line.lower(): omni.update(status='not-applicable')
+        if '1 of 1 declaring test(s) made no omni spawn of their own' in line: omni['spawns']=0
+    counts['errorsAreAdditionalTestCases']=False
+    return {'counts':counts,'fileResults':dict(by_file),'tests':rows,'unhandledErrors':errors,'selectedFiles':selected,'omniPositiveControl':omni,'summaryRawLogLine':summary+1,'summaryDuplicateFailuresExcluded':True}
+
+def main():
+    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('config');args=ap.parse_args();cfg=read(args.config)
+    run=read(cfg['run']); jobs_record=read(cfg['jobs']);jobs=jobs_record.get('structuredContent',jobs_record)['jobs']
+    artifacts_record=read(cfg['artifacts']);artifacts=artifacts_record.get('structuredContent',artifacts_record)['artifacts']
+    compare=read(cfg['compare']);commit=read(cfg['commit']);request=read(cfg['envelope']);product=read(cfg['publication'])
+    W=product['productSha'];tree=product['expectedTree']; S=commit['sha'];job=next(x for x in jobs if x['id']==cfg['jobId']);is_check=cfg['kind']=='check'; envelope='.astra-wp10-check.json' if is_check else '.ci-run.json'
+    assert run['status']=='completed' and job['status']=='completed' and run['conclusion'] in ('success','failure','timed_out','cancelled')
+    assert run['id']==job['run_id']==cfg['runId'] and run['head_sha']==S and run['head_commit']['tree_id']==commit['tree']['sha']
+    assert commit['parents'][0]['sha']==W and compare['base_commit']['sha']==compare['merge_base_commit']['sha']==W
+    assert [(x['filename'],x['status']) for x in compare['files']]==[(envelope,'added')]
+    assert meta(cfg['envelope'])['git_blob_sha1']==compare['files'][0]['sha']
+    if is_check: assert request['productSha']==W
+    raw=(ROOT/cfg['log']).read_bytes(); text=raw.decode();files=[packaged(cfg[k],'source-records/'+k+'.json') for k in ('run','jobs','artifacts','compare','commit','envelope')]
+    rec={'schema':'wp10.normalized-hosted-ci.v4','kind':cfg['kind'],'label':cfg['label'],'productSha':W,'productTree':tree,'snapshotSha':S,'snapshotTree':commit['tree']['sha'],'runId':run['id'],'jobId':job['id'],'runAttempt':run['run_attempt'],'status':run['status'],'conclusion':run['conclusion'],'jobConclusion':job['conclusion'],'runUrl':run['html_url'],'runStartedAt':run['run_started_at'],'runUpdatedAt':run['updated_at'],'envelopeOnlyDiff':[{'path':x['filename'],'status':x['status'],'blob':x['sha']} for x in compare['files']],'request':meta(cfg['envelope']),'log':meta(cfg['log'])|{'characters':len(text),'byteExactRawCapture':True,'duplicatedInPackage':False},'steps':job['steps'],'cleanupJobs':[x for x in jobs if x['id']!=job['id']],'returnedArtifacts':artifacts,'terminalResultObserved':True,'nativeAcceptance':False,'globalAcceptance':False,'builderIndependentAcceptance':False}
+    artifact=None
+    if cfg.get('artifactManifest'):
+        am=read(cfg['artifactManifest']); artifact=next(x for x in artifacts if x['id']==am['artifactId']);zm=meta(cfg['artifactZip'])
+        assert zm['sha256']==am['sha256']==artifact['digest'].removeprefix('sha256:') and zm['bytes']==am['bytes']==artifact['size_in_bytes']
+        assert am['sha256'] in text and str(am['artifactId']) in text
+        members=am.get('files',am.get('members')); names=[x.get('file',x.get('path')) for x in members]
+        with zipfile.ZipFile(ROOT/cfg['artifactZip']) as z:
+            assert {x.filename for x in z.infolist() if not x.is_dir()}==set(names)
+            for item,name in zip(members,names):
+                p=pathlib.Path(cfg['artifactDirectory'])/name;data=(ROOT/p).read_bytes()
+                assert data==z.read(name) and digest(data)==item['sha256'] and len(data)==item['bytes']
+                files.append(packaged(p,'artifact/'+(name[:-4]+'.txt' if name.endswith('.log') else name))|{'original_artifact_name':name,'content_edited':False})
+        files.append(packaged(cfg['artifactManifest'],'source-records/artifact-manifest.json'));artifact={'id':am['artifactId'],**zm,'membersVerified':len(members),'duplicatedZipInPackage':False};rec['artifact']=artifact
+    else:
+        assert not artifacts, 'An available artifact must be captured and verified'
+        rec['artifact']=None;rec['artifactAbsenceQualification']='GitHub artifacts API returned an empty list.'
+    out=pathlib.Path(cfg['out'])
+    if is_check:
+        ad=ROOT/cfg['artifactDirectory'];assert (ad/'revisions.txt').read_text().splitlines()==[W,tree,request['devSha']]
+        tree_index={x['path']:x for x in read(cfg['verifiedTree'])['tree']}; ownership=read('context/WP10.pack.json')['ownership']
+        def owned(p): return not any(p==q or p.startswith(q) for q in ownership['operational_exclusions']) and (p in ownership['exact_files'] or any(p.startswith(q) for q in ownership['prefixes']))
+        unique={};by_log={}
+        for name,prefix in [('sucafina-typecheck.log',SF),('cli-typecheck.log','apps/cli/'),('wp10-test-typecheck.log',SF),('atlas-typecheck.log','')]:
+            rows=[]
+            for no,line in enumerate((ad/name).read_text().splitlines(),1):
+                m=re.match(r'^(.+?)\((\d+),(\d+)\): error (TS\d+): (.*)',line)
+                if not m: continue
+                p,ln,col,code,msg=m.groups();p=posixpath.normpath(posixpath.join(prefix,p));key=(p,ln,col,code,msg);row={'path':p,'line':int(ln),'column':int(col),'code':code,'message':msg,'own':owned(p),'log':name,'artifactLine':no};rows.append(row)
+                if key not in unique:
+                    entry=tree_index[p];pins=[x for x in product['effectiveForeignPins'] if x['path']==p and x['blobSha']==entry['sha']];assert len(pins)<=1
+                    marker=re.search(r'/test/product/(wp\d+)/',p); owner=marker[1].upper() if marker else 'WP04' if '/product/procurement/' in p else 'WP06' if '/product/planner/evidence-reader' in p else 'UNRESOLVED'
+                    unique[key]=row|{'candidateSource':{'commit':W,'tree':tree,'blobSha':entry['sha'],'url':f'https://github.com/gustavomhss/Orchestra-SF/blob/{W}/{p}'},'producerPin':pins[0] if pins else None,'triageOwner':owner,'logs':[]}
+                unique[key]['logs'].append(name)
+            by_log[name]={'occurrences':len(rows),'own':sum(x['own'] for x in rows),'foreign':sum(not x['own'] for x in rows)}
+        diagnostics={'productSha':W,'productTree':tree,'uniqueCount':len(unique),'ownUnique':sum(x['own'] for x in unique.values()),'foreignUnique':sum(not x['own'] for x in unique.values()),'byLog':by_log,'byTriageOwner':dict(Counter(x['triageOwner'] for x in unique.values())),'diagnostics':list(unique.values()),'qualification':'Each diagnostic has an exact candidate commit/path/blob. Publisher pin is supplied only when a matching effective pin exists. Counts are diagnostics, not independent causes.'}
+        write(out/'diagnostics.json',diagnostics);files.append(packaged(out/'diagnostics.json','diagnostics.json'))
+        rec.update(counts={'diagnosticOccurrences':sum(x['occurrences'] for x in by_log.values()),'uniqueDiagnostics':len(unique),'ownUniqueDiagnostics':diagnostics['ownUnique'],'foreignUniqueDiagnostics':diagnostics['foreignUnique']},diagnosticsByLog=by_log)
+    else:
+        observations=parse_tests(text,request);write(out/'test-observations.json',{'productSha':W,'snapshotSha':S,**observations});files.append(packaged(out/'test-observations.json','test-observations.json'));rec.update({k:observations[k] for k in ('counts','fileResults','selectedFiles','omniPositiveControl')})
+    rec['scopeQualification']='Observed terminal of the exact selected product and snapshot. Individual scoped passes never change a failed run into success. No native/global, criterion or independent-review acceptance is inferred.'
+    write(out/'terminal.json',rec)
+    entry={'id':cfg['label'],'kind':cfg['kind'],'product_sha':W,'product_tree':tree,'snapshot_sha':S,'snapshot_tree':commit['tree']['sha'],'run_id':run['id'],'job_id':job['id'],'run_attempt':run['run_attempt'],'status':run['status'],'conclusion':run['conclusion'],'record_path':str(out/'terminal.json'),'record_sha256':meta(out/'terminal.json')['sha256'],'files':files,'counts':rec['counts'],'qualification':rec['scopeQualification']}
+    if artifact: entry.update(artifact_zip_path=artifact['path'],artifact_sha256=artifact['sha256'],artifact_id=artifact['id'])
+    write(out/'entry.json',entry);print(json.dumps({k:rec[k] for k in ('label','productSha','runId','jobId','conclusion','counts')},ensure_ascii=False))
+if __name__=='__main__':main()

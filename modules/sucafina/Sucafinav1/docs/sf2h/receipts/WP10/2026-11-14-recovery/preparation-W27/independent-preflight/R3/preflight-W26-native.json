@@ -1,0 +1,557 @@
+{
+  "schema": "wp10-independent-preflight-v1",
+  "kind": "PRELIMINARY_FOCAL_REVIEW",
+  "reviewer": {
+    "id": "R3",
+    "agent": "/root/independent_r3",
+    "authoredProductFiles": [],
+    "independent": true
+  },
+  "candidate": {
+    "label": "W26",
+    "sha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+    "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+    "parent": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+    "immutable": true
+  },
+  "status": "NATIVE_COMPOSITION_BLOCK_CONFIRMED_WITH_PRECISIONS",
+  "finalReview": false,
+  "countsTowardThreeFinalReviews": false,
+  "acceptance": {
+    "native": false,
+    "global": false,
+    "fullWP10": false
+  },
+  "conclusion": "No complete, legitimate implementation of all nine SfRoutineNativePort operations and the five C07 callables was identified within owned paths using the inspected published public boundaries. Genuine Tool.Context capture in an owned callback is possible; the missing information in TrustedDomainContext alone is not an impossibility proof. The unresolved chain is canonical Task provenance plus approved plan/arm/admission and durable SF correlation/terminal facts, with a separate conditional knowledge-author problem.",
+  "baselineAudit": {
+    "path": "agents/c17/W25-native-boundary",
+    "sourceCount": 47,
+    "sourcesIdenticalAtW26": 47,
+    "sealEntriesVerified": 87,
+    "ownerFilesVerified": 4,
+    "sealSha256": "bba61c669e4818f1b10c377222343f462a948d6a7c54c01bd7f135837b84bec5",
+    "sourceManifestSha256": "f128ee95e22e5be204b7fb4542f564b4fa82d8793e777c9b2cbac82e5e26e21d",
+    "builderAuditIsIndependentReview": false
+  },
+  "auditAddenda": [
+    {
+      "id": "R3-W26-CONTEXT-PRECISION-01",
+      "relatesTo": "W25-C07-TASK-CONTEXT-02",
+      "classification": "precision_not_new_product_fix",
+      "evidence": [
+        "E01",
+        "E02",
+        "E05"
+      ],
+      "finding": "The real Tool.Context is available in the owned contribution.ts execute(payload, context). A private lexical/lease-bound capture can preserve that real context without exposing it to the model or extending foreign contracts. It remains the context of sf_*, not a recorded task invocation, so replaying it into Task cannot pass requireParent. The failure is not merely missing fields in TrustedDomainContext.",
+      "permittedPartialSeam": {
+        "path": "apps/cli/src/sucafina-product/contribution.ts",
+        "purpose": "Capture actual SF invocation metadata privately if a future published handoff consumes it.",
+        "necessaryProof": [
+          "Actual native Tool.dynamic callback supplies context, no payload-derived identity",
+          "Operation/digest/Request/lease and provider generation remain bound; cross-call reuse refuses",
+          "Capture removed on completion, error, abort and release",
+          "Trying to reuse sf_* identity for task still fails recorded-part name/input guard"
+        ],
+        "completesC07": false
+      }
+    },
+    {
+      "id": "R3-W26-PUBLIC-API-PRECISION-02",
+      "relatesTo": "W25-C07-NATIVE-READERS-03",
+      "classification": "public_primitives_exist_but_full_contract_absent",
+      "evidence": [
+        "E06",
+        "E07",
+        "E08",
+        "E09",
+        "E10",
+        "E13",
+        "E14"
+      ],
+      "finding": "Public Relay.Service create/rebind/holder/currentStep/transition and RelayWorkflowSession current/reconcile/settle are real. Public Host.Contribution supports replacements and TaskGovernance exposes hooks, but none is a complete C07 dispatch/receipt boundary. Calling lower-level arm/transition APIs with self-authored approval/binding/revalidate facts would replace canonical governance. Calling TaskGovernance.admit alone misses Task checks and does not provide the full native mapping."
+    },
+    {
+      "id": "R3-W26-KNOWLEDGE-PRECISION-03",
+      "relatesTo": "W25-C07-KNOWLEDGE-04",
+      "classification": "conditional_missing_public_resolver_and_canonical_author",
+      "evidence": [
+        "E10",
+        "E11",
+        "E12",
+        "E13"
+      ],
+      "finding": "The missing knowledge resolver/Archie author blocks workflows that cite knowledge references, not every readonly publication/catalog or every anchor-free materialization. For anchored workflows both the public canonical resolver and plan/upstream-derived Archie author are missing. Exporting the resolver alone is insufficient; the current authorSession returns an SF resident profile and UI supplies none."
+    },
+    {
+      "id": "R3-W26-WATCH-BOUNDARY-04",
+      "relatesTo": "W25-C07-HOST-UNCOMPOSED-01",
+      "classification": "known_implementation_absence_strengthened",
+      "evidence": [
+        "E03",
+        "E04",
+        "E15"
+      ],
+      "finding": "Watch has two separate missing pieces: its descriptor is not incorporated into the host descriptors, and its actual callback ends unconditionally in native-watch-admission-port-unavailable after successful case/condition checks. Adding only the descriptor would expose a deterministic refusal. Native authorization, schedule/occurrence identity and owner binding are still required. Watch is separate from the five C07 callables."
+    },
+    {
+      "id": "R3-W26-TASK-GUARD-PRECISION-05",
+      "relatesTo": "W25-C07-TASK-GUARD-PRECISION-06",
+      "classification": "confirmed_source_precision",
+      "evidence": [
+        "E02"
+      ],
+      "finding": "requireParent checks a genuine recorded task part with non-pending decodable input equal to executor input. It does not independently require status===running. This report makes no claim that completed exact retries are denied merely because of their status."
+    }
+  ],
+  "nativePort": {
+    "count": 9,
+    "operations": [
+      {
+        "operation": "resolvePlan",
+        "callables": [
+          "sf_routine_catalog"
+        ],
+        "publicAvailableInBaseline": [
+          "RelayWorkflowBinding.catalog",
+          "AuthoringStore get/version/documents",
+          "SkillV2.get"
+        ],
+        "missingCanonicalFacts": [
+          "authenticated native plan revision bound to exact publication",
+          "ordered writeScope and workflowParameters",
+          "canonical full RoutineAdmittedInput inputDigest",
+          "principal/project/case/source binding"
+        ],
+        "status": "NOT_IMPLEMENTED_BY_INSTALLED_W26_NATIVE_ADAPTER"
+      },
+      {
+        "operation": "resolveRecipe",
+        "callables": [
+          "sf_routine_prepare"
+        ],
+        "publicAvailableInBaseline": [
+          "RelayWorkflowBinding.acquire/revalidate for a selected published document"
+        ],
+        "missingCanonicalFacts": [
+          "host-authorized recipe reference to exact plan revision and publication",
+          "canonical inputDigest and scope; no identity inferred from model reference"
+        ],
+        "status": "NOT_IMPLEMENTED_BY_INSTALLED_W26_NATIVE_ADAPTER"
+      },
+      {
+        "operation": "prepare",
+        "callables": [
+          "sf_routine_prepare"
+        ],
+        "publicAvailableInBaseline": [
+          "TaskGovernance.Interface hooks inside canonical Task",
+          "TaskTool registered tool",
+          "pure verifyGovernedTask/evaluateReply"
+        ],
+        "missingCanonicalFacts": [
+          "real approved plan/validation/authorization",
+          "native arm receipt for same parent placement",
+          "durable admitted record bound to SF input/principal/case/source refs",
+          "canonical governance entry invoked inside real Task chain"
+        ],
+        "status": "NOT_IMPLEMENTED_BY_INSTALLED_W26_NATIVE_ADAPTER"
+      },
+      {
+        "operation": "readAdmission",
+        "callables": [
+          "sf_routine_run",
+          "decision consumers"
+        ],
+        "publicAvailableInBaseline": [
+          "SessionStore reads",
+          "public schemas and pure approval verifier"
+        ],
+        "missingCanonicalFacts": [
+          "authenticated durable admissionRef/version to approved plan, arm, input and SF owner",
+          "current native reader, rather than an adapter-authored admission ledger"
+        ],
+        "status": "NOT_IMPLEMENTED_BY_INSTALLED_W26_NATIVE_ADAPTER"
+      },
+      {
+        "operation": "readRun",
+        "callables": [
+          "sf_routine_status",
+          "sf_routine_result",
+          "routine discovery",
+          "analysis/decision readers"
+        ],
+        "publicAvailableInBaseline": [
+          "SessionStore",
+          "RelayWorkflowSession.current for an already stored native Task binding"
+        ],
+        "missingCanonicalFacts": [
+          "C07 runRef to native admission/child binding",
+          "full immutable input and workflow facts required by SfRoutineNativeRecord",
+          "principal/project/case correlation"
+        ],
+        "status": "NOT_IMPLEMENTED_BY_INSTALLED_W26_NATIVE_ADAPTER"
+      },
+      {
+        "operation": "start",
+        "callables": [
+          "sf_routine_run"
+        ],
+        "publicAvailableInBaseline": [
+          "canonical Task tool through ToolRegistry settlement",
+          "TaskGovernance hooks"
+        ],
+        "missingCanonicalFacts": [
+          "genuine Tool.Context for an actual recorded task call with exact input",
+          "approved governed/authorizationID plus workflow/plan revision/arm",
+          "dispatch-time current SF authority binding",
+          "atomic retry correlation with admitted version/inputDigest"
+        ],
+        "status": "NOT_IMPLEMENTED_BY_INSTALLED_W26_NATIVE_ADAPTER"
+      },
+      {
+        "operation": "listRunRefs",
+        "callables": [
+          "Workbench routine discovery via sf_routine_status lease"
+        ],
+        "publicAvailableInBaseline": [
+          "generic native Session/event read facilities"
+        ],
+        "missingCanonicalFacts": [
+          "owner-authorized C07 run index retaining exact admission mapping",
+          "current principal/project/source filtering; arbitrary session scan is not C07 discovery"
+        ],
+        "status": "NOT_IMPLEMENTED_BY_INSTALLED_W26_NATIVE_ADAPTER"
+      },
+      {
+        "operation": "readExecution",
+        "callables": [
+          "sf_routine_result",
+          "decision result",
+          "native schedule lifecycle"
+        ],
+        "publicAvailableInBaseline": [
+          "RelayWorkflowSession.current/reconcile for an existing native binding"
+        ],
+        "missingCanonicalFacts": [
+          "immutable terminal receipt revision/state for exact C07 run",
+          "completed resultRef and outputDigest emitted by completion",
+          "cancel/fail state and ownership correlated with admission"
+        ],
+        "status": "NOT_IMPLEMENTED_BY_INSTALLED_W26_NATIVE_ADAPTER"
+      },
+      {
+        "operation": "readArtifact",
+        "callables": [
+          "sf_routine_result",
+          "openResult",
+          "review/decision consumers"
+        ],
+        "publicAvailableInBaseline": [
+          "native Session output storage primitives; product createRoutineResultAccess validator"
+        ],
+        "missingCanonicalFacts": [
+          "immutable authorized output linked to actual terminal receipt",
+          "exact inputDigest/outputDigest and correlationId/principal/project/sourceRefs",
+          "current artifact/file access"
+        ],
+        "status": "NOT_IMPLEMENTED_BY_INSTALLED_W26_NATIVE_ADAPTER"
+      }
+    ]
+  },
+  "callables": {
+    "count": 5,
+    "names": [
+      "sf_routine_catalog",
+      "sf_routine_prepare",
+      "sf_routine_run",
+      "sf_routine_status",
+      "sf_routine_result"
+    ],
+    "hostRegistered": false,
+    "watchSeparate": {
+      "name": "sf_watch_prepare",
+      "hostRegistered": false,
+      "positiveImplementation": false
+    }
+  },
+  "rejectedShortcuts": [
+    "Use model/payload Session, parent, assistant, call or Archie IDs as authority.",
+    "Relabel the captured sf_* call as task, synthesize a Task part/event, or replay an unrelated recorded task.",
+    "Replace canonical Task/governance with SessionV2.resume, direct admit hook, permissive service replacement, or low-level Relay.create/transition supplied invented approval/binding facts.",
+    "Invent admission/run/terminal records in a second ledger or derive outputDigest only while reading an artifact.",
+    "Register all routine/watch descriptors to count always-unavailable tools as delivered.",
+    "Deep import private Maestro code, extend foreign exports, copy its algorithms into owned CLI code, or widen guards/allowlists."
+  ],
+  "requiredOwnerBoundary": [
+    {
+      "responsibility": "S0 / Maestro-Core owner",
+      "required": "Supported authorized handoff that preserves an actual canonical Task invocation and its current parent/placement/permission checks; typed native readers for plan revision, approval/arm, admission, run/index, terminal and artifact facts."
+    },
+    {
+      "responsibility": "WP09 / native producer owners",
+      "required": "Canonical mapping of RoutineAdmittedInput, inputDigest, SF owner/project/case/source scope, ordered writeScope, publication, admission version, authorization, child/run and immutable completion outputDigest; stable exact retry behavior."
+    },
+    {
+      "responsibility": "Maestro-Atlas owner",
+      "required": "For workflows with anchors, public canonical resolver plus canonical plan/upstream-to-Archie author association, preserving provenance and live source reread."
+    },
+    {
+      "responsibility": "WP10",
+      "required": "Compose the published adapter in owned host paths with exact pins, preserve current ACL/revocation/cleanup/result checks, then register the five actual callables; watch additionally needs real native admission/schedule mapping."
+    }
+  ],
+  "proofRequiredAfterImplementation": [
+    "Positive actual installed native cycle through canonical governed Task, exact plan/arm/admission, completion receipt and artifact consumed after reload",
+    "Forged/cross-call/foreign-placement/same-ID-different-input negatives; no fabricated Task history",
+    "Revocation of principal/case/source/policy between list, approval, dispatch, every awaited read and final egress",
+    "Exact retry retains admission version, run/child identity and terminal correlation; no second native ledger",
+    "Failed/cancelled/incomplete run never opens a successful factual output; artifact/input/output digest mismatch refuses",
+    "Conditional knowledge proof with actual Archie seat and unique native anchor call; wrong author/provider-executed call/duplicate/drift deny",
+    "Five descriptors and watch independently demonstrate UI/native/private-MCP behavior; callback presence and readonly publication do not count",
+    "Three FINAL independent reviews on final candidate after required hosted jobs are terminal; this preflight does not count"
+  ],
+  "criteriaAssessment": {
+    "preservedOwnCriteria": 171,
+    "preservedTasks": 7,
+    "archivedForeignInputsConstraint": 128,
+    "readonlyForeignInputsConstraint": 131,
+    "constraintCounts": "Preserved task constraints; this preflight does not recalculate or rewrite their inventories.",
+    "impacted": [
+      "WP10.T01.CMP.02",
+      "WP10.T03.CMP.02",
+      "WP10.T03.CMP.40",
+      "WP10.T06.CHK.07",
+      "WP10.T06.CHK.60",
+      "WP10.T06.DOD.01",
+      "WP10.T06.DOD.60",
+      "WP10.T06.INV.40",
+      "WP10.T06.INV.60",
+      "WP10.T06.QLT.60",
+      "WP10.T06.CMP.60",
+      "WP10.T06.SUC.60"
+    ],
+    "state": "PRELIMINARY_GAP_CONFIRMED; NO_CRITERION_ACCEPTANCE"
+  },
+  "evidence": [
+    {
+      "id": "E01",
+      "path": "apps/cli/src/sucafina-product/contribution.ts",
+      "lines": [
+        40,
+        49
+      ],
+      "fact": "Tool.dynamic execute receives the real canonical Tool.Context, before bridge.call. Legitimate host-only capture is technically possible in this owned path.",
+      "blobSha": "8d44320acedc4afec9ffc100f5f6a171cdf26993",
+      "sha256": "ba0a78312a3a9682a470f2cdc2bf8292a56e15c9102b52651e99d10c5c58a903",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/apps/cli/src/sucafina-product/contribution.ts"
+    },
+    {
+      "id": "E02",
+      "path": "packages/core/src/tool/task.ts",
+      "lines": [
+        425,
+        456
+      ],
+      "fact": "requireParent rereads actual parent placement and assistant ownership, requires recorded part.name task and exact non-pending decoded input equality. A captured sf_* context fails the tool-name identity.",
+      "blobSha": "0e82455ca428e5b498551496bc65bdc0f6551df3",
+      "sha256": "ec3ff8e684c131e2894071e2f46af78fbdccbc80d2a47531088e65e678e9cb05",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/packages/core/src/tool/task.ts"
+    },
+    {
+      "id": "E03",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "lines": [
+        279,
+        283
+      ],
+      "fact": "Host constructs routineServices with publication and prepareWatch but without native; it deliberately does not advertise routineServices.descriptors.",
+      "blobSha": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+      "sha256": "42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/apps/cli/src/sucafina-product/host-context.ts"
+    },
+    {
+      "id": "E04",
+      "path": "apps/cli/src/sucafina-product/memory-services.ts",
+      "lines": [
+        218,
+        228
+      ],
+      "fact": "Even with a real case/condition/current materiality, prepareWatch returns native-watch-admission-port-unavailable. Registration alone cannot implement it.",
+      "blobSha": "85c3021dec21ab942a8fab04524d48295fd918f7",
+      "sha256": "f08c39347bfb9998af6e6a1fea8acfe02e4ab02eed6d5b19d83b5c3057d0d171",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/apps/cli/src/sucafina-product/memory-services.ts"
+    },
+    {
+      "id": "E05",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts",
+      "lines": [
+        55,
+        67
+      ],
+      "fact": "Resident grants end with default deny plus selected skills and selected sf_* operations; Task is not a selected frozen SF operation.",
+      "blobSha": "a1413fd5224f373d704bbdfca7a489a904875d00",
+      "sha256": "286e286fec2797a51d79d02b2eabb2d4933a8fcd97bd20797ef217cd43ad697f",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts"
+    },
+    {
+      "id": "E06",
+      "path": "packages/core/src/relay.ts",
+      "lines": [
+        120,
+        173,
+        472,
+        522
+      ],
+      "fact": "Public Relay create/rebind/holder/currentStep/transition exist. evaluate refuses workflow-bound arms with WORKFLOW_NATIVE_SETTLEMENT_REQUIRED; transition requires authoritative binding, settlement, revalidation and host checks supplied by canonical workflow host.",
+      "blobSha": "25fb509203f933a2e8b0f311c3fc8f9476d53e16",
+      "sha256": "446774386bf8020528bdc2138a066fd9dc4b214d3288dc069cb5da9d3cef2b2a",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/packages/core/src/relay.ts"
+    },
+    {
+      "id": "E07",
+      "path": "packages/core/src/relay-workflow-session.ts",
+      "lines": [
+        14,
+        94
+      ],
+      "fact": "Public current/reconcile/settle concern an already stored native WorkflowBound. The global host registered by Maestro exposes current/settle, not admit/grade via this public projection.",
+      "blobSha": "fc006686eb25e96aa55cd8b93fc60994ebdd9dfd",
+      "sha256": "c5aefaf53fcd61059a68ee2b0411e587f4d125a42fae8169f8846c4d37c70221",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/packages/core/src/relay-workflow-session.ts"
+    },
+    {
+      "id": "E08",
+      "path": "modules/maestro/coordination/src/v2/governance/workflow-admission.ts",
+      "lines": [
+        28,
+        181
+      ],
+      "fact": "Canonical workflow admission requires real governance/authorization, same-parent arm, exact latest plan revision/parameters/ordered write paths and native upstream attribution. It records actual assistant/call identity and delegates to native host.",
+      "blobSha": "633cfc60d784e5df8d6d616bed568e5f881b3f11",
+      "sha256": "6375ae66c6eb080cabfc0dc6d1d1680d2d9f689aa9e0fbabcbe81456a9a43de1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/maestro/coordination/src/v2/governance/workflow-admission.ts"
+    },
+    {
+      "id": "E09",
+      "path": "modules/maestro/coordination/src/v2/workflow/host.ts",
+      "lines": [
+        87,
+        127,
+        162,
+        225,
+        275,
+        339,
+        398,
+        398
+      ],
+      "fact": "Native host owns approved placement, publication revalidation, terminal checks and durable WorkflowBound adoption; its public SessionHost registration projects only current/settle.",
+      "blobSha": "111dac220a84bdeffe94956244b728b29eb98ea4",
+      "sha256": "e089aab5fd69259b2f9f7c91d948fac7e2ebcb8b92e7d3b91f1a6f14b1982b32",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/maestro/coordination/src/v2/workflow/host.ts"
+    },
+    {
+      "id": "E10",
+      "path": "modules/maestro/coordination/package.json",
+      "lines": [
+        8,
+        33
+      ],
+      "fact": "No exports for WorkflowKnowledgeV2, WorkflowRelayV2, MaestroWorkflowHostV2, WorkflowAdmissionV2 or authoritative GovernanceRecords/WorkflowRecords readers.",
+      "blobSha": "438c5a89f01d13d992e86582030d1a3b59f277a3",
+      "sha256": "d99ccbaad3dd30a0842dbae7fd705b48c295d335e03d1bba71adda7f50e2d5d8",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/maestro/coordination/package.json"
+    },
+    {
+      "id": "E11",
+      "path": "modules/maestro/coordination/src/v2/workflow/knowledge.ts",
+      "lines": [
+        27,
+        111
+      ],
+      "fact": "Resolver requires same-project actual Archie author Session, native Archie seat, unique completed non-provider atlas_context anchor call, exact input/identity/digests and current source reread.",
+      "blobSha": "f8f7852950b60029a4807324798954962f72ada5",
+      "sha256": "3e072c4fca557ce7299b18d407e1e47dad08f87d7645ddf8a06084d1445d5ae7",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/maestro/coordination/src/v2/workflow/knowledge.ts"
+    },
+    {
+      "id": "E12",
+      "path": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+      "lines": [
+        101,
+        151
+      ],
+      "fact": "Installed authorSession returns only the bound resident SF Session, UI returns none; knowledge always holds. Public readonly AuthoringStore/Skill publication is otherwise composed.",
+      "blobSha": "6405d4a2e4aa41a3bb8fb8da40641093d3eee7ff",
+      "sha256": "b63a0e28e855f9ec387d246a46e24e32e9b3e4734963829d3227b6f3e3dee49a",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/apps/cli/src/sucafina-product/routine-installed-publication.ts"
+    },
+    {
+      "id": "E13",
+      "path": "packages/core/src/relay-workflow-binding.ts",
+      "lines": [
+        81,
+        99,
+        153,
+        167
+      ],
+      "fact": "Knowledge resolver/author are required only when the sprint has knowledge references. Public admission checks runnable compilation; it is not governed Task/C07 authorization.",
+      "blobSha": "7149e276e0c214d70c2dafad90dadff5d2c21059",
+      "sha256": "3174f65f835ea0c4ba64c6a597a2169902627b94673cbb1c54cc5e90a414e0e2",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/packages/core/src/relay-workflow-binding.ts"
+    },
+    {
+      "id": "E14",
+      "path": "modules/sucafina/Sucafinav1/product/routines/result-access.ts",
+      "lines": [
+        8,
+        110
+      ],
+      "fact": "Consumer requires immutable native execution receipt, admitted input digest, output digest emitted at completion, correlated artifact and current authorization; generic Session/currentStep/model result does not satisfy this contract.",
+      "blobSha": "098a92920857926f117e266f5b63325f6ad112ca",
+      "sha256": "1f944e243d1b5bb9517dfdd34ee16ba5d8ee0743cd096efdf9bcfdea257a25c2",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/product/routines/result-access.ts"
+    },
+    {
+      "id": "E15",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "lines": [
+        22,
+        139
+      ],
+      "fact": "Private MCP only lists/calls provided descriptors, uses one-use operation/digest lease, verifies native capability receipt and final revalidation. It does not generate governed Task approval or C07 terminal receipt.",
+      "blobSha": "bc00a2fe70bb37d6132369c3767388e544e18510",
+      "sha256": "8c028345862f0a351f7624cdf7a805b5ae3a6c8aa97cba9db44221d9e0773ffc",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts"
+    },
+    {
+      "id": "E16",
+      "path": "modules/sucafina/Sucafinav1/product/routines/schedule-native.ts",
+      "lines": [
+        45,
+        118
+      ],
+      "fact": "Native scheduler started is durable prompt admission; routine state/result still requires real C07 mapping plus execution and artifact readers.",
+      "blobSha": "0711a5d689e303f7cbca97b46d10a10aab4c2b8e",
+      "sha256": "83b77115726c9b4367caa22e7c272f9fa136eb84eb4cad6868d71febc2aeca3c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/product/routines/schedule-native.ts"
+    }
+  ],
+  "sourceInventory": "preflight-W26-native.sources.json",
+  "extraPublicManifest": "preflight-W26-native.extra-manifest.json",
+  "remoteAnchors": "preflight-W26-native.remote.json",
+  "productWrites": [],
+  "previousReviewWrites": [],
+  "localProductExecution": false,
+  "remoteMutations": false,
+  "ciResultsAccepted": [],
+  "ciStatus": "W26 in progress per coordinator; this preflight makes no test/result acceptance claim",
+  "createdAt": "2026-11-14T17:09:14.956057+00:00",
+  "limitations": [
+    "This is static source analysis of the listed public APIs and canonical producers, not proof that no imaginable future upstream design can work.",
+    "47 files were independently integrity-checked against W26; 27 received fresh focal source reading with ranges in the inventory. This is not a claim that all 47 were reread fully.",
+    "Twelve extra public files were fetched at W26 via MCP and five additional own/freeze sources were inspected; no product code was executed.",
+    "No change was made to the immutable W26 product, 128 archived inputs, 131 readonly inputs, prior reviews, other branches or sf2-stack.",
+    "Availability of model/runtime alone does not supply missing composition; hosted adapter tests alone do not establish native inference/Relay acceptance."
+  ]
+}

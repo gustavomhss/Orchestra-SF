@@ -1,0 +1,190 @@
+{
+  "schema": "wp10-independent-source-preflight-v1",
+  "reviewId": "R1-W27-MEMORY-V2",
+  "reviewer": {
+    "id": "R1",
+    "agent": "/root/independent_r1_w16",
+    "authoredProductChanges": false,
+    "authoredProductTests": false,
+    "independenceDeclaration": "Independent non-author review of exact sealed proposed sources. No product/test edits, local product execution, remote mutation or reliance on author audit as approval."
+  },
+  "finalForCandidate": false,
+  "criteriaAcceptance": false,
+  "cutoffUtc": "2026-11-14T17:44:49.062353+00:00",
+  "baseCandidateSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "baseCandidateTree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+  "candidateSha": null,
+  "candidateTree": null,
+  "candidateStatus": "Sealed pre-publication own overlays; no W27 product identity or terminal qualified here",
+  "sourceVerdict": "STATIC_COMPOSITION_ADMISSIBLE_FOR_FIVE_EXACT_OVERLAY_PATHS",
+  "functionalVerdict": "HOLD_HOSTED_RECHECK_PENDING",
+  "blockingSourceFindings": [],
+  "closedSourceFindings": [
+    {
+      "id": "R1-W27-PARTICIPANT-EGRESS-01",
+      "priorStatus": "OPEN_IN_SEALED_V1",
+      "currentStatus": "SOURCE_FIXED_IN_SEALED_V2_HOSTED_RECHECK_PENDING",
+      "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "blobSha": "64a7252089ca33d9f316a4382a0ef73fb70d8466",
+      "lines": [
+        77,
+        160,
+        175,
+        176,
+        181,
+        182,
+        188,
+        189,
+        197
+      ],
+      "reason": "The completed owner remains reachable after the real persistence.transaction await. Lexical admission closes in the callback but child pins survive. The synchronous egress check validates own current, invalid/active children, every retained child predicate and live accepting ancestor; only the outer finally clears pins. Independently qualified nested owners transfer their own and descendant predicates after egress to the parent.",
+      "counterproof": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+        "blobSha": "b1137e58b9800eb94587848d3e3882a87c1a11a4",
+        "lines": [
+          271,
+          305,
+          342,
+          346
+        ],
+        "sourceAssessment": "The wrapper forwards engine.transaction exactly once and mutates only the completed child reader after the real root closes. It asserts the hook actually fired, currentSnapshots is undefined at injection, the real canonical child was fresh, the parent refuses, execution remains one and persisted digest is unchanged.",
+        "executed": false,
+        "limits": "Direct egress test covers child-reader change. Child-input and independently qualified-owner propagation share source predicates but are not separately executed egress counterproofs here."
+      }
+    }
+  ],
+  "sourceBoundaries": [
+    {
+      "boundary": "Private authority and exact closure",
+      "assessment": "No new public authority token. Participation is private module ALS, starts after the complete actual root witness, requires identical dependencies/call/Request and a subset of complete ref digests. Snapshot presence alone never admits participation. Each child executes the actual canonical producer; fresh environment and authority checks are retained."
+    },
+    {
+      "boundary": "Namespace and current access",
+      "assessment": "Actual state.read authorizes before and after its callback. The Memory path explicitly requests cases and atlas; canonical Atlas still requests outbox/atlas/cases. Product grants are privately cloned and namespaces contribute to accessRevision. A cases-only grant does not establish an Atlas grant."
+    },
+    {
+      "boundary": "Inputs and egress",
+      "assessment": "Generic current pins Request identity/all headers/method/URL, abort, call kind/binding identity+digest, lease identity, selection object+digest+expiry, reader callback+object identity, refs and dependencies. Completed child predicates now survive the final transaction await. This is a scoped source finding closure, not general end-to-end revocation acceptance."
+    },
+    {
+      "boundary": "Memory closure and ownership",
+      "assessment": "The Memory preflight checks full C08 bytes, all snapshots/source fences, the same-case complete Atlas partition and complete historical record refs. Only Procurement record evidence and same-case metadata qualify; calculation/mixed/continuous approval-age sources stay out. Per-observation scope, exact proofs, active map, closed ALS markers and reading/children counters prevent detached, overlapping or cross-observation reuse."
+    },
+    {
+      "boundary": "Canonical producer and fallback",
+      "assessment": "Actual Atlas remains called once per grouped observation, and actual nested record producers run. No pending Promise, authorization answer or environment value is used as a replacement. Unsupported fallthrough is limited to before canonical work; changed/failed/altered/double invocation refuses without retry."
+    },
+    {
+      "boundary": "Mutation probes and assertions",
+      "assessment": "Actual writer mutation hooks remain outside the grouped root; the historical race/lifecycle tail is byte-exact. Original three generic tests remain literal; v2 adds an egress counterproof. Historical assertions increase 84 to92. No budget expansion or omitted original test found."
+    }
+  ],
+  "T01T07Compatibility": {
+    "interpretation": "Narrow compatibility for one Procurement business-domain observation plus protected same-case/Atlas metadata; no acceptance of mixed-domain aggregation within a metadata commit.",
+    "literalRequirements": [
+      "T01 work: Fazer agregação de projeções fora das transações de domínio, mantendo versões por seção.",
+      "T01 work: Não abrir transação de outro surface dentro da transação de metadados; leituras seccionadas conservam tokens de versão/acesso.",
+      "T07 work: Reads multi-domain ocorrem fora da transação central."
+    ],
+    "actualMechanism": [
+      "Generic scope calls Persistence.transaction(\"dashboard\") and every callback return is commit:false. It does not invoke C08 state.transaction or Atlas append.",
+      "LocalStore transaction uses operation(true) and BEGIN IMMEDIATE; this reserves the writer slot. It is NOT a SQLite read-only or lock-free transaction.",
+      "Nested actual Surface reads use the same LocalStore root and defensive snapshots. commit:true, nested blob writes and other nested writers poison the root and fail; the source-lifecycle wrapper retains this behavior.",
+      "C08 state.read performs real namespace authorization before and after reads. Canonical Atlas recall only reads; its append/state.transaction path is not introduced into this grouping.",
+      "The eligibility predicate excludes a second business domain and calculations. All returned business sources are Procurement, with protected C08/case/Atlas metadata. Domain mutations and central append remain separate; no global atomicity is promised."
+    ],
+    "conclusion": "No concrete new T01/T07 source conflict found for this narrow eligible path. Do not generalize it to mixed-domain consumers or metadata writers. Writer reservation/latency must be measured in hosted execution.",
+    "requirementsPromoted": []
+  },
+  "identities": [
+    {
+      "repositoryPath": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "path": "agents/ci/W27-record-participation-v2/package/apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+      "bytes": 18356,
+      "sha256": "83a2e8ff826eeb1c07b14ee9d90e7a465d6ca444437729ee039481ecae051906",
+      "blobSha": "64a7252089ca33d9f316a4382a0ef73fb70d8466"
+    },
+    {
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "path": "agents/ci/W27-record-participation-v2/package/modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+      "bytes": 25551,
+      "sha256": "146379c5e287bac835b3529c06606a6d929d75521b2386325a6b91ce17d1f845",
+      "blobSha": "b1137e58b9800eb94587848d3e3882a87c1a11a4"
+    },
+    {
+      "repositoryPath": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "path": "agents/c17/W27-memory-atlas-scope/package/apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "bytes": 32213,
+      "sha256": "26f577d698afd62bd0b73c508f44ba7eafcf00d8e3bb167916c2f23f11d5ba08",
+      "blobSha": "ba55d4f1624dabed660e58d3d8b787bd991acd7a"
+    },
+    {
+      "repositoryPath": "apps/cli/src/sucafina-product/business-services.ts",
+      "path": "agents/root/W27-memory-observation-composition/files/apps/cli/src/sucafina-product/business-services.ts",
+      "bytes": 69619,
+      "sha256": "82d182ce0ae3cff5f7346d4b7f61519440316c37a74751687277744d8d673ef2",
+      "blobSha": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1"
+    },
+    {
+      "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "path": "agents/root/W27-memory-observation-composition/files/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "bytes": 48710,
+      "sha256": "7af2197cbad8b0456dab995d097ea86e9468e8d560cc58546f57e1c16b7e99fd",
+      "blobSha": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed"
+    }
+  ],
+  "sealedInputs": [
+    {
+      "path": "agents/ci/W27-record-participation-v2/seal.json",
+      "sha256": "3bbd1ffe5f4ad8d001db40b715b3128ad73e6d826630f7211a8e4b6201cfa6ae",
+      "memberCount": 9,
+      "allMembersMatch": true
+    },
+    {
+      "path": "agents/c17/W27-memory-atlas-scope/seal.json",
+      "sha256": "6eb52791d8131151081f8d0af1993ccd018ccb1fe03fc864f10ab10085c9cd7e",
+      "memberCount": 13,
+      "allMembersMatch": true
+    },
+    {
+      "path": "agents/root/W27-memory-observation-composition/seal.json",
+      "sha256": "b2749db05a3825dff0cf43aedf364aa1a20d2b2ded287f2ab17907777c9278fc",
+      "memberCount": 6,
+      "allMembersMatch": true
+    }
+  ],
+  "criteria": {
+    "literalCount": 171,
+    "taskCount": 7,
+    "packSha256": "b34a53e66e33b88a13bcb30d17fb8b7a2a009f12e6a8922bc7ab7fedbf70d1e7",
+    "promoted": [],
+    "archivedForeignInputs": 128,
+    "readOnlyForeignInputs": 131,
+    "allArchiveBlobsReauditedInThisFocus": false
+  },
+  "evidence": {
+    "currentW27PublishedCandidate": null,
+    "currentW27HostedTerminals": [],
+    "historicalW26ARunId": 43618475702,
+    "historicalW26AJobId": 132518644009,
+    "historicalW26ASnapshot": "dd53af531181d1b05e5081b765dbfecc2a6ba6a9",
+    "historicalW26AResult": "45 pass /1 fail /46 tests /8 files; Memory 225s cooperative deadline",
+    "historicalEvidenceTransferred": false
+  },
+  "limits": [
+    "Static admission to compose these five exact own paths is not source equality of a future candidate, hosted success or a FINAL independent review.",
+    "No local product import/execution, tests, typecheck, build, browser or remote mutation was performed.",
+    "No new performance claim, financial acceptance, native admission, resident runtime, governed Task/knowledge, global epic, merge or deploy approval.",
+    "Relative import closure is data-only resolution against the full base tree, not typechecking. Three existing targets are not hydrated locally but are present in the full tree.",
+    "Optional exact-threshold trace is outside the five-path composition verdict; it does not repair or prove financial behavior."
+  ],
+  "nextProof": "Recheck equality of the published W27 product against these exact blobs, then assess hosted check and selected whole-file terminals at the matching W/S identity. Preserve v1 and all earlier reports. Three FINAL independent reviews still required.",
+  "audit": {
+    "path": "reviews/R1/audit-W27-memory-v2.json",
+    "sha256": "63db245caa993f3cc61841abb58c1cb7e2ffc795a46855de3ccbbbeddb445e27"
+  },
+  "priorReportPreserved": {
+    "path": "reviews/R1/preflight-W27-memory-v1.json",
+    "sha256": "cf77eaeed5aca90c10e3778a8a0f09172c1891aab9904b3dc0678886718291ea"
+  }
+}

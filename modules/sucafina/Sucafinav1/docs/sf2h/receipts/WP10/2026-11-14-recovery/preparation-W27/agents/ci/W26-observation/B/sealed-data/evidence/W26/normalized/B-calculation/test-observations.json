@@ -1,0 +1,476 @@
+{
+  "productSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "snapshotSha": "edc61b259cc0479d1916a7dd3a2e2ee89d7724a9",
+  "counts": {
+    "pass": 38,
+    "fail": 2,
+    "expects": 533,
+    "tests": 40,
+    "files": 7,
+    "durationSeconds": 1420.51,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp11/calculation-persistence.test.ts": {
+      "pass": 0,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp11/scenario-batch.test.ts": {
+      "pass": 9,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp11/calculation-history.test.ts": {
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts": {
+      "pass": 0,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts": {
+      "pass": 2,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts": {
+      "pass": 5,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts": {
+      "pass": 21,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "tests": [
+    {
+      "status": "fail",
+      "name": "nested C17 calculations reopen through persisted canonical requests and replay every ancestor",
+      "durationMs": 188985.84,
+      "file": "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "rawLogLine": 817,
+      "kind": "named-test",
+      "context": [
+        "        GITHUB_ACTIONS=false bun test --conditions=browser --preload ../../script/test-omni-control.ts --preload ./happydom.ts \"${browser[@]}\" \"${common[@]}\" || status=$?",
+        "      fi",
+        "      exit $status",
+        "    fi",
+        "    GITHUB_ACTIONS=false bun test \"${args[@]}\"",
+        "    ;;",
+        "  node)",
+        "    for file in \"${args[@]}\"; do",
+        "      case \"$file\" in",
+        "        *.node-smoke.mjs) ;;",
+        "        *) echo \"::error::the node runner runs only *.node-smoke.mjs files, not $file\"; exit 2 ;;",
+        "      esac",
+        "    done",
+        "    node --experimental-strip-types --test \"${args[@]}\"",
+        "    ;;",
+        "esac",
+        "shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}",
+        "env:",
+        "  ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1",
+        "  ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: strict",
+        "  HUGR_OMNI_ADDON: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/libhugr_omni_node.so",
+        "  HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor",
+        "  ORCHESTRA_OMNI_CONTROL_NONCE: 1fa62a43ed81082d17ab022dffff998a",
+        "  ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: false",
+        "  ORCHESTRA_OMNI_CONTROL: declared",
+        "  PACKAGE: sucafina",
+        "  DIRECTORY: modules/sucafina",
+        "  RUNNER: bun",
+        "##[endgroup]",
+        "bun test v1.3.14 (0d9b296a)",
+        "",
+        "Sucafinav1/test/product/wp11/calculation-persistence.test.ts:",
+        "(fail) nested C17 calculations reopen through persisted canonical requests and replay every ancestor [188985.84ms]",
+        "  ^ this test timed out after 180000ms.",
+        "",
+        "Sucafinav1/test/product/wp11/scenario-batch.test.ts:",
+        "(pass) one sibling batch shares only its two canonical case observations and retains every result reread [59501.01ms]"
+      ],
+      "timeoutMs": 180000
+    },
+    {
+      "status": "pass",
+      "name": "one sibling batch shares only its two canonical case observations and retains every result reread",
+      "durationMs": 59501.01,
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "rawLogLine": 821,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "units emit the identical binding with six canonical case reads, while a legacy host still performs ten",
+      "durationMs": 19361.66,
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "rawLogLine": 834,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "comparison starts independent batches for its initial and final observations",
+      "durationMs": 3114.94,
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "rawLogLine": 835,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "different cases and historical producer versions form separate groups and retain order, cardinality and refusal",
+      "durationMs": 3132.4,
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "rawLogLine": 836,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "ledger, alternative and coverage changes between phases invalidate every sibling without a version shortcut",
+      "durationMs": 2546.33,
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "rawLogLine": 837,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "authority revoked after result rereads is rejected by the fresh final case observation",
+      "durationMs": 663.56,
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "rawLogLine": 838,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a real Planner source change during projection invalidates both stored siblings",
+      "durationMs": 617.38,
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "rawLogLine": 839,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "retained store and case callback objects cannot rewrite an earlier observation",
+      "durationMs": 958.33,
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "rawLogLine": 840,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "batch refusals and malformed cardinality never fall back to individual resolution",
+      "durationMs": 1478.36,
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "rawLogLine": 841,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result",
+      "durationMs": 1540.99,
+      "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "rawLogLine": 844,
+      "kind": "named-test"
+    },
+    {
+      "status": "fail",
+      "name": "C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority",
+      "durationMs": 105004.76,
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "rawLogLine": 864,
+      "kind": "named-test",
+      "context": [
+        "  },",
+        "}",
+        "(pass) units emit the identical binding with six canonical case reads, while a legacy host still performs ten [19361.66ms]",
+        "(pass) comparison starts independent batches for its initial and final observations [3114.94ms]",
+        "(pass) different cases and historical producer versions form separate groups and retain order, cardinality and refusal [3132.40ms]",
+        "(pass) ledger, alternative and coverage changes between phases invalidate every sibling without a version shortcut [2546.33ms]",
+        "(pass) authority revoked after result rereads is rejected by the fresh final case observation [663.56ms]",
+        "(pass) a real Planner source change during projection invalidates both stored siblings [617.38ms]",
+        "(pass) retained store and case callback objects cannot rewrite an earlier observation [958.33ms]",
+        "(pass) batch refusals and malformed cardinality never fall back to individual resolution [1478.36ms]",
+        "",
+        "Sucafinav1/test/product/wp11/calculation-history.test.ts:",
+        "(pass) an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result [1540.99ms]",
+        "",
+        "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts:",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"initialize\",\"state\":\"started\",\"elapsedMs\":1}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"initialize\",\"state\":\"returned\",\"phaseMs\":33,\"elapsedMs\":34,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"produce-inner\",\"state\":\"started\",\"elapsedMs\":34}",
+        "SF_CALCULATION_ANCESTRY {\"phase\":\"produce-inner\",\"elapsedMs\":3270,\"canonicalResultReads\":14,\"canonicalResultReadsCompleted\":14,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"produce-inner\",\"state\":\"returned\",\"phaseMs\":3270,\"elapsedMs\":3303,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"produce-outer\",\"state\":\"started\",\"elapsedMs\":3310}",
+        "SF_CALCULATION_ANCESTRY {\"phase\":\"produce-outer\",\"elapsedMs\":101691,\"canonicalResultReads\":373,\"canonicalResultReadsCompleted\":373,\"aborted\":true}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"calculation-ancestry-composition\",\"phase\":\"produce-outer\",\"state\":\"returned\",\"phaseMs\":101691,\"elapsedMs\":105001,\"aborted\":true}",
+        "1 | /** Cooperative host-boundary deadline; it does not replace Bun's outer test budget. */",
+        "2 | export function compositionTestDeadline(name: string, budgetMs = 105_000) {",
+        "3 |   const started = performance.now()",
+        "4 |   const cancellation = new AbortController()",
+        "5 |   const deadlineError = new Error(`${name} exceeded its ${budgetMs}ms cooperative deadline`)",
+        "                                ^",
+        "error: calculation-ancestry-composition exceeded its 105000ms cooperative deadline",
+        "      at compositionTestDeadline (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29)",
+        "      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts:39:7",
+        "(fail) C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority [105004.76ms]",
+        "",
+        "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts:",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"planner-recorded-history\",\"phase\":\"actual-producers-and-archive\",\"state\":\"started\",\"elapsedMs\":0}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"planner-recorded-history\",\"phase\":\"actual-producers-and-archive\",\"state\":\"returned\",\"phaseMs\":1754,\"elapsedMs\":1754,\"aborted\":false}"
+      ]
+    },
+    {
+      "status": "pass",
+      "name": "stored Planner operations read protected originals after drift while new execution stays current",
+      "durationMs": 142170.58,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "rawLogLine": 877,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "stored Planner historical access rejects unrecorded input, missing capture, read races, cycles and replacement",
+      "durationMs": 136506.36,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "rawLogLine": 902,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "concurrent calculation admissions retain one case scope across two real replays and release it after the last replay",
+      "durationMs": 10886.25,
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "rawLogLine": 905,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a real calculation retains a withCase owner's selection after the outer action completes",
+      "durationMs": 9337.91,
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "rawLogLine": 906,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "calculation replay cannot borrow another selected case even when the same principal belongs to both",
+      "durationMs": 9315.67,
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "rawLogLine": 907,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "two real calculation replays refuse revoke during overlap and release every retention",
+      "durationMs": 9016.54,
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "rawLogLine": 908,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "two real calculation replays refuse abort during overlap and release every retention",
+      "durationMs": 9072.21,
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "rawLogLine": 909,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner ledger history preserves the protected original after case advance and cannot authorize current execution",
+      "durationMs": 18737.09,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 927,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner calculation history requires its actual ledger, case incarnation, request, result, capture and fresh sources",
+      "durationMs": 19748.81,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 959,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner calculation history denies disclosure after principal, Request or lease revocation",
+      "durationMs": 13161.8,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 976,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Analysis lifecycle reentry preserves a real historical calculation without upgrading its original case selector",
+      "durationMs": 83489.19,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1009,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner calculation preserves UI and repeated BCS reads and rejects cycles, tampering and over-budget selectors",
+      "durationMs": 13593.32,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1029,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner observed calculation outputs recheck protected state, headers and lease after the canonical store passes",
+      "durationMs": 55978.38,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1062,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner calculation survives SQLite and Atlas reopen with continuity, original and ancestor context",
+      "durationMs": 59002.49,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1093,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner calculation recalls the actual reopened Atlas record and does not append it twice",
+      "durationMs": 45240.86,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1114,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner calculation rejects foreign case routing and all six corrupted durable Atlas capture fields",
+      "durationMs": 39425.58,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1136,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner continuity fences membership changes during a real environment await and recovers after restoration",
+      "durationMs": 37665.19,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1160,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner overlapping replays and Atlas recall disclose nothing after principal revocation",
+      "durationMs": 45248.72,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1181,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner calculation becomes unavailable after its real persisted source changes",
+      "durationMs": 19032.4,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1198,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner reopened recall rejects source drift after a completed calculation proof",
+      "durationMs": 20466.96,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1216,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner reopened recall rejects membership drift after a completed calculation proof",
+      "durationMs": 17153.53,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1234,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner reopened recall rejects capture drift after a completed calculation proof",
+      "durationMs": 17149.1,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1252,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner reopened recall rejects coverage drift after a completed calculation proof",
+      "durationMs": 17231.96,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1270,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner reopened recall rejects selector drift after a completed calculation proof",
+      "durationMs": 17075.67,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1288,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner reopened recall rejects clock drift after a completed calculation proof",
+      "durationMs": 37000.05,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1306,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner reopened recall rejects principal drift after a completed calculation proof",
+      "durationMs": 37729.67,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1324,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner reopened recall rejects lease drift after a completed calculation proof",
+      "durationMs": 36613.62,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1342,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner recall proof stays lexical while an independent same-call calculation resolves in parallel",
+      "durationMs": 43224.01,
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "rawLogLine": 1361,
+      "kind": "named-test"
+    }
+  ],
+  "unhandledErrors": [],
+  "selectedFiles": [
+    "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+    "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+    "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+    "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+    "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+    "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+    "Sucafinav1/test/product/wp11/scenario-batch.test.ts"
+  ],
+  "omniPositiveControl": {
+    "observedLines": [
+      "omni positive control [1fa62a43ed81082d17ab022dffff998a]: pass (declared: 23 test(s) in Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts, Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts); 46 omni spawn(s), 0 delegated."
+    ],
+    "nativeInferenceAcceptance": false,
+    "status": "success",
+    "spawns": 46,
+    "delegated": 0,
+    "declaredTests": 23,
+    "declaringFile": "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts, Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts"
+  },
+  "summaryRawLogLine": 1363,
+  "summaryDuplicateFailuresExcluded": true
+}

@@ -1,0 +1,304 @@
+{
+  "schema": "wp10.normalized-hosted-ci.v4",
+  "kind": "test",
+  "label": "W26-B-calculation",
+  "productSha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "productTree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+  "snapshotSha": "edc61b259cc0479d1916a7dd3a2e2ee89d7724a9",
+  "snapshotTree": "d743262f72c6676626634833df6660ad43211c87",
+  "runId": 43620440087,
+  "jobId": 132524715232,
+  "runAttempt": 1,
+  "status": "completed",
+  "conclusion": "failure",
+  "jobConclusion": "failure",
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620440087",
+  "runStartedAt": "2026-11-14T17:19:08Z",
+  "runUpdatedAt": "2026-11-14T17:44:43Z",
+  "envelopeOnlyDiff": [
+    {
+      "path": ".ci-run.json",
+      "status": "added",
+      "blob": "2bbc730463bd47237b4a5e2caad92d343cd3019d"
+    }
+  ],
+  "request": {
+    "path": "evidence/W26/B-envelope.json",
+    "bytes": 713,
+    "sha256": "d382a88cfad9129c19c1bfb861bc992d917dd03fc19dc7fdbfd5f4eccff8ac69",
+    "git_blob_sha1": "2bbc730463bd47237b4a5e2caad92d343cd3019d"
+  },
+  "log": {
+    "path": "evidence/W26/B-job-132524715232.raw.txt",
+    "bytes": 157996,
+    "sha256": "c1b4f91d069a9fc26305b1be2a89e7c285d6ab92666f0f09e56e9e7cf9edcbcd",
+    "git_blob_sha1": "b297aad34cfa5bc05bb3fcd47bd42811b16fb20a",
+    "characters": 157994,
+    "byteExactRawCapture": true,
+    "duplicatedInPackage": false
+  },
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Checkout repository",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Assert Linux ARM64",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 3
+    },
+    {
+      "name": "Assert macOS arm64",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 4
+    },
+    {
+      "name": "Setup request validator Node",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5
+    },
+    {
+      "name": "Read request",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 6
+    },
+    {
+      "name": "Fetch source history for Script fixtures",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 7
+    },
+    {
+      "name": "Setup Bun",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 8
+    },
+    {
+      "name": "ripgrep",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 9
+    },
+    {
+      "name": "Setup Playwright Node",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 10
+    },
+    {
+      "name": "Install Chromium",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 11
+    },
+    {
+      "name": "Linux sandbox dependencies",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 12
+    },
+    {
+      "name": "Setup Python",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 13
+    },
+    {
+      "name": "Install Python test dependencies",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 14
+    },
+    {
+      "name": "Configure git identity",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 15
+    },
+    {
+      "name": "Export requested environment",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 16
+    },
+    {
+      "name": "omni binaries",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 17
+    },
+    {
+      "name": "Rust toolchain (rust-toolchain.toml)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 18
+    },
+    {
+      "name": "Omni control nonce",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 19
+    },
+    {
+      "name": "Run tests",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 20
+    },
+    {
+      "name": "Upload Lean dashboard previews (extension)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 21
+    },
+    {
+      "name": "Upload Playwright evidence",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 22
+    },
+    {
+      "name": "Post Setup Bun",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 42
+    },
+    {
+      "name": "Post Setup request validator Node",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 43
+    },
+    {
+      "name": "Post Checkout repository",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 44
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 45
+    }
+  ],
+  "cleanupJobs": [
+    {
+      "id": 132531826661,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43620440087,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "returnedArtifacts": [],
+  "terminalResultObserved": true,
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "builderIndependentAcceptance": false,
+  "artifact": null,
+  "artifactAbsenceQualification": "GitHub artifacts API returned an empty list.",
+  "counts": {
+    "pass": 38,
+    "fail": 2,
+    "expects": 533,
+    "tests": 40,
+    "files": 7,
+    "durationSeconds": 1420.51,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp11/calculation-persistence.test.ts": {
+      "pass": 0,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp11/scenario-batch.test.ts": {
+      "pass": 9,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp11/calculation-history.test.ts": {
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts": {
+      "pass": 0,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts": {
+      "pass": 2,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts": {
+      "pass": 5,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts": {
+      "pass": 21,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "selectedFiles": [
+    "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+    "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+    "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+    "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+    "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+    "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+    "Sucafinav1/test/product/wp11/scenario-batch.test.ts"
+  ],
+  "omniPositiveControl": {
+    "observedLines": [
+      "omni positive control [1fa62a43ed81082d17ab022dffff998a]: pass (declared: 23 test(s) in Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts, Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts); 46 omni spawn(s), 0 delegated."
+    ],
+    "nativeInferenceAcceptance": false,
+    "status": "success",
+    "spawns": 46,
+    "delegated": 0,
+    "declaredTests": 23,
+    "declaringFile": "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts, Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts"
+  },
+  "scopeQualification": "Observed terminal of the exact selected product and snapshot. Individual scoped passes never change a failed run into success. No native/global, criterion or independent-review acceptance is inferred."
+}

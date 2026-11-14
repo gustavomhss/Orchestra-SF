@@ -1,0 +1,82 @@
+{
+  "schema": "wp10-owned-static-audit-v1",
+  "base": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "role": "builder; auxiliary static audit only, not an independent review",
+  "change": "Lexical participation of complete-record readers in an already-qualified actual LocalStore read transaction.",
+  "api": {
+    "factory": "createSfProcurementRecordReadScope(input)",
+    "call": "(incoming, call, work) => observed(value) | unsupported | changed",
+    "changedPublicSignature": false,
+    "exportedToken": false,
+    "foreignEdits": false
+  },
+  "parentRequirements": [
+    "Private ALS owner is created only after a complete before-witness in actual host.persistence.transaction.",
+    "Owner input is UI and every complete Procurement record is materialized for the actual current principal, context and source selector. Existing exact-entry/materialization algorithm is byte-identical.",
+    "Owner pins entire input array, Request object/method/URL/all headers, binding object+digest, lease object, selection object+digest+expiry, real reader value+getter, host/state/persistence/currentSnapshots/contextFor/selection/lockedSourceFences identities.",
+    "A before/after full C08, all-three snapshots/source fence, actual context/auth/environment witness still encloses all canonical work."
+  ],
+  "childRequirements": [
+    "Borrowing requires identical dependency identities and the exact same call/Request. Each full ref must already belong to the owner set by digest of the complete ref; refId or returned currentRef does not add membership.",
+    "Every child invokes actual host.revalidate, environment and authenticate at entry and exit, with current all-three snapshot and source-fence checks after awaited operations. Environment compares UTC day, directory and bank key; principal compares complete canonical principal/roles/canWrite.",
+    "Every child executes its actual work once. No result, Promise, auth decision or environment return value is cached.",
+    "Each child retains its distinct reader and complete-input pins through owner completion. Late changes after successful child return invalidate the parent. Independently qualified child-owner pins are transferred to the parent before closing.",
+    "Changed dependencies/input/headers/reader/auth/environment, exceptions and nested writers fail closed and invalidate ancestors, even if mutable state is restored before parent completion.",
+    "Active child count prevents a successful owner completing while canonical child work remains pending. A detached continuation under a closed token returns changed before work and cannot start a fresh root.",
+    "A different dependency bundle retains the complete W26 qualification, separate witness and token; it receives no borrowed closure.",
+    "Lexical open/accepting close in the protected callback finally, but completed participant pins remain retained. After the await of the actual transaction returns, the helper checks owner invalid/pending state and all synchronous input/reader/dependency pins. Only then may it transfer completed predicates to a surrounding owner and clear its private set in the outer finally."
+  ],
+  "fallback": [
+    "Unsupported is possible only before canonical work. Outside an owner, the old cold-state/missing-preferences canonical fresh fallback remains unchanged.",
+    "Matched child outside closure returns changed with zero work, not unsupported/fallback.",
+    "No after-work retry or broadened grants. Canonical undefined fresh resolution remains an observed undefined value."
+  ],
+  "tests": {
+    "existingBodies": 3,
+    "existingExpectTokens": 24,
+    "existingBudgetsMs": [
+      120000,
+      120000,
+      120000
+    ],
+    "existingBodiesByteExact": true,
+    "newSourceCases": 14,
+    "wholeFileSourceCases": 17,
+    "testNames": [
+      "Repeated identical real ref and recursive exact participation; canonical work count3, actual full owner C08 witnesses2, context reads2, no durable mutation.",
+      "Six transient changes: reader, arbitrary header, actual authority revocation, UTC day, directory and bank key; restore only after refusal and parent still fails.",
+      "Two post-return changes: child reader and complete child input; parent refuses before output.",
+      "Two out-of-closure cases: another actual record and a complete selector changed under same refId; canonical work0.",
+      "Detached continuation after actual successful owner returns; canonical work0.",
+      "Actual nested LocalStore writer after canonical read; executes once, parent changed, durable bytes unchanged.",
+      "Real persistence forwarding egress: arm only after a successful child; after the actual root is closed and before transaction Promise resolves, swap the child reader. Verify one egress hook, closed root, child actual fresh result, parent changed and unchanged durable bytes."
+    ],
+    "execution": "not run locally or remotely for this candidate",
+    "counterQualification": "The assertion evidenceFences=2/contextReads=2 counts only the fixture shared owner/child dependency bundle via a forwarding C08 port and actual individual context reader. The real BCS internal record scope has a different dependency bundle and retains full W26 witnesses, which these counters do not count. Total composition elision/performance is not proved here; mounted Memory A27 must measure global C08 counters."
+  },
+  "memoryBridgeConstraints": [
+    "This helper does not emit or move sf-memory-case-fence. C17 owns the distinct Memory closure/participation overlay.",
+    "The Memory owner bridge must use actual atlas namespace authorization for the entire partition, not merely access an atlas property from a cases callback.",
+    "Before external Memory witness, authorized partition closure and fresh root entry must match common private full-C08/snapshot/source/context/identity components. Aggregate witness hashes differ because their inputs differ.",
+    "Full Atlas/canonical BCS original/capture/continuity work, both independent observations and caseForEvidence all-case ambiguity scan remain actual. No new currentRef may automatically expand closure."
+  ],
+  "costAndLimits": [
+    "No elapsed-time or performance success is claimed. A26 counts do not separate all nested source witnesses.",
+    "Retained completed participant pins use synchronous current checks. Each live check is linear in participant count; a sequence of child boundaries can incur quadratic total synchronous checks. This deliberately retains the root-lifetime guarantee. Any later optimization must preserve object/reader identity and complete-ref mutation detection.",
+    "Canonical producer calls, authorization/environment calls, full root before/after witnesses and C08 namespace authorization remain.",
+    "No product test, import, typecheck or build executed locally; no remote mutation or CI dispatch. Hosted CHECK and A are required before conclusions."
+  ],
+  "revision": 2,
+  "supersedes": "agents/ci/W27-record-participation/seal.json",
+  "closedFindings": [
+    {
+      "id": "R1-child-lifetime-pin",
+      "reason": "Distinct child reader/input/dependency predicates now persist throughout owner lifetime, including after successful child return. Two real post-return cases added."
+    },
+    {
+      "id": "R1-transaction-egress-pin",
+      "reason": "Pins are no longer cleared inside protected callback finally. They are checked after actual transaction await and cleared only in outer finally; actual forwarding egress counterproof added."
+    }
+  ],
+  "scopeQualification": "Static implementation response to review findings. No independent review acceptance, typecheck pass, test pass or elapsed improvement is claimed."
+}

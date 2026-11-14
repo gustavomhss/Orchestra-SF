@@ -64,7 +64,8 @@ test("historical decision recall binds original/current evidence and rejects cha
   const transactionAll = driver.transactionAll
   if (!transactionAll) throw new Error("Real cross-surface store unavailable")
   const counters = { persistenceCalls: 0, rootPersistenceCalls: 0, nestedPersistenceCalls: 0, groupedEvidenceFences: 0,
-    c08Reads: 0, caseReads: 0, caseFences: 0, evidenceContextReads: 0, groupedCaseContextReads: 0, atlasCanonicalReads: 0, atlasCanonicalCompleted: 0 }
+    c08Reads: 0, caseReads: 0, caseFences: 0, evidenceContextReads: 0, groupedCaseContextReads: 0, atlasCanonicalReads: 0, atlasCanonicalCompleted: 0,
+    groupedAtlasReads: 0, groupedAtlasCompleted: 0 }
   const measuredDriver: typeof driver = { ...driver,
     transaction: (surface, work, options) => {
       counters.persistenceCalls += 1
@@ -172,8 +173,12 @@ test("historical decision recall binds original/current evidence and rejects cha
     const readMemory = atlas.memory.recall
     atlas.memory.recall = async (value, call) => {
       counters.atlasCanonicalReads += 1
+      if (driver.currentSnapshots?.()) counters.groupedAtlasReads += 1
       const result = await readMemory(value, call)
-      if (result.status === "ok") counters.atlasCanonicalCompleted += 1
+      if (result.status === "ok") {
+        counters.atlasCanonicalCompleted += 1
+        if (driver.currentSnapshots?.()) counters.groupedAtlasCompleted += 1
+      }
       return result
     }
     const selectionPayload = { purpose: "work-selection", period }
@@ -300,9 +305,11 @@ test("historical decision recall binds original/current evidence and rejects cha
       // Repeated cases still reopen C08/authority without replaying that producer.
       expect(counters.evidenceContextReads - beforePrepare.evidenceContextReads).toBe(6)
       // Both canonical BCS passes still execute in each independent observation.
-      // Only their actual case read is grouped; the selection's own two reads
-      // and every external mutation witness retain their separate boundaries.
+      // Complete case and Atlas reads have separate protected roots. The
+      // selection's two reads and external mutation witnesses stay outside them.
       expect(counters.groupedCaseContextReads - beforePrepare.groupedCaseContextReads).toBe(4)
+      expect(counters.groupedAtlasReads - beforePrepare.groupedAtlasReads).toBe(2)
+      expect(counters.groupedAtlasCompleted - beforePrepare.groupedAtlasCompleted).toBe(2)
       expect(counters.groupedEvidenceFences - beforePrepare.groupedEvidenceFences).toBeGreaterThan(0)
       expect(counters.nestedPersistenceCalls - beforePrepare.nestedPersistenceCalls).toBeGreaterThan(0)
       const readers = createSfAnalysisSelectionReaders({ authority, business: activeBusiness })
@@ -314,6 +321,8 @@ test("historical decision recall binds original/current evidence and rejects cha
       expect(counters.atlasCanonicalCompleted - beforeVerify.atlasCanonicalCompleted).toBe(2)
       expect(counters.evidenceContextReads - beforeVerify.evidenceContextReads).toBe(6)
       expect(counters.groupedCaseContextReads - beforeVerify.groupedCaseContextReads).toBe(4)
+      expect(counters.groupedAtlasReads - beforeVerify.groupedAtlasReads).toBe(2)
+      expect(counters.groupedAtlasCompleted - beforeVerify.groupedAtlasCompleted).toBe(2)
       const proof = verified.value
       expect(sfAnalysisSourcesAuthorized(proof, analysis, call)).toBe(true)
       const prompt = proof.promptContext && "decisionRecall" in proof.promptContext ? proof.promptContext.decisionRecall : undefined
@@ -342,6 +351,8 @@ test("historical decision recall binds original/current evidence and rejects cha
       expect(counters.atlasCanonicalReads - beforeAccept.atlasCanonicalReads).toBe(2)
       expect(counters.atlasCanonicalCompleted - beforeAccept.atlasCanonicalCompleted).toBe(2)
       expect(counters.groupedCaseContextReads - beforeAccept.groupedCaseContextReads).toBe(4)
+      expect(counters.groupedAtlasReads - beforeAccept.groupedAtlasReads).toBe(2)
+      expect(counters.groupedAtlasCompleted - beforeAccept.groupedAtlasCompleted).toBe(2)
       const recallInput = { caseRef, limit: 50, scope: { query: value.query, recallScope: { ...value.recallScope, includeHistorical: false } } }
       let releaseDetached = () => {}
       const detachedGate = new Promise<void>((resolve) => { releaseDetached = resolve })
@@ -361,6 +372,8 @@ test("historical decision recall binds original/current evidence and rejects cha
       expect(excluded).toMatchObject({ status: "ok", matches: [] })
       expect(overlapping).toBe(true)
       expect(counters.atlasCanonicalReads - beforeRecall.atlasCanonicalReads).toBe(1)
+      expect(counters.groupedAtlasReads - beforeRecall.groupedAtlasReads).toBe(1)
+      expect(counters.groupedAtlasCompleted - beforeRecall.groupedAtlasCompleted).toBe(1)
       expect(counters.caseReads - beforeRecall.caseReads).toBeGreaterThan(2)
       expect(counters.caseFences - beforeRecall.caseFences).toBeGreaterThan(2)
       interleave.observe = undefined

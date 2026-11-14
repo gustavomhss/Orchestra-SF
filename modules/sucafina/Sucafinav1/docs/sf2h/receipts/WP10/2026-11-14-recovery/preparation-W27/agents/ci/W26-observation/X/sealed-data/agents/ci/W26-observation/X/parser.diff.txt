@@ -1,0 +1,11 @@
+--- normalize-hosted-observation.py
++++ normalize-hosted-observation-singular.py
+@@ -42,7 +42,7 @@
+         if m: counts['errors' if m[2] in ('error','errors') else m[2]]=int(m[1])
+         m=re.fullmatch(r'\s*(\d+) expect\(\) calls',line)
+         if m: counts['expects']=int(m[1])
+-        m=re.fullmatch(r'Ran (\d+) tests across (\d+) files\. \[([\d.]+)s\]',line)
++        m=re.fullmatch(r'Ran (\d+) tests? across (\d+) files?\. \[([\d.]+)s\]',line)
+         if m: counts.update(tests=int(m[1]),files=int(m[2]),durationSeconds=float(m[3]))
+     for key in ('pass','fail','skip','errors'): counts.setdefault(key,0)
+     assert Counter(x['status'] for x in rows)==Counter({k:counts[k] for k in ('pass','fail','skip') if counts[k]}), 'Per-test totals differ'

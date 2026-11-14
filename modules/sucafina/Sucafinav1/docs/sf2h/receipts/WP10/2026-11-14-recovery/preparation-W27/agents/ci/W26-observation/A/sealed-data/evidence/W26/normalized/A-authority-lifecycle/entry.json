@@ -1,0 +1,78 @@
+{
+  "id": "W26-A-authority-lifecycle",
+  "kind": "test",
+  "product_sha": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "product_tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+  "snapshot_sha": "dd53af531181d1b05e5081b765dbfecc2a6ba6a9",
+  "snapshot_tree": "ab3895d693c0923a8e26aebe03654cce1854149d",
+  "run_id": 43618475702,
+  "job_id": 132518644009,
+  "run_attempt": 1,
+  "status": "completed",
+  "conclusion": "failure",
+  "record_path": "evidence/W26/normalized/A-authority-lifecycle/terminal.json",
+  "record_sha256": "6145c7ad2d0c0caaaf2722de1da8468b264016ef41e014a70a96844951327c76",
+  "files": [
+    {
+      "path": "evidence/W26/terminal-A-run.json",
+      "bytes": 14166,
+      "sha256": "6fe038d3c96c87f589248001717c77baf044c7a247ad8c06c363176c9a14222c",
+      "git_blob_sha1": "8ece29013097085d57d01c054f986e80994a4547",
+      "name": "source-records/run.json"
+    },
+    {
+      "path": "evidence/W26/terminal-A-jobs.json",
+      "bytes": 4900,
+      "sha256": "1f738558c68c5b1e7047f1af7f3814901351e4ffca8e1d0ad54151c08fda9d61",
+      "git_blob_sha1": "6dea92d2fbc6fbf17f97bfcb1be2bb565751ce84",
+      "name": "source-records/jobs.json"
+    },
+    {
+      "path": "evidence/W26/terminal-A-artifacts.json",
+      "bytes": 22,
+      "sha256": "fb09a9699b26ad536855bb4263ff01baa31a107d9af48b348e96cb4a9eb2b8d9",
+      "git_blob_sha1": "08944e0f51c515b2a160ffd22abef9ef99fda766",
+      "name": "source-records/artifacts.json"
+    },
+    {
+      "path": "evidence/W26/A-compare.json",
+      "bytes": 14733,
+      "sha256": "f5205b48e6c97769f2f0ee11047a42004e3e60cb1bd0f74c4cbb1f78bf2e38d4",
+      "git_blob_sha1": "053fb2700d40666b801827e4be0afb389e3c38f5",
+      "name": "source-records/compare.json"
+    },
+    {
+      "path": "evidence/W26/initial-A-commit.json",
+      "bytes": 1348,
+      "sha256": "487d70ef45b855c35dce664ecdd59c0856004d1bca1f26a2d8f29f77e0f22d29",
+      "git_blob_sha1": "0dddf19b3e66f5fb250ff11b3d02d4afea460c3e",
+      "name": "source-records/commit.json"
+    },
+    {
+      "path": "evidence/W26/A-envelope.json",
+      "bytes": 842,
+      "sha256": "a32eb2400374c5dff4b9f8d523b5424c238b9926ea6c43dba909eb4262e64eab",
+      "git_blob_sha1": "661cbd88494d80b48c193177137f61980b034bf8",
+      "name": "source-records/envelope.json"
+    },
+    {
+      "path": "evidence/W26/normalized/A-authority-lifecycle/test-observations.json",
+      "bytes": 24160,
+      "sha256": "7d4d3b05a7c874092be5ed4960ffa6499215fc7cbb089cd1a9d5e92ab03164ef",
+      "git_blob_sha1": "b2efccc66f6fcdfc95bbce325204b91f85c4bb0b",
+      "name": "test-observations.json"
+    }
+  ],
+  "counts": {
+    "pass": 45,
+    "fail": 1,
+    "expects": 1904,
+    "tests": 46,
+    "files": 8,
+    "durationSeconds": 391.43,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "qualification": "Observed terminal of the exact selected product and snapshot. Individual scoped passes never change a failed run into success. No native/global, criterion or independent-review acceptance is inferred."
+}

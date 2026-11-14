@@ -1,0 +1,34 @@
+{
+  "candidateBase": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "scope": "Own business composition and measured real Memory integration test; data-only static checks. Hosted qualification pending.",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "baseSha256": "cde7d5280d7fa9408cac1677faea09d0a4fc5c11fca7875ceebdf95d4928361e",
+      "sha256": "82d182ce0ae3cff5f7346d4b7f61519440316c37a74751687277744d8d673ef2",
+      "blob": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+      "bytes": 69619
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "baseSha256": "e43d2c13137e1ccadc42ada89b0e9e2b8514fc8412704a14e5c7fc386d5ac3fd",
+      "sha256": "7af2197cbad8b0456dab995d097ea86e9468e8d560cc58546f57e1c16b7e99fd",
+      "blob": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+      "bytes": 48710
+    }
+  ],
+  "checks": {
+    "oldExpectLines": 84,
+    "newExpectLines": 92,
+    "oldExpectLinesPreservedInOrder": true,
+    "durableLifecycleTailByteExact": true,
+    "cooperativeDeadlineMs": 225000,
+    "bunBudgetMs": 240000,
+    "newGroupedAtlasAssertions": 8,
+    "productExecution": false
+  },
+  "dependencies": [
+    "agents/c17/W27-memory-atlas-scope",
+    "agents/ci/W27-record-participation-v2"
+  ]
+}

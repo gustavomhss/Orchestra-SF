@@ -1,0 +1,87 @@
+{
+  "schema": "wp10-data-and-source-preservation-v1",
+  "base": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+    "localPath": "/workspace/scratch/301a7f2754f4/publication/frozen-W26/repo/modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+    "bytes": 16088,
+    "sha256": "33faf5709c5465b99c6c18658eda6d80088af63dc6d3f596a08a8033caea0ee0",
+    "gitBlob": "e526fffa28318367b9180b419509949c93abb273"
+  },
+  "overlay": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+    "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W27-exact-threshold-trace/package/modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+    "bytes": 24978,
+    "sha256": "aaa39b8a4570ea483542062d8345d2eeac2e8e8dfb92693a3bf76246170f9327",
+    "gitBlob": "fa4bdf61e69af2498b5668a5dfceb9286613d0bd"
+  },
+  "instrumentationRemoval": {
+    "nineExplicitReplacementsReversed": true,
+    "helperRemoved": true,
+    "reconstructedBaseByteExact": true,
+    "reconstructedBaseSha256": "33faf5709c5465b99c6c18658eda6d80088af63dc6d3f596a08a8033caea0ee0"
+  },
+  "testDeclarations": 1,
+  "expectExpressionsPreserved": 40,
+  "outerBudgetMs": 300000,
+  "cooperativeBudgetMs": 285000,
+  "imports": [
+    {
+      "specifier": "bun:test",
+      "kind": "runtime-built-in",
+      "notExecutedLocally": true
+    },
+    {
+      "specifier": "node:async_hooks",
+      "kind": "runtime-built-in",
+      "notExecutedLocally": true
+    },
+    {
+      "specifier": "../../../../product/contracts/canonical.ts",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "gitBlob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "availableInFrozenTree": true
+    },
+    {
+      "specifier": "../../../../product/contracts/decisions.ts",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "gitBlob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "availableInFrozenTree": true
+    },
+    {
+      "specifier": "../../../../product/contracts/operations.ts",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "gitBlob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "availableInFrozenTree": true
+    },
+    {
+      "specifier": "../../../../product/contracts/ports.ts",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "gitBlob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "availableInFrozenTree": true
+    },
+    {
+      "specifier": "../../../../../../../apps/cli/src/sucafina-product/portfolio-services.ts",
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "gitBlob": "881ce4672d9d0e641d1cc849663c0980c118774d",
+      "availableInFrozenTree": true
+    },
+    {
+      "specifier": "./financial-composition-fixture.ts",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "gitBlob": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+      "availableInFrozenTree": true
+    },
+    {
+      "specifier": "./composition-test-deadline.ts",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "gitBlob": "3eb140557b597156baf52578d8981d332e52aef3",
+      "availableInFrozenTree": true
+    }
+  ],
+  "newRuntimeImport": "node:async_hooks",
+  "forbiddenProductExecution": false,
+  "localTypecheckPerformed": false,
+  "localTestPerformed": false,
+  "qualification": "Text/hash/import-presence checks only; hosted CHECK and X execution are still required.",
+  "receiverForwarding": "Original function receives the actual wrapper receiver through typed Function.apply(this,args); original argument elements, result value and thrown error are retained."
+}
