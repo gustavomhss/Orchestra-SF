@@ -1,0 +1,669 @@
+{
+  "schema": "sf-wp12-focused-hosted-receipt-v1",
+  "scope": "Only four WP12 mission files from W11; no assertion of overall job success",
+  "run": {
+    "id": 43592776338,
+    "jobId": 132440838567,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43592776338",
+    "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43592776338/job/132440838567",
+    "conclusion": "CANCELLED",
+    "productCommit": "70219282bc9f458c41fd670936e793da44d18363",
+    "snapshotCommit": "799d7113a8d9c4c34e16a7ea70cff8c5c6768fd1",
+    "requestBlob": "d6f208314d1ba8a595b59fc5234e529b3055669a",
+    "requestSha256": "68ff3a74d93837075939364ee1fe9c313dce141e2b9310c8c613c1ca0b15cfa8",
+    "terminalLog": {
+      "line": 1820,
+      "timestamp": "2026-11-14T12:46:52.7631107Z",
+      "message": "The operation was canceled."
+    },
+    "bunFinalSummaryPresent": false
+  },
+  "evidence": {
+    "localLog": "evidence/resume-06-tests.log",
+    "sha256": "fe7e52fb09f4f24b4ecd213f02356f62fbea02e2ef2190dc5ca4ecca27811117",
+    "bytes": 198695,
+    "lineCount": 1844,
+    "historicalManifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-06.json",
+    "sourcePinsVerified": "All four tests and both own helpers fetched through GitHub MCP at productCommit; blobs equal historical manifest."
+  },
+  "counts": {
+    "observedTests": 11,
+    "pass": 9,
+    "fail": 2,
+    "nativeInferenceExecuted": 0,
+    "nativeOutputsProduced": 0,
+    "gnativeAccepted": false
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+      "blob": "9650090140d3bf85878da315638fab32d3944df4",
+      "sha256": "47fff06cdc7e8ae584ed9623d71bb09e96c3d265d06d20e16cfdf70b5b8f0613",
+      "logLines": [
+        830,
+        1092
+      ],
+      "tests": [
+        {
+          "status": "PASS",
+          "title": "real host Finance prepares increase-12000 and verifies native output when an installed model is available",
+          "durationMs": 9716.77,
+          "line": 876,
+          "timestamp": "2026-11-14T12:03:21.6091402Z"
+        },
+        {
+          "status": "PASS",
+          "title": "real host Finance prepares increase-6000 and verifies native output when an installed model is available",
+          "durationMs": 15061.35,
+          "line": 919,
+          "timestamp": "2026-11-14T12:03:36.6708525Z"
+        },
+        {
+          "status": "PASS",
+          "title": "real host Finance prepares unchanged and verifies native output when an installed model is available",
+          "durationMs": 10802.85,
+          "line": 962,
+          "timestamp": "2026-11-14T12:03:47.4734230Z"
+        },
+        {
+          "status": "PASS",
+          "title": "real host Finance prepares observed-zero and verifies native output when an installed model is available",
+          "durationMs": 10395.86,
+          "line": 1005,
+          "timestamp": "2026-11-14T12:03:57.8692391Z"
+        },
+        {
+          "status": "PASS",
+          "title": "real host Finance prepares missing-fx and verifies native output when an installed model is available",
+          "durationMs": 13119.97,
+          "line": 1048,
+          "timestamp": "2026-11-14T12:04:10.9900777Z"
+        },
+        {
+          "status": "PASS",
+          "title": "real host Finance prepares missing-month and verifies native output when an installed model is available",
+          "durationMs": 9714.54,
+          "line": 1091,
+          "timestamp": "2026-11-14T12:04:20.7038080Z"
+        }
+      ],
+      "catalog": {
+        "lines": [
+          853,
+          875,
+          896,
+          918,
+          939,
+          961,
+          982,
+          1004,
+          1025,
+          1047,
+          1068,
+          1090
+        ],
+        "observations": 12,
+        "states": [
+          "empty"
+        ],
+        "availableCount": 0,
+        "supportedCount": 0,
+        "publishedCount": 0,
+        "intersectionCount": 0
+      },
+      "availabilityOnly": {
+        "lines": [
+          855,
+          898,
+          941,
+          984,
+          1027,
+          1070
+        ],
+        "observations": 6,
+        "nativeInferenceExecuted": false,
+        "nativeOutputRef": null,
+        "gnativeAccepted": false
+      },
+      "observations": [
+        {
+          "event": "SF_WP12_FORECAST_VARIANT_INPUT",
+          "line": 854,
+          "value": {
+            "variant": "increase-12000",
+            "githubSha": "799d7113a8d9c4c34e16a7ea70cff8c5c6768fd1",
+            "caseRef": {
+              "id": "4a2eceab-486f-4cc1-8ef8-ae38b6525d6e",
+              "incarnation": "33f3ad46-aa8c-4ab8-87ea-d64df2562626",
+              "version": 1
+            },
+            "inputDigest": "3f479d60ac9f671cc9de57b083ed37fd44fa2b38849396751810627bd64f40fd",
+            "objectiveDigest": "af7076142d68e53ab05168ecf317ca961bec5568bc96bc7eeda2164f55f36b89",
+            "knownDifference": 12000,
+            "completeDifference": null,
+            "gaps": [
+              "cost-coverage-unavailable"
+            ],
+            "sourceRefIds": [
+              "planner-version:wp12-variant-0:9159976b-84ae-4c54-8d4a-0a455b49e5e7:1",
+              "planner-version:wp12-variant-1:f2bbed9e-b962-457d-9566-8ee0b4bf1be8:1"
+            ],
+            "producer": "workbench-analysis:prepare",
+            "domainUnchanged": true,
+            "inferenceExecuted": false
+          }
+        },
+        {
+          "event": "SF_WP12_FORECAST_VARIANT_INPUT",
+          "line": 897,
+          "value": {
+            "variant": "increase-6000",
+            "githubSha": "799d7113a8d9c4c34e16a7ea70cff8c5c6768fd1",
+            "caseRef": {
+              "id": "1b79c31b-eae6-4e80-a895-992288dc055f",
+              "incarnation": "71aec0ea-c3f4-4cb8-992c-b88dea0c1265",
+              "version": 1
+            },
+            "inputDigest": "76e4ba34b47fa1aa67826b5e22428acaf621d7063a86024d7bf276be9b1060e4",
+            "objectiveDigest": "af7076142d68e53ab05168ecf317ca961bec5568bc96bc7eeda2164f55f36b89",
+            "knownDifference": 6000,
+            "completeDifference": null,
+            "gaps": [
+              "cost-coverage-unavailable"
+            ],
+            "sourceRefIds": [
+              "planner-version:wp12-variant-0:dc2f78aa-ed75-4c24-afdf-300fd36f536a:1",
+              "planner-version:wp12-variant-1:92ceb3f2-3a45-4a52-a375-2078b80f7eeb:1"
+            ],
+            "producer": "workbench-analysis:prepare",
+            "domainUnchanged": true,
+            "inferenceExecuted": false
+          }
+        },
+        {
+          "event": "SF_WP12_FORECAST_VARIANT_INPUT",
+          "line": 940,
+          "value": {
+            "variant": "unchanged",
+            "githubSha": "799d7113a8d9c4c34e16a7ea70cff8c5c6768fd1",
+            "caseRef": {
+              "id": "881205db-9255-4451-9c4d-44b65bc0527f",
+              "incarnation": "b6674c0b-340d-4ba9-bc60-c5179ed03241",
+              "version": 1
+            },
+            "inputDigest": "e705e797e9212cf9fe86ca5934e3f02d4d32ccc41e7d4343bff9987d74dc5301",
+            "objectiveDigest": "af7076142d68e53ab05168ecf317ca961bec5568bc96bc7eeda2164f55f36b89",
+            "knownDifference": 0,
+            "completeDifference": null,
+            "gaps": [
+              "cost-coverage-unavailable"
+            ],
+            "sourceRefIds": [
+              "planner-version:wp12-variant-0:a75f6851-fa84-4144-a862-bf83150ddc20:1",
+              "planner-version:wp12-variant-1:d191216a-3649-49f8-94a6-45b5c1c50f43:1"
+            ],
+            "producer": "workbench-analysis:prepare",
+            "domainUnchanged": true,
+            "inferenceExecuted": false
+          }
+        },
+        {
+          "event": "SF_WP12_FORECAST_VARIANT_INPUT",
+          "line": 983,
+          "value": {
+            "variant": "observed-zero",
+            "githubSha": "799d7113a8d9c4c34e16a7ea70cff8c5c6768fd1",
+            "caseRef": {
+              "id": "1cf1c8e9-ac8c-4bf7-8443-f2ee4a080604",
+              "incarnation": "b8a0eb5b-c4da-4349-a348-6f7d8499c9fa",
+              "version": 1
+            },
+            "inputDigest": "536532984dc84cd0b6bacf6d1839d4a794403df1388d1b20e0986a01b8da76cd",
+            "objectiveDigest": "af7076142d68e53ab05168ecf317ca961bec5568bc96bc7eeda2164f55f36b89",
+            "knownDifference": 0,
+            "completeDifference": null,
+            "gaps": [
+              "cost-coverage-unavailable"
+            ],
+            "sourceRefIds": [
+              "planner-version:wp12-variant-0:0777bf06-c97a-403f-b6b0-59a5c0b44ecc:1",
+              "planner-version:wp12-variant-1:3b39526f-6cc4-48c1-b0f0-6cd8ece0902e:1"
+            ],
+            "producer": "workbench-analysis:prepare",
+            "domainUnchanged": true,
+            "inferenceExecuted": false
+          }
+        },
+        {
+          "event": "SF_WP12_FORECAST_VARIANT_INPUT",
+          "line": 1026,
+          "value": {
+            "variant": "missing-fx",
+            "githubSha": "799d7113a8d9c4c34e16a7ea70cff8c5c6768fd1",
+            "caseRef": {
+              "id": "6b105d28-0212-482d-b651-b81d99eec147",
+              "incarnation": "d0952db2-ab19-4310-b486-8ae1219cc1ea",
+              "version": 1
+            },
+            "inputDigest": "90c9153ea53351d7bf835501665ba72b3c8e0d93c0b2a21a55b17d43ec864140",
+            "objectiveDigest": "af7076142d68e53ab05168ecf317ca961bec5568bc96bc7eeda2164f55f36b89",
+            "knownDifference": null,
+            "completeDifference": null,
+            "gaps": [
+              "currency:missing-fx",
+              "wp12-variant-service:1:fx:missing-fx",
+              "wp12-variant-service:2:fx:missing-fx",
+              "wp12-variant-service:3:fx:missing-fx",
+              "wp12-variant-service:4:fx:missing-fx",
+              "wp12-variant-service:5:fx:missing-fx",
+              "wp12-variant-service:6:fx:missing-fx",
+              "wp12-variant-service:7:fx:missing-fx",
+              "wp12-variant-service:8:fx:missing-fx",
+              "wp12-variant-service:9:fx:missing-fx",
+              "wp12-variant-service:10:fx:missing-fx",
+              "wp12-variant-service:11:fx:missing-fx",
+              "wp12-variant-service:12:fx:missing-fx",
+              "cost-coverage-unavailable"
+            ],
+            "sourceRefIds": [
+              "planner-version:wp12-variant-0:5e252f35-8354-4812-8b83-d2148c6ca336:1",
+              "planner-version:wp12-variant-1:1d0d45dc-249a-4f47-82f0-038dadee005b:1"
+            ],
+            "producer": "workbench-analysis:prepare",
+            "domainUnchanged": true,
+            "inferenceExecuted": false
+          }
+        },
+        {
+          "event": "SF_WP12_FORECAST_VARIANT_INPUT",
+          "line": 1069,
+          "value": {
+            "variant": "missing-month",
+            "githubSha": "799d7113a8d9c4c34e16a7ea70cff8c5c6768fd1",
+            "caseRef": {
+              "id": "3b24c8ea-32e9-45c9-8391-f36072d22af9",
+              "incarnation": "17b346a6-87ed-4228-9504-0ad218abdd90",
+              "version": 1
+            },
+            "inputDigest": "435384ef73d34863402b79f1fa0c61cef3a815ddcda9c3aa80d3aae1c0399546",
+            "objectiveDigest": "af7076142d68e53ab05168ecf317ca961bec5568bc96bc7eeda2164f55f36b89",
+            "knownDifference": null,
+            "completeDifference": null,
+            "gaps": [
+              "wp12-variant-service:1:budget:missing",
+              "cost-coverage-unavailable"
+            ],
+            "sourceRefIds": [
+              "planner-version:wp12-variant-0:220dccdc-6b79-42e1-95a7-42f5813c21b2:1",
+              "planner-version:wp12-variant-1:632e81c8-123b-4790-a88e-a9ca6e1d6ffd:1"
+            ],
+            "producer": "workbench-analysis:prepare",
+            "domainUnchanged": true,
+            "inferenceExecuted": false
+          }
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+      "blob": "28c43ff9f5a27db73437edd123b6c4bc02fd2f0c",
+      "sha256": "0417876bb7a230d02d422d4683065a6e82ace55c2090236547e4195a2bcfa2cc",
+      "logLines": [
+        1093,
+        1120
+      ],
+      "tests": [
+        {
+          "status": "PASS",
+          "title": "Maestro frames two real case selections and its native contribution reopens with the selected evidence",
+          "durationMs": 13217.11,
+          "line": 1119,
+          "timestamp": "2026-11-14T12:04:33.9270142Z"
+        }
+      ],
+      "catalog": {
+        "lines": [
+          1113
+        ],
+        "observations": 1,
+        "states": [
+          "empty"
+        ],
+        "availableCount": 0,
+        "supportedCount": 0,
+        "publishedCount": 0,
+        "intersectionCount": 0
+      },
+      "availabilityOnly": {
+        "lines": [
+          1117,
+          1118
+        ],
+        "observations": 2,
+        "nativeInferenceExecuted": false,
+        "nativeOutputRef": null,
+        "gnativeAccepted": false
+      },
+      "observations": [
+        {
+          "event": "SF_WP12_NATIVE_INTENT_INPUT",
+          "line": 1114,
+          "value": {
+            "scope": "real-host-http-input-producer",
+            "githubSha": "799d7113a8d9c4c34e16a7ea70cff8c5c6768fd1",
+            "route": "workbench-analysis:prepare",
+            "skillId": "sf-enquadrar-decisao",
+            "profileId": "sf_maestro",
+            "caseRef": {
+              "id": "9de90740-115a-41fc-97da-d83fb5672836",
+              "incarnation": "c136b32a-019a-4105-936d-5f763b9cebca",
+              "version": 1
+            },
+            "inputDigest": "4c73f5040e670afbe8fee308382589905e0bbd3a52aef73681b71b16156e7d2e",
+            "sourceRefIds": [
+              "planner-version:wp12-intent-forecast-0:a90c35f2-ae0c-46d8-90d9-9b2fda81c2fc:1",
+              "planner-version:wp12-intent-forecast-1:acc7589d-ff17-41ea-91ea-0edb215630ec:1"
+            ],
+            "inferenceExecuted": false
+          }
+        },
+        {
+          "event": "SF_WP12_NATIVE_INTENT_INPUT",
+          "line": 1115,
+          "value": {
+            "scope": "real-host-http-input-producer",
+            "githubSha": "799d7113a8d9c4c34e16a7ea70cff8c5c6768fd1",
+            "route": "workbench-analysis:prepare",
+            "skillId": "sf-enquadrar-decisao",
+            "profileId": "sf_maestro",
+            "caseRef": {
+              "id": "7e3089cf-2cdc-4c95-bbe2-f7899481c495",
+              "incarnation": "5c4efc3f-c0ed-49b9-aef6-8186da211724",
+              "version": 1
+            },
+            "inputDigest": "124ffd3cf51c962d864965b395ed71b3223a408c67275cd3d02099b1eba5cf47",
+            "sourceRefIds": [
+              "planner-version:wp12-intent-forecast-0:a90c35f2-ae0c-46d8-90d9-9b2fda81c2fc:1",
+              "planner-version:wp12-intent-forecast-2:32123d3e-555d-486d-8ea9-67ef6b67628f:1"
+            ],
+            "inferenceExecuted": false
+          }
+        },
+        {
+          "event": "SF_WP12_NATIVE_INTENT_NEGATIVES",
+          "line": 1116,
+          "value": {
+            "scope": "real-host-input-admission",
+            "githubSha": "799d7113a8d9c4c34e16a7ea70cff8c5c6768fd1",
+            "outsideCase": "unavailable",
+            "changedAuthorizedRequest": "denied",
+            "inferenceExecuted": false
+          }
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+      "blob": "fa6316fd4e961df8ccfc961302e6d57c835542b0",
+      "sha256": "ccf61f884b631f6f6170e1140dc42a731b5b44f1f09e0a93791d38ebb9b834ff",
+      "logLines": [
+        1121,
+        1230
+      ],
+      "tests": [
+        {
+          "status": "PASS",
+          "title": "real Recall preparation preserves an explicit empty scope and the native empty result reopens when a model exists",
+          "durationMs": 19335.11,
+          "line": 1165,
+          "timestamp": "2026-11-14T12:04:53.2870606Z"
+        },
+        {
+          "status": "PASS",
+          "title": "real question preparation preserves absent conditions and refuses an unverified recipient before any native run",
+          "durationMs": 11836.17,
+          "line": 1207,
+          "timestamp": "2026-11-14T12:05:05.1241558Z"
+        },
+        {
+          "status": "FAIL",
+          "title": "question input derives a real pending training condition and the human preview preserves its actual source",
+          "durationMs": 423137.49,
+          "line": 1228,
+          "timestamp": "2026-11-14T12:12:08.2607174Z"
+        }
+      ],
+      "catalog": {
+        "lines": [
+          1141,
+          1163,
+          1185,
+          1206,
+          1227
+        ],
+        "observations": 5,
+        "states": [
+          "empty"
+        ],
+        "availableCount": 0,
+        "supportedCount": 0,
+        "publishedCount": 0,
+        "intersectionCount": 0
+      },
+      "availabilityOnly": {
+        "lines": [
+          1143
+        ],
+        "observations": 1,
+        "nativeInferenceExecuted": false,
+        "nativeOutputRef": null,
+        "gnativeAccepted": false
+      },
+      "observations": [
+        {
+          "event": "SF_WP12_NATIVE_RECALL_INPUT",
+          "line": 1142,
+          "value": {
+            "scope": "real-host-prepare-empty-recall-scope",
+            "githubSha": "799d7113a8d9c4c34e16a7ea70cff8c5c6768fd1",
+            "caseRef": {
+              "id": "8a02d8ec-a67e-44d6-8499-cd48d22256e4",
+              "incarnation": "5785e69c-d143-4de1-b0d8-7b8449b98cbb",
+              "version": 1
+            },
+            "inputDigest": "9a996a49ccae236cdff1ea2cdbe1c42e0756e368cd6625d4d11b534916a42f93",
+            "consumerRef": "createSfAnalysisHttp:prepare",
+            "route": "/sucafina/planner?sf=workbench-analysis",
+            "negativeDiscriminators": [
+              "query-mismatch",
+              "case-incarnation-mismatch",
+              "unknown-explicit-precedent"
+            ],
+            "actualPrecedentObserved": false,
+            "atlasReadWitness": false,
+            "inferenceExecuted": false
+          }
+        },
+        {
+          "event": "SF_WP12_NATIVE_RECALL_REOPEN",
+          "line": 1164,
+          "value": {
+            "scope": "real-input-reopened-without-inference",
+            "githubSha": "799d7113a8d9c4c34e16a7ea70cff8c5c6768fd1",
+            "caseRef": {
+              "id": "8a02d8ec-a67e-44d6-8499-cd48d22256e4",
+              "incarnation": "5785e69c-d143-4de1-b0d8-7b8449b98cbb",
+              "version": 1
+            },
+            "inputDigest": "9a996a49ccae236cdff1ea2cdbe1c42e0756e368cd6625d4d11b534916a42f93",
+            "consumerRef": "createSfAnalysisHttp:prepare",
+            "inputReopened": true,
+            "outputRef": null,
+            "actualPrecedentObserved": false,
+            "atlasReadWitness": false,
+            "inferenceExecuted": false,
+            "gnativeAccepted": false
+          }
+        },
+        {
+          "event": "SF_WP12_NATIVE_QUESTION_INPUT",
+          "line": 1186,
+          "value": {
+            "scope": "real-question-input-and-negative-selection",
+            "githubSha": "799d7113a8d9c4c34e16a7ea70cff8c5c6768fd1",
+            "caseRef": {
+              "id": "30c5a0e3-37b6-42e1-b346-5fc3406c20de",
+              "incarnation": "c2ab9de5-942d-461e-80e0-b1515f4fc7a8",
+              "version": 1
+            },
+            "inputDigest": "e9c1cc4d7dde1f192ba1424c8def5d625121db39b4cc35ef327dafeedddba720",
+            "consumerRef": "createSfAnalysisHttp:prepare",
+            "route": "/sucafina/planner?sf=workbench-analysis",
+            "unresolvedConditionCount": 0,
+            "authorizedRecipientCount": 0,
+            "missingPositivePrerequisites": [
+              "persisted-alternative-or-choice-with-real-pending-cost-coverage",
+              "confirmed-source-relation-and-authorized-recipient"
+            ],
+            "proposalCreated": false,
+            "assignmentCreated": false,
+            "inferenceExecuted": false,
+            "outputRef": null,
+            "gnativeAccepted": false
+          }
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "blob": "041f5e1a18419510e2163ed73003655e8afb6ff6",
+      "sha256": "191abb51d5d71aa03a50c97e8bd08f8f6ef08006d653e6fc808599ec9b7734af",
+      "logLines": [
+        1231,
+        1266
+      ],
+      "tests": [
+        {
+          "status": "FAIL",
+          "title": "native Finance preserves pending versus covered scenario costs and a fresh Reviewer critiques its real author",
+          "durationMs": 419432.3,
+          "line": 1265,
+          "timestamp": "2026-11-14T12:19:07.7004224Z"
+        }
+      ],
+      "catalog": {
+        "lines": [
+          1251
+        ],
+        "observations": 1,
+        "states": [
+          "empty"
+        ],
+        "availableCount": 0,
+        "supportedCount": 0,
+        "publishedCount": 0,
+        "intersectionCount": 0
+      },
+      "availabilityOnly": {
+        "lines": [],
+        "observations": 0,
+        "nativeInferenceExecuted": false,
+        "nativeOutputRef": null,
+        "gnativeAccepted": false
+      },
+      "observations": []
+    }
+  ],
+  "helpers": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "blob": "724c0d8e7ae3194664b8d5c20e3450a6c4c04cf7",
+      "sha256": "080ba860d22df2fd8ceb688c4f3cb0af592d8e1f7f6260f8e89ad42162b9cc3f",
+      "bytes": 19034
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts",
+      "blob": "47eced50c547a95c430206f1dce188e32c17f5e4",
+      "sha256": "7e191b6992f24dd9459912cc4afd8276e3c23b80c6fe9ef1f302ed3f71a5fed5",
+      "bytes": 10542
+    }
+  ],
+  "diagnosis": [
+    {
+      "id": "W11-SCENARIO-EXPECTED-COMPLETE",
+      "classification": "OWN_DRIVER_EXPECTATION_INCOMPATIBLE_WITH_PUBLISHED_SCENARIO_SEMANTICS",
+      "message": "Expected 240000, received null at native-scenario-preparation.ts:109:33",
+      "logLines": [
+        1252,
+        1265
+      ],
+      "phase": "After real source issuance, three baseline-coverage registrations and three decision-promote calls, at the final case projection assertion; before ScenarioComparison input preparation, native author or Reviewer. This phase is established by the pinned helper control flow.",
+      "observed": {
+        "baselineKnownSubtotal": 240000,
+        "baselineTotal": null,
+        "laterAssertionsReached": false
+      },
+      "sourceProof": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "blob": "e4a21957da6b91186ecae996a78664c54d7ce41a",
+          "fact": "simulateScenario returns total:null, comparisonStatus:conditioned and scenario-is-hypothetical even for operations:[]; no-op does not become an observed final total."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+          "blob": "d654b13aafcf1e0b29d410e916c1a09b4fa19963",
+          "fact": "reassessScenarioCoverage preserves complete only if the incoming scenario was already complete and the new assessment is complete. Otherwise total remains null."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+          "blob": "e0840d775274ea73c6b938711764c69593dadca0",
+          "fact": "addAlternative consumes real coverage evidence and reassesses; this does not override hypothetical scenario status."
+        }
+      ],
+      "notProved": [
+        "The later derivedMissingCategoryIds training assertion was not reached. This run does not execute the already-known roundtrip counterproof.",
+        "No native scenario or independent Reviewer run started."
+      ]
+    },
+    {
+      "id": "W11-QUESTION-PREPARATION-TIMEOUT",
+      "classification": "REAL_TIMEOUT_WITH_INSUFFICIENT_SUBPHASE_TELEMETRY",
+      "test": "question input derives a real pending training condition and the human preview preserves its actual source",
+      "lastCatalogLine": 1227,
+      "failureLines": [
+        1228,
+        1229
+      ],
+      "reportedDeadlineMs": 120000,
+      "observedDurationMs": 423137.49,
+      "lastTimestamp": "2026-11-14T12:05:08.1545807Z",
+      "failureTimestamp": "2026-11-14T12:12:08.2607174Z",
+      "phase": "The historical test calls prepareWp12ScenarioCase immediately after the initial catalog observation. Its completion marker and every subsequent question input/preview marker are absent. Exact blocking await is not identifiable from this log.",
+      "ownLimitation": "The harness has no per-phase timing/cancellation witness for this preparation; the configured test deadline was reported after roughly 423 seconds. No evidence establishes whether synchronous work, a slow awaited producer or cancellation teardown caused the delay.",
+      "notProved": [
+        "Do not infer a deadlock or reuse the scenario assertion failure as the observed error for this separate test.",
+        "No pending-question input, human preview, native proposal or reopen completed in this test."
+      ]
+    }
+  ],
+  "scopedConclusions": [
+    "Six Forecast variants prepared real inputs: knownDifference 12000, 6000, 0, 0, null and null; all completeDifference null. Inputs had distinct digests under the same objective, and domain persistence reopened; no inference or native output consumer.",
+    "Intent prepared two real materially different source selections and rejected outside-case source plus changed authorized request. The model-empty branch returns before its native contribution reopen.",
+    "Recall prepared and reopened an explicit empty scope. It observed no actual precedent and no Atlas read witness.",
+    "The empty-condition question case prepared and reopened its deterministic input and rejected an unverified recipient. It created no proposal or assignment.",
+    "All 19 catalog observations in these four files report available/supported/published/intersection empty.",
+    "Both WP12 failures happened before native execution; job cancellation happened later in owner integration tests outside this receipt scope."
+  ],
+  "nextChange": {
+    "status": "AUTHORIZED_NOT_APPLIED_AT_RECEIPT",
+    "scope": "Own scenario helper and scenario/reviewer driver; no deadline increase",
+    "intent": "Preserve complete category coverage as its own positive fact, retain hypothetical scenario total:null/conditioned, retain knownSubtotal and strict omitted-training derived-missing assertions. Do not declare canonical T03.CHK.20 complete without real independent inference and later human-resolution proof."
+  },
+  "localExecution": {
+    "product": false,
+    "typecheck": false,
+    "newCI": false,
+    "remoteWrites": false
+  },
+  "fullWp12Acceptance": false
+}

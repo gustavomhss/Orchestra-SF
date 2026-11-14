@@ -1,0 +1,20 @@
+--- a/modules/sucafina/Sucafinav1/product/decisions/case-port.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/case-port.ts
+@@ -67,6 +67,7 @@
+         const parsed = decodeSfOperationInput("sf_case_read", request)
+         if (!parsed.ok) return { status: "needs-input", reason: "invalid-case-reference" }
+         const ref = parseCaseRef(parsed.value.caseRef)
++        const retained = { kind: context.kind, binding: context.binding, lease: context.lease, bindingDigest: digestSfValue(context.binding) }
+         const source = input.host.requestFor(context)
+         if (!ref) return { status: "needs-input", reason: "invalid-case-reference" }
+         if (!source || !await input.host.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
+@@ -89,6 +90,9 @@
+         if (again.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
+         if (again.status !== "ok") return failure(again)
+         if (!again.value || digestSfValue(again.value) !== caseDigest || digestSfValue(value) !== caseDigest || digestSfValue(refs) !== refsDigest || source.signal.aborted) return { status: "stale", reason: "case-changed" }
++        // The C08 read reauthenticates the Request, not this UI/native lease.
++        // Check the live registry synchronously after the last awaited read.
++        if (input.host.requestFor(context) !== source || context.kind !== retained.kind || context.binding !== retained.binding || context.lease !== retained.lease || digestSfValue(context.binding) !== retained.bindingDigest) return { status: "denied", reason: "case-access-unavailable" }
+         const final = again.value
+         const projection: AuthorizedCaseProjection = {
+           context: { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, policyVersion: context.binding.policyVersion, accessRevision: context.binding.accessRevision, ...(context.kind === "native" ? { kind: "native" as const, profileId: context.binding.profileId } : { kind: "ui" as const }) },
