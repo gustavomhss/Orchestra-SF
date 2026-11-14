@@ -1,0 +1,307 @@
+{
+  "schema": "sf-wp13-static-independent-review-v1",
+  "id": "WP13-W20-PRIVATE-SENSITIVITY-READ-SCOPE",
+  "reviewer": "/root/wp13_review_acceptance",
+  "reviewedAt": "2026-11-14T14:08:14.062533Z",
+  "status": "NO_STATIC_BLOCKER_HOSTED_VALIDATION_PENDING",
+  "target": {
+    "increment": "W20_AUTHOR_FROZEN_UNPUBLISHED_AT_REVIEW",
+    "parentProductHead": "02e77add3701570c228b11d971b51c4dd70af552",
+    "parentProductTree": "c3ee3042a28b83e182e88ae4941684802c81bebb",
+    "reviewedFiles": [
+      {
+        "repositoryPath": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "localPath": "repo/modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "bytes": 22535,
+        "gitBlob": "912df8ecd8552b245e124b93c46644c92a32f3ac",
+        "sha256": "1c8cebd12d0970ad9364c9854553dd9f9d2961f4fefb13849d9e8180fd47e9fe"
+      },
+      {
+        "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope-fixture.ts",
+        "localPath": "repo/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope-fixture.ts",
+        "bytes": 6465,
+        "gitBlob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+        "sha256": "4e75e71ebf5d350a419902be587de516b63a8b6f5807e296d37af2c40d7779c1"
+      },
+      {
+        "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+        "localPath": "repo/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+        "bytes": 10716,
+        "gitBlob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+        "sha256": "1147cc8e18f91dd008d2c78e24ca83ec453f7ad9f94157a7951f3dd8c3635636"
+      },
+      {
+        "repositoryPath": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "localPath": "repo/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "bytes": 17731,
+        "gitBlob": "4195ec55c7d9cdfe5e308d192414562bb998d7c0",
+        "sha256": "59ea8ee443f0380d60c3ccfed602b5ff13c8d911b942ec20902e65fc137c52cd"
+      }
+    ]
+  },
+  "verdict": {
+    "staticBlockers": [],
+    "eligibleForSurgicalHostedValidation": true,
+    "productAcceptance": "NOT_CLAIMED",
+    "criteriaPromoted": [],
+    "nativeProof": false,
+    "hostConsumerAdoptionProven": false,
+    "performanceImprovementMeasured": false,
+    "scope": "Somente o opt-in privado composto com o mesmo LocalStore auditado. Não atribuir as garantias novas a Persistence genérica ou ao fallback sem hook."
+  },
+  "comparison": {
+    "originalVerification": {
+      "localPath": "reference/wp13-W20-before/modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "bytes": 17055,
+      "gitBlob": "dd571e43b841dc7cbc37296c4fa9ccd708215ef4",
+      "sha256": "fa2ec4afe016ef0820cce9d08601cd9772e099b1308790e23fd6f538af226320"
+    },
+    "originalIntegration": {
+      "localPath": "reference/wp13-W20-before/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "bytes": 23011,
+      "gitBlob": "8eb97976d7a2f228acf189b25882fd72d960d95b",
+      "sha256": "5c09acc087257862eb16920c893645b75d54aded4a8f73a5d5cbf8416ac1a594"
+    },
+    "rawReplayBodyByteEqualAfterOnlyStageArgumentNormalization": true,
+    "rawReplayNormalization": "Apenas await capture(binding, context, initialFence, stage) -> await capture(binding, context, initialFence); o corpo restante foi comparado literalmente.",
+    "sixIntegrationBodiesAndBudgetsByteEqual": true,
+    "integrationLiteralExpectCallsBefore": 64,
+    "integrationLiteralExpectCallsAfter": 64,
+    "staticCountsAreNotExecutedEvidence": true,
+    "defaultWithoutOptIn": "Replay integral anterior permanece como fallback. A captura legacy sem stage mantém seu comportamento anterior.",
+    "unchangedNumericAndCanonicalBoundaries": [
+      "Leituras C08 de cenário fonte, baseline e cada amostra",
+      "Emissão e revalidação de unidades e regra",
+      "Preview canônico por amostra",
+      "C10 issue/qualify/verify/revalidate aplicáveis",
+      "Certificado exato, witnesses adjacentes e segunda certificação",
+      "Comparação final do resultado reproduzido e fences de fonte",
+      "Quatro chamadas do verificador no caminho de leitura persistida e oito chamadas exact no caminho aplicável de dois pontos"
+    ]
+  },
+  "lifecycleFindings": [
+    {
+      "id": "R01",
+      "finding": "A tentativa scoped apaga o grant anterior antes de qualquer await. Token por chave impede publicação fora de ordem; finally de uma tentativa antiga não apaga token/grant mais recente.",
+      "basis": "verification.ts: sensitivityAttempts, ingress e finally",
+      "evidenceClass": "STATIC_CODE_REVIEW"
+    },
+    {
+      "id": "R02",
+      "finding": "Escopo já herdado é recusado no ingresso. A transação raiz deve pertencer à chamada, pois uma leitura aninhada pode terminar antes de seu root externo falhar.",
+      "basis": "verification.ts: currentSnapshots() precisa ser undefined antes da nova transaction",
+      "evidenceClass": "STATIC_CODE_REVIEW_AND_WRITTEN_COUNTEREXAMPLE_NOT_RUN"
+    },
+    {
+      "id": "R03",
+      "finding": "Binding e stored originais e suas cópias privadas são cercados por digest; autoridade preserva a identidade do contexto e compara kind/binding; Request conserva identidade, signal e fingerprint de method/url/headers.",
+      "basis": "verification.ts: ingress e unchanged()",
+      "evidenceClass": "STATIC_CODE_REVIEW_AND_WRITTEN_COUNTEREXAMPLES_NOT_RUN"
+    },
+    {
+      "id": "R04",
+      "finding": "capture só prepara a entrada local no caminho scoped. A publicação espera a raiz resolver, workAccepted, uma única invocação, token atual, digests/Request estáveis e prazo válido; não há await após a publicação.",
+      "basis": "verification.ts: stage, accepted/workAccepted/invocations e publicação final",
+      "evidenceClass": "STATIC_CODE_REVIEW_AND_WRITTEN_COUNTEREXAMPLE_NOT_RUN"
+    },
+    {
+      "id": "R05",
+      "finding": "O LocalStore fecha o scope, verifica abort, poison, leitores pendentes e gerações antes de resolver. Uma tentativa de escrita aninhada envenena a raiz mesmo se sua rejeição for capturada.",
+      "basis": "runtime/local-store.ts: transaction e operation",
+      "evidenceClass": "STATIC_DEPENDENCY_REVIEW"
+    },
+    {
+      "id": "R06",
+      "finding": "O helper revalida a autoridade em cada coleta de fence, usa currentSnapshots dentro do root e só usa transactionAll fora dele; verifica identidade entre store da fixture e store da capacidade.",
+      "basis": "sensitivity-read-scope-fixture.ts: readSourceFences e readScopeHost",
+      "evidenceClass": "STATIC_CODE_REVIEW"
+    },
+    {
+      "id": "R07",
+      "finding": "O escopo fixa a coorte de leitura C08/caso/regra/fontes enquanto aberto. Não transforma sfRunSourceFence, que exclui __sfProductV1, em prova de C08 nem cria cache de replay entre chamadas.",
+      "basis": "LocalStore currentSnapshots e preservação do replay completo por chamada",
+      "evidenceClass": "STATIC_CONTRACT_BOUNDARY"
+    }
+  ],
+  "writtenCounterexamples": [
+    {
+      "case": 1,
+      "title": "Nested canonical write after stage",
+      "status": "WRITTEN_NOT_RUN",
+      "observations": [
+        "Último callback de scope revalidate observa verifySnapshot=false depois da captura",
+        "Comando Planner real OPEX/save f10=46000 é aceito sobre staging",
+        "Commit aninhado é tentado e sua rejeição é capturada",
+        "Raiz precisa recusar; snapshots reais e grant permanecem inalterados/indisponíveis"
+      ],
+      "budgetMs": 120000
+    },
+    {
+      "case": 2,
+      "title": "Fresh committed source between calls",
+      "status": "WRITTEN_NOT_RUN",
+      "observations": [
+        "Primeira verificação e grant precisam ser válidos e somente leitura",
+        "Alteração canônica confirmada de f10 muda o snapshot persistido",
+        "Nova verificação da prova anterior precisa recusar e invalidar o grant"
+      ],
+      "budgetMs": 120000
+    },
+    {
+      "case": 3,
+      "title": "Final UI authority revocation",
+      "status": "WRITTEN_NOT_RUN",
+      "observations": [
+        "Último callback observa ausência de grant provisório",
+        "Header authorization do Request real é removido",
+        "Revalidação UI canônica precisa recusar e remover a admissão",
+        "Nenhuma alteração financeira nem grant publicado"
+      ],
+      "budgetMs": 120000
+    },
+    {
+      "case": 4,
+      "title": "Inherited root, old grant and mutable private replay input",
+      "status": "WRITTEN_NOT_RUN",
+      "observations": [
+        "Antes do primeiro replay válido, chamada dentro de transaction planner real precisa recusar com checks=0 e grant false dentro e depois do root",
+        "O bloco herdado tem quatro asserts e não consome o grant da contraprova seguinte",
+        "Um novo replay fora do root precisa estabelecer grant válido",
+        "Resolver canônico delega normalmente, mas retém o argumento privado recebido",
+        "Callback final observa grant indisponível e altera maximum apenas nessa cópia",
+        "Envelopes originais e snapshots permanecem intactos; nova tentativa recusa e grant anterior não reaparece"
+      ],
+      "budgetMs": 120000
+    }
+  ],
+  "fixtureAuthorityBoundary": {
+    "financialValues": "Planner, regras, previews e C08 reais calculam/persistem os valores e amostras; nenhum callback novo fornece um valor financeiro calculado.",
+    "bindingEnvelope": "Os quatro testes de fronteira constroem a entrada privada do verificador a partir da regra e do resultado canônicos; não provam publicação do binding.",
+    "bindingPublicationAndColdRead": "Os seis casos de integração preservados continuam sendo a prova exigida de publicação/retomada e de quatro replays na leitura fria.",
+    "admission": "A infraestrutura de admissão UI é real, com autorização/evidência sintéticas declaradas na fixture. Não constitui GNATIVE, host instalado, decisão humana aplicada nem adoção WP10."
+  },
+  "remainingEvidenceAndOperationalLimits": [
+    {
+      "id": "L01",
+      "status": "HOSTED_PENDING",
+      "detail": "Nenhum dos dez casos do corte W20 foi executado nesta revisão. Não converter contagem de asserts/casos ou este parecer em PASS.",
+      "nextAction": "Root publicar os quatro blobs e executar somente os seletores cirúrgicos autorizados com controle/receipt completos."
+    },
+    {
+      "id": "L02",
+      "status": "CODE_REVIEW_ONLY",
+      "detail": "Sobreposição de tentativas da mesma chave está protegida por token no código, mas não tem contraprova executada nem caso próprio nos quatro testes.",
+      "nextAction": "Manter explícito como limite de cobertura; não atribuir PASS ao cenário de overlap."
+    },
+    {
+      "id": "L03",
+      "status": "PRIVATE_COMPOSITION_REQUIRED",
+      "detail": "A interface TypeScript não comprova que todos os leitores/produtores compartilham o LocalStore. O opt-in exige composição confiável same-store; stores diferentes e providers remotos não recebem atomicidade por esta capacidade.",
+      "nextAction": "WP10 só adotar mediante composição privada auditada e provas de suas fontes/admissões; manter delta de consumidor separado."
+    },
+    {
+      "id": "L04",
+      "status": "PERFORMANCE_UNMEASURED",
+      "detail": "BEGIN IMMEDIATE fica aberto durante uma verificação completa; aquisição/rollback são reduzidos em leituras aninhadas, mas matemática e serializações permanecem. Não há medição de ganho neste parecer.",
+      "nextAction": "Comparar tempos hosted do mesmo escopo de teste e observar contenção; não aumentar budgets nem inferir tempo de cold-read a partir de duração do caso inteiro."
+    },
+    {
+      "id": "L05",
+      "status": "EXTERNAL_AUTHORITY_NOT_ATOMIC",
+      "detail": "Revogações externas ao store dependem dos callbacks frescos mantidos. O scope não torna estado externo, ACL ou Request uma transação do banco.",
+      "nextAction": "Conservar todos os checks canônicos e a admissão final; não reutilizar autoridade ou prova numérica entre chamadas."
+    },
+    {
+      "id": "L06",
+      "status": "FALLBACK_LEGACY",
+      "detail": "Sem sensitivityReadScope o caminho original permanece. A nova garantia de staging/root não deve ser atribuída automaticamente à captura legacy.",
+      "nextAction": "Separar afirmações de consumidores que adotarem o opt-in dos que permanecerem no fallback."
+    }
+  ],
+  "requiredHostedSelectors": [
+    {
+      "path": "test/product/wp13/sensitivity-read-scope.test.ts",
+      "staticExpectedCases": 4,
+      "executedHere": false
+    },
+    {
+      "path": "test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "staticExpectedCases": 6,
+      "executedHere": false
+    }
+  ],
+  "dependenciesReviewed": [
+    {
+      "localPath": "repo/modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "bytes": 24537,
+      "gitBlob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "sha256": "c8ce4f6d20eb89d2adebc6577692c310b65310be251784b109431bc18a7c26e5"
+    },
+    {
+      "localPath": "repo/modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "bytes": 4642,
+      "gitBlob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "sha256": "cb9ea7ac4610fc19cf6caa51a7339df9fd69ae181cdf638a8712779c846987c0"
+    },
+    {
+      "localPath": "repo/modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+      "bytes": 31605,
+      "gitBlob": "c357c6c66aac544394ab355306e1f6f7195395f7",
+      "sha256": "88d63af3bb3b3f115e59bcde29de014dd5337ba71ce68910089d97bd89299217"
+    },
+    {
+      "localPath": "repo/modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "bytes": 8025,
+      "gitBlob": "33a8d973c045769b456342499e1c247d524f6c53",
+      "sha256": "180d8117de887296d11e73bf49e1cda9afb53c5144ee6f4ca50dd8b4ef72c3a2"
+    },
+    {
+      "localPath": "repo/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "bytes": 19837,
+      "gitBlob": "78009bbe25a975baa14066376fa0686e821dd5c3",
+      "sha256": "4b825a62baf60c02bf9d2400e19f5e1deb6b0e6c03cfd6c62972eb43ef5e54c1",
+      "publishedBlob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "localDifference": "Extra LF já documentado; não foi editado nem incluído no incremento."
+    },
+    {
+      "localPath": "reference/W13-exact/modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "bytes": 6876,
+      "gitBlob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "sha256": "b6e875b8fc9ff731d225af16f84966bf78f6c1f65aefb852ef52a2983c6ec93e"
+    }
+  ],
+  "sourceReports": [
+    {
+      "localPath": "reference/wp13-owned-readscope-feasibility-W18.json",
+      "bytes": 22038,
+      "gitBlob": "6599fa9afef0ce8e6ce054150bf385eb20cc673a",
+      "sha256": "de4dfca9dd47780e07a8c2f173893aaf74d561a384f686af4bb1a20e652c74ff"
+    },
+    {
+      "localPath": "reference/wp13-cold-W18-static-review.json",
+      "bytes": 23006,
+      "gitBlob": "d10f2a52874fa79a851abc45442c4e8be43ca691",
+      "sha256": "e1af2cd6bb079935a94c77c2e4f35e6c692bd289beedc57de451acf20e62b062"
+    }
+  ],
+  "independentLifecycleReview": {
+    "agent": "/root/wp13_review_acceptance/w6_handoff_static",
+    "verificationBlob": "912df8ecd8552b245e124b93c46644c92a32f3ac",
+    "conclusion": "Nenhum bloqueador estático novo no lifecycle scoped; overlap permanece sem contraprova hosted.",
+    "productExecuted": false
+  },
+  "actionsPerformed": {
+    "sourceReads": true,
+    "textDiffAndHashMetadataOnly": true,
+    "writtenArtifacts": [
+      "reference/wp13-readscope-W20-independent-review.json"
+    ],
+    "productEdited": false,
+    "mapsEdited": false,
+    "ledgerEdited": false,
+    "localProductTests": false,
+    "localTypecheckOrGuards": false,
+    "ciDispatched": false,
+    "remoteMutation": false
+  }
+}

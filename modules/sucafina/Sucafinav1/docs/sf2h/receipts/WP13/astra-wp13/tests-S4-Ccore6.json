@@ -1,0 +1,196 @@
+{
+  "schema": "wp13-hosted-product-receipt-v1",
+  "label": "S4-C-core6",
+  "productSha": "44ecc88ad6c8c56bf08693e386e9e5dd9e46cfbc",
+  "productTree": "536b79767d971c82c0d5b8a6728da93265019232",
+  "snapshotSha": "9cc8c488c86f3b4724ee250f0bbf0bbdbfef8a2e",
+  "snapshotTree": "4db98f9a043d9bdd3f8b6a4652681e32546cdef9",
+  "snapshotOnlyAdded": {
+    "path": ".ci-run.json",
+    "sha": "f164acc4e71861fa3195ff51cbb064752e69c9d7"
+  },
+  "branch": "ci-run-linux-astra-wp13-44ecc88a-1d45e293-1",
+  "runId": 43589779412,
+  "jobId": 132431838705,
+  "cleanupJobId": 132432268943,
+  "status": "completed",
+  "conclusion": "failure",
+  "jobStartedAt": "2026-11-14T11:23:17Z",
+  "jobCompletedAt": "2026-11-14T11:25:06Z",
+  "cleanupCompletedAt": "2026-11-14T11:25:11Z",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/handoff.test.ts",
+      "Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestSha256": "1d45e293d9ff276a8bea9d0752276cb8bc7a5e2e73d2c6fc0caffe044d9deade",
+  "selectedPublishedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+      "sha": "22e9e17fdfc2fb07f6a5ef3c23e521fc3781c25f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "sha": "b4e720037aec7c4c0119b4de900bcbd05957810b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "sha": "d5327a70410a6c52c64b534056939cbfc9eb9483"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "sha": "de2315abe69288edc26d66424f676ce5dbe625ea"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "sha": "62365bd79c1f90b6ee90e64746678bfe779011cf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+      "sha": "5d5491cd95fb989f1233ba49db6185214e980899"
+    }
+  ],
+  "log": {
+    "sha256": "c7595495f0cf0b0b072757cc0c19e060182881e314408189efd1ffef78606e1c",
+    "bytes": 73575
+  },
+  "control": {
+    "nonce": "0bdf598e8ce97ad23b394de9ee65bdfd",
+    "accepted": true,
+    "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "omniSpawnProven": false
+  },
+  "summary": {
+    "passed": 16,
+    "failed": 1,
+    "tests": 17,
+    "files": 6,
+    "expectCalls": 283,
+    "runtimeSeconds": 3.23
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts": [
+      {
+        "status": "pass",
+        "name": "portfolio history can retain a result at the same case version and still requires private provenance and current access",
+        "milliseconds": 87.6
+      }
+    ],
+    "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts": [
+      {
+        "status": "pass",
+        "name": "real prepared execution reconciles normal without repeating Planner effects",
+        "milliseconds": 88.66
+      },
+      {
+        "status": "pass",
+        "name": "real prepared execution reconciles lost-response without repeating Planner effects",
+        "milliseconds": 79.1
+      },
+      {
+        "status": "pass",
+        "name": "real prepared execution reconciles revoked without repeating Planner effects",
+        "milliseconds": 70.16
+      }
+    ],
+    "Sucafinav1/test/product/wp13/handoff.test.ts": [
+      {
+        "status": "pass",
+        "name": "prepares through the WP11 port only when the persisted human choice matches",
+        "milliseconds": 5.67
+      },
+      {
+        "status": "pass",
+        "name": "promotes the reviewed combination through the case domain only for a human",
+        "milliseconds": 4.07
+      },
+      {
+        "status": "pass",
+        "name": "handoff keeps the reviewed case and selection fixed across asynchronous evaluation",
+        "milliseconds": 0.76
+      },
+      {
+        "status": "pass",
+        "name": "review digest ignores observation clocks but retains financial changes",
+        "milliseconds": 0.36
+      }
+    ],
+    "Sucafinav1/test/product/wp13/reconciliation.test.ts": [
+      {
+        "status": "pass",
+        "name": "reconciliation preserves the chosen composition and WP11 partial/retry receipts without writing",
+        "milliseconds": 29.95
+      },
+      {
+        "status": "fail",
+        "name": "reconciliation sends a source-bound price observation to the WP14 classifier while retaining original null and currency",
+        "milliseconds": 13.59
+      },
+      {
+        "status": "pass",
+        "name": "a global criterion change cannot attribute a different component's price to an unchanged component",
+        "milliseconds": 11.7
+      },
+      {
+        "status": "pass",
+        "name": "reconciliation refuses a substituted historical selection even when its numbers match the choice",
+        "milliseconds": 2.13
+      },
+      {
+        "status": "pass",
+        "name": "reconciliation refuses receipt substitution, revoked sources and a different current principal",
+        "milliseconds": 4.15
+      },
+      {
+        "status": "pass",
+        "name": "reconciliation rejects a changed ledger, borrowed callback mutation and a changed read during egress",
+        "milliseconds": 12.1
+      },
+      {
+        "status": "pass",
+        "name": "reconciliation does not reinterpret another source or missing data as a material price signal",
+        "milliseconds": 15.83
+      }
+    ],
+    "Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts": [
+      {
+        "status": "pass",
+        "name": "portfolio C08 choice resumes after an unconfirmed change and a Procurement precommit storage failure with durable receipts",
+        "milliseconds": 1876.57
+      }
+    ],
+    "Sucafinav1/test/product/wp13/handoff-integration.test.ts": [
+      {
+        "status": "pass",
+        "name": "portfolio handoff records a human choice against C08, prepares two changes, and resumes application without repeating a receipt",
+        "milliseconds": 686.93
+      }
+    ]
+  },
+  "artifacts": [],
+  "acceptance": {
+    "aggregatePass": false,
+    "completedPassedFiles": [
+      "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+      "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "Sucafinav1/test/product/wp13/handoff.test.ts",
+      "Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "Sucafinav1/test/product/wp13/handoff-integration.test.ts"
+    ],
+    "failedFile": "Sucafinav1/test/product/wp13/reconciliation.test.ts",
+    "nextAction": "Correct the own unit oracle: unchanged source/component with an unknown criterion retains WP14 unknown impact and unknown signal. Rerun only reconciliation among these six files. The five fully passed files stay attributed to W8 and this snapshot.",
+    "nativeOrInstalledConsumerProof": false
+  },
+  "ready": false
+}

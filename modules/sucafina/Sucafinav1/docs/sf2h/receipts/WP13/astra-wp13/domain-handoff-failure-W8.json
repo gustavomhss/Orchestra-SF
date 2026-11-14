@@ -1,0 +1,212 @@
+{
+  "criterion": "WP13.T04.CHK.02",
+  "baseHead": "8145b909310e01c711d43a97e6c1bd35d5dcec3a",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+  "previousBlob": "e098a74a6476be4bef1f18bde98225d20e83bc25",
+  "gitBlob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+  "sha256": "c99518ad2fd8a20e770b903c4107ad683034b7e4578a976238f75e40dcd9338a",
+  "bytes": 47701,
+  "pinsReadExactly": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "sha": "dbcc51d75ccefb23f328f1d4151504be96a35a45",
+      "readFrom": "repo"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "sha": "acb3b7fb3050264758a5470ffe8168fa5f581370",
+      "readFrom": "repo"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "sha": "d0cab7f33b08806a6bb01a869fa789dc77e087ee",
+      "readFrom": "repo"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "sha": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "readFrom": "reference/domain-handoff-W3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "sha": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "readFrom": "repo"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "sha": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "readFrom": "repo"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "sha": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "readFrom": "repo"
+    }
+  ],
+  "directImports": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "sha": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "sha": "dbcc51d75ccefb23f328f1d4151504be96a35a45"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "sha": "acb3b7fb3050264758a5470ffe8168fa5f581370"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+      "sha": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "sha": "922358d17c470c16b43076510bdf04744e2306e4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "sha": "338889513cfc681bdda91697a9d5bbc16bde8fd1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "sha": "2fd55c7304add0829d7434917c80664fe86356b9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "sha": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "sha": "102c849084980ae52223809d33bdeea36a58536b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "sha": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "sha": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "sha": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "sha": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "sha": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "sha": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "sha": "64cfaf1fcada712548c5f28a12be12aff37f9620"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "sha": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "sha": "5a146c7a1c05598bdc67596e282ce150c720e9c0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "sha": "1b183b82758f8f49954a5038b675bb784fc89915"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "sha": "d0cab7f33b08806a6bb01a869fa789dc77e087ee"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "sha": "c28a167575bf2713590f97798e463ccb33dc50c8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/prepared.ts",
+      "sha": "9aaa684196dc125d0c265db02eafd7e3caa8c0c8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/prepared-review.ts",
+      "sha": "3b330244088844c47029b26ae2cfdb583f21bd58"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "sha": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/c12.ts",
+      "sha": "84f27e1312d3c58f3ba1ea5ae78fe5a936e3adc7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+      "sha": "0332b118846cc8a45399aa24e4694fb6bf055719"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "sha": "3866b57ebc630b06ef76f43f40219dd4ebc16960"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "sha": "7dd93cea781ad68d6db66e2d08e320c1d395d123"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/planner-accounts.ts",
+      "sha": "6ca9b19e8b54e3279c2c16667e92ad7df748b3ea"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "sha": "dba62042653bd061fa099e2956cae4d11a0475ce"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+      "sha": "5a56fb5305e64922af8b6b3246b8807256e79138"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "sha": "84151d62b46e949c90a48a5965f5bdd244b0c5fb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "sha": "3488f1d757fca6fd6527540679f4fb68a533aee0"
+    }
+  ],
+  "foreignIntakeRequired": [],
+  "failure": {
+    "code": "WP13_TEST_PROCUREMENT_PRECOMMIT_STORAGE_FAILURE",
+    "boundary": "test-only wrapper of real LocalStore.transactionAll, after canonical callback, before SQLite COMMIT",
+    "predicate": "armed once, callback commit true, requests:PR-1 revision changed by canonical command",
+    "rollback": "real LocalStore exception/finally path rolls back entire transaction including receipt and source clocks",
+    "wp11Result": {
+      "status": "unavailable",
+      "reason": "domain-application-unavailable"
+    },
+    "not": "CAS conflict; authorization failure; postcommit response loss"
+  },
+  "oracles": [
+    "separate human confirmation gate retained",
+    "Planner committed then Procurement command stages a change but storage fails before commit",
+    "official snapshots and case projection including ledger remain equal to pre-failure partial state",
+    "receipt store, storage version and review bindings unchanged after failure",
+    "Planner receipt replays without additional producer invocation",
+    "same Procurement request retries using unchanged command/choice/review and canonical adapter",
+    "producer invocations: Planner once, Procurement twice",
+    "durable effects/revisions: one per domain; Procurement history one entry",
+    "durable receipts: exactly planner then procurement, each bound to original review",
+    "later receipt replay invokes no producer and changes no official snapshots"
+  ],
+  "testsRun": false,
+  "typecheckRun": false,
+  "remoteOperations": false,
+  "limitations": [
+    "coverage is controlled and conditioned, not C10 acceptance",
+    "UI admission and case historical access remain controlled",
+    "initial Procurement scope admission remains controlled; no native/host acceptance"
+  ]
+}

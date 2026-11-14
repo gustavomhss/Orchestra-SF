@@ -1,0 +1,138 @@
+{
+  "schema": "wp13-hosted-product-receipt-v1",
+  "label": "S10-B1Preview",
+  "productSha": "cb111a14ee527d66748c4e19040c26b828f2bfe4",
+  "productTree": "022548856d95a1df933e6f34e70250e86ccd95ec",
+  "snapshotSha": "aaf218c111c45b7ec65bd2e812e05417b5b3abeb",
+  "snapshotTree": "db54260e3ffc583050d18a06d8c9c59e0f0a9081",
+  "branch": "ci-run-linux-astra-wp13-cb111a14-fd1803bb-1",
+  "snapshotOnlyAdded": {
+    "path": ".ci-run.json",
+    "sha": "62acdb8ae8cd28cabe4d0197cd7b8f9e3f6ee158"
+  },
+  "runId": 43597153713,
+  "jobId": 132453995151,
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 132453995151,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-14T12:55:18Z",
+      "completed_at": "2026-11-14T12:59:16Z"
+    },
+    {
+      "id": 132454941584,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-14T12:59:18Z",
+      "completed_at": "2026-11-14T12:59:22Z"
+    }
+  ],
+  "artifacts": [],
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestSha256": "fd1803bbe44ea3e795080e8b8ea990971ed404a483224804645969913dcdb129",
+  "selectedPublishedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+      "sha": "ea5f94f0c3f036625688c7e60ce9ee9c4ad328d2"
+    }
+  ],
+  "log": {
+    "sha256": "09f73d77dd44c87a8730a228ebd0279e2e3e81c758f69adf73d392f9c1bfc8d1",
+    "bytes": 70204
+  },
+  "control": {
+    "accepted": true,
+    "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "error": null,
+    "omniSpawnProven": false
+  },
+  "summary": {
+    "passed": 11,
+    "failed": 0,
+    "summary": "Ran 11 tests across 1 file. [160.20s]",
+    "expectCalls": 82
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp13/coverage-preview.test.ts": [
+      {
+        "status": "pass",
+        "name": "WP13 composes real Planner and C10 interval proofs at 55000/55001 without applying the preview",
+        "milliseconds": 27123.38
+      },
+      {
+        "status": "pass",
+        "name": "WP13 preserves omitted training coverage and its canonical boundary without treating absence as zero",
+        "milliseconds": 10101.97
+      },
+      {
+        "status": "pass",
+        "name": "WP13 preserves null training coverage and its canonical boundary without treating absence as zero",
+        "milliseconds": 11599.46
+      },
+      {
+        "status": "pass",
+        "name": "WP13 preserves zero training coverage and its canonical boundary without treating absence as zero",
+        "milliseconds": 21655.95
+      },
+      {
+        "status": "pass",
+        "name": "WP13 preserves confirmed training coverage and its canonical boundary without treating absence as zero",
+        "milliseconds": 23569.48
+      },
+      {
+        "status": "pass",
+        "name": "WP13 rejects forged metrics, changed fixed components, unissued qualifications and revoked scope evidence",
+        "milliseconds": 13609.89
+      },
+      {
+        "status": "pass",
+        "name": "WP13 fences source authority changes in a real coverage certificate",
+        "milliseconds": 12047.87
+      },
+      {
+        "status": "pass",
+        "name": "WP13 fences rule authority changes in a real coverage certificate",
+        "milliseconds": 12054.49
+      },
+      {
+        "status": "pass",
+        "name": "WP13 fences access authority changes in a real coverage certificate",
+        "milliseconds": 12266.55
+      },
+      {
+        "status": "pass",
+        "name": "WP13 fences borrowed authority changes in a real coverage certificate",
+        "milliseconds": 9531.71
+      },
+      {
+        "status": "pass",
+        "name": "WP13 does not qualify a real foreign currency preview with missing FX",
+        "milliseconds": 6505.46
+      }
+    ]
+  },
+  "selectionMatches": true,
+  "acceptance": {
+    "aggregatePass": true,
+    "completedPassedFiles": [
+      "Sucafinav1/test/product/wp13/coverage-preview.test.ts"
+    ],
+    "nativeOrInstalledConsumerProof": false
+  },
+  "ready": false
+}

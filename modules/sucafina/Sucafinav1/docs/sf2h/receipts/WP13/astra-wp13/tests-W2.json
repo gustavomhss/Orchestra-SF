@@ -1,0 +1,297 @@
+{
+  "schema": "sf-wp13-hosted-product-check-v1",
+  "productSha": "84fa950ed4925124ca7ee6c854d4ae534bcd6d1a",
+  "productTree": "c619bb577c20133c41388eb6d2e538c9af8e453e",
+  "snapshotSha": "83d971e0da225d0095d5b3498bb2f7f5d473455f",
+  "snapshotTree": "f9f3a9606af082b7c78893db3bd0b83d08270693",
+  "requestSha256": "5fd67d9b4d401fdf5c51922b1af389ed4cda8d4c0d3d91aa37f4cbaae1f45488",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+      "Sucafinav1/test/product/wp13/campaign.test.ts",
+      "Sucafinav1/test/product/wp13/candidates-store.test.ts",
+      "Sucafinav1/test/product/wp13/candidates.test.ts",
+      "Sucafinav1/test/product/wp13/contribution.test.ts",
+      "Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+      "Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "Sucafinav1/test/product/wp13/coverage.test.ts",
+      "Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "Sucafinav1/test/product/wp13/handoff.test.ts",
+      "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "Sucafinav1/test/product/wp13/persistent-store.test.ts",
+      "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+      "Sucafinav1/test/product/wp13/portfolio.test.ts",
+      "Sucafinav1/test/product/wp13/production.test.ts",
+      "Sucafinav1/test/product/wp13/projection.test.ts",
+      "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+      "Sucafinav1/test/product/wp13/sensitivity.test.ts",
+      "Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "Sucafinav1/test/product/wp13/stored-store.test.ts",
+      "Sucafinav1/test/product/wp13/stored.test.ts",
+      "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "runId": 43580984368,
+  "jobId": 132405452364,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580984368",
+  "conclusion": "cancelled",
+  "runStartedAt": "2026-11-14T09:31:52Z",
+  "completedAt": "2026-11-14T10:17:19Z",
+  "observedAssertions": {
+    "pass": 33,
+    "fail": 2,
+    "filesStarted": 9
+  },
+  "files": [
+    {
+      "file": "Sucafinav1/test/product/wp13/candidates.test.ts",
+      "assertions": [
+        {
+          "status": "pass",
+          "name": "resolves only the authorized case and versioned alternative",
+          "durationMs": 8.14
+        },
+        {
+          "status": "pass",
+          "name": "rejects a case read that returns another incarnation",
+          "durationMs": 0.15
+        },
+        {
+          "status": "pass",
+          "name": "propagates denial without revealing an alternative",
+          "durationMs": 0.11
+        },
+        {
+          "status": "pass",
+          "name": "catalog detects a changed case when the provider reuses its original object",
+          "durationMs": 0.82
+        },
+        {
+          "status": "pass",
+          "name": "catalog pins the admitted selection and protects it from source-validator mutation",
+          "durationMs": 0.5
+        }
+      ]
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/sensitivity.test.ts",
+      "assertions": [
+        {
+          "status": "pass",
+          "name": "withholds a domain threshold when coverage is omitted",
+          "durationMs": 1.26
+        },
+        {
+          "status": "pass",
+          "name": "does not infer an exact threshold from sampled points",
+          "durationMs": 0.28
+        },
+        {
+          "status": "pass",
+          "name": "retains the domain values on either side of the exact boundary",
+          "durationMs": 0.28
+        },
+        {
+          "status": "pass",
+          "name": "does not disclose sampled values after source revocation",
+          "durationMs": 0.23
+        },
+        {
+          "status": "pass",
+          "name": "rejects conflicting versioned units across samples",
+          "durationMs": 0.16
+        },
+        {
+          "status": "pass",
+          "name": "rejects missing unit metadata instead of inferring currency",
+          "durationMs": 0.1
+        },
+        {
+          "status": "pass",
+          "name": "preserves each sampled coverage when the provider reuses a mutable scenario",
+          "durationMs": 0.31
+        },
+        {
+          "status": "pass",
+          "name": "rejects one persisted sample reference reused for different parameter values",
+          "durationMs": 0.21
+        },
+        {
+          "status": "pass",
+          "name": "refuses a range whose intermediate arithmetic overflows before consulting the domain",
+          "durationMs": 0.11
+        }
+      ]
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/campaign.test.ts",
+      "assertions": [
+        {
+          "status": "pass",
+          "name": "multi-case campaign keeps owner separate, provisional AI, order and exact retry",
+          "durationMs": 66.01
+        },
+        {
+          "status": "pass",
+          "name": "revoked and stale sources and a moved proposal do not replace the campaign",
+          "durationMs": 17.35
+        },
+        {
+          "status": "pass",
+          "name": "a locked fence that differs from the pre-lock fingerprint does not commit",
+          "durationMs": 7.11
+        },
+        {
+          "status": "pass",
+          "name": "campaign metadata needs the host's private writer grant",
+          "durationMs": 6.61
+        },
+        {
+          "status": "pass",
+          "name": "campaign rejects a candidate in another currency or horizon before any write",
+          "durationMs": 7.53
+        },
+        {
+          "status": "pass",
+          "name": "a prior campaign is separately marked historical after the owner case advances",
+          "durationMs": 20.98
+        },
+        {
+          "status": "pass",
+          "name": "campaign history binds a replaced candidate to the trusted historical port and original digest",
+          "durationMs": 19.7
+        }
+      ]
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+      "assertions": [
+        {
+          "status": "pass",
+          "name": "WP13 composes real Planner and C10 interval proofs at 55000/55001 without applying the preview",
+          "durationMs": 77265.24
+        },
+        {
+          "status": "fail",
+          "name": "WP13 distinguishes omitted/null training from explicit zero and moves the real boundary to 15000/15001 after the 40000 quote",
+          "durationMs": 188943.01
+        },
+        {
+          "status": "pass",
+          "name": "WP13 rejects forged metrics, changed fixed components, unissued qualifications and revoked scope evidence",
+          "durationMs": 38524.26
+        },
+        {
+          "status": "pass",
+          "name": "WP13 fences source/rule/access changes and refuses an authority mutated during its validity callback",
+          "durationMs": 136044.7
+        },
+        {
+          "status": "pass",
+          "name": "WP13 does not qualify a real foreign currency preview with missing FX",
+          "durationMs": 20916.49
+        }
+      ]
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "assertions": [
+        {
+          "status": "fail",
+          "name": "real Planner sensitivity keeps EUR input separate from USD output and leaves missing FX conditioned in C08",
+          "durationMs": 176115.37
+        }
+      ]
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/handoff.test.ts",
+      "assertions": [
+        {
+          "status": "pass",
+          "name": "prepares through the WP11 port only when the persisted human choice matches",
+          "durationMs": 2.74
+        },
+        {
+          "status": "pass",
+          "name": "promotes the reviewed combination through the case domain only for a human",
+          "durationMs": 2.45
+        },
+        {
+          "status": "pass",
+          "name": "handoff keeps the reviewed case and selection fixed across asynchronous evaluation",
+          "durationMs": 0.66
+        },
+        {
+          "status": "pass",
+          "name": "review digest ignores observation clocks but retains financial changes",
+          "durationMs": 0.23
+        }
+      ]
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/stored.test.ts",
+      "assertions": [
+        {
+          "status": "pass",
+          "name": "reads an existing bound contribution and denies a revoked portfolio",
+          "durationMs": 0.84
+        },
+        {
+          "status": "pass",
+          "name": "reports an unavailable store instead of exposing an error",
+          "durationMs": 0.16
+        },
+        {
+          "status": "pass",
+          "name": "does not return persisted payload when source access changes during read",
+          "durationMs": 0.36
+        }
+      ]
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "assertions": [
+        {
+          "status": "pass",
+          "name": "portfolio handoff prepares two WP11 changes and resumes a partial application without repeating a receipt",
+          "durationMs": 72.32
+        }
+      ]
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "assertions": []
+    }
+  ],
+  "omniPositiveControl": {
+    "status": "NOT_ESTABLISHED",
+    "reason": "test (ubuntu-24.04): expected one omni positive control verdict for this run's nonce, found 0"
+  },
+  "artifacts": [],
+  "logSha256": "12b89ebf2a29359b0cca0650c9758d6c5435edd668718ab7bb920263ec11d4a4",
+  "productAcceptance": "NOT_ESTABLISHED",
+  "evidenceLimit": "The cancelled job has no complete test summary or omni verdict; individual emitted assertions are diagnostic observations only and do not establish a product PASS.",
+  "nextAction": "Reduce redundant own fixture replay without weakening authority; split explicit affected files into disjoint scoped requests on the next published product. Rerun the five otherwise unchanged files because S2 did not complete its control gate.",
+  "envelopeProof": {
+    "status": "PASS",
+    "source": "GitHub compare via MCP",
+    "commitCount": 1,
+    "files": [
+      {
+        "path": ".ci-run.json",
+        "status": "added",
+        "blob": "a511e86a4d987dd315b07b50ef774e46de4c0fbd"
+      }
+    ],
+    "productTestFixtureConfigBlobsUnchanged": true
+  }
+}

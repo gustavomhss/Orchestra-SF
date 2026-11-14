@@ -1,0 +1,759 @@
+{
+  "schema": "wp13-owner-reconciliation-W15-static-v1",
+  "preparedAt": "2026-11-14T12:50:42.833989+00:00",
+  "reviewer": "/root/wp13_findings",
+  "status": "STATIC_OWNER_RECONCILIATION_NO_INTAKE_NO_RUNTIME_CLAIM",
+  "ready": false,
+  "product": {
+    "label": "W15",
+    "head": "cb111a14ee527d66748c4e19040c26b828f2bfe4",
+    "tree": "022548856d95a1df933e6f34e70250e86ccd95ec",
+    "baseBranch": "sf2-stack",
+    "baseSha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "unchangedByReview": true
+  },
+  "observation": {
+    "atAsReportedByRoot": "2026-11-14T12:46:00Z",
+    "heads": {
+      "WP10": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+      "WP11": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "Finance": "c449efc092e507fca2b4f61d1e7ce057faf05c89"
+    },
+    "source": "Root read-only GitHub MCP ref/compare/file downloads saved locally. Reviewer uses these immutable bytes and compare metadata; no remote operation by reviewer.",
+    "wholeOwnerHeadsConsumed": false,
+    "ownAndBaseHeadsUnchanged": true
+  },
+  "inputs": {
+    "downloadedExactFiles": [
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+        "blob": "d20eafe56f782c8d23917c53d60377fa09a386a6",
+        "sha256": "64627a56a2f4b6f15e8c5d790e4e1d945958e02b71e380d0b71355cc123cda92",
+        "bytes": 15723,
+        "readBytesPath": "reference/owner-1246/apps/cli/src/sucafina-product/portfolio-coverage.ts",
+        "sourceCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "blob": "9514f80dc7e8dbb9c8acf1822bbd4f1ea067c0e1",
+        "sha256": "667104e7adbf32bcaca7989c1134bbc23de8d9c040740a2dfd86816577166c79",
+        "bytes": 25596,
+        "readBytesPath": "reference/owner-1246/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "sourceCommit": "dc9d4327d07db58d026e7672cf619717394f5ffd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "blob": "73eee84b724bfdef9dbd4aaa65902e4503a1e8e0",
+        "sha256": "aeb01fde16f61497f952f25c9eaf5c5c4cdbc00967e2f3932806ad0894e72b11",
+        "bytes": 6425,
+        "readBytesPath": "reference/owner-1246/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "sourceCommit": "dc9d4327d07db58d026e7672cf619717394f5ffd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "blob": "38f82f4b931682e255a18d52856e192f2ee43390",
+        "sha256": "74b8964deabc274b59892f48de8bc54c774aab242d911a9b0713f9ad36f76095",
+        "bytes": 17490,
+        "readBytesPath": "reference/owner-1246/modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "sourceCommit": "dc9d4327d07db58d026e7672cf619717394f5ffd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "blob": "46b004a1b374229ad46077930134ba0469213087",
+        "sha256": "12dbbe50b2044ce12112cc13d1655d5cc138c58cd387b1f9ffcc799ff1e6fb98",
+        "bytes": 13761,
+        "readBytesPath": "reference/owner-1246/modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "sourceCommit": "dc9d4327d07db58d026e7672cf619717394f5ffd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/source-observation-H6-review.json",
+        "blob": "6bbbb22ec7504b36edcda72b6e28cd4e34a4acfc",
+        "sha256": "8f031cf83dd9945978968500705f2f463112d6dc18b075ce0964e5044b94ceb8",
+        "bytes": 9497,
+        "readBytesPath": "reference/owner-1246/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/source-observation-H6-review.json",
+        "sourceCommit": "dc9d4327d07db58d026e7672cf619717394f5ffd"
+      }
+    ],
+    "ownerComparisons": [
+      {
+        "path": "reference/owner-1246-WP10-compare.json",
+        "blob": "f45b4703f53165ba64b6c7f509f41ff8a8f1d3c2",
+        "sha256": "c52b5ccf8b493ff91c825e4e53d76c06fbf636cc238f341fbd73188d256b598d",
+        "bytes": 352984,
+        "owner": "WP10",
+        "head": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+        "commits": 1,
+        "changedFiles": 40
+      },
+      {
+        "path": "reference/owner-1246-WP11-compare.json",
+        "blob": "d9761129e2f3385ec180441fcfc3c72814106592",
+        "sha256": "5a34ad5b5c4216a9854e8a4f017e9a6e64421d676f0b67e290353bc8c1cd71e2",
+        "bytes": 492671,
+        "owner": "WP11",
+        "head": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+        "commits": 3,
+        "changedFiles": 35
+      },
+      {
+        "path": "reference/owner-1246-Finance-compare.json",
+        "blob": "7caa6ca307e6b02e673a45cd8285df584e419d70",
+        "sha256": "847072489a23eaaffe7033a24b16097014310dd4be6641aed2bc737f65b704cc",
+        "bytes": 788922,
+        "owner": "Finance",
+        "head": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+        "commits": 6,
+        "changedFiles": 53
+      }
+    ],
+    "scopeAudit": {
+      "path": "reference/wp13-W15-pin-audit.json",
+      "blob": "b6302be1dcd7304d444de06cfb67c27b5a51ad9e",
+      "sha256": "902e4243cdaa428a42121c8f60d18d7e9d3a38819bfaa34c9c04fc0c7c6b9b2f",
+      "bytes": 85002
+    },
+    "newRegressionReadFromExactPatch": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "sourceCommit": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "sha256": "ed792565e2a75a2b29a65dc81eee892db5bcefd0744c55d110ee9af6401df737",
+      "bytes": 11611,
+      "readMechanism": "Complete added-file MCP compare patch reconstructed in memory; exact Git blob hash matched. No source file written or executed."
+    }
+  },
+  "findings": [
+    {
+      "id": "WP13-OWNER1246-WP10-COVERAGE",
+      "owner": "WP10",
+      "state": "REFRESHED_SOURCE_PIN_NOT_APPLIED",
+      "previousHead": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+      "previousBlob": "ec824f54d67630edce6ef218e2e1301193362f3c",
+      "currentHead": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+      "currentBlob": "d20eafe56f782c8d23917c53d60377fa09a386a6",
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "observedChange": "The owner extracts captureEntries with optional assessmentOrder. prepareNoop supplies baseline.evaluatedSourceRefs; the helper checks exact unique one-to-one reference membership before resolving in that baseline order. Case/source/selection/classification and final C08 intent fences remain. The blanket not-applicable veto is still present at captureEntries line101.",
+      "effect": "Source-only promotion now preserves baseline evidence ordering. This does not resolve WP13-HOST-NA-01 and does not supply exactThreshold/authenticated sensitivity authority. No owner host acceptance is inferred.",
+      "notAppliedDelta": {
+        "id": "WP13-HOST-NA-01",
+        "targetHead": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+        "targetBlob": "d20eafe56f782c8d23917c53d60377fa09a386a6",
+        "removeOnly": "baseline.entries.some((entry) => entry.status === \"not-applicable\") || ",
+        "replacement": "",
+        "occurrences": 1,
+        "proposedBlob": "82cb2d447802201f003255e215a62c7eb725a692",
+        "proposedSha256": "3e650c3e0c7773faebfc4e9ffaea1586f21a63cd1da1e79883830ec77967a84d",
+        "proposedBytes": 15652,
+        "patch": "--- a/apps/cli/src/sucafina-product/portfolio-coverage.ts\n+++ b/apps/cli/src/sucafina-product/portfolio-coverage.ts\n@@ -98,7 +98,7 @@\n     const classification = await business.baselineCoverage.readClassification(held.value.scenario.baseRef, call)\n     if (!before || !sources || coverage.status !== \"ok\" || classification.status !== \"ok\" || !same(coverage.value.assessment, baseline) ||\n       !same(coverage.value.basis, classification.value.basis) || classification.value.source.refId !== held.value.scenario.baseRef ||\n-      baseline.entries.some((entry) => entry.status === \"not-applicable\") || baseline.entries.some((entry) => entry.status === \"included\" &&\n+      baseline.entries.some((entry) => entry.status === \"included\" &&\n         !classification.value.mappings.some((mapping) => same(mapping.entry, entry)))) return unavailable()\n     const entries: readonly CostCoverageEntry[] = structuredClone(baseline.entries)\n     for (const entry of entries) if (entry.status !== \"pending\") classifications.set(entry, classification.value)\n",
+        "patchSha256": "0a60d38f3cafa2e47869d64c1cba47dcc955738629b2f3bfa2c600916593a449",
+        "applied": false,
+        "foreignSourceWritten": false,
+        "scope": "Text derived in memory and recorded only inside this receipt. Not compilation, typecheck, runtime proof or owner adoption."
+      },
+      "retainedOwnerRequirements": [
+        "captureEntries assessmentOrder uniqueness and full membership validation",
+        "fresh evidence resolutions, access revision and immutable currentRef checks",
+        "WeakMap-backed classification and supportsCoverageClassification",
+        "canonical reassessScenarioCoverage, included-component mappings and pending semantics",
+        "private selection/run identity, source and decision-state fences",
+        "verifySnapshot including result/basis and actual intent before C08 commit"
+      ],
+      "nextAction": "WP10 reviews/applies the published D1 W15 bundle against the then-current d20eafe coverage target, removing only the N/A veto and retaining assessmentOrder, canonical classification and fresh fences. Prove sourced N/A acceptance and invalid/revoked classification refusal at producer/C08/replay. No old complete coverage file replacement."
+    },
+    {
+      "id": "WP13-OWNER1246-WP10-OTHER-DELTAS",
+      "owner": "WP10",
+      "state": "EXACT_TARGET_BLOBS_UNCHANGED_IN_SINGLE_PARENT_COMPARE",
+      "compareParent": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+      "head": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+      "targets": [
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+          "blob": "18caa4381d7d02f1193bdac4c2e9c2134c64daf1",
+          "changedInCompare": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-portfolio-history.ts",
+          "blob": "4d11a5c8c81d99f117709fc65327373055ee2cc1",
+          "changedInCompare": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-sensitivity-authority.ts",
+          "newProposedPath": true,
+          "changedInCompare": false
+        }
+      ],
+      "remainingDeltaIds": [
+        "WP13-HOST-THRESHOLD-02",
+        "WP13-WP10-HISTORY-CANDIDATE-READER",
+        "WP13-WP10-WP14-RECONCILIATION"
+      ],
+      "boundary": "The complete one-commit owner compare contains40 changed files but neither services nor review-portfolio-history; their prior exact blobs remain the relevant hunk bases. The new helper remains a proposal. Other owner business/review/memory changes are not certified by this narrow target check.",
+      "nextAction": "WP10 adopts the three unchanged-target proposals from the published D1 W15 bundle with authenticated readers and hosted consumer proof. Recheck target blobs if its head advances again; do not infer adoption from documentary publication."
+    },
+    {
+      "id": "WP13-OWNER1246-WP11-PHASE-PROJECTION",
+      "owner": "WP11",
+      "state": "EXACT_ONE_FILE_CANDIDATE_NOT_CONSUMED",
+      "sourceCommit": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "currentConsumed": {
+        "commit": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+        "blob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+        "introducedBy": "W14",
+        "retainedBy": "W15"
+      },
+      "candidateBlob": "9514f80dc7e8dbb9c8acf1822bbd4f1ea067c0e1",
+      "observedChange": "Only the final preparePhase projection call changes from classified planner.compareForecast to the already constructed sourcePlanner.compareForecast; two comments explain that only candidate DomainProjection is returned. All other bytes match the current consumed d5395570 file.",
+      "retainedFinancialPaths": [
+        "results.write scenario/comparison",
+        "withCriteria.compareScenarios and criterion registry",
+        "classified Planner used by exact/preview",
+        "C10 registration/classification/coverage assessments",
+        "same case, choice recording, training/implementation source revisions and restart"
+      ],
+      "minimalIntake": {
+        "foreignPaths": 1,
+        "newImports": 0,
+        "newRuntimeProducerDependencies": 0,
+        "requiresNewVerifier73eee": false
+      },
+      "possibleEffect": "May avoid one redundant classified coverage resolution per prepared phase. Canonical source projection still runs; no measured speedup or baseline-result parity is asserted.",
+      "nextAction": "Keep S9 running on W15. If its exact result implicates the redundant phase projection/setup, this single exact file is the narrower candidate. Re-run only affected current-source/price/renewal roots once with unchanged assertions and budgets; verify source identity, absence versus zero and C10 outputs before accepting any gain."
+    },
+    {
+      "id": "WP13-OWNER1246-WP11-SOURCE-ADMISSION",
+      "owner": "WP11/Finance",
+      "state": "LARGER_FIXTURE_ADMISSION_CHANGE_NOT_CONSUMED_REQUIRES_CURRENT_COMPOSITION_PROOF",
+      "sourceCommit": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "currentConsumed": {
+        "commit": "96fc3162ae309f8b91b2c55524335026f8704714",
+        "blob": "2338917427497733e4bd88aec852985206cce066",
+        "introducedBy": "W14",
+        "retainedBy": "W15"
+      },
+      "candidateBlob": "73eee84b724bfdef9dbd4aaa65902e4503a1e8e0",
+      "sourceOnlyMechanism": [
+        "Closed decode selects the observer only when operations and assumptions are both empty.",
+        "Two cloned source-envelope resolutions validate installation/project/ref identity, digest, record type/id, exact projection fields and whole-month same-year period.",
+        "Two fresh real Planner transactions authenticate current actor/roles/access and call canonical projectPlannerSource; static synthetic reference equality cannot hide a real Planner edit.",
+        "After the second source resolution and external revalidate, the final transaction authenticates again, revalidates the private UI lease and request/binding/abort before synchronous projection; the returned boolean is guarded synchronously.",
+        "No financial result, C10 assessment or prior authorization is memoized between calls. The canonical projector can still calculate domain projection data; this is not a claim of zero numerical work."
+      ],
+      "differenceFromOurConsumedFinanceWrapper": "The current Finance233891 verifier wraps both paths in one read-only Planner transaction and performs a canonical compareForecast for source-only. The new WP11 candidate removes that outer wrapper; nonempty scenarios delegate directly to createPlannerOperationVerifier, which retains its own canonical projection/target/simulation/final checks. Source-only avoids FinancialAnalysis/C10 construction but changes transaction scope and callback ordering.",
+      "ownerReviewBoundary": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/source-observation-H6-review.json",
+        "blob": "6bbbb22ec7504b36edcda72b6e28cd4e34a4acfc",
+        "reviewedBaseVerifier": "f83ca8b14429905f84d42d27bb57e8b19d7aba42",
+        "ourBaseVerifier": "2338917427497733e4bd88aec852985206cce066",
+        "differentBase": true,
+        "ownerVerdict": "NO_STATIC_BLOCKER_FOUND_HOSTED_VALIDATION_PENDING",
+        "runtimeProof": false
+      },
+      "minimalIntake": {
+        "helperPaths": [
+          "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts"
+        ],
+        "requiredOwnerRegression": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+            "sourceCommit": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+            "blob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+            "sha256": "ed792565e2a75a2b29a65dc81eee892db5bcefd0744c55d110ee9af6401df737",
+            "bytes": 11611,
+            "readMechanism": "Complete added-file MCP compare patch reconstructed in memory; exact Git blob hash matched. No source file written or executed."
+          }
+        ],
+        "newRuntimeProducerDependencies": 0,
+        "additionalRuntimeFilesAlreadyPresent": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+            "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "blob": "dba62042653bd061fa099e2956cae4d11a0475ce"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+            "blob": "64cfaf1fcada712548c5f28a12be12aff37f9620"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+            "blob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5"
+          }
+        ],
+        "requiresFixture9514": false
+      },
+      "requiredControls": [
+        "Owner seven source-admission cases with two fresh projections and zero auxiliary coverage/environment calls only for empty source-only admission.",
+        "Real Planner source mutation while the synthetic reference stays equal; second-source callback mutation; last revalidate source edit; private lease revocation; final authentication returning an old principal after actual request-header revocation.",
+        "Nine scope/digest/field/period variants with recomputed digests so scope failures are discriminating.",
+        "Canonical nonempty three-operation positive control, invalid implementation:13 target refusal and unchanged durable source snapshot.",
+        "Existing own W15 read-scope3 controls, same-case renewal/source/price consumers, actual C10 and numeric outcomes, restart/persistence and bounded completion on the candidate closure."
+      ],
+      "nextAction": "Do not consume while S9 is active. If current evidence identifies repeated source-only admission as the bottleneck or a freshness defect, consider the exact verifier plus its7-case owner regression as a separate intake. First reconcile its direct nonempty path against our Finance transaction wrapper; retain both real positive/negative operation proof and durable no-write assertions. No timeout extension or blanket cache is justified."
+    },
+    {
+      "id": "WP13-OWNER1246-CURRENT-CHOICE-FENCE",
+      "owner": "WP11",
+      "state": "OWNER_IMPROVEMENT_NOT_IN_CURRENT_WP13_IMPORT_CLOSURE_NOT_CONSUMED",
+      "sourceCommit": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "blob": "38f82f4b931682e255a18d52856e192f2ee43390",
+      "test": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "blob": "46b004a1b374229ad46077930134ba0469213087"
+      },
+      "observedChanges": "The latest owner reader clones incoming and stored binding, binds the historical choice and current scenario/producer, revalidates source authority, reauthorizes preference access after callbacks and finishes with one case-state read checking case, both persisted results and private binding together. The dedicated test discriminates membership and preferences-read revocation during final case authorization while the UI lease stays valid.",
+      "testBoundary": "Two generated reader-fence cases use real UI/SQLite/result-store reads with seeded conditioned/null monetary records. They assert no calculation/promotion/dispatch callback, stale result without value after race, unchanged original choice and no receipts. They are not financial, choice-promotion or native-session proof and were not executed by this reviewer.",
+      "dependencyEvidence": {
+        "directImportSearch": "No current-choice-preview/createCurrentChoicePreview/readCurrentChoiceBinding/verifyCurrentChoiceBinding imports found in product/portfolio, test/product/wp13 or renewal* fixtures.",
+        "S9RelativeClosures": {
+          "anyCurrentChoicePreviewDependency": false
+        },
+        "publishedPinEstablishedInW15Map": false,
+        "hydrationCaution": "An older local hydrated copy exists, but no current published consumption pin was established from W2+W3-W15 manifests; its local availability is not reason to import it."
+      },
+      "nextAction": "Leave this owner fix unconsumed for WP13. WP10/WP11 should exercise it through the actual current-choice consumer when composing that flow; do not expand S9 or the WP13 branch solely because a new owner file exists."
+    },
+    {
+      "id": "WP13-OWNER1246-FINANCE-TYPE-GUARD",
+      "owner": "Finance",
+      "state": "OWNER_CORRECTION_OBSERVED_OWN_W15_ALREADY_HAS_CONFIRMED_EQUIVALENT_TYPE_NARROWING",
+      "sourceCommit": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+      "candidateBlob": "803a9a3154a2dcf99a8118253216bf97efb2e8f5",
+      "verifiedFromComparePatch": true,
+      "observedChange": "Finance adds an explicit missing-transactionAll guard before both calls in its test. The new bytes hash to803a9a3154a2dcf99a8118253216bf97efb2e8f5.",
+      "ownState": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/renewal-read-scope.test.ts",
+        "blob": "bcd5ed7f2cc26b2d9e271dae421b4d86e2f05591",
+        "check": "C15",
+        "runId": 43595789801,
+        "jobId": 132449862598,
+        "diagnostics": "0 own/130 outside WP13; C14 four imported-test messages no longer present. Package remains FAIL."
+      },
+      "nextAction": "Retain the own W15 test, its preserved3 controls and current S9 selection. Do not reintroduce the deleted foreign copy or run duplicate equivalent tests; owner type correction adds no current WP13 compilation need."
+    }
+  ],
+  "observedS9DependencyImpacts": [
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "selectedBlob": "553e171d14ea8e7318ad245375cd6d2597b66d4a",
+      "changedHelperDependencies": [],
+      "currentChoicePreviewInObservedRelativeClosure": false,
+      "observedRelativeClosureFiles": 66,
+      "unresolvedOrUnverifiedReads": [
+        "modules/sucafina/Sucafinav1/product/integration/dashboard-preview.ts",
+        "modules/sucafina/Sucafinav1/product/integration/public-state.ts",
+        "modules/sucafina/Sucafinav1/runtime/assets.ts",
+        "modules/sucafina/Sucafinav1/runtime/dashboard-backup.ts",
+        "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+        "modules/sucafina/Sucafinav1/src/records.ts"
+      ],
+      "scopeBoundary": "Observed local relative graph only; listed missing/uncertified paths prevent a complete transitive-closure claim. Direct changed-helper dependency matches are established independently."
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp13/renewal-read-scope.test.ts",
+      "selectedBlob": "bcd5ed7f2cc26b2d9e271dae421b4d86e2f05591",
+      "changedHelperDependencies": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts"
+      ],
+      "currentChoicePreviewInObservedRelativeClosure": false,
+      "observedRelativeClosureFiles": 68,
+      "unresolvedOrUnverifiedReads": [
+        "modules/sucafina/Sucafinav1/product/integration/dashboard-preview.ts",
+        "modules/sucafina/Sucafinav1/product/integration/public-state.ts",
+        "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+        "modules/sucafina/Sucafinav1/runtime/assets.ts",
+        "modules/sucafina/Sucafinav1/runtime/dashboard-backup.ts",
+        "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+        "modules/sucafina/Sucafinav1/src/records.ts"
+      ],
+      "scopeBoundary": "Observed local relative graph only; listed missing/uncertified paths prevent a complete transitive-closure claim. Direct changed-helper dependency matches are established independently."
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "selectedBlob": "5f12e1d8a9c12d3947eda77ab93970771e3146e9",
+      "changedHelperDependencies": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts"
+      ],
+      "currentChoicePreviewInObservedRelativeClosure": false,
+      "observedRelativeClosureFiles": 92,
+      "unresolvedOrUnverifiedReads": [
+        "modules/sucafina/Sucafinav1/product/integration/dashboard-preview.ts",
+        "modules/sucafina/Sucafinav1/product/integration/public-state.ts",
+        "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+        "modules/sucafina/Sucafinav1/runtime/assets.ts",
+        "modules/sucafina/Sucafinav1/runtime/dashboard-backup.ts",
+        "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+        "modules/sucafina/Sucafinav1/src/records.ts"
+      ],
+      "scopeBoundary": "Observed local relative graph only; listed missing/uncertified paths prevent a complete transitive-closure claim. Direct changed-helper dependency matches are established independently."
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "selectedBlob": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+      "changedHelperDependencies": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts"
+      ],
+      "currentChoicePreviewInObservedRelativeClosure": false,
+      "observedRelativeClosureFiles": 76,
+      "unresolvedOrUnverifiedReads": [
+        "modules/sucafina/Sucafinav1/product/integration/dashboard-preview.ts",
+        "modules/sucafina/Sucafinav1/product/integration/public-state.ts",
+        "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+        "modules/sucafina/Sucafinav1/runtime/assets.ts",
+        "modules/sucafina/Sucafinav1/runtime/dashboard-backup.ts",
+        "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+        "modules/sucafina/Sucafinav1/src/records.ts"
+      ],
+      "scopeBoundary": "Observed local relative graph only; listed missing/uncertified paths prevent a complete transitive-closure claim. Direct changed-helper dependency matches are established independently."
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+      "selectedBlob": "ce02051d09115665056d36382bde5f1dbd0d9238",
+      "changedHelperDependencies": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts"
+      ],
+      "currentChoicePreviewInObservedRelativeClosure": false,
+      "observedRelativeClosureFiles": 81,
+      "unresolvedOrUnverifiedReads": [
+        "modules/sucafina/Sucafinav1/product/integration/dashboard-preview.ts",
+        "modules/sucafina/Sucafinav1/product/integration/public-state.ts",
+        "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+        "modules/sucafina/Sucafinav1/runtime/assets.ts",
+        "modules/sucafina/Sucafinav1/runtime/dashboard-backup.ts",
+        "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+        "modules/sucafina/Sucafinav1/src/records.ts"
+      ],
+      "scopeBoundary": "Observed local relative graph only; listed missing/uncertified paths prevent a complete transitive-closure claim. Direct changed-helper dependency matches are established independently."
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "selectedBlob": "4efa414f8ecadde5799e7246337863b145373210",
+      "changedHelperDependencies": [],
+      "currentChoicePreviewInObservedRelativeClosure": false,
+      "observedRelativeClosureFiles": 75,
+      "unresolvedOrUnverifiedReads": [
+        "modules/sucafina/Sucafinav1/product/integration/dashboard-preview.ts",
+        "modules/sucafina/Sucafinav1/product/integration/public-state.ts",
+        "modules/sucafina/Sucafinav1/runtime/assets.ts",
+        "modules/sucafina/Sucafinav1/runtime/dashboard-backup.ts",
+        "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+        "modules/sucafina/Sucafinav1/src/records.ts"
+      ],
+      "scopeBoundary": "Observed local relative graph only; listed missing/uncertified paths prevent a complete transitive-closure claim. Direct changed-helper dependency matches are established independently."
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "selectedBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "changedHelperDependencies": [],
+      "currentChoicePreviewInObservedRelativeClosure": false,
+      "observedRelativeClosureFiles": 51,
+      "unresolvedOrUnverifiedReads": [
+        "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+        "modules/sucafina/Sucafinav1/product/dashboard/records.ts",
+        "modules/sucafina/Sucafinav1/product/dashboard/scope.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+        "modules/sucafina/Sucafinav1/product/integration/dashboard-preview.ts",
+        "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+        "modules/sucafina/Sucafinav1/product/integration/public-state.ts",
+        "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+        "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+        "modules/sucafina/Sucafinav1/runtime/assets.ts",
+        "modules/sucafina/Sucafinav1/runtime/dashboard-backup.ts",
+        "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+        "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+        "modules/sucafina/Sucafinav1/src/records.ts"
+      ],
+      "scopeBoundary": "Observed local relative graph only; listed missing/uncertified paths prevent a complete transitive-closure claim. Direct changed-helper dependency matches are established independently."
+    }
+  ],
+  "publishedDependencyChecks": {
+    "mapMethod": "W2 exact remote file map plus ordered W3-W15 manifests, applying the W15 explicit null-blob deletion. Local bodies used only where exact or normalized single final LF in memory; no file changed.",
+    "hydrationNotes": {
+      "modules/sucafina/Sucafinav1/product/contracts/outputs.ts": {
+        "localBlob": "93602d07d3a31321837a85f140dd330358703a1e",
+        "publishedBlob": "4db2e631bd83ccda67442824557881c2ed990c92",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      },
+      "modules/sucafina/Sucafinav1/product/contracts/state.ts": {
+        "localBlob": "8a5aa84dce9fe12ea7ff3fdea481c3cbf2ef3ddc",
+        "publishedBlob": "755639b2a16265fe164ba2e6343738c1362d168c",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      },
+      "modules/sucafina/Sucafinav1/product/planner/comparison.ts": {
+        "localBlob": "5cf1266faaf73421d4b112bcb3c117a4a27c27dc",
+        "publishedBlob": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      },
+      "modules/sucafina/Sucafinav1/product/planner/coverage.ts": {
+        "localBlob": "405e85a410cffdbdd3f969af590129f8380b2012",
+        "publishedBlob": "de86e90c86aca626a575bf5b8dfdf6973fac8b1e",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      },
+      "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts": {
+        "localBlob": "e20d2cc43e23464d834a2126c8d4b23fa6c97393",
+        "publishedBlob": "64deee2c7570d718686eb2181ff197f4347e6764",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      },
+      "modules/sucafina/Sucafinav1/product/decisions/case-port.ts": {
+        "localBlob": "810539cbd2f0b89006102b334710e9d6695151ca",
+        "publishedBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      },
+      "modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts": {
+        "localBlob": "71bb3344bd5a935d06d612768d5401a0e3b874c0",
+        "publishedBlob": "0d9fc51d26a0ca726d32e74605b555f871d99af6",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      },
+      "modules/sucafina/Sucafinav1/product/planner/persistence.ts": {
+        "localBlob": "a3e7d9eb3f86370d6bf3adc08cb9589aa37e3bfd",
+        "publishedBlob": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      },
+      "modules/sucafina/Sucafinav1/product/planner/port.ts": {
+        "localBlob": "23e9c1b6c39e980c053b5ddf3324c587f4b6dc7f",
+        "publishedBlob": "dba62042653bd061fa099e2956cae4d11a0475ce",
+        "exactReadPath": "reference/W13-exact/modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "difference": "Local hydration has an extra terminal LF; exact published bytes read from archived pin."
+      },
+      "modules/sucafina/Sucafinav1/product/planner/headcount-months.ts": {
+        "localBlob": "bee3bfead7c1e6ce321b77e0ad9fd7302accf3c2",
+        "publishedBlob": "789615d49e519c742cef9c55d36362ec413a9fbe",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      },
+      "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts": {
+        "localBlob": "78009bbe25a975baa14066376fa0686e821dd5c3",
+        "publishedBlob": "2fd55c7304add0829d7434917c80664fe86356b9",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      },
+      "modules/sucafina/Sucafinav1/product/contracts/state-layout.ts": {
+        "localBlob": "8d661a02074560b60ef569cc2e2d3f48ba19bc00",
+        "publishedBlob": "c3a6e039badc5ed49b20caa7153cb01979ebec9a",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      },
+      "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts": {
+        "localBlob": "b85058bb3b648dd9b1ae1498d0253f08eb69e9e1",
+        "publishedBlob": "dc480a2e1e343e7f2a8844a3c23ec9f06582d5ad",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      },
+      "modules/sucafina/Sucafinav1/product/ai/run-store.ts": {
+        "localBlob": "26ee90e86489c55d24222b8f9fb48aed255e24c5",
+        "publishedBlob": "a547883f113e5879f13fb13ad23f31704209b4dc",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      },
+      "modules/sucafina/Sucafinav1/product/ai/run-provenance.ts": {
+        "localBlob": "fc12b23f853dc5165418f93fa2103a501eae3ef4",
+        "publishedBlob": "b303ef7a4968ffb2cc2f51e6318e165a07ac3c73",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      },
+      "modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts": {
+        "localBlob": "1127c5258a41be714b18bb1dfd7d0a9c430ad4bf",
+        "publishedBlob": "1d3229d717ac490a2727cc30df65cedd77d52a57",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      },
+      "modules/sucafina/Sucafinav1/product/planner/versions-host.ts": {
+        "localBlob": "cf59a7d79dc1b4e25fd070d3edc3b93733144ed5",
+        "publishedBlob": "7d805cb61351f7b43cd6d4d3c47c48a21bac3dc4",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      },
+      "modules/sucafina/Sucafinav1/product/planner/versions.ts": {
+        "localBlob": "e9484a661c4645480039fe93949e5f0378c346c3",
+        "publishedBlob": "243b89b585c0698f1edbc4ba01bd4841f3950f70",
+        "difference": "One additional final LF removed only in memory to compare exact published content; file unchanged."
+      }
+    },
+    "relativeGraphLimit": "Literal relative import/export/import() graph includes type dependencies; excludes package internals, aliases and computed filesystem loads. It is static scope evidence, not runtime equivalence. Missing local hydrated paths are explicitly listed, so absence from this partial traversal is not a proof about every possible transitive dependency."
+  },
+  "recommendation": {
+    "currentAction": "NO_INTAKE_DURING_ACTIVE_S9",
+    "conditionalOrder": [
+      "Use completed S9 evidence to identify the affected path first.",
+      "If the redundant preparePhase projection is implicated, fixture9514 is the one-file, unchanged-interface candidate.",
+      "Consider verifier73eee separately with exact owner7-case regression and current nonempty/C10/renewal tests; it supersedes a different base than our Finance wrapper and may alter performance in either direction.",
+      "Rebase only the N/A hunk in the published WP10 proposal to newcoverage d20eafe; keep it NOT_APPLIED until owner adoption/proof.",
+      "Do not import current-choice-preview or Finance guard for convenience."
+    ],
+    "runtimeAcceptance": false,
+    "speedupMeasured": false,
+    "baselineParityProven": false,
+    "sourceOrFinancialPolicyChanged": false
+  },
+  "actions": {
+    "productSourceEdited": false,
+    "testSourceEdited": false,
+    "foreignSourceEdited": false,
+    "mapsEdited": false,
+    "findingsEdited": true,
+    "ledgerEdited": false,
+    "localTestsOrTypecheck": false,
+    "CIRequested": false,
+    "remoteOperationsByReviewer": false,
+    "assemblerExecuted": false,
+    "unappliedPatchComputedInMemory": true,
+    "reviewArtifact": "reference/wp13-owner-reconciliation-W15.json",
+    "additionalAuthorizedDerivative": "After D1 publication root separately authorized refreshing reference/wp13-final-findings.json with this review/current owner heads; product target remains W15. No code/test/map/ledger change."
+  },
+  "nextAction": "Root keeps W15/S9 source pins and records the actual terminal result before choosing any later intake. WP10 receives the D1-published rebased bundle, still NOT_APPLIED. The findings derivative may cite this owner review; consumer/domain/global gates remain open.",
+  "documentaryPublication": {
+    "schema": "wp13-documentation-publication-v1",
+    "label": "D1",
+    "head": "3def4e3a4038b0819284931be1b56704bb949208",
+    "tree": "c52f2bc11483d785a92a5bdf8cdbe49445716076",
+    "branch": "astra-wp13",
+    "parent": "cb111a14ee527d66748c4e19040c26b828f2bfe4",
+    "testedProduct": {
+      "head": "cb111a14ee527d66748c4e19040c26b828f2bfe4",
+      "tree": "022548856d95a1df933e6f34e70250e86ccd95ec"
+    },
+    "published": true,
+    "expectedShaGuard": true,
+    "compare": {
+      "totalCommits": 1,
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/check-W15.json",
+          "sha": "7577c42062587cbc4c3e5f46edc2c41da52bb3f7",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/wp10-consumer-bundle-W15.NOT_APPLIED.json",
+          "sha": "446504c50d0d42407b21d1ab200071742108b39e",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/wp10-consumer-bundle-W15.NOT_APPLIED.patch.txt",
+          "sha": "609a24d1b5ddc2d3006657d176d4c0e6c0b65402",
+          "status": "added"
+        }
+      ]
+    },
+    "productTestConfigurationUnchanged": true,
+    "equivalentProductRunDispatched": false,
+    "reason": "Only three own receipt/delta files added; no source/test/config changes. S9 retains exact W15 snapshot identity.",
+    "ready": false,
+    "receipt": {
+      "path": "reference/wp13-D1-publication.json",
+      "bytes": 1398,
+      "blob": "11a0701bbdab2e8379dbfff15e5095781fd2179e",
+      "sha256": "bee1d96b6e41ad1e3b4477dfc7795b9e228a68678556bed4babbbeb8de7295f5"
+    },
+    "scope": "Separate documentation commit. Product source target and S9 remain exact W15; no new runtime/test/config input or equivalent CI request."
+  },
+  "publishedHostBundle": {
+    "id": "WP13-WP10-CONSUMER-BUNDLE-W15",
+    "status": "PUBLISHED_D1_NOT_APPLIED",
+    "producer": {
+      "branch": "astra-wp13",
+      "head": "cb111a14ee527d66748c4e19040c26b828f2bfe4",
+      "tree": "022548856d95a1df933e6f34e70250e86ccd95ec"
+    },
+    "target": {
+      "branch": "astra-wp10",
+      "head": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+      "source": "GitHub MCP exact file reads",
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+          "before": {
+            "blob": "18caa4381d7d02f1193bdac4c2e9c2134c64daf1",
+            "sha256": "1bfdcc3ad250ae5f5d0ed69cab162c7516cea7d0bedb61a417304d6993ce0d1d",
+            "bytes": 9450
+          },
+          "proposed": {
+            "blob": "7089fbacd129eb7fb92a72840b580e993de56ad9",
+            "sha256": "260548176616936ae9abf41fef630d0d6a8a5f9f54b87a1a921df8a9051babdd",
+            "bytes": 10881
+          }
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+          "before": {
+            "blob": "d20eafe56f782c8d23917c53d60377fa09a386a6",
+            "sha256": "64627a56a2f4b6f15e8c5d790e4e1d945958e02b71e380d0b71355cc123cda92",
+            "bytes": 15723
+          },
+          "proposed": {
+            "blob": "82cb2d447802201f003255e215a62c7eb725a692",
+            "sha256": "3e650c3e0c7773faebfc4e9ffaea1586f21a63cd1da1e79883830ec77967a84d",
+            "bytes": 15652
+          }
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-portfolio-history.ts",
+          "before": {
+            "blob": "4d11a5c8c81d99f117709fc65327373055ee2cc1",
+            "sha256": "f7dfeb4ac76bcd016c183359169551ee6ede29fe295e6cf80c379c6b95566279",
+            "bytes": 7222
+          },
+          "proposed": {
+            "blob": "ab0f908d9340306f6a10e35a721ffd72a554be8d",
+            "sha256": "457ccf80a45677cf7ad8d015bf4324ea6dbe890936a6c7ff958165bb5dc0e561",
+            "bytes": 7552
+          }
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-sensitivity-authority.ts",
+          "before": null,
+          "proposed": {
+            "blob": "ca914bc14510371b5fa9a1a6ae85d0fb520454ae",
+            "sha256": "df7ec3ed4cd3a67ad128933b62925df515b949de634760a51bb67d5b0f388ef3",
+            "bytes": 8388
+          }
+        }
+      ]
+    },
+    "publishedIn": {
+      "head": "3def4e3a4038b0819284931be1b56704bb949208",
+      "tree": "c52f2bc11483d785a92a5bdf8cdbe49445716076",
+      "parent": "cb111a14ee527d66748c4e19040c26b828f2bfe4"
+    },
+    "receipt": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/wp10-consumer-bundle-W15.NOT_APPLIED.json",
+      "bytes": 6065,
+      "blob": "446504c50d0d42407b21d1ab200071742108b39e",
+      "sha256": "4d02fbec302f87520384997177b31c8929ff0e5b566ab25822394c86e4b6a8ca"
+    },
+    "patch": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/wp10-consumer-bundle-W15.NOT_APPLIED.patch.txt",
+      "bytes": 17129,
+      "blob": "609a24d1b5ddc2d3006657d176d4c0e6c0b65402",
+      "sha256": "d79b54cb9137a93e3c312a8429cd82c5d7eb861d5aef40dde668b1dd607859bf"
+    },
+    "retainedOwnerChanges": [
+      "captureEntries extraction",
+      "source-first one-to-one assessmentOrder fencing",
+      "prepareNoop assessment ordering",
+      "fresh source/state/authority checks"
+    ],
+    "independentCoverageProposalMatchesPublishedBundle": true,
+    "textRoundTripValidationReportedByRoot": true,
+    "runtimeAccepted": false,
+    "replacesCurrentProposalTarget": "The earlier W13 bundle remains historically published in W14; the W15 bundle is the current proposal against WP10 d357de0b."
+  }
+}

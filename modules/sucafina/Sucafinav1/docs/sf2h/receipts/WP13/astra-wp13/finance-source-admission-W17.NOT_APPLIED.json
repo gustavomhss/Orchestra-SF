@@ -1,0 +1,57 @@
+{
+  "schema": "wp13-owner-integration-delta-v1",
+  "increment": "W17",
+  "status": "NOT_APPLIED_REQUIRES_ISOLATED_OWNER_PIN_OR_REVIEWED_CLOSURE",
+  "ready": false,
+  "owner": "Finance/WP03/WP11",
+  "producerHeadObserved": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+  "currentConsumed": {
+    "plannerPort": {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "dba62042653bd061fa099e2956cae4d11a0475ce",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b"
+    },
+    "verifier": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "blob": "2338917427497733e4bd88aec852985206cce066",
+      "sourceCommit": "96fc3162ae309f8b91b2c55524335026f8704714"
+    }
+  },
+  "publishedCandidate": {
+    "verifier": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "blob": "f85c1c8e7196aff1381513b2d5ed2109641d6a45"
+    },
+    "plannerPort": {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "8389709232225424b5905638d0951d8cdbb71dd7"
+    },
+    "test": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "blob": "4a5780b82989b9e8c3437bb3758779d7cfb76733"
+    }
+  },
+  "finding": "The consumed source-only renewal fixture verifier performs its final host.revalidate after the transaction and source projection. A callback that changes the canonical source while returning a valid authority result can therefore escape that observation. The proposed owner verifier places a second canonical actor-filtered source projection after callbacks and its final lease check, while retaining the read-only transaction for nonempty operations.",
+  "boundary": "This finding concerns the published renewal test fixture admission helper; it is not a demonstrated production host exploit or a change to financial calculation. The separate WP11 full-case fence does not establish a new canonical source observation.",
+  "whyNotDirectlyConsumed": [
+    "The verifier imports plannerSourceActor from the candidate Planner port; it is not exported by the consumed port.",
+    "The exact candidate Planner port also changes monthly actual-presence semantics via actual-presence.ts, adds the scenario qualifier contract, and deduplicates same-source reads. The entire delta is broader than a standalone actor helper.",
+    "WP13 cannot claim a helper-only intake or silently splice the owner file. A complete canonical adapter closure and its behavior proofs require owner review."
+  ],
+  "requiredOwnerAction": [
+    "Publish an isolated canonical actor-helper/source-admission pin compatible with the consumed Planner contract, or provide the exact complete adapter dependency manifest and surgical proofs for the broader closure.",
+    "Retain both fresh canonical source projections, actual namespace/actor authorization, complete source evidence digest and horizon checks, late callback/authority refusals and read-only behavior; do not introduce cross-call caches.",
+    "Retain the actual-presence, missing/zero, currency, coverage and scenario qualification behavior in any full-closure intake and state which source version it requires."
+  ],
+  "nextWp13Action": "Review the published isolated pin or complete closure, consume exact owner blobs only on astra-wp13, then run the specific source-admission counterexamples on the resulting published product. No proof transfers from another owner head by name alone.",
+  "sourceInspection": {
+    "method": "GitHub MCP exact file downloads and static text/hash comparison only",
+    "filesManifest": "reference/owner-1314-files.json",
+    "localDirtyPlannerInput": "Additional final LF preserved; not uploaded or normalized into a foreign authored patch."
+  },
+  "appliedForeignEdits": false,
+  "independentReview": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/case-intake-review-W17.json",
+    "sha256": "78d69719df6a9a52bcb4a585aeb4d55ec0e3d0d17c6c53c21092985a5180c1f1"
+  }
+}

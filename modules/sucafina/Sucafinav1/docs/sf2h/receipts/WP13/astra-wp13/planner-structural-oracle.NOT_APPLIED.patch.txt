@@ -1,0 +1,11 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts
+@@ -82,7 +82,7 @@
+   expect(breakdown.rows.find((row) => row.id === "line:11")).toMatchObject({ evidenceStates: ["confirmed"], explanation: "The projected amount changed; this comparison does not identify a cause." })
+   const changes = comparePlannerVersions({ ...result.value.baseline, components: result.value.baseline.components.slice(0, 1) }, { ...result.value.candidate, components: result.value.candidate.components.slice(1, 2) })
+   expect(changes.rows.map((row) => row.state)).toEqual(["removed", "added"])
+-  expect(changes.rows.every((row) => row.difference === null)).toBe(true)
++  expect(changes.rows.map((row) => row.difference)).toEqual([-40000, 40000])
+   expect(result.value.comparison.comparisonStatus).toBe("conditioned")
+   expect(result.value.completeDifference).toBeNull()
+   expect(result.value.baseline.components.reduce((sum, component) => sum + (component.amount ?? 0), 0)).toBe(590000)

@@ -1,0 +1,154 @@
+{
+  "schema": "sf2h-wp13-recovery-bootstrap-independent-review-v1",
+  "observedAt": "2026-11-14T12:10:01.738499+00:00",
+  "reviewer": "Astra / wp13_findings",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp13",
+  "candidateIncrement": "W12",
+  "candidateCommit": null,
+  "status": "STATIC_REVIEW_NO_BLOCKER_FOR_FOCUSED_CI_NOT_RUNTIME_PASS",
+  "ready": false,
+  "scope": "Only two WP13 test/fixture files; review and metadata authoring only. No producer, canonical contract, host or other owner source was modified by this reviewer.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+      "owner": "WP13",
+      "before": {
+        "bytes": 18991,
+        "gitBlob": "315005ddb17e04aa0a7a6c324a47448624d94f25",
+        "sha256": "7549c977514ab944424ce3f06883a9aa6473f33f2062298ee400ec5c49718604"
+      },
+      "reviewedCurrent": {
+        "bytes": 20565,
+        "gitBlob": "ecc4678cf757e68c5763f8bc99d5f3573df86bc5",
+        "sha256": "d74be0a92e6c34207be052ce409207f4862e4d2e1b52b8ee5774de125265ef9e"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "owner": "WP13",
+      "before": {
+        "bytes": 11182,
+        "gitBlob": "33e3051ccfe3aa69350628eb0adff169a30dcbb1",
+        "sha256": "9fd9befe69e90f562bf71986a9a646d0877b5f87963e207b6735e2ef2691bca2"
+      },
+      "reviewedCurrent": {
+        "bytes": 11206,
+        "gitBlob": "4efa414f8ecadde5799e7246337863b145373210",
+        "sha256": "6bc51ba2946cceef497d1d6535f5d6b12e575763c735694a7a2d6a6472aabb87"
+      }
+    }
+  ],
+  "sourceArtifacts": [
+    {
+      "path": "reference/wp13-recovery-bootstrap.diff",
+      "bytes": 7381,
+      "gitBlob": "d12237df74d9f345ae6f70c8605a3ebb347fb034",
+      "sha256": "f7f4dfacca9bfee83b456a5094c7431c15609cae3b3e2dbf2dffa6ddff9ee11d"
+    },
+    {
+      "path": "reference/wp13-recovery-bootstrap-review.json",
+      "bytes": 5452,
+      "gitBlob": "c26f34954cde0940536536c01d29f2dd9b5fd4e9",
+      "sha256": "6c333c9cbbb8157067dd2cefd1e0bc9e9cd2b081ff5d53fb0bd534eddb8685d9"
+    }
+  ],
+  "verifiedTextProperties": {
+    "testTextOnlyImportAndPortfolioConstructorChanged": true,
+    "sensitivityRecoveryFunctionTextIdentical": true,
+    "fullSensitivityReturnObjectExpressionIdentical": true,
+    "fixtureReconstructsOriginalAfterRemovingNewWrapperAnalysisBranchAndReversingThreePureDeclarationMoves": true,
+    "testNamesIdentical": true,
+    "allAssertLinesIdentical": true
+  },
+  "newExportUses": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "occurrences": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+      "occurrences": 1
+    }
+  ],
+  "behavior": {
+    "analysisMode": "createWp13AnalysisFixture returns after the real Planner forecast/scenario previews, C08 scenario writes, case initialization, criterion registration, unit issuance and construction of comparison/selection services. It omits only the unrelated precomputed/bound comparison and saved sensitivity bootstrap.",
+    "sensitivityMode": "createWp13SensitivityFixture retains the complete existing initialization and exact returned object expression, including saved result, persistent port, bindings, comparisonRef, boundComparison, sensitivityRequest, canonical exact producer, exactCalls getter and all existing controls.",
+    "changedConsumers": [
+      "portfolioRecovery(\"before\")",
+      "portfolioRecovery(\"after\")"
+    ],
+    "unchangedRecoveryConsumers": [
+      "sensitivityRecovery(\"before\")",
+      "sensitivityRecovery(\"after\")"
+    ],
+    "declarationMoves": [
+      "portfolioBindingOperation",
+      "analysisRequest",
+      "selectPortfolio"
+    ],
+    "declarationMoveAssessment": "These declarations create data/closures without reads, writes, awaits or evaluation. The original sensitivity execution sequence and post-bootstrap identities are preserved.",
+    "comparisonOperationIdentity": "The new analysis branch explicitly sets portfolio-comparison-binding-analysis before return, preserving the operation identity previously established after the unrelated comparison bootstrap.",
+    "preservedInputConfiguration": [
+      "Original EUR scenario operations and missing-FX handling; no numeric result substituted.",
+      "Same case.other initialization and exact case/context/authority literals.",
+      "Same horizons, timestamps, idempotency keys, rule versions, bounds and exploration limit.",
+      "Same source/evidence and access.historical controls.",
+      "Same issued units, sources, results, case/state stores and canonical Planner/selection/comparison services."
+    ],
+    "stateDifference": "Analysis mode intentionally omits unrelated comparison and sensitivity records and their writes. The two canonical stored scenarios and actual recovery subject remain. This review does not claim the entire initialized storage state or allocation count is identical between modes."
+  },
+  "retainedRecoveryOracles": [
+    "All four named test cases and all assertion lines remain text-identical.",
+    "The first call fails at the selected before-binding-commit or lost-binding-reply seam, with the same exact reason.",
+    "The portfolio C08 result exists before the injected binding failure.",
+    "Retry preserves the previously persisted portfolioResultRef and comparisonRef.",
+    "No new allocation occurs after that persisted result; before-commit binding attempts remain two and lost-reply attempts remain one.",
+    "Fresh read and repeated evaluateAndStore return the recovered result; repeated calls still preserve result identity and attempt count.",
+    "The entire sensitivityRecovery function remains byte-for-byte identical, including sample refs, one-result allocation and recovery assertions.",
+    "The test subject still invokes real production portfolio, canonical comparison persistence, selection, C08 result/binding stores and fresh access checks."
+  ],
+  "authorityAndDomainBoundary": [
+    "This fixture already uses explicit controlled host/evidence admission seams. This split does not broaden them, remove negative cases, add a cache or replace a canonical calculation.",
+    "Real LocalStore, Planner forecast/scenario producers and actual persistence/replay remain in the exercised paths.",
+    "This review does not establish installed UI/native authority or whole-system financial acceptance."
+  ],
+  "performance": {
+    "trigger": {
+      "sourceRun": 43591217664,
+      "jobId": 132436140835,
+      "sourceIncrement": "W10",
+      "log": "reference/wp13-S7-CS2Coverage-tests.log.txt",
+      "portfolioBeforeElapsedMs": 173038.49,
+      "portfolioAfterElapsedMs": 188178.61,
+      "perTestBudgetMs": 120000,
+      "outcome": "Both portfolio recovery cases timed out."
+    },
+    "mechanism": "Avoid unrelated saved comparison and sensitivity setup in the two portfolio recovery cases. Repeated canonical work performed by selection, analysis, persistence and replay remains intact.",
+    "limits": [
+      "No setup-only profiling was performed.",
+      "No runtime or latency result for the reviewed candidate exists in this review.",
+      "The split and exact consumed Planner batching are not assumed to meet the unchanged 120000 ms test budget."
+    ],
+    "budgetChange": false,
+    "assertionRemoval": false,
+    "runtimeCacheAdded": false,
+    "resolved": false
+  },
+  "validation": {
+    "kind": "Static source/diff/hash inspection only",
+    "productModulesImportedOrExecuted": false,
+    "productTestsExecuted": false,
+    "typecheckExecuted": false,
+    "guardsExecuted": false,
+    "ciDispatched": false,
+    "remoteOperations": false,
+    "productPassClaim": "NONE"
+  },
+  "recommendation": "Accept these two own fixture/test changes into the focused W12 candidate. Publish exact hashes, then execute the complete four-case recovery file with the unchanged timeout in the next authorized non-overlapping GitHub Actions selection. Record measured outcomes before resolving the performance finding.",
+  "limits": [
+    "No approved plan, canonical producer, engine, host or foreign fixture was authored or changed in this delta.",
+    "The borrowed WP10 decomposition reference was not consumed as a snapshot; own default data and full sensitivity contract are retained.",
+    "Candidate publication and hosted evidence must be attached by the parent after publication."
+  ]
+}

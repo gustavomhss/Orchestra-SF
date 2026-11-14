@@ -1,0 +1,44 @@
+{
+  "schema": "wp13-owner-integration-delta-v1",
+  "status": "NOT_APPLIED_OWNER_FRESHNESS_BOUNDARY",
+  "owner": "Finance/WP03/WP10",
+  "sourceHead": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+  "ready": false,
+  "scope": "Generic comparison and nonempty-operation final-callback boundaries, separate from the source-only admission repair.",
+  "observedCode": {
+    "status": "NOT_NEW_REGRESSION_AND_NOT_RESOLVED_BY_SOURCE_ONLY_FIX",
+    "paths": [
+      "product/planner/port.ts",
+      "product/planner/scenario-port.ts",
+      "test/product/wp11/renewal-operation-verifier.ts"
+    ],
+    "observation": "Generic compareForecast still obtains its final canonical projection before final source/coverage provider callbacks; the nonempty verifier retains revalidate after its transaction. This code shape existed in consumed pins. The source-only fix does not prove a universal fence for arbitrary providers that mutate source state while returning a prior observation.",
+    "nextAction": "Keep the wider producer/host boundary separately assigned to Finance/WP10; do not claim it fixed by f85c. No broader runtime intake or foreign patch is recommended."
+  },
+  "candidatePins": {
+    "product/planner/port.ts": "8389709232225424b5905638d0951d8cdbb71dd7",
+    "product/planner/scenario-port.ts": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+    "test/product/wp11/renewal-operation-verifier.ts": "f85c1c8e7196aff1381513b2d5ed2109641d6a45"
+  },
+  "claimLimit": "Static code-shape observation, not a newly executed exploit or regression proof. This boundary existed in consumed versions and is not closed by the source-only fixture repair.",
+  "nextAction": [
+    "Owner identifies and tests its supported provider callback/source mutation contract for generic compareForecast and nonempty admission.",
+    "If mutation during the last provider or authority callback must invalidate the read, publish the canonical final source/authority observation fix with discriminating hosted counterexamples and exact compatible pins.",
+    "WP13 consumes only the reviewed published owner delta and reruns the specific impacted consumer oracle; no blanket freshness or human-application claim is permitted."
+  ],
+  "appliedForeignEdits": false,
+  "reviewEvidence": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/finance-closure-review-W18.json",
+      "bytes": 52277,
+      "sha256": "cf1289d226881c390ceb26bace92199cbd9b527ae11f0298fe617f4bcb222fc7",
+      "gitBlob": "947db2e3e70e2f03f6644e9b75a109d4fbad9056"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/finance-closure-independent-review-W18.json",
+      "bytes": 18185,
+      "sha256": "90a5833c320e8f8e753536d572459d03a8a759264450c463dc8716407c11700d",
+      "gitBlob": "7357d92ef4b007a33d10cee673b992393991fdd8"
+    }
+  ]
+}

@@ -37,8 +37,27 @@ test("prepares through the WP11 port only when the persisted human choice matche
   expect(prepared).toBe(1)
   expect(await preparePortfolioChoice({ ...input, choiceId: "other" }, context)).toEqual({ status: "conflict", reason: "choice-does-not-match-combination" })
   expect(prepared).toBe(1)
+  const otherCase = { read: async () => ({ status: "ok", value: { case: { id: "other-case", incarnation: "one", version: 2, choices: [{ id: "choice", scenario: { baseRef: "base", operations, assumptions: [] }, result: scenario }] } } }) } as unknown as DecisionCasePort
+  expect(await preparePortfolioChoice({ ...input, cases: otherCase }, context)).toEqual({ status: "stale", reason: "case-changed" })
+  const ambiguous = { read: async () => ({ status: "ok", value: { case: { id: "case", incarnation: "one", version: 2, choices: ["first", "second"].map(() => ({ id: "choice", scenario: { baseRef: "base", operations, assumptions: [] }, result: scenario })) } } }) } as unknown as DecisionCasePort
+  expect(await preparePortfolioChoice({ ...input, cases: ambiguous }, context)).toEqual({ status: "conflict", reason: "choice-does-not-match-combination" })
+  expect(prepared).toBe(1)
   const changed = { ...input, expectedEvaluationDigest: "old-comparison" }
   expect(await preparePortfolioChoice(changed, context)).toEqual({ status: "stale", reason: "combination-changed" })
+  expect(prepared).toBe(1)
+
+  let reads = 0
+  const changingHost: PortfolioHost = { ...host, resolveCandidate: async (ref) => {
+    reads++
+    const amount = reads === 6 ? 41 : 40
+    const nextOperations = [{ kind: "replace" as const, targetRef: "line:1", amount }]
+    return { status: "ok", value: { ref, caseRef: "case", operations: nextOperations, scenario: { baseRef: "base", operations: nextOperations, assumptions: [] } } }
+  } }
+  const changingPortfolio = createPortfolioPort(changingHost)
+  const fresh = await changingPortfolio.evaluate(request, context)
+  if (fresh.status !== "ok") throw new Error(fresh.reason)
+  const changingInput = { ...input, host: changingHost, portfolio: changingPortfolio, combinationId: fresh.value.combinations[0]!.id, expectedEvaluationDigest: portfolioEvaluationDigest(request, fresh.value) }
+  expect(await preparePortfolioChoice(changingInput, context)).toEqual({ status: "stale", reason: "candidate-changed-before-handoff" })
   expect(prepared).toBe(1)
   expect(await preparePortfolioChoice({ ...input, request: { ...request, priorities: ["changed-priority"] } }, context)).toEqual({ status: "stale", reason: "combination-changed" })
   expect(prepared).toBe(1)
@@ -65,6 +84,41 @@ test("promotes the reviewed combination through the case domain only for a human
   expect(await promotePortfolioAlternative({ ...input, expectedEvaluationDigest: "stale" }, context)).toEqual({ status: "stale", reason: "combination-changed" })
   expect(await promotePortfolioAlternative(input, { kind: "native" } as TrustedDomainContext)).toEqual({ status: "denied", reason: "human-promotion-required" })
   expect(calls).toHaveLength(1)
+
+  let reads = 0
+  const changingHost: PortfolioHost = { ...combinedHost, resolveCandidate: async (ref) => {
+    reads++
+    const amount = reads === 11 ? 41 : 40
+    const operations = [{ kind: "replace" as const, targetRef: `line:${ref}`, amount }]
+    return { status: "ok", value: { ref, caseRef: "case", operations, scenario: { baseRef: "base", operations, assumptions: [] } } }
+  } }
+  const changingPortfolio = createPortfolioPort(changingHost)
+  const fresh = await changingPortfolio.evaluate(combinedRequest, context)
+  if (fresh.status !== "ok") throw new Error(fresh.reason)
+  const selectedAgain = fresh.value.combinations.find((item) => item.caseRefs.length === 2)!
+  const changingInput = { ...input, host: changingHost, portfolio: changingPortfolio, combinationId: selectedAgain.id, expectedEvaluationDigest: portfolioEvaluationDigest(combinedRequest, fresh.value) }
+  expect(await promotePortfolioAlternative(changingInput, context)).toEqual({ status: "stale", reason: "candidate-changed-before-handoff" })
+  expect(calls).toHaveLength(1)
+})
+
+test("handoff keeps the reviewed case and selection fixed across asynchronous evaluation", async () => {
+  const portfolio = createPortfolioPort(host)
+  const admittedRequest = structuredClone(request)
+  const evaluated = await portfolio.evaluate(admittedRequest, context)
+  if (evaluated.status !== "ok") throw new Error(evaluated.reason)
+  const caseRef = { id: "case", incarnation: "one", version: 2 }
+  const selectedCandidateRefs = ["a"]
+  const calls: unknown[] = []
+  const cases = { read: async () => ({ status: "ok", value: { case: { id: "case", incarnation: "one", version: 2, choices: [{ id: "choice", scenario: { baseRef: "base", operations, assumptions: [] }, result: scenario }] } } }) } as unknown as DecisionCasePort
+  const changedCaller = { ...portfolio, evaluate: async () => {
+    admittedRequest.scope.currency = "EUR"
+    selectedCandidateRefs[0] = "other"
+    caseRef.id = "other-case"
+    return evaluated
+  } }
+  const prepared = await preparePortfolioChoice({ portfolio: changedCaller, host, cases, decisions: { prepareChanges: async (value) => { calls.push(value); return { status: "ok", value: { caseRef: value.caseRef } } } }, request: admittedRequest, selectedCandidateRefs, combinationId: evaluated.value.combinations[0]!.id, expectedEvaluationDigest: portfolioEvaluationDigest(admittedRequest, evaluated.value), caseRef, choiceId: "choice" }, context)
+  expect(prepared.status).toBe("ok")
+  expect(calls).toEqual([{ caseRef: { id: "case", incarnation: "one", version: 2 }, choiceId: "choice", operations }])
 })
 
 

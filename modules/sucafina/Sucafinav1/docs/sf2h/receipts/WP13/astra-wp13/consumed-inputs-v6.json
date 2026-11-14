@@ -1,0 +1,66 @@
+{
+  "schema": "sf-wp13-consumed-inputs-v1",
+  "sourceCommit": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe",
+  "owner": "WP03/WP05 Finance",
+  "scope": "One exact published Planner materiality producer required by the owned same-source price integration. No foreign source authored.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/materiality.ts",
+      "blob": "cbaa9e6f900eb539d393e75891a66318e50be22c",
+      "previousBlob": null,
+      "action": "exact-owner-blob-intake"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "publishedSha": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "localSha": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "publishedSha": "102c849084980ae52223809d33bdeea36a58536b",
+      "localSha": "102c849084980ae52223809d33bdeea36a58536b",
+      "matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "publishedSha": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "localSha": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "publishedSha": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "localSha": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "publishedSha": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "localSha": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "publishedSha": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "localSha": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "publishedSha": "d3098aa94cdeee71193c94ae906f6fafd14bda9b",
+      "localSha": "d3098aa94cdeee71193c94ae906f6fafd14bda9b",
+      "matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "publishedSha": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "localSha": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "matches": true
+    }
+  ],
+  "publicationIssue": "W5 test imported a file hydrated in scratch but absent from the published tree. C5 diagnosed the missing module.",
+  "productRuntimeChange": "No existing module or selected S3-A input changes; materiality is an added producer imported only by the new price integration test in selection C."
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "wp13-foreign-oracle-delta-v1",
+  "status": "NOT_APPLIED",
+  "owner": "Finance/WP03",
+  "targetPath": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+  "targetPublishedProduct": "02e77add3701570c228b11d971b51c4dd70af552",
+  "target": {
+    "blob": "03a51004ce15979fe5d5a47b2f95f58edbef0ba5",
+    "sha256": "ef315ebcd25ecdcf0809ab37c214eff91fb9d2b91b668c8f8d768a768bd1d305",
+    "bytes": 31207
+  },
+  "sourceOracleCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+  "sourceOracleFile": {
+    "blob": "2c6a3519024d2cca0fcf5256dcf9055fa1d7ae26",
+    "sha256": "02bf9e6deb0b2f47fafda9e43bb5dc4269f0195b96c2ad296c29233c3434edf9",
+    "bytes": 45655
+  },
+  "sourceLookup": "GitHub MCP fetched this exact source commit after S14; it is the same broad owner2c6 blob, so no smaller compatible published test was found at comparator origin.",
+  "delta": {
+    "blob": "f943c2bffcfb1d8b32c74129bfcb7e4a67605c66",
+    "sha256": "242f4929a40afb478fcedc753e05a380a6fdeebf801fe88444634efc4f1c223f",
+    "bytes": 1043
+  },
+  "proposedResult": {
+    "blob": "f3ce9c8a1c7009843a8895ef60e5b8f203ef842c",
+    "sha256": "e808c6af221bfe9504bab694ae9e7af4d53daa960c6c8ae3f62b183b18cf4151",
+    "bytes": 31210
+  },
+  "failure": {
+    "runId": 43602408137,
+    "jobId": 132469800764,
+    "testFileCompletePass": false,
+    "line": 85,
+    "expected": "true from all structural differences null",
+    "received": false
+  },
+  "reason": "The published comparator already treats deletion/addition of a known confirmed40000 component as -40000/+40000 via canonical variance. The missing side remains null; this is distinct from a present component with unknown amount or absent evidence, whose difference remains null.",
+  "notChanged": [
+    "canonical formula",
+    "absence versus zero",
+    "currency and period compatibility",
+    "source and permission checks",
+    "all other baseline test oracles",
+    "foreign source files"
+  ],
+  "excludedWholeOwnerFile": "The 2c6 owner file requires other imports, headcount/monthly-edit and HR visibility changes absent from this published composition; no Runtime/engine intake is authorized by this correction.",
+  "nextAction": "Finance/WP03 publish the narrow compatible oracle correction; consume the exact complete published file and run only that changed file. Retain S14 failure and the absence of proof for assertions after its failure.",
+  "ready": false
+}

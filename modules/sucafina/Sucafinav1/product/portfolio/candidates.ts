@@ -23,8 +23,9 @@ export function createDecisionCandidateResolver(cases: DecisionCasePort) {
     const result = await cases.read({ caseRef: decoded[0] }, context)
     if (result.status !== "ok") return result
     if (result.value.case.id !== requestedCase.id || result.value.case.incarnation !== requestedCase.incarnation || result.value.case.version !== caseVersion) return { status: "stale", reason: "case-changed" }
-    const alternative = result.value.case.alternatives.find((item) => item.id === decoded[1] && item.version === alternativeVersion)
-    if (!alternative) return { status: "stale", reason: "alternative-changed" }
+    const alternatives = result.value.case.alternatives.filter((item) => item.id === decoded[1] && item.version === alternativeVersion)
+    if (alternatives.length !== 1) return { status: "stale", reason: "alternative-changed" }
+    const alternative = alternatives[0]!
     return { status: "ok", value: { ref, caseRef: decoded[0], operations: structuredClone(alternative.scenario.operations), scenario: structuredClone(alternative.scenario), result: structuredClone(alternative.result) } }
   }
 }
