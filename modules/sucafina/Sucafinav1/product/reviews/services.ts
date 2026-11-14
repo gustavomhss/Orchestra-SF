@@ -7,6 +7,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { createReviewArtifactStorage } from "../reports/storage.ts"
 import { createReviewCapabilities } from "./capabilities.ts"
 import { createReviewPort } from "./port.ts"
+import { createReviewThreadContext } from "./thread-context.ts"
 import type { ReviewHost } from "./port.ts"
 
 /** Compose production review capabilities with source-owned selection and access checks. */
@@ -43,6 +44,6 @@ export function createReviewServices(input: {
     },
   })
   const artifacts = createReviewArtifactStorage({ state: input.state, host: input.host, reviews, creationTarget: input.creationTarget, operationIdentity: (context, entry) => input.operationIdentity(context) ?? (context.kind === "native" ? input.authority.receiptFor(context, "sf_report_prepare", digestSfValue({ reviewRef: entry.reviewRef, format: entry.format, sectionRefs: entry.sectionRefs }))?.callId : undefined), maxBytes: input.maxBytes })
-  return { reviews, artifacts, descriptors: createReviewCapabilities({ reviews, artifacts, authority: input.authority, requiredAuthority: input.requiredAuthority }) }
+  return { reviews, threadContext: createReviewThreadContext({ reviews, host: input.host }), artifacts, descriptors: createReviewCapabilities({ reviews, artifacts, authority: input.authority, requiredAuthority: input.requiredAuthority }) }
 }
 

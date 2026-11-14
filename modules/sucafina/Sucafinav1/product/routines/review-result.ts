@@ -38,9 +38,9 @@ export function createRoutineReviewResultReader(input: {
       return { status: "unavailable", reason: "routine-review-unverified" }
     const content = result.output.content
     if (!record(content) || content.synthesisIncluded !== false || !record(content.draft)) return { status: "unavailable", reason: "routine-review-format-unavailable" }
-    const draft = content.draft as unknown as ReviewDraft
+    const draft = content.draft
     if (!validDraft(draft, result, context)) return { status: "unavailable", reason: "routine-review-draft-invalid" }
-    const agenda = content.agendaSnapshot as unknown as Omit<ReviewAgendaPreview, "selectionRef"> | undefined
+    const agenda = content.agendaSnapshot
     if (agenda !== undefined && !validAgenda(agenda, draft, result, context)) return { status: "unavailable", reason: "routine-review-agenda-invalid" }
     if (draft.sections.some((section, index) => !validReviewCommentRefs(section.content, agenda?.sections[index]?.comments ?? []))) return { status: "unavailable", reason: "routine-review-comment-association-invalid" }
     const sections = [...draft.sections.map(draftSection), ...(agenda?.sections ?? []),
@@ -66,12 +66,12 @@ export function createRoutineReviewResultReader(input: {
   return { read: (runRef: string, context: TrustedDomainContext) => read(runRef, context).catch((): PortResult<RoutineReviewResult> => ({ status: "unavailable", reason: "routine-review-unavailable" })) }
 }
 
-function validDraft(draft: ReviewDraft, result: AuthorizedRoutineArtifactResult, context: TrustedDomainContext) {
+function validDraft(draft: unknown, result: AuthorizedRoutineArtifactResult, context: TrustedDomainContext): draft is ReviewDraft {
   if (!record(draft) || !keys(draft, ["kind", "previousReview", "period", "sections", "pendencies", "nextSteps", "coverage"]) || draft.kind !== "review-draft" ||
     (draft.period !== null && !isSfPeriod(draft.period)) || !Array.isArray(draft.sections) || !Array.isArray(draft.pendencies) || !Array.isArray(draft.nextSteps) ||
     !record(draft.coverage) || !keys(draft.coverage, ["selectedTopics", "includedTopics", "unavailableTopics", "omittedTopics", "includedRecordCount"])) return false
   const coverage = draft.coverage
-  if (![coverage.selectedTopics, coverage.includedTopics, coverage.unavailableTopics, coverage.omittedTopics].every(count) ||
+  if (!count(coverage.selectedTopics) || !count(coverage.includedTopics) || !count(coverage.unavailableTopics) || !count(coverage.omittedTopics) ||
     coverage.includedTopics !== draft.sections.length || coverage.selectedTopics !== coverage.includedTopics + coverage.unavailableTopics + coverage.omittedTopics ||
     new Set(draft.sections.map((section) => section?.id)).size !== draft.sections.length) return false
   if (draft.sections.some((section: ReviewDraft["sections"][number]) => !record(section) || !keys(section, ["id", "title", "period", "count", "sourceRefs", "content"]) ||
@@ -96,33 +96,39 @@ function validDraft(draft: ReviewDraft, result: AuthorizedRoutineArtifactResult,
   if ("status" in draft.previousReview) return keys(draft.previousReview, ["status", "reason"]) && draft.previousReview.status === "unavailable" &&
     typeof draft.previousReview.reason === "string" && ["prior-review-source-unavailable", "prior-review-mismatch"].includes(draft.previousReview.reason)
   const previous = draft.previousReview
+  const comments = previous.comments
+  const previousRefs = previous.sourceRefs
+  if (!Array.isArray(comments) || !Array.isArray(previousRefs)) return false
   return keys(previous, ["id", "version", "createdAt", "sourceRefs", "sections", "comments", "previousReviewRef"]) && nonempty(previous.id) &&
-    count(previous.version) && previous.version > 0 && date(previous.createdAt) && (previous.previousReviewRef === undefined || nonempty(previous.previousReviewRef)) && Array.isArray(previous.sourceRefs) && sourcesBound(previous.sourceRefs, result.output.sourceRefs) &&
+    count(previous.version) && previous.version > 0 && date(previous.createdAt) && (previous.previousReviewRef === undefined || nonempty(previous.previousReviewRef)) && sourcesBound(previousRefs, result.output.sourceRefs) &&
     Array.isArray(previous.sections) && previous.sections.every((section: PreservedReview["sections"][number]) => record(section) && keys(section, ["id", "title", "period", "content", "count", "sourceRefs"]) && nonempty(section.id) && typeof section.title === "string" && count(section.count) &&
-      Array.isArray(section.sourceRefs) && sourcesBound(section.sourceRefs, previous.sourceRefs) && isSfPeriod(section.period) &&
+      Array.isArray(section.sourceRefs) && sourcesBound(section.sourceRefs, previousRefs) && isSfPeriod(section.period) &&
       validSectionContents(draftSection(section)) &&
-      validReviewCommentRefs(section.content, previous.comments) &&
+      validReviewCommentRefs(section.content, comments) &&
       digestSfValue(section.sourceRefs) === digestSfValue((section.content as DomainProjection).context.sourceRefs) &&
-      sourcesBound(reviewProjectionSources(section.content as DomainProjection), previous.sourceRefs) &&
+      sourcesBound(reviewProjectionSources(section.content as DomainProjection), previousRefs) &&
       matchesProjectionPrincipal(section.content as DomainProjection, context)) &&
-    Array.isArray(previous.comments) && previous.comments.every((comment) => validComment(comment, previous.sourceRefs))
+    comments.every((comment) => validComment(comment, previousRefs))
 }
 
-function validAgenda(agenda: Omit<ReviewAgendaPreview, "selectionRef">, draft: ReviewDraft, result: AuthorizedRoutineArtifactResult, context: TrustedDomainContext) {
+function validAgenda(agenda: unknown, draft: ReviewDraft, result: AuthorizedRoutineArtifactResult, context: TrustedDomainContext): agenda is Omit<ReviewAgendaPreview, "selectionRef"> {
   if (!record(agenda) || !keys(agenda, ["sectionRefs", "sections", "sectionRecordRefs", "agendaNotes", "gaps"]) ||
     !Array.isArray(agenda.sectionRefs) || !Array.isArray(agenda.sections) || !Array.isArray(agenda.sectionRecordRefs) || !Array.isArray(agenda.agendaNotes) || !Array.isArray(agenda.gaps) ||
     agenda.sectionRefs.some((ref) => !nonempty(ref)) || new Set(agenda.sectionRefs).size !== agenda.sectionRefs.length ||
     agenda.sections.length !== agenda.sectionRefs.length || digestSfValue(agenda.sectionRefs) !== digestSfValue(draft.sections.map((section) => section.id))) return false
-  if (agenda.sections.some((section, index) => !validAgendaSection(section, result, context) || section.id !== agenda.sectionRefs[index] ||
+  const sections = agenda.sections
+  const sectionRefs = agenda.sectionRefs
+  const agendaNotes = agenda.agendaNotes
+  if (sections.some((section, index) => !validAgendaSection(section, result, context) || section.id !== sectionRefs[index] ||
     digestSfValue({ id: section.id, title: section.title, period: section.period, count: section.recordCount, sourceRefs: section.projection.context.sourceRefs, content: section.projection }) !== digestSfValue(draft.sections[index]))) return false
-  if (agenda.sectionRecordRefs.length !== agenda.sections.length || new Set(agenda.sectionRecordRefs.map((item) => item?.sectionRef)).size !== agenda.sections.length ||
+  if (agenda.sectionRecordRefs.length !== sections.length || new Set(agenda.sectionRecordRefs.map((item) => item?.sectionRef)).size !== sections.length ||
     agenda.sectionRecordRefs.some((item) => !record(item) || !keys(item, ["sectionRef", "recordRefs"]) || !Array.isArray(item.recordRefs) ||
       item.recordRefs.some((ref) => !nonempty(ref)) || new Set(item.recordRefs).size !== item.recordRefs.length ||
-      agenda.sections.find((section) => section.id === item.sectionRef)?.recordCount !== item.recordRefs.length)) return false
-  if (new Set(agenda.agendaNotes.map((note) => note?.sectionRef)).size !== agenda.agendaNotes.length ||
-    agenda.agendaNotes.some((note) => !record(note) || !keys(note, ["sectionRef", "text"]) || !nonempty(note.text) || note.text.length > 2000 ||
-      agenda.sections.find((section) => section.id === note.sectionRef)?.agendaNote !== note.text) ||
-    agenda.sections.some((section) => section.agendaNote !== undefined && !agenda.agendaNotes.some((note) => note.sectionRef === section.id && note.text === section.agendaNote))) return false
+      sections.find((section) => section.id === item.sectionRef)?.recordCount !== item.recordRefs.length)) return false
+  if (new Set(agendaNotes.map((note) => note?.sectionRef)).size !== agendaNotes.length ||
+    agendaNotes.some((note) => !record(note) || !keys(note, ["sectionRef", "text"]) || !nonempty(note.text) || note.text.length > 2000 ||
+      sections.find((section) => section.id === note.sectionRef)?.agendaNote !== note.text) ||
+    sections.some((section) => section.agendaNote !== undefined && !agendaNotes.some((note) => note.sectionRef === section.id && note.text === section.agendaNote))) return false
   return agenda.gaps.every((gap) => record(gap) && keys(gap, ["id", "reason"]) && nonempty(gap.id) && nonempty(gap.reason))
 }
 

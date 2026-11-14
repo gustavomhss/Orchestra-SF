@@ -50,18 +50,20 @@ export function createThreadHistory(input: {
       if (!message || message.authorRef !== context.binding.principalRef || message.version >= Number.MAX_SAFE_INTEGER) return { status: "denied", reason: "thread-access-unavailable" }
       const basis = threadMessageContext(prior, message)
       if (!basis || input.authorizeSources && !await input.authorizeSources(basis, context)) return { status: "unavailable", reason: "thread-history-unavailable" }
+      const review = basis.reviewContext ? await input.state.read(request, "reviews", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion) : undefined
+      if (basis.reviewContext && (review?.status !== "ok" || !review.value)) return { status: "denied", reason: "review-thread-context-unavailable" }
       const fence = await input.fence.prepare(async () => {
         const current = await load(id, context)
         return current.status === "ok" && digestSfValue(current.value.thread) === digestSfValue(prior) && (!input.authorizeSources || await input.authorizeSources(basis, context))
       })
       if (!fence) return { status: "unavailable", reason: "thread-source-fence-unavailable" }
       const work = async (state: SfProductState, authority: SfStateAuthority) => {
-        if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.thread.edit", selected) || !input.fence.check(fence) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || message.version !== selected.expectedVersion || prior.state !== "open") return { commit: false, value: 0 }
+        if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, "collaboration.thread.edit", selected) || basis.reviewContext && (!input.authorizeSources || !await input.authorizeSources(basis, context)) || !input.fence.check(fence) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || message.version !== selected.expectedVersion || prior.state !== "open") return { commit: false, value: 0 }
         state.threads[id] = { ...prior, messages: prior.messages.map((entry) => entry.id === message.id ? { ...entry, body: selected.body, version: entry.version + 1, sourceContext: basis } : entry), messageRevisions: [...(prior.messageRevisions ?? []), message] }
         return { commit: true, value: message.version + 1 }
       }
       input.threadHistoryWrites.add(work)
-      const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, commandDigest: digestSfValue({ id, messageId, expectedVersion, body }), targetRef: input.target.ref, targetIncarnation: input.target.incarnation }, work).finally(() => input.threadHistoryWrites.delete(work))
+      const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, ...(review?.status === "ok" ? { sourceFence: "all" as const, checkNamespaces: [{ namespace: "reviews" as const, expectedStorageVersion: review.storageVersion }] } : {}), commandDigest: digestSfValue({ id, messageId, expectedVersion, body }), targetRef: input.target.ref, targetIncarnation: input.target.incarnation }, work).finally(() => input.threadHistoryWrites.delete(work))
       if (saved.status === "preview") return { status: "conflict", reason: "thread-changed" }
       if (saved.status !== "ok" || !saved.value) return { status: "unavailable", reason: "thread-access-unavailable" }
       const current = await load(id, context)

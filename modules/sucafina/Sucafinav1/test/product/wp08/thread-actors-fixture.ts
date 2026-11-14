@@ -29,7 +29,7 @@ import { available, createRelationsFixture } from "./relations-fixture.ts"
 /** Real SQLite, domain selectors, UI admissions, actor scopes and Dashboard historical access verifier.
  * Recipient leases and capture archive remain explicit fixture boundaries; this is not a native/host witness.
  */
-export async function createThreadActorsFixture(options: { reviewContexts?: Parameters<typeof createCollaborationHost>[0]["reviewContexts"] } = {}) {
+export async function createThreadActorsFixture(options: { reviewContexts?: Parameters<typeof createCollaborationHost>[0]["reviewContexts"]; authorizeReviewThreadContext?: Parameters<typeof createCollaborationHost>[0]["authorizeReviewThreadContext"] } = {}) {
   const base = await createRelationsFixture()
   const at = "2026-11-13T00:00:00Z"
   const actors: Record<string, { enabled: boolean; access: string; group: string; name: string }> = {
@@ -125,7 +125,7 @@ export async function createThreadActorsFixture(options: { reviewContexts?: Para
   }
   const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
   const cases = createDecisionCasePort({ state, host, creationTarget: base.creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, evidence, createId: randomUUID, now: () => at })
-  const port = createCollaborationHost({ reviewContexts: options.reviewContexts, host, state, creationTarget: base.creationTarget, scopedSources: base.persistence, evidence, human, authority: domainAuthority, recipientAuthority, issueForActor, prepareReissueScope: observer.prepareReissueScope, confirmationSource: observer, threadHistoryWrites, caseSelectionWrites, cases, workCaseAuthority: authorizeCase,
+  const port = createCollaborationHost({ reviewContexts: options.reviewContexts, authorizeReviewThreadContext: options.authorizeReviewThreadContext, host, state, creationTarget: base.creationTarget, scopedSources: base.persistence, evidence, human, authority: domainAuthority, recipientAuthority, issueForActor, prepareReissueScope: observer.prepareReissueScope, confirmationSource: observer, threadHistoryWrites, caseSelectionWrites, cases, workCaseAuthority: authorizeCase,
     workSignals: async (_selection, period, context) => {
       const issued = await createDashboardSourceIssuer({ host, scopedSources: base.persistence })({ page: "Executive Dashboard", fields: ["signals"], period }, context)
       if (issued.status !== "ok") return { status: "unavailable" }

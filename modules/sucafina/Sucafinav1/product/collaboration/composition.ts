@@ -12,6 +12,7 @@ import { createCollaborationHotTopicReadHost } from "./hot-topic-read-host.ts"
 import { createRelationPort } from "./relations.ts"
 import { createHandoffRelationProjection } from "./handoff-relation.ts"
 import type { WorkReviewContexts } from "./work-review-context.ts"
+import type { ReviewThreadContextAuthorizer } from "./thread-context.ts"
 import { createThreadPort } from "./threads.ts"
 import { createHandoffPort } from "./handoff.ts"
 import { createCollaborationWorkPort } from "./work-port.ts"
@@ -36,6 +37,7 @@ export function createCollaborationComposition(input: {
   selections: WorkSelectionPort
   signals?: WorkSignals
   reviewContexts?: WorkReviewContexts
+  authorizeReviewThreadContext?: ReviewThreadContextAuthorizer
   human: CollaborationHumanAuthority
   recipientAuthority?: CollaborationRecipientAuthority
   recipientThread?: ReturnType<typeof createRecipientThreadReader>
@@ -48,7 +50,7 @@ export function createCollaborationComposition(input: {
   now: () => string
 }) {
   const mutationFence = createCollaborationMutationFence(input.host)
-  const authority = createCollaborationAuthority({ host: input.host, evidence: input.evidence, recipientAuthority: input.recipientAuthority })
+  const authority = createCollaborationAuthority({ host: input.host, evidence: input.evidence, recipientAuthority: input.recipientAuthority, authorizeReviewThreadContext: input.authorizeReviewThreadContext })
   const activeHandoffs = new WeakMap<TrustedDomainContext, Parameters<Parameters<typeof createHandoffPort>[0]["run"]>[1]>()
   const handoffPermit = Symbol("handoff")
   const hotTopicWriter = createHotTopicPort(createCollaborationHotTopicHost({ host: input.host, state: input.state, evidence: input.evidence, creationTarget: input.creationTarget, mutationFence, authorizeMutation: async (context) => {

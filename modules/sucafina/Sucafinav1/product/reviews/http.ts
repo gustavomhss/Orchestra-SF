@@ -10,6 +10,9 @@ import type { createReviewClosurePort, ReviewActionHandoff } from "./closure-act
 import type { createReviewHumanPort } from "./human.ts"
 import type { createReviewAgendaSelection, ReviewAgendaItem } from "./selection.ts"
 import type { createReviewPort } from "./port.ts"
+import { isReviewThreadContext } from "./thread-context.ts"
+import type { createReviewThreadContext } from "./thread-context.ts"
+import type { ThreadSourceContext } from "../collaboration/thread-context.ts"
 import type { createReviewCurrentThread } from "./current-thread.ts"
 import type { createReviewComparisonPort } from "./comparison-port.ts"
 import type { createReviewContributionConsumer, ReviewContributionRequest } from "./contribution.ts"
@@ -29,6 +32,7 @@ export function createReviewHttp(input: {
   routineAgenda?: ReturnType<typeof createReviewRoutineSelection>
   comparison?: ReturnType<typeof createReviewComparisonPort>
   currentThread?: ReturnType<typeof createReviewCurrentThread>
+  threadContext?: ReturnType<typeof createReviewThreadContext>
   contribution?: ReturnType<typeof createReviewContributionConsumer>
   download: ReturnType<typeof createReviewDownloadHandler>
   maxBodyBytes: number
@@ -37,14 +41,14 @@ export function createReviewHttp(input: {
   return async (request: Request, surface: string): Promise<Response | undefined> => {
     const url = new URL(request.url)
     const mode = url.searchParams.get("sf")
-    if (mode !== "review-read" && mode !== "review-current-thread" && mode !== "review-preview" && mode !== "review-contribution" && mode !== "review-comparison" && mode !== "review-preserve" && mode !== "review-agenda" && mode !== "review-routine" && mode !== "review-close" && mode !== "review-closure" && mode !== "review-report" && mode !== "review-download") return undefined
+    if (mode !== "review-thread-context" && mode !== "review-read" && mode !== "review-current-thread" && mode !== "review-preview" && mode !== "review-contribution" && mode !== "review-comparison" && mode !== "review-preserve" && mode !== "review-agenda" && mode !== "review-routine" && mode !== "review-close" && mode !== "review-closure" && mode !== "review-report" && mode !== "review-download") return undefined
     const json = (value: unknown, status: number) => new Response(JSON.stringify(value), { status, headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
     if (surface !== "dashboard" || url.origin !== input.origin || request.signal.aborted || url.searchParams.getAll("sf").length !== 1) return json({ status: "denied", reason: "review-unavailable" }, 403)
     if (mode === "review-download") {
       if ([...url.searchParams.keys()].some((key) => !["sf", "artifactRef"].includes(key)) || url.searchParams.getAll("artifactRef").length !== 1) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
       return input.download(request, url.searchParams.get("artifactRef") ?? "")
     }
-    if (mode === "review-preserve" || mode === "review-agenda" || mode === "review-routine" || mode === "review-contribution" || mode === "review-close" || mode === "review-report" || mode === "review-preview") {
+    if (mode === "review-thread-context" || mode === "review-preserve" || mode === "review-agenda" || mode === "review-routine" || mode === "review-contribution" || mode === "review-close" || mode === "review-report" || mode === "review-preview") {
       if (request.method !== "POST") return json({ status: "denied", reason: "method-unavailable" }, 405)
       if (request.headers.get("origin") !== input.origin || request.headers.get("sec-fetch-site") === "cross-site") return json({ status: "denied", reason: "review-unavailable" }, 403)
       if ([...url.searchParams.keys()].some((key) => key !== "sf") || !request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return json({ status: "needs-input", reason: "invalid-request" }, 400)
@@ -66,6 +70,28 @@ export function createReviewHttp(input: {
       chunks.forEach((chunk) => { bytes.set(chunk, offset); offset += chunk.length })
       const payload = await new Response(bytes).json().catch(() => undefined)
       if (payload === undefined) return json({ status: "needs-input", reason: "invalid-request" }, 400)
+      if (mode === "review-thread-context") {
+        const producer = input.threadContext
+        if (!producer) return json({ status: "unavailable", reason: "review-thread-context-unavailable" }, 503)
+        if (!payload || typeof payload !== "object" || Array.isArray(payload) || Object.keys(payload).length !== 3 || Object.keys(payload).some((key) => !["reviewRef", "sectionId", "basis"].includes(key)) || typeof payload.reviewRef !== "string" || !payload.reviewRef.trim() || typeof payload.sectionId !== "string" || !payload.sectionId.trim() || !payload.basis || typeof payload.basis !== "object" || Array.isArray(payload.basis) || Object.keys(payload.basis).length !== 5 || Object.keys(payload.basis).some((key) => !["sourceRef", "sourceIncarnation", "observedVersion", "period", "evidenceRefs"].includes(key))) return json({ status: "needs-input", reason: "invalid-review-thread-context" }, 400)
+        const selected = structuredClone({ reviewRef: payload.reviewRef as string, sectionId: payload.sectionId as string, basis: payload.basis as ThreadSourceContext })
+        const prepare = producer.prepare
+        const authorize = producer.authorize
+        const current = () => input.threadContext === producer && producer.prepare === prepare && producer.authorize === authorize
+        const digest = digestSfValue(selected)
+        const admitted = await input.ui.admit(request, "sf_review_prepare", digest)
+        if (admitted.status !== "ok") return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
+        try {
+          if (!current() || !await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
+          const result = await prepare.call(producer, { reviewRef: selected.reviewRef, sectionId: selected.sectionId }, structuredClone(selected.basis), admitted.value).catch(() => undefined)
+          if (!current() || !result) return json({ status: "unavailable", reason: "review-thread-context-unavailable" }, 503)
+          if (result.status !== "ok") return json({ status: result.status === "needs-input" ? "needs-input" : result.status === "denied" ? "denied" : "unavailable", reason: "review-thread-context-unavailable" }, result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : 503)
+          if (!isReviewThreadContext(result.value) || result.value.reviewRef !== selected.reviewRef || result.value.sectionId !== selected.sectionId) return json({ status: "unavailable", reason: "review-thread-context-unavailable" }, 503)
+          const pin = structuredClone(result.value)
+          if (!await authorize.call(producer, structuredClone(pin), structuredClone(selected.basis), admitted.value).catch(() => false) || !current() || !await input.ui.revalidate(admitted.value) || !current() || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
+          return json({ status: "ok", value: { reviewRef: pin.reviewRef, reviewVersion: pin.reviewVersion, reviewDigest: pin.reviewDigest, sectionId: pin.sectionId } }, 200)
+        } finally { input.ui.finish(admitted.value) }
+      }
       if (mode === "review-contribution") {
         if (!input.contribution) return json({ status: "unavailable", reason: "contribution-reader-unavailable" }, 503)
         const digest = digestSfValue(payload)

@@ -38,9 +38,12 @@ test("a completed handoff keeps one protected relation and rejects a replacement
     fixture.actors.person!.enabled = false
     expect((await fixture.port.relations.readVersioned([source.refId], fixture.author)).status).not.toBe("ok")
     fixture.actors.person!.enabled = true
-    expect(available(await fixture.port.relations.readVersioned([source.refId], fixture.author))).toHaveLength(1)
+    // Revocation retires this UI grant permanently; restoration needs a new admission.
+    expect((await fixture.port.relations.readVersioned([source.refId], fixture.author)).status).not.toBe("ok")
+    const restored = await fixture.admitRead("person")
+    expect(available(await fixture.port.relations.readVersioned([source.refId], restored))).toHaveLength(1)
     await fixture.mutate("dashboard", DashboardPeople.domain, { page: "Hot Topics & Actions", action: "delete", id: action.topic.id, version: completed.dashboard.versions[`hotTopics:${action.topic.id}`]!.version, values: {} })
-    expect(available(await fixture.port.relations.readVersioned([source.refId], fixture.author))).toEqual([])
+    expect(available(await fixture.port.relations.readVersioned([source.refId], restored))).toEqual([])
     // The lawful producer refuses tombstone reuse. Inject hostile storage through
     // the real lifecycle to ensure textual equality cannot authorize a new record.
     await fixture.persistence.transaction("dashboard", async (snapshot) => {
@@ -49,7 +52,7 @@ test("a completed handoff keeps one protected relation and rejects a replacement
     })
     const replaced = await fixture.snapshots()
     expect(sfSourceIdentity(replaced.dashboard, "hotTopics", action.topic.id)?.incarnation).not.toBe(physical?.incarnation)
-    expect(available(await fixture.port.relations.readVersioned([source.refId], fixture.author))).toEqual([])
+    expect(available(await fixture.port.relations.readVersioned([source.refId], restored))).toEqual([])
     expect(digestSfValue(await storedRelation())).toBe(digestSfValue(stored))
   } finally {
     await fixture.dispose()

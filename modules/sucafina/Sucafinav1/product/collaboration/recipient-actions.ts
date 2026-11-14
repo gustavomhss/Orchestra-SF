@@ -38,14 +38,17 @@ export function createRecipientThreadActions(input: {
     const prior = stored.value
     if (digestSfValue({ id: prior.id, kind: prior.kind, recipientRef: prior.recipientRef, state: prior.state, messages: prior.messages, version: prior.observedVersion, period: prior.period }) !== digestSfValue({ id: projected.value.id, kind: projected.value.kind, recipientRef: projected.value.recipientRef, state: projected.value.state, messages: projected.value.messages, version: projected.value.observed.version, period: projected.value.observed.period })) return { status: "stale", reason: "thread-changed" }
     const original = prior.evidenceRefs.find((ref) => ref.refId === prior.sourceRef)
+    const reviewBasis = prior.messages[0]?.sourceContext?.reviewContext ? prior.messages[0].sourceContext : undefined
     const currentPeriod = projected.value.current.sourceRef.target.period
-    const rollover = !!projected.value.historical && original?.kind === "record" && !!currentPeriod && digestSfValue(original.target.period) !== digestSfValue(currentPeriod)
+    const rollover = !reviewBasis && !!projected.value.historical && original?.kind === "record" && !!currentPeriod && digestSfValue(original.target.period) !== digestSfValue(currentPeriod)
     const answer = prior.state === "resolved" && selected.action.kind === "reply" && !rollover && input.answerWork ? await input.answerWork(id, context) : undefined
     const reopen = prior.state === "resolved" && selected.action.kind === "reply" && prior.recipientRef === context.binding.principalRef && (rollover || answer?.status === "ok" && answer.value.state === "stale")
     if (prior.state !== "open" && !reopen) return { status: "conflict", reason: "thread-resolved" }
     const period = currentPeriod && (currentPeriod.start > prior.period.start || currentPeriod.end < prior.period.end) ? currentPeriod : prior.period
-    const basis: ThreadSourceContext = { sourceRef: projected.value.current.sourceRef.refId, sourceIncarnation: projected.value.current.sourceRef.target.incarnation, observedVersion: projected.value.current.sourceRef.target.version, period, evidenceRefs: projected.value.current.evidenceRefs }
+    const basis: ThreadSourceContext = reviewBasis ? structuredClone(reviewBasis) : { sourceRef: projected.value.current.sourceRef.refId, sourceIncarnation: projected.value.current.sourceRef.target.incarnation, observedVersion: projected.value.current.sourceRef.target.version, period, evidenceRefs: projected.value.current.evidenceRefs }
     if (!validThreadSourceContext(basis)) return { status: "unavailable", reason: "thread-source-unavailable" }
+    const review = reviewBasis ? await input.state.read(request, "reviews", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion) : undefined
+    if (reviewBasis && (review?.status !== "ok" || !review.value)) return { status: "denied", reason: "review-thread-context-unavailable" }
     const fence = await input.mutationFence.prepare(async () => {
       const current = await input.read(id, context)
       if (current.status !== "ok" || digestSfValue(current.value.current) !== digestSfValue(projected.value.current) || digestSfValue({ id: current.value.id, kind: current.value.kind, recipientRef: current.value.recipientRef, state: current.value.state, messages: current.value.messages, version: current.value.observed.version, period: current.value.observed.period }) !== digestSfValue({ id: prior.id, kind: prior.kind, recipientRef: prior.recipientRef, state: prior.state, messages: prior.messages, version: prior.observedVersion, period: prior.period })) return false
@@ -60,12 +63,14 @@ export function createRecipientThreadActions(input: {
     const next = message ? { ...prior, state: "open" as const, messages: [...prior.messages, message] } : { ...prior, state: "resolved" as const }
     if (!isThread(next)) return { status: "unavailable", reason: "thread-source-context-invalid" }
     const work = async (state: SfProductState, authority: SfStateAuthority) => {
+      const reviewed = reviewBasis ? await input.read(id, context) : undefined
+      if (reviewBasis && (reviewed?.status !== "ok" || digestSfValue(reviewed.value.messages) !== digestSfValue(prior.messages))) return { commit: false, value: false }
       if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !await input.human.authorize(context, humanAction, payload) || !input.mutationFence.check(fence) || digestSfValue(state.threads[id]) !== digestSfValue(prior) || prior.state !== "open" && !reopen || !isThread(next)) return { commit: false, value: false }
       if (reopen) state.threads[`sf:thread-resolution-history:${digestSfValue(prior)}`] = { kind: "thread-resolution-history-v1", messages: [{ resolution: structuredClone(prior) }] }
       state.threads[id] = next
       return { commit: true, value: true }
     }
-    const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, commandDigest: digestSfValue({ id, action: selected.action }), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, work)
+    const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, ...(review?.status === "ok" ? { sourceFence: "all" as const, checkNamespaces: [{ namespace: "reviews" as const, expectedStorageVersion: review.storageVersion }] } : {}), commandDigest: digestSfValue({ id, action: selected.action }), targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation }, work)
     if (saved.status === "preview") return { status: "conflict", reason: "thread-changed" }
     if ("reason" in saved) return saved
     if (!saved.value) return { status: "conflict", reason: "thread-changed" }

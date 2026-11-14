@@ -17,7 +17,7 @@ export function createReviewPreparationView(input: {
   const root = document.createElement("section")
   root.setAttribute("aria-label", "Prepare review")
   let disposed = false
-  const state: { busy: boolean; message: string; selection?: ReviewAgendaPreview; order: string[]; items: ReviewAgendaItem[]; review?: PreservedReview; material?: MeetingMaterialProposal; previousReviewRef?: string; routine?: RoutineReviewSelectionRequest } = { busy: false, message: "Load the authorized selection to prepare a review.", order: [], items: structuredClone([...input.items]), previousReviewRef: input.previousReviewRef, routine: input.routineResult ? structuredClone(input.routineResult) : undefined }
+  const state: { busy: boolean; message: string; selection?: ReviewAgendaPreview; selectionRef?: string; sectionRecordRefs?: ReviewAgendaPreview["sectionRecordRefs"]; order: string[]; items: ReviewAgendaItem[]; review?: PreservedReview; reviewRef?: string; material?: MeetingMaterialProposal; previousReviewRef?: string; routine?: RoutineReviewSelectionRequest } = { busy: false, message: "Load the authorized selection to prepare a review.", order: [], items: structuredClone([...input.items]), previousReviewRef: input.previousReviewRef, routine: input.routineResult ? structuredClone(input.routineResult) : undefined }
   const node = <K extends keyof HTMLElementTagNameMap>(tag: K, text: string) => {
     const element = document.createElement(tag)
     element.textContent = text
@@ -32,24 +32,25 @@ export function createReviewPreparationView(input: {
   }
   const render = () => {
     if (disposed) return
-    root.replaceChildren(node("h2", state.review ? "Preserved review" : "Prepare review"))
+    root.replaceChildren(node("h2", state.reviewRef ? "Preserved review" : "Prepare review"))
     const status = node("p", state.message)
     status.setAttribute("role", "status")
     status.setAttribute("aria-live", "polite")
     root.append(status)
-    if (!state.selection) {
-      root.append(action(state.routine ? "Open routine result" : "Load selection", state.routine ? () => openRoutineResult(state.routine!) : load))
+    if (!state.selection && !state.review && !state.reviewRef) {
+      root.append(action(state.routine ? "Open routine result" : state.selectionRef ? "Refresh selection from current data" : "Load selection", state.routine ? () => openRoutineResult(state.routine!) : load))
+      if (state.selectionRef && state.order.length) root.append(action("Retry preserving this review", preserve))
       return
     }
-    if (state.routine) {
+    if (state.routine && (state.selection || state.review)) {
       root.append(node("p", "Captured routine result. Preserving this selection keeps its recorded values and rechecks access."))
       const provenance = document.createElement("details")
       provenance.append(node("summary", "Routine provenance"), node("p", `Run: ${state.routine.runRef}`), node("p", `Result: ${state.routine.resultRef}`), node("p", `Digest: ${state.routine.outputDigest}`))
       root.append(provenance)
     }
-    if (state.review) {
-      root.append(node("p", `Reference: ${state.review.id} · Preserved: ${state.review.createdAt}`))
-      root.append(action("Open meeting", () => input.openReview(state.review!.id)))
+    if (state.reviewRef) {
+      root.append(node("p", state.review ? `Reference: ${state.review.id} · Preserved: ${state.review.createdAt}` : `Reference: ${state.reviewRef} · Captured content is hidden until access is checked again.`))
+      root.append(action("Open meeting", () => input.openReview(state.reviewRef!)))
       root.append(action("Generate PPTX", () => report("pptx")), action("Generate DOCX", () => report("docx")))
       if (state.items.length) root.append(action("Prepare current data as a new revision", load))
     } else {
@@ -58,19 +59,19 @@ export function createReviewPreparationView(input: {
     }
     const list = document.createElement("ol")
     state.order.forEach((id, index) => {
-      const section = state.selection!.sections.find((entry) => entry.id === id)
-      if (!section) return
+      const section = state.selection?.sections.find((entry) => entry.id === id)
       const captured = state.review?.sections.find((entry) => entry.id === id)
-      const title = captured?.title ?? section.title
-      const period = captured?.period ?? section.period
-      const count = captured?.count ?? section.recordCount
-      const projection = captured?.content as (typeof section.projection & { reviewAgendaNote?: string }) | undefined
-      const agendaNote = captured ? projection?.reviewAgendaNote : section.agendaNote
+      if (!captured && !section) return
+      const title = captured?.title ?? section!.title
+      const period = captured?.period ?? section!.period
+      const count = captured?.count ?? section!.recordCount
+      const projection = captured?.content as (ReviewAgendaPreview["sections"][number]["projection"] & { reviewAgendaNote?: string }) | undefined
+      const agendaNote = captured ? projection?.reviewAgendaNote : section!.agendaNote
       const row = document.createElement("li")
       row.append(node("h3", title), node("p", `${period.start} – ${period.end} · ${count} selected records`))
       if (count === 0) row.append(node("p", "No selected records in this section."))
       if (agendaNote) row.append(node("p", `Agenda note: ${agendaNote}`))
-      if (!state.review) {
+      if (!state.review && section) {
         row.append(action(`Move ${section.title} up`, () => move(index, -1), index === 0), action(`Move ${section.title} down`, () => move(index, 1), index === state.order.length - 1))
         row.append(action(`Remove ${section.title}`, () => { state.order = state.order.filter((ref) => ref !== id); render() }))
         const records = state.selection!.sectionRecordRefs.find((entry) => entry.sectionRef === id)?.recordRefs ?? []
@@ -88,14 +89,14 @@ export function createReviewPreparationView(input: {
       head.append(headings)
       table.append(head)
       const body = document.createElement("tbody")
-      ;(projection ?? section.projection).values.forEach((value) => {
+      ;(projection ?? section!.projection).values.forEach((value) => {
         const line = document.createElement("tr")
         line.append(node("td", value.id), node("td", `${value.value === null ? "Unavailable" : String(value.value)} ${value.currency ?? value.unit ?? ""}`.trim()), node("td", `${value.period.start} – ${value.period.end}`))
         body.append(line)
       })
       table.append(body)
       row.append(table)
-      if (!state.review && section.comments?.length) {
+      if (!state.review && section?.comments?.length) {
         row.append(node("h4", "Captured comments — separate from current conversation"))
         section.comments.forEach((comment) => row.append(node("p", `${comment.authorRef} · ${comment.createdAt} · version ${comment.version}: ${comment.content}`)))
       }
@@ -106,7 +107,7 @@ export function createReviewPreparationView(input: {
       root.append(node("h3", "Captured comments — separate from current conversation"))
       state.review.comments.forEach((comment) => root.append(node("p", `${comment.authorRef} · ${comment.createdAt} · version ${comment.version}: ${comment.content}`)))
     }
-    if (!state.review) root.append(action("Preserve this review", preserve, state.order.length === 0))
+    if (!state.reviewRef && state.selection) root.append(action("Preserve this review", preserve, state.order.length === 0))
     if (state.order.length === 0) root.append(node("p", "No sections selected. Load a selection before preserving."))
     state.material?.orderedResultRefs.forEach((ref) => {
       const url = client.downloadUrl(ref)
@@ -122,36 +123,45 @@ export function createReviewPreparationView(input: {
     state.busy = true
     state.message = message
     render()
-    try { await work() } catch { state.message = "The request failed. Your selection is retained; retry when the service is available." }
+    try { await work() } catch { clearRestricted(); state.message = "The request failed. Captured content is hidden; retry access when the service is available." }
     state.busy = false
     render()
   }
-  const clearRestricted = () => { state.selection = undefined; state.review = undefined; state.material = undefined; state.order = [] }
-  const remainingItems = () => state.selection && state.order.length ? state.items.flatMap((item) => {
-    const selected = state.selection!.sectionRecordRefs.filter((section) => state.order.includes(section.sectionRef) && (section.sectionRef === item.id || (item.kind === "forecast-comparison" && item.sides.some((side) => section.sectionRef === `${item.id}:${side}`))))
+  // A missing/failed response does not confirm continued access. Keep only the
+  // opaque selection/review locators and order for an explicit, rechecked retry;
+  // especially, a lost preserve response must reuse its original command key.
+  const clearRestricted = () => { state.selection = undefined; state.review = undefined; state.material = undefined }
+  const remainingItems = () => state.sectionRecordRefs && state.order.length ? state.items.flatMap((item) => {
+    const selected = state.sectionRecordRefs!.filter((section) => state.order.includes(section.sectionRef) && (section.sectionRef === item.id || (item.kind === "forecast-comparison" && item.sides.some((side) => section.sectionRef === `${item.id}:${side}`))))
     return selected.length ? [{ ...item, recordRefs: selected.flatMap((section) => section.recordRefs) }] : []
   }) : state.items
   const load = () => run("Loading authorized sources…", async () => {
     const items = remainingItems()
     const oldOrder = [...state.order]
     const selection = await client.agenda(items)
-    if (selection.status !== "ok") { if (selection.status === "denied") clearRestricted(); state.message = `Selection unavailable: ${selection.reason}`; return }
-    if (state.review) state.previousReviewRef = state.review.id
+    if (selection.status !== "ok") { clearRestricted(); state.message = `Selection unavailable: ${selection.reason}. Captured content is hidden until access is checked again.`; return }
+    if (state.reviewRef) state.previousReviewRef = state.reviewRef
     state.review = undefined
+    state.reviewRef = undefined
     state.material = undefined
     state.items = items
     state.routine = undefined
     state.selection = selection.value
+    state.selectionRef = selection.value.selectionRef
+    state.sectionRecordRefs = structuredClone(selection.value.sectionRecordRefs)
     state.order = oldOrder.length ? oldOrder.filter((ref) => selection.value.sectionRefs.includes(ref)) : [...selection.value.sectionRefs]
     state.message = "Review the selection, order and periods, then explicitly preserve it."
   })
   const openRoutineResult = (request: RoutineReviewSelectionRequest) => run("Opening the authorized routine result…", async () => {
     const pin = structuredClone(request)
     const selection = await client.routine(pin)
-    if (selection.status !== "ok") { clearRestricted(); state.routine = pin; state.message = `Routine result unavailable: ${selection.reason}. Retry access to the same result.`; return }
+    if (selection.status !== "ok") { clearRestricted(); state.selectionRef = undefined; state.sectionRecordRefs = undefined; state.reviewRef = undefined; state.order = []; state.routine = pin; state.message = `Routine result unavailable: ${selection.reason}. Retry access to the same result.`; return }
     state.selection = selection.value
+    state.selectionRef = selection.value.selectionRef
+    state.sectionRecordRefs = structuredClone(selection.value.sectionRecordRefs)
     state.routine = pin
     state.review = undefined
+    state.reviewRef = undefined
     state.material = undefined
     state.previousReviewRef = selection.value.previousReviewRef
     state.order = [...selection.value.sectionRefs]
@@ -166,24 +176,27 @@ export function createReviewPreparationView(input: {
       return [{ ...item, recordRefs }]
     })
     const result = await client.agenda(items)
-    if (result.status !== "ok") { if (result.status === "denied") clearRestricted(); state.message = `Selection unavailable: ${result.reason}`; return }
+    if (result.status !== "ok") { clearRestricted(); state.message = `Selection unavailable: ${result.reason}. Captured content is hidden until access is checked again.`; return }
     state.items = items
     state.selection = result.value
+    state.selectionRef = result.value.selectionRef
+    state.sectionRecordRefs = structuredClone(result.value.sectionRecordRefs)
     state.order = state.order.filter((ref) => result.value.sectionRefs.includes(ref))
     state.message = "Selection refreshed from the authorized sources. Check the new counts and values before preserving."
   })
   const preserve = () => run("Preserving the selected review…", async () => {
-    if (!state.selection || !state.order.length) return
-    const result = await client.preserve({ selectionRef: state.selection.selectionRef, sectionRefs: state.order, ...(state.previousReviewRef ? { previousReviewRef: state.previousReviewRef } : {}) })
-    if (result.status !== "ok") { if (result.status === "denied") clearRestricted(); state.message = result.status === "denied" ? "Access is no longer available. Reload your selection after access is restored." : `Review was not saved: ${result.reason}. Refresh or retry the selection.`; return }
+    if (!state.selectionRef || !state.order.length) return
+    const result = await client.preserve({ selectionRef: state.selectionRef, sectionRefs: state.order, ...(state.previousReviewRef ? { previousReviewRef: state.previousReviewRef } : {}) })
+    if (result.status !== "ok") { clearRestricted(); state.message = result.status === "denied" ? "Access is no longer available. Reload your selection after access is restored." : `Review save was not confirmed: ${result.reason}. Captured content is hidden. Refresh or retry the same selection.`; return }
     state.review = result.value
+    state.reviewRef = result.value.id
     state.order = result.value.sections.map((section) => section.id)
     state.message = "Review preserved. Source updates will not replace this meeting's captured values."
   })
   const report = (format: "pptx" | "docx") => run(`Generating ${format.toUpperCase()} from the preserved review…`, async () => {
-    if (!state.review) return
-    const result = await client.report({ reviewRef: state.review.id, sectionRefs: state.order, format })
-    if (result.status !== "ok") { if (result.status === "denied") clearRestricted(); state.message = `Report unavailable: ${result.reason}. The preserved review was not modified.`; return }
+    if (!state.reviewRef) return
+    const result = await client.report({ reviewRef: state.reviewRef, sectionRefs: state.order, format })
+    if (result.status !== "ok") { clearRestricted(); state.message = `Report unavailable: ${result.reason}. Captured content is hidden; the preserved review was not modified.`; return }
     state.material = result.value
     state.message = "Report generated. Download access is checked again when opening the file."
   })

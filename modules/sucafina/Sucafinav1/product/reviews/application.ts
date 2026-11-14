@@ -59,7 +59,7 @@ export function createReviewApplication(input: Parameters<typeof createReviewCom
   const http = createReviewHttp({
     origin: input.origin, ui: input.ui, human, humanAuthority: input.humanAuthority,
     closure: closures, authority: input.authority, descriptors: composed.descriptors,
-    reviews: composed.reviews, agenda: composed.agenda, routineAgenda: composed.routineAgenda, comparison, contribution, currentThread, download,
+    reviews: composed.reviews, agenda: composed.agenda, routineAgenda: composed.routineAgenda, comparison, contribution, currentThread, threadContext: composed.threadContext, download,
     maxBodyBytes: input.maxBodyBytes,
   })
   return { ...composed, human, closures, comparison, contribution, currentThread, download, http }

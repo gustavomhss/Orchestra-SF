@@ -6,12 +6,14 @@ import type { DomainPortHost } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { HotTopicIntent } from "../dashboard/hot-topics.ts"
 import type { CollaborationThread } from "./threads.ts"
+import { validThreadSourceContext } from "./thread-context.ts"
+import type { ThreadSourceContext, ReviewThreadContextAuthorizer } from "./thread-context.ts"
 import { isAllowedRelationPair } from "./relation-catalog.ts"
 import { createRecipientCommitCheck, createRecipientSourceAuthorizer } from "./recipient-authority.ts"
 import type { CollaborationRecipientAuthority } from "./recipient-authority.ts"
 
 /** Current source access and explicitly selected directory IDs are checked separately. */
-export function createCollaborationAuthority(input: { host: DomainPortHost; evidence: BusinessContextService; recipientAuthority?: CollaborationRecipientAuthority }) {
+export function createCollaborationAuthority(input: { host: DomainPortHost; evidence: BusinessContextService; recipientAuthority?: CollaborationRecipientAuthority; authorizeReviewThreadContext?: ReviewThreadContextAuthorizer }) {
   const sources = async (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => {
     if (!refs.length || refs.some((ref) => !ref || typeof ref !== "object" || ref.installationId !== context.binding.installationId || ref.projectId !== context.binding.projectId)) return false
     const current = await input.evidence.context({ refs: structuredClone(refs) }, context).catch(() => [])
@@ -21,6 +23,13 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     if (!refs.length || refs.some((ref) => !ref || typeof ref !== "object" || ref.installationId !== context.binding.installationId || ref.projectId !== context.binding.projectId) || !await input.host.revalidate(context)) return false
     const resolved = await input.evidence.context({ refs: structuredClone(refs) }, context).catch(() => [])
     return resolved.length === refs.length && resolved.every((item, index) => (item.state === "fresh" || item.state === "historical" && !!item.currentRef && !!item.authorizedProjection && !!item.differences) && item.accessRevision === context.binding.accessRevision && digestSfValue(item.ref) === digestSfValue(refs[index])) && await input.host.revalidate(context)
+  }
+  const reviewThreadBasis = async (basis: ThreadSourceContext, context: TrustedDomainContext) => {
+    if (!basis.reviewContext) return true
+    const authorize = input.authorizeReviewThreadContext
+    const selected = structuredClone(basis)
+    if (!authorize || !validThreadSourceContext(selected) || !await input.host.revalidate(context)) return false
+    return await authorize(selected.reviewContext!, selected, context).catch(() => false) && input.authorizeReviewThreadContext === authorize && await input.host.revalidate(context)
   }
   const recipientSources = createRecipientSourceAuthorizer({ sources, revalidate: input.host.revalidate, recipientAuthority: input.recipientAuthority })
   const recipient = async (id: string, context: TrustedDomainContext) => {
@@ -40,6 +49,7 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
   return {
     sources,
     historicalSources,
+    reviewThreadBasis,
     recipient,
     recipientSources,
     checkRecipientAtCommit: createRecipientCommitCheck(input.recipientAuthority),
@@ -51,12 +61,16 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
       if (pair.recipientRef && (!await recipient(pair.recipientRef, context) || !await recipientSources(pair.recipientRef, pair.evidenceRefs, context))) return false
       return sources(pair.evidenceRefs, context)
     },
-    authorizeThread: async (thread: { sourceRef: string; recipientRef?: string; evidenceRefs: readonly BusinessEvidenceRef[]; messages?: CollaborationThread["messages"] }, context: TrustedDomainContext, mode: "read" | "write") => {
+    authorizeThread: async (thread: { sourceRef: string; recipientRef?: string; evidenceRefs: readonly BusinessEvidenceRef[]; messages?: CollaborationThread["messages"] } & Partial<ThreadSourceContext>, context: TrustedDomainContext, mode: "read" | "write") => {
       if (!Array.isArray(thread.evidenceRefs) || thread.evidenceRefs.some((ref) => !ref || typeof ref !== "object")) return false
-      if (!thread.evidenceRefs.some((ref) => ref.refId === thread.sourceRef) || !await sources(thread.evidenceRefs, context)) return false
+      const pin = thread.messages ? thread.messages[0]?.sourceContext?.reviewContext : thread.reviewContext
+      const basis = pin ? { sourceRef: thread.sourceRef, sourceIncarnation: thread.sourceIncarnation, observedVersion: thread.observedVersion, period: thread.period, evidenceRefs: thread.evidenceRefs, reviewContext: pin } : undefined
+      if (basis && (!validThreadSourceContext(basis) || !await reviewThreadBasis(basis, context) || mode === "write" && thread.recipientRef && thread.recipientRef !== context.binding.principalRef)) return false
+      const authorizeSources = pin ? historicalSources : sources
+      if (!thread.evidenceRefs.some((ref) => ref.refId === thread.sourceRef) || !await authorizeSources(thread.evidenceRefs, context)) return false
       const messageRefs = [...new Map((thread.messages ?? []).flatMap((message) => message.sourceContext?.evidenceRefs ?? []).map((ref) => [ref.refDigest, ref])).values()]
-      if (messageRefs.length && !await sources(messageRefs, context)) return false
-      if (thread.recipientRef && (!await recipient(thread.recipientRef, context) || mode === "write" && !await recipientSources(thread.recipientRef, thread.evidenceRefs, context))) return false
+      if (messageRefs.length && !await authorizeSources(messageRefs, context)) return false
+      if (thread.recipientRef && (!await recipient(thread.recipientRef, context) || mode === "write" && !pin && !await recipientSources(thread.recipientRef, thread.evidenceRefs, context))) return false
       if (!thread.messages) return mode === "write"
       return thread.recipientRef === context.binding.principalRef || thread.messages.some((message) => message.authorRef === context.binding.principalRef)
     },

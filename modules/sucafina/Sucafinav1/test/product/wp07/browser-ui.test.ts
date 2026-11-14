@@ -71,7 +71,7 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
   const runtime: { browser?: Browser; closeBrowser?: () => Promise<void> } = {}
   try {
     const control = {
-      allowed: true, available: true, dropPreserveResponse: false, sourceDestinationAllowed: true,
+      allowed: true, available: true, threadAllowed: true, dropPreserveResponse: false, sourceDestinationAllowed: true,
       preserveCalls: [] as { key: string; reviewRef?: string }[],
       updateChecks: [] as string[], sourceNavigations: [] as { reviewRef: string; refDigest: string }[],
       reviewNavigations: [] as { reviewRef: string; sectionId: string }[],
@@ -140,7 +140,7 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
       access: { revalidate: revalidateSources, authorizeSections: (context, sections) => measure("access.sections", () => revalidateSources(context, sections.flatMap((section) => section.sourceRefs))), authorizeOutcomeComparison: async (_context, values) => values.length === 0, authorizeOutcome: async (_context, values) => values.length === 0, authorizeDecision: async (_context, values) => values.length === 0, authorizeSensitivity: async (_context, values) => values.length === 0 },
       collaboration: {
         // Controlled thread producer: captures a real consumer comment without claiming WP08 history.
-        threads: { read: (threadId, context) => measure("comments.threadRead", async () => threadId === "browser-comment" && await host.revalidate(context)
+        threads: { read: (threadId, context) => measure("comments.threadRead", async () => control.threadAllowed && threadId === "browser-comment" && await host.revalidate(context)
           ? { status: "ok", value: { id: threadId, kind: "comment", sourceRef: "fixture-planner-v1", sourceIncarnation: "inc-v1", observedVersion: 1, period, evidenceRefs: [], messages: [{ id: "owner-note", incarnation: "owner-note-inc", version: 1, authorRef: principalRef, body: commentText, createdAt: at }] } } as const
           : { status: "denied", reason: "fixture-thread-unavailable" } as const) },
         history: { readVersion: unavailable },
@@ -257,11 +257,33 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     await expect(forecast.getByRole("cell", { name: "110 USD", exact: true })).toBeVisible()
     const december = view.getByRole("table", { name: "Second forecast · candidate · selected source values", exact: true }).getByRole("row").filter({ has: page.getByRole("cell", { name: "license:12:forecast", exact: true }) })
     await expect(december.getByRole("cell", { name: "110 USD", exact: true })).toBeVisible()
+    checkpoint("selection-thread-access-unavailable")
+    await expect(view).toContainText(commentText)
+    control.threadAllowed = false
+    await view.getByRole("button", { name: "Refresh selection from current data", exact: true }).click()
+    // The real C06 consumer deliberately returns unavailable when the controlled
+    // thread reader denies access. That status must not leave its captured body.
+    await expect(view.getByRole("status")).toContainText("thread-access-unavailable")
+    await expect(view.getByRole("table")).toHaveCount(0)
+    await expect(view.getByRole("heading", { level: 3 })).toHaveCount(0)
+    await expect(view).not.toContainText(commentText)
+    await expect(view).not.toContainText("Retain this agenda note")
+    await expect(view).not.toContainText("110 USD")
+    expect(await storedReviews()).toHaveLength(0)
+    control.threadAllowed = true
+    await view.getByRole("button", { name: "Refresh selection from current data", exact: true }).click()
+    await expect(view.getByRole("heading", { level: 3 })).toHaveText(["Second forecast · candidate", "First forecast · candidate"])
+    await expect(forecast.getByRole("cell", { name: "110 USD", exact: true })).toBeVisible()
+    await expect(view.getByText("Agenda note: Retain this agenda note", { exact: true })).toBeVisible()
+    await expect(view).toContainText(commentText)
     checkpoint("selection-stale-preserve")
     await changeForecast(120)
     await view.getByRole("button", { name: "Preserve this review", exact: true }).click()
     await expect(view.getByRole("status")).toContainText("agenda-preview-changed")
-    await expect(forecast.getByRole("cell", { name: "110 USD", exact: true })).toBeVisible()
+    await expect(view.getByRole("table")).toHaveCount(0)
+    await expect(view).not.toContainText(commentText)
+    await expect(view).not.toContainText("Retain this agenda note")
+    await expect(view).not.toContainText("110 USD")
     expect(await storedReviews()).toHaveLength(0)
     checkpoint("selection-refresh")
     await view.getByRole("button", { name: "Refresh selection from current data", exact: true }).click()
@@ -271,23 +293,44 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     control.dropPreserveResponse = true
     await view.getByRole("button", { name: "Preserve this review", exact: true }).click()
     await expect(view.getByRole("status")).toContainText("review-preserve-unavailable")
+    await expect(view.getByRole("table")).toHaveCount(0)
+    await expect(view).not.toContainText(commentText)
+    await expect(view).not.toContainText("Retain this agenda note")
+    await expect(view).not.toContainText("120 USD")
     expect(await storedReviews()).toHaveLength(1)
     checkpoint("preserve-explicit-recovery")
     // This second action is the explicit lost-response recovery, never an automatic flaky-test retry.
-    await view.getByRole("button", { name: "Preserve this review", exact: true }).click()
+    await view.getByRole("button", { name: "Retry preserving this review", exact: true }).click()
     await expect(view.getByRole("heading", { name: "Preserved review", exact: true })).toBeVisible()
+    await expect(forecast.getByRole("cell", { name: "120 USD", exact: true })).toBeVisible()
+    await expect(view).toContainText(commentText)
     const successful = control.preserveCalls.filter((call) => call.reviewRef)
     expect(successful).toHaveLength(2)
     expect(successful[0]!.key).toBe(successful[1]!.key)
     expect(successful[0]!.key).not.toBe("")
     expect(successful[0]!.reviewRef).toBe(successful[1]!.reviewRef)
     expect(await storedReviews()).toEqual([successful[0]!.reviewRef])
+    checkpoint("report-thread-revoked")
+    control.threadAllowed = false
+    await view.getByRole("button", { name: "Generate DOCX", exact: true }).click()
+    await expect(view.getByRole("status")).toContainText("Report unavailable")
+    await expect(view.getByRole("table")).toHaveCount(0)
+    await expect(view.getByRole("link", { name: "Download generated report", exact: true })).toHaveCount(0)
+    await expect(view).not.toContainText(commentText)
+    await expect(view).not.toContainText("Retain this agenda note")
+    await expect(view).not.toContainText("120 USD")
+    expect(await storedReviews()).toEqual([successful[0]!.reviewRef])
+    control.threadAllowed = true
     checkpoint("revision-source-unavailable")
     control.available = false
     await view.getByRole("button", { name: "Prepare current data as a new revision", exact: true }).click()
     await expect(view.getByRole("status")).toContainText("forecast-source-unavailable")
     await expect(view.getByRole("heading", { name: "Preserved review", exact: true })).toBeVisible()
-    await expect(forecast.getByRole("cell", { name: "120 USD", exact: true })).toBeVisible()
+    await expect(view.getByRole("table")).toHaveCount(0)
+    await expect(view.getByRole("heading", { level: 3 })).toHaveCount(0)
+    await expect(view).not.toContainText(commentText)
+    await expect(view).not.toContainText("Retain this agenda note")
+    await expect(view).not.toContainText("120 USD")
     checkpoint("revision-new-snapshot")
     control.available = true
     await changeForecast(130)
@@ -318,7 +361,7 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     await expect(view.getByRole("table")).toHaveCount(0)
     await expect(view.getByRole("heading", { level: 3 })).toHaveCount(0)
     await expect(view.getByText("Agenda note: Retain this agenda note", { exact: true })).toHaveCount(0)
-    await expect(view.getByRole("button", { name: "Load selection", exact: true })).toBeEnabled()
+    await expect(view.getByRole("button", { name: "Prepare current data as a new revision", exact: true })).toBeEnabled()
     expect(await storedReviews()).toHaveLength(2)
     checkpoint("meeting-open-preserved")
     control.allowed = true

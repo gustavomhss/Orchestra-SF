@@ -7,7 +7,7 @@ import type { TrustedDomainContext } from "../../../product/contracts/sf-executi
 test("work review context rejects extra private fields, malformed values and provider exceptions without leaking them", async () => {
   const context = { kind: "ui", binding: { principalRef: "reader" } } as TrustedDomainContext
   const entry = { closureRef: "closure", reviewRef: "review", reviewVersion: 1, reviewDigest: "a".repeat(64) }
-  const unavailable = { status: "unavailable", reason: "work-review-context-unavailable" }
+  const unavailable = { status: "unavailable" as const, reason: "work-review-context-unavailable" }
   const extra = await readWorkReviewContexts(async () => ({ status: "ok", value: [{ ...entry, privateDiagnostic: "private sentinel" }] }), "topic", context)
   expect(extra).toEqual(unavailable)
   expect(JSON.stringify(extra)).not.toContain("private sentinel")

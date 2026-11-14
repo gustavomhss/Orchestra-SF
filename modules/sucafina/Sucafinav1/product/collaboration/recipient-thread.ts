@@ -26,6 +26,7 @@ export function createRecipientThreadReader(input: {
   refresh?: CollaborationWorkSourceRefresh
   authorize: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
   authorizeHistorical?: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
+  authorizeContext?: (basis: ThreadSourceContext, context: TrustedDomainContext) => Promise<boolean>
 }) {
   return async (id: string, context: TrustedDomainContext): Promise<PortResult<RecipientThread>> => {
     if (typeof id !== "string" || !id.trim()) return { status: "needs-input", reason: "invalid-thread-reference" }
@@ -43,6 +44,8 @@ export function createRecipientThreadReader(input: {
     if (messageContexts.some((basis) => !basis)) return { status: "unavailable", reason: "thread-source-unavailable" }
     const historyRefs = [...new Map([...originals, ...messageContexts.flatMap((basis) => basis!.evidenceRefs)].map((ref) => [ref.refDigest, ref])).values()]
     const preserved = input.authorizeHistorical ? await input.authorizeHistorical(historyRefs, context) : false
+    const reviewBasis = messageContexts[0]?.reviewContext ? messageContexts[0] : undefined
+    if (reviewBasis && (!preserved || !input.authorizeContext || !await input.authorizeContext(reviewBasis, context))) return { status: "unavailable", reason: "review-thread-context-unavailable" }
     const records = historyRefs.filter((ref): ref is RecordEvidence => ref.kind === "record")
     const supplements = historyRefs.filter((ref) => ref.kind !== "record")
     const contextScopes = await Promise.all(records.map((ref) => input.reissue(ref, context)))
@@ -62,7 +65,7 @@ export function createRecipientThreadReader(input: {
     if (!sourceRef || sourceRef.kind !== "record" || !await authorizeCurrent()) return { status: "unavailable", reason: "thread-source-unavailable" }
     const again = await read()
     const finalScopes = await renew()
-    if (again.status !== "ok" || !isThread(again.value) || again.value.id !== id || digestSfValue(again.value) !== digestSfValue(thread) || digestSfValue(finalScopes) !== digestSfValue(issued) || !await authorizeCurrent() || preserved && !await input.authorizeHistorical!(historyRefs, context) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
+    if (again.status !== "ok" || !isThread(again.value) || again.value.id !== id || digestSfValue(again.value) !== digestSfValue(thread) || digestSfValue(finalScopes) !== digestSfValue(issued) || !await authorizeCurrent() || preserved && !await input.authorizeHistorical!(historyRefs, context) || reviewBasis && !await input.authorizeContext!(reviewBasis, context) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
     return { status: "ok", value: { id: thread.id, kind: thread.kind, ...(thread.recipientRef ? { recipientRef: thread.recipientRef } : {}), state: thread.state, messages: thread.messages, observed: { version: thread.observedVersion, period: thread.period }, current: { sourceRef, evidenceRefs: current }, ...(preserved ? { historical: { sourceRef: thread.sourceRef, sourceIncarnation: thread.sourceIncarnation, observedVersion: thread.observedVersion, period: thread.period, evidenceRefs: originals } } : {}), continuity: changed ? "historical" : "unchanged" } }
   }
 }

@@ -6,10 +6,12 @@ import { createDashboardSourceIssuer } from "../../../product/integration/dashbo
 import { createReviewAgendaSelection } from "../../../product/reviews/selection.ts"
 import type { ReviewAgendaItem, ReviewAgendaPorts } from "../../../product/reviews/selection.ts"
 import { DashboardPortfolio } from "../../../runtime/dashboard-portfolio.ts"
+import { DashboardBudget } from "../../../runtime/dashboard-budget.ts"
 import { DashboardPeople } from "../../../runtime/dashboard-people.ts"
 import { rows } from "../../../runtime/contract.ts"
 import { createThreadActorsFixture } from "../wp08/thread-actors-fixture.ts"
 import { available } from "../wp08/relations-fixture.ts"
+import { expectUnchangedDomainState } from "../wp08/domain-state.ts"
 
 // Uses the published Dashboard producer, scoped source issuers, real domain
 // commands and SQLite. Actor admission is the explicit fixture boundary; this
@@ -17,7 +19,13 @@ import { available } from "../wp08/relations-fixture.ts"
 test("review agenda consumes real Dashboard selectors with exact record identity, counts, order, empty scope and Talent denial", async () => {
   const f = await createThreadActorsFixture()
   try {
+    // The source issuer requires actual domain collections; absent budget inputs
+    // are unavailable, not empty arrays manufactured by the review consumer.
+    await f.mutate("dashboard", DashboardBudget.domain, { page: "OPEX Detail", action: "save", version: 0, values: { name: "Selected budget owner", budget: 1200 } }, "budget-owner")
+    await f.mutate("dashboard", DashboardBudget.domain, { page: "OPEX Detail", action: "save-entry", version: 0, values: { ownerId: "budget-owner", year: 2026, month: 1, budget: 100, actual: 80, forecast: 90 } }, "opex-january")
+    await f.mutate("dashboard", DashboardBudget.domain, { page: "CAPEX Projects", action: "save-entry", version: 0, values: { projId: "capex", year: 2026, month: 1, budget: 20, actual: 10, forecast: 15 } }, "capex-january")
     await f.mutate("dashboard", DashboardPortfolio.domain, { page: "All Projects", action: "save", version: 0, values: { name: "Shared project", budget: 330, spent: 30, status: "In Progress", risk: "Low", notes: "Exact second record" } }, "project-same-name")
+    await f.mutate("dashboard", DashboardPeople.domain, { page: "Team Structure", action: "saveLeader", version: 0, values: { name: "Selected leader", title: "Lead", domain: "IT" } }, "selected-leader")
     await f.mutate("dashboard", DashboardPeople.domain, { page: "Talent Review", action: "save", version: 0, values: { name: "PRIVATE_TALENT_NAME", title: "PRIVATE_TALENT_TITLE", status: "Active", cls: "Talent", outlook: "Promote", notes: "PRIVATE_TALENT_NOTE" } }, "private-member")
     const sources = createDashboardSourceHost({ host: f.host, scopedSources: f.persistence })
     const dashboard = createDashboardPort({ host: f.host, sources })
@@ -58,7 +66,7 @@ test("review agenda consumes real Dashboard selectors with exact record identity
     expect(chosen.sections.every((section) => section.period.start === f.period.start && section.period.end === f.period.end && section.projection.context.sourceRefs.every((ref) => ref.period.start === f.period.start && ref.period.end === f.period.end))).toBe(true)
     const empty = available(await agenda.create([{ ...items[2]!, recordRefs: [] }], f.author))
     expect(empty.sections[0]).toMatchObject({ recordCount: 0, projection: { values: [], components: [], missing: [] } })
-    expect(await f.snapshots()).toEqual(before)
+    expectUnchangedDomainState(before, await f.snapshots())
     const forbiddenSource = await issue({ page: "Talent Review", fields: ["members", "leaders"], period: f.period }, f.recipient)
     expect(forbiddenSource.status).not.toBe("ok")
     const forbiddenAgenda = await agenda.create([{ id: "talent", kind: "dashboard", topic: "talent-review", selectionRef: talent.selectionRef, period: f.period }], f.recipient)

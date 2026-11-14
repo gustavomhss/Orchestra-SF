@@ -1,0 +1,175 @@
+{
+  "kind": "hosted-typecheck-guards-and-static-export-generation",
+  "product": {
+    "sha": "ea5a6f965c803d436202934872c3650ab8f8eb19",
+    "tree": "8535b4ffdbbeee8549bc8820fec2551fa6cf9d09"
+  },
+  "snapshot": {
+    "sha": "88259b007cd9c0085ef901166a7771ec1bf52db9",
+    "tree": "8e99874ddac9204f102da6445bbfb0515ae051a3"
+  },
+  "branch": "astra-check-collaboration",
+  "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+  "run": {
+    "id": 43584368239,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584368239",
+    "job": 132415602971,
+    "conclusion": "failure",
+    "attempt": 1
+  },
+  "typecheck": {
+    "command": "bun typecheck",
+    "directory": "modules/sucafina",
+    "conclusion": "failure",
+    "diagnostics": 74,
+    "wp07_wp08_wp09_paths": 5,
+    "other_paths": 69,
+    "diagnostic_lines": [
+      "2026-11-14T10:16:27.6368621Z ##[error]../../../apps/cli/src/sucafina-product/business-services.ts(192,20): error TS2322: Type '(ref: string, call: TrustedDomainContext) => Promise<{ status: \"ok\"; value: { evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }; } | { ...; } | { ...; }>' is not assignable to type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }'.",
+      "2026-11-14T10:16:27.6385729Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(158,128): error TS2345: Argument of type '{ cases: { draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>; prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<...>; read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<...>; prepareIntentForCase: (request...' is not assignable to parameter of type 'SfAnalysisDependencies & { replayIntent: (request: CaseDraftRequest, ref: { id: string; incarnation: string; version: number; }, context: TrustedDomainContext) => Promise<...>; imports: Pick<...>; selectedPreviewRef: (caseRef: { ...; }, call: TrustedDomainContext) => Promise<...>; }'.",
+      "2026-11-14T10:16:27.6396914Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(185,136): error TS2322: Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+      "2026-11-14T10:16:27.6407225Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(217,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+      "2026-11-14T10:16:27.6421355Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(273,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+      "2026-11-14T10:16:27.6436625Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(396,5): error TS2322: Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+      "2026-11-14T10:16:27.6463102Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(412,5): error TS2322: Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+      "2026-11-14T10:16:27.6480858Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(551,5): error TS2322: Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.",
+      "2026-11-14T10:16:27.6485230Z ##[error]product/decision-memory/source-access.ts(216,35): error TS2349: This expression is not callable.",
+      "2026-11-14T10:16:27.6487811Z ##[error]product/decision-memory/source-access.ts(222,33): error TS2349: This expression is not callable.",
+      "2026-11-14T10:16:27.6492393Z ##[error]product/decisions/prepared-apply.ts(46,5): error TS2322: Type '(incoming: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, context: TrustedDomainContext) => Promise<{ reason?: undefined; status: \"ok\"; value: {}; } | { ...; }>' is not assignable to type '(request: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, binding: TrustedDomainContext) => Promise<PortResult<CommandReceipt>>'.",
+      "2026-11-14T10:16:27.6500419Z ##[error]product/decisions/prepared-apply.ts(71,446): error TS2345: Argument of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: false; value: null; } | { commit: false; value: { ...; }; } | { ...; } | { ...; } | { ...; }>' is not assignable to parameter of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: { failure: \"unavailable\"; existing?: undefined; } | null; }>'.",
+      "2026-11-14T10:16:27.6508052Z ##[error]product/decisions/prepared-apply.ts(95,75): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "2026-11-14T10:16:27.6509769Z ##[error]product/decisions/prepared-apply.ts(97,185): error TS2740: Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.",
+      "2026-11-14T10:16:27.6511365Z ##[error]product/decisions/prepared-apply.ts(100,74): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "2026-11-14T10:16:27.6513163Z ##[error]product/decisions/prepared-apply.ts(101,81): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "2026-11-14T10:16:27.6514663Z ##[error]product/decisions/prepared-apply.ts(101,112): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "2026-11-14T10:16:27.6516351Z ##[error]product/decisions/prepared-apply.ts(102,183): error TS2740: Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.",
+      "2026-11-14T10:16:27.6518427Z ##[error]product/decisions/proposals.ts(92,26): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "2026-11-14T10:16:27.6519870Z ##[error]product/documents/scenario-inputs.ts(112,119): error TS2322: Type 'string | undefined' is not assignable to type 'string'.",
+      "2026-11-14T10:16:27.6521767Z ##[error]product/host-binding/business-context.ts(170,71): error TS2353: Object literal may only specify known properties, and 'state' does not exist in type '{ host: DomainPortHost; cases: DecisionCasePort; }'.",
+      "2026-11-14T10:16:27.6523282Z ##[error]product/host-binding/business-context.ts(170,153): error TS7006: Parameter 'refs' implicitly has an 'any' type.",
+      "2026-11-14T10:16:27.6524377Z ##[error]product/host-binding/business-context.ts(170,159): error TS7006: Parameter 'call' implicitly has an 'any' type.",
+      "2026-11-14T10:16:27.6528191Z ##[error]product/host-binding/business-context.ts(212,5): error TS2322: Type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, call: TrustedDomainContext) => Promise<{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]>' is not assignable to type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, trustedCall: TrustedDomainContext) => Promise<readonly { envelope: BusinessMemoryEnvelope; entry: { ...; } | { ...; }; }[]>'.",
+      "2026-11-14T10:16:27.6541389Z ##[error]product/interface/analysis-http.ts(30,114): error TS2339: Property 'runRef' does not exist on type 'ContributionEnvelope'.",
+      "2026-11-14T10:16:27.6544574Z ##[error]product/interface/analysis-http.ts(30,171): error TS2339: Property 'version' does not exist on type 'ContributionEnvelope'.",
+      "2026-11-14T10:16:27.6547628Z ##[error]product/interface/analysis-http.ts(30,197): error TS2339: Property 'outputRef' does not exist on type 'ContributionEnvelope'.",
+      "2026-11-14T10:16:27.6550594Z ##[error]product/interface/analysis-http.ts(30,235): error TS2339: Property 'outputRef' does not exist on type 'ContributionEnvelope'.",
+      "2026-11-14T10:16:27.6554359Z ##[error]product/portfolio/catalog.ts(13,20): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "2026-11-14T10:16:27.6556413Z ##[error]product/portfolio/handoff.ts(41,18): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "2026-11-14T10:16:27.6558439Z ##[error]product/portfolio/handoff.ts(78,18): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "2026-11-14T10:16:27.6560339Z ##[error]product/portfolio/planner-sensitivity.ts(80,106): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "2026-11-14T10:16:27.6562565Z ##[error]product/portfolio/planner-sensitivity.ts(80,171): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "2026-11-14T10:16:27.6564973Z ##[error]product/portfolio/port.ts(36,20): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "2026-11-14T10:16:27.6567010Z ##[error]product/portfolio/sensitivity-store.ts(25,19): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "2026-11-14T10:16:27.6568824Z ##[error]product/portfolio/verification.ts(119,106): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "2026-11-14T10:16:27.6570853Z ##[error]product/portfolio/verification.ts(119,171): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "2026-11-14T10:16:27.6574123Z ##[error]product/procurement/prepared.ts(69,5): error TS2322: Type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: boolean; value: JsonValue; }'.",
+      "2026-11-14T10:16:27.6580305Z ##[error]test/product/wp01/personal-views.test.ts(35,137): error TS2322: Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.",
+      "2026-11-14T10:16:27.6583765Z ##[error]test/product/wp01/workbench-analysis.test.ts(6,38): error TS2307: Cannot find module '@orchestra/server/routes' or its corresponding type declarations.",
+      "2026-11-14T10:16:27.6586194Z ##[error]test/product/wp03/parity-matrix.test.ts(106,68): error TS2339: Property 'recordId' does not exist on type '{ surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; } | ... 5 more ... | { ...; }'.",
+      "2026-11-14T10:16:27.6589562Z ##[error]test/product/wp04/prepared-production.test.ts(208,41): error TS2554: Expected 0 arguments, but got 1.",
+      "2026-11-14T10:16:27.6590590Z ##[error]test/product/wp04/prepared-production.test.ts(220,107): error TS2554: Expected 0 arguments, but got 1.",
+      "2026-11-14T10:16:27.6591609Z ##[error]test/product/wp08/work-review-context.test.ts(12,25): error TS2769: No overload matches this call.",
+      "2026-11-14T10:16:27.6595649Z ##[error]test/product/wp08/work-review-context.test.ts(15,35): error TS2769: No overload matches this call.",
+      "2026-11-14T10:16:27.6599719Z ##[error]test/product/wp08/work-review-context.test.ts(17,117): error TS2769: No overload matches this call.",
+      "2026-11-14T10:16:27.6604049Z ##[error]test/product/wp08/work-review-context.test.ts(18,139): error TS2769: No overload matches this call.",
+      "2026-11-14T10:16:27.6608094Z ##[error]test/product/wp08/work-review-context.test.ts(19,142): error TS2769: No overload matches this call.",
+      "2026-11-14T10:16:27.6612145Z ##[error]test/product/wp10/integration/blob-generations.test.ts(13,112): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+      "2026-11-14T10:16:27.6613492Z ##[error]test/product/wp10/integration/blob-generations.test.ts(13,122): error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+      "2026-11-14T10:16:27.6614662Z ##[error]test/product/wp10/integration/blob-generations.test.ts(31,58): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+      "2026-11-14T10:16:27.6615811Z ##[error]test/product/wp10/integration/blob-generations.test.ts(31,68): error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+      "2026-11-14T10:16:27.6616967Z ##[error]test/product/wp10/integration/blob-generations.test.ts(40,63): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+      "2026-11-14T10:16:27.6618106Z ##[error]test/product/wp10/integration/blob-generations.test.ts(40,73): error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+      "2026-11-14T10:16:27.6619269Z ##[error]test/product/wp10/integration/blob-generations.test.ts(51,49): error TS7006: Parameter '_snapshot' implicitly has an 'any' type.",
+      "2026-11-14T10:16:27.6620406Z ##[error]test/product/wp10/integration/blob-generations.test.ts(51,60): error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+      "2026-11-14T10:16:27.6621549Z ##[error]test/product/wp10/integration/blob-generations.test.ts(68,69): error TS7006: Parameter '_snapshot' implicitly has an 'any' type.",
+      "2026-11-14T10:16:27.6622875Z ##[error]test/product/wp10/integration/blob-generations.test.ts(68,80): error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+      "2026-11-14T10:16:27.6624038Z ##[error]test/product/wp10/integration/product-authority.test.ts(24,47): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.",
+      "2026-11-14T10:16:27.6625338Z ##[error]test/product/wp10/integration/product-authority.test.ts(24,57): error TS7006: Parameter 'blobs' implicitly has an 'any' type.",
+      "2026-11-14T10:16:27.6626792Z ##[error]test/product/wp11/analysis-acceptance-adversarial.test.ts(73,60): error TS2345: Argument of type 'TrustedDomainContext' is not assignable to parameter of type 'TrustedUiContext'.",
+      "2026-11-14T10:16:27.6629976Z ##[error]test/product/wp11/coverage-access.test.ts(39,127): error TS2322: Type '{ surface: string; type: string; id: string; incarnation: string; version: number; fields: string[]; period: { start: string; end: string; }; observedAt: string; }' is not assignable to type 'SourceRef'.",
+      "2026-11-14T10:16:27.6633034Z ##[error]test/product/wp11/coverage-access.test.ts(48,127): error TS2322: Type '{ surface: string; type: string; id: string; incarnation: string; version: number; fields: string[]; period: { start: string; end: string; }; observedAt: string; }' is not assignable to type 'SourceRef'.",
+      "2026-11-14T10:16:27.6636678Z ##[error]test/product/wp11/coverage-access.test.ts(77,63): error TS2322: Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "2026-11-14T10:16:27.6647681Z ##[error]test/product/wp12/author-reader.test.ts(32,26): error TS2352: Conversion of type '{ id: string; incarnation: string; version: number; participants: string[]; }' to type 'DecisionCase' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.",
+      "2026-11-14T10:16:27.6650607Z ##[error]test/product/wp13/sensitivity-units-boundary.test.ts(218,211): error TS2722: Cannot invoke an object which is possibly 'undefined'.",
+      "2026-11-14T10:16:27.6651825Z ##[error]test/product/wp13/sensitivity-units-boundary.test.ts(230,25): error TS2722: Cannot invoke an object which is possibly 'undefined'.",
+      "2026-11-14T10:16:27.6653170Z ##[error]test/product/wp13/sensitivity-units-boundary.test.ts(230,25): error TS18048: 'store.transactionAll' is possibly 'undefined'.",
+      "2026-11-14T10:16:27.6654720Z ##[error]test/product/wp14/source-access-procurement.test.ts(10,43): error TS2305: Module '\"../../../product/procurement/sources.ts\"' has no exported member 'procurementSourceSelector'.",
+      "2026-11-14T10:16:27.6656633Z ##[error]test/product/wp14/source-access-procurement.test.ts(11,33): error TS2724: '\"../../../product/procurement/port.ts\"' has no exported member named 'isCurrentProcurementSource'. Did you mean 'projectProcurementSource'?",
+      "2026-11-14T10:16:27.6660200Z ##[error]test/product/wp14/source-access-procurement.test.ts(31,54): error TS2741: Property 'scopedSources' is missing in type '{ host: DomainPortHost; contextFor: () => Promise<{ status: \"ok\"; value: { installationId: string; projectId: string; principalRef: string; accessRevision: string; policyVersion: string; ... 4 more ...; capabilities: never[]; }; }>; }' but required in type '{ host: DomainPortHost; scopedSources: SfScopedSourcePort; contextFor: (binding: TrustedDomainContext) => Promise<PortResult<ProductContext>>; }'.",
+      "2026-11-14T10:16:27.6664858Z ##[error]test/product/wp14/source-access-procurement.test.ts(32,51): error TS2322: Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.",
+      "2026-11-14T10:16:27.6672042Z ##[error]test/product/wp14/source-access-procurement.test.ts(32,83): error TS2322: Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.",
+      "2026-11-14T10:16:27.6676887Z ##[error]test/product/wp14/source-access-procurement.test.ts(33,25): error TS2349: This expression is not callable."
+    ],
+    "own_resolution": "Five test matcher literal statuses are fixed in the next candidate; pending hosted qualification."
+  },
+  "guards": {
+    "command": "bun run check:guards --base origin/dev",
+    "conclusion": "success",
+    "rules": 78,
+    "changedPaths": 832,
+    "gates": 0,
+    "warnings": 16,
+    "errors": 0,
+    "own_action": "Replaced two review-result.ts double casts with runtime type guards in the next candidate, pending hosted qualification."
+  },
+  "exports": {
+    "conclusion": "success",
+    "files": 6,
+    "inspection": "Six Check02 exports remain the inspected deliverables; these new Check03 bytes are not claimed visually inspected."
+  },
+  "equality": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "ea5a6f965c803d436202934872c3650ab8f8eb19",
+    "head": "88259b007cd9c0085ef901166a7771ec1bf52db9",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "ea5a6f965c803d436202934872c3650ab8f8eb19",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/ea5a6f965c803d436202934872c3650ab8f8eb19",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/ea5a6f965c803d436202934872c3650ab8f8eb19"
+    },
+    "merge_base_commit": {
+      "sha": "ea5a6f965c803d436202934872c3650ab8f8eb19",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/ea5a6f965c803d436202934872c3650ab8f8eb19",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/ea5a6f965c803d436202934872c3650ab8f8eb19"
+    },
+    "files": [
+      {
+        "filename": ".astra-collaboration-check.json",
+        "status": "added",
+        "additions": 4,
+        "deletions": 0,
+        "changes": 4,
+        "previous_filename": null
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "id": 14110210215,
+      "name": "astra-collaboration-check-1",
+      "size_in_bytes": 106525,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14110210215",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14110210215/zip",
+      "expired": false,
+      "created_at": "2026-11-14T10:16:31Z",
+      "expires_at": "2026-11-28T10:16:30Z",
+      "updated_at": "2026-11-14T10:16:31Z",
+      "digest": "sha256:4c58af80667074f0a7fce2039ccb319b20d17e348feb1d1ae1ccab31aa90fd6c",
+      "workflow_run": {
+        "id": 43584368239,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "astra-check-collaboration",
+        "head_sha": "88259b007cd9c0085ef901166a7771ec1bf52db9"
+      }
+    }
+  ],
+  "limits": [
+    "Whole typecheck remains failed; external diagnostics require current owner composition.",
+    "No local product execution or typecheck."
+  ]
+}
