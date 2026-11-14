@@ -1,0 +1,327 @@
+{
+  "schema": "sf2h.wp14.w4-reconciliation.v1",
+  "writer": "Astra / WP14",
+  "base_candidate": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+  "canonical_plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "immutable_w3_manifest": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/2026-11-14-W3-reconciliation.json",
+    "git_blob": "87a7404baaa8738d703918f78c9901dad158473b",
+    "sha256": "b51b8f99969a26399126b313bdca4058efff0619425401d1f160cfb9ec5365cc",
+    "preserved": true
+  },
+  "prior_hosted_result": {
+    "run_id": 43586171924,
+    "job_id": 132421002717,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43586171924/job/132421002717",
+    "status": "FAIL",
+    "pass": 53,
+    "fail": 2,
+    "tests": 55,
+    "files": 13,
+    "assertions": 681,
+    "duration_seconds": 63.2,
+    "omni": {
+      "status": "PASS",
+      "spawns": 5,
+      "delegated": 0
+    },
+    "log": {
+      "file": "w3-job-132421002717.log",
+      "sha256": "6ca3f0a6e0469e3ba3def5ec8422783cb650b7c003f798246c3cb8b5002f5050"
+    },
+    "failures": [
+      {
+        "test": "protected Atlas original binds cross-principal continuity after store reopen",
+        "assertion": "Fresh child must return authorized ok with one exact candidate",
+        "observed": "Child exited 0, real case reads ok; Atlas read/rank/authorized recall unavailable. Parent assertion failed; no timeout in W3.",
+        "correction": "Stable original Request per TrustedDomainContext in both private host fixtures. Real host exact identity fence retained.",
+        "source_finding": "https://github.com/gustavomhss/Orchestra-SF/pull/36#issuecomment-6875348162"
+      },
+      {
+        "test": "confirmed C17 document is published and recalled by real Atlas, then withheld after blob revocation",
+        "assertion": "Private callback memory.readOriginal must be undefined after underlying document bytes are revoked",
+        "observed": "Current document resolution withheld projection/currentRef, but protected readOriginal still returned document reference. Assertion 451 failed.",
+        "status": "OPEN_FOREIGN_HOST_FINDING",
+        "owner": "astra-compose",
+        "source_finding": "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6876102932",
+        "foreign_path_at_reconciliation": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "foreign_blob_at_reconciliation": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+        "fixture_assertion_preserved": true
+      }
+    ]
+  },
+  "prior_typecheck": {
+    "job_id": 132421071089,
+    "status": "FAIL",
+    "owned_diagnostics": 5,
+    "log": {
+      "file": "w3-job-132421071089.log",
+      "sha256": "fa3197629bec3824374245707492e75b75de54a1e9ea4547bf865fdc7d796857"
+    },
+    "corrections": [
+      {
+        "path": "test/product/wp14/domain-outcome.test.ts",
+        "diagnostic": "TS2769 at W3 line130",
+        "action": "Require captured original before assertion; do not compare to optional undefined."
+      },
+      {
+        "path": "test/product/wp14/recall.test.ts",
+        "diagnostics": [
+          "TS2741 at W3 line190",
+          "TS2322 at W3 line204"
+        ],
+        "action": "Use actual memory type and explicit fail-if-called readOriginalCapture in isolated orchestration fixture."
+      },
+      {
+        "path": "test/product/wp14/signal-registry.test.ts",
+        "diagnostics": [
+          "TS2769 at W3 line144",
+          "TS2352 at W3 line260"
+        ],
+        "action": "Require captured original; type all synthetic native fields explicitly without any/unknown cast."
+      }
+    ],
+    "fixed_status": "IMPLEMENTED_NOT_EXECUTED"
+  },
+  "source_reconciliation": {
+    "from": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+    "to": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+    "own_paths": 5,
+    "published_blob_verification": "PASS",
+    "foreign_paths_consumed_by_wp14": 0
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+      "base_candidate": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "base": {
+        "git_blob": "7c1b3dd08dc663e9dfa406b09dc2af5920281131",
+        "sha256": "d75df91777528df4f4cf2af8099bbea47ebdf614a20d73803de6e6eb06ed877d"
+      },
+      "current": {
+        "git_blob": "4ffa4bffc3e3fe3bfffd3a047f1e11c473697e36",
+        "sha256": "8dded53bbd11d87d53a2e080505da8bd0a468c08e24693dfbd72fd149748be45"
+      },
+      "disposition": "recover-exact-owned-file",
+      "decision": "Recover exact f8031d guard types for owner/context/reference/review metadata. Existing ledger binding, dependency validation and closed Atlas templates remain unchanged.",
+      "source": {
+        "commit": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "git_blob": "4ffa4bffc3e3fe3bfffd3a047f1e11c473697e36",
+        "sha256": "8dded53bbd11d87d53a2e080505da8bd0a468c08e24693dfbd72fd149748be45",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f8031d7c54ec2fa06359156dc0b6462c3a248633/modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+        "from_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "method": "Exact prior source plus published GitHub patch, reconstructed bytes verified against source Git blob before selective incorporation."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+      "base_candidate": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "base": {
+        "git_blob": "30ebaf3aac1940c2760b21761dcd72be52d050d9",
+        "sha256": "1d3774b57dc1aec7f6269318d1bf97da29901802f7f04d7ef45bd16deb46e1c2"
+      },
+      "current": {
+        "git_blob": "c2efe0e5054b4a33a35daae1d5353ff730434577",
+        "sha256": "6688fd500edc16659b7ba91f92e91468c2b5365a6b92548a1cec698c88777c92"
+      },
+      "disposition": "recover-exact-owned-file",
+      "decision": "Recover exact f8031d closed-template/malformed metadata/case incarnation/reviewed policy namespace tests using actual Atlas validators. Pure mapping proof only, not durable project publication or native admission.",
+      "source": {
+        "commit": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "git_blob": "c2efe0e5054b4a33a35daae1d5353ff730434577",
+        "sha256": "6688fd500edc16659b7ba91f92e91468c2b5365a6b92548a1cec698c88777c92",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f8031d7c54ec2fa06359156dc0b6462c3a248633/modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+        "from_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "method": "Exact prior source plus published GitHub patch, reconstructed bytes verified against source Git blob before selective incorporation."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/invalidation.test.ts",
+      "base_candidate": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "base": {
+        "git_blob": "978797fc015a548b32a8a4fd8730b664bba25e8d",
+        "sha256": "0b001e508065f92f7025d98f6ccadebc3d7ee77c71ef8d11c86f02d1cf077550"
+      },
+      "current": {
+        "git_blob": "90e6dd5f1b87b03f6fe2440703443b64507ed375",
+        "sha256": "a50f9a1ab48cf6f7c6ec3dce96437fb517d8a8fe36bd2e7d94f15de8e82223da"
+      },
+      "disposition": "reconcile-owned-deltas",
+      "decision": "Selectively recover imports and two new scope-dimension/substitutive-import tests. Preserve reviewed R1/R2 full material-target N/N tests and source-digest semantics; no invalidation product changes.",
+      "source": {
+        "commit": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "git_blob": "54438ff168810a69af2ef71ce2df149805ee78a8",
+        "sha256": "42ba92e8f142de630074a9f70b52b778f6e8396ccd56d90abd1cea95ddcd0025",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f8031d7c54ec2fa06359156dc0b6462c3a248633/modules/sucafina/Sucafinav1/test/product/wp14/invalidation.test.ts",
+        "from_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "method": "Exact prior source plus published GitHub patch, reconstructed bytes verified against source Git blob before selective incorporation."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+      "base_candidate": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "base": {
+        "git_blob": "0e14479d1f0c9cddc52eeb7f55a77f97a54ddacd",
+        "sha256": "65c01f1d8b355c2c5fcd34838f49e6e77baa2392c76507677c0f978bcd45ad4f"
+      },
+      "current": {
+        "git_blob": "1c33f4da2a87b25ae8b22cf181c755ee6fa60bc7",
+        "sha256": "750f2ae265738e534cf34f594cffd19e6181dcf18f202ccd1cc4fde586b25fa4"
+      },
+      "disposition": "reconcile-owned-deltas",
+      "decision": "Selectively recover favorable/adverse/explicit-zero delta test. Preserve W2/W3 callback evidence-copy isolation, final authority fences and finite overflow negative.",
+      "source": {
+        "commit": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "git_blob": "2c84f9e2a0ae600ee7120c5c4bcbb7aaa255028b",
+        "sha256": "0cc2c86e3e17cfc55c8a72fa9bc42443c5ce72a6e7770612e329cf34ed813990",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f8031d7c54ec2fa06359156dc0b6462c3a248633/modules/sucafina/Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+        "from_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "method": "Exact prior source plus published GitHub patch, reconstructed bytes verified against source Git blob before selective incorporation."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts",
+      "base_candidate": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "base": {
+        "git_blob": "57826906307ec60f9cbd1398596ea32104f66c2e",
+        "sha256": "12bce4a3943f608afb21378cf8ab53111430384679391da7f7ddbd8c3905112a"
+      },
+      "current": {
+        "git_blob": "789bd248dff04f61119fd7bef5108754f14af423",
+        "sha256": "5d0afdb387d0ee5095b96edc5227c4ec6b3f614796f13506b6ff0f3c79ede1f8"
+      },
+      "disposition": "reconcile-owned-deltas",
+      "decision": "Selectively recover empty/deterministic mapper-derived candidates and forged/ledger-only provenance negatives; preserve R4 scope mutation tests. Annotate synthetic memory using the actual createSfCaseRecall contract and explicitly throw if readOriginalCapture is invoked, resolving both missing capability type diagnostics without fabricating a capture.",
+      "source": {
+        "commit": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "git_blob": "d870d96e0fc5440593d0fead7d9c9fd837cd506e",
+        "sha256": "9ec265bf2fb14a972d99265494fc545c39ab3fc2fc0955eb1f470dea5cc4ded4",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f8031d7c54ec2fa06359156dc0b6462c3a248633/modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts",
+        "from_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "method": "Exact prior source plus published GitHub patch, reconstructed bytes verified against source Git blob before selective incorporation."
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+      "base_candidate": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "base": {
+        "git_blob": "6216953b705f3e329e746455019ff36d3d85e6b2",
+        "sha256": "5c8776975f650aa929b3b81733e0360be5178edc9880ae503eb8a111fb79719b"
+      },
+      "current": {
+        "git_blob": "3510dac982bc4e4dafe412b19f1e0866fc569698",
+        "sha256": "b8270aa1f819dff596241372b2ad7b3f7be82e034377637a4c1eac69570c759c"
+      },
+      "disposition": "owned-fixture-correction",
+      "decision": "Resolve TS2769 with an explicit required original snapshot guard before comparing durable choices. R5 B-to-A two-read/three-check/callback-restored and durable/positive controls remain unchanged."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/signal-registry.test.ts",
+      "base_candidate": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "base": {
+        "git_blob": "9b28a77e125e686dc3b390f3281e25e3e451a82f",
+        "sha256": "8463e1b8b166b1a55513ec9874b7555e8afff4480a3940a1a363845637196ea2"
+      },
+      "current": {
+        "git_blob": "8aa8e69757b14fb1ef7b4173b974c9a9204917c2",
+        "sha256": "a7d533c1810722198eb1990759816070ba685e8736dac27ebaccfe687d23d84a"
+      },
+      "disposition": "owned-fixture-correction",
+      "decision": "Resolve TS2769 with explicit original snapshot guard and TS2352 by declaring all synthetic native fields as Omit<TrustedExecutionBinding,symbol> before the existing fixture cast. No any/unknown cast, no native admission claim or grants added; R3/R5 counterproofs retained."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "base_candidate": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "base": {
+        "git_blob": "f4fcfa9f961f5087eead1e4ce54296625c93172d",
+        "sha256": "940d24f7452e964b137911b2d708de8d238087c84aa6e286fa8fbb500aafd936"
+      },
+      "current": {
+        "git_blob": "6194f415573636efd47751f977cd157c9396f17d",
+        "sha256": "509fc4423f0d74c130a5ead0c8744548f578109a6c50ac3095089f5e6dc801d4"
+      },
+      "disposition": "owned-fixture-correction",
+      "decision": "Memoize one original Request per TrustedDomainContext in a private WeakMap. Preserve session authorization, actual SQLite reads, original cancellation.signal and 90-second cooperative cancellation, lifetime counters and exact candidate receipt."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "base_candidate": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "base": {
+        "git_blob": "d44e2088e04ba96fa5eb88256f0ffc0a4517b463",
+        "sha256": "8c06998cc9ce65d8ed57d0d995b026f4da326717b47c7c748388f1e57769ce42"
+      },
+      "current": {
+        "git_blob": "929c98f8432104ebe14e1d9cfabcea99ba0dc3e1",
+        "sha256": "80362c71fee87db87bf4ff47f02b828ddc4a529459029db06829b15b529d9f04"
+      },
+      "disposition": "owned-fixture-correction",
+      "decision": "Memoize one original Request per TrustedDomainContext inside each private host fixture. Preserve both real Atlas scenarios, parent reopen positive recall, all revocation assertions, source evidence/scanner paths and 120/180-second bounds; Operations Documents scenario unchanged byte-for-byte."
+    }
+  ],
+  "reviewed_guards_preserved_exact": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/invalidation.ts",
+      "git_blob": "3bafcac1d0114eff9cd6869fd8040a9fe414ed7f",
+      "sha256": "b060837431cd1b156c2cdf2d8ed7558b87b8422521219cdafb9f1f6f05832535"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+      "git_blob": "1c586d321cf10bdaeccd95b4ac2a2100b439fe7f",
+      "sha256": "b1924141528e52b012b2886f1da77dbd55307216101c62dc8f33bf106e005f73"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome.ts",
+      "git_blob": "97d23e90f627472e525c50288fdf4163e3cc3c54",
+      "sha256": "df5e066b8e6f43d9c93a12e56037aecb7531936e63f1f786518fec6112e191b6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+      "git_blob": "790e7c98820df61306ad67bd5897b1301118d335",
+      "sha256": "90744777637dc32595b280e8c34e52f27a770c979f5f6e40d8442c256daf1a9c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+      "git_blob": "c4a1d8d1f4e540c41c3e7d09efb92bb003ab6d8b",
+      "sha256": "1c20921bef733f96f1dbf6c7df20869150e81b8f35c4dde36676224880df4f5b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+      "git_blob": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+      "sha256": "c2678a5235e6c550e12ecb4ac2a38f87af328d145b28c7483204d0e7b4e1340b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-work.ts",
+      "git_blob": "3cc6b0ae5fd75ce84724eeafc053264fc9370740",
+      "sha256": "1e1ee1e10529b1d71bbebaf00af0abb7b44f6dea06a2915b46f36466e4702564"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+      "git_blob": "2d8524b42448ea63a7dd9ab0e9337c90540dc383",
+      "sha256": "3c8fcffff8cc2d96e8e8fe509b4bc4dd0894a6805eaecde6427ed015cbaa343d"
+    }
+  ],
+  "static_checks": {
+    "diff_check": "PASS",
+    "documents_witness_bytewise_unchanged": "PASS",
+    "revoked_original_assertion": "PRESERVED",
+    "parent_atlas_test_deadline_ms": 180000,
+    "child_process_timeout_ms": 120000,
+    "child_cooperative_cancel_ms": 90000,
+    "w3_manifest_unchanged": "PASS"
+  },
+  "verification": {
+    "local_product_tests": "NOT_RUN",
+    "local_typecheck": "NOT_RUN",
+    "hosted_w4": "NOT_RUN",
+    "independent_review": "PENDING"
+  },
+  "not_claimed": [
+    "W4 hosted or typecheck PASS before execution",
+    "Positive restart proven by synthetic call shape or a catalog",
+    "Synthetic candidateAccess provides real native cross-case admission",
+    "Mapper project-policy tests prove durable public project publication",
+    "Documents revoked readOriginal finding resolved without producer output",
+    "WP14 integrated acceptance"
+  ]
+}

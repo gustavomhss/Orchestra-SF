@@ -14,6 +14,7 @@ import type { BusinessContextService, BusinessEvidenceRef } from "../../../produ
 import type { DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
 import type { PreparedCommand } from "../../../product/contracts/context.ts"
 import type { PortfolioRequest, ScenarioOperation } from "../../../product/contracts/operations.ts"
+import type { PreparedDomainMutation } from "../../../product/contracts/ports.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import type { Command } from "../../../runtime/contract.ts"
@@ -120,7 +121,7 @@ test("persisted producer: portfolio handoff prepares two WP11 changes and resume
       resolveActor: () => ({ id: "principal", roles: ["finance", "buyer"], canWrite: true }),
       resolveMutation: (_snapshot, change) => change.target.surface === "procurement" && domain.procurementFails ? undefined : ({
         surface: change.target.surface, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest, expectedVersion: change.expectedVersion,
-        execute: (snapshot) => {
+        execute: (snapshot): ReturnType<PreparedDomainMutation["execute"]> => {
           if (snapshot.versions.wp13Amount?.version !== change.expectedVersion) return { commit: false, value: { status: "conflict" } }
           if (change.target.surface === "planner") domain.plannerCalls++
           snapshot.data.wp13Amount = change.operation.command.values.amount

@@ -127,7 +127,8 @@ test("review outcome reads the actual closed Planner month and rechecks its C08 
     expect({ reads: restoration.reads, checks: restoration.checks, restored: restoration.restored }).toEqual({ reads: 2, checks: 3, restored: true })
     const durableAfterRestoration = await state.read(host.requestFor(call)!, "cases", (value) => value.cases[caseRef.id]?.choices)
     expect(durableAfterRestoration.status).toBe("ok")
-    if (durableAfterRestoration.status === "ok") expect(durableAfterRestoration.value).toEqual(restoration.original?.choices)
+    if (!restoration.original) throw new Error("Original C08 case snapshot was not captured")
+    if (durableAfterRestoration.status === "ok") expect(durableAfterRestoration.value).toEqual(restoration.original.choices)
     expect(await registry.select({ caseRef, choiceId: "choice" }, call)).toEqual(selection)
     for (const mutation of ["approval", "final-alias"] as const) {
       const checks = { count: 0 }

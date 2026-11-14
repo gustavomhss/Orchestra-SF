@@ -45,10 +45,18 @@ try {
   const time = "2026-11-13T12:00:00Z"
   const call = (): TrustedDomainContext => ({ kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: session.id, requestId: "restart", policyVersion: "1", accessRevision: "1", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as TrustedUiLease })
   const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => time) })
+  const requests = new WeakMap<TrustedDomainContext, Request>()
+  const requestFor = (context: TrustedDomainContext) => {
+    const existing = requests.get(context)
+    if (existing) return existing
+    const request = new Request("https://example.test", { headers: { authorization: session.id }, signal: cancellation.signal })
+    requests.set(context, request)
+    return request
+  }
   const host: DomainPortHost = { persistence, authenticate: async (request, context) => {
     const id = request.headers.get("authorization")
     return id ? resolve(id, [...context!.roleMap], (group) => group === "admins") : null
-  }, environment: async () => ({ at: time, id: randomUUID, directory: [] }), requestFor: () => new Request("https://example.test", { headers: { authorization: session.id }, signal: cancellation.signal }), revalidate: async (context) => !cancellation.signal.aborted && context.binding.principalRef === session.id && await store.transaction("dashboard", async () => ({ commit: false, value: true })) }
+  }, environment: async () => ({ at: time, id: randomUUID, directory: [] }), requestFor, revalidate: async (context) => !cancellation.signal.aborted && context.binding.principalRef === session.id && await store.transaction("dashboard", async () => ({ commit: false, value: true })) }
   const issue = createDashboardSourceIssuer({ host, scopedSources: persistence })
   const dashboard = createDashboardPort({ host, sources: createDashboardSourceHost({ host, scopedSources: persistence }) })
   const source = createSfDashboardSourceAccess({ host, issue, dashboard })

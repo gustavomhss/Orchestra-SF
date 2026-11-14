@@ -60,7 +60,15 @@ test("protected Atlas original binds cross-principal continuity after store reop
         await persistence.initializeSources("dashboard")
         await persistence.transaction("dashboard", async (snapshot) => { snapshot.data.roleMap = [{ surface: "dashboard", role: "admin", entra: "admins", version: 1, by: "admin" }]; snapshot.data.opexOwners = [{ id: "o", budget: 1200 }]; snapshot.data.opexEntries = []; return { commit: true, value: undefined } })
       }
-      const host: DomainPortHost = { persistence, authenticate: async (request, context) => { const id = request.headers.get("authorization"); return id ? resolve(id, [...context!.roleMap], (group) => session.active && group === "admins") : null }, environment: async () => ({ at: time, id: randomUUID, directory: [] }), requestFor: () => new Request("https://example.test", { headers: { authorization: session.id } }), revalidate: async (call) => session.active && session.id === call.binding.principalRef && await store.transaction("dashboard", async () => ({ commit: false, value: true })) }
+      const requests = new WeakMap<TrustedDomainContext, Request>()
+      const requestFor = (context: TrustedDomainContext) => {
+        const existing = requests.get(context)
+        if (existing) return existing
+        const request = new Request("https://example.test", { headers: { authorization: session.id } })
+        requests.set(context, request)
+        return request
+      }
+      const host: DomainPortHost = { persistence, authenticate: async (request, context) => { const id = request.headers.get("authorization"); return id ? resolve(id, [...context!.roleMap], (group) => session.active && group === "admins") : null }, environment: async () => ({ at: time, id: randomUUID, directory: [] }), requestFor, revalidate: async (call) => session.active && session.id === call.binding.principalRef && await store.transaction("dashboard", async () => ({ commit: false, value: true })) }
       const issue = createDashboardSourceIssuer({ host, scopedSources: persistence })
       const sources = createDashboardSourceHost({ host, scopedSources: persistence })
       const dashboard = createDashboardPort({ host, sources })
@@ -438,6 +446,10 @@ test("confirmed C17 document is published and recalled by real Atlas, then withh
     expect(recalled.records[0]?.envelope.evidenceRefs).toEqual([eventRef, documentRef])
     expect(recalled.records[0]?.recordDigest).toBe(receipt.recordDigest)
     expect(recalled.records[0]?.resolutions.find((item) => item.ref.refDigest === documentRef.refDigest)).toMatchObject({ state: "fresh", ref: documentRef, currentRef: documentRef, authorizedProjection: confirmed.value })
+    const businessRecall = { caseRefs: [caseRef], query: "confirmed supplier price" }
+    const contextRecall = await ui("sf_decision_recall", recallInput, (call) => product.context.recall(businessRecall, call))
+    expect(contextRecall).toHaveLength(1)
+    expect(contextRecall[0]?.envelope).toEqual(recalled.records[0]?.envelope)
 
     // Replace the actual bytes while the same authenticated operator remains active.
     await app.store.transaction("procurement", async (_snapshot, blobs) => {
@@ -448,16 +460,84 @@ test("confirmed C17 document is published and recalled by real Atlas, then withh
     expect(revoked.state).not.toBe("fresh")
     expect(revoked.authorizedProjection).toBeUndefined()
     expect(revoked.currentRef).toBeUndefined()
-    expect(await ui("sf_evidence_get", { evidenceRef: documentRef }, (call) => atlas.memory.readOriginal(caseRef, documentRef.refDigest, call))).toBeUndefined()
+    // There is still no pending item: these refusals must follow the unavailable document, not an outbox gate.
+    const beforeRevokedRecall = await authority.state.read(app.request(), "outbox", (state) => Object.values(state.outbox)
+      .filter((entry) => entry.eventRef.target.caseId === caseRef.id && entry.eventRef.target.caseIncarnation === caseRef.incarnation))
+    expect(beforeRevokedRecall.status).toBe("ok")
+    if (beforeRevokedRecall.status !== "ok") throw new Error("Actual outbox unavailable before revoked recall")
+    expect(beforeRevokedRecall.value).toEqual([durable.value.outbox])
     expect(await ui("sf_decision_recall", recallInput, (call) => atlas.memory.recall(caseRef, call))).toEqual({ status: "unavailable" })
-    const refused = await ui("sf_evidence_get", { evidenceRef: eventRef }, (call) => product.context.emitFromLedger(eventRef, call))
-    expect(refused.status).toBe("unavailable")
-    expect(refused.eventId).toBeUndefined()
-    expect(refused.recordDigest).toBeUndefined()
+    await expect(ui("sf_decision_recall", recallInput, (call) => product.context.recall(businessRecall, call))).rejects.toThrow("SF_MEMORY_READ_UNAVAILABLE")
+    const revokedEvent = await ui("sf_evidence_get", { evidenceRef: eventRef }, (call) => product.context.resolve(eventRef, call))
+    expect(revokedEvent.state).not.toBe("fresh")
+    expect(revokedEvent.authorizedProjection).toBeUndefined()
+    expect(revokedEvent.currentRef).toBeUndefined()
+    // The private continuity callback keeps immutable metadata for this still-authorized case.
+    // It does not grant current document access; BCS resolution and recall above remain withheld.
+    expect(await ui("sf_evidence_get", { evidenceRef: documentRef }, (call) => atlas.memory.readOriginal(caseRef, documentRef.refDigest, call))).toEqual(documentRef)
+    // C17 transaction sequence 6 recovers the prior receipt for the same key/digest, without another append.
+    const recovered = await ui("sf_evidence_get", { evidenceRef: eventRef }, (call) => product.context.emitFromLedger(eventRef, call))
+    expect(recovered).toEqual({ ...receipt, status: "already-committed" })
     const afterRevocation = await authority.state.read(app.request(), "atlas", (state) => ({ atlas: state.atlas, outbox: state.outbox[outboxKey], versions: { atlas: state.versions.atlas, outbox: state.versions.outbox } }))
     expect(afterRevocation.status).toBe("ok")
     if (afterRevocation.status !== "ok") throw new Error("Durable Atlas state unavailable after revocation")
     expect(afterRevocation.value).toEqual(durable.value)
+
+    // A second accepted ledger event is an explicit outbox premise, not a model-acceptance witness.
+    // Commit it through real authenticated C08 after source loss, then require the new Atlas append to fail.
+    const pendingEvent: CaseLedgerEvent = { ...event, id: randomUUID(), caseRef: { ...caseRef, version: event.caseRef.version + 1 },
+      consideredActions: ["Review the supplier price after the source bytes changed"], factualGaps: ["The original confirmed document bytes are no longer available"],
+      rationale: "The prior document reference cannot support a new memory projection after its bytes change.",
+      outputDigest: digestSfValue({ premise: "accepted-document-review-after-source-loss", priorEventRef: eventRef, documentRef }) }
+    expect(pendingEvent.id).not.toBe(event.id)
+    const pendingEventRef = await ui("sf_case_read", { caseRef: encodeCaseRef(caseRef) }, async (call) => {
+      const request = host.requestFor(call)
+      if (!request || !await host.revalidate(call)) throw new Error("Actual pending ledger authority unavailable")
+      const cases = await authority.state.read(request, "cases", (state) => state.cases[caseRef.id])
+      const outbox = await authority.state.read(request, "outbox", (state) => state.versions.outbox)
+      if (cases.status !== "ok" || !cases.value || outbox.status !== "ok") throw new Error("Actual pending ledger storage unavailable")
+      const saved = await authority.state.transaction(request, { namespace: "cases", expectedStorageVersion: cases.storageVersion,
+        additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: outbox.storageVersion }], targetRef: encodeCaseRef(caseRef), targetIncarnation: caseRef.incarnation,
+        idempotencyKey: `accepted-document:${pendingEvent.id}`, commandDigest: digestSfValue(pendingEvent) }, async (state, actor) => {
+        const current = state.cases[caseRef.id]
+        if (!current || current.incarnation !== caseRef.incarnation || current.version !== event.caseRef.version || actor.principalRef !== call.binding.principalRef ||
+          actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion || !current.participants.includes(actor.principalRef) ||
+          !current.ledger.some((entry) => entry.id === event.id && digestSfValue(entry) === digestSfValue(event)))
+          throw new Error("Actual pending ledger premise changed")
+        state.cases[current.id] = { ...current, version: pendingEvent.caseRef.version, ledger: [...current.ledger, pendingEvent] }
+        const queued = enqueueSfLedgerEvent(state, pendingEvent, { installationId: call.binding.installationId, projectId: call.binding.projectId, authority: actor })
+        if (queued.status !== "ok") throw new Error(queued.reason)
+        return { commit: true, value: queued.value.eventRef }
+      })
+      expect(saved.status).toBe("ok")
+      if (saved.status !== "ok") throw new Error("Actual pending ledger/outbox commit failed")
+      return saved.value
+    })
+    expect(pendingEventRef.refDigest).not.toBe(eventRef.refDigest)
+    expect(pendingEventRef.target).toMatchObject({ caseId: caseRef.id, caseIncarnation: caseRef.incarnation, caseVersion: pendingEvent.caseRef.version,
+      eventId: pendingEvent.id, evidenceRefs: [documentRef], outputDigest: pendingEvent.outputDigest })
+    const pendingOutboxKey = JSON.stringify([caseRef.id, caseRef.incarnation, pendingEvent.id])
+    const beforeRejectedAppend = await authority.state.read(app.request(), "atlas", (state) => ({ atlas: state.atlas, published: state.outbox[outboxKey],
+      pending: state.outbox[pendingOutboxKey], decision: state.cases[caseRef.id], versions: { cases: state.versions.cases, atlas: state.versions.atlas, outbox: state.versions.outbox } }))
+    expect(beforeRejectedAppend.status).toBe("ok")
+    if (beforeRejectedAppend.status !== "ok") throw new Error("Actual pending Atlas state unavailable")
+    expect(beforeRejectedAppend.value.atlas).toEqual(durable.value.atlas)
+    expect(beforeRejectedAppend.value.versions.atlas).toBe(durable.value.versions.atlas)
+    expect(beforeRejectedAppend.value.published).toEqual(durable.value.outbox)
+    expect(beforeRejectedAppend.value.pending).toMatchObject({ state: "pending", eventRef: pendingEventRef, writerPrincipalRef: app.principal.id, attempts: 0 })
+    expect(beforeRejectedAppend.value.pending?.receipt).toBeUndefined()
+    expect(beforeRejectedAppend.value.decision?.ledger.filter((entry) => entry.id === pendingEvent.id)).toEqual([pendingEvent])
+    const refused = await ui("sf_evidence_get", { evidenceRef: pendingEventRef }, (call) => product.context.emitFromLedger(pendingEventRef, call))
+    expect(refused.status).toBe("unavailable")
+    expect(refused.sourceEventId).toBe(pendingEvent.id)
+    expect(refused.eventId).toBeUndefined()
+    expect(refused.recordDigest).toBeUndefined()
+    expect(refused.committedRevision).toBeUndefined()
+    const afterRejectedAppend = await authority.state.read(app.request(), "atlas", (state) => ({ atlas: state.atlas, published: state.outbox[outboxKey],
+      pending: state.outbox[pendingOutboxKey], decision: state.cases[caseRef.id], versions: { cases: state.versions.cases, atlas: state.versions.atlas, outbox: state.versions.outbox } }))
+    expect(afterRejectedAppend.status).toBe("ok")
+    if (afterRejectedAppend.status !== "ok") throw new Error("Actual Atlas state unavailable after refused append")
+    expect(afterRejectedAppend.value).toEqual(beforeRejectedAppend.value)
   } finally {
     try { business?.dispose() }
     finally { try { documents?.dispose() } finally { await app.dispose() } }

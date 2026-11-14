@@ -29,6 +29,8 @@ const actor = { id: "finance", roles: ["finance"], canWrite: true, assigned: [],
 
 /** Fixture derived from WP11 renewal-choice-fixture at 88144ff9495c4061fd1661c55e8c6d802bf197a7,
  * blob 52dc09126bc81da39aa4b5beb0a28d0218d7560d. The only setup extension declares the second policy before C10 registration.
+ * Operation admission selectively follows WP11 11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de, blob b913d9c0ab46a3f624b6c0aee28f5adf6654940a,
+ * using current raw source authority and the canonical operation verifier without repeated decision-coverage enrichment.
  * Every financial calculation, coverage assessment, scenario, unit, rule and durable write still uses its real producer.
  * Source declarations and human grants are synthetic fixture authority; this is not a fork of the financial engine. */
 export const wp13CeilingCriterion = { id: "renewal-ceiling-240000", description: "Complete transition cost must not exceed USD 240000: the canonical selected-minus-renewal difference must be <= 0 against the complete persisted USD 240000 renewal baseline.", required: true } as const
@@ -95,7 +97,15 @@ export async function createWp13PolicyHistory(options: { training: "omitted" | "
     ports.baseline = baseline
     ports.caseCoverage = createDecisionCoverageAccess({ state, host: fixture.host, authorizeCase, verifyEvidence: (basis, assessment) => verifyEvidence([...basis.sourceRefs, ...assessment.evaluatedSourceRefs]) })
     const results = createSfDecisionResultStore({ state, host: fixture.host, authorizeCase, verifySources: (_value, refs) => verifyEvidence(refs), createId: () => `wp11-history-result-${++current.next}`, now })
-    const verifyOperations = createPlannerOperationVerifier({ host: fixture.host, planner, sources, scenarioInputs: createPlannerScenarioInputs({ planner, sources }) })
+    // Keep C10 enrichment on the calculation/comparison path. Operation admission
+    // still resolves current sources, authenticates the actor, simulates real targets
+    // and rechecks source/projection authority through the canonical verifier.
+    const operationSources: PlannerSourceHost = {
+      resolveForecastSource: (reference, context) => current.sources.resolveForecastSource(reference, context),
+      resolveForecastCoverage: (reference, context) => current.sources.resolveForecastCoverage(reference, context),
+    }
+    const operationPlanner = createPlannerPort({ host: fixture.host, sources: operationSources, evidence })
+    const verifyOperations = createPlannerOperationVerifier({ host: fixture.host, planner: operationPlanner, sources: operationSources, scenarioInputs: createPlannerScenarioInputs({ planner: operationPlanner, sources: operationSources }) })
     const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: () => current.identity, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => `wp11-history-case-${++current.next}`, now })
     const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
     const preview: Parameters<typeof createPlannerExactThreshold>[0]["preview"] = (request, context) => comparePlannerPreview({ host: fixture.host, sources, scenarios, planner }, request, context)

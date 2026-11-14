@@ -28,6 +28,25 @@ test("outcome comparison requires a compatible complete authorized basis", () =>
   expect(compareSfExpectedObserved({ ...input, choice: { ...choice, values: [...choice.values, choice.values[0]] } }).status).toBe("unavailable")
 })
 
+test("outcome deltas preserve both directions and an explicit zero without changing the recorded choice", () => {
+  const recorded = structuredClone(choice)
+  for (const [observed, delta] of [[90, -10], [110, 10], [0, -100]] as const) {
+    const current = { ...observation, observed, limitations: ["Limited to the authorized period."] }
+    const before = structuredClone(current)
+    const compared = compareSfExpectedObserved({ caseRef: observation.caseRef, choice, observation: current, metric })
+    expect(compared.status).toBe("comparable")
+    if (compared.status !== "comparable") throw new Error("Expected a complete comparable observation")
+    expect(compared).toMatchObject({ expected: 100, observed, delta, choiceId: choice.id, caseRef: observation.caseRef, period, currency: "USD", unit: "USD" })
+    expect(compared.baselineRefs).toEqual(choice.evidenceRefs)
+    expect(compared.sourceRefs).toEqual(current.sourceRefs)
+    expect(compared.cutoff).toBe(current.cutoff)
+    expect(compared.limitations).toEqual(["Limited to the authorized period.", "Observação não estabelece causalidade."])
+    expect(compared.summary.causality).toBe("not-attributed")
+    expect(current).toEqual(before)
+    expect(choice).toEqual(recorded)
+  }
+})
+
 test("signal policy deduplicates, resolves and reopens without carrying revoked data", () => {
   const source = { surface: "planner" as const, type: "item", id: "1", incarnation: "inc", version: 1, fields: ["price"], period, observedAt: "2026-01-01" }
   const signal = classifySfMaterialChange({ id: "condition", source, fields: ["price"], period, criterionId: "cost", choice }, { source: { ...source, incarnation: "replacement" }, fields: ["price"], period, before: [ref], after: [ref], availability: "available" }).signal

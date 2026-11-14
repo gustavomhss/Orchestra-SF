@@ -141,7 +141,8 @@ test("C08 signal binding and state are host-owned and reauthorized against curre
     expect({ reads: restoration.reads, checks: restoration.checks, restored: restoration.restored }).toEqual({ reads: 2, checks: 3, restored: true })
     const durableAfterRestoration = await state.read(host.requestFor(call)!, "cases", (value) => value.cases[caseRef.id]?.choices)
     expect(durableAfterRestoration.status).toBe("ok")
-    if (durableAfterRestoration.status === "ok") expect(durableAfterRestoration.value).toEqual(restoration.original?.choices)
+    if (!restoration.original) throw new Error("Original C08 case snapshot was not captured")
+    if (durableAfterRestoration.status === "ok") expect(durableAfterRestoration.value).toEqual(restoration.original.choices)
     expect(await registry.list(caseRef, call)).toEqual({ status: "ok", records: [record] })
     const registerCall = structuredClone(call)
     const registerRace = finalRevalidation(host, 3, () => Object.assign(registerCall.binding, { accessRevision: "changed" }))
@@ -257,12 +258,15 @@ test("C08 signal binding and state are host-owned and reauthorized against curre
     // These race injections still delegate each authority check to the SQLite
     // host and use the real case, source, C08 registry and materiality ports.
     // The native call shape isolates binding fences; it is not a session bootstrap proof.
-    const nativeCall = (selected: typeof caseRef): TrustedDomainContext => ({ kind: "native", binding: {
-      installationId: "i", projectId: "p", principalRef: "alice", hostId: "host", locationId: "location",
-      nativeSessionId: "session", runId: "run", caseId: selected.id, caseIncarnation: selected.incarnation, caseVersion: selected.version,
-      profileId: "sf_finance", profileVersion: "1", manifestDigest: "manifest", skillReceipts: [], providerGeneration: 1,
-      accessRevision: "1", policyVersion: "1", expiresAt: "2099-01-01T00:00:00Z", entryMode: "interactive",
-    } as TrustedExecutionBinding, lease: {} as TrustedCallLease })
+    const nativeCall = (selected: typeof caseRef): TrustedDomainContext => {
+      const fields: Omit<TrustedExecutionBinding, symbol> = {
+        installationId: "i", projectId: "p", principalRef: "alice", hostId: "host", locationId: "location",
+        nativeSessionId: "session", runId: "run", caseId: selected.id, caseIncarnation: selected.incarnation, caseVersion: selected.version,
+        profileId: "sf_finance", profileVersion: "1", manifestDigest: "manifest", skillReceipts: [], providerGeneration: 1,
+        accessRevision: "1", policyVersion: "1", expiresAt: "2099-01-01T00:00:00Z", entryMode: "interactive",
+      }
+      return { kind: "native", binding: fields as TrustedExecutionBinding, lease: {} as TrustedCallLease }
+    }
     const invokeList = async (consumer: "case" | "work", selected: typeof caseRef, context: TrustedDomainContext, authority: Pick<DomainPortHost, "requestFor" | "revalidate">) => {
       if (consumer === "case") return createSfAuthorizedSignalList({ host: authority, cases, registry, materiality })(selected, context)
       return createSfWorkSignalList({ host: authority, cases, registry, materiality, issueWorkRef,

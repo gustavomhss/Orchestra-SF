@@ -1,0 +1,430 @@
+{
+  "schema": "astra-wp13-w4-later-head-reconciliation-v1",
+  "observedAt": "2026-11-14T11:20:33.937317+00:00",
+  "baseWorkCommit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "pr": 37,
+    "previousHead": "00f1582e7a26f37b2f4ea4a18f7883f1837e48db",
+    "head": "44ecc88ad6c8c56bf08693e386e9e5dd9e46cfbc",
+    "diffSha256": "2f9e917f0c8ff1269c433423421f73111ee98bcbfcb4ad0b03afee71b71db947",
+    "retrieval": "Parent pinned GitHub comparison; reconstruct both own files from patches and verify exact Git SHA before recovery. Owner fixture separately read at pin11261 via GitHub MCP."
+  },
+  "previousUnpublishedCandidate": {
+    "observedAt": "2026-11-14T11:08:52.639036+00:00",
+    "manifest": {
+      "gitBlob": "75eba5ef846398cd1645f83bc1e6813f8df8ece8",
+      "sha256": "148f80efb45e0e5eaabf010117b0bedfadde7b4458e2757998441fb7dc129f47"
+    },
+    "sourceReceipt": {
+      "gitBlob": "743d418ddb53998e17c8a25d05bd100516bab2c3",
+      "sha256": "6c3cedfdb3e750eb57362b94b92ba4a765e63d803beb4c1803717820a1676cfc"
+    },
+    "reviewCorrections": {
+      "gitBlob": "127a1b6b8f05ad9e62c69933ba40b0ef378f2e08",
+      "sha256": "b6f83e719331d008e2e9ff19039d79d88b21701660774c3ebcab596f03b49ed8"
+    }
+  },
+  "sourceDocumentsRead": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v6.json",
+      "sourceHead": "44ecc88ad6c8c56bf08693e386e9e5dd9e46cfbc",
+      "gitBlob": "243ee897d7ff60225cab179566d295180598df3c",
+      "sha256": "c8463fabda6aba61bd7b0eb60f8872dce6f9d5cd80a80dfc3f59542a51d551be"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v7.json",
+      "sourceHead": "44ecc88ad6c8c56bf08693e386e9e5dd9e46cfbc",
+      "gitBlob": "cddc0a25816943c5c10e90120111c8c19b657ae0",
+      "sha256": "3cbfb9328f2ce9cd70edb0effd04141f9d71c22f085a2d97269cc24c5dfe9f05"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/domain-handoff-failure-W8.json",
+      "sourceHead": "44ecc88ad6c8c56bf08693e386e9e5dd9e46cfbc",
+      "gitBlob": "c4e473b7e2275121189592ff7677821c46d82b18",
+      "sha256": "61e95c8e6342f0b4f3b52a2941cb11bfdea1571477aecdfac785541c0f4543ac"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/domain-handoff-closure-W6.json",
+      "sourceHead": "44ecc88ad6c8c56bf08693e386e9e5dd9e46cfbc",
+      "gitBlob": "6911a27b0b919ec1991edd40a2dc9ad2f2a49f19",
+      "sha256": "51f5ed9904437e656cf29f4d7ae8f6faedf54dd846e671e20ab58015a9b1fa91"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/foreign-pin-audit-W7.json",
+      "sourceHead": "44ecc88ad6c8c56bf08693e386e9e5dd9e46cfbc",
+      "gitBlob": "0df5ea51f095cf8df5749dd77edfd3f0a171801e",
+      "sha256": "b3860b02e3fd07a6f5afe0ba8ac28cf85c863b8d487b7a0189311fc27fd637af"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/fixture-intake-review-W7.json",
+      "sourceHead": "44ecc88ad6c8c56bf08693e386e9e5dd9e46cfbc",
+      "gitBlob": "121070ac9013127c46e5895862c876599da32288",
+      "sha256": "7b497a27c12a690ddb7c526c320f7afae347459f510745dfbbd14dbcbcf24521"
+    }
+  ],
+  "ownRecovery": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "sourceBlob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+      "integratedBlob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+      "exactSourceBlob": true,
+      "decision": "Additive real domain execution and precommit rollback witness; no prior witness replaced."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+      "sourceBlob": "ce02051d09115665056d36382bde5f1dbd0d9238",
+      "integratedBlob": "ce02051d09115665056d36382bde5f1dbd0d9238",
+      "exactSourceBlob": true,
+      "decision": "Guard selectable combination and refuse unexpected prepared changes/receipts before projecting readonly price observation. Original financial assertions and 300000ms budget retained."
+    }
+  ],
+  "domainHandoff": {
+    "criterion": "WP13.T04.CHK.02",
+    "realProducers": [
+      "Planner forecast command and prepared review",
+      "Procurement estimate command and C12 review",
+      "WP11 choice/preparation/application",
+      "LocalStore SQLite cross-surface transaction",
+      "WP11 receipt review binding and replay",
+      "C08 scenario and comparison persistence"
+    ],
+    "failure": "One test-only Procurement precommit storage exception after staged canonical command, before SQLite COMMIT. Real store rollback handles domain snapshots, receipts and product state; no fixture resets or alternate ledger.",
+    "positiveAndNegativeControls": [
+      "Separate human choice, prepare and each domain-apply confirmation",
+      "Planner commits once while Procurement remains unconfirmed",
+      "Injected failure occurs once with staged revision 1 and no durable effect or second receipt",
+      "Same Procurement request retries and commits once; Planner recovered from original receipt",
+      "Two final receipts correlate to original review digests; repeated calls invoke no producer and preserve snapshots/choice/ledger"
+    ],
+    "limits": [
+      "ScenarioResult composition and service-only pending coverage are controlled; monetary component values come from real command previews. Not C10 acceptance.",
+      "Admission and private source selection are controlled; not installed UI/native/host proof.",
+      "C08 scenario/comparison are persisted here; this does not replace existing C08 portfolio/binding persistence witnesses.",
+      "No process restart is performed by this new witness.",
+      "No new timeout override; existing W3 budgets remain unchanged."
+    ]
+  },
+  "foreignDisposition": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/materiality.ts",
+      "sourceBlob": "cbaa9e6f900eb539d393e75891a66318e50be22c",
+      "ownerPin": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe",
+      "observedIntegratedBlob": "cbaa9e6f900eb539d393e75891a66318e50be22c",
+      "decision": "Already exact in integration; no additional intake."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "sourceBlob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "ownerPin": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "observedIntegratedBlob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "decision": "Parent consumed exact owner dependency for renewal fixture; no WP13 edit."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "sourceBlob": "b913d9c0ab46a3f624b6c0aee28f5adf6654940a",
+      "ownerPin": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "observedIntegratedBlob": "b913d9c0ab46a3f624b6c0aee28f5adf6654940a",
+      "decision": "Parent consumed exact owner fixture. Separates real operation admission from repeated C10 enrichment; retains real source/actor/Planner verification. No runtime improvement claimed."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "sourceBlob": "02af3b8a606b91949f9009d239e4f2289dd41e7d",
+      "ownerPin": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "observedIntegratedBlob": null,
+      "decision": "Not imported by WP13; not requested or copied into the WP13 selection."
+    }
+  ],
+  "directImports": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "sourceBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "integratedBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "sourceBlob": "dbcc51d75ccefb23f328f1d4151504be96a35a45",
+      "integratedBlob": "dbcc51d75ccefb23f328f1d4151504be96a35a45",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "sourceBlob": "acb3b7fb3050264758a5470ffe8168fa5f581370",
+      "integratedBlob": "acb3b7fb3050264758a5470ffe8168fa5f581370",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+      "sourceBlob": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f",
+      "integratedBlob": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "sourceBlob": "922358d17c470c16b43076510bdf04744e2306e4",
+      "integratedBlob": "922358d17c470c16b43076510bdf04744e2306e4",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "sourceBlob": "338889513cfc681bdda91697a9d5bbc16bde8fd1",
+      "integratedBlob": "d7d8eb3ca267551797b191ccfb1d037149757898",
+      "matchesSource": false,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "sourceBlob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "integratedBlob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "sourceBlob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "integratedBlob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "sourceBlob": "102c849084980ae52223809d33bdeea36a58536b",
+      "integratedBlob": "102c849084980ae52223809d33bdeea36a58536b",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "sourceBlob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "integratedBlob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "sourceBlob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "integratedBlob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "sourceBlob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "integratedBlob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "sourceBlob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "integratedBlob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "sourceBlob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "integratedBlob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "sourceBlob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "integratedBlob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "sourceBlob": "64cfaf1fcada712548c5f28a12be12aff37f9620",
+      "integratedBlob": "64cfaf1fcada712548c5f28a12be12aff37f9620",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "sourceBlob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "integratedBlob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+      "sourceBlob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "integratedBlob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "sourceBlob": "1b183b82758f8f49954a5038b675bb784fc89915",
+      "integratedBlob": "ddc5323d714c58de2d5b47eed2563176099f15b5",
+      "matchesSource": false,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "sourceBlob": "d0cab7f33b08806a6bb01a869fa789dc77e087ee",
+      "integratedBlob": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+      "matchesSource": false,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "sourceBlob": "c28a167575bf2713590f97798e463ccb33dc50c8",
+      "integratedBlob": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c",
+      "matchesSource": false,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/prepared.ts",
+      "sourceBlob": "9aaa684196dc125d0c265db02eafd7e3caa8c0c8",
+      "integratedBlob": "da7ed326826e1b63b5853248d3ba4a18ccce9736",
+      "matchesSource": false,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/prepared-review.ts",
+      "sourceBlob": "3b330244088844c47029b26ae2cfdb583f21bd58",
+      "integratedBlob": "3b330244088844c47029b26ae2cfdb583f21bd58",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "sourceBlob": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+      "integratedBlob": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/c12.ts",
+      "sourceBlob": "84f27e1312d3c58f3ba1ea5ae78fe5a936e3adc7",
+      "integratedBlob": "84f27e1312d3c58f3ba1ea5ae78fe5a936e3adc7",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+      "sourceBlob": "0332b118846cc8a45399aa24e4694fb6bf055719",
+      "integratedBlob": "0332b118846cc8a45399aa24e4694fb6bf055719",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "sourceBlob": "3866b57ebc630b06ef76f43f40219dd4ebc16960",
+      "integratedBlob": "3866b57ebc630b06ef76f43f40219dd4ebc16960",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "sourceBlob": "7dd93cea781ad68d6db66e2d08e320c1d395d123",
+      "integratedBlob": "7dd93cea781ad68d6db66e2d08e320c1d395d123",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/planner-accounts.ts",
+      "sourceBlob": "6ca9b19e8b54e3279c2c16667e92ad7df748b3ea",
+      "integratedBlob": "6ca9b19e8b54e3279c2c16667e92ad7df748b3ea",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "sourceBlob": "dba62042653bd061fa099e2956cae4d11a0475ce",
+      "integratedBlob": "e365ac59376482dfcc6f81aed045b0153f911038",
+      "matchesSource": false,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+      "sourceBlob": "5a56fb5305e64922af8b6b3246b8807256e79138",
+      "integratedBlob": "5a56fb5305e64922af8b6b3246b8807256e79138",
+      "matchesSource": true,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "sourceBlob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb",
+      "integratedBlob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "matchesSource": false,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "sourceBlob": "3488f1d757fca6fd6527540679f4fb68a533aee0",
+      "integratedBlob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+      "matchesSource": false,
+      "disposition": "Existing integrated input; no dependency overwritten by WP13."
+    }
+  ],
+  "independentClockCorrection": {
+    "id": "W4-R3",
+    "observedAt": "2026-11-14T11:20:33.937317+00:00",
+    "priority": "P1",
+    "problem": "Reconciliation equated independent source evidence revision and domain-command CAS, rejecting legitimate source 3/4 with CAS 0/1 and correlating components using the wrong clock.",
+    "change": "Validate both numbers independently as nonnegative safe integers. Match component source revision to change.target.version; retain expectedVersion unchanged for the domain command.",
+    "contractEvidence": [
+      "modules/sucafina/Sucafinav1/product/decisions/prepared-change.ts",
+      "modules/sucafina/Sucafinav1/product/planner/prepared.ts",
+      "modules/sucafina/Sucafinav1/product/procurement/prepared.ts"
+    ],
+    "paths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+        "beforeBlob": "f5d64eb84a45accb14afa7bc922d4fc04c4bac14",
+        "afterBlob": "aedc80310eee2752d067dd52afa6312a9558b87a",
+        "afterSha256": "cc40071c5f25343ee587ff6d86cec61ac2bdd6e364b3d488296303e22ebaee46"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+        "beforeBlob": "41155c4a35bb07d59337239548aad44301148bc4",
+        "afterBlob": "7823451c6be37307317d3527b6a7367d64a5d58d",
+        "afterSha256": "9020a7bb8342f7fc37a5598efe227621b489312bb91e6061a9a08535872112a7"
+      }
+    ],
+    "witness": "reconciliation retains independent evidence and command revisions while binding effects and receipts",
+    "counterexamples": "Positive source 3/4, CAS 0/1, receipt 1/2 remains bound and stable through partial/completed observations. Source 0 matching CAS 0 does not bind original source 3. Negative, fractional or unsafe numbers in either clock are refused. All prior P1/P2 controls remain.",
+    "staticReview": "Reinspected by /root/review_portfolio on aedc80310eee2752d067dd52afa6312a9558b87a and 7823451c6be37307317d3527b6a7367d64a5d58d; resolved statically. NOT_RUN."
+  },
+  "ownFixtureOptimization": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario-fixture.ts",
+    "beforeBlob": "b5c433ff0bc233856093962d1a540c453c1c5535",
+    "afterBlob": "05bce70034ab4dcced503427b2a0a63913f50509",
+    "sourceOwnerPin": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+    "sourceFixtureBlob": "b913d9c0ab46a3f624b6c0aee28f5adf6654940a",
+    "decision": "Selectively recover only operationSources/operationPlanner canonical admission separation; not tracing, timeouts or source setup. Keep second policy seeded before C10, current-source callbacks, canonical operation verifier and scenario inputs; all calculation/comparison/rule/coverage/replay paths stay enriched.",
+    "testUnchanged": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "gitBlob": "7b786158c1019b1e67d0e2f2593929ef3f4f5974",
+      "sha256": "937cbbf5501dc527a320bc8b7bb6be417c2dbdde7c159514e0cc733f989cacf5",
+      "w3Blob": "7b786158c1019b1e67d0e2f2593929ef3f4f5974",
+      "changedSinceW3": false
+    },
+    "staticReview": "Independent static reinspection by /root/review_portfolio of 05bce70034ab4dcced503427b2a0a63913f50509: dynamic current sources and canonical actor/source/projection/simulation verification retained; enriched C10 and initial policy unchanged. No new finding. NOT_RUN."
+  },
+  "verification": {
+    "localProductExecution": false,
+    "localTypecheck": false,
+    "localTests": false,
+    "wholeMerge": false,
+    "foreignEditByWp13": false,
+    "hostedW4": "NOT_RUN",
+    "passTransferred": false,
+    "w3FlightStillSeparate": {
+      "run": "43586169806",
+      "job": "132420996139"
+    }
+  },
+  "freezeObservedAt": "2026-11-14T11:21:21.332996+00:00"
+}

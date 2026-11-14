@@ -19,24 +19,44 @@ import { createPortfolioProofVerifier } from "../../../product/portfolio/verific
 import { createPortfolioCoverageFixture } from "./coverage-preview-fixture.ts"
 import { createRenewalChoiceHistory } from "../wp11/renewal-choice-fixture.ts"
 
-test("WP13 evaluates, persists and reproduces certified 55000/15000 sensitivity through real C08 and criterion bindings", async () => {
-  for (const training of ["bundled", "confirmed"] as const) {
+test("WP13 persists and cold-reads real 55000/15000 sensitivity with omitted training conditioned and all three training states idempotent", async () => {
+  for (const training of ["omitted", "bundled", "confirmed"] as const) {
+    const started = Date.now()
+    const phase = (name: string) => console.log("SF_WP13_SENSITIVITY_PHASE:" + JSON.stringify({ training, phase: name, elapsedMs: Date.now() - started }))
+    phase("fixture-begin")
     const fixture = await createPortfolioCoverageFixture(training)
+    phase("fixture-ready")
     try {
       const services = await persistedServices(fixture, training)
+      phase("evaluate-and-store-begin")
       const saved = await services.persistent.evaluateAndStore(fixture.sensitivityRequest, fixture.caseRef, fixture.context)
+      phase("evaluate-and-store-returned")
       if (saved.status !== "ok") throw new Error(`Certified sensitivity persistence unavailable: ${JSON.stringify(saved)}`)
       const expected = training === "confirmed" ? 15000 : 55000
-      expect(saved.value.sensitivity.comparisonStatus).toBe("complete")
+      expect(saved.value.sensitivity.comparisonStatus).toBe(training === "omitted" ? "conditioned" : "complete")
       expect(saved.value.sensitivity.threshold).toBeCloseTo(expected, 8)
       expect(saved.value.sensitivity.thresholdEvidence.state).toBe("exact")
+      expect(saved.value.sensitivity.evaluated.map((point) => point.parameterValue)).toEqual([10000, 40000, 70000])
       const units = await fixture.issuer.resolve(fixture.sensitivityRequest, fixture.context)
       if (units.status !== "ok") throw new Error("Canonical coverage references unavailable")
       expect(saved.value.sensitivity.costCoverageRefs).toContain(units.value.baselineCoverageRef)
       expect(saved.value.sensitivity.costCoverageRefs).toContain(units.value.scenarioCoverageRef)
       expect(saved.value.sensitivity.costCoverageRefs.some((ref) => ref.startsWith("portfolio-coverage-interval:"))).toBe(false)
       expect(saved.value.sensitivity.unresolvedConditions.some((condition) => condition.category === "hypothesis")).toBe(true)
-      expect(saved.value.sensitivity.evidenceRefs.some((ref) => ref.refId === fixture.selectedCoverage.statement.refId)).toBe(true)
+      if (training !== "omitted") expect(saved.value.sensitivity.evidenceRefs.some((ref) => ref.refId === fixture.selectedCoverage.statement.refId)).toBe(true)
+      if (training === "omitted") {
+        expect(fixture.selectedCoverage.assessment.coverageState).toBe("pending")
+        expect(saved.value.sensitivity.unresolvedConditions.some((condition) => condition.reason === "missing-category:training")).toBe(true)
+        expect(saved.value.sensitivity.unresolvedConditions.find((condition) => condition.id === "known-subtotal-threshold")).toMatchObject({ category: "coverage", reason: expect.stringContaining("known subtotal differences") })
+        expect(saved.value.sensitivity.thresholdEvidence.state === "exact" && saved.value.sensitivity.thresholdEvidence.evidenceRefs.length).toBeGreaterThan(0)
+        for (const amount of [55000, 55001]) {
+          const preview = await fixture.preview({ baselineRef: fixture.baselineRef, scenario: fixture.withAmount(amount) }, fixture.context)
+          if (preview.status !== "ok") throw new Error(`Omitted-training boundary witness unavailable: ${JSON.stringify(preview)}`)
+          expect(preview.value.metric.value).toBe(amount === 55000 ? -20000 : -19999)
+          expect(preview.value.sample.total).toBeNull()
+          expect(preview.value.sample.components.some((component) => component.id === "training:11")).toBe(false)
+        }
+      }
       for (const point of saved.value.sensitivity.evaluated) {
         const sample = await services.results.read({ kind: "scenario", resultRef: point.resultRef }, fixture.context)
         if (sample.status !== "ok" || sample.value.kind !== "scenario") throw new Error("Persisted canonical sample unavailable")
@@ -44,27 +64,37 @@ test("WP13 evaluates, persists and reproduces certified 55000/15000 sensitivity 
         expect(sample.value.result.comparisonStatus).toBe("conditioned")
         expect(sample.value.result.restrictions).toContain("preview-not-applied")
         expect(sample.value.caseRef).toEqual(fixture.caseRef)
+        if (training === "omitted") expect(sample.value.result.costCoverage.derivedMissingCategoryIds).toContain("training")
       }
       const stored = await services.results.read({ kind: "sensitivity", resultRef: saved.value.sensitivityResultRef }, fixture.context)
       const binding = await services.bindings.read({ caseRef: fixture.caseRef, resultRef: saved.value.sensitivityResultRef }, fixture.context)
+      phase("samples-and-binding-read")
       if (stored.status !== "ok" || binding.status !== "ok") throw new Error(`Certified stored result or binding unavailable: ${JSON.stringify({ stored, binding })}`)
       const before = await services.state.read(fixture.request, "cases", (state) => Object.keys(state.decisionResults ?? {}))
       const reloaded = await persistedServices(fixture, training)
-      expect(await reloaded.verifier.verifySensitivity(binding.value, stored.value, fixture.context)).toBe(true)
+      // The recreated service must cold-read first, before direct verification can populate its private proof maps.
+      phase("cold-read-begin")
       const replay = await reloaded.persistent.read(saved.value.sensitivityResultRef, fixture.context)
+      phase("cold-read-returned")
       if (replay.status !== "ok") throw new Error(`Fresh service replay unavailable: ${JSON.stringify(replay)}`)
       expect(replay.value).toEqual(saved.value)
+      expect(await reloaded.verifier.verifySensitivity(binding.value, stored.value, fixture.context)).toBe(true)
+      phase("replay-proof-ready")
       const again = await reloaded.persistent.evaluateAndStore(fixture.sensitivityRequest, fixture.caseRef, fixture.context)
+      phase("idempotent-evaluate-returned")
       if (again.status !== "ok") throw new Error(`Idempotent certified sensitivity unavailable: ${JSON.stringify(again)}`)
       expect(again.value.sensitivityResultRef).toBe(saved.value.sensitivityResultRef)
       expect(await services.state.read(fixture.request, "cases", (state) => Object.keys(state.decisionResults ?? {}))).toEqual(before)
-      fixture.revokeStatement()
+      if (training === "omitted") fixture.revokeSource(fixture.scenario.baseRef)
+      else fixture.revokeStatement()
       expect(await reloaded.verifier.verifySensitivity(binding.value, stored.value, fixture.context)).toBe(false)
       expect((await reloaded.persistent.read(saved.value.sensitivityResultRef, fixture.context)).status).not.toBe("ok")
+      phase("revocation-refused")
       const current = await fixture.state.read(fixture.request, "cases", (state) => state.cases[fixture.caseRef.id])
       if (current.status !== "ok" || !current.value) throw new Error("Case unavailable after analysis")
       expect(current.value.choices).toEqual([])
       expect(current.value.receipts).toEqual([])
+      phase("case-unchanged")
     } finally { await fixture.cleanup() }
   }
 }, 300000)
@@ -139,8 +169,8 @@ async function persistedServices(fixture: Awaited<ReturnType<typeof createPortfo
   const state = createSfProductState({ persistence: fixture.store, proposalCoverageWrites: writes, createId: () => "wp13-coverage-state", resolveTarget: async () => ({ incarnation: fixture.caseRef.incarnation }), authorize: async (request) => request === fixture.request && await fixture.host.revalidate(fixture.context) ? identity : undefined })
   const sequence = { value: 0 }
   const results = createSfDecisionResultStore({ state, host: fixture.host, authorizeCase: async (decision, context) => decision.id === fixture.caseRef.id && decision.incarnation === fixture.caseRef.incarnation && decision.participants.includes(context.binding.principalRef) && await fixture.host.revalidate(context), verifySources: async (_value, refs, context) => {
-    const authority = await fixture.resolveAuthority(fixture.sensitivityRequest, fixture.baselineRef, context)
-    return authority.status === "ok" && await authority.value.isStillValid(context) && refs.every((ref) => authority.value.evidence.some((item) => item.state === "fresh" && item.accessRevision === context.binding.accessRevision && digestSfValue(item.ref) === digestSfValue(ref)))
+    const evidence = await fixture.coverageEvidence(refs, context)
+    return !!evidence && refs.every((ref) => evidence.some((item) => item.state === "fresh" && item.accessRevision === context.binding.accessRevision && digestSfValue(item.ref) === digestSfValue(ref)))
   }, createId: () => `wp13-certified-${training}-${++sequence.value}`, now: () => "2026-11-13T00:00:00Z" })
   const coveragePreview = createPortfolioCoveragePreview({ units: fixture.issuer, preview: fixture.preview, resolveAuthority: fixture.resolveAuthority })
   const exactThreshold: NonNullable<Parameters<typeof createPlannerSensitivity>[0]["exactThreshold"]> = (request, binding, context) => fixture.exact(request, binding.baselineRef, context)

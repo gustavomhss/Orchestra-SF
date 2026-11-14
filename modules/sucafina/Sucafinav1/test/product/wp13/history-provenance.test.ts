@@ -355,7 +355,7 @@ function historyMutations(world: Awaited<ReturnType<typeof createWp13AnalysisFix
     host: world.host,
     planner: world.plannerWithCriteria,
     sources: world.sources,
-    coverageEvidence: { entries: async (_scenario, baseline) => ({ status: "ok", value: baseline.entries.filter((entry) => !baseline.derivedMissingCategoryIds.includes(entry.categoryId)) }), resolve: (refs) => world.evidenceService.context({ refs }, world.context), supports: () => false, verifySnapshot: () => world.access.allowed },
+    coverageEvidence: { entries: async (_scenario, baseline) => ({ status: "ok", value: baseline.entries.filter((entry) => !baseline.derivedMissingCategoryIds.some((categoryId) => categoryId === entry.categoryId)) }), resolve: (refs) => world.evidenceService.context({ refs }, world.context), supports: () => false, verifySnapshot: () => world.access.allowed },
     authorizeCase: async () => world.access.allowed,
     authorizeMutation: async (kind, _request, context) => world.access.allowed && context.kind === "ui" && (kind === "add-alternative" || kind === "record-choice"),
     verifyMutation: () => world.access.allowed,
