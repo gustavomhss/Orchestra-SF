@@ -97,10 +97,10 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
         if (index === 0 || !result.recipientRef || message.authorRef !== result.recipientRef || typeof message.id !== 'string') return
         const confirm = document.createElement('button'); confirm.type = 'button'; confirm.textContent = 'Confirm this answer and add to decision'; item.append(confirm)
         // The server issues the opaque answer selector from the exact message
-        // selected in this authorized read. Existing selectors remain opaque.
-        const publishedAnswer = typeof answerRef === 'string' && !!answerRef.trim()
+        // selected in this authorized read. A saved selector may refer to an
+        // older message with exactly the same author and body.
         const selection = typeof message.incarnation === 'string' && message.incarnation.trim() && Number.isSafeInteger(message.version) && message.version > 0 ? { questionId: threadRef, messageId: message.id, incarnation: message.incarnation, version: message.version } : undefined
-        const unavailable = questionState === 'answered' ? 'This answer is already recorded in the decision.' : message !== latestAnswer ? 'Only the most recent recipient answer can be confirmed.' : questionState !== 'open' || (!publishedAnswer && !selection) ? 'Answer confirmation needs an authorized current message. Reopen the conversation; you can still send a reply.' : undefined
+        const unavailable = questionState === 'answered' ? 'This answer is already recorded in the decision.' : message !== latestAnswer ? 'Only the most recent recipient answer can be confirmed.' : questionState !== 'open' || !selection ? 'Answer confirmation needs an authorized current message. Reopen the conversation; you can still send a reply.' : undefined
         if (unavailable) { confirm.disabled = true; const reason = document.createElement('p'); reason.textContent = unavailable; item.append(reason) }
         const showAttachmentReview = (current) => {
           item.querySelector('[data-answer-attachment-review]')?.remove()
@@ -128,8 +128,8 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
           busy = true; confirm.disabled = true; button.disabled = true; output.querySelectorAll('button,textarea').forEach((other) => { other.disabled = true }); status.textContent = 'Confirming answer…'
           try {
             if (!pending) {
-              const prepared = publishedAnswer ? await send('collaboration-answer-prepare', { questionId: threadRef, answerRef }) : await send('collaboration-answer-prepare-message', selection)
-              if (typeof prepared?.answerRef !== 'string' || !prepared.answerRef.trim() || (publishedAnswer && prepared.answerRef !== answerRef) || prepared.answer !== message.body || prepared.authorRef !== message.authorRef || typeof prepared.observationRef !== 'string' || !prepared.observationRef.trim() || !Number.isSafeInteger(prepared.observedSourceVersion) || prepared.observedSourceVersion < 1 || typeof prepared.expectedScopeFingerprint !== 'string' || !prepared.expectedScopeFingerprint.trim()) throw new Error('unavailable')
+              const prepared = await send('collaboration-answer-prepare-message', selection)
+              if (typeof prepared?.answerRef !== 'string' || !prepared.answerRef.trim() || prepared.answer !== message.body || prepared.authorRef !== message.authorRef || typeof prepared.observationRef !== 'string' || !prepared.observationRef.trim() || !Number.isSafeInteger(prepared.observedSourceVersion) || prepared.observedSourceVersion < 1 || typeof prepared.expectedScopeFingerprint !== 'string' || !prepared.expectedScopeFingerprint.trim()) throw new Error('unavailable')
               const version = await send('collaboration-storage-version', { namespace: 'threads' })
               if (!Number.isSafeInteger(version) || version < 0) throw new Error('unavailable')
               pending = { key: confirmKey, answerRef: prepared.answerRef, answer: prepared.answer, authorRef: prepared.authorRef, observedSourceVersion: prepared.observedSourceVersion, body: JSON.stringify({ questionId: threadRef, answerRef: prepared.answerRef, mutation: { expectedStorageVersion: version, idempotencyKey: confirmKey, observationRef: prepared.observationRef, observedSourceVersion: prepared.observedSourceVersion, expectedScopeFingerprint: prepared.expectedScopeFingerprint } }) }; guard.dataset.dirty = 'true'
@@ -162,13 +162,15 @@ document.querySelectorAll('[data-case-thread]').forEach((entry) => {
           const previous = [...output.querySelectorAll('button,textarea')].map((control) => ({ control, disabled: control.disabled }))
           busy = true; replyPending = true; reply.disabled = true; text.disabled = true; button.disabled = true; output.querySelectorAll('button').forEach((other) => { other.disabled = true }); status.textContent = 'Sending reply…'
           try {
-            if (!replyRequest) { const version = await send('collaboration-storage-version', { namespace: 'threads' }); if (!Number.isSafeInteger(version) || version < 0) throw new Error('unavailable'); replyRequest = { key: replyKey, text: text.value.trim(), messageIds: result.messages.map((message) => message.id), messageIncarnations: result.messages.map((message) => message.incarnation), body: JSON.stringify({ id: threadRef, body: text.value.trim(), mutation: { expectedStorageVersion: version, idempotencyKey: replyKey } }) }; replyPending = true }
+            if (!replyRequest) { const version = await send('collaboration-storage-version', { namespace: 'threads' }); if (!Number.isSafeInteger(version) || version < 0) throw new Error('unavailable'); replyRequest = { key: replyKey, text: text.value.trim(), currentProjection: Object.hasOwn(result, 'current'), messages: result.messages.map((message) => ({ id: message.id, incarnation: message.incarnation, version: message.version })), body: JSON.stringify({ id: threadRef, body: text.value.trim(), mutation: { expectedStorageVersion: version, idempotencyKey: replyKey } }) }; replyPending = true }
             const sent = await send('collaboration-thread-reply', undefined, replyRequest.key, replyRequest.body)
-            if (sent?.id !== threadRef || !Array.isArray(sent.messages) || sent.messages.length <= replyRequest.messageIds.length || replyRequest.messageIds.some((id, index) => sent.messages[index]?.id !== id)) throw new Error('unavailable')
-            // Recipient replies may return a newer thread after this write. Select
-            // one matching new message; ordering or identical wording is not identity.
-            const matches = sent.messages.slice(replyRequest.messageIds.length).filter((message) => typeof message?.id === 'string' && message.id.trim() && !replyRequest.messageIds.includes(message.id) && typeof message.incarnation === 'string' && message.incarnation.trim() && !replyRequest.messageIncarnations.includes(message.incarnation) && Number.isSafeInteger(message.version) && message.version >= 1 && typeof message.authorRef === 'string' && message.authorRef.trim() && (!principalRef || message.authorRef === principalRef) && message.body === replyRequest.text)
-            if (matches.length !== 1) throw new Error('unavailable')
+            // The ordinary thread port returns its exact C08 transaction snapshot.
+            // A recipient projection instead re-reads the current conversation;
+            // even one matching author/body cannot identify this request's effect.
+            // Keep that request frozen until its producer supplies an exact outcome.
+            if (sent?.id !== threadRef || replyRequest.currentProjection || Object.hasOwn(sent, 'current') || !Array.isArray(sent.messages) || sent.messages.length !== replyRequest.messages.length + 1 || replyRequest.messages.some((message, index) => sent.messages[index]?.id !== message.id || sent.messages[index]?.incarnation !== message.incarnation || sent.messages[index]?.version !== message.version)) throw new Error('unavailable')
+            const message = sent.messages[replyRequest.messages.length]
+            if (typeof principalRef !== 'string' || !principalRef.trim() || typeof message?.id !== 'string' || !message.id.trim() || typeof message.incarnation !== 'string' || !message.incarnation.trim() || message.version !== 1 || message.authorRef !== principalRef || message.body !== replyRequest.text || replyRequest.messages.some((prior) => prior.id === message.id || prior.incarnation === message.incarnation)) throw new Error('unavailable')
             replyPending = false; replyRequest = undefined; delete form.dataset.dirty; reopen = true
           } catch (error) {
             if (!active() || error?.ignored) return
