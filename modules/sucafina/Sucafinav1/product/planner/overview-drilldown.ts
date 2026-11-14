@@ -114,13 +114,18 @@ function renderComposition(metric: ReturnType<typeof plannerOverviewDrilldowns>[
 }
 
 function renderContext(metric: ReturnType<typeof plannerOverviewDrilldowns>[number]) {
-  const identity = (refs: readonly SourceRef[]) => refs.length ? refs.map((ref) => `${esc(ref.id)} · revision ${esc(String(ref.version))}`).join(", ") : "Unavailable"
+  const identity = (refs: readonly SourceRef[]) => refs.length ? refs.map((ref) => `${referenceText(ref?.id)} · revision ${referenceText(ref?.version, true)}`).join(", ") : "Unavailable"
   return `<p data-overview-context>Baseline: ${identity(metric.versions.baseline)}. Candidate: ${identity(metric.versions.candidate)}. Official: ${identity(metric.versions.official)}. ${esc(metric.period.start)} to ${esc(metric.period.end)} · ${esc(metric.currency)}.</p>`
+}
+
+function referenceText(value: unknown, revision = false) {
+  if (revision) return typeof value === "number" && Number.isFinite(value) ? esc(String(value)) : "Unavailable"
+  return typeof value === "string" && value.trim() ? esc(value) : "Unavailable"
 }
 
 function renderSide(side: Side | null) {
   if (!side) return '<span data-overview-presence="not-present">Not present</span>'
   const amount = side.amount === null ? "Unavailable" : `${esc(String(side.amount))} ${esc(side.currency)}`
-  const sources = side.sourceRefs.map((ref) => `<li>${esc(ref.surface)} / ${esc(ref.type)} / ${esc(ref.id)} · incarnation ${esc(ref.incarnation)} · revision ${esc(String(ref.version))} · ${esc(ref.period.start)} to ${esc(ref.period.end)}</li>`).join("")
+  const sources = side.sourceRefs.map((ref) => `<li>${referenceText(ref?.surface)} / ${referenceText(ref?.type)} / ${referenceText(ref?.id)} · incarnation ${referenceText(ref?.incarnation)} · revision ${referenceText(ref?.version, true)} · ${referenceText(ref?.period?.start)} to ${referenceText(ref?.period?.end)}</li>`).join("")
   return `<span data-overview-value-id="${esc(side.valueId)}" data-overview-evidence="${esc(side.evidenceState)}">${amount} · ${esc(side.evidenceState)}</span><br><span data-overview-period>${esc(side.period.start)} to ${esc(side.period.end)}</span><details data-overview-source><summary>Inspect source measures and references</summary><p>${esc(side.note)}</p>${side.inputs.length ? `<dl>${side.inputs.map((input) => `<dt>${esc(input.label)}</dt><dd data-overview-input="${esc(input.id)}">${input.value === null ? "Unavailable" : esc(String(input.value))}${input.currency ? " " + esc(input.currency) : input.unit ? " " + esc(input.unit) : ""} · ${esc(input.evidenceState)}<br>Evidence: ${input.evidenceRefs.map(esc).join(", ")}</dd>`).join("")}</dl>` : ""}${sources ? `<ul>${sources}</ul>` : '<p>Source reference unavailable.</p>'}</details>`
 }
