@@ -18,6 +18,12 @@ import type { ParsedImport } from "./files.ts"
 import type { ImportTarget } from "./staged-files.ts"
 import type { ImportDetail, ImportExecution } from "./store.ts"
 
+type WorkbookResult = ReturnType<typeof previewDashboardWorkbook>
+type ImportPreview = { format: Parameters<typeof previewDashboardWorkbook>[0]["format"] } & (
+  | { result: Exclude<WorkbookResult, { status: "preview" }> }
+  | { result: Extract<WorkbookResult, { status: "preview" }>; impactDigest: string; before: Record<string, unknown>; after: Record<string, unknown> }
+)
+
 export function createSfDashboardImportPreview(input: {
   host: DomainPortHost
   operationIdentity: (context: TrustedDomainContext) => string | undefined
@@ -35,7 +41,7 @@ export function createSfDashboardImportPreview(input: {
     const environment = await input.host.environment(http)
     const source: SourceRef = { surface: "dashboard", type: evidence.target.recordType, id: evidence.target.recordId, incarnation: evidence.target.incarnation, version: evidence.target.version, fields: evidence.target.fields, period: evidence.target.period ?? { start: "0001-01-01", end: "9999-12-31" }, observedAt: environment.at }
     const idempotencyKey = digestSfValue({ operationId, principal: context.binding.principalRef, target: request.target, file: request.parsed.sourceDigest })
-    const preview = await input.host.persistence.transaction("dashboard", async (snapshot) => {
+    const preview = await input.host.persistence.transaction<ImportPreview | undefined>("dashboard", async (snapshot) => {
       const principal = await input.host.authenticate(http, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })
       if (!principal || principal.id !== context.binding.principalRef || !principal.canWrite) return { commit: false, value: undefined }
       const access = object(object(snapshot.data.access)[principal.id])

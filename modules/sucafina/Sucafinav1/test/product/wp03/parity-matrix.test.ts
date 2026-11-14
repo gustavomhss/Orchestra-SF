@@ -103,7 +103,10 @@ test("Planner finance projection matches the legacy engine across provenance, pe
     expect(analysis.value.gaps).toContain("cost-coverage-unavailable")
     expect(analysis.value.baseline.context).toMatchObject({ period, currency: "USD", sourceRefs: [{ id: "v0", type: "planner-version" }] })
     expect(analysis.value.candidate.context).toMatchObject({ period, currency: "USD", sourceRefs: [{ id: "v1", type: "planner-version" }] })
-    expect(analysis.value.sourceRefs.map((source) => source.target.recordId)).toEqual(["v0", "v1"])
+    expect(analysis.value.sourceRefs.map((source) => {
+      if (source.kind !== "record") throw new Error("Forecast source must identify a record")
+      return source.target.recordId
+    })).toEqual(["v0", "v1"])
     expect(analysis.value.baseline.values.filter((value) => value.id.startsWith("month:") && value.id.endsWith(":budget")).map((value) => value.value)).toEqual(baseline.summary.budget)
     expect(analysis.value.candidate.values.filter((value) => value.id.startsWith("month:") && value.id.endsWith(":budget")).map((value) => value.value)).toEqual(candidate.summary.budget)
     expect(analysis.value.baseline.values.filter((value) => value.id.startsWith("month:") && value.id.endsWith(":outlook")).map((value) => value.value)).toEqual(baseline.summary.outlook)

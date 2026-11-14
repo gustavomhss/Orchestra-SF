@@ -27,7 +27,7 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
     if (!result) return reply({ status: "unavailable" }, 503)
     if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
     if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
-    if (action === "read" && "state" in result.value) return reply({ status: "ok", value: { runRef: result.value.runRef, state: result.value.state, version: result.value.version, ...(result.value.outputRef ? { outputRef: result.value.outputRef } : {}) } }, 200)
+    if (action === "read" && "runRef" in result.value && "version" in result.value && "state" in result.value) return reply({ status: "ok", value: { runRef: result.value.runRef, state: result.value.state, version: result.value.version, ...("outputRef" in result.value && typeof result.value.outputRef === "string" ? { outputRef: result.value.outputRef } : {}) } }, 200)
     if (action === "output" && "kind" in result.value) {
       const output = result.value
       const html = await Promise.resolve().then(() => contribution(output)).catch(() => undefined)

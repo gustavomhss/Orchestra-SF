@@ -1,0 +1,76 @@
+{
+  "schema": "wp04-w7-download-review-v1",
+  "mode": "STATIC_ONLY_NO_LOCAL_EXECUTION",
+  "baseline": "publication-w6.json",
+  "status": "NO_OPEN_FINDINGS_STATIC_REVIEW_COMPLETE_PENDING_HOSTED_CI",
+  "finding": {
+    "id": "W7-CR-01",
+    "severity": "material-correctness",
+    "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+    "symbol": "purchaseOrderMoney",
+    "summary": "Guard for missing or malformed PO lines discards independently recorded submitted approval/currency/FX/state, while canonical C02 preserves those facts.",
+    "witness": {
+      "status": "po_pending",
+      "po": {
+        "currency": "EUR",
+        "fxRate": 1.08,
+        "approvalBaseCurrency": "USD",
+        "approval": {
+          "amount": 108
+        },
+        "lines": []
+      }
+    },
+    "canonical_result": "original/baseAmount are null; submittedAmount 108, submittedCurrency USD, submittedFxRate 1.08, monetaryState pending-approval",
+    "required_change": "Delegate known PO states to canonical producer even with missing lines; retain guard against borrowing a selected quote/PR when a PO is incidental in another stage. Add real download-bytes assertion for the witness.",
+    "status": "CLOSED_STATICALLY_PENDING_HOSTED_CI",
+    "initial_reviewed_result": "purchaseOrderMoney returned undefined and rendered the independently recorded submitted facts/state unavailable.",
+    "resolution": "purchaseOrderMoney now delegates all five canonical PO states even when lines are absent/malformed. Only an incidental PO outside these states remains subject to the line guard, preventing quote/PR substitution.",
+    "discriminating_test": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+      "test_name": "real financial downloads preserve frozen submitted currency after base changes and retain explicit zero",
+      "assertions": [
+        "Real CSV and PO HTML downloads are generated for po_pending and po_approved with lines [].",
+        "Original/base totals remain Unavailable while submitted amount 108 USD, submitted FX 1.08 and the corresponding monetary state remain present.",
+        "Each case asserts the entire input snapshot remains unchanged."
+      ],
+      "execution_status": "PENDING_W7_HOSTED_CI"
+    },
+    "related_expectation": "Malformed po_draft still has unavailable amount; identity FX USD/USD remains the known canonical rate 1 independently of line completeness."
+  },
+  "other_findings": [],
+  "reviewed_boundaries": [
+    "Strict numeric/currency guards preserve zero and never coerce missing monetary values.",
+    "Selected quote uses unique selected identity and recorded currency; ambiguous identity and missing currency remain unavailable.",
+    "Real PDF-independent PO HTML and CSV share canonical monetary producer; no copied total/FX formula.",
+    "Frozen submitted currency remains distinct after Settings base changes when lines are present.",
+    "Explicit CSV/HTML field selection continues to exclude bank material from request register and PO; supplier privilege gate unchanged.",
+    "UI sourcing test decodes five serialized entities once and asserts literal &quot; remains data; full parsed config expectation remains.",
+    "Two matcher fixes add real presence/numeric guards and retain equality; no bypass cast."
+  ],
+  "files": {
+    "modules/sucafina/Sucafinav1/runtime/downloads.ts": "68fd4fd424dc89754ea4298bfe227978e443471a492b192e79f0acbd0a85f828",
+    "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts": "2f8cbde0de833645964c943fd74796ac9e30472908de2861c62a3c8ab01ebf59",
+    "modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts": "4d07767f4e5897ff2b307eb8c69568f521a1775c53fa756160e1d3c786564ca6",
+    "modules/sucafina/Sucafinav1/test/product/wp04/queue-lifecycle.test.ts": "fed84abdd811f8d376fc8017b578d6ad13ee6f2bfb492e3f28b5e0e2e0b79af7",
+    "modules/sucafina/Sucafinav1/test/product/wp04/queue-view.test.ts": "d9984a1e2efb1c8f835e4d1d5135c79953eedf334c6b2afd106ceb6c7fb38f76"
+  },
+  "ci_status": "W7_PENDING; root reported W6 253 pass / 1 fail / 254 tests / 53 files. No W7 execution result inferred.",
+  "new_download_tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+      "test_name": "real register bytes distinguish missing quotation values and currency from recorded zero and reject ambiguous selection",
+      "execution_status": "PENDING_W7_HOSTED_CI"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+      "test_name": "real PO and register bytes keep missing lines prices currency and frozen FX unavailable",
+      "execution_status": "PENDING_W7_HOSTED_CI"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+      "test_name": "real financial downloads preserve frozen submitted currency after base changes and retain explicit zero",
+      "execution_status": "PENDING_W7_HOSTED_CI"
+    }
+  ]
+}

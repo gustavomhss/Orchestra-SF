@@ -38,7 +38,10 @@ export function createSfProductAuthority(input: {
   providerGeneration: () => Promise<number | undefined>
   /** Composition-owned capability; never returned in browser or model services. */
   proposalCoverageWrites?: WeakSet<object>
+  procurementEvidenceWrites?: WeakSet<object>
   authorizeDocument: (request: Request, snapshot: Snapshot, assetId: string, principal: string, authority: SfStateAuthority) => Promise<{ incarnation: string } | undefined>
+  /** Only the composition's active prepared execution may resolve a domain receipt target. */
+  authorizePreparedTarget?: (request: Request, snapshot: Snapshot, targetRef: string, authority: SfStateAuthority) => Promise<{ incarnation: string } | undefined>
 }) {
   const grants = structuredClone(input.grants)
   if (!input.installationId.trim() || !input.policyVersion.trim() || !URL.canParse(input.origin) || new URL(input.origin).origin !== input.origin ||
@@ -97,7 +100,7 @@ export function createSfProductAuthority(input: {
     return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), { signal: request.signal })
   }
   const state = createSfProductState({
-    persistence: input.persistence, createId: input.createId, nativeEvidenceWrites, proposalCoverageWrites: input.proposalCoverageWrites,
+    persistence: input.persistence, createId: input.createId, nativeEvidenceWrites, proposalCoverageWrites: input.proposalCoverageWrites, procurementEvidenceWrites: input.procurementEvidenceWrites,
     authorize: async (request, snapshot, namespace, mode) => {
       const actor = await principal(request, snapshot)
       if (!actor || !actor.grant.namespaces.includes(namespace) || (mode === "write" && !actor.canWrite)) return undefined
@@ -116,6 +119,7 @@ export function createSfProductAuthority(input: {
       if (entry && entry.id === id && typeof entry.incarnation === "string" && (!parsed || parsed.incarnation === entry.incarnation) &&
         Array.isArray(entry.participants) && entry.participants.includes(actor.principalRef)) return { incarnation: entry.incarnation }
       if (namespace === "documents") return input.authorizeDocument(request, snapshot, targetRef, actor.principalRef, { principalRef: actor.principalRef, accessRevision: actor.accessRevision, policyVersion: actor.policyVersion })
+      if (namespace === "receipts" && actor.canWrite) return input.authorizePreparedTarget?.(request, snapshot, targetRef, { principalRef: actor.principalRef, accessRevision: actor.accessRevision, policyVersion: actor.policyVersion })
       return undefined
     },
   })

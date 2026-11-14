@@ -1,0 +1,30 @@
+--- a/modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts
++++ b/modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts
+@@ -204,7 +204,7 @@
+ }
+ 
+ /** The existing Procurement resolver and port reauthenticate and project the current record. */
+-export function createSfProcurementSourceAccess(input: { host: DomainPortHost; resolve: ReturnType<typeof createProcurementSourceResolver>; procurement: ProcurementPort }) {
++export function createSfProcurementSourceAccess(input: { host: DomainPortHost; resolve: ReturnType<typeof createProcurementSourceResolver>["resolve"]; procurement: ProcurementPort }) {
+   return async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
+     const unavailable = (checkedAt = ""): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt })
+     try {
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -26,6 +26,7 @@
+ import { createProcurementCollectionRegistry, createProcurementSourceResolver } from "../../../../modules/sucafina/Sucafinav1/product/procurement/sources.ts"
+ import { createProcurementSourcingEvidence } from "../../../../modules/sucafina/Sucafinav1/product/procurement/sourcing-evidence.ts"
+ import { createProcurementPort } from "../../../../modules/sucafina/Sucafinav1/product/procurement/port.ts"
++import type { ProcurementSourceHost } from "../../../../modules/sucafina/Sucafinav1/product/procurement/port.ts"
+ import { createProcurementCapabilities } from "../../../../modules/sucafina/Sucafinav1/product/procurement/capabilities.ts"
+ import { createProcurementContractSource } from "../../../../modules/sucafina/Sucafinav1/product/procurement/contracts.ts"
+ import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
+@@ -80,7 +81,7 @@
+     const selected = await registry.resolveRequestSource(ref, call)
+     return selected.status === "unavailable" && selected.reason === "Request unavailable" ? individual.resolve(ref, call) : selected
+   }
+-  const procurementHost = { ...host, ...registry,
++  const procurementHost: ProcurementSourceHost = { ...host, ...registry,
+     resolveRequestSource: resolveProcurement,
+     isCurrentRequestSource: (snapshot, evidence) => registry.isCurrentRequestSource(snapshot, evidence) || individual.isCurrent(snapshot, evidence),
+     resolveSupplierSource: individual.resolve, isCurrentSupplierSource: individual.isCurrent,

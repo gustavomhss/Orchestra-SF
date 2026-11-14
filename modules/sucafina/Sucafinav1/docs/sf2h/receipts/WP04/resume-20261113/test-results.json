@@ -1,0 +1,2269 @@
+{
+  "schema": "sf2h.wp04.final-observed-tests.v1",
+  "product_commit": "dae18b4f43f0daecf46264e876810025684a919d",
+  "scope": "exact 53 Bun files and 2 Playwright files",
+  "bun": {
+    "receipt_id": "ci_bun",
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534137756",
+    "counts": {
+      "pass": 257,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0
+    },
+    "summary": {
+      "tests": 257,
+      "files": 53,
+      "duration": "221.91s"
+    },
+    "expect_calls": 2763,
+    "tests": [
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-actor-invalid extra field",
+        "status": "pass",
+        "duration_ms": 6.7,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-at-invalid",
+        "status": "pass",
+        "duration_ms": 0.23,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-settings-invalid empty levels",
+        "status": "pass",
+        "duration_ms": 0.09,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-issued-invalid",
+        "status": "pass",
+        "duration_ms": 0.14,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-supplier-invalid",
+        "status": "pass",
+        "duration_ms": 0.07,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-action-invalid",
+        "status": "pass",
+        "duration_ms": 0.4,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-request-invalid empty holder on a step",
+        "status": "pass",
+        "duration_ms": 0.27,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-read-only",
+        "status": "pass",
+        "duration_ms": 0.05,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-not-a-transition cancel on null",
+        "status": "pass",
+        "duration_ms": 0.09,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-cancelled",
+        "status": "pass",
+        "duration_ms": 0.08,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-already-issued",
+        "status": "pass",
+        "duration_ms": 0.16,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-no-step",
+        "status": "pass",
+        "duration_ms": 0.16,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-not-requester",
+        "status": "pass",
+        "duration_ms": 0.08,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-not-buyer",
+        "status": "pass",
+        "duration_ms": 0.2,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-not-canceller",
+        "status": "pass",
+        "duration_ms": 0.05,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-no-override stays no_override when the admin is also the creator and the flag is on",
+        "status": "pass",
+        "duration_ms": 0.11,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-not-approver the word approver does not authorize",
+        "status": "pass",
+        "duration_ms": 0.09,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-self-approval empty holder, flag on, creator",
+        "status": "pass",
+        "duration_ms": 0.06,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-reason-required",
+        "status": "pass",
+        "duration_ms": 0.07,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-no-quote",
+        "status": "pass",
+        "duration_ms": 0.11,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-not-compliant",
+        "status": "pass",
+        "duration_ms": 0.09,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-no-selection",
+        "status": "pass",
+        "duration_ms": 0.08,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-no-po",
+        "status": "pass",
+        "duration_ms": 0.04,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-no-expense-type",
+        "status": "pass",
+        "duration_ms": 0.07,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-supplier-blocked",
+        "status": "pass",
+        "duration_ms": 0.16,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "observed_name": "C-no-fx",
+        "status": "pass",
+        "duration_ms": 0.11,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "observed_name": "L-create requester mints a draft and create on draft is not a transition",
+        "status": "pass",
+        "duration_ms": 0.45,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "observed_name": "L-submit-pr replaces approval and submit on sourcing is not a transition",
+        "status": "pass",
+        "duration_ms": 0.46,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "observed_name": "L-approve-pr-resta keeps the status and approve on draft is not a transition",
+        "status": "pass",
+        "duration_ms": 0.28,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "observed_name": "L-approve-pr-ultimo opens sourcing and does not create a PO",
+        "status": "pass",
+        "duration_ms": 0.33,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "observed_name": "L-reject-pr rejects the first pending and leaves the others",
+        "status": "pass",
+        "duration_ms": 0.15,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "observed_name": "L-select writes the proposal and select on draft is not a transition",
+        "status": "pass",
+        "duration_ms": 0.24,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "observed_name": "L-submit-sourcing copies entram and keeps a PO that already came from the selected quote",
+        "status": "pass",
+        "duration_ms": 0.28,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "observed_name": "L-approve-src-resta stays pending and approve on draft is not a transition",
+        "status": "pass",
+        "duration_ms": 0.14,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "observed_name": "L-approve-src-ultimo clears issuedAt and does not create a PO",
+        "status": "pass",
+        "duration_ms": 0.27,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "observed_name": "L-reject-src clears the snapshot",
+        "status": "pass",
+        "duration_ms": 0.12,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "observed_name": "L-submit-po stores the rate and the amount times that rate",
+        "status": "pass",
+        "duration_ms": 0.23,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "observed_name": "L-approve-po-resta stays pending",
+        "status": "pass",
+        "duration_ms": 0.14,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "observed_name": "L-approve-po-ultimo approves and clears issuedAt",
+        "status": "pass",
+        "duration_ms": 0.11,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "observed_name": "L-reject-po clears the rate",
+        "status": "pass",
+        "duration_ms": 0.1,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "observed_name": "L-issue stamps at and does not change the number",
+        "status": "pass",
+        "duration_ms": 0.13,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "observed_name": "L-cancel cancels and leaves every other field",
+        "status": "pass",
+        "duration_ms": 0.16,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/s3.test.ts",
+        "observed_name": "S3-1 create then submit_pr copies only L1",
+        "status": "pass",
+        "duration_ms": 0.17,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/s3.test.ts",
+        "observed_name": "S3-2 sourcing 30000 USD stays on L1 even in matrix mode",
+        "status": "pass",
+        "duration_ms": 0.15,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/s3.test.ts",
+        "observed_name": "S3-3 EUR amount is total times the EUR rate, and steps are L1 then L2",
+        "status": "pass",
+        "duration_ms": 0.13,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/porta/s3.test.ts",
+        "observed_name": "S3-4 blocked supplier refuses and leaves the input request intact",
+        "status": "pass",
+        "duration_ms": 0.06,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "procurement required pages contain functional controls or nonempty read views",
+        "status": "pass",
+        "duration_ms": 1.97,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "procurement direct write without canWrite fails atomically",
+        "status": "pass",
+        "duration_ms": 0.48,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "request fields survive creation, save, submission and actual holder decisions",
+        "status": "pass",
+        "duration_ms": 3.54,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "supplier creation persists and deletion never reuses its SUP allocation",
+        "status": "pass",
+        "duration_ms": 1.3,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "complete procurement field roundtrip and frozen approvals survive settings edits",
+        "status": "pass",
+        "duration_ms": 15.5,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "bank changes encrypt, reset active validation, audit only fields and protect actor views",
+        "status": "pass",
+        "duration_ms": 1.85,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "unknown pages and actions, missing keys, and invalid PR reject without mutation",
+        "status": "pass",
+        "duration_ms": 0.83,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "request ownership, self-approval flag and independent record versions are enforced",
+        "status": "pass",
+        "duration_ms": 1.33,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "render escapes persisted values and the PO document excludes banking",
+        "status": "pass",
+        "duration_ms": 3.41,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "imported high-water marks and deleted requests do not reuse issued numbers",
+        "status": "pass",
+        "duration_ms": 0.73,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "asset metadata survives business transitions and deletion returns the deleted record",
+        "status": "pass",
+        "duration_ms": 0.59,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "ordinary nested form rows decode and numeric supplier references remain linked",
+        "status": "pass",
+        "duration_ms": 1.66,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "dual-role request transitions retain porta authorization without permitting foreign PR edits",
+        "status": "pass",
+        "duration_ms": 2.47,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "missing and invalid encryption keys fail closed on bank writes without altering state",
+        "status": "pass",
+        "duration_ms": 1.38,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "nested supplier bank material is excluded recursively from audits and history",
+        "status": "pass",
+        "duration_ms": 0.61,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "decision and supplier revalidation notices carry symbolic roles without fake directory IDs",
+        "status": "pass",
+        "duration_ms": 1.7,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "observed_name": "actual browser-shaped nested arrays omit untouched repeat placeholders and preserve zero thresholds",
+        "status": "pass",
+        "duration_ms": 0.75,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "observed_name": "settings reset restores the original complete defaults and preserves procurement records",
+        "status": "pass",
+        "duration_ms": 1.43,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "observed_name": "default addresses and FX update date save, read, render and reset to empty defaults",
+        "status": "pass",
+        "duration_ms": 0.88,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "observed_name": "new PO proposals use saved address defaults and retain existing nonblank PO addresses",
+        "status": "pass",
+        "duration_ms": 1.06,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "observed_name": "request query opens its authorized target, includes closed rows and leaves other rows closed",
+        "status": "pass",
+        "duration_ms": 2.3,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "observed_name": "request query cannot reveal a record omitted by the authorization-filtered view",
+        "status": "pass",
+        "duration_ms": 1.47,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "observed_name": "supplier query opens only its matching visible supplier detail",
+        "status": "pass",
+        "duration_ms": 0.55,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "observed_name": "requester supplier deeplink opens the real view target while bank values stay masked",
+        "status": "pass",
+        "duration_ms": 0.6,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "observed_name": "unknown supplier query opens no supplier detail or exposes a record outside view",
+        "status": "pass",
+        "duration_ms": 0.36,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "observed_name": "supplier query cannot open or disclose a supplier excluded from the authorization-filtered view",
+        "status": "pass",
+        "duration_ms": 0.37,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+        "observed_name": "preserved review survives changed projections and is denied after access revocation",
+        "status": "pass",
+        "duration_ms": 637.74,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+        "observed_name": "comparison requires identity and a compatible period before calculating a delta",
+        "status": "pass",
+        "duration_ms": 2.18,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+        "observed_name": "preserved report exports every selected record from the captured projection",
+        "status": "pass",
+        "duration_ms": 34.59,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+        "observed_name": "review capability denies a forged binding before selecting source data",
+        "status": "pass",
+        "duration_ms": 0.74,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+        "observed_name": "financial trajectory exports a captured figure and the same data table in both formats",
+        "status": "pass",
+        "duration_ms": 27.02,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+        "observed_name": "category charts paginate every captured value in both export formats",
+        "status": "pass",
+        "duration_ms": 54.67,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+        "observed_name": "ticket flow chart keeps monthly entries as separate periods",
+        "status": "pass",
+        "duration_ms": 1.11,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+        "observed_name": "timeline export paginates resolved milestones and refuses fabricated completion",
+        "status": "pass",
+        "duration_ms": 34.55,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+        "observed_name": "waterfall export uses resolved endpoints and marks a mismatched snapshot unavailable",
+        "status": "pass",
+        "duration_ms": 39.18,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+        "observed_name": "capacity and cost charts require alignment and keep separate units",
+        "status": "pass",
+        "duration_ms": 12.7,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+        "observed_name": "sensitivity exports evaluated points and preserves a sampled threshold as an interval",
+        "status": "pass",
+        "duration_ms": 18.08,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp00/contracts.test.ts",
+        "observed_name": "context admission preserves explicit scope without sharing mutable input",
+        "status": "pass",
+        "duration_ms": 0.36,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp00/contracts.test.ts",
+        "observed_name": "context admission rejects absent or impossible periods and unversioned references",
+        "status": "pass",
+        "duration_ms": 0.15,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp00/contracts.test.ts",
+        "observed_name": "all capability entry schemas close their host identity argument boundary",
+        "status": "pass",
+        "duration_ms": 0.16,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp00/contracts.test.ts",
+        "observed_name": "reading an old installation never initializes or persists product state implicitly",
+        "status": "pass",
+        "duration_ms": 5.81,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp00/contracts.test.ts",
+        "observed_name": "capability schemas reject nested authority and dangling evidence references",
+        "status": "pass",
+        "duration_ms": 0.19,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp00/contracts.test.ts",
+        "observed_name": "a conditioned comparison cannot publish a complete difference",
+        "status": "pass",
+        "duration_ms": 0.2,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp00/contracts.test.ts",
+        "observed_name": "renewal inventory cannot omit training or invent a new decision inventory",
+        "status": "pass",
+        "duration_ms": 0.16,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp00/contracts.test.ts",
+        "observed_name": "schema registries reject inherited names rather than admitting an empty schema",
+        "status": "pass",
+        "duration_ms": 0.12,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp00/contracts.test.ts",
+        "observed_name": "all resident input names have real closed decoders and identity stays outside the input",
+        "status": "pass",
+        "duration_ms": 0.12,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+        "observed_name": "Planner finance projection matches the legacy engine across provenance, period, currency, absence, and coverage states",
+        "status": "pass",
+        "duration_ms": 205.87,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts",
+        "observed_name": "scenario and comparison results use the real case-scoped result store",
+        "status": "pass",
+        "duration_ms": 19.92,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/monthly-host.test.ts",
+        "observed_name": "monthly UI authority previews and commits only valid current domain rows",
+        "status": "pass",
+        "duration_ms": 19.44,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+        "observed_name": "headcount projection follows domain visibility and increase preview is disposable",
+        "status": "pass",
+        "duration_ms": 1.86,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+        "observed_name": "forecast port compares the real engine, and detects source changes",
+        "status": "pass",
+        "duration_ms": 859.44,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+        "observed_name": "real Planner mutation and case receipt commit atomically across surfaces",
+        "status": "pass",
+        "duration_ms": 38.88,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+        "observed_name": "human-confirmed conditional choice persists its C10 caveat and provenance",
+        "status": "pass",
+        "duration_ms": 15.25,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+        "observed_name": "C10 complete coverage needs every category and fresh source resolution",
+        "status": "pass",
+        "duration_ms": 0.71,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "observed_name": "human-approved prepared dashboard command and receipt commit together",
+        "status": "pass",
+        "duration_ms": 30.69,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+        "observed_name": "C10 derives omitted renewal costs, distinguishes supported zero, and fails closed on bad evidence",
+        "status": "pass",
+        "duration_ms": 0.9,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+        "observed_name": "persisted comparison results are scoped to current case, principal, and source access",
+        "status": "pass",
+        "duration_ms": 12.21,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+        "observed_name": "Procurement evidence is read through current source and domain ports",
+        "status": "pass",
+        "duration_ms": 32.78,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+        "observed_name": "prepares through the WP11 port only when the persisted human choice matches",
+        "status": "pass",
+        "duration_ms": 1.66,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+        "observed_name": "promotes the reviewed combination through the case domain only for a human",
+        "status": "pass",
+        "duration_ms": 0.85,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+        "observed_name": "review digest ignores observation clocks but retains financial changes",
+        "status": "pass",
+        "duration_ms": 0.14,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+        "observed_name": "real Planner sensitivity keeps EUR input separate from USD output and leaves missing FX conditioned in C08",
+        "status": "pass",
+        "duration_ms": 139609.03,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-browser-selection.test.ts",
+        "observed_name": "the real canonical Playwright selector enables the Procurement fixture without changing the selector",
+        "status": "pass",
+        "duration_ms": 0.29,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "observed_name": "bank change through the real domain clears validation and explains revalidation without leaking secrets",
+        "status": "pass",
+        "duration_ms": 2.77,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "observed_name": "supplier activation reports recorded prerequisites and duplicate tax IDs remain rejected",
+        "status": "pass",
+        "duration_ms": 1.0,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "observed_name": "duplicate legal names warn on success while distinct tax IDs remain separate",
+        "status": "pass",
+        "duration_ms": 0.36,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "observed_name": "Settings exposes complete baseline policy controls and secondary reset without inventing defaults",
+        "status": "pass",
+        "duration_ms": 0.49,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "observed_name": "the real supplier CSV keeps business fields and grants every bank field only to existing privileged roles",
+        "status": "pass",
+        "duration_ms": 1.95,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "observed_name": "real register and purchase-order downloads preserve recorded business terms and omit restricted bank material",
+        "status": "pass",
+        "duration_ms": 2.03,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "observed_name": "real register bytes distinguish missing quotation values and currency from recorded zero and reject ambiguous selection",
+        "status": "pass",
+        "duration_ms": 0.76,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "observed_name": "real PO and register bytes keep missing lines prices currency and frozen FX unavailable",
+        "status": "pass",
+        "duration_ms": 2.04,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "observed_name": "real financial downloads preserve frozen submitted currency after base changes and retain explicit zero",
+        "status": "pass",
+        "duration_ms": 1.59,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "observed_name": "real supplier lifecycle covers all four states, authorized search, linked requests and audit without granting buyer status powers",
+        "status": "pass",
+        "duration_ms": 6.03,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "observed_name": "recorded supplier enum values outside the current options remain selected through a real form save",
+        "status": "pass",
+        "duration_ms": 0.89,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+        "observed_name": "sourcing entry renders only attached authorized request selectors with the verified resident manifest and supplied catalog",
+        "status": "pass",
+        "duration_ms": 29.79,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+        "observed_name": "sourcing entry remains unavailable without a catalog, sourcing source or mounted analysis port",
+        "status": "pass",
+        "duration_ms": 6.88,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+        "observed_name": "sourcing input is mounted in the workbench and refuses absent runtime or an unrelated origin and path",
+        "status": "pass",
+        "duration_ms": 1.61,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/reissue.test.ts",
+        "observed_name": "reissue requires the recipient's current scope and the same physical request",
+        "status": "pass",
+        "duration_ms": 126.22,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+        "observed_name": "capability refuses forged arguments and refuses an ungranted direct call",
+        "status": "pass",
+        "duration_ms": 0.52,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+        "observed_name": "authorized capability reads through an issued scoped source and consumes once",
+        "status": "pass",
+        "duration_ms": 112.8,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+        "observed_name": "supplier export requires a consumed UI grant and preserves current scoped source failures",
+        "status": "pass",
+        "duration_ms": 29.39,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "observed_name": "sourcing identifies the missing commercial control without blaming completed technical scores",
+        "status": "pass",
+        "duration_ms": 2.21,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "observed_name": "adjacent error text is escaped and field ids remain separate across requests",
+        "status": "pass",
+        "duration_ms": 0.16,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "observed_name": "saved order terms survive source suggestions and ambiguous supplier identity supplies no terms",
+        "status": "pass",
+        "duration_ms": 0.2,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "observed_name": "recurring draft values survive collapsing and saving the nonrecurring section",
+        "status": "pass",
+        "duration_ms": 2.17,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "observed_name": "contract strategy changes preserve saved references and existing-contract submission uses the real validator",
+        "status": "pass",
+        "duration_ms": 3.16,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "observed_name": "rendered order rows retain omitted metadata across consecutive saves, reorder, removal and a new row",
+        "status": "pass",
+        "duration_ms": 5.37,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "observed_name": "rendered quotation saves retain omitted metadata by quote ID and never transfer removed metadata to a new quote",
+        "status": "pass",
+        "duration_ms": 4.93,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "observed_name": "money never labels a missing order or ambiguous quotation as an approved amount",
+        "status": "pass",
+        "duration_ms": 0.23,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+        "observed_name": "durable queue selection, counts and drilldowns keep requester scope across unrelated changes",
+        "status": "pass",
+        "duration_ms": 61.6,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+        "observed_name": "sourcing comparison crosses the shared dispatcher with frozen money, criteria and a real UI receipt",
+        "status": "pass",
+        "duration_ms": 69.38,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+        "observed_name": "incomplete sourcing remains conditioned across the closed shared dispatcher and input verifier",
+        "status": "pass",
+        "duration_ms": 394.64,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+        "observed_name": "sourcing verifier checks current weights, manual requirements, evidence and offer eligibility",
+        "status": "pass",
+        "duration_ms": 411.71,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+        "observed_name": "revoked sourcing authority cannot reuse a prepared input or a dispatched comparison",
+        "status": "pass",
+        "duration_ms": 72.52,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+        "observed_name": "case-bound sourcing input crosses the real business composition and HTTP authority boundary",
+        "status": "pass",
+        "duration_ms": 2000.67,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+        "observed_name": "sourcing output verifier rejects non-ready envelopes and tampered replay material",
+        "status": "pass",
+        "duration_ms": 279.36,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "observed_name": "producer with missing submitted FX suppresses every score and rank despite a current rate",
+        "status": "pass",
+        "duration_ms": 1.49,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "observed_name": "producer with absent weights or incomplete human assessments withholds ranking",
+        "status": "pass",
+        "duration_ms": 1.07,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "observed_name": "a stated total mismatch in one proposal suppresses the whole producer ranking",
+        "status": "pass",
+        "duration_ms": 1.43,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "observed_name": "runtime and producer present the same submitted quote amount and FX source",
+        "status": "pass",
+        "duration_ms": 1.4,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "observed_name": "prepared Procurement mutation uses current actor and SQLite revision, and retries by receipt",
+        "status": "pass",
+        "duration_ms": 51.33,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "observed_name": "prepared Procurement mutation records a stale source conflict without changing the domain",
+        "status": "pass",
+        "duration_ms": 43.34,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/contracts.test.ts",
+        "observed_name": "contract capability reads only the issued Dashboard scope and rejects revocation and ABA",
+        "status": "pass",
+        "duration_ms": 52.45,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/confirmation.test.ts",
+        "observed_name": "confirmation observes scoped material and fences against source changes and revoked authority",
+        "status": "pass",
+        "duration_ms": 28.25,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "observed_name": "the canonical three-offer fixture preserves scoring, eligibility and exact price premium",
+        "status": "pass",
+        "duration_ms": 0.29,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "observed_name": "equal complete proposals retain recorded order without adding a tie-break policy",
+        "status": "pass",
+        "duration_ms": 0.12,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "observed_name": "missing currency and incomplete purchase orders cannot inherit a base-currency estimate",
+        "status": "pass",
+        "duration_ms": 0.16,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "observed_name": "ambiguous selected quotes and an overflowing order remain unavailable",
+        "status": "pass",
+        "duration_ms": 0.09,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "observed_name": "rejected submissions preserve the submitted currency and never reinterpret a frozen rate",
+        "status": "pass",
+        "duration_ms": 0.07,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "observed_name": "a frozen PR retains its submitted currency after the current base changes",
+        "status": "pass",
+        "duration_ms": 0.56,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "observed_name": "C06 preserves zero versus absence and fingerprints compensating financial inputs",
+        "status": "pass",
+        "duration_ms": 0.27,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-conflict.test.ts",
+        "observed_name": "the actual stale Procurement save returns its current CAS version and preserves the first actor's record",
+        "status": "pass",
+        "duration_ms": 3.05,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+        "observed_name": "confirmation reauthorizes material across buyers and fences physical replacement",
+        "status": "pass",
+        "duration_ms": 78.3,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "submitted PO uses its frozen exchange rate and approved and issued totals remain separate",
+        "status": "pass",
+        "duration_ms": 0.3,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "an unavailable frozen quote rate does not use a later rate or the requisition estimate",
+        "status": "pass",
+        "duration_ms": 0.12,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "approval view separates unassigned holders and labels the pending decision",
+        "status": "pass",
+        "duration_ms": 0.51,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "request detail shows the discrepancy without changing the quoted total",
+        "status": "pass",
+        "duration_ms": 1.21,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "register export removes bank material recursively including audit values",
+        "status": "pass",
+        "duration_ms": 0.18,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "request detail explains why a different holder cannot be overridden",
+        "status": "pass",
+        "duration_ms": 0.78,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "unassigned approvals are not attributed to another holder",
+        "status": "pass",
+        "duration_ms": 0.19,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "approval queue retains missing steps and does not invent holder names or actions",
+        "status": "pass",
+        "duration_ms": 1.27,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "ranking does not replace a missing submitted FX snapshot with a later rate",
+        "status": "pass",
+        "duration_ms": 0.21,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "comparison displays the submitted rate even after the current rate changes",
+        "status": "pass",
+        "duration_ms": 0.75,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "submitted sourcing without a snapshot does not display live FX as historical",
+        "status": "pass",
+        "duration_ms": 0.74,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "invalid PO or selected quote values remain unavailable rather than falling back",
+        "status": "pass",
+        "duration_ms": 0.09,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "quote comparison preserves missing currency and frozen FX provenance",
+        "status": "pass",
+        "duration_ms": 0.27,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "request guidance distinguishes internal issue and unknown stages",
+        "status": "pass",
+        "duration_ms": 0.1,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "quote comparison distinguishes an invalid rate from a missing rate",
+        "status": "pass",
+        "duration_ms": 0.15,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "request comparison does not label an unspecified quote currency as base currency",
+        "status": "pass",
+        "duration_ms": 0.88,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "supplier activation explains alternative required fields without revealing bank values",
+        "status": "pass",
+        "duration_ms": 0.17,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "order guidance compares the linked selected quote without asserting edit history",
+        "status": "pass",
+        "duration_ms": 0.2,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "nonprivileged supplier view removes bank metadata and audit values",
+        "status": "pass",
+        "duration_ms": 0.28,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "request detail displays current stage validation without mutating the draft",
+        "status": "pass",
+        "duration_ms": 0.94,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "requisition rejection returns field errors from the actual validator",
+        "status": "pass",
+        "duration_ms": 0.91,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "supplier controls reflect existing buyer and supplier admin roles",
+        "status": "pass",
+        "duration_ms": 0.85,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "supplier presentation removes bank and audit material from a viewer",
+        "status": "pass",
+        "duration_ms": 0.23,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "observed_name": "order shows supplier terms as a suggestion without replacing recorded terms",
+        "status": "pass",
+        "duration_ms": 1.0,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+        "observed_name": "the prepared command retains its reviewed inputs when caller-owned outputs are mutated",
+        "status": "pass",
+        "duration_ms": 45.91,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-queues.test.ts",
+        "observed_name": "approval queues sort only by proven entry, keep unavailable history and do not use a save timestamp",
+        "status": "pass",
+        "duration_ms": 0.36,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-queues.test.ts",
+        "observed_name": "request search covers stored requester, buyer and holder identifiers and authorized directory names",
+        "status": "pass",
+        "duration_ms": 0.94,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/queue-view.test.ts",
+        "observed_name": "authorized Requests and My approvals render the actual C02 queue across baseline states",
+        "status": "pass",
+        "duration_ms": 343.91,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/queue-view.test.ts",
+        "observed_name": "the page fence refuses material changes and revocation between C02 preparation and rendering",
+        "status": "pass",
+        "duration_ms": 186.8,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "queue projection uses the latest submission, never a later save",
+        "status": "pass",
+        "duration_ms": 0.28,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "missing history and holder stay unavailable, and restricted fields are omitted",
+        "status": "pass",
+        "duration_ms": 0.13,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "requisition drafts and revisions expose their saved justification in the authorized projection",
+        "status": "pass",
+        "duration_ms": 0.13,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "port authenticates against the current snapshot and does not reveal another request",
+        "status": "pass",
+        "duration_ms": 0.51,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "aging uses the trusted observation time and leaves unproven ages unavailable",
+        "status": "pass",
+        "duration_ms": 0.23,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "sourcing comparison reads the authorized request and uses frozen FX",
+        "status": "pass",
+        "duration_ms": 3.32,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "stock counts open stages only and retains a stage-specific drilldown",
+        "status": "pass",
+        "duration_ms": 0.84,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "aging for the next holder starts at the preceding approval, or remains unavailable without that event",
+        "status": "pass",
+        "duration_ms": 0.18,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "supplier projection returns authorized fields and refuses bank fields",
+        "status": "pass",
+        "duration_ms": 0.52,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "decision preparation is deterministic and does not change the request",
+        "status": "pass",
+        "duration_ms": 0.21,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "revocation during the domain read prevents returning the projection",
+        "status": "pass",
+        "duration_ms": 0.52,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "projection reports PO original amount and submitted FX without replacing the base value",
+        "status": "pass",
+        "duration_ms": 0.2,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "a legacy PO with no currency leaves its monetary basis unavailable",
+        "status": "pass",
+        "duration_ms": 0.1,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "unrecognized imported status stays explicitly unavailable",
+        "status": "pass",
+        "duration_ms": 0.06,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "approval stage is the current pending level and is scoped to its evidence",
+        "status": "pass",
+        "duration_ms": 0.11,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "confirmation material tracks only selected fields and the status dependency",
+        "status": "pass",
+        "duration_ms": 0.14,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "observed_name": "confirmation material isolates relevant monetary inputs and preserves missing FX",
+        "status": "pass",
+        "duration_ms": 0.17,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+        "observed_name": "real host composes C06 confirmation, current evidence routing and the WP09 dossier",
+        "status": "pass",
+        "duration_ms": 810.32,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+        "observed_name": "real HTTP prepares, reviews and applies C12 with one durable effect and authorized historical evidence",
+        "status": "pass",
+        "duration_ms": 20693.7,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+        "observed_name": "private original evidence is immutable and a replacement Request cannot revive historical facts or receipts",
+        "status": "pass",
+        "duration_ms": 19386.32,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+        "observed_name": "Procurement decision HTTP rejects injected commands, ungranted actors and cross-origin intent",
+        "status": "pass",
+        "duration_ms": 452.14,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+        "observed_name": "a real case edit between durable receipt and reconciliation preserves the conflict without reapplying",
+        "status": "pass",
+        "duration_ms": 7192.56,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+        "observed_name": "a durable application recovers after a lost commit response and cleared review cache",
+        "status": "pass",
+        "duration_ms": 11118.52,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/sources.test.ts",
+        "observed_name": "projection digest excludes bank details while retaining authorized business fields",
+        "status": "pass",
+        "duration_ms": 0.57,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+        "observed_name": "dashboard observation supports a human confirmation and another authorized reader",
+        "status": "pass",
+        "duration_ms": 324.55,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+        "observed_name": "author reader rechecks the real stored run, receipt, case, and current authority",
+        "status": "pass",
+        "duration_ms": 26.61,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+        "observed_name": "personal views isolate authenticated principals and reconcile exact retries",
+        "status": "pass",
+        "duration_ms": 1658.44,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "observed_name": "Workbench analysis HTTP enforces human authority and hides forged run references",
+        "status": "pass",
+        "duration_ms": 2705.71,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+        "observed_name": "Workbench analysis returns unavailable when its host services are absent",
+        "status": "pass",
+        "duration_ms": 0.4,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+        "observed_name": "blob generations survive ABA, removal and restart while rollback and forgery fail",
+        "status": "pass",
+        "duration_ms": 25.58,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+        "observed_name": "caught generation overflow cannot commit blob changes",
+        "status": "pass",
+        "duration_ms": 7.06,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "observed_name": "product authority revalidates current surfaces without opening a nested transaction",
+        "status": "pass",
+        "duration_ms": 5.9,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "observed_name": "human writes require their own action grant and cannot borrow a consumed read lease",
+        "status": "pass",
+        "duration_ms": 12.75,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "observed_name": "human command admission binds exact action and payload and revokes on authority change",
+        "status": "pass",
+        "duration_ms": 5.61,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "observed_name": "dashboard roles alone do not grant C08 or a business operation",
+        "status": "pass",
+        "duration_ms": 3.92,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "observed_name": "private grants narrow namespaces and operations; role changes revoke existing UI authority",
+        "status": "pass",
+        "duration_ms": 11.45,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "observed_name": "write requires current write authority and document targets do not accept unverified identifiers",
+        "status": "pass",
+        "duration_ms": 4.17,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "observed_name": "native binding cannot be invented without a current stored run",
+        "status": "pass",
+        "duration_ms": 11.17,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "observed_name": "a real C08 run and case still cannot bind a missing native Session",
+        "status": "pass",
+        "duration_ms": 33.04,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "observed_name": "assignment and domain revocation invalidate authority without incorporating other principals",
+        "status": "pass",
+        "duration_ms": 14.94,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "observed_name": "workspace target is limited to explicit creation namespaces and still requires current grant and write access",
+        "status": "pass",
+        "duration_ms": 15.23,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "observed_name": "identity mutation during authentication is denied",
+        "status": "pass",
+        "duration_ms": 4.17,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "dashboard administrator is denied without product authority",
+        "status": "pass",
+        "duration_ms": 5.58,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "exact retry recovers the result, digest reuse conflicts and principals remain isolated",
+        "status": "pass",
+        "duration_ms": 0.72,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "concurrent different commands at the same version commit once",
+        "status": "pass",
+        "duration_ms": 0.28,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "a retry after authority revocation never discloses the stored result",
+        "status": "pass",
+        "duration_ms": 0.22,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "failure before commit rolls back all staged changes",
+        "status": "pass",
+        "duration_ms": 0.35,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "read callback cannot mutate persisted state",
+        "status": "pass",
+        "duration_ms": 0.28,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "revoked authority at egress prevents read disclosure and write commit",
+        "status": "pass",
+        "duration_ms": 0.43,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "preview does not persist state or consume the command",
+        "status": "pass",
+        "duration_ms": 0.26,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "writes in another namespace do not invalidate section CAS",
+        "status": "pass",
+        "duration_ms": 0.44,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "replacing the actual target blocks replay of the old receipt",
+        "status": "pass",
+        "duration_ms": 0.28,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "target replacement during work prevents commit and disclosure",
+        "status": "pass",
+        "duration_ms": 0.18,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "a callback cannot mutate a different namespace, versions, or receipts",
+        "status": "pass",
+        "duration_ms": 0.39,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "malformed command digest is rejected without work or persistence",
+        "status": "pass",
+        "duration_ms": 0.1,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "admitted Atlas and outbox commit atomically with independent versions",
+        "status": "pass",
+        "duration_ms": 0.71,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "stale secondary namespace blocks all work",
+        "status": "pass",
+        "duration_ms": 0.42,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "secondary authority revoked at egress rolls back both sections",
+        "status": "pass",
+        "duration_ms": 0.28,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "retry with a changed admitted namespace scope conflicts without executing",
+        "status": "pass",
+        "duration_ms": 0.42,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "observed_name": "runtime rejects internal and prototype-key namespaces before work",
+        "status": "pass",
+        "duration_ms": 0.28,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+        "observed_name": "snapshot store preserves ordered canonical events and deduplicates identical records",
+        "status": "pass",
+        "duration_ms": 10.03,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+        "observed_name": "snapshot store reports tampered or duplicate event identities",
+        "status": "pass",
+        "duration_ms": 0.87,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+        "observed_name": "cyclic case event resolution fails closed and releases the guard",
+        "status": "pass",
+        "duration_ms": 5.93,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+        "observed_name": "historical evidence keeps its original identity and requires authorized historical content",
+        "status": "pass",
+        "duration_ms": 0.57,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+        "observed_name": "recall rejects forged source versions after current authorization",
+        "status": "pass",
+        "duration_ms": 0.65,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+        "observed_name": "SQLite Planner imports workbook bytes and rejects a stale preview without partial writes",
+        "status": "pass",
+        "duration_ms": 108.58,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+        "observed_name": "human workbook admission, Planner preview, atomic receipt and retry survive SQLite reopen",
+        "status": "pass",
+        "duration_ms": 230.15,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+        "observed_name": "human JSON restore keeps private state and returns the same receipt after source replacement",
+        "status": "pass",
+        "duration_ms": 101.76,
+        "retry": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+        "observed_name": "real host persists procurement document evidence and Planner import under current authority",
+        "status": "pass",
+        "duration_ms": 9207.57,
+        "retry": 0
+      }
+    ]
+  },
+  "playwright": {
+    "receipt_id": "ci_browser",
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463",
+    "artifact": {
+      "id": 14088094597,
+      "name": "playwright-ubuntu-24.04-1",
+      "digest": "sha256:379a94caec10edce2da7afb7f5d0e376eaefbb05f92db93c7cf535962b0c6d84",
+      "verified_sha256": "379a94caec10edce2da7afb7f5d0e376eaefbb05f92db93c7cf535962b0c6d84",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+      "archive_verification": "Builder independently hashed the actual downloaded ZIP, matched digest/name/id/run URL to one hosted upload block, and bound the evidence/attachment bytes to exact members of this archive."
+    },
+    "counts": {
+      "pass": 10,
+      "fail": 0,
+      "skip": 0,
+      "retry": 0
+    },
+    "tests": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+        "test_name": "keyboard submission uses current entries and focuses the real 422 field without clearing the draft",
+        "project": "chromium",
+        "status": "pass",
+        "duration_ms": 2956,
+        "retry": 0,
+        "attachments": [
+          {
+            "name": "keyboard-422.png",
+            "content_type": "image/png",
+            "sha256": "633db0dffd2f43164f8d640650f4a24a319f6cbe9ff25ab62070496f5fe4a4fd",
+            "bytes": 43669,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "packages/app-shell/e2e/test-results/sucafina-wp04-procurement--9e351--without-clearing-the-draft-chromium/attachments/keyboard-422-png-74a619a6ac459b1bd5a56eaa682863138c3d0676.png"
+          },
+          {
+            "name": "keyboard-422.json",
+            "content_type": "application/json",
+            "sha256": "096a63d75b25f32067a6215a291c501ed02a4c3e3d618d33eeeba5765bc79416",
+            "bytes": 118,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "test-ci-evidence/playwright-runtime.json#inline-attachment"
+          }
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+        "test_name": "two authenticated actors review an actual CAS conflict and submit only after an explicit version choice",
+        "project": "chromium",
+        "status": "pass",
+        "duration_ms": 5938,
+        "retry": 0,
+        "attachments": [
+          {
+            "name": "cas-explicit-review-step.png",
+            "content_type": "image/png",
+            "sha256": "e2cd1e638a1da90f5652b3b220fce9cbbfc8e3f569abeae1d34f589c0e6bd774",
+            "bytes": 64492,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "packages/app-shell/e2e/test-results/sucafina-wp04-procurement--1f0cd--an-explicit-version-choice-chromium/attachments/cas-explicit-review-step-png-96633157d2c96ffe08faa3ccda34c00bab2b672e.png"
+          },
+          {
+            "name": "cas-explicit-review-step.json",
+            "content_type": "application/json",
+            "sha256": "d7f13f2c72d9357dcb72db303cb59e37dd53144d502b0e4dbb6c6e61b6063f41",
+            "bytes": 110,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "test-ci-evidence/playwright-runtime.json#inline-attachment"
+          }
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+        "test_name": "a stale approval preserves the typed comment and refuses to revive an action after cancellation",
+        "project": "chromium",
+        "status": "pass",
+        "duration_ms": 5483,
+        "retry": 0,
+        "attachments": [
+          {
+            "name": "approval-comment-preserved.png",
+            "content_type": "image/png",
+            "sha256": "0e4291f2c7ae193d1dbb60219cc8722abaf5ead607c758c46102b1f9ea9cfe72",
+            "bytes": 50613,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "packages/app-shell/e2e/test-results/sucafina-wp04-procurement--a3e63-n-action-after-cancellation-chromium/attachments/approval-comment-preserved-png-fde35fa8afcd95cc605bbc0ea77f611cba37b923.png"
+          },
+          {
+            "name": "approval-comment-preserved.json",
+            "content_type": "application/json",
+            "sha256": "3b4966287b214f2b98718bbb78f0d43fc95b5f61230a3256dd3fd10e2d9ff200",
+            "bytes": 128,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "test-ci-evidence/playwright-runtime.json#inline-attachment"
+          }
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+        "test_name": "a real committed save cannot clear edits typed before its response arrives",
+        "project": "chromium",
+        "status": "pass",
+        "duration_ms": 4513,
+        "retry": 0,
+        "attachments": [
+          {
+            "name": "later-edits-preserved.png",
+            "content_type": "image/png",
+            "sha256": "ac700252f96a9b9aca8851b6a51f710b89f41a77b6c3226ad82f5fddce422094",
+            "bytes": 40202,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "packages/app-shell/e2e/test-results/sucafina-wp04-procurement--cd8f4-before-its-response-arrives-chromium/attachments/later-edits-preserved-png-9a4760dc6676cd3f6f35eb96ad514698aecc2cc0.png"
+          },
+          {
+            "name": "later-edits-preserved.json",
+            "content_type": "application/json",
+            "sha256": "9c0df2498de94d3ddde3711772f1cb260cd7b255ef121b5f6f3b01f739e675c4",
+            "bytes": 157,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "test-ci-evidence/playwright-runtime.json#inline-attachment"
+          }
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+        "test_name": "a recurring request reaches an internally issued PO with source values and negotiated entries preserved",
+        "project": "chromium",
+        "status": "pass",
+        "duration_ms": 24572,
+        "retry": 0,
+        "attachments": [
+          {
+            "name": "pr-sourcing-po-issued.png",
+            "content_type": "image/png",
+            "sha256": "969c15e5ee5c2c8537a761dd41d0bf7a2b914c8bdb81374c8ced23fb46e8afbf",
+            "bytes": 45443,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "packages/app-shell/e2e/test-results/sucafina-wp04-procurement--90263-egotiated-entries-preserved-chromium/attachments/pr-sourcing-po-issued-png-5a33bb0439862d38941938d560f416b68f66c15b.png"
+          },
+          {
+            "name": "pr-sourcing-po-issued.json",
+            "content_type": "application/json",
+            "sha256": "6e551c0bbd5e16bfc49bb7a8701fc79bc1b01cd43ac0a1c01ff2a374ffb91250",
+            "bytes": 224,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "test-ci-evidence/playwright-runtime.json#inline-attachment"
+          }
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+        "test_name": "the A B C comparison shows score components and retains submitted FX in the real detail and queue",
+        "project": "chromium",
+        "status": "pass",
+        "duration_ms": 10469,
+        "retry": 0,
+        "attachments": [
+          {
+            "name": "abc-submitted-comparison.png",
+            "content_type": "image/png",
+            "sha256": "caca42acdbb2b8fb81aaa52b9f67fb94179509754a8f2ddd6cdb953f6cd6db45",
+            "bytes": 85744,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "packages/app-shell/e2e/test-results/sucafina-wp04-procurement--5ae3c-n-the-real-detail-and-queue-chromium/attachments/abc-submitted-comparison-png-c8c05242f8e93fd705091411610f4f68e556d071.png"
+          },
+          {
+            "name": "abc-submitted-comparison.json",
+            "content_type": "application/json",
+            "sha256": "e78e83ad52c3fd11bca80ba8730eb61d1e7e5156b1be55dedc2cd3ffb05223e5",
+            "bytes": 173,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "test-ci-evidence/playwright-runtime.json#inline-attachment"
+          },
+          {
+            "name": "queue-keyboard-filter-restored.png",
+            "content_type": "image/png",
+            "sha256": "f3d530fc4796b7489c4671ca87579cabf3cfd89d971e8cc3ce35e2326af8ec94",
+            "bytes": 44689,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "packages/app-shell/e2e/test-results/sucafina-wp04-procurement--5ae3c-n-the-real-detail-and-queue-chromium/attachments/queue-keyboard-filter-restored-png-77ae5d77d728a31beb71f07c7b708f3e33c76922.png"
+          },
+          {
+            "name": "queue-keyboard-filter-restored.json",
+            "content_type": "application/json",
+            "sha256": "b22a5a7301e2d00ac49ef0fc1f7005f83593f5102f5994d9fec724c0f5f04e85",
+            "bytes": 198,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "test-ci-evidence/playwright-runtime.json#inline-attachment"
+          }
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+        "test_name": "an authorized bank change requires supplier revalidation and a real viewer cannot read or update bank details",
+        "project": "chromium",
+        "status": "pass",
+        "duration_ms": 6693,
+        "retry": 0,
+        "attachments": [
+          {
+            "name": "supplier-bank-revalidation.png",
+            "content_type": "image/png",
+            "sha256": "6351481af961d1c55dfde58ba51f5041b4eb2d7fdf1723c04358da2e5d5b0366",
+            "bytes": 49679,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "packages/app-shell/e2e/test-results/sucafina-wp04-procurement--f398c-read-or-update-bank-details-chromium/attachments/supplier-bank-revalidation-png-86b36b20fa1eea513a4841c7378e607f11382d84.png"
+          },
+          {
+            "name": "supplier-bank-revalidation.json",
+            "content_type": "application/json",
+            "sha256": "314a8ac839c0343a0f3bd82985484694e19ab6e5b1c24568540f97eb6376f5cc",
+            "bytes": 143,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "test-ci-evidence/playwright-runtime.json#inline-attachment"
+          },
+          {
+            "name": "supplier-viewer-redaction.png",
+            "content_type": "image/png",
+            "sha256": "50db1678eb159a32cc8c831295c5407890e4f2f92f912f7343638da018de50a9",
+            "bytes": 59729,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "packages/app-shell/e2e/test-results/sucafina-wp04-procurement--f398c-read-or-update-bank-details-chromium/attachments/supplier-viewer-redaction-png-635160f01a84e2fb99b1544563edab59d276efeb.png"
+          },
+          {
+            "name": "supplier-viewer-redaction.json",
+            "content_type": "application/json",
+            "sha256": "732a38d4bbaa9817cdb21a24bd902bb1d0cdbca620c250776aab259c90b12d30",
+            "bytes": 152,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "test-ci-evidence/playwright-runtime.json#inline-attachment"
+          },
+          {
+            "name": "supplier-reactivated-masked.png",
+            "content_type": "image/png",
+            "sha256": "d203569af630c433d1d9c60f4fe6878e8290b4c9f704074530bed15fb1877e87",
+            "bytes": 59616,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "packages/app-shell/e2e/test-results/sucafina-wp04-procurement--f398c-read-or-update-bank-details-chromium/attachments/supplier-reactivated-masked-png-4e6464be4dd5f769e4c2830b4fd1f5e29a5d7a3a.png"
+          },
+          {
+            "name": "supplier-reactivated-masked.json",
+            "content_type": "application/json",
+            "sha256": "8c20ee478d0abc3d46ddb62bd29b0e4b43e1d484ec3921f4303f8c72b533406e",
+            "bytes": 180,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "test-ci-evidence/playwright-runtime.json#inline-attachment"
+          }
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+        "test_name": "settings reject invalid currencies with visible feedback and reset restores defaults without changing a submitted request",
+        "project": "chromium",
+        "status": "pass",
+        "duration_ms": 8865,
+        "retry": 0,
+        "attachments": [
+          {
+            "name": "settings-reset-preserves-submitted-source.png",
+            "content_type": "image/png",
+            "sha256": "f3d530fc4796b7489c4671ca87579cabf3cfd89d971e8cc3ce35e2326af8ec94",
+            "bytes": 44689,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "packages/app-shell/e2e/test-results/sucafina-wp04-procurement--87a1f-hanging-a-submitted-request-chromium/attachments/settings-reset-preserves-submitted-source-png-22bd8e28c08fa08dfc400792348513e53cb7ffee.png"
+          },
+          {
+            "name": "settings-reset-preserves-submitted-source.json",
+            "content_type": "application/json",
+            "sha256": "77d8ceda446666b20b3176c407c3ad7af0f81caba32d6e5c24d3a900665f4157",
+            "bytes": 175,
+            "artifact_id": 14088094597,
+            "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+            "artifact_member": "test-ci-evidence/playwright-runtime.json#inline-attachment"
+          }
+        ]
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts",
+        "test_name": "isolated sourcing controller survives shell refresh while preparing, running and uncertain until an observed terminal read",
+        "project": "chromium",
+        "status": "pass",
+        "duration_ms": 1436,
+        "retry": 0,
+        "attachments": []
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts",
+        "test_name": "isolated sourcing controller cannot repeat an unconfirmed start after history or shell refresh",
+        "project": "chromium",
+        "status": "pass",
+        "duration_ms": 578,
+        "retry": 0,
+        "attachments": []
+      }
+    ]
+  },
+  "mapped_test_ids": [
+    "test_004803f588e1eb524a49",
+    "test_01f3ff6bfa2d6ee502ed",
+    "test_043da2a674198f70dde9",
+    "test_04d58ac83c173a6387af",
+    "test_08094ef71a3f06d0d266",
+    "test_0dbe4a7e68e8770c4320",
+    "test_0ee9c599f7b129d16b7b",
+    "test_1087711dcc0d0a7c8f2c",
+    "test_11be8600feabcc3939a3",
+    "test_147e9ad21fe37941a269",
+    "test_159cd3e85ec06bf5fef7",
+    "test_16e6710da78f60574528",
+    "test_1b731c02abaff1e0f580",
+    "test_1d4c2f1fc88efc258e49",
+    "test_1e00a798062e209ab08f",
+    "test_1ebb93e9a6ec0380b2f2",
+    "test_20278fe4ea416f17263f",
+    "test_26b0e9b5e316fe5462e4",
+    "test_2b9422c6a67a4c2497e4",
+    "test_2cedc9096e6d2392995e",
+    "test_2d86a5c91f2a22b4f0d5",
+    "test_2e1b0dae155bc2ed6a0e",
+    "test_2fa9e9772cbb800072e6",
+    "test_335a0ecbd0f6e78e1f92",
+    "test_37ca611787de8cd9f60e",
+    "test_3c85156c51e6e6c3d546",
+    "test_3d58223cc007ea33c1c5",
+    "test_3dc7eb0ffcaa7ae2b2c9",
+    "test_3de28c6bcef4fcb14cdd",
+    "test_41d25e7b44f10c3c469f",
+    "test_454da23eb912b2f9ea5d",
+    "test_45615d8a94a032b41bd8",
+    "test_45a88b09f681f263f4a4",
+    "test_469e3e5df86b090c2144",
+    "test_4794310ac9ebf90fb3e0",
+    "test_4a7570a102f62d022524",
+    "test_4b4ffc93a4e81f446cdb",
+    "test_4c10b52c957255b3a1cc",
+    "test_4cd71886b4dddb4a9062",
+    "test_4d1bf09c609d665f42d0",
+    "test_5219e856659a559a2907",
+    "test_59cc3a3b8d5ff59db2c0",
+    "test_5cef8551fb09ae7191f1",
+    "test_5d3aa8e0deba9b4f7ef1",
+    "test_5dd1a303f67143bd69ff",
+    "test_612b88a3e9700edca00f",
+    "test_636c917673d6d1ca810e",
+    "test_64e3912e8fb787acba9d",
+    "test_651e0ea6cd19c23b35e2",
+    "test_665a15fd31367d3aafd9",
+    "test_667a0783877dc9fe39a9",
+    "test_6722bdf3f450851b51a3",
+    "test_68f59d25655edb3be8b4",
+    "test_69a5069acbfdcaa0bbf5",
+    "test_69d6f081e0cdfc30a58a",
+    "test_6b573073b4ba82ac590b",
+    "test_6b99f2ee2f1e8da8fb2f",
+    "test_6ec0aaad82d767ef6d90",
+    "test_6edb3b8d0deca3633eab",
+    "test_75509fafd5ad53f7ab3b",
+    "test_760e91b918f1f5be8465",
+    "test_774ae7de798e5e2c67bb",
+    "test_79177e5f3c3f904f61c5",
+    "test_7b024e3f261bd49386aa",
+    "test_7b757408fda588acb113",
+    "test_7ba9c198f81ec1bb4f57",
+    "test_7d32b8d1a40a03da1d9d",
+    "test_7dacfef73083a802eab4",
+    "test_7db1565aa04b1bd60e57",
+    "test_7e76f6971b061c219053",
+    "test_7f36b3f5c2b6ce56a211",
+    "test_7fb9bd61e2a0d844dcfe",
+    "test_8181d121b72f370d2603",
+    "test_81b1cd16baa1d21f71a4",
+    "test_868acd09c14bbc5badb7",
+    "test_86fdcce9cd94f8c153fa",
+    "test_896c646fb46b2be532fe",
+    "test_8978c27ba56c5840645d",
+    "test_89cb3069fbd8c7923a51",
+    "test_8a9f00368b47495ca8e4",
+    "test_8b456816a9ed2059980a",
+    "test_8ca865396280127bdba3",
+    "test_8e45403eaff5c8b30a92",
+    "test_8f9ff172ddc220521190",
+    "test_93beeae51b7da70de4e1",
+    "test_9b1d7f1d61ff5bd1daa8",
+    "test_9b3b6f4a891e4868dfcf",
+    "test_9dc9af7d2d9c73917159",
+    "test_a1da3836d0ed8cd76883",
+    "test_a34108a4a245992082d7",
+    "test_a38d4034ab1d0f718782",
+    "test_a66dd1a7afd35a7c619f",
+    "test_a7f1ee5535ca0a5020ce",
+    "test_a896da26bab38d48f910",
+    "test_a9ee78304a4fa786cafc",
+    "test_b0b504bbf9f9dc258d25",
+    "test_b5a7210f089cbcf92847",
+    "test_b66e531a2da6e4681149",
+    "test_bac5fc66329bbd6d288e",
+    "test_bf481403d481f938378b",
+    "test_c094b536461ad6b8b697",
+    "test_c79004b8258e38abd7d9",
+    "test_c86a66c74112c7dba39a",
+    "test_ca755c19cb9ff8232be3",
+    "test_cc83f18a6e6b41f8c245",
+    "test_cd95359b933ff26f6988",
+    "test_cfaebd2b0daf4d874a11",
+    "test_d75f0c6d9b77fc7d80e9",
+    "test_d7a2e216fabd133388b6",
+    "test_d9a58d1eea4de34dbdb9",
+    "test_da0cdc62b37d2701a8c1",
+    "test_da1763a95c4ea64c5c13",
+    "test_da582267b77c61f4c987",
+    "test_dd8764a3fcf1fa32068a",
+    "test_ddb6a9c27c5eb32a1788",
+    "test_de8fcd13641f882cba9b",
+    "test_e51b65c2845be17a5dde",
+    "test_e53c4313f3b741674de2",
+    "test_e603ec2e6d2f19ff3051",
+    "test_e6041c1e1bc3abb0dfd6",
+    "test_e6bba87aaafbd0babca3",
+    "test_eb9fea80269b71e960bd",
+    "test_edca1cde9e870eb8083f",
+    "test_f72276a4ca0247e5b52d",
+    "test_fb74f987b2b32b4ccefa",
+    "test_fd97f7c525436361e6e6",
+    "test_ff56fdea15b62cb8e720"
+  ],
+  "all_mapped_tests_pass": true,
+  "native_or_human_proof": false
+}

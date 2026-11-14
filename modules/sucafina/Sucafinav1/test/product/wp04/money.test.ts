@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { initialProcurementSettings } from "../../../src/initial-settings.ts"
 import { procurementDashboard, requestValue } from "../../../src/procurement-screen.ts"
 import type { RequestView } from "../../../src/procurement-screen.ts"
 
@@ -74,7 +75,9 @@ test("approval queue retains missing steps and does not invent holder names or a
     { number: "PR-self", status: "pr_pending", createdBy: "buyer", prApproval: { amount: 20, steps: [{ status: "pending", holderId: "buyer" }] } },
   ]
   const queue = myApprovals(requests, "buyer")
-  expect(queue.unassigned).toEqual([{ number: "PR-no-step", amount: 10 }, { number: "PR-no-approval", amount: null }, { number: "PR-unknown-stage", amount: null }])
+  expect(queue.unassigned).toEqual([{ number: "PR-no-approval", amount: null }, { number: "PR-no-step", amount: 10 }, { number: "PR-unknown-stage", amount: null }])
+  expect(queue.waitingForYou).toEqual([{ number: "PR-self", amount: 20 }])
+  expect(queue.waitingForOthers).toEqual([{ number: "PR-unknown-holder", amount: 30 }])
   const html = render("My approvals", { requests, directory: [], formSettings: { currency: "USD", blockSelfApproval: true } }, { actor: { id: "buyer", roles: ["buyer"], canWrite: true }, year: 2026, month: 1, at: "2026-01-01T00:00:00Z", versions: {} })!
   expect(html).toContain("PR-no-step")
   expect(html).toContain("PR-no-approval")
@@ -119,4 +122,112 @@ test("invalid PO or selected quote values remain unavailable rather than falling
   const rates = { currency: "USD" }
   expect(requestValue({ status: "po_draft", createdBy: "a", pr: { estAmount: 10 }, po: { currency: "USD", lines: [{ qty: 1, unitPrice: Number.NaN }] } }, rates)).toBeNull()
   expect(requestValue({ status: "sourcing", createdBy: "a", pr: { estAmount: 10 }, sourcing: { selectedId: "q", quotes: [{ id: "q", total: Number.NaN, currency: "USD" }] } }, rates)).toBeNull()
+})
+
+test("quote comparison preserves missing currency and frozen FX provenance", async () => {
+  const { quoteComparisonPresentation } = await import("../../../src/form.ts")
+  const settings = { currency: "USD", fxRates: [{ code: "EUR", rate: 2 }] }
+  const sourcing = { quotes: [{ id: "missing-currency", total: 12 }, { id: "euro", currency: "EUR", total: 20 }], fxSnapshot: { EUR: 1.1 } }
+  const frozen = quoteComparisonPresentation({ sourcing }, settings, { submitted: true, submittedBaseCurrency: "USD" })
+  expect(frozen[0]).toMatchObject({ currency: null, fxRate: null, monetary: ["currency-missing"] })
+  expect(frozen[1]).toMatchObject({ currency: "EUR", fxRate: 1.1, monetary: [] })
+  const absent = quoteComparisonPresentation({ sourcing: { ...sourcing, fxSnapshot: null } }, settings, { submitted: true, submittedBaseCurrency: "USD" })
+  expect(absent[1]).toMatchObject({ fxRate: null, monetary: ["fx-missing"] })
+  const changedBase = quoteComparisonPresentation({ sourcing }, settings, { submitted: true, submittedBaseCurrency: "GBP" })
+  expect(changedBase[1]).toMatchObject({ fxRate: null, monetary: ["submitted-base-unavailable"] })
+})
+
+test("request guidance distinguishes internal issue and unknown stages", async () => {
+  const { requestStageGuidance } = await import("../../../src/requests.ts")
+  expect(requestStageGuidance("po_approved").next).toContain("awaits internal issue")
+  expect(requestStageGuidance("po_issued").stage).toBe("Issued internally")
+  expect(requestStageGuidance("constructor")).toEqual({ stage: "Unknown status", next: "Next step unavailable" })
+})
+
+test("quote comparison distinguishes an invalid rate from a missing rate", async () => {
+  const { quoteComparisonPresentation } = await import("../../../src/form.ts")
+  const sourcing = { quotes: [{ id: "q", currency: "EUR", total: 20 }] }
+  expect(quoteComparisonPresentation({ sourcing }, { currency: "USD", fxRates: [{ code: "EUR", rate: 0 }] })[0]?.monetary).toContain("fx-invalid")
+  expect(quoteComparisonPresentation({ sourcing }, { currency: "USD" })[0]?.monetary).toContain("fx-missing")
+})
+
+test("request comparison does not label an unspecified quote currency as base currency", async () => {
+  const { render } = await import("../../../runtime/procurement.ts")
+  const html = render("Requests", { requests: [{ number: "PR-1", status: "sourcing", createdBy: "a", sourcing: { quotes: [{ id: "q", supplier: "A", total: 90, qty: 2, unitPrice: 40 }] } }], formSettings: { currency: "USD", criteria: [], commCriteria: [] } }, { actor: { id: "a", roles: ["buyer"], canWrite: true }, year: 2026, month: 1, at: "2026-01-01T00:00:00Z", versions: {} })!
+  expect(html).toContain("90 Currency unavailable")
+  expect(html).toContain("80 Currency unavailable")
+  expect(html).toContain("Comparison ranking unavailable")
+})
+
+test("supplier activation explains alternative required fields without revealing bank values", async () => {
+  const { supplierActivationRequirements } = await import("../../../src/supplier.ts")
+  const supplier = { id: "s", status: "pending", legalName: "Vendor", country: "BR", address: "Address", contactEmail: "a@example.com", paymentTerms: "30 days", riskRating: "low", sanctionsDate: "2026-01-01", dueDiligence: true }
+  expect(supplierActivationRequirements(supplier)).toEqual(["taxId or regNo", "iban or bankName"])
+  expect(supplierActivationRequirements({ ...supplier, regNo: "R1", bankName: "Bank" })).toEqual([])
+})
+
+test("order guidance compares the linked selected quote without asserting edit history", async () => {
+  const { orderSourceGuidance } = await import("../../../src/requests.ts")
+  const request = { sourcing: { selectedId: "q", quotes: [{ id: "q", supplierId: "s", currency: "EUR", qty: 3 }] }, po: { sourceQuoteId: "q", supplierId: "s", currency: "USD", lines: [{ qty: 3 }] } }
+  expect(orderSourceGuidance(request)).toEqual({ state: "selected-quote", selectedId: "q", supplier: "equals", currency: "differs", quantity: "equals" })
+  expect(orderSourceGuidance({ ...request, po: { ...request.po, sourceQuoteId: "other" } })).toEqual({ state: "unavailable", reason: "source-quote-mismatch" })
+})
+
+test("nonprivileged supplier view removes bank metadata and audit values", async () => {
+  const { domain } = await import("../../../runtime/procurement.ts")
+  const snapshot = { data: { store: { suppliers: [{ id: "s", status: "pending", bankName: "secret bank", accountHolder: "secret holder", bankCountry: "secret country", swift: "secret swift", iban: "secret iban", account: "secret account", history: [{ field: "iban", value: "secret audit" }] }] } }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const view = domain.view(snapshot, { id: "buyer", roles: ["buyer"], canWrite: true }, { at: "2026-01-01T00:00:00Z", directory: [], id: () => "unused" })
+  expect(JSON.stringify(view.data.suppliers)).not.toContain("secret")
+})
+
+test("request detail displays current stage validation without mutating the draft", async () => {
+  const { render } = await import("../../../runtime/procurement.ts")
+  const draft = { number: "PR-1", status: "draft", createdBy: "a", pr: { title: "My request" } }
+  const html = render("Requests", { requests: [draft], formSettings: { currency: "USD" } }, { actor: { id: "a", roles: ["requester"], canWrite: true }, year: 2026, month: 1, at: "2026-01-01T00:00:00Z", versions: {} })!
+  expect(html).toContain("Business justification is required")
+  expect(draft.pr).toEqual({ title: "My request" })
+})
+
+test("requisition rejection returns field errors from the actual validator", async () => {
+  const { domain } = await import("../../../runtime/procurement.ts")
+  const snapshot = { data: { store: { settings: initialProcurementSettings() } }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const actor = { id: "a", roles: ["requester"], canWrite: true }
+  const environment = { at: "2026-01-01T00:00:00Z", directory: [], id: () => "unused" }
+  expect(domain.execute(snapshot, actor, { page: "Requests", action: "create", version: 0, values: { pr: { title: "Draft" } } }, environment).ok).toBe(true)
+  const requests = domain.view(snapshot, actor, environment).data.requests as Record<string, unknown>[]
+  const result = domain.execute(snapshot, actor, { page: "Requests", action: "submit_pr", id: String(requests[0]!.number), version: 1, values: {} }, environment)
+  expect(result).toMatchObject({ ok: false, status: 422 })
+  if (result.ok || !("fieldErrors" in result)) throw new Error("incomplete requisition did not return field errors")
+  expect(result.fieldErrors).toContainEqual({ field: "pr.justification", message: "Business justification is required" })
+})
+
+test("supplier controls reflect existing buyer and supplier admin roles", async () => {
+  const { render } = await import("../../../runtime/procurement.ts")
+  const data = { suppliers: [{ id: "s", status: "pending", legalName: "Vendor" }] }
+  const context = { year: 2026, month: 1, at: "2026-01-01T00:00:00Z", versions: {} }
+  const viewer = render("Suppliers", data, { ...context, actor: { id: "v", roles: ["viewer"], canWrite: true } })!
+  const buyer = render("Suppliers", data, { ...context, actor: { id: "b", roles: ["buyer"], canWrite: true } })!
+  const admin = render("Suppliers", data, { ...context, actor: { id: "a", roles: ["supplier admin"], canWrite: true } })!
+  expect(viewer).not.toContain('data-command="save"')
+  expect(buyer).toContain('data-command="create"')
+  expect(buyer).not.toContain('data-command="activate"')
+  expect(admin).toContain('data-command="activate"')
+  expect(admin).not.toContain('data-command="create"')
+})
+
+test("supplier presentation removes bank and audit material from a viewer", async () => {
+  const { presentSupplier } = await import("../../../src/supplier.ts")
+  const supplier = { id: "s", status: "pending", bankName: "secret bank", swift: "secret swift", iban: "secret iban", account: "secret account", history: [{ field: "secret audit" }] }
+  const visible = presentSupplier(supplier, { roles: ["viewer"] }, new Uint8Array(32))
+  expect(visible).toMatchObject({ id: "s", iban: "masked", account: "masked" })
+  expect(JSON.stringify(visible)).not.toContain("secret")
+})
+
+test("order shows supplier terms as a suggestion without replacing recorded terms", async () => {
+  const { render } = await import("../../../runtime/procurement.ts")
+  const request = { number: "PR-1", status: "po_draft", createdBy: "a", po: { supplierId: "s", paymentTerms: "45 days" } }
+  const html = render("Requests", { requests: [request], suppliers: [{ id: "s", status: "active", paymentTerms: "30 days" }], formSettings: { currency: "USD" } }, { actor: { id: "a", roles: ["buyer"], canWrite: true }, year: 2026, month: 1, at: "2026-01-01T00:00:00Z", versions: {} })!
+  expect(html).toContain("Current supplier master payment terms: 30 days")
+  expect(html).toContain("Saved order payment terms: 45 days")
+  expect(request.po.paymentTerms).toBe("45 days")
 })

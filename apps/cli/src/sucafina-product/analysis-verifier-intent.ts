@@ -9,8 +9,8 @@ import type { SfAnalysisDependencies, SfAnalysisRequest, SfAnalysisVerifier } fr
 
 export function createSfIntentVerifier(dependencies: SfAnalysisDependencies & {
   replayIntent: ReturnType<typeof createDecisionCasePort>["prepareIntentForCase"]
-  imports: Pick<ReturnType<typeof createSfImportHost>, "readPreviewForAnalysis">
-  selectedPreviewRef: (caseRef: SfAnalysisRequest["caseRef"], call: TrustedDomainContext) => Promise<PortResult<{ previewRef: string }>>
+  imports?: Pick<ReturnType<typeof createSfImportHost>, "readPreviewForAnalysis">
+  selectedPreviewRef?: (caseRef: SfAnalysisRequest["caseRef"], call: TrustedDomainContext) => Promise<PortResult<{ previewRef: string }>>
 }): SfAnalysisVerifier {
   return {
     skillIds: ["sf-enquadrar-decisao"],
@@ -28,6 +28,7 @@ export function createSfIntentVerifier(dependencies: SfAnalysisDependencies & {
           value.context.sourceRefs.some((source) => source.surface !== value.context.surface || !value.selectedSourceRefs.some((ref) => ref.kind === "record" && ref.target.surface === source.surface && ref.target.recordType === source.type && ref.target.recordId === source.id && ref.target.incarnation === source.incarnation && ref.target.version === source.version && ref.target.period?.start === source.period.start && ref.target.period.end === source.period.end && source.fields.every((field) => ref.kind === "record" && ref.target.fields.includes(field))))) return undefined
         const preview = await (async () => {
           if (!value.importPreview) return null
+          if (!dependencies.imports || !dependencies.selectedPreviewRef) return undefined
           const selected = await dependencies.selectedPreviewRef(request.caseRef, currentCall)
           if (selected.status !== "ok" || !selected.value.previewRef.trim()) return undefined
           const result = await dependencies.imports.readPreviewForAnalysis({ previewRef: selected.value.previewRef, request: value.importPreview }, currentCall)

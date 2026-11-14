@@ -11,6 +11,11 @@ import type { SfDomainValidation } from "../contracts/runtime.ts"
 import type { ScannerBinarySpec } from "@orchestra/atlas-boundary/native-memory"
 import type { DecisionCase } from "../contracts/decisions.ts"
 
+type ProcurementEvidence = {
+  resolve: (ref: BusinessEvidenceRef, context: TrustedDomainContext) => Promise<BusinessEvidenceResolution | undefined>
+  proveContinuity: (original: BusinessEvidenceRef, current: BusinessEvidenceRef, context: TrustedDomainContext) => Promise<boolean | undefined>
+}
+
 /** All source readers and memory operations are host-bound; references are selectors, not authority. */
 export function createSfBusinessContext(host: {
   revalidate: (call: TrustedDomainContext) => Promise<boolean>
@@ -102,7 +107,7 @@ export function createSfBusinessContext(host: {
 
 /** Textual IDs cannot carry historical authorization across replacement incarnations. */
 function sameHistoricalSource(original: BusinessEvidenceRef, current: BusinessEvidenceRef): boolean {
-  if (original.kind === "record" && current.kind === "record") return original.target.surface === current.target.surface && original.target.recordType === current.target.recordType && original.target.recordId === current.target.recordId && (original.target.surface === "dashboard" || original.target.incarnation === current.target.incarnation)
+  if (original.kind === "record" && current.kind === "record") return original.target.surface === current.target.surface && original.target.recordType === current.target.recordType && original.target.recordId === current.target.recordId && (original.target.surface === "dashboard" || original.target.surface === "procurement" || original.target.incarnation === current.target.incarnation)
   if (original.kind === "document" && current.kind === "document") return original.target.documentId === current.target.documentId && original.target.incarnation === current.target.incarnation
   if (original.kind === "receipt" && current.kind === "receipt") return original.target.surface === current.target.surface && original.target.receiptId === current.target.receiptId && original.target.targetIncarnation === current.target.targetIncarnation
   if (original.kind === "case-event" && current.kind === "case-event") return original.target.caseId === current.target.caseId && original.target.caseIncarnation === current.target.caseIncarnation && original.target.eventId === current.target.eventId
@@ -115,6 +120,7 @@ export function createSfEvidenceRouter(input: {
   dashboardRecord?: ReturnType<typeof createSfDashboardRecordSourceAccess>
   caseEvent: ReturnType<typeof createSfCaseEventSourceAccess>
   procurement: ReturnType<typeof createSfProcurementSourceAccess>
+  procurementEvidence?: ProcurementEvidence
   document?: ReturnType<typeof createSfDocumentSourceAccess>
   planner?: ReturnType<typeof createSfDashboardSourceAccess>
   dashboardProof: ReturnType<typeof createSfDashboardContinuityProof>
@@ -125,7 +131,11 @@ export function createSfEvidenceRouter(input: {
   plannerProof?: ReturnType<typeof createSfSourceContinuityProof>
 }) {
   return {
-    resolveSource(ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> {
+    async resolveSource(ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> {
+      if ((ref.kind === "record" || ref.kind === "receipt") && ref.target.surface === "procurement") {
+        const resolved = await input.procurementEvidence?.resolve(ref, call)
+        if (resolved) return resolved
+      }
       if (ref.kind === "record" && ref.target.surface === "dashboard" && ref.target.recordType === "dashboard-page") return input.dashboard(ref, call)
       if (ref.kind === "record" && ref.target.surface === "dashboard" && input.dashboardRecord) return input.dashboardRecord(ref, call)
       if (ref.kind === "case-event") return input.caseEvent(ref, call)
@@ -134,7 +144,11 @@ export function createSfEvidenceRouter(input: {
       if (ref.kind === "record" && ref.target.surface === "planner" && ref.target.recordType === "planner-version" && input.planner) return input.planner(ref, call)
       return Promise.resolve({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })
     },
-    proveContinuity(original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext): Promise<boolean> {
+    async proveContinuity(original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext): Promise<boolean> {
+      if (original.kind === "record" && original.target.surface === "procurement") {
+        const proven = await input.procurementEvidence?.proveContinuity(original, current, call)
+        if (proven !== undefined) return proven
+      }
       if (original.kind === "record" && original.target.surface === "dashboard" && original.target.recordType === "dashboard-page") return input.dashboardProof(original, current, call)
       if (original.kind === "record" && original.target.surface === "dashboard" && input.dashboardRecordProof) return input.dashboardRecordProof(original, current, call)
       if (original.kind === "case-event") return input.caseEventProof(original, current, call)
@@ -158,6 +172,7 @@ export function createSfAtlasBusiness(input: {
   dashboardRecords: Parameters<typeof createSfDashboardRecordSourceAccess>[0]["records"]
   procurement: ProcurementPort
   procurementResolve: Parameters<typeof createSfProcurementSourceAccess>[0]["resolve"]
+  procurementEvidence?: ProcurementEvidence
   documentRead: Parameters<typeof createSfDocumentSourceAccess>[0]["read"]
   planner?: { sources: PlannerSourceHost; port: PlannerPort }
   caseForEvidence: (digest: string, call: TrustedDomainContext) => Promise<{ id: string; incarnation: string } | undefined>
@@ -167,10 +182,7 @@ export function createSfAtlasBusiness(input: {
 }) {
   const dashboard = createSfDashboardSourceAccess({ host: input.host, issue: input.dashboardIssue, dashboard: input.dashboard })
   const dashboardRecord = createSfDashboardRecordSourceAccess({ host: input.host, records: input.dashboardRecords })
-  const caseEvent = createSfCaseEventSourceAccess({ host: input.host, state: input.state, authorizeCase: input.authorizeCase, authorizeEvidence: async (refs, call) => {
-    const results = await context.context({ refs }, call)
-    return results.length === refs.length && results.every((result, index) => (result.state === "fresh" || result.state === "historical") && digestSfValue(result.ref) === digestSfValue(refs[index])) && await input.host.revalidate(call)
-  } })
+  const caseEvent = createSfCaseEventSourceAccess({ host: input.host, cases: input.cases })
   const procurement = createSfProcurementSourceAccess({ host: input.host, resolve: input.procurementResolve, procurement: input.procurement })
   const document = createSfDocumentSourceAccess({ host: input.host, read: input.documentRead })
   const planner = async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
@@ -199,7 +211,7 @@ export function createSfAtlasBusiness(input: {
     return await check() && await check()
   }
   const router = createSfEvidenceRouter({
-    dashboard, dashboardRecord, caseEvent, procurement, document, planner,
+    dashboard, dashboardRecord, caseEvent, procurement, procurementEvidence: input.procurementEvidence, document, planner,
     dashboardProof: createSfDashboardContinuityProof({ host: input.host, issue: input.dashboardIssue, dashboard: input.dashboard, readOriginal }),
     dashboardRecordProof,
     caseEventProof: createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: caseEvent }),

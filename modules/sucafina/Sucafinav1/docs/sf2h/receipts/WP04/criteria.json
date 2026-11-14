@@ -1,0 +1,5347 @@
+{
+  "schema": "wp04-final-criterion-map-v2",
+  "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "product_sha": "c9f861851c5b8c9f341e2be7f9c525267987eb80",
+  "snapshot_sha": "df1b7a42f52eb125930f93e70c2281823f1fdf8b",
+  "test_run_id": 43517984814,
+  "status": "BLOCKED_INTEGRATED_ACCEPTANCE",
+  "criterion_count": 111,
+  "status_definitions": {
+    "PASS_SCOPED": "Own producer/domain/port/render behavior witnessed by the named final hosted tests; no native or global qualification.",
+    "PASS_DOCUMENTED": "Required ownership/inventory/handoff material is supplied and reviewed; not an execution claim.",
+    "PARTIAL": "Named own behavior passed scoped tests, but the full criterion has a listed integration, browser or coverage gap.",
+    "BLOCKED": "A required foreign producer/consumer or composed/native proof is absent.",
+    "NOT_RUN_HUMAN": "The requested actual human comprehension measurement was not executed."
+  },
+  "counts": {
+    "PARTIAL": 44,
+    "PASS_SCOPED": 39,
+    "BLOCKED": 21,
+    "PASS_DOCUMENTED": 3,
+    "NOT_RUN_HUMAN": 4
+  },
+  "task_counts": {
+    "WP04": {
+      "PARTIAL": 8,
+      "PASS_SCOPED": 5,
+      "BLOCKED": 4,
+      "PASS_DOCUMENTED": 2,
+      "NOT_RUN_HUMAN": 1
+    },
+    "WP04.T01": {
+      "PASS_SCOPED": 8,
+      "BLOCKED": 5,
+      "PARTIAL": 6,
+      "PASS_DOCUMENTED": 1
+    },
+    "WP04.T02": {
+      "PARTIAL": 10,
+      "PASS_SCOPED": 3,
+      "BLOCKED": 1
+    },
+    "WP04.T03": {
+      "PASS_SCOPED": 12,
+      "BLOCKED": 5,
+      "PARTIAL": 3,
+      "NOT_RUN_HUMAN": 1
+    },
+    "WP04.T04": {
+      "NOT_RUN_HUMAN": 2,
+      "PASS_SCOPED": 6,
+      "PARTIAL": 7
+    },
+    "WP04.T05": {
+      "PARTIAL": 10,
+      "PASS_SCOPED": 5,
+      "BLOCKED": 6
+    }
+  },
+  "criteria": [
+    {
+      "criterion_id": "WP04.CMP.01",
+      "task": "WP04",
+      "criterion": "A matriz de cobertura inclui requester, buyer, approver, supplier admin, admin, viewer e combinações já permitidas; estados normais, rejeitados, cancelados e emitidos não ficam fora.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Selected tests exercise baseline roles, combinations, rejection/cancel/issued states and unknown holders.",
+      "remaining_limits": [
+        "A complete Cartesian role/state/browser inventory is not claimed."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T001",
+        "T002",
+        "T003",
+        "T004",
+        "T005",
+        "T006"
+      ]
+    },
+    {
+      "criterion_id": "WP04.CMP.02",
+      "task": "WP04",
+      "criterion": "A cobertura monetária inclui moeda base, moeda estrangeira, FX ausente, mudança de taxa após submissão, proposta incompleta e divergência entre total informado e quantidade vezes preço.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Focused monetary coverage distinguishes currencies, frozen/missing FX, incomplete comparison and inconsistent stated totals.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T007",
+        "T008",
+        "T009",
+        "T010",
+        "T011"
+      ]
+    },
+    {
+      "criterion_id": "WP04.CMP.03",
+      "task": "WP04",
+      "criterion": "Cadastro/ativação/bloqueio/inativação/banco de fornecedor, configurações/reset, histórico, registros/exportações e referências existentes permanecem acessíveis.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Original supplier operations, settings/reset, history and export controls are preserved.",
+      "remaining_limits": [
+        "Actual HTTP/download bytes and every supplier-state browser operation remain unobserved."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T012",
+        "T001",
+        "T013",
+        "T014",
+        "T015",
+        "T016"
+      ]
+    },
+    {
+      "criterion_id": "WP04.CMP.10",
+      "task": "WP04",
+      "criterion": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "The 111-criterion map and integration requests identify owners, exports, consumers and discriminating negatives.",
+      "remaining_limits": [
+        "Common host mounting, native Session/SkillLoadReceipt and cross-surface UI/native/MCP parity remain unproved; see integration requests INT-01 through INT-04. Scoped producer tests do not establish resident acceptance."
+      ],
+      "blockers": [
+        "INT-01",
+        "INT-02",
+        "INT-03",
+        "INT-04"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.DOD.01",
+      "task": "WP04",
+      "criterion": "As cinco páginas e o inventário de comandos/estados originais têm cobertura explícita, com views exportadas, C02/C03 reais e evidências locais reproduzíveis.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "All five domain pages, original transitions, C02/C03 producer exports and focused tests are retained.",
+      "remaining_limits": [
+        "Common host mounting, native Session/SkillLoadReceipt and cross-surface UI/native/MCP parity remain unproved; see integration requests INT-01 through INT-04. Scoped producer tests do not establish resident acceptance.",
+        "Coverage is not an exhaustive every-command/every-role browser matrix."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T012",
+        "T001",
+        "T018",
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.DOD.02",
+      "task": "WP04",
+      "criterion": "Fila, pedido guiado, comparação, resumos por etapa e fornecedores estão demonstrados com os mesmos registros e versões, sem um store paralelo de demonstração.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Production domain data and SQLite source lifecycle are used; no parallel demonstration store was introduced.",
+      "remaining_limits": [
+        "Common host mounting, native Session/SkillLoadReceipt and cross-surface UI/native/MCP parity remain unproved; see integration requests INT-01 through INT-04. Scoped producer tests do not establish resident acceptance.",
+        "No mounted browser journey reconciles all views and C02 on the integrated host."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T019",
+        "T001",
+        "T020",
+        "T013"
+      ]
+    },
+    {
+      "criterion_id": "WP04.DOD.03",
+      "task": "WP04",
+      "criterion": "O handoff lista consumidores, casos adversos, artefatos de evidência e verificações de composição reservadas a WP10; não declara entrega integrada com base apenas em fixtures.",
+      "status": "PASS_DOCUMENTED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "This receipt enumerates production consumers, adversarial cases, exact selected tests and reserved WP10 composition work.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T019",
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.DOD.10",
+      "task": "WP04",
+      "criterion": "As entregas residentes atribuídas a WP04 têm produção, consumo e provas reais completos.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Own C16 handlers and scoped producers are exported.",
+      "remaining_limits": [
+        "Common host mounting, native Session/SkillLoadReceipt and cross-surface UI/native/MCP parity remain unproved; see integration requests INT-01 through INT-04. Scoped producer tests do not establish resident acceptance."
+      ],
+      "blockers": [
+        "INT-01",
+        "INT-02",
+        "INT-03",
+        "INT-04"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.INV.01",
+      "task": "WP04",
+      "criterion": "Alçadas, papéis, autorização por holder, opção de bloquear autoaprovação, política de fornecedores e transições legais permanecem os do domínio; decidir continua sendo ato explícito da pessoa autorizada.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Actual domain/porta transitions retain role, holder, self-approval and explicit human command checks.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T001",
+        "T003",
+        "T002",
+        "T021",
+        "T022"
+      ]
+    },
+    {
+      "criterion_id": "WP04.INV.02",
+      "task": "WP04",
+      "criterion": "Histórico, identificadores já emitidos, versões esperadas e snapshots de aprovação/câmbio são preservados; po_issued continua significando emissão interna.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Record IDs, CAS versions, submitted currency/rates, approval snapshots and internal PO issue semantics are preserved.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T001",
+        "T009",
+        "T016",
+        "T023"
+      ]
+    },
+    {
+      "criterion_id": "WP04.INV.03",
+      "task": "WP04",
+      "criterion": "Recortes autorizados e restrições bancárias valem para tela, exportação, resumo e C02; referência textual ou ausência nunca vira relação, autorização ou valor zero.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Authorized domain projections omit unavailable values and bank material; text references remain textual.",
+      "remaining_limits": [
+        "Common host mounting, native Session/SkillLoadReceipt and cross-surface UI/native/MCP parity remain unproved; see integration requests INT-01 through INT-04. Scoped producer tests do not establish resident acceptance.",
+        "Actual HTTP download-byte and all-consumer exposure proof is absent."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T019",
+        "T024",
+        "T004",
+        "T015",
+        "T025",
+        "T026"
+      ]
+    },
+    {
+      "criterion_id": "WP04.INV.10",
+      "task": "WP04",
+      "criterion": "WP04 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+      "status": "PASS_DOCUMENTED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "The published delta is confined to leased WP04 paths and the handoff-authorized check workflow; no enterprise access, new identity or policy was introduced.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": []
+    },
+    {
+      "criterion_id": "WP04.QLT.01",
+      "task": "WP04",
+      "criterion": "Cada etapa informa próxima ação, responsável conhecido e motivo concreto da restrição, sem expor uma parede de comandos que só falham depois do clique.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Rendered rows/details describe stage, next step, responsible person and concrete restriction.",
+      "remaining_limits": [
+        "No comprehensive keyboard/browser journey over all roles and transitions was observed."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T006",
+        "T027",
+        "T012"
+      ]
+    },
+    {
+      "criterion_id": "WP04.QLT.02",
+      "task": "WP04",
+      "criterion": "Valores, ranking e resumos mostram origem, moeda, versão e limitações; notas humanas não são apresentadas como medida objetiva de qualidade do fornecedor.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "The production comparison and C02 disclose currency, snapshot, human assessment, rank components and limitations without changing financial rules.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T007",
+        "T020",
+        "T009",
+        "T028",
+        "T010"
+      ]
+    },
+    {
+      "criterion_id": "WP04.QLT.03",
+      "task": "WP04",
+      "criterion": "Formulários e ações críticas são operáveis por teclado, mantêm foco após erro/conflito e apresentam a correção junto ao campo correspondente.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Initial rendering associates validation text with controls and preserves recorded field values.",
+      "remaining_limits": [
+        "WP01 common shell does not yet consume fieldErrors dynamically or expose explicit current CAS revision/review flow; no real keyboard/focus/concurrent browser run was observed."
+      ],
+      "blockers": [
+        "INT-05"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T006"
+      ]
+    },
+    {
+      "criterion_id": "WP04.QLT.10",
+      "task": "WP04",
+      "criterion": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Concrete schemas, references, digests and explicit denial/stale/unavailable results are retained.",
+      "remaining_limits": [
+        "Common host mounting, native Session/SkillLoadReceipt and cross-surface UI/native/MCP parity remain unproved; see integration requests INT-01 through INT-04. Scoped producer tests do not establish resident acceptance.",
+        "Package typecheck remains blocked by foreign composition diagnostics."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T029",
+        "T030",
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.SUC.01",
+      "task": "WP04",
+      "criterion": "No roteiro sintético, o aprovador identifica em até 30 segundos a etapa que decide, o valor, a diferença relevante, a razão da escolha e o próximo passo, sem abrir Settings.",
+      "status": "NOT_RUN_HUMAN",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Rendered summaries contain decision context and source limitations.",
+      "remaining_limits": [
+        "No timed human comprehension session was executed; deterministic HTML assertions cannot establish a 30-second user outcome."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T020",
+        "T006"
+      ]
+    },
+    {
+      "criterion_id": "WP04.SUC.02",
+      "task": "WP04",
+      "criterion": "No roteiro PR até PO, o buyer não redigita fornecedor, moeda e quantidade já selecionados quando esses valores podem ser reutilizados; sugestões identificam a origem e preservam ajustes negociados.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Existing proposal copying and labeled source suggestions retain negotiated values.",
+      "remaining_limits": [
+        "No observed buyer/browser journey proves the no-retyping outcome."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T031",
+        "T032",
+        "T001"
+      ]
+    },
+    {
+      "criterion_id": "WP04.SUC.03",
+      "task": "WP04",
+      "criterion": "Os casos adversos distinguem aprovado de emitido, desconhecido de zero e versão atual de versão desatualizada; nenhuma dessas diferenças é ocultada por um resultado visual aparentemente correto.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Approved/issued, missing/zero and current/stale are distinct in domain values, validation and scoped reads.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T009",
+        "T011",
+        "T003",
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.SUC.10",
+      "task": "WP04",
+      "criterion": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "The actual shared UI dispatcher consumes readRequest in hosted scoped tests.",
+      "remaining_limits": [
+        "Common host mounting, native Session/SkillLoadReceipt and cross-surface UI/native/MCP parity remain unproved; see integration requests INT-01 through INT-04. Scoped producer tests do not establish resident acceptance."
+      ],
+      "blockers": [
+        "INT-01",
+        "INT-02",
+        "INT-03",
+        "INT-04"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003",
+        "C004",
+        "C005",
+        "C006"
+      ],
+      "tests_refs": [
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.CHK.01",
+      "task": "WP04.T01",
+      "criterion": "Comparar a leitura do mesmo conjunto por requester puro e buyer: o requester recebe apenas seus pedidos também em totais, pendências e referências; inserir um pedido alheio deve alterar o buyer e não o requester.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "The real persisted collection scope keeps requester counts, members and drilldowns unchanged when another actor request is inserted; buyer refresh sees it.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T019",
+        "T033",
+        "T024"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.CHK.02",
+      "task": "WP04.T01",
+      "criterion": "Dado pedido submetido, rejeitado, ressubmetido e salvo depois, a idade usa a última entrada na etapa pendente; alterar apenas o horário do save não altera essa idade.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Aging follows the latest relevant submit/approval event, not a later save.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T019",
+        "T034",
+        "T035"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.CHK.03",
+      "task": "WP04.T01",
+      "criterion": "Retirar o evento que comprova a entrada na etapa: C02 marca idade indisponível e a fila mantém o pedido; não usa criação como fallback nem calcula uma duração fictícia.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "A missing transition leaves age unavailable and the visible request remains in the queue.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T019",
+        "T026",
+        "T036",
+        "T037"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.CHK.04",
+      "task": "WP04.T01",
+      "criterion": "Um pedido com holder diferente do ator não oferece aprovação como próxima ação; holder ausente aparece explicitamente sem responsável, sem criar autorização nova.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "A different holder blocks decision controls; absent holder remains explicitly unassigned, subject to the original command policy.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T006",
+        "T022"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.CHK.18",
+      "task": "WP04.T01",
+      "criterion": "Executar sf_request_read pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Actual UI authority and dispatcher are exercised for sf_request_read; forged/direct/ungranted and revoked reads fail.",
+      "remaining_limits": [
+        "Common host mounting, native Session/SkillLoadReceipt and cross-surface UI/native/MCP parity remain unproved; see integration requests INT-01 through INT-04. Scoped producer tests do not establish resident acceptance."
+      ],
+      "blockers": [
+        "INT-01",
+        "INT-04"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T017",
+        "T029",
+        "T030"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.CMP.01",
+      "task": "WP04.T01",
+      "criterion": "Incluir rejeitados, cancelados, emitidos, sem holder e históricos incompletos, além do caminho feliz.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Tests retain closed, rejected, cancelled and issued states plus missing holders/history instead of dropping them.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T005",
+        "T038",
+        "T006",
+        "T026",
+        "T001"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.CMP.02",
+      "task": "WP04.T01",
+      "criterion": "Entregar referência estável de drilldown e contexto de versão para cada pedido visível.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Current visible members carry scoped evidence and a stable authorized drilldown; stale collection scopes require refresh.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T019",
+        "T018",
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.CMP.18",
+      "task": "WP04.T01",
+      "criterion": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Own request-read export has authorized and negative scoped proofs.",
+      "remaining_limits": [
+        "Common host mounting, native Session/SkillLoadReceipt and cross-surface UI/native/MCP parity remain unproved; see integration requests INT-01 through INT-04. Scoped producer tests do not establish resident acceptance.",
+        "There is no mounted complete parity matrix for native/MCP direct, stale and unavailable calls."
+      ],
+      "blockers": [
+        "INT-01",
+        "INT-04"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T017",
+        "T029",
+        "T030"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.DOD.01",
+      "task": "WP04.T01",
+      "criterion": "As filas exportadas consomem a projeção C02 de Procurement e cobrem cada estado atual do baseline.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "The C02 list and runtime queues share production domain records and the stage-entry functions.",
+      "remaining_limits": [
+        "The common UI still renders its authorized domain view; a mounted all-state C02-to-UI journey is not proved."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T019",
+        "T018",
+        "T005",
+        "T038"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.DOD.02",
+      "task": "WP04.T01",
+      "criterion": "O mapa estado/papel/próxima ação e a proveniência da idade estão anexados ao handoff local.",
+      "status": "PASS_DOCUMENTED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "The state/role/action inventory and exact aging provenance are attached in coverage-inventory.md.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T034",
+        "T006",
+        "T037"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.DOD.18",
+      "task": "WP04.T01",
+      "criterion": "Descritores C16 de sf_request_read são implementados e consumidos por T06 com referências reais.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "C16 readRequest descriptor/export and UI binding exist.",
+      "remaining_limits": [
+        "Common host mounting, native Session/SkillLoadReceipt and cross-surface UI/native/MCP parity remain unproved; see integration requests INT-01 through INT-04. Scoped producer tests do not establish resident acceptance."
+      ],
+      "blockers": [
+        "INT-01",
+        "INT-04"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.INV.01",
+      "task": "WP04.T01",
+      "criterion": "Filas, totais e deep links compartilham o mesmo recorte autorizado de requests.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Queues, totals and generated drilldowns use the same authorized collection selection.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T019",
+        "T018",
+        "T024"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.INV.02",
+      "task": "WP04.T01",
+      "criterion": "Salvar um campo não reinicia a idade da etapa; histórico insuficiente não produz data presumida.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Saves do not reset stage age and missing event history does not create a substitute date.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T019",
+        "T034",
+        "T026",
+        "T037"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.INV.18",
+      "task": "WP04.T01",
+      "criterion": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "The production destination reauthorizes reads and commands independently of transport labels.",
+      "remaining_limits": [
+        "Common host mounting, native Session/SkillLoadReceipt and cross-surface UI/native/MCP parity remain unproved; see integration requests INT-01 through INT-04. Scoped producer tests do not establish resident acceptance."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T021",
+        "T029",
+        "T030",
+        "T002"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.QLT.01",
+      "task": "WP04.T01",
+      "criterion": "Cada linha explica estado, próxima ação e responsável conhecido sem depender de códigos internos.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Rows expose recorded stage, next step, known holder or an explicit missing-holder condition.",
+      "remaining_limits": [
+        "All-state/role user comprehension has not been observed."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T006",
+        "T027",
+        "T005",
+        "T039"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.QLT.02",
+      "task": "WP04.T01",
+      "criterion": "Ordenação e filtros são visíveis, reversíveis e operáveis por teclado.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Sort basis is visible, uses proven entry then request ID, and filters are standard labeled form controls.",
+      "remaining_limits": [
+        "No real keyboard/focus walkthrough was executed."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T037",
+        "T027"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.QLT.18",
+      "task": "WP04.T01",
+      "criterion": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Closed request schemas and handler receipts exist; invalid/missing data is explicit.",
+      "remaining_limits": [
+        "Common host mounting, native Session/SkillLoadReceipt and cross-surface UI/native/MCP parity remain unproved; see integration requests INT-01 through INT-04. Scoped producer tests do not establish resident acceptance."
+      ],
+      "blockers": [
+        "INT-01",
+        "INT-04"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T017",
+        "T029"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.SUC.01",
+      "task": "WP04.T01",
+      "criterion": "Requester e buyer localizam seus pedidos e distinguem falta de informação de espera por outra pessoa sem executar uma ação inválida.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Requester and buyer have scoped search and concrete waiting/unassigned states.",
+      "remaining_limits": [
+        "Actual user task completion has not been observed."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T027",
+        "T006",
+        "T019"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.SUC.02",
+      "task": "WP04.T01",
+      "criterion": "Aging e contagens fornecidos a WP05 reproduzem a seleção autorizada e não divergem da fila.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "The producer delivers consistent stock/aging and authorized selection to consumers.",
+      "remaining_limits": [
+        "Mounted WP05 consumer parity is reserved for integration; no WP05 run is attributed to this selection."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T019",
+        "T018",
+        "T036"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T01.SUC.18",
+      "task": "WP04.T01",
+      "criterion": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "One real UI binding receipt is covered without additional domain effects.",
+      "remaining_limits": [
+        "Common host mounting, native Session/SkillLoadReceipt and cross-surface UI/native/MCP parity remain unproved; see integration requests INT-01 through INT-04. Scoped producer tests do not establish resident acceptance."
+      ],
+      "blockers": [
+        "INT-01",
+        "INT-04"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C001",
+        "C002",
+        "C003"
+      ],
+      "tests_refs": [
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T02.CHK.01",
+      "task": "WP04.T02",
+      "criterion": "Percorrer PR aprovada até a proposta de PO: fornecedor, moeda e quantidade selecionados reaparecem sem redigitação; uma condição negociada já presente na PO não é substituída por default do fornecedor.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Existing domain proposal copies selected commercial data; render shows saved values and source candidates without overwriting negotiated terms.",
+      "remaining_limits": [
+        "No observed browser PR-to-PO journey demonstrating no retyping; selected supplier/currency/quantity are not all independently asserted in the address test."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I013",
+        "I014",
+        "I015"
+      ],
+      "consumers_refs": [
+        "C007"
+      ],
+      "tests_refs": [
+        "T031",
+        "T032",
+        "T040",
+        "T001"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T02.CHK.02",
+      "task": "WP04.T02",
+      "criterion": "Alternar compra recorrente e não recorrente e estratégia existing/new: campos e validações aplicáveis acompanham o estado sem apagar valores previamente salvos nem aceitar submissão que o validador existente recusa.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Conditional values persist through recurrence changes and actual sourcing saves existing→new→existing. The renderer retains the saved contract reference and displays the applicable existing-contract hint. The actual PO validator and submit_po both refuse existing-contract submission without a reference; the same otherwise-complete new-contract input has no reference error.",
+      "remaining_limits": [
+        "The final scoped run verifies recurrence plus both strategy directions, preserved renderer fields and actual domain saves. The PO refusal uses a separate PO-draft fixture; no browser interaction or end-to-end sourcing approval transition is claimed by that scenario."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I016",
+        "I017",
+        "I018"
+      ],
+      "consumers_refs": [
+        "C008"
+      ],
+      "tests_refs": [
+        "T041",
+        "T001",
+        "T042",
+        "T043"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T02.CHK.03",
+      "task": "WP04.T02",
+      "criterion": "Dois atores abrem a mesma versão; o segundo tenta salvar após a alteração do primeiro: o comando retorna conflito, os valores do segundo continuam visíveis e o primeiro registro não é sobrescrito silenciosamente.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Stale commands stop before overwriting; the common shell retains local form values and describes the current record. ",
+      "remaining_limits": [
+        "WP01 src/screen-shell.ts preserves dirty inputs and displays stored/attempt for 409, but does not consume response.fieldErrors, focus the invalid field or supply an explicit review/rebase action. runtime/contract.ts conflict returns stored/by, not the current CAS revision. No real browser focus/concurrent-edit run was observed."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I019",
+        "I020",
+        "I021"
+      ],
+      "consumers_refs": [
+        "C009",
+        "C010"
+      ],
+      "tests_refs": [
+        "T023",
+        "T044"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T02.CHK.04",
+      "task": "WP04.T02",
+      "criterion": "Tentar excluir pedido fora de draft ou cancelar po_issued continua recusado; ocultar o botão não substitui a recusa do comando real.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Forbidden cancel/delete is checked by the actual domain independent of button visibility.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I022",
+        "I019",
+        "I023"
+      ],
+      "consumers_refs": [
+        "C011"
+      ],
+      "tests_refs": [
+        "T001",
+        "T003",
+        "T016"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T02.CMP.01",
+      "task": "WP04.T02",
+      "criterion": "Cobrir os campos obrigatórios/condicionais de PR, sourcing e PO, defaults, linhas repetidas e histórico.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Required and conditional validators, repeat rows, defaults and history use existing production paths.",
+      "remaining_limits": [
+        "Both contract-strategy directions and the real existing-contract submission refusal passed the final scoped run. Coverage remains short of a complete every-field/every-condition browser matrix."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I024",
+        "I016"
+      ],
+      "consumers_refs": [
+        "C012"
+      ],
+      "tests_refs": [
+        "T001",
+        "T045",
+        "T042",
+        "T031",
+        "T041",
+        "T043"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T02.CMP.02",
+      "task": "WP04.T02",
+      "criterion": "Cobrir retomada, rejeição, cancelamento e exclusão somente nas condições existentes.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Real domain tests cover rejection transitions, cancellation preservation, issued-state refusals and permitted draft deletion.",
+      "remaining_limits": [
+        "No observed browser resume after each rejection/cancellation path; all named porta suites were included in the final request."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I019",
+        "I025",
+        "I026"
+      ],
+      "consumers_refs": [
+        "C013"
+      ],
+      "tests_refs": [
+        "T001",
+        "T046",
+        "T047",
+        "T048",
+        "T049",
+        "T016"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T02.DOD.01",
+      "task": "WP04.T02",
+      "criterion": "PR, sourcing e PO têm apresentação progressiva e roundtrip completo dos campos originais.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "The real renderer keeps all four details and the actual runtime retains business fields through the main lifecycle.",
+      "remaining_limits": [
+        "No browser inventory/roundtrip proof for every original field; full claim exceeds a few synthetic roundtrip paths."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I027"
+      ],
+      "consumers_refs": [
+        "C014"
+      ],
+      "tests_refs": [
+        "T001",
+        "T045",
+        "T042",
+        "T041"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T02.DOD.02",
+      "task": "WP04.T02",
+      "criterion": "Os estados de erro e conflito conservam entradas locais e permitem retomar a tarefa.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Validation failure and stale writes do not commit changes; dirty forms are preserved by the existing shell.",
+      "remaining_limits": [
+        "WP01 src/screen-shell.ts preserves dirty inputs and displays stored/attempt for 409, but does not consume response.fieldErrors, focus the invalid field or supply an explicit review/rebase action. runtime/contract.ts conflict returns stored/by, not the current CAS revision. No real browser focus/concurrent-edit run was observed."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I019",
+        "I028"
+      ],
+      "consumers_refs": [
+        "C015"
+      ],
+      "tests_refs": [
+        "T023",
+        "T041",
+        "T044"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T02.INV.01",
+      "task": "WP04.T02",
+      "criterion": "Pré-preenchimento é sugestão identificada ou cópia de dado existente; não inventa condição comercial nem substitui ajuste negociado.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Suggestions identify selected quote/master/default origin, unavailable data remain unavailable and saved values are retained.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I015",
+        "I029",
+        "I030"
+      ],
+      "consumers_refs": [
+        "C016"
+      ],
+      "tests_refs": [
+        "T032",
+        "T031",
+        "T040"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T02.INV.02",
+      "task": "WP04.T02",
+      "criterion": "Ocultar uma seção ou comando não altera a autorização, a transição legal ou os dados persistidos.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Collapsed or disabled presentation does not replace authorization or mutate persisted fields.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I017",
+        "I031",
+        "I023"
+      ],
+      "consumers_refs": [
+        "C017"
+      ],
+      "tests_refs": [
+        "T041",
+        "T001",
+        "T003",
+        "T002"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T02.QLT.01",
+      "task": "WP04.T02",
+      "criterion": "A pendência aponta o campo e a correção necessária, sem um erro genérico no fim do formulário.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Current-stage pending errors point to escaped adjacent controls with accessible relationships.",
+      "remaining_limits": [
+        "Initial rendering uses exact fields; after a new server validation response the common shell only shows generic errors and does not consume fieldErrors dynamically."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I032",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C018"
+      ],
+      "tests_refs": [
+        "T050",
+        "T051",
+        "T052"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T02.QLT.02",
+      "task": "WP04.T02",
+      "criterion": "Ações de salvar, revisar conflito e continuar mantêm foco e contexto do pedido.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Request context and version are displayed; static accessible controls and conflict-preserving shell behavior are available.",
+      "remaining_limits": [
+        "WP01 src/screen-shell.ts preserves dirty inputs and displays stored/attempt for 409, but does not consume response.fieldErrors, focus the invalid field or supply an explicit review/rebase action. runtime/contract.ts conflict returns stored/by, not the current CAS revision. No real browser focus/concurrent-edit run was observed."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I006",
+        "I028"
+      ],
+      "consumers_refs": [
+        "C019"
+      ],
+      "tests_refs": [
+        "T050",
+        "T023"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T02.SUC.01",
+      "task": "WP04.T02",
+      "criterion": "O roteiro de compra reutiliza os dados já confirmados e deixa visível a origem de cada sugestão.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Production renders explicit source candidates and retains copied/negotiated values.",
+      "remaining_limits": [
+        "No observed end-to-end buyer interaction proving the no-retyping user outcome."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I015",
+        "I033",
+        "I030"
+      ],
+      "consumers_refs": [
+        "C016"
+      ],
+      "tests_refs": [
+        "T032",
+        "T031",
+        "T040",
+        "T001"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T02.SUC.02",
+      "task": "WP04.T02",
+      "criterion": "Uma edição concorrente não destrói entrada local nem produz confirmação de salvamento inexistente.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Failed concurrent save does not commit or report Saved, and existing dirty-form behavior retains local edits.",
+      "remaining_limits": [
+        "WP01 src/screen-shell.ts preserves dirty inputs and displays stored/attempt for 409, but does not consume response.fieldErrors, focus the invalid field or supply an explicit review/rebase action. runtime/contract.ts conflict returns stored/by, not the current CAS revision. No real browser focus/concurrent-edit run was observed."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I019",
+        "I020"
+      ],
+      "consumers_refs": [
+        "C020"
+      ],
+      "tests_refs": [
+        "T023",
+        "T044"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.CHK.01",
+      "task": "WP04.T03",
+      "criterion": "Fixture: A USD 32.400, notas técnicas [5,4,4,4,4], comerciais manuais [4,4]; B EUR 28.000 a 1,08, notas [4,4,4,3,4] e [5,4]; C USD 29.000 não conforme. Esperar A 87,9333..., B 85, C fora do ranking, diferença A versus menor conforme USD 2.160/7,142857...%; a UI deve mostrar o arredondamento sem alterar a ordem.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Exact A/B/C scoring, ranking, premium, submitted FX, producer output and formatted HTML passed the final scoped run. Human comprehension is separately unproved."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I034",
+        "I035",
+        "I036",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C022",
+        "C023"
+      ],
+      "tests_refs": [
+        "T007",
+        "T020",
+        "T053"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.CHK.02",
+      "task": "WP04.T03",
+      "criterion": "Deixar uma nota obrigatória vazia ou manter somente uma proposta: a UI declara incompletude/comparação limitada e a submissão segue exatamente o validador vigente; não inventa nota zero nem nova exceção.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Single-offer limitation and incomplete scores are asserted in fixtures; actual browser interaction is not observed."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I034",
+        "I035",
+        "I036",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021"
+      ],
+      "tests_refs": [
+        "T054",
+        "T010",
+        "T050"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.CHK.03",
+      "task": "WP04.T03",
+      "criterion": "Mudar a taxa configurada depois da submissão: a decisão pendente preserva o valor/câmbio congelado; remover FX de uma comparação sem snapshot produz indisponibilidade/pendência, nunca total zero.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Frozen-source regressions, projection and strict malformed string-FX cases passed the final scoped run; mounted native consumption is separate."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I034",
+        "I035",
+        "I036",
+        "I037",
+        "I007",
+        "I038"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C022",
+        "C023"
+      ],
+      "tests_refs": [
+        "T008",
+        "T055",
+        "T056",
+        "T057",
+        "T001",
+        "T058"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.CHK.04",
+      "task": "WP04.T03",
+      "criterion": "Misturar PO em moeda base e estrangeira, uma po_approved e outra po_issued: totais por estado usam valores C02 comparáveis e apresentam itens não conversíveis; aprovado não vira emitido ou realizado.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Different monetary states and unavailable amounts are covered; no claim of realized spending or budget balance."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I037",
+        "I007",
+        "I038",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C022",
+        "C023"
+      ],
+      "tests_refs": [
+        "T009",
+        "T028",
+        "T059"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.CHK.05",
+      "task": "WP04.T03",
+      "criterion": "Introduzir total informado diferente de qty vezes unitPrice: ambas as bases e a discrepância aparecem; nenhum cálculo silencioso altera preço, política de aprovação ou documento.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Both stated and quantity-times-price amounts remain visible and unmodified. The final producer discrepancy assertion passed with numeric precision appropriate to the existing engine."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I034",
+        "I035",
+        "I036",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C022",
+        "C023"
+      ],
+      "tests_refs": [
+        "T010",
+        "T060"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.CHK.18",
+      "task": "WP04.T03",
+      "criterion": "Executar sf_sourcing_compare pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Existing local scoped fixtures do not prove native/MCP parity or a real loaded skill. Frozen output decoder rejects expanded comparison until WP00 integration."
+      ],
+      "blockers": [
+        "INT-02-WP00-CommercialComparison-schema",
+        "INT-03-WP10-sourcing-verifier",
+        "INT-04-WP10-host-composition",
+        "GNATIVE-NOT-RUN"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I039",
+        "I040",
+        "I041",
+        "I034",
+        "I035",
+        "I036"
+      ],
+      "consumers_refs": [
+        "C024",
+        "C003",
+        "C025",
+        "C026"
+      ],
+      "tests_refs": [
+        "T029",
+        "T053",
+        "T030"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.CMP.01",
+      "task": "WP04.T03",
+      "criterion": "Cobrir moedas diferentes, snapshot, FX ausente, empate, proposta não conforme, menos propostas e notas incompletas.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "The final scoped run covers currencies, snapshots, noncompliance, one offer, missing notes/FX and equal-score ordering in both input orders without automatic selection."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I034",
+        "I035",
+        "I036",
+        "I037",
+        "I007",
+        "I038"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C022",
+        "C023"
+      ],
+      "tests_refs": [
+        "T007",
+        "T054",
+        "T057",
+        "T010",
+        "T061",
+        "T062"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.CMP.02",
+      "task": "WP04.T03",
+      "criterion": "Cobrir PR estimada, sourcing, PO aprovada e PO emitida internamente sem agregar estados como se fossem equivalentes.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "PR estimate, sourcing and PO approved/issued states are separately represented; C02 final dispatcher composition remains a separate integration obligation."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I037",
+        "I007",
+        "I038",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C022",
+        "C023"
+      ],
+      "tests_refs": [
+        "T007",
+        "T009",
+        "T059",
+        "T028",
+        "T063"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.CMP.18",
+      "task": "WP04.T03",
+      "criterion": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Direct producer authorized/stale/unavailable cases exist. Positive capability/native comparison is blocked by the schema and verifier; synthetic request-read tests are not sourcing-native proof."
+      ],
+      "blockers": [
+        "INT-02-WP00-CommercialComparison-schema",
+        "INT-03-WP10-sourcing-verifier",
+        "INT-04-WP10-host-composition",
+        "GNATIVE-NOT-RUN"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I039",
+        "I040",
+        "I041",
+        "I034",
+        "I035",
+        "I036"
+      ],
+      "consumers_refs": [
+        "C024",
+        "C003",
+        "C025",
+        "C026"
+      ],
+      "tests_refs": [
+        "T029",
+        "T053",
+        "T057",
+        "T030"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.DOD.01",
+      "task": "WP04.T03",
+      "criterion": "A comparação visual utiliza o motor existente e entrega componentes reconciliáveis no C02.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Direct producer/render reconciliation is implemented; enriched C02 output is not accepted by the seed shared closed schema."
+      ],
+      "blockers": [
+        "INT-02-WP00-CommercialComparison-schema"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I034",
+        "I035",
+        "I036",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C022",
+        "C023",
+        "C024",
+        "C003"
+      ],
+      "tests_refs": [
+        "T007",
+        "T020",
+        "T053"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.DOD.02",
+      "task": "WP04.T03",
+      "criterion": "Moeda, taxa/snapshot e estado monetário ficam definidos para cada valor exibido.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Nominal amount can be present while currency/conversion is absent; no complete monetary total is claimed in that case."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I037",
+        "I007",
+        "I038",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C022",
+        "C023"
+      ],
+      "tests_refs": [
+        "T009",
+        "T028",
+        "T059",
+        "T058",
+        "T063"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.DOD.18",
+      "task": "WP04.T03",
+      "criterion": "Descritores C16 de sf_sourcing_compare são implementados e consumidos por T06 com referências reais.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Descriptors and handlers exist, but T06 consumption for sourcing has not been demonstrated on a resident run."
+      ],
+      "blockers": [
+        "INT-02-WP00-CommercialComparison-schema",
+        "INT-03-WP10-sourcing-verifier",
+        "INT-04-WP10-host-composition",
+        "GNATIVE-NOT-RUN"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I039",
+        "I040",
+        "I041"
+      ],
+      "consumers_refs": [
+        "C024",
+        "C003",
+        "C025",
+        "C026"
+      ],
+      "tests_refs": [
+        "T029",
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.INV.01",
+      "task": "WP04.T03",
+      "criterion": "Pesos, mínimo de propostas, critérios, elegibilidade e justificativas continuam os da configuração existente.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Checks reuse existing validators/ranking/configuration; no new thresholds or supplier policies were introduced."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I034",
+        "I035",
+        "I036",
+        "I019",
+        "I042"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C022",
+        "C023"
+      ],
+      "tests_refs": [
+        "T007",
+        "T054",
+        "T050",
+        "T001"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.INV.02",
+      "task": "WP04.T03",
+      "criterion": "Ausência de taxa/nota/valor não vira zero, precisão inventada ou confirmação de gasto realizado.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Zero, absence, malformed material, string FX and incomplete assessment remain distinct in the final scoped run."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I034",
+        "I035",
+        "I036",
+        "I037",
+        "I007",
+        "I038"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C022",
+        "C023"
+      ],
+      "tests_refs": [
+        "T059",
+        "T064",
+        "T063",
+        "T057",
+        "T054",
+        "T061"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.INV.18",
+      "task": "WP04.T03",
+      "criterion": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Domain authority remains enforced in scoped tests; native transport authorization is not independently executed for sourcing."
+      ],
+      "blockers": [
+        "GNATIVE-NOT-RUN"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I039",
+        "I040",
+        "I041",
+        "I019",
+        "I042"
+      ],
+      "consumers_refs": [
+        "C024",
+        "C003",
+        "C025",
+        "C026"
+      ],
+      "tests_refs": [
+        "T029",
+        "T021",
+        "T003"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.QLT.01",
+      "task": "WP04.T03",
+      "criterion": "A comparação distingue avaliação humana, cálculo e informação ausente; diferença de preço e razão do ranking são legíveis juntas.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Generated UI explains weights, human criteria, normalized price and limitations; feed/browser legibility and human comprehension are not measured."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I034",
+        "I035",
+        "I036",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021"
+      ],
+      "tests_refs": [
+        "T007",
+        "T020",
+        "T054",
+        "T010"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.QLT.02",
+      "task": "WP04.T03",
+      "criterion": "Arredondamento é de apresentação e não altera ranking, valor aprovado ou reconciliação.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Presentation rounding is separate from scores/amounts; exact input multiplication, submitted FX and formatted HTML passed in the final scoped run."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I034",
+        "I035",
+        "I036",
+        "I037",
+        "I007",
+        "I038",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C022",
+        "C023"
+      ],
+      "tests_refs": [
+        "T007",
+        "T020",
+        "T009"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.QLT.18",
+      "task": "WP04.T03",
+      "criterion": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Shared closed schema does not yet accept all emitted comparison fields; no successful UI/native/MCP comparison equivalence can be claimed."
+      ],
+      "blockers": [
+        "INT-02-WP00-CommercialComparison-schema",
+        "INT-03-WP10-sourcing-verifier",
+        "INT-04-WP10-host-composition",
+        "GNATIVE-NOT-RUN"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I039",
+        "I040",
+        "I041"
+      ],
+      "consumers_refs": [
+        "C024",
+        "C003",
+        "C025",
+        "C026"
+      ],
+      "tests_refs": [
+        "T029",
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.SUC.01",
+      "task": "WP04.T03",
+      "criterion": "O leitor explica a liderança de A e seu custo adicional no cenário sintético usando apenas a comparação e sua decomposição.",
+      "status": "NOT_RUN_HUMAN",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "The A/B/C numbers and explanation are implemented, but no person has completed the requested comprehension task."
+      ],
+      "blockers": [
+        "HUMAN-COMPREHENSION-NOT-RUN"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I034",
+        "I035",
+        "I036",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C027"
+      ],
+      "tests_refs": [
+        "T007",
+        "T020"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.SUC.02",
+      "task": "WP04.T03",
+      "criterion": "O mesmo valor de domínio aparece coerentemente no detalhe, resumo e C02 entregue a consumidores.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Direct UI/C02 consistency is tested; final shared decoder and downstream host consumption remain unproven."
+      ],
+      "blockers": [
+        "INT-02-WP00-CommercialComparison-schema",
+        "INT-04-WP10-host-composition"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I037",
+        "I007",
+        "I038",
+        "I034",
+        "I035",
+        "I036",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C022",
+        "C023",
+        "C024",
+        "C003"
+      ],
+      "tests_refs": [
+        "T020",
+        "T028",
+        "T063"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T03.SUC.18",
+      "task": "WP04.T03",
+      "criterion": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Same-result user experience across UI/native/MCP is not demonstrated by the available fixtures."
+      ],
+      "blockers": [
+        "INT-02-WP00-CommercialComparison-schema",
+        "INT-03-WP10-sourcing-verifier",
+        "INT-04-WP10-host-composition",
+        "GNATIVE-NOT-RUN"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I039",
+        "I040",
+        "I041"
+      ],
+      "consumers_refs": [
+        "C024",
+        "C003",
+        "C025",
+        "C026"
+      ],
+      "tests_refs": [
+        "T029",
+        "T017",
+        "T053"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T04.CHK.01",
+      "task": "WP04.T04",
+      "criterion": "Em cada variante, uma pessoa identifica em até 30 segundos o que está aprovando, valor, diferença relevante, razão/evidência e próximo passo; registrar respostas incorretas, não apenas tempo.",
+      "status": "NOT_RUN_HUMAN",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "No human 30-second test was performed for PR, sourcing or PO. Time and incorrect answers must be recorded."
+      ],
+      "blockers": [
+        "HUMAN-30S-NOT-RUN"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I043",
+        "I044",
+        "I038",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C027"
+      ],
+      "tests_refs": []
+    },
+    {
+      "criterion_id": "WP04.T04.CHK.02",
+      "task": "WP04.T04",
+      "criterion": "Aprovar uma etapa intermediária mantém o pedido pendente se ainda houver holder seguinte; concluir sourcing libera po_draft, nunca po_issued ou aprovação de PO implícita.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Actual transition tests assert intermediate/final states. No native execution or business approval by this session is implied."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I019",
+        "I042",
+        "I043",
+        "I044",
+        "I038"
+      ],
+      "consumers_refs": [
+        "C021"
+      ],
+      "tests_refs": [
+        "T065",
+        "T066",
+        "T067",
+        "T068",
+        "T069",
+        "T070"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T04.CHK.03",
+      "task": "WP04.T04",
+      "criterion": "Ator que não é o holder, inclusive admin sem direito de override, recebe a recusa existente também no comando; opção blockSelfApproval continua configurável e respeitada.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Holder/admin/self-approval invariants passed through original domain and runtime commands; no business approval was performed by this session."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I019",
+        "I042",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021"
+      ],
+      "tests_refs": [
+        "T071",
+        "T072",
+        "T073",
+        "T022",
+        "T003"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T04.CHK.04",
+      "task": "WP04.T04",
+      "criterion": "Alterar a versão entre abertura e confirmação: decisão é recusada por conflito, comentário local permanece e nenhuma aprovação é reaplicada automaticamente após recarregar.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Domain conflict and detached preparation are tested, but browser comment retention, focus and prohibition of automatic reapplication were not exercised. C12 PR-edit tests do not by themselves prove an approval-comment interaction."
+      ],
+      "blockers": [
+        "WP01-CONFLICT-BROWSER-PROOF-NOT-RUN"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I019",
+        "I042",
+        "I021",
+        "I045",
+        "I046"
+      ],
+      "consumers_refs": [
+        "C028",
+        "C021"
+      ],
+      "tests_refs": [
+        "T044",
+        "T003",
+        "T074"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T04.CHK.05",
+      "task": "WP04.T04",
+      "criterion": "Executar a preparação determinística C02 consumida pela receita C07 de WP09 duas vezes na mesma versão: obter o mesmo conteúdo de decisão/pendências sem transição de estado, novo identificador de PO ou mensagem externa.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Repeated local preparation is deterministic and read-only; the WP09 recipe consumer is not mounted in the inspected WP10 host."
+      ],
+      "blockers": [
+        "INT-04-WP10-host-composition"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I043",
+        "I044",
+        "I038"
+      ],
+      "consumers_refs": [
+        "C022",
+        "C023",
+        "C029"
+      ],
+      "tests_refs": [
+        "T075",
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T04.CMP.01",
+      "task": "WP04.T04",
+      "criterion": "Cobrir PR, sourcing, PO, aprovador intermediário/final, rejeição com motivo, autoaprovação configurável e holder alheio.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Domain cases cover all approval stages, rejection and authority variants. This is not a human usability receipt."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I019",
+        "I042",
+        "I043",
+        "I044",
+        "I038",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021"
+      ],
+      "tests_refs": [
+        "T065",
+        "T066",
+        "T067",
+        "T068",
+        "T069",
+        "T070",
+        "T046",
+        "T076",
+        "T071",
+        "T073",
+        "T077"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T04.CMP.02",
+      "task": "WP04.T04",
+      "criterion": "Cobrir versão desatualizada, evidência incompleta e execução read-only por consumidor de rotinas.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Stale versions and missing comparison input are covered locally; actual routine execution and browser conflict preservation are not proven."
+      ],
+      "blockers": [
+        "INT-04-WP10-host-composition",
+        "WP01-CONFLICT-BROWSER-PROOF-NOT-RUN"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I043",
+        "I044",
+        "I038",
+        "I021",
+        "I045",
+        "I046"
+      ],
+      "consumers_refs": [
+        "C022",
+        "C023",
+        "C029",
+        "C028"
+      ],
+      "tests_refs": [
+        "T044",
+        "T075",
+        "T017",
+        "T057"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T04.DOD.01",
+      "task": "WP04.T04",
+      "criterion": "PR, sourcing e PO possuem resumos próprios ligados à versão e aos comandos reais.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "PR/sourcing/PO labels, evidence context and command versions exist; integrated browser proof remains pending separately."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I043",
+        "I044",
+        "I038",
+        "I006",
+        "I019",
+        "I042"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C022",
+        "C023"
+      ],
+      "tests_refs": [
+        "T077",
+        "T039",
+        "T078",
+        "T023"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T04.DOD.02",
+      "task": "WP04.T04",
+      "criterion": "Preparação read-only e ações humanas estão separadas no contrato exportado.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Read-only preparation has no approval command; the actual routine-to-host integration remains pending."
+      ],
+      "blockers": [
+        "INT-04-WP10-host-composition"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I043",
+        "I044",
+        "I038",
+        "I021",
+        "I045",
+        "I046"
+      ],
+      "consumers_refs": [
+        "C022",
+        "C023",
+        "C029"
+      ],
+      "tests_refs": [
+        "T075",
+        "T017",
+        "T074"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T04.INV.01",
+      "task": "WP04.T04",
+      "criterion": "Aprovar uma etapa não pula outras aprovações nem muda os poderes do holder/admin.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Actual transition/holder checks passed on the final product; no native run or human comprehension evidence is inferred."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I019",
+        "I042"
+      ],
+      "consumers_refs": [
+        "C021"
+      ],
+      "tests_refs": [
+        "T065",
+        "T066",
+        "T067",
+        "T068",
+        "T069",
+        "T070",
+        "T071",
+        "T073"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T04.INV.02",
+      "task": "WP04.T04",
+      "criterion": "Uma decisão desatualizada nunca é reaplicada automaticamente e referências textuais não ganham validação fictícia.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Stale mutation returns conflict and text references remain explicitly unvalidated. Browser automatic-reapply absence needs its own execution proof."
+      ],
+      "blockers": [
+        "WP01-CONFLICT-BROWSER-PROOF-NOT-RUN"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I019",
+        "I042",
+        "I021",
+        "I045",
+        "I046",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C028"
+      ],
+      "tests_refs": [
+        "T044",
+        "T003",
+        "T074"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T04.QLT.01",
+      "task": "WP04.T04",
+      "criterion": "O título nomeia a decisão concreta e a área de ação explica seu efeito e a próxima etapa.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Concrete stage/holder/next-step render assertions exist; human clarity is not established by generated HTML alone."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I043",
+        "I044",
+        "I038",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021"
+      ],
+      "tests_refs": [
+        "T077",
+        "T006",
+        "T039",
+        "T023"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T04.QLT.02",
+      "task": "WP04.T04",
+      "criterion": "Resumo curto e drilldown detalhado apresentam os mesmos valores, contexto e limitações.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Direct summaries and C02 reuse the monetary producer; downstream integration and real browser drilldown remain unproven."
+      ],
+      "blockers": [
+        "INT-04-WP10-host-composition"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I043",
+        "I044",
+        "I038",
+        "I037",
+        "I007",
+        "I038",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C022",
+        "C023"
+      ],
+      "tests_refs": [
+        "T020",
+        "T028",
+        "T075"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T04.SUC.01",
+      "task": "WP04.T04",
+      "criterion": "O aprovador completa o roteiro de compreensão sem abrir Settings nem reconstruir a comparação manualmente.",
+      "status": "NOT_RUN_HUMAN",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "No approver comprehension session was performed; cannot claim success without Settings or manual reconstruction."
+      ],
+      "blockers": [
+        "HUMAN-30S-NOT-RUN"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I043",
+        "I044",
+        "I038",
+        "I006"
+      ],
+      "consumers_refs": [
+        "C021",
+        "C027"
+      ],
+      "tests_refs": []
+    },
+    {
+      "criterion_id": "WP04.T04.SUC.02",
+      "task": "WP04.T04",
+      "criterion": "Uma preparação automática é útil como rascunho e demonstravelmente não produz decisão de negócio.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "See the named production exports and focused observations.",
+      "remaining_limits": [
+        "Local preparation returns useful source material without business mutation; actual automatic recipe consumption is not integrated/proven."
+      ],
+      "blockers": [
+        "INT-04-WP10-host-composition"
+      ],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I043",
+        "I044",
+        "I038"
+      ],
+      "consumers_refs": [
+        "C022",
+        "C023",
+        "C029"
+      ],
+      "tests_refs": [
+        "T075",
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.CHK.01",
+      "task": "WP04.T05",
+      "criterion": "Fornecedor ativo tem IBAN/account alterado por ator permitido: volta a pending, validação é removida e a interface indica revalidação; ator sem permissão é recusado e não vê material bancário em view, erro, histórico, register ou C02.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Real domain bank updates encrypt, clear active validation and render revalidation; nonprivileged views/audit/register/C02 omit bank material.",
+      "remaining_limits": [
+        "C02 projection evidence uses a synthetic host; no same-case native/MCP consumer or complete error/download combination."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I047",
+        "I048",
+        "I049",
+        "I050"
+      ],
+      "consumers_refs": [
+        "C030"
+      ],
+      "tests_refs": [
+        "T079",
+        "T013",
+        "T080",
+        "T015",
+        "T081"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.CHK.02",
+      "task": "WP04.T05",
+      "criterion": "Fornecedor com taxId duplicado não é aceito; legalName duplicado segue o aviso existente; ativação incompleta aponta os requisitos reais sem declarar sanctions screening externo realizado.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Duplicate tax IDs are refused without mutation; the new real-domain scenario proves duplicate legalName succeeds with the existing warning while retaining distinct supplier IDs/tax IDs. Activation feedback enumerates the actual missing prerequisites and labels sanctions screening as a recorded declaration.",
+      "remaining_limits": [
+        "Duplicate-name success warning, duplicate tax-ID refusal, activation prerequisites and bank revalidation passed the final scoped run. No claim of external sanctions screening is made."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I051",
+        "I052"
+      ],
+      "consumers_refs": [
+        "C031"
+      ],
+      "tests_refs": [
+        "T082",
+        "T083",
+        "T079",
+        "T084"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.CHK.03",
+      "task": "WP04.T05",
+      "criterion": "Reset de Settings restaura exatamente os defaults do baseline sem apagar requests/suppliers; edição de matriz/câmbio não modifica snapshots já congelados.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Reset restores the complete baseline object while retaining requests, suppliers and issued lists; submitted approval/FX snapshots survive later settings changes.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I053",
+        "I054",
+        "I037"
+      ],
+      "consumers_refs": [
+        "C032"
+      ],
+      "tests_refs": [
+        "T014",
+        "T085",
+        "T001"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.CHK.04",
+      "task": "WP04.T05",
+      "criterion": "Após importação representativa ou exclusão permitida, criar PR/PO/SUP não reutiliza identificador já emitido; registro/PO exportados preservam campos de negócio e omitem material restrito.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "High-water marks and retained issued lists prevent reused IDs after deletion/imported state; export presentation removes restricted data.",
+      "remaining_limits": [
+        "Selected tests do not establish all PR/PO/SUP imported-file paths and actual HTTP/download bytes; downloads is outside WP04 ownership."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I055",
+        "I056",
+        "I057",
+        "I050",
+        "I058"
+      ],
+      "consumers_refs": [
+        "C033"
+      ],
+      "tests_refs": [
+        "T016",
+        "T083",
+        "T045",
+        "T025",
+        "T015",
+        "T086"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.CHK.05",
+      "task": "WP04.T05",
+      "criterion": "Percorrer create → submit_pr → approve → sourcing/select/submit → approve → PO/submit → approve → issue e caminhos de rejeição/cancelamento: estados e recusas coincidem com o inventário; po_issued permanece interno e terminal para cancel/delete.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Actual domain flow reaches po_issued with separate rejection/cancellation tests; internal issue remains terminal for cancel/delete.",
+      "remaining_limits": [
+        "This is domain execution coverage, not a browser/native user journey."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I019",
+        "I059",
+        "I042"
+      ],
+      "consumers_refs": [
+        "C034"
+      ],
+      "tests_refs": [
+        "T001",
+        "T046",
+        "T047",
+        "T048",
+        "T049",
+        "T002"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.CHK.18",
+      "task": "WP04.T05",
+      "criterion": "Executar sf_supplier_read, sf_contract_read pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Production handlers and closed descriptors use current authority and the common dispatcher seam; direct port scope/revocation/ABA negatives exist.",
+      "remaining_limits": [
+        "The two T05 descriptors and UI binding exports exist, but no mounted UI/native/MCP parity run for both sf_supplier_read and sf_contract_read, no native Session/SkillLoadReceipt, and no real cross-surface consumer receipt were observed. WP10 owns common composition. Shared sf_request_read tests cannot stand in for both T05 exports."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I060",
+        "I061",
+        "I062",
+        "I041"
+      ],
+      "consumers_refs": [
+        "C035",
+        "C036"
+      ],
+      "tests_refs": [
+        "T081",
+        "T087",
+        "T029",
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.CMP.01",
+      "task": "WP04.T05",
+      "criterion": "Cobrir os quatro estados de fornecedor, dados comerciais/bancários/compliance, linked requests, auditoria, busca e exportação.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Renderer and domain retain four statuses and general/categories/contacts/commercial/bank/compliance/links/audit/search/export surfaces.",
+      "remaining_limits": [
+        "Selected tests do not separately execute every blocked/inactive transition, full commercial/compliance roundtrip, linked-request search and actual CSV bytes."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I063",
+        "I052",
+        "I049"
+      ],
+      "consumers_refs": [
+        "C037"
+      ],
+      "tests_refs": [
+        "T079",
+        "T013",
+        "T088",
+        "T089",
+        "T045",
+        "T090"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.CMP.02",
+      "task": "WP04.T05",
+      "criterion": "Cobrir configurações/reset, todos os comandos originais e preservação de identificadores/campos após dados migrados representativos.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Config reset, primary commands and migrated high-water marks are covered by concrete runtime tests.",
+      "remaining_limits": [
+        "Every baseline command/role/state combination and imported file variant is not exhaustively witnessed; receipts must not extrapolate from the main path."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I064",
+        "I065",
+        "I056"
+      ],
+      "consumers_refs": [
+        "C038"
+      ],
+      "tests_refs": [
+        "T014",
+        "T001",
+        "T016",
+        "T083",
+        "T045",
+        "T042",
+        "T002"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.CMP.18",
+      "task": "WP04.T05",
+      "criterion": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Supplier port authorized/forbidden and contract stale/revocation/ABA cases exist.",
+      "remaining_limits": [
+        "The two T05 descriptors and UI binding exports exist, but no mounted UI/native/MCP parity run for both sf_supplier_read and sf_contract_read, no native Session/SkillLoadReceipt, and no real cross-surface consumer receipt were observed. WP10 owns common composition. No complete authorized/direct-forbidden/stale/unavailable matrix for both descriptors through dispatcher/UI/native/MCP."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I066",
+        "I061",
+        "I062"
+      ],
+      "consumers_refs": [
+        "C035",
+        "C036"
+      ],
+      "tests_refs": [
+        "T081",
+        "T087",
+        "T029"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.DOD.01",
+      "task": "WP04.T05",
+      "criterion": "Suppliers e Settings conservam todas as operações e campos do inventário com feedback utilizável.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Supplier operations, configuration controls, read-only fields, activation and bank feedback remain available.",
+      "remaining_limits": [
+        "A complete inventory-matched interaction proof across roles and every field is absent."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I067",
+        "I065"
+      ],
+      "consumers_refs": [
+        "C039"
+      ],
+      "tests_refs": [
+        "T091",
+        "T012",
+        "T079",
+        "T082",
+        "T045",
+        "T014"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.DOD.02",
+      "task": "WP04.T05",
+      "criterion": "O pacote fecha o recibo de preservação dos fluxos e entrega as portas ao integrador com limitações explícitas.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Production ports and precise owner integration requirements are documented; this matrix records partial evidence.",
+      "remaining_limits": [
+        "Final coverage receipt/run links still belong to root; WP05/WP06/WP07/WP08/WP09/WP10 mounted consumers are not all witnessed."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I068",
+        "I069",
+        "I046",
+        "I043"
+      ],
+      "consumers_refs": [
+        "C040"
+      ],
+      "tests_refs": [
+        "T092",
+        "T001",
+        "T014"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.DOD.18",
+      "task": "WP04.T05",
+      "criterion": "Descritores C16 de sf_supplier_read, sf_contract_read são implementados e consumidos por T06 com referências reais.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "C16 descriptors and handler references exist, with real shared dispatch available.",
+      "remaining_limits": [
+        "The two T05 descriptors and UI binding exports exist, but no mounted UI/native/MCP parity run for both sf_supplier_read and sf_contract_read, no native Session/SkillLoadReceipt, and no real cross-surface consumer receipt were observed. WP10 owns common composition. T06 consumption of the two exported capabilities remains unproved."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I040",
+        "I041",
+        "I070"
+      ],
+      "consumers_refs": [
+        "C035",
+        "C036"
+      ],
+      "tests_refs": [
+        "T081",
+        "T087",
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.INV.01",
+      "task": "WP04.T05",
+      "criterion": "Alteração bancária e ativação seguem os papéis, cifragem, máscara e revalidação existentes; dados sensíveis não vazam para consumidores.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Bank roles, encryption, masking and revalidation stay in the domain and production views.",
+      "remaining_limits": [
+        "No complete mounted consumer proof including all exports and HTTP downloads; no secret-free assertion over real private data is claimed."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I071",
+        "I072",
+        "I049"
+      ],
+      "consumers_refs": [
+        "C041"
+      ],
+      "tests_refs": [
+        "T079",
+        "T013",
+        "T080",
+        "T093",
+        "T090",
+        "T081"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.INV.02",
+      "task": "WP04.T05",
+      "criterion": "Reset, exclusão e retomada não apagam histórico nem reutilizam identificadores PR/PO/SUP já emitidos.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Reset preserves records and issued history, allocation high-water marks survive allowed deletion and cancellation preserves nonstatus fields.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I073",
+        "I074",
+        "I057"
+      ],
+      "consumers_refs": [
+        "C042"
+      ],
+      "tests_refs": [
+        "T014",
+        "T016",
+        "T083",
+        "T086",
+        "T049"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.INV.18",
+      "task": "WP04.T05",
+      "criterion": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "The capabilities delegate to domain ports and revalidate authority; transport does not define purchase authorization. ",
+      "remaining_limits": [
+        "The two T05 descriptors and UI binding exports exist, but no mounted UI/native/MCP parity run for both sf_supplier_read and sf_contract_read, no native Session/SkillLoadReceipt, and no real cross-surface consumer receipt were observed. WP10 owns common composition."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I075",
+        "I069",
+        "I019",
+        "I076",
+        "I077"
+      ],
+      "consumers_refs": [
+        "C035",
+        "C036"
+      ],
+      "tests_refs": [
+        "T029",
+        "T081",
+        "T087",
+        "T003",
+        "T093"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.QLT.01",
+      "task": "WP04.T05",
+      "criterion": "Pendências de fornecedor explicam a ação corretiva sem confundir preenchimento declarado com verificação externa.",
+      "status": "PASS_SCOPED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Feedback identifies missing recorded prerequisites and bank revalidation and explicitly denies that a date proves external screening.",
+      "remaining_limits": [],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I078",
+        "I051"
+      ],
+      "consumers_refs": [
+        "C043"
+      ],
+      "tests_refs": [
+        "T082",
+        "T079"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.QLT.02",
+      "task": "WP04.T05",
+      "criterion": "Operações raras e Settings ficam em acesso secundário claro, preservando descoberta por teclado e todos os controles.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Settings and rare reset are discoverable through existing navigation and native details/forms.",
+      "remaining_limits": [
+        "No actual keyboard walkthrough or focus witness; an HTML controls inventory does not prove keyboard discovery."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I079"
+      ],
+      "consumers_refs": [
+        "C044"
+      ],
+      "tests_refs": [
+        "T091",
+        "T090",
+        "T088"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.QLT.18",
+      "task": "WP04.T05",
+      "criterion": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Closed schema references, explicit unavailable/denied/stale results and provenance are supplied.",
+      "remaining_limits": [
+        "The two T05 descriptors and UI binding exports exist, but no mounted UI/native/MCP parity run for both sf_supplier_read and sf_contract_read, no native Session/SkillLoadReceipt, and no real cross-surface consumer receipt were observed. WP10 owns common composition."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I080",
+        "I070",
+        "I062",
+        "I081"
+      ],
+      "consumers_refs": [
+        "C035",
+        "C036"
+      ],
+      "tests_refs": [
+        "T087",
+        "T081",
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.SUC.01",
+      "task": "WP04.T05",
+      "criterion": "Buyer e supplier admin concluem cadastro, correção e revalidação sem consultar códigos internos nem expor informação bancária indevida.",
+      "status": "PARTIAL",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "The actual domain and renderer support buyer creation and authorized bank revalidation with comprehensible feedback.",
+      "remaining_limits": [
+        "No observed live buyer/supplier-admin journey establishing task completion without internal codes."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I051",
+        "I078"
+      ],
+      "consumers_refs": [
+        "C045"
+      ],
+      "tests_refs": [
+        "T079",
+        "T082",
+        "T090"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.SUC.02",
+      "task": "WP04.T05",
+      "criterion": "O integrador consegue executar a jornada real completa com os exports entregues, sem solicitar um substituto de demonstração ou escrever dentro do domínio.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "Exports run real domain and persistence in scoped integration tests and document required host seams.",
+      "remaining_limits": [
+        "Complete integrated UI/native/MCP journey still requires WP10 composition; no fixture/double is claimed as deployment proof."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I069",
+        "I040",
+        "I046",
+        "I082"
+      ],
+      "consumers_refs": [
+        "C035",
+        "C036"
+      ],
+      "tests_refs": [
+        "T001",
+        "T092",
+        "T017"
+      ]
+    },
+    {
+      "criterion_id": "WP04.T05.SUC.18",
+      "task": "WP04.T05",
+      "criterion": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "status": "BLOCKED",
+      "qualification_scope": "WP04 scoped tests or source/document review only; integrated acceptance remains BLOCKED",
+      "implemented_behavior": "All surface adapters are intended to invoke the same production capabilities.",
+      "remaining_limits": [
+        "The two T05 descriptors and UI binding exports exist, but no mounted UI/native/MCP parity run for both sf_supplier_read and sf_contract_read, no native Session/SkillLoadReceipt, and no real cross-surface consumer receipt were observed. WP10 owns common composition. A user-facing parity outcome has not been observed."
+      ],
+      "blockers": [],
+      "evidence_docs": [
+        "coverage-inventory.md",
+        "ci-evidence.json",
+        "integration-requests.md"
+      ],
+      "implementation_refs": [
+        "I066",
+        "I041",
+        "I069"
+      ],
+      "consumers_refs": [
+        "C035",
+        "C036"
+      ],
+      "tests_refs": [
+        "T081",
+        "T087",
+        "T017"
+      ]
+    }
+  ],
+  "catalog_note": "Local IDs expand within this JSON. Every criterion retains its canonical ID and full requirement; implementation/consumer/test refs resolve in catalogs. final-hosted-run carries the common run/SHAs.",
+  "evidence": {
+    "final-hosted-run": {
+      "run_id": 43517984814,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43517984814",
+      "product_sha": "c9f861851c5b8c9f341e2be7f9c525267987eb80",
+      "snapshot_sha": "df1b7a42f52eb125930f93e70c2281823f1fdf8b",
+      "conclusion": "success",
+      "counts": {
+        "pass": 146,
+        "fail": 0,
+        "files": 21
+      }
+    }
+  },
+  "catalogs": {
+    "implementations": {
+      "I001": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+        "symbol": "createProcurementPort.list"
+      },
+      "I002": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+        "symbol": "createProcurementCollectionRegistry"
+      },
+      "I003": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+        "symbol": "projectProcurementScope"
+      },
+      "I004": {
+        "path": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+        "symbol": "approvalQueue"
+      },
+      "I005": {
+        "path": "modules/sucafina/Sucafinav1/src/requests.ts",
+        "symbol": "visibleRequests"
+      },
+      "I006": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "render"
+      },
+      "I007": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+        "symbol": "procurementMonetaryFacts"
+      },
+      "I008": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/guided-request.ts"
+      },
+      "I009": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/confirmation.ts"
+      },
+      "I010": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/c12.ts"
+      },
+      "I011": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "domain.execute"
+      },
+      "I012": {
+        "path": "modules/sucafina/Sucafinav1/src/form.ts"
+      },
+      "I013": {
+        "path": "modules/sucafina/porta/act.ts",
+        "symbol": "select quote / PO proposal"
+      },
+      "I014": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "restore, execute, render"
+      },
+      "I015": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/guided-request.ts",
+        "symbol": "purchaseOrderFieldSources"
+      },
+      "I016": {
+        "path": "modules/sucafina/Sucafinav1/src/form.ts",
+        "symbol": "validatePR, validateSourcing, validatePO"
+      },
+      "I017": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "execute, render"
+      },
+      "I018": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/guided-request.ts",
+        "symbol": "requisitionFieldErrors, sourcingFieldErrors, purchaseOrderFieldErrors"
+      },
+      "I019": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "execute"
+      },
+      "I020": {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "symbol": "conflict"
+      },
+      "I021": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+        "symbol": "prepareProcurementMutation"
+      },
+      "I022": {
+        "path": "modules/sucafina/Sucafinav1/src/procurement.ts",
+        "symbol": "deleteDraft, cancel"
+      },
+      "I023": {
+        "path": "modules/sucafina/porta/act.ts",
+        "symbol": "admit"
+      },
+      "I024": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "prFields, sourceFields, poFields, repeatRows, render"
+      },
+      "I025": {
+        "path": "modules/sucafina/Sucafinav1/src/procurement.ts",
+        "symbol": "reject, cancel, deleteDraft"
+      },
+      "I026": {
+        "path": "modules/sucafina/porta/act.ts",
+        "symbol": "apply"
+      },
+      "I027": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "prFields, sourceFields, poFields, restore, render"
+      },
+      "I028": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/guided-request.ts",
+        "symbol": "presentProcurementFieldErrors"
+      },
+      "I029": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "restore, render"
+      },
+      "I030": {
+        "path": "modules/sucafina/porta/act.ts",
+        "symbol": "PO proposal"
+      },
+      "I031": {
+        "path": "modules/sucafina/Sucafinav1/src/procurement.ts",
+        "symbol": "cancel, deleteDraft"
+      },
+      "I032": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/guided-request.ts",
+        "symbol": "requisitionFieldErrors, sourcingFieldErrors, purchaseOrderFieldErrors, presentProcurementFieldErrors"
+      },
+      "I033": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "render, execute"
+      },
+      "I034": {
+        "path": "modules/sucafina/Sucafinav1/src/form.ts",
+        "symbol": "quoteAssessment"
+      },
+      "I035": {
+        "path": "modules/sucafina/Sucafinav1/src/form.ts",
+        "symbol": "quoteComparisonPresentation"
+      },
+      "I036": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+        "symbol": "createProcurementPort.compareSourcing"
+      },
+      "I037": {
+        "path": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+        "symbol": "requestValue"
+      },
+      "I038": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+        "symbol": "projectProcurementSource"
+      },
+      "I039": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+        "symbol": "compareSourcing"
+      },
+      "I040": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+        "symbol": "createProcurementCapabilities"
+      },
+      "I041": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/ui-bindings.ts",
+        "symbol": "createProcurementUiBindings"
+      },
+      "I042": {
+        "path": "modules/sucafina/porta/act.ts",
+        "symbol": "act"
+      },
+      "I043": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+        "symbol": "createProcurementDecisionPreparation"
+      },
+      "I044": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+        "symbol": "projectProcurementConfirmationFields"
+      },
+      "I045": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+        "symbol": "createProcurementPreparedReview"
+      },
+      "I046": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/c12.ts",
+        "symbol": "createProcurementC12Bridge"
+      },
+      "I047": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "supplier, view, render, redactBank"
+      },
+      "I048": {
+        "path": "modules/sucafina/Sucafinav1/src/supplier.ts",
+        "symbol": "seal, open, presentSupplier"
+      },
+      "I049": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+        "symbol": "readSupplier"
+      },
+      "I050": {
+        "path": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+        "symbol": "exportRegister"
+      },
+      "I051": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "supplier, render"
+      },
+      "I052": {
+        "path": "modules/sucafina/Sucafinav1/src/supplier.ts",
+        "symbol": "activateSupplier, supplierActivationRequirements"
+      },
+      "I053": {
+        "path": "modules/sucafina/Sucafinav1/src/initial-settings.ts",
+        "symbol": "initialProcurementSettings, legalInitialSettings"
+      },
+      "I054": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "settings"
+      },
+      "I055": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "execute, supplier"
+      },
+      "I056": {
+        "path": "modules/sucafina/Sucafinav1/src/procurement.ts",
+        "symbol": "migrateProcurement, nextSup"
+      },
+      "I057": {
+        "path": "modules/sucafina/porta/act.ts",
+        "symbol": "mint"
+      },
+      "I058": {
+        "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+        "symbol": "PO/register exports"
+      },
+      "I059": {
+        "path": "modules/sucafina/Sucafinav1/src/procurement.ts",
+        "symbol": "createRequest, submitPR, selectQuote, submitSourcing, submitPO, approve, reject, issue, cancel, deleteDraft"
+      },
+      "I060": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+        "symbol": "readSupplier, readContract, createProcurementCapabilities"
+      },
+      "I061": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+        "symbol": "readSupplier, readContract"
+      },
+      "I062": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/contracts.ts",
+        "symbol": "createProcurementContractSource"
+      },
+      "I063": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "supplier, view, render"
+      },
+      "I064": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "settings, supplier, execute"
+      },
+      "I065": {
+        "path": "modules/sucafina/Sucafinav1/src/initial-settings.ts",
+        "symbol": "initialProcurementSettings"
+      },
+      "I066": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+        "symbol": "readSupplier, readContract"
+      },
+      "I067": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "supplierFields, bankFields, settingsFields, supplier, settings, render"
+      },
+      "I068": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/README.md",
+        "symbol": "Procurement product ports, Integration boundary"
+      },
+      "I069": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+        "symbol": "createProcurementPort"
+      },
+      "I070": {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+        "symbol": "decodeSfOperationInput, decodeSfOperationOutput"
+      },
+      "I071": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "supplier, view, redactBank"
+      },
+      "I072": {
+        "path": "modules/sucafina/Sucafinav1/src/supplier.ts",
+        "symbol": "seal, open, activateSupplier, presentSupplier"
+      },
+      "I073": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "settings, execute, supplier"
+      },
+      "I074": {
+        "path": "modules/sucafina/Sucafinav1/src/procurement.ts",
+        "symbol": "nextSup, deleteDraft"
+      },
+      "I075": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+        "symbol": "run"
+      },
+      "I076": {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+        "symbol": "decodeSfOperationInput"
+      },
+      "I077": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+        "symbol": "dispatchSfCapability"
+      },
+      "I078": {
+        "path": "modules/sucafina/Sucafinav1/src/supplier.ts",
+        "symbol": "supplierActivationRequirements"
+      },
+      "I079": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "render Settings, render Suppliers"
+      },
+      "I080": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+        "symbol": "run, createProcurementCapabilities"
+      },
+      "I081": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+        "symbol": "createProcurementSourceResolver"
+      },
+      "I082": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/README.md",
+        "symbol": "composition instructions"
+      }
+    },
+    "consumers": {
+      "C001": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "domain.view/render"
+      },
+      "C002": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+        "symbol": "readRequest"
+      },
+      "C003": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/ui-bindings.ts",
+        "symbol": "createProcurementUiBindings"
+      },
+      "C004": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts"
+      },
+      "C005": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts"
+      },
+      "C006": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-evidence.ts"
+      },
+      "C007": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "render Requests"
+        ],
+        "connection": "production-renderer"
+      },
+      "C008": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "recurrence detail",
+          "contract strategy hint"
+        ],
+        "connection": "production-renderer"
+      },
+      "C009": {
+        "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "symbols": [
+          "showResult",
+          "applyRefresh"
+        ],
+        "connection": "existing-common-script"
+      },
+      "C010": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "execute"
+        ],
+        "connection": "domain-command"
+      },
+      "C011": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "action controls"
+        ],
+        "connection": "production-renderer"
+      },
+      "C012": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "field controls and history"
+        ],
+        "connection": "production-renderer"
+      },
+      "C013": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "stage-specific actions"
+        ],
+        "connection": "production-renderer"
+      },
+      "C014": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "Requisition",
+          "Sourcing",
+          "Purchase order",
+          "History"
+        ],
+        "connection": "production-renderer"
+      },
+      "C015": {
+        "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "symbols": [
+          "showResult",
+          "markDirty",
+          "applyRefresh"
+        ],
+        "connection": "existing-common-script"
+      },
+      "C016": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "source suggestion panel"
+        ],
+        "connection": "production-renderer"
+      },
+      "C017": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "disabled controls",
+          "recurrence detail"
+        ],
+        "connection": "production-renderer"
+      },
+      "C018": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "request controls"
+        ],
+        "connection": "production-renderer"
+      },
+      "C019": {
+        "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "symbols": [
+          "showResult",
+          "form submit handler",
+          "applyRefresh"
+        ],
+        "connection": "existing-common-script"
+      },
+      "C020": {
+        "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "symbols": [
+          "send",
+          "showResult",
+          "applyRefresh"
+        ],
+        "connection": "existing-common-script"
+      },
+      "C021": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbol": "render:Requests/My approvals"
+      },
+      "C022": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+        "symbol": "read/compareSourcing"
+      },
+      "C023": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-evidence.ts",
+        "symbol": "createProcurementSourcingEvidence"
+      },
+      "C024": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+        "symbol": "dispatchSfCapability"
+      },
+      "C025": {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "owner": "WP10",
+        "mount_state": "INCOMPLETE",
+        "blocker": "INT-04"
+      },
+      "C026": {
+        "path": "apps/cli/src/sucafina-product/analysis-verifier-procurement.ts",
+        "owner": "WP10",
+        "limitation": "Rejects configured criteria in the observed owner pin",
+        "blocker": "INT-03"
+      },
+      "C027": {
+        "kind": "human-observation",
+        "description": "Human approver comprehension session",
+        "execution_state": "NOT_PERFORMED"
+      },
+      "C028": {
+        "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "owner": "WP01",
+        "description": "Browser conflict controller",
+        "execution_state": "BROWSER_NOT_OBSERVED",
+        "blocker": "INT-05"
+      },
+      "C029": {
+        "path": "modules/sucafina/Sucafinav1/product/routines/dossier.ts",
+        "symbol": "prepareProcurement (WP09 host dependency; not wired in inspected business-services)",
+        "mount_state": "FOREIGN_OWNER_OUTPUT_NOT_PRESENT_IN_SEED",
+        "owner": "WP09/WP10",
+        "blocker": "INT-04"
+      },
+      "C030": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "supplier detail and bank revalidation"
+        ],
+        "connection": "production-renderer"
+      },
+      "C031": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "activation prerequisites"
+        ],
+        "connection": "production-renderer"
+      },
+      "C032": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "Settings"
+        ],
+        "connection": "production-renderer"
+      },
+      "C033": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "register / supplier / PO download links"
+        ],
+        "connection": "production-renderer"
+      },
+      "C034": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "Requests lifecycle controls"
+        ],
+        "connection": "production-renderer"
+      },
+      "C035": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/ui-bindings.ts",
+        "symbols": [
+          "readSupplier",
+          "readContract"
+        ],
+        "connection": "exported-not-mounted"
+      },
+      "C036": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+        "symbols": [
+          "dispatchSfCapability"
+        ],
+        "connection": "shared-dispatch-seam"
+      },
+      "C037": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "supplier search/status filter",
+          "linked requests",
+          "audit"
+        ],
+        "connection": "production-renderer"
+      },
+      "C038": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "Settings and lifecycle controls"
+        ],
+        "connection": "production-renderer"
+      },
+      "C039": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "Suppliers",
+          "Settings"
+        ],
+        "connection": "production-renderer"
+      },
+      "C040": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/README.md",
+        "symbols": [
+          "host composition instructions"
+        ],
+        "connection": "handoff-document"
+      },
+      "C041": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "supplier role controls"
+        ],
+        "connection": "production-renderer"
+      },
+      "C042": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "Settings reset",
+          "draft deletion"
+        ],
+        "connection": "production-renderer"
+      },
+      "C043": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "Activation prerequisites",
+          "bank revalidation"
+        ],
+        "connection": "production-renderer"
+      },
+      "C044": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "Reset settings details",
+          "role controls"
+        ],
+        "connection": "production-renderer"
+      },
+      "C045": {
+        "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "symbols": [
+          "supplier creation and bank detail"
+        ],
+        "connection": "production-renderer"
+      }
+    },
+    "tests": {
+      "T001": {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "complete procurement field roundtrip and frozen approvals survive settings edits",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run",
+        "proof_limits": [
+          "Actual runtime commands; does not execute the browser transport."
+        ]
+      },
+      "T002": {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "dual-role request transitions retain porta authorization without permitting foreign PR edits",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T003": {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "request ownership, self-approval flag and independent record versions are enforced",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T004": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "nonprivileged supplier view removes bank metadata and audit values",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T005": {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "request query opens its authorized target, includes closed rows and leaves other rows closed",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T006": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "approval queue retains missing steps and does not invent holder names or actions",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T007": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "the canonical three-offer fixture preserves scoring, eligibility and exact price premium",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T008": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "an unavailable frozen quote rate does not use a later rate or the requisition estimate",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T009": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "submitted PO uses its frozen exchange rate and approved and issued totals remain separate",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T010": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "request detail shows the discrepancy without changing the quoted total",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T011": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "money never labels a missing order or ambiguous quotation as an approved amount",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T012": {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "procurement required pages contain functional controls or nonempty read views",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T013": {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "bank changes encrypt, reset active validation, audit only fields and protect actor views",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T014": {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "settings reset restores the original complete defaults and preserves procurement records",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T015": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "register export removes bank material recursively including audit values",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T016": {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "imported high-water marks and deleted requests do not reuse issued numbers",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T017": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+        "test_name": "authorized capability reads through an issued scoped source and consumes once",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run",
+        "proof_limits": [
+          "Exercises real UI authority + dispatchSfCapability for sf_request_read only; not native or MCP and not both T05 operations."
+        ]
+      },
+      "T018": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "stock counts open stages only and retains a stage-specific drilldown",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T019": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+        "test_name": "durable queue selection, counts and drilldowns keep requester scope across unrelated changes",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T020": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "test_name": "runtime and producer present the same submitted quote amount and FX source",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T021": {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "procurement direct write without canWrite fails atomically",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T022": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "request detail explains why a different holder cannot be overridden",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T023": {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "request fields survive creation, save, submission and actual holder decisions",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run",
+        "proof_limits": [
+          "Checks stale write refusal and state preservation, not two live browser editors."
+        ]
+      },
+      "T024": {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "request query cannot reveal a record omitted by the authorization-filtered view",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T025": {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "render escapes persisted values and the PO document excludes banking",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run",
+        "proof_limits": [
+          "Rendered PO and register safety; HTTP/binary download not exercised by this assertion."
+        ]
+      },
+      "T026": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "missing history and holder stay unavailable, and restricted fields are omitted",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T027": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-queues.test.ts",
+        "test_name": "request search covers stored requester, buyer and holder identifiers and authorized directory names",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T028": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "projection reports PO original amount and submitted FX without replacing the base value",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T029": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+        "test_name": "capability refuses forged arguments and refuses an ungranted direct call",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run",
+        "proof_limits": [
+          "The tested operation is sf_request_read; this is shared-handler support, not full proof of the two T05 exports."
+        ]
+      },
+      "T030": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "revocation during the domain read prevents returning the projection",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T031": {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "new PO proposals use saved address defaults and retain existing nonblank PO addresses",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T032": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "saved order terms survive source suggestions and ambiguous supplier identity supplies no terms",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T033": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "port authenticates against the current snapshot and does not reveal another request",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T034": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "queue projection uses the latest submission, never a later save",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T035": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "aging for the next holder starts at the preceding approval, or remains unavailable without that event",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T036": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "aging uses the trusted observation time and leaves unproven ages unavailable",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T037": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-queues.test.ts",
+        "test_name": "approval queues sort only by proven entry, keep unavailable history and do not use a save timestamp",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T038": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "unrecognized imported status stays explicitly unavailable",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T039": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "approval stage is the current pending level and is scoped to its evidence",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T040": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "order shows supplier terms as a suggestion without replacing recorded terms",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T041": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "recurring draft values survive collapsing and saving the nonrecurring section",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T042": {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "actual browser-shaped nested arrays omit untouched repeat placeholders and preserve zero thresholds",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run",
+        "proof_limits": [
+          "Browser-shaped request payload, not a real browser run."
+        ]
+      },
+      "T043": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "contract strategy changes preserve saved references and existing-contract submission uses the real validator",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run",
+        "proof_limits": [
+          "Actual domain saves existing→new→existing preserve the saved reference; a separate legitimate PO-draft fixture exercises the real submit_po validator. Renderer output is inspected; no browser transport or human observation is claimed."
+        ]
+      },
+      "T044": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "test_name": "prepared Procurement mutation records a stale source conflict without changing the domain",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T045": {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "ordinary nested form rows decode and numeric supplier references remain linked",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T046": {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-reject-pr rejects the first pending and leaves the others",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T047": {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-reject-src clears the snapshot",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T048": {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-reject-po clears the rate",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T049": {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-cancel cancels and leaves every other field",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T050": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "sourcing identifies the missing commercial control without blaming completed technical scores",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run",
+        "proof_limits": [
+          "Asserts generated HTML and canonical field mapping, not browser focus."
+        ]
+      },
+      "T051": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+        "test_name": "adjacent error text is escaped and field ids remain separate across requests",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T052": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "requisition rejection returns field errors from the actual validator",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run",
+        "proof_limits": [
+          "Seed fixture must be checked by hosted CI; no local success is claimed."
+        ]
+      },
+      "T053": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "sourcing comparison reads the authorized request and uses frozen FX",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T054": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "test_name": "producer with absent weights or incomplete human assessments withholds ranking",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T055": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "comparison displays the submitted rate even after the current rate changes",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T056": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "submitted sourcing without a snapshot does not display live FX as historical",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T057": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "test_name": "producer with missing submitted FX suppresses every score and rank despite a current rate",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T058": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "rejected submissions preserve the submitted currency and never reinterpret a frozen rate",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T059": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "missing currency and incomplete purchase orders cannot inherit a base-currency estimate",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T060": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "test_name": "a stated total mismatch in one proposal suppresses the whole producer ranking",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T061": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "request comparison does not label an unspecified quote currency as base currency",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T062": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "equal complete proposals retain recorded order without adding a tie-break policy",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T063": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "C06 preserves zero versus absence and fingerprints compensating financial inputs",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T064": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "test_name": "ambiguous selected quotes and an overflowing order remain unavailable",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T065": {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-pr-resta keeps the status and approve on draft is not a transition",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T066": {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-pr-ultimo opens sourcing and does not create a PO",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T067": {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-src-resta stays pending and approve on draft is not a transition",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T068": {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-src-ultimo clears issuedAt and does not create a PO",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T069": {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-po-resta stays pending",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T070": {
+        "path": "modules/sucafina/porta/linha.test.ts",
+        "test_name": "L-approve-po-ultimo approves and clears issuedAt",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T071": {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-no-override stays no_override when the admin is also the creator and the flag is on",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T072": {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-not-approver the word approver does not authorize",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T073": {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-self-approval empty holder, flag on, creator",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T074": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+        "test_name": "the prepared command retains its reviewed inputs when caller-owned outputs are mutated",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T075": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "decision preparation is deterministic and does not change the request",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T076": {
+        "path": "modules/sucafina/porta/codigo.test.ts",
+        "test_name": "C-reason-required",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T077": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "approval view separates unassigned holders and labels the pending decision",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T078": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "requisition drafts and revisions expose their saved justification in the authorized projection",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T079": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "test_name": "bank change through the real domain clears validation and explains revalidation without leaking secrets",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T080": {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "nested supplier bank material is excluded recursively from audits and history",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T081": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/projection.test.ts",
+        "test_name": "supplier projection returns authorized fields and refuses bank fields",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run",
+        "proof_limits": [
+          "Direct domain port with synthetic host callbacks; not a native/MCP transport witness."
+        ]
+      },
+      "T082": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "test_name": "supplier activation reports recorded prerequisites and duplicate tax IDs remain rejected",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T083": {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "supplier creation persists and deletion never reuses its SUP allocation",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T084": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "test_name": "duplicate legal names warn on success while distinct tax IDs remain separate",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run",
+        "proof_limits": [
+          "Actual domain.create and domain.view; duplicate-name success has the existing warning and two retained IDs/tax IDs. A duplicate-tax create is refused without snapshot mutation."
+        ]
+      },
+      "T085": {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "default addresses and FX update date save, read, render and reset to empty defaults",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T086": {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "asset metadata survives business transitions and deletion returns the deleted record",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T087": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/contracts.test.ts",
+        "test_name": "contract capability reads only the issued Dashboard scope and rejects revocation and ABA",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run",
+        "proof_limits": [
+          "Actual SQLite/source lifecycle, direct port invocation and synthetic host authority; no native/MCP call."
+        ]
+      },
+      "T088": {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "supplier query opens only its matching visible supplier detail",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T089": {
+        "path": "modules/sucafina/Sucafinav1/test/parity-procurement.test.ts",
+        "test_name": "requester supplier deeplink opens the real view target while bank values stay masked",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T090": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+        "test_name": "supplier controls reflect existing buyer and supplier admin roles",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      },
+      "T091": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+        "test_name": "Settings exposes complete baseline policy controls and secondary reset without inventing defaults",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run",
+        "proof_limits": [
+          "Static HTML controls inventory; keyboard discovery is not observed."
+        ]
+      },
+      "T092": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "test_name": "prepared Procurement mutation uses current actor and SQLite revision, and retries by receipt",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run",
+        "proof_limits": [
+          "Actual persistence/C08 path in test composition; no mounted UI/native human decision."
+        ]
+      },
+      "T093": {
+        "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+        "test_name": "missing and invalid encryption keys fail closed on bank writes without altering state",
+        "result": "pass",
+        "kind": "hosted-scoped-domain/port/render-test",
+        "evidence": "final-hosted-run"
+      }
+    }
+  },
+  "referenced_distinct_test_count": 93
+}

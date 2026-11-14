@@ -1,0 +1,201 @@
+{
+  "schema": "wp04-independent-review-w6-v1",
+  "reviewer": "/root/wp04_final_review",
+  "captured_at": "2026-11-13T23:36:00.392256+00:00",
+  "repo": "/workspace/scratch/1ae351a91c23/repo",
+  "source_provenance": "Bytes locais materializados; não é checkout Git. Commit/tree W6 remotos não consultados nem certificados pelo reviewer.",
+  "mode": "read-only source review; only report artifacts written",
+  "executed_tests": [],
+  "executed_typechecks": [],
+  "git_commands": [],
+  "remote_operations": [],
+  "prior_checkpoint_artifacts": [
+    {
+      "path": "/workspace/scratch/1ae351a91c23/review/final-review/WP04-independent-review-checkpoint.md",
+      "sha256": "089a7766e0af1bb97eb91bd0039a2e7302aa9541c40d29fac0f58217c1fdc9c2"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/review/final-review/WP04-independent-review-hashes.json",
+      "sha256": "ed2069311f399b037a86c42acf5a5b83516122c42077818e70f613f0d13976b8"
+    }
+  ],
+  "reviewed_files": [
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "sha256": "2724422b8e7dbeb60b344fbdc437151618957851b571f9e19084c27c958c2f00",
+      "review_scope": "W6: readOriginal, historicalProofs, physicalContinuity, resolveHistoricalSource, proveContinuity e contexto receipt/resolveEvidence"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "sha256": "88b08df63cb30a88541bab9f513ac49c8bd942b2a8c4e6493bf4e51da460a8c0",
+      "review_scope": "W6: H03 material entre resolve/prove; H05/H06; budgets e instrumentação real store/HTTP"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/apps/cli/src/sucafina-product/host-context.ts",
+      "repo_relative_path": "apps/cli/src/sucafina-product/host-context.ts",
+      "sha256": "61976ec0d3bda532ff5244775ffdf10abf181ccb0d31d4ed291419be297a0f52",
+      "review_scope": "W6: analyses.read/output e contexto list/cancel; não revisão integral nova do host"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "sha256": "a04d5b314b0ace2303cffb2393c1cc5a21d0255991c94a324141e3416eec8507",
+      "review_scope": "Fonte integral: HTTP, referências forjadas, estado corrompido e host ausente"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "sha256": "9e83e45e2d88f1ed78261c84c7c5c14ae1b0542d8d6400daa6aacfbd01b55910",
+      "review_scope": "Suporte W6: resolver individual, autenticação/escopo, issueForActor e isCurrent"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "sha256": "ea543cc26476c7b20e90b57a54b6d62e8715c3e64063c3878273fc53c2f4cf50",
+      "review_scope": "Fonte integral: router histórico e encadeamento resolve → proveContinuity"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts",
+      "sha256": "9622c00f0448204c40e61fcef8a55537ff8425ab7b3c5f5588898f3dfeb71040",
+      "review_scope": "FR-02 W6: formulário/script integrais, generation/readSequence/runRef/dirty"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts",
+      "repo_relative_path": "packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts",
+      "sha256": "f37f3349748f65699301e96fc52ee4caa210ce1f05403fb062397f2f7ecd025b",
+      "review_scope": "Fonte integral do teste isolado; transporte controlado, nenhuma execução nativa"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "sha256": "1f399b7a78d5f7914d1327d141ce6abd9d4cec9e99ee6e9342fe283888b4581f",
+      "review_scope": "Suporte FR-02: applyRefresh, refresh, dirty/foco, timer e beforeunload"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "sha256": "430c42c7c2026edf8bfd3bdecabcc73be52b281c2ef598e9ecf8ca8532c9917c",
+      "review_scope": "W6: CSV suppliers/autorização bancária; register/PO e visibilidade"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "sha256": "062a5eff322c004dbc13f7c8b1c216225b260c01731994c7d6ed644a647ba0ce",
+      "review_scope": "W6: rótulos/pré-requisitos fornecedor e render; não revisão integral nova"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/src/supplier.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/src/supplier.ts",
+      "sha256": "e1607db80455888ebcbfff9161ea2684296db8524fd83844265e1c255a9a3313",
+      "review_scope": "Suporte CSV: campos restritos e supplierCsv"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+      "sha256": "8b5250d17f4621ffdcff0502bb2f732705ad9374c7731888a5f1c99bd4563144",
+      "review_scope": "W6: rótulos/pré-requisitos, CSV real quatro papéis, register/PO; releitura do complemento G3 lifecycle/search/link/audit"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+      "sha256": "c6567768c526012d587886342edfcbb16cec4dc8b7064ed5833c6f8d41a14c75",
+      "review_scope": "Fonte integral: fontes autorizadas, catálogo, placeholder e host ausente"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+      "repo_relative_path": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+      "sha256": "5ad181a1ee1fcb1805f439358c33b977bf26c3e60486775f3431aec34221ddbe",
+      "review_scope": "W6: releitura dirigida G4 Settings (foco pós-save, Tab/Enter/Tab/Space no reset); não nova revisão integral dos oito casos"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/product/procurement/http-body.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/product/procurement/http-body.ts",
+      "sha256": "8bbbb68be25fd12d8ccebb5993026ebb94a62d31876d9ad85355bc13fbd4c7b5",
+      "review_scope": "FR-01: hash idêntico ao patch previamente revisado"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+      "sha256": "a16ea242f89df9329d13d7888a534ecfa03bb07192f6168b85cde240ff2ae9b2",
+      "review_scope": "FR-01: hash idêntico ao patch previamente revisado"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/product/procurement/sourcing-input-http.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-input-http.ts",
+      "sha256": "e1c15bb61071fa6b8a1f7358096c862a9330e9c1d78141128c15b89cb0e04347",
+      "review_scope": "FR-01: hash idêntico ao patch previamente revisado"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "sha256": "72c68f3d26fa1d455f9f2feac0a1aec3673040fd980f3e4686c0ba5042406119",
+      "review_scope": "W6: releitura dirigida do stream 65537 bytes sem EOF; demais deltas não reavaliados integralmente"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "sha256": "b49699f8d77b33e172da91004acc96735ac00911f87a527799752b77df044cd3",
+      "review_scope": "FR-03: hash idêntico ao patch previamente revisado"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+      "repo_relative_path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+      "sha256": "e91f24a82e044f5674c566238dca0d383fa462656f2805708ba92f14e2086517",
+      "review_scope": "FR-03: hash idêntico ao patch previamente revisado"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/repo/AGENTS.md",
+      "repo_relative_path": "AGENTS.md",
+      "sha256": "f87f3c732f8aafec8d02501a5f11f050c07d33d350890fb12f69d8b288b830f9",
+      "review_scope": "Instruções relidas; testes somente CI e escopo readonly do coordenador"
+    },
+    {
+      "path": "/workspace/scratch/1ae351a91c23/review/w6-host-diagnosis.md",
+      "sha256": "35a66acd310464314b07857964fa65a03eaa1a2c17bbbbf2255207155d2f0820",
+      "review_scope": "Diagnóstico lido; budgets/instrumentação confrontados com fonte. Medições W5 não repetidas pelo reviewer."
+    }
+  ],
+  "findings": [
+    {
+      "id": "FR-01",
+      "priority": "P2",
+      "status": "closed-in-code-awaiting-hosted-ci",
+      "closure": "Reader bounded/cancel reutilizado; fonte do teste sem EOF reconferida."
+    },
+    {
+      "id": "FR-02",
+      "priority": "P2",
+      "status": "closed-in-code-awaiting-hosted-ci",
+      "closure": "generation + readSequence + runRef + isConnected cercam respostas; dirty mantido em ativo/incerto."
+    },
+    {
+      "id": "FR-03",
+      "priority": "P2",
+      "status": "closed-in-code-awaiting-hosted-ci",
+      "closure": "Monetary v3 preserva moeda submetida e comparação indisponível; código/teste byte a byte iguais ao patch já revisado."
+    }
+  ],
+  "open_concrete_findings_in_reviewed_scope": [],
+  "additional_w6_review": {
+    "historical_continuity": "No concrete defect found. Fresh archive/current scope/material/physical/auth checks remain.",
+    "analysis_read_output": "No concrete defect found. Absence/unauthorized denied; corruption and authorized-not-ready unavailable.",
+    "supplier_csv": "No concrete defect found. Bank metadata columns use existing privileged roles."
+  },
+  "limits": [
+    "Static closure is not hosted CI pass, publication proof, release approval or native LLM execution proof.",
+    "Scopes are per-file and per-function; no exhaustive new repository review.",
+    "Controller tests use controlled HTTP; adversarial financial envelopes are not native execution evidence.",
+    "Local file hashes do not prove the remote commit/tree that CI executes.",
+    "Added workbench negatives do not demonstrate execution of the authorized-but-not-ready output path.",
+    "G1/G2/G5 acceptance additions outside these listed scopes are not certified by this report."
+  ],
+  "checkpoint_drift_resolved": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+    "previous_ui_checkpoint": "4ee1def1fb9308f03023a3ca99bde9e43323a3ae766fe8d398c7969530819401",
+    "reviewed_final": "8b5250d17f4621ffdcff0502bb2f732705ad9374c7731888a5f1c99bd4563144",
+    "cause": "UI confirmed coordinator-authorized G3 test addition; reread before sealing."
+  }
+}
