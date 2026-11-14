@@ -71,8 +71,13 @@ test("dossier keeps the real WP04 ranking, submitted FX, technical exclusion, mi
           expect(result.value.comparison?.proposals.find((proposal) => proposal.proposalRef === "C")).toMatchObject({ eligible: false, score: null })
           expect(result.value.comparison?.proposals.find((proposal) => proposal.proposalRef === "B")?.convertedAmount).toBeCloseTo(30240, 6)
           expect(result.value.sourcing?.submittedFx).toContainEqual({ from: "EUR", rate: 1.08 })
-          expect(result.value.explanation.selection).toMatchObject({ state: "recorded", proposalRef: "B", message: expect.stringContaining("custo comparável USD 30.240") })
-          expect(result.value.explanation.selection.message).toContain("Justificativa registrada: Recorded human choice")
+          const selection = result.value.explanation.selection
+          expect(selection.state).toBe("recorded")
+          if (selection.state !== "recorded") throw new Error("The human choice must remain available")
+          expect(selection.proposalRef).toBe("B")
+          expect(typeof selection.message).toBe("string")
+          expect(selection.message).toContain("custo comparável USD 30.240")
+          expect(selection.message).toContain("Justificativa registrada: Recorded human choice")
           expect(result.value.explanation.proposals.find((proposal) => proposal.proposalRef === "C")?.text).toContain("não elegível segundo o domínio")
           expect(result.value.request.values).toContainEqual(expect.objectContaining({ id: "reason", value: "Recorded human choice" }))
         }
