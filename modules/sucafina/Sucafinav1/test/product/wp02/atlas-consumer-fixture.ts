@@ -14,7 +14,7 @@ import { createSfBusinessServices } from "../../../../../../apps/cli/src/sucafin
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { object } from "../../../runtime/contract.ts"
 import type { Persistence, Snapshot } from "../../../runtime/contract.ts"
-import type { AssetPersistence } from "../../../runtime/assets.ts"
+import type { AssetPersistence, BlobTransaction } from "../../../runtime/assets.ts"
 import { resolve } from "../../../src/identity.ts"
 import { createResidentAiBundle } from "../../../product/ai/resident.ts"
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
@@ -32,9 +32,12 @@ import type { PortResult } from "../../../product/contracts/ports.ts"
 import type { SfStateResult } from "../../../product/contracts/state.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 import type { createSfAtlasBusiness } from "../../../product/host-binding/business-context.ts"
+import { createSfAtlasScanner } from "../../../product/host-binding/atlas-scanner.ts"
 
 export const atlasPeriod = { start: "2026-01-01", end: "2026-12-31" }
 export const atlasDay = { start: "2026-11-13", end: "2026-11-13" }
+// Deliberately synthetic and never issued. The pinned release allowlists the previous alphabet sequence.
+export const syntheticScannerControl = "ghp_" + "H7k2M9q4R8t1V6w3X5y0Z2a7B9c4D8e1F6g3"
 const origin = "https://dashboard-atlas.test"
 const scannerRelease = {
   version: "8.30.1",
@@ -72,20 +75,41 @@ export async function prepareAtlasScanner(directory: string) {
   if (version !== `gitleaks version ${scannerRelease.version}`) throw new Error(`Unexpected Gitleaks version: ${version}`)
   const known = KNOWN_SCANNERS.find((value) => value.name === "gitleaks")
   if (!known) throw new Error("Atlas does not publish a Gitleaks invocation contract")
-  return { spec: { ...known, command }, version: scannerRelease.version }
+  const spec = { ...known, command }
+  const scanner = createSfAtlasScanner({ scanners: [spec] })
+  const clean = { owner: "sf-atlas-scanner-qualification", kind: "task" as const, entry: { taskId: "qualification", attempted: [], failedWith: [], stoppedAt: "review", lesson: "Review current authorized observations." } }
+  const verdicts = { clean: scanner.scan(clean), syntheticControl: scanner.scan({ ...clean, entry: { ...clean.entry, lesson: syntheticScannerControl } }) }
+  console.info("SF_ATLAS_SCANNER_QUALIFICATION", JSON.stringify({ version: scannerRelease.version, archiveSha256: digest,
+    controlSha256: new Bun.CryptoHasher("sha256").update(syntheticScannerControl).digest("hex"), ...verdicts }))
+  if (verdicts.clean !== false || verdicts.syntheticControl !== true) throw new Error("Pinned Atlas scanner qualification failed")
+  return { spec, version: scannerRelease.version }
 }
+
+type AtlasPhase = <T>(name: string, work: () => T | Promise<T>) => Promise<T>
 
 /** Business ledger text is fixture data; source reads, admission, outbox, Atlas and recall are production. */
-export async function withAtlasConsumer(work: (fixture: Awaited<ReturnType<typeof createFixture>>) => Promise<void>) {
+export async function withAtlasConsumer(work: (fixture: Awaited<ReturnType<typeof createFixture>>) => Promise<void>, scenario: string) {
+  const started = performance.now()
+  const phase: AtlasPhase = async (name, work) => {
+    const started = performance.now()
+    console.info("SF_ATLAS_PHASE", JSON.stringify({ scenario, phase: name, state: "started" }))
+    let state = "threw"
+    try { const result = await work(); state = "returned"; return result }
+    finally { console.info("SF_ATLAS_PHASE", JSON.stringify({ scenario, phase: name, state, elapsedMs: Math.round(performance.now() - started) })) }
+  }
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-dashboard-atlas-"))
   await chmod(directory, 0o700)
-  const fixture = await createFixture(directory).catch(async (error) => { await rm(directory, { recursive: true, force: true }); throw error })
-  try { await work(fixture) }
-  finally { await fixture.close(); await rm(directory, { recursive: true, force: true }) }
+  const fixture = await phase("fixture.create", () => createFixture(directory, phase)).catch(async (error) => { await rm(directory, { recursive: true, force: true }); throw error })
+  try { await phase("scenario.assertions", () => work(fixture)) }
+  finally {
+    await phase("fixture.close", () => fixture.close())
+    await rm(directory, { recursive: true, force: true })
+    console.info("SF_ATLAS_SCENARIO_TIMING", JSON.stringify({ scenario, elapsedMs: Math.round(performance.now() - started) }))
+  }
 }
 
-async function createFixture(directory: string) {
-  const pinned = await prepareAtlasScanner(directory)
+async function createFixture(directory: string, phase: AtlasPhase) {
+  const pinned = await phase("scanner.provision-and-qualify", () => prepareAtlasScanner(directory))
   const stateDirectory = path.join(directory, "product")
   await mkdir(stateDirectory, { mode: 0o700 })
   const installationId = randomUUID(), projectId = randomUUID()
@@ -116,7 +140,7 @@ async function createFixture(directory: string) {
     const forwarding: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots"> = {
       transaction: async (surface, run, options) => {
         const lost = { value: false }
-        const value = await driver.transaction(surface, (snapshot, blobs) => observe(snapshot, () => run(snapshot, blobs), lost), options)
+        const value = await driver.transaction(surface, (snapshot: Snapshot, blobs: BlobTransaction) => observe(snapshot, () => run(snapshot, blobs), lost), options)
         if (lost.value) throw new Error("Atlas test response lost after durable commit")
         return value
       },
@@ -163,8 +187,8 @@ async function createFixture(directory: string) {
       issueRecord: createDashboardRecordSourceIssuer({ host: authority.host, scopedSources: persistence }) })
     return { driver, authority, business, persistence, issue, records, configureScanner }
   }
-  const runtime = { current: await open(true) }
-  const call = async <T>(operation: string, payload: unknown, action: (context: TrustedUiContext) => Promise<T>, actor: string = actors[0]) => {
+  const runtime = { current: await phase("composition.open", () => open(true)) }
+  const call = <T>(operation: string, payload: unknown, action: (context: TrustedUiContext) => Promise<T>, actor: string = actors[0]) => phase(`operation.${operation}`, async () => {
     const digest = digestSfValue(payload), authority = runtime.current.authority
     const admitted = await authority.ui.admit(request(actor), operation, digest)
     if (admitted.status !== "ok") throw new Error(`Atlas UI admission: ${admitted.status}`)
@@ -172,7 +196,7 @@ async function createFixture(directory: string) {
       if (!await authority.ui.validate(admitted.value, operation, digest)) throw new Error("Atlas UI lease rejected")
       return await action(admitted.value)
     } finally { authority.ui.finish(admitted.value) }
-  }
+  })
   const sources = () => call("sf_dashboard_read", { period: atlasPeriod }, async (context) => ({
     budget: atlasValue(await runtime.current.issue({ page: "Budget Overview", fields: ["budgetSeries"], period: atlasPeriod }, context)).evidence,
     topic: atlasValue(await runtime.current.records.issue({ page: "Hot Topics & Actions", recordType: "hotTopics", recordId: "topic", fields: ["status"], period: atlasDay }, context)),
@@ -206,7 +230,7 @@ async function createFixture(directory: string) {
     return { caseRef: event.caseRef, event, ...saved }
     })
   }
-  return { runtime, clock, fault, active, actors, request, call, sources, ledger, scanner: pinned, scannerRelease, versions,
+  return { runtime, clock, fault, active, actors, request, call, sources, ledger, scanner: pinned, scannerRelease, versions, phase,
     inspect: async () => atlasValue(await runtime.current.authority.state.read(request(), "atlas", (state) => ({
       atlasVersion: state.versions.atlas, outboxVersion: state.versions.outbox, atlasDigest: digestSfValue(state.atlas), owners: Object.keys(state.atlas),
       entries: Object.values(state.atlas).reduce<number>((count, value) => { const events = object(value).events; return count + (Array.isArray(events) ? events.length : 0) }, 0),
@@ -217,7 +241,7 @@ async function createFixture(directory: string) {
       if (!descriptor) throw new Error(`Atlas capability unavailable: ${operation}`)
       return descriptor.handler(payload, context)
     }, actor),
-    reopen: async () => { runtime.current.business.dispose(); await runtime.current.driver.dispose(); runtime.current = await open(false) },
+    reopen: () => phase("composition.reopen", async () => { runtime.current.business.dispose(); await runtime.current.driver.dispose(); runtime.current = await open(false) }),
     close: async () => { runtime.current.business.dispose(); await runtime.current.driver.dispose() },
   }
 }
