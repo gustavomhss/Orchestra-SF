@@ -1,14 +1,14 @@
-# Missão32 — handoff para a sessão23: composição C9 qualificada
+# Missão32 — handoff terminal para a sessão23: composição C9 qualificada
 
 ## Resultado e limite de fechamento
 
 **A compatibilidade C12 foi implementada e comprovada na closure da composição real fixada nesta missão.** A reprodução distinguiu a reconciliação fresca legítima de um defeito material: o executor podia vincular o recibo do efeito150 a uma choice concorrente alterada para900. O delta agora recusa essa alteração, fecha a janela entre admissão e captura do executor e recusa identidades duplicadas, preservando o efeito e o recibo originais.
 
-A prova atual da composição C9 tem **22/22 cenários aprovados em um run: 15 C12 e 7 OPS-REV-02, com 570 assertions**. O caso WP04 de alias é reutilizado separadamente por identidade da sua closure direta. Os resultados anteriores W0–W3 permanecem preservados; o run de W2 continua failure. Não se alega um run único verde de23 testes.
+A prova atual da composição C9 tem **22/22 cenários aprovados em um run: 15 C12 e 7 OPS-REV-02, com 570 assertions**. O caso WP04 de alias é reutilizado separadamente por identidade da sua closure direta. Os resultados anteriores W0–W3 permanecem preservados; o run de W2 continua failure. Não se alega um run único verde de 23 testes.
 
-**Checks anteriores: CLI typecheck PASS e guards PASS; Sucafina typecheck FAIL pelo TS2741 herdado do caller WP14**, fora da autoridade C12. Após o ajuste autorizado da fixture, os checks da nova origem serão executados pelo mesmo workflow; este registro não antecipa seu resultado. O caller já está corrigido no bundle fixado, sem inferir um typecheck executado nesse bundle.
+**Checks atualizados: CLI typecheck PASS e guards PASS; Sucafina typecheck FAIL exclusivamente pelo TS2741 herdado do caller WP14**, fora da autoridade C12. O run43646929233 verificou a origem após o ajuste da fixture e continua failure agregado. O caller já está corrigido no bundle fixado, sem inferir um typecheck executado nesse bundle.
 
-Entrega funcional: implementação/testes e patches entregues na mesma **PR60 / procurement-apply**, prontos para consumo pela sessão23. A integração em `sf2-stack` e a qualificação do SHA efetivamente integrado pertencem à sessão23; o aceite final permanece com o coordenador S0. **Nenhum aceite global é concedido.**
+Estado terminal: implementação/testes e patches entregues na mesma **PR60 / procurement-apply**, prontos para consumo pela sessão23. A integração em `sf2-stack` e a qualificação do SHA efetivamente integrado pertencem à sessão23; o aceite final permanece com o coordenador S0. **Nenhum aceite global é concedido.**
 
 ## Autoridade, predecessores e preservação
 
@@ -34,7 +34,7 @@ O candidato atual é **W4 `ba731ff646d8ed7a1c7fb15bf82f4e8c5a2ef81a`**, tree `c4
 | test | `8a1a822601ef3d44b94df0a2d94c24af071eeff8` |
 | runtime | `46c24e8b1e54af03501b1b401a251285fa008d82` |
 
-[closure.json](closure.json) fixa o tree completo, os onze deltas permitidos (dois de produto e nove de testes/helpers) e as dependências por SHA/path/blob. A [closure anterior](https://github.com/gustavomhss/Orchestra-SF/blob/8b7497a271c5afbd8604927f75b2a86a4f960bae/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/closure.json) e o primeiro handoff terminal permanecem no commit8b7497a, com seus W/S e resultados intactos.
+[closure.json](closure.json) fixa o tree completo, os onze deltas permitidos (dois de produto e nove de testes/helpers) e as dependências por SHA/path/blob. A [closure anterior](https://github.com/gustavomhss/Orchestra-SF/blob/8b7497a271c5afbd8604927f75b2a86a4f960bae/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/closure.json) e o primeiro handoff terminal permanecem no commit 8b7497a, com seus W/S e resultados intactos.
 
 | Dependência publicada preservada | Blob na base C9 e em W4 |
 | --- | --- |
@@ -101,26 +101,29 @@ Nenhum oráculo foi convertido simplesmente de409 para200. Não houve remoção 
 | Oráculo final W3 | `796f7d75310eba98a847a5ad9a5d4a5cec7e3de7` | `0a316164ce059b113e966810dc0c09cf47e0f76b` | [43644467464](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644467464) / `132599028141` | PASS: 1 pass/0 fail/4 filtrados, 28 assertions, 26,71s. |
 | Composição publicada C9, W4 | `ba731ff646d8ed7a1c7fb15bf82f4e8c5a2ef81a` | `114b1c3ff83a038b515f4afcf5db0fc795d59b6d` | [43646007759](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646007759) / `132603819490` | PASS: 22/22, 570 assertions, nove arquivos, 402,01s. |
 | Checks anteriores da origem | `067b5cd37c09b2066dbd1a847942f8cac2ff8c40` | `e94f8ba7a91a1f384f96cd5f02b5e25d0caec428` | [43644816495](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644816495) / `132600114060` | FAIL agregado apenas pelo TS2741 herdado; CLI e guards PASS. |
+| Checks atualizados da origem | `00a4eca86f69fd186094bd7a698328a9a4f5fbc7` | `ee217e8a7e4b5c5fe99f0ed693c0cf712bfbb56c` | [43646929233](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646929233) / `132606688777` | FAIL agregado apenas pelo TS2741 herdado; CLI e guards PASS. |
 
 Cada S de teste é filho direto do W e acrescenta apenas `.ci-run.json`. O S de checks acrescenta somente `.astra-operations-check.json`. Não houve testes locais, servidores locais, epic/full suite, rerun inalterado ou dispatcher novo.
 
-A reprodução permanece vermelha. O erro sintático inicial e o mismatch de egress foram registrados, diagnosticados e corrigidos antes de suas repetições. W2→W3 altera apenas o corpo do teste que falhou e seu diagnóstico. Produto, fixtures, imports e os demais 22 corpos permanecem idênticos; o filtro exato reexecutou somente o caso afetado. Os oito passes de W1 não são necessários para a prova final. A publicação material C9 e o encaminhamento do seletor pela fixture motivaram W4; os22 cenários afetados foram reexecutados uma vez. O alias WP04 não foi repetido porque sua closure direta permaneceu idêntica.
+A reprodução permanece vermelha. O erro sintático inicial e o mismatch de egress foram registrados, diagnosticados e corrigidos antes de suas repetições. W2→W3 altera apenas o corpo do teste que falhou e seu diagnóstico. Produto, fixtures, imports e os demais 22 corpos permanecem idênticos; o filtro exato reexecutou somente o caso afetado. Os oito passes de W1 não são necessários para a prova final. A publicação material C9 e o encaminhamento do seletor pela fixture motivaram W4; os 22 cenários afetados foram reexecutados uma vez. O alias WP04 não foi repetido porque sua closure direta permaneceu idêntica.
 
 Omni em W4: **pass**, nonce `2518f58e18caab01f544b1da18395a25`, dois spawns e zero delegated. O PASS histórico de W2 e seu nonce permanecem no respectivo recibo. Nas seleções sem browser, os controles foram **not applicable**, sem alegar prova Omni. Os runs Bun produziram zero artefatos; os logs permanecem hospedados e os fatos estruturados estão commitados.
 
-## Typecheck e guards anteriores; atualização pendente
+## Typecheck e guards atualizados
 
-[checks-01/result.json](checks-01/result.json) registra o resultado completo. W da origem: `067b5cd37c09b2066dbd1a847942f8cac2ff8c40`, tree `bd1e44cbd05e3f55b716a77a8c5ab7d91a85c15c`. O check executou `bun typecheck` em modules/sucafina e apps/cli, e `bun run check:guards --base origin/dev`.
+[checks-02/request.json](checks-02/request.json) e [checks-02/result.json](checks-02/result.json) registram a execução após o ajuste da fixture. O W da origem é **`00a4eca86f69fd186094bd7a698328a9a4f5fbc7`**, tree `798eae81136ec91cce23a178a93a8898feadddac`. O S `ee217e8a7e4b5c5fe99f0ed693c0cf712bfbb56c`, tree `42d3b76db4c847fba7be4d212eee9cc51b5ad6c5`, acrescenta apenas o envelope de checks. O workflow Operations existente executou o modo completo: `bun typecheck` em modules/sucafina e apps/cli, e `bun run check:guards --base origin/dev`.
 
-- Sucafina: único TS2741 em `test/product/wp14/source-access-atlas.test.ts(167,41)`, falta de `procurementEvidenceWrites`; blob herdado `fbe627ffde443ff7e2d3b1204bbcf67523404f41`.
-- CLI: PASS.
-- Guards: PASS, 78 regras, 880 paths acumulados contra dev, 0 gates, 11 warnings, 0 erros. Os 11 WARNs são byte-idênticos aos da missão19, fora do delta C12. A skill `guardrail-usage` foi lida; nenhum ignore, aprovação, regra ou limite foi alterado.
+- Sucafina: **FAIL**, apenas TS2741 em `test/product/wp14/source-access-atlas.test.ts(167,41)`, falta de `procurementEvidenceWrites`; blob herdado `fbe627ffde443ff7e2d3b1204bbcf67523404f41`. Nenhum novo diagnóstico C12.
+- CLI: **PASS**.
+- Guards: **PASS**, 78 regras, 884 paths acumulados contra dev, 0 gates, 11 warnings, 0 erros. Os 11 WARNs coincidem exatamente com checks-01 e missão19, fora do delta C12. Nenhum ignore, aprovação, regra ou budget foi alterado.
 - Base dev: `a1d37698a7bb097c1578f827eba6a19b9917ef07`.
-- [Artefato14132869022](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644816495/artifacts/14132869022): cinco arquivos, 1.578 bytes, SHA256 `eee122db140edc28d012bf3470d428f271b131170e3f3233ef69160921e70fa9`. Download feito pelo GitHub MCP; nenhum log bruto foi commitado.
+- [Artefato14134398252](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646929233/artifacts/14134398252): cinco arquivos, 1.578 bytes, SHA256 `85c49244e633e1bc46d14c905354af16991d41b6a027fd26b48b05434b366f8f`. Download pelo GitHub MCP; nenhum log bruto commitado.
 
-O patch externo [OPS-CONSUMER-02.patch](https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/OPS-CONSUMER-02.patch), blob `2ab9a6b6f18709d5bad95f58247c70ba286a00aa`, já foi consumido no bundle: o caller tem postimage `d7d2a69837560f42438d470b83724c1a61939a73`. Não reaplicar; a pendência da origem é separada. Não houve necessidade de novo patch de teste fora da autoridade desta missão.
+O run geral permanece **failure**. [checks-01/result.json](checks-01/result.json) conserva o resultado anterior sobre 067b5cd, incluindo 78 regras / 880 paths e seu artefato; não foi reclassificado. A repetição foi necessária porque a fixture mudou materialmente depois desse W. Antes do novo dispatch, não havia run equivalente, em execução ou na fila. O workflow restrito não admite o prefixo C12; por isso foi usado seu modo completo existente, sem alterar a interface.
 
-Typecheck/guards não foram executados no W composto: o workflow Operations correspondente não existe nessa closure. Não se importou workflow nem se acionou epic para contornar isso. Esse gate do candidato integrado permanece para a qualificação da sessão23/S0.
+O patch externo completo [OPS-CONSUMER-02.patch](https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/OPS-CONSUMER-02.patch), blob `2ab9a6b6f18709d5bad95f58247c70ba286a00aa`, já foi consumido no bundle: o caller tem postimage `d7d2a69837560f42438d470b83724c1a61939a73`. **Não reaplicar ao bundle.** A pendência da origem continua separada e fora da autoridade C12; nenhum teste externo foi editado nem novo patch redundante criado.
+
+Typecheck/guards não foram executados em W4: o workflow Operations não existe nessa closure. Nenhum workflow foi importado nem epic/full suite acionado. Esse gate pertence à qualificação do SHA efetivamente integrado pela sessão23/S0. O commit terminal posterior a 00a4eca é documental; este handoff não atribui o guard de 00a4eca a outro tree ou a um futuro D global.
 
 ## Patches consumíveis e próxima ação
 
@@ -133,6 +136,6 @@ Typecheck/guards não foram executados no W composto: o workflow Operations corr
 
 A sessão23 deve reconciliar o head atual, conferir os preimages e consumir os deltas completos sobre o executor Finance retido, preservando seus demais avanços. Copiar `apply.ts` inteiro da origem perderia diferenças de composição. Se seu tree divergir, requalificar o delta e atribuir a evidência ao SHA efetivamente executado.
 
-A publicação documental de C9 registra o resultado real do W4, atualiza os patches consumíveis e conserva o primeiro fechamento no commit8b7497a. O check da origem após a mudança da fixture será registrado separadamente; nenhuma evidência da origem é transferida ao bundle.
+A publicação documental de C9 registra o resultado real do W4, os patches consumíveis e os checks atualizados. O primeiro fechamento permanece no commit 8b7497a. Este commit terminal altera somente HANDOFF/INTEGRATION/closure, explicita que a comparação de postimages em validation-04 abrange os dois arquivos C12 e acrescenta request/result de checks-02. Produto, testes, patches e CI continuam idênticos à origem checada 00a4eca; nenhuma nova execução ou guard deste commit documental é inferido.
 
-Permanecem fora deste fechamento: aceite global IOPS02/first-save/lost-register, AM04 integral, toda a navegação Workbench, execução IA/nativa e C/D/GLOBAL_RELEASE. A prova UI usa shell GET mínimo com renderer/script e POSTs reais; a reabertura reconstrói serviços/C08/SQLite no mesmo processo Bun. Não houve restart do Orchestra, merge/deploy/Azure/credenciais/mudanças de engines, mensagem a terceiros ou novo controlador. Todos os runs funcionais desta missão terminaram; o novo check da origem ainda será registrado antes do fechamento terminal.
+Permanecem fora deste fechamento: aceite global IOPS02/first-save/lost-register, AM04 integral, toda a navegação Workbench, execução IA/nativa e C/D/GLOBAL_RELEASE. A prova UI usa shell GET mínimo com renderer/script e POSTs reais; a reabertura reconstrói serviços/C08/SQLite no mesmo processo Bun. Não houve restart do Orchestra, merge/deploy/Azure/credenciais/mudanças de engines, mensagem a terceiros ou novo controlador. Todos os runs funcionais e de checks desta missão terminaram. A sessão23 recebe a entrega completa por PR60 e pelos paths/SHAs deste handoff; nenhuma mensagem externa foi enviada.

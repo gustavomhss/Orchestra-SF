@@ -8,7 +8,7 @@ A composição observada inicialmente era `253baad3f2ff4af5beac695feae4c2f6372dc
 
 Na conferência final, a publicação material C9 avançou a base para **`2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0`**, tree `2dba7fd244afcd39b837b1e61406de1e43450bb5`. Esta missão concluiu uma única requalificação delimitada dessa base: **W4 `ba731ff646d8ed7a1c7fb15bf82f4e8c5a2ef81a`**, tree `c46c6dbb4d0e1bdc84da7ab21812f16e4bcc9b04`, filho direto da publicação C9. O delta contém somente dois arquivos de produto e nove arquivos próprios de testes/helpers. `closure.json` fixa SHA/path/blob, o tree completo e a referência imutável à qualificação anterior.
 
-O código de produto é idêntico ao qualificado em W3. A fixture C12 da origem `a20f8701f8e8d8a5e75a1dc66e47de1ef8a2dfe1` conserva a identidade do callback C08 quando o hook de retenção não está armado. Não altera o provider, o case-port, o host compartilhado ou os oráculos. Os avanços materiais dessas dependências são preservados e motivam o recheck C12/OPS.
+Os dois arquivos de produto C12 alterados pela missão são idênticos aos qualificados em W3. A fixture C12 da origem `a20f8701f8e8d8a5e75a1dc66e47de1ef8a2dfe1` conserva a identidade do callback C08 quando o hook de retenção não está armado. Não altera o provider, o case-port, o host compartilhado ou os oráculos. Os avanços materiais dessas dependências são preservados e motivam o recheck C12/OPS.
 
 ## Patches completos
 
@@ -81,3 +81,10 @@ O run [43643559235](https://github.com/gustavomhss/Orchestra-SF/actions/runs/436
 O run [43646007759](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646007759), job `132603819490`, aprovou **22/22 cenários, 570 assertions, nove arquivos, 402,01s** no W4/S4 acima. O controle Omni foi **pass**, nonce `2518f58e18caab01f544b1da18395a25`, dois spawns, zero delegated. Não houve artefatos Bun; o recibo estruturado e os logs hospedados identificam os resultados reais.
 
 São 15 casos C12 e sete OPS-REV-02 novamente executados sobre o C9 publicado. O caso WP04 de alias permanece uma evidência separada do run43643559235, reutilizada por identidade do teste e de sua closure direta. Não se alega um run verde de23 testes, aceite de desempenho C08, aceite de Routines ou aceite global. A nova prova substitui a necessidade de transportar os resultados C12/OPS da base anterior; esses recibos continuam preservados com suas conclusões originais.
+
+
+## Checks finais da origem e encerramento
+
+O [run43646929233](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646929233) checou W `00a4eca86f69fd186094bd7a698328a9a4f5fbc7` por S `ee217e8a7e4b5c5fe99f0ed693c0cf712bfbb56c`. CLI PASS; guards PASS com 78 regras, 884 paths, 0 gates, 11 avisos herdados e 0 erros. Sucafina FAIL exclusivamente pelo TS2741 herdado em WP14. O resultado agregado continua failure; [checks-02/result.json](checks-02/result.json) registra os diagnósticos, o artefato e as identidades.
+
+O fechamento terminal posterior é somente documental, sem novo teste ou guard inferido. [HANDOFF.md](HANDOFF.md) consolida a entrega e os limites para consumo pela sessão23. A origem, o W4 executado e um futuro SHA integrado permanecem identidades distintas.

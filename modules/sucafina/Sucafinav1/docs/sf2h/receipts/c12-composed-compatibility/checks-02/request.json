@@ -1,0 +1,48 @@
+{
+  "schema": "sf-c12-source-checks-request-v1",
+  "mission": 32,
+  "label": "checks-02",
+  "W": "00a4eca86f69fd186094bd7a698328a9a4f5fbc7",
+  "W_tree": "798eae81136ec91cce23a178a93a8898feadddac",
+  "S": "ee217e8a7e4b5c5fe99f0ed693c0cf712bfbb56c",
+  "S_tree": "42d3b76db4c847fba7be4d212eee9cc51b5ad6c5",
+  "request": {
+    "productSha": "00a4eca86f69fd186094bd7a698328a9a4f5fbc7",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+  },
+  "request_identity": {
+    "sha256": "4af6d898de898ef21b2c7b7c8b26298797135298fe4ad933ae1720ce3f5511cf",
+    "blob": "4456951c2ddc80311de152b09e321a1a19ba7c3c",
+    "bytes": 109
+  },
+  "ref": "astra-check-operations-c12-m32-00a4eca8-4af6d898-02",
+  "run": 43646929233,
+  "job": 132606688777,
+  "workflow": {
+    "path": ".github/workflows/astra-operations-check.yml",
+    "blob": "ec63fc5e1a355ada4f1b73cc518c225719e9b08e",
+    "mode": "all",
+    "unchanged": true
+  },
+  "reason": "The authorized C12 fixture changed after checks-01 to preserve published C9 selector callback identity. Repeat source package typechecks and guards through the existing full-mode Operations envelope; no source runtime or bundle typecheck claim.",
+  "dedup": {
+    "equivalentRunsBeforeDispatch": 0,
+    "inProgressRunsBeforeDispatch": 0,
+    "queuedRunsBeforeDispatch": 0,
+    "priorFunctionalRun": {
+      "id": 43646007759,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "priorSourceCheck": {
+      "id": 43644816495,
+      "status": "completed",
+      "preserved": true
+    }
+  },
+  "snapshotDelta": [
+    ".astra-operations-check.json"
+  ],
+  "noLocalExecution": true,
+  "globalAcceptance": false
+}
