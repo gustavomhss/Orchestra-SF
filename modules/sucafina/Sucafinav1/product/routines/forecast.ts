@@ -19,7 +19,7 @@ export type ForecastFacts = {
 
 /** The host reads the same C06 validity projection used by collaboration and revalidates all sources on egress. */
 export type ForecastReviewHost = {
-  planner: PlannerPort
+  planner: Pick<PlannerPort, "compareForecast">
   confirmations: (request: ForecastCompareRequest, context: TrustedDomainContext) => Promise<PortResult<readonly ConfirmationValidityProjection[]>>
   revalidate: (request: ForecastCompareRequest, context: TrustedDomainContext) => Promise<boolean>
   /** Absent until composition supplies a real owner source. Missing does not invent an owner. */
@@ -58,15 +58,18 @@ const producerSemanticsUnavailable = { status: "unavailable", reason: "producer-
 
 /** The Planner computes all values. Margin, inherited budget, and missing actual are reported only when the producer names them. */
 export async function prepareForecastReview(input: { request: ForecastCompareRequest; context: TrustedDomainContext; host: ForecastReviewHost }) {
-  const comparison = await input.host.planner.compareForecast(input.request, input.context)
-  if (comparison.status !== "ok") return comparison
+  const compared = await input.host.planner.compareForecast(input.request, input.context)
+  if (compared.status !== "ok") return compared
+  const comparison = { value: structuredClone(compared.value) }
   if ([comparison.value.baseline, comparison.value.candidate].some((projection) => projection.missing.some((entry) => entry.reason === "restricted"))) return { status: "unavailable", reason: "review-source-unavailable" } as const
-  const confirmations = await input.host.confirmations(input.request, input.context)
-  if (confirmations.status !== "ok") return confirmations
+  const confirmed = await input.host.confirmations(input.request, input.context)
+  if (confirmed.status !== "ok") return confirmed
+  const confirmations = { value: structuredClone(confirmed.value) }
   if (confirmations.value.some((entry) => confirmationCharge(entry) === "unavailable")) return { status: "unavailable", reason: "review-source-unavailable" } as const
   const changes = compareProjections(comparison.value.baseline, comparison.value.candidate)
   if (changes === undefined) return { status: "unavailable", reason: "projection-identity-invalid" } as const
-  const facts = input.host.facts ? await input.host.facts(input.request, input.context) : { status: "unavailable", reason: "producer-semantics-unavailable" } as const
+  const observedFacts = input.host.facts ? await input.host.facts(input.request, input.context) : { status: "unavailable", reason: "producer-semantics-unavailable" } as const
+  const facts = observedFacts.status === "ok" ? { status: "ok" as const, value: structuredClone(observedFacts.value) } : observedFacts
   if (facts.status === "denied") return { status: "denied", reason: "access-changed" } as const
   if (facts.status !== "ok" && facts.status !== "unavailable" && facts.status !== "needs-input") return facts
   if (facts.status === "ok" && (!facts.value.budgetMargin.currency.trim() || (facts.value.budgetMargin.value !== null && (!Number.isFinite(facts.value.budgetMargin.value) || !facts.value.budgetMargin.evidenceRefs.length)) || [...facts.value.absentActual, ...facts.value.inheritedBudget, ...facts.value.responsibles].some((entry) => !entry.valueId.trim() || !entry.evidenceRefs.length))) return { status: "unavailable", reason: "producer-facts-invalid" } as const

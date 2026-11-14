@@ -11,6 +11,7 @@ import type { LocalStore } from "../../../../runtime/local-contract.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
 import type { SfProductGrant } from "../../../../product/integration/product-authority.ts"
 import type { ResidentProfile, SkillLoadReceipt } from "../../../../product/contracts/resident-ai.ts"
+import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { selection } from "../resident-runtime/fixture.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 
@@ -97,6 +98,32 @@ test("human command admission binds exact action and payload and revokes on auth
     actor.write = false
     expect(await product.human.authorize(admitted.value, "collaboration.thread.reply", payload)).toBe(false)
     product.human.finish(admitted.value)
+  })
+})
+
+test("private collaboration reads admit a viewer with an explicit grant and bind exact payload", async () => {
+  await fixture([{ principalRef: "person", namespaces: ["threads"], operations: [], humanActions: ["collaboration.thread.read", "collaboration.thread.reply"] }], async ({ product, request, actor }) => {
+    actor.write = false
+    const payload = { id: "thread" }
+    const post = new Request(request, { method: "POST", headers: { origin: "https://example.test" } })
+    const admitted = await product.human.admit(post, "collaboration.thread.read", payload)
+    expect(admitted.status).toBe("ok")
+    if (admitted.status !== "ok") return
+    expect(await product.human.authorize(admitted.value, "collaboration.thread.read", payload)).toBe(true)
+    expect(await product.human.authorize(admitted.value, "collaboration.thread.read", { id: "another" })).toBe(false)
+    expect((await product.human.admit(post, "collaboration.thread.reply", { id: "thread", body: "Changed" })).status).toBe("denied")
+    actor.active = false
+    expect(await product.human.authorize(admitted.value, "collaboration.thread.read", payload)).toBe(false)
+    product.human.finish(admitted.value)
+  })
+})
+
+test("the read-only exception does not grant unconfigured private reads", async () => {
+  await fixture([{ principalRef: "person", namespaces: ["threads"], operations: ["sf_work_list"], humanActions: [] }], async ({ product, request, actor }) => {
+    actor.write = false
+    const post = new Request(request, { method: "POST", headers: { origin: "https://example.test" } })
+    expect((await product.human.admit(post, "collaboration.thread.read", { id: "thread" })).status).toBe("denied")
+    expect((await product.ui.admit(post, "sf-human:collaboration.thread.secret", digestSfValue({ id: "thread" }))).status).toBe("denied")
   })
 })
 

@@ -20,6 +20,11 @@ export type Contribution = {
   domain: Domain
   render: (page: string, data: Record<string, unknown>, context: RenderContext) => string | undefined
 }
+export type ApplicationPageView = {
+  data: Record<string, unknown>
+  current: (snapshot: Snapshot, actor: Actor) => boolean | Promise<boolean>
+  finish: () => void
+}
 export type Application = {
   authenticate: (
     request: Request,
@@ -32,6 +37,8 @@ export type Application = {
   workbookLimits?: Partial<WorkbookLimits>
   assets?: { persistence: AssetPersistence; services: AssetServices }
   product?: (request: Request, surface: Surface) => Promise<Response | undefined>
+  // Prepare outside the page lock; fence the retained projection against the authenticated snapshot inside it.
+  productView?: (request: Request, surface: Surface, page: string | undefined) => Promise<ApplicationPageView | Response | undefined>
   // Runs within the authorized page transaction; the decorator must be synchronous and pure.
   productHtml?: (html: string, surface: Surface, page: string) => string
 }
@@ -72,6 +79,8 @@ export function createApplication(mount: string, application: Application) {
       return serveDownload(request, surface, application, transaction, environment)
     const preparedUpload = uploading ? await prepareUpload(request, surface, application, transaction) : undefined
     if (preparedUpload instanceof Response) return preparedUpload
+    const productView = request.method === "POST" ? undefined : await application.productView?.(request, surface, url.searchParams.get("page") ?? undefined)
+    if (productView instanceof Response) return productView
     const response = await transaction(async (snapshot, blobs) => {
       // Resolve current roles INSIDE the same transaction that rereads records and locks.
       const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
@@ -365,6 +374,8 @@ export function createApplication(mount: string, application: Application) {
           ? (own ?? Math.min(2027, Math.max(2024, now.getFullYear())))
           : sidebar
       const auditBefore = snapshot.audit.length
+      if (productView && !await productView.current(snapshot, actor))
+        return { commit: false, value: reply("The current queue is unavailable. Refresh the page to read the current authorized records.", 503) }
       const view = contribution.domain.view({ ...snapshot, data: publicSfData(snapshot.data) }, actor, environment)
       const filters = Object.fromEntries(
         [
@@ -392,7 +403,7 @@ export function createApplication(mount: string, application: Application) {
       )
       const content = contribution.render(
         page,
-        { ...publicSfData(view.data), ...filters, sidebarYear: sidebar },
+        { ...publicSfData(view.data), ...filters, sidebarYear: sidebar, ...productView?.data },
         {
           actor,
           year: selected,
@@ -423,7 +434,7 @@ export function createApplication(mount: string, application: Application) {
           ? `<label>FY<select data-year="sidebar" data-query="year">${[2024, 2025, 2026, 2027].map((year) => `<option value="${year}"${year === sidebar ? " selected" : ""}>${year}</option>`).join("")}</select></label>`
           : "",
       )
-      const toolsHtml = application.product ? html.replace("<!--local-tools-->", `<a href="${mount}/dashboard?sf=bi">Business intelligence</a>${surface === "planner" || surface === "dashboard" ? `<a href="${mount}/${surface}?sf=imports">Imports</a>` : ""}<a href="${mount}/${surface}?sf=documents">Documents</a><!--local-tools-->`) : html
+      const toolsHtml = application.product ? html.replace("<!--local-tools-->", `<a href="${mount}/dashboard?sf=bi">Business intelligence</a><!--local-tools-->`) : html
       const finalHtml = application.productHtml?.(toolsHtml, surface, page) ?? toolsHtml
       return {
         commit: snapshot.audit.length !== auditBefore,
@@ -432,7 +443,7 @@ export function createApplication(mount: string, application: Application) {
           "Content-Security-Policy": htmlPolicy(finalHtml),
         }),
       }
-    })
+    }).finally(() => productView?.finish())
     return request.method === "HEAD"
       ? new Response(null, {
           status: response.status,

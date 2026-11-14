@@ -26,6 +26,7 @@ import { createSfBiHttp } from "../product/integration/bi-http.ts"
 import { createSfWorkbenchHttp } from "../product/interface/http.ts"
 import { decorateSfProductHtml } from "../product/interface/html.ts"
 import { sfHumanActions } from "../product/integration/human-authority.ts"
+import { getSfProductHtml } from "../product/integration/host-presentation.ts"
 import { digestSfValue } from "../product/contracts/canonical.ts"
 import freeze from "../product/contracts/freeze-v1.json"
 import biBrowser from "../product/integration/generated/bi-entry.txt" with { type: "text" }
@@ -101,7 +102,20 @@ export async function createLocalInstallation(context: { origin: string; createH
     authenticate: identity.authenticate,
     environment: requestEnvironment,
     product: async (request, surface) => await runtime?.services?.()?.productHttp?.(request, surface) ?? await workbench(request, surface) ?? await bi(request, surface),
-    productHtml: decorateSfProductHtml,
+    productView: async (request, surface, page) => {
+      if (surface !== "procurement" || page !== "Requests" && page !== "My approvals") return undefined
+      if (!runtime) return undefined
+      const view = runtime.services?.()?.productView
+      return view ? view(request, surface, page) : new Response("Procurement is temporarily unavailable. Refresh the page to try again.", {
+        status: 503, headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8", "X-Content-Type-Options": "nosniff" },
+      })
+    },
+    productHtml: (html, surface, page) => {
+      const productHtml = getSfProductHtml(runtime?.services?.())
+      const document = productHtml?.(decorateSfProductHtml(html, surface, page), surface, page) ?? decorateSfProductHtml(html, surface, page)
+      // Keep WP06 document/import navigation while composing WP04's fenced page projection.
+      return document.replace('<div class="workspace-tools">', `<div class="workspace-tools">${surface === "dashboard" || surface === "planner" ? '<a href="?sf=imports">Imports</a>' : ""}<a href="?sf=documents">Documents</a>`)
+    },
     maxJsonBytes: 2 * 1024 * 1024,
     assets,
   })

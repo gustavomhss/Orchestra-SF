@@ -4,9 +4,11 @@ import { prepareForecastReview } from "../../../product/routines/forecast.ts"
 import { prepareSourcingDossier } from "../../../product/routines/dossier.ts"
 import type { ConfirmationValidityProjection, DomainProjection } from "../../../product/contracts/context.ts"
 import type { ForecastCompareRequest } from "../../../product/contracts/operations.ts"
-import type { FinancialAnalysis, PlannerPort } from "../../../product/contracts/ports.ts"
+import type { FinancialAnalysis } from "../../../product/contracts/ports.ts"
 import type { CommercialComparison } from "../../../product/contracts/outputs.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+import { digestSfEvidenceRef } from "../../../product/contracts/canonical.ts"
+import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 
 const context = {} as TrustedDomainContext
 const period = { start: "2027-01-01", end: "2027-01-31" }
@@ -42,6 +44,7 @@ test("review refuses a mixed source snapshot but accepts a new C06 evaluation ti
     revalidate: async () => true,
   } })
   expect(stable).toMatchObject({ status: "ok", value: { synthesisIncluded: false, topics: [{ review: "confirmed", sourceObservedAt: ["2026-12-20T00:00:00Z"] }], draft: { pendencies: [], coverage: { selectedTopics: 1, includedTopics: 1, unavailableTopics: 0, omittedTopics: 0, includedRecordCount: 2 } } } })
+  expect(stable).toMatchObject({ status: "ok", value: { topics: [{ lastUpdate: { state: "unknown", reason: "source-update-time-unavailable" } }], draft: { nextSteps: [] } } })
 })
 
 test("review coverage declares unavailable topics and unknown record counts without counting metrics", async () => {
@@ -53,11 +56,23 @@ test("review coverage declares unavailable topics and unknown record counts with
   expect(JSON.stringify(result)).not.toContain("private")
 })
 
+test("review declares empty selections and omits a section whose producer supplied no usable period", async () => {
+  const host = {
+    readTopic: async () => ({ status: "ok" as const, value: { projection: { version: 1, values: [], components: [], missing: [] } as unknown as DomainProjection, recordCount: 0, confirmation: null } }),
+    revalidate: async () => true,
+  }
+  expect(await prepareFactualReview({ topicRefs: [], context, host })).toMatchObject({ status: "ok", value: { topics: [], draft: { sections: [], pendencies: [], coverage: { selectedTopics: 0, includedTopics: 0, unavailableTopics: 0, omittedTopics: 0, includedRecordCount: 0 } } } })
+  expect(await prepareFactualReview({ topicRefs: ["no-period"], context, host })).toMatchObject({ status: "ok", value: { draft: { sections: [], coverage: { selectedTopics: 1, includedTopics: 0, unavailableTopics: 0, omittedTopics: 1, includedRecordCount: 0 } } } })
+})
+
 test("forecast suppresses a comparison changed while confirmation was being read", async () => {
-  let reads = 0
+  const mutable = structuredClone(comparison)
   const result = await prepareForecastReview({ request, context, host: {
-    planner: { compareForecast: async () => ({ status: "ok", value: ++reads === 1 ? comparison : { ...comparison, knownDifference: 6000, completeDifference: 6000 } }) } as PlannerPort,
-    confirmations: async () => ({ status: "ok", value: [confirmation] }),
+    planner: { compareForecast: async () => ({ status: "ok", value: mutable }) },
+    confirmations: async () => {
+      mutable.candidate.version = 9
+      return { status: "ok", value: [confirmation] }
+    },
     revalidate: async () => true,
   } })
   expect(result).toEqual({ status: "stale", reason: "forecast-source-changed" })
@@ -66,7 +81,7 @@ test("forecast suppresses a comparison changed while confirmation was being read
 test("forecast rechecks C06 validity and never releases the old fingerprint after revocation", async () => {
   let reads = 0
   const result = await prepareForecastReview({ request, context, host: {
-    planner: { compareForecast: async () => ({ status: "ok", value: comparison }) } as PlannerPort,
+    planner: { compareForecast: async () => ({ status: "ok", value: comparison }) },
     confirmations: async () => ({ status: "ok", value: ++reads === 1 ? [confirmation] : [{ confirmationId: "jan", state: "unavailable", reason: "access-unavailable", evaluatedSourceVersion: 8, evaluatedAt: "2027-01-03" }] }),
     revalidate: async () => true,
   } })
@@ -84,4 +99,25 @@ test("a single sourced proposal remains an incomplete factual dossier without fa
     revalidateProcurement: async () => true,
   })
   expect(result).toMatchObject({ status: "ok", value: { comparison, complete: false, synthesisIncluded: false, summary: { proposalCount: 1, comparisonAvailable: true, ranking: [] }, draft: { alternatives: [], domainApplied: false, gaps: ["comparison-needs-multiple-proposals", "document-evidence-unavailable"] } } })
+})
+
+test("dossier pins the initial procurement snapshot and fences it after the final document read", async () => {
+  const selectedContext = { binding: { installationId: "i", projectId: "p", accessRevision: "a" } } as TrustedDomainContext
+  const document: Extract<BusinessEvidenceRef, { kind: "document" }> = { schema: "sf-evidence-v1", kind: "document", refId: "doc", refDigest: "", installationId: "i", projectId: "p", evidenceLevel: "observed", target: { documentId: "doc", incarnation: "inc", revision: 1, blobDigest: { algorithm: "sha256", value: "a".repeat(64) }, segment: { start: 0, end: 1, unit: "utf16", textDigest: { algorithm: "sha256", value: "b".repeat(64) } } } }
+  document.refDigest = digestSfEvidenceRef(document)
+  const material = { request: structuredClone(projection), comparison: null, limitations: [] }
+  let reads = 0
+  const result = await prepareSourcingDossier({ requestRef: "request", context: selectedContext,
+    prepareProcurement: async () => ({ status: "ok", value: material }),
+    selectedDocuments: async () => ({ status: "ok", value: [document] }),
+    reader: async () => {
+      if (++reads === 2) material.request.version = 9
+      return { status: "unavailable", accessRevision: "a" }
+    },
+    revalidate: async () => true,
+    revalidateProcurement: async (initial) => initial.request.version === material.request.version,
+  })
+  expect(reads).toBe(2)
+  expect(result).toEqual({ status: "denied", reason: "access-changed" })
+  expect(result).not.toHaveProperty("value")
 })

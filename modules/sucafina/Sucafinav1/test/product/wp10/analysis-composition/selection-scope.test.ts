@@ -205,3 +205,29 @@ test("fresh human preparation renews an expired generation with CAS and remains 
     state.authority.human.finish(fresh)
   } finally { await state.close() }
 })
+
+test("a fresh human prepare renews an expired exact selection without reviving it on read", async () => {
+  const state = await fixture()
+  try {
+    const first = await state.admit()
+    expect((await state.prepare(state.create(), state.incoming, first)).status).toBe("ok")
+    state.authority.human.finish(first)
+    const before = await state.records()
+    if (before.status !== "ok") throw new Error("Selection unavailable")
+    state.actor.now += 1001
+    const fresh = await state.admit()
+    const scope = state.create()
+    const read = () => scope.selectionScope.verify(state.prepared(state.incoming), state.incoming.request, fresh,
+      () => scope.read(state.caseRef, state.incoming.request.skillId, fresh))
+    expect((await read()).status).toBe("unavailable")
+    const expired = await state.records()
+    expect(expired.status === "ok" && expired.value).toEqual(before.value)
+    expect((await state.prepare(scope, state.incoming, fresh)).status).toBe("ok")
+    expect((await read()).status).toBe("ok")
+    const after = await state.records()
+    expect(after.status === "ok" && after.value.length).toBe(1)
+    expect(after.status === "ok" && after.value[0]![0]).toEqual(before.value[0]![0])
+    expect(after.status === "ok" && after.value[0]![1]).not.toEqual(before.value[0]![1])
+    state.authority.human.finish(fresh)
+  } finally { await state.close() }
+})

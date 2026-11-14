@@ -203,7 +203,7 @@ export function createSfAtlasBusiness(input: {
   procurementResolve: Parameters<typeof createSfProcurementSourceAccess>[0]["resolve"]
   procurementEvidence?: Pick<ReturnType<typeof import("../procurement/decision-host.ts").createProcurementDecisionHost>, "resolveEvidence" | "proveContinuity">
   documentRead: Parameters<typeof createSfDocumentSourceAccess>[0]["read"]
-  planner?: { sources: PlannerSourceHost; port: PlannerPort }
+  planner?: { sources: PlannerSourceHost; port: PlannerPort; project?: (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext) => Promise<import("../contracts/ports.ts").PortResult<import("../contracts/context.ts").DomainProjection>> }
   caseForEvidence: (digest: string, call: TrustedDomainContext) => Promise<readonly { id: string; incarnation: string }[] | { id: string; incarnation: string } | undefined>
   selections: Pick<Parameters<typeof createSfEvidenceCapabilities>[0], "contextSelections" | "recallSelections" | "featuresForCase" | "runtimeVersions">
   scanner?: { spec: ScannerBinarySpec; version: string }
@@ -228,11 +228,13 @@ export function createSfAtlasBusiness(input: {
     if (!input.planner || ref.kind !== "record" || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || !ref.target.period || !await input.host.revalidate(call)) return unavailable()
     const first = await input.planner.sources.resolveForecastSource(ref.refId, call)
     if (first.status !== "ok" || digestSfValue(first.value.evidence) !== digestSfValue(ref)) return unavailable()
-    const projected = await input.planner.port.compareForecast({ baseRef: ref.refId, candidateRef: ref.refId, period: ref.target.period, currency: "USD" }, call)
-    if (projected.status !== "ok" || projected.value.analysisBasis !== "domain" || digestSfValue(projected.value.sourceRefs) !== digestSfValue([ref, ref]) || projected.value.baseline.context.installationId !== call.binding.installationId || projected.value.baseline.context.projectId !== call.binding.projectId || projected.value.baseline.context.principalRef !== call.binding.principalRef || projected.value.baseline.context.accessRevision !== call.binding.accessRevision || projected.value.baseline.context.policyVersion !== call.binding.policyVersion || projected.value.baseline.context.surface !== "planner" || digestSfValue(projected.value.baseline.context.period) !== digestSfValue(ref.target.period) || projected.value.baseline.values.some((value) => value.sourceRefs.length !== 1 || digestSfValue(value.sourceRefs[0]) !== digestSfValue(ref)) || !await input.host.revalidate(call)) return unavailable()
+    const direct = input.planner.project ? await input.planner.project(ref, call) : undefined
+    const compared = direct ? undefined : await input.planner.port.compareForecast({ baseRef: ref.refId, candidateRef: ref.refId, period: ref.target.period, currency: "USD" }, call)
+    const projection = direct?.status === "ok" ? direct.value : compared?.status === "ok" ? compared.value.baseline : undefined
+    if (!projection || projection.context.installationId !== call.binding.installationId || projection.context.projectId !== call.binding.projectId || projection.context.principalRef !== call.binding.principalRef || projection.context.accessRevision !== call.binding.accessRevision || projection.context.policyVersion !== call.binding.policyVersion || projection.context.surface !== "planner" || digestSfValue(projection.context.period) !== digestSfValue(ref.target.period) || projection.values.some((value) => value.sourceRefs.length !== 1 || digestSfValue(value.sourceRefs[0]) !== digestSfValue(ref)) || !await input.host.revalidate(call)) return unavailable()
     const again = await input.planner.sources.resolveForecastSource(ref.refId, call)
     if (again.status !== "ok" || digestSfValue(again.value.evidence) !== digestSfValue(ref) || !await input.host.revalidate(call)) return unavailable()
-    return { state: "fresh", ref, currentRef: again.value.evidence, authorizedProjection: projected.value.baseline, accessRevision: call.binding.accessRevision, checkedAt: input.now() }
+    return { state: "fresh", ref, currentRef: again.value.evidence, authorizedProjection: projection, accessRevision: call.binding.accessRevision, checkedAt: input.now() }
   }
   const readOriginal = async (digest: string, call: TrustedDomainContext) => {
     const selected = await input.caseForEvidence(digest, call)

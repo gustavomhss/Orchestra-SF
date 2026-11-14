@@ -29,7 +29,7 @@ function fixture() {
     list: async () => ({ status: "ok", value: [] }),
     readRun: async () => ({ status: "unavailable", reason: "no-admitted-run" }),
   }
-  return { host, state, occurrence, api: createRoutineSchedule(host, schedules) }
+  return { host, schedules, state, occurrence, api: createRoutineSchedule(host, schedules) }
 }
 
 test("a qualified occurrence binding reaches C08 create and update without approving the routine", async () => {
@@ -81,4 +81,90 @@ test("revocation during occurrence dispatch hides every result and pending refer
   const result = await api.runDue("schedule", context)
   expect(result.status).toBe("denied")
   expect(JSON.stringify(result)).not.toContain("sentinel")
+})
+
+test("create keeps the authorized recipe and cadence when owner resolution mutates the caller's request", async () => {
+  const { host, schedules, api } = fixture()
+  const incoming = structuredClone(request)
+  const authorized: unknown[] = []
+  const written: unknown[] = []
+  host.authorize = async (_, __, payload) => { authorized.push(structuredClone(payload)); return true }
+  host.owner = async () => { incoming.recipeRef = "foreign-recipe"; incoming.recurrence = "weekly"; incoming.timezone = "UTC"; return { principalRef: "owner", projectId: "project" } }
+  schedules.create = async (payload) => { written.push(payload); return { status: "ok", value: { scheduleRef: "schedule", version: 1, state: "active" } } }
+  expect((await api.create(incoming, context)).status).toBe("ok")
+  expect(authorized).toEqual([request, request])
+  expect(written).toEqual([request])
+})
+
+test.each(["update", "pause", "resume", "runNow"] as const)("%s keeps the authorized schedule, version and cadence across owner awaits", async (operation) => {
+  const { host, schedules, api, occurrence } = fixture()
+  if (!host.occurrences) throw new Error("fixture missing occurrence port")
+  const incoming = { scheduleRef: "schedule", expectedVersion: 1, recurrence: "daily", timezone: request.timezone, idempotencyKey: "manual-1" }
+  const original = structuredClone(incoming)
+  const authorized: unknown[] = []
+  const written: unknown[] = []
+  host.authorize = async (_, __, payload) => { authorized.push(structuredClone(payload)); return true }
+  host.owner = async () => { incoming.scheduleRef = "foreign"; incoming.expectedVersion = 99; incoming.recurrence = "weekly"; incoming.timezone = "UTC"; incoming.idempotencyKey = "other-key"; return { principalRef: "owner", projectId: "project" } }
+  schedules.update = async (payload) => { written.push(payload); return { status: "ok", value: { scheduleRef: "schedule", version: 2 } } }
+  schedules.pause = async (payload) => { written.push(payload); return { status: "ok", value: { scheduleRef: "schedule", version: 2, state: "paused" } } }
+  host.occurrences.resume = async (payload) => { written.push(payload); return { status: "ok", value: { scheduleRef: "schedule", version: 2, state: "active" } } }
+  host.occurrences.runNow = async (payload) => { written.push(payload); return { status: "ok", value: occurrence } }
+  expect((await api[operation](incoming, context)).status).toBe("ok")
+  expect(authorized).toEqual([original, original])
+  expect(written).toEqual([original])
+})
+
+test("authorization and qualification callbacks cannot rewrite the mutation payload", async () => {
+  const { host, schedules, api } = fixture()
+  if (!host.occurrences) throw new Error("fixture missing occurrence port")
+  const incoming = structuredClone(request)
+  const written: unknown[] = []
+  host.authorize = async (_, __, payload) => { Object.assign(payload as Record<string, unknown>, { recipeRef: "callback-recipe", recurrence: "weekly" }); return true }
+  host.occurrences.qualify = async (payload) => { payload.recipeRef = "qualification-recipe"; return { status: "ok", value: { principalRef: "owner", projectId: "project", recipeRef: request.recipeRef, conditionRef: request.conditionRef } } }
+  schedules.create = async (payload) => { written.push(payload); return { status: "ok", value: { scheduleRef: "schedule", version: 1, state: "active" } } }
+  expect((await api.create(incoming, context)).status).toBe("ok")
+  expect(written).toEqual([request])
+  expect(incoming).toEqual(request)
+})
+
+test.each(["create", "update", "pause", "resume", "runNow"] as const)("%s requires the same payload authorization immediately before mutation", async (operation) => {
+  const { host, api, state } = fixture()
+  const authorizations = { count: 0 }
+  host.authorize = async () => ++authorizations.count === 1
+  const input = { ...request, scheduleRef: "schedule", expectedVersion: 1, idempotencyKey: "manual-1" }
+  expect(await api[operation](input, context)).toEqual({ status: "denied", reason: "human-authorization-required" })
+  expect(authorizations.count).toBe(2)
+  expect(state.calls).toEqual([])
+})
+
+test("private pending references participate in occurrence egress authorization", async () => {
+  const { host, api, occurrence } = fixture()
+  occurrence.pendingRefs = ["private-pending-sentinel"]
+  host.revalidate = async (_, refs) => !refs.includes("private-pending-sentinel")
+  const result = await api.runDue("schedule", context)
+  expect(result).toEqual({ status: "denied", reason: "schedule-authority-changed" })
+  expect(JSON.stringify(result)).not.toContain("sentinel")
+})
+
+test.each(["", " pending ", "p".repeat(513)])("invalid pending reference is rejected before egress: %s", async (pendingRef) => {
+  const { api, occurrence } = fixture()
+  occurrence.pendingRefs = [pendingRef]
+  expect(await api.runDue("schedule", context)).toEqual({ status: "unavailable", reason: "occurrence-pending-references-invalid" })
+})
+
+test("pending reference arrays reject nonstrings and excessive entries", async () => {
+  const { api, occurrence } = fixture()
+  occurrence.pendingRefs = [17 as unknown as string]
+  expect((await api.runDue("schedule", context)).status).toBe("unavailable")
+  occurrence.pendingRefs = Array.from({ length: 129 }, (_, index) => `pending-${index}`)
+  expect((await api.runDue("schedule", context)).status).toBe("unavailable")
+})
+
+test("pending references are deduplicated and detached from callback mutation", async () => {
+  const { host, api, occurrence } = fixture()
+  occurrence.pendingRefs = ["pending", "pending"]
+  const checked: string[][] = []
+  host.revalidate = async (_, refs) => { if (refs.includes("pending")) { checked.push([...refs]); occurrence.pendingRefs = ["unvalidated-substitution"] } return true }
+  expect(await api.runDue("schedule", context)).toMatchObject({ status: "ok", value: { pendingRefs: ["pending"] } })
+  expect(checked).toEqual([["schedule", "pending"]])
 })

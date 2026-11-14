@@ -7,12 +7,12 @@ import { createSfBiArtifactStore } from "../../../../modules/sucafina/Sucafinav1
 import { createStoredContextualBiSelectionReader } from "../../../../modules/sucafina/Sucafinav1/product/analytics/contextual.ts"
 import { createApprovedCatalog } from "../../../../modules/sucafina/Sucafinav1/product/analytics/approved-catalog.ts"
 import type { ApprovedView } from "../../../../modules/sucafina/Sucafinav1/product/analytics/approved-catalog.ts"
+import type { BiPresentationPort } from "../../../../modules/sucafina/Sucafinav1/product/analytics/capabilities.ts"
 import { resolveDashboardBiSelection } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/bi-metadata.ts"
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
-import type { createSfWorkspaceServices } from "./workspace-services.ts"
 import type { createSfAnalysisSelectionScope } from "./analysis-selection-scope.ts"
 import type { SfAnalysisPreparation } from "./analysis-services.ts"
 import { withoutObservationTimes } from "./analysis-verifier.ts"
@@ -23,7 +23,7 @@ export const sfAnalysisApprovedBiViews: readonly ApprovedView[] = ["BI01", "BI07
 export function createSfAnalysisBiBindings(input: {
   authority: ReturnType<typeof createSfProductAuthority>
   business: ReturnType<typeof createSfBusinessServices>
-  workspace: ReturnType<typeof createSfWorkspaceServices>
+  workspace: { bi: { source: BiPresentationPort } }
   selection: ReturnType<typeof createSfAnalysisSelectionScope>["read"]
 }) {
   const host = input.authority.host
@@ -53,11 +53,23 @@ export function createSfAnalysisBiBindings(input: {
     if (presentation.status !== "ok") return presentation
     const refs = projection.value.values.flatMap((value) => [...value.sourceRefs, ...(value.drilldown ? [value.drilldown] : [])])
       .filter((ref, index, all) => all.findIndex((candidate) => same(candidate, ref)) === index)
-    const sourceRefs = [source.value.evidence, ...refs].filter((ref, index, all) => all.findIndex((candidate) => same(candidate, ref)) === index)
-    if (!refs.length || !projection.value.context.sourceRefs.length || sourceRefs.some((ref) => !current.value.evidenceRefs.some((allowed) => same(allowed, ref)))) return { status: "unavailable", reason: "bi-analysis-case-evidence-unavailable" }
-    const resolutions = await input.business.context.context({ refs: sourceRefs }, call)
+    if (!refs.length || !projection.value.context.sourceRefs.length || refs.some((ref) => !current.value.evidenceRefs.some((allowed) => same(allowed, ref)))) return { status: "unavailable", reason: "bi-analysis-case-evidence-unavailable" }
+    // Artifacts persist canonical evidence, not the observational SourceRef context.
+    const selectedSources = projection.value.context.sourceRefs.map((sourceRef) => current.value.evidenceRefs.filter((ref) => {
+      if (ref.kind !== "record") return false
+      const target = ref.target
+      return target.surface === sourceRef.surface && target.recordType === sourceRef.type && target.recordId === sourceRef.id &&
+        target.incarnation === sourceRef.incarnation && target.version === sourceRef.version && same(target.period, sourceRef.period) &&
+        sourceRef.fields.every((field) => target.fields.includes(field))
+    }))
+    if (selectedSources.some((selected) => selected.length !== 1)) return { status: "unavailable", reason: "bi-analysis-source-evidence-unavailable" }
+    const sourceRefs = [source.value.evidence, ...selectedSources.flat(), ...refs]
+      .filter((ref, index, all) => all.findIndex((candidate) => same(candidate, ref)) === index)
+    if (sourceRefs.some((ref) => !current.value.evidenceRefs.some((allowed) => same(allowed, ref)))) return { status: "unavailable", reason: "bi-analysis-case-evidence-unavailable" }
+    const authorized = sourceRefs
+    const resolutions = await input.business.context.context({ refs: authorized }, call)
     const again = await input.business.cases.read({ caseRef: encodeCaseRef(selection.caseRef) }, call)
-    if (resolutions.length !== sourceRefs.length || resolutions.some((value, index) => value.state !== "fresh" || !value.authorizedProjection || !value.currentRef || !same(value.ref, sourceRefs[index]) || !same(value.currentRef, value.ref)) ||
+    if (resolutions.length !== authorized.length || resolutions.some((value, index) => value.state !== "fresh" || !value.authorizedProjection || !value.currentRef || !same(value.ref, authorized[index]) || !same(value.currentRef, value.ref)) ||
       again.status !== "ok" || !same(again.value.case, current.value.case) || before !== await fence(call) || !await input.workspace.bi.source.revalidate(request, call, projection.value) || !await host.revalidate(call)) return { status: "unavailable", reason: "bi-analysis-source-changed" }
     return { status: "ok", value: { projection: projection.value, presentation: presentation.value, projectionRefs: refs, sourceRefs, sourceFenceDigest: before } }
   }

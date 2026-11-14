@@ -14,13 +14,12 @@ import { createSfAnalysisSelectionScope } from "./analysis-selection-scope.ts"
 import { createSfAnalysisBiBindings } from "./analysis-bi-bindings.ts"
 import type { SfAnalysisPreparation, SfAnalysisServiceBindings } from "./analysis-services.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
-import type { createSfWorkspaceServices } from "./workspace-services.ts"
 
 /** Compose registered domain producers over one installation, case store and human-selection authority. */
 export function createSfAnalysisDomainBindings(input: {
   authority: ReturnType<typeof createSfProductAuthority>
   business: ReturnType<typeof createSfBusinessServices>
-  workspace: ReturnType<typeof createSfWorkspaceServices>
+  workspace: Parameters<typeof createSfAnalysisBiBindings>[0]["workspace"]
   selectionWrites: WeakSet<object>
   readAuthorAnalysis: NonNullable<SfAnalysisServiceBindings["critique"]>["readAuthorAnalysis"]
   changeProposals?: NonNullable<SfAnalysisServiceBindings["purchase"]>["changeProposals"]

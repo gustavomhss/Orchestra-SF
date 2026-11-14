@@ -21,7 +21,15 @@ export type RoutineArtifact = {
   content: JsonValue
   createdAt: string
 }
-export type AuthorizedRoutineArtifactResult = { run: RoutineResult; output: RoutineArtifact }
+/** Immutable native execution receipt. The output digest comes from completion, not artifact I/O. */
+export type RoutineExecutionSnapshot = {
+  runRef: string
+  resultRef?: string
+  state: "requested" | "admission-pending" | "preparing" | "completed" | "failed" | "cancelled"
+  revision: string
+  outputDigest?: string
+}
+export type AuthorizedRoutineArtifactResult = { run: RoutineResult; execution: RoutineExecutionSnapshot; output: RoutineArtifact }
 export type RoutineResultAccess = {
   readResult: (runRef: string, context: TrustedDomainContext) => Promise<PortResult<AuthorizedRoutineArtifactResult>>
 }
@@ -47,6 +55,8 @@ export function createRoutineResultAccess(input: {
   readArtifact: (resultRef: string, context: TrustedDomainContext) => Promise<PortResult<RoutineArtifact>>
   /** Resolve the full admitted parameters/scope/case from native storage, never infer them from a result URL. */
   expectedInputDigest: (run: RoutineResult, context: TrustedDomainContext) => Promise<PortResult<string>>
+  /** Read the native execution/terminal receipt under current authority; a result reference is insufficient. */
+  readExecution: (runRef: string, context: TrustedDomainContext) => Promise<PortResult<RoutineExecutionSnapshot>>
   authorize: (context: TrustedDomainContext) => Promise<boolean>
   revalidateArtifact: (artifact: RoutineArtifact, context: TrustedDomainContext) => Promise<boolean>
 }): RoutineResultAccess {
@@ -59,7 +69,14 @@ export function createRoutineResultAccess(input: {
       run.principalRef !== context.binding.principalRef || run.projectId !== context.binding.projectId)
       return { status: "denied", reason: "routine-result-unavailable" }
     if (!run.resultRef) return { status: "needs-input", reason: "result-not-ready" }
-    const admittedInput = await input.expectedInputDigest(run, context)
+    const runDigest = digestSfValue(run)
+    const executionRead = await input.readExecution(runRef, context)
+    if (executionRead.status !== "ok") return executionRead
+    const execution = structuredClone(executionRead.value)
+    const executionStatus = completedExecution(execution, run)
+    if (executionStatus) return executionStatus
+    const executionDigest = digestSfValue(execution)
+    const admittedInput = await input.expectedInputDigest(structuredClone(run), context)
     if (admittedInput.status !== "ok") return admittedInput
     if (!/^[a-f0-9]{64}$/.test(admittedInput.value)) return { status: "unavailable", reason: "routine-input-unverified" }
     if (!await input.authorize(context)) return { status: "denied", reason: "routine-result-unavailable" }
@@ -67,19 +84,34 @@ export function createRoutineResultAccess(input: {
     if (!artifact) return { status: "unavailable", reason: "routine-artifact-unavailable" }
     if (artifact.status !== "ok") return artifact
     const output = structuredClone(artifact.value)
-    if (!validArtifact(output, run, admittedInput.value)) return { status: "unavailable", reason: "routine-artifact-unverified" }
+    if (!validArtifact(output, run, admittedInput.value) || output.outputDigest !== execution.outputDigest)
+      return { status: "unavailable", reason: "routine-artifact-unverified" }
     if (!await input.revalidateArtifact(structuredClone(output), context)) return { status: "denied", reason: "routine-result-unavailable" }
     // Do not release an old output if completion, cancellation, source version or access changed during its read.
     const current = await input.routines.readRun(runRef, context)
     if (current.status !== "ok") return current
-    if (digestSfValue(current.value) !== digestSfValue(run)) return { status: "stale", reason: "routine-result-changed" }
-    const currentInput = await input.expectedInputDigest(run, context)
+    if (digestSfValue(current.value) !== runDigest) return { status: "stale", reason: "routine-result-changed" }
+    const currentInput = await input.expectedInputDigest(structuredClone(run), context)
     if (currentInput.status !== "ok") return currentInput
     if (currentInput.value !== admittedInput.value) return { status: "stale", reason: "routine-input-changed" }
+    const currentExecution = await input.readExecution(runRef, context)
+    if (currentExecution.status !== "ok") return currentExecution
+    if (digestSfValue(currentExecution.value) !== executionDigest) return { status: "stale", reason: "routine-execution-changed" }
     if (!await input.revalidateArtifact(structuredClone(output), context) || !await input.authorize(context)) return { status: "denied", reason: "routine-result-unavailable" }
-    return { status: "ok", value: { run, output } }
+    return { status: "ok", value: { run, execution, output } }
   }
   return { readResult: (runRef, context) => readResult(runRef, context).catch(() => ({ status: "unavailable", reason: "routine-result-unavailable" })) }
+}
+
+function completedExecution(execution: RoutineExecutionSnapshot, run: RoutineResult): Exclude<PortResult<never>, { status: "ok" }> | undefined {
+  if (!execution || execution.runRef !== run.runRef || !execution.revision?.trim())
+    return { status: "unavailable", reason: "routine-execution-unverified" }
+  if (execution.state === "failed" || execution.state === "cancelled")
+    return { status: "denied", reason: "routine-result-unavailable" }
+  if (execution.state === "requested" || execution.state === "admission-pending" || execution.state === "preparing")
+    return { status: "needs-input", reason: "result-not-ready" }
+  if (execution.state !== "completed" || execution.resultRef !== run.resultRef || !/^[a-f0-9]{64}$/.test(execution.outputDigest ?? ""))
+    return { status: "unavailable", reason: "routine-execution-unverified" }
 }
 
 function validArtifact(output: RoutineArtifact, run: RoutineResult, admittedInputDigest: string) {

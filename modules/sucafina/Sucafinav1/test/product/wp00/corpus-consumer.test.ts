@@ -77,6 +77,7 @@ test("synthetic volume proposal creates the declared deterministic row counts", 
 
 test("synthetic projects and action text use existing product boundaries", () => {
   const projectFixture = corpus.datasets.projects
+  const identities = { next: 0 }
   const projectImport = importProjects(
     [],
     projectFixture.capex_projects,
@@ -84,9 +85,12 @@ test("synthetic projects and action text use existing product boundaries", () =>
     "replace",
     true,
     "2027-01-01",
-    () => "synthetic-imported-project",
+    () => `synthetic-imported-project-${++identities.next}`,
   )
   expect(projectImport).toMatchObject({ ok: true, added: projectFixture.projects.length, capexProjects: projectFixture.capex_projects })
+  if (!projectImport.ok) throw new Error("Synthetic project import failed")
+  expect(new Set(projectImport.projects.map((project) => project.id)).size).toBe(projectFixture.projects.length)
+  expect(projectImport.capexProjects).toEqual(projectFixture.capex_projects)
 
   const state: Snapshot = { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
   // This verifies action text persistence only; approval transitions need their own domain proof.

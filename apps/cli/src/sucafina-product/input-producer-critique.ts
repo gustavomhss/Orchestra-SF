@@ -37,7 +37,7 @@ function selection(value: unknown): CritiqueSelection | undefined {
   const evidenceRefIds = entries.find(([key]) => key === "evidenceRefIds")?.[1]
   const responseRef = entries.find(([key]) => key === "responseRef")?.[1]
   if (typeof authorRunRef !== "string" || !authorRunRef.trim() || typeof outputDigest !== "string" || !/^[a-f0-9]{64}$/.test(outputDigest)) return undefined
-  if (!Array.isArray(choiceRefs) || !Array.isArray(alternativeRefs) || !Array.isArray(evidenceRefIds) || !choiceRefs.length || !alternativeRefs.length) return undefined
+  if (!Array.isArray(choiceRefs) || !Array.isArray(alternativeRefs) || !Array.isArray(evidenceRefIds) || !alternativeRefs.length) return undefined
   if (choiceRefs.some((id) => typeof id !== "string" || !id.trim()) || alternativeRefs.some((id) => typeof id !== "string" || !id.trim())) return undefined
   if (new Set(choiceRefs).size !== choiceRefs.length || new Set(alternativeRefs).size !== alternativeRefs.length) return undefined
   if (evidenceRefIds.some((id) => typeof id !== "string" || !id.trim()) || new Set(evidenceRefIds).size !== evidenceRefIds.length) return undefined
@@ -110,7 +110,7 @@ async function load(
   if (author.status !== "ok" || author.value.run.state !== "ready" || !author.value.run.native || author.value.run.runRef !== human.authorRunRef || author.value.output.state !== "ready" || author.value.run.outputRef !== author.value.output.id || author.value.output.outputDigest !== human.outputDigest || digestSfContribution(author.value.output) !== human.outputDigest) return undefined
   if (author.value.run.caseRef.id !== request.caseRef.id || author.value.run.caseRef.incarnation !== request.caseRef.incarnation || (effect ? author.value.run.caseRef.version >= request.caseRef.version : author.value.run.caseRef.version !== request.caseRef.version)) return undefined
   const target = authorComparison(author.value.output)
-  const criteria = choices[0]?.criteria
+  const criteria = choices[0]?.criteria ?? target?.criterionResults.map((criterion) => criterion.criterionId)
   if (!target || !criteria || choices.some((choice) => !same(choice.criteria, criteria))) return undefined
   const requestRefs = effect ? effect.currentRequest : { scenarioRefs: [target.baselineResultRef, target.alternativeResultRef] as const, criteria }
   if (effect && !same(target, effect.originalChoice.comparison)) return undefined

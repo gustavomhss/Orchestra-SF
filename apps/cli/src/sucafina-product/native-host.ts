@@ -67,7 +67,7 @@ export type SfNativeHostPolicy = {
   onReady?: (api: SfNativeHostApi) => () => void
   onSkillLoaded?: (observation: SfLoadedSkillObservation) => () => void
   budget?: {
-    gate: ReturnType<typeof createSfTokenGate>
+    gate: Pick<ReturnType<typeof createSfTokenGate>, "reserveSession" | "register" | "revokeSession" | "revoke" | "valid">
     reserveSession: (input: SfNativeBudgetReservation) => Effect.Effect<void, unknown>
     persistReceipt: (binding: TrustedExecutionBinding, receipt: SfTokenCountReceipt) => Effect.Effect<void, unknown>
   }
@@ -80,7 +80,7 @@ export type SfNativeHostPolicy = {
 export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
   const sources = new WeakMap<SkillV2.Interface, SfSourceCapability>()
   const runs = new WeakMap<TrustedExecutionBinding, { admission: SfNativeAdmission; ticket: SfTokenGateTicket; prompt: string; used: boolean; release: () => void }>()
-  const observations = new Set<() => void>()
+  const observations = new Map<SessionSchema.ID, () => void>()
   const lifetime = { open: true }
   const onRegistered = (registration: { skills: SkillV2.Interface; sourceCapability: SfSourceCapability }) => {
     sources.set(registration.skills, registration.sourceCapability)
@@ -94,8 +94,13 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
         const locations = yield* LocationServiceMap.Service
         yield* Effect.addFinalizer(() => Effect.gen(function* () {
           lifetime.open = false
-          yield* Effect.forEach(observations, (release) => Effect.exit(Effect.sync(release)), { discard: true })
+          const owned = [...observations.keys()]
+          // Revoke every grant before waiting on any Session; another root need not own these runs.
+          yield* Effect.forEach(observations.values(), (release) => Effect.exit(Effect.sync(release)), { discard: true })
           observations.clear()
+          yield* Effect.forEach(owned, (sessionID) => Effect.exit(Effect.gen(function* () {
+            if ((yield* session.active).has(sessionID)) yield* session.interrupt(sessionID)
+          })), { discard: true, concurrency: "unbounded" })
         }))
         const authorized = (binding: TrustedExecutionBinding) => {
           const run = runs.get(binding)
@@ -185,13 +190,14 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
                 acquired.ticket = ticket
                 if (!lifetime.open) return { status: "unavailable", reason: "c15-context-budget-gate-unavailable" } as const
                 const discard = () => {
-                  if (!observations.delete(discard)) return
+                  if (observations.get(sessionID) !== discard) return
+                  observations.delete(sessionID)
                   budget.gate.revoke(ticket)
                   input.registry.revoke(bound.value)
                   runs.delete(bound.value)
                   release?.()
                 }
-                observations.add(discard)
+                observations.set(sessionID, discard)
                 runs.set(bound.value, { admission, ticket, prompt: args.prompt, used: false, release: discard })
                 acquired.retained = true
                 return { status: "ok", value: { binding: bound.value, sessionID, skillReceipt: loaded.success } } as const

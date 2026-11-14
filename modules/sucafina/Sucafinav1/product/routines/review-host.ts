@@ -13,7 +13,8 @@ export function createReviewRoutinePreparation(input: {
   confirmationFor: (section: ReviewSection, context: TrustedDomainContext) => Promise<PortResult<ConfirmationValidityProjection | null>>
   revalidate: (context: TrustedDomainContext) => Promise<boolean>
 }) {
-  return async (request: { items: readonly ReviewAgendaItem[]; period: Period; currentReviewRef?: string; previousReviewRef?: string }, context: TrustedDomainContext) => {
+  return async (incoming: { items: readonly ReviewAgendaItem[]; period: Period; currentReviewRef?: string; previousReviewRef?: string }, context: TrustedDomainContext) => {
+    const request = structuredClone(incoming)
     const selected = await input.agenda.create(request.items, context)
     if (selected.status !== "ok") return selected
     const selectionRef = selected.value.selectionRef
@@ -34,8 +35,10 @@ export function createReviewRoutinePreparation(input: {
           if (confirmation.status !== "ok") return confirmation
           const previous = request.previousReviewRef && request.currentReviewRef ? await input.reviews.read(request.currentReviewRef, call) : undefined
           if (previous && previous.status !== "ok") return previous
-          const prior = previous?.status === "ok" && previous.value.previousReviewRef === request.previousReviewRef ? await input.reviews.read(request.previousReviewRef!, call) : undefined
+          if (previous?.status === "ok" && (previous.value.id !== request.currentReviewRef || previous.value.previousReviewRef !== request.previousReviewRef)) return { status: "unavailable", reason: "prior-review-mismatch" }
+          const prior = request.previousReviewRef ? await input.reviews.read(request.previousReviewRef, call) : undefined
           if (prior && prior.status !== "ok") return prior
+          if (prior?.status === "ok" && prior.value.id !== request.previousReviewRef) return { status: "unavailable", reason: "prior-review-mismatch" }
           const earlier = prior?.status === "ok" ? prior.value.sections.find((entry) => entry.id === topicRef && entry.period.start === section.period.start && entry.period.end === section.period.end) : undefined
           return { status: "ok", value: { projection: section.projection, recordCount: section.recordCount, confirmation: confirmation.value, previousProjection: earlier ? earlier.content as DomainProjection : null } }
         },
@@ -57,6 +60,7 @@ export function createReviewRoutinePreparation(input: {
     }
     return { status: "ok", value: {
       ...prepared.value,
+      draft: { ...prepared.value.draft, sections: prepared.value.draft.sections.map((section) => ({ ...section, title: selected.value.sections.find((candidate) => candidate.id === section.id)!.title })) },
       reviewSelection: { selectionRef, sectionRefs, ...(request.previousReviewRef ? { previousReviewRef: request.previousReviewRef } : {}) },
       agendaGaps: selected.value.gaps,
       preserved: false,

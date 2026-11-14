@@ -1,0 +1,32 @@
+{
+  "sourceCommit": "441fbbee466117312ba1fc402423ad6b1fab66ec",
+  "publisher": "W5",
+  "owner": "WP10",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-bi-bindings.ts",
+      "currentBlobSha": "4f21e442aebcc2151b3d07ee5b78595d2322e67f",
+      "sourceCommit": "441fbbee466117312ba1fc402423ad6b1fab66ec",
+      "sourceBlobSha": "4519bbec0a6f4c892441bd9b55356a89a312d6a4",
+      "decision": "composed-own",
+      "reason": "Preserves unique context SourceRef to canonical BusinessEvidenceRef mapping; unions explicit Dashboard source and projection refs; requires all persisted sources in case and fresh BCS resolution. W5 parseSelection type annotation already present."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+      "currentBlobSha": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695",
+      "sourceCommit": "441fbbee466117312ba1fc402423ad6b1fab66ec",
+      "sourceBlobSha": "29284027ee7d89ed6c0b0e0130d0146ee18bd41c",
+      "decision": "preserved-own-superset",
+      "reason": "All W5 extraction/schema/readCandidate changes already present; retain WP06 explicit Extract<CostCoverageEntry,{status:pending}> type guard and current purchase readSet/target checks."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/import-services.ts",
+      "currentBlobSha": "53a1f34779598545cde83295c8ff98b861fabb72",
+      "sourceCommit": "441fbbee466117312ba1fc402423ad6b1fab66ec",
+      "sourceBlobSha": "53a1f34779598545cde83295c8ff98b861fabb72",
+      "decision": "already-exact-both-publishers",
+      "reason": "Current exact blob equals W5 and WP06 e4e9ceb5ec97a9c3238a35582cb7ca5401756536; retained current bytes and existing WP06 provenance pin; W5 confirms same source.version receipt exception."
+    }
+  ],
+  "validation": "Static source/diff/hash inspection only; no local tests/typecheck/CI; no remote writes."
+}

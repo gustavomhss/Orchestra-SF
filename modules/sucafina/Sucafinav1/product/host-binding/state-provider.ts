@@ -17,10 +17,10 @@ export function createSfProductState(input: {
   nativePublicationGuards?: WeakMap<object, () => boolean>
   signalRegistryWrites?: WeakSet<object>
   caseSelectionWrites?: WeakSet<object>
-  analysisSelectionWrites?: WeakSet<object>
   threadHistoryWrites?: WeakSet<object>
   dashboardHostWrites?: WeakSet<object>
   procurementEvidenceWrites?: WeakSet<object>
+  analysisSelectionWrites?: WeakSet<object>
   resolveTarget: (request: Request, snapshot: Snapshot, namespace: SfStateNamespace, targetRef: string, command: SfStateMutation) => Promise<{ incarnation: string } | undefined>
 }): SfProductStatePort {
   return {
@@ -105,11 +105,17 @@ export function createSfProductState(input: {
         if (!input.signalRegistryWrites?.has(work) && digestSfValue(signalMetadata(staged.preferences)) !== digestSfValue(signalMetadata(state.preferences)))
           return { commit: false, value: { status: "denied", reason: "signal-registry-write-outside-authority" } }
         const caseSelectionMetadata = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:case-work-selection:")))
-        const analysisSelectionMetadata = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:analysis-selection:")))
-        if (!input.analysisSelectionWrites?.has(work) && digestSfValue(analysisSelectionMetadata(staged.preferences)) !== digestSfValue(analysisSelectionMetadata(state.preferences)))
-          return { commit: false, value: { status: "denied", reason: "analysis-selection-writer-required" } }
         if (!input.caseSelectionWrites?.has(work) && digestSfValue(caseSelectionMetadata(staged.preferences)) !== digestSfValue(caseSelectionMetadata(state.preferences)))
           return { commit: false, value: { status: "denied", reason: "case-selection-write-outside-authority" } }
+        const dashboardMetadata = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:dashboard-host:")))
+        if (!input.dashboardHostWrites?.has(work) && digestSfValue(dashboardMetadata(staged.preferences)) !== digestSfValue(dashboardMetadata(state.preferences)))
+          return { commit: false, value: { status: "denied", reason: "dashboard-host-write-outside-authority" } }
+        const procurementEvidence = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:procurement-evidence:")))
+        if (!input.procurementEvidenceWrites?.has(work) && digestSfValue(procurementEvidence(staged.preferences)) !== digestSfValue(procurementEvidence(state.preferences)))
+          return { commit: false, value: { status: "denied", reason: "procurement-evidence-write-outside-authority" } }
+        const analysisSelections = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:analysis-selection:")))
+        if (!input.analysisSelectionWrites?.has(work) && digestSfValue(analysisSelections(staged.preferences)) !== digestSfValue(analysisSelections(state.preferences)))
+          return { commit: false, value: { status: "denied", reason: "analysis-selection-writer-required" } }
         if (!input.threadHistoryWrites?.has(work) && Object.entries(state.threads).some(([id, value]) => {
           const before = object(value)
           const after = object(staged.threads[id])
@@ -120,12 +126,6 @@ export function createSfProductState(input: {
         })) return { commit: false, value: { status: "denied", reason: "thread-history-write-outside-authority" } }
         if (!input.threadHistoryWrites?.has(work) && Object.entries(staged.threads).some(([id, value]) => !Object.hasOwn(state.threads, id) && object(value).messageRevisions !== undefined))
           return { commit: false, value: { status: "denied", reason: "thread-history-write-outside-authority" } }
-        const dashboardMetadata = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:dashboard-host:")))
-        if (!input.dashboardHostWrites?.has(work) && digestSfValue(dashboardMetadata(staged.preferences)) !== digestSfValue(dashboardMetadata(state.preferences)))
-          return { commit: false, value: { status: "denied", reason: "dashboard-host-write-outside-authority" } }
-        const procurementEvidence = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:procurement-evidence:")))
-        if (!input.procurementEvidenceWrites?.has(work) && digestSfValue(procurementEvidence(staged.preferences)) !== digestSfValue(procurementEvidence(state.preferences)))
-          return { commit: false, value: { status: "denied", reason: "procurement-evidence-write-outside-authority" } }
         if (digestSfValue(staged.versions) !== digestSfValue(state.versions) || storedNamespaces.some((key) => !scope.some((entry) => entry.namespace === key) && digestSfValue(staged[key]) !== digestSfValue(state[key])) ||
           (!scope.some((entry) => entry.namespace === "contributions") && digestSfValue(staged.nativeRuns) !== digestSfValue(state.nativeRuns)) ||
           (!scope.some((entry) => entry.namespace === "bi-artifacts") && digestSfValue(staged.biArtifacts) !== digestSfValue(state.biArtifacts)) ||
@@ -172,3 +172,4 @@ function readSfState(snapshot: Snapshot): SfProductState | undefined {
   if (!legacy && (!state.biArtifacts || typeof state.biArtifacts !== "object" || Array.isArray(state.biArtifacts))) return undefined
   return (legacy ? { ...state, versions: { ...versions, "bi-artifacts": 0 }, biArtifacts: {} } : state) as SfProductState
 }
+

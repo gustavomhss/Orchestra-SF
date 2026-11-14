@@ -38,6 +38,8 @@ type AvailableTopic = {
   recordCount: number | null
   /** Source observation dates are separate from a later human confirmation. */
   sourceObservedAt: readonly string[]
+  /** C02/WP07 do not expose the last material update; observation and confirmation are not updates. */
+  lastUpdate: { state: "unknown"; reason: "source-update-time-unavailable"; message: string }
 }
 
 type HiddenTopic = { state: "unavailable"; reason: "source-unavailable" | "period-mismatch" }
@@ -68,6 +70,7 @@ export type ReviewDraft = {
     evaluatedAt: string | null
     missing: DomainProjection["missing"]
   }[]
+  nextSteps: readonly { kind: "review-material" | "confirm-scope" | "check-source-access" | "select-matching-period"; topicRef?: string; message: string }[]
   coverage: { selectedTopics: number; includedTopics: number; unavailableTopics: number; omittedTopics: number; includedRecordCount: number | null }
 }
 
@@ -104,8 +107,9 @@ export async function prepareFactualReview(input: {
 }
 
 async function readPreparedTopic(topicRef: string, input: { period?: Period; host: ReviewPreparationHost; context: TrustedDomainContext }): Promise<PreparedTopic> {
-  const result = await input.host.readTopic(topicRef, input.context)
-  if (result.status !== "ok") return hidden("source-unavailable")
+  const read = await input.host.readTopic(topicRef, input.context)
+  if (read.status !== "ok") return hidden("source-unavailable")
+  const result = { value: structuredClone(read.value) }
   if (confirmationCharge(result.value.confirmation) === "unavailable") return hidden("source-unavailable")
   if (input.period && !samePeriod(input.period, result.value.projection.context?.period)) return hidden("period-mismatch")
   if ([result.value.projection, result.value.previousProjection].some((projection) => projection?.missing.some((entry) => entry.reason === "restricted"))) return hidden("source-unavailable")
@@ -123,21 +127,22 @@ async function readPreparedTopic(topicRef: string, input: { period?: Period; hos
     confirmationReason: result.value.confirmation && result.value.confirmation.state !== "unavailable" ? result.value.confirmation.reason : null,
     recordCount: Number.isSafeInteger(result.value.recordCount) && (result.value.recordCount ?? -1) >= 0 ? result.value.recordCount! : null,
     sourceObservedAt: [...new Set(redacted.current.context?.sourceRefs.map((ref) => ref.observedAt) ?? [])].sort(),
+    lastUpdate: { state: "unknown", reason: "source-update-time-unavailable", message: "A fonte não informa a data da última atualização. A data de leitura e a confirmação humana não indicam a idade do dado." },
   }
 }
 
 async function loadPreviousReview(input: { currentReviewRef?: string; previousReviewRef?: string; host: ReviewPreparationHost; context: TrustedDomainContext }): Promise<{ status: "denied" } | { status: "ok"; value: AuthorizedPriorReview; currentDigest?: string }> {
   if (!input.previousReviewRef) return { status: "ok", value: null }
-  if (!input.currentReviewRef || !input.host.readPreviousReview) return { status: "ok", value: { status: "unavailable", reason: "prior-review-source-unavailable" } }
-  const current = await input.host.readPreviousReview(input.currentReviewRef, input.context)
-  if (current.status === "denied") return { status: "denied" }
-  if (current.status !== "ok") return { status: "ok", value: { status: "unavailable", reason: "prior-review-source-unavailable" } }
-  if (current.value.id !== input.currentReviewRef || current.value.previousReviewRef !== input.previousReviewRef) return { status: "ok", value: { status: "unavailable", reason: "prior-review-mismatch" } }
+  if (!input.host.readPreviousReview) return { status: "ok", value: { status: "unavailable", reason: "prior-review-source-unavailable" } }
+  const current = input.currentReviewRef ? await input.host.readPreviousReview(input.currentReviewRef, input.context) : undefined
+  if (current?.status === "denied") return { status: "denied" }
+  if (current && current.status !== "ok") return { status: "ok", value: { status: "unavailable", reason: "prior-review-source-unavailable" } }
+  if (current?.status === "ok" && (current.value.id !== input.currentReviewRef || current.value.previousReviewRef !== input.previousReviewRef)) return { status: "ok", value: { status: "unavailable", reason: "prior-review-mismatch" } }
   const read = await input.host.readPreviousReview(input.previousReviewRef, input.context)
   if (read.status === "denied") return { status: "denied" }
   if (read.status !== "ok") return { status: "ok", value: { status: "unavailable", reason: "prior-review-source-unavailable" } }
   if (read.value.id !== input.previousReviewRef) return { status: "ok", value: { status: "unavailable", reason: "prior-review-mismatch" } }
-  return { status: "ok", value: read.value, currentDigest: digestSfValue(current.value) }
+  return { status: "ok", value: structuredClone(read.value), ...(current?.status === "ok" ? { currentDigest: digestSfValue(current.value) } : {}) }
 }
 
 function draftFrom(topics: readonly PreparedTopic[], period: Period | undefined, previousReview: AuthorizedPriorReview): ReviewDraft {
@@ -170,6 +175,17 @@ function draftFrom(topics: readonly PreparedTopic[], period: Period | undefined,
         missing: topic.missing,
       }]
     }),
+    nextSteps: [
+      ...available.filter((topic) => topic.review === "pending").map((topic) => ({
+        kind: topic.confirmationReason && topic.confirmationReason !== "unchanged-scope" ? "review-material" as const : "confirm-scope" as const,
+        topicRef: topic.topicRef,
+        message: topic.confirmationReason && topic.confirmationReason !== "unchanged-scope"
+          ? "Revise a alteração e os faltantes no recorte indicado; confirme a revisão na superfície responsável."
+          : "Confira os fatos e os faltantes do recorte; registre a confirmação humana na superfície responsável.",
+      })),
+      ...(topics.some((topic) => topic.state === "unavailable" && topic.reason === "source-unavailable") ? [{ kind: "check-source-access" as const, message: "Uma fonte está indisponível. Confira o acesso e a versão na superfície de origem; não há solicitação de confirmação para dados sem acesso." }] : []),
+      ...(topics.some((topic) => topic.state === "unavailable" && topic.reason === "period-mismatch") ? [{ kind: "select-matching-period" as const, message: "Selecione uma fonte autorizada que cubra o período solicitado." }] : []),
+    ],
     coverage: { selectedTopics: topics.length, includedTopics: included.length, unavailableTopics: topics.length - available.length, omittedTopics: available.length - included.length, includedRecordCount: included.some((topic) => topic.recordCount === null) ? null : included.reduce((sum, topic) => sum + topic.recordCount!, 0) },
   }
 }

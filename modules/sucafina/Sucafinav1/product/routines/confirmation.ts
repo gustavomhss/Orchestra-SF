@@ -17,7 +17,7 @@ export function createScopedConfirmationIndex(input: {
     if (scopes.status !== "ok") return scopes
     const found = await Promise.all(scopes.value.map((scope) => input.confirmation.find(scope, context)))
     const error = found.find((result) => result.status !== "ok")
-    if (error && error.status !== "ok") return error
+    if (error) return error
     const current = await input.resolveScopes(request, context)
     if (current.status !== "ok") return current
     if (digestSfValue(current.value) !== digestSfValue(scopes.value)) return { status: "stale", reason: "confirmation-scope-changed" }

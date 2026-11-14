@@ -20,7 +20,7 @@ import { createSfImportHttp } from "../../../product/interface/import-http.ts"
 import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 import { createSfDocumentTargetAuthority } from "../../../../../../apps/cli/src/sucafina-product/document-authority.ts"
 import { createSfImportServices } from "../../../../../../apps/cli/src/sucafina-product/import-services.ts"
-import { prepareAtlasScanner } from "./atlas-consumer-fixture.ts"
+import { prepareAtlasScanner, syntheticScannerControl } from "./atlas-consumer-fixture.ts"
 
 /** Actual application HTTP, encrypted login, C08, import producers and DOCX export.
  * The scanner policy is real Gitleaks for this JSON secrets corpus only; it neither
@@ -120,8 +120,9 @@ test("Dashboard app delegates reviewed JSON import and authorized report downloa
       return send("sf=import-admit", { method: "POST", headers: { "idempotency-key": key }, body: form })
     }
     const beforeScan = await inspect()
-    // Synthetic token-shaped text, never a real credential; the pinned scanner must refuse it.
-    const blocked = await upload({ risks: [{ id: "risk-1", name: "ghp_" + "0123456789abcdefghijklmnopqrstuvwxyz" }] }, "scanner-negative")
+    // Non-issued synthetic control, qualified by the pinned scanner before this flow.
+    // Avoid its global alphabet stopword; keep the scanner's real policy unchanged.
+    const blocked = await upload({ risks: [{ id: "risk-1", name: syntheticScannerControl }] }, "scanner-negative")
     expect(blocked.status).toBe(403)
     expect(object(await blocked.json()).status).toBe("denied")
     expect(scans.map((scan) => scan.hit)).toEqual([true])

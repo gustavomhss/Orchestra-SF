@@ -7,8 +7,9 @@ import type { Mcp } from "@orchestra/core/mcp"
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { CreateSfBusinessMcpBridge } from "../contracts/runtime.ts"
 import type { CapabilityDescriptor, CapabilityResult, TrustedCallContext } from "../contracts/sf-execution.ts"
+import type { SfVerifiedCallObserver } from "./verified-call.ts"
 
-export type SfVerifiedBusinessCall = (operation: string, payload: unknown, result: Extract<CapabilityResult, { status: "ok" }>, context: TrustedCallContext) => boolean
+export type SfVerifiedBusinessCall = SfVerifiedCallObserver
 
 /** Inspect configuration without connecting; the host uses this before starting a provider turn. */
 export async function hasSfProviderConflict(mcp: Mcp.Interface) {
@@ -17,7 +18,9 @@ export async function hasSfProviderConflict(mcp: Mcp.Interface) {
 }
 
 /** Each operation owns its client, server, transport pair and native lease. */
-export const createSfBusinessMcpBridge = (input: Parameters<CreateSfBusinessMcpBridge>[0] & { onVerifiedCall?: SfVerifiedBusinessCall }): ReturnType<CreateSfBusinessMcpBridge> => {
+export const createSfBusinessMcpBridge = (input: Parameters<CreateSfBusinessMcpBridge>[0] & {
+  onVerifiedCall?: SfVerifiedCallObserver
+}): ReturnType<CreateSfBusinessMcpBridge> => {
   const conflict = () => hasSfProviderConflict(input.mcp).catch(() => undefined)
   return {
     list: async (context) => {
@@ -55,8 +58,8 @@ export const createSfBusinessMcpBridge = (input: Parameters<CreateSfBusinessMcpB
         return { status: "unavailable", reason: "private-mcp-unavailable" }
       } finally {
         grants.forEach((grant) => input.registry.finish(grant))
-        await client.close()
-        await server.close()
+        await client.close().catch(() => undefined)
+        await server.close().catch(() => undefined)
       }
     },
     call: async (context, operation, payload) => {

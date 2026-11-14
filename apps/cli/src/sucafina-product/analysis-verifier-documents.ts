@@ -1,6 +1,7 @@
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfSkillInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { SfSkillInputMap } from "../../../../modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts"
+import type { CostCoverageEntry } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { createChangeProposalStore } from "../../../../modules/sucafina/Sucafinav1/product/decisions/change-proposal-store.ts"
 import type { DocumentEvidenceHost } from "../../../../modules/sucafina/Sucafinav1/product/documents/capabilities.ts"
@@ -137,7 +138,7 @@ export function createSfPurchasePreparationVerifier(dependencies: SfAnalysisDepe
             ? { status: "ok", value: true } : { status: "unavailable", reason: "analysis-output-unverified" }
         }
         const dossier = output.payload
-        const pending = value.choice.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [entry] : [])
+        const pending = [...value.choice.costCoverage.entries].filter((entry): entry is Extract<CostCoverageEntry, { status: "pending" }> => entry.status === "pending")
         const missing: readonly string[] = value.choice.costCoverage.derivedMissingCategoryIds
         if (dossier.requestRef !== value.request.requestRef || dossier.requestVersion !== value.request.version || dossier.domainApplied !== false || digestSfValue(dossier.alternatives) !== digestSfValue([value.choice.alternativeId]) ||
           digestSfValue(dossier.gaps) !== digestSfValue(value.choice.costCoverage.issues) || pending.some((entry) => !dossier.conditions.some((condition) => condition.category === entry.categoryId && condition.reason === entry.reason)) || missing.some((category) => !dossier.conditions.some((condition) => condition.category === category)) ||

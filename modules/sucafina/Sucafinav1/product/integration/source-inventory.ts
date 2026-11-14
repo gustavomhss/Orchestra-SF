@@ -50,3 +50,4 @@ export function enumerateSfSources(surface: Surface, snapshot: Snapshot): readon
   return [...performance, ...assets, { recordType: "dashboard-dataset", recordId: "all", inputDigest: digestSfValue(publicSfData(snapshot.data)) }, ...records, ...keyed, ...[...DashboardBudget.pages, ...DashboardPeople.pages, ...DashboardOperations.pages, ...DashboardPortfolio.pages]
     .map((page) => ({ recordType: "dashboard-page", recordId: page, inputDigest: digestSfValue({ page, data: publicSfData(snapshot.data) }) }))]
 }
+

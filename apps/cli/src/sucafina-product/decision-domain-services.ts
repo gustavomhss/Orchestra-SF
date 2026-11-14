@@ -29,6 +29,7 @@ import type { createSfDecisionBaselineServices } from "./decision-baseline-servi
 import { createSfDecisionMaterialityServices } from "./decision-materiality-services.ts"
 import { createSfDecisionProposalServices } from "./decision-proposal-services.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
+import type { createSfPortfolioServices } from "./portfolio-services.ts"
 import type { SfAnalysisServiceBindings } from "./analysis-services.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
@@ -44,6 +45,7 @@ export function createSfDecisionDomainServices(input: {
   verifiedInputFor?: (call: TrustedDomainContext) => Promise<PortResult<unknown>>
   hasAdmittedInputContext?: (call: TrustedDomainContext) => boolean
   readAlternativeCapture?: NonNullable<SfAnalysisServiceBindings["portfolio"]>["readAlternativeCapture"]
+  sharedPortfolio?: ReturnType<typeof createSfPortfolioServices>
 }) {
   const business = input.business
   const host = input.authority.host
@@ -82,7 +84,7 @@ export function createSfDecisionDomainServices(input: {
       return !!actor && intent.verify(call, "decisions.criteria", request) && verifyDecisionPlannerSources(snapshot, [...rule.evidenceRefs, ...(rule.sensitivity?.sourceRefs ?? [])], actor, call)
     },
     readMetric: (request, call) => metric(request, call), verifyMetric: checks.metric })
-  const units = createPlannerSensitivityUnits({ host, cases: business.cases, scenarios, store: business.results, evidence: business.context, rules })
+  const units = input.sharedPortfolio?.units ?? createPlannerSensitivityUnits({ host, cases: business.cases, scenarios, store: business.results, evidence: business.context, rules })
   const metric = createPlannerCriterionMetric({ host, rules, units, preview })
   const plannerCriteria: PlannerCriteriaHost = { evaluate: async (request, call) => {
     const selected = await input.selectedCase(call)
@@ -90,7 +92,7 @@ export function createSfDecisionDomainServices(input: {
     return rules.evaluate({ ...request, caseRef: selected.value }, call)
   } }
   const compare = createDecisionComparisonService({ state: input.authority.state, cases: business.cases, results: business.results, planner: business.planner, host })
-  const selectedPortfolio = createDecisionPortfolioSelection({ ...common, compare,
+  const selectedPortfolio = input.sharedPortfolio?.selection ?? createDecisionPortfolioSelection({ ...common, compare,
     authorizeSelection: (request, call) => intent.authorize(call, "decisions.select-portfolio", request),
     verifySnapshot: (snapshot, request, selected, call) => {
       const current = selectionCases.get(call)
@@ -103,11 +105,11 @@ export function createSfDecisionDomainServices(input: {
         ...alternative.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)] : [])
       return verifyDecisionPlannerSources(snapshot, refs, actor, call)
     } })
-  const comparisonBindings = createCriterionComparisonBindings({ ...common, rules, results: business.results,
+  const comparisonBindings = input.sharedPortfolio?.comparisonBindings ?? createCriterionComparisonBindings({ ...common, rules, results: business.results,
     verifyBinding: (binding, result, call) => proof.verifyComparison(binding, result, call), verifySnapshot: (snapshot, binding, call) => proof.verifySnapshot(snapshot, binding, call) })
-  const sensitivityBindings = createCriterionResultBindings({ ...common, rules, results: business.results,
+  const sensitivityBindings = input.sharedPortfolio?.sensitivityBindings ?? createCriterionResultBindings({ ...common, rules, results: business.results,
     verifyBinding: (binding, _rule, result, call) => proof.verifySensitivity(binding, result, call), verifySnapshot: (snapshot, binding, _rule, call) => proof.verifySnapshot(snapshot, binding, call) })
-  const portfolioBindings = createPortfolioResultBindings({ ...common, results: business.results, selection: selectedPortfolio, resolveCandidate: createDecisionCandidateResolver(business.cases),
+  const portfolioBindings = input.sharedPortfolio?.portfolioBindings ?? createPortfolioResultBindings({ ...common, results: business.results, selection: selectedPortfolio, resolveCandidate: createDecisionCandidateResolver(business.cases),
     verifyBinding: (binding, result, call) => proof.verifyPortfolio(binding, result, call), verifySnapshot: (snapshot, binding, call) => proof.verifySnapshot(snapshot, binding, call) })
   const idempotencyKey = async (requestDigest: string, call: TrustedDomainContext) => {
     const operation = business.operationIdentity(call)
@@ -120,7 +122,7 @@ export function createSfDecisionDomainServices(input: {
     select: createPortfolioSelectionResolver({ selection: selectedPortfolio, results: business.results, caseFor: input.selectedCase }), idempotencyKey })
   const decisions = { prepareChanges: business.procurementDecisions.prepareChanges }
   const createReceipt: Parameters<typeof createPortfolioProduct>[0]["createReceipt"] = async (call, operation, digest, result) => business.receipt(call, operation, digest, result)
-  const proof: ReturnType<typeof createPortfolioProofVerifier> = createPortfolioProofVerifier({ cases: business.cases, planner: business.planner, sources: business.plannerSources,
+  const proof: ReturnType<typeof createPortfolioProofVerifier> = input.sharedPortfolio?.proof ?? createPortfolioProofVerifier({ cases: business.cases, planner: business.planner, sources: business.plannerSources,
     evidence: business.context, results: business.results, revalidate: host.revalidate, readSourceFences: business.readSourceFences, lockedSourceFences: business.lockedSourceFences,
     caseFor: input.selectedCase, idempotencyKey, decisions, createReceipt, units, sensitivityPreview: preview, revalidateAnalysis: analysis.revalidate,
     candidateCoverageRefFor: async (candidate, call) => {
@@ -128,11 +130,11 @@ export function createSfDecisionDomainServices(input: {
       if (!ref || !candidate.result || !await host.revalidate(call)) return { status: "unavailable", reason: "candidate-coverage-unavailable" }
       return { status: "ok", value: decisionCoverageRef(ref, candidate.result.costCoverage.alternativeId, candidate.result.costCoverage.alternativeVersion) }
     } })
-  const portfolio = createPortfolioProduct({ host, cases: business.cases, evidence: business.context, planner, results: business.results,
+  const portfolio = input.sharedPortfolio?.product ?? createPortfolioProduct({ host, cases: business.cases, evidence: business.context, planner, results: business.results,
     rules, selection: selectedPortfolio, portfolioBindings, comparisonBindings, sensitivityBindings, decisions, createReceipt, caseFor: input.selectedCase, idempotencyKey })
   const proposals = createSfDecisionProposalServices({ ...input, selection: selectedPortfolio, checks })
   const materiality = createSfDecisionMaterialityServices({ authority: input.authority, business, selectedCase: input.selectedCase, signalRegistryWrites: input.signalRegistryWrites })
-  return { ...proposals, descriptors: [...portfolio.contribution.capabilities, ...proposals.descriptors], portfolio, portfolioProof: proof, units, sensitivityBindings, comparisonBindings, portfolioBindings,
+  return { ...proposals, descriptors: [...(input.sharedPortfolio?.product ? [] : portfolio.contribution.capabilities), ...proposals.descriptors], portfolio, portfolioProof: proof, units, sensitivityBindings, comparisonBindings, portfolioBindings,
     analysisBindings: { changeProposals: proposals.changeProposals,
       portfolio: { portfolioProof: proof, replayAlternative: proposals.replayAlternative, ...(input.readAlternativeCapture ? { readAlternativeCapture: input.readAlternativeCapture } : {}) },
       sensitivity: { portfolioProof: proof, units, bindings: sensitivityBindings }, materiality: { registry: materiality.registry, produce: materiality.produce } },

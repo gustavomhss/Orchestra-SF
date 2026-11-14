@@ -114,3 +114,4 @@ export function projectSfSourceScope(surface: Surface, snapshot: Snapshot, scope
   return { roster: roster.map((row) => Object.fromEntries(fields.map((field) => [field, object(row)[field]]))), sourceVersion: source.version }
 
 }
+

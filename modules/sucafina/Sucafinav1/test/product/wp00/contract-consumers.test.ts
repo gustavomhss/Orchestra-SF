@@ -5,6 +5,7 @@ import { createSfProductState } from "../../../product/host-binding/state-provid
 import { sfProductStateNamespaceFields, sfProductStateAdditiveFields } from "../../../product/contracts/state-layout.ts"
 import { testPersistence } from "../../fixture/persistence.ts"
 import type { SfProductState, SfStateNamespace } from "../../../product/contracts/state.ts"
+import { object } from "../../../runtime/contract.ts"
 import type { Snapshot } from "../../../runtime/contract.ts"
 import freeze from "../../../product/contracts/freeze-v1.json"
 
@@ -13,13 +14,13 @@ const request = new Request("https://example.test/wp00-contract-consumer")
 const command = { namespace: "preferences" as const, expectedStorageVersion: 0, targetRef: "preferences:synthetic-principal", targetIncarnation: "target-incarnation", idempotencyKey: "initial", commandDigest: "a".repeat(64) }
 
 // These are acceptance assertions against current consumers. A failure remains a release blocker.
-test("every declared operation has an actual exported producer in the composed candidate", async () => {
-  const root = path.resolve(import.meta.dir, "../../../../../..")
-  for (const operation of freeze.operations) {
+for (const operation of freeze.operations) {
+  test(`producer ${operation.operation}: ${operation.handlerPath}#${operation.handlerExport} is exported`, async () => {
+    const root = path.resolve(import.meta.dir, "../../../../../..")
     const source = await Bun.file(path.join(root, operation.handlerPath)).text()
     expect(source).toMatch(new RegExp(`export (?:async )?(?:function|const) ${operation.handlerExport}\\b`))
-  }
-})
+  })
+}
 
 test("the distributed five-profile/eighteen-skill bundle consumes the frozen C15 contract", async () => {
   const root = path.resolve(import.meta.dir, "../../../product/ai")
@@ -51,51 +52,96 @@ test("C08 adds the v1 fields on an authorized write and an exact retry does not 
   for (const field of sfProductStateAdditiveFields) delete value[field]
   const migrated = stateConsumer(legacy)
   const next = { ...command, idempotencyKey: "migrate", expectedStorageVersion: 1, commandDigest: "b".repeat(64) }
-  expect(await migrated.port.transaction(request, next, async (state) => {
+  const migration = await migrated.port.transaction(request, next, async (state) => {
     state.preferences.theme = "light"
     return { commit: true, value: "migrated" }
-  })).toMatchObject({ status: "ok", storageVersion: 2 })
+  })
   const once = structuredClone(migrated.storage.state.dashboard)
   const callbacks: string[] = []
-  expect(await migrated.port.transaction(request, next, async () => {
+  const retry = await migrated.port.transaction(request, next, async () => {
     callbacks.push("unexpected-retry")
     return { commit: true, value: "duplicate" }
-  })).toMatchObject({ status: "ok", storageVersion: 2, value: "migrated" })
-  expect(callbacks).toEqual([])
-  expect(migrated.storage.state.dashboard).toEqual(once)
-  expect(await migrated.port.read(request, "bi-artifacts", (state) => ({ version: state.versions["bi-artifacts"], artifacts: state.biArtifacts }))).toMatchObject({ status: "ok", value: { version: 0, artifacts: {} } })
+  })
+  const afterRetry = structuredClone(migrated.storage.state.dashboard)
+  const read = await migrated.port.read(request, "bi-artifacts", (state) => ({
+    versions: state.versions,
+    fields: Object.fromEntries(sfProductStateAdditiveFields.map((field) => [field, state[field]])),
+  }))
+  const expectedFields = Object.fromEntries(sfProductStateAdditiveFields.map((field) => [field, {}]))
+  const expectedVersions = Object.fromEntries(Object.keys(sfProductStateNamespaceFields).map((namespace) => [namespace, namespace === "preferences" ? 2 : 0]))
+  // Observe all migration fields and the exact retry before comparing any one boundary.
+  expect({
+    migration,
+    initializedFields: Object.fromEntries(sfProductStateAdditiveFields.map((field) => [field, object(once.data.__sfProductV1)[field]])),
+    initializedVersions: object(once.data.__sfProductV1).versions,
+    retry,
+    retryCallbacks: callbacks,
+    snapshotAfterRetry: afterRetry,
+    read,
+    snapshotAfterRead: migrated.storage.state.dashboard,
+  }).toEqual({
+    migration: expect.objectContaining({ status: "ok", storageVersion: 2, aggregateRevision: 2, value: "migrated" }),
+    initializedFields: expectedFields,
+    initializedVersions: expectedVersions,
+    retry: expect.objectContaining({ status: "ok", storageVersion: 2, aggregateRevision: 2, value: "migrated" }),
+    retryCallbacks: [],
+    snapshotAfterRetry: once,
+    read: expect.objectContaining({ status: "ok", storageVersion: 0, aggregateRevision: 2, value: { versions: expectedVersions, fields: expectedFields } }),
+    snapshotAfterRead: once,
+  })
 })
 
 test("C08 checkNamespaces rejects a stale read dependency before invoking the write callback", async () => {
   const consumer = stateConsumer()
   expect(await consumer.port.transaction(request, command, async () => ({ commit: true, value: "initialized" }))).toMatchObject({ status: "ok" })
   const before = structuredClone(consumer.storage.state.dashboard)
+  const authorizationStart = consumer.authorizations.length
   const callbacks: string[] = []
   const result = await consumer.port.transaction(request, { ...command, expectedStorageVersion: 1, idempotencyKey: "guarded", checkNamespaces: [{ namespace: "cases", expectedStorageVersion: 1 }] }, async (state) => {
     callbacks.push("unexpected-write")
     state.preferences.recalledCase = "stale-case"
     return { commit: true, value: "stale-write" }
   })
-  expect(result).toMatchObject({ status: "conflict" })
-  expect(callbacks).toEqual([])
-  expect(consumer.storage.state.dashboard).toEqual(before)
+  const after = structuredClone(consumer.storage.state.dashboard)
+  // Capture every boundary before asserting, so a wrong status cannot hide a callback or commit.
+  expect({
+    status: result.status,
+    authorizations: consumer.authorizations.slice(authorizationStart),
+    callbacks,
+    storedVersions: object(after.data.__sfProductV1).versions,
+    aggregateRevision: object(after.data.__sfProductV1).revision,
+    snapshot: after,
+  }).toEqual({
+    status: "conflict",
+    authorizations: expect.arrayContaining([{ namespace: "cases", mode: "read" }]),
+    callbacks: [],
+    storedVersions: object(before.data.__sfProductV1).versions,
+    aggregateRevision: object(before.data.__sfProductV1).revision,
+    snapshot: before,
+  })
 })
 
 test("C08 checkNamespaces requires current read authority and does not increment the read version", async () => {
   const consumer = stateConsumer()
   expect(await consumer.port.transaction(request, command, async () => ({ commit: true, value: "initialized" }))).toMatchObject({ status: "ok" })
-  expect(await consumer.port.transaction(request, { ...command, expectedStorageVersion: 1, idempotencyKey: "read-fence", checkNamespaces: [{ namespace: "cases", expectedStorageVersion: 0 }] }, async (state) => {
+  const result = await consumer.port.transaction(request, { ...command, expectedStorageVersion: 1, idempotencyKey: "read-fence", checkNamespaces: [{ namespace: "cases", expectedStorageVersion: 0 }] }, async (state) => {
     state.preferences.recalledCase = "authorized-case"
     return { commit: true, value: "saved" }
-  })).toMatchObject({ status: "ok" })
-  expect(consumer.authorizations).toContainEqual({ namespace: "cases", mode: "read" })
-  expect(await consumer.port.read(request, "cases", (state) => state.versions.cases)).toMatchObject({ status: "ok", value: 0 })
+  })
+  const transactionAuthorizations = [...consumer.authorizations]
+  const read = await consumer.port.read(request, "cases", (state) => state.versions.cases)
+  expect({ result, transactionAuthorizations, read }).toEqual({
+    result: expect.objectContaining({ status: "ok", storageVersion: 2 }),
+    transactionAuthorizations: expect.arrayContaining([{ namespace: "cases", mode: "read" }]),
+    read: expect.objectContaining({ status: "ok", value: 0, storageVersion: 0 }),
+  })
 })
 
 test("C08 refuses an unreadable check namespace before invoking any write callback", async () => {
   const consumer = stateConsumer(undefined, "cases")
   expect(await consumer.port.transaction(request, command, async () => ({ commit: true, value: "initialized" }))).toMatchObject({ status: "ok" })
   const before = structuredClone(consumer.storage.state.dashboard)
+  const authorizationStart = consumer.authorizations.length
   const callbacks: string[] = []
   const result = await consumer.port.transaction(request, {
     ...command,
@@ -107,24 +153,35 @@ test("C08 refuses an unreadable check namespace before invoking any write callba
     state.preferences.recalledCase = "unreadable-case"
     return { commit: true, value: "unauthorized-write" }
   })
-  expect(result).toMatchObject({ status: "denied" })
-  expect(consumer.authorizations).toContainEqual({ namespace: "cases", mode: "read" })
-  expect(callbacks).toEqual([])
-  expect(consumer.storage.state.dashboard).toEqual(before)
+  const after = structuredClone(consumer.storage.state.dashboard)
+  expect({
+    status: result.status,
+    authorizations: consumer.authorizations.slice(authorizationStart),
+    callbacks,
+    storedVersions: object(after.data.__sfProductV1).versions,
+    aggregateRevision: object(after.data.__sfProductV1).revision,
+    snapshot: after,
+  }).toEqual({
+    status: "denied",
+    authorizations: expect.arrayContaining([{ namespace: "cases", mode: "read" }]),
+    callbacks: [],
+    storedVersions: object(before.data.__sfProductV1).versions,
+    aggregateRevision: object(before.data.__sfProductV1).revision,
+    snapshot: before,
+  })
 })
 
-test("C08 namespace fences cover every additive field before a durable commit", async () => {
-  for (const field of sfProductStateAdditiveFields) {
+for (const field of sfProductStateAdditiveFields) {
+  test(`C08 namespace fence refuses ${field} outside preferences before a durable commit`, async () => {
     const consumer = stateConsumer()
     const before = structuredClone(consumer.storage.state.dashboard)
     const result = await consumer.port.transaction(request, { ...command, idempotencyKey: `outside:${field}` }, async (state) => {
       Reflect.set(state, field, { unauthorized: { marker: "synthetic-only" } })
       return { commit: true, value: field }
     })
-    expect(result).toMatchObject({ status: "denied" })
-    expect(consumer.storage.state.dashboard).toEqual(before)
-  }
-})
+    expect({ status: result.status, snapshot: consumer.storage.state.dashboard }).toEqual({ status: "denied", snapshot: before })
+  })
+}
 
 test("C08 retains existing preference CAS and idempotency semantics", async () => {
   const consumer = stateConsumer()

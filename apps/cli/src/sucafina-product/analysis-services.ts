@@ -5,6 +5,7 @@ import type { TrustedDomainContext, TrustedUiContext } from "../../../../modules
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import { sfDocumentLimits } from "../../../../modules/sucafina/Sucafinav1/product/documents/limits.ts"
 import { createSfAnalysisRegistry } from "./analysis-registry.ts"
+import type { SfAnalysisSelectionScope } from "./analysis-selection-scope.ts"
 import { createSfScenarioComparisonInput } from "./analysis-inputs.ts"
 import type { SfScenarioComparisonSelection } from "./analysis-inputs.ts"
 import type { SfAnalysisDependencies, SfAnalysisProof, SfAnalysisRequest, SfAnalysisVerifier } from "./analysis-verifier.ts"
@@ -35,7 +36,6 @@ import { createSfQuestionVerifier, createSfDependencyVerifier, createSfCommitmen
 import { createSfCritiqueInputProducer } from "./input-producer-critique.ts"
 import { createSfEvidenceReviewInputProducer } from "./input-producer-evidence-review.ts"
 import { createSfDecisionCritiqueVerifier, createSfEvidenceReviewVerifier } from "./analysis-verifier-review.ts"
-import type { SfAnalysisSelectionScope } from "./analysis-selection-scope.ts"
 
 type Bindings<T> = Omit<T, keyof SfAnalysisDependencies>
 export type SfAnalysisPair = { producer: SfInputProducer; verifier: SfAnalysisVerifier }
@@ -73,13 +73,14 @@ export function createSfAnalysisServices(input: {
   dependencies: SfAnalysisDependencies
   selected: readonly SfSelectedRuntime[]
   bindings: SfAnalysisServiceBindings
+  pairs?: readonly SfAnalysisPair[]
   selectionScope?: SfAnalysisSelectionScope
   authorizeSelection: (call: TrustedUiContext, input: SfAnalysisPreparation) => Promise<boolean>
 }) {
   const selected = structuredClone(input.selected)
   const base = input.dependencies
   const bound = input.bindings
-  const pairs: SfAnalysisPair[] = []
+  const pairs: SfAnalysisPair[] = [...input.pairs ?? []]
   if (bound.intent) pairs.push({ producer: createSfIntentInputProducer({ ...base, ...bound.intent }), verifier: createSfIntentVerifier({ ...base, ...bound.intent }) })
   if (bound.documents) {
     pairs.push({ producer: createSfExtractionInputProducer({ ...base, ...bound.documents }), verifier: createSfDocumentExtractionVerifier({ ...base, ...bound.documents }) })

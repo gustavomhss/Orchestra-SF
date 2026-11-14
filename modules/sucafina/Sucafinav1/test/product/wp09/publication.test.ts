@@ -2,6 +2,7 @@ import { expect, test } from "bun:test"
 import { listPublishedRoutineWorkflows } from "../../../product/routines/publication.ts"
 import type { RoutinePublicationHost } from "../../../product/routines/publication.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+import { createRoutineUiFixture } from "./ui-authority-fixture.ts"
 
 test("publication is not opened for a foreign project or revoked authority", async () => {
   const context = { binding: { projectId: "project" } } as TrustedDomainContext
@@ -29,8 +30,9 @@ test("real Relay publication supplies exact document and version; unpublished dr
       const graph = yield* AuthoringGraph.project("Review", { work_packages: [{ id: "prepare", instructions: "Prepare facts", checklist: [{ id: "check", cmd: "true" }] }] })
       const draft = yield* store.save({ body: graph })
       const port: RelayWorkflowBinding.PublicationPort = { projectID, use: (read) => read(store), skills: () => Effect.fail(new AuthoringGraph.Refusal({ status: 404, code: "skill-unavailable", message: "no skill" })), acceptance: [{ id: "package-verification", host_check: "package-verification" }, { id: "cold-review", host_check: "cold-review" }] }
-      const context = { binding: { projectId: projectID } } as TrustedDomainContext
-      const host = { publication: port, authorize: async () => true, authorSession: async () => undefined }
+      const ui = yield* Effect.promise(() => createRoutineUiFixture(projectID, "publisher"))
+      const context = ui.context
+      const host = { publication: port, authorize: async (call: TrustedDomainContext) => call.kind === "ui" && await ui.authority.revalidate(call), authorSession: async () => undefined }
       const catalog = createRoutinePublicationCatalog({ host, resolvePlan: async (recipe) => recipe.documentId === draft.id && recipe.publishedVersion === draft.versionId ? { state: "ready", planRevisionId: "real-plan-ref", writeScope: ["scope"] } : { state: "excluded" } })
       expect((yield* Effect.promise(() => catalog("review", context)))).toEqual({ status: "ok", value: [] })
       const before = yield* Effect.promise(() => acquireRoutineWorkflow({ host, context, projectID, documentId: draft.id, expectedPublishedVersion: draft.versionId, parameters: {}, writePaths: ["scope"] }))
@@ -49,6 +51,7 @@ test("real Relay publication supplies exact document and version; unpublished dr
       expect(current.status).toBe("ok")
       yield* store.unpublish(draft.id)
       expect((yield* Effect.promise(() => acquireRoutineWorkflow({ host, context, projectID, documentId: draft.id, expectedPublishedVersion: next.versionId, parameters: {}, writePaths: ["scope"] }))).status).toBe("unavailable")
+      ui.authority.finish(context)
     })))
   } finally {
     await rm(dir, { recursive: true, force: true })

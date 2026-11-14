@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test"
 import { readDecisionRoutine, readDecisionRoutineOutput, startDecisionRoutine } from "../../../product/routines/decision.ts"
 import { createRoutineResultAccess, routineArtifactDigest, routineInputDigest } from "../../../product/routines/result-access.ts"
+import type { RoutineAdmittedInput, RoutineExecutionSnapshot } from "../../../product/routines/result-access.ts"
 import type { DecisionRoutineHost } from "../../../product/routines/decision.ts"
 import type { AuthorizedCaseProjection } from "../../../product/contracts/business-context.ts"
 import type { RoutineResult } from "../../../product/contracts/context.ts"
@@ -36,10 +37,17 @@ function fixture() {
     routines: { catalog: async () => ({ status: "unavailable", reason: "unused" }), prepareAdmission: async () => ({ status: "unavailable", reason: "unused" }), readAdmission: async () => ({ status: "ok", value: state.admission }), readRun: async () => ({ status: "ok", value: state.run }), run: async () => { state.starts++; return { status: "ok", value: state.run } } },
     binding: async () => ({ status: "ok", value: state.binding }), revalidate: async () => state.allowed,
   }
-  host.resultAccess = createRoutineResultAccess({ routines: host.routines, authorize: async () => state.allowed, revalidateArtifact: async () => state.allowed, readArtifact: async () => {
-    const body = { schema: "sf-routine-artifact-v1" as const, runRef: "run", resultRef: "result", correlationId: state.run.correlationId, documentId: state.run.documentId, publishedVersion: state.run.publishedVersion, principalRef: state.run.principalRef, projectId: state.run.projectId, inputDigest: routineInputDigest(state.run), sourceRefs: state.run.sourceRefs, content: { questions: ["Confirm the quoted cost"] }, createdAt: "2026-11-13T00:00:00Z" }
-    return { status: "ok", value: { ...body, outputDigest: routineArtifactDigest(body) } }
-  } })
+  // These immutable admission/completion fixtures exercise the consumer, not a native Relay execution.
+  const admittedInput: RoutineAdmittedInput = { publishedRecipeRef: routine.documentId, publishedVersion: routine.publishedVersion, planRevisionId: "plan-v1", writeScope: ["cases"], inputRefs: ["case:inc:1"], parameters: { objective: "Review the quote", currency: "USD" }, principalRef: routine.principalRef, projectId: routine.projectId, caseRef: { ...caseRef } }
+  const inputDigest = routineInputDigest(admittedInput)
+  const body = { schema: "sf-routine-artifact-v1" as const, runRef: "run", resultRef: "result", correlationId: routine.correlationId, documentId: routine.documentId, publishedVersion: routine.publishedVersion, principalRef: routine.principalRef, projectId: routine.projectId, inputDigest, sourceRefs: [], content: { questions: ["Confirm the quoted cost"] }, createdAt: "2026-11-13T00:00:00Z" }
+  const artifact = { ...body, outputDigest: routineArtifactDigest(body) }
+  const execution: RoutineExecutionSnapshot = { runRef: "run", resultRef: "result", state: "completed", revision: "completion:1", outputDigest: artifact.outputDigest }
+  host.resultAccess = createRoutineResultAccess({ routines: host.routines, authorize: async () => state.allowed, revalidateArtifact: async () => state.allowed,
+    expectedInputDigest: async () => ({ status: "ok", value: inputDigest }),
+    readExecution: async () => ({ status: "ok", value: structuredClone(execution) }),
+    readArtifact: async () => ({ status: "ok", value: structuredClone(artifact) }),
+  })
   return { state, host, start: { admissionRef: "admission", admissionVersion: 3, caseRef, context, host }, read: { admissionRef: "admission", runRef: "run", caseRef, context, host } }
 }
 
