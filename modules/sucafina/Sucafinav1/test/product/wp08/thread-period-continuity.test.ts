@@ -29,7 +29,7 @@ for (const selected of [
     forged.refDigest = digestSfEvidenceRef(forged)
     await fixture.capture(forged)
     const version = async (context = fixture.read) => available(await port.storageVersion("threads", context))
-    const draft = { kind: "clarification" as const, sourceRef: source.refId, sourceIncarnation: source.target.incarnation, observedVersion: source.target.version, period: selected.period, recipientRef: fixture.person.id, body: `Question observed in ${selected.period.start}`, evidenceRefs: [source] }
+    const draft = { kind: "review" as const, sourceRef: source.refId, sourceIncarnation: source.target.incarnation, observedVersion: source.target.version, period: selected.period, recipientRef: fixture.person.id, body: `Question observed in ${selected.period.start}`, evidenceRefs: [source] }
     const mutation = { expectedStorageVersion: await version(), idempotencyKey: "open-before-rollover" }
     const thread = available(await port.threads.create(draft, mutation, await fixture.admit("collaboration.thread.create", { draft, mutation })))
     const body = "Answer for the original observed period."
@@ -59,6 +59,17 @@ for (const selected of [
     expect((await port.answerReuse.read(thread.id, read)).status).not.toBe("ok")
     const historicalRefresh = createHistoricalThreadSourceRefresh({ host: fixture.host, evidence: fixture.historyEvidence })
     expect((await historicalRefresh(forged, read)).status).not.toBe("ok")
+    if (selected.type === "hotTopics") {
+      const shared = await fixture.historyEvidence.resolve(source, read)
+      expect(shared.state).toBe("historical")
+      const calls = { count: 0 }
+      const mutableProducer = { ...fixture.historyEvidence, resolve: async (...args: Parameters<typeof fixture.historyEvidence.resolve>) => {
+        if (args[0].refDigest !== source.refDigest) return fixture.historyEvidence.resolve(...args)
+        if (++calls.count > 1) shared.state = "revoked"
+        return shared
+      } }
+      expect((await createHistoricalThreadSourceRefresh({ host: fixture.host, evidence: mutableProducer })(source, read)).status).not.toBe("ok")
+    }
     const nextBody = "New answer for the newly observed period."
     const nextMutation = { expectedStorageVersion: await version(read), idempotencyKey: "new-period-answer" }
     const next = available(await port.recipientActions.reply(thread.id, nextBody, nextMutation, await fixture.admit("collaboration.thread.reply", { id: thread.id, body: nextBody, mutation: nextMutation })))
