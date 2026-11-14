@@ -1,0 +1,17 @@
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts b/modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts
+--- a/modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts
+@@ -351,10 +351,11 @@ async function canonicalDomains(store: Awaited<ReturnType<typeof openLocalStore>>)
+     snapshot.versions["requests:PR-1"] = { version: 0, by: "principal" }
+     return { commit: true, value: true }
+   })
++  const admittedRequest = new Request("https://example.test/controlled-domain-admission")
+   const host: DomainPortHost = {
+     persistence,
+     authenticate: async (_request, scope) => ({ id: "principal", canWrite: true, roles: [{ surface: scope?.surface ?? "procurement", role: scope?.surface === "planner" ? "finance" : "requester" }] }),
+     environment: async () => environment,
+-    requestFor: () => new Request("https://example.test/controlled-domain-admission"),
++    requestFor: () => admittedRequest,
+     revalidate: async (context) => context.kind === "ui" && context.binding.installationId === "install" && context.binding.projectId === "project" && context.binding.principalRef === "principal" && context.binding.accessRevision === "access" && context.binding.policyVersion === "policy",
+   }
+

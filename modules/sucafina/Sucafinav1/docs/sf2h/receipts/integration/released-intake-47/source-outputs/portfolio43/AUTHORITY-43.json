@@ -1,0 +1,86 @@
+{
+  "schema": "sf2-portfolio-held-closure-authority-v1",
+  "mission": 43,
+  "actor": "S4-C",
+  "lease_epoch": "portfolio-held-browser43",
+  "state": "IN_PROGRESS",
+  "source_branch": "astra-wp13",
+  "pr": 37,
+  "expected_head": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+  "observed_source_tree": "f9e4e23db0b3bc941599efba5341a653bb4ca3d9",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z",
+  "authorization": "Explicit user instruction mission43 and pinned rolling-wave mission grant a new bounded implementation lane on the existing PR37. No inference of abandonment from missing commits or silence.",
+  "mission_ref": {
+    "commit": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/portfolio-held-closure.json",
+    "blob": "d56819d53cc3a3533e1916700e81a593ba535fce"
+  },
+  "predecessors": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/WP13.json",
+      "commit": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+      "blob": "0559ea4ed570c9f1ee28c3859ab7cfecd878b10f",
+      "status": "STOPPED_INCOMPLETE",
+      "meaning": "Original WP13 handoff; not relabeled as a terminal receipt for astra-wp13 W20."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/owned-sensitivity-read-scope-W20.json",
+      "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "blob": "226a1b71a05118fd3ecb67892d1c84238fd32e12",
+      "status": "IMPLEMENTED_REVIEWED_HOSTED_PROOF_PENDING"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/portfolio-union/HANDOFF.md",
+      "commit": "ac7d29397db0f639237cdb39fb0754d59c1a929d",
+      "blob": "c8b22c5f08db54d2cff3e401488d74c8e088361d",
+      "status": "TERMINAL_DOCUMENTARY_PROPOSAL"
+    }
+  ],
+  "reconciliation": {
+    "source_head_unchanged": true,
+    "pr_comments_reviewed": 5,
+    "nominal_post_W20_terminal_located": false,
+    "authority_basis": "Explicit new mission43, with source head and history retained; no newer conflicting path authority located.",
+    "current_integration": {
+      "commit": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+      "tree": "f2027afd2be824ad1bb1a4116044fd1be0760039"
+    },
+    "current_findings": [
+      "WP13-SEMANTIC-UNION",
+      "WP13-P02-C12-RECEIPT-SCOPE",
+      "CURRENT-CHOICE-COHORT"
+    ]
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/test/product/wp13/",
+    "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/portfolio-held-closure/"
+  ],
+  "preservation": {
+    "p01": "Preserve already admitted P01 in composed target; no source financial algorithm replacement.",
+    "keep_current": 19,
+    "assertions": "All original positive/negative assertions and budgets retained.",
+    "current_choice": "Separate HELD owner requirement; not closed by P01-P04."
+  },
+  "validation": {
+    "remote": "GitHub MCP only; CAS expected head and force=false.",
+    "product": "Exact composed candidate using current sf2-stack plus owned delta; source commit and composed W are distinct.",
+    "first": "Short canonical C08/C12 handoff discriminator before longer consumers.",
+    "local_tests": false,
+    "full_suite": false,
+    "engines": false,
+    "deploy": false
+  },
+  "delegation": {
+    "c12_review": "Read canonical C08/C12 and prepare bounded test implementation; no remote writes or dispatch.",
+    "ci_protocol": "Read existing CI/authority protocol; no writes or dispatch.",
+    "p03_review": "Read complete resident/resident_ui/numeric_oracles/completion and appendices plus P03/P04 compatibility; no remote writes or dispatch."
+  },
+  "consumer": "Session42 is sole sf2-stack integrator; S0 retains final acceptance.",
+  "global_release": false
+}

@@ -1,0 +1,79 @@
+2026-11-14T22:38:12.2113851Z   key: Linux-X64-modules-v4-aae4ae6338ceda7ccd75de032d7ff87daba6bcf039d25a710aeb926654749a4f
+2026-11-14T22:38:12.2114279Z   enableCrossOsArchive: false
+2026-11-14T22:38:12.2114526Z   fail-on-cache-miss: false
+2026-11-14T22:38:12.2114756Z   lookup-only: false
+2026-11-14T22:38:12.2114994Z ##[endgroup]
+
+2026-11-14T22:38:12.3549107Z   enableCrossOsArchive: false
+2026-11-14T22:38:12.3549740Z   fail-on-cache-miss: false
+2026-11-14T22:38:12.3549999Z   lookup-only: false
+2026-11-14T22:38:12.3550229Z ##[endgroup]
+2026-11-14T22:38:15.6325039Z       exit 0
+2026-11-14T22:38:15.6325260Z     fi
+2026-11-14T22:38:15.6325617Z     echo "::warning::bun install attempt $attempt failed on Windows; retrying from an empty cache"
+2026-11-14T22:38:15.6326033Z   done
+2026-11-14T22:38:15.6326241Z   exit 1
+2026-11-14T22:38:52.8071858Z   key: ripgrep-archive-ripgrep-15.2.0-x86_64-unknown-linux-musl-33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c
+2026-11-14T22:38:52.8072305Z   enableCrossOsArchive: false
+2026-11-14T22:38:52.8072740Z   fail-on-cache-miss: false
+2026-11-14T22:38:52.8072943Z   lookup-only: false
+2026-11-14T22:38:52.8073104Z ##[endgroup]
+2026-11-14T22:38:52.9443379Z mkdir -p "$ARCHIVES"
+2026-11-14T22:38:52.9443893Z # https only, redirects included. --retry covers timeouts and HTTP 408, 429, 500, 502, 503 and 504 (GitHub's
+2026-11-14T22:38:52.9444363Z # release CDN has answered 504 for this file); a 404 or another client error fails at once.
+2026-11-14T22:38:52.9444811Z curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \
+2026-11-14T22:38:52.9445247Z   --retry 6 --retry-connrefused --retry-delay 5 --connect-timeout 20 --max-time 120 \
+2026-11-14T22:38:53.1619161Z ##[group]Run # Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that
+2026-11-14T22:38:53.1619847Z # Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that
+2026-11-14T22:38:53.1620299Z # name from apt-mirrors.txt. Fall back to archive.ubuntu.com only after the fetch fails.
+2026-11-14T22:38:53.1620617Z install_sandbox() {
+2026-11-14T22:38:53.1620805Z   sudo apt-get update -qq
+2026-11-14T22:39:16.3859140Z   key: omni-bin-v2-Linux-X64-97518c5742e25a49884d3106c8ac013f1765c5fc5eee51b24c8c175f8f5f5189
+2026-11-14T22:39:16.3859711Z   enableCrossOsArchive: false
+2026-11-14T22:39:16.3859911Z   fail-on-cache-miss: false
+2026-11-14T22:39:16.3860094Z   lookup-only: false
+2026-11-14T22:39:16.3860255Z env:
+2026-11-14T22:39:41.0257498Z nonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")
+2026-11-14T22:39:41.0258078Z echo "ORCHESTRA_OMNI_CONTROL_NONCE=$nonce" >> "$GITHUB_ENV"
+2026-11-14T22:39:41.0258450Z echo "omni control nonce: $nonce"
+2026-11-14T22:39:41.0289009Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T22:39:41.0289633Z env:
+2026-11-14T22:39:41.0291154Z   HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor
+2026-11-14T22:39:41.0291687Z ##[endgroup]
+2026-11-14T22:39:41.0623424Z omni control nonce: 5fa755898d08ca51f61e6cb71cda57cd
+2026-11-14T22:39:41.0643747Z ##[group]Run if [ "$RUNNER" = playwright ]; then
+2026-11-14T22:39:41.0644083Z if [ "$RUNNER" = playwright ]; then
+2026-11-14T22:39:41.0649676Z const args = ['run', 'test:e2e:local', ...playwrightArgs(request), '--trace', 'retain-on-failure']
+2026-11-14T22:39:41.0650170Z const listed = spawnSync('bun', [...args, '--list', '--reporter=json'], { cwd, env, encoding: 'utf8' })
+2026-11-14T22:39:41.0650692Z if (listed.error || listed.status !== 0) throw new Error(`playwright selection failed: ${listed.error ?? listed.stderr}`)
+2026-11-14T22:39:41.0651195Z writeFileSync('test-ci-evidence/playwright-selection.json', listed.stdout)
+2026-11-14T22:39:41.0651529Z const report = JSON.parse(listed.stdout)
+2026-11-14T22:39:41.0652408Z validateSelection(request.args.map((file) => path.resolve(cwd, file)),
+2026-11-14T22:39:41.0652940Z   report.suites.filter(hasTests).map((suite) => path.resolve(report.config.rootDir, suite.file)))
+2026-11-14T22:39:41.0653402Z // The flaky reporter lists tests that passed only on a retry in the log and the job summary.
+2026-11-14T22:39:41.0653790Z const flaky = path.resolve(cwd, 'e2e/utils/flaky-reporter.ts')
+2026-11-14T22:39:41.0654202Z const reporters = statSync(flaky, { throwIfNoEntry: false }) ? `html,line,json,${flaky}` : 'html,line,json'
+2026-11-14T22:39:41.0655103Z   env: { ...env, PLAYWRIGHT_HTML_OUTPUT_DIR: path.resolve(cwd, 'e2e/playwright-report'),
+2026-11-14T22:39:41.0655558Z     PLAYWRIGHT_JSON_OUTPUT_NAME: path.resolve('test-ci-evidence/playwright-runtime.json') } })
+2026-11-14T22:39:41.0656044Z if (run.error || run.status === null) throw new Error(`playwright execution failed: ${run.error ?? run.signal}`)
+2026-11-14T22:39:41.0656405Z process.exit(run.status)
+2026-11-14T22:39:41.0656586Z NODE
+2026-11-14T22:39:41.0658337Z   bun)
+2026-11-14T22:39:41.0658587Z     # solid-sonner's compiled dist/index.js imports `use` from solid-js/web, a
+2026-11-14T22:39:41.0658964Z     # browser-only export that fails under bun's default (`node`) conditions.
+2026-11-14T22:39:41.0659518Z     # The `solid` condition routes solid-sonner to its untranspiled dist/index.jsx
+2026-11-14T22:39:41.0659924Z     # source, which does not make that import. test-ci bypasses the package's own
+2026-11-14T22:39:41.0660315Z     # `test:unit` script (which already passes `--conditions=solid`), so reproduce it.
+2026-11-14T22:39:41.0660700Z     # test-browser/ files follow `test:browser` instead: solid-js has no `solid`
+2026-11-14T22:39:41.0661078Z     # export, so under `solid` it falls through to `node` and loads its server build,
+2026-11-14T22:39:41.0982879Z 
+2026-11-14T22:39:41.0983411Z Sucafinav1/test/product/wp13/handoff-integration.test.ts:
+2026-11-14T22:39:41.2580188Z (pass) portfolio handoff prepares two WP11 changes and resumes after pre-dispatch unavailability without repeating a receipt [130.89ms]
+2026-11-14T22:39:41.3772823Z omni positive control [5fa755898d08ca51f61e6cb71cda57cd]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-14T22:39:41.3774334Z 
+2026-11-14T22:39:41.3774442Z  1 pass
+2026-11-14T22:39:41.3774642Z  0 fail
+2026-11-14T22:39:41.3774836Z  31 expect() calls
+2026-11-14T22:39:41.3775096Z Ran 1 test across 1 file. [299.00ms]
+2026-11-14T22:39:41.4407659Z Post job cleanup.
+2026-11-14T22:39:41.4411268Z ##[start-action display=Setup Bun;id=__49edafb8-d50e-4ed5-8b9a-69fb8566a79b.__oven-sh_setup-bun]

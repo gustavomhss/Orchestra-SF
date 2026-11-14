@@ -1,0 +1,154 @@
+2026-11-14T22:41:11.5383808Z   key: Linux-X64-modules-v4-aae4ae6338ceda7ccd75de032d7ff87daba6bcf039d25a710aeb926654749a4f
+2026-11-14T22:41:11.5384394Z   enableCrossOsArchive: false
+2026-11-14T22:41:11.5384739Z   fail-on-cache-miss: false
+2026-11-14T22:41:11.5385110Z   lookup-only: false
+2026-11-14T22:41:11.5385395Z ##[endgroup]
+
+2026-11-14T22:41:11.7508116Z   enableCrossOsArchive: false
+2026-11-14T22:41:11.7508484Z   fail-on-cache-miss: false
+2026-11-14T22:41:11.7508812Z   lookup-only: false
+2026-11-14T22:41:11.7509112Z ##[endgroup]
+2026-11-14T22:41:13.6663944Z       exit 0
+2026-11-14T22:41:13.6664286Z     fi
+2026-11-14T22:41:13.6664856Z     echo "::warning::bun install attempt $attempt failed on Windows; retrying from an empty cache"
+2026-11-14T22:41:13.6665436Z   done
+2026-11-14T22:41:13.6665826Z   exit 1
+2026-11-14T22:41:57.6715470Z   key: ripgrep-archive-ripgrep-15.2.0-x86_64-unknown-linux-musl-33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c
+2026-11-14T22:41:57.6716044Z   enableCrossOsArchive: false
+2026-11-14T22:41:57.6716289Z   fail-on-cache-miss: false
+2026-11-14T22:41:57.6716515Z   lookup-only: false
+2026-11-14T22:41:57.6716724Z ##[endgroup]
+2026-11-14T22:41:57.8853963Z mkdir -p "$ARCHIVES"
+2026-11-14T22:41:57.8854617Z # https only, redirects included. --retry covers timeouts and HTTP 408, 429, 500, 502, 503 and 504 (GitHub's
+2026-11-14T22:41:57.8855229Z # release CDN has answered 504 for this file); a 404 or another client error fails at once.
+2026-11-14T22:41:57.8855789Z curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \
+2026-11-14T22:41:57.8856370Z   --retry 6 --retry-connrefused --retry-delay 5 --connect-timeout 20 --max-time 120 \
+2026-11-14T22:41:58.1949911Z ##[group]Run # Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that
+2026-11-14T22:41:58.1950785Z # Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that
+2026-11-14T22:41:58.1951362Z # name from apt-mirrors.txt. Fall back to archive.ubuntu.com only after the fetch fails.
+2026-11-14T22:41:58.1951899Z install_sandbox() {
+2026-11-14T22:41:58.1952151Z   sudo apt-get update -qq
+2026-11-14T22:42:08.3104774Z   key: omni-bin-v2-Linux-X64-97518c5742e25a49884d3106c8ac013f1765c5fc5eee51b24c8c175f8f5f5189
+2026-11-14T22:42:08.3105225Z   enableCrossOsArchive: false
+2026-11-14T22:42:08.3105473Z   fail-on-cache-miss: false
+2026-11-14T22:42:08.3105703Z   lookup-only: false
+2026-11-14T22:42:08.3105912Z env:
+2026-11-14T22:42:39.7482082Z nonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")
+2026-11-14T22:42:39.7482593Z echo "ORCHESTRA_OMNI_CONTROL_NONCE=$nonce" >> "$GITHUB_ENV"
+2026-11-14T22:42:39.7482952Z echo "omni control nonce: $nonce"
+2026-11-14T22:42:39.7495568Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T22:42:39.7495888Z env:
+2026-11-14T22:42:39.7497272Z   HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor
+2026-11-14T22:42:39.7497735Z ##[endgroup]
+2026-11-14T22:42:39.7874607Z omni control nonce: 4eaedeb8cefed46398127611a63e8cf7
+2026-11-14T22:42:39.7905113Z ##[group]Run if [ "$RUNNER" = playwright ]; then
+2026-11-14T22:42:39.7905544Z if [ "$RUNNER" = playwright ]; then
+2026-11-14T22:42:39.7912945Z const args = ['run', 'test:e2e:local', ...playwrightArgs(request), '--trace', 'retain-on-failure']
+2026-11-14T22:42:39.7913555Z const listed = spawnSync('bun', [...args, '--list', '--reporter=json'], { cwd, env, encoding: 'utf8' })
+2026-11-14T22:42:39.7914245Z if (listed.error || listed.status !== 0) throw new Error(`playwright selection failed: ${listed.error ?? listed.stderr}`)
+2026-11-14T22:42:39.7914889Z writeFileSync('test-ci-evidence/playwright-selection.json', listed.stdout)
+2026-11-14T22:42:39.7915325Z const report = JSON.parse(listed.stdout)
+2026-11-14T22:42:39.7916407Z validateSelection(request.args.map((file) => path.resolve(cwd, file)),
+2026-11-14T22:42:39.7916951Z   report.suites.filter(hasTests).map((suite) => path.resolve(report.config.rootDir, suite.file)))
+2026-11-14T22:42:39.7917568Z // The flaky reporter lists tests that passed only on a retry in the log and the job summary.
+2026-11-14T22:42:39.7918163Z const flaky = path.resolve(cwd, 'e2e/utils/flaky-reporter.ts')
+2026-11-14T22:42:39.7918790Z const reporters = statSync(flaky, { throwIfNoEntry: false }) ? `html,line,json,${flaky}` : 'html,line,json'
+2026-11-14T22:42:39.7919947Z   env: { ...env, PLAYWRIGHT_HTML_OUTPUT_DIR: path.resolve(cwd, 'e2e/playwright-report'),
+2026-11-14T22:42:39.7920863Z     PLAYWRIGHT_JSON_OUTPUT_NAME: path.resolve('test-ci-evidence/playwright-runtime.json') } })
+2026-11-14T22:42:39.7921536Z if (run.error || run.status === null) throw new Error(`playwright execution failed: ${run.error ?? run.signal}`)
+2026-11-14T22:42:39.7922012Z process.exit(run.status)
+2026-11-14T22:42:39.7922271Z NODE
+2026-11-14T22:42:39.7924663Z   bun)
+2026-11-14T22:42:39.7924997Z     # solid-sonner's compiled dist/index.js imports `use` from solid-js/web, a
+2026-11-14T22:42:39.7925520Z     # browser-only export that fails under bun's default (`node`) conditions.
+2026-11-14T22:42:39.7926018Z     # The `solid` condition routes solid-sonner to its untranspiled dist/index.jsx
+2026-11-14T22:42:39.7926534Z     # source, which does not make that import. test-ci bypasses the package's own
+2026-11-14T22:42:39.7927042Z     # `test:unit` script (which already passes `--conditions=solid`), so reproduce it.
+2026-11-14T22:42:39.7927541Z     # test-browser/ files follow `test:browser` instead: solid-js has no `solid`
+2026-11-14T22:42:39.7928030Z     # export, so under `solid` it falls through to `node` and loads its server build,
+2026-11-14T22:42:39.8266390Z 
+2026-11-14T22:42:39.8267355Z Sucafinav1/test/product/wp13/handoff.test.ts:
+2026-11-14T22:42:39.8742156Z (pass) prepares through the WP11 port only when the persisted human choice matches [18.86ms]
+2026-11-14T22:42:39.8798748Z (pass) promotes the reviewed combination through the case domain only for a human [5.69ms]
+2026-11-14T22:42:39.8801007Z (pass) review digest ignores observation clocks but retains financial changes [0.30ms]
+2026-11-14T22:42:39.8819706Z (pass) handoffs reject a candidate object reused and mutated during its final read [1.76ms]
+2026-11-14T22:42:39.8829779Z (pass) promotion retains the reviewed case, scope and title when the caller mutates its request [1.02ms]
+2026-11-14T22:42:39.8837730Z (pass) handoff keeps the reviewed case and selection fixed across asynchronous evaluation [0.75ms]
+2026-11-14T22:42:39.8838446Z 
+2026-11-14T22:42:39.8838887Z Sucafinav1/test/product/wp13/receipt-scope-boundary.test.ts:
+2026-11-14T22:42:39.9711888Z (pass) portfolio C12 rollback before domain commit retains its durable reservation across reopen [78.69ms]
+2026-11-14T22:42:40.0556312Z (pass) portfolio C12 lost response recovers the original canonical receipt after reopen without repeating the effect [84.51ms]
+2026-11-14T22:42:40.1273655Z (pass) portfolio C12 canonical producer preserves the domain CAS and commits a single rejected receipt [71.70ms]
+2026-11-14T22:42:40.1274136Z 
+2026-11-14T22:42:40.1274383Z Sucafinav1/test/product/wp13/history-provenance.test.ts:
+2026-11-14T22:42:40.1526374Z (pass) portfolio historical provenance > accepts an original binding and selection when current case and evidence remain authorized [2.34ms]
+2026-11-14T22:42:40.1542554Z (pass) portfolio historical provenance > allows preserved evidence after a source change while the case remains at the original version [1.67ms]
+2026-11-14T22:42:40.1544122Z (pass) portfolio historical provenance > rejects a preserved result from a future case version [0.27ms]
+2026-11-14T22:42:40.1549238Z (pass) portfolio historical provenance > rejects a candidate whose case incarnation was replaced [0.42ms]
+2026-11-14T22:42:40.1555545Z (pass) portfolio historical provenance > rejects revoked historical sources [0.65ms]
+2026-11-14T22:42:40.1560532Z (pass) portfolio historical provenance > rejects a historical candidate missing from the authorized case [0.44ms]
+2026-11-14T22:42:40.1565295Z (pass) portfolio historical provenance > rejects a same-version alternative whose original payload changed [0.51ms]
+2026-11-14T22:42:40.1572910Z (pass) portfolio historical provenance > rejects ambiguous duplicate alternatives and a case older than the candidate [0.69ms]
+2026-11-14T22:42:40.1574265Z (pass) portfolio historical provenance > rejects a binding supplied for a different current owner case [0.22ms]
+2026-11-14T22:42:40.1587166Z (pass) portfolio historical provenance > keeps the first candidate observation when the provider reuses mutable objects [1.20ms]
+2026-11-14T22:42:40.1602296Z (pass) portfolio historical provenance > keeps the case snapshot before awaiting a historical candidate provider that reuses the same object [1.49ms]
+2026-11-14T22:42:40.1613837Z (pass) portfolio historical provenance > rejects caller mutation during historical provenance verification [1.18ms]
+2026-11-14T22:42:40.1625453Z (pass) portfolio historical provenance > rejects an owner observation changed during the first binding read [1.15ms]
+2026-11-14T22:42:40.1629047Z (pass) portfolio historical provenance > rejects a binding whose digest does not cover its contents [0.38ms]
+2026-11-14T22:42:40.1632990Z (pass) portfolio historical provenance > rejects a selection that differs from the binding proof [0.38ms]
+2026-11-14T22:42:40.1645242Z (pass) portfolio historical provenance > rejects a binding that changes between provenance passes [1.18ms]
+2026-11-14T22:42:40.1678173Z SF_WP13_FIXTURE_STAGE:base-start:elapsedMs=1
+2026-11-14T22:42:40.2615560Z SF_WP13_FIXTURE_STAGE:base-ready:elapsedMs=95
+2026-11-14T22:42:40.4769136Z SF_WP13_FIXTURE_STAGE:criteria-start:elapsedMs=95
+2026-11-14T22:42:40.4770264Z SF_WP13_FIXTURE_STAGE:criteria-ready:elapsedMs=310
+2026-11-14T22:42:40.8986974Z (pass) historical portfolio reads the original C08 candidate after WP11 replaces alternative v1 with v2 [734.03ms]
+2026-11-14T22:42:40.8989397Z SF_WP13_FIXTURE_STAGE:base-start:elapsedMs=0
+2026-11-14T22:42:40.9742288Z SF_WP13_FIXTURE_STAGE:base-ready:elapsedMs=75
+2026-11-14T22:42:40.9743199Z SF_WP13_FIXTURE_STAGE:criteria-start:elapsedMs=76
+2026-11-14T22:42:41.1641914Z SF_WP13_FIXTURE_STAGE:criteria-ready:elapsedMs=265
+2026-11-14T22:42:41.3708510Z (pass) historical candidate rejects a naked digest when the original C08 case snapshot and choice are absent [472.18ms]
+2026-11-14T22:42:41.3712034Z SF_WP13_FIXTURE_STAGE:base-start:elapsedMs=0
+2026-11-14T22:42:41.4405667Z SF_WP13_FIXTURE_STAGE:base-ready:elapsedMs=69
+2026-11-14T22:42:41.4406302Z SF_WP13_FIXTURE_STAGE:criteria-start:elapsedMs=69
+2026-11-14T22:42:41.6361008Z SF_WP13_FIXTURE_STAGE:criteria-ready:elapsedMs=264
+2026-11-14T22:42:41.9092231Z (pass) historical candidate rejects changed C08 request ancestry and revoked evidence [538.37ms]
+2026-11-14T22:42:41.9106437Z SF_WP13_FIXTURE_STAGE:base-start:elapsedMs=0
+2026-11-14T22:42:41.9794034Z SF_WP13_FIXTURE_STAGE:base-ready:elapsedMs=70
+2026-11-14T22:42:41.9794783Z SF_WP13_FIXTURE_STAGE:criteria-start:elapsedMs=70
+2026-11-14T22:42:42.1691536Z SF_WP13_FIXTURE_STAGE:criteria-ready:elapsedMs=259
+2026-11-14T22:42:42.7363272Z (pass) historical chosen candidate requires the exact WP11 choice ledger and its original C08 scenario [827.07ms]
+2026-11-14T22:42:42.7367691Z SF_WP13_FIXTURE_STAGE:base-start:elapsedMs=0
+2026-11-14T22:42:42.8020322Z SF_WP13_FIXTURE_STAGE:base-ready:elapsedMs=65
+2026-11-14T22:42:43.2000897Z 416 |     expect(rejected.status).not.toBe("ok")
+2026-11-14T22:42:43.2001218Z                                       ^
+2026-11-14T22:42:43.2001538Z error: expect(received).not.toBe(expected)
+2026-11-14T22:42:43.2001988Z 
+2026-11-14T22:42:43.2002101Z Expected: not "ok"
+2026-11-14T22:42:43.2002239Z 
+2026-11-14T22:42:43.2002731Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts:416:33)
+2026-11-14T22:42:43.2003618Z (fail) historical candidate refuses a real case CAS in its last callback while the authority remains live [463.61ms]
+2026-11-14T22:42:43.2003993Z 
+2026-11-14T22:42:43.2004168Z Sucafinav1/test/product/wp13/campaign.test.ts:
+2026-11-14T22:42:43.2772185Z (pass) multi-case campaign keeps owner separate, provisional AI, order and exact retry [72.26ms]
+2026-11-14T22:42:43.3039690Z (pass) revoked and stale sources and a moved proposal do not replace the campaign [26.75ms]
+2026-11-14T22:42:43.3171087Z (pass) a locked fence that differs from the pre-lock fingerprint does not commit [13.06ms]
+2026-11-14T22:42:43.3294058Z (pass) campaign metadata needs the host's private writer grant [12.35ms]
+2026-11-14T22:42:43.3415675Z (pass) campaign rejects a candidate in another currency or horizon before any write [12.15ms]
+2026-11-14T22:42:43.3736826Z (pass) a prior campaign is separately marked historical after the owner case advances [31.92ms]
+2026-11-14T22:42:43.4025622Z (pass) campaign history binds a replaced candidate to the trusted historical port and original digest [29.00ms]
+2026-11-14T22:42:43.4276948Z (pass) a source fence may advance while a preserved campaign remains authorized at owner N/N [25.12ms]
+2026-11-14T22:42:43.4524259Z (pass) a saved campaign remains authenticated historical data at the same owner case version [24.70ms]
+2026-11-14T22:42:43.4525305Z 
+2026-11-14T22:42:43.4525742Z Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts:
+2026-11-14T22:42:46.6673083Z (pass) portfolio handoff retains C08 choice and resumes after pre-dispatch producer unavailability without repeating a receipt [3211.08ms]
+2026-11-14T22:42:46.8154541Z 
+2026-11-14T22:42:46.8156076Z omni positive control [4eaedeb8cefed46398127611a63e8cf7]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-14T22:42:46.8156898Z 1 tests failed:
+2026-11-14T22:42:46.8157518Z (fail) historical candidate refuses a real case CAS in its last callback while the authority remains live [463.61ms]
+2026-11-14T22:42:46.8157914Z 
+2026-11-14T22:42:46.8158030Z  39 pass
+2026-11-14T22:42:46.8158251Z  1 fail
+2026-11-14T22:42:46.8158531Z  260 expect() calls
+2026-11-14T22:42:46.8158824Z Ran 40 tests across 5 files. [7.01s]
+2026-11-14T22:42:46.8304340Z ##[error]Process completed with exit code 1.
+2026-11-14T22:42:46.9375842Z Post job cleanup.

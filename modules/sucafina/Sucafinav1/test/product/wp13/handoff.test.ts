@@ -36,6 +36,7 @@ test("prepares through the WP11 port only when the persisted human choice matche
   expect(await preparePortfolioChoice({ ...input, cases: replaced }, context)).toEqual({ status: "stale", reason: "case-changed" })
   expect(prepared).toBe(1)
   expect(await preparePortfolioChoice({ ...input, choiceId: "other" }, context)).toEqual({ status: "conflict", reason: "choice-does-not-match-combination" })
+  expect(prepared).toBe(1)
   const otherCase = { read: async () => ({ status: "ok", value: { case: { id: "other-case", incarnation: "one", version: 2, choices: [{ id: "choice", scenario: { baseRef: "base", operations, assumptions: [] }, result: scenario }] } } }) } as unknown as DecisionCasePort
   expect(await preparePortfolioChoice({ ...input, cases: otherCase }, context)).toEqual({ status: "stale", reason: "case-changed" })
   const ambiguous = { read: async () => ({ status: "ok", value: { case: { id: "case", incarnation: "one", version: 2, choices: ["first", "second"].map(() => ({ id: "choice", scenario: { baseRef: "base", operations, assumptions: [] }, result: scenario })) } } }) } as unknown as DecisionCasePort

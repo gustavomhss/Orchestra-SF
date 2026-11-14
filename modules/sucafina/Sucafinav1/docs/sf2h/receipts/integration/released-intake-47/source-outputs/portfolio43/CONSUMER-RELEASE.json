@@ -1,0 +1,69 @@
+{
+  "schema": "sf2h-mission43-consumer-release-v1",
+  "mission": 43,
+  "branch": "astra-wp13",
+  "pr": 37,
+  "lease_epoch": "portfolio-held-browser43",
+  "state": "TERMINAL_IMPLEMENTED_PARTIAL_PROOF_HELD",
+  "release_for_selective_intake": true,
+  "qualified_whole_package": false,
+  "global_release": false,
+  "source_product_commit": "f767ef44e0a165ca6dc5fc4590b0970a68a7379e",
+  "source_product_tree": "80d425d327c5a4beb8f0dba1e45a12277e73849c",
+  "source_code_test_commit": "63f952c06baf3be82464e2b320fbdf4c8c3c9ce8",
+  "terminal_commit": "Resolve exact containing commit; terminal receipt adds only the authorized receipt namespace to source_product_commit.",
+  "target": {
+    "branch": "sf2-stack",
+    "pr": 65,
+    "head": "217b4295e2aeb00bc2f4accb9fb893451b9795e9",
+    "tree": "e6a09da0acdf041a8b757e92e20bdca9d2b8c81c",
+    "material_candidate": "6470bebdc9bb5044df7959e697cb7d8629157e23"
+  },
+  "delivery_composition": {
+    "W": "0f74d4ba0646eadfef6ac975d0073344623447d2",
+    "tree": "927ef9f29a4b52ad8a88c8ee1721937f27e8df5b",
+    "executed": false,
+    "reason": "Only final README note and inert target receipt advancement after recorded runs; no execution or blanket PASS transfer claimed."
+  },
+  "patch": {
+    "path": "patches/P02-P04-complete.patch",
+    "blob": "90b218902d2f58f66611ba2b43404273fe4496da",
+    "sha256": "71c50b685b8eff13a307bea13be2d3bf6c0ba6d004059f594fa9dfcc07098d18",
+    "bytes": 119342,
+    "prepost": "patch-manifest.json"
+  },
+  "group_status": {
+    "P01": "PRESERVED_NOT_REQUALIFIED",
+    "P02": "IMPLEMENTED_COMPONENT_SCOPE_PASS_HISTORY_FAIL_HELD",
+    "P03": "IMPLEMENTED_27_CONSUMER_PASS_SEMANTIC_TIMEOUT_HELD",
+    "P04": "DOCUMENTED_ACTUAL_CONTRACT_AND_LIMITS",
+    "CurrentChoice": "SEPARATE_HELD"
+  },
+  "consumer": {
+    "requested_session": 42,
+    "ack": "NOT_RECEIVED",
+    "latest_state": "TERMINAL_BOUNDED_CHECKPOINT_TO_S0",
+    "continuation_requires_fresh_authority_reconciliation": true,
+    "new_writer_designated": false
+  },
+  "application_conditions": [
+    "Exact preimages/absence and current head must be reobserved.",
+    "No whole historical source-branch merge.",
+    "P01 and19KEEP_CURRENT retain current target blobs.",
+    "External proof/Finance patches remain inert until authorized owner intake and qualification.",
+    "Retain all failed and not-run proof states; qualify only affected exact new W.",
+    "Source guards/typecheck results do not qualify composed candidate."
+  ],
+  "writer_end": "Authority for mission43 ends after this terminal receipt is published and read back. No native controller or replacement integrator is started.",
+  "runs_pending": [],
+  "owned_product_paths": 10,
+  "external_active_paths_changed": [],
+  "integration_ref_changed": false,
+  "authority_provenance": {
+    "initial_pin": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+    "rechecked_control_pin": "18f8d33a0a288155e605fa4246ad8f5f6b4039fc",
+    "mission_blob": "d56819d53cc3a3533e1916700e81a593ba535fce",
+    "common_blob": "ad53f26697738fc410648b198a79b6bfe6e7bac5"
+  }
+}
+

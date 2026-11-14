@@ -1,0 +1,160 @@
+{
+  "schema": "mission43-dispatch-deduplication-v1",
+  "policy": "One product WP13 run in flight, including other owners selecting WP13; existing authorized workflow only.",
+  "sequence": [
+    {
+      "id": "R1",
+      "W": "96b912ac62b1c9b1825c7c7645c9fec53f2b89dd",
+      "request": "9f94aede169c4146093255d8af7e2f2fa4f93584",
+      "run_id": 43649095824,
+      "created_at": "2026-11-14T22:37:51Z",
+      "terminal_at": "2026-11-14T22:39:49Z"
+    },
+    {
+      "id": "R2",
+      "W": "0528307ee1f95dbec44f07d3dd5b2e3d1b156bc5",
+      "request": "3cb0ac4d5fd3598d54b6f20b31810cb276cd3b93",
+      "run_id": 43649352866,
+      "created_at": "2026-11-14T22:40:52Z",
+      "terminal_at": "2026-11-14T22:42:58Z"
+    },
+    {
+      "id": "R3",
+      "W": "524fa67c99dda72807a98f5e23ce3354c8e40197",
+      "request": "d0ce0de717e09954f2ec6770a380ccc63bf60969",
+      "run_id": 43649882839,
+      "created_at": "2026-11-14T22:47:02Z",
+      "terminal_at": "2026-11-14T22:52:03Z"
+    },
+    {
+      "id": "R4",
+      "W": "e539fdbf41101b5fa6703bd373fe48c21bcf8604",
+      "request": "cae9c10f297c629f89e9a2a527858d52f14f9755",
+      "run_id": 43650463661,
+      "created_at": "2026-11-14T22:53:55Z",
+      "terminal_at": "2026-11-14T22:55:35Z"
+    }
+  ],
+  "after_publication_branch_queries": [
+    {
+      "id": "R1",
+      "branch": "ci-run-linux-astra-wp13-96b912ac-9f94aede-a1",
+      "total_count": 1,
+      "runs": [
+        {
+          "id": 43649095824,
+          "head_sha": "c864c42f2886a5e4ec4baef66b605c2e74810d15",
+          "run_attempt": 1,
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T22:37:51Z",
+          "updated_at": "2026-11-14T22:39:49Z"
+        }
+      ]
+    },
+    {
+      "id": "R2",
+      "branch": "ci-run-linux-astra-wp13-0528307e-3cb0ac4d-a1",
+      "total_count": 1,
+      "runs": [
+        {
+          "id": 43649352866,
+          "head_sha": "71ba4615848276bb9f49b4c561514cdddc94186b",
+          "run_attempt": 1,
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-14T22:40:52Z",
+          "updated_at": "2026-11-14T22:42:58Z"
+        }
+      ]
+    },
+    {
+      "id": "R3",
+      "branch": "ci-run-linux-astra-wp13-524fa67c-d0ce0de7-a1",
+      "total_count": 1,
+      "runs": [
+        {
+          "id": 43649882839,
+          "head_sha": "6ff519e41a661dcfb87399fa4aa83ea2c1d2213f",
+          "run_attempt": 1,
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-14T22:47:02Z",
+          "updated_at": "2026-11-14T22:52:03Z"
+        }
+      ]
+    },
+    {
+      "id": "R4",
+      "branch": "ci-run-linux-astra-wp13-e539fdbf-cae9c10f-a1",
+      "total_count": 1,
+      "runs": [
+        {
+          "id": 43650463661,
+          "head_sha": "5f4755d3a666f49f9d83331339581b2428686fb5",
+          "run_attempt": 1,
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T22:53:55Z",
+          "updated_at": "2026-11-14T22:55:35Z"
+        }
+      ]
+    }
+  ],
+  "retained_pre_dispatch_snapshots": [
+    {
+      "key": "shortDedup0",
+      "total_count": 0,
+      "runs": []
+    },
+    {
+      "key": "shortDedup1",
+      "total_count": 0,
+      "runs": []
+    },
+    {
+      "key": "shortDedup2",
+      "total_count": 0,
+      "runs": []
+    },
+    {
+      "key": "finalDedup0",
+      "total_count": 2,
+      "runs": [
+        {
+          "id": 43650398020,
+          "branch": "astra-check-wp11",
+          "sha": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+          "status": "in_progress",
+          "conclusion": null
+        },
+        {
+          "id": 43650319287,
+          "branch": "ci-run-linux-astra-wp07-21da1ab4-04335bcb-m39-03",
+          "sha": "2108012e41071a7f5a030d99a50b572ee715a0bc",
+          "status": "in_progress",
+          "conclusion": null
+        }
+      ]
+    },
+    {
+      "key": "finalDedup1",
+      "total_count": 0,
+      "runs": []
+    },
+    {
+      "key": "finalDedup2",
+      "total_count": 0,
+      "runs": []
+    }
+  ],
+  "observations": [
+    "Root waited for Finance34 run43648344709, which selected WP13, before R1.",
+    "R1→R2→R3→R4 do not overlap in their recorded created/updated intervals.",
+    "R4 happened only after the two explicit mutation return-type changes; it selected two changed controlled fixtures and did not rerun semantic or Finance journeys.",
+    "Typecheck/guards lanes are recorded separately; all workflow requests and product runs are terminal."
+  ],
+  "product_test_runs": 4,
+  "source_check_runs": 2,
+  "unchanged_long_reruns": 0
+}

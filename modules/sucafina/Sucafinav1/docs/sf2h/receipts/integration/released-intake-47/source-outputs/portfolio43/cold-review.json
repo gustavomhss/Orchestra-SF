@@ -1,0 +1,90 @@
+{
+  "schema": "mission43-cold-review-v1",
+  "reviewer": "/root/c12_review",
+  "review_type": "final textual review; reviewer authored the controlled fixtures and owner patch, so this record is not represented as an independent implementation review",
+  "reviewed_inputs": [
+    "mission43/patch-input.json",
+    "mission43/final-adjustments.json",
+    "mission43/collected-evidence.json",
+    "c12-review/proof.owner.preimage.ts",
+    "c12-review/proof.owner.postimage.ts"
+  ],
+  "own_findings": {
+    "assertion_preservation_artifact": "mission43/assertion-preservation.json",
+    "P02_candidate_literals": "211/214 plus three unchanged-value durable amount assertions; final 295 expect-lines",
+    "P03_candidate_literals": "portfolio 40/40; reconciliation 69/69; semantic 72 and 180000ms retained",
+    "owner_patch": {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "preimage_blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+      "postimage_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+      "reader_body_byte_equal": true,
+      "selector_and_witness_helpers_byte_equal": true,
+      "internal_revalidate_callsite_texts_before": 3,
+      "internal_revalidate_callsite_texts_after": 3,
+      "runtime_revalidate_sequence": "Four calls: entry, inspect 1, inspect 2, final; inspect() contains one textual callsite invoked twice.",
+      "delta": [
+        "Import existing readPortfolioSnapshot",
+        "Add optional host.persistence while preserving required requestFor/revalidate",
+        "Retain complete existing reader body as private read",
+        "Wrap public reader in the existing admitted snapshot boundary"
+      ],
+      "status": "OWNER_PATCH_PROPOSED_NOT_APPLIED_NOT_TESTED",
+      "patch_files": [
+        "c12-review/proof.owner.preimage.ts",
+        "c12-review/proof.owner.postimage.ts",
+        "c12-review/proof.owner.patch",
+        "c12-review/proof.owner.handoff.json"
+      ],
+      "fences_preserved": [
+        "case identity/incarnation/version",
+        "authenticated transaction or choice+ledger witness",
+        "original C08 scenario request/result",
+        "candidate/scenario/provenance digests",
+        "current source evidence and access revision",
+        "both complete observations and all four authority callbacks",
+        "abort checks and all non-ok exits"
+      ],
+      "expected_effect": "A write attempted in the fourth callback runs nested inside the admitted LocalStore root. commit=true poisons that root; swallowing the nested error cannot release ok. Root rollback preserves the durable case/result/storageVersion.",
+      "fallback_limit": "Host adapters without persistence retain independent-observation behavior; no snapshot guarantee is claimed for them.",
+      "production_evidence": {
+        "callsite": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+        "callsite_blob": "39dc82d505931daf927b35230341ac99fdc7e09d",
+        "shared_persistence_composition": "product/integration/product-authority.ts",
+        "composition_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+        "evidence_origin": "Read by this reviewer via GitHub MCP in the preceding investigation, before this final no-remote textual review."
+      }
+    },
+    "legacy_domain_status": "HELD_STATIC_INCOMPATIBILITY, not an executed FAIL",
+    "CurrentChoice": "Separate held obligation; not closed by P01–P04"
+  },
+  "ci_protocol_review_as_communicated": {
+    "origin": "/root task message forwarding ci_protocol audit; not a direct independently reconstructed source comparison by this reviewer",
+    "claims": [
+      "188 original-source expect-lines preserved",
+      "P02 source/candidate/final: campaign 55/56/60; history 49/50/60; handoff 27/32/33; controlled absent/19/30; C08 57/57/59; boundary absent/absent/53",
+      "211/214 candidate literal lines retained; the remaining three Map amount assertions retain 30/50, 40/50, 40/60 against durable storage",
+      "P03 original target assertions: portfolio 40/40 and reconciliation 69/69; semantic union 72 expect-lines and unchanged 180000ms budget"
+    ],
+    "locally_reproduced_subset": "All candidate/final counts and replacements verified from actual local JSON bodies. Original-source 188 and per-source counts remain attributed to the communicated ci_protocol audit."
+  },
+  "CI_evidence_review": {
+    "origin": "Supplied collected-evidence.json logs and root report; this child did not independently execute or retrieve these runs",
+    "R4": {
+      "run_id": 43650463661,
+      "W": "e539fdbf41101b5fa6703bd373fe48c21bcf8604",
+      "S": "5f4755d3a666f49f9d83331339581b2428686fb5",
+      "result": {
+        "pass": 4,
+        "fail": 0,
+        "expect_calls": 84,
+        "duration_ms": 573
+      },
+      "matches_supplied_R4_identity": true,
+      "origin": "Root report confirmed against supplied collected-evidence R4 log text; no independent CI execution or retrieval by c12_review"
+    },
+    "R2": "39 pass / 1 fail: history final-callback CAS; retain failure and owner patch obligation",
+    "R3": "27 pass / 1 fail: semantic union long journey timed out at 180000ms; budget preserved and no causal rerun performed here"
+  },
+  "disposition": "REVIEWED_WITH_EXPLICIT_HELD_OBLIGATIONS; receipt scope implementation is concrete, but this review does not certify full P02/P03 closure",
+  "no_execution": "No product code, tests, typechecks, servers, remote writes, dispatches or reruns. Local work only parsed stored JSON, compared text, computed artifact hashes and wrote this report."
+}

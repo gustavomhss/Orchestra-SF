@@ -1,0 +1,315 @@
+{
+  "schema": "mission43-input-closure-v1",
+  "target_before_docs": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+  "target_after_docs": "217b4295e2aeb00bc2f4accb9fb893451b9795e9",
+  "source_product": "f767ef44e0a165ca6dc5fc4590b0970a68a7379e",
+  "inputs": [
+    {
+      "path": "product/decisions/apply.ts",
+      "sha": "65d2a0518427b1454aa665ef744bce7564ed8049"
+    },
+    {
+      "path": "product/decisions/prepared-apply.ts",
+      "sha": "90c3e981d8418c562342660bd3d56d03f9995383"
+    },
+    {
+      "path": "product/decisions/prepared-review.ts",
+      "sha": "ae7a4476d686638512f3fc8bcf342a746259cacc"
+    },
+    {
+      "path": "product/decisions/application-attempt.ts",
+      "sha": "d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e"
+    },
+    {
+      "path": "product/decisions/receipt-review-binding.ts",
+      "sha": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f"
+    },
+    {
+      "path": "product/host-binding/state-provider.ts",
+      "sha": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c"
+    },
+    {
+      "path": "product/portfolio/proof.ts",
+      "sha": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b"
+    },
+    {
+      "path": "product/portfolio/read-snapshot.ts",
+      "sha": "095a0e5764e115fb874a5f5c0c16a9c73466c340"
+    },
+    {
+      "path": "runtime/local-store.ts",
+      "sha": "b753e3ffbfcdc06de373388845c686afac26dec8"
+    },
+    {
+      "path": "runtime/contract.ts",
+      "sha": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "path": "product/planner/sensitivity-units.ts",
+      "sha": "29ef0758be90aa2851a2631de8ed3aff5e0cc332"
+    },
+    {
+      "path": "test/product/wp11/renewal-operation-verifier.ts",
+      "sha": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e"
+    }
+  ],
+  "target_advance": {
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/HANDOFF.md",
+        "blob": "ab93cb029d7fea936d7df7c7c2a89284f19a2a08"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/authority-reconciliation-final.json",
+        "blob": "6899c898bab87c0f4837945b04c809ea171b9dca"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/consumer-acks-final.json",
+        "blob": "2ba1b8b7b813630e9a39b81b037043506112e394"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/finding-routing-final.json",
+        "blob": "109d68cd9e692a4c73505a4e312f901fc78e3c8a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/pending-owners-final.json",
+        "blob": "66c0443af3c39af9a4ef419002e3cd7f0b824478"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-intake.json",
+        "blob": "5269406f2596413023a88ddad379efa7cec7d7eb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-semantic-review.json",
+        "blob": "c0e1c3baff457e94f18e7d7a7d8c2179e541209d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-census-final.json",
+        "blob": "0f51b1c0c8c78fbcdd6a3078da6f025f58bd98f5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/ACK-REQUEST.json",
+        "blob": "877e226c9f2da5b3b22de7e6d0dcba3224826184"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/AUTHORITY.json",
+        "blob": "7d6dde501daae83b622d440daed877c98754fe4e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/CONSUMER-RELEASE.json",
+        "blob": "427cb8a0e258017efae99efe4ebeaf938f981872"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/CRITERIA.json",
+        "blob": "ef879397c9add43014f0487ba257855c0468c285"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/DELIVERY.json",
+        "blob": "a345b2e7b0ae234b10a2eeaa7972092a4595e765"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/FINDINGS.json",
+        "blob": "ace0d014ccd03517e619c915c1a7813a46476958"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/HANDOFF.md",
+        "blob": "b9f8f74f56b131a527b8115d1bca075485c5190c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/INPUT-CLOSURE.json",
+        "blob": "4a475e52fe7c1ca790161aeaac6540432e5a843d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/PRECONDITIONS.json",
+        "blob": "1f861a3b6ca48124847548a0310ff6d23d42e643"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/READINGS.json",
+        "blob": "6470c76073d5f1381372e6f2d5811d6de8a1d920"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/RUNS.json",
+        "blob": "843e1b56bad5a15426421c4489dfb8ad4bf5ab07"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/client-and-collection.log",
+        "blob": "88ddc0fae6c8c7cf77e28bae0eb224a6fd75c478"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/nominal-03.log",
+        "blob": "7c6801eed5eb0a3bcee125133734e87ff34319ad"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/source-guards.log",
+        "blob": "03784d07d1cad170a7a49529fc6febd5aca9d501"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/typecheck-diagnostics.json",
+        "blob": "3e2fc9688652f7128eee0605a6f70fa5a361dade"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/product-postimages/modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts.txt",
+        "blob": "144aa0f9137403735ffdfd85c9b5ea7963613cb2"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/product-postimages/modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts.txt",
+        "blob": "e23eeddb79dbcd0fa2b80dc6fffbfa3ffee6b6ca"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/product-postimages/modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts.txt",
+        "blob": "cf67dc28e24e0dcca00de604739a1eaddf2db3ed"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/product-postimages/modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts.txt",
+        "blob": "540d5dbfee126a0e2f03f83bbed14ef5107eb8ee"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/product-postimages/packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts.txt",
+        "blob": "604bd5d8bd9cd66370d3f15e6477fe4186951e49"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/product-postimages/packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts.txt",
+        "blob": "c2553d992f3b5ca9d222509c8ae2d635013f4d6a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/product-postimages/packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts.txt",
+        "blob": "a15b1f6e52e4a5418a13bb850255711b1ca70186"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/product-postimages/packages/app-shell/e2e/sucafina/reports-support/production-installation.ts.txt",
+        "blob": "1465b8a2f2c512705f965ec493cd4c08a80d23f0"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/product-postimages/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts.txt",
+        "blob": "4af1d169e39f945de01314fef73e3689ff297545"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/product-postimages/packages/app-shell/e2e/sucafina/reports.spec.ts.txt",
+        "blob": "c332c865c9241df073553b1ddc8dfcb6af65399a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/requests/client-and-bundles.json",
+        "blob": "3fab0314e8a32dc29547ec8c23cd8c02d8f07850"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/requests/collection-and-client.json",
+        "blob": "9492fe531fc12b9881c69928d7ed838d70345555"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/requests/reports-nominal.json",
+        "blob": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/installation-router-wildcard/README.md",
+        "blob": "170bd131e1460b900a6e131fa5436b88d9ac00bf"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/installation-router-wildcard/evidence/effect-wildcard-expansion.txt",
+        "blob": "cd9f95445c7605c34e5b7c27510e453ed8c994fa"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/installation-router-wildcard/evidence/observed-startup-failure.txt",
+        "blob": "a2c5e4ec54430159d65ca5d8e18e98dd8eac00dc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/installation-router-wildcard/installation-router-wildcard.patch",
+        "blob": "fe26bc053ec5dbc1b759ca56472f0e91ba3278a7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/installation-router-wildcard/manifest.json",
+        "blob": "ce7e55eff6bb5c428c4548474bb2ef0cf908e97c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/installation-router-wildcard/postimage/apps/cli/src/sucafina-product/installation.ts.txt",
+        "blob": "edc4d574854a39583fb6847e4e8bb135ede93cc1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/installation-router-wildcard/preimage/apps/cli/src/sucafina-product/installation.ts.txt",
+        "blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/reports-e2e-check/README.md",
+        "blob": "3a4e3c7c6046de8b88c8044fed55956b08e4cb70"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/reports-e2e-check/manifest.json",
+        "blob": "3da30e304fdbd2a24e0ed4013f9c82d49bddbe5c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/reports-e2e-check/postimage/.github/workflows/astra-wp07-check.yml.txt",
+        "blob": "99bae26c6fe2b5d6e63199bd13baf9c351120030"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/reports-e2e-check/preimage/.github/workflows/astra-wp07-check.yml.txt",
+        "blob": "28c453f4b7735f944e1237715e399e955d86546c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/reports-e2e-check/reports-e2e-check.patch",
+        "blob": "9ade2cb58f4b99c0beb6c5e8ce26db0e74dbf048"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/review-discussion-binding/README.md",
+        "blob": "7d72c14939642814fad81b50c1c13ed1002ac079"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/review-discussion-binding/independent-static-review.json",
+        "blob": "2d16c25857871c1208ef56162a9d35be5586b2ca"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/review-discussion-binding/manifest.json",
+        "blob": "953a2f3b5813c41dc5e5967896547be04fd05924"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/review-discussion-binding/postimage/apps/cli/src/sucafina-product/extended-browser.ts.txt",
+        "blob": "fcf5a23b44eb4bcbea135858bfa6326eb9e6b10c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/review-discussion-binding/postimage/modules/sucafina/Sucafinav1/product/collaboration/http.ts.txt",
+        "blob": "956ff69dbe8941ec50b2b29c9b923327379c269d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/review-discussion-binding/postimage/modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts.txt",
+        "blob": "7c6d585a6245ad95b0948b8ca3d6b0c8f45f810f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/review-discussion-binding/postimage/modules/sucafina/Sucafinav1/product/reviews/http.ts.txt",
+        "blob": "42ca69647984e4bc1d4afc22f3fa11deeeeea6a5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/review-discussion-binding/preimage/apps/cli/src/sucafina-product/extended-browser.ts.txt",
+        "blob": "83ecd80669c759dc65cc621543af2b5ebd9f9ac0"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/review-discussion-binding/preimage/modules/sucafina/Sucafinav1/product/collaboration/http.ts.txt",
+        "blob": "91091bf444bc23221d1f427138ebb9e5ca4c51bb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/review-discussion-binding/preimage/modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts.txt",
+        "blob": "4bf7f79347f94255d3805fe6c1114893fedfbaa9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/review-discussion-binding/preimage/modules/sucafina/Sucafinav1/product/reviews/http.ts.txt",
+        "blob": "ce0e5655f19d7d60246024af013c811bf921b042"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/shared-patches/review-discussion-binding/review-discussion-binding.patch",
+        "blob": "fbe10dad5d6aff68222e8c92a5953fb37f9854e7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-results-final.json",
+        "blob": "f15ccfee2572a806b6f0f526b2639585fffd4c6a"
+      }
+    ],
+    "only_inert_receipts": true
+  },
+  "authority42": {
+    "state": "TERMINAL_BOUNDED_CHECKPOINT_TO_S0",
+    "continuation_required": true,
+    "consumer42_ack": "NOT_RECEIVED",
+    "no_replacement_assigned": true
+  },
+  "control_pin": "18f8d33a0a288155e605fa4246ad8f5f6b4039fc",
+  "mission43_blob": "d56819d53cc3a3533e1916700e81a593ba535fce",
+  "common_blob": "ad53f26697738fc410648b198a79b6bfe6e7bac5",
+  "currentchoice_control_blob": "d0a3527574cfd1b8e5ea1aba889a09eb0b4228cc"
+}

@@ -1,0 +1,72 @@
+{
+  "schema": "sf2h-owner-patch-v1",
+  "mission": "43",
+  "issue": "WP13-P02-HISTORY-FINAL-CAS",
+  "status": "HELD_OUTSIDE_MISSION_PATHS",
+  "owner": "Portfólio proof.ts owner / sessão42 integrator; ownership must be confirmed by authoritative handoff",
+  "candidateCommit": "0528307ee1f95dbec44f07d3dd5b2e3d1b156bc5",
+  "productionPath": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+  "preimageBlob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+  "postimageBlob": "d99af3b43388b510e510908fff2371a34b57eee1",
+  "companionBoundaryPath": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+  "companionBoundaryBlob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+  "localStoreBlob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+  "regressionPath": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+  "regressionBlob": "8ae8e056f426e128ecec38a26d646896b7c28d81",
+  "regressionName": "historical candidate refuses a real case CAS in its last callback while the authority remains live",
+  "observedActions": {
+    "runId": 43649352866,
+    "worktreeSha": "0528307ee1f95dbec44f07d3dd5b2e3d1b156bc5",
+    "sourceShaPrefix": "71ba4615",
+    "result": "39 pass / 1 fail; sole failure expected non-ok but received ok at line 416",
+    "evidenceOrigin": "Parent/root report; this child performed no workflow dispatch or independent run-log retrieval"
+  },
+  "diagnosis": {
+    "revalidationSequence": [
+      "initial authority admission",
+      "end of provenance inspect 1",
+      "end of provenance inspect 2",
+      "final callback after comparing the two observations"
+    ],
+    "cause": "The final callback runs after every individual state.read transaction has closed. Its real C08 CAS is therefore a top-level authorized write, not a nested read-side write. No admitted LocalStore read root encloses it, so there is no poison/rollback boundary and no final storage observation. The callback returns true and the raw reader returns its earlier value.",
+    "liveProductionCallsite": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+    "liveProductionCallsiteBlob": "39dc82d505931daf927b35230341ac99fdc7e09d",
+    "sharedPersistenceEvidence": "product/integration/product-authority.ts blob 2c82d60d220d8d5365da8322bad648a64bbb62d2 passes identical input.persistence to C08 state at lines 125–126 and host at 248–249.",
+    "liveProductionEvidence": "Creates raw reader with authority.host at lines 29–32; invokes it via historical provenance at lines 75–78 and directly at line 86. Function readPortfolio lines 33–105 does not open readPortfolioSnapshot.",
+    "statePortCapability": "SfProductStatePort exposes read and transaction only; neither is an admitted long-lived read scope. Reuse existing readPortfolioSnapshot with host.persistence rather than inventing state or norm contract APIs."
+  },
+  "change": {
+    "files": [
+      "proof.ts"
+    ],
+    "additions": [
+      "Import existing readPortfolioSnapshot helper",
+      "Allow optional host.persistence without changing required requestFor/revalidate fields",
+      "Keep the complete existing reader body, including all four internal authority callbacks, as private read",
+      "Wrap public reader in the existing canonical snapshot helper when persistence exists"
+    ],
+    "fallback": "Hosts without persistence retain their original independent-observation behavior; no snapshot guarantee is claimed for those adapters.",
+    "refusedReason": "portfolio-history-candidate-unavailable",
+    "untouched": [
+      "history-provenance.test.ts including every new CAS assertion and the 120000 budget",
+      "C08 producer and LocalStore",
+      "all existing selector, evidence, historical witness and digest checks",
+      "financial calculations",
+      "all mission43 retained oracles"
+    ]
+  },
+  "expectedMechanism": [
+    "Real host opens the canonical dashboard read root before the raw reader starts.",
+    "At the fourth raw-reader revalidation, attempted C08 case write executes its callback exactly once against a nested clone.",
+    "Nested transaction commit=true poisons LocalStore root and throws; the test deliberately catches that refusal.",
+    "Raw reader may return an internal ok, but readPortfolioSnapshot releases no value because LocalStore refuses the poisoned root.",
+    "Durable case/result/storageVersion are unchanged; fresh call has a fresh root and succeeds."
+  ],
+  "ownerValidation": [
+    "Apply only after confirming candidate proof.ts blob still equals e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+    "Preserve existing history-provenance CAS test exactly; rerun the short authorized discriminant through deduplicated GitHub Actions",
+    "Require attempts=1, attemptedCommits=1, writeRejected=true, current authority still true, unchanged case/result/storageVersion and successful fresh reread",
+    "Do not wrap the test alone, lower its expected result, remove assertions, or increase its timeout"
+  ],
+  "verification": "Static reasoning only; no local tests, no product code execution, no CI dispatch by this child. Patch is proposed to its owner, not applied to production."
+}

@@ -1,0 +1,104 @@
+{
+  "schema": "sf2h-mission43-findings-final-v1",
+  "status": "BLOCKED",
+  "closure_status": "HELD",
+  "target": "217b4295e2aeb00bc2f4accb9fb893451b9795e9",
+  "input_closure": "input-closure.json",
+  "findings": [
+    {
+      "id": "WP13-P02-C12-RECEIPT-SCOPE",
+      "status": "PASS",
+      "scope": "Canonical producer with controlled domain/admission fixtures only",
+      "evidence": [
+        "runs/R1.json",
+        "runs/R2.json",
+        "runs/R4.json"
+      ],
+      "closed_component_finding": true,
+      "whole_P02_closed": false,
+      "next": "Preserve final typed producer fixtures and exact canonical witness assertions during selective intake."
+    },
+    {
+      "id": "WP13-P02-HISTORY-FINAL-CAS",
+      "status": "FAIL",
+      "closure_status": "HELD_OUTSIDE_MISSION_PATHS",
+      "evidence": "runs/R2.json",
+      "owner": "Authorized Portfolio proof.ts owner via session42/S0 reconciliation",
+      "patch": "external/proof-owner/proof.NOT_APPLIED.patch.txt",
+      "preimage_blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+      "postimage_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+      "applied": false,
+      "patch_tested": false,
+      "next": "Apply the complete owner patch under proper authority and qualify unchanged final-CAS regression; no fixture-only wrapper or assertion weakening."
+    },
+    {
+      "id": "WP13-P03-SEMANTIC-SOURCE-TIMEOUT",
+      "status": "FAIL",
+      "closure_status": "HELD_PENDING_MATERIAL_DEPENDENCY_INTAKE",
+      "evidence": "runs/R3.json",
+      "owner": "Portfolio consumer plus Finance34 persistence owner; integration42 continuation",
+      "patch": "external/p03/finance34-owner/composed-with-tests.NOT_APPLIED.patch.txt",
+      "diagnosis": "external/p03/DIAGNOSIS-P03.md",
+      "owner_terminal": "3117cae7e113b7aa0a8286963dcd7bc918994f3f",
+      "preimage_blob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "proposed_postimage_blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "applied": false,
+      "sufficiency_for_WP13": "NOT_DEMONSTRATED",
+      "next": "Integrate and qualify real persistence delta under authorized owner; only then consider unchanged180000ms semantic selection on newW. Do not rerun unchanged or transfer source Finance PASS."
+    },
+    {
+      "id": "WP13-LEGACY-DOMAIN-POSTRESERVATION-REDISPATCH",
+      "status": "BLOCKED",
+      "execution_status": "NOT_RUN",
+      "closure_status": "HELD_STATIC_INCOMPATIBILITY",
+      "evidence": "external/legacy-domain/compatibility.json",
+      "owner": "WP13 test owner with canonical C12 contract owner and42",
+      "oracle_preserved": true,
+      "next": "Resolve original post-reservation no-receipt redispatch oracle explicitly; the independent Request-stability patch is insufficient. No controlled pre-dispatch substitution or disabled assertion."
+    },
+    {
+      "id": "WP13-SOURCE-TYPECHECK",
+      "status": "FAIL",
+      "evidence": [
+        "runs/G1.json",
+        "runs/G2.json"
+      ],
+      "guards": "PASS",
+      "diagnostics_before": 149,
+      "diagnostics_after": 147,
+      "own_inference_errors_removed": 2,
+      "remaining_wp13_source_dependency_diagnostics": 17,
+      "next": "Keep actual source FAIL; selective current-target composition still requires authorized compiler45/S0 qualification. Do not import old dependencies or edit shared config."
+    },
+    {
+      "id": "WP13-COMPOSED-COMPILER",
+      "status": "NOT_RUN",
+      "owner": "Compiler45 / S0 authorized lane",
+      "reason": "Specific source-check workflow absent in composed target; no shared workflow edit authorized.",
+      "next": "Qualify exact composed W via supported authorized lane; no inference from source guardsPASS."
+    },
+    {
+      "id": "CURRENT-CHOICE-COHORT",
+      "status": "BLOCKED",
+      "execution_status": "NOT_RUN",
+      "closure_status": "SEPARATE_HELD",
+      "owner": "Prepared mission46 Finance/WP11 / astra-finance PR35 with WP10 composition",
+      "authority_pin": "18f8d33a0a288155e605fa4246ad8f5f6b4039fc",
+      "authority_blob": "d0a3527574cfd1b8e5ea1aba889a09eb0b4228cc",
+      "observed_control_state": "PREPARED_NOT_STARTED",
+      "closed_by_P01_P04": false,
+      "cohort_imported": false,
+      "next": "Owner46 must reconcile live authority and deliver complete preview/promotion/Planner/provider cohort with real ui.finish, substituted lease/Request and final joint fence; S0/42 intake remains separate."
+    }
+  ],
+  "unclosed_global": [
+    "Installed native/UI/MCP and process-restart acceptance",
+    "AM01–AM06",
+    "C-G7 and D-G8 final independent reviews/guards",
+    "Missing Procurement costs/source authority/human approval remain with owning producers",
+    "Exact whole-bundle compiler and final S0 tests"
+  ],
+  "consumer_ack": "NOT_RECEIVED",
+  "source_green_is_not_target_green": true
+}
+

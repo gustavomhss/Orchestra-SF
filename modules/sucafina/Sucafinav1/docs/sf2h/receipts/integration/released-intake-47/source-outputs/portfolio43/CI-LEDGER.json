@@ -1,0 +1,157 @@
+{
+  "schema": "sf2h-mission43-ci-ledger-v1",
+  "product_runs": [
+    {
+      "id": "R1",
+      "status": "PASS",
+      "W": "96b912ac62b1c9b1825c7c7645c9fec53f2b89dd",
+      "S": "c864c42f2886a5e4ec4baef66b605c2e74810d15",
+      "request_blob": "9f94aede169c4146093255d8af7e2f2fa4f93584",
+      "run_id": 43649095824,
+      "job_id": 132613334635,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649095824",
+      "observed": {
+        "pass": 1,
+        "fail": 0,
+        "expect_calls": 31,
+        "duration_seconds": 0.299,
+        "meaning": "Short canonical cases+receipts+domainSurface discriminator PASS."
+      },
+      "log": {
+        "path": "logs/R1.log.txt",
+        "git_blob": "a1764061f0d99edfb9472df4a1f2930a5aef581b",
+        "sha256": "f58a1edd31359b32b8cd3d28b6fb0c7ddd0f9c82ac7b8032638e5deeaa44f933",
+        "bytes": 68902
+      }
+    },
+    {
+      "id": "R2",
+      "status": "FAIL",
+      "W": "0528307ee1f95dbec44f07d3dd5b2e3d1b156bc5",
+      "S": "71ba4615848276bb9f49b4c561514cdddc94186b",
+      "request_blob": "3cb0ac4d5fd3598d54b6f20b31810cb276cd3b93",
+      "run_id": 43649352866,
+      "job_id": 132614130440,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649352866",
+      "observed": {
+        "pass": 39,
+        "fail": 1,
+        "expect_calls": 260,
+        "duration_seconds": 7.01,
+        "by_file": {
+          "handoff.test.ts": "6 PASS",
+          "receipt-scope-boundary.test.ts": "3 PASS",
+          "campaign.test.ts": "9 PASS",
+          "handoff-c08-integration.test.ts": "1 PASS",
+          "history-provenance.test.ts": "20 PASS / 1 FAIL"
+        },
+        "failure": "Final-callback real case CAS returned ok; history-provenance.test.ts line416 expected not ok. External proof.ts owner patch supplied; assertion retained."
+      },
+      "log": {
+        "path": "logs/R2.log.txt",
+        "git_blob": "847848467502815649beedbed87140b6995e293b",
+        "sha256": "270949cd90cc1c96388dc89f36bcbaf856389e2fdd9070829e19c209a2277440",
+        "bytes": 77756
+      }
+    },
+    {
+      "id": "R3",
+      "status": "FAIL",
+      "W": "524fa67c99dda72807a98f5e23ce3354c8e40197",
+      "S": "6ff519e41a661dcfb87399fa4aa83ea2c1d2213f",
+      "request_blob": "d0ce0de717e09954f2ec6770a380ccc63bf60969",
+      "run_id": 43649882839,
+      "job_id": 132615750915,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649882839",
+      "observed": {
+        "pass": 27,
+        "fail": 1,
+        "errors": 1,
+        "expect_calls": 154,
+        "duration_seconds": 180.52,
+        "by_file": {
+          "portfolio.test.ts": "16 PASS",
+          "reconciliation.test.ts": "11 PASS",
+          "semantic-union-source-scenario.test.ts": "FAIL timeout180000ms"
+        },
+        "failure": "Semantic scenario180009.58ms. Late comparison-persisted-but-binding-unavailable appears after deadline; it is not an independent demonstrated binding defect. No unchanged long rerun."
+      },
+      "log": {
+        "path": "logs/R3.log.txt",
+        "git_blob": "406df6f9e65a50c4387efd2732873bae749370ef",
+        "sha256": "dff9b95d5fc6d6623888d6689a28da29cce6ce550b8c3922615615bbc12ed5a3",
+        "bytes": 77658
+      }
+    },
+    {
+      "id": "R4",
+      "status": "PASS",
+      "W": "e539fdbf41101b5fa6703bd373fe48c21bcf8604",
+      "S": "5f4755d3a666f49f9d83331339581b2428686fb5",
+      "request_blob": "cae9c10f297c629f89e9a2a527858d52f14f9755",
+      "run_id": 43650463661,
+      "job_id": 132617547329,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650463661",
+      "observed": {
+        "pass": 4,
+        "fail": 0,
+        "expect_calls": 84,
+        "duration_seconds": 0.573,
+        "by_file": {
+          "receipt-scope-boundary.test.ts": "3 PASS",
+          "handoff-integration.test.ts": "1 PASS"
+        },
+        "meaning": "Final typed canonical receipt fixtures: rollback/reopen, lost-response recovery, single rejected CAS receipt, pre-dispatch unavailability."
+      },
+      "log": {
+        "path": "logs/R4.log.txt",
+        "git_blob": "c67cd93dcf15487f2562139c562e51e4b5f1fc58",
+        "sha256": "9e93b60b856c8bab9634944f86e382c8e6e9485cb382c340c3b99e05d600ca3e",
+        "bytes": 71517
+      }
+    }
+  ],
+  "source_checks": [
+    {
+      "id": "G1",
+      "status": "FAIL",
+      "source_product_commit": "df851effcb0cfd09660782d21d61a3dfa30cc410",
+      "S": "f70781a852d4be8dac3a3b9ffa86cab8e09f27fe",
+      "run_id": 43649824898,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649824898",
+      "guards": "PASS",
+      "typecheck": "FAIL",
+      "diagnostic_count": 149,
+      "log": {
+        "path": "logs/G1.log.txt",
+        "git_blob": "f36de2b7fe418a5104bd955c804d5f9066bfd67b",
+        "sha256": "ddd78a5aeefc58b8853e4e49239d6d5714fd8efa35954943646109ac4dd5b211",
+        "bytes": 155855
+      }
+    },
+    {
+      "id": "G2",
+      "status": "FAIL",
+      "source_product_commit": "63f952c06baf3be82464e2b320fbdf4c8c3c9ce8",
+      "S": "eb0e660b65ea3b1135067c19d0aa9cdd54c85b52",
+      "run_id": 43650194283,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650194283",
+      "guards": "PASS",
+      "typecheck": "FAIL",
+      "diagnostic_count": 147,
+      "log": {
+        "path": "logs/G2.log.txt",
+        "git_blob": "014bbf53f0a33e18a19e48d407ba04e1f3842914",
+        "sha256": "fd9511997a871de615fe3997647282848ad12a4759c9066d763953d10793dff8",
+        "bytes": 154717
+      }
+    }
+  ],
+  "composed_typecheck": {
+    "status": "NOT_RUN",
+    "reason": "The authorized astra-wp13-check workflow exists on the source lane but not on the composed target. Mission43 cannot edit shared workflows/config or silently import old branch dependencies."
+  },
+  "no_repeat_policy": "P03 semantic timeout is not rerun unchanged. FIN-IND-005 long journey was not dispatched by mission43.",
+  "all_runs_terminal": true,
+  "no_runtime_pass_transferred_to_later_documentation_commit": true
+}
