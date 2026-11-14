@@ -1,0 +1,61 @@
+{
+  "id": "OPS-CONSUMER-02",
+  "status": "PROPOSED_NOT_APPLIED",
+  "owner": "astra-compose / WP14 consumer owner",
+  "target": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+  "baseCommit": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+  "baseTree": "e7c36171c132009e34d4f870e5d300bab4a1c82a",
+  "beforeBlob": "fbe627ffde443ff7e2d3b1204bbcf67523404f41",
+  "afterBlob": "d7d2a69837560f42438d470b83724c1a61939a73",
+  "composeChecked": {
+    "commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+    "blob": "3f2b5f6fac83233cd97b200450a402897e110ece",
+    "hasFailingBusinessConsumer": false,
+    "hasConfirmedDocumentCase": false,
+    "fixPresent": false
+  },
+  "newWeakSetDeclarations": 1,
+  "occurrences": 3,
+  "sourceUnmodified": true,
+  "failedRun": 43578238861,
+  "failedJob": 132397139678,
+  "requiredEvidence": [
+    "Hosted Sucafina bun typecheck on the exact owner-consumed candidate; preserve original failed attempt",
+    "Focused existing Sucafinav1/test/product/wp14/source-access-atlas.test.ts with both tests and positive Omni control verdict",
+    "Run guards for the changed candidate per AGENTS; inherit unrelated CLI typecheck only with unchanged dependency closure"
+  ],
+  "intelligenceChecked": {
+    "product": "2fb7e9c792327725384d99d656cc44b232ddc485",
+    "snapshot": "290ca0553d97e9e25991611f5dc002d2900e1dcb",
+    "snapshotTree": "a9e92e3bc2ea357b15af597fc13192f814253bfb",
+    "run": 43578709182,
+    "job": 132398584340,
+    "blob": "d31c8dc6867bcbb7f389bde79df644a5133de51a",
+    "hasFailingBusinessConsumer": false,
+    "hasConfirmedDocumentCase": false,
+    "fixPresent": false,
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+        "Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+        "Sucafinav1/test/product/wp14/materiality.test.ts",
+        "Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+        "Sucafinav1/test/product/wp14/planner-materiality.test.ts",
+        "Sucafinav1/test/product/wp14/recall.test.ts",
+        "Sucafinav1/test/product/wp14/signal-registry.test.ts",
+        "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "Sucafinav1/test/product/wp14/source-access-dashboard-record.test.ts",
+        "Sucafinav1/test/product/wp14/source-access-document.test.ts",
+        "Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+        "Sucafinav1/test/product/wp14/source-access.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "consequence": "Cannot replace W file with this owner blob: it omits the WP06 Documents to BusinessContext to Atlas consumer scenario."
+  }
+}
