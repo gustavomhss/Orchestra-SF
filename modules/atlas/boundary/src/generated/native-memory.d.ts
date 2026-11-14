@@ -379,13 +379,36 @@ export interface MemoryRejected {
 	/** `scanner-blocked` / `scanner-unavailable` only — the block is attributable to a NAMED stage. */
 	readonly scanner?: string;
 }
-interface ScannerBinarySpec {
+/** The three-value scan outcome. `scan()` on the `NamedScanner` seam is boolean (block/pass) by contract
+ *  (`writeWithScanner`) -- this richer value is what this module computes BEFORE it is collapsed to that
+ *  boolean, and it is exported so a caller that wants to log/observe WHY a write blocked can. */
+export type ScanVerdict = "clean" | "hit" | "could-not-run";
+/** One known scanner binary invocation contract. `cleanExitCodes` / `hitExitCodes` are the DOCUMENTED
+ *  exit codes for that binary "no secrets" / "secrets found" outcomes; ANY other exit (a crash, an
+ *  unrecognised flag, a version that changed its codes) is `could-not-run` -- never silently read as clean.
+ *  Record content is piped over STDIN (`input`), never interpolated into `args` or a shell string. */
+export interface ScannerBinarySpec {
 	readonly name: "gitleaks" | "trufflehog";
 	readonly command: string;
 	readonly args: readonly string[];
 	readonly cleanExitCodes: readonly number[];
 	readonly hitExitCodes: readonly number[];
 }
+export declare const KNOWN_SCANNERS: readonly ScannerBinarySpec[];
+/** The name a `NamedScanner` carries when NO real binary was found on PATH -- attributable, never blank,
+ *  never a name that could be confused with a real scanner. */
+export declare const NO_SCANNER_NAME = "no-scanner-on-path";
+/** Find the first `KNOWN_SCANNERS` entry whose binary is on PATH, in declared order. `null` when neither
+ *  is available -- the caller (`makeScannerAdapter`) is responsible for the fail-closed no-binary case. */
+export declare function detectAvailableScanner(scanners?: readonly ScannerBinarySpec[]): ScannerBinarySpec | null;
+/**
+ * Invoke one scanner binary against a record content and return its verdict as one of THREE values.
+ * The subprocess is invoked with `input` on stdin -- record content is NEVER interpolated into `args` or a
+ * shell string (no shell is used at all; `execFileSync` with an argv array). Every error path -- a
+ * non-zero/non-documented exit, a timeout, a spawn failure (binary vanished between detection and call),
+ * unparseable/unexpected exit codes -- resolves to `could-not-run`, never silently to `clean`.
+ */
+export declare function runScanner(spec: ScannerBinarySpec, record: MemoryRecord, timeoutMs?: number): ScanVerdict;
 /** F3 clause 1. Supplied by the harness, frozen on entry; the model never supplies any field of it. */
 export interface AtlasBinding {
 	readonly storage: {

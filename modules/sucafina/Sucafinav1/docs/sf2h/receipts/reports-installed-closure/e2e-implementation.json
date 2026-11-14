@@ -1,0 +1,232 @@
+{
+  "schema": "orchestra-sf.mission25.e2e-implementation.v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp07",
+  "pull_request": 27,
+  "actor": "S3-A",
+  "mission": "reports-installed-closure",
+  "status": "COMMITTED_IMPLEMENTATION_NOMINAL_NOT_RUN",
+  "source": "Static reading of final E2E postimages and canonical producer sources; no execution claim.",
+  "commits": {
+    "predecessor": "dbc5e803050052909316562ad4c1dc579f5f453a",
+    "W1": "567727670b4039c316a12718c84b43b57f4fa19d",
+    "W2": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+    "W2_scope": "Public browser export and two additional entry targets in the existing browser build test; the five E2E implementation files remain unchanged since W1. The shared E2E tsconfig patch remains an inert proposal.",
+    "S": null
+  },
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "preimage_blob": "0d6c965e2afb83b2fe703c080f1f96547b2a582f",
+      "committed_blob": "afc8b97cdc7425fedf1368275a1436f0227f89e8",
+      "sha256": "2ee691a0450172e23e567a1a82052bc2244b993b114d26f3dcb42606bfd753db",
+      "change": "Installed UI journeys; exact reuse after reload; private recording policy."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/confirmation.ts",
+      "preimage_blob": "dbdd5c6cf117bd793101dfa6164b026dd10ec9bd",
+      "committed_blob": "9580eaf32f59508ad50d02339b4e8cf396ff405e",
+      "sha256": "8a06064f5a3a027e55b97c869befabec3317f5a5eb0973566394f40ac2f3416d",
+      "change": "Validate actual UI mutation responses; retain authenticated readback, stale-selector, reuse and history assertions."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+      "preimage_blob": "70a721dc5c20182f67ba3cd52a153190f62875e9",
+      "committed_blob": "02b0f6f6957bdc537c75c527aea1fc6cb95ff7a4",
+      "sha256": "618a61fe41f014f5a5b8a0b64db268235bf7326539389416a0ce7b73db4af4fd",
+      "change": "Ask, reply, inspect exact captured projection and pin, confirm, edit and read original through installed Review controls."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+      "preimage_blob": "82e4723fc40359e4da16a64973db8d9c516d3ebd",
+      "committed_blob": "98abf576128aa1c9ea7ae0c99230cc1dd16d4a0d",
+      "sha256": "6e5e6db1546098d3291b336a1cc9d7107dbcdc640569b0b43c1c66f03a4b738b",
+      "change": "Edit January through preview and explicit apply; scope meeting navigation to the actual preserved meeting."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+      "preimage_blob": "e05b2e2a8e1b09114c4d1691d946a0cd59ad87f6",
+      "committed_blob": "21d21cac3b28211e3360ccbc8a3a4abe58653232",
+      "sha256": "9ff913f66c39963de81d764e11a0344355a2585760e2ff1bd180a0ae199ed67e",
+      "change": "Exercise actual Sign out; require complete removal of cached meeting/discussion/navigation and durable denial of old credentials."
+    }
+  ],
+  "nominal_campaign": {
+    "suite": "CI-UI-REPORTS · real preserved dossier",
+    "file": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+    "config": "packages/app-shell/e2e/playwright.production.config.ts",
+    "workers": 1,
+    "retries": 0,
+    "timeout_ms": 180000,
+    "status": "NOT_RUN",
+    "run_id": null,
+    "job_id": null,
+    "reason": "Session23 must consume and compose the shared patch with the owned product changes before the four nominal installed journeys execute.",
+    "tests": [
+      {
+        "id": "RPT-01",
+        "title": "RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source",
+        "helpers": [
+          "review-flow.ts#prepareReview",
+          "review-flow.ts#changeForecast",
+          "review-flow.ts#exportReview",
+          "review-flow.ts#openAndReopenMeeting",
+          "review-flow.ts#expectCapturedBudget",
+          "review-flow.ts#followBudgetSource",
+          "ooxml.ts#inspectReport"
+        ],
+        "critical_assertions": [
+          "Real Workbench and Reports form select Budget Overview, Portfolio Dashboard and Hot Topics & Actions; actual review-agenda returns Budget, Projects and empty Hot Topics.",
+          "Exact 25 project identities and names, annual/monthly periods, forecast 1320 and January 110; explicit UI reordering preserves Projects, Budget, Hot Topics and exact selected IDs/counts/content.",
+          "Real OPEX edit previews January 110 to 190; source stays unchanged until Confirm and apply, then source becomes annual 1400 while the preserved review remains exactly equal.",
+          "DOCX and PPTX are generated from the preserved review and downloaded through same-origin private artifact URLs; distinct artifacts and hashes.",
+          "OOXML extraction checks every captured value/period/source tuple in order, 25 unique project records, all long-note content including tail, empty topic, captured 1320 and exclusion of current 1400.",
+          "Meeting opens and reloads its durable URL, navigates preserved topics, and retains 1320/110; following its captured source reaches current Budget Overview at 1400 with the same reporting year."
+        ],
+        "status": "NOT_RUN",
+        "composition": null,
+        "run_id": null,
+        "job_id": null,
+        "evidence": []
+      },
+      {
+        "id": "RPT-02",
+        "title": "RPT-02 confirms and reuses the exact human answer under C05, then rejects its edited version",
+        "helpers": [
+          "human-answer-flow.ts#confirmHumanAnswer",
+          "human-answer-flow.ts#editHumanAnswer",
+          "human-answer-flow.ts#expectConfirmedAnswerVisible",
+          "confirmation.ts#expectCreatedReviewQuestion",
+          "confirmation.ts#expectRepliedReviewQuestion",
+          "confirmation.ts#expectPreparedReviewAnswer",
+          "confirmation.ts#expectConfirmedReviewAnswer",
+          "confirmation.ts#expectReusedReviewAnswer",
+          "confirmation.ts#expectEditedReviewAnswer"
+        ],
+        "critical_assertions": [
+          "Ask and reply through actual Review controls with authoritative recipient, captured source basis and exact reviewRef/reviewVersion/reviewDigest/sectionId pin; validate real request, idempotency header/body and CAS version.",
+          "New reply remains unconfirmed (400 answer-unconfirmed); old messages remain intact and the appended reply has its own incarnation.",
+          "Review this answer uses the exact message id/incarnation/version; inspect full server projection and pin in visible details, equal to the preserved 1320 capture after the source changed to 1400.",
+          "Confirm this answer submits the inspected observation, source version and fingerprint without a new preparation; exact receipt and readback preserve answer text, author and pin.",
+          "Reload reopens the same review/thread and automatically reuses the exact confirmed answer; storage version remains unchanged, so reuse creates no confirmation write.",
+          "Save answer edit advances only message version within the same incarnation; current body is visible, old selector returns 409 answer-selection-changed and old reuse returns 503 answer-reuse-unavailable.",
+          "Read original answer uses the exact historical id/incarnation/version under current authorization; original body, basis and pin remain intact while the edited body remains current; preserved review remains equal with 1320."
+        ],
+        "status": "NOT_RUN",
+        "composition": null,
+        "run_id": null,
+        "job_id": null,
+        "evidence": []
+      },
+      {
+        "id": "RPT-03",
+        "title": "RPT-03 removes one authorized record without editing its source and creates only an explicit new revision",
+        "helpers": [
+          "review-flow.ts#prepareReview",
+          "review-flow.ts#removeOneProject",
+          "review-flow.ts#readSourceData",
+          "review-flow.ts#changeForecast",
+          "review-flow.ts#preserveNewRevision"
+        ],
+        "critical_assertions": [
+          "Remove exactly one opaque record reference issued by the actual authorized selector; do not infer a record from page-level evidence or fabricate reference encoding.",
+          "Selection changes from 25 unique project references to the exact remaining 24; one project identity disappears and every retained value/period tuple remains identical.",
+          "Business source projects, owners, entries and hot topics remain exactly equal before and after selection removal.",
+          "Changing the real January source to 190 does not mutate the existing preserved review at annual 1320.",
+          "Prepare current data as a new revision and Preserve this review are separate explicit actions; new selection has 24 records and annual 1400.",
+          "Preserve request names previousReviewRef and the exact new selection; successor has a different id, links its predecessor, preserves order/counts, reads at 1400, and predecessor remains exactly unchanged at 1320."
+        ],
+        "status": "NOT_RUN",
+        "composition": null,
+        "run_id": null,
+        "job_id": null,
+        "evidence": []
+      },
+      {
+        "id": "RPT-04",
+        "title": "RPT-04 revokes the real session and clears cached meeting data, export and answer access",
+        "helpers": [
+          "revocation.ts#revokeReportsSession",
+          "revocation.ts#denied",
+          "production-installation.ts#signIn",
+          "human-answer-flow.ts#confirmHumanAnswer",
+          "review-flow.ts#exportReview"
+        ],
+        "critical_assertions": [
+          "Create a real review, private DOCX and C05-confirmed answer; retain the authentic old credential only in memory in a separate browser context.",
+          "Actual Sign out returns 204/no-store and navigates the original page to the real login route, removing meeting and discussion.",
+          "Retained page attempts guarded navigation after logout and must clear the entire meeting/discussion/confirmed-answer/navigation DOM and cached private content.",
+          "Old credential receives exact 303 login redirects for review/artifact GET and 403 for answer read and export POST; all responses are no-store and leak none of the asserted private markers.",
+          "Fresh real single-use enrollment admits a new session for the same local operator; saved review and answer are readable and the same private DOCX downloads with the exact prior SHA-256.",
+          "After fresh admission, old credential remains denied for review, artifact and answer; no broadening of grants or credential fabrication."
+        ],
+        "status": "NOT_RUN",
+        "composition": null,
+        "run_id": null,
+        "job_id": null,
+        "evidence": []
+      }
+    ]
+  },
+  "privacy": {
+    "trace": "off",
+    "video": "off",
+    "screenshot": "off",
+    "scope": "reportsTest.use in the Reports suite",
+    "reason": "Real operator credentials may otherwise be retained in Playwright API/network recordings.",
+    "credential_handling": "Actual local enrollment and scoped cookies; old storage state stays in memory. Private runtime files stay outside the Playwright artifact tree and are removed by the owned lifecycle.",
+    "evidence_scope": "Explicit synthetic-business-content receipts and private downloaded reports only; no tokens, cookies, enrollment codes, storageState files, databases or private installation directories."
+  },
+  "implementation_constraints": {
+    "positive_app_or_authorization_mocks": false,
+    "mandatory_ui_actions_replaced_by_API_POST": false,
+    "local_tests_or_servers": false,
+    "sleeps_skips_or_timeout_inflation": false,
+    "assertion_reduction": false,
+    "revocation_assertion_change": "Removal of the entire navigation and private view replaces the prior disabled-control representation; all denied HTTP, content-clearing, fresh-admission and old-credential assertions remain."
+  },
+  "assembly": {
+    "status": "PENDING_SESSION23",
+    "shared_manifest": "shared/manifest.json",
+    "owned_composition_manifest": "owned-assembly/MANIFEST.json",
+    "graph_manifest": "shared-typecheck/MANIFEST.json",
+    "required_controls": [
+      "Review discussion",
+      "Answer confirmation",
+      "Confirmed answer",
+      "Answer history",
+      "Preserved review meeting"
+    ],
+    "title_audit": {
+      "status": "STATIC_CONFIRMED",
+      "composition_read": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "form_topics": [
+        "Budget Overview",
+        "Portfolio Dashboard",
+        "Hot Topics & Actions"
+      ],
+      "canonical_section_titles": [
+        "Budget",
+        "Projects",
+        "Hot Topics"
+      ],
+      "reorder": [
+        "Projects",
+        "Budget",
+        "Hot Topics"
+      ],
+      "explanation": "The shared adapter drops the discovery-only UI title. createReviewAgendaSelection supplies canonical dashboardTopics titles. Existing E2E title assertions are unchanged.",
+      "bootstrap_dependency": "Shared patch postimage assigns id=report:<page> for Reports entries because discover otherwise returns id=dashboard for every topic. The adapter preserves topic, selectionRef, recordRefs and period; review-update preserves each prior section.id. Patch is inert and awaits session23.",
+      "shared_patch_sha256": "42cce7c5b42604636c77584e6e86f5594a2a1fa1b6d265f9fc16c7a028f78f47",
+      "e2e_title_followup_needed": false
+    }
+  },
+  "limits": [
+    "All four nominal journeys are NOT_RUN. Static source inspection is not installed journey evidence; no S, run or job is assigned here.",
+    "The available real local identity selects the same operator as recipient. Distinct-recipient authority is NOT_PROVEN; no alternative principal or grant is fabricated.",
+    "Logout proves the intended durable local session boundary only when executed. Selective Talent revocation remains NOT_PROVEN.",
+    "OOXML assertions are semantic extraction and completeness checks. Visual clipping, rendered layout and native application execution remain NOT_PROVEN.",
+    "Uncovered canonical criteria and runtime proof obligations remain in CRITERIA.json; no criterion is passed by this implementation receipt."
+  ],
+  "readings": "READINGS.json"
+}

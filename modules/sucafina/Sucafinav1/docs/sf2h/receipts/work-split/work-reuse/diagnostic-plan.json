@@ -1,0 +1,73 @@
+{
+  "schema": "sf2h.work-reuse.diagnostic-plan.v1",
+  "status": "PREPARED_NOT_RUN",
+  "branch": "work-reuse",
+  "target": "ui-work",
+  "input": {
+    "sha": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+    "tree": "d0508747f0818b3467f44bac845ca6a878bdb7ea"
+  },
+  "handoff": "09a06b412ca624339b3634cf27d205a930e8f02e",
+  "normative_plan": {
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "full_plan_preserved": true
+  },
+  "prior_runs": [
+    43621603578,
+    43622153636,
+    43622829031
+  ],
+  "collaboration_consulted_first": {
+    "product_w6": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+    "snapshot": "72848c2122b68e15341baa41e5beef4e9237562a",
+    "run": 43623257640,
+    "conclusion": "failure",
+    "pass": 7,
+    "fail": 3,
+    "later_head": "9e1f44af7689946d27d37ed48b9f5e9849417121",
+    "later_delta": "W7 changes two tests and a receipt only; production and shared fixtures identical to W6. No copy of W6/W7 run."
+  },
+  "compose_current_observation": {
+    "head": "ad7fcdef7739e1bc471e42fac082452799de751b",
+    "portfolio_http_blob": "c434de513cb7ceae4acad1fc595e776785ec85af",
+    "attachment_route": "decision-answer-question exists in compose-resume; it is absent from the retained UI-only fixture. Do not propose a second mount or claim installed 404."
+  },
+  "hypothesis": "Repeated authorized thread/source reads on the retained producer may exhaust the unchanged 5000ms UI observation window. HTTP200 in a finally trace does not establish arrival before that window. Separate producer, raw SQLite snapshot copying, fixture response audit, Playwright route.fetch/fulfill and browser status observation.",
+  "discriminant": "One previously failing exact-confirmation journey, with observational inclusive timing and pending spans; original assertions, action sequence, loss injection and deadlines retained. Previously approved UI journeys are reattached, not selected.",
+  "deadlines_ms": {
+    "page": 5000,
+    "ui_request": 10000,
+    "named_test": 60000,
+    "fixture_before_all": 35000,
+    "fixture_after_all": 25000,
+    "static_gates": 120000,
+    "cli_default": 120000
+  },
+  "measurements": {
+    "inclusive_nested_spans_not_additive": true,
+    "raw_store_below_stable_source_persistence": true,
+    "state_transaction_callback_identity_unchanged": true,
+    "host_revalidate_only_dynamically_dispatched_calls": true,
+    "instrumentation_overhead_not_subtracted": true,
+    "latency_claim": "No timing result or p95 claimed before hosted execution."
+  },
+  "write_scope": {
+    "production_changes": 0,
+    "shared_fixture_changes": 0,
+    "own_tests": "modules/sucafina/Sucafinav1/test/product/work-split/work-reuse/",
+    "receipts": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/work-split/work-reuse/"
+  },
+  "attachment_limit": "The diagnostic retains the existing unmounted-404 boundary assertion. It cannot prove a real case attachment, installed host behavior or C03 replay. A real route/case/authority composition belongs to the corresponding owner.",
+  "preflight": {
+    "request": "request-01.json",
+    "canonical_validateRequest_and_locateTestPackage": "PASS using unchanged input validators, actual registry and all 35 actual package manifests; only request validation, no product test executed locally.",
+    "static_ts_syntax": "PASS with Node stripTypeScriptTypes; not a typecheck.",
+    "hosted_checks": [
+      "bun typecheck in modules/sucafina",
+      "bun run check:guards --base origin/dev"
+    ],
+    "tests_local": false
+  },
+  "next": "Publish W then S differing only by .ci-run.json; launch one unique work-reuse diagnostic after duplicate check, inspect terminal logs, and prepare owner patch plus attachment counterproof request without applying foreign sources."
+}

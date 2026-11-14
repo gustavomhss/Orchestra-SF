@@ -1,0 +1,157 @@
+{
+  "schema": "sf2h-c12-receipt-recovery-checks-v1",
+  "mission": "19 / C12 / I-OPS-02",
+  "checkAttempt": 2,
+  "status": "FAIL",
+  "repository": "gustavomhss/Orchestra-SF",
+  "product": {
+    "sha": "0391ef0dfba2186c0c4fedcf8f36c4a5006080ca",
+    "tree": "fbae28c3d865b402fe239250e958086d02c979e3",
+    "productTestsConfigFixturesIdenticalTo": "0b483fbf2040e0551f817ea6211d54c7cb2e2d14"
+  },
+  "snapshot": {
+    "sha": "0f209755f9d70149b48501f676a8ec5315c6188c",
+    "tree": "571ef729401e368d0c4bdd3b868cf191c32662af",
+    "parent": "0391ef0dfba2186c0c4fedcf8f36c4a5006080ca",
+    "ref": "astra-check-operations-c12-0391ef0d-d1f13368-02",
+    "differenceFromProduct": [
+      {
+        "status": "added",
+        "path": ".astra-operations-check.json"
+      }
+    ],
+    "allOtherBlobsIdentical": true
+  },
+  "request": {
+    "content": {
+      "productSha": "0391ef0dfba2186c0c4fedcf8f36c4a5006080ca",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    },
+    "serialization": "compact JSON, no final newline",
+    "bytes": 109,
+    "sha256": "d1f133686e6a145f944baf21c149b8ef3fc6b25daa5a11cee15194a4a0eeeec3",
+    "gitBlob": "280dee3c03dbf1b7b79a8c6e4df1b46afee57de6",
+    "mode": "all (no scoped reuse mode)"
+  },
+  "workflow": {
+    "path": ".github/workflows/astra-operations-check.yml",
+    "blob": "ec63fc5e1a355ada4f1b73cc518c225719e9b08e",
+    "runId": 43637454132,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43637454132",
+    "headSha": "0f209755f9d70149b48501f676a8ec5315c6188c",
+    "runAttempt": 1,
+    "conclusion": "failure",
+    "jobId": 132577282295,
+    "createdAt": "2026-11-14T20:25:54Z",
+    "updatedAt": "2026-11-14T20:28:16Z"
+  },
+  "checkoutVerification": {
+    "productSha": "0391ef0dfba2186c0c4fedcf8f36c4a5006080ca",
+    "guardBase": "origin/dev",
+    "guardBaseSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "snapshotParentAndOnlyEnvelope": true,
+    "checkoutExactProduct": true,
+    "productAndBaseAssertions": "PASS"
+  },
+  "results": {
+    "sucafina": {
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "status": "FAIL",
+      "exitCode": 2,
+      "diagnostics": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "line": 167,
+          "column": 41,
+          "code": "TS2741",
+          "message": "Property 'procurementEvidenceWrites' is missing in business-services caller",
+          "preimage": "fbe627ffde443ff7e2d3b1204bbcf67523404f41",
+          "inherited": true,
+          "owner": "astra-compose / owner WP14",
+          "referencePatch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/OPS-CONSUMER-02.patch",
+          "referencePatchBlob": "2ab9a6b6f18709d5bad95f58247c70ba286a00aa",
+          "proposedPostimage": "d7d2a69837560f42438d470b83724c1a61939a73",
+          "appliedByThisMission": false,
+          "verifiedBlobAtProduct": "fbe627ffde443ff7e2d3b1204bbcf67523404f41"
+        }
+      ]
+    },
+    "cli": {
+      "command": "bun typecheck",
+      "directory": "apps/cli",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "directory": ".",
+      "status": "PASS",
+      "exitCode": 0,
+      "rules": 78,
+      "changedPaths": 859,
+      "gates": 0,
+      "warnings": 11,
+      "errors": 0,
+      "gate": [],
+      "warningFindings": [
+        "apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts:82 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer."
+      ],
+      "warningsInherited": true
+    }
+  },
+  "artifact": {
+    "id": 14131225641,
+    "name": "astra-operations-check-1",
+    "size_in_bytes": 1579,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43637454132/artifacts/14131225641",
+    "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14131225641/zip",
+    "expired": false,
+    "created_at": "2026-11-14T20:28:13Z",
+    "expires_at": "2026-11-28T20:28:12Z",
+    "updated_at": "2026-11-14T20:28:13Z",
+    "digest": "sha256:b5686d21bc50a6a0557a7b07d0d45dcddb62f089ea588c397b03d23b393ce8b0",
+    "workflow_run": {
+      "id": 43637454132,
+      "repository_id": 1455724710,
+      "head_repository_id": 1455724710,
+      "head_branch": "astra-check-operations-c12-0391ef0d-d1f13368-02",
+      "head_sha": "0f209755f9d70149b48501f676a8ec5315c6188c"
+    },
+    "fileCount": 5,
+    "contentsIndependentlyDownloaded": false,
+    "source": "Metadata and upload completion plus corresponding decoded job logs inspected through GitHub MCP"
+  },
+  "decodedJobLog": {
+    "bytes": 70039,
+    "sha256": "b4f37a77cb6b99dd4c63f399ac1de045f20de953f92474352a03877e6fe77295",
+    "source": "GitHub Actions job132577282295; raw output kept only for analysis"
+  },
+  "deduplication": {
+    "oneMissionRunAtATime": true,
+    "previousCheckRun": 43636913954,
+    "previousConclusion": "failure",
+    "rerun": false,
+    "reason": "Documentation-only W3 removes the owned raw-log gate; guards must run on the fixed tree. Existing canonical workflow's scoped modes do not admit the C12 path, so unchanged typechecks run again as required by that unmodified workflow. Product tests are not repeated."
+  },
+  "nextAction": "Session14 composes C12 with Finance's current executor and validates the composed SHA. astra-compose/owner WP14 reconciles the existing caller patch. Final handoff/doc-only successor does not inherit a fictitious new execution.",
+  "resolvedOwnFinding": {
+    "rule": "agent-scratch",
+    "previousPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-receipt-recovery/attempt-01/TESTS.log",
+    "resolution": "Removed raw log from tree; no rename, ignore or approval bypass",
+    "verifiedByRun": 43637454132
+  },
+  "remainingBlockers": [
+    "Inherited WP14 TS2741 only; outside mission write_paths. Overall run remains failure."
+  ]
+}

@@ -3,6 +3,7 @@ import JSZip from "jszip"
 import { createReport } from "../runtime/reports.ts"
 import { download } from "../runtime/downloads.ts"
 import { empty } from "./fixture/persistence.ts"
+import { exportFixture, extractReportText } from "./product/wp07/export-fixture.ts"
 
 const actor = { id: "admin", canWrite: true, roles: ["admin"] }
 const environment = {
@@ -11,7 +12,7 @@ const environment = {
   directory: [],
 }
 
-test("PowerPoint contains the server's twelve-month totals and at most twelve table rows per slide", async () => {
+test("PowerPoint contains the server totals and every selected record across slides", async () => {
   const snapshot = empty()
   snapshot.data.opexOwners = [{ id: "o", budget: 1200 }]
   snapshot.data.opexEntries = [
@@ -40,10 +41,12 @@ test("PowerPoint contains the server's twelve-month totals and at most twelve ta
   const zip = await JSZip.loadAsync(result.bytes)
   const executive = await zip.file("ppt/slides/slide1.xml")!.async("string")
   expect(executive).toContain("$1600")
-  const topics = await zip.file("ppt/slides/slide2.xml")!.async("string")
-  expect((topics.match(/<a:tr\b/g) ?? []).length).toBeLessThanOrEqual(12)
-  expect(topics).toContain("Topic 11")
-  expect(topics).not.toContain("Topic 12")
+  const slides = await Promise.all(
+    Object.keys(zip.files).filter((path) => /^ppt\/slides\/slide\d+\.xml$/.test(path)).map((path) => zip.file(path)!.async("string")),
+  )
+  for (let index = 0; index < 30; index++) {
+    expect(slides.filter((slide) => slide.includes(`Topic ${index} ·`))).toHaveLength(1)
+  }
 })
 
 test("Word is an actual DOCX presenter script with all bullets rather than slide limits", async () => {
@@ -76,6 +79,23 @@ test("Word is an actual DOCX presenter script with all bullets rather than slide
       })
     ).ok,
   ).toBe(false)
+})
+
+test("legacy report keeps all 25 projects and long notes once in both formats", async () => {
+  const fixture = exportFixture()
+  for (const format of ["pptx", "docx"] as const) {
+    const result = await createReport(structuredClone(fixture.legacy), actor, environment, { format, year: 2026, topics: ["All Projects"] })
+    if (!result.ok) throw new Error("Legacy report refused")
+    const extracted = await extractReportText(result.bytes, format)
+    const text = extracted.text.replace(/\s/gu, "")
+    for (let index = 1; index <= 25; index++) {
+      const id = String(index).padStart(2, "0")
+      expect(text.split(`LEGACY-PROJECT-${id}`).length - 1).toBe(1)
+      expect(text.split(`END-NOTE-${id}`).length - 1).toBe(1)
+    }
+    if (format === "pptx") expect(extracted.pages!).toBeLessThan(30)
+  }
+  expect(await createReport(fixture.legacy, actor, environment, { format: "docx", year: 2026, topics: ["All Projects", "All Projects"] })).toMatchObject({ ok: false, status: 422 })
 })
 
 test("report scopes never expose talent and unauthorized Executive Summary cannot bypass page visibility", async () => {
@@ -147,4 +167,34 @@ test("PO HTML omits bank fields, escapes description, and the register respects 
   const register = await download("register", snapshot, requester, environment, new URLSearchParams())
   if (!register.ok) throw new Error("Register refused")
   expect(new TextDecoder().decode(register.bytes)).not.toContain("OTHER-REQUEST")
+})
+
+test("executive reports include budget figures only when the viewer can access Budget Overview", async () => {
+  const snapshot = empty()
+  snapshot.data.opexOwners = [{ id: "restricted", budget: 1200 }]
+  snapshot.data.opexEntries = [{ ownerId: "restricted", year: 2026, month: 1, budget: 500, actual: 321, forecast: 654 }]
+  const viewer = { id: "viewer", roles: ["viewer"], canWrite: false }
+  for (const format of ["docx", "pptx"] as const) {
+    for (const topic of ["Executive Dashboard", "Executive Summary"]) {
+      snapshot.data.summaries = []
+      const hidden = await createReport(snapshot, viewer, environment, { format, year: 2026, topics: [topic] })
+      if (!hidden.ok) throw new Error("Viewer report refused")
+      const hiddenZip = await JSZip.loadAsync(hidden.bytes)
+      const paths = Object.keys(hiddenZip.files).filter((path) => format === "docx" ? path === "word/document.xml" : /^ppt\/slides\/slide\d+\.xml$/.test(path))
+      const hiddenXml = (await Promise.all(paths.map((path) => hiddenZip.file(path)!.async("string")))).join(" ")
+      expect(hiddenXml).toContain("Budget figures are unavailable")
+      expect(hiddenXml).not.toContain("$1600")
+      expect(hiddenXml).not.toContain("$321")
+      expect(hiddenXml).not.toContain("$654")
+      snapshot.data.summaries = ["Budget Overview"]
+      const visible = await createReport(snapshot, viewer, environment, { format, year: 2026, topics: [topic] })
+      if (!visible.ok) throw new Error("Authorized viewer report refused")
+      const visibleZip = await JSZip.loadAsync(visible.bytes)
+      const visiblePaths = Object.keys(visibleZip.files).filter((path) => format === "docx" ? path === "word/document.xml" : /^ppt\/slides\/slide\d+\.xml$/.test(path))
+      const visibleXml = (await Promise.all(visiblePaths.map((path) => visibleZip.file(path)!.async("string")))).join(" ")
+      expect(visibleXml).toContain("$1600")
+      expect(visibleXml).toContain("$321")
+      expect(visibleXml).toContain("$654")
+    }
+  }
 })

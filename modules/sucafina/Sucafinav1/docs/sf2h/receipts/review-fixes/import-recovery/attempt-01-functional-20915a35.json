@@ -1,0 +1,364 @@
+{
+  "schema": "sf2h-review-fix-execution-v1",
+  "campaign_id": "sf2h-integral-20261112",
+  "execution_instance": "import-recovery-20261114",
+  "attempt": 1,
+  "actor": "S2-C",
+  "work_package": "WP06",
+  "tasks": [
+    "WP06.T03"
+  ],
+  "mission": "import-recovery",
+  "branch": "import-recovery",
+  "target": "astra-operations",
+  "pr": "https://github.com/gustavomhss/Orchestra-SF/pull/58",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_source_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "code_base": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "commit": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/review-fixes/COMMON.md",
+      "commit": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+      "blob": "77528795ad0ac28e077dd070898f758825db12ec"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/review-fixes/import-recovery.json",
+      "commit": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+      "blob": "4d3aaa52bfd23adc2c10d2f7282b9506a89c3833"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP06.pack.json",
+      "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "blob": "97f169c7236204c0268bc5bf47f374e24adeffd6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
+      "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6"
+    }
+  ],
+  "lease": {
+    "epoch": 1,
+    "allocation_commit": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+    "source_head_observed": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+    "product_paths": [
+      "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+      "modules/sucafina/Sucafinav1/product/imports/host.ts"
+    ],
+    "new_test_prefix": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/",
+    "new_receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/",
+    "publication": "Fast-forward por GitHub MCP com expected_sha; nenhuma mudança posterior observada antes de W."
+  },
+  "status_at_receipt": "IN_PROGRESS",
+  "status_reason": "Provas funcionais da missão executadas e aprovadas. Typechecks/guards serão executados no head que contiver este recibo; seu resultado será publicado no fechamento da PR sem reescrever este arquivo.",
+  "product_candidate": {
+    "W": "20915a35aa8364a39d1a6014c494f9ab4c1339e8",
+    "tree": "49a833e708e87b605eaff04ff34b712a17982e12",
+    "parent": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+    "changed_files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+        "mode": "100644",
+        "blob": "0d42f5242acd3d1c93bc110422285b96975b8ea0",
+        "status": "modified",
+        "preimage": "b24558f415f48921b43255169ec0cc82d7037ddb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/admission-fixture.ts",
+        "mode": "100644",
+        "blob": "675c6fff9a395a88665a8f0e55e5129bd3772a8d",
+        "status": "added",
+        "preimage": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/admission-restart.test.ts",
+        "mode": "100644",
+        "blob": "a58a4dec6cfee07474dd0c1b910ba96c4e7d9c03",
+        "status": "added",
+        "preimage": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/apply-fixture.ts",
+        "mode": "100644",
+        "blob": "d08a7c77421e3e40c70ba4e75c741fccdd58dd09",
+        "status": "added",
+        "preimage": null
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts",
+        "mode": "100644",
+        "blob": "19949fd9821bb8768b9feffcc398b5313aa5fbef",
+        "status": "added",
+        "preimage": null
+      }
+    ],
+    "delta_verification": {
+      "url": "https://github.com/gustavomhss/Orchestra-SF/compare/ba8a09e371ce8d93eb917eabb102caaee5affaf4...20915a35aa8364a39d1a6014c494f9ab4c1339e8",
+      "files": 5,
+      "modified": 1,
+      "added": 4,
+      "complete": true
+    }
+  },
+  "behavior": {
+    "admission": "Bytes e prova privada de admissão são gravados na mesma transação SQLite de AssetPersistence. Retry sem catálogo verifica digest do registro completo e SHA256 dos bytes, preserva a expiração original e revalida autoridade e alvo antes de publicar o catálogo uma vez.",
+    "binding": "A prova sf-import-admission-v1 liga id/key, principal, instalação, projeto, revisão de acesso, política, alvo/incarnação/versão/opções, formato, digest, tamanho e expiração por digestSfValue(entry).",
+    "uncertainty": "Erro ou resposta incerta de catálogo nunca remove os bytes/prova: a leitura de reconciliação pode confirmar a publicação, ou um retry autorizado posterior continua a operação.",
+    "apply": "A implementação real existente passou pela recuperação após reconstruir os serviços. Não foi necessária alteração em host.ts nem import-services.ts.",
+    "compatibility": "Catálogos sf-import-file-v1 concluídos continuam legíveis. Órfãos legados sem prova durável de alvo/formato/autoridade são preservados e recusados: os metadados originais não podem ser reconstruídos com segurança somente dos bytes.",
+    "contract_versions": {
+      "catalog": "sf-import-file-v1 (inalterado)",
+      "private_admission_proof": "sf-import-admission-v1 (novo; interno)",
+      "public_C03_C04": "inalterados"
+    }
+  },
+  "read_only_dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/host.ts",
+      "commit": "20915a35aa8364a39d1a6014c494f9ab4c1339e8",
+      "blob": "40e02a3486c1b5a192395568c3ad37bde8a2e1e5",
+      "changed": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/import-services.ts",
+      "commit": "20915a35aa8364a39d1a6014c494f9ab4c1339e8",
+      "blob": "53a1f34779598545cde83295c8ff98b861fabb72",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/store.ts",
+      "commit": "20915a35aa8364a39d1a6014c494f9ab4c1339e8",
+      "blob": "9ae8492b4618d454cf069e27d2b079028759802d",
+      "changed": false
+    }
+  ],
+  "functional_ci": {
+    "status": "PASS",
+    "snapshot": {
+      "S": "a0e8b4d9c9ed338d3a3e1e850ae258bf098678c3",
+      "parent": "20915a35aa8364a39d1a6014c494f9ab4c1339e8",
+      "tree": "7daabdb1401f40232bb4c049a0a54d55c2fab9f5",
+      "branch": "ci-run-linux-astra-wp06-20915a35-da8bf081-import-recovery-1",
+      "request_path": ".ci-run.json",
+      "request_blob": "da8bf0816549e4b97bba6ad1359681c885d1e3d8",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/review-fixes/import-recovery/admission-restart.test.ts",
+          "./Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts",
+          "./Sucafinav1/test/product/wp06/imports/staged-files.test.ts",
+          "./Sucafinav1/test/product/wp06/imports/admission-boundaries.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "product_identity": {
+        "comparison": "https://github.com/gustavomhss/Orchestra-SF/compare/20915a35aa8364a39d1a6014c494f9ab4c1339e8...a0e8b4d9c9ed338d3a3e1e850ae258bf098678c3",
+        "complete_diff": [
+          {
+            "status": "added",
+            "path": ".ci-run.json",
+            "mode": "100644"
+          }
+        ],
+        "all_existing_product_test_config_fixture_blobs_unchanged": true
+      }
+    },
+    "deduplication": "Consultadas refs e runs existentes por MCP antes de criar S; nenhuma execução equivalente para W/seleção/config/env/fixtures. Uma tentativa, no máximo um run desta missão em voo.",
+    "workflow": {
+      "path": ".github/workflows/test-ci.yml",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "request_validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "package_locator_blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee"
+    },
+    "run": {
+      "id": 43626093062,
+      "attempt": 1,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626093062",
+      "event": "push",
+      "head_sha": "a0e8b4d9c9ed338d3a3e1e850ae258bf098678c3",
+      "conclusion": "success",
+      "started_at": "2026-11-14T18:20:54Z",
+      "completed_observed_at": "2026-11-14T18:22:44Z"
+    },
+    "jobs": [
+      {
+        "id": 132542099820,
+        "name": "test (ubuntu-24.04)",
+        "conclusion": "success",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626093062/job/132542099820",
+        "request_validation": "Read request: success",
+        "execution_step": "Run tests: success"
+      },
+      {
+        "id": 132542594316,
+        "name": "cleanup",
+        "conclusion": "success",
+        "observation": "Snapshot branch deleted by the official workflow; W and S remain identified by commit."
+      }
+    ],
+    "actual": {
+      "runner": "ubuntu-24.04",
+      "bun": "1.3.14 (0d9b296a)",
+      "test_files": 4,
+      "passed": 14,
+      "failed": 0,
+      "expect_calls": 186,
+      "test_duration_seconds": 16.8,
+      "observed_cases": [
+        "OPS-REV-04: blob commit survives restart and exact authorized admission publishes one catalog entry",
+        "OPS-REV-04: divergent bytes, target, format and options cannot claim the orphan after restart",
+        "OPS-REV-04: uncertain catalog commit keeps bytes and recovers its original reference without republishing",
+        "OPS-REV-04: durable session revocation before recovery denies a fresh post-restart grant",
+        "OPS-REV-04: retry cannot extend an expired interrupted admission",
+        "OPS-REV-04: legacy orphan without durable target proof remains unavailable and is never deleted",
+        "OPS-REV-04: concurrent identical recovery after restart publishes the catalog once",
+        "E-OPS-02: lost Apply response, SQLite restart and fresh HTTP recovery preserve one effect (newVersion=false)",
+        "E-OPS-02: lost Apply response, SQLite restart and fresh HTTP recovery preserve one effect (newVersion=true)",
+        "E-OPS-02: durable session revocation before restart denies receipt recovery and exact Apply retry",
+        "E-OPS-02: persisted Planner grant revocation denies recovery after restart and fresh authentication",
+        "private import admission persists SQLite bytes and binds retries to the same target and content",
+        "an absent or unavailable domain adapter cannot persist or fabricate an import preview",
+        "real deletion and recreation of a Planner ID invalidates its old preview and cannot emit an Apply receipt"
+      ]
+    },
+    "omni": {
+      "nonce": "361768f5d7c099a4aef6923ced13d726",
+      "status": "not applicable",
+      "reason": "focused: no declaring test ran",
+      "limit": "This run made no omni spawn and delegated none; no omni qualification claimed."
+    },
+    "artifacts": {
+      "observed": [],
+      "required_for_selected_bun_path": false,
+      "explanation": "O workflow só envia evidência de Playwright nas seleções aplicáveis; esta seleção Bun conserva request imutável e logs oficiais. Nenhum artefato obrigatório ausente é tratado como PASS."
+    }
+  },
+  "criteria": [
+    {
+      "finding": "OPS-REV-04",
+      "primary": [
+        "WP06.QLT.03"
+      ],
+      "related": [
+        "CAMP.CMP.02",
+        "CAMP.QLT.03"
+      ],
+      "test_file": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/admission-restart.test.ts",
+      "cases": 7,
+      "expected": "Reconciliar interrupção entre commit dos bytes e publicação do catálogo; negar bytes/alvo/formato/opções divergentes e revogação; conservar bytes sob commit incerto.",
+      "observed": "PASS: conexão antiga fechada; nova conexão SQLite e nova sessão recuperam mesma ref/expiração. Divergências e sessão revogada recusadas sem mudança. Commit de catálogo confirmado seguido de perda do ACK e da leitura de observação preserva bytes. Retry concorrente publica uma vez; expiração não é renovada; órfão legado permanece preservado.",
+      "scope": "Fronteiras de admissão desta missão; não aceite global de WP06 ou da campanha."
+    },
+    {
+      "finding": "E-OPS-02",
+      "primary": [
+        "WP06.T03.DOD.02"
+      ],
+      "related": [
+        "C03",
+        "C04",
+        "CAMP.CMP.02"
+      ],
+      "test_file": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts",
+      "cases": 4,
+      "expected": "Apply real com resposta perdida, fechar composição e SQLite, reconstruir serviços reais e autenticar novamente; recuperar referência/recibo e repetir a mesma intenção sem duplicar efeitos, versões ou auditoria; incluir revogação antes da recuperação.",
+      "observed": "PASS nas versões atual e nova: resposta de Apply descartada sem entregar recibo; driver antigo rejeita leitura e HTTP antigo responde 503; nova store/authority/service/hostId e cookie distinto. import-reference e import-detail recuperam manifesto aplicado e recibo público completo. Mesmos payload/idempotency key retornam o mesmo manifesto; snapshots integrais de domínio/recibos/versões/revisões/transações/auditoria permanecem iguais. Logout persistido e remoção real do grant Planner por admin.configure recusam recuperação/retry após reopen, inclusive com nova autenticação válida no caso de permissão.",
+      "scope": "Composição isolada hospedada com adaptadores reais; não browser E2E, desktop/server restart, infraestrutura corporativa ou aceite global."
+    }
+  ],
+  "proof_mechanics": {
+    "durability": "openLocalStore real sobre SQLite temporário em disco; primeira conexão disposed; novas instâncias reabrem o mesmo diretório.",
+    "services": "createSfSourcePersistence, createOperatorIdentity, createSfProductAuthority, createSfSourceScopeProjector, createSfDocumentTargetAuthority, createSfImportServices e createSfImportHttp reais.",
+    "admission_faults": "Wrappers delegam a implementação real e interrompem antes do catálogo ou depois do commit real (com ACK/leitura perdidos); não substituem a recuperação por mocks.",
+    "apply_loss": "Handler HTTP real conclui Apply; corpo da Response é cancelado e erro representa resposta perdida antes de entregar recibo ao chamador. Não é kill de processo nem falha de rede externa.",
+    "fixtures": "Entradas financeiras sintéticas, identidade assinada de teste, membership de teste resolvido pela implementação real contra roleMap persistido e scanner de aceitação explícito. Não qualifica scanner/IdP corporativo.",
+    "financial_assertions": "Linha renewal de forecast janeiro 72000 para 84000; linha fixed mantém 518000; demais meses/null/zero mantidos. newVersion=false mantém uma versão; true cria exatamente duas e conserva v1. Replay não altera snapshots integrais.",
+    "scope_limits": [
+      "Nenhum teste de produto local.",
+      "Nenhuma epic/full suite.",
+      "Nenhum restart de Orchestra desktop/server.",
+      "Nenhuma alteração de alçada, política de produto, workflow ou engines.",
+      "Nenhum merge.",
+      "Não representa G7/G8, AM01-AM06, oito seleções finais ou GLOBAL_RELEASE."
+    ]
+  },
+  "checks_after_receipt": {
+    "status": "NOT_RUN_AT_RECEIPT_CREATION",
+    "workflow": ".github/workflows/astra-operations-check.yml",
+    "workflow_blob": "ec63fc5e1a355ada4f1b73cc518c225719e9b08e",
+    "commands": [
+      {
+        "directory": "modules/sucafina",
+        "command": "bun typecheck"
+      },
+      {
+        "directory": "apps/cli",
+        "command": "bun typecheck"
+      },
+      {
+        "directory": ".",
+        "command": "bun run check:guards --base origin/dev"
+      }
+    ],
+    "target": "Head de entrega que apenas acrescenta recibos a W, identificado externamente na PR; snapshot de check filho direto com somente .astra-operations-check.json.",
+    "reporting": "Resultado, SHA examinado, devSha, run/jobs e artefatos serão registrados na PR. Não anotar retroativamente neste recibo um resultado futuro."
+  },
+  "handoff": {
+    "consumer": "S0 / integrador astra-operations; WP06 e WP10",
+    "pending": "Revisão e integração do delta pelo owner; checks finais conforme acima.",
+    "review": "Revisão fria de produto/testes por agente ci_protocol sem autoria de código; inspeção preparatória, não parecer de aceite independente da campanha.",
+    "external_product_patch_required": false
+  },
+  "previous_attempt_refs": [],
+  "handoff_agents": {
+    "path": "AGENTS.md",
+    "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "identical_to_code_base_agents": true
+  },
+  "proof_packages": {
+    "bindings": [
+      "E07",
+      "E15"
+    ],
+    "scope": "Somente os critérios/fronteiras da missão observados acima; estes pacotes não são fechados integralmente."
+  },
+  "contract_manifest_changes": [],
+  "dynamic_manifest_digests": "sourceDigest/commandDigest e conteúdo do manifesto/recibo são verificados pelas asserções contra a mesma intenção antes e após reopen; valores sintéticos por execução não são tratados como hashes estáticos de contrato.",
+  "evidence_index_with_paths_and_hashes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/attempt-01-external-wp14-typecheck.json",
+      "blob": "f3cfc230fcdb2a9b8b113b9315dc2ddf1fab87a2",
+      "kind": "proposta de patch externo, não aplicado"
+    }
+  ],
+  "external_typecheck_dependency": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+    "preimage_blob": "fbe627ffde443ff7e2d3b1204bbcf67523404f41",
+    "owner": "WP14 / S0",
+    "proposal": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/attempt-01-external-wp14-typecheck.json",
+    "status": "Diagnóstico estático de falha herdada; checker próprio ainda pendente. Nenhum arquivo fora da faixa foi alterado."
+  },
+  "time_accounting": {
+    "session_elapsed_minutes": null,
+    "reason": "Horário inicial da sessão não capturado; não há estimativa retrospectiva inventada.",
+    "observed_functional_run_seconds": 110,
+    "observed_bun_test_seconds": 16.8,
+    "eta": "Conclusão após leitura do checker hospedado e fechamento da PR; duração de fila/check ainda não medida."
+  }
+}

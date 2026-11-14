@@ -1,0 +1,49 @@
+{
+  "owner": "session23",
+  "state": "NOT_APPLIED_SHARED_PATCH",
+  "base_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "patch_sha256": "33aea0e43b34c501cd1313c5af45288641a7360e34e7ce1fd5074ef5c0b2ecdc",
+  "dependencies": [
+    "Canonical BCS must independently return historical with authorizedProjection, currentRef and differences under the current principal. This patch cannot create a historical capture or bypass unavailable evidence."
+  ],
+  "behavior": "Allow authorized historical source references in case-list reads only. Current evidence remains required for edits, coverage, criteria and financial application. ChoiceRecord and source refs are preserved byte for byte.",
+  "unverified": "No local tests or runtime executed. Source-changed calculation closures and native provider/scanner/restart remain independent producer boundaries; this patch does not prove them.",
+  "scope_correction": "This patch repairs the generic management.list read seam. Workbench decision-controls enumerates identities and invokes business.cases.read directly, whose case-port already distinguishes fresh and historical. Therefore this patch alone does not repair or prove Workbench reentry after a source change. Canonical historical captures/continuity and calculation-history remain independently required.",
+  "patch": "history-read.patch",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts",
+      "preimage_blob": "fafd1c99e96b0d5bac5d9a596b29252829870e62",
+      "postimage_blob": "da41f148e5b3592d700cdfb81d72ea23d8774500",
+      "preimage": "preimages/modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts.txt",
+      "preimage_bytes": 2125,
+      "preimage_sha256": "5f6d3c3d1383343fe4abcecab9d6acb3766c5188a324a6392c686247e3c70351",
+      "postimage": "postimages/modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts.txt",
+      "postimage_bytes": 3793,
+      "postimage_sha256": "b736e63bbaf6e8df2fc8febcad987c82881f629eca8458f9e600ca4fac2839b1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-management.ts",
+      "preimage_blob": "22cc1a0b08a5952a886fe159590ca0c40eb5f63e",
+      "postimage_blob": "5140fee739f874a5c2d8dfeaf95c3bbb3d6ff585",
+      "preimage": "preimages/modules/sucafina/Sucafinav1/product/decisions/case-management.ts.txt",
+      "preimage_bytes": 9508,
+      "preimage_sha256": "b52d2ba50de515760f6082c43da21e5f1adb24ffa1b4478f94782e8b40c64404",
+      "postimage": "postimages/modules/sucafina/Sucafinav1/product/decisions/case-management.ts.txt",
+      "postimage_bytes": 9758,
+      "postimage_sha256": "bf7990ef194284a373ade688bc8ec33e60681fee053f606c2db4002a8dae662e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/host-product.ts",
+      "preimage_blob": "74450e928e9bdf67df701f0a1e790ce5829016c7",
+      "postimage_blob": "f6e3d0473338553dc71340fe632d3de59b08deb9",
+      "preimage": "preimages/modules/sucafina/Sucafinav1/product/decisions/host-product.ts.txt",
+      "preimage_bytes": 10661,
+      "preimage_sha256": "e26f4b4d0fe6e5ae011835c285a5d378b40a96cbfd866b989c22281849d43e99",
+      "postimage": "postimages/modules/sucafina/Sucafinav1/product/decisions/host-product.ts.txt",
+      "postimage_bytes": 10723,
+      "postimage_sha256": "136f7a818bdc67201717e59addc95cb56197d06d4c6908402e196941da12f30d"
+    }
+  ],
+  "artifact_note": "Images use .ts.txt so uninstalled owner proposals are not included as executable TypeScript. Strip only the final .txt when applying to the declared target path."
+}

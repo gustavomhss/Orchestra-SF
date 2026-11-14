@@ -1,0 +1,319 @@
+{
+  "mission": "ui-recipient-ack",
+  "attempt": 2,
+  "state": "COMPLETED_FAILURE",
+  "branch": "ui-work",
+  "pull_request": 47,
+  "W": {
+    "sha": "359ab99db8aaec23e885b492876bc0a3df3d0a33",
+    "tree": "9793849ac18d0c664fabfec49e7e3b3a9ffd0605",
+    "parent": "7c9bbd966483b94d21a4c30961a8174be7ed6804"
+  },
+  "S": {
+    "sha": "d482772e85f117e95f70dbaabed7b0518e9f5b1e",
+    "tree": "eeda391d690537249607f294afaf32b1f0556b2c",
+    "parent": "359ab99db8aaec23e885b492876bc0a3df3d0a33",
+    "delta": [
+      ".ci-run.json"
+    ],
+    "product_test_config_fixture_blobs_identical_to_W": true
+  },
+  "request": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/ui-ack-completion/ci-request.02.json",
+    "blob": "750d98d5cd8d19a96977687651dcfd792cff226f",
+    "sha256": "908b78f2a2aa53ad029a756467f3d07d0c5f7ac6a1b2b2b0c7bc694525ef0e38",
+    "validated_by": "existing workflow Read request step: success"
+  },
+  "run": {
+    "id": 43633483813,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633483813",
+    "head_sha": "d482772e85f117e95f70dbaabed7b0518e9f5b1e",
+    "branch": "ci-run-linux-ui-ack-359ab99d-908b78f2-02",
+    "status": "completed",
+    "conclusion": "failure",
+    "job_id": 132565093216,
+    "job_name": "test (ubuntu-24.04)",
+    "cleanup_job": 132566199039,
+    "cleanup": "success"
+  },
+  "selection": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+      "./Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+      "./Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+      "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "result": {
+    "pass": 11,
+    "fail": 3,
+    "assertions": 308,
+    "files": 6,
+    "seconds": 131.15,
+    "recipient_cases": {
+      "pass": 9,
+      "fail": 2
+    },
+    "cases": [
+      {
+        "status": "pass",
+        "name": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+        "milliseconds": 10158.78
+      },
+      {
+        "status": "pass",
+        "name": "recipient ACK selects the committed identity among equal messages and exact retry never appends twice",
+        "milliseconds": 10643.61
+      },
+      {
+        "status": "fail",
+        "name": "pagehide removes protected pending content and persisted pageshow reauthorizes by GET without autosend",
+        "milliseconds": 7226.01
+      },
+      {
+        "status": "pass",
+        "name": "reload reauthorizes before showing pending content and replays a resolved thread without reopening or autosend",
+        "milliseconds": 5974.42
+      },
+      {
+        "status": "pass",
+        "name": "same recipient key with changed text or expected storage version conflicts and preserves the pending original",
+        "milliseconds": 4242.44
+      },
+      {
+        "status": "pass",
+        "name": "recovery purges a persisted intent whose project or policy scope differs from the fresh page",
+        "milliseconds": 5039.73
+      },
+      {
+        "status": "pass",
+        "name": "current projection, legacy Boolean and invalid receipt fields cannot acknowledge the pending mutation",
+        "milliseconds": 14907.1
+      },
+      {
+        "status": "pass",
+        "name": "an access-revoked event purges a pending intent even after its conversation element detaches",
+        "milliseconds": 2489.94
+      },
+      {
+        "status": "pass",
+        "name": "legacy persisted Boolean remains unavailable after retry and reload without a synthetic ACK",
+        "milliseconds": 3021.96
+      },
+      {
+        "status": "pass",
+        "name": "editing the exact committed message invalidates its old version instead of matching the new text",
+        "milliseconds": 4389.65
+      },
+      {
+        "status": "pass",
+        "name": "revocation and principal switch purge the scoped intent before any retry or protected render",
+        "milliseconds": 5201.98
+      },
+      {
+        "status": "fail",
+        "name": "physical source replacement refuses the old recipient intent and reload cannot render its protected text",
+        "milliseconds": 2533.26
+      },
+      {
+        "status": "fail",
+        "name": "ui-work package typecheck and repository guards use the canonical commands",
+        "milliseconds": 54779.64
+      },
+      {
+        "status": "pass",
+        "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+        "milliseconds": 135.95
+      }
+    ],
+    "failures": [
+      {
+        "case": "pagehide/pageshow",
+        "observed": "Timeout waiting for load event (5000 ms) while navigation response is deliberately gated",
+        "classification": "own test synchronization failure; no PASS for this case",
+        "next": "Remove reads against a main-frame context undergoing gated navigation; retain pre-pagehide DOM purge checks, held GET/no commit/no write evidence, fresh-page/recovery/retry checks."
+      },
+      {
+        "case": "source replacement",
+        "observed": "reload: net::ERR_HTTP_RESPONSE_CODE_FAILURE",
+        "classification": "own negative navigation error matcher accepted only page.reload prefix, not observed bridge reload prefix",
+        "already_observed": "Real source replaced; recipient retry refused; independent GET is503 with empty body",
+        "next": "Accept only the exact documented navigation error code with either observed API prefix; continue checking no protected content."
+      },
+      {
+        "case": "static-gates",
+        "observed": "typecheck exit2;9 foreign diagnostics,0 own-path diagnostics",
+        "classification": "readonly foreign baseline"
+      }
+    ],
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "exit_code": 0,
+      "rules": 78,
+      "changed_paths": 945,
+      "gate_findings": 0,
+      "warnings": 54,
+      "errors": 0
+    },
+    "typecheck": {
+      "command": "bun typecheck",
+      "cwd": "modules/sucafina",
+      "exit_code": 2,
+      "diagnostics": 9,
+      "own_path_diagnostics": 0
+    },
+    "omni": {
+      "positive_control": "pass",
+      "spawns": 4,
+      "delegated": 0
+    },
+    "browser": {
+      "startup": "PASS",
+      "lifecycle": "PASS",
+      "launches": 1,
+      "acquisitions": 3,
+      "releases": 3,
+      "remaining_contexts": 0,
+      "driver_exit": 0
+    }
+  },
+  "observations": [
+    {
+      "event": "UI_ACK_EXACT_RETRY",
+      "threadId": "8bbedc07-12ef-48dc-8400-aa941e641d6e",
+      "reply": {
+        "id": "2dc1cde9-b72b-4898-b5a8-70950b830244",
+        "incarnation": "e2d344c7-e64f-40e8-ac6f-769738cf1f07",
+        "version": 1
+      },
+      "intentDigest": "730cff9006944bd3ab5cd35fdc6b952d1f96c06961c2ebee9284f368b022f686",
+      "attempts": 2,
+      "equalTextReplies": 3,
+      "storageVersion": 4
+    },
+    {
+      "event": "UI_ACK_RELOAD_RESOLVED",
+      "threadId": "6e48bc0f-67bf-4d95-87be-62d817bba62f",
+      "reply": {
+        "id": "8e79441a-bf2d-4294-a26e-f7a6ecab0c10",
+        "incarnation": "91902c65-9c24-4f59-8d74-6561e5b397c4",
+        "version": 1
+      },
+      "intentDigest": "558e076eb2315fcf422a99c4104358453fdb994d3c5032cec443767406addda8",
+      "attempts": 2,
+      "state": "resolved",
+      "storageVersion": 4,
+      "reloadReauthorized": true,
+      "sqliteReopened": true,
+      "automaticWrites": 0
+    },
+    {
+      "event": "UI_ACK_DIVERGENT_INTENT",
+      "threadId": "2ba616a2-2ed7-43ea-97c6-34d952379712",
+      "intentDigest": "fd44e7d26d8e92bc6f749e38b608a448024281591fa09062f0f6123a7d5187d3",
+      "changedText": "conflict",
+      "changedStorageVersion": "conflict",
+      "originalRecovered": true
+    },
+    {
+      "event": "UI_ACK_PERSISTED_SCOPE_PURGE",
+      "field": "projectId",
+      "purged": true,
+      "automaticWrites": 0
+    },
+    {
+      "event": "UI_ACK_PERSISTED_SCOPE_PURGE",
+      "field": "policyVersion",
+      "purged": true,
+      "automaticWrites": 0
+    },
+    {
+      "event": "UI_ACK_INVALID_RECEIPTS",
+      "threadId": "5c397757-d6c7-4a22-aeb5-f47ce79ed05a",
+      "refused": [
+        "missing",
+        "legacy-Boolean",
+        "wrong-principal",
+        "wrong-key",
+        "wrong-thread",
+        "wrong-intent",
+        "wrong-command",
+        "missing-message",
+        "different-incarnation",
+        "different-version",
+        "equal-text-prior-message",
+        "different-source"
+      ],
+      "exactAttempts": 14,
+      "originalRecovered": true
+    },
+    {
+      "event": "UI_ACK_DETACHED_PURGE",
+      "automaticWrites": 0,
+      "purged": true,
+      "detached": true
+    },
+    {
+      "event": "UI_ACK_LEGACY_OUTCOME",
+      "threadId": "8c850046-94e4-452c-9dd5-22ba301b2ba2",
+      "status": "unavailable",
+      "automaticWrites": 0,
+      "sqliteReopened": true,
+      "acknowledged": false
+    },
+    {
+      "event": "UI_ACK_EDITED_MESSAGE",
+      "threadId": "e46ed827-373c-4cc3-a0fb-921a93b59193",
+      "original": {
+        "id": "0b265e49-4c8c-496e-8d35-b03f84b97c01",
+        "incarnation": "43252a60-8590-4ee1-99d7-2fdf4464b69b",
+        "version": 1
+      },
+      "currentVersion": 2,
+      "acknowledged": false
+    },
+    {
+      "event": "UI_ACK_SCOPE_PURGE",
+      "reason": "revocation",
+      "automaticWrites": 0,
+      "purged": true
+    },
+    {
+      "event": "UI_ACK_SCOPE_PURGE",
+      "reason": "principal-switch",
+      "automaticWrites": 0,
+      "purged": true
+    }
+  ],
+  "logs": {
+    "source": "GitHub MCP decoded job log",
+    "job_id": 132565093216,
+    "utf8_bytes": 125547,
+    "sha256": "b006443e415ef8e97748eab64b23c9845409226e24d21befc5e890cfd1e53dac",
+    "raw_log_committed": false
+  },
+  "dedupe": {
+    "method": "Actions global list plus exact branch lookup before creation",
+    "matching_prior_runs": 0,
+    "concurrent_mission_runs": 0
+  },
+  "reused": {
+    "ordinary": {
+      "run": 43632801654,
+      "status": "PASS_REUSED_UNCHANGED_BLOBS",
+      "rerun": false,
+      "equality": "blobs.02.json"
+    }
+  },
+  "next": "Fix only own lifecycle/source-replacement tests; revalidate their two files with browser startup/lifecycle and static gates. Do not rerun unchanged refusal file or ordinary fixture; preserve all results and failures."
+}

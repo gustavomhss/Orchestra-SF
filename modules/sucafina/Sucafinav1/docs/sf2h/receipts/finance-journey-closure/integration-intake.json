@@ -1,0 +1,163 @@
+{
+  "schema": "finance-journey-closure-intake-v1",
+  "mission": 18,
+  "finding": "FIN-IND-005",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "finance-resume",
+  "pr": 42,
+  "recipientRole": "session14/integration",
+  "previousHandoff": "454b97daf614176507711df889bd45743467f7af",
+  "authority": {
+    "sourceCommit": "a32285b2683b5000dafe93df99289547c7f410fb",
+    "sourceBlob": "c8129f55def8293a43595e9ab7beda44d66654b1",
+    "explicitUserContinuation": true,
+    "previousTerminalHandoffRead": true,
+    "branchHeadMatchedAtIntake": true,
+    "writeScope": [
+      "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+      "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/"
+    ]
+  },
+  "product": {
+    "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+    "tree": "a736cd370da6081c6010ffb26d66130fea94736f",
+    "linearCommits": [
+      "9a2ab893be9f2af2078f67ca867c13892452752e",
+      "5a029e77bfd9d8ba19494966a95c908e3f05043d"
+    ],
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+        "blob": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+        "characters": 20097,
+        "bytes": 20097,
+        "sha256": "dedee7a05f2fb00a7267b93fc7ba23052c5bd625cfd161ab6bce71f4f07d635e",
+        "disposition": "UNCHANGED_PRESERVED"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "blob": "fe4ab56201fd1898905ac7bc810f0495a64f8602",
+        "characters": 19250,
+        "bytes": 19250,
+        "sha256": "b62aa7dc8931f1dbf5cc8437fb3875ece324027a78ad623c3de750ba41fa4c1d",
+        "disposition": "UNCHANGED_PRESERVED"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "blob": "46a04597df74205add4531465f35d8a55ca1f8dd",
+        "characters": 24748,
+        "bytes": 24748,
+        "sha256": "0bcc2e34091b35a4efc3b680a8de3348e627a5aa8a0f7816e4c3412d3fc3512f",
+        "disposition": "UNCHANGED_PRESERVED"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+        "blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+        "characters": 8265,
+        "bytes": 8265,
+        "sha256": "60aba00602cf6f33870832579844a86b95abae046c1f9593ff58d20f9d2767a1",
+        "disposition": "UNCHANGED_PRESERVED"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+        "blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332",
+        "characters": 23457,
+        "bytes": 23457,
+        "sha256": "3b5c59375a39f85996a28210fad0932a2c0ad2402b21c0170f2d8c0930eac5d8",
+        "disposition": "CHANGED"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+        "blob": "d39d52bc2b04d7b4864539c78a002232628ad2c7",
+        "characters": 6933,
+        "bytes": 6933,
+        "sha256": "7fcc1f6978ff260b17af791bba873d2356799b3d03266f767bd6f7a4892e662c",
+        "disposition": "UNCHANGED_PRESERVED"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+        "characters": 29250,
+        "bytes": 29250,
+        "sha256": "576dc47430a6072d094c98d4c319d6659f8b58d07a201dc1a50d47bc34679a59",
+        "disposition": "CHANGED"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/units-batch.test.ts",
+        "blob": "d48900410734026982431b44d4885fe0f91fae9d",
+        "characters": 9188,
+        "bytes": 9188,
+        "sha256": "9443e82bf954586c973159a7c59a2daf6a18cd6e149d076982838b546fe33ea0",
+        "disposition": "ADDED"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/original-authority.test.ts",
+        "blob": "1a6989101c47f36ff21d8495780b179ceb595357",
+        "characters": 1961,
+        "bytes": 1961,
+        "sha256": "77eaf22dfed08ff6dbd8ec3d6d7827e6acb9c60f0222277b07605a781f371a04",
+        "disposition": "ADDED"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/result-receipt.test.ts",
+        "blob": "438672355e67c0c4b0f445b01a993edb1b3ad7fc",
+        "characters": 10778,
+        "bytes": 10778,
+        "sha256": "77b33f22421041d8b164df66184302a2b20b448a1dd0b4b338fb684b6dee709b",
+        "disposition": "ADDED"
+      }
+    ],
+    "preimages": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "blob": "33a99c9fc0d1c22b9dee21ee37274988c72736ba"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+        "blob": "d2ae9e7b53fe3a86b356f8453814b2b7d7b2615e"
+      }
+    ]
+  },
+  "integrationRules": [
+    "Compare exact target preimages before selective intake; do not substitute a branch name for the pinned SHA.",
+    "Retain W1 tests and W2 tests with the producer changes, plus final receipts from the commit containing this manifest.",
+    "Do not merge/deploy or claim global acceptance from this delivery.",
+    "Old result-store code fails closed when replaying new compact receipts; mixed-version/rollback operation is not established.",
+    "No CLI/host-binding/WP10 integration, Memory13, ACK10, forecast12, exports11 or C12/apply changes included."
+  ],
+  "proofs": {
+    "S1": {
+      "W": "9a2ab893be9f2af2078f67ca867c13892452752e",
+      "S": "e47c611a7f03dfbb501487d09f1567c6802077fc",
+      "run": 43634808031,
+      "result": "EXPECTED_RED"
+    },
+    "S2": {
+      "W": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+      "S": "8bf015c999750c26a721749cfca9372891d3cec3",
+      "run": 43635340065,
+      "result": "PASS_43_350"
+    },
+    "check": {
+      "W": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+      "run": 43635795619,
+      "result": "FAIL_115_EXTERNAL_43_GATES_15_WARNINGS"
+    },
+    "S3": {
+      "W": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+      "S": "5b82d9de8e329bdf2656ab8785c8d7ed2d7841a8",
+      "run": 43636137688,
+      "result": "FAIL_FIXTURE_GUARD_180000_BEFORE_EXACT_THRESHOLD"
+    }
+  },
+  "globalRelease": false,
+  "findingDisposition": "OPEN_IMPLEMENTED_NOT_CLOSED",
+  "remainingDependency": "Reduce the cost of fresh C08/provider state materialization and canonical case/source replay under the appropriate owner's paths, or demonstrate a new equivalent Finance observation boundary. No such provider delta is applied or proven here."
+}

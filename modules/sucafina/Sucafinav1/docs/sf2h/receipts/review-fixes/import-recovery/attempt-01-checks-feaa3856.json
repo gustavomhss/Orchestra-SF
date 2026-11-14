@@ -1,0 +1,110 @@
+{
+  "schema": "sf2h-review-fix-checks-v1",
+  "mission": "import-recovery",
+  "actor": "S2-C",
+  "attempt": 1,
+  "status": "IN_PROGRESS",
+  "examined": {
+    "head": "feaa3856ef84b5a85b687fd67e8e20883bc246c2",
+    "tree": "fcf9bcfc37ae8e41655b7e26a3b9d60747387222",
+    "snapshot": "2002c10b0e9807d4739adcc80e4130f1577f88ab",
+    "snapshot_tree": "05978d44b71a2aa6f1f3faa63e46374cc7c17ad7",
+    "snapshot_only_addition": ".astra-operations-check.json",
+    "request_blob": "73aa81338d7d0db09bdcf35189ceb88a30962c58",
+    "request": {
+      "productSha": "feaa3856ef84b5a85b687fd67e8e20883bc246c2",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    },
+    "dev_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf"
+  },
+  "run": {
+    "id": 43627027938,
+    "job": 132545209318,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627027938/job/132545209318",
+    "conclusion": "failure",
+    "started_at": "2026-11-14T18:31:04Z",
+    "completed_observed_at": "2026-11-14T18:33:27Z"
+  },
+  "checks": [
+    {
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "result": "FAIL",
+      "diagnostics": [
+        {
+          "code": "TS2345",
+          "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts",
+          "line": 13,
+          "column": 72,
+          "classification": "OWN_TEST_TYPE_ERROR",
+          "cause": "O default randomUUID() de app.call inferiu tipo template UUID; loseApplyResponse recebe chave de intenção string.",
+          "correction": "Anotar intent: string = randomUUID() no helper call de apply-fixture.ts. Alteração somente de tipo, sem casts e sem mudar o default ou a execução."
+        },
+        {
+          "code": "TS2741",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "line": 167,
+          "column": 41,
+          "classification": "PREEXISTING_OUTSIDE_WRITE_PATHS",
+          "cause": "Parâmetro obrigatório procurementEvidenceWrites ausente.",
+          "external_proposal": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/attempt-01-external-wp14-typecheck.json",
+          "preimage_blob": "fbe627ffde443ff7e2d3b1204bbcf67523404f41"
+        }
+      ]
+    },
+    {
+      "command": "bun typecheck",
+      "directory": "apps/cli",
+      "result": "PASS"
+    },
+    {
+      "command": "bun run check:guards --base origin/dev",
+      "directory": ".",
+      "result": "PASS",
+      "rules": 78,
+      "changed_paths_against_dev": 843,
+      "gate_findings": 0,
+      "warn_findings": 11,
+      "errors": 0,
+      "warning_scope": "10 avisos de dependências em package.json de apps/cli, modules/atlas/boundary e modules/sucafina; 1 aviso de timeout em test/product/wp01/personal-views.test.ts. Todos estão fora do delta desta missão e já presentes na base."
+    }
+  ],
+  "artifact": {
+    "id": 14126472543,
+    "name": "astra-operations-check-1",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627027938/artifacts/14126472543",
+    "sha256": "b86d7525dd1b5ff5627e5b2bdf40305c53b8bf224a99cc22b001159620febbcc",
+    "size_in_bytes": 1670,
+    "downloaded_and_digest_verified": true,
+    "read_files": [
+      "revisions.txt",
+      "merge-base.txt",
+      "sucafina-typecheck.log",
+      "cli-typecheck.log",
+      "guards.log"
+    ],
+    "revision_file_matches_examined": true,
+    "raw_logs_committed": false
+  },
+  "next_attempt": {
+    "material_scope": "Somente assinatura de helper de teste Apply; produto e demais testes não mudam.",
+    "functional_selection": [
+      "./Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts"
+    ],
+    "reason": "Revalidar os quatro casos que consomem a fixture alterada; não repetir os dez casos de admissão/regressão cujas entradas permanecem byte-idênticas.",
+    "checks": "Reexecutar typechecks e guards sobre o novo head de entrega. Preservar esta falha e ambos os recibos anteriores."
+  },
+  "previous_attempt_refs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/attempt-01-functional-20915a35.json",
+      "blob": "e7d46b4111fca731e1e984566d4876eaa0c53265",
+      "functional_result": "14 PASS / 0 FAIL no W/S originais; não é PASS de typecheck."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/attempt-01-external-wp14-typecheck.json",
+      "blob": "f3cfc230fcdb2a9b8b113b9315dc2ddf1fab87a2"
+    }
+  ],
+  "consumer": "S0 / WP06 / WP10; dependência de teste WP14 com patch externo não aplicado."
+}

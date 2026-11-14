@@ -60,6 +60,16 @@ export function outlookMonth(monthIndex: number, closed: number, actual: number 
   return budget
 }
 
+/** The save command preserves every finite numeric forecast, including fractional amounts. */
+export function plannerMonthlyAmount(value: unknown) {
+  return value === "" || value === null ? null : Number(value)
+}
+
+/** Preserve component order and IEEE-754 rounding for the Planner known subtotal. */
+export function plannerKnownSubtotal(amounts: readonly (number | null)[]) {
+  return amounts.reduce<number>((sum, amount) => sum + (amount ?? 0), 0)
+}
+
 export function variance(outlook: number, budget: number): { value: number; over: boolean; shown: number | "–" } {
   const value = outlook - budget
   if (Math.abs(value) < 0.5) return { value, over: value > 0, shown: "–" }

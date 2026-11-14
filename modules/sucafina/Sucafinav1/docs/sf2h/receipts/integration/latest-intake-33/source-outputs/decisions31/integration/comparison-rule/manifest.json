@@ -1,0 +1,58 @@
+{
+  "mission": "31",
+  "owner": "session23/shared-host",
+  "status": "COMPLETE_OWNER_PATCH_NOT_APPLIED",
+  "dependencies": [
+    {
+      "ref": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "blob": "138238ca9273e84f39f8e1db484378a3e62d41d4",
+      "contract": "Existing readMetric uses canonical compareScenarios and exact request/case/source observations; no synthesized amount or parameter."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "contract": "sharedPortfolio exposes readMetric from registries; integration must supply the existing sharedPortfolio instance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+      "contract": "Mission31 explicit human numeric rule input: compare, select actual authorized supporting evidence, choose condition and limit, register, compare again."
+    }
+  ],
+  "preserved_guards": [
+    "selected exact case and current authority",
+    "rule metric/currency/period scope",
+    "fresh authorized rule evidence",
+    "actors.locked + intent.verify + verifyDecisionPlannerSources in registry snapshot",
+    "existing generic registry preferences CAS, human admission and idempotent replay",
+    "sensitivity rules retain original parameter and producer checks"
+  ],
+  "behavior": "Only composed sharedPortfolio runtime accepts plain known-subtotal comparison rules; it delegates metrics to existing canonical shared readMetric. Standalone composition remains unavailable for plain rules. Rule registration advances only rule version. No financial approval or Apply.",
+  "verification": "NOT_RUN: no local product test, parser, server or CI dispatch by this agent. Owner must consume exact patch and run focused Actions before positive E2E can be claimed.",
+  "required_owner_checks": [
+    "Human plain rule registration/replay with real comparison sources",
+    "Conditioned known subtotal remains unknown criterion state and null complete cost",
+    "Stale source and current authority changes deny registration/metric",
+    "Existing sensitivity comparison unchanged",
+    "End-to-end choice values produced by portfolio-preparation.resolveChoiceValues"
+  ],
+  "patch": "comparison-rule.patch",
+  "patch_sha256": "3e960eb0a3a92cfe38fd8c7ef6b2b9a289730cd43a2708d531e7ec1821fed1ac",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "source_sha": "556079fe2fb97c824504ec60a47798c6e0553539",
+      "source_status": "absent (GitHub MCP 404)",
+      "preimage_ref": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+      "preimage_blob": "e8a931a3d0788d0c6899e9550fbe069a4a5dc7de",
+      "preimage_local_blob": "e8a931a3d0788d0c6899e9550fbe069a4a5dc7de",
+      "postimage_blob": "149cc8fb12dd54b6622842cfa4e0c1a2e2bf4f93",
+      "preimage": "preimages/apps/cli/src/sucafina-product/decision-domain-services.ts.txt",
+      "preimage_bytes": 17822,
+      "preimage_sha256": "2b782fb131707f8f3aceb3bec37c84f2ccff7a2d6970456e9812d8f471acf01a",
+      "postimage": "postimages/apps/cli/src/sucafina-product/decision-domain-services.ts.txt",
+      "postimage_bytes": 19078,
+      "postimage_sha256": "3726be1e6a28bb33efe916c161572aa94427df5f5e66021ab1253a66a1a2a509"
+    }
+  ],
+  "artifact_note": "Images use .ts.txt so uninstalled owner proposals are not included as executable TypeScript. Strip only the final .txt when applying to the declared target path."
+}

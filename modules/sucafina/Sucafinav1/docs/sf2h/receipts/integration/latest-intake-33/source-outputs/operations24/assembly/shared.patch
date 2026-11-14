@@ -1,0 +1,122 @@
+--- a/packages/app-shell/e2e/sucafina/wp04/host.ts
++++ b/packages/app-shell/e2e/sucafina/wp04/host.ts
+@@ -2,9 +2,6 @@
+ import { chmod, mkdtemp, realpath, rm, writeFile } from "node:fs/promises"
+ import { tmpdir } from "node:os"
+ import path from "node:path"
+-import { Location } from "@orchestra/core/location"
+-import { AbsolutePath } from "@orchestra/core/schema"
+-import { createApplication } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
+ import type { Application } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
+ import { openLocalStore } from "../../../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
+ import { createOperatorIdentity } from "../../../../../modules/sucafina/Sucafinav1/runtime/operator-identity.ts"
+@@ -15,11 +12,10 @@
+ import { createSfSourcePersistence } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
+ import { enumerateSfSources } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-inventory.ts"
+ import { createSfSourceScopeProjector } from "../../../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
+-import { createSfProductAuthority } from "../../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+-import { createSfBusinessServices } from "../../../../../apps/cli/src/sucafina-product/business-services.ts"
++import { createOperationsInstallation } from "../operations-support/installation.ts"
+ 
+ // Playwright starts this composition in Bun because the production adapter uses bun:sqlite.
+-// The fixture serves the real authenticated application, C02 queue producer, domain, renderer and shell.
++// The fixture serves the real authenticated application, C02 queue, Planner, import/document services, renderer and shell.
+ // Synthetic local-operator accounts qualify this browser path, not Entra or native residency.
+ const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-wp04-browser-"))
+ await chmod(directory, 0o700)
+@@ -48,6 +44,10 @@
+ const origin = server.url.origin
+ const bankKey = randomBytes(32)
+ const environment = async () => ({ at, id: randomUUID, directory: people, bankKey })
++const signingKey = randomBytes(32)
++// The runner must provide an already approved real ClamD service. No service is installed here.
++const scannerPort = process.env.SF_OPERATIONS_CLAMD_PORT
++const scanner = scannerPort === undefined ? null : { host: "127.0.0.1" as const, port: Number(scannerPort) }
+ const accounts = configurations.map((configuration) => {
+   const identity = createOperatorIdentity({
+     origin,
+@@ -64,30 +64,13 @@
+       ? { ...authenticated, canWrite: false, roles: [{ surface: context.surface, role: "viewer" }] }
+       : authenticated
+   }
+-  const proposalCoverageWrites = new WeakSet<object>()
+-  const procurementEvidenceWrites = new WeakSet<object>()
+-  const authority = createSfProductAuthority({
+-    identity: () => ({ installationId, hostId: "wp04-browser", projectId: installationId, location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }),
+-    installationId, origin, policyVersion: "wp04-browser-read", persistence: store, authenticate, environment,
+-    grants: [{ principalRef: "macos:" + installationId + ":" + configuration.uid, namespaces: [], operations: ["sf_request_read"] }],
+-    createId: randomUUID, now: Date.now, commandIdentity: async () => randomUUID(),
+-    inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
+-    providerGeneration: async () => undefined, authorizeDocument: async () => undefined, proposalCoverageWrites, procurementEvidenceWrites,
++  const installation = createOperationsInstallation({
++    installationId, directory, origin, mount: configuration.mount,
++    principalRef: "macos:" + installationId + ":" + configuration.uid,
++    readOnly: configuration.key === "viewer",
++    persistence: store, authenticate, environment, signingKey, scanner,
+   })
+-  const business = createSfBusinessServices({ authority, persistence: store, proposalCoverageWrites, procurementEvidenceWrites })
+-  return {
+-    ...configuration,
+-    identity,
+-    business,
+-    application: createApplication(configuration.mount, {
+-      persistence: store,
+-      authenticate,
+-      environment,
+-      productView: business.procurementQueueView,
+-      domains: { procurement: [ProcurementModule], dashboard: [], planner: [] },
+-      maxJsonBytes: 100_000,
+-    }),
+-  }
++  return { ...configuration, identity, installation, application: installation.application }
+ })
+ const records = await store.transaction("procurement", async (snapshot) => {
+   const actor = { id: people[0]!.id, roles: ["admin", "buyer"], canWrite: true }
+@@ -96,9 +79,13 @@
+   if (!reset.ok) throw new Error("Baseline Procurement settings could not be initialized")
+   const holders = ProcurementModule.domain.execute(snapshot, actor, {
+     page: "Settings", action: "save", version: snapshot.versions.settings!.version,
+-    values: { levels: initialProcurementSettings().levels.map((level) => ({ ...level, holderId: actor.id })) },
++    values: {
++      levels: initialProcurementSettings().levels.map((level) => ({ ...level, holderId: actor.id })),
++      // The real private upload path requires a configured limit in bytes before scanning.
++      uploadCap: 16 * 1024 * 1024,
++    },
+   }, context)
+-  if (!holders.ok) throw new Error("Synthetic approval holder could not be configured")
++  if (!holders.ok) throw new Error("Synthetic approval holder and attachment limit could not be configured")
+   const execute = (command: Command) => {
+     const result = ProcurementModule.domain.execute(snapshot, actor, command, context)
+     if (!result.ok) throw new Error(`Fixture command ${command.page}/${command.action} was refused (${result.status})`)
+@@ -152,7 +139,7 @@
+   closing.started = true
+   active.ready = false
+   await server.stop(true)
+-  for (const account of accounts) account.business.dispose()
++  for (const account of accounts) account.installation.dispose()
+   await store.dispose()
+   await rm(manifest, { force: true })
+   await rm(directory, { recursive: true, force: true })
+--- a/packages/app-shell/e2e/sucafina/wp04/selection.ts
++++ b/packages/app-shell/e2e/sucafina/wp04/selection.ts
+@@ -3,6 +3,7 @@
+   return args.some((argument) => {
+     // test-ci-request.ts passes anchored filename regexes with this separator class.
+     const path = argument.replaceAll("[\\\\/]", "/").replaceAll("\\.", ".").replaceAll("\\", "/").replace(/:\d+(?::\d+)?$/, "")
+-    return path.endsWith("e2e/sucafina/wp04/procurement.spec.ts") || path.endsWith("e2e/sucafina/wp04/procurement.spec.ts$")
++    return ["e2e/sucafina/wp04/procurement.spec.ts", "e2e/sucafina/operations.spec.ts"]
++      .some((filename) => path.endsWith(filename) || path.endsWith(filename + "$"))
+   })
+ }
+--- a/packages/app-shell/e2e/tsconfig.json
++++ b/packages/app-shell/e2e/tsconfig.json
+@@ -30,6 +30,9 @@
+     "../../core/src/flag/flag.ts",
+     "../playwright.config.ts",
+     "./playwright.production.config.ts",
++    "./sucafina/operations.spec.ts",
++    "./sucafina/operations-support/**/*.ts",
++    "./sucafina/wp04/host.ts",
+     "./orchestra/**/*.ts",
+     "./orchestra-screenshots/**/*.ts",
+     "./orchestra/theme-first-paint.fixture.tsx",

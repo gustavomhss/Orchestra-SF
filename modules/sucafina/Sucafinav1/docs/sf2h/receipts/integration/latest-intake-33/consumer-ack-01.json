@@ -1,0 +1,56 @@
+{
+  "schema": "sf2-consumer-ack-intent-v1",
+  "mission": 33,
+  "consumer": "S0-C sf2-stack/PR65",
+  "source_commit": "5e3073bceca683adc5663108832094421b43325e",
+  "source_handoff_blob": "154be08934e9210fc973323dfd3be51ce16dcaaa",
+  "candidate": "C5",
+  "disposition": "Accept selective implementation, three tests/fixture and all33 original receipts into containing candidate; exact commit/tree and observed ref readback follow in candidate-C5.json.",
+  "paths": 39,
+  "criteria_status": "Unchanged; FIN-IND-005 remains open; no source PASS transferred",
+  "scope": "Consumption ACK, not functional or independent acceptance",
+  "dependencies_verified": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "source_blob": "0dc89d86866620a8109051c68bc2d2b4d92c508f",
+      "target_blob": "0dc89d86866620a8109051c68bc2d2b4d92c508f",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "source_blob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "target_blob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "source_blob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+      "target_blob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "source_blob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "target_blob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "source_blob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "target_blob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "source_blob": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "target_blob": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+      "source_blob": "3086ebdaf8049ab38cc0855934389bdec3f251c8",
+      "target_blob": "3086ebdaf8049ab38cc0855934389bdec3f251c8",
+      "unchanged": true
+    }
+  ]
+}

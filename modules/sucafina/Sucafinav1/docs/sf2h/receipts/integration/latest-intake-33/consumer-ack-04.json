@@ -1,0 +1,31 @@
+{
+  "schema": "sf2-consumer-ack-v1",
+  "mission": 33,
+  "source": "Tooling26",
+  "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+  "candidate": "C8",
+  "parent_commit": "8f944fc198602563893ccc6783cc096656cd9f3a",
+  "status": "CONSUMED_TERMINAL_IMPLEMENTATION_COMPILER_NOT_RUN_PENDING_READBACK",
+  "manifest": "increment-04.json",
+  "exact_identity_receipt": "candidate-C8.json",
+  "material_paths": 6,
+  "original_receipts": 19,
+  "source_status": "COMPILER_NOT_RUN",
+  "builder_mode": "100755",
+  "historical_patch": "owner-patches/operations-host-selection.patch must remain INERT_SUPERSEDED_BY_CURRENT_SOURCE, never apply.",
+  "pending": [
+    {
+      "owner": "S0 dispatcher",
+      "action": "Run actual five package checks and new bun run typecheck:sf-e2e showConfig/listFiles on current candidate, capture logs/config/program; COMPILER_NOT_RUN."
+    },
+    {
+      "owner": "source owners",
+      "action": "Resolve actual compiler diagnostics if observed; do not suppress, exclude or loosen sources."
+    }
+  ],
+  "functional_acceptance": false,
+  "tests": "NOT_RUN",
+  "ci": "NOT_RUN",
+  "AM": "NOT_RUN",
+  "source_PASS_transferred": false
+}

@@ -1,0 +1,664 @@
+diff --git a/apps/cli/src/sucafina-product/business-services.ts b/apps/cli/src/sucafina-product/business-services.ts
+index 385dd1998ec3fb73b32f77ab3dec9c93beb440d1..ce3a281bf07819f90af7fad10f98861980f3273b 100644
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -42,6 +42,7 @@
+ import { createSfCaseRecall } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts"
+ import { createSfAtlasBusiness } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+ import type { probeSfAtlasScanner } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts"
++import { createSfReviewCollaborationBinding } from "./review-collaboration-binding.ts"
+ import { createSfDashboardServices } from "./dashboard-services.ts"
+ import { createSfDashboardDecisions } from "./dashboard-decisions.ts"
+ import { createSfPlannerEvidence } from "./planner-evidence.ts"
+@@ -157,6 +158,7 @@
+     recall: (request, call) => evidence.current ? evidence.current.recall(request, call) : Promise.reject(new Error("SF_ATLAS_UNAVAILABLE")),
+     emitFromLedger: (ref, call) => evidence.current ? evidence.current.emitFromLedger(ref, call) : Promise.resolve({ status: "unavailable", sourceEventId: ref.kind === "case-event" ? ref.target.eventId : "", scanner: { name: "", version: "", status: "unavailable" }, reason: "atlas-unavailable" }),
+   }
++  const reviewCollaboration = createSfReviewCollaborationBinding(context)
+   const dashboardServices = createSfDashboardServices({ authority: input.authority, scopedSources: input.persistence, dashboard, sources: dashboardSources, records: dashboardRecords, dashboardHostWrites, evidence: context })
+   const operationIdentity = (call: TrustedDomainContext) => call.kind === "ui" ? input.authority.ui.operationIdentity(call) : input.authority.native.operationIdentity?.(call)
+   const authorizeCase = async (value: DecisionCase, call: TrustedDomainContext) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call)
+@@ -196,7 +198,9 @@
+   type WorkBridge = { signals: WorkSignals; destination: (selection: WorkListRequest, actionRef: string, call: TrustedDomainContext) => Promise<PortResult<{ href: string }>> }
+   const workBridge: { current?: WorkBridge } = {}
+   const collaborationProducer = createCollaborationHost({ host, state: input.authority.state, creationTarget: input.authority.creationTarget,
+-    scopedSources: input.persistence, evidence: context, procurement, collections: registry, cases,
++    scopedSources: input.persistence, evidence: reviewCollaboration.evidence, procurement, collections: registry, cases,
++    authorizeReviewThreadContext: reviewCollaboration.authorizeReviewThreadContext, reviewRecipientAuthority: reviewCollaboration.reviewRecipientAuthority,
++    reviewAnswerSource: reviewCollaboration.reviewAnswerSource,
+     authority: input.authority.authority, human: input.authority.human, confirmationSource,
+     captureWorkSource: createProcurementCollectionMemberIssuer({ collection: registry, individual, revalidate: host.revalidate }),
+     issueForActor: individual.issueForActor, prepareReissueScope: individual.prepareReissueScope,
+@@ -694,6 +698,7 @@
+   return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
+     projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain, withProcurementWorkPeriod,
+     withMemoryObservation,
++    bindReviewCollaboration: reviewCollaboration.bind,
+     bindWorkBridge: (bridge: WorkBridge) => {
+       if (workBridge.current) throw new Error("SF_WORK_BRIDGE_ALREADY_BOUND")
+       workBridge.current = Object.freeze({ ...bridge })
+@@ -704,5 +709,5 @@
+     },
+     atlasRecall: () => atlasState.current,
+     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
+-    dispose: () => { workBridge.current = undefined; plannerConfirmation.current = undefined; dashboardServices.dispose(); procurementDecisions?.dispose(); periods.clear(); evidence.current = undefined; recall.current = undefined; decisionEvidence.current = undefined; atlasState.current = undefined; forecastCoverage.current = undefined; decisionDomain.current = undefined; plannerHolder.current = undefined; clearAtlasDescriptors() } }
++    dispose: () => { reviewCollaboration.dispose(); workBridge.current = undefined; plannerConfirmation.current = undefined; dashboardServices.dispose(); procurementDecisions?.dispose(); periods.clear(); evidence.current = undefined; recall.current = undefined; decisionEvidence.current = undefined; atlasState.current = undefined; forecastCoverage.current = undefined; decisionDomain.current = undefined; plannerHolder.current = undefined; clearAtlasDescriptors() } }
+ }
+diff --git a/apps/cli/src/sucafina-product/extended-business-services.ts b/apps/cli/src/sucafina-product/extended-business-services.ts
+index a57e9d39f81e8a064f903765e70533bdffea4ba2..4cadc40037fefb895a7c77d53125922fa747b479 100644
+--- a/apps/cli/src/sucafina-product/extended-business-services.ts
++++ b/apps/cli/src/sucafina-product/extended-business-services.ts
+@@ -10,6 +10,8 @@
+ import { createSfBiServices } from "./bi-services.ts"
+ import { createSfBiArtifacts } from "./bi-artifacts.ts"
+ import type { SfBiHumanChoiceReader } from "./bi-artifacts.ts"
++import { createSfReviewCollaboration } from "./review-collaboration.ts"
++import type { ReviewThreadRecipientAuthority } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts"
+ import { createSfReviewServices } from "./review-services.ts"
+ import type { SfReviewReaders } from "./review-services.ts"
+ import { createSfExtendedAssets } from "./extended-assets.ts"
+@@ -35,6 +37,7 @@
+   origin: string
+   preparation?: SfPortfolioPreparation
+   reviewReaders?: SfReviewReaders
++  reviewRecipientAuthority?: ReviewThreadRecipientAuthority
+   readHumanBiChoice?: SfBiHumanChoiceReader
+   assets?: Pick<ReturnType<typeof createSfExtendedAssets>, "bi" | "reviews">
+ }) {
+@@ -49,6 +52,8 @@
+     readHumanChoice: input.readHumanBiChoice ?? choices.readBi, readArtifact: biArtifacts.store.read, revalidate: input.authority.host.revalidate })
+   const reviewServices = createSfReviewServices({ ...input, portfolio: portfolioServices, bi, readers: input.reviewReaders })
+   const reviews = reviewServices.application
++  if (reviews && reviewServices.historical) input.business.bindReviewCollaboration(createSfReviewCollaboration({ authority: input.authority,
++    application: reviews, evidence: reviewServices.historical.evidence, recipientAuthority: input.reviewRecipientAuthority }))
+   const ownAssets = input.assets ? undefined : createSfExtendedAssets()
+   const assets = input.assets ?? ownAssets!
+   const descriptors: readonly CapabilityDescriptor[] = [bi.descriptor, ...portfolioServices.descriptors, ...(reviews?.descriptors ?? [])]
+@@ -61,7 +66,7 @@
+       requiredAuthority: { read: ["cases:read"], draft: ["cases:write"], receipt: ["cases:read"], alternative: ["cases:read"], change: ["cases:read"] } })
+       .filter((descriptor) => descriptor.id === "sf_change_prepare" || descriptor.id === "sf_alternative_draft"),
+   ]
+-  const http = createSfExtendedHttp({ ...input, bi, reviews, assets })
++  const http = createSfExtendedHttp({ ...input, bi, reviews, assets, reviewEvidence: reviewServices.historical?.evidence })
+   const choiceHttp = createSfAnalysisChoiceHttp({ authority: input.authority, origin: input.origin, choices, artifacts: biArtifacts.store,
+     alternatives: alternatives.choices, business: input.business })
+   let disposed = false
+@@ -86,7 +91,8 @@
+       ...(reviews ? { reviews: reviews.reviews, artifacts: reviews.artifacts } : {}),
+       ...(portfolioServices.proof ? { portfolioProof: portfolioServices.proof } : {}), ...(portfolioServices.units ? { units: portfolioServices.units } : {}),
+     },
+-    unavailable: [...portfolioServices.unavailable, ...bi.unavailable, ...reviewServices.unavailable, ...decisions.unavailable],
++    unavailable: [...portfolioServices.unavailable, ...bi.unavailable, ...reviewServices.unavailable, ...decisions.unavailable,
++      ...(!input.reviewRecipientAuthority ? ["review-distinct-recipient-authority-unavailable"] : [])],
+     dispose: () => { disposed = true; portfolioServices.dispose(); ownAssets?.dispose() },
+   }
+ }
+diff --git a/apps/cli/src/sucafina-product/extended-http.ts b/apps/cli/src/sucafina-product/extended-http.ts
+index 63bbe96595c04a484cdc16e01f95c42233b4025c..d8e0d149e37c640db8957f3e917f867088923d93 100644
+--- a/apps/cli/src/sucafina-product/extended-http.ts
++++ b/apps/cli/src/sucafina-product/extended-http.ts
+@@ -16,6 +16,7 @@
+ import { createSfExtendedReviewCycle, sfDashboardReviewAgendaItem } from "./extended-review-cycle.ts"
+ import { sfExtendedSourceLinks } from "./extended-source-links.ts"
+ import { sameBiProjection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/projection.ts"
++import type { BusinessContextService } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+ import type { DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+ import { createSfBiDecisionNavigation, sfBiDecisionNavigation } from "./extended-bi-navigation.ts"
+ 
+@@ -25,6 +26,7 @@
+   bi: ReturnType<typeof createSfBiServices>
+   reviews: ReturnType<typeof createSfReviewServices>["application"]
+   persistence: SfScopedSourcePort
++  reviewEvidence?: Pick<BusinessContextService, "resolve">
+   origin: string
+   assets: Pick<ReturnType<typeof createSfExtendedAssets>, "bi" | "reviews">
+ }) {
+@@ -36,19 +38,33 @@
+   const handle = async (request: Request, surface: string): Promise<Response | undefined> => {
+     const reviewed = await input.reviews?.http(request, surface)
+     if (reviewed) return reviewed
+-    const url = new URL(request.url), mode = url.searchParams.get("sf")
++    const url = new URL(request.url)
++    const reportsEntry = !url.searchParams.has("sf") && url.searchParams.get("page") === "Generate Report" && url.searchParams.has("download")
++    const mode = reportsEntry ? "review" : url.searchParams.get("sf")
+     if (!["bi", "bi-data", "bi-source", "bi-decision", "bi-options", "review", "review-update", "review-source"].includes(mode ?? "")) return undefined
+     const json = (value: unknown, status = 200) => new Response(request.method === "HEAD" ? null : JSON.stringify(value), { status,
+       headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
+     if (surface !== "dashboard" || url.origin !== input.origin || request.signal.aborted) return json({ status: "denied", reason: "surface-unavailable" }, 403)
+     if (request.method !== "GET" && request.method !== "HEAD") return json({ status: "denied", reason: "read-method-required" }, 405)
+-    const allowed = mode === "review" ? ["sf", "page", "reviewRef", "previousReviewRef", "sectionId", "start", "end"] : mode === "review-update" ? ["sf", "reviewRef"] : mode === "review-source" ? ["sf", "reviewRef", "referenceId"] : mode === "bi-decision" ? ["sf", "selectionRef", "viewId", "start", "end", "snapshot", "target"] : mode === "bi-source" ? ["sf", "selectionRef", "viewId", "start", "end", "valueId", "referenceDigest"] : mode === "bi-options" ? ["sf", "page", "viewId", "start", "end"] : ["sf", "page", "viewId", "selectionRef", "start", "end", "baseRef", "candidateRef", "currency"]
+-    if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1)) return json({ status: "needs-input", reason: "invalid-query" }, 400)
+-    const period = { start: url.searchParams.get("start") ?? `${new Date().getUTCFullYear()}-01-01`, end: url.searchParams.get("end") ?? `${new Date().getUTCFullYear()}-12-31` }
++    const allowed = reportsEntry ? ["page", "download", "year", "title", "topic"] : mode === "review" ? ["sf", "page", "reviewRef", "previousReviewRef", "sectionId", "reviewThread", "reviewMessage", "reviewIncarnation", "reviewVersion", "start", "end"] : mode === "review-update" ? ["sf", "reviewRef"] : mode === "review-source" ? ["sf", "reviewRef", "referenceId"] : mode === "bi-decision" ? ["sf", "selectionRef", "viewId", "start", "end", "snapshot", "target"] : mode === "bi-source" ? ["sf", "selectionRef", "viewId", "start", "end", "valueId", "referenceDigest"] : mode === "bi-options" ? ["sf", "page", "viewId", "start", "end"] : ["sf", "page", "viewId", "selectionRef", "start", "end", "baseRef", "candidateRef", "currency"]
++    if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || !(reportsEntry && key === "topic") && url.searchParams.getAll(key).length !== 1)) return json({ status: "needs-input", reason: "invalid-query" }, 400)
++    const reportTopics = reportsEntry ? url.searchParams.getAll("topic") : undefined
++    const reportYear = reportsEntry ? url.searchParams.get("year") : undefined
++    if (reportsEntry && (!["docx", "pptx"].includes(url.searchParams.get("download") ?? "") || !reportYear || !/^202[4-7]$/.test(reportYear) ||
++      !reportTopics?.length || reportTopics.length > 40 || new Set(reportTopics).size !== reportTopics.length || reportTopics.some((topic) => !topic.trim() || topic.length > 120) ||
++      (url.searchParams.get("title")?.length ?? 0) > 200)) return json({ status: "needs-input", reason: "invalid-report-selection" }, 400)
++    if (url.searchParams.has("reviewThread") && (!url.searchParams.get("reviewRef") || !url.searchParams.get("reviewThread")?.trim() || url.searchParams.get("reviewThread")!.length > 2048))
++      return json({ status: "needs-input", reason: "invalid-review-thread" }, 400)
++    const messageKeys = ["reviewMessage", "reviewIncarnation", "reviewVersion"]
++    if (messageKeys.some((key) => url.searchParams.has(key)) && (!url.searchParams.get("reviewThread") ||
++      messageKeys.some((key) => !url.searchParams.get(key)?.trim() || url.searchParams.get(key)!.length > 2048) ||
++      !/^[1-9]\d*$/.test(url.searchParams.get("reviewVersion")!) || !Number.isSafeInteger(Number(url.searchParams.get("reviewVersion")))))
++      return json({ status: "needs-input", reason: "invalid-review-message" }, 400)
++    const period = { start: reportYear ? `${reportYear}-01-01` : url.searchParams.get("start") ?? `${new Date().getUTCFullYear()}-01-01`, end: reportYear ? `${reportYear}-12-31` : url.searchParams.get("end") ?? `${new Date().getUTCFullYear()}-12-31` }
+     if (!isSfPeriod(period)) return json({ status: "needs-input", reason: "invalid-period" }, 400)
+     const viewId = url.searchParams.get("viewId") ?? "BI01"
+     const bootstrap = { mode, page: url.searchParams.get("page"), period, viewId, selectionRef: url.searchParams.get("selectionRef"), reviewRef: url.searchParams.get("reviewRef"), baseRef: url.searchParams.get("baseRef"), candidateRef: url.searchParams.get("candidateRef"), currency: url.searchParams.get("currency"), previousReviewRef: url.searchParams.get("previousReviewRef"), sectionId: url.searchParams.get("sectionId"), referenceId: url.searchParams.get("referenceId"), valueId: url.searchParams.get("valueId"), referenceDigest: url.searchParams.get("referenceDigest") }
+-    const digest = digestSfValue(mode === "bi-decision" ? { ...bootstrap, snapshot: url.searchParams.get("snapshot"), target: url.searchParams.get("target") } : bootstrap)
++    const digest = digestSfValue(reportsEntry ? { ...bootstrap, reportTopics, reportYear, requestedTitle: url.searchParams.get("title"), requestedFormat: url.searchParams.get("download") } : mode === "bi-decision" ? { ...bootstrap, snapshot: url.searchParams.get("snapshot"), target: url.searchParams.get("target") } : bootstrap)
+     const action = mode?.startsWith("review") ? "sf_review_prepare" : "sf_dashboard_read"
+     const admitted = await authority.ui.admit(request, action, digest)
+     if (admitted.status !== "ok") return json(admitted, 403)
+@@ -75,7 +91,7 @@
+           sources = reviewCycle.evidence(previous.value, referenceId)
+         }
+         if (!sources.length || sources.some((source) => digestSfValue(source) !== digestSfValue(sources[0]))) return json({ status: "denied", reason: "source-outside-preserved-review" }, 403)
+-        const links = await sfExtendedSourceLinks({ business, reference: sources[0]!, call, url })
++        const links = await sfExtendedSourceLinks({ business, reference: sources[0]!, call, url, reviewEvidence: input.reviewEvidence })
+         // The canonical readers may materialize source scopes. Finish that work
+         // before C08; the final grouped reads require the same complete proof.
+         await input.reviews.readScope?.prepare(preserved.map((entry) => entry.reference), call)
+@@ -197,10 +213,20 @@
+             return undefined
+           }
+         } else {
+-          const current = await business.dashboardServices.discover({ page: url.searchParams.get("page") ?? "Budget Overview", period }, call)
+-          if (current.status !== "ok") return json(current, current.status === "denied" ? 403 : 409)
+-          if (!current.value.agenda) return json({ status: "unavailable", reason: "review-source-selection-unavailable" }, 409)
+-          data = { items: [sfDashboardReviewAgendaItem(current.value.agenda.section)] }
++          // The existing Generate Report form chooses the actual ordered agenda.
++          // Each topic is reopened by its production producer; none is dropped.
++          const pages = reportTopics?.map((topic) => topic === "Executive Summary" ? "Executive Dashboard" : topic) ?? [url.searchParams.get("page") ?? "Budget Overview"]
++          if (new Set(pages).size !== pages.length) return json({ status: "needs-input", reason: "duplicate-report-topic" }, 400)
++          const items: ReturnType<typeof sfDashboardReviewAgendaItem>[] = []
++          for (const page of pages) {
++            const current = await business.dashboardServices.discover({ page, period }, call)
++            if (current.status !== "ok") return json(current, current.status === "denied" ? 403 : 409)
++            if (!current.value.agenda) return json({ status: "unavailable", reason: "review-source-selection-unavailable" }, 409)
++            // Discovery uses one local "dashboard" ID; a report needs one stable ID per chosen topic.
++            items.push(sfDashboardReviewAgendaItem({ ...current.value.agenda.section,
++              id: reportsEntry ? `report:${page}` : current.value.agenda.section.id }))
++          }
++          data = { items, ...(reportsEntry ? { requestedTitle: url.searchParams.get("title"), requestedFormat: url.searchParams.get("download") } : {}) }
+         }
+       }
+       const script = await (mode === "review" ? input.assets.reviews() : input.assets.bi()).catch(() => undefined)
+@@ -216,7 +242,7 @@
+       // The published shell still owns navigation, notifications and sign-out.
+       const content = mode === "review" ? '<section data-sf-review-workspace data-sf-retain-view><p role="status">Loading review…</p></section>' : '<section data-sf-bi data-sf-retain-view><p role="status">Loading analyses…</p></section>'
+       const inline = script.replace(/<\/script/gi, "<\\/script")
+-      const bootstrapHtml = data === undefined ? "" : `<script type="application/json" data-sf-review-bootstrap>${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`
++      const bootstrapHtml = data === undefined ? "" : `<script type="application/json" data-sf-review-bootstrap>${JSON.stringify(mode === "review" ? { ...(data as object), principalRef: call.binding.principalRef } : data).replace(/</g, "\\u003c")}</script>`
+       const title = mode === "review" ? "Review and reports" : "Business intelligence"
+       const accessRevision = call.binding.accessRevision
+       const shell = documentHtml(title, "dashboard", `<a href="${url.pathname}">Dashboard</a>`, pageMain({ drawn: true, key: title, index: 0 }, content), "", "", accessRevision)
+diff --git a/apps/cli/src/sucafina-product/extended-browser.ts b/apps/cli/src/sucafina-product/extended-browser.ts
+index 9ddc9d3e95585cda5efe877ce2303ade497a0b98..83ecd80669c759dc65cc621543af2b5ebd9f9ac0 100644
+--- a/apps/cli/src/sucafina-product/extended-browser.ts
++++ b/apps/cli/src/sucafina-product/extended-browser.ts
+@@ -1,4 +1,5 @@
+ import { createReviewPreparationBrowser } from "../../../../modules/sucafina/Sucafinav1/product/reviews/browser.ts"
++import { createReviewCollaborationView } from "../../../../modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts"
+ import { createMeetingViewFromReads } from "../../../../modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+ import type { ReviewComparisonRead } from "../../../../modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts"
+ import type { ReviewCurrentThread } from "../../../../modules/sucafina/Sucafinav1/product/reviews/current-thread.ts"
+@@ -13,8 +14,16 @@
+ const bootstrap = document.querySelector<HTMLScriptElement>("script[data-sf-review-bootstrap]")
+ const reviewUrl = (reviewRef: string, sectionId?: string) => {
+   const url = new URL(location.href)
+-  url.searchParams.set("sf", "review"); url.searchParams.set("reviewRef", reviewRef)
+-  url.searchParams.delete("previousReviewRef"); url.searchParams.delete("sectionId")
++  const context = url.searchParams.get("reviewRef") === reviewRef ? new URLSearchParams(url.search) : undefined
++  const thread = context?.get("reviewThread")
++  url.search = new URLSearchParams({ sf: "review", reviewRef }).toString()
++  if (thread) {
++    url.searchParams.set("reviewThread", thread)
++    for (const key of ["reviewMessage", "reviewIncarnation", "reviewVersion"]) {
++      const selected = context?.get(key)
++      if (selected) url.searchParams.set(key, selected)
++    }
++  }
+   if (sectionId) url.searchParams.set("sectionId", sectionId)
+   return url
+ }
+@@ -23,6 +32,7 @@
+   bootstrap.remove()
+   let closed = false, generation = 0
+   let dispose = () => {}
++  let refreshCollaboration = () => {}
+   const pending = new Set<AbortController>()
+   let probing = false
+   const clearPrivate = () => {
+@@ -33,13 +43,19 @@
+     const message = document.createElement("p"); message.setAttribute("role", "status"); message.textContent = "O acesso mudou. Reabra uma revisão autorizada."
+     root.replaceChildren(message)
+   }
++  const accessDenied = (response: Response) => {
++    if (response.status === 401 || response.status === 403) return true
++    if (!response.redirected) return false
++    const destination = new URL(response.url, location.href)
++    return destination.origin === location.origin && /\/auth\/login\/?$/.test(destination.pathname)
++  }
+   const privateRead = async (url: URL) => {
+     if (closed) return undefined
+     const turn = generation, controller = new AbortController(); pending.add(controller)
+     const timer = setTimeout(() => controller.abort(), 30_000)
+     try {
+       const response = await fetch(url, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
+-      if (response.status === 401 || response.status === 403) { clearPrivate(); return undefined }
++      if (accessDenied(response)) { clearPrivate(); return undefined }
+       const body = await response.json().catch(() => undefined)
+       return !closed && turn === generation && !controller.signal.aborted ? { response, body } : undefined
+     } catch { return undefined } finally { clearTimeout(timer); pending.delete(controller) }
+@@ -51,12 +67,12 @@
+     const timer = setTimeout(() => controller.abort(), 30_000)
+     try {
+       const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
+-      if (response.status === 401 || response.status === 403) clearPrivate()
++      if (accessDenied(response)) clearPrivate()
+       await response.body?.cancel()
+     } catch { /* A network failure does not authorize a new render or erase preserved history. */ }
+     finally { clearTimeout(timer); pending.delete(controller); probing = false }
+   }
+-  window.addEventListener("focus", () => { void probe() })
++  window.addEventListener("focus", () => { void probe().then(() => { if (!closed) refreshCollaboration() }) })
+   // The shell has just reopened this exact review/preparation under current
+   // authority. Keep the mounted reader and human choices; updates remain an
+   // explicit successor operation, not a replacement of preserved history.
+@@ -68,7 +84,8 @@
+   window.addEventListener("pagehide", clearPrivate, { once: true })
+   window.addEventListener("pageshow", (event) => { if (event.persisted) location.reload() })
+   if (value && typeof value === "object" && typeof value.reviewRef === "string") {
+-    const status = document.createElement("p"), sources = document.createElement("nav")
++    const status = document.createElement("p"), sources = document.createElement("nav"), collaboration = document.createElement("section")
++    let conversation: ReturnType<typeof createReviewCollaborationView> | undefined
+     status.setAttribute("role", "status"); sources.setAttribute("aria-label", "Origens autorizadas da revisão")
+     let sourceGeneration = 0
+     const openSource = async (reference: BusinessEvidenceRef) => {
+@@ -96,6 +113,11 @@
+         const found = await privateRead(url), body = found?.body
+         if (!found?.response.ok || body?.status !== "ok" || body.value?.id !== reference || !Array.isArray(body.value?.sections) || !Array.isArray(body.value?.comments))
+           return { status: closed ? "denied" : "unavailable", reason: "review-unavailable" }
++        if (!conversation && typeof value.principalRef === "string" && value.principalRef.trim()) {
++          conversation = createReviewCollaborationView({ review: body.value, principalRef: value.principalRef })
++          collaboration.replaceChildren(conversation.element)
++          refreshCollaboration = () => { if (!closed) void conversation?.refresh() }
++        }
+         return { status: "ok", value: body.value }
+       },
+       readComparison: async (reference): Promise<PortResult<ReviewComparisonRead>> => {
+@@ -122,6 +144,7 @@
+         return { status: "ok", value: thread as ReviewCurrentThread }
+       },
+       checkUpdate: async (reference) => {
++        refreshCollaboration()
+         const url = new URL(location.href); url.search = new URLSearchParams({ sf: "review-update", reviewRef: reference }).toString()
+         const found = await privateRead(url)
+         if (closed) return { status: "denied", reason: "review-access-changed" }
+@@ -136,15 +159,15 @@
+       },
+       requestUpdate: (reference) => {
+         if (closed) return
+-        const url = new URL(location.href); url.searchParams.delete("reviewRef"); url.searchParams.delete("sectionId"); url.searchParams.set("previousReviewRef", reference)
++        const url = new URL(location.href); url.search = new URLSearchParams({ sf: "review", previousReviewRef: reference }).toString()
+         location.assign(url)
+       },
+       openSource, openReviewSection: (reference, sectionId) => { if (!closed) location.assign(reviewUrl(reference, sectionId)) },
+     })
+     const selected = value.selectedSection as PreservedReview["sections"][number] | undefined
+     const selectedView = selected ? selectedSection(selected, openSource) : undefined
+-    root.replaceChildren(...(selectedView ? [selectedView] : []), view.element, status, sources)
+-    dispose = view.dispose
++    root.replaceChildren(...(selectedView ? [selectedView] : []), view.element, collaboration, status, sources)
++    dispose = () => { refreshCollaboration = () => {}; conversation?.dispose(); collaboration.replaceChildren(); view.dispose() }
+   } else if (value && typeof value === "object" && Array.isArray(value.items)) {
+     const update = value as Partial<SfReviewUpdate> & { items: ReviewAgendaItem[] }
+     const client = createReviewPreparationBrowser()
+diff --git a/apps/cli/src/sucafina-product/extended-source-links.ts b/apps/cli/src/sucafina-product/extended-source-links.ts
+index 147b3a687aa8786a7429ba8e7452db40290081d5..f655f9d0728d8c92efe9b78efa1f379c5be67efd 100644
+--- a/apps/cli/src/sucafina-product/extended-source-links.ts
++++ b/apps/cli/src/sucafina-product/extended-source-links.ts
+@@ -1,18 +1,25 @@
+-import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
++import type { BusinessContextService, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+ import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
+ import type { createSfBusinessServices } from "./business-services.ts"
+ 
+ /** Links are derived from producer-authorized evidence, never an incoming URL. */
+-export async function sfExtendedSourceLinks(input: { business: ReturnType<typeof createSfBusinessServices>; reference: BusinessEvidenceRef; call: TrustedDomainContext; url: URL }) {
++export async function sfExtendedSourceLinks(input: { business: ReturnType<typeof createSfBusinessServices>; reference: BusinessEvidenceRef; call: TrustedDomainContext; url: URL; reviewEvidence?: Pick<BusinessContextService, "resolve"> }) {
+   const refs: BusinessEvidenceRef[] = input.reference.kind === "calculation" ? [...input.reference.target.sourceRefs] : [input.reference]
+   const links: { label: string; url: string }[] = []
+   for (const reference of refs) {
+     if (reference.kind !== "record") continue
+-    const current = await input.business.context.resolve(reference, input.call)
+-    if (current.state !== "fresh" || digestSfValue(current.ref) !== digestSfValue(reference)) continue
+-    const target = reference.target
++    const current = await (input.reviewEvidence ?? input.business.context).resolve(reference, input.call)
++    if (digestSfValue(current.ref) !== digestSfValue(reference) || current.accessRevision !== input.call.binding.accessRevision) continue
++    const selected = current.state === "fresh" ? reference : input.reviewEvidence && current.state === "historical" &&
++      current.authorizedProjection && current.differences && current.currentRef?.kind === "record" ? current.currentRef : undefined
++    if (!selected || selected.target.surface !== reference.target.surface || selected.target.recordType !== reference.target.recordType ||
++      selected.target.recordId !== reference.target.recordId || selected.target.incarnation !== reference.target.incarnation ||
++      digestSfValue(selected.target.fields) !== digestSfValue(reference.target.fields) || digestSfValue(selected.target.period) !== digestSfValue(reference.target.period)) continue
++    const live = await input.business.context.resolve(selected, input.call)
++    if (live.state !== "fresh" || live.accessRevision !== input.call.binding.accessRevision || digestSfValue(live.ref) !== digestSfValue(selected)) continue
++    const target = selected.target
+     const url = new URL(input.url)
+     url.pathname = url.pathname.replace(/\/dashboard\/?$/, `/${target.surface}`); url.search = ""; url.hash = ""
+     if (target.surface === "planner") { url.searchParams.set("page", "Overview"); url.searchParams.set("version", target.recordId) }
+diff --git a/apps/cli/src/sucafina-product/review-history.ts b/apps/cli/src/sucafina-product/review-history.ts
+index 0c9a68225d114ba77617af4a0e3acc2607ea0e5a..965ad8445deb9b97d1f1c76f18d4036bc2006975 100644
+--- a/apps/cli/src/sucafina-product/review-history.ts
++++ b/apps/cli/src/sucafina-product/review-history.ts
+@@ -6,6 +6,8 @@
+ import type { SfScopedSourcePort } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
+ import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
+ import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
++import { createDashboardSourceHost, createDashboardRecordEvidenceHost, dashboardSourceSelector } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/sources.ts"
++import { createDashboardRecordSourceIssuer } from "../../../../modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts"
+ import { createSfReviewCalculationHistory } from "./review-calculation-history.ts"
+ 
+ /** Read-only history is anchored in immutable review bodies and their atomic C08 receipts. */
+@@ -18,6 +20,9 @@
+   const { authority } = input
+   const host = authority.host
+   const calculation = createSfReviewCalculationHistory(input)
++  const dashboard = createDashboardSourceHost({ host, scopedSources: input.persistence })
++  const dashboardRecords = createDashboardRecordEvidenceHost({ host, scopedSources: input.persistence,
++    issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: input.persistence }) })
+   const scoped = async (ref: SourceRef, call: TrustedDomainContext) => {
+     const request = host.requestFor(call)
+     if (!request || !await host.revalidate(call)) return undefined
+@@ -111,7 +116,28 @@
+     if (!again?.some((review) => same(review, record.review))) return current
+     const checked = await readClosure()
+     if (!checked || !same(sources, checked) || ref.kind === "calculation" && await calculation(ref, call) !== calculationProof || !await host.revalidate(call)) return current
+-    const resolution: BusinessEvidenceResolution = { state: "historical", ref: structuredClone(ref), authorizedProjection: structuredClone(record.projection),
++    // C05/C06 continuity consumes a real current reference from its producer.
++    // Never update the captured reference's version/digest by construction.
++    const currentRecord = async () => {
++      if (ref.kind !== "record" || ref.target.surface !== "dashboard") return undefined
++      const source = record.review.sourceRefs.find((entry) => matchesRecord(entry, ref))
++      const live = source ? await scoped(source, call) : undefined
++      if (!live) return undefined
++      const selector = dashboardSourceSelector(live.incarnation, live.version)
++      const result = ref.target.recordType === "dashboard-page"
++        ? await dashboard.resolveDashboardSource(selector, call).then((value) => value.status === "ok" ? value.value.evidence : undefined)
++        : await dashboardRecords.resolve(selector, call).then((value) => value.status === "ok" ? value.value : undefined)
++      if (!result || result.target.surface !== ref.target.surface || result.target.recordType !== ref.target.recordType ||
++        result.target.recordId !== ref.target.recordId || result.target.incarnation !== ref.target.incarnation ||
++        result.target.version < ref.target.version || !same(result.target.fields, ref.target.fields) || !same(result.target.period, ref.target.period)) return undefined
++      const authorized = await input.evidence.resolve(result, call)
++      return authorized.state === "fresh" && authorized.accessRevision === call.binding.accessRevision && same(authorized.ref, result) ? result : undefined
++    }
++    const currentRef = await currentRecord()
++    const finalSources = await readClosure(), finalCaptures = await captures(call)
++    if (ref.kind === "record" && ref.target.surface === "dashboard" && !currentRef || !finalSources || !same(checked, finalSources) ||
++      !finalCaptures?.some((review) => same(review, record.review)) || !await host.revalidate(call)) return current
++    const resolution: BusinessEvidenceResolution = { state: "historical", ref: structuredClone(ref), ...(currentRef ? { currentRef } : {}), authorizedProjection: structuredClone(record.projection),
+       accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString(),
+       differences: sources.flatMap((value) => value && "source" in value && value.source && value.ref.kind === "record"
+         ? [{ field: `${value.ref.refId}.version`, before: value.ref.target.version, after: value.source.version }] : []) }
+diff --git a/apps/cli/src/sucafina-product/review-collaboration-binding.ts b/apps/cli/src/sucafina-product/review-collaboration-binding.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..0da7d51672dc2519019f7880806d61c529456aa9
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/review-collaboration-binding.ts
+@@ -0,0 +1,81 @@
++import type { BusinessContextService, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
++import type { ReviewThreadContextAuthorizer } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/thread-context.ts"
++import type { ReviewThreadRecipientAuthority } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts"
++import type { createReviewAnswerSource } from "../../../../modules/sucafina/Sucafinav1/product/reviews/review-answer-source.ts"
++
++export type SfReviewCollaborationBinding = {
++  evidence: BusinessContextService
++  authorizeReviewThreadContext: ReviewThreadContextAuthorizer
++  reviewRecipientAuthority: ReviewThreadRecipientAuthority
++  reviewAnswerSource: ReturnType<typeof createReviewAnswerSource>
++}
++
++/** Collaboration is built before Review. Bind its stable producer callbacks once,
++ * after the real application exists; no ID/directory entry supplies authority. */
++export function createSfReviewCollaborationBinding(original: BusinessContextService) {
++  const holder: { current?: SfReviewCollaborationBinding; closed: boolean } = { closed: false }
++  const unavailable: BusinessContextService["resolve"] = async (ref, call) => ({
++    state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString(),
++  })
++  const resolve: BusinessContextService["resolve"] = async (ref, call) => {
++    if (holder.closed) return unavailable(ref, call)
++    const bound = holder.current
++    const producer = bound?.evidence ?? original
++    const read = producer.resolve
++    const result: BusinessEvidenceResolution = await read.call(producer, ref, call)
++    return !holder.closed && holder.current === bound && producer.resolve === read ? result : unavailable(ref, call)
++  }
++  const evidence: BusinessContextService = { ...original, resolve,
++    context: (request, call) => Promise.all(request.refs.map((ref) => resolve(ref, call))) }
++  const authorizeReviewThreadContext: ReviewThreadContextAuthorizer = async (pin, basis, call) => {
++    const bound = holder.current, authorize = bound?.authorizeReviewThreadContext
++    return !!bound && !!authorize && await authorize(pin, basis, call) && holder.current === bound && !holder.closed && bound.authorizeReviewThreadContext === authorize
++  }
++  const reviewRecipientAuthority: ReviewThreadRecipientAuthority = {
++    authorize: async (recipient, basis, call) => {
++      const bound = holder.current, provider = bound?.reviewRecipientAuthority, authorize = provider?.authorize
++      return !!bound && !!provider && !!authorize && await authorize.call(provider, recipient, basis, call) &&
++        !holder.closed && holder.current === bound && bound.reviewRecipientAuthority === provider && provider.authorize === authorize
++    },
++    checkAtCommit: (recipient, basis, call) => {
++      const bound = holder.current, provider = bound?.reviewRecipientAuthority, check = provider?.checkAtCommit
++      return !!bound && !!provider && !!check && !holder.closed && check.call(provider, recipient, basis, call) &&
++        holder.current === bound && bound.reviewRecipientAuthority === provider && provider.checkAtCommit === check
++    },
++  }
++  const reviewAnswerSource: ReturnType<typeof createReviewAnswerSource> = {
++    resolve: async (basis, call) => {
++      const bound = holder.current, provider = bound?.reviewAnswerSource, read = provider?.resolve
++      if (!bound || !provider || !read || holder.closed) return { status: "unavailable", reason: "review-answer-producer-unavailable" }
++      const result = await read.call(provider, basis, call)
++      return !holder.closed && holder.current === bound && bound.reviewAnswerSource === provider && provider.resolve === read
++        ? result : { status: "unavailable", reason: "review-answer-producer-unavailable" }
++    },
++    observe: async (scope, basis, call) => {
++      const bound = holder.current, provider = bound?.reviewAnswerSource, observe = provider?.observe
++      if (!bound || !provider || !observe || holder.closed) return { state: "access-unavailable", sourceVersion: 0 }
++      const result = await observe.call(provider, scope, basis, call)
++      return !holder.closed && holder.current === bound && bound.reviewAnswerSource === provider && provider.observe === observe
++        ? result : { state: "access-unavailable", sourceVersion: 0 }
++    },
++    fence: async (scope, observation, basis, call) => {
++      const bound = holder.current, provider = bound?.reviewAnswerSource, fence = provider?.fence
++      return !!bound && !!provider && !!fence && !holder.closed && await fence.call(provider, scope, observation, basis, call) &&
++        !holder.closed && holder.current === bound && bound.reviewAnswerSource === provider && provider.fence === fence
++    },
++    prepareThreadFence: async (basis, call) => {
++      const bound = holder.current, provider = bound?.reviewAnswerSource, prepare = provider?.prepareThreadFence
++      if (!bound || !provider || !prepare || holder.closed) return undefined
++      const current = () => !holder.closed && holder.current === bound && bound.reviewAnswerSource === provider && provider.prepareThreadFence === prepare
++      const fence = await prepare.call(provider, basis, call)
++      return fence && current() ? async () => current() && await fence() && current() : undefined
++    },
++  }
++  return { evidence, authorizeReviewThreadContext, reviewRecipientAuthority, reviewAnswerSource,
++    bind: (binding: SfReviewCollaborationBinding) => {
++      if (holder.current || holder.closed) throw new Error("SF_REVIEW_COLLABORATION_ALREADY_BOUND")
++      holder.current = Object.freeze({ ...binding })
++    },
++    dispose: () => { holder.closed = true; holder.current = undefined },
++  }
++}
+diff --git a/apps/cli/src/sucafina-product/review-collaboration.ts b/apps/cli/src/sucafina-product/review-collaboration.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..0912fc1f33fb1b4fe81d92eeb509c7806ab1a380
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/review-collaboration.ts
+@@ -0,0 +1,164 @@
++import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import type { BusinessContextService } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
++import type { PreservedReview } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
++import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
++import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
++import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
++import type { createReviewApplication } from "../../../../modules/sucafina/Sucafinav1/product/reviews/application.ts"
++import { createReviewAnswerSource } from "../../../../modules/sucafina/Sucafinav1/product/reviews/review-answer-source.ts"
++import type { ReviewThreadContext } from "../../../../modules/sucafina/Sucafinav1/product/reviews/thread-context.ts"
++import { isReviewThreadContext } from "../../../../modules/sucafina/Sucafinav1/product/reviews/thread-context.ts"
++import type { ThreadSourceContext } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/thread-context.ts"
++import type { ReviewThreadRecipientAuthority } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts"
++import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
++import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
++import type { SfReviewCollaborationBinding } from "./review-collaboration-binding.ts"
++
++type AccessLease = { fence: () => Promise<boolean>; check: () => boolean }
++type RecipientLease = { access: AccessLease; provider?: ReviewThreadRecipientAuthority;
++  authorize?: ReviewThreadRecipientAuthority["authorize"]; check?: ReviewThreadRecipientAuthority["checkAtCommit"] }
++
++/** Compose the actual C05 reader and C06 producer. This short-lived lease is
++ * private to one authenticated call; it is not a persisted confirmation scope. */
++export function createSfReviewCollaboration(input: {
++  authority: ReturnType<typeof createSfProductAuthority>
++  application: ReturnType<typeof createReviewApplication>
++  evidence: BusinessContextService
++  /** A real host-private recipient/source ACL provider; directory membership is insufficient. */
++  recipientAuthority?: ReviewThreadRecipientAuthority
++}): SfReviewCollaborationBinding {
++  const host = input.authority.host
++  const reviews = input.application.reviews
++  const contexts = input.application.threadContext
++  const readContext = contexts.read
++  const sameProducer = () => input.authority.host === host && input.application.reviews === reviews &&
++    input.application.threadContext === contexts && contexts.read === readContext
++  const leases = new WeakMap<TrustedDomainContext, Map<string, AccessLease>>()
++  const key = (pin: ReviewThreadContext, basis: ThreadSourceContext, call: TrustedDomainContext) => digestSfValue({ pin, basis, authority: call.binding })
++  const fingerprint = (pin: ReviewThreadContext) => {
++    const snapshots = host.persistence.currentSnapshots?.()
++    if (!snapshots) return undefined
++    const product = object(snapshots.dashboard.data.__sfProductV1)
++    const review = object(product.reviews)[pin.reviewRef]
++    if (digestSfValue(review) !== pin.reviewDigest) return undefined
++    const receipts = Object.values(object(product.transactions)).filter((entry) => {
++      const receipt = object(entry), value = object(receipt.value)
++      return receipt.namespace === "reviews" && receipt.targetRef === input.authority.creationTarget.ref &&
++        receipt.targetIncarnation === input.authority.creationTarget.incarnation && typeof receipt.principalRef === "string" && !!receipt.principalRef.trim() &&
++        (value.schema === "sf-review-receipt-v1" && Object.keys(value).length === 3 && value.reviewRef === pin.reviewRef && value.reviewDigest === pin.reviewDigest ||
++          value.schema === undefined && value.id === pin.reviewRef && digestSfValue(value) === pin.reviewDigest)
++    })
++    if (!receipts.length) return undefined
++    // Plain record reviews depend on these domain data/ACLs and source identities.
++    // C06's own threads/confirmations may change inside C08; they are not source data.
++    const sources = (["dashboard", "planner", "procurement"] as const).map((surface) => ({
++      surface, data: Object.fromEntries(Object.entries(snapshots[surface].data).filter(([name]) => name !== "__sfProductV1")),
++      identities: snapshots[surface].sfSources,
++    }))
++    return digestSfValue({ pin, receipts, sources })
++  }
++  const prepareAccess = async (pin: ReviewThreadContext, basis: ThreadSourceContext, review: PreservedReview, call: TrustedDomainContext): Promise<PortResult<AccessLease>> => {
++    const unavailable = (): PortResult<AccessLease> => ({ status: "unavailable", reason: "review-current-source-authority-unavailable" })
++    const persistence = host.persistence, state = input.authority.state, readState = state.read
++    const requestFor = host.requestFor, authenticate = host.authenticate
++    const request = requestFor.call(host, call), read = reviews.read, revalidate = host.revalidate, snapshots = persistence.currentSnapshots
++    const binding = digestSfValue([call.kind, call.binding])
++    const current = () => sameProducer() && host.persistence === persistence && input.authority.state === state && state.read === readState &&
++      host.requestFor === requestFor && host.authenticate === authenticate && requestFor.call(host, call) === request && !!request && !request.signal.aborted &&
++      reviews.read === read && host.revalidate === revalidate && persistence.currentSnapshots === snapshots && binding === digestSfValue([call.kind, call.binding])
++    // External outcomes/documents/comments need their producer's transaction lease.
++    // Do not turn their absence into positive source authority.
++    if (!request || !snapshots || snapshots.call(host.persistence) || !localRecordReview(review) || !isReviewThreadContext(pin) ||
++      digestSfValue(review) !== pin.reviewDigest || !current() || !await revalidate.call(host, call)) return unavailable()
++    const snapshot = async () => {
++      const checked = await readState.call(state, request, "reviews", async (_state, actor) => {
++        if (!current() || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
++          actor.policyVersion !== call.binding.policyVersion) return undefined
++        const held = snapshots.call(host.persistence)
++        if (!held) return undefined
++        for (const surface of [...new Set(review.sourceRefs.map((source) => source.surface))]) {
++          const principal = await authenticate.call(host, request, { surface, roleMap: roleMap(held[surface], surface) })
++          if (!principal || principal.id !== call.binding.principalRef || principal.id.startsWith("local:") || !current()) return undefined
++        }
++        return fingerprint(pin)
++      })
++      return checked.status === "ok" && current() ? checked.value : undefined
++    }
++    const first = await read.call(reviews, pin.reviewRef, call)
++    if (!current() || first.status !== "ok" || digestSfValue(first.value) !== pin.reviewDigest) return unavailable()
++    const before = await snapshot()
++    const second = await read.call(reviews, pin.reviewRef, call)
++    const after = await snapshot()
++    if (!before || before !== after || !current() || second.status !== "ok" || digestSfValue(second.value) !== pin.reviewDigest ||
++      !await revalidate.call(host, call) || !current()) return unavailable()
++    const check = () => current() && fingerprint(pin) === after
++    const lease = { check, fence: async () => check() && await revalidate.call(host, call) && check() }
++    const selected = leases.get(call) ?? new Map<string, AccessLease>()
++    if (selected.size >= 128 && !selected.has(key(pin, basis, call))) return unavailable()
++    selected.set(key(pin, basis, call), lease); leases.set(call, selected)
++    return { status: "ok", value: lease }
++  }
++  const authorizeReviewThreadContext: SfReviewCollaborationBinding["authorizeReviewThreadContext"] = async (pin, basis, call) => {
++    if (!sameProducer() || !isReviewThreadContext(pin)) return false
++    if (host.persistence.currentSnapshots?.()) {
++      const lease = leases.get(call)?.get(key(pin, basis, call))
++      return !!lease && await lease.fence()
++    }
++    const found = await readContext.call(contexts, pin, basis, call)
++    if (!sameProducer() || found.status !== "ok") return false
++    return (await prepareAccess(pin, basis, found.value.review, call)).status === "ok"
++  }
++  const recipientLeases = new WeakMap<TrustedDomainContext, Map<string, RecipientLease>>()
++  const recipientKey = (recipient: string, basis: ThreadSourceContext, call: TrustedDomainContext) => digestSfValue({ recipient, basis, authority: call.binding })
++  const reviewRecipientAuthority: ReviewThreadRecipientAuthority = {
++    authorize: async (recipient, basis, call) => {
++      if (!sameProducer() || !recipient.trim() || !isReviewThreadContext(basis.reviewContext) || host.persistence.currentSnapshots?.()) return false
++      const found = await readContext.call(contexts, basis.reviewContext, basis, call)
++      if (!sameProducer() || found.status !== "ok") return false
++      const access = await prepareAccess(basis.reviewContext, basis, found.value.review, call)
++      if (access.status !== "ok") return false
++      const provider = recipient === call.binding.principalRef ? undefined : input.recipientAuthority
++      const authorize = provider?.authorize, check = provider?.checkAtCommit
++      if (recipient !== call.binding.principalRef && (!provider || !authorize || !check ||
++        !await authorize.call(provider, recipient, structuredClone(basis), call) || input.recipientAuthority !== provider || provider.authorize !== authorize || provider.checkAtCommit !== check))
++        return false
++      if (!await host.revalidate(call)) return false
++      const selected = recipientLeases.get(call) ?? new Map<string, RecipientLease>()
++      if (selected.size >= 128 && !selected.has(recipientKey(recipient, basis, call))) return false
++      selected.set(recipientKey(recipient, basis, call), { access: access.value, provider, authorize, check }); recipientLeases.set(call, selected)
++      return true
++    },
++    checkAtCommit: (recipient, basis, call) => {
++      const lease = recipientLeases.get(call)?.get(recipientKey(recipient, basis, call))
++      if (!lease || !lease.access.check()) return false
++      if (recipient === call.binding.principalRef) return true
++      const provider = lease.provider, check = lease.check
++      return !!provider && !!check && input.recipientAuthority === provider && provider.authorize === lease.authorize && provider.checkAtCommit === check &&
++        check.call(provider, recipient, structuredClone(basis), call) === true && lease.access.check() && input.recipientAuthority === provider &&
++        provider.authorize === lease.authorize && provider.checkAtCommit === check
++    },
++  }
++  return { evidence: input.evidence, authorizeReviewThreadContext, reviewRecipientAuthority,
++    reviewAnswerSource: createReviewAnswerSource({ reviews, host, prepareAccess }) }
++}
++
++/** Scope boundary, not an authorization substitute: actual reviews.read above
++ * still reopens every source and C08 receipt under the current request. */
++function localRecordReview(review: PreservedReview) {
++  const sourceTypes = ["dashboard-page", "hotTopics", "opexOwners", "capexProjects", "members", "leaders", "projects", "opsTickets",
++    "secKpi", "risks", "contracts", "stakeholders", "itperf-item"]
++  if (!review.sourceRefs.length || review.comments.length || review.sourceRefs.some((source) => source.surface !== "dashboard" || !sourceTypes.includes(source.type))) return false
++  let budget = 20_000
++  const visit = (value: unknown, depth = 0): boolean => {
++    if (--budget < 0 || depth > 24) return false
++    if (!value || typeof value !== "object") return true
++    if (Array.isArray(value)) return value.every((entry) => visit(entry, depth + 1))
++    if ("decision" in value && value.decision !== undefined || "reviewOutcome" in value || "reviewOutcomeComparison" in value ||
++      "reviewCommentRefs" in value && (!Array.isArray(value.reviewCommentRefs) || value.reviewCommentRefs.length > 0) ||
++      "sensitivity" in value && value.sensitivity !== undefined) return false
++    if ("schema" in value && value.schema === "sf-evidence-v1" && (!("kind" in value) || value.kind !== "record" ||
++      !("target" in value) || object(value.target).surface !== "dashboard" || !sourceTypes.includes(String(object(value.target).recordType)))) return false
++    return Object.values(value).every((entry) => visit(entry, depth + 1))
++  }
++  return visit(review)
++}

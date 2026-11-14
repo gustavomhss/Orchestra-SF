@@ -1,0 +1,1754 @@
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/decision-coverage-read.ts
+@@ -0,0 +1,53 @@
++import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
++import type { DomainPortHost, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
++import type { TrustedUiContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
++import type { createDecisionBaselineCoverage } from "../../../../modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts"
++import { classificationDigest } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts"
++import type { CoverageClassification } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts"
++
++type Selection = { caseRef: { id: string; incarnation: string; version: number }; source: Extract<BusinessEvidenceRef, { kind: "record" }> }
++type Coverage = Extract<Awaited<ReturnType<PlannerSourceHost["resolveForecastCoverage"]>>, { status: "ok" }>["value"]
++export type SfDecisionCoverageRead = { expectedVersion: number; classification: CoverageClassification; coverage: Coverage }
++
++/** Reopen the canonical classification and receipt under the current UI admission.
++ * This projection neither creates coverage nor treats a remembered browser receipt
++ * as authority. Historical choices continue to use their immutable case records.
++ */
++export async function readSfDecisionCoverage(input: {
++  host: Pick<DomainPortHost, "requestFor" | "revalidate">
++  baseline: Pick<ReturnType<typeof createDecisionBaselineCoverage>, "readClassification" | "resolveForecastCoverage">
++}, selection: Selection, context: TrustedUiContext): Promise<PortResult<SfDecisionCoverageRead>> {
++  try {
++    const captured = structuredClone(selection)
++    const source = input.host.requestFor(context)
++    const binding = digestSfValue({ kind: context.kind, binding: context.binding })
++    const selected = digestSfValue(captured)
++    const live = () => !!source && !source.signal.aborted && input.host.requestFor(context) === source &&
++      digestSfValue({ kind: context.kind, binding: context.binding }) === binding && digestSfValue(selection) === selected
++    if (context.kind !== "ui" || !live() || !captured.caseRef.id.trim() || !captured.caseRef.incarnation.trim() ||
++      !Number.isSafeInteger(captured.caseRef.version) || captured.caseRef.version < 1 || captured.source.refDigest !== digestSfEvidenceRef(captured.source) ||
++      captured.source.installationId !== context.binding.installationId || captured.source.projectId !== context.binding.projectId ||
++      captured.source.target.surface !== "planner" || captured.source.target.recordType !== "planner-version" ||
++      !await input.host.revalidate(context) || !live()) return { status: "denied", reason: "decision-coverage-read-authority-unavailable" }
++    const classification = await input.baseline.readClassification(captured.source.refId, context)
++    if (!live()) return { status: "denied", reason: "decision-coverage-read-authority-unavailable" }
++    if (classification.status !== "ok") return classification
++    const value = classification.value
++    if (value.caseRef.id !== captured.caseRef.id || value.caseRef.incarnation !== captured.caseRef.incarnation ||
++      value.caseRef.version > captured.caseRef.version || !Number.isSafeInteger(value.version) || value.version < 1 ||
++      digestSfValue(value.source) !== digestSfValue(captured.source) || value.classificationDigest !== classificationDigest(value))
++      return { status: "stale", reason: "decision-coverage-read-selection-changed" }
++    const coverage = await input.baseline.resolveForecastCoverage(captured.source.refId, context)
++    if (!live()) return { status: "denied", reason: "decision-coverage-read-authority-unavailable" }
++    if (coverage.status !== "ok") return coverage
++    if (!coverage.value.coverageRef || digestSfValue(coverage.value.basis) !== digestSfValue(value.basis) ||
++      coverage.value.assessment.basisId !== value.basis.id || coverage.value.assessment.basisVersion !== value.basis.version ||
++      coverage.value.assessment.alternativeVersion !== value.version)
++      return { status: "stale", reason: "decision-coverage-read-classification-changed" }
++    if (!await input.host.revalidate(context) || !live()) return { status: "denied", reason: "decision-coverage-read-authority-unavailable" }
++    return { status: "ok", value: structuredClone({ expectedVersion: value.version, classification: value, coverage: coverage.value }) }
++  } catch {
++    return { status: "unavailable", reason: "decision-coverage-read-unavailable" }
++  }
++}
+--- a/modules/sucafina/Sucafinav1/product/ui/decision-choice.ts
++++ b/modules/sucafina/Sucafinav1/product/ui/decision-choice.ts
+@@ -1,36 +1,112 @@
+ import type { AuthorizedCaseProjection } from "../contracts/business-context.ts"
+ import { esc } from "../../src/screen-shell.ts"
++import { decisionFormContext } from "./decision-alternatives.ts"
++
++type ChoiceIntentionContext = { scope: string; caseRef: { id: string; incarnation: string; version: number } }
++type ChoiceIntentionAction = "decision-choose" | "decision-prepare-changes" | "decision-criteria"
++
++/** Reload may advance the case, but it must never replace the original mutation bytes or principal. */
++export function readDecisionChoiceIntention(raw: string, context: ChoiceIntentionContext) {
++  const saved: unknown = JSON.parse(raw)
++  if (!saved || typeof saved !== "object" || Array.isArray(saved) || Object.keys(saved).some((key) => !["scope", "action", "key", "body"].includes(key))) throw new Error("invalid-choice-intention")
++  const value = saved as { scope?: unknown; action?: unknown; key?: unknown; body?: unknown }
++  if (value.scope !== context.scope || !["decision-choose", "decision-prepare-changes", "decision-criteria"].includes(String(value.action)) || typeof value.key !== "string" || !value.key.trim() || value.key.length > 128 || typeof value.body !== "string" || new TextEncoder().encode(value.body).byteLength > 262144) throw new Error("invalid-choice-intention")
++  const payload = JSON.parse(value.body)
++  const fields = value.action === "decision-choose" ? ["caseRef", "alternativeId", "alternativeVersion", "comparison", "criteria", "reason"] : value.action === "decision-prepare-changes" ? ["caseRef", "choiceId", "operations"] : ["caseRef", "criterionId", "metricRef", "operator", "value", "unit", "period", "evidenceRefs", "expectedRuleVersion"]
++  if (!payload || typeof payload !== "object" || Array.isArray(payload) || Object.keys(payload).length !== fields.length || Object.keys(payload).some((key) => !fields.includes(key))) throw new Error("invalid-choice-payload")
++  const ref = payload.caseRef
++  if (!ref || typeof ref !== "object" || Object.keys(ref).length !== 3 || Object.keys(ref).some((key) => !["id", "incarnation", "version"].includes(key)) || ref.id !== context.caseRef.id || ref.incarnation !== context.caseRef.incarnation || !Number.isSafeInteger(ref.version) || ref.version < 1 || ref.version > context.caseRef.version) throw new Error("invalid-choice-case")
++  if (value.action === "decision-choose" && (typeof payload.alternativeId !== "string" || !payload.alternativeId.trim() || !Number.isSafeInteger(payload.alternativeVersion) || payload.alternativeVersion < 1 || typeof payload.reason !== "string" || !payload.reason.trim() || !Array.isArray(payload.criteria) || !payload.criteria.length || payload.criteria.some((id: unknown) => typeof id !== "string" || !id.trim()) || !payload.comparison || !Array.isArray(payload.comparison.scenarioRefs) || payload.comparison.scenarioRefs.length !== 2)) throw new Error("invalid-choice-payload")
++  if (value.action === "decision-prepare-changes" && (typeof payload.choiceId !== "string" || !payload.choiceId.trim() || !Array.isArray(payload.operations) || !payload.operations.length)) throw new Error("invalid-choice-payload")
++  if (value.action === "decision-criteria" && (typeof payload.criterionId !== "string" || !payload.criterionId.trim() || payload.metricRef !== "planner:known-subtotal-difference" || !["lte", "gte", "eq"].includes(payload.operator) || typeof payload.value !== "number" || !Number.isFinite(payload.value) || typeof payload.unit !== "string" || !payload.unit.trim() || !payload.period || typeof payload.period.start !== "string" || typeof payload.period.end !== "string" || !payload.period.start.trim() || !payload.period.end.trim() || !Array.isArray(payload.evidenceRefs) || !payload.evidenceRefs.length || !Number.isSafeInteger(payload.expectedRuleVersion) || payload.expectedRuleVersion < 0)) throw new Error("invalid-choice-payload")
++  return Object.freeze({ scope: context.scope, action: value.action as ChoiceIntentionAction, key: value.key, body: value.body })
++}
++
++export function createDecisionChoiceIntention(action: ChoiceIntentionAction, payload: object, key: string, context: ChoiceIntentionContext) {
++  return readDecisionChoiceIntention(JSON.stringify({ scope: context.scope, action, key, body: JSON.stringify(payload) }), context)
++}
++
++/** A replay receipt is compared with the frozen command revision, never the later page revision. */
++export function isDecisionChoiceReceipt(receipt: unknown, expected: ChoiceIntentionContext["caseRef"]) {
++  if (!receipt || typeof receipt !== "object" || !("caseRef" in receipt)) return false
++  const ref = receipt.caseRef
++  return !!ref && typeof ref === "object" && "id" in ref && "incarnation" in ref && "version" in ref && ref.id === expected.id && ref.incarnation === expected.incarnation && typeof ref.version === "number" && Number.isSafeInteger(ref.version) && ref.version === expected.version + 1
++}
++
++/** Registering a numeric rule advances its rule version, not the decision case revision. */
++export function isDecisionCriterionReceipt(receipt: unknown, expectedVersion: number) {
++  return !!receipt && typeof receipt === "object" && "ruleRef" in receipt && typeof receipt.ruleRef === "string" && !!receipt.ruleRef.trim() && "version" in receipt && typeof receipt.version === "number" && Number.isSafeInteger(receipt.version) && receipt.version === expectedVersion + 1
++}
++
++function decisionPreparationForm(projection: AuthorizedCaseProjection) {
++  const choices = projection.case.choices
++  const preparedChoiceIds = [...new Set(projection.case.preparedChanges.map((change) => change.choiceId))]
++  const context = { ...decisionFormContext(projection), choices, preparedChoiceIds }
++  const first = choices[0]
++  const canPrepare = !!first?.scenario.operations.length && !preparedChoiceIds.includes(first.id)
++  return `<section aria-label="Recorded choices"><h3>Recorded choices</h3><p>These are the original human choices and their saved sources, assumptions and cost coverage. Recording or preparing a choice does not approve a financial change.</p>${choices.length ? `<form data-decision-prepare data-context="${esc(JSON.stringify(context))}"><label>Recorded choice<select data-choice-prepare-select>${choices.map((choice) => `<option value="${esc(choice.id)}">${esc(choice.at)} · ${esc(choice.reason)}</option>`).join("")}</select></label><p data-choice-prepare-summary></p><button type="submit"${canPrepare ? "" : " disabled"}>Prepare changes from this choice</button><p data-choice-prepare-status role="status" aria-live="polite">${first && preparedChoiceIds.includes(first.id) ? "This choice already has prepared changes. Review or recover them below." : canPrepare ? "Review the selected choice, then prepare its exact saved operations for preview." : "This recorded choice contains no executable operations. No changes were prepared."}</p></form>` : "<p>No human choice recorded.</p>"}</section>`
++}
+ 
+ /** A comparison and choice always use the saved alternatives and domain result. */
+ export function decisionChoiceForm(projection: AuthorizedCaseProjection) {
+   const item = projection.case
+-  if (item.alternatives.length < 2) return "<p>Add at least two alternatives before comparing a choice.</p>"
+-  const context = { caseRef: { id: item.id, incarnation: item.incarnation, version: item.version }, alternatives: item.alternatives.map((alternative) => ({ id: alternative.id, version: alternative.version, title: alternative.title, currency: alternative.result.currency, horizon: alternative.result.horizon })), criteria: item.criteria.map((criterion) => ({ id: criterion.id, description: criterion.description, required: criterion.required })) }
++  const preparation = decisionPreparationForm(projection)
++  if (item.alternatives.length < 2) return "<p>Add at least two alternatives before comparing a choice.</p>" + preparation
++  const context = { ...decisionFormContext(projection), choices: item.choices, alternatives: item.alternatives.map((alternative) => ({ id: alternative.id, version: alternative.version, title: alternative.title, currency: alternative.result.currency, horizon: alternative.result.horizon })), criteria: item.criteria.map((criterion) => ({ id: criterion.id, description: criterion.description, required: criterion.required })) }
+   const options = item.alternatives.map((alternative) => `<option value="${esc(alternative.id)}">${esc(alternative.title)}</option>`).join("")
+-  return `<section><h3>Compare and choose</h3><form data-decision-choice data-context="${esc(JSON.stringify(context))}"><label>Baseline<select name="baseline">${options}</select></label><label>Alternative<select name="alternative">${options}</select></label><fieldset><legend>Criteria</legend>${item.criteria.map((criterion) => `<label><input type="checkbox" name="criteria" value="${esc(criterion.id)}" checked${criterion.required ? " required" : ""}>${esc(criterion.description)}${criterion.required ? " (required)" : ""}</label>`).join("")}</fieldset><button type="button" data-compare>Compare</button><div data-comparison role="status" aria-live="polite"></div><button type="button" data-portfolio disabled>Use these alternatives in portfolio</button><details data-sensitivity hidden><summary>Explore sensitivity</summary><label>Criterion<select data-sensitivity-criterion><option value="">Choose a criterion</option>${item.criteria.map((criterion) => `<option value="${esc(criterion.id)}">${esc(criterion.description)}</option>`).join("")}</select></label><button type="button" data-sensitivity-rule>Load criterion and units</button><p data-sensitivity-basis></p><label>Minimum<input data-sensitivity-min type="number" step="any"></label><label>Maximum<input data-sensitivity-max type="number" step="any"></label><label>Sample steps<input data-sensitivity-steps type="number" min="1" max="1024" step="1"></label><button type="button" data-sensitivity-run>Evaluate sensitivity</button><div data-sensitivity-output role="status" aria-live="polite"></div></details><label>Reason for choosing<textarea name="reason" required></textarea></label><button type="submit" disabled>Record choice</button><p role="status" aria-live="polite"></p></form></section>`
++  const numericRule = `<fieldset data-numeric-rule hidden><legend>Numeric comparison rule</legend><p>Define a limit only for a criterion that explicitly concerns the known subtotal difference. Missing costs remain unresolved, and saving a rule does not grant financial approval.</p><label>Criterion for numeric comparison<select data-numeric-criterion><option value="">Choose a criterion</option>${item.criteria.map((criterion) => `<option value="${esc(criterion.id)}">${esc(criterion.description)}</option>`).join("")}</select></label><button type="button" data-numeric-load>Load comparison rule</button><p data-numeric-basis></p><label>Evidence for the numeric rule<select data-numeric-evidence multiple disabled></select></label><label>Numeric comparison condition<select data-numeric-operator disabled><option value="">Choose a condition</option><option value="lte">At most</option><option value="gte">At least</option><option value="eq">Equal to</option></select></label><label>Limit for known subtotal difference in ${esc(item.currency)}<input data-numeric-value type="number" step="any" disabled></label><button type="button" data-numeric-save disabled>Save comparison rule</button><p data-numeric-status role="status" aria-live="polite"></p></fieldset>`
++  return `<section><h3>Compare and choose</h3><p>A recorded choice preserves its comparison and conditions. Financial approval remains a separate explicit action.</p><form data-decision-choice data-context="${esc(JSON.stringify(context))}"><label>Baseline<select name="baseline">${options}</select></label><label>Alternative<select name="alternative">${options}</select></label><fieldset><legend>Criteria</legend>${item.criteria.map((criterion) => `<label><input type="checkbox" name="criteria" value="${esc(criterion.id)}" checked${criterion.required ? " required" : ""}>${esc(criterion.description)}${criterion.required ? " (required)" : ""}</label>`).join("")}</fieldset><button type="button" data-compare>Compare</button><div data-comparison role="status" aria-live="polite"></div>${numericRule}<button type="button" data-portfolio disabled>Use these alternatives in portfolio</button><details data-sensitivity hidden><summary>Explore sensitivity</summary><label>Criterion<select data-sensitivity-criterion><option value="">Choose a criterion</option>${item.criteria.map((criterion) => `<option value="${esc(criterion.id)}">${esc(criterion.description)}</option>`).join("")}</select></label><button type="button" data-sensitivity-rule>Load criterion and units</button><p data-sensitivity-basis></p><label>Minimum<input data-sensitivity-min type="number" step="any"></label><label>Maximum<input data-sensitivity-max type="number" step="any"></label><label>Sample steps<input data-sensitivity-steps type="number" min="1" max="1024" step="1"></label><button type="button" data-sensitivity-run>Evaluate sensitivity</button><div data-sensitivity-output role="status" aria-live="polite"></div></details><label>Reason for choosing<textarea name="reason" required></textarea></label><button type="submit" disabled>Record choice</button><p data-choice-status role="status" aria-live="polite"></p></form></section>${preparation}`
+ }
+ 
+ export const decisionChoiceScript = `
++;(() => {
++const readChoiceIntention = ${readDecisionChoiceIntention.toString()}
++const createChoiceIntention = (action, payload, key, context) => readChoiceIntention(JSON.stringify({ scope: context.scope, action, key, body: JSON.stringify(payload) }), context)
++const confirmedChoiceReceipt = ${isDecisionChoiceReceipt.toString()}
++const confirmedCriterionReceipt = ${isDecisionCriterionReceipt.toString()}
++const choiceStorageKey = (context) => 'sf:decision-ui:' + context.scope + ':choice'
++const holdChoicePeers = (form) => document.querySelectorAll('[data-decision-edit], [data-decision-alternatives], [data-decision-choice], [data-decision-prepare], [data-decision-apply]').forEach((other) => {
++  if (other !== form) { other.inert = true; other.dataset.choiceHeld = 'true' }
++})
++const releaseChoicePeers = () => document.querySelectorAll('[data-choice-held]').forEach((other) => { other.inert = false; delete other.dataset.choiceHeld })
++const choiceEndpoint = (action) => {
++  const url = new URL(location.href)
++  if (!/\\/(dashboard|planner|procurement)$/.test(url.pathname)) throw new Error('unsupported-surface')
++  url.pathname = url.pathname.replace(/\\/(dashboard|planner|procurement)$/, '/dashboard')
++  url.search = new URLSearchParams({ sf: action }).toString(); url.hash = ''
++  return url
++}
+ document.querySelectorAll('[data-decision-choice]').forEach((form) => {
+   if (form.dataset.sfChoiceReady) return; form.dataset.sfChoiceReady = 'true'
+   let context = JSON.parse(form.dataset.context)
++  const storageKey = choiceStorageKey(context)
+   const compare = form.querySelector('[data-compare]'); const choose = form.querySelector('button[type=submit]'); const portfolio = form.querySelector('[data-portfolio]')
+-  const output = form.querySelector('[data-comparison]'); const status = form.querySelector('p[role=status]')
++  const output = form.querySelector('[data-comparison]'); const status = form.querySelector('[data-choice-status]')
+   const sensitivity = form.querySelector('[data-sensitivity]'); const sensitivityOutput = form.querySelector('[data-sensitivity-output]'); const basis = form.querySelector('[data-sensitivity-basis]')
+   const loadRule = sensitivity.querySelector('[data-sensitivity-rule]'); const evaluate = sensitivity.querySelector('[data-sensitivity-run]')
++  const numeric = form.querySelector('[data-numeric-rule]'); const numericCriterion = form.querySelector('[data-numeric-criterion]')
++  const numericLoad = form.querySelector('[data-numeric-load]'); const numericSave = form.querySelector('[data-numeric-save]')
++  const numericEvidence = form.querySelector('[data-numeric-evidence]'); const numericOperator = form.querySelector('[data-numeric-operator]'); const numericValue = form.querySelector('[data-numeric-value]')
++  const numericStatus = form.querySelector('[data-numeric-status]'); const numericDescription = form.querySelector('[data-numeric-basis]')
++  let numericBasis
+   let controls = [...form.querySelectorAll('select, input, textarea, button')]; const initial = new Map(controls.map((control) => [control, control.disabled]))
+   let result; let rule; let key = crypto.randomUUID(); let portfolioKey = crypto.randomUUID(); let sensitivityKey = crypto.randomUUID()
+   let pending; let snapshot; let busy = false; let accessRevoked = false; let reconciliationRequired = false; let completed = false
+   const active = () => !accessRevoked && form.isConnected
+-  const locked = () => busy || !!pending || completed || reconciliationRequired
++  const foreignIntention = () => { try { return !!sessionStorage.getItem('sf:decision-ui:' + context.scope) || !!sessionStorage.getItem(storageKey) && !pending?.intent } catch { return true } }
++  const locked = () => busy || !!pending || completed || reconciliationRequired || foreignIntention()
+   const capture = () => controls.filter((control) => control.tagName !== 'BUTTON').map((control) => ({ control, value: control.value, checked: control.checked }))
+   const restore = () => snapshot?.forEach(({ control, value, checked }) => { control.value = value; if (typeof checked === 'boolean') control.checked = checked })
+   const sync = () => {
+     if (!active()) return
+     controls.forEach((control) => { control.disabled = locked() || initial.get(control) })
+-    compare.disabled = locked(); choose.disabled = busy || reconciliationRequired || (!completed && (!result || (!!pending && pending.kind !== 'choice')))
+-    portfolio.disabled = busy || completed || reconciliationRequired || !result || (!!pending && pending.kind !== 'portfolio')
+-    loadRule.disabled = locked() || !result; evaluate.disabled = busy || completed || reconciliationRequired || !result || !rule || (!!pending && pending.kind !== 'sensitivity')
++    compare.disabled = locked(); choose.disabled = busy || reconciliationRequired || foreignIntention() || (!completed && (((!result || result.rulesReady === false) && pending?.kind !== 'choice') || (!!pending && pending.kind !== 'choice')))
++    portfolio.disabled = busy || completed || reconciliationRequired || foreignIntention() || !result || (!!pending && pending.kind !== 'portfolio')
++    loadRule.disabled = locked() || !result; evaluate.disabled = busy || completed || reconciliationRequired || foreignIntention() || !result || !rule || (!!pending && pending.kind !== 'sensitivity')
++    numericLoad.disabled = locked() || !result
++    ;[numericEvidence, numericOperator, numericValue].forEach((control) => { control.disabled = locked() || !numericBasis })
++    numericSave.disabled = busy || completed || reconciliationRequired || foreignIntention() || (pending ? pending.kind !== 'criterion' : !result || !numericBasis)
++    numericSave.textContent = pending?.kind === 'criterion' ? 'Retry the same comparison rule' : 'Save comparison rule'
+     choose.textContent = completed ? 'Reload decision' : pending?.kind === 'choice' ? 'Retry the same choice' : 'Record choice'
+     portfolio.textContent = pending?.kind === 'portfolio' ? 'Retry the same portfolio selection' : 'Use these alternatives in portfolio'
+     evaluate.textContent = pending?.kind === 'sensitivity' ? 'Retry the same sensitivity request' : 'Evaluate sensitivity'
+@@ -38,28 +114,30 @@
+   const begin = () => { if (!pending) snapshot = capture(); busy = true; sync() }
+   const finish = () => { busy = false; if (!pending && !completed) snapshot = undefined; sync() }
+   const revoke = () => {
+-    if (accessRevoked) return; accessRevoked = true; context = undefined; result = undefined; rule = undefined; pending = undefined; snapshot = undefined
++    if (accessRevoked) return; accessRevoked = true
++    try { sessionStorage.removeItem(storageKey) } catch { /* The protected DOM is still removed when browser storage cannot be cleared. */ }
++    context = undefined; result = undefined; rule = undefined; numericBasis = undefined; pending = undefined; snapshot = undefined
+     controls.forEach((control) => { if (control.tagName === 'SELECT') control.replaceChildren(); else if (control.tagName !== 'BUTTON') { control.value = ''; if ('checked' in control) control.checked = false }; control.disabled = true })
+     controls = []; initial.clear(); output.replaceChildren(); sensitivityOutput.replaceChildren(); basis.textContent = ''; delete form.dataset.context; delete form.dataset.dirty
+     const message = document.createElement('p'); message.setAttribute('role', 'status'); message.textContent = 'Decision access changed. Reopen it with your current access.'; form.replaceChildren(message)
+   }
+-  addEventListener('sf-access-revoked', () => { if (form.isConnected) revoke() })
++  addEventListener('sf-access-revoked', revoke)
+   const invalidate = () => {
+     if (!active()) return; if (locked()) { restore(); return }
+-    result = undefined; rule = undefined; sensitivity.hidden = true; output.textContent = 'Compare the current selection before recording a choice.'; basis.textContent = ''; sensitivityOutput.replaceChildren()
++    result = undefined; rule = undefined; numericBasis = undefined; numeric.hidden = true; numericEvidence.replaceChildren(); numericDescription.textContent = ''; numericStatus.textContent = ''; sensitivity.hidden = true; output.textContent = 'Compare the current selection before recording a choice.'; basis.textContent = ''; sensitivityOutput.replaceChildren()
+     key = crypto.randomUUID(); portfolioKey = crypto.randomUUID(); sensitivityKey = crypto.randomUUID(); form.dataset.dirty = 'true'; sync()
+   }
+   form.querySelectorAll('select[name=baseline], select[name=alternative], input[name=criteria]').forEach((input) => input.addEventListener('change', invalidate))
+   form.querySelector('textarea').addEventListener('input', () => { if (!active()) return; if (locked()) { restore(); return }; key = crypto.randomUUID(); form.dataset.dirty = 'true' })
+   const send = async (action, payload, id) => {
+-    const url = new URL(location.href); url.search = '?sf=' + action
++    const url = choiceEndpoint(action)
+     const controller = new AbortController(); const deadline = setTimeout(() => controller.abort(), 10000)
+     try {
+       const response = await fetch(url, { method: 'POST', credentials: 'same-origin', signal: controller.signal, headers: { 'Content-Type': 'application/json', 'Idempotency-Key': id }, body: typeof payload === 'string' ? payload : JSON.stringify(payload) })
+-      if (accessRevoked || response.status === 401 || response.status === 403) throw Object.assign(new Error('access-changed'), { accessDenied: true })
++      if (accessRevoked || response.status === 401 || response.status === 403) { dispatchEvent(new Event('sf-access-revoked')); throw Object.assign(new Error('access-changed'), { accessDenied: true }) }
+       const value = await response.json()
+       if (accessRevoked) throw Object.assign(new Error('access-changed'), { accessDenied: true })
+-      if (!response.ok || value.status !== 'ok') throw Object.assign(new Error('unavailable'), { httpStatus: response.status, rejected: [400, 409, 422].includes(response.status) && ['invalid', 'needs-input', 'conflict'].includes(value.status) })
++      if (!response.ok || value.status !== 'ok') throw Object.assign(new Error('unavailable'), { httpStatus: response.status, inputRejected: response.status === 400 && value.reason === 'invalid-decision-input', rejected: [400, 409, 422].includes(response.status) && ['invalid', 'needs-input', 'conflict'].includes(value.status) })
+       if (!active()) throw new Error('closed')
+       return value.value
+     } finally { clearTimeout(deadline) }
+@@ -70,8 +148,8 @@
+     // Sensitivity may persist its result before a binding conflict is returned.
+     // An initial 409 therefore cannot release that request's body or key.
+     if (error?.rejected && pending && !pending.resultRef && !(pending.kind === 'sensitivity' && error.httpStatus === 409 && !wasUncertain)) {
+-      if (wasUncertain) { reconciliationRequired = true; message.textContent = 'The retry was rejected but the earlier ' + kind + ' is still unconfirmed. Reopen the decision to reconcile its current state.' }
+-      else { pending = undefined; key = crypto.randomUUID(); portfolioKey = crypto.randomUUID(); sensitivityKey = crypto.randomUUID(); message.textContent = 'The ' + kind + ' was rejected. Your entries are preserved; review the current decision before retrying.' }
++      if (wasUncertain || pending.intent && !error.inputRejected) { reconciliationRequired = true; message.textContent = 'The request was rejected but the earlier ' + kind + ' is still unconfirmed. Reopen the decision to reconcile its current state.' }
++      else { if (pending.intent) { sessionStorage.removeItem(storageKey); releaseChoicePeers() }; pending = undefined; key = crypto.randomUUID(); portfolioKey = crypto.randomUUID(); sensitivityKey = crypto.randomUUID(); message.textContent = 'The ' + kind + ' was rejected. Your entries are preserved; review the current decision before retrying.' }
+       return true
+     }
+     return false
+@@ -80,17 +158,77 @@
+     if (!active() || locked() || compare.disabled) return
+     const fields = new FormData(form); const baseline = fields.get('baseline'); const alternative = fields.get('alternative'); const criteria = fields.getAll('criteria')
+     if (baseline === alternative || context.criteria.some((criterion) => criterion.required && !criteria.includes(criterion.id))) { output.textContent = 'Select two different alternatives and all required criteria.'; return }
+-    begin(); rule = undefined; sensitivity.hidden = true; output.textContent = 'Comparing alternatives…'
++    begin(); rule = undefined; numericBasis = undefined; numeric.hidden = true; numericEvidence.replaceChildren(); numericDescription.textContent = ''; sensitivity.hidden = true; output.textContent = 'Comparing alternatives…'
+     try {
+       const compared = await send('decision-compare', { caseRef: context.caseRef, baselineAlternativeId: baseline, alternativeId: alternative, criteria }, crypto.randomUUID())
+-      result = { request: compared.request, baselineAlternativeId: baseline, alternativeId: alternative, criteria }; key = crypto.randomUUID(); portfolioKey = crypto.randomUUID()
++      result = { request: compared.request, baselineAlternativeId: baseline, alternativeId: alternative, criteria, rulesReady: !compared.comparison.criterionResults.some((criterion) => criterion.reason === 'criterion-rule-unavailable') }; key = crypto.randomUUID(); portfolioKey = crypto.randomUUID()
+       const value = compared.comparison; output.replaceChildren()
+       const summary = document.createElement('p'); summary.textContent = 'Comparison: ' + value.comparisonStatus + ' · ' + (value.comparisonStatus === 'complete' ? 'Difference: ' + value.completeDifference : 'Known difference: ' + (value.knownDifference ?? 'unavailable')); output.append(summary)
+       ;[baseline, alternative].forEach((id) => { const source = context.alternatives.find((item) => item.id === id); if (!source) return; const line = document.createElement('p'); line.textContent = source.title + ' · ' + source.currency + ' · ' + source.horizon.start + ' – ' + source.horizon.end; output.append(line) })
+       value.unresolvedConditions.forEach((condition) => { const line = document.createElement('p'); line.textContent = condition; output.append(line) })
+       value.criterionResults.forEach((criterion) => { const line = document.createElement('p'); line.textContent = (context.criteria.find((item) => item.id === criterion.criterionId)?.description || 'Criterion') + ': ' + criterion.state + ' · ' + criterion.reason; output.append(line) })
+-      sensitivity.hidden = false
++      sensitivity.hidden = false; numeric.hidden = false
++      numericStatus.textContent = result.rulesReady ? 'Current numeric rules were read with this comparison.' : 'A selected criterion has no numeric rule. Define its rule before recording a choice.'
+     } catch (error) { if (error?.accessDenied) revoke(); else if (active()) { result = undefined; output.textContent = 'Comparison unavailable or sources changed. Check the alternatives and try again.' } }
++    finally { finish() }
++  })
++  numericCriterion.addEventListener('change', () => {
++    if (!active()) return; if (locked()) { restore(); return }
++    numericBasis = undefined; numericEvidence.replaceChildren(); numericOperator.value = ''; numericValue.value = ''; numericDescription.textContent = ''; numericStatus.textContent = ''; form.dataset.dirty = 'true'; sync()
++  })
++  ;[numericEvidence, numericOperator, numericValue].forEach((control) => control.addEventListener('input', () => { if (!active()) return; if (locked()) { restore(); return }; form.dataset.dirty = 'true' }))
++  numericLoad.addEventListener('click', async () => {
++    if (!active() || locked() || numericLoad.disabled) return
++    const criterionId = numericCriterion.value
++    if (!result || !result.criteria.includes(criterionId)) { numericStatus.textContent = 'Choose a criterion included in the current comparison.'; return }
++    begin(); numericBasis = undefined; numericEvidence.replaceChildren(); numericDescription.textContent = ''; numericStatus.textContent = 'Reading the current rule revision and authorized comparison evidence…'
++    try {
++      const url = choiceEndpoint('decision-controls'); url.searchParams.set('case', context.caseSelector); url.searchParams.set('format', 'json')
++      const response = await fetch(url, { credentials: 'same-origin', cache: 'no-store', signal: AbortSignal.timeout(10000) })
++      if (response.status === 401 || response.status === 403) { dispatchEvent(new Event('sf-access-revoked')); return }
++      const read = await response.json()
++      if (!active()) return
++      if (!response.ok || read.status !== 'ok') throw new Error('rule-basis-unavailable')
++      const current = read.value; const selected = current.selected
++      if (current.accessRevision !== context.authority.accessRevision || !current.actions.includes('decisions.criteria') || !selected || selected.caseRef.id !== context.caseRef.id || selected.caseRef.incarnation !== context.caseRef.incarnation || selected.caseRef.version !== context.caseRef.version || selected.decision.currency !== context.currency || selected.decision.horizon.start !== context.horizon.start || selected.decision.horizon.end !== context.horizon.end) throw new Error('rule-scope-changed')
++      const revisions = selected.rules.filter((entry) => entry.id === criterionId)
++      if (revisions.length !== 1 || !Number.isSafeInteger(revisions[0].expectedVersion) || revisions[0].expectedVersion < 0) throw new Error('rule-revision-unavailable')
++      const ids = [result.baselineAlternativeId, result.alternativeId]
++      if (!Array.isArray(result.request.scenarioRefs) || result.request.scenarioRefs.length !== 2 || !ids.every((id, index) => selected.scenarios.some((entry) => entry.alternativeId === id && entry.ref === result.request.scenarioRefs[index]))) throw new Error('comparison-source-changed')
++      const alternatives = ids.map((id) => selected.decision.alternatives.filter((alternative) => alternative.id === id))
++      if (alternatives.some((matches) => matches.length !== 1)) throw new Error('comparison-source-changed')
++      const comparedRefs = alternatives.flatMap(([alternative]) => [...alternative.result.sourceRefs, ...alternative.result.costCoverage.evaluatedSourceRefs, ...alternative.result.costCoverage.entries.flatMap((entry) => entry.status === 'pending' ? [] : entry.evidenceRefs)])
++      const evidence = selected.evidence.filter((entry) => comparedRefs.some((ref) => ref.refDigest === entry.evidence.refDigest))
++      if (!evidence.length) throw new Error('current-comparison-evidence-unavailable')
++      numericBasis = { criterionId, expectedVersion: revisions[0].expectedVersion, evidence }
++      evidence.forEach((entry) => numericEvidence.add(new Option(entry.label, entry.evidence.refDigest)))
++      numericDescription.textContent = 'Known subtotal difference in ' + context.currency + ' · ' + context.horizon.start + ' – ' + context.horizon.end + ' · current rule revision ' + numericBasis.expectedVersion + '. Choose the supporting evidence and enter your own numeric condition.'
++      numericStatus.textContent = 'Only current authorized evidence from the compared alternatives is available. Pending costs remain unresolved.'
++    } catch (error) { if (error?.accessDenied) revoke(); else if (active()) numericStatus.textContent = 'The current rule revision or authorized comparison evidence is unavailable. Reopen the decision before defining this rule.' }
++    finally { finish() }
++  })
++  numericSave.addEventListener('click', async () => {
++    if (!active() || busy || completed || reconciliationRequired || foreignIntention() || numericSave.disabled || (pending && pending.kind !== 'criterion')) return
++    if (!pending) {
++      if (!result || !numericBasis || numericBasis.criterionId !== numericCriterion.value || !result.criteria.includes(numericBasis.criterionId)) return
++      const value = numericValue.valueAsNumber; const operator = numericOperator.value
++      const evidenceRefs = Array.from(numericEvidence.selectedOptions, (option) => numericBasis.evidence.find((entry) => entry.evidence.refDigest === option.value)?.evidence)
++      if (!['lte', 'gte', 'eq'].includes(operator) || !Number.isFinite(value) || !evidenceRefs.length || evidenceRefs.some((ref) => !ref)) { numericStatus.textContent = 'Choose supporting evidence, a numeric condition and an explicit finite limit.'; return }
++      try {
++        const intent = createChoiceIntention('decision-criteria', { caseRef: context.caseRef, criterionId: numericBasis.criterionId, metricRef: 'planner:known-subtotal-difference', operator, value, unit: context.currency, period: context.horizon, evidenceRefs, expectedRuleVersion: numericBasis.expectedVersion }, crypto.randomUUID(), context)
++        sessionStorage.setItem(storageKey, JSON.stringify(intent)); snapshot = capture(); pending = { kind: 'criterion', key: intent.key, body: intent.body, intent, uncertain: false }; holdChoicePeers(form)
++      } catch { numericStatus.textContent = 'The rule could not be retained safely. No request was sent.'; return }
++    }
++    const wasUncertain = pending.uncertain; begin(); pending.uncertain = true; form.dataset.dirty = 'true'; numericStatus.textContent = 'Saving the explicit numeric comparison rule…'
++    try {
++      const retained = readChoiceIntention(sessionStorage.getItem(storageKey), context)
++      if (retained.action !== 'decision-criteria' || retained.body !== pending.body || retained.key !== pending.key) throw new Error('invalid-retained-rule')
++      const receipt = await send('decision-criteria', retained.body, retained.key)
++      if (!confirmedCriterionReceipt(receipt, JSON.parse(retained.body).expectedRuleVersion)) throw new Error('unconfirmed-rule')
++      sessionStorage.removeItem(storageKey); releaseChoicePeers(); pending = undefined; result = undefined; rule = undefined; numericBasis = undefined; sensitivity.hidden = true; delete form.dataset.dirty
++      output.textContent = 'Compare the selected alternatives again using the registered rule before recording a choice.'
++      numericStatus.textContent = 'Comparison rule saved at revision ' + receipt.version + '. Compare again before choosing. Financial approval remains separate.'
++    } catch (error) { if (!rejected(error, wasUncertain, numericStatus, 'comparison rule')) numericStatus.textContent = 'Could not confirm the comparison rule. Its exact values, evidence, revision and key are retained; retry only the same rule.' }
+     finally { finish() }
+   })
+   sensitivity.querySelector('[data-sensitivity-criterion]').addEventListener('change', () => { if (!active()) return; if (locked()) { restore(); return }; rule = undefined; basis.textContent = ''; sensitivityOutput.replaceChildren(); sensitivityKey = crypto.randomUUID(); form.dataset.dirty = 'true'; sync() })
+@@ -141,7 +279,7 @@
+     finally { finish() }
+   })
+   form.addEventListener('submit', async (event) => {
+-    event.preventDefault(); if (!active() || busy || reconciliationRequired || choose.disabled || (pending && pending.kind !== 'choice')) return
++    event.preventDefault(); if (!active() || busy || reconciliationRequired || foreignIntention() || choose.disabled || (pending && pending.kind !== 'choice')) return
+     if (completed) { location.reload(); return }
+     if (!pending) {
+       if (!result || !form.reportValidity()) return
+@@ -149,17 +287,117 @@
+       if (!alternative) return
+       const reason = form.querySelector('textarea[name=reason]').value.trim()
+       if (!reason) { status.textContent = 'Enter a reason for this choice.'; return }
+-      snapshot = capture(); pending = { kind: 'choice', key, body: JSON.stringify({ caseRef: context.caseRef, alternativeId: alternative.id, alternativeVersion: alternative.version, comparison: result.request, criteria: result.criteria, reason }), uncertain: false }
++      try {
++        const intent = createChoiceIntention('decision-choose', { caseRef: context.caseRef, alternativeId: alternative.id, alternativeVersion: alternative.version, comparison: result.request, criteria: result.criteria, reason }, key, context)
++        sessionStorage.setItem(storageKey, JSON.stringify(intent)); snapshot = capture(); pending = { kind: 'choice', key: intent.key, body: intent.body, intent, uncertain: false }; holdChoicePeers(form)
++      } catch { status.textContent = 'The choice could not be retained safely. No request was sent; keep this page open and try again.'; return }
++
+     }
+     const wasUncertain = pending.uncertain; begin(); pending.uncertain = true; form.dataset.dirty = 'true'; status.textContent = 'Recording choice…'
+     try {
+-      const receipt = await send('decision-choose', pending.body, pending.key)
+-      if (receipt?.caseRef?.id !== context.caseRef.id || receipt.caseRef.incarnation !== context.caseRef.incarnation ||
+-        !Number.isSafeInteger(receipt.caseRef.version) || receipt.caseRef.version <= context.caseRef.version) throw new Error('unconfirmed-choice')
+-      pending = undefined; completed = true; delete form.dataset.dirty; status.textContent = 'Choice recorded. Reload the decision to view it.'; location.reload()
++      const retained = readChoiceIntention(sessionStorage.getItem(storageKey), context)
++      if (retained.action !== 'decision-choose' || retained.body !== pending.body || retained.key !== pending.key) throw new Error('invalid-retained-intention')
++      const expected = JSON.parse(retained.body).caseRef
++      const receipt = await send('decision-choose', retained.body, retained.key)
++      if (!confirmedChoiceReceipt(receipt, expected)) throw new Error('unconfirmed-choice')
++      sessionStorage.removeItem(storageKey); releaseChoicePeers(); pending = undefined; completed = true; delete form.dataset.dirty; status.textContent = 'Choice recorded. Reload the decision to view it.'; location.reload()
+     } catch (error) { if (!rejected(error, wasUncertain, status, 'choice')) status.textContent = 'Could not confirm the choice. Your reason and comparison are locked; retry the same request.' }
+     finally { finish() }
+   })
++  try {
++    const raw = sessionStorage.getItem(storageKey)
++    if (raw) {
++      const intent = readChoiceIntention(raw, context)
++      if (intent.action === 'decision-choose') {
++        const payload = JSON.parse(intent.body)
++        form.querySelector('textarea[name=reason]').value = payload.reason
++        form.querySelector('select[name=alternative]').value = payload.alternativeId
++        form.querySelectorAll('input[name=criteria]').forEach((input) => { input.checked = payload.criteria.includes(input.value) })
++        pending = { kind: 'choice', key: intent.key, body: intent.body, intent, uncertain: true }; snapshot = capture(); form.dataset.dirty = 'true'; holdChoicePeers(form)
++        status.textContent = 'An earlier choice is unconfirmed. Its original reason, comparison and version are retained. Retry the same choice to retrieve its canonical receipt.'
++      } else if (intent.action === 'decision-criteria') {
++        const payload = JSON.parse(intent.body)
++        numeric.hidden = false; numericCriterion.value = payload.criterionId; numericOperator.value = payload.operator; numericValue.value = String(payload.value)
++        numericEvidence.replaceChildren(); payload.evidenceRefs.forEach((ref) => numericEvidence.add(new Option('Retained comparison evidence ' + ref.refId, ref.refDigest, true, true)))
++        pending = { kind: 'criterion', key: intent.key, body: intent.body, intent, uncertain: true }; snapshot = capture(); form.dataset.dirty = 'true'; holdChoicePeers(form)
++        numericStatus.textContent = 'An earlier comparison rule is unconfirmed. Its original values, evidence, case revision and rule revision are retained. Retry the same comparison rule.'
++      }
++    }
++  } catch { reconciliationRequired = true; status.textContent = 'The retained choice could not be verified. No mutation will be sent. Reopen with the original identity to reconcile it.' }
+   sync()
+ })
++document.querySelectorAll('[data-decision-prepare]').forEach((form) => {
++  if (form.dataset.sfPrepareReady) return; form.dataset.sfPrepareReady = 'true'
++  let context = JSON.parse(form.dataset.context)
++  const storageKey = choiceStorageKey(context)
++  const select = form.querySelector('[data-choice-prepare-select]'); const button = form.querySelector('button[type=submit]')
++  const summary = form.querySelector('[data-choice-prepare-summary]'); const status = form.querySelector('[data-choice-prepare-status]')
++  let retained; let busy = false; let denied = false; let blocked = false; let completed = false
++  const active = () => !denied && form.isConnected
++  const current = () => context.choices.find((choice) => choice.id === select.value)
++  const sync = () => {
++    if (!active()) return
++    const choice = current()
++    summary.textContent = choice ? 'Choice ' + choice.id + ' · alternative ' + choice.alternativeId + ' version ' + choice.alternativeVersion + ' · coverage basis version ' + choice.basisVersion + ' · ' + choice.comparisonStatus + ' · ' + choice.scenario.operations.length + ' saved operations.' : 'Recorded choice unavailable.'
++    const foreign = !!sessionStorage.getItem('sf:decision-ui:' + context.scope) || !!sessionStorage.getItem(storageKey) && !retained
++    select.disabled = busy || blocked || completed || !!retained || foreign
++    button.disabled = busy || blocked || foreign || !completed && !retained && (!choice?.scenario.operations.length || context.preparedChoiceIds.includes(choice.id))
++    button.textContent = completed ? 'Reload decision' : retained ? 'Retry the same preparation' : 'Prepare changes from this choice'
++  }
++  const revoke = () => {
++    if (denied) return; denied = true
++    try { sessionStorage.removeItem(storageKey) } catch { /* Denied state and protected DOM removal do not depend on storage availability. */ }
++    retained = undefined; context = undefined; delete form.dataset.context; delete form.dataset.dirty
++    const message = document.createElement('p'); message.setAttribute('role', 'status'); message.textContent = 'Decision access changed. Reopen it with your current access.'
++    form.replaceChildren(message)
++  }
++  addEventListener('sf-access-revoked', revoke)
++  select.addEventListener('change', () => {
++    if (!active() || busy || retained || blocked) return
++    status.textContent = context.preparedChoiceIds.includes(select.value) ? 'This choice already has prepared changes. Review or recover them below.' : current()?.scenario.operations.length ? 'Review the selected choice, then prepare its exact saved operations for preview.' : 'This recorded choice contains no executable operations. No changes were prepared.'
++    sync()
++  })
++  form.addEventListener('submit', async (event) => {
++    event.preventDefault(); if (!active() || busy || blocked || button.disabled) return
++    if (completed) { location.reload(); return }
++    const wasUncertain = !!retained
++    if (!retained) {
++      try {
++        if (sessionStorage.getItem(storageKey) || sessionStorage.getItem('sf:decision-ui:' + context.scope)) throw new Error('earlier-intention')
++        const choice = current()
++        if (choice && context.preparedChoiceIds.includes(choice.id)) { status.textContent = 'This choice already has prepared changes. Review or recover them below.'; return }
++        if (!choice?.scenario.operations.length) { status.textContent = 'This recorded choice contains no executable operations. No changes were prepared.'; return }
++        retained = createChoiceIntention('decision-prepare-changes', { caseRef: context.caseRef, choiceId: choice.id, operations: choice.scenario.operations }, crypto.randomUUID(), context)
++        sessionStorage.setItem(storageKey, JSON.stringify(retained)); holdChoicePeers(form)
++      } catch { retained = undefined; status.textContent = 'The preparation could not be retained safely. No request was sent.'; return }
++    }
++    busy = true; form.dataset.dirty = 'true'; sync(); status.textContent = 'Preparing the exact saved operations for review…'
++    try {
++      const intent = readChoiceIntention(sessionStorage.getItem(storageKey), context)
++      if (intent.action !== 'decision-prepare-changes' || intent.body !== retained.body || intent.key !== retained.key) throw new Error('changed-intention')
++      const response = await fetch(choiceEndpoint(intent.action), { method: 'POST', credentials: 'same-origin', signal: AbortSignal.timeout(10000), headers: { 'Content-Type': 'application/json', 'Idempotency-Key': intent.key }, body: intent.body })
++      if (response.status === 401 || response.status === 403) { dispatchEvent(new Event('sf-access-revoked')); return }
++      const result = await response.json()
++      if (!active()) return
++      if (!response.ok && !wasUncertain && response.status === 400 && result.reason === 'invalid-decision-input') {
++        sessionStorage.removeItem(storageKey); releaseChoicePeers(); retained = undefined; delete form.dataset.dirty
++        status.textContent = 'Preparation was rejected. Your recorded choice is unchanged; reopen the decision and review its current sources.'; return
++      }
++      const expected = JSON.parse(intent.body).caseRef; const receipt = result.value
++      if (!response.ok || result.status !== 'ok' || !confirmedChoiceReceipt(receipt, expected)) throw new Error('unconfirmed-preparation')
++      sessionStorage.removeItem(storageKey); releaseChoicePeers(); retained = undefined; completed = true; delete form.dataset.dirty
++      status.textContent = 'Changes prepared for preview. No financial approval or Apply was performed.'; location.reload()
++    } catch { if (active()) status.textContent = 'Preparation is unconfirmed. The original choice, operations, case version and key are retained; retry only the same preparation.' }
++    finally { busy = false; if (active()) sync() }
++  })
++  try {
++    const raw = sessionStorage.getItem(storageKey)
++    if (raw) {
++      const intent = readChoiceIntention(raw, context)
++      if (intent.action === 'decision-prepare-changes') { retained = intent; select.value = JSON.parse(intent.body).choiceId; form.dataset.dirty = 'true'; holdChoicePeers(form); status.textContent = 'An earlier preparation is unconfirmed. Retry the same preparation to retrieve its canonical receipt.' }
++    }
++    sync()
++  } catch { blocked = true; button.disabled = true; select.disabled = true; status.textContent = 'The retained preparation could not be verified. No mutation will be sent.' }
++})
++})()
+ `
+--- a/modules/sucafina/Sucafinav1/product/ui/decision-edit.ts
++++ b/modules/sucafina/Sucafinav1/product/ui/decision-edit.ts
+@@ -1,13 +1,33 @@
+-import type { AuthorizedCaseProjection } from "../contracts/business-context.ts"
++import type { AuthorizedCaseProjection, BusinessEvidenceRef } from "../contracts/business-context.ts"
++import type { DomainProjection } from "../contracts/context.ts"
+ import { esc } from "../../src/screen-shell.ts"
+ import { decisionFormContext, decisionScriptHelpers } from "./decision-alternatives.ts"
++
++/** Only an authorized individual projection can supply selectable Procurement references. */
++export function decisionProcurementEvidence(projection: DomainProjection, scope: ReturnType<typeof decisionFormContext>) {
++  if (!projection?.context || !["installationId", "projectId", "principalRef", "accessRevision", "policyVersion"].every((key) =>
++    projection.context[key as keyof typeof projection.context] === scope.authority[key as keyof typeof scope.authority]) ||
++    projection.context.surface !== "procurement" || projection.context.currency !== scope.currency ||
++    projection.context.period.start !== scope.horizon.start || projection.context.period.end !== scope.horizon.end ||
++    !Array.isArray(projection.values) || !Array.isArray(projection.components)) throw new Error("procurement-source-unavailable")
++  const supplied = projection.values.flatMap((value) => [...value.sourceRefs, ...(value.drilldown ? [value.drilldown] : [])])
++  const refs = supplied.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> =>
++    ref?.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" &&
++    ref.installationId === scope.authority.installationId && ref.projectId === scope.authority.projectId &&
++    ref.refId === "sf-procurement:" + encodeURIComponent(ref.target.incarnation) + ":" + ref.target.version && typeof ref.refDigest === "string" && /^[a-f0-9]{64}$/.test(ref.refDigest) &&
++    Number.isSafeInteger(ref.target.version) && ref.target.version > 0 && !!ref.target.period &&
++    ref.target.period.start <= scope.horizon.start && ref.target.period.end >= scope.horizon.end)
++    .filter((ref, index, all) => all.findIndex((other) => other.refDigest === ref.refDigest) === index)
++  if (new Set(refs.map((ref) => ref.refId)).size !== refs.length) throw new Error("ambiguous-procurement-source")
++  return refs
++}
+ 
+ /** Discovery yields authorized evidence; the existing case command validates every saved reference. */
+ export function decisionEditForm(projection: AuthorizedCaseProjection) {
+   const item = projection.case
+   const context = { ...decisionFormContext(projection), criteria: item.criteria.map((criterion) => ({ id: criterion.id, required: criterion.required })) }
+   const sources = item.sourceRefs.map((ref) => `<li>${esc(ref.kind === "record" ? ref.target.recordType + " · " + ref.target.recordId + " · revision " + ref.target.version : ref.kind + " · " + ref.evidenceLevel)}</li>`).join("")
+-  return `<details><summary>Edit decision</summary><form data-decision-edit data-context="${esc(JSON.stringify(context))}"><label>Decision objective<input name="objective" required value="${esc(item.objective)}"></label><label>Start<input name="start" type="date" required value="${esc(item.horizon.start)}"></label><label>End<input name="end" type="date" required value="${esc(item.horizon.end)}"></label><label>Currency<input name="currency" required value="${esc(item.currency)}"></label><div data-decision-criteria>${item.criteria.map((criterion, index) => `<label>Criterion ${index + 1}<input name="criterion-${index}" data-criterion-id="${esc(criterion.id)}" required value="${esc(criterion.description)}"></label>`).join("")}</div><fieldset><legend>Evidence attached to this decision</legend><ul data-decision-sources>${sources}</ul><p>Inspect an authorized source, attach it to this draft, then save the decision. Source values and financial approvals are unchanged.</p><button type="button" data-source-discover>Find Planner sources</button><label>Planner source<select name="source-option" disabled><option value="">Find sources first</option></select></label><button type="button" data-source-inspect disabled>Inspect selected source</button><div data-source-preview aria-live="polite"></div><button type="button" data-source-attach disabled>Attach source to draft</button></fieldset><button type="submit">Save decision</button><button type="button" data-decision-retry hidden style="display:none">Retry same request</button><button type="button" data-decision-review hidden style="display:none">Review current decision</button><p role="status" aria-live="polite"></p><div data-decision-conflict></div></form></details>`
++  return `<details><summary>Edit decision</summary><form data-decision-edit data-context="${esc(JSON.stringify(context))}"><label>Decision objective<input name="objective" required value="${esc(item.objective)}"></label><label>Start<input name="start" type="date" required value="${esc(item.horizon.start)}"></label><label>End<input name="end" type="date" required value="${esc(item.horizon.end)}"></label><label>Currency<input name="currency" required value="${esc(item.currency)}"></label><div data-decision-criteria>${item.criteria.map((criterion, index) => `<label>Criterion ${index + 1}<input name="criterion-${index}" data-criterion-id="${esc(criterion.id)}" required value="${esc(criterion.description)}"></label>`).join("")}</div><fieldset><legend>Evidence attached to this decision</legend><ul data-decision-sources>${sources}</ul><p>Inspect an authorized source, attach it to this draft, then save the decision. Source values and financial approvals are unchanged.</p><button type="button" data-source-discover>Find Planner sources</button><label>Planner source<select name="source-option" disabled><option value="">Find sources first</option></select></label><button type="button" data-source-inspect disabled>Inspect selected source</button><div data-source-preview aria-live="polite"></div><button type="button" data-source-attach disabled>Attach source to draft</button><hr><p>Procurement evidence is read from the authorized request collection. Attaching it does not create a scenario, change a request, or approve spending.</p><button type="button" data-procurement-discover>Find Procurement sources</button><label>Procurement source<select name="procurement-source-option" disabled><option value="">Find Procurement sources first</option></select></label><button type="button" data-procurement-inspect disabled>Inspect selected procurement source</button><div data-procurement-preview aria-live="polite"></div><button type="button" data-procurement-attach disabled>Attach procurement source to draft</button></fieldset><button type="submit">Save decision</button><button type="button" data-decision-retry hidden style="display:none">Retry same request</button><button type="button" data-decision-review hidden style="display:none">Review current decision</button><p role="status" aria-live="polite"></p><div data-decision-conflict></div></form></details>`
+ }
+ 
+ export const decisionEditScript = `
+@@ -18,6 +38,10 @@
+   const submit = form.querySelector('button[type=submit]'); const retry = form.querySelector('[data-decision-retry]'); const review = form.querySelector('[data-decision-review]')
+   const discover = form.querySelector('[data-source-discover]'); const inspect = form.querySelector('[data-source-inspect]'); const attach = form.querySelector('[data-source-attach]')
+   const source = form.elements.namedItem('source-option'); const preview = form.querySelector('[data-source-preview]'); const list = form.querySelector('[data-decision-sources]'); const conflict = form.querySelector('[data-decision-conflict]')
++  const procurementDiscover = form.querySelector('[data-procurement-discover]'); const procurementInspect = form.querySelector('[data-procurement-inspect]'); const procurementAttach = form.querySelector('[data-procurement-attach]')
++  const procurementSource = form.elements.namedItem('procurement-source-option'); const procurementPreview = form.querySelector('[data-procurement-preview]')
++  const procurementEvidence = ${decisionProcurementEvidence.toString()}
++  let procurementOptions = []; let inspectedProcurement
+   const names = ['objective', 'start', 'end', 'currency']
+   const editable = () => [...form.querySelectorAll('input')].filter((input) => names.includes(input.name) || input.dataset.criterionId)
+   const disabled = new Map(editable().map((input) => [input, input.disabled])); const removedDrafts = new Map()
+@@ -37,17 +61,19 @@
+     if (!locked) {
+       editable().forEach((input) => { input.disabled = disabled.get(input) || false })
+       source.disabled = !options.length || !scopeMatches(); inspect.disabled = !source.value || !scopeMatches(); attach.disabled = !inspected || !scopeMatches(); submit.disabled = needsReview
++      procurementSource.disabled = !procurementOptions.length || !scopeMatches(); procurementInspect.disabled = !procurementSource.value || !scopeMatches(); procurementAttach.disabled = !inspectedProcurement || !scopeMatches()
+     }
+     shown(retry, !!pending); retry.disabled = busy || !pending || completed
+     shown(review, !!pending || needsReview); review.disabled = busy || completed
+   }
+   const eraseDraft = () => {
+     editable().forEach((input) => { input.value = ''; input.defaultValue = ''; input.removeAttribute('value') })
+-    refs = []; options = []; inspected = undefined; pending = undefined; comparison = undefined; reviewed = undefined; context = undefined; removedDrafts.clear(); disabled.clear(); delete form.dataset.context
++    refs = []; options = []; inspected = undefined; procurementOptions = []; inspectedProcurement = undefined; pending = undefined; comparison = undefined; reviewed = undefined; context = undefined; removedDrafts.clear(); disabled.clear(); delete form.dataset.context
+   }
+   addEventListener('sf-access-revoked', eraseDraft)
+   const invalidateDiscovery = () => {
+     options = []; inspected = undefined; source.replaceChildren(new Option('Find sources first', '')); preview.replaceChildren(); delete preview.dataset.state
++    procurementOptions = []; inspectedProcurement = undefined; procurementSource.replaceChildren(new Option('Find Procurement sources first', '')); procurementPreview.replaceChildren(); delete procurementPreview.dataset.state
+   }
+   const inspectPlanner = async (refId, scope) => {
+     const result = await read('bi-data', { viewId: 'BI01', baseRef: refId, candidateRef: refId, currency: scope.currency, start: scope.horizon.start, end: scope.horizon.end })
+@@ -58,10 +84,32 @@
+     if (matches.length !== 1) throw new Error('source-unavailable')
+     return { ref: matches[0], projection }
+   }
++  const readProcurement = async (scope) => {
++    const current = await read('decision-controls', { case: scope.caseSelector, format: 'json' })
++    const selected = current.selected
++    if (current.accessRevision !== scope.authority.accessRevision || !selected || !same(selected.caseRef, scope.caseRef) ||
++      selected.decision.currency !== scope.currency || !same(selected.decision.horizon, scope.horizon) ||
++      !Array.isArray(selected.procurementEvidence?.sources)) throw new Error('procurement-collection-unavailable')
++    const entries = selected.procurementEvidence.sources
++    // Collection members expire. Only a full source in the owner's durable
++    // individual projection may be retained in the case.
++    if (entries.some((entry) => !entry.source || typeof entry.label !== 'string' ||
++      !procurementEvidence(entry.projection, scope).some((ref) => same(ref, entry.source))) ||
++      new Set(entries.map((entry) => entry.source.refId)).size !== entries.length) throw new Error('procurement-source-unavailable')
++    return { refs: entries.map((entry) => entry.source), entries }
++  }
++  const inspectProcurement = async (selected, scope) => {
++    const current = await readProcurement(scope)
++    const matching = current.entries.filter((entry) => same(entry.source, selected))
++    if (matching.length !== 1) throw new Error('procurement-source-changed')
++    return { ref: matching[0].source, projection: matching[0].projection }
++  }
+   const revalidateSources = async (selected, scope) => {
+     for (const ref of selected) {
+-      if (ref.kind !== 'record' || ref.target.surface !== 'planner' || ref.target.recordType !== 'planner-version') throw new Error('source-unavailable')
+-      const current = await inspectPlanner(ref.refId, scope)
++      if (ref.kind !== 'record') throw new Error('source-unavailable')
++      const current = ref.target.surface === 'planner' && ref.target.recordType === 'planner-version' ? await inspectPlanner(ref.refId, scope)
++        : ref.target.surface === 'procurement' && ref.target.recordType === 'procurement-request' ? await inspectProcurement(ref, scope) : undefined
++      if (!current) throw new Error('source-unavailable')
+       if (!same(current.ref, ref)) throw new Error('source-unavailable')
+     }
+   }
+@@ -229,6 +277,37 @@
+     if (refs.some((ref) => ref.refDigest === inspected.ref.refDigest)) { status.textContent = 'This exact source is already attached to the draft.'; return }
+     refs = [...refs, inspected.ref]; renderRefs(); form.dataset.dirty = 'true'; status.textContent = 'Source attached to the draft. Save decision to persist it.'
+   })
++  procurementDiscover.addEventListener('click', async () => {
++    if (!live() || busy || pending || completed || !scopeMatches()) return
++    busy = true; controls(); inspectedProcurement = undefined; procurementPreview.replaceChildren(); delete procurementPreview.dataset.state
++    status.textContent = 'Finding authorized Procurement sources…'
++    try {
++      const current = await readProcurement(context)
++      procurementOptions = current.refs; procurementSource.replaceChildren(new Option('Choose a Procurement source', ''))
++      procurementOptions.forEach((ref) => procurementSource.append(new Option(ref.target.recordId + ' · revision ' + ref.target.version, ref.refDigest)))
++      status.textContent = procurementOptions.length ? 'Choose a request and inspect its authorized evidence.' : 'No authorized Procurement requests cover this decision scope.'
++    } catch { if (live()) { procurementOptions = []; procurementSource.replaceChildren(); status.textContent = 'Procurement sources are unavailable. Your decision draft is preserved.' } }
++    finally { busy = false; if (!live()) eraseDraft(); else controls() }
++  })
++  procurementSource.addEventListener('change', () => { if (!live() || busy || pending) return; inspectedProcurement = undefined; procurementPreview.replaceChildren(); delete procurementPreview.dataset.state; controls() })
++  procurementInspect.addEventListener('click', async () => {
++    if (!live() || busy || pending || completed || !scopeMatches()) return
++    const selected = procurementOptions.filter((ref) => ref.refDigest === procurementSource.value)
++    if (selected.length !== 1) return
++    busy = true; controls(); inspectedProcurement = undefined; status.textContent = 'Inspecting authorized Procurement evidence…'
++    try {
++      const current = await inspectProcurement(selected[0], context)
++      inspectedProcurement = current.ref; showProjection(procurementPreview, current.projection, current.ref.target.recordId)
++      status.textContent = 'Procurement evidence inspected. Attach it to the draft, then save the decision.'
++    } catch { if (live()) status.textContent = 'The request changed or is outside this decision scope. No Procurement reference was attached.' }
++    finally { busy = false; if (!live()) eraseDraft(); else controls() }
++  })
++  procurementAttach.addEventListener('click', () => {
++    if (!live() || busy || pending || completed || !inspectedProcurement || !scopeMatches()) return
++    if (refs.some((ref) => same(ref, inspectedProcurement))) { status.textContent = 'This exact Procurement source is already attached to the draft.'; return }
++    refs = [...refs, inspectedProcurement]; renderRefs(); form.dataset.dirty = 'true'
++    status.textContent = 'Procurement source attached to the draft. Save decision to persist it.'
++  })
+   form.addEventListener('submit', async (event) => {
+     event.preventDefault(); if (!live() || busy || pending || completed || needsReview || !form.reportValidity()) return
+     busy = true; controls(); let dispatch
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/choice-forms.test.ts
+@@ -0,0 +1,80 @@
++import { expect, test } from "bun:test"
++import type { AuthorizedCaseProjection, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { ChoiceRecord, ScenarioResult } from "../../../product/contracts/decisions.ts"
++import { decisionChoiceForm, decisionChoiceScript } from "../../../product/ui/decision-choice.ts"
++
++test("choice initialization parses with the exact embedded retention and receipt helpers", () => {
++  // This only parses the emitted browser program; it is not a simulated successful user journey.
++  expect(() => new Bun.Transpiler({ loader: "js" }).transformSync(decisionChoiceScript)).not.toThrow()
++})
++
++test("authorized choice context preserves the original condition and snapshots after current source values change", () => {
++  const item = projection()
++  const old = structuredClone(item.case.choices[0]!)
++  const current: AuthorizedCaseProjection = { ...item, case: { ...item.case, version: 9, alternatives: item.case.alternatives.map((alternative) => ({ ...alternative, version: 4, result: { ...alternative.result, knownSubtotal: 9000 } })) } }
++  const before = structuredClone(current)
++  const html = decisionChoiceForm(current)
++  const context = embedded(html, "data-decision-choice")
++  expect(context.caseRef).toEqual({ id: "case", incarnation: "incarnation", version: 9 })
++  expect(context.authority.principalRef).toBe("person")
++  expect(context.choices).toEqual([old])
++  expect(context.choices[0]?.result.knownSubtotal).toBe(0)
++  expect(context.choices[0]?.result.total).toBeNull()
++  expect(context.choices[0]?.result.costCoverage.derivedMissingCategoryIds).toEqual(["training"])
++  expect(context.choices[0]?.scenario.assumptions.map((assumption) => assumption.value)).toEqual([null, 0])
++  expect(current).toEqual(before)
++  expect(html).toContain("Financial approval remains a separate explicit action.")
++})
++
++test("a recorded choice without operations does not invent an Apply route or a prepared change", () => {
++  const item = projection()
++  const before = structuredClone(item)
++  const html = decisionChoiceForm(item)
++  expect(html).toContain('<button type="submit" disabled>Prepare changes from this choice</button>')
++  expect(html).toContain("This recorded choice contains no executable operations. No changes were prepared.")
++  expect(embedded(html, "data-decision-prepare").choices[0]?.scenario.operations).toEqual([])
++  expect(item).toEqual(before)
++  expect(html).not.toContain("Apply reviewed change")
++})
++
++test("numeric comparison rule starts without an inferred amount and uses buttons inside the existing choice form", () => {
++  const html = decisionChoiceForm(projection())
++  expect(html).toContain('<fieldset data-numeric-rule hidden>')
++  expect(html).toContain('<button type="button" data-numeric-load>Load comparison rule</button>')
++  expect(html).toContain('<button type="button" data-numeric-save disabled>Save comparison rule</button>')
++  expect(html).toContain('<input data-numeric-value type="number" step="any" disabled>')
++  expect(html).toContain('<select data-numeric-evidence multiple disabled></select>')
++  expect(html.match(/<form\b/g)).toHaveLength(2)
++  expect(html.match(/<\/form>/g)).toHaveLength(2)
++  expect(html).toContain("Missing costs remain unresolved, and saving a rule does not grant financial approval.")
++})
++
++test("preparation uses the exact authorized historical operations and safely escapes its labels", () => {
++  const item = projection()
++  const original = item.case.choices[0]!
++  const reason = '</option><script>throw "not executed"</script>'
++  const choice: ChoiceRecord = { ...original, reason, scenario: { ...original.scenario, operations: [{ kind: "replace", targetRef: "authorized-target", amount: 0, currency: "USD", period: original.result.horizon }] } }
++  const current = { ...item, case: { ...item.case, alternatives: [], choices: [choice] } }
++  const html = decisionChoiceForm(current)
++  const prepared = embedded(html, "data-decision-prepare")
++  expect(prepared.choices).toEqual([choice])
++  expect(prepared.choices[0]?.scenario.operations).toEqual(choice.scenario.operations)
++  expect(html).toContain('<button type="submit">Prepare changes from this choice</button>')
++  expect(html).not.toContain('<script>throw')
++  expect(html).toContain('&lt;/option&gt;&lt;script&gt;throw &quot;not executed&quot;&lt;/script&gt;')
++  expect(current.case.preparedChanges).toEqual([])
++})
++
++function projection(): AuthorizedCaseProjection {
++  const horizon = { start: "2027-01-01", end: "2027-12-31" }
++  const evidence: BusinessEvidenceRef = { schema: "sf-evidence-v1", kind: "record", installationId: "installation", projectId: "project", refId: "source", refDigest: "a".repeat(64), evidenceLevel: "observed", target: { surface: "planner", recordType: "planner-version", recordId: "forecast", incarnation: "forecast-inc", version: 3, fields: ["amount"], period: horizon, projectionDigest: "b".repeat(64) } }
++  const result: ScenarioResult = { id: "result", version: 1, components: [], currency: "USD", horizon, sourceRefs: [evidence], unresolvedConditions: ["training: missing-category"], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: 0, total: null, costCoverage: { basisId: "coverage", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1, currency: "USD", horizon, entries: [{ categoryId: "training", status: "pending", reason: "missing-category" }], derivedMissingCategoryIds: ["training"], coverageState: "pending", issues: ["training: missing-category"], evaluatedSourceRefs: [evidence] } }
++  const choice: ChoiceRecord = { id: "choice", alternativeId: "alternative", alternativeVersion: 1, basisVersion: 1, criteria: ["cost"], values: [{ criterionRef: "cost", value: null, unit: "USD", currency: "USD", horizon }], evidenceRefs: [evidence], principalRef: "person", reason: "Choose with explicit pending cost; no financial approval", at: "2026-11-14T20:00:00Z", scenario: { baseRef: "authorized-forecast", operations: [], assumptions: [{ id: "unknown", value: null, evidenceRefs: [evidence], state: "absent" }, { id: "zero", value: 0, evidenceRefs: [evidence], state: "confirmed" }] }, result, comparisonStatus: "conditioned", costCoverage: result.costCoverage, comparison: { baselineResultRef: "baseline-result", alternativeResultRef: "result", costCoverageRefs: ["coverage"], comparisonStatus: "conditioned", knownDifference: 0, completeDifference: null, criterionResults: [{ criterionId: "cost", state: "unknown", reason: "missing category" }], unresolvedConditions: ["training: missing-category"] } }
++  return { context: { kind: "ui", installationId: "installation", projectId: "project", principalRef: "person", policyVersion: "policy", accessRevision: "access" }, case: { id: "case", incarnation: "incarnation", version: 5, state: "chosen", objective: "Compare", horizon, currency: "USD", criteria: [{ id: "cost", description: "Cost", required: true }], participants: ["person"], sourceRefs: [evidence], alternatives: ["baseline", "alternative"].map((id) => ({ id, version: 1, title: id, scenario: choice.scenario, result: { ...result, id: id + "-result" } })), costCoverageBases: [], assumptions: [], questions: [], choices: [choice], preparedChanges: [], receipts: [], ledger: [] }, events: [], evidenceRefs: [evidence], checkedAt: "2026-11-14T20:01:00Z" }
++}
++
++function embedded(html: string, marker: string) {
++  const encoded = html.match(new RegExp(marker + ' data-context="([^"]+)"'))?.[1]
++  if (!encoded) throw new Error("context-not-rendered")
++  return JSON.parse(encoded.replaceAll("&quot;", '"').replaceAll("&#39;", "'").replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&amp;", "&")) as { caseRef: { id: string; incarnation: string; version: number }; authority: AuthorizedCaseProjection["context"]; choices: readonly ChoiceRecord[] }
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/choice-intention.test.ts
+@@ -0,0 +1,91 @@
++import { expect, test } from "bun:test"
++import { createDecisionChoiceIntention, isDecisionChoiceReceipt, isDecisionCriterionReceipt, readDecisionChoiceIntention } from "../../../product/ui/decision-choice.ts"
++
++const context = { scope: '["installation","project","person","case","incarnation"]', caseRef: { id: "case", incarnation: "incarnation", version: 4 } }
++
++function choice() {
++  return { caseRef: { ...context.caseRef }, alternativeId: "alternative", alternativeVersion: 2, comparison: { scenarioRefs: ["baseline-result", "alternative-result"], criteria: ["cost"] }, criteria: ["cost"], reason: "Accept the stated missing-cost condition; this is not financial approval." }
++}
++
++test("choice replay after reload retains the exact original command bytes and key at a newer case version", () => {
++  const payload = choice()
++  const intention = createDecisionChoiceIntention("decision-choose", payload, "one-choice-key", context)
++  const original = intention.body
++  payload.caseRef.version = 8
++  payload.criteria.push("new-criterion")
++  payload.reason = "Different intention"
++  const reopened = readDecisionChoiceIntention(JSON.stringify(intention), { ...context, caseRef: { ...context.caseRef, version: 9 } })
++  expect(Object.isFrozen(intention)).toBe(true)
++  expect(Object.isFrozen(reopened)).toBe(true)
++  expect(reopened.key).toBe("one-choice-key")
++  expect(reopened.body).toBe(original)
++  expect(JSON.parse(reopened.body)).toEqual(choice())
++})
++
++test("retained choice refuses another principal, installation, project, case, incarnation or a future CAS", () => {
++  const intention = createDecisionChoiceIntention("decision-choose", choice(), "choice-key", context)
++  const raw = JSON.stringify(intention)
++  for (const scope of [
++    '["installation","project","another-person","case","incarnation"]',
++    '["another-installation","project","person","case","incarnation"]',
++    '["installation","another-project","person","case","incarnation"]',
++  ]) expect(() => readDecisionChoiceIntention(raw, { ...context, scope })).toThrow("invalid-choice-intention")
++  expect(() => readDecisionChoiceIntention(raw, { ...context, caseRef: { ...context.caseRef, id: "other-case" } })).toThrow("invalid-choice-case")
++  expect(() => readDecisionChoiceIntention(raw, { ...context, caseRef: { ...context.caseRef, incarnation: "replacement" } })).toThrow("invalid-choice-case")
++  expect(() => readDecisionChoiceIntention(raw, { ...context, caseRef: { ...context.caseRef, version: 3 } })).toThrow("invalid-choice-case")
++})
++
++test("preparation freezes the already chosen operations including explicit zero without fabricating an operation", () => {
++  const payload = { caseRef: { ...context.caseRef }, choiceId: "recorded-choice", operations: [{ kind: "replace", targetRef: "real-target", amount: 0, currency: "USD", period: { start: "2027-01-01", end: "2027-12-31" } }] }
++  const intention = createDecisionChoiceIntention("decision-prepare-changes", payload, "preparation-key", context)
++  payload.operations[0]!.amount = 750
++  const reopened = readDecisionChoiceIntention(JSON.stringify(intention), { ...context, caseRef: { ...context.caseRef, version: 7 } })
++  expect(JSON.parse(reopened.body).operations).toEqual([{ kind: "replace", targetRef: "real-target", amount: 0, currency: "USD", period: { start: "2027-01-01", end: "2027-12-31" } }])
++  expect(reopened.action).toBe("decision-prepare-changes")
++  expect(reopened.key).toBe("preparation-key")
++  expect(() => createDecisionChoiceIntention("decision-prepare-changes", { ...payload, operations: [] }, "empty", context)).toThrow("invalid-choice-payload")
++})
++
++test("malformed or oversized retained commands cannot introduce authority or be silently rewritten", () => {
++  expect(() => createDecisionChoiceIntention("decision-choose", { ...choice(), principalRef: "admin" }, "key", context)).toThrow("invalid-choice-payload")
++  expect(() => createDecisionChoiceIntention("decision-choose", { ...choice(), reason: "" }, "key", context)).toThrow("invalid-choice-payload")
++  expect(() => createDecisionChoiceIntention("decision-choose", choice(), " ", context)).toThrow("invalid-choice-intention")
++  expect(() => createDecisionChoiceIntention("decision-choose", { ...choice(), reason: "é".repeat(132000) }, "key", context)).toThrow("invalid-choice-intention")
++  expect(() => readDecisionChoiceIntention(JSON.stringify({ scope: context.scope, action: "decision-apply", key: "key", body: JSON.stringify(choice()) }), context)).toThrow("invalid-choice-intention")
++})
++
++test("explicit comparison rule keeps its own CAS and zero limit while rejecting absent values or invented sensitivity", () => {
++  const payload = { caseRef: { ...context.caseRef }, criterionId: "cost", metricRef: "planner:known-subtotal-difference", operator: "lte", value: 0, unit: "USD", period: { start: "2027-01-01", end: "2027-12-31" }, evidenceRefs: [{ refId: "authorized-current-comparison-source", refDigest: "a".repeat(64) }], expectedRuleVersion: 3 }
++  const intention = createDecisionChoiceIntention("decision-criteria", payload, "human-rule-key", context)
++  payload.value = 2000
++  payload.expectedRuleVersion = 4
++  const reopened = readDecisionChoiceIntention(JSON.stringify(intention), { ...context, caseRef: { ...context.caseRef, version: 8 } })
++  expect(reopened.body).toBe(intention.body)
++  expect(reopened.key).toBe("human-rule-key")
++  expect(JSON.parse(reopened.body)).toMatchObject({ value: 0, expectedRuleVersion: 3, caseRef: context.caseRef })
++  expect(() => createDecisionChoiceIntention("decision-criteria", { ...payload, value: undefined }, "absent", context)).toThrow("invalid-choice-payload")
++  expect(() => createDecisionChoiceIntention("decision-criteria", { ...payload, value: null }, "null", context)).toThrow("invalid-choice-payload")
++  expect(() => createDecisionChoiceIntention("decision-criteria", { ...payload, sensitivity: { parameterRef: "invented" } }, "parameter", context)).toThrow("invalid-choice-payload")
++  expect(() => createDecisionChoiceIntention("decision-criteria", { ...payload, evidenceRefs: [] }, "empty-evidence", context)).toThrow("invalid-choice-payload")
++})
++
++test("numeric rule receipt confirms the next rule revision without assuming the case advanced", () => {
++  expect(isDecisionCriterionReceipt({ ruleRef: "canonical-rule", version: 4 }, 3)).toBe(true)
++  expect(isDecisionCriterionReceipt({ ruleRef: "canonical-rule", version: 3 }, 3)).toBe(false)
++  expect(isDecisionCriterionReceipt({ ruleRef: "canonical-rule", version: 5 }, 3)).toBe(false)
++  expect(isDecisionCriterionReceipt({ ruleRef: "", version: 4 }, 3)).toBe(false)
++  expect(isDecisionCriterionReceipt({ caseRef: { ...context.caseRef, version: 5 } }, 3)).toBe(false)
++})
++
++test("canonical replay receipt confirms only the original identity and a committed revision after the frozen CAS", () => {
++  const expected = context.caseRef
++  // The page may now be v9; a real replay still returns the original committed v5.
++  expect(isDecisionChoiceReceipt({ caseRef: { ...expected, version: 5 } }, expected)).toBe(true)
++  expect(isDecisionChoiceReceipt({ caseRef: { ...expected, version: 4 } }, expected)).toBe(false)
++  expect(isDecisionChoiceReceipt({ caseRef: { ...expected, version: 6 } }, expected)).toBe(false)
++  expect(isDecisionChoiceReceipt({ caseRef: { ...expected, version: 5, id: "other" } }, expected)).toBe(false)
++  expect(isDecisionChoiceReceipt({ caseRef: { ...expected, version: 5, incarnation: "replacement" } }, expected)).toBe(false)
++  expect(isDecisionChoiceReceipt({ caseRef: { ...expected, version: 5.5 } }, expected)).toBe(false)
++  expect(isDecisionChoiceReceipt({ caseRef: { ...expected, version: Number.MAX_SAFE_INTEGER + 1 } }, expected)).toBe(false)
++  expect(isDecisionChoiceReceipt(undefined, expected)).toBe(false)
++})
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/coverage-read.test.ts
+@@ -0,0 +1,119 @@
++import { expect, test } from "bun:test"
++import { readSfDecisionCoverage } from "../../../../../../apps/cli/src/sucafina-product/decision-coverage-read.ts"
++import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
++import type { DomainProjection } from "../../../product/contracts/context.ts"
++import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
++import type { CostCoverageEntry } from "../../../product/contracts/decisions.ts"
++import type { DomainPortHost } from "../../../product/contracts/ports.ts"
++import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
++import { classifyCoverage, classificationDigest, supportsCoverageClassification } from "../../../product/decisions/coverage-classification.ts"
++import { assessCostCoverage } from "../../../product/decisions/cost-coverage.ts"
++import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
++
++// Adapter contract tests use canonical C10 classification and real UI leases.
++// The two read-port responses are explicit component fixtures, not an installed
++// journey, persisted case, provider run, or evidence of C12 execution.
++async function fixture(amount: number | null = 0) {
++  const state = { allowed: true, sequence: 0, calls: 0, afterRead: () => {} }
++  const request = new Request("https://example.test/decision-controls")
++  const identity = { installationId: "install", projectId: "project", principalRef: "reader", accessRevision: "access", policyVersion: "policy" }
++  const ui = createSfUiAuthority({ authorize: async (incoming) => incoming === request && state.allowed ? identity : undefined,
++    commandIdentity: async () => "coverage-read", createId: () => `read-${++state.sequence}`, now: () => Date.parse("2026-11-14T00:00:00Z") })
++  const host: Pick<DomainPortHost, "requestFor" | "revalidate"> = { requestFor: (call) => call.kind === "ui" ? ui.requestFor(call) : undefined,
++    revalidate: (call) => call.kind === "ui" ? ui.revalidate(call) : Promise.resolve(false) }
++  const period = { start: "2027-01-01", end: "2027-12-31" }
++  const record = { surface: "planner", type: "planner-version", id: "forecast", incarnation: "forecast-inc", version: 1, fields: ["lines"], period, observedAt: "2026-11-14T00:00:00Z" } as const
++  const unsigned: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", kind: "record", refId: "forecast", installationId: "install", projectId: "project", refDigest: "", evidenceLevel: "observed",
++    target: { surface: "planner", recordType: "planner-version", recordId: record.id, incarnation: record.incarnation, version: record.version, fields: record.fields, period, projectionDigest: digestSfValue({ lines: "fixture" }) } }
++  const source = { ...unsigned, refDigest: digestSfEvidenceRef(unsigned) }
++  const selection = { caseRef: { id: "case", incarnation: "case-inc", version: 4 }, source }
++  const basis = { id: "basis", version: 1, decisionType: "renewal-transition-v1", categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: [source] }
++  const projection: DomainProjection = { context: { ...identity, surface: "planner", period, currency: "USD", sourceRefs: [record], capabilities: [] }, version: 1, engineVersion: "fixture", values: [], missing: [],
++    components: [{ id: "service", amount, currency: "USD", period, sourceRefs: [record], evidenceState: amount === null ? "absent" : "confirmed" }] }
++  const entries: CostCoverageEntry[] = [{ categoryId: "service", status: "included", componentRefs: ["service"], evidenceRefs: [source], scopeNote: "Explicit service amount" },
++    { categoryId: "training", status: "pending", reason: "Awaiting the authorized training source" }]
++  const proposed = classifyCoverage({ ...selection, basis, entries, expectedVersion: 0 }, projection, 1)
++  const evidence: BusinessEvidenceResolution[] = [{ state: "fresh", ref: source, accessRevision: identity.accessRevision, checkedAt: "2026-11-14T00:00:00Z" }]
++  const assessment = assessCostCoverage({ basis, alternativeId: "baseline", alternativeVersion: 1, currency: "USD", horizon: period, entries, components: projection.components, evidence,
++    supports: (entry, resolved) => supportsCoverageClassification(proposed, entry, resolved) })
++  const classification = classifyCoverage({ ...selection, basis, entries: assessment.entries, expectedVersion: 0 }, projection, 1)
++  const stored = { classification, coverage: { coverageRef: "opaque-registered-coverage", basis, assessment } }
++  const baseline: Parameters<typeof readSfDecisionCoverage>[0]["baseline"] = {
++    readClassification: async (selector) => { expect(selector).toBe(source.refId); state.calls++; return { status: "ok", value: structuredClone(stored.classification) } },
++    resolveForecastCoverage: async (selector) => { expect(selector).toBe(source.refId); state.calls++; state.afterRead(); return { status: "ok", value: structuredClone(stored.coverage) } },
++  }
++  const admit = async () => {
++    const admitted = await ui.admit(request, "sf_case_read", digestSfValue(selection))
++    if (admitted.status !== "ok" || !await ui.validate(admitted.value, "sf_case_read", digestSfValue(selection))) throw new Error("Real read admission unavailable")
++    return admitted.value
++  }
++  return { ui, input: { host, baseline }, selection, stored, projection, state, admit, context: await admit() }
++}
++
++for (const amount of [0, null] as const) test(`coverage reread preserves canonical pending versus ${amount === null ? "absent" : "zero"} after a fresh admission`, async () => {
++  const value = await fixture(amount)
++  const before = structuredClone(value.stored)
++  const result = await readSfDecisionCoverage(value.input, value.selection, value.context)
++  expect(result).toEqual({ status: "ok", value: { expectedVersion: 1, classification: before.classification, coverage: before.coverage } })
++  if (result.status !== "ok") throw new Error("Coverage read failed")
++  expect(result.value.coverage.assessment.coverageState).toBe("pending")
++  expect(result.value.coverage.assessment.entries.find((entry) => entry.categoryId === "training")).toEqual({ categoryId: "training", status: "pending", reason: "Awaiting the authorized training source" })
++  expect(result.value.coverage.assessment.entries.find((entry) => entry.categoryId === "service")?.status).toBe(amount === null ? "pending" : "included")
++  expect(result.value.coverage.assessment.derivedMissingCategoryIds).toContain("migration")
++  expect(value.projection.components[0]?.amount).toBe(amount)
++  value.ui.finish(value.context)
++  const next = await value.admit()
++  expect(next.binding.requestId).not.toBe(value.context.binding.requestId)
++  expect(await readSfDecisionCoverage(value.input, value.selection, next)).toEqual(result)
++  expect(value.stored).toEqual(before)
++  value.ui.finish(next)
++})
++
++test("coverage reread rejects a replaced case or source and mixed active classification revisions", async () => {
++  const value = await fixture()
++  expect(await readSfDecisionCoverage(value.input, { ...value.selection, caseRef: { ...value.selection.caseRef, version: 0 } }, value.context)).toEqual({ status: "denied", reason: "decision-coverage-read-authority-unavailable" })
++  const replaced = { ...value.selection, caseRef: { ...value.selection.caseRef, incarnation: "replaced" } }
++  expect(await readSfDecisionCoverage(value.input, replaced, value.context)).toEqual({ status: "stale", reason: "decision-coverage-read-selection-changed" })
++  const source = { ...value.selection.source, target: { ...value.selection.source.target, version: 2 } }
++  source.refDigest = digestSfEvidenceRef(source)
++  expect(await readSfDecisionCoverage(value.input, { ...value.selection, source }, value.context)).toEqual({ status: "stale", reason: "decision-coverage-read-selection-changed" })
++  value.stored.coverage.assessment = { ...value.stored.coverage.assessment, alternativeVersion: 2 }
++  expect(await readSfDecisionCoverage(value.input, value.selection, value.context)).toEqual({ status: "stale", reason: "decision-coverage-read-classification-changed" })
++  value.ui.finish(value.context)
++})
++
++test("coverage reread requires the canonical classification digest and matching basis contents", async () => {
++  const value = await fixture()
++  const original = structuredClone(value.stored)
++  value.stored.classification.classificationDigest = "0".repeat(64)
++  expect(await readSfDecisionCoverage(value.input, value.selection, value.context)).toEqual({ status: "stale", reason: "decision-coverage-read-selection-changed" })
++  value.stored.classification = original.classification
++  value.stored.coverage.basis = { ...original.coverage.basis, sourceRefs: [] }
++  expect(await readSfDecisionCoverage(value.input, value.selection, value.context)).toEqual({ status: "stale", reason: "decision-coverage-read-classification-changed" })
++  expect(value.stored.classification.classificationDigest).toBe(classificationDigest(value.stored.classification))
++  value.ui.finish(value.context)
++})
++
++for (const end of ["finish", "revoke", "selection-change"] as const) test(`coverage reread releases no data after ${end} while the canonical reader awaits`, async () => {
++  const value = await fixture()
++  value.state.afterRead = () => {
++    if (end === "finish") value.ui.finish(value.context)
++    if (end === "revoke") value.state.allowed = false
++    if (end === "selection-change") value.selection.caseRef.version++
++  }
++  const result = await readSfDecisionCoverage(value.input, value.selection, value.context)
++  expect(result).toEqual({ status: "denied", reason: "decision-coverage-read-authority-unavailable" })
++  expect(result).not.toHaveProperty("value")
++  value.ui.finish(value.context)
++})
++
++test("coverage reread does not turn canonical failure or a forged UI object into coverage", async () => {
++  const value = await fixture()
++  const missing = { ...value.input, baseline: { ...value.input.baseline, readClassification: async () => ({ status: "unavailable" as const, reason: "classification-unavailable" }) } }
++  expect(await readSfDecisionCoverage(missing, value.selection, value.context)).toEqual({ status: "unavailable", reason: "classification-unavailable" })
++  const forged = { ...value.context, binding: { ...value.context.binding, principalRef: "other" } } as TrustedUiContext
++  expect(await readSfDecisionCoverage(value.input, value.selection, forged)).toEqual({ status: "denied", reason: "decision-coverage-read-authority-unavailable" })
++  expect(value.state.calls).toBe(0)
++  value.ui.finish(value.context)
++})
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/procurement-evidence.test.ts
+@@ -0,0 +1,45 @@
++import { expect, test } from "bun:test"
++import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { DomainProjection } from "../../../product/contracts/context.ts"
++import { decisionFormContext } from "../../../product/ui/decision-alternatives.ts"
++import { decisionEditScript, decisionProcurementEvidence } from "../../../product/ui/decision-edit.ts"
++
++const period = { start: "2027-01-01", end: "2027-12-31" }
++const authority = { kind: "ui" as const, installationId: "installation", projectId: "project", principalRef: "reader", accessRevision: "access", policyVersion: "policy" }
++const scope: ReturnType<typeof decisionFormContext> = { scope: "scope", authority, caseRef: { id: "case", incarnation: "case-inc", version: 2 }, caseSelector: "case", horizon: period, currency: "USD", sourceRefs: [] }
++function fixture() {
++  const ref: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", kind: "record", installationId: authority.installationId, projectId: authority.projectId, refId: "sf-procurement:pr-inc:2", refDigest: "a".repeat(64), evidenceLevel: "observed", target: { surface: "procurement", recordType: "procurement-request", recordId: "PR-2027-1", incarnation: "pr-inc", version: 2, fields: ["status", "stageChangedAt"], period, projectionDigest: "b".repeat(64) } }
++  const projection: DomainProjection = { context: { ...authority, surface: "procurement", period, currency: "USD", sourceRefs: [], capabilities: [] }, version: 2, engineVersion: "fixture-only", components: [], missing: [{ field: "ageDays", reason: "unavailable" }], values: [{ id: "PR-2027-1:pr-inc:ageDays", value: null, unit: "days", period, granularity: "record", sourceRefs: [ref], drilldown: ref, evidenceState: "absent" }] }
++  return { ref, projection }
++}
++
++test("Procurement evidence selector keeps the exact issued reference and never derives an amount from missing age", () => {
++  const value = fixture()
++  const original = structuredClone(value.projection)
++  expect(decisionProcurementEvidence(value.projection, scope)).toEqual([value.ref])
++  expect(value.projection).toEqual(original)
++  expect(value.projection.values[0]?.value).toBeNull()
++  expect(value.ref.target.fields).not.toContain("estAmount")
++})
++
++test("Procurement evidence selector rejects a different principal, revision, currency or horizon", () => {
++  const { projection } = fixture()
++  for (const context of [{ ...projection.context, principalRef: "other" }, { ...projection.context, accessRevision: "revoked" }, { ...projection.context, policyVersion: "changed" }, { ...projection.context, currency: "EUR" }, { ...projection.context, period: { start: "2026-01-01", end: "2026-12-31" } }])
++    expect(() => decisionProcurementEvidence({ ...projection, context }, scope)).toThrow("procurement-source-unavailable")
++})
++
++test("Procurement evidence selector filters out foreign records and refuses ambiguous issued references", () => {
++  const { projection, ref } = fixture()
++  const foreign = { ...ref, projectId: "other-project" }
++  const outside = { ...ref, target: { ...ref.target, period: { start: "2027-01-01", end: "2027-01-31" } } }
++  const invalidVersion = { ...ref, target: { ...ref.target, version: 0 } }
++  const temporary = { ...ref, refId: "temporary-collection-member" }
++  const row = projection.values[0]!
++  expect(decisionProcurementEvidence({ ...projection, values: [{ ...row, sourceRefs: [foreign, outside, invalidVersion, temporary], drilldown: null }] }, scope)).toEqual([])
++  const ambiguous = { ...ref, refDigest: "c".repeat(64) }
++  expect(() => decisionProcurementEvidence({ ...projection, values: [{ ...row, sourceRefs: [ref, ambiguous] }] }, scope)).toThrow("ambiguous-procurement-source")
++})
++
++test("the mounted Edit initializer parses with both canonical evidence readers", () => {
++  expect(() => new Bun.Transpiler({ loader: "js" }).transformSync(decisionEditScript)).not.toThrow()
++})
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/decisions-support/apply-recovery.ts
+@@ -0,0 +1,192 @@
++import { expect, test, type Page, type Request } from "@playwright/test"
++import { asRecord, caseIdentity, clickCommand, enterWorkbench, isCommand, readReply } from "./journey"
++import { loseClosureResponse } from "./closure-response"
++
++/** Consume the published C12 path only after the caller proves a compatible domain approval. */
++export async function applyRecoveryJourney(page: Page, origin: string, selection: { reference: string; objective: string; choiceId: string }, observations: Record<string, unknown>[], approveBeforeApply: (page: Page, review: Record<string, unknown>, operation: Record<string, unknown>) => Promise<{ requestId: string; amount: unknown; currency: string; version: number; action: string }>) {
++  const identity = caseIdentity(selection.reference)
++  const context = asRecord(JSON.parse((await page.locator("form[data-decision-choice]").getAttribute("data-context"))!))
++  const selected = (context.choices as unknown[]).map(asRecord).filter((choice) => choice.id === selection.choiceId)
++  expect(selected, "The public human journey must have produced the exact persisted Procurement choice").toHaveLength(1)
++  const operations = asRecord(selected[0]!.scenario).operations as unknown[]
++  expect(operations, "An empty Planner scenario cannot prove Procurement Apply or receipt recovery").toHaveLength(1)
++  const operation = asRecord(operations[0])
++  expect(operation).toMatchObject({ kind: "replace" })
++  expect(typeof operation.amount).toBe("number")
++  expect(Number.isFinite(operation.amount)).toBe(true)
++  const commands: { mode: string; body: unknown; key: string | undefined }[] = []
++  const record = (request: Request) => {
++    const url = new URL(request.url())
++    if (url.origin === origin && request.method() === "POST" && ["decision-apply", "decision-recover"].includes(url.searchParams.get("sf") ?? ""))
++      commands.push({ mode: url.searchParams.get("sf")!, body: request.postDataJSON(), key: request.headers()["idempotency-key"] })
++  }
++  page.context().on("request", record)
++  const audit = await page.context().newPage()
++  const fresh = await page.context().newPage()
++  try {
++    await test.step("prepare only the operation held in the recorded human choice", async () => {
++      const prepare = page.locator("[data-decision-prepare]")
++      await expect(prepare.locator("[data-choice-prepare-select]")).toBeEnabled()
++      await prepare.locator("[data-choice-prepare-select]").selectOption(selection.choiceId)
++      const sent = page.waitForRequest((request) => isCommand(request, "decision-prepare-changes"))
++      const loaded = page.waitForEvent("domcontentloaded")
++      const receipt = await clickCommand(page, prepare.getByRole("button", { name: "Prepare changes from this choice", exact: true }), "decision-prepare-changes", observations)
++      expect((await sent).postDataJSON()).toEqual({ caseRef: context.caseRef, choiceId: selection.choiceId, operations })
++      expect(asRecord(asRecord(receipt.value).caseRef)).toMatchObject(identity)
++      await loaded
++    })
++    const entry = page.locator("[data-decision-apply]")
++    await expect(entry).toHaveCount(1)
++    await expect(entry).toHaveAttribute("data-sf-apply-ready", "true")
++    const change = asRecord(JSON.parse((await entry.getAttribute("data-context"))!))
++    expect(change.choiceId).toBe(selection.choiceId)
++    expect(change.surface).toBe("procurement")
++    let reviewed = await test.step("read the exact domain preview and require explicit confirmation before Apply", async () => {
++      const confirmation = entry.getByRole("checkbox", { name: "I reviewed these changes and want to apply them", exact: true })
++      const apply = entry.getByRole("button", { name: "Apply reviewed change", exact: true })
++      await expect(confirmation).not.toBeChecked()
++      await expect(confirmation).toBeDisabled()
++      await expect(apply).toBeDisabled()
++      const response = page.waitForResponse((response) => procurementCommand(response.request(), origin, "decision-review"))
++      await entry.getByRole("button", { name: "Review current changes", exact: true }).click()
++      const review = asRecord((await readReply(await response, observations)).value)
++      expect(review).toMatchObject({ choiceId: selection.choiceId, changeId: change.changeId, surface: "procurement", state: "planned", expectedVersion: change.expectedVersion })
++      expect(review.reviewDigest).toMatch(/^[a-f0-9]{64}$/)
++      expect(asRecord(review.target).type).toBe("procurement-request")
++      expect(typeof asRecord(review.target).id).toBe("string")
++      expect((review.fields as unknown[]).length).toBeGreaterThan(0)
++      expect(review.receipt).toBeUndefined()
++      await expect(confirmation).toBeEnabled()
++      await expect(confirmation).not.toBeChecked()
++      await expect(apply).toBeDisabled()
++      expect(commands).toEqual([])
++      return review
++    })
++    const requestId = String(asRecord(reviewed.target).id)
++    const approval = await approveBeforeApply(audit, reviewed, operation)
++    expect(approval).toMatchObject({ requestId, amount: operation.amount, currency: operation.currency, action: "approve" })
++    // Formal approval cannot silently authorize a stale draft-edit preparation. The
++    // existing domain review must still prove this same change after that transition.
++    const reviewedAgain = page.waitForResponse((response) => procurementCommand(response.request(), origin, "decision-review"))
++    await entry.getByRole("button", { name: "Review current changes", exact: true }).click()
++    const afterApproval = asRecord((await readReply(await reviewedAgain, observations)).value)
++    expect(afterApproval).toMatchObject({ target: reviewed.target, choiceId: selection.choiceId, changeId: change.changeId,
++      surface: "procurement", state: "planned", expectedVersion: change.expectedVersion, fields: reviewed.fields })
++    expect(afterApproval.reviewDigest).toMatch(/^[a-f0-9]{64}$/)
++    expect(afterApproval.receipt).toBeUndefined()
++    reviewed = afterApproval
++    expect(commands).toEqual([])
++    const domain = await openRequest(audit, origin, requestId)
++    const domainVersion = Number(await domain.getAttribute("data-version"))
++    expect(Number.isSafeInteger(domainVersion) && domainVersion > 0).toBe(true)
++    const lost = await test.step("confirm one financial change and lose the response after the domain commit", async () => {
++      await entry.getByRole("checkbox", { name: "I reviewed these changes and want to apply them", exact: true }).check()
++      const interruption = await loseClosureResponse(page, origin, "procurement", "decision-apply")
++      try {
++        const failed = page.waitForEvent("requestfailed", { predicate: (request) => procurementCommand(request, origin, "decision-apply") })
++        const observed = Promise.all([interruption.completed, failed])
++        await entry.getByRole("button", { name: "Apply reviewed change", exact: true }).click()
++        const result = (await observed)[0]
++        expect(result.httpStatus).toBe(200)
++        expect(result.contentType).toContain("application/json")
++        const receipt = asRecord(asRecord(result.body).value)
++        expect(asRecord(result.body).status).toBe("ok")
++        expect(receipt).toMatchObject({ surface: "procurement", outcome: "applied", version: domainVersion + 1 })
++        expect(typeof receipt.receiptId).toBe("string")
++        expect(result.payload).toEqual({ caseRef: change.caseRef, choiceId: selection.choiceId, changeId: change.changeId, reviewDigest: reviewed.reviewDigest })
++        expect(commands).toHaveLength(1)
++        await expect(entry.getByRole("button", { name: "Retry same application", exact: true })).toBeEnabled()
++        await expect(entry.getByRole("checkbox", { name: "I reviewed these changes and want to apply them", exact: true })).toBeDisabled()
++        observations.push({ stage: "apply-response-lost", caseRef: change.caseRef, choiceId: selection.choiceId, changeId: change.changeId,
++          preview: reviewed, receipt, approval, applyRequests: 1, explicitApplyConfirmation: true, separateFinancialApproval: true,
++          interruptionPoint: "Original HTTP response after the real handler returned; this does not isolate the domain-commit/case-reconciliation gap." })
++        return result
++      } finally { await interruption.close() }
++    })
++    const revisedObjective = `${selection.objective} — concurrent note after application`
++    const editedRef = await test.step("edit the same case in another page while the original Apply remains uncertain", async () => {
++      await openCase(audit, origin, selection.reference, selection.objective)
++      await audit.getByText("Edit decision", { exact: true }).click()
++      const editor = audit.locator("form[data-decision-edit]")
++      await expect(editor).toHaveAttribute("data-sf-edit-ready", "true")
++      const before = asRecord(JSON.parse((await editor.getAttribute("data-context"))!))
++      expect(asRecord(before.caseRef)).toMatchObject(identity)
++      await editor.getByLabel("Decision objective", { exact: true }).fill(revisedObjective)
++      const loaded = audit.waitForEvent("domcontentloaded")
++      const result = await clickCommand(audit, editor.getByRole("button", { name: "Save decision", exact: true }), "decision-edit", observations)
++      await loaded
++      const ref = asRecord(asRecord(result.value).caseRef)
++      expect(ref).toEqual({ ...identity, version: Number(asRecord(before.caseRef).version) + 1 })
++      await expect(audit.getByRole("heading", { name: revisedObjective, exact: true })).toBeVisible()
++      expect(commands).toHaveLength(1)
++      return ref
++    })
++    await test.step("recover the original receipt under a fresh admission without sending another Apply", async () => {
++      // A new page never held the first Apply's body, key or review token.
++      await openCase(fresh, origin, selection.reference, revisedObjective)
++      const recoveredEntry = fresh.locator("[data-decision-apply]")
++      await expect(recoveredEntry).toHaveCount(1)
++      await expect(recoveredEntry).toHaveAttribute("data-sf-apply-ready", "true")
++      const current = asRecord(JSON.parse((await recoveredEntry.getAttribute("data-context"))!))
++      expect(current.caseRef).toEqual(editedRef)
++      expect(current.choiceId).toBe(selection.choiceId)
++      expect(current.changeId).toBe(change.changeId)
++      const sent = fresh.waitForRequest((request) => procurementCommand(request, origin, "decision-recover"))
++      const reply = fresh.waitForResponse((response) => procurementCommand(response.request(), origin, "decision-recover"))
++      const loaded = fresh.waitForEvent("domcontentloaded")
++      await recoveredEntry.getByRole("button", { name: "Recover recorded receipt", exact: true }).click()
++      const request = await sent
++      expect(request.postDataJSON()).toEqual({ purpose: "recover", caseRef: editedRef, choiceId: selection.choiceId, changeId: change.changeId })
++      expect(request.headers()["idempotency-key"]).not.toBe(commands[0]!.key)
++      const recovered = await readReply(await reply, observations)
++      expect(recovered).toEqual(lost.body)
++      await loaded
++      expect(commands.filter((command) => command.mode === "decision-apply")).toHaveLength(1)
++      expect(commands.filter((command) => command.mode === "decision-recover")).toHaveLength(1)
++      const currentCase = asRecord(JSON.parse((await fresh.locator("form[data-decision-choice]").getAttribute("data-context"))!))
++      expect(asRecord(currentCase.caseRef)).toMatchObject(identity)
++      expect(currentCase.choices).toEqual(context.choices)
++      const decision = fresh.getByRole("region", { name: "Decision", exact: true })
++      const history = decision.locator(":scope > details").filter({ has: fresh.getByText("History and sources", { exact: true }) })
++      await history.getByText("History and sources", { exact: true }).click()
++      await expect(history.locator(":scope > p")).toHaveText(/^\d+ source references · 1 receipts$/)
++      const unchangedDomain = await openRequest(audit, origin, requestId)
++      await expect(unchangedDomain).toHaveAttribute("data-version", String(domainVersion + 1))
++      await expect(unchangedDomain.getByLabel("Estimated amount", { exact: true })).toHaveValue(String(operation.amount))
++      observations.push({ stage: "c12-fresh-admission-recovered", originalCaseRef: change.caseRef, editedCaseRef: editedRef,
++        currentCaseRef: currentCase.caseRef, choiceId: selection.choiceId, changeId: change.changeId, receipt: recovered.value,
++        applyRequests: 1, recoverRequests: 1, domainVersionBefore: domainVersion, domainVersionAfter: domainVersion + 1,
++        originalChoiceUnchanged: true, nativeRestartProved: false })
++    })
++  } finally {
++    page.context().off("request", record)
++    await fresh.close()
++    await audit.close()
++  }
++}
++
++function procurementCommand(request: Request, origin: string, action: string) {
++  const url = new URL(request.url())
++  return request.method() === "POST" && url.origin === origin && url.pathname === "/sucafina/procurement" && url.searchParams.get("sf") === action
++}
++
++async function openCase(page: Page, origin: string, reference: string, objective: string) {
++  await enterWorkbench(page, origin)
++  const link = page.getByRole("link", { name: objective, exact: true })
++  await expect(link).toHaveCount(1)
++  expect(new URL((await link.getAttribute("href"))!, page.url()).searchParams.get("caseRef")).toBe(reference)
++  await link.click()
++  await expect(page.getByRole("heading", { name: objective, exact: true })).toBeVisible()
++}
++
++async function openRequest(page: Page, origin: string, id: string) {
++  expect(id).toMatch(/^PR-\d{4}-\d+$/)
++  await page.goto(`${origin}/sucafina/procurement?${new URLSearchParams({ page: "Requests", request: id, q: id })}`)
++  const detail = page.locator("details").filter({ has: page.locator(`section[id="${id}-pr"]`) })
++  await expect(detail).toHaveCount(1)
++  await expect(detail).toHaveAttribute("open", "")
++  const form = detail.locator(`section[id="${id}-pr"] form[data-command="save"]`)
++  await expect(form).toHaveCount(1)
++  await expect(form).toHaveAttribute("data-version", /^[1-9]\d*$/)
++  return form
++}
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts
+@@ -0,0 +1,160 @@
++import { expect, test, type Page, type Request } from "@playwright/test"
++import { asRecord, caseIdentity, clickCommand, draft, enterWorkbench, isCommand, reopenCase } from "./journey"
++import { loseClosureResponse } from "./closure-response"
++import { changePlannerSource } from "./planner-sources"
++import { registerKnownIncreaseRule } from "./comparison-rule"
++
++type Selection = {
++  reference: string
++  objective: string
++  sources: { baseline: string; candidate: string }
++  titles: { baseline: string; candidate: string }
++}
++
++/** Continue the same UI-created case; no choice, source or operation is inserted by the harness. */
++export async function choiceHistoryJourney(page: Page, installation: { origin: string }, selection: Selection, observations: Record<string, unknown>[]) {
++  const identity = caseIdentity(selection.reference)
++  const reason = "I choose the candidate under the recorded pending cost conditions. This choice does not approve any financial change."
++  await reopenCase(page, selection.reference, selection.objective)
++  const choice = page.locator("form[data-decision-choice]")
++  await expect(choice).toHaveAttribute("data-sf-choice-ready", "true")
++  const before = asRecord(JSON.parse((await choice.getAttribute("data-context"))!))
++  expect(before.caseRef).toEqual({ ...identity, version: 4 })
++  expect(before.choices).toEqual([])
++  const alternative = (before.alternatives as unknown[]).map(asRecord).find((item) => item.title === selection.titles.candidate)
++  expect(alternative).toBeDefined()
++  await choice.getByLabel("Baseline", { exact: true }).selectOption({ label: selection.titles.baseline })
++  await choice.getByLabel("Alternative", { exact: true }).selectOption({ label: selection.titles.candidate })
++  const initial = asRecord((await clickCommand(page, choice.getByRole("button", { name: "Compare", exact: true }), "decision-compare", observations)).value)
++  expect(asRecord(initial.comparison)).toMatchObject({ comparisonStatus: "conditioned", knownDifference: 1200, completeDifference: null })
++  await expect(choice.getByRole("button", { name: "Record choice", exact: true })).toBeDisabled()
++  const rule = await registerKnownIncreaseRule(page, observations)
++  const compared = asRecord((await clickCommand(page, choice.getByRole("button", { name: "Compare", exact: true }), "decision-compare", observations)).value)
++  expect(asRecord(compared.comparison)).toMatchObject({ comparisonStatus: "conditioned", knownDifference: 1200, completeDifference: null })
++  expect(asRecord(compared.comparison).criterionResults).toEqual([{ criterionId: rule.criterionId, state: "unknown", reason: "criterion-metric-conditioned" }])
++  await choice.getByLabel("Reason for choosing", { exact: true }).fill(reason)
++  await expect(choice.getByRole("button", { name: "Record choice", exact: true })).toBeEnabled()
++  const commands: { body: string | null; key: string | undefined }[] = []
++  const capture = (request: Request) => {
++    if (isCommand(request, "decision-choose")) commands.push({ body: request.postData(), key: request.headers()["idempotency-key"] })
++  }
++  page.on("request", capture)
++  try {
++    await test.step("record a human choice, lose its response, then explicitly retry the exact retained intent after reload", async () => {
++      const interruption = await loseClosureResponse(page, installation.origin, "dashboard", "decision-choose")
++      const lost = await (async () => {
++        try {
++          const failed = page.waitForEvent("requestfailed", { predicate: (request) => isCommand(request, "decision-choose") })
++          const observed = Promise.all([interruption.completed, failed])
++          await choice.getByRole("button", { name: "Record choice", exact: true }).click()
++          return (await observed)[0]
++        } finally { await interruption.close() }
++      })()
++      expect(lost.httpStatus).toBe(200)
++      expect(lost.contentType).toContain("application/json")
++      expect(lost.body).toEqual({ status: "ok", value: { caseRef: { ...identity, version: 5 } } })
++      expect(lost.payload).toEqual({ caseRef: before.caseRef, alternativeId: alternative!.id, alternativeVersion: alternative!.version,
++        comparison: compared.request, criteria: asRecord(compared.request).criteria, reason })
++      expect(commands).toHaveLength(1)
++      expect(commands[0]!.key).toMatch(/^[a-f0-9-]{36}$/)
++      expect(JSON.parse(commands[0]!.body!)).toEqual(lost.payload)
++      await expect(choice.getByLabel("Reason for choosing", { exact: true })).toHaveValue(reason)
++      await expect(choice.getByLabel("Reason for choosing", { exact: true })).toBeDisabled()
++      await expect(choice.getByRole("button", { name: "Retry the same choice", exact: true })).toBeEnabled()
++      page.once("dialog", (dialog) => dialog.accept())
++      await page.reload()
++      await expect(choice).toHaveAttribute("data-sf-choice-ready", "true")
++      const reloaded = asRecord(JSON.parse((await choice.getAttribute("data-context"))!))
++      expect(reloaded.caseRef).toEqual({ ...identity, version: 5 })
++      expect(reloaded.choices).toHaveLength(1)
++      await expect(choice.getByLabel("Reason for choosing", { exact: true })).toHaveValue(reason)
++      await expect(choice.getByLabel("Reason for choosing", { exact: true })).toBeDisabled()
++      await expect(choice.getByRole("button", { name: "Retry the same choice", exact: true })).toBeEnabled()
++      expect(commands).toHaveLength(1)
++      const reloadedAfterRetry = page.waitForEvent("domcontentloaded")
++      const reconciled = await clickCommand(page, choice.getByRole("button", { name: "Retry the same choice", exact: true }), "decision-choose", observations)
++      await reloadedAfterRetry
++      expect(reconciled).toEqual(lost.body)
++      expect(commands).toHaveLength(2)
++      expect(commands[1]).toEqual(commands[0])
++      observations.push({ stage: "human-choice-response-recovered", caseRef: { ...identity, version: 5 },
++        mutationRequests: 2, distinctIntentions: 1, originalMutationKey: commands[0]!.key, financialApproval: false, financialApplication: false })
++    })
++    const snapshot = await test.step("read the durable choice without treating it as financial approval", async () => {
++      const current = await currentChoice(page, selection.reference, selection.objective)
++      expect(current.caseRef).toEqual({ ...identity, version: 5 })
++      expect(current.choices).toHaveLength(1)
++      const saved = asRecord((current.choices as unknown[])[0])
++      expect(saved).toMatchObject({ alternativeId: alternative!.id, alternativeVersion: 1, basisVersion: 1,
++        principalRef: asRecord(before.authority).principalRef, reason, comparisonStatus: "conditioned" })
++      expect(typeof saved.id).toBe("string")
++      expect(Number.isFinite(Date.parse(String(saved.at)))).toBe(true)
++      expect(saved.criteria).toEqual(asRecord(compared.request).criteria)
++      expect(saved.comparison).toEqual(compared.comparison)
++      expect(asRecord(saved.result)).toMatchObject({ currency: "USD", horizon: draft.horizon, knownSubtotal: 2400, total: null, comparisonStatus: "conditioned" })
++      expect(asRecord(saved.costCoverage)).toMatchObject({ basisVersion: 1, alternativeId: alternative!.id, alternativeVersion: 1, coverageState: "pending", currency: "USD", horizon: draft.horizon })
++      expect(asRecord(saved.costCoverage).entries).toHaveLength(9)
++      for (const entry of (asRecord(saved.costCoverage).entries as unknown[]).map(asRecord)) expect(entry.status).toBe("pending")
++      expect((asRecord(saved.result).unresolvedConditions as unknown[]).length).toBeGreaterThan(0)
++      expect((saved.evidenceRefs as unknown[]).length).toBeGreaterThan(0)
++      expect(asRecord(saved.scenario).operations).toEqual([])
++      expect(asRecord(saved.scenario).assumptions).toEqual([])
++      await assertHistoricalChoice(page, reason)
++      const prepare = page.locator("[data-decision-prepare]")
++      await expect(prepare.getByRole("button", { name: "Prepare changes from this choice", exact: true })).toBeDisabled()
++      await expect(prepare.locator("[data-choice-prepare-status]")).toHaveText("This recorded choice contains no executable operations. No changes were prepared.")
++      await expect(page.getByText("No changes prepared.", { exact: true })).toBeVisible()
++      await expect(page.getByRole("button", { name: "Apply reviewed change", exact: true })).toHaveCount(0)
++      observations.push({ stage: "persisted-human-choice", caseRef: current.caseRef, choice: saved,
++        financialApproval: false, financialApplication: false, applicationBoundary: "The public Planner alternatives contain no executable Procurement operation." })
++      return saved
++    })
++    await test.step("reopen the same choice and retain its historical values after the real Planner source changes", async () => {
++      await page.reload()
++      expect((await currentChoice(page, selection.reference, selection.objective)).choices).toEqual([snapshot])
++      await reopenCase(page, selection.reference, selection.objective)
++      expect((await currentChoice(page, selection.reference, selection.objective)).choices).toEqual([snapshot])
++      await changePlannerSource(page, installation.origin, selection.sources.candidate, 3600, observations)
++      await enterWorkbench(page, installation.origin)
++      const link = page.getByRole("link", { name: selection.objective, exact: true })
++      await expect(link).toHaveCount(1)
++      expect(new URL((await link.getAttribute("href"))!, page.url()).searchParams.get("caseRef")).toBe(selection.reference)
++      await link.click()
++      const historical = await currentChoice(page, selection.reference, selection.objective)
++      expect(historical.caseRef).toEqual({ ...identity, version: 5 })
++      // Compare the complete emitted immutable record, not only its title or subtotal.
++      expect(historical.choices).toEqual([snapshot])
++      await assertHistoricalChoice(page, reason)
++      expect(commands).toHaveLength(2)
++      observations.push({ stage: "historical-choice-after-source-change", caseRef: historical.caseRef,
++        choiceId: snapshot.id, originalChoice: snapshot, currentSourceAnnualInput: 3600, choiceUnchanged: true,
++        mutationRequests: commands.length, nativeRestartProved: false, financialApplication: false })
++    })
++  } finally { page.off("request", capture) }
++}
++
++async function currentChoice(page: Page, reference: string, objective: string) {
++  await expect(page).toHaveURL((url) => url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === "workbench-case" && url.searchParams.get("caseRef") === reference)
++  const decision = page.getByRole("region", { name: "Decision", exact: true })
++  await expect(decision.getByRole("heading", { name: objective, exact: true })).toBeVisible()
++  await expect(decision.locator("header > p")).toHaveText(`chosen · Version 5 · ${draft.horizon.start} – ${draft.horizon.end} · USD`)
++  const form = page.locator("form[data-decision-choice]")
++  await expect(form).toHaveAttribute("data-sf-choice-ready", "true")
++  return asRecord(JSON.parse((await form.getAttribute("data-context"))!))
++}
++
++async function assertHistoricalChoice(page: Page, reason: string) {
++  const decision = page.getByRole("region", { name: "Decision", exact: true })
++  const history = decision.locator(":scope > details").filter({ has: page.getByText("History and sources", { exact: true }) })
++  await expect(history).toHaveCount(1)
++  if (!(await history.getAttribute("open") === "")) await history.getByText("History and sources", { exact: true }).click()
++  const choice = history.locator(":scope > article")
++  await expect(choice).toHaveCount(1)
++  await expect(choice.getByText(reason, { exact: true })).toBeVisible()
++  await expect(choice.getByText("Known subtotal: 2400 USD", { exact: true })).toBeVisible()
++  await expect(choice.getByText("Known difference: 1200 USD", { exact: true })).toBeVisible()
++  await expect(choice.getByText(/^Total:/)).toHaveCount(0)
++  await expect(choice.getByText(/^Difference:/)).toHaveCount(0)
++  await expect(choice.getByRole("list", { name: "Pending cost categories", exact: true }).getByRole("listitem")).toHaveCount(9)
++  await expect(choice).not.toContainText("Known subtotal: 3600")
++}
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts
+@@ -0,0 +1,29 @@
++import { expect, type Page } from "@playwright/test"
++
++type PausedResponse = {
++  requestId: string
++  request: { url: string; method: string; postData?: string }
++  responseStatusCode?: number
++  responseHeaders?: { name: string; value: string }[]
++}
++
++/** Fail the original response after the installed handler answers, without issuing a replacement request. */
++export async function loseClosureResponse(page: Page, origin: string, surface: "dashboard" | "procurement", action: "decision-choose" | "decision-apply") {
++  const session = await page.context().newCDPSession(page)
++  const completed = Promise.withResolvers<{ httpStatus: number; contentType: string; body: unknown; payload: unknown }>()
++  session.once("Fetch.requestPaused", async (event: PausedResponse) => {
++    try {
++      expect(event.request.url).toBe(`${origin}/sucafina/${surface}?sf=${action}`)
++      expect(event.request.method).toBe("POST")
++      const contentType = event.responseHeaders?.find((header) => header.name.toLowerCase() === "content-type")?.value ?? ""
++      const raw = await session.send("Fetch.getResponseBody", { requestId: event.requestId }) as { body: string; base64Encoded: boolean }
++      const body: unknown = contentType.includes("application/json")
++        ? JSON.parse(raw.base64Encoded ? Buffer.from(raw.body, "base64").toString("utf8") : raw.body) : undefined
++      const payload: unknown = event.request.postData ? JSON.parse(event.request.postData) : undefined
++      await session.send("Fetch.failRequest", { requestId: event.requestId, errorReason: "ConnectionReset" })
++      completed.resolve({ httpStatus: event.responseStatusCode ?? 0, contentType, body, payload })
++    } catch (error) { completed.reject(error) }
++  })
++  await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/${surface}\\?sf=${action}`, requestStage: "Response" }] })
++  return { completed: completed.promise, close: async () => { await session.send("Fetch.disable"); await session.detach() } }
++}
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts
+@@ -0,0 +1,60 @@
++import { expect, test, type Page } from "@playwright/test"
++import { asRecord, clickCommand, draft, isCommand, readReply } from "./journey"
++import { knownIncreaseCriterion } from "./initial-alternatives"
++
++/** The human supplies a real numeric criterion; this never converts unknown costs to zero. */
++export async function registerKnownIncreaseRule(page: Page, observations: Record<string, unknown>[]) {
++  return test.step("register the explicit limit for the known subtotal increase using current comparison evidence", async () => {
++    const form = page.locator("form[data-decision-choice]")
++    const context = asRecord(JSON.parse((await form.getAttribute("data-context"))!))
++    const criteria = (context.criteria as unknown[]).map(asRecord).filter((criterion) => criterion.description === knownIncreaseCriterion)
++    expect(criteria).toHaveLength(1)
++    const criterionId = String(criteria[0]!.id)
++    await expect(form.locator("[data-numeric-rule]")).toBeVisible()
++    await form.locator("[data-numeric-criterion]").selectOption(criterionId)
++    const loaded = page.waitForResponse((response) => isCommand(response.request(), "decision-controls", "GET"))
++    await form.getByRole("button", { name: "Load comparison rule", exact: true }).click()
++    const controls = asRecord((await readReply(await loaded, observations)).value)
++    const selected = asRecord(controls.selected)
++    expect(selected.caseRef).toEqual(context.caseRef)
++    const rules = (selected.rules as unknown[]).map(asRecord).filter((rule) => rule.id === criterionId)
++    expect(rules).toHaveLength(1)
++    expect(rules[0]!.expectedVersion).toBe(0)
++    const evidence = form.locator("[data-numeric-evidence]")
++    await expect(evidence).toBeEnabled()
++    await expect(evidence.getByRole("option")).not.toHaveCount(0)
++    const digests = await evidence.getByRole("option").evaluateAll((options) => options.map((option) => (option as HTMLOptionElement).value))
++    expect(new Set(digests).size).toBe(digests.length)
++    const selectedIds = [await form.getByLabel("Baseline", { exact: true }).inputValue(), await form.getByLabel("Alternative", { exact: true }).inputValue()]
++    const comparedAlternatives = (asRecord(selected.decision).alternatives as unknown[]).map(asRecord).filter((alternative) => selectedIds.includes(String(alternative.id)))
++    expect(comparedAlternatives).toHaveLength(2)
++    const comparedRefs = comparedAlternatives.flatMap((alternative) => asRecord(alternative.result).sourceRefs as unknown[]).map(asRecord)
++    const authorized = (selected.evidence as unknown[]).map(asRecord).map((entry) => asRecord(entry.evidence))
++    const refs = digests.map((digest) => {
++      const matching = authorized.filter((ref) => ref.refDigest === digest)
++      expect(matching).toHaveLength(1)
++      expect(comparedRefs.some((ref) => ref.refDigest === digest)).toBe(true)
++      expect(asRecord(matching[0]!.target)).toMatchObject({ surface: "planner", recordType: "planner-version", period: draft.horizon })
++      return matching[0]!
++    })
++    await evidence.selectOption(digests)
++    await form.locator("[data-numeric-operator]").selectOption("lte")
++    await expect(form.locator("[data-numeric-value]")).toHaveValue("")
++    await form.locator("[data-numeric-value]").fill("2000")
++    const sent = page.waitForRequest((request) => isCommand(request, "decision-criteria"))
++    const result = await clickCommand(page, form.getByRole("button", { name: "Save comparison rule", exact: true }), "decision-criteria", observations)
++    const request = await sent
++    expect(request.postDataJSON()).toEqual({ caseRef: context.caseRef, criterionId, metricRef: "planner:known-subtotal-difference",
++      operator: "lte", value: 2000, unit: "USD", period: draft.horizon, evidenceRefs: refs, expectedRuleVersion: 0 })
++    expect(request.headers()["idempotency-key"]).toMatch(/^[a-f0-9-]{36}$/)
++    const receipt = asRecord(result.value)
++    expect(receipt).toEqual({ ruleRef: expect.stringMatching(/^criterion-rule:/), version: 1 })
++    await expect(form.locator("[data-numeric-status]")).toHaveText("Comparison rule saved at revision 1. Compare again before choosing. Financial approval remains separate.")
++    await expect(form.getByRole("button", { name: "Record choice", exact: true })).toBeDisabled()
++    expect(asRecord(JSON.parse((await form.getAttribute("data-context"))!)).caseRef).toEqual(context.caseRef)
++    observations.push({ stage: "human-numeric-rule-saved", caseRef: context.caseRef, criterionId, ruleRef: receipt.ruleRef,
++      ruleVersion: 1, operator: "lte", limit: 2000, unit: "USD", metricRef: "planner:known-subtotal-difference",
++      evidenceRefs: refs, financialApproval: false, unknownCostsRemainPending: true })
++    return { criterionId, ruleRef: receipt.ruleRef }
++  })
++}
+--- a/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts
+@@ -5,12 +5,14 @@
+ 
+ const titles = { baseline: "Keep the baseline service", candidate: "Consider the candidate service" }
+ const pendingReason = "Cost categories still need evidence; a known service amount does not establish complete coverage."
++export const knownIncreaseCriterion = "Keep the increase in known annual subtotal at or below 2000 USD; unresolved cost categories remain pending."
+ 
+ export async function initialAlternativesJourney(page: Page, installation: { origin: string; actorId: string }, observations: Record<string, unknown>[]) {
+   const sources = await test.step("create two actual Planner versions through human controls", () => createPlannerSources(page, installation.origin, installation.actorId, observations))
+   await enterWorkbench(page, installation.origin)
+   const objective = `${draft.objective} — initial alternatives`
+   const form = await fillDecision(page, objective)
++  await form.getByLabel("Criteria, one per line", { exact: true }).fill(knownIncreaseCriterion)
+   const created = await clickCommand(page, form.getByRole("button", { name: "Create decision", exact: true }), "workbench-command", observations)
+   expect(typeof created.outputRef).toBe("string")
+   const reference = created.outputRef as string
+@@ -150,7 +152,7 @@
+       })))
+       expect(asRecord(value.comparison).unresolvedConditions).toContain("criterion-rules-unavailable")
+       await expect(choice.locator("[data-comparison]")).toContainText("Comparison: conditioned · Known difference: 1200")
+-      await expect(choice.getByRole("button", { name: "Record choice", exact: true })).toBeEnabled()
++      await expect(choice.getByRole("button", { name: "Record choice", exact: true })).toBeDisabled()
+       await expect(page.getByText("No changes prepared.", { exact: true })).toBeVisible()
+       await expect(page.getByRole("button", { name: "Apply reviewed change", exact: true })).toHaveCount(0)
+       expect(promotions).toHaveLength(3)
+@@ -183,6 +185,7 @@
+         alternativeIds: candidates.map((candidate) => candidate.alternativeId), portfolioEvaluated: false })
+     })
+   } finally { page.off("request", listener) }
++  return { reference, objective, sources, titles }
+ }
+ 
+ async function selectSource(select: Locator, name: string, id: string) {
+--- a/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
+@@ -60,6 +60,23 @@
+   return { baseline, candidate }
+ }
+ 
++/** A real source revision, independent of the saved ChoiceRecord. */
++export async function changePlannerSource(page: Page, origin: string, versionId: string, annualBudget: number, observations: Record<string, unknown>[]) {
++  await page.goto(`${origin}/sucafina/planner?${new URLSearchParams({ page: "OPEX", version: versionId })}`)
++  const row = page.getByRole("row").filter({ has: page.getByRole("cell", { name: sourceNames.line, exact: true }) })
++  await expect(row).toHaveCount(1)
++  await row.getByRole("button", { name: "Manage", exact: true }).click()
++  const manager = page.getByRole("dialog", { name: "Manage record", exact: true })
++  await expect(manager.getByLabel("Annual budget", { exact: true })).toHaveValue("2400")
++  await expect(manager.getByLabel("Currency", { exact: true })).toHaveValue("USD")
++  await manager.getByLabel("Annual budget", { exact: true }).fill(String(annualBudget))
++  await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
++  await expect(page.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
++  await row.getByRole("button", { name: "Manage", exact: true }).click()
++  await expect(manager.getByLabel("Annual budget", { exact: true })).toHaveValue(String(annualBudget))
++  observations.push({ stage: "planner-source-revised-through-ui", versionId, previousAnnualInput: 2400, annualInput: annualBudget, currency: "USD" })
++}
++
+ async function plannerCommand(page: Page, button: Locator, action: string, observations: Record<string, unknown>[]) {
+   await expect(button).toBeEnabled()
+   const pending = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname === "/sucafina/planner" && response.request().postDataJSON()?.action === action)
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts
+@@ -0,0 +1,163 @@
++import { expect, test, type Page } from "@playwright/test"
++import { asRecord, caseIdentity, clickCommand, draft, isCommand, readReply, reopenCase } from "./journey"
++import { initialAlternativesJourney } from "./initial-alternatives"
++import { sourceNames } from "./planner-sources"
++import { registerKnownIncreaseRule } from "./comparison-rule"
++import { approveExactRequisition, createRequisition, openRequisition } from "./procurement-source"
++import { applyRecoveryJourney } from "./apply-recovery"
++
++/** Nominal selection: every unmet public producer is a failure at its first required action. */
++export async function procurementClosureJourney(page: Page, installation: { origin: string; actorId: string }, observations: Record<string, unknown>[]) {
++  const requestId = await test.step("create the real requisition through its human form", () => createRequisition(page, installation.origin, observations))
++  const selection = await initialAlternativesJourney(page, installation, observations)
++  await reopenCase(page, selection.reference, selection.objective)
++  const source = await attachRequisition(page, selection.reference, requestId, observations)
++  const titles = { baseline: "Requisition proposal for 120 USD", candidate: "Requisition proposal for 140 USD" }
++  await typedAlternative(page, selection.sources.baseline, sourceNames.baseline, source, titles.baseline, 120, observations)
++  await typedAlternative(page, selection.sources.candidate, sourceNames.candidate, source, titles.candidate, 140, observations)
++  const choiceId = await test.step("compare the two typed proposals and record a human choice without approving spending", async () => {
++    const form = page.locator("form[data-decision-choice]")
++    await expect(form).toHaveAttribute("data-sf-choice-ready", "true")
++    const before = asRecord(JSON.parse((await form.getAttribute("data-context"))!))
++    expect(before.choices).toEqual([])
++    expect(before.alternatives).toHaveLength(4)
++    await form.getByLabel("Baseline", { exact: true }).selectOption({ label: titles.baseline })
++    await form.getByLabel("Alternative", { exact: true }).selectOption({ label: titles.candidate })
++    await clickCommand(page, form.getByRole("button", { name: "Compare", exact: true }), "decision-compare", observations)
++    await registerKnownIncreaseRule(page, observations)
++    const compared = asRecord((await clickCommand(page, form.getByRole("button", { name: "Compare", exact: true }), "decision-compare", observations)).value)
++    expect(asRecord(compared.comparison)).toMatchObject({ comparisonStatus: "conditioned", knownDifference: 1200, completeDifference: null })
++    const reason = "I choose the 140 USD proposal under its unresolved external cost conditions. Financial approval is still required before Apply."
++    await form.getByLabel("Reason for choosing", { exact: true }).fill(reason)
++    const sent = page.waitForRequest((request) => isCommand(request, "decision-choose"))
++    const loaded = page.waitForEvent("domcontentloaded")
++    const receipt = await clickCommand(page, form.getByRole("button", { name: "Record choice", exact: true }), "decision-choose", observations)
++    const payload = asRecord((await sent).postDataJSON())
++    expect(payload).toMatchObject({ caseRef: before.caseRef, comparison: compared.request, criteria: asRecord(compared.request).criteria, reason })
++    expect(asRecord(receipt.value).caseRef).toEqual({ ...asRecord(before.caseRef), version: Number(asRecord(before.caseRef).version) + 1 })
++    await loaded
++    await expect(form).toHaveAttribute("data-sf-choice-ready", "true")
++    const current = asRecord(JSON.parse((await form.getAttribute("data-context"))!))
++    expect(current.choices).toHaveLength(1)
++    const saved = asRecord((current.choices as unknown[])[0])
++    expect(saved).toMatchObject({ alternativeId: payload.alternativeId, alternativeVersion: 1, reason,
++      principalRef: installation.actorId, comparisonStatus: "conditioned", comparison: compared.comparison })
++    expect(asRecord(saved.scenario).operations).toEqual([{ kind: "replace", targetRef: source.refId, amount: 140, currency: "USD", period: draft.horizon }])
++    expect(asRecord(saved.result)).toMatchObject({ knownSubtotal: 2400, total: null, comparisonStatus: "conditioned" })
++    expect((asRecord(saved.result).unresolvedConditions as string[]).some((condition) => condition.startsWith("external-operation:"))).toBe(true)
++    expect((asRecord(saved.result).sourceRefs as unknown[]).map(asRecord)).toContainEqual(source)
++    observations.push({ stage: "human-procurement-choice-recorded", caseRef: current.caseRef, choice: saved,
++      financialApproval: false, financialApplication: false, externalCostRemainsUnresolved: true })
++    return String(saved.id)
++  })
++  const audit = await page.context().newPage()
++  try {
++    const original = await openRequisition(audit, installation.origin, requestId)
++    const form = original.locator(`section[id="${requestId}-pr"] form[data-command="save"]`)
++    await expect(form).toHaveAttribute("data-version", "1")
++    await expect(form.getByLabel("Estimated amount", { exact: true })).toHaveValue("100")
++    await expect(original.locator("[data-request-summary]")).toContainText("Requisition draft")
++  } finally { await audit.close() }
++  // Published C12 is consumed here; no Apply is sent until its current preview and
++  // a real, compatible domain approval both succeed. Missing stages never pass.
++  await applyRecoveryJourney(page, installation.origin, { ...selection, choiceId }, observations,
++    (approvalPage, review, operation) => approveExactRequisition(approvalPage, installation.origin, review, operation, observations))
++}
++
++async function attachRequisition(page: Page, reference: string, requestId: string, observations: Record<string, unknown>[]) {
++  return test.step("inspect the authorized Procurement evidence and attach it to the human case", async () => {
++    await page.getByText("Edit decision", { exact: true }).click()
++    const editor = page.locator("form[data-decision-edit]")
++    await expect(editor).toHaveAttribute("data-sf-edit-ready", "true")
++    const before = asRecord(JSON.parse((await editor.getAttribute("data-context"))!))
++    expect(before.caseRef).toEqual({ ...caseIdentity(reference), version: 4 })
++    const discovered = page.waitForResponse((response) => isCommand(response.request(), "decision-controls", "GET"))
++    await editor.getByRole("button", { name: "Find Procurement sources", exact: true }).click()
++    const controls = asRecord((await readReply(await discovered, observations)).value)
++    const selected = asRecord(controls.selected)
++    expect(selected.caseRef).toEqual(before.caseRef)
++    const entries = (asRecord(selected.procurementEvidence).sources as unknown[]).map(asRecord)
++      .filter((entry) => asRecord(asRecord(entry.source).target).recordId === requestId)
++    expect(entries).toHaveLength(1)
++    const observed = asRecord(entries[0]!.source)
++    expect(observed.refId, "A temporary BI06 approval-row reference is not durable Procurement evidence").toMatch(/^sf-procurement:[^:]+:[1-9]\d*$/)
++    const source = editor.getByLabel("Procurement source", { exact: true })
++    await expect(source).toBeEnabled()
++    const option = source.getByRole("option", { name: new RegExp(`^${requestId} · revision [1-9]\\d*$`) })
++    await expect(option).toHaveCount(1)
++    await source.selectOption({ label: (await option.textContent())!.trim() })
++    const digest = await source.inputValue()
++    expect(digest).toBe(observed.refDigest)
++    const inspected = page.waitForResponse((response) => isCommand(response.request(), "decision-controls", "GET"))
++    await editor.getByRole("button", { name: "Inspect selected procurement source", exact: true }).click()
++    const current = asRecord((await readReply(await inspected, observations)).value)
++    const currentEntries = (asRecord(asRecord(current.selected).procurementEvidence).sources as unknown[]).map(asRecord)
++      .filter((entry) => asRecord(entry.source).refDigest === digest)
++    expect(currentEntries).toHaveLength(1)
++    expect(currentEntries[0]!.source).toEqual(observed)
++    await expect(editor.locator("[data-procurement-preview]")).toHaveAttribute("data-state", "ready")
++    await expect(editor.locator("[data-procurement-preview]")).toContainText(requestId)
++    await expect(editor.locator("[data-procurement-preview]")).toContainText("USD")
++    await editor.getByRole("button", { name: "Attach procurement source to draft", exact: true }).click()
++    await expect(editor.locator("[data-decision-sources] > li")).toHaveCount(3)
++    const sent = page.waitForRequest((request) => isCommand(request, "decision-edit"))
++    const loaded = page.waitForEvent("domcontentloaded")
++    const receipt = await clickCommand(page, editor.getByRole("button", { name: "Save decision", exact: true }), "decision-edit", observations)
++    const request = asRecord((await sent).postDataJSON())
++    const refs = (request.sourceRefs as unknown[]).map(asRecord)
++    const added = refs.filter((ref) => ref.refDigest === digest)
++    expect(added).toHaveLength(1)
++    expect(added[0]).toEqual(observed)
++    expect(added[0]!).toMatchObject({ kind: "record", evidenceLevel: "observed", target: { surface: "procurement", recordType: "procurement-request", recordId: requestId, period: draft.horizon } })
++    expect(refs).toHaveLength(3)
++    expect(refs).toEqual(expect.arrayContaining(before.sourceRefs as unknown[]))
++    expect(asRecord(receipt.value).caseRef).toEqual({ ...caseIdentity(reference), version: 5 })
++    await loaded
++    await expect(editor).toHaveAttribute("data-sf-edit-ready", "true")
++    expect(asRecord(JSON.parse((await editor.getAttribute("data-context"))!)).sourceRefs).toEqual(refs)
++    observations.push({ stage: "authorized-procurement-source-attached", caseRef: asRecord(receipt.value).caseRef, source: added[0] })
++    return added[0]!
++  })
++}
++
++async function typedAlternative(page: Page, versionId: string, sourceName: string, requestSource: Record<string, unknown>, title: string, amount: number, observations: Record<string, unknown>[]) {
++  return test.step(`create the typed Procurement alternative for ${amount} USD through public controls`, async () => {
++    const form = page.locator("form[data-decision-alternatives]")
++    await expect(form).toHaveAttribute("data-sf-alternatives-ready", "true")
++    const before = asRecord(JSON.parse((await page.locator("form[data-decision-edit]").getAttribute("data-context"))!))
++    await form.getByRole("button", { name: "Load attached scenarios", exact: true }).click()
++    const planner = form.getByLabel("Source for alternative", { exact: true })
++    const option = planner.getByRole("option", { name: new RegExp(sourceName) })
++    await expect(option).toHaveCount(1)
++    await planner.selectOption({ label: (await option.textContent())!.trim() })
++    const digest = await planner.inputValue()
++    const refs = (before.sourceRefs as unknown[]).map(asRecord).filter((ref) => ref.refDigest === digest)
++    expect(refs).toHaveLength(1)
++    expect(asRecord(refs[0]!.target)).toMatchObject({ surface: "planner", recordType: "planner-version", recordId: versionId })
++    await form.getByRole("button", { name: "Inspect scenario", exact: true }).click()
++    await expect(form.locator("[data-alternative-preview]")).toHaveAttribute("data-state", "ready")
++    await expect(form.getByRole("button", { name: "Create alternative", exact: true }), "The existing canonical coverage must reopen, without an invented inventory").toBeEnabled()
++    observations.push({ stage: "typed-procurement-producer-required", caseRef: before.caseRef, requestId: asRecord(requestSource.target).recordId,
++      requiredControls: ["Procurement request", "Proposed estimated amount"], amount,
++      dependency: "Owner23 must publish human authoring of an evidenced typed Procurement operation and its authorized composite scenario producer. The current initial-alternatives UI emits operations=[]." })
++    const target = form.getByLabel("Procurement request", { exact: true })
++    await expect(target, "An executable Procurement operation must be authored through the public product; a missing producer cannot satisfy C12").toBeEnabled()
++    const requestId = String(asRecord(requestSource.target).recordId)
++    const targetOption = target.getByRole("option", { name: new RegExp(`^${requestId}(?: ·|$)`) })
++    await expect(targetOption).toHaveCount(1)
++    await target.selectOption({ label: (await targetOption.textContent())!.trim() })
++    await form.getByLabel("Proposed estimated amount", { exact: true }).fill(String(amount))
++    await form.getByLabel("Alternative title", { exact: true }).fill(title)
++    const sent = page.waitForRequest((request) => isCommand(request, "decision-promote"))
++    const loaded = page.waitForEvent("domcontentloaded")
++    const receipt = await clickCommand(page, form.getByRole("button", { name: "Create alternative", exact: true }), "decision-promote", observations)
++    const payload = asRecord((await sent).postDataJSON())
++    expect(payload).toEqual({ caseRef: before.caseRef, title, coverageRef: expect.any(String), scenario: { baseRef: refs[0]!.refId,
++      operations: [{ kind: "replace", targetRef: requestSource.refId, amount, currency: "USD", period: draft.horizon }], assumptions: [] } })
++    expect(asRecord(receipt.value)).toEqual({ caseRef: { ...asRecord(before.caseRef), version: Number(asRecord(before.caseRef).version) + 1 }, resultRef: expect.stringMatching(/^decision-result:/) })
++    await loaded
++    await expect(page.getByRole("heading", { name: title, exact: true })).toBeVisible()
++    observations.push({ stage: "human-typed-procurement-alternative-created", caseRef: asRecord(receipt.value).caseRef, title,
++      source: requestSource, operation: asRecord(payload.scenario).operations, financialApproval: false, financialApplication: false })
++  })
++}
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts
+@@ -0,0 +1,97 @@
++import { expect, test, type Locator, type Page } from "@playwright/test"
++import { asRecord } from "./journey"
++
++export async function createRequisition(page: Page, origin: string, observations: Record<string, unknown>[]) {
++  await page.goto(`${origin}/sucafina/procurement?page=Requests`)
++  const form = page.locator('form[data-command="create"][data-page="Requests"]')
++  await expect(form).toHaveCount(1)
++  const title = "CI Decisions — explicit requisition proposal"
++  await form.getByLabel("Title", { exact: true }).fill(title)
++  await form.getByLabel("Type", { exact: true }).selectOption("service")
++  await form.getByLabel("Description", { exact: true }).fill("Human requisition for the Decisions approval and recovery journey")
++  await form.getByLabel("Estimated amount", { exact: true }).fill("100")
++  await form.getByLabel("Cost centre", { exact: true }).fill("Decisions verification")
++  await form.getByLabel("Needed by", { exact: true }).fill("2027-01-01")
++  await form.getByLabel("Justification", { exact: true }).fill("Compare explicit alternatives before any financial approval or application")
++  await domainCommand(page, origin, form, "Create request", observations)
++  const row = page.getByRole("row").filter({ has: page.getByRole("cell", { name: title, exact: true }) })
++  await expect(row).toHaveCount(1)
++  const link = row.getByRole("link", { name: /^PR-\d{4}-\d+$/ })
++  await expect(link).toHaveCount(1)
++  const id = (await link.innerText()).trim()
++  const detail = await openRequisition(page, origin, id)
++  const saved = detail.locator(`section[id="${id}-pr"] form[data-command="save"]`)
++  await expect(saved).toHaveAttribute("data-version", "1")
++  await expect(saved.getByLabel("Estimated amount", { exact: true })).toHaveValue("100")
++  await expect(detail.locator("[data-request-summary]")).toContainText("Requisition draft")
++  observations.push({ stage: "human-requisition-created", requestId: id, amount: 100, currency: "USD", version: 1,
++    financialApproval: false, decisionsApply: false })
++  return id
++}
++
++/** Approval uses Procurement's actual transition, never the Decisions choice or Apply checkbox. */
++export async function approveExactRequisition(page: Page, origin: string, review: Record<string, unknown>, operation: Record<string, unknown>, observations: Record<string, unknown>[]) {
++  return test.step("require a compatible explicit Procurement approval for the exact reviewed amount before Apply", async () => {
++    const requestId = String(asRecord(review.target).id)
++    const detail = await openRequisition(page, origin, requestId)
++    const pr = detail.locator(`section[id="${requestId}-pr"] form[data-command="save"]`)
++    const fields = (review.fields as unknown[]).map(asRecord).filter((field) => field.after === operation.amount)
++    expect(fields, "The domain preview must identify the same finite amount selected by the human").toHaveLength(1)
++    expect(operation.currency).toBe("USD")
++    const summary = await detail.locator("[data-request-summary]").innerText()
++    observations.push({ stage: "financial-approval-gate-entered", requestId, proposedAmount: operation.amount,
++      currentEstimatedAmount: await pr.getByLabel("Estimated amount", { exact: true }).inputValue(), currentSummary: summary,
++      dependency: "The domain must provide an approvable proposal compatible with the prepared change. C3 only prepares draft requisition saves, which cannot run after formal approval." })
++    // A draft amount change is not a submitted financial proposal. Do not submit or
++    // approve the old amount just to manufacture an approval unrelated to the preview.
++    await expect(detail.locator("[data-request-summary]"), "A legitimate pending approval for this exact proposal must exist before Apply").toContainText("Requisition approval")
++    await expect(pr.getByLabel("Estimated amount", { exact: true }), "Never approve a different amount from the reviewed proposal").toHaveValue(String(operation.amount))
++    const approval = detail.locator('form[data-command="approve"]')
++    await expect(approval).toHaveCount(1)
++    const version = Number(await approval.getAttribute("data-version"))
++    const comment = `I explicitly approve this requisition for ${operation.amount} USD after reviewing the recorded choice and proposal.`
++    await approval.getByLabel("Comment", { exact: true }).fill(comment)
++    await domainCommand(page, origin, approval, "Approve", observations)
++    await expect(detail.locator("[data-request-summary]")).toContainText("Sourcing")
++    await expect(pr).toHaveAttribute("data-version", String(version + 1))
++    const history = detail.locator(`section[id="${requestId}-history"]`)
++    const receipt = history.getByRole("row").filter({ has: page.getByRole("cell", { name: comment, exact: true }) })
++    await expect(receipt).toHaveCount(1)
++    await expect(receipt.getByRole("cell", { name: /^Requisition approved by / })).toHaveCount(1)
++    const proof = { requestId, amount: operation.amount, currency: "USD", version: version + 1, action: "approve", comment }
++    observations.push({ stage: "explicit-financial-approval", ...proof })
++    return proof
++  })
++}
++
++export async function openRequisition(page: Page, origin: string, id: string) {
++  expect(id).toMatch(/^PR-\d{4}-\d+$/)
++  await page.goto(`${origin}/sucafina/procurement?${new URLSearchParams({ page: "Requests", request: id, q: id })}`)
++  const detail = page.locator(`details[id="${id}"]`)
++  await expect(detail).toHaveCount(1)
++  await expect(detail).toHaveAttribute("open", "")
++  await expect(detail.locator(`section[id="${id}-pr"] form[data-command="save"]`)).toHaveAttribute("data-version", /^[1-9]\d*$/)
++  return detail
++}
++
++async function domainCommand(page: Page, origin: string, form: Locator, label: string, observations: Record<string, unknown>[]) {
++  const action = await form.getAttribute("data-command")
++  const recordId = await form.getAttribute("data-record")
++  const version = Number(await form.getAttribute("data-version"))
++  expect(action).not.toBeNull()
++  const pending = page.waitForResponse((response) => {
++    const request = response.request(); const url = new URL(request.url())
++    if (request.method() !== "POST" || url.origin !== origin || url.pathname !== "/sucafina/procurement" || url.searchParams.has("sf")) return false
++    const body = request.postDataJSON()
++    return body.page === "Requests" && body.action === action && (!recordId || body.id === recordId)
++  })
++  const button = form.getByRole("button", { name: label, exact: true })
++  await expect(button).toBeEnabled()
++  await button.click()
++  const response = await pending
++  expect(response.request().postDataJSON()).toMatchObject({ page: "Requests", action, ...(recordId ? { id: recordId, version } : {}) })
++  expect(response.status()).toBe(200)
++  expect(response.headers()["content-type"]).toContain("application/json")
++  expect(asRecord(await response.json()).ok).toBe(true)
++  observations.push({ stage: "procurement-human-command", action, httpStatus: response.status(), body: response.request().postDataJSON() })
++}
+--- a/packages/app-shell/e2e/sucafina/decisions.spec.ts
++++ b/packages/app-shell/e2e/sucafina/decisions.spec.ts
+@@ -2,16 +2,28 @@
+ import { asRecord, assertCase, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, reopenCase, withInstallation } from "./decisions-support/journey"
+ import { loseCreationResponse } from "./decisions-support/lost-response"
+ import { initialAlternativesJourney } from "./decisions-support/initial-alternatives"
++import { choiceHistoryJourney } from "./decisions-support/choice-history"
++import { procurementClosureJourney } from "./decisions-support/procurement-closure"
+ 
+ // Enrollment and the HttpOnly operator session are real. Do not retain auth in traces.
+ test.use({ trace: "off" })
+ test.describe.configure({ retries: 0 })
+ 
+-test("CI-UI-DECISIONS — attach authorized evidence, create two alternatives and recover one uncertain result", async ({ page }, info) => {
++test("CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change", async ({ page }, info) => {
+   test.setTimeout(180_000)
+-  info.annotations.push({ type: "proof-limit", description: "Initial alternatives with pending cost coverage; no complete financial comparison, financial approval, C12 Apply, native model or AM acceptance" })
++  info.annotations.push({ type: "proof-limit", description: "Human choice and historical C10 coverage with pending costs; this path has no executable Procurement operation and does not accept financial approval, C12 Apply, native model or AM proofs" })
+   await withInstallation(page, info, async (installation, observations) => {
+-    await initialAlternativesJourney(page, installation, observations)
++    const selection = await initialAlternativesJourney(page, installation, observations)
++    await choiceHistoryJourney(page, installation, selection, observations)
++  })
++})
++
++test("CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt", async ({ page }, info) => {
++  test.setTimeout(180_000)
++  info.annotations.push({ type: "dependency", description: "Public typed Procurement alternative authoring, authorized composite producer, numeric criterion rule and a domain financial approval compatible with the prepared change are mandatory. Missing controls fail; no fixture inserts them." })
++  info.annotations.push({ type: "proof-limit", description: "Consumes the published C12 Apply and recovery; selection and confirmation alone do not prove financial approval, native provider/critique or restart." })
++  await withInstallation(page, info, async (installation, observations) => {
++    await procurementClosureJourney(page, installation, observations)
+   })
+ })
+ 
+@@ -114,8 +126,8 @@
+       await expect(candidates.getByRole("checkbox")).toHaveCount(0)
+       await expect(portfolio.locator(":scope > p[role=status]")).toHaveText("Choose alternatives and enter the portfolio scope.")
+       await expect(portfolio.getByRole("button", { name: "Save this evaluation", exact: true })).toBeDisabled()
+-      // A new case correctly has no alternatives. Positive C09/C10 comparison,
+-      // choice and Apply remain blocked until their real UI producer is composed.
++      // A new case correctly has no alternatives. The positive journeys
++      // create their own alternatives through the composed human controls.
+     })
+   })
+ })

@@ -1,0 +1,96 @@
+{
+  "schema": "sf2-terminal-authority-reconciliation-v1",
+  "mission": 33,
+  "actor": "S0-C",
+  "lease_epoch": "S0-C-e7-browser33",
+  "state": "TERMINAL_BOUNDED_INTEGRATED_HANDOFF_TO_S0",
+  "authority_ack": "133312e39a9aa6d1cb51bed20625108c6cc79359",
+  "initial_control": "7150af3c3cea2a1dece40ffa3f13abe8fb10278d",
+  "control_advances": [
+    {
+      "commit": "970ae24e36cae47dfa7e0df327e409d9cc3fcea7",
+      "change": "Mission35 addition only, keeps33 sole integrator",
+      "blob": "0772578134458d933d66769b307d564eab4aa105"
+    },
+    {
+      "commit": "9ffdd8310d54ae82cc011bf699c1fdaf066063eb",
+      "change": "Mission36 addition only, explicitly recognizes C6/ACK and keeps33 sole integrator",
+      "blob": "90dbd087e7d1f339885c06f64b55ad7d86e273c9"
+    },
+    {
+      "commit": "acd92cb0cb6a931bfb2a6d33ef13ae572334a209",
+      "change": "Mission37 addition only, consumes terminal31/32 findings, keeps33 sole integrator and excludes C12/shared/persistence/report/Atlas scopes",
+      "blob": "508aa3694c44720de43d0a10253de3527df571ac"
+    },
+    {
+      "commit": "edee66d9a22ab4a3090e6b461953e783b9910ca8",
+      "change": "Three additions only: functional-wave COMMON and independent source missions38 BI waterfall/39 first agenda. Explicitly preserves33 sole integrator, all current source leases and S0 final gates.",
+      "blobs": [
+        "81af853152230fae8df23b20d990b31352c4785c",
+        "cc65df8f1796c4de0d6b1fe4281a5f1b7cd79d57",
+        "ea318f5dd53ae4385e5d7988a7499dfb160649ed"
+      ]
+    }
+  ],
+  "final_control": {
+    "control": "edee66d9a22ab4a3090e6b461953e783b9910ca8",
+    "control_tree": "28125be92536e4ad5bd9c668afc415dbae28fcc5",
+    "mission33": "4e8f0f5ac6239125e27acb570f652913c58383b9",
+    "COMMON": "7839082081554eb288758460bdd8ce52529ba7da",
+    "mission36": "90dbd087e7d1f339885c06f64b55ad7d86e273c9",
+    "observation_time": "2026-11-14 22:15:29 UTC",
+    "status": "MISSION33_SOLE_INTEGRATOR_PRESERVED_NO_REVOCATION",
+    "mission37": "508aa3694c44720de43d0a10253de3527df571ac",
+    "functional_COMMON": "81af853152230fae8df23b20d990b31352c4785c",
+    "mission38": "cc65df8f1796c4de0d6b1fe4281a5f1b7cd79d57",
+    "mission39": "ea318f5dd53ae4385e5d7988a7499dfb160649ed"
+  },
+  "current_candidate": {
+    "symbol": "C11",
+    "commit": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+    "tree": "ab936df4784ad81deacec756af1cee69f739f712"
+  },
+  "pre_terminal_checkpoint": {
+    "commit": "e7e97591edfc15f230856a035e32951f2f700c2f",
+    "tree": "c9ba0e9dfc4011787567f84500dde4130b730d72"
+  },
+  "single_remote_writer": "/root; read-only/local preparation helpers never wrote remote/source lanes",
+  "helpers": [
+    "finance22_intake",
+    "reports25_intake",
+    "source_census"
+  ],
+  "source_ownership": "Decisions31 explicitly ended its source write authority and released partial implementation; C12/32 terminal input consumed, later a20 fixture remains separately unreleased. Finance34, Atlas35, Reports36, Procurement37, BI38 and first-agenda39 remain separately scoped source owners. No worker lifecycle is inferred from silence.",
+  "end_of_slice": "This terminal handoff completes mission33's published bounded intake. No tests, dispatcher, supervisor, controller, Goal or pending background work is left by33. Later material source intake requires explicit reconciled continuation authority; no automatic resume or assumed worker death.",
+  "next_authority": "S0 retains final dispatcher and acceptance, and assigns next bounded continuation for released deltas. No transfer of those powers to33.",
+  "same_branch_pr": {
+    "branch": "sf2-stack",
+    "pr": 65,
+    "base": "dev",
+    "draft": true,
+    "merge": false
+  },
+  "remote_policy": "GitHub MCP only; every ref advance expected-head CAS and force:false; no control-tree or whole-source-tree merge",
+  "prohibited_actions_performed": [],
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "scope": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "resident_profiles": 5,
+    "skills": 18,
+    "packs": 8,
+    "operations": 39,
+    "AM": [
+      "AM01",
+      "AM02",
+      "AM03",
+      "AM04",
+      "AM05",
+      "AM06"
+    ]
+  },
+  "global_release": false
+}

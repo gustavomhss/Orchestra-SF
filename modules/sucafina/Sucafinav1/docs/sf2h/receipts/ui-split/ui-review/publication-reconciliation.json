@@ -1,0 +1,66 @@
+{
+  "schema": "sf-ui-review-publication-reconciliation-v1",
+  "branches": [
+    {
+      "branch": "ui-review",
+      "head": "4183ebdb53b17b8e4efe9c8835ff2b0012e98624",
+      "tree": "ec4fac7620aa27bf79f2af671838fd5a1c1db639"
+    },
+    {
+      "branch": "interface-resume",
+      "head": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "tree": "cf3676a469a1f8bcab05e322ee7a4a1ada0704c5"
+    },
+    {
+      "branch": "compose-resume",
+      "head": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "tree": "885ce466354d2b8dcf674472561c9c1fc3b632ff"
+    },
+    {
+      "branch": "astra-wp10",
+      "head": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305"
+    },
+    {
+      "branch": "collab-resume",
+      "head": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+      "tree": "39cec0a91dc5ebc2dde012d4d1d8b63166074373"
+    }
+  ],
+  "compose": {
+    "initialHead": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+    "finalHead": "ad7fcdef7739e1bc471e42fac082452799de751b",
+    "headAdvanced": true,
+    "criticalSourceBytesUnchanged": true,
+    "criticalSources": [
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "blob": "b3595989d0c08159c96484d96bd40a149a9721e6"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "blob": "0891d178833165fff098e3c05f3a64c5f5b35043"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+        "blob": "2bd1fbd753e38f38ef58e4d71f364972ac22703e"
+      }
+    ],
+    "deltaSummary": "Two commits changed documentation/receipts only. The three patch preimages and both already-exact helper dependencies are unchanged. The proposed mount remains NOT_APPLIED."
+  },
+  "collaboration": {
+    "initialHead": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+    "finalHead": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+    "hostBlobBefore": "119f642392a046dabc280c785acd2ad1fa65a838",
+    "hostBlobAfter": "d80d441aa5775a3747303a60161e5a049f84ac16",
+    "businessServicesUnchanged": true,
+    "businessServicesBlob": "49f9e7824edb25443f48a2035ebfa698554de87e",
+    "compositionBlob": "7222e35f290d46f68d7ab2aefdfd1780774140ae",
+    "deltaSummary": "The host advanced with its own review-answer/confirmation changes. Those changes were not overwritten or claimed tested here. The inspected BCS still does not pass reviewContexts/authorizeReviewThreadContext providers."
+  },
+  "proofInput": "WP10 a1434e7e remains unchanged; the running consumer probe stays on its immutable product/snapshot pair.",
+  "observedBetween": [
+    "2026-11-14T17:33:00Z",
+    "2026-11-14T17:33:51Z"
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "source_ref": "402a091485e11d60dff433049c7dedd7fcead687",
+  "method": "Read literal test/reportsTest declarations in source, not runner collection.",
+  "specs": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "declaration_count": 5,
+      "titles": [
+        "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+        "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+        "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+        "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+        "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation"
+      ],
+      "file": {
+        "bytes": 2356,
+        "sha256": "29c9dcd28d0de5726770feac79be3f11652c349de2cbac09e8517307663f76fb",
+        "git_blob_sha": "bab6a804e5f082cc60eb6f27209070b552981035"
+      },
+      "collection": "NOT_RUN",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "declaration_count": 4,
+      "titles": [
+        "CI-UI-DECISIONS — attach authorized evidence, create two alternatives and recover one uncertain result",
+        "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+        "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+        "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting"
+      ],
+      "file": {
+        "bytes": 11670,
+        "sha256": "bceb4c415ac0be676b9db554c97b2c737f529f33e7a6b2d3af5a3034539db988",
+        "git_blob_sha": "a2515c40a71728299b0e9303168b6d822f2ba338"
+      },
+      "collection": "NOT_RUN",
+      "execution": "NOT_RUN"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "declaration_count": 4,
+      "titles": [
+        "RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source",
+        "RPT-02 confirms and reuses the exact human answer under C05, then rejects its edited version",
+        "RPT-03 removes one authorized record without editing its source and creates only an explicit new revision",
+        "RPT-04 revokes the real session and clears cached meeting data, export and answer access"
+      ],
+      "file": {
+        "bytes": 6074,
+        "sha256": "ea9da191002050f784b1dc3ce90b143335d443bbf03fc70b7dd2d8587cd46c8a",
+        "git_blob_sha": "0d6c965e2afb83b2fe703c080f1f96547b2a582f"
+      },
+      "collection": "NOT_RUN",
+      "execution": "NOT_RUN"
+    }
+  ],
+  "total_declarations": 13,
+  "playwright_collection": "NOT_RUN",
+  "playwright_execution": "NOT_RUN",
+  "reconciliation": "Nominal spec blobs unchanged in complete source comparison; source declaration count remains13, collection/execution NOT_RUN."
+}

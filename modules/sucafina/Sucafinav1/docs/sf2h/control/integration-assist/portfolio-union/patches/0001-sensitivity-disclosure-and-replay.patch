@@ -1,0 +1,361 @@
+diff --git a/modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts b/modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts
+index fe4ab56201fd1898905ac7bc810f0495a64f8602..9d29046dd40adffc88985be5e1b1603b64491129 100644
+--- a/modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts
+@@ -125,10 +125,12 @@
+     })
+     const evaluated = await evaluate(request, context)
+     if (evaluated.status !== "ok") return evaluated
+-    return finalizePlannerSensitivity({ request, binding, result: evaluated.value, samples, baselineRefs: baseline.value.sourceRefs, exact: exactEvidence.value })
++    return finalizePlannerSensitivity({ request, binding, result: evaluated.value, samples, baselineRefs: baseline.value.sourceRefs, exact: exactEvidence.value, originalScenarios: evaluated.value.comparisonStatus === "complete" ? [] : [{ resultRef: request.scenarioRef, scenario: sourceScenario, coverageRef: binding.scenarioCoverageRef }, { resultRef: binding.baselineRef, scenario: baselineScenario, coverageRef: binding.baselineCoverageRef }] })
+   }
+ }
+ 
++export type SensitivityDisclosureFormat = "bundle-v1" | "pr37-v1" | "intelligence-v1" | "union-v1"
++
+ /** Attach the same threshold and disclosure semantics to calculated or read-only reproduced samples. */
+ export function finalizePlannerSensitivity(input: {
+   request: SensitivityRequest
+@@ -137,6 +139,9 @@
+   samples: readonly { resultRef: string; coverageRefs: readonly string[]; conditions: readonly string[] }[]
+   baselineRefs: readonly BusinessEvidenceRef[]
+   exact?: { value: number | null; evidenceRefs: readonly BusinessEvidenceRef[] }
++  originalScenarios?: readonly { resultRef: string; scenario: ScenarioResult; coverageRef: string }[]
++  /** Reconstruct an authenticated historical serialization; all proofs are still rebuilt. */
++  disclosureFormat?: SensitivityDisclosureFormat
+ }) {
+   const meets = (value: number) => input.request.criterion.operator === "lte" ? value <= input.request.criterion.value : input.request.criterion.operator === "gte" ? value >= input.request.criterion.value : value === input.request.criterion.value
+   const points = input.result.evaluated
+@@ -145,7 +150,37 @@
+   const complete = input.result.comparisonStatus === "complete" && input.result.unresolvedConditions.every((condition) => condition.category === "hypothesis") && input.samples.every((sample) => !sample.conditions.length)
+   const comparable = input.result.comparisonStatus === "complete" || input.result.comparisonStatus === "conditioned"
+   const exact = comparable && input.result.threshold !== null && input.exact?.value === input.result.threshold && input.exact.evidenceRefs.length > 0
++  const format = input.disclosureFormat ?? "union-v1"
++  const observations = format === "intelligence-v1" || format === "union-v1"
++    ? [...input.samples, ...(input.originalScenarios ?? []).map(({ resultRef, scenario, coverageRef }) => ({ resultRef, coverageRefs: [coverageRef], conditions: [...scenario.unresolvedConditions, ...scenario.costCoverage.issues, ...(scenario.costCoverage.coverageState === "complete" ? [] : [`coverage:${scenario.costCoverage.coverageState}`]), ...scenario.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [`${entry.categoryId}:${entry.reason}`] : []), ...scenario.costCoverage.derivedMissingCategoryIds.map((category) => `missing-category:${category}`)] }))]
++    : input.samples
+   const thresholdRefs = [...input.result.evidenceRefs, ...input.binding.evidenceRefs, ...input.baselineRefs, ...(input.exact?.evidenceRefs ?? [])].filter((ref, index, refs) => refs.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index)
+-  const thresholdEvidence = exact && input.exact && input.result.threshold !== null ? { state: "exact" as const, value: input.result.threshold, evidenceRefs: thresholdRefs } : transition === undefined ? { state: "unavailable" as const, reason: transitions.length > 1 ? "multiple-sampled-transitions" : points.some((point) => point.value === null) ? "sample-value-unavailable" : "no-sampled-transition" } : { state: "sampled" as const, interval: { minimum: points[transition - 1].parameterValue, maximum: points[transition].parameterValue }, evidenceRefs: thresholdRefs }
+-  return attachSensitivityV6({ result: { ...input.result, threshold: exact ? input.result.threshold : null, comparisonStatus: comparable ? complete ? "complete" : "conditioned" : input.result.comparisonStatus, unresolvedConditions: [...input.result.unresolvedConditions, ...input.samples.flatMap((sample) => sample.conditions.map((reason) => ({ id: `${sample.resultRef}:${reason}`, category: "coverage", reason, evidenceRefs: input.baselineRefs }))), ...(complete || input.result.unresolvedConditions.some((condition) => condition.id === "known-components-threshold") ? [] : [{ id: "preview-coverage", category: "coverage", reason: "Threshold evidence concerns known subtotal differences only; unresolved coverage can change the decision.", evidenceRefs: input.baselineRefs }])], evidenceRefs: [...input.result.evidenceRefs, ...input.binding.evidenceRefs, ...input.baselineRefs] }, costCoverageRefs: [...new Set([input.binding.baselineCoverageRef, input.binding.scenarioCoverageRef, ...input.samples.flatMap((sample) => sample.coverageRefs)])], unit: input.binding.unit, engineVersion: input.binding.engineVersion, thresholdEvidence })
++  // Older evidence order is reproduced from fresh domain inputs, never from the
++  // saved result. Numeric precision and current completeness guards stay unchanged.
++  const exactRefs = format === "intelligence-v1" ? input.exact?.evidenceRefs ?? [] : thresholdRefs
++  const sampledRefs = format === "intelligence-v1" ? [...input.binding.evidenceRefs, ...input.baselineRefs, ...input.result.evidenceRefs] : thresholdRefs
++  const thresholdEvidence = exact && input.exact && input.result.threshold !== null ? { state: "exact" as const, value: input.result.threshold, evidenceRefs: exactRefs } : transition === undefined ? { state: "unavailable" as const, reason: transitions.length > 1 ? "multiple-sampled-transitions" : points.some((point) => point.value === null) ? "sample-value-unavailable" : "no-sampled-transition" } : { state: "sampled" as const, interval: { minimum: points[transition - 1].parameterValue, maximum: points[transition].parameterValue }, evidenceRefs: sampledRefs }
++  const disclosed = [...input.result.unresolvedConditions]
++  if (exact && input.result.threshold !== null && input.result.comparisonStatus === "conditioned" && (format === "pr37-v1" || format === "union-v1")) disclosed.push({
++    id: "known-components-threshold", category: "coverage",
++    reason: `The domain-proven threshold ${input.result.threshold} ${input.result.parameterUnit} applies only to the known components. Any missing cost categories remain unresolved and are not treated as zero; their eventual costs can change this conditioned decision.`,
++    evidenceRefs: input.exact!.evidenceRefs,
++  })
++  const preserveSubtotalId = exact && (format === "intelligence-v1" || format === "union-v1")
++  const finalDisclosure = complete || (!preserveSubtotalId && disclosed.some((condition) => condition.id === "known-components-threshold")) ? [] : [{
++    id: preserveSubtotalId ? "known-subtotal-threshold" : "preview-coverage", category: "coverage",
++    reason: "Threshold evidence concerns known subtotal differences only; unresolved coverage can change the decision.",
++    evidenceRefs: input.baselineRefs,
++  }]
++  return attachSensitivityV6({
++    result: {
++      ...input.result,
++      threshold: exact ? input.result.threshold : null,
++      comparisonStatus: comparable ? complete ? "complete" : "conditioned" : input.result.comparisonStatus,
++      unresolvedConditions: [...disclosed, ...observations.flatMap((sample) => sample.conditions.map((reason) => ({ id: `${sample.resultRef}:${reason}`, category: "coverage", reason, evidenceRefs: input.baselineRefs }))), ...finalDisclosure],
++      evidenceRefs: [...input.result.evidenceRefs, ...input.binding.evidenceRefs, ...input.baselineRefs],
++    },
++    costCoverageRefs: [...new Set([input.binding.baselineCoverageRef, input.binding.scenarioCoverageRef, ...observations.flatMap((sample) => sample.coverageRefs)])],
++    unit: input.binding.unit, engineVersion: input.binding.engineVersion, thresholdEvidence,
++  })
+ }
+diff --git a/modules/sucafina/Sucafinav1/product/portfolio/verification.ts b/modules/sucafina/Sucafinav1/product/portfolio/verification.ts
+index 46a04597df74205add4531465f35d8a55ca1f8dd..254e22ea35f5b422b59c8f0549c8f12d1d4fb492 100644
+--- a/modules/sucafina/Sucafinav1/product/portfolio/verification.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/verification.ts
+@@ -17,7 +17,7 @@
+ import { finalizePlannerSensitivity, plannerSensitivityScenario } from "./planner-sensitivity.ts"
+ import { validatePlannerThreshold } from "./threshold-proof.ts"
+ import type { KnownSubtotalThreshold } from "./threshold-proof.ts"
+-import type { createPlannerSensitivity } from "./planner-sensitivity.ts"
++import type { createPlannerSensitivity, SensitivityDisclosureFormat } from "./planner-sensitivity.ts"
+ import type { CriterionComparisonBinding } from "../decisions/criterion-comparison.ts"
+ import { createProductionPortfolio } from "./production.ts"
+ import { portfolioResultDigest } from "./result-store.ts"
+@@ -185,8 +185,20 @@
+     })
+     const sampled = await evaluate(binding.request, context)
+     if (sampled.status !== "ok") return false
+-    const result = finalizePlannerSensitivity({ request: binding.request, binding: unitBinding, result: sampled.value, samples, baselineRefs: baseline.value.sourceRefs, exact: exact.value })
+-    return result.status === "ok" && digestSfValue(result.value) === stored.resultDigest && await capture(binding, context, initialFence, stage)
++    // Reconstruct only explicit historical serializers from current domain inputs.
++    // No stored condition/evidence array is used as a producer, and each candidate
++    // must match the full stored digest after all Finance certification callbacks.
++    const componentsDisclosure = expectedResult.unresolvedConditions.some((condition) => condition.id === "known-components-threshold")
++    const subtotalDisclosure = expectedResult.unresolvedConditions.some((condition) => condition.id === "known-subtotal-threshold")
++    const formats: readonly SensitivityDisclosureFormat[] = componentsDisclosure
++      ? [subtotalDisclosure ? "union-v1" : "pr37-v1"]
++      : subtotalDisclosure ? ["intelligence-v1"] : ["union-v1", "bundle-v1", "intelligence-v1"]
++    const originalScenarios = sampled.value.comparisonStatus === "complete" ? [] : [{ resultRef: binding.request.scenarioRef, scenario: sourceScenario, coverageRef: unitBinding.scenarioCoverageRef }, { resultRef: unitBinding.baselineRef, scenario: baselineScenario, coverageRef: unitBinding.baselineCoverageRef }]
++    const matches = formats.some((disclosureFormat) => {
++      const result = finalizePlannerSensitivity({ request: binding.request, binding: unitBinding, result: sampled.value, samples, baselineRefs: baseline.value.sourceRefs, exact: exact.value, originalScenarios, disclosureFormat })
++      return result.status === "ok" && digestSfValue(result.value) === stored.resultDigest
++    })
++    return matches && await capture(binding, context, initialFence, stage)
+   }
+   const verifySensitivity = async (incomingBinding: CriterionResultBinding, incomingStored: StoredDecisionResult, context: TrustedDomainContext) => {
+     const host = input.sensitivityReadScope
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts b/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..ca583dd473bdfb13299dfe470e301a6a113c0b73 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts
+@@ -0,0 +1,116 @@
++import type { ScenarioResult } from "../../../product/contracts/decisions.ts"
++import { expect, test } from "bun:test"
++import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import { finalizePlannerSensitivity } from "../../../product/portfolio/planner-sensitivity.ts"
++
++type FinalizerInput = Parameters<typeof finalizePlannerSensitivity>[0]
++const evidence = [{ refDigest: "controlled-finalizer-unit-test" } as unknown as BusinessEvidenceRef]
++
++// Controlled serializer input, not a domain certificate or an installed-host proof.
++function input(): FinalizerInput {
++  const request = { scenarioRef: "source", parameterBounds: { parameterRef: "implementation", minimum: 10000, maximum: 70000, steps: 1 }, criterion: { id: "advantage", operator: "gte" as const, value: 20000 } }
++  return {
++    request,
++    binding: { caseRef: { id: "case", incarnation: "inc", version: 1 }, scenario: { baseRef: "base", operations: [], assumptions: [] }, baselineRef: "baseline", baselineCoverageRef: "baseline-coverage", scenarioCoverageRef: "selected-coverage", criterionId: "advantage", metric: "alternative-minus-baseline-known-subtotal", parameterUnit: "USD", resultUnit: "USD", unit: "USD", unitMetadataRef: "units", unitMetadataVersion: 1, engineVersion: "planner-runtime-v1", evidenceRefs: evidence, sensitivityRequest: request, ruleRef: "rule", ruleVersion: 1, ruleDigest: "a".repeat(64), metadataDigest: "b".repeat(64) },
++    result: { scenarioRef: "source", parameterRef: "implementation", parameterUnit: "USD", resultUnit: "USD", bounds: { minimum: 10000, maximum: 70000, steps: 1 }, evaluated: [{ parameterValue: 10000, resultRef: "sample-low", value: 65000 }, { parameterValue: 70000, resultRef: "sample-high", value: 5000 }], threshold: 55000, comparisonStatus: "conditioned", unresolvedConditions: [{ id: "sample:missing-category:training", category: "coverage", reason: "missing-category:training", evidenceRefs: evidence }, { id: "sample:preview-not-applied", category: "hypothesis", reason: "preview-not-applied", evidenceRefs: evidence }], evidenceRefs: evidence },
++    samples: [{ resultRef: "sample-low", coverageRefs: ["baseline-coverage"], conditions: ["baseline-pending"] }, { resultRef: "sample-high", coverageRefs: ["selected-coverage"], conditions: [] }],
++    baselineRefs: evidence,
++    exact: { value: 55000, evidenceRefs: evidence },
++  }
++}
++
++test("conditioned exact sensitivity keeps both consumer disclosures and every original gap", () => {
++  const original = input()
++  const before = structuredClone(original)
++  const found = finalizePlannerSensitivity(original)
++  expect(found.status).toBe("ok")
++  if (found.status !== "ok") throw new Error(found.reason)
++  expect(found.value.comparisonStatus).toBe("conditioned")
++  expect(found.value.threshold).toBe(55000)
++  expect(found.value.thresholdEvidence).toEqual({ state: "exact", value: 55000, evidenceRefs: evidence })
++  expect(found.value.evaluated).toEqual(before.result.evaluated)
++  expect(found.value.costCoverageRefs).toEqual(["baseline-coverage", "selected-coverage"])
++  expect(found.value.unresolvedConditions.slice(0, 2)).toEqual(before.result.unresolvedConditions)
++  expect(found.value.unresolvedConditions.map((condition) => condition.id)).toEqual(["sample:missing-category:training", "sample:preview-not-applied", "known-components-threshold", "sample-low:baseline-pending", "known-subtotal-threshold"])
++  expect(found.value.unresolvedConditions.find((condition) => condition.id === "known-components-threshold")?.reason).toContain("55000 USD applies only to the known components")
++  expect(found.value.unresolvedConditions.find((condition) => condition.id === "known-subtotal-threshold")?.reason).toContain("known subtotal differences")
++  expect(original).toEqual(before)
++})
++
++test("historical bundle and PR37 serializers retain exact condition order without changing monetary fields", () => {
++  const bundle = finalizePlannerSensitivity({ ...input(), disclosureFormat: "bundle-v1" })
++  const source = finalizePlannerSensitivity({ ...input(), disclosureFormat: "pr37-v1" })
++  const current = finalizePlannerSensitivity(input())
++  if (bundle.status !== "ok" || source.status !== "ok" || current.status !== "ok") throw new Error("Serializer unavailable")
++  expect(bundle.value.unresolvedConditions.map((condition) => condition.id)).toEqual(["sample:missing-category:training", "sample:preview-not-applied", "sample-low:baseline-pending", "preview-coverage"])
++  expect(source.value.unresolvedConditions.map((condition) => condition.id)).toEqual(["sample:missing-category:training", "sample:preview-not-applied", "known-components-threshold", "sample-low:baseline-pending"])
++  for (const previous of [bundle.value, source.value]) {
++    const { unresolvedConditions: _previousConditions, ...previousFields } = previous
++    const { unresolvedConditions: _currentConditions, ...currentFields } = current.value
++    expect(previousFields).toEqual(currentFields)
++  }
++})
++
++test("complete qualified coverage has no incomplete-coverage disclaimer", () => {
++  const original = input()
++  original.result.comparisonStatus = "complete"
++  original.result.unresolvedConditions = original.result.unresolvedConditions.filter((condition) => condition.category === "hypothesis")
++  original.samples = original.samples.map((sample) => ({ ...sample, conditions: [] }))
++  const found = finalizePlannerSensitivity(original)
++  expect(found.status).toBe("ok")
++  if (found.status !== "ok") throw new Error(found.reason)
++  expect(found.value.comparisonStatus).toBe("complete")
++  expect(found.value.thresholdEvidence.state).toBe("exact")
++  expect(found.value.unresolvedConditions).toEqual(original.result.unresolvedConditions)
++})
++
++test("missing or mismatched exact evidence keeps sampled precision and unresolved coverage", () => {
++  for (const exact of [undefined, { value: 15000, evidenceRefs: evidence }, { value: 55000, evidenceRefs: [] }]) {
++    const found = finalizePlannerSensitivity({ ...input(), exact })
++    expect(found.status).toBe("ok")
++    if (found.status !== "ok") throw new Error(found.reason)
++    expect(found.value.threshold).toBeNull()
++    expect(found.value.thresholdEvidence).toEqual({ state: "sampled", interval: { minimum: 10000, maximum: 70000 }, evidenceRefs: evidence })
++    expect(found.value.comparisonStatus).toBe("conditioned")
++    expect(found.value.unresolvedConditions.some((condition) => condition.id === "preview-coverage")).toBe(true)
++    expect(found.value.unresolvedConditions.some((condition) => condition.id === "known-components-threshold" || condition.id === "known-subtotal-threshold")).toBe(false)
++  }
++})
++
++test("union retains original source and baseline gaps while rebuilding Intelligence evidence order", () => {
++  const original = input()
++  const horizon = { start: "2027-01-01", end: "2027-12-31" }
++  const scenario: ScenarioResult = { id: "original", version: 1, components: [], currency: "USD", horizon, sourceRefs: evidence, unresolvedConditions: ["unconfirmed-source"], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: 210000, total: null, costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "selected", alternativeVersion: 1, currency: "USD", horizon, issues: [], evaluatedSourceRefs: evidence, coverageState: "pending", entries: [], derivedMissingCategoryIds: ["training"] } }
++  original.originalScenarios = [{ resultRef: "original-source", scenario, coverageRef: "selected-coverage" }, { resultRef: "original-baseline", scenario: { ...scenario, costCoverage: { ...scenario.costCoverage, derivedMissingCategoryIds: ["support"] } }, coverageRef: "baseline-coverage" }]
++  const certificateOnly = { refDigest: "certificate-only-unit-test" } as unknown as BusinessEvidenceRef
++  original.exact = { value: 55000, evidenceRefs: [certificateOnly, ...evidence] }
++  const before = structuredClone(original)
++  const current = finalizePlannerSensitivity(original)
++  const intelligence = finalizePlannerSensitivity({ ...original, disclosureFormat: "intelligence-v1" })
++  const bundle = finalizePlannerSensitivity({ ...original, disclosureFormat: "bundle-v1" })
++  if (current.status !== "ok" || intelligence.status !== "ok" || bundle.status !== "ok") throw new Error("Historical finalization unavailable")
++  for (const result of [current.value, intelligence.value]) {
++    expect(result.unresolvedConditions.some((condition) => condition.id === "original-source:missing-category:training")).toBe(true)
++    expect(result.unresolvedConditions.some((condition) => condition.id === "original-baseline:missing-category:support")).toBe(true)
++    expect(result.comparisonStatus).toBe("conditioned")
++    expect(result.threshold).toBe(55000)
++    expect(result.unresolvedConditions.at(-1)?.id).toBe("known-subtotal-threshold")
++  }
++  expect(current.value.thresholdEvidence).toEqual({ state: "exact", value: 55000, evidenceRefs: [...evidence, certificateOnly] })
++  expect(intelligence.value.thresholdEvidence).toEqual({ state: "exact", value: 55000, evidenceRefs: [certificateOnly, ...evidence] })
++  expect(intelligence.value.unresolvedConditions.some((condition) => condition.id === "known-components-threshold")).toBe(false)
++  expect(bundle.value.unresolvedConditions.some((condition) => condition.id.startsWith("original-"))).toBe(false)
++  expect(original).toEqual(before)
++})
++
++test("Intelligence sampled history retains its original ordered evidence without claiming exactness", () => {
++  const original = input()
++  original.result.threshold = null
++  delete original.exact
++  const found = finalizePlannerSensitivity({ ...original, disclosureFormat: "intelligence-v1" })
++  expect(found.status).toBe("ok")
++  if (found.status !== "ok") throw new Error(found.reason)
++  expect(found.value.threshold).toBeNull()
++  expect(found.value.thresholdEvidence).toEqual({ state: "sampled", interval: { minimum: 10000, maximum: 70000 }, evidenceRefs: [...evidence, ...evidence, ...evidence] })
++  expect(found.value.unresolvedConditions.at(-1)?.id).toBe("preview-coverage")
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts b/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts
+index 76ea3fa6902105c7be42956dae99ea4e4f9a4c3b..0444570a0a961c979f75388fb0708812f98497e5 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts
+@@ -112,3 +112,25 @@
+   })
+   expect(await evaluate({ ...request, parameterBounds: { ...request.parameterBounds, minimum: -Number.MAX_VALUE, maximum: Number.MAX_VALUE } }, context)).toEqual({ status: "needs-input", reason: "parameter-range-overflow" })
+ })
++
++test("only a certified known-subtotal scope may retain an exact bound with unresolved coverage", async () => {
++  const source = { surface: "planner" as const, type: "line", id: "implementation", incarnation: "line-inc", version: 1, fields: ["amount"], period, observedAt: "2027-01-01T00:00:00Z" }
++  const evidence = [{ refDigest: "synthetic-scope-unit-test" } as unknown as BusinessEvidenceRef]
++  const quantified: ScenarioResult = { ...scenario, sourceRefs: evidence, components: [{ id: "implementation", amount: 45000, currency: "USD", period, sourceRefs: [source], evidenceState: "confirmed" }] }
++  for (const scope of [undefined, "known-subtotal"] as const) {
++    let exactCalls = 0
++    const evaluate = createSensitivityEvaluator({
++      sample: async (_request, value) => ({ status: "ok", value: { resultRef: `scope-sample-${value}`, scenario: quantified, parameterUnit: "USD", resultUnit: "USD", unitMetadataRef: "units-v1", unitMetadataVersion: 1, criterionValue: 75000 - value } }),
++      exactThreshold: async () => { exactCalls++; return { status: "ok", value: { value: 55000, evidenceRefs: evidence, ...(scope ? { scope } : {}) } } },
++      revalidate: async () => true,
++    })
++    const found = await evaluate(request, context)
++    expect(found.status).toBe("ok")
++    if (found.status !== "ok") throw new Error(found.reason)
++    expect(exactCalls).toBe(1)
++    expect(found.value.threshold).toBe(scope === "known-subtotal" ? 55000 : null)
++    expect(found.value.comparisonStatus).toBe("conditioned")
++    expect(found.value.unresolvedConditions.some((condition) => condition.reason === "missing-category:training")).toBe(true)
++    expect(quantified.total).toBeNull()
++  }
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts b/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts
+index a3b1cd5326dc4dfbbaa4a16cb0134c9d0fe15a4c..a22b4625c8375d7c88037e1c66c1a0fee17e5c83 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts
+@@ -10,6 +10,16 @@
+ 
+ test("v6 keeps exact evidence and legacy threshold consistent", () => {
+   const input = { result, costCoverageRefs: ["coverage-v1"], unit: "USD", engineVersion: "planner-v1", thresholdEvidence: { state: "exact" as const, value: 55000, evidenceRefs: evidence } }
++  const scopedResult: SensitivityLegacyResult = { ...result, comparisonStatus: "conditioned", unresolvedConditions: [{ id: "known-components-threshold", category: "coverage", reason: "This bound concerns known components; training is omitted and remains unresolved.", evidenceRefs: evidence }] }
++  const scoped = attachSensitivityV6({ ...input, result: scopedResult })
++  expect(scoped.status).toBe("ok")
++  if (scoped.status === "ok") {
++    expect(scoped.value.comparisonStatus).toBe("conditioned")
++    expect(scoped.value.unresolvedConditions).toEqual(scopedResult.unresolvedConditions)
++    expect(scoped.value.thresholdEvidence).toEqual(input.thresholdEvidence)
++  }
++  expect(attachSensitivityV6({ ...input, result: { ...result, comparisonStatus: "unavailable" } })).toEqual({ status: "conflict", reason: "threshold-evidence-mismatch" })
++  expect(attachSensitivityV6({ ...input, thresholdEvidence: { ...input.thresholdEvidence, evidenceRefs: [] } })).toEqual({ status: "conflict", reason: "threshold-evidence-mismatch" })
+   const accepted = attachSensitivityV6(input)
+   expect(accepted.status).toBe("ok")
+   const conditioned = attachSensitivityV6({ ...input, result: { ...result, comparisonStatus: "conditioned", unresolvedConditions: [{ id: "training", category: "coverage", reason: "Known subtotal threshold; training remains unresolved.", evidenceRefs: evidence }] } })
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts b/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts
+index 1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc..7025de0601768ccc0bec76d8e0675882dee7cda9 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts
+@@ -257,3 +257,79 @@
+   }
+ }, 120000)
+ 
++
++test("WP13 rejects a false scalar boundary even when it carries the real canonical source evidence", async () => {
++  const fixture = await createPortfolioCoverageFixture("omitted")
++  try {
++    const request = { ...fixture.sensitivityRequest, parameterBounds: { ...fixture.sensitivityRequest.parameterBounds, steps: 1 } }
++    const canonical = await fixture.exact(request, fixture.baselineRef, fixture.context)
++    if (canonical.status !== "ok") throw new Error(`Canonical boundary proof unavailable: ${JSON.stringify(canonical)}`)
++    expect(canonical.value.value).toBeCloseTo(55000, 8)
++    const evaluate = createPlannerSensitivity({ results: fixture.results, resolve: fixture.issuer.resolve, revalidate: fixture.issuer.revalidate, preview: fixture.preview, coveragePreview: fixture.coverage, exactThreshold: async () => ({ status: "ok", value: { ...canonical.value, value: 55001 } }), idempotencyKey: async () => "wp13-false-scalar-certificate" })
++    const result = await evaluate(request, fixture.context)
++    if (result.status !== "ok") throw new Error(`Sampled fallback unavailable: ${JSON.stringify(result)}`)
++    expect(result.value.threshold).toBeNull()
++    expect(result.value.thresholdEvidence).toMatchObject({ state: "sampled", interval: { minimum: 10000, maximum: 70000 } })
++    expect(result.value.comparisonStatus).toBe("conditioned")
++    expect(result.value.unresolvedConditions.some((condition) => condition.reason === "missing-category:training")).toBe(true)
++    expect(fixture.selectedResult.total).toBeNull()
++  } finally { await fixture.cleanup() }
++}, 180000)
++
++for (const format of ["bundle-v1", "pr37-v1", "intelligence-v1"] as const) {
++  test(`semantic union: ${format} sensitivity replays its original C08 digest under current authority`, async () => {
++    const fixture = await createPortfolioCoverageFixture("omitted")
++    try {
++      const label = `disclosure-${format}`
++      const request = { ...fixture.sensitivityRequest, parameterBounds: { ...fixture.sensitivityRequest.parameterBounds, steps: 1 } }
++      const services = await persistedServices(fixture, label)
++      const legacyProducer: typeof services.sensitivity = async (incoming, trusted) => {
++        const found = await services.sensitivity(incoming, trusted)
++        if (found.status !== "ok") return found
++        const baseline = await services.results.readHistoricalScenario({ resultRef: fixture.baselineRef }, trusted)
++        if (baseline.status !== "ok" || baseline.value.kind !== "scenario") throw new Error("Original baseline evidence unavailable")
++        // Reproduce an earlier published serialization, then let the real C08
++        // store and WP11 binding verify it. No shared fixture or stored row is edited.
++        const originalPrefixes = [`${incoming.scenarioRef}:`, `${fixture.baselineRef}:`]
++        const unresolvedConditions = found.value.unresolvedConditions.filter((condition) => condition.id !== "known-subtotal-threshold" && (format === "pr37-v1" || condition.id !== "known-components-threshold") && (format === "intelligence-v1" || !originalPrefixes.some((prefix) => condition.id.startsWith(prefix))))
++        if (format !== "pr37-v1") unresolvedConditions.push({ id: format === "intelligence-v1" ? "known-subtotal-threshold" : "preview-coverage", category: "coverage", reason: "Threshold evidence concerns known subtotal differences only; unresolved coverage can change the decision.", evidenceRefs: baseline.value.sourceRefs })
++        if (format === "intelligence-v1") {
++          const exact = await fixture.exact(incoming, fixture.baselineRef, trusted)
++          if (exact.status !== "ok" || exact.value.value === null) throw new Error("Original Intelligence certificate unavailable")
++          return { status: "ok", value: { ...found.value, unresolvedConditions, thresholdEvidence: { state: "exact", value: exact.value.value, evidenceRefs: exact.value.evidenceRefs } } }
++        }
++        return { status: "ok", value: { ...found.value, unresolvedConditions } }
++      }
++      const persistent = createPersistentSensitivityPort({ portfolio: { evaluate: async () => ({ status: "unavailable", reason: "portfolio-not-requested" }), sensitivity: legacyProducer }, results: services.results, bindings: services.bindings, resolveBinding: fixture.issuer.resolve, idempotencyKey: async (digest) => `wp13-certified-result:${label}:${digest}` })
++      const saved = await persistent.evaluateAndStore(request, fixture.caseRef, fixture.context)
++      if (saved.status !== "ok") throw new Error(`Historical serialization persistence unavailable: ${JSON.stringify(saved)}`)
++      expect(saved.value.sensitivity.threshold).toBeCloseTo(55000, 8)
++      expect(saved.value.sensitivity.comparisonStatus).toBe("conditioned")
++      expect(saved.value.sensitivity.unresolvedConditions.some((condition) => condition.reason === "missing-category:training")).toBe(true)
++      expect(saved.value.sensitivity.unresolvedConditions.some((condition) => condition.id === "known-subtotal-threshold")).toBe(format === "intelligence-v1")
++      expect(saved.value.sensitivity.unresolvedConditions.some((condition) => condition.id === "known-components-threshold")).toBe(format === "pr37-v1")
++      const stored = await services.results.read({ kind: "sensitivity", resultRef: saved.value.sensitivityResultRef }, fixture.context)
++      const binding = await services.bindings.read({ caseRef: fixture.caseRef, resultRef: saved.value.sensitivityResultRef }, fixture.context)
++      if (stored.status !== "ok" || stored.value.kind !== "sensitivity" || binding.status !== "ok") throw new Error("Historical C08 or binding unavailable")
++      const originalDigest = digestSfValue(stored.value)
++      const before = await services.state.read(fixture.request, "cases", (state) => Object.keys(state.decisionResults ?? {}))
++      const reloaded = await persistedServices(fixture, label)
++      // Recreate services over the same open LocalStore. This is not a process restart.
++      expect(await reloaded.persistent.read(saved.value.sensitivityResultRef, fixture.context)).toEqual(saved)
++      expect(await reloaded.persistent.evaluateAndStore(request, fixture.caseRef, fixture.context)).toEqual(saved)
++      expect(reloaded.calls.searches).toBe(0)
++      expect(reloaded.calls.evaluations).toBe(0)
++      expect(reloaded.calls.previews).toBeGreaterThan(0)
++      expect(reloaded.calls.authority).toBeGreaterThan(0)
++      expect(await services.state.read(fixture.request, "cases", (state) => Object.keys(state.decisionResults ?? {}))).toEqual(before)
++      const retained = await services.results.read({ kind: "sensitivity", resultRef: saved.value.sensitivityResultRef }, fixture.context)
++      expect(retained.status === "ok" && digestSfValue(retained.value)).toBe(originalDigest)
++      const forged = structuredClone(stored.value)
++      forged.result.unresolvedConditions = forged.result.unresolvedConditions.filter((condition) => condition.reason !== "missing-category:training")
++      forged.resultDigest = digestSfValue(forged.result)
++      expect(await reloaded.verifier.verifySensitivity(binding.value, forged, fixture.context)).toBe(false)
++      fixture.revokeSource(fixture.scenario.baseRef)
++      expect((await reloaded.persistent.read(saved.value.sensitivityResultRef, fixture.context)).status).not.toBe("ok")
++    } finally { await fixture.cleanup() }
++  }, 180000)
++}

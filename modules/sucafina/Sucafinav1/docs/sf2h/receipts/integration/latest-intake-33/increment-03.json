@@ -1,0 +1,1330 @@
+{
+  "schema": "sf2-integration-increment-v1",
+  "mission": 33,
+  "increment": 3,
+  "candidate": "C7",
+  "previous_candidate": {
+    "symbol": "C6",
+    "commit": "52add8433f8ecf9d361ee635cda484142131ef84",
+    "tree": "efec3fadd92b1507a1c42bdf5aad48b7e778c17d"
+  },
+  "parent_commit": "b19606b73f1ffc5a9e58702e939f1aa788dabfa1",
+  "parent_tree": "561700c145767a16d42e8b2103bd0ea81d0b379f",
+  "authority_commit": "133312e39a9aa6d1cb51bed20625108c6cc79359",
+  "lease_epoch": "S0-C-e7-browser33",
+  "control_reconciled": "970ae24e36cae47dfa7e0df327e409d9cc3fcea7",
+  "scope": "Operations24 explicitly terminal post-C4 fixture/host/config deltas on Reports C6",
+  "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+  "source_tree": "9b18919a7bab9510dde3ead0176ed007ce13dd78",
+  "source_product_commit": "49d29bf4d6512d130307f46e145885949f213ea8",
+  "source_product_tree": "0d982446f0708975895b59fad3c94d0a53704f58",
+  "release": {
+    "state": "TERMINAL_SOURCE_EXPLICIT_WRITE_AUTHORITY_ENDED",
+    "handoff_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/HANDOFF.md",
+    "handoff_blob": "db119c0f9306619c47cf5258417c5ad961478231",
+    "delivery_blob": "435a754ca27d1e780853838ae06dab0f3e9ac3a3",
+    "mission33_authorization": "7150af3c3cea2a1dece40ffa3f13abe8fb10278d",
+    "consumer": "root sole sf2-stack writer; final dispatcher/acceptance S0"
+  },
+  "entries": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": "8ba8d97ec138265454507852a5ab50b600b96c60",
+      "postimage": "8230eb28f322dde255382b74280192f39844724d",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_product_commit": "49d29bf4d6512d130307f46e145885949f213ea8",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/postimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+      "source_blob": "8230eb28f322dde255382b74280192f39844724d",
+      "original_source_preimage": "8ba8d97ec138265454507852a5ab50b600b96c60",
+      "disposition": "EXACT_TERMINAL_DELTA"
+    },
+    {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": "141da754e380d7410da97f9ca44505880cca55c9",
+      "postimage": "2bb15622053039562aab716f9afce410071afaf3",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_product_commit": "49d29bf4d6512d130307f46e145885949f213ea8",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/postimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "source_blob": "fd63fd70922e9cc243626b52302ecd7774e4b478",
+      "original_source_preimage": "8364221434311400cae3007ea74cc67ddcfde765",
+      "disposition": "SELECTIVE_THREE_OPERATIONS_INCLUDES_ON_REPORTS_C6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": "508f4580d0decb1d5c97208fed650f51d8566045",
+      "postimage": "eddc60289524c374f970ea226632a030fc9b994d",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_product_commit": "49d29bf4d6512d130307f46e145885949f213ea8",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/postimages/modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts.txt",
+      "source_blob": "eddc60289524c374f970ea226632a030fc9b994d",
+      "original_source_preimage": "508f4580d0decb1d5c97208fed650f51d8566045",
+      "disposition": "EXACT_TERMINAL_DELTA"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/DELIVERY.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "435a754ca27d1e780853838ae06dab0f3e9ac3a3",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/DELIVERY.json",
+      "source_blob": "435a754ca27d1e780853838ae06dab0f3e9ac3a3",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/HANDOFF.md",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "db119c0f9306619c47cf5258417c5ad961478231",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/HANDOFF.md",
+      "source_blob": "db119c0f9306619c47cf5258417c5ad961478231",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/START.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "074ad0a95eb0d2af67a16edf48fbf36500e48eeb",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/START.json",
+      "source_blob": "074ad0a95eb0d2af67a16edf48fbf36500e48eeb",
+      "previous_original_blob": "074ad0a95eb0d2af67a16edf48fbf36500e48eeb",
+      "original_path_disposition": "ALREADY_IDENTICAL",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/advanced-input-disposition-c3.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "9d2e2b607104e2cf4dd04f34b8bc6004e2013421",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/advanced-input-disposition-c3.json",
+      "source_blob": "9d2e2b607104e2cf4dd04f34b8bc6004e2013421",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/advanced-input-disposition-c4.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "3e9b805ebe21367fee82999aef60539ed1286f85",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/advanced-input-disposition-c4.json",
+      "source_blob": "3e9b805ebe21367fee82999aef60539ed1286f85",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/advanced-input-disposition.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "d23a870d6d283b517e0fbc529393c93f265a7e51",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/advanced-input-disposition.json",
+      "source_blob": "d23a870d6d283b517e0fbc529393c93f265a7e51",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "f6ada6559244762cc7461f844d968c43e320dc28",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/README.md",
+      "source_blob": "f6ada6559244762cc7461f844d968c43e320dc28",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/complete-followup.patch",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "16895fe4784f24363275d7c1a5fdcbd1b5ae36d8",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/complete-followup.patch",
+      "source_blob": "16895fe4784f24363275d7c1a5fdcbd1b5ae36d8",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/manifest.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "aaae4866cecdcd87a930e7ef303f4dd46b35e600",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/manifest.json",
+      "source_blob": "aaae4866cecdcd87a930e7ef303f4dd46b35e600",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/postimages/modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts.txt",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "eddc60289524c374f970ea226632a030fc9b994d",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/postimages/modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts.txt",
+      "source_blob": "eddc60289524c374f970ea226632a030fc9b994d",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/postimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "8230eb28f322dde255382b74280192f39844724d",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/postimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+      "source_blob": "8230eb28f322dde255382b74280192f39844724d",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/postimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/postimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+      "source_blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/postimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "fd63fd70922e9cc243626b52302ecd7774e4b478",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/postimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "source_blob": "fd63fd70922e9cc243626b52302ecd7774e4b478",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/preimages/modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts.txt",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "508f4580d0decb1d5c97208fed650f51d8566045",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/preimages/modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts.txt",
+      "source_blob": "508f4580d0decb1d5c97208fed650f51d8566045",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/preimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "8ba8d97ec138265454507852a5ab50b600b96c60",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/preimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+      "source_blob": "8ba8d97ec138265454507852a5ab50b600b96c60",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/preimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/preimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+      "source_blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/preimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "8364221434311400cae3007ea74cc67ddcfde765",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/preimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "source_blob": "8364221434311400cae3007ea74cc67ddcfde765",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/regression-request.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "41f46f41a06a50e41271f9c4965002aab6359878",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/regression-request.json",
+      "source_blob": "41f46f41a06a50e41271f9c4965002aab6359878",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/shared.patch",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "b433efe06f957a816c6525433352556816b47c19",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/shared.patch",
+      "source_blob": "b433efe06f957a816c6525433352556816b47c19",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/test-source-intake.patch",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "5f175a76ceb0d63c4b596ba36703844a3ffa32a3",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/test-source-intake.patch",
+      "source_blob": "5f175a76ceb0d63c4b596ba36703844a3ffa32a3",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/verification.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "7808b4034d43e0fd76c5b6d6be84a037b6d96966",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly-c4/verification.json",
+      "source_blob": "7808b4034d43e0fd76c5b6d6be84a037b6d96966",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "c03789a79969247cae26ac3ca300d9ca2b2ff48c",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/README.md",
+      "source_blob": "c03789a79969247cae26ac3ca300d9ca2b2ff48c",
+      "previous_original_blob": "d5a63dbf2d094d751df1e3a67b37e6ba3906312c",
+      "original_path_disposition": "SOURCE_ADVANCED_PRESERVE_PREVIOUS_RECORD",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/direct-bindings.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "dc741392279b3c4b6b4cd630db1bbc73d80809e8",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/direct-bindings.json",
+      "source_blob": "dc741392279b3c4b6b4cd630db1bbc73d80809e8",
+      "previous_original_blob": "dc741392279b3c4b6b4cd630db1bbc73d80809e8",
+      "original_path_disposition": "ALREADY_IDENTICAL",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/manifest.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "43870a84cc0a4288a38f6e05c33de325d8997a89",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/manifest.json",
+      "source_blob": "43870a84cc0a4288a38f6e05c33de325d8997a89",
+      "previous_original_blob": "065b53c497565e901a73bf69956446911a3e41da",
+      "original_path_disposition": "SOURCE_ADVANCED_PRESERVE_PREVIOUS_RECORD",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/patch-verification.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "17c7b298af3b02434b1e053fa44ce2754d6889a8",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/patch-verification.json",
+      "source_blob": "17c7b298af3b02434b1e053fa44ce2754d6889a8",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/postimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "8230eb28f322dde255382b74280192f39844724d",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/postimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+      "source_blob": "8230eb28f322dde255382b74280192f39844724d",
+      "previous_original_blob": "8ba8d97ec138265454507852a5ab50b600b96c60",
+      "original_path_disposition": "SOURCE_ADVANCED_PRESERVE_PREVIOUS_RECORD",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/postimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/postimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+      "source_blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "previous_original_blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "original_path_disposition": "ALREADY_IDENTICAL",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/postimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "fd63fd70922e9cc243626b52302ecd7774e4b478",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/postimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "source_blob": "fd63fd70922e9cc243626b52302ecd7774e4b478",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/preimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "3dd5760da92346e267a3cc767c69c4d8bb51b31c",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/preimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+      "source_blob": "3dd5760da92346e267a3cc767c69c4d8bb51b31c",
+      "previous_original_blob": "3dd5760da92346e267a3cc767c69c4d8bb51b31c",
+      "original_path_disposition": "ALREADY_IDENTICAL",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/preimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "7224825eb470a2f172e7dc32172f83a6b05a5787",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/preimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+      "source_blob": "7224825eb470a2f172e7dc32172f83a6b05a5787",
+      "previous_original_blob": "7224825eb470a2f172e7dc32172f83a6b05a5787",
+      "original_path_disposition": "ALREADY_IDENTICAL",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/preimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "8364221434311400cae3007ea74cc67ddcfde765",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/preimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "source_blob": "8364221434311400cae3007ea74cc67ddcfde765",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/regression-request.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "41f46f41a06a50e41271f9c4965002aab6359878",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/regression-request.json",
+      "source_blob": "41f46f41a06a50e41271f9c4965002aab6359878",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/shared.patch",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "4c02d343f3de4af9ec36e4b612be3435c46fada6",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/shared.patch",
+      "source_blob": "4c02d343f3de4af9ec36e4b612be3435c46fada6",
+      "previous_original_blob": "50b2fdf2211c3001c90810ea7c49ec38ee6bba26",
+      "original_path_disposition": "SOURCE_ADVANCED_PRESERVE_PREVIOUS_RECORD",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/boundary-attempt-01.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "a1f8644c087f13f988e8f9ef02eed78c55c7f509",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/boundary-attempt-01.json",
+      "source_blob": "a1f8644c087f13f988e8f9ef02eed78c55c7f509",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/boundary-attempt-02.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "196982e2a9079e8ef44c9d6be80eb1698cf9c780",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/boundary-attempt-02.json",
+      "source_blob": "196982e2a9079e8ef44c9d6be80eb1698cf9c780",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/boundary-attempt-03.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "34c59316798c47cb1e2423a83f6a4da78c01be4c",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/boundary-attempt-03.json",
+      "source_blob": "34c59316798c47cb1e2423a83f6a4da78c01be4c",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/criteria.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "2f9035adac40854513e6e5f064d097195145d071",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/criteria.json",
+      "source_blob": "2f9035adac40854513e6e5f064d097195145d071",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/dispatch-ledger.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "daa4c9d073ef5b569c3422be2e51ae81b76b4abf",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/dispatch-ledger.json",
+      "source_blob": "daa4c9d073ef5b569c3422be2e51ae81b76b4abf",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/evidence/benchmark-runtime.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "9e26dfeeb6e641a33dae4961196235bdb965b21b",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/benchmark-runtime.json",
+      "source_blob": "9e26dfeeb6e641a33dae4961196235bdb965b21b",
+      "previous_original_blob": "9e26dfeeb6e641a33dae4961196235bdb965b21b",
+      "original_path_disposition": "ALREADY_IDENTICAL",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/evidence/playwright-runtime.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "a9f71f384cb6c9811805051796793fbe8e784a55",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/playwright-runtime.json",
+      "source_blob": "a9f71f384cb6c9811805051796793fbe8e784a55",
+      "previous_original_blob": "a9f71f384cb6c9811805051796793fbe8e784a55",
+      "original_path_disposition": "ALREADY_IDENTICAL",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/evidence/playwright-selection.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "2bec0465fe4f964be11868063d31deb26d6ba767",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/playwright-selection.json",
+      "source_blob": "2bec0465fe4f964be11868063d31deb26d6ba767",
+      "previous_original_blob": "2bec0465fe4f964be11868063d31deb26d6ba767",
+      "original_path_disposition": "ALREADY_IDENTICAL",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/evidence/request.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "518e78f5ac81c8aa9963da0cce5445886a6f67af",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/request.json",
+      "source_blob": "518e78f5ac81c8aa9963da0cce5445886a6f67af",
+      "previous_original_blob": "518e78f5ac81c8aa9963da0cce5445886a6f67af",
+      "original_path_disposition": "ALREADY_IDENTICAL",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/evidence/source-checks-01/revisions.txt",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "60ecac4b73177fa5eecd97424f39732d12ceedc6",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/source-checks-01/revisions.txt",
+      "source_blob": "60ecac4b73177fa5eecd97424f39732d12ceedc6",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/final-disposition.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "c95c7077f103814c2653c4e5c8151d7bfcfa81ee",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/final-disposition.json",
+      "source_blob": "c95c7077f103814c2653c4e5c8151d7bfcfa81ee",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/helper-changes.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "3331c71dbe515ffbce1b641c2e7002c7e466272d",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/helper-changes.json",
+      "source_blob": "3331c71dbe515ffbce1b641c2e7002c7e466272d",
+      "previous_original_blob": "3331c71dbe515ffbce1b641c2e7002c7e466272d",
+      "original_path_disposition": "ALREADY_IDENTICAL",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/input-closure.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "915aba94db910fe0dea60e31e3e3919090c3b90b",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/input-closure.json",
+      "source_blob": "915aba94db910fe0dea60e31e3e3919090c3b90b",
+      "previous_original_blob": "915aba94db910fe0dea60e31e3e3919090c3b90b",
+      "original_path_disposition": "ALREADY_IDENTICAL",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/input-subtrees.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "cec432efe6d3c88958aea4be13e4344427915ce6",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/input-subtrees.json",
+      "source_blob": "cec432efe6d3c88958aea4be13e4344427915ce6",
+      "previous_original_blob": "cec432efe6d3c88958aea4be13e4344427915ce6",
+      "original_path_disposition": "ALREADY_IDENTICAL",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/nominal-request.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "9677c3c3dd034e9b94ffa11bcd7ddf03fd219d7a",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/nominal-request.json",
+      "source_blob": "9677c3c3dd034e9b94ffa11bcd7ddf03fd219d7a",
+      "previous_original_blob": "9677c3c3dd034e9b94ffa11bcd7ddf03fd219d7a",
+      "original_path_disposition": "ALREADY_IDENTICAL",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/nominal-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "d77c15224842c002d66f2e78942c9c899d378820",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/nominal-run.json",
+      "source_blob": "d77c15224842c002d66f2e78942c9c899d378820",
+      "previous_original_blob": "f54e9d5d53cee25e3f4f61750c10454cdd1b430e",
+      "original_path_disposition": "SOURCE_ADVANCED_PRESERVE_PREVIOUS_RECORD",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/receipt-log-correction.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "60415923ac25b6cc3a1cc09d22098527d3201b1e",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/receipt-log-correction.json",
+      "source_blob": "60415923ac25b6cc3a1cc09d22098527d3201b1e",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/source-checks-01.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "d10819932a6c8cd92881d3e8c8a11522ddceebb3",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/source-checks-01.json",
+      "source_blob": "d10819932a6c8cd92881d3e8c8a11522ddceebb3",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/source-checks-02.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "949cb52632978fe80a5ab8215da203f33f899bb5",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/source-checks-02.json",
+      "source_blob": "949cb52632978fe80a5ab8215da203f33f899bb5",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/source-checks-03.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "7669d8e6c442a7f1da8b09445db8746ba8daff9f",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/source-checks-03.json",
+      "source_blob": "7669d8e6c442a7f1da8b09445db8746ba8daff9f",
+      "previous_original_blob": null,
+      "original_path_disposition": "NEW",
+      "disposition": "COPY_EXACT_SOURCE_RECEIPT_IN_ADDITIVE_NAMESPACE_PRESERVE_ALL_ORIGINALS"
+    }
+  ],
+  "counts": {
+    "material": 3,
+    "source_receipts": 53,
+    "preserved_original_receipts": 18,
+    "unchanged_source_material": 6
+  },
+  "no_ops_retained": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+      "blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "mode": "100644",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "disposition": "KEEP_CURRENT_EXACT"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+      "mode": "100644",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "disposition": "KEEP_CURRENT_EXACT"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "blob": "7136131cdb713abecccde2c29e8b6c1204b60a6c",
+      "mode": "100644",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "disposition": "KEEP_CURRENT_EXACT"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "blob": "c03cf0ec947f10548557643dd8a57a39e098fef0",
+      "mode": "100644",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "disposition": "KEEP_CURRENT_EXACT"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "blob": "d60be2f87aa210c9700fba276932a6f443264e4f",
+      "mode": "100644",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "disposition": "KEEP_CURRENT_EXACT"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/selection.test.ts",
+      "blob": "ad277ff25b728397993ea8d57b492c8ebe5eab90",
+      "mode": "100644",
+      "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+      "disposition": "KEEP_CURRENT_EXACT"
+    }
+  ],
+  "assembly": {
+    "original_complete_patch": "16895fe4784f24363275d7c1a5fdcbd1b5ae36d8",
+    "original_manifest": "aaae4866cecdcd87a930e7ef303f4dd46b35e600",
+    "reconciled_patch": "patches/operations24-after-reports.patch",
+    "config_preimage": "141da754e380d7410da97f9ca44505880cca55c9",
+    "config_postimage": "2bb15622053039562aab716f9afce410071afaf3",
+    "preserved_include_count": 49,
+    "new_include_count": 52,
+    "added_includes": [
+      "./sucafina/operations.spec.ts",
+      "./sucafina/operations-support/**/*.ts",
+      "./sucafina/wp04/host.ts"
+    ],
+    "preservation": "All Reports and earlier includes, compiler options and existing order retained; exactly three new Operations includes."
+  },
+  "source_receipts": {
+    "source_tree": "4d05c1e1d335340e2c8187724e4ece99525d2e15",
+    "original_target_tree": "1b814e3006c770c59b8b95fe35375a0acfe835d8",
+    "strategy": "Full source subtree may be copied by exact blobs into proposed additive namespace to preserve all relative receipt links and all original18 C4 records; no old receipt deletion or rewriting is proposed.",
+    "source_counts": {
+      "source": 53,
+      "current": 18,
+      "identical": 13,
+      "advanced": 5,
+      "new": 35
+    }
+  },
+  "provenance_correction": "operations24-revision-disposition-correction.json",
+  "preserved_invariants": [
+    "C4 identity unchanged",
+    "all earlier receipt records unchanged",
+    "source result identity unchanged",
+    "all five nominal test bodies and all boundary expectations retained",
+    "no whole source tree merge"
+  ],
+  "source_runs": [
+    {
+      "id": 43641173533,
+      "status": "completed",
+      "conclusion": "failure",
+      "head_sha": "ca244e5b74ebb2f9a20262b4e7448aa7d528a15b",
+      "source_W": "49d29bf4d6512d130307f46e145885949f213ea8",
+      "observed_source": "3 PASS /2 FAIL"
+    },
+    {
+      "id": 43641839432,
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "837ff32d178fc754a38e9b42b117c49c5390257a",
+      "observed_source": "generation/module typecheck/guards PASS with11 inherited warnings"
+    }
+  ],
+  "source_nominal_status": "0 PASS/5 FAIL before UI on historical d8ab W; source body unchanged; not proof of C7",
+  "pending": [
+    {
+      "owner": "S0/environment",
+      "action": "Provide previously approved real ClamD via SF_OPERATIONS_CLAMD_PORT; do not synthesize verdict or provision services here."
+    },
+    {
+      "owner": "S0 dispatcher",
+      "action": "Run the seven auxiliary cases and five nominal cases on the newly integrated candidate, plus E2E typechecks; current candidate result NOT_RUN."
+    },
+    {
+      "owner": "Operations/C06/native/human proof owners",
+      "action": "Close C06 material, native/AM and human timing obligations under original criteria."
+    }
+  ],
+  "verification": {
+    "preimages": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+        "expected": "8ba8d97ec138265454507852a5ab50b600b96c60",
+        "actual": "8ba8d97ec138265454507852a5ab50b600b96c60",
+        "mode": "100644",
+        "pass": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+        "expected": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+        "actual": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+        "mode": "100644",
+        "pass": true
+      },
+      {
+        "path": "packages/app-shell/e2e/tsconfig.json",
+        "expected": "141da754e380d7410da97f9ca44505880cca55c9",
+        "actual": "141da754e380d7410da97f9ca44505880cca55c9",
+        "mode": "100644",
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+        "expected": "508f4580d0decb1d5c97208fed650f51d8566045",
+        "actual": "508f4580d0decb1d5c97208fed650f51d8566045",
+        "mode": "100644",
+        "pass": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+        "expected": "bab6a804e5f082cc60eb6f27209070b552981035",
+        "actual": "bab6a804e5f082cc60eb6f27209070b552981035",
+        "mode": "100644",
+        "pass": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+        "expected": "7136131cdb713abecccde2c29e8b6c1204b60a6c",
+        "actual": "7136131cdb713abecccde2c29e8b6c1204b60a6c",
+        "mode": "100644",
+        "pass": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+        "expected": "c03cf0ec947f10548557643dd8a57a39e098fef0",
+        "actual": "c03cf0ec947f10548557643dd8a57a39e098fef0",
+        "mode": "100644",
+        "pass": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+        "expected": "d60be2f87aa210c9700fba276932a6f443264e4f",
+        "actual": "d60be2f87aa210c9700fba276932a6f443264e4f",
+        "mode": "100644",
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/selection.test.ts",
+        "expected": "ad277ff25b728397993ea8d57b492c8ebe5eab90",
+        "actual": "ad277ff25b728397993ea8d57b492c8ebe5eab90",
+        "mode": "100644",
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/DELIVERY.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/HANDOFF.md",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/START.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/advanced-input-disposition-c3.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/advanced-input-disposition-c4.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/advanced-input-disposition.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/README.md",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/complete-followup.patch",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/manifest.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/postimages/modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts.txt",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/postimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/postimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/postimages/packages/app-shell/e2e/tsconfig.json.txt",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/preimages/modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts.txt",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/preimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/preimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/preimages/packages/app-shell/e2e/tsconfig.json.txt",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/regression-request.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/shared.patch",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/test-source-intake.patch",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly-c4/verification.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/README.md",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/direct-bindings.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/manifest.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/patch-verification.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/postimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/postimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/postimages/packages/app-shell/e2e/tsconfig.json.txt",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/preimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/preimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/preimages/packages/app-shell/e2e/tsconfig.json.txt",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/regression-request.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/assembly/shared.patch",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/boundary-attempt-01.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/boundary-attempt-02.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/boundary-attempt-03.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/criteria.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/dispatch-ledger.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/evidence/benchmark-runtime.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/evidence/playwright-runtime.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/evidence/playwright-selection.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/evidence/request.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/evidence/source-checks-01/revisions.txt",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/final-disposition.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/helper-changes.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/input-closure.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/input-subtrees.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/nominal-request.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/nominal-run.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/receipt-log-correction.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/source-checks-01.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/source-checks-02.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-outputs/operations24/source-checks-03.json",
+        "expected": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1",
+        "expected": "1b814e3006c770c59b8b95fe35375a0acfe835d8",
+        "actual": "1b814e3006c770c59b8b95fe35375a0acfe835d8",
+        "mode": "040000",
+        "pass": true
+      }
+    ],
+    "method": "Pinned Git objects, exact blob comparison and text-only three-include reconciliation; no product execution.",
+    "tests": "NOT_RUN",
+    "ci": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "AM": "NOT_RUN",
+    "source_PASS_transferred": false
+  },
+  "acceptance": "INTEGRATED_STATIC_ONLY; exact material C7 identity follows in candidate-C7.json",
+  "global_release": false
+}

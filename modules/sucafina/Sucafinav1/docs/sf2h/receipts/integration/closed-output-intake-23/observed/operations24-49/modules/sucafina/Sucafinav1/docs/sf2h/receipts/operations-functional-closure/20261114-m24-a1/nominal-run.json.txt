@@ -1,0 +1,255 @@
+{
+  "schema": "operations-nominal-run-v1",
+  "mission": 24,
+  "run_id": 43639526175,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43639526175",
+  "status": "completed",
+  "conclusion": "failure",
+  "W": {
+    "sha": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+    "tree": "b9223690f64415a936eb38ad6f8796b21a8a7966",
+    "kind": "published full composed product, predecessor own helpers"
+  },
+  "S": {
+    "sha": "a54db382b9425e68f0c1dee1754aae80e2665726",
+    "tree": "197de12267331c7aa91e03b2f27a57fdc666a571",
+    "branch": "ci-run-linux-astra-wp04-d8ab1d33-88a94dc8fd-m24a1"
+  },
+  "request": {
+    "package": "app",
+    "packageSelector": "packages/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/operations.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "request_blob": "9677c3c3dd034e9b94ffa11bcd7ddf03fd219d7a",
+  "request_sha256": "88a94dc8fd9952a64381646a567b7c349f4c3ccad8c63e818269a6cd57a8ab60",
+  "envelope": {
+    "w_tree": "b9223690f64415a936eb38ad6f8796b21a8a7966",
+    "s_tree": "197de12267331c7aa91e03b2f27a57fdc666a571",
+    "non_request_changed": [],
+    "missing": [],
+    "request": {
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9677c3c3dd034e9b94ffa11bcd7ddf03fd219d7a",
+      "size": 277,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/9677c3c3dd034e9b94ffa11bcd7ddf03fd219d7a"
+    }
+  },
+  "jobs": [
+    {
+      "id": 132583728635,
+      "name": "test (ubuntu-24.04)",
+      "conclusion": "failure"
+    },
+    {
+      "id": 132584482197,
+      "name": "cleanup",
+      "conclusion": "success"
+    }
+  ],
+  "selection": {
+    "files": [
+      "e2e/sucafina/operations.spec.ts"
+    ],
+    "collected": 5,
+    "body_attempts": 5,
+    "retries": 0,
+    "skipped": 0,
+    "passed": 0,
+    "failed": 5,
+    "business_ui_actions_reached": 0,
+    "functional_acceptance": "BLOCKED_MOUNT_NOT_PASS"
+  },
+  "failure": {
+    "stage": "first login helper -> readManifest -> ENOENT",
+    "path": "packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+    "line": 19,
+    "cause": "Shared wp04BrowserSelected recognizes only old Procurement spec; no Operations host manifest is produced."
+  },
+  "tests": [
+    {
+      "title": "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+      "line": 13,
+      "status": "failed",
+      "retry": 0,
+      "duration_ms": 175,
+      "error": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.",
+      "criteria": [
+        {
+          "type": "criteria-scope",
+          "description": "WP04.T03.CHK.01; WP04.T01.INV.01; WP04.T01.CMP.02"
+        }
+      ],
+      "attachments": [
+        "screenshot",
+        "video",
+        "error-context",
+        "trace"
+      ]
+    },
+    {
+      "title": "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+      "line": 18,
+      "status": "failed",
+      "retry": 0,
+      "duration_ms": 210,
+      "error": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.",
+      "criteria": [
+        {
+          "type": "criteria-scope",
+          "description": "WP04.T03.CHK.02; WP04.T03.CHK.03; WP04.T03.INV.02"
+        }
+      ],
+      "attachments": [
+        "screenshot",
+        "video",
+        "error-context",
+        "trace"
+      ]
+    },
+    {
+      "title": "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+      "line": 23,
+      "status": "failed",
+      "retry": 0,
+      "duration_ms": 188,
+      "error": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.",
+      "criteria": [
+        {
+          "type": "criteria-scope",
+          "description": "WP04.T03.CHK.03; WP04.T03.CMP.01; WP04.CMP.02"
+        }
+      ],
+      "attachments": [
+        "screenshot",
+        "video",
+        "error-context",
+        "trace"
+      ]
+    },
+    {
+      "title": "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+      "line": 28,
+      "status": "failed",
+      "retry": 0,
+      "duration_ms": 185,
+      "error": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.",
+      "criteria": [
+        {
+          "type": "criteria-scope",
+          "description": "WP06.T01.INV.01; WP06.T01.QLT.01; WP06.T02.INV.01; WP06.T02.INV.02; WP06.T02.QLT.18; WP06.T03.CHK.04; WP06.T03.INV.01; WP06.T03.INV.03; WP06.T03.QLT.02; WP06.T03.SUC.02; WP06.T04.CHK.02; WP06.T04.INV.01; WP06.T04.QLT.01"
+        }
+      ],
+      "attachments": [
+        "screenshot",
+        "video",
+        "error-context",
+        "trace"
+      ]
+    },
+    {
+      "title": "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+      "line": 33,
+      "status": "failed",
+      "retry": 0,
+      "duration_ms": 184,
+      "error": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.",
+      "criteria": [
+        {
+          "type": "criteria-scope",
+          "description": "WP06.T05.CHK.02; WP06.T05.CHK.19; WP06.T05.INV.01; WP06.T05.QLT.18; WP06.T05.QLT.19; WP06.T05.CMP.19; WP06.T05.SUC.19"
+        }
+      ],
+      "attachments": [
+        "screenshot",
+        "video",
+        "error-context",
+        "trace"
+      ]
+    }
+  ],
+  "stats": {
+    "startTime": "2026-11-14T20:51:31.321Z",
+    "duration": 37820.913,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 5,
+    "flaky": 0
+  },
+  "artifacts": [
+    {
+      "id": 14131128177,
+      "name": "playwright-ubuntu-24.04-1",
+      "size_in_bytes": 739334,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14131128177",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14131128177/zip",
+      "expired": false,
+      "created_at": "2026-11-14T20:52:09Z",
+      "expires_at": "2026-11-21T20:52:09Z",
+      "updated_at": "2026-11-14T20:52:09Z",
+      "digest": "sha256:6ac2f68af1f5900be9a27fa61395035b03404020ed1b969e3e97f67a17f10eef",
+      "workflow_run": {
+        "id": 43639526175,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "ci-run-linux-astra-wp04-d8ab1d33-88a94dc8fd-m24a1",
+        "head_sha": "a54db382b9425e68f0c1dee1754aae80e2665726"
+      }
+    }
+  ],
+  "artifact_inspection": {
+    "transport": "GitHub MCP artifact download; inspected returned artifact bytes",
+    "sha256_verified": "6ac2f68af1f5900be9a27fa61395035b03404020ed1b969e3e97f67a17f10eef",
+    "files": [
+      {
+        "path": "evidence/request.json",
+        "sha256": "cf6e638aff9e14c7f3851745caaf9f37cfb1a75a1ce3f6cb29ae302edf896a5a"
+      },
+      {
+        "path": "evidence/playwright-selection.json",
+        "sha256": "80a9a9858d4edeb13d31e6a10b1cc789fa65e29feab665d0558d5725801414d4"
+      },
+      {
+        "path": "evidence/playwright-runtime.json",
+        "sha256": "fb2af1971ec94dec3e2866f8def10f44978589965eb0924315ee2c42d022019e"
+      },
+      {
+        "path": "evidence/benchmark-runtime.json",
+        "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      }
+    ],
+    "runtime_report_preserved": true
+  },
+  "omni_positive_control": {
+    "status": "NOT_APPLICABLE",
+    "reason": "Canonical script/test-ci.ts report() requires a nonce-bound verdict only when runner === bun and the package preloads test-omni-control.ts. This request uses Playwright; no Bun control verdict is required or inferred.",
+    "source_path": "script/test-ci.ts",
+    "source_blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+    "observed": "One workflow nonce, no positive-control verdict line; no Omni execution proof claimed."
+  },
+  "dedup": {
+    "recent_runs_total": 954,
+    "matching_branch_runs_before": 0,
+    "in_progress_before": 0,
+    "queued_before": 0,
+    "old_collection_runs_not_reused": [
+      43633572790,
+      43633311440
+    ]
+  },
+  "limitations": [
+    "No corrected mission24 helper was present in W; this execution proves the existing composed mount failure only.",
+    "No automatic rerun of an unchanged failing mount.",
+    "Collection JSON marks unexecuted listing entries skipped; actual runtime report has skipped=0.",
+    "Five attempted bodies are not five completed business journeys."
+  ]
+}

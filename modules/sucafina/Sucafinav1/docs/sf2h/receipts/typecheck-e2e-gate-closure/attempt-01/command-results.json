@@ -1,0 +1,86 @@
+{
+  "schema": "sf2-typecheck-command-results-v1",
+  "source_snapshot": "402a091485e11d60dff433049c7dedd7fcead687",
+  "tooling_overlay": "intake-files.json",
+  "checks": [
+    {
+      "name": "Typecheck Atlas",
+      "workflow_job": "sf-static",
+      "cwd": "modules/atlas/boundary",
+      "command": "bun typecheck",
+      "package_script": "tsgo --noEmit",
+      "result": "NOT_RUN",
+      "exit_code": null,
+      "diagnostics": null,
+      "reason": "Bun and installed workspace dependencies unavailable."
+    },
+    {
+      "name": "Typecheck Sucafina",
+      "workflow_job": "sf-static",
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck",
+      "package_script": "bun --cwd Sucafinav1 typecheck",
+      "result": "NOT_RUN",
+      "exit_code": null,
+      "diagnostics": null,
+      "reason": "Bun and installed workspace dependencies unavailable."
+    },
+    {
+      "name": "Typecheck Core",
+      "workflow_job": "sf-static",
+      "cwd": "packages/core",
+      "command": "bun typecheck",
+      "package_script": "tsgo --noEmit",
+      "result": "NOT_RUN",
+      "exit_code": null,
+      "diagnostics": null,
+      "reason": "Bun and installed workspace dependencies unavailable."
+    },
+    {
+      "name": "Typecheck CLI",
+      "workflow_job": "sf-static",
+      "cwd": "apps/cli",
+      "command": "bun typecheck",
+      "package_script": "tsgo --noEmit",
+      "result": "NOT_RUN",
+      "exit_code": null,
+      "diagnostics": null,
+      "reason": "Bun and installed workspace dependencies unavailable."
+    },
+    {
+      "name": "Typecheck app",
+      "workflow_job": "sf-static",
+      "cwd": "packages/app-shell",
+      "command": "bun typecheck",
+      "package_script": "tsgo -b",
+      "result": "NOT_RUN",
+      "exit_code": null,
+      "diagnostics": null,
+      "reason": "Bun and installed workspace dependencies unavailable."
+    },
+    {
+      "name": "Sucafina E2E effective configuration",
+      "workflow_job": "sf-e2e-typecheck",
+      "cwd": "packages/app-shell",
+      "command": "bun run typecheck:sf-e2e --showConfig",
+      "result": "NOT_RUN",
+      "exit_code": null,
+      "reason": "Bun and installed workspace dependencies unavailable.",
+      "required_inputs_receipt": "declared-inputs.json"
+    },
+    {
+      "name": "Sucafina E2E compiler program",
+      "workflow_job": "sf-e2e-typecheck",
+      "cwd": "packages/app-shell",
+      "command": "bun run typecheck:sf-e2e --listFiles --pretty false",
+      "result": "NOT_RUN",
+      "exit_code": null,
+      "diagnostics": null,
+      "reason": "Bun and installed workspace dependencies unavailable.",
+      "static_graph_receipt": "static-graph.json",
+      "actual_program_receipt": "Produced by authorized final run as inclusion.json; absent in this mission."
+    }
+  ],
+  "authority": "Session23 integrates; S0 owns authorized final execution. No new dispatcher, wrapper test or workflow fleet.",
+  "zero_errors_claimed": false
+}

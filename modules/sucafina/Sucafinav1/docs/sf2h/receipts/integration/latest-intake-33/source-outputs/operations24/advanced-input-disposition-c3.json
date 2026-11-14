@@ -1,0 +1,232 @@
+{
+  "schema": "sf2-operations24-advanced-input-disposition-v1",
+  "mission": 24,
+  "observed_at": "2026-11-14T21:09:57Z",
+  "supplement_to": "advanced-input-disposition.json",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reference_scope": {
+    "previous_checkpoint": "c7c2ffdc113764f7bcf67c07ef2e86b49004bbb1",
+    "material_candidate": "C3",
+    "product_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+    "product_tree": "5a0f4aae93e4df629816982a36a0720754c4d3d9",
+    "documentary_checkpoint": "0d5bd54a109774d4e3296e00c276be341fe39b00",
+    "checkpoint_tree": "c056602b26eb044fe5e2e18a5a05bd2bd2d5a83a",
+    "state": "FROZEN_IDENTITY_UNQUALIFIED",
+    "candidate_C2_unchanged": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+    "tested_Operations_W_unchanged": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+    "source_green_transferred": false
+  },
+  "chain": [
+    {
+      "commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+      "parent": "c7c2ffdc113764f7bcf67c07ef2e86b49004bbb1",
+      "at": "2026-11-14T20:58:46Z",
+      "disposition": "Decisions20 source23 paths plus1 shared HTTP assembly and4 integrator receipts."
+    },
+    {
+      "commit": "0d5bd54a109774d4e3296e00c276be341fe39b00",
+      "parent": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+      "at": "2026-11-14T21:04:29Z",
+      "disposition": "Four documentary records only; C3 product identity retained."
+    }
+  ],
+  "operations_disposition": {
+    "consumer_ack": "NOT_OBSERVED_AT_PINNED_CHECKPOINT",
+    "ack03_scope": "Decisions20 only; source PR40@556079fe2fb97c824504ec60a47798c6e0553539.",
+    "original_spec_and_shared_host_unchanged": true,
+    "planned_assembly_is_not_ack": "candidate-C3.next_material_change mentions prospective Operations24 assembly, but contains no Operations source/path/blob intake or ACK.",
+    "current_source_authority": "Root reports mission24 source remains active/nonterminal. No session23 intake authorization exists until explicit terminal handoff; the prospective candidate narrative does not supersede that instruction.",
+    "consequence": "Publish own terminal source and exact complete shared proposal. Session23 remains sole integrator and must reconcile the pinned terminal output and current preimages. Do not count this C3 advance as proof of Operations execution or helper intake."
+  },
+  "unchanged_shared_and_operations_inputs": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "blob": "3dd5760da92346e267a3cc767c69c4d8bb51b31c",
+      "readback_ref": "0d5bd54a109774d4e3296e00c276be341fe39b00"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+      "blob": "7224825eb470a2f172e7dc32172f83a6b05a5787",
+      "readback_ref": "0d5bd54a109774d4e3296e00c276be341fe39b00"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+      "readback_ref": "0d5bd54a109774d4e3296e00c276be341fe39b00"
+    },
+    {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "blob": "8364221434311400cae3007ea74cc67ddcfde765",
+      "readback_ref": "0d5bd54a109774d4e3296e00c276be341fe39b00"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+      "readback_ref": "0d5bd54a109774d4e3296e00c276be341fe39b00"
+    }
+  ],
+  "relevant_product_change": {
+    "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+    "preimage_blob": "81b7cd4ef5a73670642df42a2f891b9d95420dac",
+    "postimage_blob": "406187a4fe4e6f59a2cca5dc84c83758a063cd3a",
+    "observed_postimage": "406187a4fe4e6f59a2cca5dc84c83758a063cd3a",
+    "source_commit": "556079fe2fb97c824504ec60a47798c6e0553539",
+    "source_instruction_blob": "922c89d144fc3b31dc8d16a12be2d53d44000108",
+    "source_patch_blob": "94aa40a748a709c327909d75013b68b35f083f1f",
+    "changes": [
+      "Import decisionAlternativesForm and decisionAlternativesScript.",
+      "Mount alternatives form after decisionEditForm and before decisionChoiceForm.",
+      "Mount alternatives script after decisionEditScript and before decisionChoiceScript."
+    ],
+    "disposition": "Any future HTTP patch must use current406187a4 postimage and preserve these three Decisions hunks. Host/selection/E2E tsconfig proposals retain the unchanged file preimages above.",
+    "execution": "NOT_RUN_ON_C3"
+  },
+  "changed_nonreceipt_inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+      "preimage": null,
+      "postimage": "a731b36427ffbdbc30d19b3b7785be16e5c9747d",
+      "method": "EXACT_SOURCE_ADDITION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+      "preimage": "ebc7763548e3eaf476f36c17de72e1800f0fee2d",
+      "postimage": "27bb8adbf3ca2fefce4bc8c756de7f12ce990baa",
+      "method": "OWNER_RECONCILED_PR43_VIA_22_EXACT_TARGET_HUNKS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-initial-alternatives/forms.test.ts",
+      "preimage": null,
+      "postimage": "aad4ce77254f195285e086371c06bae79744cbba",
+      "method": "EXACT_SOURCE_ADDITION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-initial-alternatives/intention.test.ts",
+      "preimage": null,
+      "postimage": "e1badb81f98aaa81d8e1caefa905eb97326ca758",
+      "method": "EXACT_SOURCE_ADDITION"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/alternative-response.ts",
+      "preimage": null,
+      "postimage": "7e7122698568a4ced5aed789a4d2ac743cd6db2c",
+      "method": "EXACT_SOURCE_ADDITION"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+      "preimage": null,
+      "postimage": "72471e276be8a95f499b4b4693c5a283772a2df3",
+      "method": "EXACT_SOURCE_ADDITION"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+      "preimage": null,
+      "postimage": "72b6c14d762b17a9b70398bdcfd3b5c4ec877559",
+      "method": "EXACT_SOURCE_ADDITION"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "preimage": "2fa77a69a28ae399f30f4d0e7642c05e7f029077",
+      "postimage": "a2515c40a71728299b0e9303168b6d822f2ba338",
+      "method": "EXACT_SOURCE_AFTER_PREIMAGE_MATCH"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "preimage": "81b7cd4ef5a73670642df42a2f891b9d95420dac",
+      "postimage": "406187a4fe4e6f59a2cca5dc84c83758a063cd3a",
+      "method": "THREE_PUBLISHED_SHARED_HTTP_HUNKS"
+    }
+  ],
+  "authority_reconciliation": {
+    "previous_control": "233e9acb7c048dda3d8174d87b76f1e8441f4917",
+    "control": "6da04cd66eb268362ee58509271fef773ac2a62e",
+    "control_parent": "233e9acb7c048dda3d8174d87b76f1e8441f4917",
+    "change": "Exactly5 additive validation-wave files; closure-wave missions are not replaced.",
+    "closure_COMMON_blob": "6dddb69b7f044e0467cfa4ab8dff60f560ca50b1",
+    "closure_operations24_blob": "4d04b061cba169532e8448035fc19eedafa7f0c2",
+    "mission24_revocation_observed": false,
+    "state": "PREPARED_NOT_STARTED",
+    "writer": "Session23 only for sf2-stack.",
+    "final_dispatcher_and_acceptor": "S0.",
+    "tooling26": {
+      "branch": "astra-compose",
+      "pr": 32,
+      "expected_head": "5c41125e7ef17a6c7eff9c9fb2329fe8f85ce982",
+      "ownership": "Explicit tooling paths include E2E tsconfig and app typecheck scripts; mission24 still only proposes shared changes under its own receipt prefix.",
+      "own_check_scope": "The new restriction against changing existing fixed check refs without current-owner handoff is in mission26 validation. It does not revoke mission24's existing own scoped-check authority or authorize another lane to mutate it.",
+      "intake_state": "Prepared source authority; no closed tooling output intake documented here."
+    },
+    "independent_reviews": {
+      "missions": [
+        27,
+        28,
+        29
+      ],
+      "target": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "state": "PREPARED_NOT_STARTED",
+      "limit": "Reviews targetingC2 do not qualify C3 or later material Operations deltas; same-candidate final verdict and scoped rechecks remain required."
+    },
+    "native_sessions": "No new native session/model identities supplied; do not infer execution.",
+    "sources": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/COMMON.json",
+        "blob": "6cdf29c62aa06307aa4d5fb4137b34b1baa84dc1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/typecheck-e2e-gate-closure.json",
+        "blob": "171ce861c06e890e73240362dfaeb50a553c82e7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/review-contract-security.json",
+        "blob": "ebc7206f7b690480bc8ac14ec72e5d179be0b5d5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/review-functional-composition.json",
+        "blob": "069130f04843e1f8b271c5b6bdd884086921e7ab"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/review-runtime-evidence.json",
+        "blob": "ed05084805d3e7e9ced8db82af3b9885ce600dfb"
+      }
+    ]
+  },
+  "integration_records": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/authority-reconciliation-01.json",
+      "blob": "4be50209dee373a96d68db4daa9ef15bfa249d4c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/candidate-C3.json",
+      "blob": "4ddb5f1755edc2697eb3575991682a1bf43f6b8d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/consumer-acks-03.json",
+      "blob": "c76f85b917bd50cf5d167f9efa8b2a0f6c58c4ff"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/verification-03.json",
+      "blob": "5064005f2e8e92233c710bc3eb3dbd3000293057"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/assembly-03.json",
+      "blob": "1906864ee54129dc94af93216a3d39310328418c"
+    }
+  ],
+  "preserved_limits": [
+    "C3 retains all earlier Finance, C12, Memory, Portfolio, Operations and Reports pending findings.",
+    "Decisions consumer CAS, registered coverage reader, retry after CAS, app/E2E graph and nominal execution remain pending.",
+    "Optional decision-controls coverage proposal is retained inert and unaccepted.",
+    "C3 assembly has no composed typecheck, guard, nominal CI, native or independent final acceptance result.",
+    "Operations nominal43639526175 retains original W/S and failure evidence; no result is transferred to C3."
+  ],
+  "method": {
+    "remote": "GitHub MCP GET only",
+    "reads": "Pinned commits and complete path lists; four new records; shared HTTP assembly; all5 new validation-wave controls; unchanged closure-wave mission; six pinned file blob readbacks.",
+    "remote_mutations": "NONE",
+    "ci_dispatch": "NONE",
+    "ci_polling": "NONE",
+    "local_tests": "NOT_RUN",
+    "external_messages": "NONE",
+    "artifact": "Scratch receipt only."
+  }
+}

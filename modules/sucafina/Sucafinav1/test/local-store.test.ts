@@ -3,13 +3,182 @@ import { Database } from "bun:sqlite"
 import { chmod, chown, mkdir, mkdtemp, realpath, rm, stat, symlink } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { openLocalStore } from "../runtime/local-store.ts"
+import { decodeSnapshot, encodeSnapshot, openLocalStore } from "../runtime/local-store.ts"
 import type { LocalStore } from "../runtime/local-contract.ts"
 import type { BlobTransaction } from "../runtime/assets.ts"
 import type { Snapshot } from "../runtime/contract.ts"
+import { object } from "../runtime/contract.ts"
 
 const bytes = new Uint8Array([0, 255, 17, 128])
 const empty: Snapshot = { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+
+test("current snapshots are isolated copies in a live transaction and expire with its scope", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    if (!store.currentSnapshots) throw new Error("currentSnapshots unavailable")
+    expect(store.currentSnapshots()).toBeUndefined()
+    await store.transaction("planner", async (snapshot) => { snapshot.data.value = "persisted"; return { commit: true, value: undefined } })
+    const release = Promise.withResolvers<void>()
+    const late: { pending?: Promise<unknown> } = {}
+    await store.transaction("dashboard", async (snapshot) => {
+      snapshot.data.value = "staged"
+      const current = store.currentSnapshots!()
+      expect(current?.dashboard.data.value).toBe("staged")
+      expect(current?.planner.data.value).toBe("persisted")
+      if (!current) throw new Error("missing current snapshots")
+      current.dashboard.data.value = "copy-only"
+      current.planner.data.value = "copy-only"
+      expect(store.currentSnapshots!()?.dashboard.data.value).toBe("staged")
+      expect(store.currentSnapshots!()?.planner.data.value).toBe("persisted")
+      late.pending = release.promise.then(() => store.currentSnapshots!())
+      void late.pending.catch(() => undefined)
+      return { commit: true, value: undefined }
+    })
+    release.resolve()
+    await expect(late.pending).rejects.toThrow("scope has ended")
+    expect(store.currentSnapshots()).toBeUndefined()
+    expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot.data.value }))).toBe("persisted")
+    expect(await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.data.value }))).toBe("staged")
+  })
+})
+
+test("current and nested snapshot copies preserve codec normalization and isolate staged mutations", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    if (!store.currentSnapshots) throw new Error("currentSnapshots unavailable")
+    const expected = await store.transaction("dashboard", async (snapshot) => {
+      const shared = { value: "original" }
+      const sparse: unknown[] = []
+      sparse.length = 3
+      sparse[1] = undefined
+      sparse[2] = shared
+      Object.defineProperty(sparse, "extra", { value: "ignored by the array codec", enumerable: true })
+      const hidden = Object.defineProperty({ visible: true }, "nonEnumerable", { value: undefined, enumerable: false })
+      const nullPrototype: Record<string, unknown> = Object.create(null)
+      nullPrototype.value = "plain after decoding"
+      Object.defineProperty(nullPrototype, "__proto__", { value: { value: "ordinary own property" }, enumerable: true })
+      snapshot.data.copyFixture = { left: shared, right: shared, sparse, hidden, nullPrototype, minusZero: -0, optional: undefined, text: "\ud800" }
+      const wire = decodeSnapshot(encodeSnapshot(snapshot))
+      const copies = store.currentSnapshots!()
+      if (!copies) throw new Error("missing current snapshots")
+      expect(copies.dashboard).toEqual(wire)
+      const copied = object(copies.dashboard.data.copyFixture)
+      expect(Object.is(copied.minusZero, -0)).toBe(true)
+      expect(Object.hasOwn(copied, "optional")).toBe(true)
+      expect(copied.optional).toBeUndefined()
+      expect(Object.getOwnPropertyDescriptor(object(copied.hidden), "nonEnumerable")).toMatchObject({ value: undefined, enumerable: true, writable: true, configurable: true })
+      expect(Object.getPrototypeOf(copied.nullPrototype)).toBe(Object.prototype)
+      expect(Object.hasOwn(object(copied.nullPrototype), "__proto__")).toBe(true)
+      expect(object(copied.nullPrototype).__proto__).toEqual({ value: "ordinary own property" })
+      expect(copied.text).toBe("\ud800")
+      expect(copied.left).not.toBe(copied.right)
+      expect(copied.left).not.toBe(shared)
+      const copiedArray = copied.sparse
+      if (!Array.isArray(copiedArray)) throw new Error("array projection unavailable")
+      expect(copiedArray).toHaveLength(3)
+      expect(Object.hasOwn(copiedArray, 0)).toBe(true)
+      expect(Object.hasOwn(copiedArray, 1)).toBe(true)
+      expect(copiedArray[0]).toBeUndefined()
+      expect(Object.hasOwn(copiedArray, "extra")).toBe(false)
+      expect(copiedArray[2]).not.toBe(copied.left)
+      object(copied.left).value = "copy only"
+      copies.dashboard.data.extra = "copy only"
+      expect(shared.value).toBe("original")
+      expect(snapshot.data).not.toHaveProperty("extra")
+      expect(store.currentSnapshots!()?.dashboard).toEqual(wire)
+      await store.transaction("dashboard", async (nested) => {
+        expect(nested).toEqual(wire)
+        const value = object(nested.data.copyFixture)
+        expect(value.left).not.toBe(value.right)
+        object(value.left).value = "nested only"
+        nested.data.extra = "nested only"
+        expect(shared.value).toBe("original")
+        expect(store.currentSnapshots!()?.dashboard).toEqual(wire)
+        return { commit: false, value: undefined }
+      })
+      expect(shared.value).toBe("original")
+      expect(snapshot.data).not.toHaveProperty("extra")
+      return { commit: true, value: wire }
+    })
+    expect(await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot }))).toEqual(expected)
+  })
+})
+
+test("current and nested snapshot copies retain codec rejection and snapshot validation", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    if (!store.currentSnapshots) throw new Error("currentSnapshots unavailable")
+    const getters = { calls: 0 }
+    const cycle: Record<string, unknown> = {}
+    cycle.self = cycle
+    const unsupported: unknown[] = [NaN, Infinity, -Infinity, 1n, () => true]
+    const cases: { install: (snapshot: Snapshot) => void; reason: string }[] = [
+      ...unsupported.map((value) => ({ install: (snapshot: Snapshot) => { snapshot.data.value = value }, reason: "Unsupported local snapshot value" })),
+      { install: (snapshot) => { snapshot.data.value = cycle }, reason: "Cyclic local snapshot" },
+      { install: (snapshot) => { snapshot.data.value = new Date(0) }, reason: "Local snapshots require plain objects" },
+      { install: (snapshot) => { snapshot.data.value = { [Symbol("private")]: true } }, reason: "Unsupported symbol properties" },
+      { install: (snapshot) => { snapshot.data.value = Object.defineProperty({}, "accessor", { get: () => { getters.calls++; return "not read" } }) }, reason: "Unsupported snapshot accessor" },
+      { install: (snapshot) => { Object.assign(snapshot, { data: [] }) }, reason: "Corrupt local snapshot shape" },
+      { install: (snapshot) => { snapshot.versions.record = { version: -1, by: "actor" } }, reason: "Corrupt local snapshot contents" },
+      { install: (snapshot) => { snapshot.sfBlobGenerations = { file: -1 } }, reason: "Corrupt local blob generations" },
+    ]
+    for (const invalid of cases) {
+      await store.transaction("dashboard", async (snapshot) => {
+        const generations = snapshot.sfBlobGenerations
+        try {
+          invalid.install(snapshot)
+          expect(() => store.currentSnapshots!()).toThrow(invalid.reason)
+          await expect(store.transaction("dashboard", async () => ({ commit: false, value: undefined }))).rejects.toThrow(invalid.reason)
+        } finally {
+          // The invalid-map case tests decoding; leave the independent private-write guard intact.
+          if (generations === undefined) delete snapshot.sfBlobGenerations
+          else snapshot.sfBlobGenerations = generations
+        }
+        return { commit: false, value: undefined }
+      })
+    }
+    expect(getters.calls).toBe(0)
+    expect(await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot }))).toEqual(empty)
+  })
+})
+
+test("all-surface transaction exposes staged nested reads and rejects nested writes", async () => {
+  await fixture(async (_directory, open) => {
+    const store = await open()
+    expect(store.transactionAll).toBeDefined()
+    if (!store.transactionAll) return
+    await store.transactionAll(async (snapshots) => {
+      snapshots.dashboard.data.value = "dashboard-staged"
+      snapshots.planner.data.value = "planner-staged"
+      expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot.data.value }))).toBe("planner-staged")
+      return { commit: true, value: undefined }
+    })
+    await expect(store.transactionAll(async (snapshots) => {
+      snapshots.dashboard.data.value = "should-rollback"
+      await expect(store.transaction("planner", async () => ({ commit: true, value: undefined }))).rejects.toThrow("Nested local writes")
+      return { commit: true, value: undefined }
+    })).rejects.toThrow("Nested local write attempted")
+    expect(await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.data.value }))).toBe("dashboard-staged")
+    expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot.data.value }))).toBe("planner-staged")
+    const release = Promise.withResolvers<void>()
+    const started = Promise.withResolvers<void>()
+    const child: { pending?: Promise<unknown> } = {}
+    await expect(store.transactionAll(async (snapshots) => {
+      snapshots.dashboard.data.value = "detached-rollback"
+      child.pending = store.transaction("planner", async () => {
+        started.resolve()
+        await release.promise
+        return { commit: false, value: undefined }
+      })
+      void child.pending.catch(() => undefined)
+      await started.promise
+      return { commit: true, value: undefined }
+    })).rejects.toThrow("Nested local read still active")
+    release.resolve()
+    await expect(child.pending).rejects.toThrow("scope has ended")
+    expect(await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.data.value }))).toBe("dashboard-staged")
+  })
+})
 
 async function fixture(work: (directory: string, open: (options?: { lockTimeoutMs?: number }) => Promise<LocalStore>) => Promise<void>) {
   const root = await mkdtemp(join(await realpath(tmpdir()), "sucafina-store-test-"))
@@ -205,7 +374,11 @@ test("surface namespaces isolate identical blob keys and snapshots", async () =>
       snapshot.data.other = true
       return { commit: true, value: null }
     })
-    expect(await read(store)).toEqual({ snapshot: { ...empty, data: { private: true } }, blob: bytes })
+    expect(await read(store)).toEqual({ snapshot: { ...empty, data: { private: true }, sfBlobGenerations: { document: 1 } }, blob: bytes })
+    expect(await store.transaction("procurement", async (snapshot: Snapshot, blobs: BlobTransaction) => ({
+      commit: false,
+      value: { snapshot, blob: await blobs.get("document") },
+    }))).toEqual({ snapshot: { ...empty, data: { other: true }, sfBlobGenerations: { document: 1 } }, blob: new Uint8Array([9]) })
   })
 })
 

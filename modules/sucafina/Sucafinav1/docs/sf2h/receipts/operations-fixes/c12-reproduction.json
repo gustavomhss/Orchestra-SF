@@ -1,0 +1,168 @@
+{
+  "schema": "operations-fixes-proof-v1",
+  "finding": "I-OPS-02",
+  "classification": "reproduced-consumer-impasse",
+  "closure": false,
+  "observedAt": "2026-11-14",
+  "repository": "gustavomhss/Orchestra-SF",
+  "product": {
+    "sha": "8caafd2455cc149064ad0d5fdb63f48009269de7",
+    "tree": "fa7504de55812a21ec0c794b72f0bda9c144150d"
+  },
+  "snapshot": {
+    "sha": "9c173f573e88bf033e9180494114d33da9a4894f",
+    "tree": "9d540f848d5dd7acb101485ea41b5ed1caa6bc33",
+    "parent": "8caafd2455cc149064ad0d5fdb63f48009269de7",
+    "delta": [
+      {
+        "path": ".ci-run.json",
+        "status": "added",
+        "blob": "89a21288231186dbb0ac8e54901e8d755943bd49"
+      }
+    ],
+    "compareVerified": true,
+    "branch": "ci-run-linux-operations-fixes-8caafd24-89a21288-1"
+  },
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/operations-fixes/c12-concurrency.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "run": {
+    "id": 43624678702,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43624678702",
+    "status": "completed",
+    "conclusion": "success",
+    "headSha": "9c173f573e88bf033e9180494114d33da9a4894f",
+    "job": 132537765899,
+    "cleanupJob": 132538391496
+  },
+  "result": {
+    "pass": 2,
+    "fail": 0,
+    "assertions": 76,
+    "seconds": 37.36
+  },
+  "omni": {
+    "nonce": "d37f1479f16ec5e354c22161bdbe17a2",
+    "verdict": "pass",
+    "declaredTests": 1,
+    "spawns": 1,
+    "delegated": 0
+  },
+  "reproduction": {
+    "finding": "I-OPS-02",
+    "classification": "reproduced-consumer-impasse",
+    "firstStatus": 409,
+    "retryStatus": 409,
+    "reopenExactStatus": 409,
+    "sameBody": true,
+    "sameKey": true,
+    "originalCaseVersion": 3,
+    "concurrentCaseVersion": 4,
+    "receiptId": "b8e99638-6ed0-4e23-ba1f-f8b9253ea80e",
+    "financialEffects": 1,
+    "durableReceipts": 1,
+    "caseReceiptCount": 0,
+    "runtimeReconstructed": true,
+    "sqliteReopened": true,
+    "processRestarted": false,
+    "recoveryAccepted": false
+  },
+  "producerControl": {
+    "alteredDigestStatus": 409,
+    "currentVersionControlStatus": 200,
+    "receiptId": "5a3eebee-ab84-43ce-8dc9-09a9351a0b9e",
+    "replacedTargetStatus": 403,
+    "revokedStatus": 403,
+    "uiRecoveryProven": false,
+    "explicitRecoveryEndpointProven": false
+  },
+  "browserDriver": {
+    "consumer": "host-response-recovery",
+    "clientRuntime": {
+      "name": "bun",
+      "version": "1.3.14",
+      "pid": 4261
+    },
+    "driverRuntime": {
+      "name": "node",
+      "version": "24.22.2",
+      "pid": 4281
+    },
+    "playwrightVersion": "1.59.1",
+    "browserVersion": "157.0.8103.50",
+    "browserPid": 4296,
+    "transport": "playwright-unix-pipe-node-websocket",
+    "spawnBoundary": "AppProcess",
+    "browserStdioCount": 5,
+    "browserUsesPipe": true,
+    "browserPipeOwner": "node",
+    "bridge": {
+      "framing": "json-nul",
+      "acceptedClients": 1,
+      "framesToBrowser": 49,
+      "framesFromBrowser": 128,
+      "peakQueuedBytes": 2368,
+      "peakBufferedBytes": 957,
+      "maxFrameBytes": 16777216,
+      "maxQueuedBytes": 33554432,
+      "directoryMode": 448,
+      "socketMode": 384
+    },
+    "lifecycle": {
+      "remainingContexts": 0,
+      "connected": false,
+      "nodeExitCode": 0,
+      "browserExitCode": 0,
+      "browserSignal": null,
+      "bridgeClosed": true,
+      "listenerClosed": true,
+      "socketClosed": true,
+      "pipeEnded": true,
+      "webSocketOpened": true,
+      "webSocketClosed": true,
+      "webSocketCloseCode": 1000,
+      "webSocketCloseWasClean": true,
+      "pendingFrameBytes": 0,
+      "queuedWriteBytes": 0,
+      "socketRemoved": true,
+      "directoryRemoved": true
+    }
+  },
+  "logs": {
+    "kind": "decoded-job-log",
+    "job": 132537765899,
+    "sha256": "c689b80eb88dff39f826e0e88183fc3ef90fb2c1e45b9a3411c9a1b040dc57ca",
+    "bytes": 75883,
+    "retainedInRepository": false
+  },
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes/c12-fixture.ts",
+      "gitBlob": "47d5a3deb98e15e8ac1b9800fb57ae7a9a476218"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes/c12-consumer.ts",
+      "gitBlob": "ff4e5670b3d14b6d7b0bb760fec671e691666f77"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes/c12-concurrency.test.ts",
+      "gitBlob": "2f4d1d0455bdf073f9a262943f925c1263a69b60"
+    }
+  ],
+  "limitations": [
+    "PASS asserts the consumer impasse, not receipt recovery acceptance.",
+    "Typed choice fixture seeds the H05 setup; it does not prove the native choice producer.",
+    "SQLite, authority and services reopen in the same Bun process; this is not process restart evidence.",
+    "The current-version API control is not a UI remedy or an explicit receipt-only endpoint.",
+    "Shared host/executor changes are NOT_APPLIED proposals."
+  ]
+}

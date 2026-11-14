@@ -1,0 +1,39 @@
+{
+  "finding_id": "M26-OPERATIONS-HOST-SELECTION",
+  "kind": "STATIC_SOURCE_FINDING_NOT_TYPECHECK_DIAGNOSTIC",
+  "owner": "WP04 / session24; session23 consumes only after the active owner handoff",
+  "branch": "astra-wp04",
+  "pr": 23,
+  "source_ref": "49d29bf4d6512d130307f46e145885949f213ea8",
+  "candidate_ref": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "target_path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+  "preimage_git_blob": "7224825eb470a2f172e7dc32172f83a6b05a5787",
+  "postimage": {
+    "bytes": 578,
+    "sha256": "02c158377004c3d36dc45c66abe57a4664697cdbd983a18f41d19fb7f7b8f3b1",
+    "git_blob_sha": "190cd4e252c53b1a94741036f7b9d8553be42b75"
+  },
+  "patch": "operations-host-selection.patch",
+  "complete_postimage": "selection.ts.txt",
+  "status": "SUPERSEDED_BY_CURRENT_SOURCE_DO_NOT_APPLY",
+  "reason": "The original fixed9cc candidate and observed owner49d had the omission. Before publication, consumer402 incorporated its own correction; the historical complete patch is retained for provenance only, not as current application advice.",
+  "preserved": "Old Procurement selection and regex normalization unchanged; production config retains its --list no-server guard; no test selector/assertion/retry changes.",
+  "validation": {
+    "git_apply_check": "PASS",
+    "typecheck": "NOT_RUN",
+    "functional_e2e": "NOT_RUN"
+  },
+  "owner_validation_required": [
+    "Historical procurement filename and canonical anchored regex remain true.",
+    "Nominal operations filename and canonical anchored regex become true.",
+    "decisions/reports/other spec paths remain false.",
+    "Production --list still starts no host.",
+    "Run the actual five Operations cases through S0 authorized CI; fixture data/producer readiness are separate obligations."
+  ],
+  "freshness_rule": "Do not apply this obsolete patch to402. Historical preimage and postimage document the earlier source finding; runtime proof remains with source owner and S0.",
+  "superseded_by": {
+    "source_ref": "402a091485e11d60dff433049c7dedd7fcead687",
+    "target_git_blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+    "observation": "Both nominal Operations and historical Procurement filenames plus anchored suffixes are recognized. Runtime NOT_RUN."
+  }
+}

@@ -1,0 +1,42 @@
+import { digestSfValue } from "../contracts/canonical.ts"
+import type { PortResult } from "../contracts/ports.ts"
+import type { TrustedDomainContext, TrustedUiContext } from "../contracts/sf-execution.ts"
+import type { createSfUiAuthority } from "../integration/ui-authority.ts"
+
+export const collaborationHumanActions = [
+  "collaboration.thread.create", "collaboration.thread.reply", "collaboration.thread.resolve", "collaboration.thread.edit",
+  "collaboration.relation.confirm", "collaboration.handoff.confirm", "collaboration.confirmation.confirm",
+  "collaboration.selection.create", "collaboration.answer.confirm", "collaboration.question.confirm",
+] as const
+export type CollaborationHumanAction = typeof collaborationHumanActions[number]
+
+/** Root-private authority; the retained Request and action digest never come from payload fields. */
+export type CollaborationHumanAuthority = {
+  authorize: (context: TrustedDomainContext, action: CollaborationHumanAction, payload: unknown) => Promise<boolean>
+}
+
+/** The host must explicitly register and grant these private commands in its existing UI authority. */
+export function createCollaborationHumanAuthority(input: { origin: string; ui: ReturnType<typeof createSfUiAuthority> }) {
+  return {
+    admit: async (request: Request, action: CollaborationHumanAction, payload: unknown): Promise<PortResult<TrustedUiContext>> => {
+      if (request.method !== "POST" || new URL(request.url).origin !== input.origin || request.headers.get("origin") !== input.origin || request.headers.get("sec-fetch-site") === "cross-site" || !collaborationHumanActions.some((value) => value === action)) return { status: "denied", reason: "human-command-unavailable" }
+      const operation = `sf-human:${action}`
+      const digest = digestSfValue(payload)
+      const admitted = await input.ui.admit(request, operation, digest)
+      if (admitted.status !== "ok") return admitted
+      if (!await input.ui.validate(admitted.value, operation, digest)) {
+        input.ui.finish(admitted.value)
+        return { status: "denied", reason: "human-command-unavailable" }
+      }
+      return admitted
+    },
+    authorize: async (context: TrustedDomainContext, action: CollaborationHumanAction, payload: unknown) => {
+      if (context.kind !== "ui" || !collaborationHumanActions.some((value) => value === action)) return false
+      const operation = `sf-human:${action}`
+      const digest = digestSfValue(payload)
+      return input.ui.matchesIntent(context, operation, digest) && await input.ui.revalidate(context) && input.ui.matchesIntent(context, operation, digest)
+    },
+    finish: input.ui.finish,
+  }
+}
+

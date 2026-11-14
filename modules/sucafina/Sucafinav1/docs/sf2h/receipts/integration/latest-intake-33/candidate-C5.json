@@ -1,0 +1,374 @@
+{
+  "schema": "sf2-candidate-identity-v1",
+  "mission": 33,
+  "symbol": "C5",
+  "commit": "9ed907920fd7516adff7a9e03388aeda487afc64",
+  "tree": "0a85144874f8f3fafa9e08e3c3de9a95292870e6",
+  "parent": "133312e39a9aa6d1cb51bed20625108c6cc79359",
+  "previous_candidate": {
+    "symbol": "C4",
+    "commit": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+    "tree": "c3648fca57012f6e6934e207e02c88c75cc6eb3a"
+  },
+  "increment_manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/increment-01.json",
+  "consumer_ack": {
+    "source": "Finance22",
+    "source_commit": "5e3073bceca683adc5663108832094421b43325e",
+    "integrated_commit": "9ed907920fd7516adff7a9e03388aeda487afc64",
+    "integrated_tree": "0a85144874f8f3fafa9e08e3c3de9a95292870e6",
+    "status": "CONSUMED_STATIC_NOT_FUNCTIONALLY_ACCEPTED",
+    "original_receipts": 33,
+    "material_paths": 5,
+    "preserved_source_test": 1,
+    "source_PASS_transferred": false
+  },
+  "remote_readback": {
+    "head": "9ed907920fd7516adff7a9e03388aeda487afc64",
+    "tree": "0a85144874f8f3fafa9e08e3c3de9a95292870e6",
+    "parents": [
+      "133312e39a9aa6d1cb51bed20625108c6cc79359"
+    ]
+  },
+  "complete_diff": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/artifact-index.json",
+      "preimage": null,
+      "postimage": "57dec427362de51927dd30a6a09b86b6db7bc2ac",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/ci-config-identity.json",
+      "preimage": null,
+      "postimage": "0037db3efb20252a941240fb77aaefc583e961a6",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/CI-LEDGER.json",
+      "preimage": null,
+      "postimage": "1b46112162687c285ba86bda4b6ce25807f2e02c",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/ci-log-archive.json",
+      "preimage": null,
+      "postimage": "944771c842b765252f77bde8ea68629695a4cffe",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/ci-metadata.json",
+      "preimage": null,
+      "postimage": "2e8fb82c859bff8f137c18201520040264683308",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/composed.NOT_APPLIED.patch.txt",
+      "preimage": null,
+      "postimage": "d2e96016349f7d512db31b7ffa91d7600c7aa3a8",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/criteria-provenance.json",
+      "preimage": null,
+      "postimage": "5a14e288a97bb20bef3c2ab49011a07a5e00d01d",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/finance.patch.txt",
+      "preimage": null,
+      "postimage": "24c7363ba66a773af51ec44b21fbd54fd4370a15",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/full-candidate.patch.txt",
+      "preimage": null,
+      "postimage": "8be82be537f451de47e7c6cb57f0827787302577",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/HANDOFF-FINAL.md",
+      "preimage": null,
+      "postimage": "154be08934e9210fc973323dfd3be51ce16dcaaa",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/intake-01.json",
+      "preimage": null,
+      "postimage": "ece6ad07b0a1ba1b04c438a747297cda7a968d7e",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/integration-intake.json",
+      "preimage": null,
+      "postimage": "53ffa60b0cb5268e99b458f13256e6989893973e",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/K1-result.json",
+      "preimage": null,
+      "postimage": "ad3c053a62afdebc5cf585385509ee879e8a942f",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/K2-result.json",
+      "preimage": null,
+      "postimage": "68494c4bccbf31ac57eed6493353c63fcdc71c57",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/postimages/case-port.ts.txt",
+      "preimage": null,
+      "postimage": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/postimages/composed-state-provider.NOT_APPLIED.ts.txt",
+      "preimage": null,
+      "postimage": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/postimages/finance-state-provider.ts.txt",
+      "preimage": null,
+      "postimage": "e7810b956073fa83a977109cfdea4735493b8aa3",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/preimages/case-port.ts.txt",
+      "preimage": null,
+      "postimage": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/preimages/composed-state-provider.ts.txt",
+      "preimage": null,
+      "postimage": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/preimages/finance-state-provider.ts.txt",
+      "preimage": null,
+      "postimage": "b7988a2963a2797a96ea19ab2b3a481564548213",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/preserved-inputs.json",
+      "preimage": null,
+      "postimage": "7e7a655e6e2ffe0ebab12f448ab935e79f54353c",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/proof/original-journey.UNCHANGED.ts.txt",
+      "preimage": null,
+      "postimage": "6395a5dc529acadfb0d9c1e2d8dca0664f40a39e",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/proof/short-test-W0-W1.ts.txt",
+      "preimage": null,
+      "postimage": "4838dc020a3b7d5d6fa0a27772514e547c8c53d2",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/requests/S1.json",
+      "preimage": null,
+      "postimage": "c390165569c0eaf6c2bcbe6f8885eff6e99ce33f",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/requests/S2.json",
+      "preimage": null,
+      "postimage": "d6065fa0b3b745f35a53f4a9128be02157ea35e1",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/requests/S3.json",
+      "preimage": null,
+      "postimage": "8dffaaa4f504376c952f9d927ee0cbde76c9fc6e",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/residual-boundary.json",
+      "preimage": null,
+      "postimage": "15e4a39e62de748952f23cc15d02d5d017f2da5e",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/S1-result.json",
+      "preimage": null,
+      "postimage": "488abf51f936add4906f87463992fc3d46948906",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/S2-result.json",
+      "preimage": null,
+      "postimage": "8ec07c556aa924495425d5c1eb856ac876ed1ce7",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/S3-result.json",
+      "preimage": null,
+      "postimage": "803f8ead3e257ca48e7128602c935045da123401",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/semantics.json",
+      "preimage": null,
+      "postimage": "8903065b2685147a7f971081b3318e6f7d590181",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/source-identities.json",
+      "preimage": null,
+      "postimage": "d1016c25e68c1ff0f64a929f6bb50b2585f95d24",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/terminal-review.json",
+      "preimage": null,
+      "postimage": "2d45099347e1d46265f131ea51e0b31202d481e5",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/consumer-ack-01.json",
+      "preimage": null,
+      "postimage": "95de669d00dc749b0c5629c8e54abc3e957ccd77",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/increment-01.json",
+      "preimage": null,
+      "postimage": "5caab3df68fdf99364350abc434eafbd5f2189b3",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/source-artifacts/finance22/isolation.original.test.ts.txt",
+      "preimage": null,
+      "postimage": "18f3140769260dafbe7f639d6694ea493f3ea535",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "preimage": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6",
+      "postimage": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+      "old_mode": "100644",
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "preimage": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "postimage": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "old_mode": "100644",
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/fixture.ts",
+      "preimage": null,
+      "postimage": "e0405a7c523702482ffd1c8a9b500f4ca241b3a8",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "preimage": null,
+      "postimage": "68bc02293a7f6baa3c2e46b4617af3341b9a03ea",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/materialization.test.ts",
+      "preimage": null,
+      "postimage": "6731cab950249b1d018ced74cafce42a2ca27b9e",
+      "old_mode": null,
+      "new_mode": "100644",
+      "type": "blob"
+    }
+  ],
+  "verification": {
+    "tree_diff": "complete recursive changed-tree enumeration; all41 entries match requested postimages/modes; no other change",
+    "tests": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "AM": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "independent_reviews": "NOT_RUN"
+  },
+  "finding": "FIN-IND-005 OPEN_IMPLEMENTED_NOT_CLOSED",
+  "checkpoint_policy": "This containing commit only records C5 identity and readback; it is not a new product candidate or D/G8",
+  "global_release": false
+}

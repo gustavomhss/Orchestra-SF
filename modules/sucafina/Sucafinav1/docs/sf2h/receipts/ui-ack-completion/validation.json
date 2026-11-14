@@ -1,0 +1,179 @@
+{
+  "schema": "sf-ui-recipient-ack-validation-v1",
+  "mission": "ui-recipient-ack",
+  "actor": "S1-A",
+  "branch": "ui-work",
+  "pull_request": 47,
+  "observed_at": "2026-11-14T19:53:08Z",
+  "state": "READY_FOR_INTEGRATION",
+  "terminal_handoff": true,
+  "qualification": {
+    "consumer": "IMPLEMENTED_COMPOSED_FUNCTIONAL_PROOF_PASS",
+    "functional_distinct_cases": 12,
+    "package_typecheck": "FAIL_EXTERNAL_9_DIAGNOSTICS",
+    "installed_host": "NOT_RUN_OWNER_INTAKE",
+    "global_acceptance": "NOT_CLAIMED",
+    "note": "READY_FOR_INTEGRATION refers only to this consumer delta and its bounded evidence; it is not DONE or a package/global green."
+  },
+  "candidate": {
+    "W": "d8524169e0de188312f6c2d3b6877562c47e664d",
+    "tree": "3ee21c140ca1647ed36989bd2203c1134eec08d6",
+    "S": "a53551af20e1476173cbeed8b54ae8f61c9872fe",
+    "snapshot_tree": "ea77baf645e92d06e4cded0123de5337506cd311"
+  },
+  "ui": {
+    "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+    "blob": "d9362a92e0bc71c8068790bf308e2a88adcb3243",
+    "unchanged_since": "7c9bbd966483b94d21a4c30961a8174be7ed6804"
+  },
+  "consumer_acknowledgement": {
+    "producer_commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+    "producer_blob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+    "contract_blob": "b007f61c444af37a4fcb788bd512baad34b7071a",
+    "intake": "Real published factory bytes in own .fixture; only four verified runtime import paths relocated by compiler input. Real C08/SQLite/source authority/HTTP and Chromium; no positive receipt fabricated.",
+    "positive_run": 43634168745,
+    "positive_job": 132567207864,
+    "accepted_fields": [
+      "kind",
+      "action",
+      "principalRef",
+      "idempotencyKey",
+      "threadId",
+      "commandDigest",
+      "intentDigest",
+      "sourceIncarnation",
+      "reply.id",
+      "reply.incarnation",
+      "reply.version"
+    ],
+    "association": "The actual receipt identifies a unique current message tuple outside the original baseline; author/text corroborate the tuple, never identify the operation.",
+    "original_intent": "Serialized payload, idempotency key and expectedStorageVersion retained unchanged through loss/reload/explicit retry; recovered via fresh thread and case authority.",
+    "negative_run": 43633483813,
+    "negative_job": 132565093216,
+    "negative_receipt_variants": 12,
+    "acknowledgement_not": "C06 confirmation, answer attachment or financial approval"
+  },
+  "evidence": {
+    "matrix": "test-matrix.json",
+    "blob_identity": "blobs.03.json",
+    "runs": [
+      "run.01.json",
+      "run.02.json",
+      "run.03.json"
+    ],
+    "functional_provenance": [
+      {
+        "run": 43632801654,
+        "file": "ordinary-thread.test.ts",
+        "distinct_cases": 1,
+        "reused": true
+      },
+      {
+        "run": 43633483813,
+        "file": "recipient-refusal.test.ts",
+        "distinct_cases": 7,
+        "reused": true
+      },
+      {
+        "run": 43634168745,
+        "files": [
+          "recipient-recovery.test.ts",
+          "source-replacement.test.ts"
+        ],
+        "distinct_cases": 4,
+        "reused": false
+      }
+    ],
+    "not_one_12_pass_run": true
+  },
+  "persistence": {
+    "mechanism": "sessionStorage",
+    "prefix": "sf:recipient-reply:v1:",
+    "scope": [
+      "origin",
+      "path",
+      "installationId",
+      "projectId",
+      "policyVersion",
+      "principalRef",
+      "accessRevision",
+      "caseId",
+      "caseIncarnation",
+      "threadId"
+    ],
+    "retention": "30 minutes; expiry checked on mount, restore and retry",
+    "authorization": "Fresh no-store case GET plus real authorized thread read before recovery render; fresh case check again before retry.",
+    "automatic_resend": false,
+    "purge": [
+      "valid ACK",
+      "access-revoked even after detach",
+      "mismatched admission/project/policy/principal/case incarnation",
+      "missing conversation when script is mounted",
+      "expired/malformed envelope"
+    ],
+    "content_in_url_or_history": false,
+    "product_content_logging": false,
+    "limit": "A signed-out/error document that does not mount this module cannot execute its storage purge. No restored content renders without reauthorization; shell integration owner retains global revocation responsibility."
+  },
+  "criteria_delta": {
+    "predecessor": "criteria.json",
+    "canonical_text_unchanged": true,
+    "observed_ack_slice": [
+      "WP01.T03.CHK.01",
+      "WP01.T03.INV.01",
+      "WP01.T03.CMP.01",
+      "WP01.T03.SUC.01",
+      "WP01.INV.01",
+      "WP01.T05.INV.01",
+      "WP01.T05.CHK.02",
+      "WP01.T05.CMP.01"
+    ],
+    "status": "PASS_FOR_OBSERVED_ACK_SLICE_ONLY",
+    "full_WP01_DoD": "NOT_CLAIMED"
+  },
+  "remaining_findings": [
+    {
+      "status": "FAIL",
+      "owner": "current native host owner / WP07",
+      "receipt": "external-typecheck.01.json",
+      "reason": "Nine foreign package typecheck diagnostics; same preimages as retained baseline; no own-path diagnostics."
+    },
+    {
+      "status": "OWNER_INTAKE",
+      "owner": "Collaboration / Composition-WP10",
+      "receipt": "owner-intake.json",
+      "reason": "Compose the complete published producer/host closure with this UI. Retained host lacks C05 callbacks; installing only one producer file is not sufficient."
+    },
+    {
+      "status": "OWNER_BOUNDARY",
+      "owner": "shell lifecycle owner",
+      "receipt": "owner-intake.02.json",
+      "reason": "Pages that do not mount the consumer cannot run its purge; preserve global access-revoked lifecycle."
+    }
+  ],
+  "delivery": {
+    "receipt_policy": "Append-only; every prior file unchanged. This commit adds only the finite evidence list indexed by delivery-index.json. No product/test/config/fixture edits after W3.",
+    "guard_request": "ci-request.04.json",
+    "guard_test_blob": "6b4d9caae7f355509282c24fadad86c32cd63ab5",
+    "guard_status_at_receipt_write": "PENDING_EXTERNAL_RESULT_IN_PR47",
+    "self_reference": "Delivery commit SHA and final guard W/S/run/job/result are published in PR47 after the immutable evidence commit. This receipt does not embed its own SHA or later guard result."
+  },
+  "restrictions": {
+    "remote": "GitHub MCP only",
+    "local_product_tests": "NOT_RUN",
+    "epic_or_full_suite": "NOT_RUN",
+    "foreign_paths": "READONLY",
+    "merge_reset_force_or_new_product_branch": false
+  },
+  "not_claimed": [
+    "Installed host C03/C05 acceptance",
+    "native BFcache restoration",
+    "global logout purge in a document without this script",
+    "G03",
+    "C06 confirmation/reuse/attachment",
+    "native/AM01-AM06",
+    "full WP01",
+    "GLOBAL_RELEASE"
+  ],
+  "review": "Auxiliary static reviews participated in implementation/test work; not the three independent final approvals of a common integrated candidate."
+}

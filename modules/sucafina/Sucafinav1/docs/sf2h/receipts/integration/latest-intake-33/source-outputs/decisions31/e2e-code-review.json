@@ -1,0 +1,152 @@
+{
+  "task": "mission31 positive E2E",
+  "source": "556079fe2fb97c824504ec60a47798c6e0553539",
+  "composition": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "preimage": "a2515c40a71728299b0e9303168b6d822f2ba338",
+      "postimage": "952ce06a276bca7723e11e8ea9067637e6bbf8e4"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+      "preimage": "72471e276be8a95f499b4b4693c5a283772a2df3",
+      "postimage": "979bfeeb460e85fe1911affe0ac9ad4d21a27e3a"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+      "preimage": "72b6c14d762b17a9b70398bdcfd3b5c4ec877559",
+      "postimage": "c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+      "preimage": null,
+      "postimage": "c469187a2e04d49d157cf9d3830145ca845f4064"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts",
+      "preimage": null,
+      "postimage": "fa509e9d7a7da9d0024c9487975f7b26b3b29146"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/apply-recovery.ts",
+      "preimage": null,
+      "postimage": "cb70480c28e9382629d289c1c954e88379e173d3"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts",
+      "preimage": null,
+      "postimage": "9e02b30fee0e1f37afeac28b0296bdfbbbab70aa"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+      "preimage": null,
+      "postimage": "7a7553b89af8f90592603f7d454ba164cbb81afd"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts",
+      "preimage": null,
+      "postimage": "5784a995ba25d042101fe2eed63ce96957b711b1"
+    }
+  ],
+  "normative_read": [
+    "AGENTS root inherited full",
+    "app/e2e AGENTS",
+    "COMMON",
+    "pack proof_bindings all 83",
+    "pack execution_proofs complete AM01-AM06",
+    "pack evidence complete",
+    "pack numeric_oracles complete FX01/FX02/FX03/AI-RENEWAL/AI-COUNTEREXAMPLE/AI-RENEWAL-OMITTED-CATEGORY/CONFIRM-SCOPE",
+    "pack coverage complete",
+    "pack criterion_ids all 83"
+  ],
+  "playwright_refs": [
+    "https://playwright.dev/docs/best-practices",
+    "https://playwright.dev/docs/actionability",
+    "https://playwright.dev/docs/test-assertions",
+    "https://playwright.dev/docs/locators",
+    "https://playwright.dev/docs/network",
+    "https://playwright.dev/docs/browser-contexts"
+  ],
+  "local_execution": "NONE: no tests, no server, no typecheck",
+  "original_three_bodies_preserved": true,
+  "new_scenario": "Fourth continues comparison to explicit numeric rule, persisted human choice, exact retry after response loss/reload and immutable history after source update. Fifth calls published C12 consumer after real public Procurement authoring, choice, preview and mandatory compatible domain approval.",
+  "execution_status": "NOT_RUN by this agent; root owns exact remote run results",
+  "mandatory_boundaries": [
+    "Root reported C3 baseline run43641724503 0pass4fail at bootstrap: Method ACL already declared for route /sucafina. No UI action executed; do not repeat an old missing-mount diagnosis.",
+    "Numeric-rule UI requires owner23 shared rule evidence/metric patch for explicit comparison without a sensitivity parameter; pending costs remain conditioned.",
+    "Procurement source discovery must use decision-controls.selected.procurementEvidence.sources with durable sf-procurement references; ephemeral pending-only BI06 collection refs cannot substitute.",
+    "Typed Procurement authoring controls Procurement request and Proposed estimated amount are a declared unmet producer dependency. The nominal fifth test fails if unavailable; no synthetic promotion or inserted operation.",
+    "C3 Procurement prepared.ts accepts only draft/pr_rejected requisition saves; formal approval requires a pending stage and invalidates that save. Fifth requires actual matching approval before Apply and re-reviews afterward; it never calls an Apply checkbox formal approval.",
+    "Fifth C12 consumer is reachable from the selected nominal spec only after all real producer/approval gates pass; code connectivity is not executed coverage.",
+    "Original HTTP response is interrupted after the real handler returns. This does not independently isolate the gap between domain commit and case reconciliation.",
+    "Native provider/reviewer/restart unavailable under isolated fixture; NOT_RUN. A new page proves a fresh HTTP admission, not a process restart.",
+    "Canonical AI-RENEWAL and omitted-category oracle are not replaced by the illustrative1200/2400 financial-source example."
+  ],
+  "c12_consumer": "Fifth nominal calls applyRecoveryJourney: exact frozen operation preparation, real preview, separate Procurement approval callback, fresh compatible review, explicit checkbox, one original Apply response interrupted, concurrent case edit, fresh page/admission recover, same receipt/choice and one domain version increment. No new Apply implementation.",
+  "notes": [
+    "Request/response waits registered before actions",
+    "No direct HTTP mutation or route.fetch",
+    "No sleeps/skips/budget increase/retries of mutation except explicit user Retry button",
+    "Full snapshot equality includes choice id/version,basis,source refs,conditions,reason,actor,timestamp,result and comparison"
+  ],
+  "original_three_exception": "Only the obsolete empty-catalog comment changed; all executable bodies remain byte-for-byte.",
+  "nominal_test_count": 5,
+  "criterion_assertions": [
+    {
+      "criteria": [
+        "WP11.T03.CHK.01"
+      ],
+      "planned_assertion": "Complete ChoiceRecord deep equality across reload, reopen and real Planner2400→3600 source update. Does not prove canonical training40000/new alternative250000 or restart.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criteria": [
+        "WP11.INV.01",
+        "WP11.T03.CHK.02",
+        "WP11.T03.INV.01"
+      ],
+      "planned_assertion": "Choice leaves PR version1/amount100/draft; pending cost conditions and totalnull retained. Formal domain approval is a separate exact-amount gate before Apply.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criteria": [
+        "WP11.T03.DOD.01",
+        "WP11.T03.QLT.01"
+      ],
+      "planned_assertion": "Exact stored operation→prepare→target/fields/version/digest review. Gate requires public typed-operation producer.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criteria": [
+        "WP11.T04.CHK.02",
+        "WP11.T04.DOD.01",
+        "WP11.T04.DOD.02",
+        "WP11.T04.QLT.01",
+        "WP11.T04.SUC.01"
+      ],
+      "planned_assertion": "One Apply, dropped original response, concurrent case edit, new page admission, one recovery and exact same receipt; domain version+1 and expected amount. Approval-compatible producer still missing.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criteria": [
+        "WP11.T02.CHK.20",
+        "WP11.T02.CHK.21",
+        "WP11.T03.CHK.20"
+      ],
+      "planned_assertion": "Not claimed by1200/2400 pending-cost path; canonical renewal/training oracle remains outstanding.",
+      "status": "NOT_RUN"
+    },
+    {
+      "criteria": [
+        "WP11.DOD.01",
+        "WP11.DOD.10",
+        "WP11.T03.CHK.18",
+        "WP11.T04.CHK.18"
+      ],
+      "planned_assertion": "No claim of process restart, native provider/critique, UI/native/MCP parity or all AM proof packages.",
+      "status": "NOT_RUN"
+    }
+  ],
+  "published_receipt_note": "This is a static agent review, not native critique or runtime acceptance. Local staging paths in its narrative are historical; consumable complete patch paths and images are in integration/INDEX.json. Exact current executions are in the root run receipts."
+}

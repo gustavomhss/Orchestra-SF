@@ -1,0 +1,63 @@
+{
+  "mission": "memory-integrity-preflight",
+  "status": "PREPARED_NOT_RUN",
+  "reason": "MI04 proved that the first integrity fix added two full BCS/Atlas recalls to stale.preserve (23334ms) and exhausted the unchanged historical cooperative budget.",
+  "causalScope": "Remove only that newly introduced duplicate graph work; no X29 optimization, source producer/engine changes or budget/assertion edits.",
+  "changes": [
+    "BCS privately associates the exact real context result array with a single-use canonical capture reader route, bound to the same call and retained Request/headers.",
+    "Wrapper consumes that route inside C08; missing/fabricated observation fails closed.",
+    "Single canonical event/envelope uses canonical journal fold, all expanded capture reads, current source resolutions and real continuity.",
+    "Real complete case authorization is performed before captures and again after all capture/continuity awaits, including case-wide references outside the envelope.",
+    "Complex/empty/unsupported topology uses existing full canonical recall; no blanket denial and no good sibling masking a corrupt selected record.",
+    "Real-source fault probes move to installed readOriginalCapture; a two-envelope positive/corrupt-sibling test is added."
+  ],
+  "securityReview": {
+    "initialPlanRejected": [
+      "Raw case metadata does not replace full case authorization",
+      "One initial case read does not catch late external ACL revocation of other case references"
+    ],
+    "resolution": "Two actual cases.read passes plus existing snapshot/source/capture/request/header/binding pins and final authorization.",
+    "limits": "No cross-call grant/result cache, no claim to close general C17-between-observations."
+  },
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "bytes": 15527,
+      "sha256": "3d1b2e6ed237e1321fe6052277f94e6edc83a66b0b03a1e977b9757641bf8ca0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "bytes": 56552,
+      "sha256": "51ae8d2f38afd88cd86a8eca8c44f5e6d23201924137c8790044125e693926de"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+      "bytes": 8828,
+      "sha256": "e5fd66ab1d882abd9fd1db5febb112af9c47d28a2bcd97cc49879a22555ea184"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fallback.test.ts",
+      "bytes": 5589,
+      "sha256": "fb6b4d2bd21724a5bf1b82ceeca9af98dd93b5dd09dc1ccc49e39f2956849da8"
+    }
+  ],
+  "tests": {
+    "focused": {
+      "count": 13,
+      "status": "NOT_RUN",
+      "selection": "four exact memory-integrity test files"
+    },
+    "originalHistorical": {
+      "status": "NOT_RUN",
+      "blob": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+      "budgets": [
+        225000,
+        240000
+      ]
+    },
+    "hostedTypechecksAndGuards": "NOT_RUN"
+  },
+  "previousObservations": "MI01, MI02, MI03 and MI04 remain attributed to their exact W/S. Product reader changed, so focused criteria require new execution.",
+  "nativeExecution": false,
+  "localTests": false
+}

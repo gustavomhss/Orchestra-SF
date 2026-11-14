@@ -1,0 +1,231 @@
+{
+  "schema": "sf2-bundle-candidate-checkpoint-v1",
+  "campaign": "sf2h-integral-20261112",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "actor": "S0-C delegated bundle-integrator",
+  "lease_epoch": 5,
+  "status": "PUBLISHED_COMPOSED_REVIEW_TEST_CANDIDATE_NOT_ACCEPTED",
+  "candidate_C": {
+    "sha": "b62c32940d06c15c04f52b88209d5b4930cf1a3e",
+    "tree": "6336a25ac2bd505f4135b9292d1b061ab90ad8e4",
+    "frozen": true,
+    "freeze_kind": "FIXED_REVIEW_AND_TEST_INPUTS",
+    "accepted": false,
+    "ready_for_release": false,
+    "final_gate_results": "NOT_RUN",
+    "note": "Known mandatory findings block release, not the creation or examination of this test candidate. S0 alone decides and dispatches the final gate round."
+  },
+  "product_branch": "sf2-stack",
+  "draft_pr": {
+    "number": 65,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/65",
+    "head": "sf2-stack",
+    "base": "dev",
+    "draft": true,
+    "unique_verified": true,
+    "epic_label": false
+  },
+  "expected_parent_for_this_documental_checkpoint": "b62c32940d06c15c04f52b88209d5b4930cf1a3e",
+  "publication_chain": [
+    {
+      "role": "starting_head",
+      "sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af"
+    },
+    {
+      "role": "authority_ACK",
+      "sha": "df0107b553e3aa99b0ac0e3c1f38d79eed82ccda"
+    },
+    {
+      "role": "increment_01",
+      "sha": "47273c4f20c7c1af9b08537d26618901c36725e3",
+      "tree": "894074bb9436867979f81e93a8360bc900cf5f7a",
+      "source_files": 9
+    },
+    {
+      "role": "increment_02",
+      "sha": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+      "tree": "3ca2f19fb2d1b40d0f94b4a6e9c1cfecb4cefb32",
+      "source_and_composed_files": 1399,
+      "own_records": 8
+    },
+    {
+      "role": "increment_03_candidate_C",
+      "sha": "b62c32940d06c15c04f52b88209d5b4930cf1a3e",
+      "tree": "6336a25ac2bd505f4135b9292d1b061ab90ad8e4",
+      "closed_source_additions": 53,
+      "source_executable_modes_restored": 3,
+      "published_G03_observation_patch": 1,
+      "own_records": 6
+    }
+  ],
+  "preservation": {
+    "no_deletions": true,
+    "no_renames": true,
+    "source_refs_unchanged": true,
+    "control_branch_merge": false,
+    "prior_import_recovery_preserved": true,
+    "source_inputs": 26,
+    "source_skills": 18,
+    "resident_profiles": 5,
+    "verification_increment02": {
+      "candidate": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+      "tree": "3ca2f19fb2d1b40d0f94b4a6e9c1cfecb4cefb32",
+      "expected_files": 1407,
+      "observed_files": 1407,
+      "pages": 15,
+      "all_pages_unique": true,
+      "accepted_status_counts": {
+        "added": 1078,
+        "modified": 329
+      },
+      "mismatches": [],
+      "unexpected": [],
+      "missing": [],
+      "baseline_unchanged_v1_mismatches": [],
+      "published_v1_blob_mode_mismatches": [],
+      "prior_increment": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/attempt-01-checks-feaa3856.json",
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/attempt-01-external-wp14-typecheck.json",
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/attempt-01-functional-20915a35.json",
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/attempt-02-functional-95b3c9a3.json",
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/admission-fixture.ts",
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/admission-restart.test.ts",
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/apply-fixture.ts",
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts",
+          "preserved": true
+        }
+      ],
+      "result": "STATIC_TREE_MATCH",
+      "qualification": "No tests, typecheck, guards or runtime execution"
+    },
+    "verification_candidate": {
+      "candidate": "b62c32940d06c15c04f52b88209d5b4930cf1a3e",
+      "tree": "6336a25ac2bd505f4135b9292d1b061ab90ad8e4",
+      "parent": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+      "expected_files": 63,
+      "observed_files": 63,
+      "blob_mismatches": [],
+      "mode_only_paths": [
+        "script/sf2h/final-bundle/build-artifact.py",
+        "script/sf2h/final-bundle/validate-requests.mjs",
+        "script/sf2h/final-bundle/verify-bun-report.py"
+      ],
+      "mode_only_verification": "Exact complete preparation subtree equals immutable source subtree 0e9aaa321cd36c216fc081ed3961f479eecd24db; REST commit file metadata is not used as the blob oracle for mode-only changes.",
+      "prep_directory_mode_and_blob_equality_to_source": true,
+      "unexpected_paths": [],
+      "root_changes": [
+        "modules",
+        "script"
+      ],
+      "v1_changes": [
+        "docs",
+        "test"
+      ],
+      "unchanged_product_runtime_src_local_and_host": true,
+      "source_tests_added": 8,
+      "deterministic_legacy_test_patch": true,
+      "tests_typechecks_guards_CI": "NOT_RUN",
+      "result": "STATIC_TREE_MATCH"
+    }
+  },
+  "provenance": {
+    "main": "increment-02.json",
+    "files": [
+      "increment-02-files-01.json",
+      "increment-02-files-02.json",
+      "increment-02-files-03.json",
+      "increment-02-files-04.json"
+    ],
+    "increment3": "increment-03.json",
+    "original_proofs": "source-proofs.json",
+    "helper_intake": "helper-consumption.json",
+    "held_wp13": "held-intake.json",
+    "late_leaf_disposition": "late-leaf-intake.json"
+  },
+  "gate_preparation": {
+    "manifest": "freeze-preparation.json",
+    "requests_path": "script/sf2h/final-bundle/requests.json",
+    "recipe_ids": [
+      "CI-SF",
+      "CI-CLI",
+      "CI-APP-SRC",
+      "CI-APP-BROWSER",
+      "CI-ATLAS-BUSINESS",
+      "CI-UI-OPERATIONS",
+      "CI-UI-DECISIONS",
+      "CI-UI-REPORTS"
+    ],
+    "dispatch_performed": false,
+    "CI_ref_written": false,
+    "all_results": "NOT_RUN",
+    "local_product_tests": "NOT_RUN_PROHIBITED",
+    "independent_review_limit": "Helper PR64 review covers increment01 only; no final review is transferred to C."
+  },
+  "mandatory_open_findings": {
+    "manifest": "pending-owners-03.json",
+    "ids": [
+      "MEMORY-INTEGRITY",
+      "FIN-IND-005",
+      "WP13-SEMANTIC-UNION",
+      "C05-INSTALLED-CLOSURE",
+      "C12-RECOVERY",
+      "E2E-OPERATIONS",
+      "E2E-DECISIONS",
+      "E2E-REPORTS",
+      "TYPECHECK-GUARDS",
+      "NATIVE-AM-REVIEW",
+      "C17-BETWEEN-OBSERVATIONS",
+      "CURRENT-CHOICE-COHORT"
+    ],
+    "source_green_transfer": false
+  },
+  "S0_handoff": {
+    "acceptance_owner": "S0",
+    "dispatcher": "EXISTING_S0_ONLY",
+    "next": [
+      "Review exact C and per-file provenance; consume only terminal owner outputs with a new CAS increment if necessary.",
+      "Fix composition/product findings through their owners; any material change makes a new candidate and invalidates affected proof.",
+      "Run the eight exact recipes plus inherited/static/native/AM gates and three independent final reviews on the same fixed candidate.",
+      "Accept C only after required results and mandatory findings are resolved; then prepare and qualify the separate normative D/G8 envelope."
+    ],
+    "no_acceptance_prerequisite_to_test": true
+  },
+  "checkpoint_envelope": {
+    "type": "INTEGRATION_RECORD_ONLY_NOT_D_G8",
+    "paths": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/bundle-integrator-20261114/candidate-C.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/bundle-integrator-20261114/CHECKPOINT.md"
+    ],
+    "writes": "New UTF-8 documentation only; no product/test/config/fixture/skill/normative-guide change from C.",
+    "later_commit_and_tree": "Published in PR65 after CAS/readback; deliberately not self-referenced here."
+  },
+  "executor_state": "CHECKPOINTED; no agent, watchdog, schedule or dispatch left running",
+  "GLOBAL_RELEASE": "NOT_DECLARED"
+}

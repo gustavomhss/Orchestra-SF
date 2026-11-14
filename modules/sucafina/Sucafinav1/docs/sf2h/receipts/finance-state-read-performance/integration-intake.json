@@ -1,0 +1,275 @@
+{
+  "schema": "finance-state-read-performance-integration-intake-v1",
+  "mission": 22,
+  "finding": "FIN-IND-005",
+  "findingDisposition": "OPEN_IMPLEMENTED_NOT_CLOSED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "finance-resume",
+  "pr": 42,
+  "consumer": "session14",
+  "actor": "S0-C scoped source-support22; no supervisor/native worker/dispatcher",
+  "leaseEpoch": "browser-source-performance-22",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "missionSource": {
+    "commit": "f23da37c8a2dd6ccfa69c73cf36837b8943e225e",
+    "blob": "724d9b596dec1c82b56e02edb594a09e187128bd"
+  },
+  "readSources": {
+    "rootAgents": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "nestedAgents": "No AGENTS under modules/sucafina/Sucafinav1 in complete pinned product tree; modules/AGENTS absent; modules/sucafina listing has no AGENTS.",
+    "start": "522782bb7e113124a937d7ef17313032be9d6850",
+    "workflow": "043205bee6031b4517a98591b3588fca0ab12925",
+    "commonSha256": "a518cf4b3136d5c1126d59304afedf71b5f93168314f1f2f56743dcae719c94e",
+    "actorPack": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "actorCriteria": 155,
+    "mandatoryAppendices": [
+      "specs/product-acceptance.md",
+      "specs/resident-runtime.md",
+      "specs/atlas-packaging.md"
+    ],
+    "parallelCommon": "c708ec0609dbfc95b259707d8c38481617f74f11",
+    "ciProtocol": {
+      "sha": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
+      "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb"
+    },
+    "counterexample": {
+      "sha": "29356ad7a554309e9a905749dd84e3f6bd0900ea",
+      "blob": "71dbf3cec182e7f9295d9f36c01b7cac7dba582a",
+      "disposition": "Original predicates retained; coverage-preview.ts untouched. Equal values never substitute an opaque original predicate."
+    }
+  },
+  "mandatoryAppendixBlobs": {
+    "specs/product-acceptance.md": "ded082688fce327def0b48968fa3b89a5831029c",
+    "specs/resident-runtime.md": "033737b1051b23443e633df7874c550629bf55a1",
+    "specs/atlas-packaging.md": "907750ae7c945e5f303480cc6e14f11bb1696eb9"
+  },
+  "initialIntake": "intake-01.json (historical, unchanged)",
+  "commits": {
+    "received": "d8d586e19c824f75a88494a9c3677faac617e81d",
+    "receivedTree": "37e25cf23c449eb1e0fca381301681fa14e9fd4d",
+    "W0": "231b0652d12d5c6ce8b5d31d02b725eabdbe308f",
+    "W0tree": "19e946d6a0c68d9fce1e1a2696bf31e66e796814",
+    "W1": "a710446e3a002068eacf6ff1ade66365d24005d6",
+    "W1tree": "2083c7594b85505d0a97167acb30c0b6fd65f6b8",
+    "W2": "1a656f1f7251de8c104e5b03a43b457e80437181",
+    "W2tree": "1ebd1ee9d0e95253526d0ee73cf2353a71ccbe58"
+  },
+  "lineage": [
+    "d8d586e19c824f75a88494a9c3677faac617e81d",
+    "231b0652d12d5c6ce8b5d31d02b725eabdbe308f",
+    "a710446e3a002068eacf6ff1ade66365d24005d6",
+    "1a656f1f7251de8c104e5b03a43b457e80437181"
+  ],
+  "receivedHeadMatchedExpectation": true,
+  "noResetOrOverwriteOfLaterProgress": true,
+  "currentProductCandidate": {
+    "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+    "tree": "1ebd1ee9d0e95253526d0ee73cf2353a71ccbe58",
+    "shortProofW": "a710446e3a002068eacf6ff1ade66365d24005d6",
+    "shortProofTree": "2083c7594b85505d0a97167acb30c0b6fd65f6b8",
+    "W2Delta": "Two type-only imports and two parameter annotations in materialization.test.ts. No executable statement, assertion or budget changed; both product blobs are identical toW1."
+  },
+  "productFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "financePreimage": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "path": "preimages/finance-state-provider.ts.txt",
+        "bytes": 12807,
+        "sha256": "f988cc1c91c340628c80523d587bfeec27e92971d6ff467233f9bbb4fff0dfbe",
+        "gitBlob": "b7988a2963a2797a96ea19ab2b3a481564548213"
+      },
+      "financePostimage": {
+        "commit": "1a656f1f7251de8c104e5b03a43b457e80437181",
+        "sameProductAtShortProofW": "a710446e3a002068eacf6ff1ade66365d24005d6",
+        "path": "postimages/finance-state-provider.ts.txt",
+        "bytes": 15198,
+        "sha256": "fbe80239c4f1d67a399b7eed9d25d2785098b0c3a220e153b47fd166819420e3",
+        "gitBlob": "e7810b956073fa83a977109cfdea4735493b8aa3"
+      },
+      "composedPreimage": {
+        "commit": "b62c32940d06c15c04f52b88209d5b4930cf1a3e",
+        "alsoObservedAt": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+        "path": "preimages/composed-state-provider.ts.txt",
+        "bytes": 19836,
+        "sha256": "de25a3d2c5fc8725debb538ec0efb45b3a3c986ff478156cce734038f87d7268",
+        "gitBlob": "2fd55c7304add0829d7434917c80664fe86356b9"
+      },
+      "composedProposedPostimage": {
+        "disposition": "NOT_APPLIED_NOT_TESTED",
+        "path": "postimages/composed-state-provider.NOT_APPLIED.ts.txt",
+        "bytes": 22226,
+        "sha256": "edfd0547919597e0e79e4dbe15670eab2797399cab4c8f627e0a26a8045d8cab",
+        "gitBlob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c"
+      },
+      "intakePrecondition": "Compare live preimage blobs before selective application; reconcile later advances. Never replace composed provider with the older Finance provider."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "financePreimage": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "path": "preimages/case-port.ts.txt",
+        "bytes": 18035,
+        "sha256": "43ce8b8f833a5f401fc9d26d1d85c9a806dd1736d3f3b059dcc9a05681bf5ecb",
+        "gitBlob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+      },
+      "financePostimage": {
+        "commit": "1a656f1f7251de8c104e5b03a43b457e80437181",
+        "sameProductAtShortProofW": "a710446e3a002068eacf6ff1ade66365d24005d6",
+        "path": "postimages/case-port.ts.txt",
+        "bytes": 17689,
+        "sha256": "dc35d90d36c1d562b380b6e58defc639bbe94d351367ae31aebc5c1884900075",
+        "gitBlob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74"
+      },
+      "composedPreimage": {
+        "commit": "b62c32940d06c15c04f52b88209d5b4930cf1a3e",
+        "alsoObservedAt": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+        "path": "preimages/case-port.ts.txt",
+        "bytes": 18035,
+        "sha256": "43ce8b8f833a5f401fc9d26d1d85c9a806dd1736d3f3b059dcc9a05681bf5ecb",
+        "gitBlob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+      },
+      "composedProposedPostimage": {
+        "disposition": "NOT_APPLIED_NOT_TESTED",
+        "path": "postimages/case-port.ts.txt",
+        "bytes": 17689,
+        "sha256": "dc35d90d36c1d562b380b6e58defc639bbe94d351367ae31aebc5c1884900075",
+        "gitBlob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74"
+      },
+      "intakePrecondition": "Compare live preimage blobs before selective application; reconcile later advances. Never replace composed provider with the older Finance provider."
+    }
+  ],
+  "addedCandidateFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/fixture.ts",
+      "preimage": null,
+      "postimage": {
+        "bytes": 4880,
+        "gitBlob": "e0405a7c523702482ffd1c8a9b500f4ca241b3a8",
+        "sha256": "860097a5e259ca985883b88bed467a0d5781b5bf6dee708689e7b063e72fdf7d"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "preimage": null,
+      "postimage": {
+        "bytes": 14323,
+        "gitBlob": "18f3140769260dafbe7f639d6694ea493f3ea535",
+        "sha256": "e336bc1118d437d9d65dd7c7624664c2bb68c929c0cc20e4ad39b5ab84d91923"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/materialization.test.ts",
+      "preimage": null,
+      "postimage": {
+        "bytes": 6994,
+        "gitBlob": "6731cab950249b1d018ced74cafce42a2ca27b9e",
+        "sha256": "51e86ca02f58373c0dccc1afe937a9d1435ad9270f19eb19f0b134240d074661"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/intake-01.json",
+      "preimage": null,
+      "postimage": {
+        "bytes": 4353,
+        "gitBlob": "ece6ad07b0a1ba1b04c438a747297cda7a968d7e",
+        "sha256": "3fef5e41343b601d329bd29f909e003fb5b7bb6ba05ea76b63ee760d2567a15f"
+      }
+    }
+  ],
+  "patches": [
+    {
+      "kind": "complete implementation and short proof package (six files, before terminal receipts)",
+      "base": "d8d586e19c824f75a88494a9c3677faac617e81d",
+      "candidate": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "scope": [
+        "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/materialization.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/intake-01.json"
+      ],
+      "path": "full-candidate.patch.txt",
+      "bytes": 38981,
+      "sha256": "1baaa9e07cf17faa28e1a796d6ca4650bca574557a6f1801d7fbdaf61b1f87f3",
+      "gitBlob": "8be82be537f451de47e7c6cb57f0827787302577"
+    },
+    {
+      "kind": "applied Finance product delta (two files)",
+      "base": "d8d586e19c824f75a88494a9c3677faac617e81d",
+      "candidate": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "scope": [
+        "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+      ],
+      "path": "finance.patch.txt",
+      "bytes": 7455,
+      "sha256": "168f854ba11380869c9c70150ea84d784dfcb3b39d3ba95be98702aba97f744e",
+      "gitBlob": "24c7363ba66a773af51ec44b21fbd54fd4370a15"
+    },
+    {
+      "kind": "selective composed proposal (two files)",
+      "base": "b62c32940d06c15c04f52b88209d5b4930cf1a3e",
+      "alsoCompatibleWithObservedBlobsAt": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+      "disposition": "NOT_APPLIED_NOT_TESTED",
+      "scope": [
+        "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+      ],
+      "path": "composed.NOT_APPLIED.patch.txt",
+      "bytes": 7457,
+      "sha256": "fadcd80b68ea33601fa394297c979289c628b859d9379b3ad4d53632e4a941df",
+      "gitBlob": "d2e96016349f7d512db31b7ffa91d7600c7aa3a8"
+    }
+  ],
+  "composedObservation": {
+    "pinned": "b62c32940d06c15c04f52b88209d5b4930cf1a3e",
+    "observed": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+    "providerBlob": "2fd55c7304add0829d7434917c80664fe86356b9",
+    "casePortBlob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6",
+    "pinnedPreimagesStillExact": true,
+    "applied": false,
+    "tested": false,
+    "consumer": "session14"
+  },
+  "composedPreservedAdditions": [
+    "state-layout and bi-artifacts migration",
+    "protected writer registries",
+    "checkNamespaces and their authorizations",
+    "sourceFence",
+    "nativePublicationGuard",
+    "additional namespaces/private maps and legacy-state validation"
+  ],
+  "exclusionsPreserved": [
+    "Memory/business-context.ts/analysis-stale-commit.ts/CLI host-context",
+    "Apply/C12/generic apply/procurement decision HTTP/UI/interface HTTP/host contract",
+    "initial alternatives UI/spec",
+    "WP13 semantic union",
+    "existing Finance producer algorithms",
+    "runtime/local-store.ts",
+    "global contracts/publicProtocol/HttpApi",
+    "fixtures/workflows/config/shared source tests",
+    "engines/runtime restarts/deploy/Azure/credentials/dev merge/sf2-stack writes"
+  ],
+  "testsAndEvidence": {
+    "short": "S2-result.json",
+    "counterproof": "S1-result.json",
+    "long": "S3-result.json",
+    "typecheckAndGuards": "K2-result.json",
+    "firstChecksAndCorrection": "K1-result.json",
+    "semantics": "semantics.json",
+    "criteria": "criteria-provenance.json",
+    "sourceInputs": "preserved-inputs.json",
+    "logs": "ci-log-archive.json",
+    "ledger": "CI-LEDGER.json"
+  },
+  "sourceReviewLimit": "Auxiliary analyses are source/evidence checks only; no independent E17/G4/native/bundle acceptance is granted.",
+  "deliveryCommitRule": "This package archives exact W evidence. Its containing receipt commit is identified externally on PR42; no self-referential hash or future commit SHA is embedded. W checks are not relabelled as a later documentation commit check.",
+  "writeAuthority": "TERMINAL upon publication of this HANDOFF-FINAL and receipts. Consumer session14 must observe the published head and reconcile preimages before further source integration.",
+  "globalRelease": false
+}

@@ -1,0 +1,87 @@
+import { digestSfValue } from "../contracts/canonical.ts"
+import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+import type { ScenarioRequest, SensitivityRequest } from "../contracts/operations.ts"
+import type { SensitivityResult } from "../contracts/outputs.ts"
+import type { PlannerPort, PortResult } from "../contracts/ports.ts"
+import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import type { createSfDecisionResultStore } from "../decisions/result-store.ts"
+import { createSensitivityEvaluator } from "./sensitivity.ts"
+import { attachSensitivityV6 } from "./sensitivity-v6.ts"
+
+type SensitivityBinding = {
+  caseRef: { id: string; incarnation: string; version: number }
+  scenarioRequest: ScenarioRequest
+  baselineScenarioRef: string
+  metric: "alternative-minus-baseline"
+  parameterUnit: string
+  resultUnit: string
+  legacyUnit: string
+  unitMetadataRef: string
+  unitMetadataVersion: number
+  engineVersion: string
+  evidenceRefs: readonly BusinessEvidenceRef[]
+}
+
+/** Sample the actual Planner and persist each result; metadata and all inputs remain host-authorized. */
+export function createPlannerSensitivity(input: {
+  planner: PlannerPort
+  results: ReturnType<typeof createSfDecisionResultStore>
+  resolve: (request: SensitivityRequest, context: TrustedDomainContext) => Promise<PortResult<SensitivityBinding>>
+  revalidate: (binding: SensitivityBinding, context: TrustedDomainContext) => Promise<boolean>
+  idempotencyKey: (requestDigest: string, context: TrustedDomainContext) => Promise<string | undefined>
+}) {
+  return async (request: SensitivityRequest, context: TrustedDomainContext): Promise<PortResult<SensitivityResult>> => {
+    const resolved = await input.resolve(request, context)
+    if (resolved.status !== "ok") return resolved
+    const binding = structuredClone(resolved.value)
+    if (binding.metric !== "alternative-minus-baseline" || !binding.parameterUnit.trim() || !binding.resultUnit.trim() || !binding.legacyUnit.trim() || !binding.unitMetadataRef.trim() || !Number.isSafeInteger(binding.unitMetadataVersion) || binding.unitMetadataVersion < 1 || !binding.engineVersion.trim() || !binding.evidenceRefs.length || !await input.revalidate(binding, context)) return { status: "unavailable", reason: "sensitivity-metadata-unavailable" }
+    const source = await input.results.read({ kind: "scenario", resultRef: request.scenarioRef }, context)
+    if (source.status !== "ok") return source
+    if (source.value.kind !== "scenario" || source.value.requestDigest !== digestSfValue(binding.scenarioRequest) || digestSfValue(source.value.caseRef) !== digestSfValue(binding.caseRef)) return { status: "stale", reason: "sensitivity-scenario-changed" }
+    const operations = binding.scenarioRequest.operations.filter((operation) => operation.targetRef === request.parameterBounds.parameterRef)
+    if (operations.length !== 1 || operations[0].kind !== "replace" || operations[0].replacementRef !== undefined || typeof operations[0].amount !== "number") return { status: "needs-input", reason: "unsupported-sensitivity-parameter" }
+    const key = await input.idempotencyKey(digestSfValue(request), context)
+    if (!key?.trim()) return { status: "denied", reason: "operation-identity-unavailable" }
+    const comparisons: { scenarioRef: string; comparisonRef: string; comparisonDigest: string; sourceRefs: readonly BusinessEvidenceRef[]; coverageRefs: readonly string[] }[] = []
+    const evaluate = createSensitivityEvaluator({
+      sample: async (_request, value, trusted) => {
+        const scenarioRequest = { ...binding.scenarioRequest, operations: binding.scenarioRequest.operations.map((operation) => operation.targetRef === request.parameterBounds.parameterRef ? { ...operation, amount: value } : operation) }
+        const simulated = await input.planner.simulateScenario(scenarioRequest, trusted)
+        if (simulated.status !== "ok") return simulated
+        const scenarioDigest = digestSfValue(scenarioRequest)
+        const sources = [...simulated.value.sourceRefs, ...binding.evidenceRefs].filter((ref, index, refs) => refs.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index)
+        const saved = await input.results.write({ kind: "scenario", result: simulated.value, caseRef: binding.caseRef, requestDigest: scenarioDigest, sourceRefs: sources, idempotencyKey: `${key}:scenario:${scenarioDigest}` }, trusted)
+        if (saved.status !== "ok") return saved
+        if (saved.value.kind !== "scenario" || digestSfValue(saved.value.result) !== digestSfValue(simulated.value)) return { status: "stale", reason: "sensitivity-sample-changed" }
+        const comparisonRequest = { scenarioRefs: [binding.baselineScenarioRef, saved.value.resultRef], criteria: [] }
+        const compared = await input.planner.compareScenarios(comparisonRequest, trusted)
+        if (compared.status !== "ok") return compared
+        if (compared.value.baselineResultRef !== binding.baselineScenarioRef || compared.value.alternativeResultRef !== saved.value.resultRef || compared.value.comparisonStatus === "unavailable" || compared.value.comparisonStatus === "incompatible") return { status: "unavailable", reason: "sensitivity-comparison-unavailable" }
+        const comparedDigest = digestSfValue(comparisonRequest)
+        const savedComparison = await input.results.write({ kind: "comparison", result: compared.value, caseRef: binding.caseRef, requestDigest: comparedDigest, sourceRefs: sources, idempotencyKey: `${key}:comparison:${comparedDigest}` }, trusted)
+        if (savedComparison.status !== "ok") return savedComparison
+        if (savedComparison.value.kind !== "comparison" || digestSfValue(savedComparison.value.result) !== digestSfValue(compared.value)) return { status: "stale", reason: "sensitivity-comparison-changed" }
+        comparisons.push({ scenarioRef: saved.value.resultRef, comparisonRef: savedComparison.value.resultRef, comparisonDigest: digestSfValue(compared.value), sourceRefs: sources, coverageRefs: compared.value.costCoverageRefs })
+        return { status: "ok", value: { resultRef: saved.value.resultRef, scenario: saved.value.result, criterionValue: compared.value.knownDifference, parameterUnit: binding.parameterUnit, resultUnit: binding.resultUnit, unitMetadataRef: binding.unitMetadataRef, unitMetadataVersion: binding.unitMetadataVersion } }
+      },
+      exactThreshold: async () => ({ status: "unavailable", reason: "exact-threshold-not-proven" }),
+      revalidate: async (samples, _thresholdEvidence, trusted) => {
+        const latest = await input.resolve(request, trusted)
+        if (latest.status !== "ok" || digestSfValue(latest.value) !== digestSfValue(binding) || !await input.revalidate(binding, trusted) || samples.length !== comparisons.length) return false
+        const reread = await Promise.all(comparisons.map(async (item) => {
+          const scenario = await input.results.read({ kind: "scenario", resultRef: item.scenarioRef }, trusted)
+          const comparison = await input.results.read({ kind: "comparison", resultRef: item.comparisonRef }, trusted)
+          return scenario.status === "ok" && scenario.value.kind === "scenario" && comparison.status === "ok" && comparison.value.kind === "comparison" && digestSfValue(comparison.value.result) === item.comparisonDigest && comparison.value.result.alternativeResultRef === scenario.value.resultRef
+        }))
+        return reread.every(Boolean) && await input.revalidate(binding, trusted)
+      },
+    })
+    const sampled = await evaluate(request, context)
+    if (sampled.status !== "ok") return sampled
+    const coverageRefs = [...new Set(comparisons.flatMap((item) => item.coverageRefs))]
+    const satisfied = (value: number) => request.criterion.operator === "lte" ? value <= request.criterion.value : request.criterion.operator === "gte" ? value >= request.criterion.value : value === request.criterion.value
+    const transition = sampled.value.evaluated.findIndex((point, index, values) => index > 0 && point.value !== null && values[index - 1].value !== null && satisfied(point.value) !== satisfied(values[index - 1].value!))
+    const thresholdEvidence = transition > 0 ? { state: "sampled" as const, interval: { minimum: sampled.value.evaluated[transition - 1].parameterValue, maximum: sampled.value.evaluated[transition].parameterValue }, evidenceRefs: [...binding.evidenceRefs, ...comparisons[transition - 1].sourceRefs, ...comparisons[transition].sourceRefs] } : { state: "unavailable" as const, reason: "no-sampled-transition" }
+    return attachSensitivityV6({ result: sampled.value, costCoverageRefs: coverageRefs, unit: binding.legacyUnit, engineVersion: binding.engineVersion, thresholdEvidence })
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "mission": "forecast-cancel-visibility",
+  "phase": "REVOCATION_ORACLE_RECHECK",
+  "status": "NOT_RUN",
+  "parent_W": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+  "reason": "Only the shell-event observation in the new revocation test failed; all production assertions and the full U30 passed in run43633001171.",
+  "changes": "Correct own test to observe the real shell's replaced access-unavailable view and retained old DOM handles. Keep every scrub/removal condition, add history case clearing, and retain identical deadlines.",
+  "production_changes": [],
+  "unchanged_test_files": [
+    "forecast-submit.test.ts",
+    "states.test.ts",
+    "recovery.test.ts"
+  ],
+  "unchanged_helpers": [
+    "fixture.ts",
+    "controls.ts",
+    "journey.ts"
+  ],
+  "selection": [
+    "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "./Sucafinav1/test/product/forecast-cancel-visibility/revocation.test.ts",
+    "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "dedupe": "Reattach unaffected PASS evidence from prior W by identical production/test/helper/config blobs. Whole revocation file rerun because shared pool accepts exact files, not test filters.",
+  "no_assertion_removal": "All 17 U30 statements untouched. For shell-event, evaluate scrubbing through retained DOM handles; assert old form/history disconnected and live controls/output absent instead of incorrectly requiring the old form to remain visible.",
+  "limits": {
+    "real": [
+      "forecastAnalysisForm",
+      "forecastAnalysisScript",
+      "documentHtml/pageMain shell",
+      "distributed resident catalog",
+      "Chromium and existing WP01/WP02 browser pool"
+    ],
+    "fixture": [
+      "case and evidence data",
+      "model catalog",
+      "HTTP prepare/start/read/output responses"
+    ],
+    "not_claimed": [
+      "financial producer",
+      "native model or Session",
+      "AM01-AM06",
+      "GLOBAL_RELEASE"
+    ]
+  }
+}

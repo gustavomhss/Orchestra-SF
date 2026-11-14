@@ -1,0 +1,181 @@
+{
+  "schema": "sf2h.operations-dependencies.v1",
+  "status": "BLOCKED_DEPENDENCY",
+  "observed_at_utc": "2026-11-14",
+  "W": "70255998e3310652c4b7fce33f498e592be0bda9",
+  "scope": "Prerequisites for real browser execution; separate integration watchlist is not an asserted cause of failure in unexecuted journeys.",
+  "dependencies": [
+    {
+      "id": "OPS-E2E-DEP-001",
+      "owner": "S0 / shared production Playwright fixture owner",
+      "blockingForAuthoredJourneys": true,
+      "title": "Nominal Operations filename does not start the existing host",
+      "evidence": {
+        "config": {
+          "path": "packages/app-shell/e2e/playwright.production.config.ts",
+          "commit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+          "blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+          "same_blob_at_PR34": "15df31a67efab0aae6e2bff2b7eb8e5e59511324"
+        },
+        "selector": {
+          "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+          "blob": "7224825eb470a2f172e7dc32172f83a6b05a5787"
+        }
+      },
+      "observed": "wp04BrowserSelected recognizes only e2e/sucafina/wp04/procurement.spec.ts. The nominal operations.spec.ts selection starts apps/web but does not create wp04/.host-manifest.json or __wp04_ready.",
+      "required": "Shared owner must enable the real isolated host lifecycle for exactly operations.spec.ts under the unchanged canonical production recipe. Keep one nominal file, no extra old spec, process/server workaround, HTML replacement or mocked product.",
+      "outsideWriteScope": [
+        "packages/app-shell/e2e/playwright.production.config.ts",
+        "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+        "packages/app-shell/e2e/sucafina/wp04/host.ts"
+      ]
+    },
+    {
+      "id": "OPS-E2E-DEP-002",
+      "owner": "S0 integration / Operations product owner",
+      "blockingForAuthoredJourneys": true,
+      "title": "Real product versions used by the authored assertions are absent from the PR23 base",
+      "base": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "targetSource": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "evidence": {
+        "procurement_runtime": {
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "baseBlob": "6cd5783d5b4f6f9c9ed3e15547d59f79ccb5ef72",
+          "targetBlob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+          "baseMissing": "data-request-money and updated pending-sourcing/future-PO presentation"
+        },
+        "missingAtBase": [
+          "product/imports/workbench.ts",
+          "product/imports/workbench-script.ts",
+          "product/documents/workbench.ts"
+        ],
+        "importHttp": {
+          "baseBlob": "f500c9abbb7330555494c8755ae1c57a103cda5d",
+          "targetBlob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786"
+        },
+        "documentHttp": {
+          "baseBlob": "fbb76f54c1ebfa475189a92ecad6092e22733c81",
+          "targetBlob": "8f679deec37dc99ae335c4bacae2162c9a7a076a"
+        }
+      },
+      "required": "Owner must reconcile the approved product deltas on one candidate, retaining the runtime and interface contracts pinned in sources.json. This E2E mission neither edits nor merges product sources."
+    },
+    {
+      "id": "OPS-E2E-DEP-003",
+      "owner": "S0 / WP10 app-host integration with WP04 and WP06",
+      "blockingForAuthoredJourneys": true,
+      "title": "Shared WP04 host composes only Procurement and its C02 queue",
+      "evidence": {
+        "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+        "commit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+        "blob": "3dd5760da92346e267a3cc767c69c4d8bb51b31c"
+      },
+      "observed": [
+        "domains is procurement:[ProcurementModule], dashboard:[], planner:[]",
+        "createApplication receives productView:business.procurementQueueView but not the application.product HTTP composition",
+        "Only sf_request_read is granted"
+      ],
+      "required": [
+        "Compose real PlannerModule, import/document HTTP workbenches and the actual import/document services through createApplication.product.",
+        "Use the existing SQLite runtime, staged bytes, source registry, RAG/document parser, asset authorization and atomic command/receipt infrastructure.",
+        "Retain isolated first/second/viewer local-operator accounts and the existing one-use enrollment names. Do not grant arbitrary authority from test input.",
+        "First operator needs actual requester/admin/buyer abilities for PR, Settings, Planner and supplier setup; private supplier upload additionally requires Procurement admin/supplier admin. Viewer must read the authorized Planner export without writes.",
+        "Provide the deterministic empty Planner store in the fresh host; OP-IMPORT-01 creates its first version via UI. Retain the existing active supplier and J04 comparison fixtures; no new manifest field is assumed.",
+        "Mount real import-targets/admit/preview/detail/apply/reference and document discovery/admit/schema/extract/confirm/candidates/open routes. Preserve read-only recovery and revocation behavior."
+      ],
+      "testIsolation": {
+        "comparison": "read-only seeded comparison",
+        "snapshot": "own random request; changes EUR rate through Settings and restores the original rate in finally",
+        "fxRefusal": "own random request; JPY absent in initial settings",
+        "import": "own random Planner version/row IDs; one real Apply; same credential logout; viewer checks committed values",
+        "documents": "own pending supplier and random text bytes; deletes only that supplier after confirmation"
+      }
+    },
+    {
+      "id": "OPS-E2E-DEP-004",
+      "owner": "S0 / collaboration and Procurement material-confirmation producer / UI owner",
+      "blockingForC06": true,
+      "blockingForAuthoredJourneys": false,
+      "title": "C06 material confirmation has no integrated producer selection, transport and user control",
+      "details": "c06-dependency.json",
+      "required": "Expose the real material selector from createProcurementConfirmationObserver, mount collaboration HTTP into the host, and offer a real Procurement material-confirmation UI control. Then author the positive valid/stale/unavailable journey using producer-issued incarnation/fingerprint and original audit identity.",
+      "notEquivalent": [
+        "C02 collection UUID or procurement-record-v1 source",
+        "Prefix-swapped sf-procurement-c06 reference or locally fabricated scope",
+        "Conversation answer confirmation",
+        "HTTP adapter factory that is never mounted"
+      ],
+      "implementationStatus": "No substitute positive test, skip or mock added; C06 remains BLOCKED_DEPENDENCY."
+    },
+    {
+      "id": "OPS-E2E-DEP-005",
+      "owner": "S0 / app-shell TypeScript project owner",
+      "blockingForTypecheck": true,
+      "blockingForAuthoredJourneys": false,
+      "title": "Current typecheck projects do not include the Operations test graph",
+      "evidence": {
+        "e2eTsconfig": {
+          "path": "packages/app-shell/e2e/tsconfig.json",
+          "blob": "8364221434311400cae3007ea74cc67ddcfde765"
+        },
+        "appTsconfig": {
+          "path": "packages/app-shell/tsconfig.json",
+          "blob": "8604188dee0f1ce9978cae39366d1850f5e97e7f"
+        }
+      },
+      "observed": "Neither normal app-shell tsconfig nor its explicit E2E include list reaches sucafina/operations.spec.ts or operations-support. Existing astra-wp04-check typechecks modules/sucafina, not this graph.",
+      "required": "Owner must include the Operations graph and arrange hosted bun typecheck / package typecheck:e2e under the approved path. Playwright list/transpile is not TypeScript typecheck. No config or workflow edit was made here.",
+      "guardDistinction": "check:guards still applies to these .ts files independently of tsconfig. Its actual execution and origin/dev base are recorded separately in execution receipts."
+    }
+  ],
+  "integrationWatchlist": [
+    {
+      "id": "OPS-INTEGRATION-PR57",
+      "owner": "sourcing-money / procurement-exports",
+      "head": "717efbbef27de70b382db2aa734605c779228947",
+      "productW": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+      "blockingForAuthoredJourneys": false,
+      "observed": "PR34 has monetary.ts c9a224b12c13b7cec506be90527300caa7e984fd but not the later downloads.ts fix.",
+      "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "PR34Blob": "fa365f9d350be341348ab69d789e40779c8b9756",
+      "ownerBlob": "7fa9c254c7c08b894d8b4c3336653c32b6270126",
+      "risk": "Future-PO exports and individual line totals need owner reconciliation. These five cases do not exercise the Procurement download slice; preserve PR34 runtime 20a3ec5 when composing."
+    },
+    {
+      "id": "OPS-INTEGRATION-PR58",
+      "owner": "import-recovery",
+      "head": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+      "blockingForAuthoredJourneys": false,
+      "path": "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+      "PR34Blob": "b24558f415f48921b43255169ec0cc82d7037ddb",
+      "ownerBlob": "0d42f5242acd3d1c93bc110422285b96975b8ea0",
+      "risk": "Recovery between staged-byte commit and catalog publication requires the owner's durable admission proof. OP-IMPORT-01 loses only an already committed Apply response; no interrupted admission or host restart is tested."
+    },
+    {
+      "id": "OPS-INTEGRATION-PR60",
+      "owner": "procurement-apply / S0",
+      "head": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+      "blockingForAuthoredJourneys": false,
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+          "PR34Blob": "9c1b657dc4d6d5ba139c4f9fe854c1c8960cc95b",
+          "ownerBlob": "e613a1bf32fe1ee75574139cf699c34843cf25d1"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+          "PR34Blob": "8c83680aaffa06c7b265f17e612118b1e008615a",
+          "ownerBlob": "bdea5d497b4e8fa7e540cfb44d427cd3696678db"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+          "PR34Blob": "d6382e93faeb7bf7b3118d592a9a47351d482fec",
+          "ownerBlob": "c8d476a1be6d2b839a087b2bc248293014599791"
+        }
+      ],
+      "risk": "C12 preparation must reject inactive PR intent and successful domain no-ops. This C12 flow is not exercised by the five cases."
+    }
+  ],
+  "integrationWarning": "PR34 and the three owner branches diverge from ba8a09e371ce8d93eb917eabb102caaee5affaf4. No validated union of their heads is asserted. Keep PR34 WP14 source-access-atlas.test.ts d7d2a69837560f42438d470b83724c1a61939a73 when reconciling the other owners' fbe627ffde443ff7e2d3b1204bbcf67523404f41 preimage.",
+  "nextAction": "S0 reconciles product deltas and delegates shared host/config/typecheck prerequisites. Once supplied, re-read the resulting candidate, validate the exact one-file request, execute CI-UI-OPERATIONS once through the canonical Actions path, then inspect exact effects/receipts and author C06 against the real offered UI."
+}

@@ -30,6 +30,18 @@ export type Snapshot = {
   sequences: Record<string, number>
   audit: Audit[]
   notices: Notice[]
+  sfCommandPreviews?: Record<string, { principalRef: string; actorDigest: string; command: Command; baseDigest: string; commandDigest: string; ids: string[]; expiresAt: string; receipt?: Result }>
+  // Host-private blob generations survive deletion and are updated atomically with blob bytes.
+  sfBlobGenerations?: Record<string, number>
+  // Host-private source lifecycle metadata. Business views and JSON export expose only data/versions.
+  sfSources?: {
+    schemaVersion: 1
+    records: Record<string, { incarnation: string; version: number; alive: boolean; inputDigest: string }>
+    scopes?: Record<string, {
+      scope: { principalRef: string; accessRevision: string; policyVersion: string; recordType: string; recordId: string; selector: unknown }
+      incarnation: string; sourceIncarnation: string; version: number; alive: boolean; inputDigest: string
+    }>
+  }
 }
 export type Environment = {
   at: string
@@ -43,8 +55,10 @@ export type Result =
       ok: false
       status: 400 | 403 | 404 | 409 | 422 | 503
       errors?: string[]
+      fieldErrors?: { field: string; message: string }[]
       stored?: unknown
       by?: string
+      currentVersionCAS?: number
     }
 export type View = {
   data: Record<string, unknown>
@@ -63,6 +77,8 @@ export type Persistence = {
   // commit=false, cancellation, callback failure or commit failure writes nothing, including after restart.
   // Production adapters must run the conformance suite against their real driver; the test Map adapter is not durability proof.
   transaction: <T>(surface: Surface, work: (snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
+  transactionAll?: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
+  currentSnapshots?: () => Readonly<Record<Surface, Snapshot>> | undefined
 }
 
 export function object(value: unknown): Record<string, unknown> {
@@ -83,7 +99,7 @@ export function finite(value: unknown, fallback = 0): number {
 }
 export function conflict(snapshot: Snapshot, key: string, command: Command, stored: unknown): Result | undefined {
   const current = snapshot.versions[key]
-  if ((current?.version ?? 0) !== command.version) return { ok: false, status: 409, stored, by: current?.by }
+  if ((current?.version ?? 0) !== command.version) return { ok: false, status: 409, stored, by: current?.by, currentVersionCAS: current?.version ?? 0 }
 }
 export function changed(snapshot: Snapshot, key: string, actor: Actor, at: string, was: unknown, became: unknown) {
   snapshot.versions[key] = {

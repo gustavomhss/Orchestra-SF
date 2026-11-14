@@ -1,0 +1,78 @@
+{
+  "state": "OBSERVED_FOREIGN_FAILURES_NOT_FIXED_IN_UI_SCOPE",
+  "candidate": "7c9bbd966483b94d21a4c30961a8174be7ed6804",
+  "baseline": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+  "source": {
+    "run_id": 43632801654,
+    "job_id": 132562905431,
+    "channel": "GitHub MCP decoded job log"
+  },
+  "command": "bun typecheck",
+  "cwd": "modules/sucafina",
+  "exit_code": 2,
+  "diagnostics": 9,
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "preimage_blob": "4aca959eaba4f30aa7ee4f89eb95030afc2fa02b",
+      "baseline_blob": "4aca959eaba4f30aa7ee4f89eb95030afc2fa02b",
+      "positions": [
+        "193:136",
+        "225:138",
+        "281:138",
+        "404:5",
+        "420:5"
+      ],
+      "code": "TS2322",
+      "owner_action": "Owner vigente do host nativo: reconciliar SfStateResult com PortResult sem mudar este consumidor UI; respeitar lease e este preimage."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "preimage_blob": "0b10585a9ea34b26a132816a4e56670ac5de23a8",
+      "baseline_blob": "0b10585a9ea34b26a132816a4e56670ac5de23a8",
+      "positions": [
+        "40:35",
+        "45:41",
+        "56:37",
+        "221:36"
+      ],
+      "code": "TS2739",
+      "missing": [
+        "creationTarget",
+        "authorizeOutcomeComparison",
+        "authorizeOutcome",
+        "authorizeDecision"
+      ],
+      "owner_action": "Owner WP07: reconciliar seus fixtures com o ReviewHost atual, preservando negativas de autorização e este preimage."
+    }
+  ],
+  "log_diagnostics": [
+    "2026-11-14T19:36:43.5172727Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(193,136): error TS2322: Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+    "2026-11-14T19:36:43.5184272Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(225,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+    "2026-11-14T19:36:43.5192167Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(281,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+    "2026-11-14T19:36:43.5200409Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(404,5): error TS2322: Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+    "2026-11-14T19:36:43.5214528Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(420,5): error TS2322: Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+    "2026-11-14T19:36:43.5225881Z ##[error]test/product/wp07/review-port.test.ts(40,35): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<boolean>; authorizeComments: () => Promise<boolean>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+    "2026-11-14T19:36:43.5229561Z ##[error]test/product/wp07/review-port.test.ts(45,41): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+    "2026-11-14T19:36:43.5233511Z ##[error]test/product/wp07/review-port.test.ts(56,37): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<true>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+    "2026-11-14T19:36:43.5237346Z ##[error]test/product/wp07/review-port.test.ts(221,36): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => undefined; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision"
+  ],
+  "proof_limit": "Os dois blobs são idênticos no baseline e em W1. Isso prova que os arquivos não mudaram nesta missão, não converte o typecheck em PASS. Nenhum patch estrangeiro foi aplicado.",
+  "reobserved_in": [
+    {
+      "W": "359ab99db8aaec23e885b492876bc0a3df3d0a33",
+      "run": 43633483813,
+      "job": 132565093216,
+      "diagnostics": 9,
+      "own_path_diagnostics": 0
+    },
+    {
+      "W": "d8524169e0de188312f6c2d3b6877562c47e664d",
+      "run": 43634168745,
+      "job": 132567207864,
+      "diagnostics": 9,
+      "own_path_diagnostics": 0
+    }
+  ],
+  "identity_through_W3": "W1→W2→W3 changed only own recipient loader/tests and receipts; both foreign preimages remain unchanged."
+}

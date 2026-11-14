@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": true,
+    "emitDeclarationOnly": false,
+    "allowImportingTsExtensions": true,
+    "rootDir": "../..",
+    "types": ["node", "bun", "vite/client"]
+  },
+  "files": [
+    "e2e/sucafina/operations.spec.ts",
+    "e2e/sucafina/decisions.spec.ts",
+    "e2e/sucafina/reports.spec.ts"
+  ],
+  "include": [
+    "e2e/playwright.production.config.ts",
+    "e2e/utils/flaky-reporter.ts",
+    "e2e/sucafina/**/*.ts",
+    "e2e/sucafina/**/*.tsx"
+  ]
+}

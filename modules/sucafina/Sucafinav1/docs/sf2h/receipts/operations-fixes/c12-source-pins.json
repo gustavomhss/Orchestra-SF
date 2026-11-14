@@ -1,0 +1,89 @@
+{
+  "initial": {
+    "commit": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+    "tree": "eb427121bcfd8c2511aac31d908f3c0d52c1915e"
+  },
+  "review": "6830fa159d30b60d001f91a47326ae88c6255282",
+  "normative": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "currentOwners": [
+    {
+      "branch": "astra-wp11",
+      "head": "e8949be0e31952d5be4987c099003cd0b46e2add",
+      "tree": "694ab744ce9e1361ec65704c5854c0bd30bf833a"
+    },
+    {
+      "branch": "finance-resume",
+      "head": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "tree": "2d1ecef2ebc5aeca3fd312397bdf709f53d42582"
+    },
+    {
+      "branch": "compose-resume",
+      "head": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "tree": "885ce466354d2b8dcf674472561c9c1fc3b632ff"
+    },
+    {
+      "branch": "interface-resume",
+      "head": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "tree": "cf3676a469a1f8bcab05e322ee7a4a1ada0704c5"
+    }
+  ],
+  "currentExecutor": {
+    "owner": "finance-resume",
+    "preimage": "f8404c18abc040c49cf111eb4561ce4c2873a4c6",
+    "source": "3ea9dc2efe0de8d283f9625774697e431f55a0d7"
+  },
+  "patches": [
+    {
+      "path": "c12-receipt-recovery.NOT_APPLIED.patch",
+      "applied": false,
+      "execution": "NOT_RUN",
+      "sha256": "350d5a03daeb4d0b8c53ed04398fb1051f0bfbab02ff6bd5a79078a35d7191a7",
+      "members": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+          "preimageGitBlob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+          "preimageSha256": "aa777b4062e785eb69db1724e2be633e4547303310ec02d9b15329affc8f7db8",
+          "proposedGitBlob": "ef76c9a0399f936a556a04234415fe20998b9b9f",
+          "proposedSha256": "6ed3f5fdfdac12226a65e386ab70451e3f5b7b9270307a8dff71a9f575e59a65"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "preimageGitBlob": "23d9291b3dcedda36edc4aa4f38856024e3c58f4",
+          "preimageSha256": "dc8a1a16ea7b54b03ca6bafacf60cc27b61aff32626c2a8cf69affa5d3f1399f",
+          "proposedGitBlob": "cd1555dbbc4813cee11202a26d783f6215642432",
+          "proposedSha256": "71b5ee2098cf4dacca40811ff3335a0949331d08d650b8023185a89556d189d9"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+          "preimageGitBlob": "e169d335f091c446bb380ee73f450083f917946f",
+          "preimageSha256": "e853571c1530368e85136175d913c646c95bf5c850eefb583270f605ed6eddd1",
+          "proposedGitBlob": "1704aeef4c219137391d8f7417f6099a748cc482",
+          "proposedSha256": "a08f6ca569a0758f2a129ae24aa4cdb6537acd829e32ddd450b63a2847066e45"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+          "preimageGitBlob": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+          "preimageSha256": "ca082614ef672c2640261e1bef690375a32c8bbb016b67993be276a19f930184",
+          "proposedGitBlob": "0e875e7b9493c93e527c6b72e25e80b08052d0e4",
+          "proposedSha256": "2e8c91b614462f06c1cb99b7ebe9d0a7b0e5799b4a453ff482cbe842a53de2dd"
+        }
+      ]
+    },
+    {
+      "path": "c12-current-executor.NOT_APPLIED.patch",
+      "applied": false,
+      "execution": "NOT_RUN",
+      "sha256": "56368afff5a2bd0c6b3ceab38113ffc43623404c4c0c157207adebb840baf2db",
+      "members": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+          "preimageGitBlob": "f8404c18abc040c49cf111eb4561ce4c2873a4c6",
+          "preimageSha256": "f73888488ffa52adf1c0a970e09462643e3f4921707e27265c1fdac998b41be1",
+          "proposedGitBlob": "d31317d29c487cdadb325647e244f12e6d8bf886",
+          "proposedSha256": "8519a109de953bfc2dd5968910edb0a6eb1cfeb96c3109278c4deeb4d77bbd38"
+        }
+      ]
+    }
+  ],
+  "correlationScope": "sessionStorage for the same browser tab across reload and fresh navigation; not a durable server resolver or new-tab/browser-session guarantee"
+}

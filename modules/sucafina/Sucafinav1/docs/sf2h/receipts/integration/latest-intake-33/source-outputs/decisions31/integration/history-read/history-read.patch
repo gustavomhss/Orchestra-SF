@@ -1,0 +1,74 @@
+--- a/modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts
+@@ -17,8 +17,26 @@
+       return result.length === values.length && result.every((item, index) => item.state === "fresh" && item.accessRevision === context.binding.accessRevision && !!item.authorizedProjection && !!item.currentRef && digestSfValue(item.ref) === digestSfValue(values[index]) && digestSfValue(item.currentRef) === digestSfValue(item.ref)) && await input.host.revalidate(context)
+     } catch { return false }
+   }
++  // Listing history may expose only the producer's authorized original and
++  // explicit differences. Mutation, criterion and metric checks keep refs above.
++  const readRefs = async (values: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => {
++    try {
++      const captured = structuredClone(values)
++      const binding = digestSfValue({ kind: context.kind, binding: context.binding })
++      const current = () => digestSfValue(values) === digestSfValue(captured) && digestSfValue({ kind: context.kind, binding: context.binding }) === binding
++      if (!await input.host.revalidate(context) || !current() || captured.some((ref) => ref.installationId !== context.binding.installationId || ref.projectId !== context.binding.projectId || ref.refDigest !== digestSfEvidenceRef(ref))) return false
++      const result = await input.evidence.context({ refs: captured }, context)
++      const readable = result.length === captured.length && result.every((item, index) => item.accessRevision === context.binding.accessRevision &&
++        !!item.authorizedProjection && !!item.currentRef && digestSfValue(item.ref) === digestSfValue(captured[index]) &&
++        item.currentRef.installationId === context.binding.installationId && item.currentRef.projectId === context.binding.projectId &&
++        item.currentRef.refDigest === digestSfEvidenceRef(item.currentRef) &&
++        (item.state === "fresh" ? digestSfValue(item.currentRef) === digestSfValue(item.ref) : item.state === "historical" && Array.isArray(item.differences)))
++      return readable && current() && await input.host.revalidate(context) && current()
++    } catch { return false }
++  }
+   return {
+     refs,
++    readRefs,
+     rule: async (rule: CriterionRule, context: TrustedDomainContext) => refs([...rule.evidenceRefs, ...(rule.sensitivity?.sourceRefs ?? [])], context),
+     metric: async (metric: CriterionMetric, context: TrustedDomainContext) => {
+       if (!await refs(metric.evidenceRefs, context)) return false
+--- a/modules/sucafina/Sucafinav1/product/decisions/case-management.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/case-management.ts
+@@ -16,6 +16,8 @@
+   authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<boolean>
+   authorizeEdit: (request: Edit, context: TrustedDomainContext) => Promise<boolean>
+   verifyEvidence: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
++  /** Read-only history admission; edits continue using current evidence. */
++  verifyReadEvidence?: (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => Promise<boolean>
+   verifyEdit: (snapshot: import("../../runtime/contract.ts").Snapshot, before: DecisionCase, after: DecisionCase, context: TrustedDomainContext) => boolean
+   operationIdentity: (context: TrustedDomainContext) => string | undefined
+ }) {
+@@ -26,11 +28,11 @@
+       const read = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? Object.values(state.cases).filter((value) => value.participants.includes(context.binding.principalRef)) : undefined)
+       const current = await read().catch(() => undefined)
+       if (!current || current.status !== "ok" || !current.value) return { status: "unavailable", reason: "case-list-unavailable" }
+-      const allowed = await Promise.all(current.value.map(async (value) => context.kind === "native" && (context.binding.caseId !== value.id || context.binding.caseIncarnation !== value.incarnation || context.binding.caseVersion !== value.version) ? undefined : await input.authorizeCase(value, context).catch(() => false) && await input.verifyEvidence(value.sourceRefs, context).catch(() => false) ? value : undefined))
++      const allowed = await Promise.all(current.value.map(async (value) => context.kind === "native" && (context.binding.caseId !== value.id || context.binding.caseIncarnation !== value.incarnation || context.binding.caseVersion !== value.version) ? undefined : await input.authorizeCase(value, context).catch(() => false) && await (input.verifyReadEvidence ?? input.verifyEvidence)(value.sourceRefs, context).catch(() => false) ? value : undefined))
+       const again = await read().catch(() => undefined)
+       if (!again || again.status !== "ok" || again.storageVersion !== current.storageVersion || digestSfValue(again.value) !== digestSfValue(current.value) || !await input.host.revalidate(context).catch(() => false)) return { status: "stale", reason: "case-list-changed" }
+       const authorized = allowed.filter((value): value is DecisionCase => !!value)
+-      if (!(await Promise.all(authorized.map(async (value) => await input.authorizeCase(value, context).catch(() => false) && await input.verifyEvidence(value.sourceRefs, context).catch(() => false)))).every(Boolean) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-list-access-changed" }
++      if (!(await Promise.all(authorized.map(async (value) => await input.authorizeCase(value, context).catch(() => false) && await (input.verifyReadEvidence ?? input.verifyEvidence)(value.sourceRefs, context).catch(() => false)))).every(Boolean) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-list-access-changed" }
+       return { status: "ok", value: authorized.map((value) => ({ caseRef: { id: value.id, incarnation: value.incarnation, version: value.version }, objective: value.objective, state: value.state })) }
+     },
+     edit: async (incoming: Edit, context: TrustedDomainContext): Promise<PortResult<{ caseRef: CaseRef }>> => {
+--- a/modules/sucafina/Sucafinav1/product/decisions/host-product.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/host-product.ts
+@@ -41,7 +41,7 @@
+   verifySelectionSourcesLocked: Product["selection"]["verifySnapshot"]
+   verifyMutationSourcesLocked: Product["mutations"]["verifyMutation"]
+   mutationGrant: (operation: DecisionMutationOperation, payload: unknown, context: TrustedDomainContext) => { action: MutationAction; payload: unknown } | undefined
+-  management: Omit<Product["management"], "authorizeEdit" | "verifyEvidence" | "verifyEdit">
++  management: Omit<Product["management"], "authorizeEdit" | "verifyEvidence" | "verifyReadEvidence" | "verifyEdit">
+   baseline: Omit<Product["baseline"], "authorizeCoverage" | "resolveEvidence" | "verifySnapshot">
+   criteria: Omit<Product["criteria"], "authorizeRule" | "verifyEvidence" | "verifyMetric" | "verifySnapshot">
+   selection: Omit<Product["selection"], "authorizeSelection" | "verifySnapshot">
+@@ -73,7 +73,7 @@
+       promotion: { ...input.currentChoice.promotion, authorizePromotion: (request, context) => intent.authorize(context, "decisions.promote-alternative", request), verifySnapshot: (snapshot, request, choice, result, context) => intent.verify(context, "decisions.promote-alternative", request) && input.verifyCurrentChoicePromotionSourcesLocked(snapshot, request, choice, result, context) },
+     },
+     hotTopic: { ...input.hotTopic, authorizeDraft: (request, context) => intent.authorize(context, "decisions.draft-hot-topic", request), verifySnapshot: (snapshot, request, draft, context) => intent.verify(context, "decisions.draft-hot-topic", request) && input.verifyHotTopicSourcesLocked(snapshot, request, draft, context) },
+-    management: { ...input.management, authorizeEdit: (request, context) => intent.authorize(context, "decisions.edit", request), verifyEvidence: evidence.refs, verifyEdit: (snapshot, before, after, context) => matchesCaptured(context, "decisions.edit") && input.verifyEditSourcesLocked(snapshot, before, after, context) },
++    management: { ...input.management, authorizeEdit: (request, context) => intent.authorize(context, "decisions.edit", request), verifyEvidence: evidence.refs, verifyReadEvidence: evidence.readRefs, verifyEdit: (snapshot, before, after, context) => matchesCaptured(context, "decisions.edit") && input.verifyEditSourcesLocked(snapshot, before, after, context) },
+     baseline: { ...input.baseline, authorizeCoverage: (request, context) => intent.authorize(context, "decisions.coverage", request), resolveEvidence: (refs, context) => input.evidence.context({ refs }, context), verifySnapshot: (snapshot, request, record, context) => baselineFence(snapshot, request, record, context) },
+     criteria: { ...input.criteria, authorizeRule: (request, context) => intent.authorize(context, "decisions.criteria", request), verifyEvidence: async (rule, context) => await evidence.rule(rule, context) && await input.verifyRuleSource(rule, context), verifyMetric: evidence.metric, verifySnapshot: (snapshot, request, rule, context) => intent.verify(context, "decisions.criteria", request) && input.verifyRuleSourcesLocked(snapshot, request, rule, context) },
+     selection: { ...input.selection, authorizeSelection: (request, context) => intent.authorize(context, "decisions.select-portfolio", request), verifySnapshot: (snapshot, request, selection, context) => intent.verify(context, "decisions.select-portfolio", request) && input.verifySelectionSourcesLocked(snapshot, request, selection, context) },

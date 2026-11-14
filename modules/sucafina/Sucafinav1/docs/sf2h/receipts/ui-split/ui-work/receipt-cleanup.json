@@ -1,0 +1,20 @@
+{
+  "schema": "sf2h.ui-work.receipt-cleanup.v1",
+  "reason": "Remove raw tool-output dumps from the delivered tree per the unchanged agent-scratch guard. Structured, reviewed receipts remain; original Actions logs and prior commit are preserved. This is not a suffix rename or a guard suppression.",
+  "artifacts": [
+    {
+      "removedPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/ui-split/ui-work/run-01.log",
+      "sha256": "ffd14de2860e487adc8f01f997de7eb43d49485f349664aade8cd2113587db8f",
+      "gitBlob": "05d0ea21ebf733330f951e2d7f32d0bc3487ba62",
+      "preservedCommit": "a8d5d83f9da9a7042f1bfb5f3f19eb601cc16db3",
+      "actionsJob": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43621153005/job/132526911184"
+    },
+    {
+      "removedPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/ui-split/ui-work/run-02.log",
+      "sha256": "b5f0a236f913c88be3affd97c9a0092c75edaa8aa740fb73d774271c9b28d7bd",
+      "gitBlob": "48e811ca2c036e0d85b8fe181e65eecf1e1c587f",
+      "preservedCommit": "a8d5d83f9da9a7042f1bfb5f3f19eb601cc16db3",
+      "actionsJob": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43621603578/job/132528304173"
+    }
+  ]
+}

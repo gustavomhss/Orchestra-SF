@@ -1,0 +1,230 @@
+{
+  "schema": "sf-routine-native-criteria-evidence-v1",
+  "mission": 30,
+  "source": {
+    "commit": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "mission_commit": "5b00bd553781f437586177247b8a726aafd8ee59"
+  },
+  "product": {
+    "W": "7676fd9173015e2c7d7c91745cc486f50018fc85",
+    "tree": "bade962f294c3dc3504c97388c780c8bc8b9be24"
+  },
+  "implementation_directory": "apps/cli/src/sucafina-product",
+  "test_directory": "modules/sucafina/Sucafinav1/test/product/routine-native-admission",
+  "canonical_WP09_112_states": "UNCHANGED; this mission does not reclassify the previous complete criterion map",
+  "acceptance": [
+    {
+      "ordinal": 1,
+      "canonical_text": "Adapter covers resolvePlan/resolveRecipe/prepare/readAdmission/readRun/start/listRunRefs/readExecution/readArtifact with exact canonical provenance and authority, without second admission/run ledger. Catalogue doesn't execute. LLM.generateObject or Session.resume is not workflow admission.",
+      "source_status": "IMPLEMENTED",
+      "proof_status": "SCOPED_READERS_AND_BOUNDARIES; NATIVE_END_TO_END_UNPROVEN",
+      "methods": [
+        "resolvePlan",
+        "resolveRecipe",
+        "prepare",
+        "readAdmission",
+        "readRun",
+        "start",
+        "listRunRefs",
+        "readExecution",
+        "readArtifact"
+      ],
+      "evidence": [
+        "implementation.md",
+        "candidate-manifest.json",
+        "ci-attempts/02.json",
+        "ci-attempts/03.json"
+      ],
+      "remaining": "Actual installed private owner capability, live native start and terminal artifact witness."
+    },
+    {
+      "ordinal": 2,
+      "canonical_text": "Bind real current Request/principal/project/location/case/incarnation/source versions, exact published version/planRevision/writeScope/inputDigest. Reauthorize at native transaction/dispatch and result return; reject drift/revocation/old-generation; retries don't duplicateadmission/dispatch/effect. Native engine keeps its existing identity and semantics.",
+      "source_status": "IMPLEMENTED",
+      "proof_status": "SCOPED_AUTHORITY_AND_COORDINATOR_PASS; COMPOSED_PROOF_PENDING",
+      "evidence": [
+        "retained-input.test.ts",
+        "governance-lease.test.ts",
+        "adapter-boundaries.test.ts"
+      ],
+      "remaining": "Live host/provider revocation, generation change, native transactions/effects and reload under current authority."
+    },
+    {
+      "ordinal": 3,
+      "canonical_text": "Real governed human review/approval/arm/dispatch boundaries remain enforced. Only advertise sixRoutinesdescriptors when native port truly available; absent resources keep explicitunavailable, nofakepositive.",
+      "source_status": "IMPLEMENTED_WITH_EXPLICIT_RESOURCE_GATES",
+      "proof_status": "FIVE_TASK_DESCRIPTORS_ONLY_WHEN_BOUND; WATCH_UNAVAILABLE",
+      "evidence": [
+        "positive-admission.test.ts",
+        "governance-lease.test.ts",
+        "adapter-boundaries.test.ts",
+        "assembly/manifest.json"
+      ],
+      "remaining": "Real Request-to-Maestro owner registry and supported native watch admission. A function returning unavailable is not a binding."
+    },
+    {
+      "ordinal": 4,
+      "canonical_text": "Factualterminalresult/body/artifact/version/run belongs actualadmission and retained input. Return to originalcase with currentauthority, preservepartial/failure/cancel/replay, no modelclaim as receipt. Existing Schedule behavior only via its supported port, noenginechanges.",
+      "source_status": "IMPLEMENTED_FACTUAL_NATIVE_RECEIPT",
+      "proof_status": "POSITIVE_NATIVE_TERMINAL_AND_ORIGINAL_CASE_RETURN_UNPROVEN",
+      "evidence": [
+        "routine-native-records.ts",
+        "routine-native-adapter.ts",
+        "routine-services.ts",
+        "implementation.md"
+      ],
+      "remaining": "Live completed Task/Relay checkpoint/audit and original-case return after reload. Native schema has no typed cancelled outcome; background is not admitted by this Request-bound port."
+    },
+    {
+      "ordinal": 5,
+      "canonical_text": "Surgical hosted proof for adapter where actual existing runtime testservices available, truthfulboundary for any testfixture. RealAMneeds authorizedinstalledhost and actualprovider; do not claim adapterunit/integrationtest satisfiesAM01–06. No Orchestra desktop/server restart forproof.",
+      "source_status": "HOSTED_SURGICAL_EVIDENCE_DELIVERED",
+      "proof_status": "AM06_NOT_RUN; PACKAGE_TYPECHECK_FAIL_EXTERNAL",
+      "evidence": [
+        "ci-attempts/01.json",
+        "ci-attempts/02.json",
+        "ci-attempts/03.json"
+      ],
+      "remaining": "Session23 composition and S0/native acceptance on the authorized installed host with an actual provider."
+    }
+  ],
+  "methods": [
+    {
+      "method": "resolvePlan",
+      "implementation": "routine-native-adapter.ts; routine-native-records.ts; routine-native-input.ts",
+      "native_binding": "GovernanceRecordsV2 and EventV2 PlanRevision.RecordedV3; latest-plan selection across v1/v2/v3; retained publication/purpose/input.",
+      "focused_test_files": [
+        "plan-records.test.ts",
+        "retained-input.test.ts"
+      ],
+      "proof_limit": "Live current Request/owner/plan/publication/source resolution not accepted on the shared host."
+    },
+    {
+      "method": "resolveRecipe",
+      "implementation": "routine-native-adapter.ts; routine-native-records.ts; routine-native-input.ts",
+      "native_binding": "Same native plan source by published document reference/version and current purpose; no recipe or plan allocation.",
+      "focused_test_files": [
+        "plan-records.test.ts",
+        "retained-input.test.ts"
+      ],
+      "proof_limit": "Live published recipe with SF_ROUTINE_INPUT and real installed owner binding remains required."
+    },
+    {
+      "method": "prepare",
+      "implementation": "routine-native-adapter.ts; routine-native-governance.ts",
+      "native_binding": "Existing TaskGovernance.admit under SessionExecution.exclusive and Request lease; existing native validation/review/human approval/arm/reservation/binding.",
+      "focused_test_files": [
+        "admission-records.test.ts",
+        "positive-admission.test.ts",
+        "governance-lease.test.ts"
+      ],
+      "proof_limit": "No full positive prepare on a live native host/provider; fixture chain proves readers only."
+    },
+    {
+      "method": "readAdmission",
+      "implementation": "routine-native-records.ts; routine-native-adapter.ts",
+      "native_binding": "Actual Authorization, Validation/Context, Review, Approval presentation payload identity, human decision, Dispatch.ReservedV2, WorkflowBound and arm receipt.",
+      "focused_test_files": [
+        "admission-records.test.ts",
+        "positive-admission.test.ts"
+      ],
+      "proof_limit": "Retained data is synthetic in tests; no actual human acceptance or production run witnessed."
+    },
+    {
+      "method": "readRun",
+      "implementation": "routine-native-records.ts; routine-native-adapter.ts",
+      "native_binding": "Canonical reservation plus WorkflowBound and actual child Session if present; no invented run IDs or second ledger.",
+      "focused_test_files": [
+        "positive-admission.test.ts"
+      ],
+      "proof_limit": "Read coverage on native database fixtures does not establish an actual dispatched child."
+    },
+    {
+      "method": "start",
+      "implementation": "routine-native-dispatch.ts; routine-native-adapter.ts; routine-native-governance.ts",
+      "native_binding": "Actual current Task registry materialization, Session/Agent permissions and scope charge, CapabilityInvocation, native coordinator and Tool.Success/Failed events.",
+      "focused_test_files": [
+        "adapter-boundaries.test.ts",
+        "governance-lease.test.ts"
+      ],
+      "proof_limit": "Cancellation/busy ownership has focused proof; successful Task/provider/Relay dispatch and replay effects have no end-to-end native witness."
+    },
+    {
+      "method": "listRunRefs",
+      "implementation": "routine-native-records.ts; routine-native-adapter.ts",
+      "native_binding": "Discovery from actual native Session authorizations/reservations, filtered by current owner/case and revalidated input sources.",
+      "focused_test_files": [
+        "plan-records.test.ts",
+        "positive-admission.test.ts"
+      ],
+      "proof_limit": "No installed UI discovery after a real run/reload was exercised."
+    },
+    {
+      "method": "readExecution",
+      "implementation": "routine-native-records.ts; routine-native-adapter.ts",
+      "native_binding": "Actual Task output/failure, child completed reply, Relay currentStep, settled ArmLoad checkpoint and audit; partial remains pending.",
+      "focused_test_files": [
+        "positive-admission.test.ts"
+      ],
+      "proof_limit": "Missing Relay produces unavailable in focused test; positive terminal checkpoint/audit execution is not proven."
+    },
+    {
+      "method": "readArtifact",
+      "implementation": "routine-native-records.ts; routine-native-adapter.ts; routine-services.ts",
+      "native_binding": "Re-derived immutable native-task-relay-receipt-v1 and independent digest, tied to exact native events, child, checkpoint/audit and original input/case.",
+      "focused_test_files": [],
+      "proof_limit": "Artifact return path implemented and typechecked, but no positive live terminal artifact or reload-to-case acceptance; model business report is not a factual receipt."
+    }
+  ],
+  "test_files": [
+    {
+      "file": "plan-records.test.ts",
+      "count": 6,
+      "witness": "1fe2e77f8cb70ff9f8fd0195efcc4792ebf6cadd",
+      "result": "PASS",
+      "scope": "Actual Database/EventV2 readers; synthetic v3 plans, hashes, IDs, aggregates and closed schemas."
+    },
+    {
+      "file": "admission-records.test.ts",
+      "count": 6,
+      "witness": "1fe2e77f8cb70ff9f8fd0195efcc4792ebf6cadd",
+      "result": "PASS",
+      "scope": "Actual retained record readers refuse incomplete or inconsistent authorization, validation and reservations."
+    },
+    {
+      "file": "retained-input.test.ts",
+      "count": 3,
+      "witness": "7676fd9173015e2c7d7c91745cc486f50018fc85",
+      "result": "success",
+      "scope": "Real input reader; positive input, negative source version/owner/case/publication matrix and owner-generation comparison."
+    },
+    {
+      "file": "governance-lease.test.ts",
+      "count": 8,
+      "witness": "1fe2e77f8cb70ff9f8fd0195efcc4792ebf6cadd",
+      "result": "PASS",
+      "scope": "Real Maestro TaskGovernance composed with native services and declared Config/Skill fixtures; authority refusal and scope lifetime."
+    },
+    {
+      "file": "positive-admission.test.ts",
+      "count": 2,
+      "witness": "1fe2e77f8cb70ff9f8fd0195efcc4792ebf6cadd",
+      "result": "PASS",
+      "scope": "Synthetic but schema-valid chain in actual Database/EventV2/SessionStore; human payload, Task and arm provenance readers. No live human/provider/Relay execution."
+    },
+    {
+      "file": "adapter-boundaries.test.ts",
+      "count": 6,
+      "witness": "1fe2e77f8cb70ff9f8fd0195efcc4792ebf6cadd",
+      "result": "PASS",
+      "scope": "Declared adapter boundary doubles plus real Effect/SessionRunCoordinator cancellation, busy retry and successor isolation."
+    }
+  ],
+  "fixture_boundary": "Native schemas, database and some services are real; test inputs/messages/reviews/approvals/arm payloads are synthetic. Boundary doubles are explicitly limited. No fixture is native acceptance.",
+  "native_acceptance": {
+    "AM06": "NOT_RUN",
+    "AM01_AM05": "NO_NEW_CLAIM",
+    "GLOBAL_RELEASE": false
+  }
+}

@@ -1,0 +1,821 @@
+{
+  "schema": "finance-state-read-terminal-audit-v1",
+  "finding": "FIN-IND-005",
+  "findingDisposition": "OPEN_IMPLEMENTED_NOT_CLOSED",
+  "reviewScope": "Independent analytical helper inspection of captured Actions responses and source/receipt bytes; not E17/G4 or global acceptance.",
+  "method": {
+    "localActions": [
+      "read files",
+      "parse captured logs/JSON",
+      "hash bytes",
+      "apply unified-diff hunks in memory and compare exact images"
+    ],
+    "productTestsExecuted": false,
+    "remoteMutations": false,
+    "remoteObservation": "This helper used parent-captured immutable GitHub responses; no new remote observation is claimed."
+  },
+  "candidate": {
+    "W1": "a710446e3a002068eacf6ff1ade66365d24005d6",
+    "W2": "1a656f1f7251de8c104e5b03a43b457e80437181",
+    "W2tree": "1ebd1ee9d0e95253526d0ee73cf2353a71ccbe58",
+    "S2RemainsOnW1": true,
+    "W2MaterializationTestOnlyTypeImportsAndParameterAnnotations": true,
+    "originalShortTestBlob": "4838dc020a3b7d5d6fa0a27772514e547c8c53d2",
+    "originalShortTestBlobVerified": true
+  },
+  "S3": {
+    "runId": 43640055910,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43640055910",
+    "S": "9a2867b258de5cb049876a0005ef54109a4a11c5",
+    "Stree": "40637e9cc6ebb4dbd99a549b33b93973e6a5fffc",
+    "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+    "attempt": 1,
+    "conclusion": "failure",
+    "status": "completed",
+    "testJob": 132585426041,
+    "cleanupJob": 132588041332,
+    "allJobsTerminal": true,
+    "tests": {
+      "pass": 43,
+      "fail": 1,
+      "assertions": 368,
+      "filtered": 4,
+      "selected": 44,
+      "files": 14,
+      "totalSeconds": 464.54,
+      "longTestMs": 180032.11
+    },
+    "failure": {
+      "file": "test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+      "line": 49,
+      "message": "Source-only certified analysis unavailable: {\"status\":\"stale\",\"reason\":\"source-or-authority-changed\"}",
+      "fixtureBudgetMs": 180000,
+      "fixtureDeadlineObservedMs": 180018,
+      "BunTestBudgetMs": 300000,
+      "confirmedExactStartMs": 148191,
+      "confirmedExactCompleteMs": 180018,
+      "confirmedExactDurationMs": 31827,
+      "confirmedExactStatus": "unavailable"
+    },
+    "reportingNote": "Bun printed the same failed test twice. Summary and unique test identity show one failure, not two.",
+    "log": {
+      "bytes": 144415,
+      "gitBlob": "57a61ad34432d5664e28a2360a1822ab90aaf03a",
+      "sha256": "8716e9c383c5bc6007798f48bd48e97d4850038d0bcbbd0cbb39a3718177e8c1"
+    },
+    "artifacts": [],
+    "omni": {
+      "nonce": "876bc0c13600524d558d45bc17caf3a3",
+      "verdict": "not applicable",
+      "nativeProof": false
+    }
+  },
+  "affectedSelection": {
+    "priorRunId": 43635340065,
+    "priorW": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+    "priorSelected": 43,
+    "priorAssertions": 350,
+    "sameExactPassingTestNameSet": true,
+    "passingNames": [
+      "one sibling batch shares only its two canonical case observations and retains every result reread",
+      "units emit the identical binding with six canonical case reads, while a legacy host still performs ten",
+      "comparison starts independent batches for its initial and final observations",
+      "different cases and historical producer versions form separate groups and retain order, cardinality and refusal",
+      "ledger, alternative and coverage changes between phases invalidate every sibling without a version shortcut",
+      "authority revoked after result rereads is rejected by the fresh final case observation",
+      "a real Planner source change during projection invalidates both stored siblings",
+      "retained store and case callback objects cannot rewrite an earlier observation",
+      "batch refusals and malformed cardinality never fall back to individual resolution",
+      "decision result persistence binds retries, current case and source authority",
+      "sensitivity retains the admitted request when a provider mutates its borrowed input",
+      "sensitivity detects a provider reusing and changing the original source record",
+      "each sensitivity verification reads a fresh committed Planner source instead of retaining its previous scope",
+      "a failed sensitivity scope cannot retain its old grant or publish a callback-mutated replay input",
+      "real Planner sensitivity keeps EUR input separate from USD output and leaves missing FX conditioned in C08",
+      "FIN-IND-005 result receipt avoids duplicating the durable body while preserving authorized retries",
+      "FIN-IND-005 result receipt retains legacy replay and rejects corrupt or revoked reads after SQLite reopen",
+      "coverage refuses its original predicate even when the next resolution has equal data",
+      "Finance units pairs keep every authority callback and use six fresh C08 envelopes",
+      "Finance units resolution preserves rule chronology and batches only its final pair",
+      "Finance units pairs retain concurrent entry and every hook of a scalar facade",
+      "Finance units pair grouping detects a real Planner source change between observations",
+      "historical scenario batches coalesce only C08 envelopes for real siblings",
+      "historical scenario batches coalesce only C08 envelopes for real siblings including duplicate occurrences",
+      "historical scenario batch keeps an overriding scalar facade and its per-result hooks",
+      "Finance sensitivity searches once and recertifies fresh adjacent witnesses without retaining authority for the next operation",
+      "Finance sensitivity refuses authority revoked after the final awaited adjacent witness",
+      "persisted Finance candidates recertify without another search and retain witness, evidence, root and lease fences",
+      "units resolution reuses only its first observation and rereads both sides in every operation",
+      "units resolution rejects case-version during the rule callback after its first observation",
+      "units resolution rejects planner-source during the rule callback after its first observation",
+      "units resolution rejects revocation during the rule callback after its first observation",
+      "units resolution rejects request-headers during the rule callback after its first observation",
+      "units resolution rejects lease during the rule callback after its first observation",
+      "units resolution rejects incoming-request during the rule callback after its first observation",
+      "historical batch keeps each real callback and ordered failures across duplicate occurrences",
+      "historical batch refuses planner-source after the later sibling's final source callback",
+      "historical batch refuses case-version after the later sibling's final source callback",
+      "historical batch refuses stored-result after the later sibling's final source callback",
+      "historical batch refuses request-headers after the later sibling's final source callback",
+      "historical batch refuses lease after the later sibling's final source callback",
+      "historical batch refuses scalar-facade after the later sibling's final source callback",
+      "historical batch refuses store-facade after the later sibling's final source callback"
+    ],
+    "negativeCoverage": {
+      "fresh case/content and callback retention": [
+        "ledger, alternative and coverage changes between phases invalidate every sibling without a version shortcut",
+        "retained store and case callback objects cannot rewrite an earlier observation",
+        "units resolution rejects case-version during the rule callback after its first observation",
+        "historical batch refuses case-version after the later sibling's final source callback"
+      ],
+      "original authority predicate": [
+        "coverage refuses its original predicate even when the next resolution has equal data"
+      ],
+      "source mutation/revocation": [
+        "authority revoked after result rereads is rejected by the fresh final case observation",
+        "a real Planner source change during projection invalidates both stored siblings",
+        "sensitivity detects a provider reusing and changing the original source record",
+        "each sensitivity verification reads a fresh committed Planner source instead of retaining its previous scope",
+        "a failed sensitivity scope cannot retain its old grant or publish a callback-mutated replay input",
+        "Finance units pair grouping detects a real Planner source change between observations",
+        "Finance sensitivity refuses authority revoked after the final awaited adjacent witness",
+        "units resolution rejects planner-source during the rule callback after its first observation",
+        "historical batch refuses planner-source after the later sibling's final source callback"
+      ],
+      "Request headers/identity and lease": [
+        "sensitivity retains the admitted request when a provider mutates its borrowed input",
+        "persisted Finance candidates recertify without another search and retain witness, evidence, root and lease fences",
+        "units resolution rejects request-headers during the rule callback after its first observation",
+        "units resolution rejects lease during the rule callback after its first observation",
+        "units resolution rejects incoming-request during the rule callback after its first observation",
+        "historical batch refuses request-headers after the later sibling's final source callback",
+        "historical batch refuses lease after the later sibling's final source callback"
+      ],
+      "scalar/store facade and ordered duplicate failures": [
+        "different cases and historical producer versions form separate groups and retain order, cardinality and refusal",
+        "batch refusals and malformed cardinality never fall back to individual resolution",
+        "Finance units pairs retain concurrent entry and every hook of a scalar facade",
+        "historical scenario batch keeps an overriding scalar facade and its per-result hooks",
+        "historical batch keeps each real callback and ordered failures across duplicate occurrences",
+        "historical batch refuses scalar-facade after the later sibling's final source callback",
+        "historical batch refuses store-facade after the later sibling's final source callback"
+      ],
+      "legacy receipt reopen and corrupt/revoked reads": [
+        "FIN-IND-005 result receipt retains legacy replay and rejects corrupt or revoked reads after SQLite reopen"
+      ]
+    },
+    "originalPredicateCounterexample": {
+      "phase": "closure.original-predicate",
+      "counts": {
+        "resolutions": 1,
+        "originalChecks": 1,
+        "replacementChecks": 0,
+        "previews": 0
+      },
+      "result": {
+        "status": "stale",
+        "reason": "coverage-authority-changed"
+      }
+    },
+    "assertionAccounting": "All 43 prior tests revalidated; 368 minus prior350 assertions is consistent with the18 original-journey assertions before its failure. The unchanged source explicitly contains those18 expectations before the line49 throw."
+  },
+  "originalJourney": {
+    "sourceBlob": "6395a5dc529acadfb0d9c1e2d8dca0664f40a39e",
+    "sourceUnchanged": true,
+    "completedCheckpoints": [
+      {
+        "elapsedMs": 35055,
+        "event": "checkpoint",
+        "label": "omitted.assertions-complete",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 3
+        },
+        "knownSubtotal": 210000,
+        "threshold": 55000.000000000015,
+        "comparisonStatus": "conditioned"
+      },
+      {
+        "elapsedMs": 43117,
+        "event": "checkpoint",
+        "label": "choice.persisted",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 4
+        },
+        "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+      },
+      {
+        "elapsedMs": 80178,
+        "event": "checkpoint",
+        "label": "confirmed.assertions-complete",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 6
+        },
+        "total": 250000,
+        "advantage": -10000,
+        "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+      }
+    ],
+    "observedOracles": [
+      "pending training omitted; baseline known subtotal240000; selected known subtotal210000 and total null",
+      "pre-confirmation exact threshold55000 with conditioned coverage",
+      "conditioned choice persisted",
+      "training40000 confirmed; selected total250000; complete difference-10000; renewal-difference criterion failed"
+    ],
+    "missingCheckpoints": [
+      {
+        "label": "confirmed.threshold-assertions-complete",
+        "status": "NOT_RUN",
+        "observedInTrace": false
+      },
+      {
+        "label": "witness.15000.assertions-complete",
+        "status": "NOT_RUN",
+        "observedInTrace": false
+      },
+      {
+        "label": "witness.15001.assertions-complete",
+        "status": "NOT_RUN",
+        "observedInTrace": false
+      },
+      {
+        "label": "history.read",
+        "status": "NOT_RUN",
+        "observedInTrace": false
+      },
+      {
+        "label": "history.assertions-complete",
+        "status": "NOT_RUN",
+        "observedInTrace": false
+      },
+      {
+        "label": "choice.authorized-replay",
+        "status": "NOT_RUN",
+        "observedInTrace": false
+      },
+      {
+        "label": "choice.replay-assertions-complete",
+        "status": "NOT_RUN",
+        "observedInTrace": false
+      },
+      {
+        "label": "persistence.real-restart",
+        "status": "NOT_RUN",
+        "observedInTrace": false
+      },
+      {
+        "label": "persistence.collaborator-read",
+        "status": "NOT_RUN",
+        "observedInTrace": false
+      },
+      {
+        "label": "persistence.outsider-read",
+        "status": "NOT_RUN",
+        "observedInTrace": false
+      },
+      {
+        "label": "persistence.revoked-read",
+        "status": "NOT_RUN",
+        "observedInTrace": false
+      },
+      {
+        "label": "persistence.restart-and-revocation-assertions-complete",
+        "status": "NOT_RUN",
+        "observedInTrace": false
+      }
+    ],
+    "limit": "Historical scenario-result rereads inside sensitivity and legacy receipt replay/reopen in separate passing tests do not establish the final choice-history reread, replay, real reopen or access negatives of this original journey."
+  },
+  "materializationProof": {
+    "sourceReceipt": "S2-result.json",
+    "W": "a710446e3a002068eacf6ff1ade66365d24005d6",
+    "runId": 43639203076,
+    "status": "PASS",
+    "comparison": {
+      "sameRunnerInterleavedSamplesPerMode": 6,
+      "medianReductionMs": 10.207495500002551,
+      "medianReductionPercent": 7.700705249873108,
+      "fullStateBytes": 1241296,
+      "selectedCaseBytes": 115925,
+      "scope": "Case-port.read inclusive wall time on the same persisted state; not end-to-end speedup. Not added to nested trace timings.",
+      "countDiscriminant": {
+        "unrelatedStateCloneTraversals": {
+          "opaque": 2,
+          "canonical": 0
+        },
+        "freshCaseReads": {
+          "opaque": 2,
+          "canonical": 2
+        },
+        "caseCloneTraversals": {
+          "opaque": 2,
+          "canonical": 2
+        },
+        "hostChecks": {
+          "opaque": 36,
+          "canonical": 36
+        }
+      }
+    },
+    "scope": "Same-runner six interleaved samples per mode, unchanged real SQLite/C08. The observed7.7007% reduction applies to inclusive case-port.read, not the complete journey or storage size."
+  },
+  "longTrace": {
+    "terminal": {
+      "label": "renewal-choice-history",
+      "phase": "prepare:transition-confirmed:complete",
+      "elapsedMs": 180018,
+      "budgetMs": 180000,
+      "status": "deadline-exceeded",
+      "counts": {
+        "c08.read.cases": {
+          "calls": 3494,
+          "elapsedMs": 70670,
+          "maximumMs": 47
+        },
+        "host.revalidate": {
+          "calls": 28768,
+          "elapsedMs": 1379,
+          "maximumMs": 18
+        },
+        "operation-source": {
+          "calls": 5672,
+          "elapsedMs": 3998,
+          "maximumMs": 29
+        },
+        "operation-coverage": {
+          "calls": 2216,
+          "elapsedMs": 51,
+          "maximumMs": 8
+        },
+        "c08.read.preferences": {
+          "calls": 694,
+          "elapsedMs": 14654,
+          "maximumMs": 40
+        },
+        "c08.transaction.preferences": {
+          "calls": 6,
+          "elapsedMs": 278,
+          "maximumMs": 90
+        },
+        "classified-source": {
+          "calls": 377,
+          "elapsedMs": 2678,
+          "maximumMs": 30
+        },
+        "classified-coverage": {
+          "calls": 349,
+          "elapsedMs": 37456,
+          "maximumMs": 230
+        },
+        "c08.transaction.cases": {
+          "calls": 15,
+          "elapsedMs": 1236,
+          "maximumMs": 142
+        },
+        "planner.verifySourceOnly": {
+          "calls": 1316,
+          "elapsedMs": 4052,
+          "maximumMs": 10
+        },
+        "planner.verifyOperation": {
+          "calls": 412,
+          "elapsedMs": 5532,
+          "maximumMs": 26
+        },
+        "planner.verifySourceProjection": {
+          "calls": 2632,
+          "elapsedMs": 1924,
+          "maximumMs": 9
+        },
+        "c08.read.outbox": {
+          "calls": 1,
+          "elapsedMs": 10,
+          "maximumMs": 10
+        }
+      }
+    },
+    "matchingConfirmedCheckpoint": {
+      "label": "renewal-choice-history",
+      "phase": "prepare:transition-confirmed:complete",
+      "elapsedMs": 80177,
+      "budgetMs": 180000,
+      "counts": {
+        "c08.read.cases": {
+          "calls": 2225,
+          "elapsedMs": 32810,
+          "maximumMs": 39
+        },
+        "host.revalidate": {
+          "calls": 17089,
+          "elapsedMs": 1032,
+          "maximumMs": 18
+        },
+        "operation-source": {
+          "calls": 4180,
+          "elapsedMs": 1577,
+          "maximumMs": 27
+        },
+        "operation-coverage": {
+          "calls": 2020,
+          "elapsedMs": 51,
+          "maximumMs": 8
+        },
+        "c08.read.preferences": {
+          "calls": 446,
+          "elapsedMs": 6808,
+          "maximumMs": 35
+        },
+        "c08.transaction.preferences": {
+          "calls": 6,
+          "elapsedMs": 278,
+          "maximumMs": 90
+        },
+        "classified-source": {
+          "calls": 242,
+          "elapsedMs": 246,
+          "maximumMs": 26
+        },
+        "classified-coverage": {
+          "calls": 229,
+          "elapsedMs": 14849,
+          "maximumMs": 179
+        },
+        "c08.transaction.cases": {
+          "calls": 13,
+          "elapsedMs": 1013,
+          "maximumMs": 142
+        },
+        "planner.verifySourceOnly": {
+          "calls": 668,
+          "elapsedMs": 1888,
+          "maximumMs": 10
+        },
+        "planner.verifyOperation": {
+          "calls": 412,
+          "elapsedMs": 5532,
+          "maximumMs": 26
+        },
+        "planner.verifySourceProjection": {
+          "calls": 1336,
+          "elapsedMs": 1114,
+          "maximumMs": 9
+        },
+        "c08.read.outbox": {
+          "calls": 1,
+          "elapsedMs": 10,
+          "maximumMs": 10
+        }
+      },
+      "stateBytes": 1311209,
+      "transactionsBytes": 443599,
+      "casesBytes": 115934,
+      "resultBytes": 319129,
+      "transactions": 20,
+      "cases": 1,
+      "results": 12
+    },
+    "summary": {
+      "elapsedMs": 180031,
+      "event": "summary",
+      "counts": {
+        "fixture.create": {
+          "calls": 1,
+          "completed": 1,
+          "failed": 0,
+          "inclusiveMs": 9693
+        },
+        "omitted.evaluate": {
+          "calls": 1,
+          "completed": 1,
+          "failed": 0,
+          "inclusiveMs": 25362
+        },
+        "omitted.units.resolve": {
+          "calls": 2,
+          "completed": 2,
+          "failed": 0,
+          "inclusiveMs": 1931
+        },
+        "omitted.units.revalidate": {
+          "calls": 4,
+          "completed": 4,
+          "failed": 0,
+          "inclusiveMs": 3906
+        },
+        "omitted.results.readHistoricalScenario": {
+          "calls": 4,
+          "completed": 4,
+          "failed": 0,
+          "inclusiveMs": 189
+        },
+        "omitted.preview": {
+          "calls": 17,
+          "completed": 17,
+          "failed": 0,
+          "inclusiveMs": 19231
+        },
+        "omitted.results.readByRequest": {
+          "calls": 2,
+          "completed": 2,
+          "failed": 0,
+          "inclusiveMs": 51
+        },
+        "omitted.results.write": {
+          "calls": 2,
+          "completed": 2,
+          "failed": 0,
+          "inclusiveMs": 212
+        },
+        "omitted.exact": {
+          "calls": 1,
+          "completed": 1,
+          "failed": 0,
+          "inclusiveMs": 10911
+        },
+        "omitted.units.issue": {
+          "calls": 2,
+          "completed": 2,
+          "failed": 0,
+          "inclusiveMs": 1723
+        },
+        "omitted.results.read": {
+          "calls": 2,
+          "completed": 2,
+          "failed": 0,
+          "inclusiveMs": 193
+        },
+        "choice.record": {
+          "calls": 1,
+          "completed": 1,
+          "failed": 0,
+          "inclusiveMs": 8062
+        },
+        "training.confirm": {
+          "calls": 1,
+          "completed": 1,
+          "failed": 0,
+          "inclusiveMs": 37061
+        },
+        "confirmed.evaluate": {
+          "calls": 1,
+          "completed": 1,
+          "failed": 0,
+          "inclusiveMs": 99842
+        },
+        "confirmed.units.resolve": {
+          "calls": 8,
+          "completed": 8,
+          "failed": 0,
+          "inclusiveMs": 21076
+        },
+        "confirmed.units.revalidate": {
+          "calls": 7,
+          "completed": 7,
+          "failed": 0,
+          "inclusiveMs": 21282
+        },
+        "confirmed.results.readHistoricalScenario": {
+          "calls": 2,
+          "completed": 2,
+          "failed": 0,
+          "inclusiveMs": 324
+        },
+        "confirmed.coverage.issue": {
+          "calls": 1,
+          "completed": 1,
+          "failed": 0,
+          "inclusiveMs": 23525
+        },
+        "confirmed.authority.resolve": {
+          "calls": 6,
+          "completed": 6,
+          "failed": 0,
+          "inclusiveMs": 18614
+        },
+        "confirmed.authority.read-case": {
+          "calls": 12,
+          "completed": 12,
+          "failed": 0,
+          "inclusiveMs": 405
+        },
+        "confirmed.authority.read-classifications": {
+          "calls": 12,
+          "completed": 12,
+          "failed": 0,
+          "inclusiveMs": 365
+        },
+        "confirmed.authority.evidence-context": {
+          "calls": 6,
+          "completed": 6,
+          "failed": 0,
+          "inclusiveMs": 124
+        },
+        "confirmed.authority.is-still-valid": {
+          "calls": 6,
+          "completed": 6,
+          "failed": 0,
+          "inclusiveMs": 18732
+        },
+        "confirmed.units.issue": {
+          "calls": 3,
+          "completed": 3,
+          "failed": 0,
+          "inclusiveMs": 7764
+        },
+        "confirmed.preview": {
+          "calls": 16,
+          "completed": 16,
+          "failed": 0,
+          "inclusiveMs": 47458
+        },
+        "confirmed.coverage.qualify": {
+          "calls": 2,
+          "completed": 2,
+          "failed": 0,
+          "inclusiveMs": 31284
+        },
+        "confirmed.results.readByRequest": {
+          "calls": 2,
+          "completed": 2,
+          "failed": 0,
+          "inclusiveMs": 131
+        },
+        "confirmed.results.write": {
+          "calls": 2,
+          "completed": 2,
+          "failed": 0,
+          "inclusiveMs": 656
+        },
+        "confirmed.exact": {
+          "calls": 1,
+          "completed": 1,
+          "failed": 0,
+          "inclusiveMs": 31828
+        }
+      },
+      "active": []
+    },
+    "interpretation": "These are nested inclusive operation counters/times. Do not sum them as independent costs, extrapolate a total saving from short medians, or compare old/new per-read averages as controlled evidence; work mix differs. More case reads before the same deadline does not close the journey."
+  },
+  "checks": {
+    "runId": 43639846168,
+    "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+    "conclusion": "failure",
+    "typecheckDiagnosticCount": 115,
+    "missionOwnedDiagnostics": 0,
+    "inheritedDiagnostics": 115,
+    "gateCount": 43,
+    "warningCount": 15,
+    "limit": "Inherited attribution is not a passing package gate or waiver."
+  },
+  "patchAudit": {
+    "completeCandidateFiles": 6,
+    "sourceIdentityRowsAllMatchExactBytes": true,
+    "patches": [
+      {
+        "path": "receipt-source/finance.patch.txt",
+        "bytes": 7455,
+        "gitBlob": "24c7363ba66a773af51ec44b21fbd54fd4370a15",
+        "sha256": "168f854ba11380869c9c70150ea84d784dfcb3b39d3ba95be98702aba97f744e",
+        "textualApplication": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+            "hunks": 3,
+            "exactPostimage": true,
+            "postimage": {
+              "bytes": 15198,
+              "gitBlob": "e7810b956073fa83a977109cfdea4735493b8aa3",
+              "sha256": "fbe80239c4f1d67a399b7eed9d25d2785098b0c3a220e153b47fd166819420e3"
+            }
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "hunks": 4,
+            "exactPostimage": true,
+            "postimage": {
+              "bytes": 17689,
+              "gitBlob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+              "sha256": "dc35d90d36c1d562b380b6e58defc639bbe94d351367ae31aebc5c1884900075"
+            }
+          }
+        ]
+      },
+      {
+        "path": "receipt-source/composed.NOT_APPLIED.patch.txt",
+        "bytes": 7457,
+        "gitBlob": "d2e96016349f7d512db31b7ffa91d7600c7aa3a8",
+        "sha256": "fadcd80b68ea33601fa394297c979289c628b859d9379b3ad4d53632e4a941df",
+        "textualApplication": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+            "hunks": 2,
+            "exactPostimage": true,
+            "postimage": {
+              "bytes": 22226,
+              "gitBlob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+              "sha256": "edfd0547919597e0e79e4dbe15670eab2797399cab4c8f627e0a26a8045d8cab"
+            }
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "hunks": 4,
+            "exactPostimage": true,
+            "postimage": {
+              "bytes": 17689,
+              "gitBlob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+              "sha256": "dc35d90d36c1d562b380b6e58defc639bbe94d351367ae31aebc5c1884900075"
+            }
+          }
+        ]
+      },
+      {
+        "path": "receipt-source/full-candidate.patch.txt",
+        "bytes": 38981,
+        "gitBlob": "8be82be537f451de47e7c6cb57f0827787302577",
+        "sha256": "1baaa9e07cf17faa28e1a796d6ca4650bca574557a6f1801d7fbdaf61b1f87f3",
+        "textualApplication": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+            "hunks": 3,
+            "exactPostimage": true,
+            "postimage": {
+              "bytes": 15198,
+              "gitBlob": "e7810b956073fa83a977109cfdea4735493b8aa3",
+              "sha256": "fbe80239c4f1d67a399b7eed9d25d2785098b0c3a220e153b47fd166819420e3"
+            }
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "hunks": 4,
+            "exactPostimage": true,
+            "postimage": {
+              "bytes": 17689,
+              "gitBlob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+              "sha256": "dc35d90d36c1d562b380b6e58defc639bbe94d351367ae31aebc5c1884900075"
+            }
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/fixture.ts",
+            "hunks": 1,
+            "exactPostimage": true,
+            "postimage": {
+              "bytes": 4880,
+              "gitBlob": "e0405a7c523702482ffd1c8a9b500f4ca241b3a8",
+              "sha256": "860097a5e259ca985883b88bed467a0d5781b5bf6dee708689e7b063e72fdf7d"
+            }
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+            "hunks": 1,
+            "exactPostimage": true,
+            "postimage": {
+              "bytes": 14323,
+              "gitBlob": "18f3140769260dafbe7f639d6694ea493f3ea535",
+              "sha256": "e336bc1118d437d9d65dd7c7624664c2bb68c929c0cc20e4ad39b5ab84d91923"
+            }
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/materialization.test.ts",
+            "hunks": 1,
+            "exactPostimage": true,
+            "postimage": {
+              "bytes": 6994,
+              "gitBlob": "6731cab950249b1d018ced74cafce42a2ca27b9e",
+              "sha256": "51e86ca02f58373c0dccc1afe937a9d1435ad9270f19eb19f0b134240d074661"
+            }
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/intake-01.json",
+            "hunks": 1,
+            "exactPostimage": true,
+            "postimage": {
+              "bytes": 4353,
+              "gitBlob": "ece6ad07b0a1ba1b04c438a747297cda7a968d7e",
+              "sha256": "3fef5e41343b601d329bd29f909e003fb5b7bb6ba05ea76b63ee760d2567a15f"
+            }
+          }
+        ]
+      }
+    ],
+    "composedDisposition": "NOT_APPLIED_NOT_TESTED",
+    "composedLimit": "Session14 must verify its current preimages and apply only the selective delta; the Finance provider must not replace the composed provider."
+  },
+  "executionSequence": {
+    "selections": [
+      "S1",
+      "S2",
+      "K1",
+      "K2",
+      "S3"
+    ],
+    "noObservedOverlap": true,
+    "definition": "Compared each captured run created_at against the previous run terminal updated_at, including cleanup. This audits the five recorded mission runs, not unknown external jobs."
+  },
+  "terminalRecommendation": "Publish source and proof, retain FIN-IND-005 open, record the exact residual and end writer authority for session14. Do not repeat the same failed long tree or claim integrated/native/global acceptance.",
+  "globalRelease": false
+}

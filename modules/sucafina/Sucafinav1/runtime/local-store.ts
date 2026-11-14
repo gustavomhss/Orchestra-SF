@@ -1,4 +1,5 @@
 import { Database } from "bun:sqlite"
+import { AsyncLocalStorage } from "node:async_hooks"
 import { constants } from "node:fs"
 import { lstat, mkdir, open, realpath } from "node:fs/promises"
 import { isAbsolute, join, parse, resolve, sep } from "node:path"
@@ -77,11 +78,44 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     initial.close()
   }
 
+  type ReadScope = {
+    root: { db: Database; snapshots: Partial<Record<Surface, Snapshot>>; poisoned: boolean; readers: number }
+    parent?: ReadScope
+    open: boolean
+    signal?: AbortSignal
+  }
+  const context = new AsyncLocalStorage<ReadScope>()
+  const requireScope = (scope: ReadScope) => {
+    let current: ReadScope | undefined = scope
+    while (current) {
+      if (!current.open) throw new Error("Local transaction scope has ended")
+      current.signal?.throwIfAborted()
+      current = current.parent
+    }
+  }
   const lifecycle = { closed: false, disposing: undefined as Promise<void> | undefined }
   const active = new Set<Promise<unknown>>()
   const queue = { tail: undefined as Promise<void> | undefined }
   const operation = <T>(write: boolean, work: (db: Database) => Promise<T>, signal?: AbortSignal): Promise<T> => {
     if (lifecycle.closed) return Promise.reject(new Error("Local store is disposed"))
+    const inherited = context.getStore()
+    if (inherited) {
+      try {
+        requireScope(inherited)
+        signal?.throwIfAborted()
+        if (write) {
+          inherited.root.poisoned = true
+          throw new Error("Nested local writes are forbidden")
+        }
+        return work(inherited.root.db).then((value) => {
+          requireScope(inherited)
+          signal?.throwIfAborted()
+          return value
+        })
+      } catch (error) {
+        return Promise.reject(error)
+      }
+    }
     const previous = write ? queue.tail : undefined
     const deadline = performance.now() + timeout
     const pending = (async () => {
@@ -117,19 +151,92 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
   }
 
   return {
-    transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) =>
-      operation(true, async (db) => {
-        const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
-        const snapshot = row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
-        const capability = { open: true }
+    currentSnapshots: () => {
+      const scope = context.getStore()
+      if (!scope) return undefined
+      requireScope(scope)
+      const snapshots = scope.root.snapshots
+      if (!snapshots.dashboard || !snapshots.planner || !snapshots.procurement) throw new Error("Local transaction snapshots unavailable")
+      return { dashboard: cloneSnapshot(snapshots.dashboard), planner: cloneSnapshot(snapshots.planner),
+        procurement: cloneSnapshot(snapshots.procurement) }
+    },
+    transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
+      const parent = context.getStore()
+      if (parent) return (async () => {
+        if (lifecycle.closed) throw new Error("Local store is disposed")
+        requireScope(parent)
+        transactionOptions?.signal?.throwIfAborted()
+        const scope: ReadScope = { root: parent.root, parent, open: true, signal: transactionOptions?.signal }
+        const staged = parent.root.snapshots[surface]
+        const row = staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+        const snapshot = staged ? cloneSnapshot(staged) :
+          row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+        const blobs: BlobTransaction = {
+          get: async (key) => {
+            requireScope(scope)
+            if (context.getStore() !== scope) throw new Error("Blob capability used outside its transaction scope")
+            const blob = scope.root.db.query<{ payload: Uint8Array }, [string, string]>("SELECT payload FROM blobs WHERE surface = ? AND key = ?").get(surface, key)
+            return blob ? new Uint8Array(blob.payload) : undefined
+          },
+          put: async () => { requireScope(scope); scope.root.poisoned = true; throw new Error("Nested blob writes are forbidden") },
+          remove: async () => { requireScope(scope); scope.root.poisoned = true; throw new Error("Nested blob writes are forbidden") },
+        }
+        scope.root.readers++
+        try {
+          const result = await context.run(scope, () => work(snapshot, blobs))
+          requireScope(scope)
+          if (result.commit) {
+            scope.root.poisoned = true
+            throw new Error("Nested local writes are forbidden")
+          }
+          if (scope.root.poisoned) throw new Error("Nested local write attempted")
+          return result.value
+        } finally {
+          scope.open = false
+          scope.root.readers--
+        }
+      })()
+      return operation(true, async (db) => {
+        const read = (name: Surface) => {
+          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(name)
+          return row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+        }
+        const snapshots = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
+        const snapshot = snapshots[surface]
+        const generations = new Map(Object.entries(snapshot.sfBlobGenerations ?? {}))
+        const checkGenerations = () => {
+          if (!Bun.deepEquals(snapshot.sfBlobGenerations ?? {}, Object.fromEntries(generations))) throw new Error("Private blob generations changed outside storage")
+        }
+        const nextGeneration = (key: string) => {
+          const current = generations.get(key) ?? 0
+          if (!Number.isSafeInteger(current) || current < 0 || current >= Number.MAX_SAFE_INTEGER) throw new Error("Blob generation overflow")
+          return current + 1
+        }
+        const recordGeneration = (key: string, generation: number) => {
+          generations.set(key, generation)
+          snapshot.sfBlobGenerations = Object.fromEntries(generations)
+        }
+        const scope: ReadScope = { root: { db, snapshots, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
         const requireOpen = () => {
-          if (!capability.open) throw new Error("Blob transaction has ended")
-          transactionOptions?.signal?.throwIfAborted()
+          requireScope(scope)
+          if (context.getStore() !== scope) throw new Error("Blob capability used outside its transaction scope")
+        }
+        const requireWritable = () => {
+          requireScope(scope)
+          if (context.getStore() !== scope || scope.root.readers > 0) {
+            scope.root.poisoned = true
+            throw new Error("Nested blob writes are forbidden")
+          }
         }
         const blobs: BlobTransaction = {
           put: async (key, bytes, type) => {
-            requireOpen()
+            requireWritable()
+            checkGenerations()
+            const previous = db.query<{ payload: Uint8Array; type: string }, [string, string]>("SELECT payload, type FROM blobs WHERE surface = ? AND key = ?").get(surface, key)
+            if (previous && previous.type === type && Bun.deepEquals(new Uint8Array(previous.payload), bytes)) return
+            const generation = nextGeneration(key)
             db.query("INSERT INTO blobs (surface, key, payload, type) VALUES (?, ?, ?, ?) ON CONFLICT (surface, key) DO UPDATE SET payload=excluded.payload, type=excluded.type").run(surface, key, bytes, type)
+            recordGeneration(key, generation)
           },
           get: async (key) => {
             requireOpen()
@@ -137,22 +244,60 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
             return blob ? new Uint8Array(blob.payload) : undefined
           },
           remove: async (key) => {
-            requireOpen()
+            requireWritable()
+            checkGenerations()
+            const existing = db.query<{ present: number }, [string, string]>("SELECT 1 AS present FROM blobs WHERE surface = ? AND key = ?").get(surface, key)
+            if (!existing) return
+            const generation = nextGeneration(key)
             db.query("DELETE FROM blobs WHERE surface = ? AND key = ?").run(surface, key)
+            recordGeneration(key, generation)
           },
         }
         const result = await (async () => {
           try {
-            return await work(snapshot, blobs)
+            return await context.run(scope, () => work(snapshot, blobs))
           } finally {
-            capability.open = false
+            scope.open = false
           }
         })()
         transactionOptions?.signal?.throwIfAborted()
+        if (scope.root.poisoned) throw new Error("Nested local write attempted")
+        if (scope.root.readers) throw new Error("Nested local read still active")
+        checkGenerations()
         if (result.commit) {
           const payload = encodeSnapshot(snapshot)
           decodeSnapshot(payload)
           db.query("INSERT INTO snapshots (surface, payload) VALUES (?, ?) ON CONFLICT (surface) DO UPDATE SET payload=excluded.payload").run(surface, payload)
+          transactionOptions?.signal?.throwIfAborted()
+          db.exec("COMMIT")
+        }
+        return result.value
+      }, transactionOptions?.signal)
+    },
+    transactionAll: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) =>
+      operation(true, async (db) => {
+        const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
+        const read = (surface: Surface) => {
+          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+          return row ? decodeSnapshot(row.payload) : { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
+        }
+        const snapshots = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
+        const generations = Object.fromEntries(surfaces.map((surface) => [surface, structuredClone(snapshots[surface].sfBlobGenerations ?? {})]))
+        const scope: ReadScope = { root: { db, snapshots, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
+        const result = await (async () => {
+          try { return await context.run(scope, () => work(snapshots)) }
+          finally { scope.open = false }
+        })()
+        transactionOptions?.signal?.throwIfAborted()
+        if (scope.root.poisoned) throw new Error("Nested local write attempted")
+        if (scope.root.readers) throw new Error("Nested local read still active")
+        if (surfaces.some((surface) => !Bun.deepEquals(snapshots[surface].sfBlobGenerations ?? {}, generations[surface]))) throw new Error("Private blob generations changed outside storage")
+        if (result.commit) {
+          surfaces.forEach((surface) => {
+            const payload = encodeSnapshot(snapshots[surface])
+            decodeSnapshot(payload)
+            db.query("INSERT INTO snapshots (surface, payload) VALUES (?, ?) ON CONFLICT (surface) DO UPDATE SET payload=excluded.payload").run(surface, payload)
+          })
           transactionOptions?.signal?.throwIfAborted()
           db.exec("COMMIT")
         }
@@ -183,6 +328,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       }),
     },
     dispose: () => {
+      if (context.getStore()) return Promise.reject(new Error("Cannot dispose a store from its transaction scope"))
       lifecycle.closed = true
       lifecycle.disposing ??= Promise.allSettled([...active]).then(() => undefined)
       return lifecycle.disposing
@@ -291,9 +437,40 @@ export function decodeSnapshot(payload: string): Snapshot {
   const envelope: unknown = JSON.parse(payload)
   if (!Array.isArray(envelope) || envelope.length !== 3 || envelope[0] !== "sucafina-snapshot" || envelope[1] !== 1)
     throw new Error("Unsupported local snapshot encoding")
-  const value = decode(envelope[2])
+  return validateSnapshot(decode(envelope[2]))
+}
+
+/** Match the wire codec's normalized tree without allocating tagged nodes or JSON text. */
+function cloneSnapshot(snapshot: Snapshot): Snapshot {
+  return validateSnapshot(copyValue(snapshot))
+}
+
+function copyValue(value: unknown, ancestors = new Set<object>()): unknown {
+  if (value === undefined || value === null || typeof value === "boolean" || typeof value === "string") return value
+  if (typeof value === "number" && Number.isFinite(value)) return value
+  if (typeof value !== "object") throw new Error("Unsupported local snapshot value")
+  if (ancestors.has(value)) throw new Error("Cyclic local snapshot")
+  if (!Array.isArray(value) && Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null)
+    throw new Error("Local snapshots require plain objects")
+  if (Object.getOwnPropertySymbols(value).length) throw new Error("Unsupported symbol properties")
+  ancestors.add(value)
+  try {
+    // Array.from densifies holes; each path is copied separately, including shared aliases.
+    if (Array.isArray(value)) return Array.from(value, (item) => copyValue(item, ancestors))
+    return Object.fromEntries(Object.entries(Object.getOwnPropertyDescriptors(value)).map(([key, descriptor]) => {
+      if (!Object.hasOwn(descriptor, "value")) throw new Error("Unsupported snapshot accessor")
+      return [key, copyValue(descriptor.value, ancestors)]
+    }))
+  } finally {
+    ancestors.delete(value)
+  }
+}
+
+function validateSnapshot(value: unknown): Snapshot {
   if (!record(value) || !record(value.data) || !record(value.versions) || !record(value.sequences) || !Array.isArray(value.audit) || !Array.isArray(value.notices))
     throw new Error("Corrupt local snapshot shape")
+  if (value.sfBlobGenerations !== undefined && (!record(value.sfBlobGenerations) || !Object.values(value.sfBlobGenerations).every((generation) => Number.isSafeInteger(generation) && Number(generation) >= 0)))
+    throw new Error("Corrupt local blob generations")
   if (!Object.values(value.versions).every((version) => record(version) && Number.isSafeInteger(version.version) && Number(version.version) >= 0 && typeof version.by === "string") ||
       !Object.values(value.sequences).every((sequence) => typeof sequence === "number" && Number.isFinite(sequence)) ||
       !value.audit.every((audit: unknown) => record(audit) && typeof audit.who === "string" && typeof audit.at === "string" && typeof audit.record === "string" && Object.hasOwn(audit, "was") && Object.hasOwn(audit, "became")) ||

@@ -1,0 +1,69 @@
+{
+  "schema": "sf-c12-composed-validation-v1",
+  "mission": 32,
+  "label": "validation-01",
+  "W": "05b9486f7c96f3aa793f030d5157c17b7b340ac1",
+  "W_tree": "a904a47aa25c0094b2e8fba035e2064f13fc2ebf",
+  "S": "7660065a030c5e0e128c1d5947ce6c41d798d583",
+  "S_tree": "7a20de4156d9e16d569a42f71bfc854eae882abd",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+      "./Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+      "./Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+      "./Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts",
+      "./Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts",
+      "./Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts",
+      "./Sucafinav1/test/product/review-fixes/procurement-apply/real-apply.test.ts",
+      "./Sucafinav1/test/product/review-fixes/procurement-apply/refusals.test.ts",
+      "./Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "ref": "ci-run-linux-astra-c12-32-05b9486f-fixed-01",
+  "run": 43642889681,
+  "job": 132594136855,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43642889681",
+  "attempt": 1,
+  "conclusion": "failure",
+  "summary": {
+    "pass": 8,
+    "fail": 6,
+    "errors": 6,
+    "expectCalls": 122,
+    "reportedTests": 14,
+    "files": 9,
+    "seconds": 64.82
+  },
+  "diagnosis": "The six C12 modules could not load because interruptC12AfterCommit missed its closing brace before consumer.ts:68. They produced no functional C12 PASS.",
+  "independentPasses": {
+    "count": 8,
+    "files": [
+      "test/product/review-fixes/procurement-apply/real-apply.test.ts",
+      "test/product/review-fixes/procurement-apply/refusals.test.ts",
+      "test/product/wp04/finance-prepared-alias.test.ts"
+    ],
+    "finalProofReuse": false,
+    "reason": "W2 changes the product's identity checks; these regressions are repeated against the new product closure."
+  },
+  "correction": {
+    "sourceCommit": "1ff696864b167405c944af4bbc76b6904b66a22d",
+    "consumerPostimage": "fc9b0e4d52fca55921aa619687f41b8953954c7e",
+    "includedInW2": "9cf37f42eefb080940c7c71e4c2b1c5539459295"
+  },
+  "omni": {
+    "nonce": "6df4c5c10de7cbd9fd8370c9a8a91603",
+    "verdict": "not applicable",
+    "spawns": 0,
+    "delegated": 0,
+    "claim": false
+  },
+  "evidencePolicy": "Keep this run failure; hosted logs are the primary record, raw logs are not committed.",
+  "globalAcceptance": false
+}

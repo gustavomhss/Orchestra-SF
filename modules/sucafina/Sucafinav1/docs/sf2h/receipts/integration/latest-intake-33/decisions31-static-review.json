@@ -1,0 +1,467 @@
+{
+  "schema": "sf2-decisions31-static-review-v1",
+  "mission": 33,
+  "candidate": "C11",
+  "independent": {
+    "schema": "mission33-decisions31-shared-static-review-v1",
+    "reviewer": "reports25_intake; independent static auxiliary; no write authority",
+    "repository": "gustavomhss/Orchestra-SF",
+    "sourceRelease": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+    "sourceProduct": "386d1f9f52ba720e994f9d8feedfca8aa9c9e270",
+    "sourceProductTree": "3fc1bd258bb05ffd7ec6e05618961633fff253ce",
+    "reviewBase": {
+      "checkpoint": "2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0",
+      "tree": "2dba7fd244afcd39b837b1e61406de1e43450bb5",
+      "candidate": "C9",
+      "candidateCommit": "c1bd1c91b0e0d32db3074408e815e36107384073"
+    },
+    "recommendation": "READY_FOR_SCOPED_IMPLEMENTATION_INTAKE_WITH_FUNCTIONAL_HOLD",
+    "acceptance": "NOT_GRANTED",
+    "newStaticBlockerIdentified": false,
+    "releaseBoundary": "Terminal HANDOFF explicitly delivers partial code and five complete shared proposals while retaining functional HOLD and ending source31 authority. No source green transfers to any integrated candidate.",
+    "patchIndex": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/INDEX.json",
+      "blob": "1e207cc5bd95d9ad592106baaf4ec2e7db10f0ce"
+    },
+    "patches": [
+      {
+        "name": "router-mount",
+        "manifest": "integration/router-mount/manifest.json",
+        "patch": "integration/router-mount/router-mount.patch",
+        "patch_sha256": "3d78c688488110854d3fe361c7f1a93979e0aa2131e8261ca591648bfd08b7d7",
+        "files": [
+          {
+            "path": "apps/cli/src/sucafina-product/installation.ts",
+            "preimage_blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109",
+            "postimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c"
+          },
+          {
+            "path": "apps/cli/test/sucafina-installation.test.ts",
+            "preimage_blob": null,
+            "postimage_blob": "6360d706352ec7e4fab097cb9e9152dc2ed5a101"
+          },
+          {
+            "path": "apps/cli/test/fixture/sucafina-installation.ts",
+            "preimage_blob": null,
+            "postimage_blob": "5c43c84dde0f44fbc51dffc3d53a5176bda5e900"
+          }
+        ],
+        "sourcePatchBlob": "cfe4d6c9012bff6581b92aeeb73a6c898fe112e5"
+      },
+      {
+        "name": "coverage-read",
+        "manifest": "integration/coverage-read/manifest.json",
+        "patch": "integration/coverage-read/coverage-read.patch",
+        "patch_sha256": "50a0a926c46ec1283d1aa02193334fd01b7dd01114c8d498b13595364142214c",
+        "files": [
+          {
+            "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+            "preimage_blob": "77563520dbfa9cab5876c0312eba294cb579e11d",
+            "postimage_blob": "8ba78e4a49d289f1f0f50c2737989ff2ad1c26d6"
+          }
+        ],
+        "sourcePatchBlob": "43ad2f1719426bf7aa9a4c35424c58d2a72ee871"
+      },
+      {
+        "name": "procurement-read",
+        "manifest": "integration/procurement-read/manifest.json",
+        "patch": "integration/procurement-read/procurement-read.patch",
+        "patch_sha256": "2bb840628ed3bc13bdb5a29c24b829689df8864ddeadaefb0900d10eeb14114b",
+        "files": [
+          {
+            "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+            "preimage_blob": "8ba78e4a49d289f1f0f50c2737989ff2ad1c26d6",
+            "postimage_blob": "986450eb9b3a2bf9feb73f8071d8f05e38f1e515"
+          }
+        ],
+        "sourcePatchBlob": "2e63be3de3af7d37e6c6f928e1481f4c7a425877"
+      },
+      {
+        "name": "comparison-rule",
+        "manifest": "integration/comparison-rule/manifest.json",
+        "patch": "integration/comparison-rule/comparison-rule.patch",
+        "patch_sha256": "3e960eb0a3a92cfe38fd8c7ef6b2b9a289730cd43a2708d531e7ec1821fed1ac",
+        "files": [
+          {
+            "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+            "preimage_blob": "e8a931a3d0788d0c6899e9550fbe069a4a5dc7de",
+            "postimage_blob": "149cc8fb12dd54b6622842cfa4e0c1a2e2bf4f93"
+          }
+        ],
+        "sourcePatchBlob": "57dae287195d0ef9953cd353bf159c6de6c61abc"
+      },
+      {
+        "name": "history-read",
+        "manifest": "integration/history-read/manifest.json",
+        "patch": "integration/history-read/history-read.patch",
+        "patch_sha256": "33aea0e43b34c501cd1313c5af45288641a7360e34e7ce1fd5074ef5c0b2ecdc",
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts",
+            "preimage_blob": "fafd1c99e96b0d5bac5d9a596b29252829870e62",
+            "postimage_blob": "da41f148e5b3592d700cdfb81d72ea23d8774500"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-management.ts",
+            "preimage_blob": "22cc1a0b08a5952a886fe159590ca0c40eb5f63e",
+            "postimage_blob": "5140fee739f874a5c2d8dfeaf95c3bbb3d6ff585"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/host-product.ts",
+            "preimage_blob": "74450e928e9bdf67df701f0a1e790ce5829016c7",
+            "postimage_blob": "f6e3d0473338553dc71340fe632d3de59b08deb9"
+          }
+        ],
+        "sourcePatchBlob": "ee8e22c408efcc64d4c38dfd8a14117d2c27c92e"
+      }
+    ],
+    "findings": [
+      {
+        "id": "M33-DEC31-SHARED-PERIOD-QUALIFICATION",
+        "classification": "STATIC_INFERENCE_NOT_RUNTIME_REPRODUCTION",
+        "blocksScopedIntake": false,
+        "owner": "mission33 qualification coordinator with Work/Procurement host owner; mission37 if its proposed producer uses the same boundary",
+        "evidence": {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "blob": "ce3a281bf07819f90af7fad10f98861980f3273b",
+          "locations": [
+            "key()/selectedPeriod()",
+            "procurementSelections.create()",
+            "contextFor()"
+          ],
+          "patch": "procurement-read"
+        },
+        "finding": "The new optional controls read uses the existing procurementSelections.create API. That API stores a period in a map keyed by installation/project/principal/access/policy rather than by Request. Another simultaneous view with a different period can replace that selected period. Existing context and source equality checks should make mismatched reads stale/unavailable; this review does not assert successful cross-view continuity or a runtime failure.",
+        "nextAction": "In later authorized qualification, inspect concurrent Work/Decisions reads with differing periods. Preserve the fail-closed source/context fences; do not add grants or synthesize sources to hide unavailability."
+      }
+    ],
+    "preservation": [
+      {
+        "boundary": "Router and private HTTP",
+        "evidence": "installation 30ffcb8353cdf478808fbb8d6bc67b48b10a6109 -> e1392759f00d6d42477249823bbb6b3cec51601c; exact Effect HttpRouter 3a52c4acd7938674bc209059212efd745cff9715; package 947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2; dependency patch aa7a9314ea0058a2dadb4ffac329f6387c89799d",
+        "conclusion": "Effect addAll registers /* plus the base path. Removing the extra explicit base layer addresses that duplicate registration mechanically. Host/origin checks, handler delegation, abort signal, catch/status behavior remain in the source hunk. No product route, private-artifact admission, capability or grant is added."
+      },
+      {
+        "boundary": "Coverage",
+        "evidence": "decision-controls intermediate 8ba78e4a49d289f1f0f50c2737989ff2ad1c26d6; adapter cfbff030208adb764f392f637ff7b903c0c64199",
+        "conclusion": "Uses canonical readClassification and resolveForecastCoverage with exact Request/binding/selection checks, evidence digest and case/source/version validation. Absent classification retains expectedVersion zero; an unavailable registered value is not invented or converted to confirmed cost. Adds the real coverage receipt without a new formula."
+      },
+      {
+        "boundary": "Procurement evidence and Work",
+        "evidence": "decision-controls final 986450eb9b3a2bf9feb73f8071d8f05e38f1e515; current business-services ce3a281bf07819f90af7fad10f98861980f3273b; collection-member 4d35da609cc89817abc1d595cdf3de64193f4f1e; sources 615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e; source-fence-read 5f1c4b43162aa2ba3eae9a7c57862cd41df0af18",
+        "conclusion": "Child sf_work_list admission uses the exact parent Request and existing purpose/period digest. Existing real collection/member/individual producers authenticate Procurement and capture durable sf-procurement references. Patch checks IDs/digests/period/currency/actor/version, uniqueness and a 100-record ceiling. Collection and projections are reread; whole canonical second projection (including producer ageDays) is returned under source and exact-case fences. finally releases only that collection scope and finishes child admission. Optional failure omits procurementEvidence; parent read must still revalidate. Source metadata may be materialized by the existing capture API, but no domain operation/Apply/approval is introduced."
+      },
+      {
+        "boundary": "Numeric rules and Portfolio",
+        "evidence": "decision-domain-services e8a931a3d0788d0c6899e9550fbe069a4a5dc7de -> 149cc8fb12dd54b6622842cfa4e0c1a2e2bf4f93; portfolio-authority 138238ca9273e84f39f8e1db484378a3e62d41d4; portfolio-services 881ce4672d9d0e641d1cc849663c0980c118774d; criterion-rules c357c6c66aac544394ab355306e1f6f7195395f7",
+        "conclusion": "Plain human known-subtotal rule is admitted only in the composition supplying sharedPortfolio. Its metric re-resolves exact rule identity/version and delegates to existing canonical readMetric that reopens both stored scenarios. Sensitivity keeps its existing producer. Registry evaluate still returns unknown for conditioned/unavailable/null metrics; human authorization, preferences CAS, current sources, idempotent replay and locked snapshot verification remain. Standalone plain metric remains unavailable; no invented parameter or total. Factory creates callbacks only, so the later metric binding is not eagerly read during createCriterionRuleRegistry construction."
+      },
+      {
+        "boundary": "History, Memory and CurrentChoice",
+        "evidence": "host-evidence da41f148e5b3592d700cdfb81d72ea23d8774500; case-management 5140fee739f874a5c2d8dfeaf95c3bbb3d6ff585; host-product f6e3d0473338553dc71340fe632d3de59b08deb9",
+        "conclusion": "New readRefs accepts only canonical independently authorized fresh or historical projections with currentRef/digests/accessRevision and explicit historical differences. Only management.list chooses verifyReadEvidence. Edits, criteria, metrics and other mutation paths keep strict fresh evidence.refs and existing locked verification. Native case/incarnation/version filtering, participants and state reread remain. ChoiceRecord and CurrentChoice promotion/record paths are untouched by these hunks; the patch does not prove Workbench reentry, historical capture availability or changed-source calculation continuity."
+      },
+      {
+        "boundary": "Reports, Operations and Routines host",
+        "evidence": "No shared patch targets business-services, host-context, extended-business-services/http/browser, review handlers or Operations contribution code. C6 business-services and reviewed C9 host composition retained.",
+        "conclusion": "Reports binding and private-artifact boundaries, Work bridge, Memory instance, Operations contribution and native Routines owner gating are not replaced. Original host passes extended.portfolioServices to decisionDomain; C9 routine patch leaves that provision unchanged. This is a patch-boundary preservation argument, not a runtime integration result."
+      }
+    ],
+    "deferred": [
+      {
+        "id": "M31-PRECHOICE-PROCUREMENT",
+        "owner": "mission37",
+        "state": "OPEN_MANDATORY_IMPLEMENTATION_AND_COMPLETE_PATCH_NOT_DELIVERED",
+        "action": "Supply real read-only typed pre-choice Procurement scenario producer, source witness and persistence/replay/typed authoring without inventing totals or executing post-choice Apply early."
+      },
+      {
+        "id": "M31-FINANCIAL-APPROVAL",
+        "owner": "mission37",
+        "state": "OPEN_MANDATORY_IMPLEMENTATION_AND_COMPLETE_PATCH_NOT_DELIVERED",
+        "action": "Supply proposed-value approval/prepared-command contract compatible with existing Procurement policy and C12 Apply/recovery; choice is not financial approval."
+      },
+      {
+        "id": "M31-HISTORICAL-READ",
+        "owner": "mission33 with Memory/Finance canonical history owners",
+        "state": "PARTIAL_IMPLEMENTATION_ONLY",
+        "action": "Qualify canonical historical captures and calculation continuity; management.list patch alone does not close Workbench source-change journey."
+      },
+      {
+        "id": "M31-NATIVE",
+        "owner": "S0/native provider, critique, restart owners",
+        "state": "NOT_RUN",
+        "action": "Preserve actual native proof requirements; this static auxiliary review is not native critique."
+      },
+      {
+        "id": "M31-PROOF-AND-CHECKS",
+        "owner": "S0 final dispatcher and assigned proof/diagnostic owners",
+        "state": "NOT_RUN_ON_COMPOSITION",
+        "action": "No tests or checks in mission33. Source nominal Wc2 is 0 pass/5 fail before UI; source checks FAILURE (130 TS,43 GATE,18 WARN). No source component green transfers; preserve all83criteria and predecessor evidence."
+      }
+    ],
+    "downstreamC10Note": "Peer source_census reports C10/C12-32 precedes Decisions integration and changes procurement decision-host/apply, outside these eight shared target files. This review is pinned to C9 and does not certify an unread later dependency. source_census/root must reconcile that dependency with its existing C12 review; no stale preimage replacement.",
+    "directAdditionalReads": [
+      {
+        "key": "effect-http",
+        "blob": "3a52c4acd7938674bc209059212efd745cff9715",
+        "url": "https://github.com/Effect-TS/effect-smol/blob/effect@4.0.0-beta.83/packages/effect/src/unstable/http/HttpRouter.ts",
+        "scope": "addAll wildcard registration"
+      },
+      {
+        "key": "package.json",
+        "blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0/package.json",
+        "scope": "dependency pin"
+      },
+      {
+        "key": "patches/effect@4.0.0-beta.83.patch",
+        "blob": "aa7a9314ea0058a2dadb4ffac329f6387c89799d",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0/patches/effect@4.0.0-beta.83.patch",
+        "scope": "patch file targets"
+      },
+      {
+        "key": "portfolio-authority",
+        "blob": "138238ca9273e84f39f8e1db484378a3e62d41d4",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0/apps/cli/src/sucafina-product/portfolio-authority.ts",
+        "scope": "full"
+      },
+      {
+        "key": "portfolio-services",
+        "blob": "881ce4672d9d0e641d1cc849663c0980c118774d",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0/apps/cli/src/sucafina-product/portfolio-services.ts",
+        "scope": "full"
+      },
+      {
+        "key": "criterion-rules",
+        "blob": "c357c6c66aac544394ab355306e1f6f7195395f7",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0/modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+        "scope": "createCriterionRuleRegistry through helper validation"
+      },
+      {
+        "key": "collection-member",
+        "blob": "4d35da609cc89817abc1d595cdf3de64193f4f1e",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0/modules/sucafina/Sucafinav1/product/procurement/collection-member.ts",
+        "scope": "full"
+      },
+      {
+        "key": "sources",
+        "blob": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0/modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+        "scope": "individual resolver and collection registry"
+      },
+      {
+        "key": "source-fence-read",
+        "blob": "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0/apps/cli/src/sucafina-product/source-fence-read.ts",
+        "scope": "full"
+      }
+    ],
+    "reviewedSourceDocuments": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/HANDOFF.md",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/PRODUCT.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/FINDINGS.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/INPUTS.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/INDEX.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/router-mount/manifest.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/coverage-read/manifest.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/procurement-read/manifest.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/comparison-rule/manifest.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-functional-closure/integration/history-read/manifest.json"
+    ],
+    "method": {
+      "allFivePatchesReadInFull": true,
+      "localAssemblyOwnedBy": "source_census; not repeated by this reviewer",
+      "remoteChannel": "GitHub MCP only",
+      "localProductExecution": false,
+      "tests": false,
+      "checks": false,
+      "build": false,
+      "runtime": false,
+      "remoteWrites": false,
+      "sourceBranchesModified": false,
+      "sourceGreenTransfer": false
+    }
+  },
+  "root_reads": [
+    "terminal HANDOFF",
+    "five complete shared patches",
+    "decision-coverage-read.ts",
+    "preimage/sourcepath/blob/mode checks87paths",
+    "dependency checks24paths and C10 extension",
+    "C10 full product patch and both ORACLES source documents"
+  ],
+  "C10_reconciliation": {
+    "schema": "mission33-decisions31-C10-semantic-reconciliation-v1",
+    "reviewer": "/root/source_census",
+    "earlier_independent_review": "/workspace/scratch/e727afafae7e/decisions31-review/review.json",
+    "source_decisions31": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+    "comparison": {
+      "base": "2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0",
+      "head": "9b51c8ee132541ed837eac909611b70c1b991bc3",
+      "material": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+      "material_tree": "d34dba1f7eca5a1bce546a0b6fab9d9ec5aef5b7",
+      "checkpoint_tree": "7cc8e7c5015f2bf7a09e8be1099babda304c94b8",
+      "commits": 2,
+      "changed_paths": 31,
+      "material_or_receipt_destination_overlap": [],
+      "all87_entries_preserved_against_C10": "Root independently verified all87 sourcepaths/blobs/modes/preimages at current checkpoint with zero discrepancies; helper complete31path compare confirms no overlap."
+    },
+    "product_dependencies": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "preimage": "6ad51e47b22eca073a0a81731575c463d98673e4",
+        "postimage": "65d2a0518427b1454aa665ef744bce7564ed8049",
+        "reading": "Complete108line two-product patch, current postimage SHA via MCP, surrounding typed interfaces represented by unchanged diff.",
+        "change": "Reject duplicated prepared-change IDs and nonunique ChoiceRecord IDs; retain digest of the exact selected choices and refuse material replacement/duplication during fresh post-domain reconciliation.",
+        "compatibility": "Existing createPreparedExecution request/API/result types and normal canonical apply/recovery path stay intact. Decision31 creates a real human choice and passes its exact frozen operations; it does not depend on accepting duplicate/replaced choice records. No receipt rebinding, bypass, financial approval or new executor was added."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+        "preimage": "14e41977752f48fc0f204dc5e5893521a5bd1d30",
+        "postimage": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635",
+        "reading": "Complete product patch and current postimage SHA via MCP.",
+        "change": "Bind the active exact Request admission to a digest of its single chosen record and unique prepared change; strengthen authorizeCase/readCase against drift without a nested state read; retain existing current() Request/context/abort checks.",
+        "compatibility": "Host/HTTP public operation contracts, prepare/review/apply/recover names, reviewDigest and request body fields remain unchanged. Decisions31 Apply helper uses the existing decision-apply UI; C10 adds rejection at material races and preserves original intent/receipt. No domain state policy, threshold, approval ladder or prepared command was changed."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "postimage": "a182c632c1714e3c48e6be07142adc7ed87d8f13",
+        "unchanged_from_C9": true,
+        "observed_ref": "9b51c8ee132541ed837eac909611b70c1b991bc3",
+        "compatibility": "Direct MCP read confirms same UI consumer used by Decisions31 helpers. Source31's five-journey spec remains a positive requirement, not an execution result."
+      }
+    ],
+    "tests": "NOT_RUN",
+    "prechoice_and_approval": {
+      "owner": "mission37 / procurement-decision-browser37",
+      "finding_ids": [
+        "M31-PRECHOICE-PROCUREMENT",
+        "M31-FINANCIAL-APPROVAL"
+      ],
+      "state": "OPEN_MANDATORY_IMPLEMENTATION_AND_COMPLETE_PATCH_NOT_DELIVERED",
+      "reason": "C10 changes uniqueness and admission-to-reconciliation binding only. It does not produce pre-choice Procurement alternatives or repair Requests/save vs formal-approval state compatibility. Choice/Apply checkbox is not financial approval; original policy remains unchanged."
+    },
+    "review_boundary": {
+      "C9_shared_patch_review": "READY_FOR_SCOPED_IMPLEMENTATION_INTAKE_WITH_FUNCTIONAL_HOLD; no new static blocker",
+      "C10_extension": "No static interface conflict identified between C10 stronger identity fences and the prepared C11 unit. This is dependency reconciliation, not runtime qualification.",
+      "historical_read": "management.list only; Workbench source-change/reopen remains independently unproved",
+      "concurrent_periods": "Keep independent-review M33-DEC31-SHARED-PERIOD-QUALIFICATION: concurrent different-period views may become stale/unavailable because the existing selection map is principal/access/policy scoped; no runtime failure or grant bypass asserted."
+    },
+    "recommendation": "READY_FOR_SCOPED_IMPLEMENTATION_INTAKE_WITH_FUNCTIONAL_HOLD",
+    "checks": false,
+    "product_execution": false,
+    "CI_epic": false,
+    "AM": false,
+    "source_green_transfer": false,
+    "remote_writes": false,
+    "GLOBAL_RELEASE": false,
+    "C10_test_preservation": {
+      "method": "Root exact Git blob and destination-set check",
+      "source_candidate": "C10",
+      "source_commit": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+      "actual_parent": "9b51c8ee132541ed837eac909611b70c1b991bc3",
+      "count": 8,
+      "entries": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts",
+          "expected_blob": "c9a7fc6ee875a2ec6e9ac2a02307fe1d1c41124a",
+          "current_blob": "c9a7fc6ee875a2ec6e9ac2a02307fe1d1c41124a",
+          "mode": "100644",
+          "overlap_with_C11": false,
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/duplicate-choice.test.ts",
+          "expected_blob": "e8b6d8a9c0c02670269f38336e4a9446b8133647",
+          "current_blob": "e8b6d8a9c0c02670269f38336e4a9446b8133647",
+          "mode": "100644",
+          "overlap_with_C11": false,
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts",
+          "expected_blob": "c45757c67769a7654f9ae1ecbbeb2f55f93e6acd",
+          "current_blob": "c45757c67769a7654f9ae1ecbbeb2f55f93e6acd",
+          "mode": "100644",
+          "overlap_with_C11": false,
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts",
+          "expected_blob": "c2fca3a7aed03776072cd059cd361df98ac9cf28",
+          "current_blob": "c2fca3a7aed03776072cd059cd361df98ac9cf28",
+          "mode": "100644",
+          "overlap_with_C11": false,
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts",
+          "expected_blob": "fc9b0e4d52fca55921aa619687f41b8953954c7e",
+          "current_blob": "fc9b0e4d52fca55921aa619687f41b8953954c7e",
+          "mode": "100644",
+          "overlap_with_C11": false,
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+          "expected_blob": "4528a2c390110b3bf010cc77884e204139b50c09",
+          "current_blob": "4528a2c390110b3bf010cc77884e204139b50c09",
+          "mode": "100644",
+          "overlap_with_C11": false,
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+          "expected_blob": "76bf7963d30dde72eb369616dfcd0fee61948803",
+          "current_blob": "76bf7963d30dde72eb369616dfcd0fee61948803",
+          "mode": "100644",
+          "overlap_with_C11": false,
+          "preserved": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+          "expected_blob": "65876bfc65f8682ad19723cd3bc1589803118b9b",
+          "current_blob": "65876bfc65f8682ad19723cd3bc1589803118b9b",
+          "mode": "100644",
+          "overlap_with_C11": false,
+          "preserved": true
+        }
+      ],
+      "execution": "NOT_RUN"
+    }
+  },
+  "source_status": "EXPLICIT_TERMINAL_PARTIAL_IMPLEMENTATION_FUNCTIONAL_HOLD",
+  "owner37": {
+    "owner": "mission37 / procurement-decision-browser37",
+    "finding_ids": [
+      "M31-PRECHOICE-PROCUREMENT",
+      "M31-FINANCIAL-APPROVAL"
+    ],
+    "state": "OPEN_MANDATORY_IMPLEMENTATION_AND_COMPLETE_PATCH_NOT_DELIVERED",
+    "reason": "C10 changes uniqueness and admission-to-reconciliation binding only. It does not produce pre-choice Procurement alternatives or repair Requests/save vs formal-approval state compatibility. Choice/Apply checkbox is not financial approval; original policy remains unchanged."
+  },
+  "findings": [
+    {
+      "id": "M33-DEC31-SHARED-PERIOD-QUALIFICATION",
+      "classification": "STATIC_INFERENCE_NOT_RUNTIME_REPRODUCTION",
+      "blocksScopedIntake": false,
+      "owner": "mission33 qualification coordinator with Work/Procurement host owner; mission37 if its proposed producer uses the same boundary",
+      "evidence": {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "blob": "ce3a281bf07819f90af7fad10f98861980f3273b",
+        "locations": [
+          "key()/selectedPeriod()",
+          "procurementSelections.create()",
+          "contextFor()"
+        ],
+        "patch": "procurement-read"
+      },
+      "finding": "The new optional controls read uses the existing procurementSelections.create API. That API stores a period in a map keyed by installation/project/principal/access/policy rather than by Request. Another simultaneous view with a different period can replace that selected period. Existing context and source equality checks should make mismatched reads stale/unavailable; this review does not assert successful cross-view continuity or a runtime failure.",
+      "nextAction": "In later authorized qualification, inspect concurrent Work/Decisions reads with differing periods. Preserve the fail-closed source/context fences; do not add grants or synthesize sources to hide unavailability."
+    }
+  ],
+  "tests": "NOT_RUN",
+  "checks": "NOT_RUN",
+  "product_execution": false,
+  "source_PASS_transferred": false
+}

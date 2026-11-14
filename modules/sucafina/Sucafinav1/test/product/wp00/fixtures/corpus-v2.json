@@ -1,0 +1,629 @@
+{
+  "schema_version": 1,
+  "source_plan_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "source_pack_sha256": "9eba95a91797a0c57934ee5be337dca38d278cc48296014fb9454f17cd4f2f37",
+  "source_code_baseline": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "synthetic": true,
+  "warning": "Proposed test corpus, not Sucafina data or observed performance. Numeric expected values are independently authored assertions.",
+  "datasets": {
+    "finance": {
+      "id": "WP00-T03-FINANCE-V2",
+      "synthetic": true,
+      "currency": "USD",
+      "period": "FY2027",
+      "supersedes": "WP00-T03-FINANCE-V1",
+      "decision_source": "plan/campaign.json numeric_oracles FX01 and FX03; S0 decision in epoch2 handoff",
+      "budget": {
+        "annual_total": 600000,
+        "monthly": [
+          {
+            "period": "2027-01",
+            "amount": 40000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-02",
+            "amount": 45000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-03",
+            "amount": 45000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-04",
+            "amount": 50000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-05",
+            "amount": 50000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-06",
+            "amount": 50000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-07",
+            "amount": 50000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-08",
+            "amount": 50000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-09",
+            "amount": 50000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-10",
+            "amount": 50000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-11",
+            "amount": 60000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-12",
+            "amount": 60000,
+            "evidence_state": "synthetic-input"
+          }
+        ]
+      },
+      "actual": {
+        "annual_total": 400000,
+        "coverage_periods": [
+          "2027-01",
+          "2027-09"
+        ],
+        "monthly": [
+          {
+            "period": "2027-01",
+            "amount": 40000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-02",
+            "amount": 40000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-03",
+            "amount": 45000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-04",
+            "amount": 45000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-05",
+            "amount": 45000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-06",
+            "amount": 45000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-07",
+            "amount": 45000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-08",
+            "amount": 45000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-09",
+            "amount": 50000,
+            "evidence_state": "synthetic-input"
+          }
+        ],
+        "unprovided_periods": [
+          "2027-10",
+          "2027-11",
+          "2027-12"
+        ]
+      },
+      "forecast": {
+        "annual_total": 190000,
+        "coverage_periods": [
+          "2027-10",
+          "2027-12"
+        ],
+        "monthly": [
+          {
+            "period": "2027-10",
+            "amount": 38000,
+            "evidence_state": "synthetic-input"
+          },
+          {
+            "period": "2027-11",
+            "amount": 112000,
+            "evidence_state": "synthetic-input",
+            "includes_decision_item_id": "synthetic-forecast-item-72k"
+          },
+          {
+            "period": "2027-12",
+            "amount": 40000,
+            "evidence_state": "synthetic-input"
+          }
+        ],
+        "other_open_forecast_total": 118000,
+        "other_open_forecast_monthly": [
+          {
+            "period": "2027-10",
+            "amount": 38000
+          },
+          {
+            "period": "2027-11",
+            "amount": 40000
+          },
+          {
+            "period": "2027-12",
+            "amount": 40000
+          }
+        ],
+        "license_included": {
+          "amount": 72000,
+          "period": "2027-11",
+          "included_in_forecast_monthly": true
+        }
+      },
+      "decision_item": {
+        "id": "synthetic-forecast-item-72k",
+        "period": "2027-11",
+        "amount": 72000,
+        "included_in_forecast_monthly": true,
+        "alternatives": [
+          {
+            "id": "base",
+            "amount": 72000
+          },
+          {
+            "id": "alternative-84k",
+            "amount": 84000
+          },
+          {
+            "id": "alternative-78k",
+            "amount": 78000
+          }
+        ]
+      },
+      "expected": {
+        "outlook_base": 590000,
+        "outlook_item_84k": 602000,
+        "outlook_item_78k": 596000,
+        "basis": "closed actual + open forecast; budget is a separate reference, not added to outlook. Replace the included November license contribution once; alternatives change outlook by +12000/+6000."
+      },
+      "provenance_rule": "All month values are explicit synthetic inputs; absent closed actual/open forecast periods stay unprovided and are not zero. Annual totals are independently declared assertions; do not derive monthly distributions from annual values.",
+      "edge_cases": [
+        {
+          "id": "blank-vs-zero",
+          "period": "2027-10",
+          "value_blank": null,
+          "value_zero": 0,
+          "expected": "blank remains absent; explicit zero remains observed zero"
+        },
+        {
+          "id": "inherited-forecast",
+          "period": "2027-11",
+          "value": null,
+          "inherited_from": "2027-10",
+          "expected": "provenance remains inherited; null does not become zero"
+        },
+        {
+          "id": "period-separation",
+          "periods": [
+            "2027-01",
+            "2027-02"
+          ],
+          "expected": "monthly values remain period scoped; no cross-period assumption"
+        }
+      ]
+    },
+    "procurement": {
+      "id": "WP00-T03-PROCUREMENT-V1",
+      "synthetic": true,
+      "base_currency": "USD",
+      "fx_snapshot": {
+        "pair": "EUR/USD",
+        "rate": 1.08,
+        "status": "present",
+        "source": "SYN-FX-108"
+      },
+      "request": {
+        "id": "synthetic-po-eur-28k",
+        "amount": 28000,
+        "currency": "EUR",
+        "expected_base_amount": 30240
+      },
+      "bids": [
+        {
+          "id": "A",
+          "compliance": "compliant",
+          "score_expected": 87.9333
+        },
+        {
+          "id": "B",
+          "compliance": "compliant",
+          "score_expected": 85.0
+        },
+        {
+          "id": "C",
+          "compliance": "non-compliant",
+          "ranked": false
+        }
+      ],
+      "fx_missing_control": {
+        "pair": "EUR/USD",
+        "rate": null,
+        "expected": "unpriced; never zero"
+      },
+      "approval": {
+        "states": [
+          "submitted",
+          "approved",
+          "po_issued"
+        ],
+        "expected_distinction": "internal issuance is not realized spend or supplier delivery"
+      },
+      "edge_cases": [
+        {
+          "id": "alternative-ranking",
+          "expected": "eligible alternatives retain independent scores; non-compliant alternative excluded"
+        },
+        {
+          "id": "missing-fx",
+          "expected": "EUR source with absent rate stays unpriced and visible; no rate is fabricated"
+        },
+        {
+          "id": "approval-return-resubmit",
+          "expected": "returned approval and resubmission are separate linked events; prior audit preserved"
+        }
+      ]
+    },
+    "report": {
+      "id": "WP00-T03-REPORT-V1",
+      "synthetic": true,
+      "records": [
+        {
+          "id": "synthetic-report-01",
+          "period": "2027-02",
+          "value": 125,
+          "status": "open",
+          "owner": "person-2"
+        },
+        {
+          "id": "synthetic-report-02",
+          "period": "2027-03",
+          "value": 250,
+          "status": "open",
+          "owner": "person-3"
+        },
+        {
+          "id": "synthetic-report-03",
+          "period": "2027-04",
+          "value": 375,
+          "status": "closed",
+          "owner": "person-4"
+        },
+        {
+          "id": "synthetic-report-04",
+          "period": "2027-05",
+          "value": 500,
+          "status": "open",
+          "owner": "person-5"
+        },
+        {
+          "id": "synthetic-report-05",
+          "period": "2027-06",
+          "value": 625,
+          "status": "open",
+          "owner": "person-1"
+        },
+        {
+          "id": "synthetic-report-06",
+          "period": "2027-07",
+          "value": 750,
+          "status": "closed",
+          "owner": "person-2"
+        },
+        {
+          "id": "synthetic-report-07",
+          "period": "2027-08",
+          "value": 875,
+          "status": "open",
+          "owner": "person-3"
+        },
+        {
+          "id": "synthetic-report-08",
+          "period": "2027-09",
+          "value": 1000,
+          "status": "open",
+          "owner": "person-4"
+        },
+        {
+          "id": "synthetic-report-09",
+          "period": "2027-10",
+          "value": 1125,
+          "status": "closed",
+          "owner": "person-5"
+        },
+        {
+          "id": "synthetic-report-10",
+          "period": "2027-11",
+          "value": 1250,
+          "status": "open",
+          "owner": "person-1"
+        },
+        {
+          "id": "synthetic-report-11",
+          "period": "2027-12",
+          "value": 1375,
+          "status": "open",
+          "owner": "person-2"
+        },
+        {
+          "id": "synthetic-report-12",
+          "period": "2027-01",
+          "value": 1500,
+          "status": "closed",
+          "owner": "person-3"
+        },
+        {
+          "id": "synthetic-report-13",
+          "period": "2027-02",
+          "value": 1625,
+          "status": "open",
+          "owner": "person-4"
+        },
+        {
+          "id": "synthetic-report-14",
+          "period": "2027-03",
+          "value": 1750,
+          "status": "open",
+          "owner": "person-5"
+        },
+        {
+          "id": "synthetic-report-15",
+          "period": "2027-04",
+          "value": 1875,
+          "status": "closed",
+          "owner": "person-1"
+        },
+        {
+          "id": "synthetic-report-16",
+          "period": "2027-05",
+          "value": 2000,
+          "status": "open",
+          "owner": "person-2"
+        },
+        {
+          "id": "synthetic-report-17",
+          "period": "2027-06",
+          "value": 2125,
+          "status": "open",
+          "owner": "person-3"
+        },
+        {
+          "id": "synthetic-report-18",
+          "period": "2027-07",
+          "value": 2250,
+          "status": "closed",
+          "owner": "person-4"
+        },
+        {
+          "id": "synthetic-report-19",
+          "period": "2027-08",
+          "value": 2375,
+          "status": "open",
+          "owner": "person-5"
+        },
+        {
+          "id": "synthetic-report-20",
+          "period": "2027-09",
+          "value": 2500,
+          "status": "open",
+          "owner": "person-1"
+        }
+      ],
+      "expected_record_count": 20,
+      "truncation_policy": "Return all records or explicitly label a chosen summary and its scope."
+    },
+    "authorization": {
+      "id": "WP00-T03-AUTH-V1",
+      "synthetic": true,
+      "actors": [
+        {
+          "id": "finance-authorized",
+          "role": "finance",
+          "can_read": [
+            "finance",
+            "projects",
+            "procurement-summary"
+          ],
+          "can_read_restricted_people": false
+        },
+        {
+          "id": "procurement-authorized",
+          "role": "procurement",
+          "can_read": [
+            "procurement",
+            "contracts"
+          ],
+          "can_read_restricted_people": false
+        },
+        {
+          "id": "reviewer-limited",
+          "role": "reviewer",
+          "can_read": [
+            "approved-evidence"
+          ],
+          "can_read_restricted_people": false
+        },
+        {
+          "id": "restricted-person-owner",
+          "role": "people-owner",
+          "can_read": [
+            "restricted-people"
+          ],
+          "can_read_restricted_people": true
+        }
+      ],
+      "negative_cases": [
+        "restricted value hidden",
+        "restricted link hidden",
+        "revoked permission yields unavailable",
+        "no request routed to unauthorized actor"
+      ]
+    },
+    "import": {
+      "id": "WP00-T03-IMPORT-V1",
+      "synthetic": true,
+      "source": "synthetic-projects.csv",
+      "rows": [
+        {
+          "external_id": "project-001",
+          "name": "Synthetic project 001",
+          "budget": 1000,
+          "status": "planned"
+        },
+        {
+          "external_id": "project-002",
+          "name": "Synthetic project 002",
+          "budget": 2000,
+          "status": "planned"
+        },
+        {
+          "external_id": "project-003",
+          "name": "Synthetic project 003",
+          "budget": 3000,
+          "status": "planned"
+        },
+        {
+          "external_id": "project-004",
+          "name": "Synthetic project 004",
+          "budget": 4000,
+          "status": "planned"
+        },
+        {
+          "external_id": "project-005",
+          "name": "Synthetic project 005",
+          "budget": 5000,
+          "status": "planned"
+        }
+      ],
+      "expected": {
+        "first_import": "5 created",
+        "exact_reimport": "0 duplicate rows; same source identities/revisions reconciled",
+        "changed_reimport": "preview shows changed rows and impact; no silent overwrite",
+        "stale_base": "conflict preserves draft"
+      },
+      "resubmission": {
+        "event": "approval-returned-for-correction",
+        "attempt": 2,
+        "expected": "new resubmission event links to original request; original decision/audit remains unchanged"
+      }
+    },
+    "volume": {
+      "id": "WP00-T03-VOLUME-V1",
+      "synthetic": true,
+      "proposal_only": true,
+      "datasets": {
+        "financial_lines": 1000,
+        "purchase_orders": 200,
+        "projects": 100
+      },
+      "measurement": {
+        "repetitions_min": 30,
+        "viewport_widths_px": [
+          320,
+          768,
+          1440
+        ],
+        "zoom_percent": 200,
+        "capture": "record environment, dataset digest, operation, visual-ready latency and task-completion outcome separately",
+        "baseline": "measure on pinned candidate/environment; no observed timing is asserted by this fixture",
+        "flows": [
+          "open dashboard and filter",
+          "planner scenario compare",
+          "procurement rank and restricted filter",
+          "report search/export preview",
+          "import preview and exact reimport"
+        ]
+      }
+    },
+    "people": {
+      "id": "WP00-T03-PEOPLE-V1",
+      "synthetic": true,
+      "plan_year": 2027,
+      "roster": [
+        { "name": "Synthetic Person A", "status": "Active", "start": "2027-03-01", "leader": "Synthetic Leader", "domain": "Finance" },
+        { "name": "Synthetic Person B", "status": "Terminated", "start": "2026-01-01", "leader": "Synthetic Leader", "domain": "Operations" }
+      ],
+      "positions": [
+        { "name": "synthetic person a", "domainManual": false },
+        { "name": "Synthetic Person B", "domainManual": false }
+      ],
+      "leader_domains": { "Synthetic Leader": "Finance" },
+      "expected": { "position_count": 2, "second_position_left": false, "manual_domains_preserved": true }
+    },
+    "actions": {
+      "id": "WP00-T03-ACTIONS-V1",
+      "synthetic": true,
+      "events": [
+        { "id": "synthetic-action-1", "kind": "approval-returned-for-correction", "attempt": 1 },
+        { "id": "synthetic-action-2", "kind": "approval-resubmitted", "attempt": 2, "supersedes_event_id": "synthetic-action-1" }
+      ],
+      "expected": { "event_count": 2, "attempts_distinct": true, "prior_event_preserved": true }
+    },
+    "projects": {
+      "id": "WP00-T03-PROJECTS-V1",
+      "synthetic": true,
+      "projects": [
+        { "id": "synthetic-project-linked", "budget": 12000, "capex_id": "synthetic-capex-linked" },
+        { "id": "synthetic-project-unlinked", "budget": 8000, "capex_id": null }
+      ],
+      "capex_projects": [
+        { "id": "synthetic-capex-linked", "budget": 12000 }
+      ],
+      "expected": { "linked_count": 1, "unlinked_remains_unlinked": true }
+    },
+    "operations": {
+      "id": "WP00-T03-OPERATIONS-V1",
+      "synthetic": true,
+      "monthly_budget": { "annual": 1200, "months": [{ "month": 1, "budget": 200 }, { "month": 2, "budget": 0 }] },
+      "expected": { "month_1_effective_budget": 200, "month_2_effective_budget": 100 }
+    },
+    "risks": {
+      "id": "WP00-T03-RISKS-V1",
+      "synthetic": true,
+      "items": [{ "id": "synthetic-risk-high", "impact": 4, "probability": 5 }, { "id": "synthetic-risk-low", "impact": 1, "probability": 1 }],
+      "expected": { "high_score": 20, "high_tier": "Very High", "low_score": 1, "low_tier": "Low" }
+    },
+    "contracts": {
+      "id": "WP00-T03-CONTRACTS-V1",
+      "synthetic": true,
+      "contract": { "id": "synthetic-contract-1", "vendor": "Synthetic Supplier A" },
+      "supplier": { "id": "synthetic-supplier-1", "name": "Synthetic Supplier A" },
+      "expected": { "same_display_name_does_not_link": true }
+    }
+  },
+  "supersedes": {
+    "dataset_id": "WP00-T03-FINANCE-V1",
+    "reason": "June license72k exceeds the June forecast15k, and monthly finance fixture conflicts with FX03 monthly closed/open vectors; retain the v1 bytes as superseded evidence."
+  }
+}

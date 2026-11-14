@@ -1,0 +1,86 @@
+import { expect, test } from "bun:test"
+import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
+import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
+import { openLocalStore } from "../../../runtime/local-store.ts"
+import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
+
+test("decision result persistence binds retries, current case and source authority", async () => {
+  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-result-"))
+  await chmod(directory, 0o700)
+  const db = await openLocalStore(directory)
+  try {
+    const access = { case: true, sources: true, checks: 0 }
+    const context = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "principal", requestId: "request", policyVersion: "policy", accessRevision: "access", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedUiContext
+    const state = createSfProductState({ persistence: db, createId: () => "state", resolveTarget: async () => ({ incarnation: "inc" }), authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
+    const horizon = { start: "2027-01-01", end: "2027-12-31" }
+    const decision = { id: "case", incarnation: "inc", version: 1, state: "draft", objective: "decision", currency: "USD", horizon, criteria: [], participants: ["principal"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] } as const
+    const source = new Request("https://example.test")
+    await state.transaction(source, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed", commandDigest: "a".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (staged) => { staged.cases.case = decision; return { commit: true, value: true } })
+    const ids = { next: 0 }
+    const settings: Parameters<typeof createSfDecisionResultStore>[0] = { state, host: { requestFor: () => source, revalidate: async () => true }, authorizeCase: async () => access.case, verifySources: async () => { access.checks += 1; return access.sources }, createId: () => `result-${++ids.next}`, now: () => "2026-11-13T00:00:00Z" }
+    const results = createSfDecisionResultStore(settings)
+    const request = { kind: "comparison", result: { baselineResultRef: "base", alternativeResultRef: "result", costCoverageRefs: ["coverage"], criterionResults: [], unresolvedConditions: ["training:missing-category"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null }, caseRef: { id: "case", incarnation: "inc", version: 1 }, requestDigest: "b".repeat(64), sourceRefs: [], idempotencyKey: "operation" } as const
+    const lookup = { caseRef: request.caseRef, kind: request.kind, idempotencyKey: request.idempotencyKey, requestDigest: request.requestDigest }
+    expect(await results.readByRequest(lookup, context)).toEqual({ status: "ok", value: { state: "not-found" } })
+    const created = await results.write(request, context)
+    expect(created.status).toBe("ok")
+    if (created.status !== "ok") throw new Error(created.reason)
+    expect(await results.readByRequest(lookup, context)).toEqual({ status: "ok", value: { state: "found", result: created.value } })
+    expect((await results.readByRequest({ ...lookup, requestDigest: "c".repeat(64) }, context)).status).toBe("conflict")
+    expect(await results.write(request, context)).toEqual(created)
+    expect((await results.write({ ...request, requestDigest: "c".repeat(64) }, context)).status).toBe("conflict")
+    expect((await results.read({ resultRef: created.value.resultRef, kind: "scenario" }, context)).status).toBe("unavailable")
+    expect((await results.read({ resultRef: created.value.resultRef, kind: "comparison" }, context)).status).toBe("ok")
+    const mutating = createSfDecisionResultStore({ ...settings, verifySources: async (value) => {
+      if (value.kind === "comparison") value.result.knownDifference = 999999
+      return true
+    } })
+    expect((await mutating.read({ resultRef: created.value.resultRef, kind: "comparison" }, context)).status).toBe("denied")
+    expect((await mutating.write({ ...request, idempotencyKey: "mutating-publication" }, context)).status).toBe("denied")
+    const retained: { value?: Parameters<typeof settings.verifySources>[0]; calls: number } = { calls: 0 }
+    const retaining = createSfDecisionResultStore({ ...settings, verifySources: async (value) => {
+      retained.calls += 1
+      if (retained.value?.kind === "comparison") retained.value.result.knownDifference = 888888
+      retained.value = value
+      return true
+    } })
+    expect(await retaining.read({ resultRef: created.value.resultRef, kind: "comparison" }, context)).toEqual(created)
+    expect(retained.calls).toBe(2)
+    expect(await results.read({ resultRef: created.value.resultRef, kind: "comparison" }, context)).toEqual(created)
+    access.sources = false
+    expect((await results.read({ resultRef: created.value.resultRef, kind: "comparison" }, context)).status).toBe("denied")
+    access.sources = true
+    access.case = false
+    expect((await results.read({ resultRef: created.value.resultRef, kind: "comparison" }, context)).status).toBe("denied")
+    access.case = true
+    const scenario = { id: "scenario", version: 1, components: [], currency: "USD", horizon, sourceRefs: [], unresolvedConditions: ["missing"], restrictions: [], costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1, currency: "USD", horizon, issues: ["inventory-unavailable"], evaluatedSourceRefs: [], coverageState: "pending", entries: [], derivedMissingCategoryIds: [] }, comparisonStatus: "conditioned", knownSubtotal: null, total: null } as const
+    const storedScenario = await results.write({ kind: "scenario", result: scenario, caseRef: request.caseRef, requestDigest: "f".repeat(64), sourceRefs: [], idempotencyKey: "scenario-operation" }, context)
+    if (storedScenario.status !== "ok") throw new Error(storedScenario.reason)
+    const mutatingCalculation = createSfDecisionResultStore({ ...settings, verifyCalculationSources: async (value) => {
+      value.result.knownSubtotal = 888888
+      return true
+    } })
+    expect(await mutatingCalculation.readForCalculation({ resultRef: storedScenario.value.resultRef }, context)).toMatchObject({ status: "unavailable", reason: "calculation-source-unproven" })
+    expect(await results.readForCalculation({ resultRef: storedScenario.value.resultRef }, context)).toEqual(storedScenario)
+    const nested = { schema: "sf-evidence-v1", refId: "event", installationId: "install", projectId: "project", refDigest: "e".repeat(64), evidenceLevel: "observed", kind: "case-event", target: { caseId: "case", caseIncarnation: "inc", caseVersion: 1, eventId: "event", outputDigest: "d".repeat(64), evidenceRefs: [] } } as const
+    const unsafe = await results.write({ kind: "scenario", result: scenario, caseRef: request.caseRef, requestDigest: "f".repeat(64), sourceRefs: [nested], idempotencyKey: "nested-source" }, context)
+    if (unsafe.status !== "ok") throw new Error(unsafe.reason)
+    access.checks = 0
+    expect(await results.readForCalculation({ resultRef: unsafe.value.resultRef }, context)).toMatchObject({ status: "unavailable", reason: "calculation-source-unsupported" })
+    expect(access.checks).toBe(0)
+    const before = await state.read(source, "cases", () => null)
+    if (before.status !== "ok") throw new Error("state unavailable")
+    await state.transaction(source, { namespace: "cases", expectedStorageVersion: before.storageVersion, idempotencyKey: "advance", commandDigest: "d".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (staged) => { staged.cases.case = { ...staged.cases.case!, version: 2 }; return { commit: true, value: true } })
+    expect((await results.read({ resultRef: created.value.resultRef, kind: "comparison" }, context)).status).toBe("denied")
+    expect((await results.read({ resultRef: storedScenario.value.resultRef, kind: "scenario" }, context)).status).toBe("denied")
+    expect((await results.readHistoricalScenario({ resultRef: storedScenario.value.resultRef }, context)).status).toBe("ok")
+    access.sources = false
+    expect((await results.readHistoricalScenario({ resultRef: storedScenario.value.resultRef }, context)).status).toBe("denied")
+  } finally {
+    await db.dispose()
+    await rm(directory, { recursive: true, force: true })
+  }
+})

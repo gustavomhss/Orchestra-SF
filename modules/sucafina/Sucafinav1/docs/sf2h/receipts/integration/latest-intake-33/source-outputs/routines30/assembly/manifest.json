@@ -1,0 +1,23 @@
+{
+  "schema": "sf-routine-native-assembly-v1",
+  "consumer": "session23",
+  "target_path": "apps/cli/src/sucafina-product/host-context.ts",
+  "target_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "target_preimage_git_blob": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+  "target_postimage_git_blob": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+  "target_preimage_sha256": "42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893",
+  "target_postimage_sha256": "6063552373c63e9a7bd71c3b43ee31f8782aafe294eea1ae194dae8d6a5f72a0",
+  "source_pr30_host_must_not_be_overwritten": "81f07b9d68a85811cef3aa4d3b4615475486f04f",
+  "application": "NOT_APPLIED; consumer must compare exact preimage and reconcile current shared head before applying",
+  "public_contract_change": false,
+  "private_entrypoint": "createSfHostRuntimeWithRoutineNative(existingInput, installedOwnerPort)",
+  "default_entrypoint": "createSfHostRuntime(existingInput) remains unavailable without owner capability",
+  "ordering": [
+    "Existing Maestro and WriteRoots/Arsenal composition",
+    "routineGovernance replacements",
+    "routineRuntime.node with actual Task registration",
+    "onReady descriptors",
+    "product Location tool registration"
+  ],
+  "watch": "sf_watch_prepare remains unavailable: existing memory.prepareWatch has no native watch admission"
+}

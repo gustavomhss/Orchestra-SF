@@ -1,0 +1,21 @@
+{
+  "attempt": 2,
+  "predecessor": "producer-manifest.json",
+  "source_fixture_blob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+  "change": "Only the test-owned loader compiler input relocates the four whitelisted runtime import specifiers to canonical absolute paths before Bun.build. The fixture source bytes and producer algorithm remain unchanged. Dependencies remain external singletons and their Git blobs are verified before import.",
+  "rationale": "Run43632801654 demonstrated that Bun's external import output preserved the original relative specifier, so resolution from the temporary output directory failed.",
+  "whitelist": [
+    "../../runtime/contract.ts",
+    "../contracts/canonical.ts",
+    "./threads.ts",
+    "./thread-context.ts"
+  ],
+  "unchanged": [
+    "producer source .fixture",
+    "all runtime dependency blobs",
+    "production UI",
+    "ordinary-thread test and retained fixture",
+    "all 11 recipient test cases"
+  ],
+  "validation": "PENDING_ACTIONS_ATTEMPT_02"
+}

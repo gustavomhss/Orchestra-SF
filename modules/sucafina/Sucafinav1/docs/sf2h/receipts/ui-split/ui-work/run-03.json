@@ -1,0 +1,151 @@
+{
+  "schema": "sf2h.ui-work.ci-result.v1",
+  "attempt": 3,
+  "W": "a8d5d83f9da9a7042f1bfb5f3f19eb601cc16db3",
+  "WTree": "4f3984ee1552a50e74433417ba3815b9af3efaf0",
+  "S": "27d000afc04aa646e27f6804bf430c6dea76835c",
+  "STree": "ca6c9d5be8d594554164f87e540fdc8e5a3c93f8",
+  "requestSha256": "16a68815fd61b98c86cb53274ae11d2ec4f31ab8dc1872d6711961882808c569",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/ui-split/ui-work/exact-confirmation.test.ts",
+      "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "equivalence": [
+    {
+      "filename": ".ci-run.json",
+      "status": "added",
+      "additions": 16,
+      "deletions": 0,
+      "changes": 16,
+      "previous_filename": null
+    }
+  ],
+  "run": {
+    "id": 43622153636,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43622153636",
+    "conclusion": "failure",
+    "jobId": 132529996818,
+    "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43622153636/job/132529996818"
+  },
+  "counts": {
+    "pass": 2,
+    "fail": 2,
+    "expectCalls": 20,
+    "files": 4
+  },
+  "omni": {
+    "verdict": "pass",
+    "nonce": "b3ef1c4953fc7fa2b52e638360d9f20d",
+    "declaringTests": 2,
+    "spawns": 4,
+    "delegated": 0
+  },
+  "confirmation": {
+    "status": "FAIL",
+    "failedPhase": "first-confirmation status observation",
+    "deadlineMs": 5000,
+    "testDeadlineMs": 60000,
+    "uiRequestDeadlineMs": 10000,
+    "deadlinesChanged": false,
+    "observedAtCleanup": "Could not confirm the answer. Retry this same request.",
+    "observedHttp": [
+      {
+        "route": "collaboration-thread-read",
+        "http": 200,
+        "key": "d463148c-4034-41b3-880c-a9e67eff6b12"
+      },
+      {
+        "route": "collaboration-answer-prepare-message",
+        "http": 200,
+        "key": "fdd73a90-196d-45f2-9f0f-659fafa054bb",
+        "request": {
+          "questionId": "184e4e7a-cfa6-41e2-9df8-bb60c50e145b",
+          "messageId": "4e7e7387-db9f-42c6-8a1e-f85ec949168f",
+          "incarnation": "923b1272-59d9-4e74-8589-1e8657fb012b",
+          "version": 1
+        },
+        "portStatus": "ok",
+        "responseIdentity": {
+          "answerRef": "sf-thread-answer:184e4e7a-cfa6-41e2-9df8-bb60c50e145b:4e7e7387-db9f-42c6-8a1e-f85ec949168f:923b1272-59d9-4e74-8589-1e8657fb012b:1",
+          "authorRef": "reader-b",
+          "observedSourceVersion": 1,
+          "observationRef": "425448d6-3687-4a36-8d25-0af808b428ad"
+        }
+      },
+      {
+        "route": "collaboration-storage-version",
+        "http": 200,
+        "key": "bce77412-143b-41fd-a340-150361057e13"
+      },
+      {
+        "route": "collaboration-answer-confirm",
+        "http": 200,
+        "key": "809395a4-e198-4e0c-b3fd-316cfb006f05",
+        "request": {
+          "questionId": "184e4e7a-cfa6-41e2-9df8-bb60c50e145b",
+          "answerRef": "sf-thread-answer:184e4e7a-cfa6-41e2-9df8-bb60c50e145b:4e7e7387-db9f-42c6-8a1e-f85ec949168f:923b1272-59d9-4e74-8589-1e8657fb012b:1",
+          "mutation": {
+            "expectedStorageVersion": 3,
+            "idempotencyKey": "809395a4-e198-4e0c-b3fd-316cfb006f05",
+            "observationRef": "425448d6-3687-4a36-8d25-0af808b428ad",
+            "observedSourceVersion": 1,
+            "expectedScopeFingerprint": "effea198fedaf1d7e399889cc2e6a333bf5b558e92843a84695b96b763efaf44"
+          }
+        },
+        "portStatus": "ok",
+        "responseIdentity": {
+          "answerRef": "sf-thread-answer:184e4e7a-cfa6-41e2-9df8-bb60c50e145b:4e7e7387-db9f-42c6-8a1e-f85ec949168f:923b1272-59d9-4e74-8589-1e8657fb012b:1",
+          "observedVersion": 1
+        }
+      }
+    ],
+    "limit": "Exact prepare-message and answer-confirm HTTP 200 are diagnostic observations, not a passing retry/reuse/attachment journey. This run did not reach retry."
+  },
+  "typecheck": {
+    "command": "bun typecheck",
+    "cwd": "modules/sucafina",
+    "exitCode": 2,
+    "status": "FAIL",
+    "totalDiagnostics": 9,
+    "ownDiagnostics": 0,
+    "foreignDiagnostics": 9,
+    "diagnostics": [
+      "##[error]../../../apps/cli/src/sucafina-product/host-context.ts(193,136): error TS2322: Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+      "##[error]../../../apps/cli/src/sucafina-product/host-context.ts(225,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+      "##[error]../../../apps/cli/src/sucafina-product/host-context.ts(281,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+      "##[error]../../../apps/cli/src/sucafina-product/host-context.ts(404,5): error TS2322: Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+      "##[error]../../../apps/cli/src/sucafina-product/host-context.ts(420,5): error TS2322: Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+      "##[error]test/product/wp07/review-port.test.ts(40,35): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<boolean>; authorizeComments: () => Promise<boolean>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "##[error]test/product/wp07/review-port.test.ts(45,41): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "##[error]test/product/wp07/review-port.test.ts(56,37): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<true>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "##[error]test/product/wp07/review-port.test.ts(221,36): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => undefined; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision"
+    ]
+  },
+  "guards": {
+    "command": "bun run check:guards --base origin/dev",
+    "baseFetchExitCode": 0,
+    "exitCode": 1,
+    "rules": 78,
+    "changedPaths": 920,
+    "gateFindings": 2,
+    "warnings": 52,
+    "errors": 0,
+    "findings": [
+      "run-01.log: agent-scratch",
+      "run-02.log: agent-scratch"
+    ]
+  },
+  "followup": "Remove raw log dumps from the delivered tree, retain structured receipts and immutable Actions/history references; run only the affected guards. Keep confirmation acceptance FAIL without a deadline increase or equivalent browser rerun."
+}

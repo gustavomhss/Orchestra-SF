@@ -1,0 +1,134 @@
+{
+  "schema": "sf2h-final-e2e-reports-dependencies-v1",
+  "input_head": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+  "all_blockers_unmodified": true,
+  "blockers": [
+    {
+      "id": "RPT-D01",
+      "owner": "S0 / WP10, with WP02 producer intake",
+      "status": "BLOCKED",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/agenda.ts",
+      "at_input_head": "ABSENT in complete module tree",
+      "producer": {
+        "sha": "5a0f1acf9fa2cdc0171cf3f5178b61ab3bcd8d49",
+        "blob": "32b95d4a270cb9b9c987c6cb3097dbd6de975895",
+        "export": "createDashboardAgendaSelector"
+      },
+      "need": "Compose the existing authorized record selector and its real C17 record evidence issuer. ReviewComposition requires selectDashboardAgenda; test never fabricates selection refs or projections.",
+      "affected": [
+        "authorized 25-project selection",
+        "single opaque record removal",
+        "budget/empty coverage"
+      ]
+    },
+    {
+      "id": "RPT-D02",
+      "owner": "S0 / WP10 production composition",
+      "status": "BLOCKED",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "81f07b9d68a85811cef3aa4d3b4615475486f04f",
+      "existing_factory": "modules/sucafina/Sucafinav1/product/reviews/application.ts",
+      "need": "Mount createReviewApplication with its real required producers/authority/storage/access in the existing productHttp chain. Current head mounts documents/imports but no review application. Use existing sf=review-agenda, review-preserve, review-read, review-report and review-download on /sucafina/dashboard.",
+      "affected": [
+        "all four scenarios"
+      ]
+    },
+    {
+      "id": "RPT-D03",
+      "owner": "S0 / WP10 installed Reports UI",
+      "status": "BLOCKED",
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "blob": "5a144bc373395a1ad2ce9eb7de256bcd94d0ed18",
+      "existing_components": [
+        "modules/sucafina/Sucafinav1/product/reviews/workspace.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/browser.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+      ],
+      "need": "Connect the existing Reports and backup / Generate Report entry to createReviewPreparationView with authorized selectors, mount the real meeting, persist its actual navigation URL for reload, and supply its authorized source callback to existing Budget Overview with the selected reporting year. Legacy Generate Report currently downloads live data. No host/UI patch or guessed new route is supplied by this mission.",
+      "affected": [
+        "preparation",
+        "reload",
+        "source navigation"
+      ]
+    },
+    {
+      "id": "RPT-D04",
+      "owner": "Current Colaboração session for producer; S0/WP10 for intake",
+      "status": "BLOCKED",
+      "producer_pr": 41,
+      "producer_sha": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+      "missing_at_input_head": [
+        "modules/sucafina/Sucafinav1/product/collaboration/http.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/http-routes.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/thread-context.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/review-answer-source.ts"
+      ],
+      "need": "Intake the existing real C05 pin, thread/history, confirmation and reuse HTTP producers and current authority/persistence services. Preserve the published reply receipt correction. Self-recipient is deliberate; no fake recipient directory/lease.",
+      "affected": [
+        "human confirmation/reuse",
+        "edited-answer denial/history",
+        "revoked answer access"
+      ]
+    },
+    {
+      "id": "RPT-D05",
+      "owner": "Current Colaboração / UI Work / S0",
+      "status": "OPEN_ACCEPTANCE_LIMIT",
+      "producer_pr": 47,
+      "producer_sha": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-review-context.ts"
+      ],
+      "need": "Installed C05 confirmation UI must show the prepared preserved projection/context before confirming. Existing generic decision confirmation UI does not establish this. Spec uses actual human HTTP boundary beside the actual preserved meeting and labels UI button/separate-person proof NOT_PROVEN."
+    },
+    {
+      "id": "RPT-D06",
+      "owner": "S0 / app configuration owner",
+      "status": "BLOCKED_VALIDATION",
+      "paths": [
+        {
+          "path": "packages/app-shell/tsconfig.json",
+          "blob": "8604188dee0f1ce9978cae39366d1850f5e97e7f",
+          "command": "bun typecheck",
+          "finding": "src/script includes omit E2E"
+        },
+        {
+          "path": "packages/app-shell/e2e/tsconfig.json",
+          "blob": "8364221434311400cae3007ea74cc67ddcfde765",
+          "command": "bun run typecheck:e2e",
+          "finding": "explicit includes omit e2e/sucafina/**"
+        }
+      ],
+      "need": "Owner must include the new scope in an authorized hosted typecheck gate. No config/workflow edits allowed here. Neither an old green nor Playwright transpilation is a typecheck of these files."
+    }
+  ],
+  "composition_refresh": {
+    "pr32": "5c41125e7ef17a6c7eff9c9fb2329fe8f85ce982",
+    "finding": "Final CI preparation adds workflow/builder/receipts only; does not resolve D01-D04 on astra-wp07. No candidate C accepted."
+  },
+  "execution_decision": {
+    "selection": "CI-UI-REPORTS",
+    "status": "NOT_RUN",
+    "reason": "Do not dispatch a known uncomposed production journey or transfer fixture/unit evidence as E2E. No local tests, new runtime route, reproduction server, mocked product or mutation retry.",
+    "snapshot_S": null,
+    "run_id": null,
+    "jobs": [],
+    "artifacts": []
+  },
+  "still_required": [
+    "selective Talent/section revocation",
+    "captured C06 comment v3 vs live v4 including export",
+    "monthly operations section",
+    "update indicator while meeting is open",
+    "rendered DOCX/PPTX clipping review",
+    "UI/native/MCP parity",
+    "meeting closure/actions",
+    "integrated candidate C, AM01-AM06, formal independent reviews and final bundle"
+  ]
+}
+

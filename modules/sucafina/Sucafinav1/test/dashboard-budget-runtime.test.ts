@@ -321,7 +321,7 @@ test("owner deletion spans years while leaving YTD/deviations; CAPEX deletion le
   expect(state.data.capexEntries).toEqual([])
   expect(state.data.projects).toEqual([{ id: "p", name: "PMO" }])
 })
-test("budget overview uses singleton CAS, deletes zero revenue and retains flat chart", () => {
+test("budget overview uses singleton CAS and displays effective and flat-reference budgets", () => {
   const state = snapshot()
   state.data.opexOwners = [{ id: "o", budget: 1200 }]
   state.data.opexEntries = [
@@ -358,7 +358,8 @@ test("budget overview uses singleton CAS, deletes zero revenue and retains flat 
   })
   expect(html).toContain("$1300")
   expect(html).toContain("13.00%")
-  expect(html).toContain("$108.33333333333333")
+  expect(html).toContain("Flat reference (annual allocations / 12)")
+  expect(html).toContain("$100")
   expect(
     domain.execute(
       state,
@@ -570,10 +571,10 @@ test("executive derived ops, SLA, security and performance expose no raw records
   const view = domain.view(state, actor, env)
   const monthly = (view.data.executiveMonths as Record<string, Record<string, unknown>>)["2026:2"]!
   expect(monthly).toMatchObject({
-    opened: 10,
-    closed: 15,
-    backlog: 0,
-    backlogYtd: 0,
+    opened: null,
+    closed: null,
+    backlog: null,
+    backlogYtd: null,
     incYtd: 95,
     svcYtd: 85,
     p1: 1,
@@ -583,14 +584,42 @@ test("executive derived ops, SLA, security and performance expose no raw records
     key: "training",
     value: 96,
     status: "Good",
+    sourceYear: 2026,
+    sourceMonth: 1,
   })
   expect(monthly.kpis).toContainEqual({
     key: "socClosure",
     value: 50,
     status: "High risk",
+    sourceYear: 2026,
+    sourceMonth: 1,
   })
   expect(view.data.executive).toMatchObject({ onTarget: 2 })
   expect(JSON.stringify(view)).not.toContain("secret")
+})
+test("executive security separates the operations month, current incidents and each fallback KPI period", () => {
+  const state = snapshot()
+  state.data.opsHeatmap = [{ year: 2026, month: 3, p1: 2 }, { year: 2026, month: 11, p1: 9 }]
+  state.data.secKpi = [{ year: 2026, month: 9, training: 96, socCritical: 2, socPending: 1 }, { year: 2026, month: 11, training: "", patch: 0 }]
+  state.data.secIncidents = [{ id: "current", contained: true, remediated: false, rootCause: true }]
+  const before = structuredClone(state)
+  const view = domain.view(state, actor, { at, id: () => "unused", directory: [] })
+  const monthly = (view.data.executiveMonths as Record<string, Record<string, unknown>>)["2026:11"]!
+  expect(monthly.kpis).toContainEqual({ key: "training", value: 96, status: "Good", sourceYear: 2026, sourceMonth: 9 })
+  expect(monthly.kpis).toContainEqual(expect.objectContaining({ key: "patch", value: 0, sourceYear: 2026, sourceMonth: 11 }))
+  expect(monthly.kpis).toContainEqual(expect.objectContaining({ value: null, sourceYear: null, sourceMonth: null }))
+  const html = render("Executive Dashboard", { ...view.data, opsMonth: 3 }, { actor, year: 2026, month: 11, at, versions: state.versions })!
+  const security = html.split("<h2>Security overview</h2>")[1]!.split("<h2>Dashboard inputs</h2>")[0]!
+  expect(security).toContain("P1 reference: 2026-03, from IT Operations")
+  expect(security).toContain("Open security incidents: current records as of 2026-11-11")
+  expect(security).toContain("latest nonempty measurement at or before 2026-11")
+  expect(security).toContain('<th scope="col">Source period</th>')
+  expect(security).toContain("<td>training</td><td>96</td><td>2026-09</td>")
+  expect(security).toContain("<td>patch</td><td>0</td><td>2026-11</td>")
+  expect(security).toContain("<td>—</td><td>Unavailable</td>")
+  expect(security).toContain("<span>P1</span><strong>2</strong>")
+  expect(security).toContain("<span>Open security incidents</span><strong>1</strong>")
+  expect(state).toEqual(before)
 })
 test("deviation writes original collection with record CAS and escaped display", () => {
   const state = snapshot()
@@ -713,7 +742,7 @@ test("monthly departures require Terminated for current and selected years", () 
   expect(years["2025"]?.monthlyDepartures[1]).toBe(1)
   expect(years["2025"]?.departures).toBe(1)
 })
-test("Executive backlog ignores Initial Balance and clamps negative opened minus closed", () => {
+test("Executive backlog requires initial balances and distinguishes net flow", () => {
   const state = snapshot()
   state.data.opsCats = ["Infrastructure"]
   state.data.opsTickets = [
@@ -721,9 +750,12 @@ test("Executive backlog ignores Initial Balance and clamps negative opened minus
       id: "jan",
       year: 2026,
       month: 1,
-      "Infrastructure|Incidents|Initial Balance": 100,
+      "Infrastructure|Incidents|Initial Balance": 20,
       "Infrastructure|Incidents|Open": 10,
       "Infrastructure|Incidents|Closed": 15,
+      "Infrastructure|Service Requests|Initial Balance": 0,
+      "Infrastructure|Service Requests|Open": 0,
+      "Infrastructure|Service Requests|Closed": 0,
     },
     {
       id: "feb",
@@ -742,20 +774,23 @@ test("Executive backlog ignores Initial Balance and clamps negative opened minus
   expect(months["2026:1"]).toMatchObject({
     opened: 10,
     closed: 15,
-    backlog: 0,
-    backlogYtd: 0,
+    netChange: -5,
+    backlog: 15,
+    backlogYtd: 15,
   })
   expect(months["2026:2"]).toMatchObject({
     opened: 23,
     closed: 10,
-    backlog: 13,
-    backlogYtd: 13,
+    netChange: 13,
+    backlog: 513,
+    backlogYtd: 513,
   })
   expect(months["2026:3"]).toMatchObject({
-    opened: 0,
-    closed: 0,
-    backlog: 0,
-    backlogYtd: 13,
+    opened: null,
+    closed: null,
+    netChange: null,
+    backlog: null,
+    backlogYtd: 513,
   })
 })
 test("aggregate member reads audit every member and reveal no talent or change versions", () => {
@@ -977,7 +1012,7 @@ test("render month fallback matches execution December past and January future",
     }),
   ).toContain('name="month" type="number" value="4"')
 })
-test("capped utilization drives visible color; overview renders progress and flat graph", () => {
+test("utilization preserves excess and overview renders effective monthly distribution", () => {
   const data = {
     opexOwners: [{ id: "o", name: "O", budget: 1200 }],
     opexEntries: [
@@ -994,18 +1029,23 @@ test("capped utilization drives visible color; overview renders progress and fla
   }
   const context = { actor, year: 2026, month: 1, at, versions: {} }
   const detail = render("OPEX Detail", data, context)!
-  expect(detail).toContain('data-utilization="100" data-tone="amber" style="color:#b45309"')
-  expect(detail).toContain('data-utilization="90" data-tone="teal" style="color:#0f766e"')
-  expect(detail).not.toContain('data-utilization="125"')
+  expect(detail).toContain('data-utilization="125" data-tone="red"')
+  expect(detail).toContain('data-utilization="90" data-tone="teal"')
+  expect(detail).toContain('Unavailable — actual missing')
+  const literalExcess = render("OPEX Detail", {
+    opexOwners: data.opexOwners,
+    opexEntries: [{ id: "literal", ownerId: "o", year: 2026, month: 1, budget: 100, actual: 120 }],
+  }, context)!
+  expect(literalExcess).toContain('data-utilization="120" data-tone="red"')
   const overview = render("Budget Overview", data, context)!
   expect(overview).toContain('<progress aria-label="Actuals / budget"')
   expect(overview).toContain('value="26.153846153846157"')
   expect(overview).toContain('<svg role="img"')
-  expect(overview).toContain('data-budget-series="flat"')
-  const points = overview.match(/data-budget-series="flat" points="([^"]+)"/)![1]!.split(" ")
+  expect(overview).toContain('data-budget-series="effective"')
+  const points = overview.match(/data-budget-series="effective" points="([^"]+)"/)![1]!.split(" ")
   expect(points.length).toBe(12)
-  expect(new Set(points.map((point) => point.split(",")[1])).size).toBe(1)
-  expect(overview.match(/Month \d+: \$108\.33333333333333/g)?.length).toBe(12)
+  expect(new Set(points.map((point) => point.split(",")[1])).size).toBe(2)
+  expect(overview).toContain("Month 1: $200")
 })
 
 test("same-id budget grants isolate both collections in server mutations and rendered controls", () => {
@@ -1148,4 +1188,60 @@ test("raw legacy budget grants fail closed while admin needs no grants", () => {
       ).toMatchObject({ ok: true })
     }
   }
+})
+
+test("executive labels each period without implying one historical snapshot", () => {
+  const state = snapshot()
+  const env = { at, id: () => "unused", directory: [] }
+  const data = { ...domain.view(state, actor, env).data, opsMonth: 2 }
+  const html = render("Executive Dashboard", data, { actor, year: 2026, month: 11, at, versions: {} })!
+  expect(html).toContain("not a preserved historical review")
+  expect(html).toContain("Budget: year 2026")
+  expect(html).toContain("People and delivery: current records")
+  expect(html).toContain("Operations reference: 2026-02")
+})
+
+test("detail distinguishes a missing entry from an observed zero", () => {
+  const data = { opexOwners: [{ id: "o", name: "O", budget: 1200 }], opexEntries: [{ id: "e", ownerId: "o", year: 2026, month: 1, actual: 0, forecast: 0 }] }
+  const html = render("OPEX Detail", data, { actor, year: 2026, month: 1, at, versions: {} })!
+  expect(html).toContain('data-utilization="0"')
+  expect(html).toContain('data-utilization="" data-tone="neutral"')
+  expect(html).toContain("Not available")
+  expect(html).toContain("missing entries are not observed zero")
+  expect(html).toContain("source currency is unspecified")
+})
+
+test("invalid year amount cannot silently clear an existing value", () => {
+  const state = snapshot()
+  state.data.opexOwners = [{ id: "o", name: "O", budget: 1200 }]
+  state.data.budgetYtd = { opex: { "2026:o": { amount: 120, months: 3, perMonth: 40, at } } }
+  state.data.budgetCurrentMonth = { 2026: 3 }
+  const before = structuredClone(state)
+  for (const amount of ["not a number", "--", -1, Number.POSITIVE_INFINITY]) {
+    const result = domain.execute(state, actor, { page: "OPEX Detail", action: "year-amount", id: "o", version: 0, values: { year: 2026, amount } }, { at, id: () => "unused", directory: [] })
+    expect(result).toMatchObject({ ok: false, status: 422 })
+    expect(state).toEqual(before)
+  }
+})
+
+test("missing current collections remain unavailable while empty collections are zero", () => {
+  const state = snapshot()
+  const env = { at, id: () => "unused", directory: [] }
+  const missing = domain.view(state, actor, env).data
+  expect(missing.executive).toMatchObject({ active: null, pmoActive: null, activeRisks: null, topRisks: null })
+  state.data.members = []
+  state.data.projects = []
+  state.data.risks = []
+  const empty = domain.view(state, actor, env).data
+  expect(empty.executive).toMatchObject({ active: 0, pmoActive: 0, activeRisks: 0, topRisks: 0 })
+  const html = render("Executive Dashboard", missing, { actor, year: 2026, month: 11, at, versions: {} })!
+  expect(html).toContain("Unavailable")
+  expect(html).not.toContain("NaN%")
+})
+
+test("zero and missing budgets have distinct utilization explanations", () => {
+  const data = { opexOwners: [{ id: "zero", name: "Zero", budget: 0 }, { id: "missing", name: "Missing" }], opexEntries: [{ id: "z", ownerId: "zero", year: 2026, month: 1, actual: 10 }, { id: "m", ownerId: "missing", year: 2026, month: 1, actual: 10 }] }
+  const html = render("OPEX Detail", data, { actor, year: 2026, month: 1, at, versions: {} })!
+  expect(html).toContain("Unavailable — budget is zero")
+  expect(html).toContain("Unavailable — budget missing")
 })

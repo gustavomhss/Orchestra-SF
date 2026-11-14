@@ -1,0 +1,66 @@
+{
+  "schema": "s4-a-existing-workflow-typecheck-gap-v1",
+  "observedAt": "2026-11-14T19:31:50Z",
+  "head": "3e1a8ec84ae334b7c7320c86d6b93bd5730ba469",
+  "repository": "gustavomhss/Orchestra-SF",
+  "inspection": "Read-only through GitHub MCP. No dispatch, test execution, workflow/config edit or validator workaround.",
+  "workflows": [
+    {
+      "path": ".github/workflows/astra-wp11-check.yml",
+      "blob": "3b361b6b22c7c5628d6b149321f73934ea5f9a84"
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+    }
+  ],
+  "available": [
+    {
+      "workflow": ".github/workflows/astra-wp11-check.yml",
+      "trigger": "push to existing astra-check-wp11",
+      "scope": [
+        "modules/sucafina bun typecheck",
+        "check:guards --base origin/dev"
+      ],
+      "inputs": [],
+      "appTypecheck": false,
+      "e2eTypecheck": false
+    },
+    {
+      "workflow": ".github/workflows/test-ci.yml",
+      "trigger": "push to ci-run-* request snapshot",
+      "scope": [
+        "bun test",
+        "node --test of named node-smoke.mjs",
+        "pytest",
+        "Playwright of named spec files"
+      ],
+      "requestRunnerChoices": [
+        "bun",
+        "node",
+        "pytest",
+        "playwright"
+      ],
+      "typecheckRunner": false,
+      "arbitraryPackageScriptInput": false
+    }
+  ],
+  "packageScripts": {
+    "path": "packages/app-shell/package.json",
+    "blob": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+    "typecheck": "tsgo -b",
+    "typecheck:e2e": "tsgo -p e2e/tsconfig.json",
+    "note": "Scripts exist, but neither existing workflow offers an admitted scoped route to invoke them."
+  },
+  "e2eConfiguration": {
+    "path": "packages/app-shell/e2e/tsconfig.json",
+    "blob": "8364221434311400cae3007ea74cc67ddcfde765",
+    "limitation": "Its explicit include list omits sucafina/**/*.ts; running this script alone would not certify the new Decisions spec/helpers."
+  },
+  "verdict": {
+    "appTypecheck": "NOT_RUN",
+    "e2eTypecheck": "NOT_RUN",
+    "decisionsTypecheck": "NOT_RUN",
+    "reason": "No existing workflow at this exact head exposes scoped app/E2E typecheck without a workflow/config change or unsupported request workaround. Only the nominal Playwright lane may supply collection/runtime evidence, not tsc evidence."
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "schema": "sf2-final-request-preflight-v1",
+  "status": "VALID_REQUESTS_NOT_RUN",
+  "scope": "canonical request admission only; no test collection or execution",
+  "manifest": "script/sf2h/final-bundle/requests.json",
+  "checks": [
+    {
+      "id": "CI-SF",
+      "status": "VALID",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [],
+        "env": {}
+      },
+      "request_sha256": "7bc4b2fc36048990ed231ed0eb28919b03eb1dfe15379dfab26913cbb1218169",
+      "omni_control": "suite",
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "CI-CLI",
+      "status": "VALID",
+      "request": {
+        "package": "cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [],
+        "env": {}
+      },
+      "request_sha256": "2c4a01a80cebaacc93db36c606a795ee501a26b42558a7c4131824032c5c4a9a",
+      "omni_control": "suite",
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "CI-APP-SRC",
+      "status": "VALID",
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "bun",
+        "args": [],
+        "env": {}
+      },
+      "request_sha256": "61968bf8574074abe1822fec9a7b2cc543e465c119c088b3ef6b7ef6d3dcf6ab",
+      "omni_control": "suite",
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "CI-APP-BROWSER",
+      "status": "VALID",
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "bun",
+        "args": [
+          "test-browser"
+        ],
+        "env": {}
+      },
+      "request_sha256": "93f5c9544af32b496cb0930402282e5fb7981b7e13010f7cf384dbfb2c1e984e",
+      "omni_control": "declared",
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "CI-ATLAS-BUSINESS",
+      "status": "VALID",
+      "request": {
+        "package": "atlas-boundary",
+        "directory": "modules/atlas/boundary",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000"
+        ],
+        "env": {}
+      },
+      "request_sha256": "50c28f8b4b780ffefd0e62d299b767a2ee2b042c2654c8e68046cb1ff004ffbe",
+      "omni_control": "suite",
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "CI-UI-OPERATIONS",
+      "status": "VALID",
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/operations.spec.ts"
+        ],
+        "env": {},
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "request_sha256": "492ff504955e1f957c5267a49fc31ec0503bdda2275fdcec8b5240ea4d08afa2",
+      "omni_control": "suite",
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "CI-UI-DECISIONS",
+      "status": "VALID",
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/decisions.spec.ts"
+        ],
+        "env": {},
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "request_sha256": "e063493af024cbefb221c2a7170cf0fce5002c8cd35dd47a57006b672c204a3a",
+      "omni_control": "suite",
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "CI-UI-REPORTS",
+      "status": "VALID",
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/reports.spec.ts"
+        ],
+        "env": {},
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "request_sha256": "2ffe01503e64a6341164468067ab73821ee4bf392c5253c0a7543ba3605c8cd7",
+      "omni_control": "suite",
+      "execution": "NOT_RUN"
+    }
+  ],
+  "source_snapshot": "402a091485e11d60dff433049c7dedd7fcead687",
+  "source_tree": "006339cc3a61de9bf99d2ba17069181bd5d8a02e",
+  "tooling_overlay": "Six mission26 files in intake-files.json; this is not a composed Git commit or compiler result."
+}

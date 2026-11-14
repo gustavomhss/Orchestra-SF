@@ -1,0 +1,89 @@
+{
+  "schema": "sf2-mission26-authority-v1",
+  "mission_sha": "6da04cd66eb268362ee58509271fef773ac2a62e",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "branch": "astra-compose",
+  "pr": 32,
+  "parent": "5c41125e7ef17a6c7eff9c9fb2329fe8f85ce982",
+  "predecessor_handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-ci-preparation/attempt-01/HANDOFF.md",
+  "source_head_reconciled": true,
+  "authority": "User mission26 exact paths; preparation predecessor retained; S0 dispatcher and session23 integrator retained.",
+  "native_goal_or_dispatcher_started": false,
+  "backend_session_identity": null,
+  "model_declared_by_environment": "GPT-6 Astra Pro",
+  "backend_model_identity": null,
+  "reads": [
+    {
+      "local_reference": "AGENTS.md",
+      "bytes": 16583,
+      "sha256": "f87f3c732f8aafec8d02501a5f11f050c07d33d350890fb12f69d8b288b830f9",
+      "status": "READ_COMPLETE_BY_PRIMARY_OR_EXHAUSTIVE_SUPPORT_REVIEW",
+      "support_reader": "/root/pack_review"
+    },
+    {
+      "local_reference": "plan/START.md",
+      "bytes": 1737,
+      "sha256": "2fe153c2360feec3e937ecdc2a8a9460032303d5c0fad2d61ae97853f6e4aa49",
+      "status": "READ_COMPLETE_BY_PRIMARY_OR_EXHAUSTIVE_SUPPORT_REVIEW",
+      "support_reader": "/root/pack_review"
+    },
+    {
+      "local_reference": "plan/WORKFLOW.md",
+      "bytes": 13978,
+      "sha256": "67304dc752489fb63b8999cc1e87b79dde2367c33b04374fea20eefbe8f5a8d9",
+      "status": "READ_COMPLETE_BY_PRIMARY_OR_EXHAUSTIVE_SUPPORT_REVIEW",
+      "support_reader": "/root/pack_review"
+    },
+    {
+      "local_reference": "plan/execution/COMMON.md",
+      "bytes": 45079,
+      "sha256": "a518cf4b3136d5c1126d59304afedf71b5f93168314f1f2f56743dcae719c94e",
+      "status": "READ_COMPLETE_BY_PRIMARY_OR_EXHAUSTIVE_SUPPORT_REVIEW",
+      "support_reader": "/root/pack_review"
+    },
+    {
+      "local_reference": "plan/execution/actors/S0-C.json",
+      "bytes": 490950,
+      "sha256": "73aefa0871ef12b3929249d82d52999313d91fb8c9f90beed39fa6d4af69ec36",
+      "status": "READ_COMPLETE_BY_PRIMARY_OR_EXHAUSTIVE_SUPPORT_REVIEW",
+      "support_reader": "/root/pack_review"
+    },
+    {
+      "local_reference": "plan/specs/product-acceptance.md",
+      "bytes": 14228,
+      "sha256": "a41222e3bed4a8a8134a7fd814c73a99f607457a7df1e38b74566a4d2589eee2",
+      "status": "READ_COMPLETE_BY_PRIMARY_OR_EXHAUSTIVE_SUPPORT_REVIEW",
+      "support_reader": "/root/pack_review"
+    },
+    {
+      "local_reference": "plan/specs/resident-runtime.md",
+      "bytes": 41803,
+      "sha256": "024795abe175e756f93f1904eba23884bf4d9ad2416c6185b3eea2e6b13ca420",
+      "status": "READ_COMPLETE_BY_PRIMARY_OR_EXHAUSTIVE_SUPPORT_REVIEW",
+      "support_reader": "/root/pack_review"
+    },
+    {
+      "local_reference": "plan/specs/atlas-packaging.md",
+      "bytes": 12101,
+      "sha256": "3118d3eb6be64c0df096d4850d3432a78d5d16067fba2f526a41ee618407b7f0",
+      "status": "READ_COMPLETE_BY_PRIMARY_OR_EXHAUSTIVE_SUPPORT_REVIEW",
+      "support_reader": "/root/pack_review"
+    },
+    {
+      "local_reference": "mission26.json",
+      "bytes": 2154,
+      "sha256": "2cf6b50848cf3c92eda844a46506593c36e8b03ac6117d445cdfdaa4272f4ba0",
+      "status": "READ_COMPLETE_BY_PRIMARY_OR_EXHAUSTIVE_SUPPORT_REVIEW",
+      "support_reader": "/root/pack_review"
+    },
+    {
+      "local_reference": "COMMON-mission26.json",
+      "bytes": 2294,
+      "sha256": "d6f9ecc8aec10ffa4653a020f2e492542d3b6e58000f79ae080c1b0f8fe69004",
+      "status": "READ_COMPLETE_BY_PRIMARY_OR_EXHAUSTIVE_SUPPORT_REVIEW",
+      "support_reader": "/root/pack_review"
+    }
+  ],
+  "precedence": "Mission26 narrows old pack grants. No takeover of source-owner paths, old dispatcher lease or sf2-stack writer.",
+  "delivery_classification": "Implementation changes are C inputs. This receipt namespace is not automatically admitted in final evidence-only D."
+}

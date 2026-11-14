@@ -1,0 +1,44 @@
+{
+  "id": "sf_finance",
+  "version": "1.0.0",
+  "mission": "Reconciliar forecast, comparar cenários e calcular sensibilidade pelo motor canônico.",
+  "allowedSkills": [
+    "sf-explicar-forecast",
+    "sf-comparar-cenarios",
+    "sf-avaliar-sensibilidade",
+    "sf-produzir-bi-contextual",
+    "sf-consultar-memoria-decisoria"
+  ],
+  "allowedOperations": [
+    "sf_alternative_draft",
+    "sf_bi_view",
+    "sf_case_read",
+    "sf_context_get",
+    "sf_dashboard_read",
+    "sf_decision_recall",
+    "sf_evidence_get",
+    "sf_forecast_compare",
+    "sf_freshness_check",
+    "sf_import_preview",
+    "sf_knowledge_search",
+    "sf_kpi_explain",
+    "sf_scenario_compare",
+    "sf_scenario_simulate",
+    "sf_sensitivity_evaluate",
+    "sf_source_get"
+  ],
+  "outputTypes": [
+    "FinancialAnalysis",
+    "ScenarioComparison",
+    "SensitivityResult",
+    "ContextualBIProposal",
+    "CaseRecall",
+    "MatchExplanation"
+  ],
+  "contextBudgetTokens": 20000,
+  "maxSteps": 10,
+  "maxDelegations": 0,
+  "modelClass": "reasoning",
+  "resumePolicy": "Retomar somente após nova validação de referências/base e skill pinada.",
+  "sourcePath": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_finance.json"
+}

@@ -1,0 +1,181 @@
+{
+  "schema": "operations24-dispatch-ledger-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "remote": "GitHub MCP only; existing canonical test-ci and existing astra-wp04-check workflows",
+  "mutations": "Manual exact-input dispatches after read-only dedup; no automatic CI reruns or mutation retries.",
+  "concurrency": "One own request/check run in flight at a time; cleanup jobs completed.",
+  "runs": [
+    {
+      "kind": "nominal_playwright",
+      "record": "nominal-run.json",
+      "run": 43639526175,
+      "W": {
+        "sha": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "tree": "b9223690f64415a936eb38ad6f8796b21a8a7966",
+        "kind": "published full composed product, predecessor own helpers"
+      },
+      "S": {
+        "sha": "a54db382b9425e68f0c1dee1754aae80e2665726",
+        "tree": "197de12267331c7aa91e03b2f27a57fdc666a571",
+        "branch": "ci-run-linux-astra-wp04-d8ab1d33-88a94dc8fd-m24a1"
+      },
+      "request": {
+        "package": "app",
+        "packageSelector": "packages/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/operations.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        },
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "request_blob": "9677c3c3dd034e9b94ffa11bcd7ddf03fd219d7a",
+      "request_sha256": "88a94dc8fd9952a64381646a567b7c349f4c3ccad8c63e818269a6cd57a8ab60",
+      "result": "0 pass / 5 fail before UI; 5 bodies attempted, 0 skips, 0 retries"
+    },
+    {
+      "kind": "source_check",
+      "record": "source-checks-01.json",
+      "run": 43640212098,
+      "W": "0042a95967ad651fe65ac0da216db6af86ed804c",
+      "W_tree": "ad87005bbc3b02d18652ebb07d87fac904cfcfbf",
+      "result": "generation PASS; module typecheck PASS; guards0 gate,11 warnings,0 errors"
+    },
+    {
+      "kind": "boundary_regression",
+      "record": "boundary-attempt-01.json",
+      "run": 43640413630,
+      "W": "0042a95967ad651fe65ac0da216db6af86ed804c",
+      "W_tree": "ad87005bbc3b02d18652ebb07d87fac904cfcfbf",
+      "S": "f1b6048c3518a7371413ca275a7c308cc7352c42",
+      "S_tree": "a083146ed6a8275ffacbd20abb7c13ea7204087e",
+      "branch": "ci-run-linux-astra-wp04-0042a959-b95915396c-m24b1",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "modules/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "request_blob": "0967d7500b5a5e409d354d97cadf57d21ce40380",
+      "request_sha256": "b95915396c03527681f676455a5c29c8cab54e3f9511e4e5cb63735fe772efc0",
+      "result": "request rejected,0 tests",
+      "reason_for_next": "correct canonical package selector"
+    },
+    {
+      "kind": "boundary_regression",
+      "record": "boundary-attempt-02.json",
+      "run": 43640551629,
+      "W": "0042a95967ad651fe65ac0da216db6af86ed804c",
+      "W_tree": "ad87005bbc3b02d18652ebb07d87fac904cfcfbf",
+      "S": "0142facd1367eadaaf8f11a5e192b195c439cfa4",
+      "S_tree": "41548b44859b38c115188e8039280c775a3ca4ee",
+      "branch": "ci-run-linux-astra-wp04-0042a959-c3cb131600-m24b2",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "@orchestra/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "request_blob": "ff67d3e579dcbf96010db2b529f457771459357c",
+      "request_sha256": "c3cb1316006809204c675213e6a7789fe66bb6c7df0325c2af1584d7738c90a6",
+      "result": "2 pass / 3 fail",
+      "reason_for_next": "fix own actual Settings upload precondition; identical test selection"
+    },
+    {
+      "kind": "boundary_regression",
+      "record": "boundary-attempt-03.json",
+      "run": 43641173533,
+      "W": "49d29bf4d6512d130307f46e145885949f213ea8",
+      "W_tree": "0d982446f0708975895b59fad3c94d0a53704f58",
+      "S": "ca244e5b74ebb2f9a20262b4e7448aa7d528a15b",
+      "S_tree": "ef240283c9315de412208a1a24e5a1169b735b10",
+      "branch": "ci-run-linux-astra-wp04-49d29bf4-c3cb131600-m24b3",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "@orchestra/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "request_blob": "ff67d3e579dcbf96010db2b529f457771459357c",
+      "request_sha256": "c3cb1316006809204c675213e6a7789fe66bb6c7df0325c2af1584d7738c90a6",
+      "result": "3 pass / 2 fail",
+      "reason_for_next": "No rerun on unchanged old source HTTP adapters; assembly intake required."
+    },
+    {
+      "kind": "source_check",
+      "record": "source-checks-02.json",
+      "run": 43641414497,
+      "W": "49d29bf4d6512d130307f46e145885949f213ea8",
+      "W_tree": "0d982446f0708975895b59fad3c94d0a53704f58",
+      "result": "generation PASS; module typecheck PASS; guardsFAIL3 ownrawlogfiles",
+      "reason_for_next": "Delete own prohibited raw log copies without changing guard or product code."
+    },
+    {
+      "kind": "source_check",
+      "record": "source-checks-03.json",
+      "run": 43641839432,
+      "W": "837ff32d178fc754a38e9b42b117c49c5390257a",
+      "W_tree": "afafe3f1a53f848896daee1654562e8928a246db",
+      "result": "generation PASS; module typecheck PASS; guards0 gate,11 warnings,0 errors",
+      "reason_for_next": "No further own run required. Next material composition needs its own planned qualification."
+    }
+  ],
+  "future_requests": {
+    "boundary_and_selector": {
+      "blob": "41f46f41a06a50e41271f9c4965002aab6359878",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "@orchestra/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+          "Sucafinav1/test/product/operations-functional-closure/selection.test.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "state": "NOT_RUN on final composed intake"
+    },
+    "nominal": {
+      "blob": "9677c3c3dd034e9b94ffa11bcd7ddf03fd219d7a",
+      "request": {
+        "package": "app",
+        "packageSelector": "packages/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/operations.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        },
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "state": "NOT_RUN on final composed intake"
+    }
+  },
+  "limits": "Collection is not functional PASS. A source regression, source check or static text patch reconstruction is not composed UI qualification."
+}

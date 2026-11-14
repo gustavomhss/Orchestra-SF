@@ -1,0 +1,331 @@
+{
+  "schema": "reports-installed-closure-runs-v1",
+  "mission": 25,
+  "actor": "S3-A",
+  "lease_epoch": "reports-browser25",
+  "remoteTransport": "GitHub MCP only",
+  "localProductExecution": "NONE",
+  "sourceHead": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+  "sourceTree": "fb3b512c69f249960bd768aef723425d5e2d6740",
+  "checkResults": [
+    {
+      "label": "W1 source check",
+      "W": "567727670b4039c316a12718c84b43b57f4fa19d",
+      "tree": "3a3cdd0ca5ae13eeb58f94810a540f8da3b23934",
+      "run": {
+        "id": 43640138913,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43640138913",
+        "status": "completed",
+        "conclusion": "failure",
+        "head_sha": "567727670b4039c316a12718c84b43b57f4fa19d",
+        "branch": "astra-check-wp07",
+        "attempt": 1,
+        "created_at": "2026-11-14T20:56:38Z",
+        "updated_at": "2026-11-14T20:58:31Z"
+      },
+      "jobId": 132585681543,
+      "graph": "New client/view not yet reachable from module tsconfig; do not infer their compilation.",
+      "artifact": {
+        "id": 14131378463,
+        "name": "wp07-check-567727670b4039c316a12718c84b43b57f4fa19d-1",
+        "size_in_bytes": 87305,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14131378463",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14131378463/zip",
+        "expired": false,
+        "created_at": "2026-11-14T20:58:27Z",
+        "expires_at": "2026-11-21T20:58:26Z",
+        "updated_at": "2026-11-14T20:58:27Z",
+        "digest": "sha256:039ed94c283556eb8cc5db04d507e7474162b99e61aa08be00b116ac10ec283e",
+        "workflow_run": {
+          "id": 43640138913,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp07",
+          "head_sha": "567727670b4039c316a12718c84b43b57f4fa19d"
+        }
+      },
+      "kind": "OWN_EXISTING_CHECK",
+      "S": null,
+      "actualCheckout": "567727670b4039c316a12718c84b43b57f4fa19d",
+      "requestHash": null,
+      "workflow": ".github/workflows/astra-wp07-check.yml",
+      "workflowBlob": "28c453f4b7735f944e1237715e399e955d86546c",
+      "typecheck": {
+        "result": "FAILURE",
+        "diagnostics": 137,
+        "files": 46,
+        "ownedDiagnostics": 0,
+        "comparison": "Exactly identical full diagnostic blocks to dcde725380e76ff3180b1415e3c0838b9ca7df34, run43537045211/job132268446934; no added/removed diagnostics.",
+        "normalizedDiagnosticBlocksSHA256": "9d3b2386ade78a32e57868dfd7702bcd831641d8cc44c97d15dd7bae2daff499"
+      },
+      "guards": {
+        "result": "PASS",
+        "rules": 78,
+        "changedPaths": 665,
+        "gateFindings": 0,
+        "warnings": 12,
+        "errors": 0
+      },
+      "exportFixtureGeneration": "PASS_GENERATION_ONLY",
+      "newRenderedVisualInspection": "NOT_RUN",
+      "installedE2E": "NOT_RUN",
+      "log": "checks/logs/job-132585681543.txt",
+      "artifactInspection": "Actual Actions metadata/upload digest and generation log read. No new visual rendering or installed download proof inferred."
+    },
+    {
+      "label": "W2 source check",
+      "W": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+      "tree": "fb3b512c69f249960bd768aef723425d5e2d6740",
+      "run": {
+        "id": 43640600856,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43640600856",
+        "status": "completed",
+        "conclusion": "failure",
+        "head_sha": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+        "branch": "astra-check-wp07",
+        "attempt": 1,
+        "created_at": "2026-11-14T21:01:51Z",
+        "updated_at": "2026-11-14T21:03:35Z"
+      },
+      "jobId": 132587110097,
+      "graph": "Static imports verified: tsconfig test/**/*.ts -> browser-ui-entry -> public browser export -> collaboration-view -> collaboration-client. Hosted tsgo ran at W2.",
+      "artifact": {
+        "id": 14130999623,
+        "name": "wp07-check-bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45-1",
+        "size_in_bytes": 87245,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14130999623",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14130999623/zip",
+        "expired": false,
+        "created_at": "2026-11-14T21:03:31Z",
+        "expires_at": "2026-11-21T21:03:30Z",
+        "updated_at": "2026-11-14T21:03:31Z",
+        "digest": "sha256:cda16a379cc247466af3bd657b42b9e6ce1a680c45b0c2b0166c29638893e876",
+        "workflow_run": {
+          "id": 43640600856,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp07",
+          "head_sha": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45"
+        }
+      },
+      "kind": "OWN_EXISTING_CHECK",
+      "S": null,
+      "actualCheckout": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+      "requestHash": null,
+      "workflow": ".github/workflows/astra-wp07-check.yml",
+      "workflowBlob": "28c453f4b7735f944e1237715e399e955d86546c",
+      "typecheck": {
+        "result": "FAILURE",
+        "diagnostics": 137,
+        "files": 46,
+        "ownedDiagnostics": 0,
+        "comparison": "Exactly identical full diagnostic blocks to dcde725380e76ff3180b1415e3c0838b9ca7df34, run43537045211/job132268446934; no added/removed diagnostics.",
+        "normalizedDiagnosticBlocksSHA256": "9d3b2386ade78a32e57868dfd7702bcd831641d8cc44c97d15dd7bae2daff499"
+      },
+      "guards": {
+        "result": "PASS",
+        "rules": 78,
+        "changedPaths": 665,
+        "gateFindings": 0,
+        "warnings": 12,
+        "errors": 0
+      },
+      "exportFixtureGeneration": "PASS_GENERATION_ONLY",
+      "newRenderedVisualInspection": "NOT_RUN",
+      "installedE2E": "NOT_RUN",
+      "log": "checks/logs/job-132587110097.txt",
+      "artifactInspection": "Actual Actions metadata/upload digest and generation log read. No new visual rendering or installed download proof inferred."
+    },
+    {
+      "kind": "SURGICAL_BROWSER_BUILD",
+      "W": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+      "treeW": "fb3b512c69f249960bd768aef723425d5e2d6740",
+      "S": "00fd9405f4637ddfd57b920ce62636a5cd740f00",
+      "treeS": "128ddae7b7637d2bc1c2c9a01d9ab9dea92fd6b5",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "modules/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp07/browser-build.test.ts"
+        ],
+        "env": {}
+      },
+      "requestSHA256": "a828e15b46322ba5dc39f608075261ef6e14b5b91e08d432472887695445e26a",
+      "requestBlob": "f61dd53c7e9c3154655b7d9b04be31ef48edc191",
+      "snapshotDelta": [
+        ".ci-run.json"
+      ],
+      "run": {
+        "id": 43640961318,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43640961318",
+        "status": "completed",
+        "conclusion": "failure",
+        "head_sha": "00fd9405f4637ddfd57b920ce62636a5cd740f00",
+        "branch": "ci-run-linux-astra-wp07-bc587ceb-a828e15b-1",
+        "attempt": 1,
+        "created_at": "2026-11-14T21:05:43Z",
+        "updated_at": "2026-11-14T21:06:12Z"
+      },
+      "jobId": 132588210719,
+      "cleanupJobId": 132588300577,
+      "status": "FAIL_INFRA_REQUEST",
+      "failure": "Read request: TEST_PACKAGE_NOT_FOUND:modules/sucafina. The package selector must be registered alias/canonical name, not the directory.",
+      "selectedFiles": [],
+      "executedTests": 0,
+      "omni": "NOT_REACHED",
+      "log": "checks/logs/job-132588210719.txt",
+      "retryReason": "Correct request-only input to use package alias sucafina; no product/validator/workflow/assertion/timeout change."
+    },
+    {
+      "kind": "SURGICAL_BROWSER_BUILD",
+      "W": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+      "treeW": "fb3b512c69f249960bd768aef723425d5e2d6740",
+      "S": "4bea121031aac61fb2f3e3b46f7e56587ee9919b",
+      "treeS": "d2a791452f8242e4289f0936a29626e1e2b4fb18",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp07/browser-build.test.ts"
+        ],
+        "env": {}
+      },
+      "requestSHA256": "62de4ef74c462a5747f0ca15640b7bd1c1399b46faafc5a476745e1cb00397e6",
+      "requestBlob": "76ccc6e7b0ed80347313ad02f77292459942c3f7",
+      "snapshotDelta": [
+        ".ci-run.json"
+      ],
+      "run": {
+        "id": 43641126816,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43641126816",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "4bea121031aac61fb2f3e3b46f7e56587ee9919b",
+        "branch": "ci-run-linux-astra-wp07-bc587ceb-62de4ef7-2",
+        "attempt": 1,
+        "created_at": "2026-11-14T21:07:33Z",
+        "updated_at": "2026-11-14T21:09:25Z"
+      },
+      "jobId": 132588718977,
+      "cleanupJobId": 132589198048,
+      "status": "PASS",
+      "selectedFiles": [
+        "modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts"
+      ],
+      "pass": 4,
+      "fail": 0,
+      "expectCalls": 20,
+      "durationMs": 184,
+      "testCases": [
+        "(pass) review browser entry bundles without server runtime dependencies [19.93ms]",
+        "(pass) review workspace entry bundles without server runtime dependencies [7.81ms]",
+        "(pass) review collaboration-client entry bundles without server runtime dependencies [1.44ms]",
+        "(pass) review collaboration-view entry bundles without server runtime dependencies [1.53ms]"
+      ],
+      "omni": {
+        "status": "NOT_APPLICABLE_VALID_CONTROL",
+        "setupNonceCount": 1,
+        "verdictCount": 1,
+        "verdict": "omni positive control [9a94a30201c84529a97a8920fddb24e4]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+        "valid": true,
+        "selectedFiles": [
+          "Sucafinav1/test/product/wp07/browser-build.test.ts:"
+        ],
+        "cases": [
+          "(pass) review browser entry bundles without server runtime dependencies [19.93ms]",
+          "(pass) review workspace entry bundles without server runtime dependencies [7.81ms]",
+          "(pass) review collaboration-client entry bundles without server runtime dependencies [1.44ms]",
+          "(pass) review collaboration-view entry bundles without server runtime dependencies [1.53ms]"
+        ],
+        "meaning": "Exactly one setup nonce and matching verdict; focused selection declares no Omni spawn. No native/Omni capability proof."
+      },
+      "artifacts": [],
+      "log": "checks/logs/job-132588718977.txt",
+      "limits": "These are four browser bundle entries, not the four nominal Reports installed E2Es. No inherited package typecheck PASS."
+    }
+  ],
+  "dedup": {
+    "scope": "One in-flight WP07 request at a time; no epic/full-suite dispatch.",
+    "ownChecks": "Own source check after explicit product delta; W1 and W2 candidates checked for pre-existing runs before moving existing astra-check-wp07 ref with expected SHA.",
+    "browserBuild": "Exact branch/S queries and recent100 runs checked before each trigger. Each S has parent W2 and only .ci-run.json differs. First request failed before tests. Second uses a different corrected request hash and starts only after first run/cleanup completed.",
+    "foreignRuns": "Other owners in-flight runs were observed but not modified."
+  },
+  "dispatcherPinsAtW2": {
+    "workflow": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "requestValidator": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "packageResolver": "a10c7b04ca6633f688b62069a9a9832aaa4543dd",
+    "location": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+    "registry": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+    "bunfig": "7000633db2c4f11e3f1aff351cd28c0df9affeca",
+    "omniControl": "643ad90a4606c2afd6c6c9aee389ca6389ab54e9"
+  },
+  "nominal": {
+    "status": "NOT_RUN",
+    "sourceCandidate": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+    "composedW": null,
+    "composedTree": null,
+    "S": null,
+    "runId": null,
+    "jobId": null,
+    "expectedTestCount": 4,
+    "selectedTestCount": null,
+    "request": {
+      "path": "ci-request.json",
+      "bytes": 274,
+      "sha256": "01608e6052545eb2729fb5cca8e3d1c2ca72302b5ee9cb4181330c7041c97766",
+      "gitBlobSHA1": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b",
+      "request": {
+        "package": "app",
+        "packageSelector": "packages/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/reports.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        },
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "canonicalCompactSHA256": "37251a43f26b5cd4b6a513334f38c537a80b7a613ac8da8fa9aa819ca3cbc22f",
+      "status": "PREPARED_NOT_DISPATCHED",
+      "reason": "Requires actual session23 composition W/tree/blobs and source/config verification; no S or run exists for the nominal four."
+    },
+    "reason": "Session23 has not consumed shared host/browser/C05 binding and E2E graph proposal. Current composition already contains agenda, ReviewApplication and Collaboration; this is a missing wiring/ACK boundary, not missing old producers.",
+    "tests": [
+      {
+        "id": "RPT-01",
+        "title": "RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      {
+        "id": "RPT-02",
+        "title": "RPT-02 confirms and reuses the exact human answer under C05, then rejects its edited version",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      {
+        "id": "RPT-03",
+        "title": "RPT-03 removes one authorized record without editing its source and creates only an explicit new revision",
+        "status": "NOT_RUN",
+        "evidence": []
+      },
+      {
+        "id": "RPT-04",
+        "title": "RPT-04 revokes the real session and clears cached meeting data, export and answer access",
+        "status": "NOT_RUN",
+        "evidence": []
+      }
+    ]
+  },
+  "evidenceLimits": [
+    "Generating DOCX/PPTX fixtures is not an installed export/download, rendered visual inspection or native application proof.",
+    "Historical rendered85-image evidence remains at its original W/run and is not transferred to W2 or a future composed candidate.",
+    "No criteria are promoted to PASS by source checks or bundle tests.",
+    "Shared host proposal and app E2E config have no hosted typecheck or runtime execution yet."
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "schema": "sf2-bundle-integrator-ack-v1",
+  "campaign": "sf2h-integral-20261112",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "T0": "2026-11-13T04:01:10Z",
+  "mission": "bundle-integrator",
+  "session_number": 14,
+  "actor_pack": "S0-C",
+  "lease_epoch": 5,
+  "status": "ACK_ACTIVE",
+  "authority_source": "557adbd63f5700f487447cbb6167fe7c71e9bcdb",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "target_branch": "sf2-stack",
+  "accepted_expected_head": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+  "accepted_tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af",
+  "writer_scope": [
+    "admitted versioned product outputs on sf2-stack",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/"
+  ],
+  "source_branches_read_only": true,
+  "publication": "GitHub MCP; fast-forward; expected_sha on every ref update; never force",
+  "s0_retains": [
+    "final acceptance",
+    "final dispatcher"
+  ],
+  "constraints": [
+    "no local product tests",
+    "no CI dispatch, epic, merge to dev, deploy or restart",
+    "no new agents, Goal, watchdog or dispatcher",
+    "no financial-policy/engine/identity changes",
+    "preserve source SHA and exact pre/postimage provenance",
+    "final proofs NOT_RUN on newly composed tree"
+  ],
+  "helpers_observed": {
+    "sf2-ci-triage": "557adbd63f5700f487447cbb6167fe7c71e9bcdb",
+    "sf2-seam-fixes": "557adbd63f5700f487447cbb6167fe7c71e9bcdb",
+    "sf2-bundle-review": "557adbd63f5700f487447cbb6167fe7c71e9bcdb"
+  },
+  "session_id": null,
+  "session_id_note": "Host does not expose a browser session identifier; no identity invented.",
+  "next_product_increment": "Closed PR58 import-recovery; exact blobs and existing consumers/dependencies checked before admission."
+}

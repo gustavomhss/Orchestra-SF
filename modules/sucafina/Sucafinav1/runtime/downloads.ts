@@ -1,11 +1,12 @@
 import type { Actor, Environment, Snapshot } from "./contract.ts"
-import { finite, object, rows, text } from "./contract.ts"
+import { object, rows, text } from "./contract.ts"
 import type { ArtifactResult } from "./artifact.ts"
 import { createReport } from "./reports.ts"
 import { visibleRequests } from "../src/requests.ts"
 import { supplierCsv } from "../src/supplier.ts"
 import { esc } from "../src/screen-shell.ts"
 import { procurementKeys } from "../src/nav.ts"
+import { procurementMonetaryFacts } from "../product/procurement/monetary.ts"
 
 export async function download(
   kind: string,
@@ -97,9 +98,7 @@ export async function download(
       "paymentTerms",
       "currency",
       "incoterm",
-      "bankName",
-      "accountHolder",
-      "bankCountry",
+      ...(privileged ? ["bankName", "accountHolder", "bankCountry"] : []),
       "riskRating",
       "dueDiligence",
       "sanctionsDate",
@@ -144,8 +143,13 @@ export async function download(
         const pr = object(request.pr),
           source = object(request.sourcing),
           po = object(request.po)
-        const quote = rows(source.quotes).find((item) => item.id === source.selectedId)
-        const total = rows(po.lines).reduce((sum, line) => sum + finite(line.qty) * finite(line.unitPrice), 0)
+        const selected = text(source.selectedId) ? rows(source.quotes).filter((item) => item.id === source.selectedId) : []
+        const quote = selected.length === 1 ? selected[0] : undefined
+        const quoteTotal = recordedNumber(quote?.total)
+        const quoteCurrency = recordedCurrency(quote?.currency)
+        const settings = object(store.settings)
+        const order = purchaseOrderMoney(request, settings)
+        const currency = recordedCurrency(po.currency)
         return {
           "PR number": text(request.number),
           Title: text(pr.title),
@@ -159,19 +163,26 @@ export async function download(
           Status: text(request.status),
           Recurring: pr.recurring ? "Yes" : "No",
           Frequency: text(pr.frequency),
-          "Est. annual value": pr.estAnnual ?? "",
-          "Estimated amount": pr.estAmount ?? "",
+          "Est. annual value": recordedNumber(pr.estAnnual) ?? "Unavailable",
+          "Estimated amount": recordedNumber(pr.estAmount) ?? "Unavailable",
           Quotes: rows(source.quotes).filter((item) => item.supplier).length,
-          "Selected supplier": text(quote?.supplier),
-          "Selected quote total": quote
-            ? `${text(quote.currency) || text(object(store.settings).currency)} ${finite(quote.total).toFixed(2)}`
+          "Selected supplier": request.sourcing ? text(quote?.supplier) || "Unavailable" : "",
+          "Selected quote total": request.sourcing
+            ? quoteTotal !== null && quoteCurrency ? `${quoteCurrency} ${quoteTotal.toFixed(2)}` : "Unavailable"
             : "",
           "Contract strategy": text(source.contractStrategy),
           "PO number": text(po.number),
           "OPEX/CAPEX": text(po.expenseType),
-          "PO currency": text(po.currency) || text(object(store.settings).currency),
-          "PO total": request.po ? total : "",
-          "PO total (base)": request.po && typeof po.fxRate === "number" ? total * po.fxRate : "",
+          "PO currency": request.po ? currency ?? "Unavailable" : "",
+          "PO total": request.po ? currency ? order?.original ?? "Unavailable" : "Unavailable" : "",
+          "PO total (base)": request.po ? order?.baseAmount ?? "Unavailable" : "",
+          "PO base currency": request.po ? recordedCurrency(settings.currency) ?? "Unavailable" : "",
+          "PO FX rate": request.po ? order?.validRate ?? "Unavailable" : "",
+          "PO FX source": request.po ? order?.fxSource ?? "Unavailable" : "",
+          "PO monetary state": request.po ? order?.monetaryState ?? "Unavailable" : "",
+          "PO submitted amount": request.po ? order?.submittedAmount ?? "Unavailable" : "",
+          "PO submitted currency": request.po ? order?.submittedCurrency || "Unavailable" : "",
+          "PO submitted FX rate": request.po ? order?.submittedFxRate ?? "Unavailable" : "",
           "Payment terms": text(po.paymentTerms),
           "Delivery date": text(po.deliveryDate),
           "PO issued": text(po.issuedAt).slice(0, 10),
@@ -182,12 +193,23 @@ export async function download(
     const request = requests.find((item) => String(item.number ?? item.id) === query.get("request"))
     if (!request || !request.po) return { ok: false, status: 404 }
     const po = object(request.po)
-    const lines = rows(po.lines)
-    const currency = text(po.currency) || text(object(store.settings).currency)
-    const money = (value: number) => value.toLocaleString("en-US", { minimumFractionDigits: 2 })
+    const lines = Array.isArray(po.lines) ? po.lines.map(object) : []
+    const settings = object(store.settings)
+    const currency = recordedCurrency(po.currency)
+    const order = purchaseOrderMoney(request, settings)
+    const money = (value: unknown) => {
+      const number = recordedNumber(value)
+      return number === null ? "Unavailable" : number.toLocaleString("en-US", { minimumFractionDigits: 2 })
+    }
+    const lineRows = lines.map((line, index) => {
+      const value = purchaseOrderMoney({ ...request, po: { ...po, lines: [line] } }, settings)
+      return `<tr><td>${index + 1}</td><td>${esc(text(line.desc ?? line.description))}</td><td>${recordedNumber(line.qty) ?? "Unavailable"}</td><td>${esc(text(line.uom ?? line.unit))}</td><td>${money(currency ? line.unitPrice : null)}</td><td>${money(currency ? value?.original : null)}</td></tr>`
+    }).join("")
+    const baseCurrency = recordedCurrency(settings.currency)
+    const monetarySummary = `<p>Monetary state: ${esc(order?.monetaryState ?? "Unavailable")}. Current base amount: ${order?.baseAmount != null && baseCurrency ? `${money(order.baseAmount)} ${esc(baseCurrency)}` : "Unavailable"}. FX: ${recordedNumber(order?.validRate) ?? "Unavailable"} (${esc(order?.fxSource ?? "Unavailable")}). Submitted approval: ${order?.submittedAmount != null && order.submittedCurrency ? `${money(order.submittedAmount)} ${esc(order.submittedCurrency)}` : "Unavailable"}; submitted FX: ${recordedNumber(order?.submittedFxRate) ?? "Unavailable"}.</p>`
     const multiline = (value: unknown) => esc(text(value) || "—").replace(/\n/g, "<br>")
     const terms = [
-      ["Currency", currency],
+      ["Currency", currency ?? "Unavailable"],
       ["Expenditure type", `${text(po.expenseType)}${po.assetRef ? ` · ${text(po.assetRef)}` : ""}`],
       ["Payment terms", po.paymentTerms],
       ["Incoterm", po.incoterm ?? po.incoterms],
@@ -200,7 +222,7 @@ export async function download(
       ["Other terms", po.notes],
     ]
     const approvals = rows(object(po.approval).steps)
-    const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(text(po.number))}</title><style>body{font:13px/1.5 Arial,sans-serif;color:#111;max-width:820px;margin:30px auto;padding:0 24px}table{width:100%;border-collapse:collapse;margin:10px 0}th,td{border:1px solid #ccc;padding:6px 8px;text-align:left}th{background:#f2f4f7}.box{display:grid;grid-template-columns:1fr 1fr;gap:16px}.box>div{border:1px solid #ccc;padding:10px}</style></head><body><h1>PURCHASE ORDER</h1><p>Status: ${esc(text(request.status))}</p><p><b>${esc(text(po.number))}</b><br>Date: ${esc(text(po.issuedAt ?? object(po.approval).submittedAt ?? po.generatedAt))}<br>Requisition: ${esc(text(request.number))}</p><div class="box"><div><b>Supplier</b><br>${esc(text(po.supplier))}<br>${esc(text(po.supplierContact))}<br>Quote ref: ${esc(text(po.quoteRef) || "—")}</div><div><b>Invoice to</b><br>${multiline(po.billingAddress)}</div></div><h2>Description</h2><p>${multiline(po.description)}</p><table><thead><tr><th>#</th><th>Description</th><th>Qty</th><th>Unit</th><th>Unit price (${esc(currency)})</th><th>Total (${esc(currency)})</th></tr></thead><tbody>${lines.map((line, index) => `<tr><td>${index + 1}</td><td>${esc(text(line.desc ?? line.description))}</td><td>${finite(line.qty)}</td><td>${esc(text(line.uom ?? line.unit))}</td><td>${money(finite(line.unitPrice))}</td><td>${money(finite(line.qty) * finite(line.unitPrice))}</td></tr>`).join("")}<tr><th colspan="5">Total agreed price (excl. VAT)</th><td>${money(lines.reduce((sum, line) => sum + finite(line.qty) * finite(line.unitPrice), 0))}</td></tr></tbody></table><h2>Terms & conditions</h2><table>${terms.map(([label, value]) => `<tr><th>${esc(text(label))}</th><td>${multiline(value)}</td></tr>`).join("")}</table>${approvals.length ? `<h2>Approvals</h2><table><tr><th>Level</th><th>Approved by</th><th>Date</th></tr>${approvals.map((step) => `<tr><td>${esc(text(step.levelName))}</td><td>${esc(step.status === "approved" ? (environment.directory.find((person) => person.id === step.by)?.name ?? text(step.by)) : text(step.status))}</td><td>${esc(text(step.at))}</td></tr>`).join("")}</table>` : ""}<p>Please quote the PO number on all invoices and delivery notes.</p></body></html>`
+    const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(text(po.number))}</title><style>body{font:13px/1.5 Arial,sans-serif;color:#111;max-width:820px;margin:30px auto;padding:0 24px}table{width:100%;border-collapse:collapse;margin:10px 0}th,td{border:1px solid #ccc;padding:6px 8px;text-align:left}th{background:#f2f4f7}.box{display:grid;grid-template-columns:1fr 1fr;gap:16px}.box>div{border:1px solid #ccc;padding:10px}</style></head><body><h1>PURCHASE ORDER</h1><p>Status: ${esc(text(request.status))}</p><p><b>${esc(text(po.number))}</b><br>Date: ${esc(text(po.issuedAt ?? object(po.approval).submittedAt ?? po.generatedAt))}<br>Requisition: ${esc(text(request.number))}</p><div class="box"><div><b>Supplier</b><br>${esc(text(po.supplier))}<br>${esc(text(po.supplierContact))}<br>Quote ref: ${esc(text(po.quoteRef) || "—")}</div><div><b>Invoice to</b><br>${multiline(po.billingAddress)}</div></div><h2>Description</h2><p>${multiline(po.description)}</p><table><thead><tr><th>#</th><th>Description</th><th>Qty</th><th>Unit</th><th>Unit price (${esc(currency ?? "Unavailable")})</th><th>Total (${esc(currency ?? "Unavailable")})</th></tr></thead><tbody>${lineRows}<tr><th colspan="5">Total agreed price (excl. VAT)</th><td>${money(currency ? order?.original : null)}</td></tr></tbody></table>${monetarySummary}<h2>Terms & conditions</h2><table>${terms.map(([label, value]) => `<tr><th>${esc(text(label))}</th><td>${multiline(value)}</td></tr>`).join("")}</table>${approvals.length ? `<h2>Approvals</h2><table><tr><th>Level</th><th>Approved by</th><th>Date</th></tr>${approvals.map((step) => `<tr><td>${esc(text(step.levelName))}</td><td>${esc(step.status === "approved" ? (environment.directory.find((person) => person.id === step.by)?.name ?? text(step.by)) : text(step.status))}</td><td>${esc(text(step.at))}</td></tr>`).join("")}</table>` : ""}<p>Please quote the PO number on all invoices and delivery notes.</p></body></html>`
     return {
       ok: true,
       name: `${text(po.number).replace(/[^A-Za-z0-9_-]/g, "_") || "purchase-order"}.html`,
@@ -209,6 +231,24 @@ export async function download(
     }
   }
   return { ok: false, status: 404 }
+}
+function recordedNumber(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null
+}
+function recordedCurrency(value: unknown): string | null {
+  return typeof value === "string" && /^[A-Z]{3}$/.test(value) ? value : null
+}
+function purchaseOrderMoney(request: Record<string, unknown>, settings: Record<string, unknown>) {
+  const lines = object(request.po).lines
+  const status = text(request.status)
+  // PO stages retain observed approval metadata even when lines are unavailable.
+  // An incidental PO in another stage must not borrow its quote or PR estimate.
+  if (!["po_draft", "po_pending", "po_rejected", "po_approved", "po_issued"].includes(status) &&
+    (!Array.isArray(lines) || !lines.length || rows(lines).length !== lines.length)) return undefined
+  // A saved future PO is a separate estimate from the sourcing decision.
+  // This projection neither changes the request stage nor persists a new state.
+  const projection = ["sourcing", "src_pending", "src_rejected"].includes(status) ? { ...request, status: "po_draft" } : request
+  return procurementMonetaryFacts(projection, text(settings.currency), settings)
 }
 function csv(name: string, data: Record<string, unknown>[]): ArtifactResult {
   const columns = [...new Set(data.flatMap((record) => Object.keys(record)))]

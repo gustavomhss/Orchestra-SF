@@ -1,0 +1,1122 @@
+{
+  "schema": "orchestra-sf.memory-diagnostic.v1",
+  "status": "EXISTING_EVIDENCE_ONLY",
+  "repository": "gustavomhss/Orchestra-SF",
+  "product": {
+    "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+    "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305"
+  },
+  "snapshot": {
+    "commit": "dd53af531181d1b05e5081b765dbfecc2a6ba6a9",
+    "tree": "ab3895d693c0923a8e26aebe03654cce1854149d",
+    "onlyChangedPath": ".ci-run.json",
+    "requestBlob": "661cbd88494d80b48c193177137f61980b034bf8",
+    "verifiedBy": "GitHub compare and snapshot request, fetched via GitHub MCP"
+  },
+  "run": {
+    "id": 43618475702,
+    "attempt": 1,
+    "job": 132518644009,
+    "cleanupJob": 132521071078,
+    "cleanupConclusion": "success",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618475702",
+    "conclusion": "failure",
+    "artifacts": [],
+    "result": {
+      "pass": 45,
+      "fail": 1,
+      "tests": 46,
+      "files": 8,
+      "expectCalls": 1904,
+      "suiteSeconds": 391.43,
+      "memoryTestMs": 225029.32
+    },
+    "runnerImage": "ubuntu-24.04",
+    "bunVersion": "1.3.14+0d9b296af",
+    "omni": {
+      "verdict": "pass",
+      "declaredTests": 1,
+      "spawns": 2,
+      "delegations": 0,
+      "nativeAcceptance": false
+    }
+  },
+  "phases": [
+    {
+      "fixture": "historical-memory",
+      "phase": "scanner.ensure",
+      "state": "started",
+      "elapsedMs": 8
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "scanner.ensure",
+      "state": "returned",
+      "phaseMs": 290,
+      "elapsedMs": 298,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "scanner.version",
+      "state": "started",
+      "elapsedMs": 298
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "scanner.version",
+      "state": "returned",
+      "phaseMs": 314,
+      "elapsedMs": 612,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "procurement.capture-original",
+      "state": "started",
+      "elapsedMs": 995
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "procurement.capture-original",
+      "state": "returned",
+      "phaseMs": 115,
+      "elapsedMs": 1109,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "atlas.emit-ledger",
+      "state": "started",
+      "elapsedMs": 1109
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "atlas.emit-ledger",
+      "state": "returned",
+      "phaseMs": 1953,
+      "elapsedMs": 3062,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.resolve-original",
+      "state": "started",
+      "elapsedMs": 3086
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.resolve-original",
+      "state": "returned",
+      "phaseMs": 337,
+      "elapsedMs": 3423,
+      "aborted": false,
+      "counts": {
+        "phase": "memory.resolve-original",
+        "persistenceCalls": 105,
+        "rootPersistenceCalls": 25,
+        "nestedPersistenceCalls": 80,
+        "groupedEvidenceFences": 2,
+        "c08Reads": 5,
+        "caseReads": 0,
+        "caseFences": 0,
+        "evidenceContextReads": 0,
+        "groupedCaseContextReads": 0,
+        "atlasCanonicalReads": 0,
+        "atlasCanonicalCompleted": 0
+      }
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.prepare",
+      "state": "started",
+      "elapsedMs": 3423
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.prepare",
+      "state": "returned",
+      "phaseMs": 37782,
+      "elapsedMs": 41206,
+      "aborted": false,
+      "counts": {
+        "phase": "memory.prepare",
+        "persistenceCalls": 11030,
+        "rootPersistenceCalls": 3450,
+        "nestedPersistenceCalls": 7580,
+        "groupedEvidenceFences": 188,
+        "c08Reads": 786,
+        "caseReads": 24,
+        "caseFences": 40,
+        "evidenceContextReads": 6,
+        "groupedCaseContextReads": 4,
+        "atlasCanonicalReads": 2,
+        "atlasCanonicalCompleted": 2
+      }
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.verify",
+      "state": "started",
+      "elapsedMs": 41207
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.verify",
+      "state": "returned",
+      "phaseMs": 37979,
+      "elapsedMs": 79186,
+      "aborted": false,
+      "counts": {
+        "phase": "memory.verify",
+        "persistenceCalls": 11072,
+        "rootPersistenceCalls": 3492,
+        "nestedPersistenceCalls": 7580,
+        "groupedEvidenceFences": 188,
+        "c08Reads": 798,
+        "caseReads": 36,
+        "caseFences": 52,
+        "evidenceContextReads": 6,
+        "groupedCaseContextReads": 4,
+        "atlasCanonicalReads": 2,
+        "atlasCanonicalCompleted": 2
+      }
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.accept-output",
+      "state": "started",
+      "elapsedMs": 79218
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.accept-output",
+      "state": "returned",
+      "phaseMs": 37861,
+      "elapsedMs": 117079,
+      "aborted": false,
+      "counts": {
+        "phase": "memory.accept-output",
+        "persistenceCalls": 11072,
+        "rootPersistenceCalls": 3492,
+        "nestedPersistenceCalls": 7580,
+        "groupedEvidenceFences": 188,
+        "c08Reads": 798,
+        "caseReads": 36,
+        "caseFences": 52,
+        "evidenceContextReads": 6,
+        "groupedCaseContextReads": 4,
+        "atlasCanonicalReads": 2,
+        "atlasCanonicalCompleted": 2
+      }
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.exclude-history-and-isolate",
+      "state": "started",
+      "elapsedMs": 117079
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.exclude-history-and-isolate",
+      "state": "returned",
+      "phaseMs": 17387,
+      "elapsedMs": 134466,
+      "aborted": false,
+      "counts": {
+        "phase": "memory.exclude-history-and-isolate",
+        "persistenceCalls": 5074,
+        "rootPersistenceCalls": 1604,
+        "nestedPersistenceCalls": 3470,
+        "groupedEvidenceFences": 86,
+        "c08Reads": 368,
+        "caseReads": 10,
+        "caseFences": 17,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-source",
+      "state": "started",
+      "elapsedMs": 134478
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-source",
+      "state": "returned",
+      "phaseMs": 11404,
+      "elapsedMs": 145882,
+      "aborted": false,
+      "counts": {
+        "phase": "memory.fence-source",
+        "persistenceCalls": 3339,
+        "rootPersistenceCalls": 829,
+        "nestedPersistenceCalls": 2510,
+        "groupedEvidenceFences": 62,
+        "c08Reads": 234,
+        "caseReads": 6,
+        "caseFences": 9,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-capture",
+      "state": "started",
+      "elapsedMs": 145898
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-capture",
+      "state": "returned",
+      "phaseMs": 11561,
+      "elapsedMs": 157458,
+      "aborted": false,
+      "counts": {
+        "phase": "memory.fence-capture",
+        "persistenceCalls": 3393,
+        "rootPersistenceCalls": 883,
+        "nestedPersistenceCalls": 2510,
+        "groupedEvidenceFences": 62,
+        "c08Reads": 237,
+        "caseReads": 6,
+        "caseFences": 10,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-principal",
+      "state": "started",
+      "elapsedMs": 157482
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-principal",
+      "state": "returned",
+      "phaseMs": 10063,
+      "elapsedMs": 167545,
+      "aborted": false,
+      "counts": {
+        "phase": "memory.fence-principal",
+        "persistenceCalls": 2836,
+        "rootPersistenceCalls": 646,
+        "nestedPersistenceCalls": 2190,
+        "groupedEvidenceFences": 54,
+        "c08Reads": 195,
+        "caseReads": 6,
+        "caseFences": 9,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-clock",
+      "state": "started",
+      "elapsedMs": 167556
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-clock",
+      "state": "returned",
+      "phaseMs": 12010,
+      "elapsedMs": 179566,
+      "aborted": false,
+      "counts": {
+        "phase": "memory.fence-clock",
+        "persistenceCalls": 3392,
+        "rootPersistenceCalls": 882,
+        "nestedPersistenceCalls": 2510,
+        "groupedEvidenceFences": 62,
+        "c08Reads": 237,
+        "caseReads": 6,
+        "caseFences": 10,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-lease",
+      "state": "started",
+      "elapsedMs": 179577
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-lease",
+      "state": "returned",
+      "phaseMs": 10042,
+      "elapsedMs": 189618,
+      "aborted": false,
+      "counts": {
+        "phase": "memory.fence-lease",
+        "persistenceCalls": 2835,
+        "rootPersistenceCalls": 645,
+        "nestedPersistenceCalls": 2190,
+        "groupedEvidenceFences": 54,
+        "c08Reads": 195,
+        "caseReads": 6,
+        "caseFences": 9,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-final-request-headers",
+      "state": "started",
+      "elapsedMs": 189636
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-final-request-headers",
+      "state": "returned",
+      "phaseMs": 18043,
+      "elapsedMs": 207679,
+      "aborted": false,
+      "counts": {
+        "phase": "memory.fence-final-request-headers",
+        "persistenceCalls": 5074,
+        "rootPersistenceCalls": 1604,
+        "nestedPersistenceCalls": 3470,
+        "groupedEvidenceFences": 86,
+        "c08Reads": 368,
+        "caseReads": 10,
+        "caseFences": 17,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.same-request-new-proof",
+      "state": "started",
+      "elapsedMs": 207690
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.same-request-new-proof",
+      "state": "returned",
+      "phaseMs": 17324,
+      "elapsedMs": 225014,
+      "aborted": true,
+      "counts": {
+        "phase": "memory.same-request-new-proof",
+        "persistenceCalls": 4896,
+        "rootPersistenceCalls": 1503,
+        "nestedPersistenceCalls": 3393,
+        "groupedEvidenceFences": 85,
+        "c08Reads": 357,
+        "caseReads": 8,
+        "caseFences": 13,
+        "evidenceContextReads": 2,
+        "groupedCaseContextReads": 2,
+        "atlasCanonicalReads": 1,
+        "atlasCanonicalCompleted": 1
+      }
+    }
+  ],
+  "derived": {
+    "positivePhaseMs": 113622,
+    "sameRequestBudgetRemainingMs": 17310,
+    "observedPersistenceCalls": 64118,
+    "observedRootCalls": 19055,
+    "observedNestedCalls": 45063,
+    "observedAtlasCalls": 14,
+    "observedAtlasOkCompletions": 14,
+    "prepareCounterOnlySnapshotClones": 22740,
+    "formula": "3 * 7580 successful nested classifications; three cloneSnapshot calls inside currentSnapshots",
+    "allMeasuredCounterOnlySnapshotClones": 135189,
+    "allMeasuredFormula": "3 * 45063; excludes unmeasured phases; operation count, not measured duration"
+  },
+  "limits": [
+    "phaseMs and elapsedMs are rounded by the existing logger",
+    "returned is emitted in finally; final phase returned does not establish successful completion",
+    "API entry counts are not SQL queries, connections, locks, commits or fsyncs",
+    "scopeInspectionMs, lock wait, exclusive CPU time and Atlas internal latency were not measured in A26",
+    "all 14 canonical Atlas calls counted ok does not prove complete Memory test, timeout correction or native acceptance",
+    "stale.preserve and later lifecycle/output/capture/revocation tail were not reached in A26",
+    "different W25/W26 runs are not a controlled performance comparison"
+  ],
+  "sourcePins": {
+    "hist26": {
+      "gitBlob": "a56e9a13b84d67cf5367b3abd609989fb4e1e3b7",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts"
+    },
+    "hist27": {
+      "gitBlob": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ab8fb4f29d078d179742a77679ef85e5c549b114/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts"
+    },
+    "local-store": {
+      "gitBlob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/runtime/local-store.ts"
+    },
+    "deadline": {
+      "gitBlob": "3eb140557b597156baf52578d8981d332e52aef3",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts"
+    },
+    "producer": {
+      "gitBlob": "34c9d636ae3f1ea4ff35268cb777dd095c70f51f",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/apps/cli/src/sucafina-product/input-producer-memory.ts"
+    },
+    "memory-evidence": {
+      "gitBlob": "7f59bd020ee61d1a88e41b915943080db156bdaf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/apps/cli/src/sucafina-product/analysis-memory-evidence.ts"
+    },
+    "case-recall": {
+      "gitBlob": "fdc378d5f251511f66bb256b78240f472f1d566c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts"
+    },
+    "atlas-memory": {
+      "gitBlob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
+    },
+    "business-context": {
+      "gitBlob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+    },
+    "product-authority": {
+      "gitBlob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+    },
+    "state-provider": {
+      "gitBlob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+    },
+    "decision-host": {
+      "gitBlob": "23d9291b3dcedda36edc4aa4f38856024e3c58f4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts"
+    },
+    "W26-readme": {
+      "gitBlob": "e2ebdffc040e2d473bdae1c5b7e9fd7c7c7bc0a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W26/README.md"
+    },
+    "W27-readme": {
+      "gitBlob": "7a4a084dc26c104dc44a3b629270215fd4ea7caf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ab8fb4f29d078d179742a77679ef85e5c549b114/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W27/agents/root/W27-memory-observation-composition/README.md"
+    },
+    "W27-generic": {
+      "gitBlob": "c9fb89ba6e3f852b01272dec8d05ebea3561a92f",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ab8fb4f29d078d179742a77679ef85e5c549b114/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W27/agents/ci/W27-record-participation-v2/README.md"
+    },
+    "W27-R1": {
+      "gitBlob": "9943b3acfd8c12a9b3575910a7a924a8805f5246",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ab8fb4f29d078d179742a77679ef85e5c549b114/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W27/independent-preflight/R1/preflight-W27-memory-v2.md"
+    },
+    "workflow": {
+      "gitBlob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ab8fb4f29d078d179742a77679ef85e5c549b114/.github/workflows/test-ci.yml"
+    },
+    "test-ci": {
+      "gitBlob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ab8fb4f29d078d179742a77679ef85e5c549b114/script/test-ci.ts"
+    },
+    "test-ci-request": {
+      "gitBlob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ab8fb4f29d078d179742a77679ef85e5c549b114/script/test-ci-request.ts"
+    },
+    "test-ci-location": {
+      "gitBlob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ab8fb4f29d078d179742a77679ef85e5c549b114/script/test-ci-location.ts"
+    },
+    "modules-registry": {
+      "gitBlob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/script/module-registry.json"
+    },
+    "CI.md": {
+      "gitBlob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/sf2-control/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md"
+    },
+    "stale-commit": {
+      "gitBlob": "9f574a7573538c2a46796dfd650fadbac052dc80",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ab8fb4f29d078d179742a77679ef85e5c549b114/apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "unchangedBetweenW26AndW27": true
+    }
+  },
+  "ownerAtFirstObservation": {
+    "branch": "astra-wp10",
+    "commit": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+    "tree": "6b889a436fafe019580801edba3015d90fa75dfd",
+    "changesAlreadyOwned": "W27 lexical scope around a real canonical Atlas observation; no competing implementation applied here",
+    "functionalState": "HOLD as stated in R1 source preflight; no Memory runtime proof consumed",
+    "terminalFollowup": "A27 terminal failure consumed before publication; see concurrentOwnerTerminal"
+  },
+  "validation": {
+    "newProductRuns": 0,
+    "localProductExecution": false,
+    "patches": "NOT_APPLIED",
+    "newDiagnosticTests": "NOT_RUN",
+    "runtimeCostDominance": "NOT_PROVEN"
+  },
+  "concurrentOwnerTerminal": {
+    "product": {
+      "commit": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+      "tree": "6b889a436fafe019580801edba3015d90fa75dfd"
+    },
+    "snapshot": {
+      "commit": "e336f3e945fc22ae737af9b2425186c25b46a43d",
+      "tree": "56b50dd0bab45311b7859f30179eb3d91ea68f32",
+      "envelopeOnlyDiff": [
+        ".ci-run.json"
+      ],
+      "requestBlob": "661cbd88494d80b48c193177137f61980b034bf8"
+    },
+    "run": {
+      "id": 43624030665,
+      "attempt": 1,
+      "job": 132535810515,
+      "cleanupJob": 132537774635,
+      "cleanupConclusion": "success",
+      "conclusion": "failure",
+      "status": "completed",
+      "updatedAt": "2026-11-14T18:06:07Z",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43624030665",
+      "artifacts": [],
+      "pass": 59,
+      "fail": 1,
+      "tests": 60,
+      "files": 8,
+      "expects": 1447,
+      "suiteSeconds": 297.68,
+      "memoryTestMs": 182124.35,
+      "omni": {
+        "verdict": "pass",
+        "declared": 1,
+        "spawns": 2,
+        "delegations": 0
+      }
+    },
+    "phases": [
+      {
+        "fixture": "historical-memory",
+        "phase": "scanner.ensure",
+        "state": "started",
+        "elapsedMs": 8
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "scanner.ensure",
+        "state": "returned",
+        "phaseMs": 278,
+        "elapsedMs": 286,
+        "aborted": false
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "scanner.version",
+        "state": "started",
+        "elapsedMs": 286
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "scanner.version",
+        "state": "returned",
+        "phaseMs": 230,
+        "elapsedMs": 516,
+        "aborted": false
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "procurement.capture-original",
+        "state": "started",
+        "elapsedMs": 796
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "procurement.capture-original",
+        "state": "returned",
+        "phaseMs": 87,
+        "elapsedMs": 883,
+        "aborted": false
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "atlas.emit-ledger",
+        "state": "started",
+        "elapsedMs": 883
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "atlas.emit-ledger",
+        "state": "returned",
+        "phaseMs": 1450,
+        "elapsedMs": 2333,
+        "aborted": false
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.resolve-original",
+        "state": "started",
+        "elapsedMs": 2346
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.resolve-original",
+        "state": "returned",
+        "phaseMs": 263,
+        "elapsedMs": 2609,
+        "aborted": false,
+        "counts": {
+          "phase": "memory.resolve-original",
+          "persistenceCalls": 105,
+          "rootPersistenceCalls": 25,
+          "nestedPersistenceCalls": 80,
+          "groupedEvidenceFences": 2,
+          "c08Reads": 5,
+          "caseReads": 0,
+          "caseFences": 0,
+          "evidenceContextReads": 0,
+          "groupedCaseContextReads": 0,
+          "atlasCanonicalReads": 0,
+          "atlasCanonicalCompleted": 0,
+          "groupedAtlasReads": 0,
+          "groupedAtlasCompleted": 0
+        }
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.prepare",
+        "state": "started",
+        "elapsedMs": 2609
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.prepare",
+        "state": "returned",
+        "phaseMs": 27126,
+        "elapsedMs": 29735,
+        "aborted": false,
+        "counts": {
+          "phase": "memory.prepare",
+          "persistenceCalls": 9996,
+          "rootPersistenceCalls": 2216,
+          "nestedPersistenceCalls": 7780,
+          "groupedEvidenceFences": 88,
+          "c08Reads": 690,
+          "caseReads": 24,
+          "caseFences": 36,
+          "evidenceContextReads": 6,
+          "groupedCaseContextReads": 4,
+          "atlasCanonicalReads": 2,
+          "atlasCanonicalCompleted": 2,
+          "groupedAtlasReads": 2,
+          "groupedAtlasCompleted": 2
+        }
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.verify",
+        "state": "started",
+        "elapsedMs": 29736
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.verify",
+        "state": "returned",
+        "phaseMs": 26648,
+        "elapsedMs": 56384,
+        "aborted": false,
+        "counts": {
+          "phase": "memory.verify",
+          "persistenceCalls": 10038,
+          "rootPersistenceCalls": 2258,
+          "nestedPersistenceCalls": 7780,
+          "groupedEvidenceFences": 88,
+          "c08Reads": 702,
+          "caseReads": 36,
+          "caseFences": 48,
+          "evidenceContextReads": 6,
+          "groupedCaseContextReads": 4,
+          "atlasCanonicalReads": 2,
+          "atlasCanonicalCompleted": 2,
+          "groupedAtlasReads": 2,
+          "groupedAtlasCompleted": 2
+        }
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.accept-output",
+        "state": "started",
+        "elapsedMs": 56400
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.accept-output",
+        "state": "returned",
+        "phaseMs": 26442,
+        "elapsedMs": 82842,
+        "aborted": false,
+        "counts": {
+          "phase": "memory.accept-output",
+          "persistenceCalls": 10038,
+          "rootPersistenceCalls": 2258,
+          "nestedPersistenceCalls": 7780,
+          "groupedEvidenceFences": 88,
+          "c08Reads": 702,
+          "caseReads": 36,
+          "caseFences": 48,
+          "evidenceContextReads": 6,
+          "groupedCaseContextReads": 4,
+          "atlasCanonicalReads": 2,
+          "atlasCanonicalCompleted": 2,
+          "groupedAtlasReads": 2,
+          "groupedAtlasCompleted": 2
+        }
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.exclude-history-and-isolate",
+        "state": "started",
+        "elapsedMs": 82842
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.exclude-history-and-isolate",
+        "state": "returned",
+        "phaseMs": 12111,
+        "elapsedMs": 94953,
+        "aborted": false,
+        "counts": {
+          "phase": "memory.exclude-history-and-isolate",
+          "persistenceCalls": 4557,
+          "rootPersistenceCalls": 987,
+          "nestedPersistenceCalls": 3570,
+          "groupedEvidenceFences": 36,
+          "c08Reads": 320,
+          "caseReads": 10,
+          "caseFences": 15,
+          "evidenceContextReads": 2,
+          "groupedCaseContextReads": 2,
+          "atlasCanonicalReads": 1,
+          "atlasCanonicalCompleted": 1,
+          "groupedAtlasReads": 1,
+          "groupedAtlasCompleted": 1
+        }
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-source",
+        "state": "started",
+        "elapsedMs": 94961
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-source",
+        "state": "returned",
+        "phaseMs": 7826,
+        "elapsedMs": 102787,
+        "aborted": false,
+        "counts": {
+          "phase": "memory.fence-source",
+          "persistenceCalls": 2822,
+          "rootPersistenceCalls": 212,
+          "nestedPersistenceCalls": 2610,
+          "groupedEvidenceFences": 12,
+          "c08Reads": 186,
+          "caseReads": 6,
+          "caseFences": 7,
+          "evidenceContextReads": 2,
+          "groupedCaseContextReads": 2,
+          "atlasCanonicalReads": 1,
+          "atlasCanonicalCompleted": 1,
+          "groupedAtlasReads": 1,
+          "groupedAtlasCompleted": 1
+        }
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-capture",
+        "state": "started",
+        "elapsedMs": 102798
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-capture",
+        "state": "returned",
+        "phaseMs": 7993,
+        "elapsedMs": 110791,
+        "aborted": false,
+        "counts": {
+          "phase": "memory.fence-capture",
+          "persistenceCalls": 2876,
+          "rootPersistenceCalls": 266,
+          "nestedPersistenceCalls": 2610,
+          "groupedEvidenceFences": 12,
+          "c08Reads": 189,
+          "caseReads": 6,
+          "caseFences": 8,
+          "evidenceContextReads": 2,
+          "groupedCaseContextReads": 2,
+          "atlasCanonicalReads": 1,
+          "atlasCanonicalCompleted": 1,
+          "groupedAtlasReads": 1,
+          "groupedAtlasCompleted": 1
+        }
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-principal",
+        "state": "started",
+        "elapsedMs": 110803
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-principal",
+        "state": "returned",
+        "phaseMs": 6836,
+        "elapsedMs": 117638,
+        "aborted": false,
+        "counts": {
+          "phase": "memory.fence-principal",
+          "persistenceCalls": 2319,
+          "rootPersistenceCalls": 29,
+          "nestedPersistenceCalls": 2290,
+          "groupedEvidenceFences": 4,
+          "c08Reads": 147,
+          "caseReads": 6,
+          "caseFences": 7,
+          "evidenceContextReads": 2,
+          "groupedCaseContextReads": 2,
+          "atlasCanonicalReads": 1,
+          "atlasCanonicalCompleted": 1,
+          "groupedAtlasReads": 1,
+          "groupedAtlasCompleted": 1
+        }
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-clock",
+        "state": "started",
+        "elapsedMs": 117651
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-clock",
+        "state": "returned",
+        "phaseMs": 8328,
+        "elapsedMs": 125979,
+        "aborted": false,
+        "counts": {
+          "phase": "memory.fence-clock",
+          "persistenceCalls": 2875,
+          "rootPersistenceCalls": 265,
+          "nestedPersistenceCalls": 2610,
+          "groupedEvidenceFences": 12,
+          "c08Reads": 189,
+          "caseReads": 6,
+          "caseFences": 8,
+          "evidenceContextReads": 2,
+          "groupedCaseContextReads": 2,
+          "atlasCanonicalReads": 1,
+          "atlasCanonicalCompleted": 1,
+          "groupedAtlasReads": 1,
+          "groupedAtlasCompleted": 1
+        }
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-lease",
+        "state": "started",
+        "elapsedMs": 125986
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-lease",
+        "state": "returned",
+        "phaseMs": 6842,
+        "elapsedMs": 132827,
+        "aborted": false,
+        "counts": {
+          "phase": "memory.fence-lease",
+          "persistenceCalls": 2318,
+          "rootPersistenceCalls": 28,
+          "nestedPersistenceCalls": 2290,
+          "groupedEvidenceFences": 4,
+          "c08Reads": 147,
+          "caseReads": 6,
+          "caseFences": 7,
+          "evidenceContextReads": 2,
+          "groupedCaseContextReads": 2,
+          "atlasCanonicalReads": 1,
+          "atlasCanonicalCompleted": 1,
+          "groupedAtlasReads": 1,
+          "groupedAtlasCompleted": 1
+        }
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-final-request-headers",
+        "state": "started",
+        "elapsedMs": 132839
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.fence-final-request-headers",
+        "state": "returned",
+        "phaseMs": 12476,
+        "elapsedMs": 145315,
+        "aborted": false,
+        "counts": {
+          "phase": "memory.fence-final-request-headers",
+          "persistenceCalls": 4557,
+          "rootPersistenceCalls": 987,
+          "nestedPersistenceCalls": 3570,
+          "groupedEvidenceFences": 36,
+          "c08Reads": 320,
+          "caseReads": 10,
+          "caseFences": 15,
+          "evidenceContextReads": 2,
+          "groupedCaseContextReads": 2,
+          "atlasCanonicalReads": 1,
+          "atlasCanonicalCompleted": 1,
+          "groupedAtlasReads": 1,
+          "groupedAtlasCompleted": 1
+        }
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.same-request-new-proof",
+        "state": "started",
+        "elapsedMs": 145327
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "memory.same-request-new-proof",
+        "state": "returned",
+        "phaseMs": 12398,
+        "elapsedMs": 157725,
+        "aborted": false,
+        "counts": {
+          "phase": "memory.same-request-new-proof",
+          "persistenceCalls": 4557,
+          "rootPersistenceCalls": 987,
+          "nestedPersistenceCalls": 3570,
+          "groupedEvidenceFences": 36,
+          "c08Reads": 320,
+          "caseReads": 10,
+          "caseFences": 15,
+          "evidenceContextReads": 2,
+          "groupedCaseContextReads": 2,
+          "atlasCanonicalReads": 1,
+          "atlasCanonicalCompleted": 1,
+          "groupedAtlasReads": 1,
+          "groupedAtlasCompleted": 1
+        }
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "stale.preserve",
+        "state": "started",
+        "elapsedMs": 158282
+      },
+      {
+        "fixture": "historical-memory",
+        "phase": "stale.preserve",
+        "state": "returned",
+        "phaseMs": 837,
+        "elapsedMs": 159119,
+        "aborted": false,
+        "counts": {
+          "phase": "stale.preserve",
+          "persistenceCalls": 304,
+          "rootPersistenceCalls": 44,
+          "nestedPersistenceCalls": 260,
+          "groupedEvidenceFences": 6,
+          "c08Reads": 23,
+          "caseReads": 0,
+          "caseFences": 0,
+          "evidenceContextReads": 3,
+          "groupedCaseContextReads": 2,
+          "atlasCanonicalReads": 0,
+          "atlasCanonicalCompleted": 0,
+          "groupedAtlasReads": 0,
+          "groupedAtlasCompleted": 0
+        }
+      }
+    ],
+    "failure": {
+      "kind": "assertion",
+      "notCooperativeTimeout": true,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "line": 580,
+      "column": 103,
+      "expected": "denied",
+      "received": "ok",
+      "operation": "staleAccess.preflight(staleRecord, corrupted.value, fixtureOutput)",
+      "trigger": "real persisted original Atlas capture corrupted; preceding atlas.memory.recall assertion returned unavailable as required",
+      "logLines": [
+        1028,
+        1041
+      ],
+      "unreached": "final access.allowed=false prepare/verify/accept-output assertions",
+      "sourceAnalysis": "analysis-stale-commit.ts is unchanged W26/W27; the newly reached failure alone does not show W27 introduced it"
+    },
+    "derived": {
+      "positivePhaseMs": 80216,
+      "positivePhaseDifferenceFromA26Ms": 33406,
+      "rootCallsReducedPerPositivePhase": 1234,
+      "nestedCallsIncreasedPerPositivePhase": 200,
+      "scopeOnlySnapshotClonesPerPositivePhase": 23340,
+      "scopeCloneFormula": "3 * 7780 successful nested classifications; operation count, not timing"
+    },
+    "limitations": [
+      "Runs differ; wall-time difference is not an exclusive attribution or controlled benchmark",
+      "No scopeInspection/admission/callback timing added by diagnose-memory was present",
+      "Entire historical test remains failed; reaching later assertions does not qualify unexecuted tail",
+      "This existing owner run does not validate the new diagnostic observer or proposed patches"
+    ]
+  },
+  "excerpts": [
+    {
+      "path": "evidence/A26-memory-excerpt.log",
+      "decodedSourceLineRanges": [
+        [
+          994,
+          1050
+        ],
+        [
+          1063,
+          1071
+        ]
+      ],
+      "sha256": "7fe6fee40586c2170dd0fbe9d2b14d0e7cd829c928bc7c623f79d2c6b992c948",
+      "bytes": 11602,
+      "fullRawLog": false
+    },
+    {
+      "path": "evidence/A27-memory-excerpt.log",
+      "decodedSourceLineRanges": [
+        [
+          980,
+          1042
+        ],
+        [
+          1057,
+          1064
+        ]
+      ],
+      "sha256": "f98e45441faf56ac9e07a1928f44dfaed0866c2e890f63b7208eb2f01cef1ebf",
+      "bytes": 12855,
+      "fullRawLog": false
+    }
+  ]
+}

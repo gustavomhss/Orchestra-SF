@@ -301,8 +301,9 @@ function selectQuote(request: Request, ready: Ready): Request {
   const quote = namedQuote(request, String(ready.action.quoteId))
   if (!request.sourcing || !quote) return request
   request.sourcing.selectedId = quote.id
-  request.po = proposta(request, quote, ready)
-  push(request, ready, "Quotation selected \u2014 PO proposal generated", quote.supplier)
+  const retained = request.po?.sourceQuoteId === quote.id
+  if (!retained) request.po = proposta(request, quote, ready)
+  push(request, ready, retained ? "Quotation selected \u2014 existing PO proposal retained" : "Quotation selected \u2014 PO proposal generated", quote.supplier)
   return request
 }
 
@@ -334,7 +335,7 @@ function issue(request: Request, ready: Ready): Request {
   if (!request.po) return request
   request.po.issuedAt = ready.at
   request.status = "po_issued"
-  push(request, ready, "PO issued to supplier", request.po.number)
+  push(request, ready, "PO issued internally", request.po.number)
   return request
 }
 

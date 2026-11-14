@@ -1,0 +1,241 @@
+{
+  "schema": "reports-installed-typecheck-comparison-v1",
+  "method": "Read-only GitHub Actions job logs; remove only BOM, timestamps, Actions error marker and ANSI formatting; resolve diagnostic paths from modules/sucafina/Sucafinav1; compare complete messages and continuation blocks including exact locations as multisets and ordered lists. No local typecheck or tests executed.",
+  "baseline": {
+    "W": "dcde725380e76ff3180b1415e3c0838b9ca7df34",
+    "S": null,
+    "workflow": "astra-wp07-check.yml",
+    "runId": 43537045211,
+    "jobId": 132268446934,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537045211/job/132268446934",
+    "jobConclusion": "failure",
+    "log": {
+      "path": "../checks/logs/job-132268446934.txt",
+      "sha256": "8c44f72c9b840ea88d4f687490da087e8c7e21ec4bee83d277ba4fb1afb119be",
+      "bytes": 125755,
+      "lines": 862
+    },
+    "typecheck": {
+      "result": "failure",
+      "diagnostics": 137,
+      "files": 46,
+      "mission25DiagnosticCount": 0,
+      "externalDiagnosticCount": 137,
+      "normalizedDiagnosticBlocksSHA256": "9d3b2386ade78a32e57868dfd7702bcd831641d8cc44c97d15dd7bae2daff499"
+    }
+  },
+  "current": {
+    "W": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+    "tree": "fb3b512c69f249960bd768aef723425d5e2d6740",
+    "S": null,
+    "workflow": "astra-wp07-check.yml",
+    "runId": 43640600856,
+    "jobId": 132587110097,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43640600856/job/132587110097",
+    "jobConclusion": "failure",
+    "log": {
+      "path": "../checks/logs/job-132587110097.txt",
+      "sha256": "a92713a510d1114f83d00232d5f7d77b65809f9c975b6ba7f7e97c9671418e38",
+      "bytes": 133733,
+      "lines": 928
+    },
+    "typecheck": {
+      "result": "failure",
+      "diagnostics": 137,
+      "files": 46,
+      "mission25DiagnosticCount": 0,
+      "externalDiagnosticCount": 137,
+      "normalizedDiagnosticBlocksSHA256": "9d3b2386ade78a32e57868dfd7702bcd831641d8cc44c97d15dd7bae2daff499"
+    }
+  },
+  "comparison": {
+    "sameOrderedBlocks": true,
+    "sameMultisetBlocks": true,
+    "addedDiagnosticCount": 0,
+    "removedDiagnosticCount": 0,
+    "addedDiagnostics": [],
+    "removedDiagnostics": [],
+    "alsoMatchesW1NormalizedSHA256": true
+  },
+  "byPath": {
+    "apps/cli/src/sucafina-product/business-services.ts": 3,
+    "apps/cli/src/sucafina-product/host-context.ts": 7,
+    "apps/cli/src/sucafina-product/import-services.ts": 2,
+    "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts": 2,
+    "modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts": 1,
+    "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts": 1,
+    "modules/sucafina/Sucafinav1/product/collaboration/relations.ts": 3,
+    "modules/sucafina/Sucafinav1/product/collaboration/threads.ts": 4,
+    "modules/sucafina/Sucafinav1/product/contracts/host-context.ts": 1,
+    "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts": 9,
+    "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts": 2,
+    "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts": 8,
+    "modules/sucafina/Sucafinav1/product/decisions/proposals.ts": 1,
+    "modules/sucafina/Sucafinav1/product/documents/capabilities.ts": 1,
+    "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts": 4,
+    "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts": 17,
+    "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts": 4,
+    "modules/sucafina/Sucafinav1/product/interface/http.ts": 2,
+    "modules/sucafina/Sucafinav1/product/interface/import-http.ts": 1,
+    "modules/sucafina/Sucafinav1/product/planner/headcount.ts": 2,
+    "modules/sucafina/Sucafinav1/product/planner/monthly-host.ts": 1,
+    "modules/sucafina/Sucafinav1/product/planner/persistence.ts": 2,
+    "modules/sucafina/Sucafinav1/product/planner/prepared.ts": 1,
+    "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts": 1,
+    "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts": 1,
+    "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts": 2,
+    "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts": 2,
+    "modules/sucafina/Sucafinav1/product/portfolio/port.ts": 1,
+    "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts": 1,
+    "modules/sucafina/Sucafinav1/product/portfolio/verification.ts": 2,
+    "modules/sucafina/Sucafinav1/product/procurement/prepared.ts": 1,
+    "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts": 1,
+    "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts": 1,
+    "modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts": 1,
+    "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts": 2,
+    "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts": 9,
+    "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts": 2,
+    "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts": 4,
+    "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts": 1,
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts": 10,
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts": 2,
+    "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts": 1,
+    "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts": 3,
+    "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts": 1,
+    "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts": 3,
+    "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts": 6
+  },
+  "byCode": {
+    "TS18046": 2,
+    "TS18048": 1,
+    "TS2304": 2,
+    "TS2305": 1,
+    "TS2307": 3,
+    "TS2322": 35,
+    "TS2339": 30,
+    "TS2345": 7,
+    "TS2349": 3,
+    "TS2352": 1,
+    "TS2353": 1,
+    "TS2367": 9,
+    "TS2554": 2,
+    "TS2638": 5,
+    "TS2722": 2,
+    "TS2724": 1,
+    "TS2739": 1,
+    "TS2740": 2,
+    "TS2741": 1,
+    "TS7006": 28
+  },
+  "sourceGraph": {
+    "W": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+    "status": "PINNED_STATIC_IMPORT_PATH_VERIFIED_AND_HOSTED_TYPECHECK_EXECUTED",
+    "sources": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/browser.ts",
+        "gitBlobSHA1": "73f38f0040f053ff24ca17ca9bc53dde84bf0082",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/product/reviews/browser.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui-entry.ts",
+        "gitBlobSHA1": "2daeb5cd3399d5df020a8b3a67519e58987f2d1d",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/test/product/wp07/browser-ui-entry.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/tsconfig.json",
+        "gitBlobSHA1": "51895f3c254e6020d116ca73d4a1c690f7562169",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/tsconfig.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts",
+        "gitBlobSHA1": "5d75db3b4f22259b239a69c0e37e90f4ce1a851d",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+        "gitBlobSHA1": "4b45a5fe673c5653f0979ba1b1044da4907383e1",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+        "gitBlobSHA1": "8c5b413e25ed7c8100cf516f8538da1a22602df2",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/package.json",
+        "gitBlobSHA1": "18911fee9313f8fb57c1a972bc70eec2f7864c55",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/package.json"
+      }
+    ],
+    "chain": [
+      {
+        "from": "modules/sucafina/Sucafinav1/tsconfig.json",
+        "to": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui-entry.ts",
+        "evidence": "include: \"test/**/*.ts\""
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui-entry.ts",
+        "to": "modules/sucafina/Sucafinav1/product/reviews/browser.ts",
+        "evidence": "import { createReviewBrowser } from \"../../../product/reviews/browser.ts\""
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/reviews/browser.ts",
+        "to": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+        "evidence": "export { createReviewCollaborationView } from \"./collaboration-view.ts\""
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+        "to": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+        "evidence": "static import of createReviewDiscussionClient and discussion helpers from \"./collaboration-client.ts\""
+      }
+    ],
+    "moduleCommand": [
+      "bun typecheck",
+      "bun --cwd Sucafinav1 typecheck",
+      "tsgo --noEmit"
+    ],
+    "browserBuild": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts",
+      "entryNames": [
+        "browser",
+        "workspace",
+        "collaboration-client",
+        "collaboration-view"
+      ],
+      "executionStatus": "NOT_EXECUTED_BY_THIS_OWN_CHECK",
+      "meaning": "Existing dynamic Bun.build test now selects both new entries when the separate surgical test runs; this is not needed to establish the static import graph."
+    },
+    "inference": "The W1 reachability gap is closed at W2 by the direct export/import chain, not by interpreting zero diagnostics as proof of an omitted file. The hosted log confirms tsgo --noEmit ran on W2; no separate compiler --listFiles output is asserted.",
+    "remainingGraphLimit": "The app-shell reports.spec.ts/support E2E tsconfig inclusion patch remains a distinct shared proposal requiring session23 and its own hosted typecheck:e2e evidence."
+  },
+  "limits": [
+    "Both compared module typechecks failed; identical external diagnostics do not establish package typecheck PASS.",
+    "At W2 the static import/export chain makes collaboration-view.ts and collaboration-client.ts reachable by the actual executed module typecheck. No compiler listFiles trace or installed-browser execution is inferred from this graph inspection.",
+    "The separate app-shell E2E graph still requires the inert tsconfig include patch to session23 and a hosted typecheck:e2e execution.",
+    "This workflow is a direct-W own check, without a .ci-run snapshot S or nominal reports.spec.ts execution; it proves no installed journey.",
+    "The separate four-case browser-build test has not executed as part of this own check; only its exact selection was inspected.",
+    "Guard and export fixture generation results are separate from module typecheck; producing OOXML does not constitute visual rendering or native proof."
+  ],
+  "guards": {
+    "result": "pass",
+    "rules": 78,
+    "changedPaths": 665,
+    "gateFindings": 0,
+    "warnFindings": 12,
+    "errors": 0
+  },
+  "artifact": {
+    "id": 14130999623,
+    "zipSha256": "cda16a379cc247466af3bd657b42b9e6ce1a680c45b0c2b0166c29638893e876",
+    "bytes": 87245,
+    "source": "Actual Actions upload-artifact lines in job132587110097 log"
+  },
+  "previousReceipt": {
+    "path": "typecheck-comparison.json",
+    "W": "567727670b4039c316a12718c84b43b57f4fa19d",
+    "sha256": "ddb304ce1752321556752e531fc361fc57389db1bc1fccaa9f8a2464f99a4bce",
+    "preservedUnchanged": true,
+    "sourceAuditSHA256": "265ef4eac401d97636e55a1940e9c119be316db8836d48f3f1df76a7e18f9474",
+    "packaging": "Only local log paths rewritten to relative receipt links; original audit digest retained separately."
+  }
+}

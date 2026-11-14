@@ -579,3 +579,11 @@ test("invalid import batch writes no audit and only first homonym requires a ver
   expect(state.audit.map((entry) => entry.record)).toEqual(["projects:1"])
   expect((state.data.projects as Record<string, unknown>[])[0]?.id).toBe(1)
 })
+
+test("review signal destinations anchor visible source rows", () => {
+  const state = snapshot({ risks: [{ id: "r-1", name: "Risk", status: "open", impact: 4, probability: 4 }], contracts: [{ id: "c-1", vendor: "Vendor", renewal: "2026-12-01" }] })
+  const view = domain.view(state, admin, environment)
+  const context = { actor: admin, year: 2026, month: 11, at: environment.at, versions: view.versions }
+  expect(render("IT Risks", view.data, context)).toContain('id="record-r-1"')
+  expect(render("Vendor Contracts", view.data, context)).toContain('id="record-c-1"')
+})

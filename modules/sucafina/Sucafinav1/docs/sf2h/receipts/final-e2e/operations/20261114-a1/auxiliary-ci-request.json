@@ -1,0 +1,12 @@
+{
+  "package": "app",
+  "packageSelector": "packages/app",
+  "directory": "packages/app-shell",
+  "runner": "bun",
+  "args": [
+    "./e2e/sucafina/operations-support/selection.check.ts"
+  ],
+  "env": {
+    "ORCHESTRA_CHANNEL": "prod"
+  }
+}

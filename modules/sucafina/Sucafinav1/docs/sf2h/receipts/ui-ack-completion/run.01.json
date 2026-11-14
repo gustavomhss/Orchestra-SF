@@ -1,0 +1,122 @@
+{
+  "mission": "ui-recipient-ack",
+  "attempt": 1,
+  "state": "COMPLETED_FAILURE",
+  "branch": "ui-work",
+  "pull_request": 47,
+  "W": {
+    "sha": "7c9bbd966483b94d21a4c30961a8174be7ed6804",
+    "tree": "6c55ee7399780575a61af242e79676a472d038af",
+    "parent": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244"
+  },
+  "S": {
+    "sha": "5ef3284a31973be8e3c14c8db23887574754a657",
+    "tree": "00a2da15699e759733003ef9c788da43acf41c6e",
+    "parent": "7c9bbd966483b94d21a4c30961a8174be7ed6804",
+    "delta": [
+      ".ci-run.json"
+    ],
+    "product_test_config_fixture_blobs_identical_to_W": true
+  },
+  "request": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/ui-ack-completion/ci-request.01.json",
+    "blob": "9054309f4fff75b66ae2cb6923476c8025faeb9d",
+    "sha256": "b804a7fadd46f2577d0b91bfc57277798a352721c56a45b1afb669b8cd01eb9d",
+    "validated_by": "existing workflow Read request step: success"
+  },
+  "run": {
+    "id": 43632801654,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632801654",
+    "head_sha": "5ef3284a31973be8e3c14c8db23887574754a657",
+    "branch": "ci-run-linux-ui-ack-7c9bbd96-b804a7fa-01",
+    "status": "completed",
+    "conclusion": "failure",
+    "job_id": 132562905431,
+    "job_name": "test (ubuntu-24.04)",
+    "cleanup_job": 132563753109,
+    "cleanup": "success"
+  },
+  "selection": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/ui-ack-completion/ordinary-thread.test.ts",
+      "./Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+      "./Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+      "./Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+      "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "result": {
+    "pass": 3,
+    "fail": 12,
+    "assertions": 30,
+    "files": 7,
+    "seconds": 61.97,
+    "functional_ordinary": "PASS: exact C08 snapshot, lost delivery, equal concurrent replies, retry and reload",
+    "functional_recipient": "NOT_EXERCISED: all 11 selected recipient tests failed in producer loader before functional assertions",
+    "fixture_failure": "Cannot find module '../../runtime/contract.ts' from temporary recipient-actions.js. Bun emitted the original relative external import specifier.",
+    "browser_startup": "PASS",
+    "browser_lifecycle": "PASS",
+    "launches": 1,
+    "acquisitions": 4,
+    "releases": 4,
+    "remaining_contexts": 0,
+    "driver_exit": 0,
+    "typecheck": {
+      "command": "bun typecheck",
+      "cwd": "modules/sucafina",
+      "exit_code": 2,
+      "diagnostics": 9,
+      "own_path_diagnostics": 0,
+      "foreign_paths": [
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts"
+      ]
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "exit_code": 0,
+      "rules": 78,
+      "changed_paths": 942,
+      "gate_findings": 0,
+      "warnings": 54,
+      "errors": 0
+    },
+    "omni": {
+      "positive_control": "pass",
+      "declared_test_files": [
+        "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts"
+      ],
+      "spawns": 4,
+      "delegated": 0
+    }
+  },
+  "logs": {
+    "source": "GitHub MCP decoded job log",
+    "job_id": 132562905431,
+    "utf8_bytes": 122761,
+    "sha256": "b385e554ea9915bc1da204b846e85f173fae7cd3d43e2622c0cec203289b1d39",
+    "raw_log_committed": false
+  },
+  "dedupe": {
+    "method": "GitHub MCP Actions runs plus exact technical branch lookup before creation",
+    "matched_prior_runs": 0,
+    "concurrent_mission_runs": 0
+  },
+  "consequence": "Fix only test-owned loader import relocation. Preserve this failed attempt. Revalidate 11 affected recipient cases and own static gate. Ordinary result is reusable only with identical consumer and ordinary test/fixture blobs.",
+  "limits": [
+    "No recipient functional PASS from this attempt.",
+    "Guards PASS does not promote the run or functional cases.",
+    "No local product tests; no epic/full suite; no foreign producer/host/route edits."
+  ]
+}

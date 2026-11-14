@@ -1,0 +1,81 @@
+{
+  "W": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+  "status": "PINNED_STATIC_IMPORT_PATH_VERIFIED_AND_HOSTED_TYPECHECK_EXECUTED",
+  "sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/browser.ts",
+      "gitBlobSHA1": "73f38f0040f053ff24ca17ca9bc53dde84bf0082",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/product/reviews/browser.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui-entry.ts",
+      "gitBlobSHA1": "2daeb5cd3399d5df020a8b3a67519e58987f2d1d",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/test/product/wp07/browser-ui-entry.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/tsconfig.json",
+      "gitBlobSHA1": "51895f3c254e6020d116ca73d4a1c690f7562169",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/tsconfig.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts",
+      "gitBlobSHA1": "5d75db3b4f22259b239a69c0e37e90f4ce1a851d",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+      "gitBlobSHA1": "4b45a5fe673c5653f0979ba1b1044da4907383e1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+      "gitBlobSHA1": "8c5b413e25ed7c8100cf516f8538da1a22602df2",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/package.json",
+      "gitBlobSHA1": "18911fee9313f8fb57c1a972bc70eec2f7864c55",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/package.json"
+    }
+  ],
+  "chain": [
+    {
+      "from": "modules/sucafina/Sucafinav1/tsconfig.json",
+      "to": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui-entry.ts",
+      "evidence": "include: \"test/**/*.ts\""
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui-entry.ts",
+      "to": "modules/sucafina/Sucafinav1/product/reviews/browser.ts",
+      "evidence": "import { createReviewBrowser } from \"../../../product/reviews/browser.ts\""
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/reviews/browser.ts",
+      "to": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+      "evidence": "export { createReviewCollaborationView } from \"./collaboration-view.ts\""
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+      "to": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+      "evidence": "static import of createReviewDiscussionClient and discussion helpers from \"./collaboration-client.ts\""
+    }
+  ],
+  "moduleCommand": [
+    "bun typecheck",
+    "bun --cwd Sucafinav1 typecheck",
+    "tsgo --noEmit"
+  ],
+  "browserBuild": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts",
+    "entryNames": [
+      "browser",
+      "workspace",
+      "collaboration-client",
+      "collaboration-view"
+    ],
+    "executionStatus": "NOT_EXECUTED_BY_THIS_OWN_CHECK",
+    "meaning": "Existing dynamic Bun.build test now selects both new entries when the separate surgical test runs; this is not needed to establish the static import graph."
+  },
+  "inference": "The W1 reachability gap is closed at W2 by the direct export/import chain, not by interpreting zero diagnostics as proof of an omitted file. The hosted log confirms tsgo --noEmit ran on W2; no separate compiler --listFiles output is asserted.",
+  "remainingGraphLimit": "The app-shell reports.spec.ts/support E2E tsconfig inclusion patch remains a distinct shared proposal requiring session23 and its own hosted typecheck:e2e evidence."
+}

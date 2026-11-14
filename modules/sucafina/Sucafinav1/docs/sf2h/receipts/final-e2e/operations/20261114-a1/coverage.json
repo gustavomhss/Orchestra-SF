@@ -1,0 +1,1540 @@
+{
+  "schema": "sf2h.final-e2e.operations.coverage.v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp04",
+  "pr": 23,
+  "namespace": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/operations/20261114-a1/",
+  "date": "2026-11-14",
+  "status": "FUNCTIONAL_EXECUTION_NOT_RUN",
+  "W": "70255998e3310652c4b7fce33f498e592be0bda9",
+  "tree": "642e3662e01526823fe29652d05cd2e6d5a1f7e0",
+  "commit_binding": "BOUND_TO_PUBLISHED_W",
+  "reviewed_implementation_predecessor": {
+    "commit": "9b3edf3651f309ce9693d8593ac3c691e03ec1e4",
+    "tree": "316647481aef48776828438fa9451d82a645ad25",
+    "base": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+    "note": "Helpers revisados no conteúdo publicado; annotations OP-PROC-01 corrigidas serão vinculadas pelo coordenador ao novo W."
+  },
+  "accepted_candidate_C": null,
+  "candidate_approval": false,
+  "completed_criteria": [],
+  "interpretation": [
+    "Este mapa descreve assertions implementadas, textos literais de critérios e limites. Todas as cinco jornadas funcionais estão NOT_RUN.",
+    "PARTIAL_IMPLEMENTED_NOT_RUN significa correspondência de uma fatia de critério com o código; não significa aceite parcial executado ou conclusão do critério.",
+    "Limitações registram cobertura ausente, não removem requisitos aprovados.",
+    "Listagem nominal, transpile/import e revisão estática não executam os corpos dos testes nem demonstram efeitos do produto.",
+    "Nenhum estado da coleta multi-head é aprovação de candidato C."
+  ],
+  "selection": {
+    "id": "CI-UI-OPERATIONS",
+    "scope": "UI real das 28 capacidades, edição, import e colaboração",
+    "request": {
+      "package": "app",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "args": [
+        "e2e/sucafina/operations.spec.ts"
+      ]
+    },
+    "directory": "packages/app-shell",
+    "planned_files": [
+      "packages/app-shell/e2e/sucafina/operations.spec.ts"
+    ],
+    "required": true,
+    "test_file": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+    "describe": "CI-UI-OPERATIONS",
+    "functional_test_count": 5,
+    "retries": 0,
+    "nominal_functional_execution": "NOT_RUN",
+    "local_test_execution": false,
+    "auxiliary_listing": {
+      "run_id": 43633572790,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633572790",
+      "W": "70255998e3310652c4b7fce33f498e592be0bda9",
+      "S": "3e931409a87e88f73e6a631edfc45466d76b6656",
+      "status": "PASS_SCOPED",
+      "receipt": "selection-a2.json",
+      "scope": "One auxiliary Bun case executed; real production configuration listed exactly five cases and official validateSelection accepted that list. All five functional bodies have zero executions.",
+      "functional_evidence": false,
+      "final_W_validation": "VALIDATED_IN_ACTIONS"
+    },
+    "execution_rule": "Somente Actions, seleção nominal cirúrgica após montagem das dependências; nenhuma epic/full suite."
+  },
+  "normative_catalog": {
+    "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "canonical_campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "criteria_read": 301,
+    "counts_by_exact_prefix": {
+      "WP04": 111,
+      "WP06": 140,
+      "CAMP": 39,
+      "sf2h-integral-20261112": 11
+    },
+    "sources": [
+      "actor-S2-A",
+      "execution-common",
+      "WP06-pack",
+      "product-acceptance",
+      "resident-runtime",
+      "ci-recipe"
+    ],
+    "read_scope": "S2-A inteiro e execution COMMON; WP06 canonical_work_package/contratos/axiomas; anexos mandatórios aplicáveis. Nenhum outro actor pack foi necessário.",
+    "catalog_digest": {
+      "algorithm": "sha256",
+      "value": "1a41551cf9ec64cd1f5396d92f07e770a81510b8c016235a3f8075c6782cf514",
+      "serialization": "UTF-8 do objeto ID→texto, chaves em ordem lexicográfica, JSON compacto sem ASCII escaping e sem newline final."
+    },
+    "mapped_unique_criterion_count": 32,
+    "mapped_criterion_ids": [
+      "CAMP.CMP.20",
+      "CAMP.DOD.20",
+      "CAMP.INV.20",
+      "CAMP.SUC.20",
+      "WP04.CMP.02",
+      "WP04.T01.CMP.02",
+      "WP04.T01.INV.01",
+      "WP04.T03.CHK.01",
+      "WP04.T03.CHK.02",
+      "WP04.T03.CHK.03",
+      "WP04.T03.CMP.01",
+      "WP04.T03.INV.02",
+      "WP06.T01.INV.01",
+      "WP06.T01.QLT.01",
+      "WP06.T02.INV.01",
+      "WP06.T02.INV.02",
+      "WP06.T02.QLT.18",
+      "WP06.T03.CHK.04",
+      "WP06.T03.INV.01",
+      "WP06.T03.INV.03",
+      "WP06.T03.QLT.02",
+      "WP06.T03.SUC.02",
+      "WP06.T04.CHK.02",
+      "WP06.T04.INV.01",
+      "WP06.T04.QLT.01",
+      "WP06.T05.CHK.02",
+      "WP06.T05.CHK.19",
+      "WP06.T05.CMP.19",
+      "WP06.T05.INV.01",
+      "WP06.T05.QLT.18",
+      "WP06.T05.QLT.19",
+      "WP06.T05.SUC.19"
+    ],
+    "unmapped_criteria": "Permanecem no catálogo aprovado, sem alegação de execução/cobertura por este spec. Não são copiados integralmente para evitar duplicar 301 textos."
+  },
+  "shared_assertion_policy": {
+    "host": "Manifesto do host WP04 real existente, loopback HTTP, base paths /wp04/{first,second,viewer}, três identidades distintas e matrículas existentes. Ausência gera erro explícito; não inicia servidor substituto.",
+    "data_isolation": "Fixtures reais anteriores preservadas; títulos/nomes/IDs novos UUID, matrículas distintas por jornada e alterações restritas aos dados isolados.",
+    "locators": "Roles/names exatos e forms/rows por page/action/recordId; tabelas e linhas discriminadas por headers/células únicas; count1 quando necessário.",
+    "effects": "Estado, IDs, versões, corpos e resultados reais prevalecem sobre mera visibilidade ou status HTTP.",
+    "money": "Oráculos literais e exportação/projeção fornecida pelo domínio; nenhuma fórmula financeira paralela no teste.",
+    "timing": "Sem sleeps ou aumento de timeout; nenhuma repetição automática de mutação; retries0 nos cinco casos.",
+    "artifacts": "Os anexos terminais só serão gerados quando as respectivas jornadas realmente terminarem; este recibo não os apresenta como observados."
+  },
+  "tests": [
+    {
+      "journey": 1,
+      "test_id": "OP-PROC-01",
+      "title": "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+      "helper": "packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts",
+      "entrypoint": "procurementComparison",
+      "enrollment": [
+        "first/comparison"
+      ],
+      "execution": "NOT_RUN",
+      "functional_run": null,
+      "observed": null,
+      "required_dependencies": [
+        "OPERATIONS-HOST-SELECTION",
+        "PROCUREMENT-CURRENT-RUNTIME"
+      ],
+      "assertions": [
+        {
+          "id": "P1-A1",
+          "description": "Na Request de comparação emitida pelo manifesto real, localizar tabela única e exatamente três propostas; comparar todas as dez células de cada linha, incluindo valor original, valor base, FX, notas arredondadas e rank."
+        },
+        {
+          "id": "P1-A2",
+          "description": "A: 32400 USD, técnica 87.0, preço 93.3, comercial 89.3, geral 87.9, rank1. B: 28000 EUR, base30240 USD pelo snapshot1.08, técnica77.0, preço100.0, comercial97.0, geral85.0, rank2. C:29000 USD, não conforme e sem notas/rank disponíveis."
+        },
+        {
+          "id": "P1-A3",
+          "description": "Resumo e seleção mantêm A/Recorded technical preference, prêmio literal2160 USD (7.14%), estado Sourcing approval e valor32400 USD; Submit sourcing está desabilitado."
+        },
+        {
+          "id": "P1-A4",
+          "description": "Fila contém uma única linha pelo mesmo recordId e valor32400 USD; referência C02 UUIDv4, digest64hex e sourceVersion positivo; URL do drilldown conserva origin/path/request/q/hash exatos."
+        },
+        {
+          "id": "P1-A5",
+          "description": "Clicar no deep link abre exatamente details[id=recordId] e mantém32400 USD no resumo correspondente."
+        }
+      ],
+      "criteria": [
+        {
+          "criterion_id": "WP04.T03.CHK.01",
+          "approved_text": "Fixture: A USD 32.400, notas técnicas [5,4,4,4,4], comerciais manuais [4,4]; B EUR 28.000 a 1,08, notas [4,4,4,3,4] e [5,4]; C USD 29.000 não conforme. Esperar A 87,9333..., B 85, C fora do ranking, diferença A versus menor conforme USD 2.160/7,142857...%; a UI deve mostrar o arredondamento sem alterar a ordem.",
+          "source_id": "actor-S2-A",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Oracle literal A/B/C e arredondamento exibido, ordem, exclusão de C e prêmio do fixture real.",
+          "assertion_refs": [
+            "P1-A1",
+            "P1-A2",
+            "P1-A3"
+          ],
+          "remaining_scope": [
+            "Os scores individuais de entrada pertencem ao fixture existente; a jornada não os edita nem calcula a fórmula de ranking.",
+            "O fixture tem estimativa PR32400; não se afirma delta400 contra PR32000."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP04.T01.INV.01",
+          "approved_text": "Filas, totais e deep links compartilham o mesmo recorte autorizado de requests.",
+          "source_id": "actor-S2-A",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Identidade e valor da linha autorizada para o buyer permanecem os mesmos no drilldown aberto.",
+          "assertion_refs": [
+            "P1-A4",
+            "P1-A5"
+          ],
+          "remaining_scope": [
+            "Não compara requester e buyer nem todos os totais/pendências do conjunto autorizado."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP04.T01.CMP.02",
+          "approved_text": "Entregar referência estável de drilldown e contexto de versão para cada pedido visível.",
+          "source_id": "actor-S2-A",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Link do pedido observado preserva destino/identidade exatos e expõe sourceVersion positivo do produtor C02.",
+          "assertion_refs": [
+            "P1-A4",
+            "P1-A5"
+          ],
+          "remaining_scope": [
+            "Não enumera todos os pedidos/papéis; refId/digest de seleção podem mudar legitimamente em nova renderização.",
+            "sourceVersion C02 não é o CAS do registro e não prova escopo material C06."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        }
+      ],
+      "limitations": [
+        "Não exercita confirmação material C06, edição, revogação, paridade native/MCP, tempos humanos, holder ausente ou comparação requester/buyer."
+      ],
+      "terminal_attachment_if_executed": "operations-j04-comparison.json"
+    },
+    {
+      "journey": 2,
+      "test_id": "OP-PROC-02",
+      "title": "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+      "helper": "packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts",
+      "entrypoint": "sourcingSnapshot",
+      "enrollment": [
+        "first/settings"
+      ],
+      "execution": "NOT_RUN",
+      "functional_run": null,
+      "observed": null,
+      "required_dependencies": [
+        "OPERATIONS-HOST-SELECTION",
+        "PROCUREMENT-CURRENT-RUNTIME"
+      ],
+      "assertions": [
+        {
+          "id": "P2-A1",
+          "description": "Criar Request com título UUID por UI e observar seu ID/version1; submeter PR, aprovar, salvar e selecionar uma cotação EUR28000 do supplier real. Cada comando confere page/action/id/version e incremento exato do CAS."
+        },
+        {
+          "id": "P2-A2",
+          "description": "Futura PO recebe supplierId/currency/unitPrice exatos; Submit purchase order permanece desabilitado e uma única proposta gera mensagem explícita de comparação limitada."
+        },
+        {
+          "id": "P2-A3",
+          "description": "Submeter sourcing congela28000 EUR/base30240 USD/taxa1.08; guardar versão positiva do domínio e identidade/valor da fila C02."
+        },
+        {
+          "id": "P2-A4",
+          "description": "Salvar taxa EUR2 via Settings real, conferir versão e reload; sourcing pendente e versão continuam30240/1.08, enquanto PO não submetida mostra56000/2 e a diferença entre bases."
+        },
+        {
+          "id": "P2-A5",
+          "description": "Fila continua30240; reload conserva dinheiro e CAS do sourcing; sourceVersion C02 depois do reload é igual à leitura imediatamente anterior sem nova mutação."
+        },
+        {
+          "id": "P2-A6",
+          "description": "finally restaura somente o campo de taxa EUR observado originalmente, por comando autorizado, conferindo persistência após reload."
+        }
+      ],
+      "criteria": [
+        {
+          "criterion_id": "WP04.T03.CHK.02",
+          "approved_text": "Deixar uma nota obrigatória vazia ou manter somente uma proposta: a UI declara incompletude/comparação limitada e a submissão segue exatamente o validador vigente; não inventa nota zero nem nova exceção.",
+          "source_id": "actor-S2-A",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "A variante de somente uma proposta mantém comparação limitada e segue o validador real com justificativas e notas preenchidas.",
+          "assertion_refs": [
+            "P2-A1",
+            "P2-A2",
+            "P2-A3"
+          ],
+          "remaining_scope": [
+            "Não cobre nota obrigatória vazia; não cria nem testa uma nova exceção de aprovação."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP04.T03.CHK.03",
+          "approved_text": "Mudar a taxa configurada depois da submissão: a decisão pendente preserva o valor/câmbio congelado; remover FX de uma comparação sem snapshot produz indisponibilidade/pendência, nunca total zero.",
+          "source_id": "actor-S2-A",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Alterar FX configurado depois de Submit sourcing preserva taxa/valor do snapshot pendente; a futura PO usa sua base atual separada.",
+          "assertion_refs": [
+            "P2-A3",
+            "P2-A4",
+            "P2-A5"
+          ],
+          "remaining_scope": [
+            "A outra cláusula do critério, comparação sem FX, está parcialmente em OP-PROC-03; nenhum deles remove uma taxa previamente configurada."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP04.T03.INV.02",
+          "approved_text": "Ausência de taxa/nota/valor não vira zero, precisão inventada ou confirmação de gasto realizado.",
+          "source_id": "actor-S2-A",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "A PO é identificada como estimativa não submetida e a comparação limitada é explícita; o teste usa valores literais do produto.",
+          "assertion_refs": [
+            "P2-A2",
+            "P2-A4"
+          ],
+          "remaining_scope": [
+            "Não prova todas as ausências de taxa/nota/valor; não afirma gasto realizado, aprovação de sourcing ou PO emitida."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        }
+      ],
+      "limitations": [
+        "Não compara histórico/auditoria do sourcing após a edição de Settings; preservação aqui é de valor, estado visível e CAS.",
+        "Não confirma materialmente o escopo C06 nem resolve sua auditoria/cobrança canônica.",
+        "A alteração de Settings afeta dados da fixture isolada e é restaurada; não altera arquivo de fixture compartilhada."
+      ],
+      "terminal_attachment_if_executed": "operations-sourcing-frozen-fx.json"
+    },
+    {
+      "journey": 3,
+      "test_id": "OP-PROC-03",
+      "title": "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+      "helper": "packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts",
+      "entrypoint": "missingFxRefusal",
+      "enrollment": [
+        "first/validation"
+      ],
+      "execution": "NOT_RUN",
+      "functional_run": null,
+      "observed": null,
+      "required_dependencies": [
+        "OPERATIONS-HOST-SELECTION",
+        "PROCUREMENT-CURRENT-RUNTIME"
+      ],
+      "assertions": [
+        {
+          "id": "P3-A1",
+          "description": "Criar Request isolada, avançar ao sourcing e salvar cotaçãoJPY28000 com supplierId real, notas e justificativas preenchidas; JPY está ausente das taxas iniciais reais."
+        },
+        {
+          "id": "P3-A2",
+          "description": "Capturar quoteId do formulário e conferir que Select quote envia esse mesmo values.quoteId; tabela mostra28000 JPY, fx-missing e indisponibilidade das demais notas/rank, sem converter para zero."
+        },
+        {
+          "id": "P3-A3",
+          "description": "Submit sourcing uma vez retorna422 com a mensagem exata Quote 1: no FX rate defined for JPY (Settings → Currencies) e fieldError somente sourcing.quotes.0.currency; payload usa id/version observados."
+        },
+        {
+          "id": "P3-A4",
+          "description": "Erro é acessível junto ao campo, JPY permanece preenchido e CAS não muda; resumo não entra em Sourcing approval."
+        },
+        {
+          "id": "P3-A5",
+          "description": "Reabrir a Request mantém resumo e todas as células de histórico iguais, mesma versão, quoteId/supplierId/selected quote e valorJPY28000 com base/FX Unavailable; nenhum formulário approve existe."
+        },
+        {
+          "id": "P3-A6",
+          "description": "Fila C02 antes/depois identifica a mesma Request e expõe Unavailable; links/referência/digest/versão obedecem ao contrato público da coleção."
+        }
+      ],
+      "criteria": [
+        {
+          "criterion_id": "WP04.T03.CHK.03",
+          "approved_text": "Mudar a taxa configurada depois da submissão: a decisão pendente preserva o valor/câmbio congelado; remover FX de uma comparação sem snapshot produz indisponibilidade/pendência, nunca total zero.",
+          "source_id": "actor-S2-A",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Variante de comparação sem snapshot e sem taxa: JPY permanece indisponível e a submissão é recusada sem mudança de versão/histórico.",
+          "assertion_refs": [
+            "P3-A2",
+            "P3-A3",
+            "P3-A4",
+            "P3-A5"
+          ],
+          "remaining_scope": [
+            "Usa uma moeda já ausente nas configurações; não executa a operação literal de remover FX.",
+            "A cláusula de taxa modificada depois da submissão pertence a OP-PROC-02."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP04.T03.CMP.01",
+          "approved_text": "Cobrir moedas diferentes, snapshot, FX ausente, empate, proposta não conforme, menos propostas e notas incompletas.",
+          "source_id": "actor-S2-A",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Slice FX ausente com proposta selecionada e notas completas, resultado monetário indisponível e recusa exata.",
+          "assertion_refs": [
+            "P3-A1",
+            "P3-A2",
+            "P3-A3"
+          ],
+          "remaining_scope": [
+            "Empate, notas incompletas e matriz completa de moedas/propostas não estão nesta jornada."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP04.CMP.02",
+          "approved_text": "A cobertura monetária inclui moeda base, moeda estrangeira, FX ausente, mudança de taxa após submissão, proposta incompleta e divergência entre total informado e quantidade vezes preço.",
+          "source_id": "actor-S2-A",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Slice moeda estrangeira sem FX, conferindo identidade selecionada e ausência de efeito da tentativa recusada.",
+          "assertion_refs": [
+            "P3-A2",
+            "P3-A3",
+            "P3-A5",
+            "P3-A6"
+          ],
+          "remaining_scope": [
+            "Não cobre divergência total informado versus quantidade vezes preço nem fecha a matriz monetária inteira."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        }
+      ],
+      "limitations": [
+        "Não reenvia a mutação recusada; não aumenta timeout; não inventa taxa nem aplica fórmula no teste.",
+        "Não é confirmação C06 nem prova geral de autoridade/holder."
+      ],
+      "terminal_attachment_if_executed": "operations-missing-fx-refusal.json"
+    },
+    {
+      "journey": 4,
+      "test_id": "OP-IMPORT-01",
+      "title": "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+      "helper": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "entrypoint": "importJourney",
+      "enrollment": [
+        "first/journey",
+        "viewer/journey"
+      ],
+      "execution": "NOT_RUN",
+      "functional_run": null,
+      "observed": null,
+      "required_dependencies": [
+        "OPERATIONS-HOST-SELECTION",
+        "PLANNER-REAL-HOST",
+        "IMPORT-PRODUCT-COMPOSITION"
+      ],
+      "assertions": [
+        {
+          "id": "I-A1",
+          "description": "Criar e nomear versão Planner por UI; criar duas linhas UUID por comandos reais: Renewal Forecast Jan72000 e Unchanged518000; ler exportação XLSX do produto e CAS de ambas."
+        },
+        {
+          "id": "I-A2",
+          "description": "Rejeitar o schema fechado de import-preview com options.unknown por400/status invalid; selecionar destino único pelo nome observado e fornecer XLSX real com Line ID observado e Jan84000, sem newVersion/removeMissing."
+        },
+        {
+          "id": "I-A3",
+          "description": "UI executa import-admit→import-preview→import-detail. Conferir referência admitida no payload, SHA256 dos bytes, actor/surface/versionId, target igual à baseIdentity, um comando e engine planner-runtime-v1; manifesto preview sem recibo nem domainApplied."
+        },
+        {
+          "id": "I-A4",
+          "description": "Projeção tem before/after exatos por ID: Renewal72000→84000 e linha fixa518000→518000; diff aponta /versions/@id=<version>/lines/@id=<renewal>/f/0 e origem OPEX/F2/linha2/coluna6/Jan."
+        },
+        {
+          "id": "I-A5",
+          "description": "Antes de Apply, exportação completa e CAS são iguais aos anteriores; ignorar apenas timestamp Exported da aba Info, sem ocultar células financeiras."
+        },
+        {
+          "id": "I-A6",
+          "description": "Um clique Apply executa um route.fetch real com maxRetries0; capturar seu manifesto real e abortar somente a entrega da resposta ao browser. Não fabricar resposta e não rePOSTar a mutação."
+        },
+        {
+          "id": "I-A7",
+          "description": "Recuperação automática GET retorna exatamente o manifesto realmente confirmado, um recibo e mesmo detalhe; recibo/summary correlacionam receiptId/manifestId/idempotencyKey/commandDigest/targetIncarnation/principal/surface e outcome aplicado; changedFields é maior que zero."
+        },
+        {
+          "id": "I-A8",
+          "description": "Exportação após Apply preserva identidades e medidas, seis linhas das duas entidades, linha fixa e todos os outros registros/abas/células; só Renewal Forecast Jan muda84000 e resultado anual exportado correspondente84000. Seu CAS sobe uma vez, o CAS fixo não muda."
+        },
+        {
+          "id": "I-A9",
+          "description": "Refresh receipt e reload por importPreviewRef fazem GET e devolvem o mesmo objeto manifest/detail/receipt; Apply fica desabilitado; exatamente um POST import-apply; exportação e CAS seguem iguais ao confirmado."
+        },
+        {
+          "id": "I-A10",
+          "description": "Logout revoga a mesma credencial previamente válida; Refresh receipt retorna403 denied, limpa contexto/impacto/diffs/recibo e desabilita Apply; o viewer existente ainda exporta o mesmo OPEX persistido."
+        }
+      ],
+      "criteria": [
+        {
+          "criterion_id": "WP06.T01.INV.01",
+          "approved_text": "Ler um arquivo não grava domínio, configuração, anexos ou revisão; valores não são inferidos de nomes de abas desconhecidas.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Leitura do XLSX e preview deixam exportação e CAS do domínio intactos.",
+          "assertion_refs": [
+            "I-A1",
+            "I-A5"
+          ],
+          "remaining_scope": [
+            "Não compara configuração, anexos, sequências ou todos os namespaces privados."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T01.QLT.01",
+          "approved_text": "O resultado aponta a origem interna do valor ou da falha por aba/linha/campo sem exigir inspeção manual do arquivo inteiro.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Origem do delta verificada por worksheet, linha, coluna, endereço F2 e field Jan.",
+          "assertion_refs": [
+            "I-A4"
+          ],
+          "remaining_scope": [
+            "A origem é asserida no detalhe HTTP real; o teste não abre cada disclosure de diff na UI."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T02.INV.01",
+          "approved_text": "Simular e aplicar usam o mesmo comando e regras do domínio; não existe caminho financeiro separado dentro do WP06.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Prévia e Apply entram pela workbench/adapter real; identidade do comando/target e valores confirmados reconciliam, sem cálculo financeiro no helper.",
+          "assertion_refs": [
+            "I-A3",
+            "I-A4",
+            "I-A7",
+            "I-A8"
+          ],
+          "remaining_scope": [
+            "Não prova todos os adapters, regras/papéis ou paridade com outros entrypoints."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T02.INV.02",
+          "approved_text": "O snapshot original, sequências e auditoria permanecem intactos durante preview.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Exportação financeira e revisões de ambas as linhas permanecem iguais durante preview.",
+          "assertion_refs": [
+            "I-A5"
+          ],
+          "remaining_scope": [
+            "Não há leitura independente de sequências e auditoria completas."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T02.QLT.18",
+          "approved_text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Schema fechado rejeita options desconhecidas, e manifesto/detalhe expõem provenance e identidades verificáveis.",
+          "assertion_refs": [
+            "I-A2",
+            "I-A3",
+            "I-A4"
+          ],
+          "remaining_scope": [
+            "Não cobre schema inválido do workbook, erros de formato/limite, native/MCP ou paridade de concessões."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T03.CHK.04",
+          "approved_text": "Sem alteração relevante de contexto, os registros e deltas confirmados correspondem ao manifesto aprovado, respeitando a convenção C04 de IDs para inclusões.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Update de linha existente sem mudança relevante de contexto produz exatamente o Forecast revisado e preserva a outra identidade.",
+          "assertion_refs": [
+            "I-A3",
+            "I-A4",
+            "I-A7",
+            "I-A8"
+          ],
+          "remaining_scope": [
+            "Não cobre IDs de inclusões, remoções ou alterações concorrentes."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T03.INV.01",
+          "approved_text": "Nenhum preview é aplicado implicitamente e nenhuma recusa é convertida em sucesso parcial.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Preview permanece sem efeito; uma única ação humana Apply precede o efeito confirmado.",
+          "assertion_refs": [
+            "I-A5",
+            "I-A6",
+            "I-A8"
+          ],
+          "remaining_scope": [
+            "Não testa recusa de Apply nem atomicidade em falha de validação."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T03.INV.03",
+          "approved_text": "Recibo descreve resultado confirmado e preserva os campos restritos, inclusive quando a aplicação falha.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Recibo real confirmado é reconciliado com comando, ator, target, IDs e efeito persistido.",
+          "assertion_refs": [
+            "I-A7",
+            "I-A8",
+            "I-A9"
+          ],
+          "remaining_scope": [
+            "Não verifica campos restritos nem recibo de falha."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T03.QLT.02",
+          "approved_text": "Contexto e estado do recibo são inequívocos; números previstos e aplicados nunca aparecem com o mesmo rótulo.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Estados preview/applied, texto de recuperação e receiptId/manifestId/actor/version ficam identificáveis; UI remove conteúdo após revogação.",
+          "assertion_refs": [
+            "I-A3",
+            "I-A7",
+            "I-A9",
+            "I-A10"
+          ],
+          "remaining_scope": [
+            "Não cobre os estados unchanged/rejected nem todos os rótulos de impacto."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T03.SUC.02",
+          "approved_text": "Após sucesso, o usuário reconcilia o recibo com os valores exibidos pelo domínio; após falha, não encontra efeitos parciais ocultos.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Após sucesso, exportação real e CAS reconciliam com os valores e recibo confirmados.",
+          "assertion_refs": [
+            "I-A7",
+            "I-A8",
+            "I-A9"
+          ],
+          "remaining_scope": [
+            "Não exercita falha de Apply com procura por efeitos parciais."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T04.CHK.02",
+          "approved_text": "Alterar somente um Forecast mensal no arquivo modifica apenas os campos autorizados correspondentes; a contribuição já incluída é substituída e não duplicada.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Um Forecast mensal de ID existente é substituído72000→84000; outras células/identidades e a linha518000 permanecem, sem duplicação após recuperação por leitura.",
+          "assertion_refs": [
+            "I-A4",
+            "I-A8",
+            "I-A9"
+          ],
+          "remaining_scope": [
+            "O workbook de entrada é montado com headers reais e ID observado; não é reimportação integral do arquivo exportado.",
+            "Nenhum outlook total590000→602000 ou delta12000 é asserido pelo helper."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T04.INV.01",
+          "approved_text": "Nenhum roundtrip cria despesa, identidade, permissão ou referência privada apenas por exportar/importar.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Contagem e identidades das linhas não aumentam; recuperação do efeito confirmado permanece somente leitura.",
+          "assertion_refs": [
+            "I-A8",
+            "I-A9"
+          ],
+          "remaining_scope": [
+            "Não cobre roundtrip sem edição, injeção de autoridade, referências privadas ou todos os formatos."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T04.QLT.01",
+          "approved_text": "Cada prova demonstra uma diferença que detectaria uma regressão concreta, como zero virando vazio, forecast duplicado ou posição indevidamente removida.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Oráculo discrimina Forecast duplicado, linha removida/alterada e mais de um incremento de CAS ou Apply.",
+          "assertion_refs": [
+            "I-A4",
+            "I-A5",
+            "I-A8",
+            "I-A9"
+          ],
+          "remaining_scope": [
+            "Zero/vazio, posição/roster, salário e demais regressões de formato permanecem fora deste caso."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        }
+      ],
+      "contract_slices": [
+        {
+          "id": "C04",
+          "slice": "admissão, manifesto, preview, Apply explícito e recibo real da edição existente",
+          "not_covered": "cancelamento, reprévia, inclusões/remoções e matriz completa de formatos"
+        },
+        {
+          "id": "C03",
+          "slice": "perda somente da entrega após commit; reconciliação autorizada GET com um efeito e um POST",
+          "not_covered": "replay de POST idempotente, mesma chave/digest divergente e conflitos"
+        },
+        {
+          "id": "C12",
+          "slice": "recibo confirmado recuperado sem repetir mutação",
+          "not_covered": "caso central, restart do processo e atomicidade entre domínios"
+        }
+      ],
+      "limitations": [
+        "Recuperação GET-only não é execução de retry por POST; não há cancel, stale/conflict/re-preview ou teste de rollback por segunda linha inválida.",
+        "Não há newVersion, removeMissing, JSON, XLS legado, All Members/roster, permissões por owner ou salário.",
+        "changedFields é positivo; o número exato de campos normalizados pelo domínio não é asserido.",
+        "Nenhuma prova de restart/PR58, native Session, skill real ou diagnóstico IA."
+      ],
+      "terminal_attachment_if_executed": "operations-import-real-receipt.json"
+    },
+    {
+      "journey": 5,
+      "test_id": "OP-DOC-01",
+      "title": "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+      "helper": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "entrypoint": "documentJourney",
+      "enrollment": [
+        "first/suppliers"
+      ],
+      "execution": "NOT_RUN",
+      "functional_run": null,
+      "observed": null,
+      "required_dependencies": [
+        "OPERATIONS-HOST-SELECTION",
+        "PROCUREMENT-CURRENT-RUNTIME",
+        "DOCUMENT-PRODUCT-COMPOSITION",
+        "PRIVATE-ASSETS-REAL"
+      ],
+      "assertions": [
+        {
+          "id": "D-A1",
+          "description": "Criar supplier próprio com nome/taxId UUID; observar seu ID e versão; upload UI de bytes UTF8 Price: 42 mais referência isolada; download assinado retorna os bytes exatos e versão do supplier incrementa uma vez."
+        },
+        {
+          "id": "D-A2",
+          "description": "Descobrir documento único por filename/surface, admitir selectionRef emitida e obter documentRef; listas iniciais schemas/candidates vazias; schema tipo currency recebe400 needs-input e listas continuam vazias."
+        },
+        {
+          "id": "D-A3",
+          "description": "Schema humano UI Price:number/USD gera schema_<40hex>, versão1 e ref schema:<id>:1; extract envia documentRef e fieldSchemaRef exatos."
+        },
+        {
+          "id": "D-A4",
+          "description": "Candidato único extracted Price42 USD conserva fileRef/documentId, revision/candidate.version, candidate.id/refId/fieldCandidateId, SHA256 do blob, segmentoUTF16[7,9] e SHA256 do trecho42; confirmationVersion ausente."
+        },
+        {
+          "id": "D-A5",
+          "description": "Presentation autorizado identifica filename/location/trecho; card mostra Price: 42 USD e blockquote42, sem link de cenário antes da confirmação."
+        },
+        {
+          "id": "D-A6",
+          "description": "Confirm this field envia candidato exato; retorno altera somente status confirmado e refDigest/confirmationVersion1, preservando origem; lists persistem schema/candidato únicos. Link de cenário carrega JSON da mesma ref confirmada."
+        },
+        {
+          "id": "D-A7",
+          "description": "Segunda página abre e recarrega workbench; descoberta e GETschemas/candidates conservam identidade confirmada. A primeira página mantém o card visível. Contador de requests de browsercontext registra exatamente um admit/schema/extract/confirm de UI."
+        },
+        {
+          "id": "D-A8",
+          "description": "Antes de remover fonte, document-open da ref confirmada retorna mesmo filename/location/trecho e mesmo assetId; supplier continua na versão pós-upload, sem escrita de domínio por schema/extract/confirm."
+        },
+        {
+          "id": "D-A9",
+          "description": "Deletar supplier próprio pelo ID/CAS observado remove supplier e link; download antigo403 Access denied; document-open da ref antiga409 stale sem value. Refresh sources elimina opção/card/link de cenário e desabilita Open document; nenhum novo POST documental."
+        }
+      ],
+      "criteria": [
+        {
+          "criterion_id": "WP06.T05.CHK.02",
+          "approved_text": "Campo confirmado mantém trecho/arquivo/versão; documento atualizado torna candidato antigo identificável.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Confirmação mantém arquivo/trecho/versão/identidade; ref antiga é explicitamente stale após remoção da fonte.",
+          "assertion_refs": [
+            "D-A4",
+            "D-A5",
+            "D-A6",
+            "D-A8",
+            "D-A9"
+          ],
+          "remaining_scope": [
+            "Não atualiza/reprocessa documento nem troca sua revisão; remoção não equivale ao caso de update."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T05.CHK.19",
+          "approved_text": "Documento autorizado é extraído e consultado pelos exports reais RAG Studio, citationProof/trecho conferem com revisão/offsets; DOCX não é lido como UTF-8 bruto e trocar SHA-256 por BLAKE3 não passa a validação.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Texto autorizado é extraído e aberto via serviços reais; bytes/digests/offsets/revisão e trecho conferem. Inspeção de source confirma consumo RAG Studio/citationProof.",
+          "assertion_refs": [
+            "D-A1",
+            "D-A4",
+            "D-A5",
+            "D-A8"
+          ],
+          "remaining_scope": [
+            "Não testa DOCX, substituição SHA256/BLAKE3 ou chamada direta dos exports RAG.",
+            "A inspeção da cadeia RAG não é resultado de execução do navegador."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T05.INV.01",
+          "approved_text": "Documento externo é evidência não confiável; instrução embutida não muda ferramentas, acesso ou autoridade, e extração não vira fato confirmado automaticamente.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Candidato permanece extracted sem confirmationVersion ou uso de cenário até ação humana explícita.",
+          "assertion_refs": [
+            "D-A4",
+            "D-A5",
+            "D-A6"
+          ],
+          "remaining_scope": [
+            "Não inclui instrução maliciosa no documento nem observa ausência de chamadas de ferramenta após injeção."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T05.QLT.18",
+          "approved_text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Schema humano fechado recusa tipo inválido sem criar candidato/schema e aceita Price:number/USD com origem identificada.",
+          "assertion_refs": [
+            "D-A2",
+            "D-A3",
+            "D-A4"
+          ],
+          "remaining_scope": [
+            "Não compara UI/native/MCP nem todos os negativos de autorização."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T05.QLT.19",
+          "approved_text": "Revisão, source hash, unidade de offset e estado candidato/confirmado tornam a evidência recuperável.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Revisão, hash do blob/trecho, offsetsUTF16 e estados extracted/confirmed persistem em GETs após reload.",
+          "assertion_refs": [
+            "D-A4",
+            "D-A6",
+            "D-A7"
+          ],
+          "remaining_scope": [
+            "Sem restart do host; não verifica algoritmos adversariais ou todas as revisões concorrentes."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T05.CMP.19",
+          "approved_text": "Cobrir PDF digital, DOCX, texto, sem camada textual, fonte revogada, revisão trocada, busca lexical e digests diferentes.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Fatias texto UTF8 e revogação por remoção da fonte com referência antiga recusada e UI limpa.",
+          "assertion_refs": [
+            "D-A1",
+            "D-A5",
+            "D-A9"
+          ],
+          "remaining_scope": [
+            "PDF digital, DOCX, texto ausente, revisão trocada, busca lexical e digests diferentes não são exercitados."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        },
+        {
+          "criterion_id": "WP06.T05.SUC.19",
+          "approved_text": "Usuário abre o trecho que sustentou a extração e fonte alterada não se passa pela versão confirmada.",
+          "source_id": "WP06-pack",
+          "coverage": "PARTIAL_IMPLEMENTED_NOT_RUN",
+          "implemented_slice": "Usuário vê o trecho de origem do valor e o consumer documental recusa a fonte removida em vez de exibir a referência como fresca.",
+          "assertion_refs": [
+            "D-A5",
+            "D-A8",
+            "D-A9"
+          ],
+          "remaining_scope": [
+            "Não é prova de documento atualizado/revisão trocada nem de consumo pelo WP09."
+          ],
+          "execution": "NOT_RUN",
+          "criterion_closed": false
+        }
+      ],
+      "limitations": [
+        "O ledger documental e a workbench são os consumidores deste caso; o link de cenário é conferido, mas não é aberto/aplicado.",
+        "WP06.T05.CHK.20 e WP09.T04 não são fechados; nenhum dossiê real recebe a referência neste teste.",
+        "Não há PDF/DOCX/OCR, rePOST de confirmação, perda de resposta de confirmação, restart, busca lexical ou IA/native Session.",
+        "O contador mede os quatro POSTs emitidos pela UI; o probe inválido document-schema usa APIRequestContext e é uma quinta chamada explícita separada, recusada."
+      ],
+      "terminal_attachment_if_executed": "operations-document-real-reference.json"
+    }
+  ],
+  "blocked_journey": {
+    "journey": 6,
+    "journey_id": "OP-C06-DEPENDENCY",
+    "test_id": null,
+    "title": "Procurement C06 material scope: confirmação, reuso, alteração irrelevante/material e revogação",
+    "implementation": "NOT_IMPLEMENTED",
+    "execution": "NOT_RUN",
+    "status": "BLOCKED_DEPENDENCY",
+    "fake_or_skipped_test_created": false,
+    "contract": {
+      "id": "C06",
+      "name": "Colaboração e ação canônica",
+      "source_id": "actor-S2-A",
+      "approved_proof": "E09/E13 executam CONFIRM-SCOPE: janeiro confirmado em v7; fevereiro isolado em v8 preserva valid e zero nova cobrança; janeiro ou dependência pertinente alterados tornam stale e uma pendência; concorrência material recusa; revogação impede uso e conteúdo restrito; substituição de encarnação não herda confirmação. AuditRef mantém a versão v7 e autoria em todos os casos."
+    },
+    "criteria": [
+      {
+        "criterion_id": "CAMP.DOD.20",
+        "approved_text": "C06 resolve confirmação por escopo e C10 resolve cobertura de custos; produtores e consumidores reais demonstram as contraprovas CONFIRM-SCOPE e AI-RENEWAL-OMITTED-CATEGORY.",
+        "source_id": "execution-common",
+        "coverage": "BLOCKED_DEPENDENCY",
+        "implemented_slice": null,
+        "required_slice": "Contraprova CONFIRM-SCOPE de Procurement com produtores e consumidores reais; sem fechar C10/AI-RENEWAL.",
+        "execution": "NOT_RUN",
+        "criterion_closed": false
+      },
+      {
+        "criterion_id": "CAMP.INV.20",
+        "approved_text": "Versão observada não equivale a validade global; soma correta não equivale a custo completo. Nova categoria relevante, revogação e substituição preservam auditoria e exigem estado correto.",
+        "source_id": "execution-common",
+        "coverage": "BLOCKED_DEPENDENCY",
+        "implemented_slice": null,
+        "required_slice": "Auditoria imutável e validade por fingerprint/encarnação após alteração, revogação e substituição.",
+        "execution": "NOT_RUN",
+        "criterion_closed": false
+      },
+      {
+        "criterion_id": "CAMP.CMP.20",
+        "approved_text": "Cobrir material/irrelevante/revogado/substituído, categoria incluída/inaplicável/pendente/omitida/zero e consumo WP06→WP09 da extração obrigatória.",
+        "source_id": "execution-common",
+        "coverage": "BLOCKED_DEPENDENCY",
+        "implemented_slice": null,
+        "required_slice": "Variantes material, irrelevante, revogada e substituída, sem equipará-las à cobertura de custos ou WP09.",
+        "execution": "NOT_RUN",
+        "criterion_closed": false
+      },
+      {
+        "criterion_id": "CAMP.SUC.20",
+        "approved_text": "A pessoa evita cobrança irrelevante, identifica a informação que condiciona a comparação e reavalia custo posterior sem perder a escolha original.",
+        "source_id": "execution-common",
+        "coverage": "BLOCKED_DEPENDENCY",
+        "implemented_slice": null,
+        "required_slice": "Reuso de confirmação válida sem cobrança irrelevante e reavaliação material sem perda da escolha/auditoria.",
+        "execution": "NOT_RUN",
+        "criterion_closed": false
+      }
+    ],
+    "blockers": [
+      {
+        "id": "C06-DEP-TRANSPORT",
+        "status": "BLOCKED_DEPENDENCY",
+        "description": "PR23 composes Procurement observer and collaboration domain host but does not mount collaboration HTTP in the application productHttp chain."
+      },
+      {
+        "id": "C06-DEP-INTEGRATION",
+        "status": "BLOCKED_DEPENDENCY",
+        "description": "Inspected PR41/PR47 contain the collaboration HTTP adapter source but their real CLI host-context/business-services do not compose or mount it. PR41 productHttp is documentHttp + importHttp; PR47 is dashboardHttp + documentHttp + importHttp. These branch snapshots do not independently offer the adapter as an integrated browser route."
+      },
+      {
+        "id": "C06-DEP-SELECTOR",
+        "status": "BLOCKED_DEPENDENCY",
+        "description": "The authenticated producer createProcurementConfirmationObserver.issue supplies the material selector and sf-procurement-c06 evidence/incarnation. No exposed adapter route inspected issues this selection. confirmation-prepare requires an already issued valid scope; ordinary C02 evidence cannot replace it."
+      },
+      {
+        "id": "C06-DEP-CONTROL",
+        "status": "BLOCKED_DEPENDENCY",
+        "description": "All 22 product/ui files plus src/procurement-screen.ts and src/screen-shell.ts at PR47 were inspected for material-confirmation controls/calls. No material Procurement confirmation control found. work-collaboration.ts confirms a selected conversation answer and attaches it to a decision; work-review-context.ts renders metadata only."
+      }
+    ],
+    "required_dependency": "A concrete integrated producer selector, real host mounting and an actual user control (or equivalent already offered authenticated application flow) for Procurement C06 scope; exact audit/effect reads must be available through the real host/fixture contract.",
+    "why_queue_C02_cannot_supply_C06": [
+      "A coleção C02 em queueIdentity emite ref UUID; seu valor/digest/sourceVersion e deep link não são um ConfirmationScope.",
+      "O produtor C06 exige selector procurement-confirmation-v1, scopeDefinitionVersion procurement-c06-v1 e referência sf-procurement-c06 com encarnação registrada para os campos/período materiais.",
+      "A referência individual C02 procurement-record-v1/sf-procurement e campos como ageDays/sourcing não podem ser promovidos ao selector C06 por troca de prefixo, recorte de campos ou cópia de digest.",
+      "Prepare requer escopo emitido pelo produtor e cria uma observação privada verificada; confirmar exige essa observação, fingerprint e CAS do namespace de confirmações.",
+      "Confirmar uma resposta em work-collaboration não confirma o escopo material de uma Request de Procurement."
+    ],
+    "required_future_assertions": [
+      "Use a real app producer selector to select one isolated Procurement request and supported material fields. Obtain issued scope/evidence under actual user authority.",
+      "Prepare through mounted collaboration adapter; assert request identity, source incarnation, period, selected material values and producer fingerprint. Read storage version; confirm once through actual offered user control; assert exact confirmation/audit identity.",
+      "Perform a real irrelevant domain edit, reread projection: valid unchanged-scope, original observedSourceVersion/audit unchanged, no extra canonical work.",
+      "Perform a real material edit, reread projection: stale material-change or dependency-change with exact new evaluatedSourceVersion; exactly one canonical work item and stable identity across repeated reads.",
+      "Revoke actual record access, then evaluate again: denial or unavailable per admission layer; no values, scope fingerprint, stale actionable links or new unauthorized work. Do not assert a single global HTTP code when the domain and host layers legitimately differ."
+    ],
+    "limitations": [
+      "Nenhum domínio, config, host ou fixture compartilhada foi editado para suprir essa dependência.",
+      "Existência do adapter fonte em PR41 não comprova montagem real em PR23/PR41/PR47.",
+      "Nenhum resultado da fila C02, comparação monetária, documento confirmado ou recibo de importação é atribuído a C06."
+    ]
+  },
+  "dependencies": [
+    {
+      "id": "OPERATIONS-HOST-SELECTION",
+      "status": "BLOCKED_DEPENDENCY",
+      "required": "Config de produção real deve montar o host existente para operations.spec.ts e disponibilizar o manifesto existente. O matcher observado só monta wp04/procurement.spec.ts.",
+      "source_ids": [
+        "production-config",
+        "existing-host"
+      ]
+    },
+    {
+      "id": "PROCUREMENT-CURRENT-RUNTIME",
+      "status": "BLOCKED_DEPENDENCY",
+      "required": "Integrar no candidato real o runtime monetário/UI observado no PR34, inclusive data-request-money. O baseline de PR23 não possui esse hook; helper não modifica produto.",
+      "source_ids": [
+        "product-runtime-procurement"
+      ]
+    },
+    {
+      "id": "PLANNER-REAL-HOST",
+      "status": "BLOCKED_DEPENDENCY",
+      "required": "Montar PlannerModule, exportação XLSX e comandos reais sobre a persistência existente, com as autoridades first/admin e viewer reais; o host observado compõe somente Procurement.",
+      "source_ids": [
+        "existing-host",
+        "product-runtime-planner",
+        "product-runtime-workbooks"
+      ]
+    },
+    {
+      "id": "IMPORT-PRODUCT-COMPOSITION",
+      "status": "BLOCKED_DEPENDENCY",
+      "required": "Montar import workbench/HTTP/services reais, concessões sf_import_preview/imports.admit/imports.apply e C08/Apply persistido no mesmo host. Workbenches estão ausentes do baseline.",
+      "source_ids": [
+        "product-product-interface-import-http",
+        "product-product-imports-workbench-script",
+        "product-product-imports-store"
+      ]
+    },
+    {
+      "id": "DOCUMENT-PRODUCT-COMPOSITION",
+      "status": "BLOCKED_DEPENDENCY",
+      "required": "Montar document HTTP/services/workbench, schema, extração, RAG e reader reais, com concessões sf_document_extract/sf_evidence_get/documents.schema/documents.confirm.",
+      "source_ids": [
+        "product-product-interface-document-http",
+        "product-product-documents-workbench",
+        "product-product-documents-capabilities",
+        "product-document-resolver"
+      ]
+    },
+    {
+      "id": "PRIVATE-ASSETS-REAL",
+      "status": "BLOCKED_DEPENDENCY",
+      "required": "application.assets e AssetPersistence reais, upload/scanner/signing configurados pelo owner; download privado e revogação compartilham a persistência do domínio. Nenhum scanner/parser é substituído no teste.",
+      "source_ids": [
+        "product-runtime-application",
+        "product-runtime-assets"
+      ]
+    }
+  ],
+  "source_independent_review": {
+    "reviewer": "criteria_review",
+    "mode": "Read-only source review of normative inputs, pinned product sources and authored helpers; only this coverage receipt written by reviewer.",
+    "execution": "NOT_RUN",
+    "approval": false,
+    "reviewed_helpers": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+        "sha256": "ffc1ed0d93642d9058b0646da7006e88aa13b8f07ae85e8cfc640f8b3f6cff4b",
+        "blob": "21e00319151989a4c2337fe20d9c7de1d8374fa9",
+        "review": "SOURCE_INSPECTED_ONLY"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+        "sha256": "a7ef8f1af1419457f5c3db58b30108a21abd54cfaa424af82d832c126a4e9501",
+        "blob": "20a9978c41697ac135a91d5229abc295d6c71375",
+        "review": "SOURCE_INSPECTED_ONLY"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts",
+        "sha256": "069d93515f36cc67e0ca0d8ac143ebebcae58fcf8bda6f336f958d995888a775",
+        "blob": "6ddccf1af1119c4eec6b45c568caf3f45d8c62bc",
+        "review": "SOURCE_INSPECTED_ONLY"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts",
+        "sha256": "f975745557648cf3c051b78b86f86a9f6496aaa17ab31361a18953eaaac90469",
+        "blob": "079af7db0ade65464aa31e564d82209527f75b5f",
+        "review": "SOURCE_INSPECTED_ONLY"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts",
+        "sha256": "5ef4b128d8080ea69be22d315633af4686cd24896bc01f6192b9435aa39a9e6a",
+        "blob": "7af501a9567f1311983e80265ebb9c1d47cf3989",
+        "review": "SOURCE_INSPECTED_ONLY"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/procurement.ts",
+        "sha256": "effbebf134bf256e13bababb2b82f5b73a103336433731b47e8832a1ed7fda03",
+        "blob": "c750821955cb56e7e6549c808d3c8e1cf5ee6e2a",
+        "review": "SOURCE_INSPECTED_ONLY"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+        "sha256": "b275ff36385f89e40448ce622dd1730fde411e122e8aa0effb12a6a31049f761",
+        "blob": "08296858b237881f29432c1cb982c91a4284c51a",
+        "review": "SOURCE_INSPECTED_ONLY"
+      }
+    ],
+    "confirmed_source_relationships": [
+      "Coleção C02 usa UUID de seleção; versão da projeção e CAS do registro são identidades distintas.",
+      "Exportação OPEX fornece Measure/Jan/Total nos índices8/9/21; compare mode fornece um save por linha.",
+      "Schema documental/ref/version, trechoUTF16[7,9], confirmationVersion1 e stale409 após remoção seguem os serviços reais.",
+      "Upload supplier está fora do details do cadastro; a workbench documental reloaded não reexecuta mutações.",
+      "Recuperação automática do import depois de entrega perdida é GET import-reference."
+    ],
+    "incorporated_fixes": [
+      {
+        "id": "REVIEW-VERSION",
+        "state": "INCORPORATED_IN_HELPER",
+        "change": "requestAction confere page/id/action/version e atributo CAS exato após ação, sem igualdade fraca por prefixo Version N."
+      },
+      {
+        "id": "REVIEW-IDENTITY-REFUSAL",
+        "state": "INCORPORATED_IN_HELPER",
+        "change": "JPY refusal mantém quoteId/supplierId/selectedId, resumo/histórico, dinheiro indisponível e mesma versão após reload."
+      },
+      {
+        "id": "REVIEW-C02-VERSION",
+        "state": "INCORPORATED_IN_HELPER",
+        "change": "Snapshot confere sourceVersion após reload sem tratar UUID/digest de seleção como identidade estática nem como CAS."
+      },
+      {
+        "id": "REVIEW-EXCELJS",
+        "state": "INCORPORATED_IN_HELPER",
+        "change": "Resolver ExcelJS pelo pacote Sucafina existente com createRequire, sem editar package/config."
+      },
+      {
+        "id": "REVIEW-DOC-CACHED-REVOCATION",
+        "state": "INCORPORATED_IN_HELPER",
+        "change": "Segunda página faz reload; primeira preserva card confirmado até revogação. Contagem de mutações cobre browsercontext e remoção verifica card/link de cenário."
+      },
+      {
+        "id": "REVIEW-CRITERIA-IMPORT-DOC",
+        "state": "INCORPORATED_IN_ANNOTATIONS",
+        "change": "Retirados IDs sobre zero/header de workbook/cancelamento/rollback/concorrência/PDF sem texto quando não exercitados; adotados slices de schema fechado, efeito e provenance."
+      },
+      {
+        "id": "REVIEW-CRITERIA-PROCUREMENT",
+        "state": "INCORPORATED_IN_PUBLISHED_W",
+        "change": "OP-PROC-01 remove T01.CHK.01/04; usa T03.CHK.01, T01.INV.01 e T01.CMP.02, sem alegar requester/buyer ou holder."
+      },
+      {
+        "id": "REVIEW-C06",
+        "state": "PRESERVED_AS_DEPENDENCY",
+        "change": "Nenhuma referência C02 ou confirmação de resposta é promovida a confirmação material C06; não foi criado teste falso."
+      }
+    ],
+    "remaining_review_limits": [
+      "Source inspection não prova configuração montada, seleção funcional executada ou comportamento observado em Actions.",
+      "Não fecha jornada C06, critérios WP04/WP06 completos, paridade native/MCP ou candidato C."
+    ]
+  },
+  "sources": [
+    {
+      "id": "mission",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/e2e-operations.json",
+      "commit": "c708ec0609dbfc95b259707d8c38481617f74f11",
+      "blob": "df26d9fe33704fa5a2f4bd7bc4c31042d5c0a869",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c708ec0609dbfc95b259707d8c38481617f74f11/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/e2e-operations.json",
+      "role": "Missão final e limites de escrita; leitura integral."
+    },
+    {
+      "id": "parallel-common",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/COMMON.md",
+      "commit": "c708ec0609dbfc95b259707d8c38481617f74f11",
+      "blob": "e54d84e3cdfa0046225518e253baf9dcf377fa7c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c708ec0609dbfc95b259707d8c38481617f74f11/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/COMMON.md",
+      "role": "Regras comuns da onda paralela; leitura integral pelo coordenador."
+    },
+    {
+      "id": "actor-S2-A",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S2-A.json",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "7327be5449328c356a0f5b242ddc9d2014175e41",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S2-A.json",
+      "role": "Pack S2-A completo: WP04, contratos, axiomas, oráculos e anexos obrigatórios."
+    },
+    {
+      "id": "execution-common",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "role": "Regras de execução e semântica dos critérios; leitura integral."
+    },
+    {
+      "id": "WP06-pack",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP06.pack.json",
+      "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "blob": "97f169c7236204c0268bc5bf47f374e24adeffd6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a3d29d011ba3607a57914701300f09117a3e2de9/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP06.pack.json",
+      "role": "canonical_work_package WP06, contratos aplicáveis e axiomas globais."
+    },
+    {
+      "id": "product-acceptance",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "role": "Anexo obrigatório de aceite e contraprovas; leitura integral."
+    },
+    {
+      "id": "resident-runtime",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "role": "Anexo obrigatório; partes aplicáveis de identidade, C14/C17, consumidor e prova real."
+    },
+    {
+      "id": "ci-recipe",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "ae5a1949876eef23450fa51167498be8a2334d35",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json",
+      "role": "Receita nominal CI-UI-OPERATIONS."
+    },
+    {
+      "id": "canonical-campaign",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+      "role": "Origem canônica apontada pelos packs; textos relevantes lidos nas seleções compiladas."
+    },
+    {
+      "id": "production-config",
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "commit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/packages/app-shell/e2e/playwright.production.config.ts",
+      "role": "Configuração real; montagem do host restrita ao nome antigo da suíte WP04."
+    },
+    {
+      "id": "existing-host",
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "commit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "blob": "3dd5760da92346e267a3cc767c69c4d8bb51b31c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "role": "Host real existente, manifesto, SQLite, contas e matrículas isoladas."
+    },
+    {
+      "id": "existing-procurement-fixture",
+      "path": "packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+      "commit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "blob": "a960a2cad432000edf51efcc6764c0c21d60ce07",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+      "role": "Contrato do navegador e dados anteriores preservados."
+    },
+    {
+      "id": "procurement-collection-sources",
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "commit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "blob": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "role": "A referência da coleção C02 é UUID emitida; não é seletor material C06."
+    },
+    {
+      "id": "product-product-contracts-context",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "dbaa8dd7a57134769aa12d4e196db1013cb278cb",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "role": "Manifesto, comando e recibo públicos."
+    },
+    {
+      "id": "product-product-contracts-decisions",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "role": "DocumentEvidence e referência documental."
+    },
+    {
+      "id": "product-product-documents-capabilities",
+      "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "6b655187d4444cff5b8966e868ba163191adfc42",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "role": "Extração real, offsets/digests e confirmationVersion."
+    },
+    {
+      "id": "product-product-documents-presentation",
+      "path": "modules/sucafina/Sucafinav1/product/documents/presentation.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "2ab4736c3bdea1ae77bdc307228346bd524e8c98",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/documents/presentation.ts",
+      "role": "Apresentação autorizada; fonte antiga não fresca retorna stale."
+    },
+    {
+      "id": "product-product-documents-schemas",
+      "path": "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "50e20b20e927f30b5b24e0e3c622c2c8a6b19a76",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+      "role": "Schema humano com id/ref/version e validação de tipo."
+    },
+    {
+      "id": "product-product-documents-workbench",
+      "path": "modules/sucafina/Sucafinav1/product/documents/workbench.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "d9769a4fbd2dd1d5c73b9f82dd021f8f3298333b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/documents/workbench.ts",
+      "role": "Seleção, extração, confirmação e limpeza da UI."
+    },
+    {
+      "id": "product-product-imports-store",
+      "path": "modules/sucafina/Sucafinav1/product/imports/store.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "9ae8492b4618d454cf069e27d2b079028759802d",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/imports/store.ts",
+      "role": "Persistência do manifesto/detalhe/recibo e releitura autorizada."
+    },
+    {
+      "id": "product-product-imports-workbench-script",
+      "path": "modules/sucafina/Sucafinav1/product/imports/workbench-script.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "4cfc3c61b365a9dd5fa0202a3bfc371acedaf433",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/imports/workbench-script.ts",
+      "role": "Preview, Apply único e recuperação automática por GET."
+    },
+    {
+      "id": "product-product-imports-workbench",
+      "path": "modules/sucafina/Sucafinav1/product/imports/workbench.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "16261f0b2a33f31c5c7cabf24cd21e65a2b161bc",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/imports/workbench.ts",
+      "role": "Controles públicos e status da workbench de importação."
+    },
+    {
+      "id": "product-product-interface-document-http",
+      "path": "modules/sucafina/Sucafinav1/product/interface/document-http.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/interface/document-http.ts",
+      "role": "Rotas documentais, schemas e recusa de evidência."
+    },
+    {
+      "id": "product-product-interface-import-http",
+      "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "role": "Rotas, schemas fechados, admissão e códigos de recusa."
+    },
+    {
+      "id": "product-runtime-application",
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "b8b03573d4e21e330b60ad308f4300702f43cbdd",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/runtime/application.ts",
+      "role": "Upload privado e navegação renderizados no app real."
+    },
+    {
+      "id": "product-runtime-assets",
+      "path": "modules/sucafina/Sucafinav1/runtime/assets.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/runtime/assets.ts",
+      "role": "Assinatura e autorização atual do download privado."
+    },
+    {
+      "id": "product-runtime-planner",
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "c487332777d4053be7a2b177ea598efb77ca0d66",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "role": "Criação de versão, linhas, importação e CAS reais."
+    },
+    {
+      "id": "product-runtime-procurement",
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "role": "Renderização e comandos reais atuais de Procurement."
+    },
+    {
+      "id": "product-runtime-workbooks",
+      "path": "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "3884ad35c7b471d2805d7444d24c4143b86ce197",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+      "role": "Exportação XLSX real, ordem de colunas e fórmulas do domínio."
+    },
+    {
+      "id": "product-document-resolver",
+      "path": "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+      "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "blob": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+      "role": "Resolver real consome RAG Studio e citationProof; verificação estática independente."
+    },
+    {
+      "id": "c06-62e5629d-modules-sucafina-Sucafinav1-product-collaboration-http",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/http.ts",
+      "commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+      "blob": "91091bf444bc23221d1f427138ebb9e5ca4c51bb",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/62e5629dbf31be2bb662dda152c96021f22b0ca5/modules/sucafina/Sucafinav1/product/collaboration/http.ts",
+      "role": "Inspeção da dependência C06; não é execução nem montagem integrada."
+    },
+    {
+      "id": "c06-62e5629d-modules-sucafina-Sucafinav1-product-collaboration-http-routes",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/http-routes.ts",
+      "commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+      "blob": "a266e12bd80a2ff95922c2492225ced86eda3ac3",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/62e5629dbf31be2bb662dda152c96021f22b0ca5/modules/sucafina/Sucafinav1/product/collaboration/http-routes.ts",
+      "role": "Inspeção da dependência C06; não é execução nem montagem integrada."
+    },
+    {
+      "id": "c06-62e5629d-modules-sucafina-Sucafinav1-product-collaboration-host",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+      "blob": "1678fc9d46c36a7da962aeca3b782b395e129c51",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/62e5629dbf31be2bb662dda152c96021f22b0ca5/modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "role": "Inspeção da dependência C06; não é execução nem montagem integrada."
+    },
+    {
+      "id": "c06-79ebf555-modules-sucafina-Sucafinav1-product-ui-work-collaboration",
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "commit": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+      "blob": "175ff36fe09405e0f31dd55207d751e3753f6ffb",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244/modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "role": "Inspeção da dependência C06; não é execução nem montagem integrada."
+    },
+    {
+      "id": "c06-79ebf555-modules-sucafina-Sucafinav1-product-ui-work-review-context",
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-review-context.ts",
+      "commit": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+      "blob": "a13f85982fa441086971d2b86af355f96c854bbd",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244/modules/sucafina/Sucafinav1/product/ui/work-review-context.ts",
+      "role": "Inspeção da dependência C06; não é execução nem montagem integrada."
+    },
+    {
+      "id": "c06-62e5629d-apps-cli-src-sucafina-product-business-services",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+      "blob": "49f9e7824edb25443f48a2035ebfa698554de87e",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/62e5629dbf31be2bb662dda152c96021f22b0ca5/apps/cli/src/sucafina-product/business-services.ts",
+      "role": "Inspeção da dependência C06; não é execução nem montagem integrada."
+    },
+    {
+      "id": "c06-62e5629d-apps-cli-src-sucafina-product-host-context",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+      "blob": "81f07b9d68a85811cef3aa4d3b4615475486f04f",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/62e5629dbf31be2bb662dda152c96021f22b0ca5/apps/cli/src/sucafina-product/host-context.ts",
+      "role": "Inspeção da dependência C06; não é execução nem montagem integrada."
+    },
+    {
+      "id": "c06-79ebf555-apps-cli-src-sucafina-product-business-services",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "commit": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+      "blob": "b289a4a376f937c2cf4b56a00a6c1247152c5798",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244/apps/cli/src/sucafina-product/business-services.ts",
+      "role": "Inspeção da dependência C06; não é execução nem montagem integrada."
+    },
+    {
+      "id": "c06-79ebf555-apps-cli-src-sucafina-product-host-context",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "commit": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+      "blob": "4aca959eaba4f30aa7ee4f89eb95030afc2fa02b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244/apps/cli/src/sucafina-product/host-context.ts",
+      "role": "Inspeção da dependência C06; não é execução nem montagem integrada."
+    },
+    {
+      "id": "c06-91e1f60b-apps-cli-src-sucafina-product-business-services",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "commit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "blob": "3faa29c858ba97b2b98fc270256500132a1f29cc",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/apps/cli/src/sucafina-product/business-services.ts",
+      "role": "Inspeção da dependência C06; não é execução nem montagem integrada."
+    },
+    {
+      "id": "c06-91e1f60b-apps-cli-src-sucafina-product-host-context",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "commit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "blob": "e32bd0f414b254c77c8fe49a3ce40aadfc5f339c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/apps/cli/src/sucafina-product/host-context.ts",
+      "role": "Inspeção da dependência C06; não é execução nem montagem integrada."
+    },
+    {
+      "id": "c06-91e1f60b-modules-sucafina-Sucafinav1-product-procurement-confirmation",
+      "path": "modules/sucafina/Sucafinav1/product/procurement/confirmation.ts",
+      "commit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "blob": "4fcda499e060bd77d595e4d567d7e9daed671fc4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/product/procurement/confirmation.ts",
+      "role": "Inspeção da dependência C06; não é execução nem montagem integrada."
+    },
+    {
+      "id": "c06-91e1f60b-modules-sucafina-Sucafinav1-product-procurement-confirmation-fields",
+      "path": "modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+      "commit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "blob": "a1e45e803105e76f147e695a7e92246257de9b16",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+      "role": "Inspeção da dependência C06; não é execução nem montagem integrada."
+    }
+  ]
+}

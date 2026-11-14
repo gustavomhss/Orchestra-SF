@@ -1,0 +1,39 @@
+{
+  "schema": "operations24-receipt-log-correction-v1",
+  "source_check": "source-checks-02.json",
+  "deleted_raw_copies": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/boundary-attempt-02-summary.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/source-checks-01/guards.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/source-checks-01/typecheck.log"
+  ],
+  "rule": {
+    "path": "script/guards/rules/agent-scratch.toml",
+    "blob": "71ce321c30465faaf957a08256bd6b7d007d4173"
+  },
+  "evidence_policy": "Use structured result and provenance receipts plus canonical GitHub Actions job/artifact links. Raw output copies are removed rather than renamed. Historical commit49d and the original runs retain the earlier bytes.",
+  "canonical_evidence": [
+    {
+      "record": "boundary-attempt-02.json",
+      "run_id": 43640551629,
+      "job_id": 132586959036,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43640551629/job/132586959036"
+    },
+    {
+      "record": "source-checks-01.json",
+      "run_id": 43640212098,
+      "job_id": 132585909805,
+      "artifact_id": 14132055714,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43640212098/artifacts/14132055714"
+    },
+    {
+      "record": "source-checks-02.json",
+      "run_id": 43641414497,
+      "job_id": 132589596387,
+      "artifact_id": 14131514826,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43641414497/artifacts/14131514826"
+    }
+  ],
+  "source_code_W": "49d29bf4d6512d130307f46e145885949f213ea8",
+  "source_code_unchanged": true,
+  "test_assertions_unchanged": true
+}

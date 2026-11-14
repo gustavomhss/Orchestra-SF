@@ -1,0 +1,65 @@
+{
+  "mission": "MemoryA27 integrity preflight",
+  "attempt": "MI07",
+  "status": "FAIL",
+  "productW": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+  "productTree": "0c7b73bd55ca21498477e9b32a763a87dff2bf50",
+  "snapshotS": "e63511737be687a2e42f9a15706a229db42a31c1",
+  "snapshotTree": "d09d2cbe63e4168822399a59d3b85a28b00c0dce",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "requestSha256": "9f6d6f3e5a949573c5b05710150172c9541668c88ac9233b2485a807f3a743ef",
+  "requestBlob": "6d6531c8be34410efe3366662c437556ff65b1d0",
+  "run": 43637227753,
+  "job": 132576581546,
+  "cleanupJob": 132578002038,
+  "cleanup": "SUCCESS",
+  "artifacts": [],
+  "pass": 0,
+  "fail": 1,
+  "expects": 687,
+  "tests": 1,
+  "files": 1,
+  "elapsedSeconds": 225.71,
+  "testDurationMs": 225031.18,
+  "budgets": {
+    "cooperativeMs": 225000,
+    "bunMs": 240000,
+    "changed": false
+  },
+  "omni": {
+    "status": "PASS",
+    "spawns": 2,
+    "delegated": 0,
+    "nonce": "f0806026496b389c2a52c40365a9347b"
+  },
+  "historicalBlob": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+  "failure": {
+    "error": "historical-memory exceeded its 225000ms cooperative deadline",
+    "lastPhase": "memory.fence-final-request-headers",
+    "lastElapsedMs": 225014,
+    "lastPhaseMs": 18805,
+    "aborted": true,
+    "stalePreserve": "NOT_REACHED",
+    "corruptCaptureAssertion580": "NOT_REACHED",
+    "finalRevocationAssertions583_585": "NOT_REACHED",
+    "locationRelativeToDelta": "Before the stale access path modified by MemoryA27. No inference that the new capture reader caused this run's earlier deadline.",
+    "next": "Do not rerun unchanged, change budgets/assertions or enter X29. Retain full historical FAIL and add separate own-namespace proof of the three revocation entrypoints."
+  },
+  "log": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-07/job.txt",
+    "bytes": 79104,
+    "sha256": "eb847a7a181edd7c331080a1e75550050d905e060489eb942efbb44a81ca39ec"
+  }
+}

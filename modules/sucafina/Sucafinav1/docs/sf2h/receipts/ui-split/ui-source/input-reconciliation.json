@@ -1,0 +1,150 @@
+{
+  "schema": "ui-source-inputs-v1",
+  "handoffCommit": "d3d411f7e2476a562a57aa7620823980eaf34e46",
+  "normativeCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "packsAndCiCommit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+  "executedBase": "2ee71fc90055814912654ae198f7a1dcf9583943",
+  "foreignSourcesChanged": false,
+  "consultedInputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "ref": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "encoding": "utf-8",
+      "sha": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "display_title": "source-lifecycle.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts",
+      "ref": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "encoding": "utf-8",
+      "sha": "aaae9db90459f8e6b34d9a1a2a1aedfda2a4affb",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/a1434e7ea7340aa1d1c8ce6bb48958b724218170/modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts",
+      "display_title": "hot-topic-host.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "ref": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+      "encoding": "utf-8",
+      "sha": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1a1888bd2117616d53c5af5f5014e81c4b4e530/modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "display_title": "sources.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+      "ref": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+      "encoding": "utf-8",
+      "sha": "0891d178833165fff098e3c05f3a64c5f5b35043",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1a1888bd2117616d53c5af5f5014e81c4b4e530/apps/cli/src/sucafina-product/dashboard-services.ts",
+      "display_title": "dashboard-services.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+      "ref": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+      "encoding": "utf-8",
+      "sha": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1a1888bd2117616d53c5af5f5014e81c4b4e530/apps/cli/src/sucafina-product/dashboard-http.ts",
+      "display_title": "dashboard-http.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "ref": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+      "encoding": "utf-8",
+      "sha": "d8a151c558227b3bd2612dbb6caba993efa85783",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1a1888bd2117616d53c5af5f5014e81c4b4e530/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "display_title": "hot-topic-draft.ts"
+    }
+  ],
+  "finalInputHeads": [
+    {
+      "name": "astra-wp10",
+      "head": "a1434e7ea7340aa1d1c8ce6bb48958b724218170"
+    },
+    {
+      "name": "compose-resume",
+      "head": "d86d119c15d1149fd6f463e07acce836b197eb4e"
+    },
+    {
+      "name": "interface-resume",
+      "head": "2ee71fc90055814912654ae198f7a1dcf9583943"
+    }
+  ],
+  "composeAdvance": {
+    "from": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+    "to": "d86d119c15d1149fd6f463e07acce836b197eb4e",
+    "changed": [
+      {
+        "path": "docs/guides/sucafina-workbench.md",
+        "sha": "a37eac966e254aae3dd8e940959f359120701c9d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/compose-resume/R04-interface-guide-intake.json",
+        "sha": "b265bb3002d39bbf7aad6f0fc42bfb4adc4bce7b"
+      }
+    ]
+  },
+  "findings": {
+    "IR-EXT-CREATE-INCARNATION": {
+      "originalFindingRef": "WP02-F02-create-correlation-incarnation",
+      "owner": "WP10 / Composition source provider; WP02 consumes",
+      "status": "EXTERNAL_ATOMIC_SOURCE_PROTOCOL_REQUIRED",
+      "boundary": "CREATE salva digest/id antes da finalização do lifecycle. Host precisa reservar/finalizar a incarnation física no mesmo commit para o port próprio armazenar e verificar no replay. Preservar UPDATE já vinculado; não criar identidade na UI nem uma segunda transação.",
+      "originalCriterionRefs": [
+        "WP02.INV.02",
+        "WP02.T04.CHK.01",
+        "WP02.T04.DOD.01",
+        "WP02.T04.QLT.02",
+        "WP02.T04.CMP.01",
+        "WP02.T04.CMP.02",
+        "WP02.T04.SUC.01",
+        "WP02.T04.SUC.02"
+      ],
+      "currentOwnerSourceReconciliation": "reconciliation.json#/initialPinnedRead",
+      "newProductExecutionCredit": false
+    },
+    "IR-EXT-DRAFT-CASE-ADVANCE": {
+      "originalFindingRef": "C12_DRAFT_REPLAY_CASE_ADVANCE",
+      "owner": "WP10 / Composition / draft producer",
+      "status": "STATIC_ORDERING_FINDING_SPECIFIC_COUNTERPROOF_MISSING",
+      "boundary": "register valida versão exata do caso antes do recibo anterior; readCurrent também exige a versão enviada. Versão publicada d8a151 adiciona fences mas mantém essa ordem. O cenário lost-register→legitimate-case-advance→exact-replay ainda precisa de contraprova própria; não usar o FAIL de lost-apply como evidência desta variante.",
+      "originalCriterionRefs": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.SUC.01",
+        "WP02.QLT.02",
+        "WP02.T02.SUC.02"
+      ],
+      "currentOwnerSourceReconciliation": "reconciliation.json#/initialPinnedRead",
+      "newProductExecutionCredit": false
+    },
+    "IR-EXT-F04-WRITE-ONLY-REVOCATION": {
+      "originalFindingRef": "WP02-F04-new-draft-source-continuity",
+      "owner": "WP10 / Composition source authority",
+      "status": "EXTERNAL_REAUTHORIZATION_ENDPOINT_REQUIRED",
+      "boundary": "Sem endpoint admitido para reautorizar a referência original do draft não salvo sob leitura atual e continuidade física. dashboard-http permanece c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c em input/#29/#32. Preservar checks exatos de digest/incarnation; não equiparar record ID a continuidade.",
+      "originalCriterionRefs": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01",
+        "WP02.QLT.02",
+        "WP02.T02.QLT.02",
+        "WP02.CMP.10"
+      ],
+      "currentOwnerSourceReconciliation": "reconciliation.json#/initialPinnedRead",
+      "newProductExecutionCredit": false
+    }
+  },
+  "ownerFindingsSource": {
+    "ref": "2ee71fc90055814912654ae198f7a1dcf9583943",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/owner-findings.json",
+    "blob": "a56f8857f2c1f27267a4b3f3cad7fd8d511c92ce"
+  },
+  "executedProducerBlobs": {
+    "product/dashboard/hot-topic-draft.ts": "bc8daed892bb2020ecf15852bf9717fb0200d40a",
+    "product/decisions/hot-topic-draft.ts": "5e0b80a470958dd201db4283bde96d594935e68d",
+    "product/integration/source-lifecycle.ts": "d0cab7f33b08806a6bb01a869fa789dc77e087ee",
+    "product/collaboration/hot-topic-host.ts": "aaae9db90459f8e6b34d9a1a2a1aedfda2a4affb",
+    "apps/cli/src/sucafina-product/dashboard-http.ts": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+    "test/product/wp02/workbench-recovery-fixture.ts": "593a46dad67e490dcfdd4fdc1878353088138dc7"
+  }
+}

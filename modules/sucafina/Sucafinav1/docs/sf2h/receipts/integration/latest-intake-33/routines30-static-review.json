@@ -1,0 +1,365 @@
+{
+  "schema": "mission33-routines30-static-consumer-review-v1",
+  "reviewer": "reports25_intake subagent; no Routines30 product authorship or remote writes",
+  "status": "READY_FOR_SCOPED_IMPLEMENTATION_INTAKE_WITH_NATIVE_ACCEPTANCE_HOLD",
+  "repository": "gustavomhss/Orchestra-SF",
+  "destination": {
+    "branch": "sf2-stack",
+    "pr": 65,
+    "productCandidate": "aa7276112dcc24a4a70d3764739a1b0712e3af80",
+    "checkpoint": "07aa9831f1a85f01b42984891c899a887fb48db5",
+    "checkpointTree": "51e788ab488188bcd08925ee2b446af473ba0f48",
+    "hostBlobReadAtCandidate": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+    "routineServicesPreimage": "8b76b7591bf3ce0312108faafcda6b244a2d5e89"
+  },
+  "source": {
+    "branch": "astra-wp09",
+    "pr": 30,
+    "terminalHead": "d9e1aca275bd04b2066ca84a605c7c315ea14c77",
+    "terminalTree": "91dba0dfd731d8501abf0d3ef3f3265d751e107b",
+    "productW": "7676fd9173015e2c7d7c91745cc486f50018fc85",
+    "productTree": "bade962f294c3dc3504c97388c780c8bc8b9be24",
+    "terminalStatus": "IMPLEMENTATION_DELIVERED; COMPOSITION_AND_NATIVE_ACCEPTANCE_HOLD",
+    "sourceLease": "routine-native-browser30"
+  },
+  "readings": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/README.md",
+      "blob": "c2b8c1c64c2e9fd4695bfc0d88f558c6527db636",
+      "reading": "COMPLETE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/terminal.json",
+      "blob": "8ebdfa310bae3ca05d7ef43d31a6360d474f4f48",
+      "reading": "COMPLETE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/candidate-manifest.json",
+      "blob": "103c247d65b3d2c2ff2015d1e08fb11cc2cd2d1f",
+      "reading": "COMPLETE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/assembly/README.md",
+      "blob": "8155807cba03b38c52b4688382d31ef4de345184",
+      "reading": "COMPLETE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/assembly/manifest.json",
+      "blob": "e332f286505676b6925d9e8f101be35aacb7b965",
+      "reading": "COMPLETE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/assembly/host-context.patch",
+      "blob": "01de7c21025a2c9f0363503aa02b928835508c5a",
+      "reading": "COMPLETE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/dependency-provenance.json",
+      "blob": "b20792ef481afd60dbf69de538725b9006697afd",
+      "reading": "COMPLETE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/implementation.md",
+      "blob": "88ef633fd78df9eee0495061ff5494853aaa22bf",
+      "reading": "COMPLETE"
+    }
+  ],
+  "implementationReadings": [
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+      "blob": "aa0b9758acee9338f8422002d718f05c71f00a09",
+      "reading": "COMPLETE_STATIC"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+      "blob": "377ceb99d45b6142c8e9f077f69f23673f470f92",
+      "reading": "COMPLETE_STATIC"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-services.ts",
+      "blob": "4b455444cdeb560e85f6a17e6192c0420287d48a",
+      "reading": "COMPLETE_STATIC"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "blob": "59c76df420f9532fbe4d278a9c1dccf86e33cbe0",
+      "reading": "COMPLETE_STATIC"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-dispatch.ts",
+      "blob": "40fbb2c2abdc26463ee20b34d1e2081287c2ea63",
+      "reading": "COMPLETE_STATIC"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-input.ts",
+      "blob": "f0a3a1f9b743161a98b5545fce1ca71c8d9c0abe",
+      "reading": "COMPLETE_STATIC"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-records.ts",
+      "blob": "d918fa52cdf301ed90ed243329caa799dcfc8ebd",
+      "reading": "NativePlan/types and readPlan/listPlans/latest-plan/bound-plan/task-call/admission entry inspected; remaining record validation delegated to source_census."
+    }
+  ],
+  "assembly": {
+    "path": "apps/cli/src/sucafina-product/host-context.ts",
+    "patchPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/assembly/host-context.patch",
+    "patchBlob": "01de7c21025a2c9f0363503aa02b928835508c5a",
+    "patchSHA256": "d83a3fb763a18ecabb0d5d0570fcf06e1c15ff3a9116c2862cbf6820b00aeb08",
+    "sourcePreimage": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+    "observedC8Preimage": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+    "sourcePostimage": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+    "preimageDisposition": "EXACT_MATCH",
+    "patchApplication": "Not applied by this reviewer; source_census owns materialization and tree-elements.",
+    "scope": "Four imports, private optional entrypoint, deferred routine binding/descriptor lifecycle, disposal, conditional native contributions and explicit product-node dependency. No Reports/router/browser edits."
+  },
+  "tdz": {
+    "finding": "NO_EARLY_CALLBACK_INVOCATION_IDENTIFIED_BY_STATIC_INSPECTION",
+    "governance": {
+      "path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "lines": [
+        77,
+        87,
+        88,
+        112,
+        260
+      ],
+      "observation": "Factory defines closures/Effects/nodes and returns services. input.records() occurs inside assertCurrent/protectPlan Effects called by governance hooks; no synchronous factory call reaches records(). The host closure can therefore capture routineRuntime before assignment without reading it during factory construction."
+    },
+    "runtime": {
+      "path": "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+      "lines": [
+        140,
+        165,
+        191,
+        195
+      ],
+      "observation": "onReady is invoked only inside the Location node's Layer.effectDiscard(Effect.gen(...)) acquisition, not by the factory. The host creates routineServices before returning the contributions. mount(product) adds a real node dependency before product tool registration."
+    },
+    "services": {
+      "path": "apps/cli/src/sucafina-product/routine-services.ts",
+      "lines": [
+        275,
+        277
+      ],
+      "observation": "descriptors is a getter consumed by deferred onReady. Factory constructs handlers without invoking native()/publication() through this getter."
+    },
+    "limit": "Static control-flow conclusion; no module import, compilation, graph acquisition or runtime test executed."
+  },
+  "preservation": [
+    {
+      "area": "Reports25",
+      "observation": "Patch does not replace business-services, extended-business-services, Reviews host/router/browser or private artifact handlers. Existing host construction of extended/reviewReaders and same business object remains."
+    },
+    {
+      "area": "Decisions",
+      "observation": "createSfDecisionDomainServices/bindDecisionDomain, descriptor replacements, selection/capture callbacks and decisionDomainHttp chain remain untouched."
+    },
+    {
+      "area": "Memory",
+      "observation": "createSfMemoryServices, review outcome binding, memoryHttp and selectedMaterialChanges/prepareWatch producer remain. Patch does not make prepareWatch available or create Schedule admission."
+    },
+    {
+      "area": "Work / Operations",
+      "observation": "Work signals/destinations/HTTP, CollaborationHttp and source authority callbacks remain. Existing routine publication/input readers are consumed; new native resources are conditional on a real private owner port."
+    },
+    {
+      "area": "Descriptor lifecycle",
+      "observation": "onReady checks ID collisions, adds only descriptors returned by installed gated services, and removes those exact descriptor objects at scope close. Task-backed set capped at five; watch absent without explicit real watchAvailable."
+    },
+    {
+      "area": "Default composition",
+      "observation": "Public createSfHostRuntime type/arguments remain; it calls the private entry with no owner port. Governance/runtime contributions are then omitted, product is not wrapped, native availability stays false, and no routine descriptors become available."
+    },
+    {
+      "area": "Private data / authority",
+      "observation": "No new positive grant, public registry, model-derived actor/session, fixture authority, report download path or persistent product admission/run ledger introduced by the patch. Current Request/case/source/publication/provider identity is revalidated at calls."
+    }
+  ],
+  "nativeOwnerBoundary": {
+    "requiredCapability": "Real private SfRoutineNativeOwnerPort binding the authenticated exact Request to a native Maestro authority Session and an already recorded exact Task assistantMessageID/toolCallID.",
+    "observedCapability": "Absent in inspected current host/UI and not supplied by this integration; must remain absent/unavailable until actual supported owner composition exists.",
+    "checks": [
+      "resources and owner-port object identity remain stable; actual Task registration/governance/safety/Relay installations remain current.",
+      "acquire requires exact Request identity, non-aborted signal, current SF authorization, valid native Session ID and actual provider generation.",
+      "Reads native SessionStore parent, project/location and native AgentV2.defaultID (not sf_maestro resident profile).",
+      "prepare/start recover the pre-existing assistant Task part and exact authorization/plan/publication/parameters/write paths/task-intent binding; background/worktree substitution rejected.",
+      "Native SessionExecution.exclusive uses wait:false; busy parent is not adopted or interrupted. Registry materialization uses current Agent plus Session permissions and Session scope charge.",
+      "Governance leases are installed only inside actual exclusive execution ownership, are tied to Request abort/current sources and are released.",
+      "Native-result entryMode denies prepare/run recursion; terminal Task retries are not rerun.",
+      "Only factual native Task/Relay result projection is emitted; no model text is accepted as native completion evidence."
+    ],
+    "noSyntheticCapabilityInstalled": true
+  },
+  "heldDependencies": [
+    {
+      "id": "real-request-maestro-task-owner",
+      "owner": "S0 / authorized private host owner",
+      "status": "HOLD",
+      "action": "Provide an actual stable native owner capability and qualified installation evidence through supported existing host flow; do not derive a registry from user/model IDs or create a substitute grant."
+    },
+    {
+      "id": "publication-plan-human-admission",
+      "owner": "Routines30 producer + authorized native/human flow",
+      "status": "HOLD",
+      "action": "Supply current native plan/publication with SF_ROUTINE_INPUT, exact source/case, governed review/approval/authorization/arm and recorded Task invocation."
+    },
+    {
+      "id": "native-provider-and-return-after-reload",
+      "owner": "S0 acceptance / authorized dispatcher",
+      "status": "NOT_RUN",
+      "action": "Exercise real provider, Task/Relay terminal checkpoint/audit and authorized consumer after reload on one accepted candidate outside mission33."
+    },
+    {
+      "id": "knowledge-upstream",
+      "owner": "Private publication host owner",
+      "status": "UNAVAILABLE_WHEN_REQUIRED",
+      "action": "Supply authenticated upstream knowledge capability; preserve SF_ROUTINE_KNOWLEDGE_PORT_UNAVAILABLE for recipes requiring it until then."
+    },
+    {
+      "id": "native-watch",
+      "owner": "Supported Schedule/private-port owner",
+      "status": "UNAVAILABLE",
+      "action": "Keep sf_watch_prepare unadvertised; current memory.prepareWatch is not native admission and no watchAvailable:true is justified."
+    },
+    {
+      "id": "background-cancel-business-artifact",
+      "owner": "Supported native capability/contract owners",
+      "status": "NOT_SUPPLIED",
+      "action": "Do not claim Request-independent background authority, typed cancellation or model business artifact as factual execution receipt."
+    },
+    {
+      "id": "composed-validation",
+      "owner": "S0 / existing authorized dispatcher",
+      "status": "NOT_RUN",
+      "action": "Shared host postimage and full native composition have no executed validation in this review; source results remain source results."
+    }
+  ],
+  "sourceEvidenceLimits": {
+    "W2": "30 pass/1 fail across31 tests; FAIL",
+    "W3": "Only retained-input selection3 pass/0 fail/27 expectations; no31of31 claim",
+    "typecheck": "FAIL78 external diagnostics; zero own reported; no composed-host typecheck",
+    "guards": "Source-only PASS, not transferred",
+    "AM06": "NOT_RUN",
+    "globalRelease": false
+  },
+  "reviewLimits": {
+    "kind": "Static intake review, not formal final independent product acceptance",
+    "blockingSemanticConflictFound": false,
+    "newFindingRequiringSourceCorrection": false,
+    "testsExecuted": false,
+    "checksExecuted": false,
+    "productImportedOrRun": false,
+    "ciDispatched": false,
+    "AMExecuted": false,
+    "remoteWrites": false,
+    "localArtifactsOnly": true,
+    "coreEngineImplementationAudit": "Native producer internals were not independently re-audited in full; API provenance is provided by the source receipt and dependency closure is separately checked by source_census."
+  },
+  "priorC6PreservationAndControlObservation": {
+    "candidate": "52add8433f8ecf9d361ee635cda484142131ef84",
+    "tree": "efec3fadd92b1507a1c42bdf5aad48b7e778c17d",
+    "checkpointPrefix": "b19606b7",
+    "treeAuthority": "Root reported and independently verified candidate/tree; this child reread the listed source blobs.",
+    "boundaries": [
+      {
+        "area": "Composition root / Decisions / Memory / Work / Operations",
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+        "preserved": "Byte-identical to 3c0b7df. Preserves createSfMemoryServices, Work bridge/destinations/HTTP, DecisionDomain binding, routine publication/inputs/services and CollaborationHttp on three surfaces; productHttp ordering unchanged.",
+        "method": "C6 GitHub MCP read + exact text/blob comparison to previously read 3c0b7df host; call-chain inspection."
+      },
+      {
+        "area": "Collaboration callbacks",
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "blob": "ce3a281bf07819f90af7fad10f98861980f3273b",
+        "preserved": "C05 binding adds review evidence/context/recipient/answer callbacks. Existing confirmationSource, workSignals, readQuestionContribution, workCaseAuthority, source issuers, caseSelectionWrites, threadHistoryWrites, bindDecisionDomain and bindWorkBridge retained.",
+        "method": "C6 source and published Reports hunks inspected; no runtime invocation."
+      },
+      {
+        "area": "Extended assembly",
+        "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+        "blob": "4cadc40037fefb895a7c77d53125922fa747b479",
+        "preserved": "Portfolio/change-proposals/alternatives/BI/choices/reviews retained. C05 binds only actual review application and historical evidence; recipient-authority absence remains explicit.",
+        "method": "Complete C6 file inspected."
+      },
+      {
+        "area": "Shared router",
+        "path": "apps/cli/src/sucafina-product/extended-http.ts",
+        "blob": "d8e0d149e37c640db8957f3e917f867088923d93",
+        "preserved": "Canonical reviews.http delegation first; actual discovery per chosen topic with unique report:<page> IDs; admission, validation, revalidation, finally finish, no-store, source/surface constraints and post-asset review reread retained.",
+        "method": "Relevant C6 router branches and Reports delta inspected."
+      },
+      {
+        "area": "Browser / private content",
+        "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+        "blob": "83ecd80669c759dc65cc621543af2b5ebd9f9ac0",
+        "preserved": "Existing comparison/current-thread/source/successor flows retained with new discussion. On401/403 or same-origin login redirect: abort pending requests, invalidate generation, dispose meeting/discussion, replace private DOM. Generic network probe failure is not treated as revocation.",
+        "method": "Complete C6 file inspected."
+      },
+      {
+        "area": "Browser asset entry",
+        "path": "apps/cli/src/sucafina-product/extended-assets.ts",
+        "blob": "d4f61546186a0f752be4c103b3a2e112deb4a582",
+        "preserved": "Fixed checked-in extended-browser.ts Reviews entry, no user-selected runtime source. Blob equals previously read3c0b7df.",
+        "method": "Complete C6 file and prior blob inspected."
+      },
+      {
+        "area": "Reviews source authority",
+        "path": "apps/cli/src/sucafina-product/review-services.ts",
+        "blob": "c07d55c714b4c85ee41abb4d287ce5861500086d",
+        "preserved": "Real authority/state/host, protectSfReviewReads, source revalidation, Decision/sensitivity/outcome/thread-history adapters retained; blob equals prior read.",
+        "method": "Complete source reread at C6."
+      },
+      {
+        "area": "Private artifact download",
+        "path": "modules/sucafina/Sucafinav1/product/reviews/application.ts",
+        "blob": "de76611be141d599b9eecc96e1173559e06be26d",
+        "preserved": "Real Request admission to sf_artifact_get; canonical dispatcher/schema checks; exact Request object and revalidation before composed.artifacts byte reader; denial403/no-store.",
+        "method": "Complete C6 application inspected; no byte download executed."
+      },
+      {
+        "area": "Artifact and human-action routing",
+        "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+        "blob": "ce0e5655f19d7d60246024af013c811bf921b042",
+        "preserved": "Strict review-download query routes to protected download; origin/surface, POST-origin, admissions and current revalidation preserved for review/thread/agenda/closure/contribution.",
+        "method": "Relevant C6 routes and authority sites inspected."
+      }
+    ],
+    "scope": "Static preservation map, no runtime or acceptance assertion.",
+    "openFinding": "REPORTS25-DRAFT-LOSS-ON-ACTION-ERROR remains open, owner Reports25/S3-A; revocation cleanup does not cure recoverable-error draft loss.",
+    "controlObservation": {
+      "observedAt": "2026-11-14T21:44:56Z",
+      "baseline": "7150af3c3cea2a1dece40ffa3f13abe8fb10278d",
+      "head": "970ae24e36cae47dfa7e0df327e409d9cc3fcea7",
+      "tree": "5754df6ca1ce22a13dfa8d35b39c72b5ae6a088b",
+      "comparison": {
+        "ahead": 1,
+        "behind": 0,
+        "totalCommits": 1,
+        "changedFiles": 1
+      },
+      "onlyChange": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/atlas-process-restart-proof.json",
+        "status": "added",
+        "blob": "0772578134458d933d66769b307d564eab4aa105",
+        "mission": 35,
+        "branch": "astra-wp14",
+        "pr": 38,
+        "expectedHead": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+        "lease": "atlas-restart-browser35",
+        "state": "PREPARED_NOT_STARTED",
+        "finding": "M29-ATLAS-003"
+      },
+      "authority33": {
+        "revoked": false,
+        "reassigned": false,
+        "basis": "The only added mission35 document explicitly retains Session33 as sole integrator; COMMON and mission33 input unchanged by blob.",
+        "commonBlob": "7839082081554eb288758460bdd8ce52529ba7da",
+        "mission33Blob": "4e8f0f5ac6239125e27acb570f652913c58383b9"
+      },
+      "disposition": "Future mission35 producer output pending terminal handoff/pre-post/qualified proof. Prepared specification is neither started session nor completed delivery. No AM/test authority transferred to mission33.",
+      "verification": "GitHub MCP ref read, exact baseline→head comparison, complete added-file read, pinned COMMON/mission33 read and final ref reread. This stored observation was not refreshed while writing this local report."
+    }
+  }
+}

@@ -1,0 +1,237 @@
+{
+  "schema": "finance-state-read-performance-result-v1",
+  "selection": "S1",
+  "purpose": "Preimage discriminant; no product implementation in W0",
+  "W": "231b0652d12d5c6ce8b5d31d02b725eabdbe308f",
+  "Wtree": "19e946d6a0c68d9fce1e1a2696bf31e66e796814",
+  "S": "27256440a3aa6383b6d96ebd95d9788f3a637ec4",
+  "Stree": "f1a8971de495cdf6595dd72682cc3b878120a3a3",
+  "branch": "ci-run-linux-finance-state-231b0652-s1",
+  "runId": 43638918360,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43638918360",
+  "jobId": 132581814674,
+  "cleanupJobId": 132582514729,
+  "attempt": 1,
+  "conclusion": "failure",
+  "classification": "EXPECTED_PREIMAGE_DISCRIMINANT_FAILURE",
+  "tests": {
+    "pass": 0,
+    "fail": 1,
+    "assertions": 56,
+    "files": 1,
+    "testMs": 65361.88,
+    "totalSeconds": 65.57
+  },
+  "failure": {
+    "path": "test/product/finance-state-read-performance/materialization.test.ts",
+    "line": 106,
+    "expected": 0,
+    "observed": 2,
+    "meaning": "Canonical C08 case reader still traverses the unrelated preferences subtree on both full-state clones. Prior content, two-read, clone-count and host-check assertions passed."
+  },
+  "measurement": {
+    "sizes": {
+      "stateBytes": 1241296,
+      "caseBytes": 115925,
+      "cases": 1,
+      "results": 10,
+      "transactions": 18
+    },
+    "opaque": {
+      "elapsedMs": 182.4421629999997,
+      "caseReads": 2,
+      "unrelatedClones": 2,
+      "caseClones": 2,
+      "hostChecks": 36
+    },
+    "canonical": {
+      "elapsedMs": 176.36138899999787,
+      "caseReads": 2,
+      "unrelatedClones": 2,
+      "caseClones": 2,
+      "hostChecks": 36
+    },
+    "timings": [
+      {
+        "mode": "canonical",
+        "elapsedMs": 182.17600099999981,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "opaque",
+        "elapsedMs": 180.02426900000137,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "opaque",
+        "elapsedMs": 180.1706650000051,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "canonical",
+        "elapsedMs": 179.94285600000148,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "canonical",
+        "elapsedMs": 181.27504500000214,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "opaque",
+        "elapsedMs": 179.51442900000256,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "opaque",
+        "elapsedMs": 181.07186200000433,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "canonical",
+        "elapsedMs": 180.48437600000034,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "canonical",
+        "elapsedMs": 180.1748630000002,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "opaque",
+        "elapsedMs": 178.0851360000015,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "opaque",
+        "elapsedMs": 181.17939599999954,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "canonical",
+        "elapsedMs": 181.36736499999824,
+        "caseReads": 2,
+        "hostChecks": 36
+      }
+    ],
+    "summary": {
+      "opaque": {
+        "samples": 6,
+        "medianMs": 180.09746700000323,
+        "totalMs": 1080.0457570000144,
+        "minimumMs": 178.0851360000015,
+        "maximumMs": 181.17939599999954
+      },
+      "canonical": {
+        "samples": 6,
+        "medianMs": 180.87971050000124,
+        "totalMs": 1085.4205060000022,
+        "minimumMs": 179.94285600000148,
+        "maximumMs": 182.17600099999981
+      }
+    },
+    "serializedReadPath": "unchanged real C08/SQLite; inclusive case-read timings are not additive",
+    "disclosure": "synthetic source grants from unchanged renewal fixture; no native or integrated acceptance"
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/finance-state-read-performance/materialization.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestOnlyChangedFiles": [
+    ".ci-run.json"
+  ],
+  "omni": {
+    "nonce": "66bd48ee85ac17b0628ef58ea4427914",
+    "verdict": "not applicable",
+    "nativeProof": false
+  },
+  "artifacts": [],
+  "artifactPolicy": "Existing bun test-ci selection has no mandatory upload step; complete job log and observed selection are the evidence.",
+  "bounds": {
+    "fixtureGuardMs": 180000,
+    "shortTestMs": 120000,
+    "originalJourneyBunBudgetMs": 300000,
+    "originalJourneyNotRun": true
+  },
+  "limitation": "No speedup claimed in this preimage. The representative preparation skips the long sensitivity evaluation; original helpers unchanged. 18 transactions/10 results is not the old full-journey checkpoint with20/12.",
+  "globalRelease": false,
+  "requestIdentity": {
+    "bytes": 226,
+    "sha256": "6c8da5ba3f7e286dda13f5b3aa507e6f615a16840f8a86b4a44c4d9d3b6cfcf1"
+  },
+  "log": {
+    "bytes": 77253,
+    "sha256": "3758a1e70b2b81801d40b4d575a6f80e755cb4e89862917a264dc16c2d3726c9",
+    "archive": "ci-log-archive.json",
+    "archiveSelection": "S1"
+  },
+  "ciMetadata": {
+    "selection": "S1",
+    "runId": 43638918360,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43638918360",
+    "status": "completed",
+    "conclusion": "failure",
+    "head_sha": "27256440a3aa6383b6d96ebd95d9788f3a637ec4",
+    "event": "push",
+    "branch": "ci-run-linux-finance-state-231b0652-s1",
+    "attempt": 1,
+    "created_at": "2026-11-14T20:42:31Z",
+    "run_started_at": "2026-11-14T20:42:31Z",
+    "updated_at": "2026-11-14T20:45:15Z",
+    "queueSeconds": 2,
+    "setupSeconds": 88,
+    "testSeconds": 66,
+    "artifactSeconds": 0,
+    "timingDefinition": "Rounded GitHub step timestamps; queue created_at->first job start; setup job start->first command; command and artifact duration sums within one job only; not finance performance."
+  },
+  "jobHeadSha": "27256440a3aa6383b6d96ebd95d9788f3a637ec4",
+  "allJobsTerminal": true,
+  "normalizedRequest": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/finance-state-read-performance/materialization.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "expectedSelectedTestCount": 1,
+  "selectedFiles": [
+    "Sucafinav1/test/product/finance-state-read-performance/materialization.test.ts"
+  ],
+  "selectedTestCount": 1,
+  "snapshotParent": "231b0652d12d5c6ce8b5d31d02b725eabdbe308f",
+  "jobMatchesSnapshot": true,
+  "deduplicationIdentity": {
+    "productCandidate": "231b0652d12d5c6ce8b5d31d02b725eabdbe308f",
+    "productTree": "19e946d6a0c68d9fce1e1a2696bf31e66e796814",
+    "requestSha256": "6c8da5ba3f7e286dda13f5b3aa507e6f615a16840f8a86b4a44c4d9d3b6cfcf1",
+    "configuration": "ci-config-identity.json",
+    "attempt": 1
+  },
+  "testNames": [
+    "FIN-IND-005 case materialization keeps two fresh reads while skipping unrelated state clones"
+  ]
+}

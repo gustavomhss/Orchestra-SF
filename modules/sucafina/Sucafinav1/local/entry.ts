@@ -19,13 +19,27 @@ import { createLocalIdentity } from "../runtime/local-identity.ts"
 import { bootstrapLocalSurface } from "../runtime/local-bootstrap.ts"
 import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
 import { scanLocalFile } from "../runtime/local-scanner.ts"
+import { createSfSourcePersistence } from "../product/integration/source-lifecycle.ts"
+import { enumerateSfSources } from "../product/integration/source-inventory.ts"
+import { createSfSourceScopeProjector } from "../product/integration/source-projections.ts"
+import { createSfBiHttp } from "../product/integration/bi-http.ts"
+import { createSfWorkbenchHttp } from "../product/interface/http.ts"
+import { decorateSfProductHtml } from "../product/interface/html.ts"
+import { decorateSfDecisionControlsHtml } from "../product/integration/decision-controls-link.ts"
+import { sfHumanActions } from "../product/integration/human-authority.ts"
+import { getSfProductHtml } from "../product/integration/host-presentation.ts"
+import { AsyncLocalStorage } from "node:async_hooks"
+import { digestSfValue } from "../product/contracts/canonical.ts"
+import freeze from "../product/contracts/freeze-v1.json"
+import biBrowser from "../product/integration/generated/bi-entry.txt" with { type: "text" }
+import type { CreateSfHostRuntime } from "../product/contracts/host-context.ts"
 
 /** Explicit factory loaded by Orchestra serve --installation. No listener, global config or host credentials. */
-export default async function installation(context: { origin: string }) {
+export default async function installation(context: { origin: string; createHostRuntime?: CreateSfHostRuntime }) {
   return createLocalInstallation(context, process.env.SUCAFINA_LOCAL_CONFIG)
 }
 
-export async function createLocalInstallation(context: { origin: string }, file: string | undefined, environment: Readonly<Record<string, string | undefined>> = process.env) {
+export async function createLocalInstallation(context: { origin: string; createHostRuntime?: CreateSfHostRuntime }, file: string | undefined, environment: Readonly<Record<string, string | undefined>> = process.env) {
   if (!file) throw new Error("Explicit private installation configuration required")
   const loaded = await loadLocalConfiguration(file)
   if (context.origin !== loaded.config.origin) throw new Error("Installation origin mismatch")
@@ -33,7 +47,11 @@ export async function createLocalInstallation(context: { origin: string }, file:
   const config = loaded.config
   const operator = config.authentication === "local-operator" && config.localOperator ? { ...config.localOperator, name: userInfo().username } : undefined
   const client = !operator && config.tenantId && config.clientId ? createEntraClient({ tenantId: config.tenantId, clientId: config.clientId }) : undefined
-  const store = await openLocalStore(path.join(loaded.directory, operator ? "business-local" : "business"))
+  const now = () => new Date().toISOString()
+  const projectScope = createSfSourceScopeProjector(now)
+  const driver = await openLocalStore(path.join(loaded.directory, operator ? "business-local" : "business"))
+  const store = { ...driver, ...createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope, createId: randomUUID }) }
+  const restoration = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope, createId: randomUUID, purpose: "business-restore" })
   const services = { jobs: undefined as Awaited<ReturnType<typeof createLocalJobs>> | undefined }
   const status = (request: Request) => {
     const url = new URL(request.url)
@@ -51,6 +69,7 @@ export async function createLocalInstallation(context: { origin: string }, file:
     handler: async (request: Request) => status(request) ?? new Response("Microsoft 365 application is not configured. Set tenantId and clientId in the private installation configuration, then start this isolated instance again.", { status: 503, headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8" } }),
     dispose: () => store.dispose(),
   }
+  for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
   const identity = operator
     ? createOperatorIdentity({ origin: config.origin, mount: config.mount, operator, secrets: store.secrets, key: loaded.keys.session })
     : createLocalIdentity({ origin: config.origin, mount: config.mount, client: client!, secrets: store.secrets, key: loaded.keys.session })
@@ -69,15 +88,43 @@ export async function createLocalInstallation(context: { origin: string }, file:
   } : undefined
   const jobs = await createLocalJobs({ store, backupDirectory, mount: config.mount, ...(recoveryDrill ? { recoveryDrill } : {}), ...(operator ? { operator: { id: `macos:${operator.installationId}:${operator.uid}`, name: operator.name } } : {}), schedule: !!operator })
   services.jobs = jobs
+  const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank })
+  const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
+  const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
+  const runtime = await context.createHostRuntime?.({ installationId, directory: loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
+    mount: config.mount, persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, assets,
+    grants: operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
+      namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"],
+      operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : [] })
+  const bi = createSfBiHttp({ installationId, projectId: installationId, policyVersion: "sf-product-v1", origin: config.origin, mount: config.mount,
+    persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
+  const workbench = createSfWorkbenchHttp({ origin: config.origin, mount: config.mount, runtime: () => runtime?.services?.() })
+  const presentationRequest = new AsyncLocalStorage<Request>()
   const business = createModule(config.mount, {
     persistence: store,
     authenticate: identity.authenticate,
-    environment: async (request) => ({ at: new Date().toISOString(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank }),
+    environment: requestEnvironment,
+    product: async (request, surface) => await runtime?.services?.()?.productHttp?.(request, surface) ?? await workbench(request, surface) ?? await bi(request, surface),
+    productView: async (request, surface, page) => {
+      if (surface !== "procurement" || page !== "Requests" && page !== "My approvals") return undefined
+      if (!runtime) return undefined
+      const view = runtime.services?.()?.productView
+      return view ? view(request, surface, page) : new Response("Procurement is temporarily unavailable. Refresh the page to try again.", {
+        status: 503, headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8", "X-Content-Type-Options": "nosniff" },
+      })
+    },
+    productHtml: (html, surface, page) => {
+      const productHtml = getSfProductHtml(runtime?.services?.())
+      const document = productHtml?.(decorateSfProductHtml(html, surface, page), surface, page, presentationRequest.getStore()) ?? decorateSfProductHtml(html, surface, page)
+      // Keep WP06 document/import navigation while composing WP04's fenced page projection.
+      return decorateSfDecisionControlsHtml(document.replace('<div class="workspace-tools">', `<div class="workspace-tools">${surface === "dashboard" || surface === "planner" ? '<a href="?sf=imports">Imports</a>' : ""}<a href="?sf=documents">Documents</a>`), surface)
+    },
     maxJsonBytes: 2 * 1024 * 1024,
-    assets: { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes) => scanLocalFile(bytes, config.scanner) } },
+    assets,
   })
   return {
     mount: config.mount,
+    ...(runtime ? { host: runtime.contributions } : {}),
     async handler(request: Request) {
       const url = new URL(request.url)
       if (url.origin !== config.origin) return new Response("Access denied", { status: 403 })
@@ -123,7 +170,7 @@ export async function createLocalInstallation(context: { origin: string }, file:
             const recovered = await withRecoveryPoint(recovery, values.at, (point) => backups.capture(point, surface, new Date().toISOString())).catch(() => undefined)
             if (!recovered) return utilityJson({ ok: false, errors: ["That recovery point is unavailable or could not be verified. Live data was not changed."] }, 422)
             await backups.capture(store, surface, new Date().toISOString())
-            const result = await restoreBackup(store, backups.source, surface, recovered.id, { id: person.id, canWrite: true, roles: ["admin"] }, true, Number(command.version), new Date().toISOString())
+            const result = await restoreBackup(restoration, backups.source, surface, recovered.id, { id: person.id, canWrite: true, roles: ["admin"] }, true, Number(command.version), new Date().toISOString())
             return utilityJson(result, result.ok ? 200 : result.status)
           }
           if (command.action !== "restore-backup" || command.confirmed !== true || typeof values.id !== "string" || !/^backup-[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/.test(values.id) || !Number.isSafeInteger(command.version) || Number(command.version) < 0) return utilityJson({ ok: false, errors: ["Confirmed restoration and current revision required."] }, 422)
@@ -133,7 +180,7 @@ export async function createLocalInstallation(context: { origin: string }, file:
           if (!pinned) return utilityJson({ ok: false, errors: ["Backup is no longer available."] }, 404)
           // Keep a verified copy of the current state before replacing business data.
           await backups.capture(store, surface, new Date().toISOString())
-          const restored = await restoreBackup(store, pinned, surface, values.id, { id: person.id, canWrite: true, roles: ["admin"] }, true, Number(command.version), new Date().toISOString())
+          const restored = await restoreBackup(restoration, pinned, surface, values.id, { id: person.id, canWrite: true, roles: ["admin"] }, true, Number(command.version), new Date().toISOString())
           return utilityJson(restored, restored.ok ? 200 : restored.status)
         }
         const surfaces = ["dashboard", "planner", "procurement"] as const
@@ -155,7 +202,7 @@ export async function createLocalInstallation(context: { origin: string }, file:
         if (!person && request.method === "GET") return new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`, "Cache-Control": "no-store" } })
         if (person && !operator) await bootstrapLocalSurface({ request, surface, groups: config.groups[surface], identity, store })
       }
-      const response = await business(request)
+      const response = await presentationRequest.run(request, () => business(request))
       if (request.method === "POST" && response?.ok) void jobs.runOnce().catch(() => undefined)
       if (!operator || !response || !response.headers.get("content-type")?.includes("text/html") || url.searchParams.has("download") || request.method === "HEAD") return response
       return localChrome(response)

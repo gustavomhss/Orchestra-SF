@@ -1,0 +1,65 @@
+{
+  "schema": "sf2-closed-output-intake-authority-v1",
+  "mission": 23,
+  "actor": "S0-C",
+  "lease_epoch": "S0-C-e6-browser23",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "campaign": "sf2h-integral-20261112",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_sha": "233e9acb7c048dda3d8174d87b76f1e8441f4917",
+  "scope": {
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "profiles": 5,
+    "skills": 18
+  },
+  "expected_head": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+  "previous_candidate": "b62c32940d06c15c04f52b88209d5b4930cf1a3e",
+  "authority": "Explicit user continuation, bounded sole integration lane; predecessor mission14 CHECKPOINT.md hands composition to S0 and mission23 delegates continuation.",
+  "reconciliation": {
+    "predecessor_handoff": {
+      "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/bundle-integrator-20261114/CHECKPOINT.md",
+      "blob": "fbae9d8f56ee798f0a66caff37f9bee80f62c97a"
+    },
+    "remote_head_matches": true,
+    "pr_open_draft": true,
+    "pr_comments": 0,
+    "control_head": "233e9acb7c048dda3d8174d87b76f1e8441f4917",
+    "historical_control_revision": 32,
+    "historical_control_state": "PAUSED / authorities REVOKED; superseded for this bounded path by explicit mission14 then mission23",
+    "later_sf2_stack_authority_observed": false,
+    "actions_runs_for_sf2_stack_observed": 0,
+    "native_goal_resumed": false
+  },
+  "writer": "/root current ChatGPT session; only this integrator mutates sf2-stack",
+  "session_id": null,
+  "model_effective": null,
+  "read_support": "Three in-session read-only analyses of source/pack segments; no source writes, native campaign workers, supervisor, dispatcher, tests or CI authority delegated.",
+  "allowed": [
+    "Selective exact closed source blobs and accepted assembly hunks on sf2-stack",
+    "Append-only receipts in own mission23 namespace",
+    "Update own PR65 description"
+  ],
+  "denied": [
+    "force/reset",
+    "source branch writes",
+    "new supervisor or dispatcher",
+    "CI/epic dispatch or ref mutation",
+    "local product tests",
+    "merge to dev",
+    "native Goal resume",
+    "messages to third parties"
+  ],
+  "source_policy": "Closed outputs by pinned SHA, compare target preimages, retain concurrent deltas/tests/fixtures/original receipts. Active source authority is not taken over.",
+  "candidate_policy": "Material integration creates a new C2; previous C remains unchanged and unaccepted. Source results never qualify composed tree.",
+  "status": "ACK_ACTIVE_BOUNDED_INTEGRATION",
+  "final_dispatcher": "S0",
+  "final_acceptance": "S0",
+  "global_release": false
+}

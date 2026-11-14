@@ -1,0 +1,127 @@
+{
+  "schema": "operations-fixes-continuation-v1",
+  "recordedAt": "2026-11-14T18:23:41.535Z",
+  "status": "IMPLEMENTED_AWAITING_ACTIONS",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "operations-fixes",
+  "pullRequest": 52,
+  "baseBranch": "astra-operations",
+  "userLastObservedHead": "ee2e14ac940ba62177052f44c0f0e781132e7564",
+  "resumedHead": "32a73ae7995eb193eaf9a78527736cb2df176a00",
+  "resumedTree": "153e1854a32472f9bda1458924f4dbfa41a5ec49",
+  "reconciliation": {
+    "laterCommits": [
+      "eb3a97c0c2063fd28bbca74cdf50b3417c15ba25",
+      "32a73ae7995eb193eaf9a78527736cb2df176a00"
+    ],
+    "laterChanges": "Nine evidence/proposal files only; prior product and tests preserved.",
+    "handoff": "docs/sf2h/receipts/operations-fixes/HANDOFF.md @32a73ae7 explicitly delivers to S0.",
+    "priorPrClosureObserved": "PR52 metadata changed during read-only reconciliation at 2026-11-14T18:19:06Z, to ready for review with terminal CI results. Preserved before writing.",
+    "concurrency": "User explicitly authorizes context substitution; no product write was made during prior-session gate finalization. Silence is not treated as proof of termination.",
+    "testsReattached": [
+      43625203326,
+      43624678702
+    ],
+    "checksReattached": [
+      43625644846
+    ],
+    "rerunsFromContextChange": 0
+  },
+  "normative": {
+    "common": {
+      "commit": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+      "blob": "77528795ad0ac28e077dd070898f758825db12ec"
+    },
+    "ownerDeltas": {
+      "commit": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+      "blob": "cb0fc930c5677d9c941b86a99c453cce424a65bf"
+    },
+    "wp06": {
+      "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "blob": "97f169c7236204c0268bc5bf47f374e24adeffd6",
+      "read": "complete, including 5 tasks, 140 criterion proof map entries, 11 contracts, global axioms, appendices/oracles/resident/secondary context"
+    },
+    "review": {
+      "commit": "048b46acd3d70dc7ddafbea9e9b439f0d2e781d9",
+      "blob": "5d48c8f8a38765a9683fd06832889c636347c682"
+    },
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "criteria": [
+      "WP06.T05.CMP.19",
+      "WP06.T05.QLT.18"
+    ],
+    "preservedCriteria": [
+      "WP06.T05.INV.19",
+      "WP06.T05.CHK.19",
+      "WP06.T05.QLT.19",
+      "CAMP.INV.04",
+      "CAMP.CMP.02",
+      "C14",
+      "C17"
+    ],
+    "wholeWorkPackageAcceptance": false
+  },
+  "ownership": {
+    "productChange": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts#searchDocumentEvidence",
+    "preimage": "6b655187d4444cff5b8966e868ba163191adfc42",
+    "testsPrefix": "modules/sucafina/Sucafinav1/test/product/operations-fixes/",
+    "receiptsPrefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-fixes/continuation-20261114/",
+    "untouchedMissionBranches": [
+      "sourcing-money",
+      "procurement-apply",
+      "import-recovery",
+      "finance-journey"
+    ],
+    "existingProductFixesPreserved": [
+      "documents/schemas.ts",
+      "documents/workbench.ts"
+    ],
+    "hostAndEngineChanges": false
+  },
+  "staticReview": {
+    "reviewer": "independent analysis subtask document_search_review",
+    "verdict": "PASS_STATIC_ONLY",
+    "executedProduct": false,
+    "notes": [
+      "Scope and current document identity before budgeting; source dedup ignores RAG revision/candidate ID.",
+      "At most 100 sources searched; authorized 101st source witnesses metadata and is revalidated at egress.",
+      "All counted sources including no-hit sources participate in egress; match-limit early stop preserved.",
+      "No production path found requiring expansion into arbitrary RAG namespace corruption."
+    ]
+  },
+  "iOps02": {
+    "status": "BLOCKED_EXTERNAL_DEPENDENCY",
+    "reproduced": true,
+    "priorProofRun": 43624678702,
+    "recoveryAccepted": false,
+    "ownerPins": [
+      {
+        "branch": "procurement-apply",
+        "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "hostBlob": "23d9291b3dcedda36edc4aa4f38856024e3c58f4"
+      },
+      {
+        "branch": "compose-resume",
+        "sha": "ad7fcdef7739e1bc471e42fac082452799de751b",
+        "hostBlob": "23d9291b3dcedda36edc4aa4f38856024e3c58f4"
+      },
+      {
+        "branch": "finance-resume",
+        "sha": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+        "executorBlob": "f8404c18abc040c49cf111eb4561ce4c2873a4c6"
+      }
+    ],
+    "nextAction": "Owners reconcile and publish receipt-only decision-recover endpoint/host plus minimal executor mode with original receipt lookup before dispatch; then UI consumes endpoint and proves H05 recovery. Preserve NOT_APPLIED proposal preimages; do not overwrite newer Finance executor."
+  },
+  "validationPolicy": {
+    "remote": "GitHub MCP only",
+    "localProductTests": false,
+    "epic": false,
+    "fullSuite": false,
+    "merge": false,
+    "newProductBranches": false,
+    "newPullRequests": false,
+    "workflowChanges": false
+  },
+  "productResultBlob": "2753c07ee03472d35d3b93789e3cb9ba309f6a41"
+}

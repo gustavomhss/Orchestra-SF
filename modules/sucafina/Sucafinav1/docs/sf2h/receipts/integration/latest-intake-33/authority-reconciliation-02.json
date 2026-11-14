@@ -1,0 +1,26 @@
+{
+  "schema": "sf2-authority-reconciliation-v1",
+  "mission": 33,
+  "lease_epoch": "S0-C-e7-browser33",
+  "previous_control": "7150af3c3cea2a1dece40ffa3f13abe8fb10278d",
+  "reconciled_control": "970ae24e36cae47dfa7e0df327e409d9cc3fcea7",
+  "reconciled_control_tree": "5754df6ca1ce22a13dfa8d35b39c72b5ae6a088b",
+  "parent": "7150af3c3cea2a1dece40ffa3f13abe8fb10278d",
+  "change": "One added mission35 atlas-process-restart-proof.json; COMMON and mission33 unchanged.",
+  "read_blob": "0772578134458d933d66769b307d564eab4aa105",
+  "result": "MISSION33_AUTHORITY_RECONFIRMED_NOT_REVOKED",
+  "authority": "Mission35 explicitly preserves Session33 sole integrator, mission34 persistence and Memory runtime owners.",
+  "new_lane": {
+    "mission": 35,
+    "branch": "astra-wp14",
+    "pr": 38,
+    "expected_source": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+    "status": "PREPARED_NOT_STARTED_NOT_A_RELEASE",
+    "required": "Terminal handoff with qualified merged patch/preimages/postimages/full input closure/exact source proof before intake; component restart does not prove full native AM05."
+  },
+  "observed_at": "2026-11-14T21:44:53.246Z",
+  "tests": "NOT_RUN",
+  "ci": "NOT_RUN",
+  "AM": "NOT_RUN",
+  "global_release": false
+}

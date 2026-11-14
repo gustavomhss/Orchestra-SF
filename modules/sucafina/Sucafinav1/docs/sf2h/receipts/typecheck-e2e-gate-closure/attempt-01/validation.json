@@ -1,0 +1,79 @@
+{
+  "schema": "sf2-mission26-static-validation-v1",
+  "status": "IMPLEMENTED_STATICALLY_VERIFIED_COMPILER_NOT_RUN",
+  "parent": "5c41125e7ef17a6c7eff9c9fb2329fe8f85ce982",
+  "source_candidate": "402a091485e11d60dff433049c7dedd7fcead687",
+  "candidate_tree": "006339cc3a61de9bf99d2ba17069181bd5d8a02e",
+  "overlay": "Six mission26 tooling/config files, whose exact hashes are in intake-files.json. The hydrated source graph was not mutated.",
+  "results": {
+    "generation": "MATCH",
+    "yaml_structure": "PASS",
+    "unchanged_prior_jobs": 8,
+    "required_package_typechecks_preserved": 5,
+    "recipes_preserved": 8,
+    "bash_syntax": {
+      "status": "PASS",
+      "blocks": 63
+    },
+    "node_syntax": "PASS",
+    "python_builder_ast": "PASS",
+    "package_delta": "Only typecheck:sf-e2e added; no deps or prior scripts changed.",
+    "source_blob_verification": {
+      "files": 1412,
+      "mismatches": 0
+    },
+    "declared_inputs": {
+      "count": 47,
+      "status": "INPUTS_PRESENT_COMPILER_NOT_RUN"
+    },
+    "request_validation": {
+      "valid": 8,
+      "blocked": 0,
+      "execution": "NOT_RUN"
+    },
+    "source_declarations": {
+      "operations": 5,
+      "decisions": 4,
+      "reports": 4,
+      "total": 13,
+      "collection": "NOT_RUN"
+    },
+    "lexical_graph": {
+      "roots": 47,
+      "nodes": 1399,
+      "edges": 8707,
+      "unresolved_repository_edges": 0,
+      "installed_dependency_paths": [
+        {
+          "source": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+          "specifier": "../../../../../modules/sucafina/node_modules/exceljs",
+          "kind": "import-literal",
+          "status": "installed-dependency-path",
+          "targets": [],
+          "resolution_candidates": []
+        }
+      ],
+      "compiler_status": "NOT_RUN"
+    },
+    "actionlint": "NOT_RUN: unavailable",
+    "bun_typechecks": "NOT_RUN: Bun unavailable",
+    "compiler_show_config_and_list_files": "NOT_RUN: Bun and installed dependencies unavailable",
+    "atlas_generation_spawn_guard_and_guards": "NOT_RUN: Bun unavailable; no authorized current hosted dispatcher handoff",
+    "local_product_tests": "NOT_RUN: prohibited",
+    "hosted_tests_and_epic": "NOT_RUN: S0 final authority",
+    "native_AM01_AM06": "NOT_RUN"
+  },
+  "runtime": {
+    "node": "v24.22.1",
+    "python": "3.12.14",
+    "bun": null,
+    "actionlint": null
+  },
+  "proof_limits": [
+    "Static graph is lexical/conservative and includes a union of conditional workspace exports; it is not the actual compiler program.",
+    "No compiler diagnostics were observed because no compiler was run; this is not a claim of zero errors.",
+    "Historical failures remain unresolved unless their owners establish current proof.",
+    "Source declaration counts and valid requests do not prove selected or executed Playwright tests."
+  ],
+  "refresh": "consumer-freshness.json"
+}

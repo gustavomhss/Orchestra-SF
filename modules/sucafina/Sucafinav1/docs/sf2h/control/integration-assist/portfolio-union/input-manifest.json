@@ -1,0 +1,446 @@
+{
+  "schema": "wp13-semantic-union-inputs-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "pins": {
+    "mission": {
+      "commit": "10a7b3dbc8140d95eb9ded97dd1377bf05043321",
+      "tree": "85a1a13141b26f3fa0d028a18300eef7a26d4e9a"
+    },
+    "planning": {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "tree": "1dbc6db9167530a464f6c7f9a94ddfe958f8d46a"
+    },
+    "target": {
+      "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+      "tree": "3ca2f19fb2d1b40d0f94b4a6e9c1cfecb4cefb32"
+    },
+    "pr37": {
+      "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "tree": "f9e4e23db0b3bc941599efba5341a653bb4ca3d9"
+    },
+    "intelligence": {
+      "commit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "tree": "7c445488ea55c1c6d8d31cf91cb61b01665dac7b"
+    },
+    "finance_product": {
+      "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+      "tree": "a736cd370da6081c6010ffb26d66130fea94736f"
+    },
+    "refresh": {
+      "sf2_stack": {
+        "sha": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "tree": "b9223690f64415a936eb38ad6f8796b21a8a7966"
+      },
+      "finance_resume": {
+        "sha": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "tree": "37e25cf23c449eb1e0fca381301681fa14e9fd4d"
+      },
+      "sf2_control": {
+        "sha": "f23da37c8a2dd6ccfa69c73cf36837b8943e225e",
+        "tree": "97f7888266ce389614b907b736add6567d6b45cd"
+      }
+    }
+  },
+  "read_records": [
+    {
+      "path": "AGENTS.md",
+      "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "scope": "Raiz; mesmo blob na base sf2-control. Ancestrais intermediários e subárvores product/test/docs inspecionados sem AGENTS adicionais aplicáveis."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/portfolio-semantic-union.json",
+      "commit": "10a7b3dbc8140d95eb9ded97dd1377bf05043321",
+      "blob": "f68f140ba1f0648f8256a6bf8491aaff089a3a90",
+      "scope": "Missão21 completa; autoridade documental e vedação de testes/agents."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "522782bb7e113124a937d7ef17313032be9d6850",
+      "scope": "Conteúdo completo lido."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "043205bee6031b4517a98591b3588fca0ab12925",
+      "scope": "Conteúdo completo lido."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6",
+      "scope": "Conteúdo completo lido."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S4-C.json",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "c59d7593fe94808048a0377d365d0681482d7252",
+      "scope": "Pack completo, incluindo 68 critérios, 17 contratos, dependências/provas/evidence, residentes, oráculos e conclusão."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "scope": "Anexo obrigatório completo."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1",
+      "scope": "Anexo obrigatório completo."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/COMMON.md",
+      "commit": "c708ec0609dbfc95b259707d8c38481617f74f11",
+      "blob": "e54d84e3cdfa0046225518e253baf9dcf377fa7c",
+      "scope": "Regras da onda paralela."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/bundle-integrator-20261114/held-intake.json",
+      "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+      "blob": "419737fcb728b1c7bc264afe568c83de3d464d57",
+      "scope": "31 alternativas retidas, todos os blobs conferidos."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/bundle-integrator-20261114/pending-owners.json",
+      "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+      "blob": "15f57952414ef7282f86118b83a2dd8013d46bce",
+      "scope": "10 achados originais preservados."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/bundle-integrator-20261114/pending-owners-03.json",
+      "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+      "blob": "dfd32bb87a987d7784e65018e0dabe30732d5abc",
+      "scope": "12 achados no refresh, incluindo C17-BETWEEN-OBSERVATIONS e CURRENT-CHOICE-COHORT."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/HANDOFF-FINAL.md",
+      "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+      "blob": "aff4a6ce54f550ad742c1d8f8b8534d38916f21a",
+      "scope": "Finance W2 é5a029e77; head posterior agrega recibos. FIN-IND-005 continua aberto."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/integration-intake.json",
+      "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+      "blob": "368c0d2afc6c8530d271672a4bc03b1b39d51af8",
+      "scope": "Finance W2 é5a029e77; head posterior agrega recibos. FIN-IND-005 continua aberto."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/residual-boundary.json",
+      "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+      "blob": "c986ddb9ca04467b230e08833315f893eabec61f",
+      "scope": "Finance W2 é5a029e77; head posterior agrega recibos. FIN-IND-005 continua aberto."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "commit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blob": "ee1a9586231ec9027bb323a817c4a469c4b207a6",
+      "scope": "Comparação adicional do finalizador/serializer PR36, proveniência original e evidência ordenada."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+      "commit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+      "scope": "Comparação adicional do finalizador/serializer PR36, proveniência original e evidência ordenada."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "commit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blob": "b2ac17f210886353d3596fc6a891242c7ea40f0a",
+      "scope": "Comparação adicional do finalizador/serializer PR36, proveniência original e evidência ordenada."
+    }
+  ],
+  "held_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "7b7779960f4ca5658bda5917f7033c51dad663f2",
+      "selected_blob": "4bdad097bb82f3dc96a74090bacc567835295680",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "4bdad097bb82f3dc96a74090bacc567835295680",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "3488f1d757fca6fd6527540679f4fb68a533aee0",
+      "selected_blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "3dec070ca5f56f7bd03a09b4b19468c950d82214",
+      "selected_blob": "fe4ab56201fd1898905ac7bc810f0495a64f8602",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "fe4ab56201fd1898905ac7bc810f0495a64f8602",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb",
+      "selected_blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "1d68174e4e54551fef742630c77c5733cd6b1b7b",
+      "selected_blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "33a8d973c045769b456342499e1c247d524f6c53",
+      "selected_blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d",
+      "selected_blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5",
+      "selected_blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+      "selected_blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "912df8ecd8552b245e124b93c46644c92a32f3ac",
+      "selected_blob": "46a04597df74205add4531465f35d8a55ca1f8dd",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "46a04597df74205add4531465f35d8a55ca1f8dd",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "6c92ae341623724fde5843292fdd81b3799eef93",
+      "selected_blob": "d85a362360301686d2c5ca72f3938551c119b38a",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "d85a362360301686d2c5ca72f3938551c119b38a",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "e83d632e6cd26ad360a9ea7ff72ba04a31c97eb4",
+      "selected_blob": "60693fea1a9fa238ecf57c43c73d8d113911b74a",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "60693fea1a9fa238ecf57c43c73d8d113911b74a",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "ea5f94f0c3f036625688c7e60ce9ee9c4ad328d2",
+      "selected_blob": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "4195ec55c7d9cdfe5e308d192414562bb998d7c0",
+      "selected_blob": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "0a5f3d28435378bae4637d629ff991fb03993f27",
+      "selected_blob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+      "selected_blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "22e9e17fdfc2fb07f6a5ef3c23e521fc3781c25f",
+      "selected_blob": "f289bde6c2b97278a9b3a7cfe1462b41b0f1ab7a",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "f289bde6c2b97278a9b3a7cfe1462b41b0f1ab7a",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "606591b793eecf9a97ba1459dd0c02d6f9d352f7",
+      "selected_blob": "9af706b6a1ab27229fb8514e117550036a13b249",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "9af706b6a1ab27229fb8514e117550036a13b249",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "4efa414f8ecadde5799e7246337863b145373210",
+      "selected_blob": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistent-store.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "ea54e03a06787a74c603c4e14a2c80d09a8c9700",
+      "selected_blob": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "33193aabe586aee6bdedb8a8a06238783ece25a2",
+      "selected_blob": "e20e97e54d60c156952fbc43fab356cf479221de",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "e20e97e54d60c156952fbc43fab356cf479221de",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "57ec7d22fc2fa20506547ae5d4a3bca40a91db04",
+      "selected_blob": "2e103fe41fd5ba5a740247bb65a4ac13d262e7da",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "2e103fe41fd5ba5a740247bb65a4ac13d262e7da",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "553e171d14ea8e7318ad245375cd6d2597b66d4a",
+      "selected_blob": "6b2a318f73aa8adb67840958add758f151f0bade",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "6b2a318f73aa8adb67840958add758f151f0bade",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "ecc4678cf757e68c5763f8bc99d5f3573df86bc5",
+      "selected_blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope-fixture.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+      "selected_blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+      "disposition": "VERIFICATION_INPUT_PRESERVED_NO_RUNTIME_QUALIFICATION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "selected_blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "disposition": "VERIFICATION_INPUT_PRESERVED_NO_RUNTIME_QUALIFICATION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "bf07b1c804138f04e01f9cf5a518b6d89ab24b9a",
+      "selected_blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "26f2ad65abc551c33561420cf7e23b04522255f6",
+      "selected_blob": "a3b1cd5326dc4dfbbaa4a16cb0134c9d0fe15a4c",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "a3b1cd5326dc4dfbbaa4a16cb0134c9d0fe15a4c",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "a77713b4a8dff26a7d105775633a9f15c1248f21",
+      "selected_blob": "76ea3fa6902105c7be42956dae99ea4e4f9a4c3b",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "76ea3fa6902105c7be42956dae99ea4e4f9a4c3b",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "a2cf45f6c343c384c37a36e0c36437e379178b43",
+      "selected_blob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "disposition": "RUNTIME_OR_OVERLAPPING_TEST_ALTERNATIVE_HELD"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/term-defer-boundary.test.ts",
+      "source_sha": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "source_blob": "edb551580d49c817141d3a850be4af36b0a7d647",
+      "selected_blob": "edb551580d49c817141d3a850be4af36b0a7d647",
+      "status": "HELD_FOR_OWNER_SEMANTIC_UNION",
+      "admitted_blob": "edb551580d49c817141d3a850be4af36b0a7d647",
+      "disposition": "VERIFICATION_INPUT_PRESERVED_NO_RUNTIME_QUALIFICATION"
+    }
+  ],
+  "latest_target_changes": "Comparação46cb4dd→d8ab1d33 conferida: os31 held e o suplemento handoff-c08 mantêm todos os blobs; outras docs/testes/scripts mudaram. Não inferir validação global.",
+  "new_paths_absent_at": [
+    {
+      "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+      "paths": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts"
+      ],
+      "evidence": "GitHub contents retornou404 para ambos; árvore do bundle também não os contém."
+    }
+  ]
+}

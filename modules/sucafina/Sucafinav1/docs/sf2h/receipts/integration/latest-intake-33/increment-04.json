@@ -1,0 +1,542 @@
+{
+  "schema": "sf2-integration-increment-v1",
+  "mission": 33,
+  "increment": 4,
+  "candidate": "C8",
+  "previous_candidate": {
+    "symbol": "C7",
+    "commit": "353f177180594fcf6eaf140fd2cba0737d9836ad",
+    "tree": "5c7a1a8de095687b3e9fb0820648e1576f41be55"
+  },
+  "parent_commit": "8f944fc198602563893ccc6783cc096656cd9f3a",
+  "parent_tree": "2cfb37725026145d8998d25225b9f2e3ad530b6d",
+  "authority_commit": "133312e39a9aa6d1cb51bed20625108c6cc79359",
+  "lease_epoch": "S0-C-e7-browser33",
+  "control_reconciled": "970ae24e36cae47dfa7e0df327e409d9cc3fcea7",
+  "scope": "Tooling26 complete six-file independent scoped E2E compiler gate and original receipts; workflow is product input, no execution",
+  "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+  "source_tree": "68f1e88a20f1e71abf911fc680aec222027967e1",
+  "release": {
+    "state": "TERMINAL_SOURCE_EXPLICIT_WRITE_AUTHORITY_ENDED",
+    "handoff_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/HANDOFF-FINAL.md",
+    "handoff_blob": "c97cf0a7b7bc9e74977ac20c5235ec443d3532fe",
+    "source_intake_blob": "ce66b4ba3d94e9fe08c5229944ae4ef4c7030c3c"
+  },
+  "authorization": {
+    "mission_ref": "6da04cd66eb268362ee58509271fef773ac2a62e",
+    "mission_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/typecheck-e2e-gate-closure.json",
+    "mission_blob": "171ce861c06e890e73240362dfaeb50a553c82e7",
+    "explicit_workflow_write": true,
+    "scoped_workflow": ".github/workflows/sf2-epic.yml",
+    "integration_authority": "Mission33 user request and7150af3c output26 incremental intake",
+    "dispatcher": "S0 only",
+    "workflow_trigger_preserved": "on.push.branches=[sf2-epic-c]; not sf2-stack",
+    "workflow_diff": "Only independent sf-e2e-typecheck job and new bundle-result dependency; existing jobs and triggers retained."
+  },
+  "entries": [
+    {
+      "path": ".github/workflows/sf2-epic.yml",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": "4e92e4960e2bc371aa712d95e08acd76a5cc1ff2",
+      "postimage": "b332d777e4465469e9e4869e29f4339a95853d21",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": ".github/workflows/sf2-epic.yml",
+      "source_blob": "b332d777e4465469e9e4869e29f4339a95853d21",
+      "disposition": "EXACT_SOURCE_POSTIMAGE_IF_CURRENT_PREIMAGE_MATCHES",
+      "sha256": "5c87488dbb717ad4e5a410aa69cc0cb15264465512d8546838497c2ae58301b8",
+      "bytes": 54846
+    },
+    {
+      "path": "script/sf2h/final-bundle/build-artifact.py",
+      "mode": "100755",
+      "type": "blob",
+      "preimage": "c78e91620042c18adc09ecf68050d55d95f4c78c",
+      "postimage": "4f7d7a12a5eeba3bfb82f9ebe03f563bd1b441a2",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "script/sf2h/final-bundle/build-artifact.py",
+      "source_blob": "4f7d7a12a5eeba3bfb82f9ebe03f563bd1b441a2",
+      "disposition": "EXACT_SOURCE_POSTIMAGE_IF_CURRENT_PREIMAGE_MATCHES",
+      "sha256": "f7b2e2cb65a09961bff0eda4b50b977b580baa5c29e2474c1d9979362b00c87d",
+      "bytes": 16157
+    },
+    {
+      "path": "script/sf2h/final-bundle/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": "8080b880846de8b6ac881fee45804c62b4afa344",
+      "postimage": "83da2c1840e57eda8901ce7cc3dfa225ab385446",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "script/sf2h/final-bundle/README.md",
+      "source_blob": "83da2c1840e57eda8901ce7cc3dfa225ab385446",
+      "disposition": "EXACT_SOURCE_POSTIMAGE_IF_CURRENT_PREIMAGE_MATCHES",
+      "sha256": "ab26491381e4b4a202b186c8906bd202bb628c59de765776db00c29612c7fce2",
+      "bytes": 15589
+    },
+    {
+      "path": "script/sf2h/final-bundle/verify-e2e-typecheck.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "9f8ce79ce8a8611451ad550f8807b4fa2a33ea30",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "script/sf2h/final-bundle/verify-e2e-typecheck.mjs",
+      "source_blob": "9f8ce79ce8a8611451ad550f8807b4fa2a33ea30",
+      "disposition": "EXACT_SOURCE_POSTIMAGE_IF_CURRENT_PREIMAGE_MATCHES",
+      "sha256": "5a35232ad96f85ee5de164c3a1ed46a981897a6db959a429e05aba8db773f129",
+      "bytes": 10147
+    },
+    {
+      "path": "packages/app-shell/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+      "postimage": "fed0414375fe5ad9553d1b6562f54972f2ed89f7",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "packages/app-shell/package.json",
+      "source_blob": "fed0414375fe5ad9553d1b6562f54972f2ed89f7",
+      "disposition": "ADD_ONLY_TYPECHECK_SCRIPT_PRESERVE_OTHER_FIELDS",
+      "sha256": "98130221e3c0d9fab48c134cfd347894a19fc4b5c075c92d7c080362904bd3f4",
+      "bytes": 4281
+    },
+    {
+      "path": "packages/app-shell/tsconfig.sf-e2e.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "93740e51cc01a84c2fd97771aa9ca5707e7e63a1",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "packages/app-shell/tsconfig.sf-e2e.json",
+      "source_blob": "93740e51cc01a84c2fd97771aa9ca5707e7e63a1",
+      "disposition": "EXACT_SOURCE_POSTIMAGE_IF_CURRENT_PREIMAGE_MATCHES",
+      "sha256": "6bd78feeb679a7d735aeee226860c656fb2b8c3f26fc7b6738d34c42c81a85c0",
+      "bytes": 533
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/HANDOFF-FINAL.md",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "c97cf0a7b7bc9e74977ac20c5235ec443d3532fe",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/HANDOFF-FINAL.md",
+      "source_blob": "c97cf0a7b7bc9e74977ac20c5235ec443d3532fe",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/command-results.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "48fec85a1fbc3ef3a0367d6bbfcf894bcd7ec0ae",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/command-results.json",
+      "source_blob": "48fec85a1fbc3ef3a0367d6bbfcf894bcd7ec0ae",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/consumer-freshness.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "614745a3f6b9583cfedf3afa099a8c52593ec8a9",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/consumer-freshness.json",
+      "source_blob": "614745a3f6b9583cfedf3afa099a8c52593ec8a9",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/declared-inputs.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "8a48011681e2284c37a757a9bdd81bfb31773711",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/declared-inputs.json",
+      "source_blob": "8a48011681e2284c37a757a9bdd81bfb31773711",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/delivery-files.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "34f5ec54fb9d64a47f088d0d5f0ef5e7419833e5",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/delivery-files.json",
+      "source_blob": "34f5ec54fb9d64a47f088d0d5f0ef5e7419833e5",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/diagnostics-and-pending.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "60b948a7a3ebb453afa12afc37db58ad1944f394",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/diagnostics-and-pending.json",
+      "source_blob": "60b948a7a3ebb453afa12afc37db58ad1944f394",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/intake-files.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "ce66b4ba3d94e9fe08c5229944ae4ef4c7030c3c",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/intake-files.json",
+      "source_blob": "ce66b4ba3d94e9fe08c5229944ae4ef4c7030c3c",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/nominal-selection.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "4f52dd60b8f079da5fb6f4261351f63b3b45c9d2",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/nominal-selection.json",
+      "source_blob": "4f52dd60b8f079da5fb6f4261351f63b3b45c9d2",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/owner-patches/manifest.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "affa1887fea7ddf657afa6bd330c8c3ea57d948c",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/owner-patches/manifest.json",
+      "source_blob": "affa1887fea7ddf657afa6bd330c8c3ea57d948c",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/owner-patches/operations-host-selection.patch",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "ec3f8d64f2b28559b3c441ce306f688f91342bfb",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/owner-patches/operations-host-selection.patch",
+      "source_blob": "ec3f8d64f2b28559b3c441ce306f688f91342bfb",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/owner-patches/selection.ts.txt",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "190cd4e252c53b1a94741036f7b9d8553be42b75",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/owner-patches/selection.ts.txt",
+      "source_blob": "190cd4e252c53b1a94741036f7b9d8553be42b75",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/reading-and-authority.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "9aff7dea0d75ca8f6b066757cf8bb56f4ffcbe83",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/reading-and-authority.json",
+      "source_blob": "9aff7dea0d75ca8f6b066757cf8bb56f4ffcbe83",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/request-inputs.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "583b87bf2c64d365847f3f276897d3ef9500b161",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/request-inputs.json",
+      "source_blob": "583b87bf2c64d365847f3f276897d3ef9500b161",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/request-preflight.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "2ec5e7de403e36495598f0017451b7d7a9b694a5",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/request-preflight.json",
+      "source_blob": "2ec5e7de403e36495598f0017451b7d7a9b694a5",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/review.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "59184fffccd3c8a1f6092f2214fad4e54f77a747",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/review.json",
+      "source_blob": "59184fffccd3c8a1f6092f2214fad4e54f77a747",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/source-files.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "98d93951e827067c0cee00d9a331bb821cb45a58",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/source-files.json",
+      "source_blob": "98d93951e827067c0cee00d9a331bb821cb45a58",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/static-graph.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "b7b7ef2867990ed8c9f6e8c2aa79b0522d8e8fbb",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/static-graph.json",
+      "source_blob": "b7b7ef2867990ed8c9f6e8c2aa79b0522d8e8fbb",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/validation.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "fffceea20ab016367d604dd4ca2cd167134c25fc",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/validation.json",
+      "source_blob": "fffceea20ab016367d604dd4ca2cd167134c25fc",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/workflow-preservation.json",
+      "mode": "100644",
+      "type": "blob",
+      "preimage": null,
+      "postimage": "6ba950b1750b9235b431a8e5daa6788d64670e93",
+      "source_commit": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/workflow-preservation.json",
+      "source_blob": "6ba950b1750b9235b431a8e5daa6788d64670e93",
+      "disposition": "NEW_SOURCE_RECEIPT_EXACT_BLOB"
+    }
+  ],
+  "counts": {
+    "material": 6,
+    "source_receipts": 19
+  },
+  "preserved_invariants": [
+    "Single package script added; all previous scripts and dependencies unchanged",
+    "Existing workflow triggers and eight prior jobs retained; only independent sf-e2e-typecheck and aggregator dependency added",
+    "Existing five package typechecks and eight recipes retained",
+    "No new exclude/ignore/loose type configuration; strict inherited config and actual compiler graph required",
+    "build-artifact.py mode100755 retained",
+    "All Reports/Operations material sources and combined E2E config from C7 retained",
+    "No workflow dispatch/ref execution; sf2-epic-c untouched"
+  ],
+  "historical_patch": "owner-patches/operations-host-selection.patch must remain INERT_SUPERSEDED_BY_CURRENT_SOURCE, never apply.",
+  "review_receipt": "tooling26-static-review.json",
+  "pending": [
+    {
+      "owner": "S0 dispatcher",
+      "action": "Run actual five package checks and new bun run typecheck:sf-e2e showConfig/listFiles on current candidate, capture logs/config/program; COMPILER_NOT_RUN."
+    },
+    {
+      "owner": "source owners",
+      "action": "Resolve actual compiler diagnostics if observed; do not suppress, exclude or loosen sources."
+    }
+  ],
+  "verification": {
+    "preimages": [
+      {
+        "path": ".github/workflows/sf2-epic.yml",
+        "preimage": "4e92e4960e2bc371aa712d95e08acd76a5cc1ff2",
+        "actual": "4e92e4960e2bc371aa712d95e08acd76a5cc1ff2",
+        "mode": "100644",
+        "pass": true
+      },
+      {
+        "path": "script/sf2h/final-bundle/build-artifact.py",
+        "preimage": "c78e91620042c18adc09ecf68050d55d95f4c78c",
+        "actual": "c78e91620042c18adc09ecf68050d55d95f4c78c",
+        "mode": "100755",
+        "pass": true
+      },
+      {
+        "path": "script/sf2h/final-bundle/README.md",
+        "preimage": "8080b880846de8b6ac881fee45804c62b4afa344",
+        "actual": "8080b880846de8b6ac881fee45804c62b4afa344",
+        "mode": "100644",
+        "pass": true
+      },
+      {
+        "path": "script/sf2h/final-bundle/verify-e2e-typecheck.mjs",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "packages/app-shell/package.json",
+        "preimage": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+        "actual": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+        "mode": "100644",
+        "pass": true
+      },
+      {
+        "path": "packages/app-shell/tsconfig.sf-e2e.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/HANDOFF-FINAL.md",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/command-results.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/consumer-freshness.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/declared-inputs.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/delivery-files.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/diagnostics-and-pending.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/intake-files.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/nominal-selection.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/owner-patches/manifest.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/owner-patches/operations-host-selection.patch",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/owner-patches/selection.ts.txt",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/reading-and-authority.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/request-inputs.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/request-preflight.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/review.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/source-files.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/static-graph.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/validation.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/typecheck-e2e-gate-closure/attempt-01/workflow-preservation.json",
+        "preimage": null,
+        "actual": null,
+        "mode": null,
+        "pass": true
+      }
+    ],
+    "static_source_read": true,
+    "source_validation": "Original tooling source records preserved; not transferred to C8",
+    "source_compiler": "COMPILER_NOT_RUN",
+    "tests": "NOT_RUN",
+    "ci": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "builder": "NOT_RUN",
+    "request_preflight": "NOT_RUN",
+    "AM": "NOT_RUN",
+    "source_PASS_transferred": false
+  },
+  "acceptance": "INTEGRATED_STATIC_ONLY; exact material C8 identity follows in candidate-C8.json",
+  "global_release": false
+}

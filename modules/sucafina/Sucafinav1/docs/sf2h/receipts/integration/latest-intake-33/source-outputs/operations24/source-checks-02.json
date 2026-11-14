@@ -1,0 +1,119 @@
+{
+  "schema": "operations-source-checks-v1",
+  "attempt": 2,
+  "W": "49d29bf4d6512d130307f46e145885949f213ea8",
+  "tree": "0d982446f0708975895b59fad3c94d0a53704f58",
+  "workflow": {
+    "path": ".github/workflows/astra-wp04-check.yml",
+    "blob": "dab8d29f69d78ba304325333e03fb8d729fe026e",
+    "branch": "astra-check-wp04",
+    "previous_head": "0042a95967ad651fe65ac0da216db6af86ed804c",
+    "expected_head_CAS": true
+  },
+  "run_id": 43641414497,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43641414497",
+  "job_id": 132589596387,
+  "conclusion": "failure",
+  "commands": [
+    {
+      "directory": "modules/sucafina/Sucafinav1",
+      "commands": [
+        "bun product/contracts/generate-output-schemas.ts",
+        "bun product/contracts/generate-output-schemas.ts --check",
+        "git diff --exit-code -- product/contracts/output-schemas.ts"
+      ],
+      "result": "PASS"
+    },
+    {
+      "directory": "modules/sucafina",
+      "command": "bun typecheck",
+      "result": "PASS"
+    },
+    {
+      "directory": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "result": "FAIL_OWN_RECEIPT_LOG_ADDITIONS",
+      "rules": 78,
+      "changed_paths": 699,
+      "gate_findings": 3,
+      "warnings": 11,
+      "errors": 0
+    }
+  ],
+  "gate_findings": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/boundary-attempt-02-summary.log",
+      "rule": "agent-scratch",
+      "origin": "added by mission24 receipt publication"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/source-checks-01/guards.log",
+      "rule": "agent-scratch",
+      "origin": "added by mission24 receipt publication"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/evidence/source-checks-01/typecheck.log",
+      "rule": "agent-scratch",
+      "origin": "added by mission24 receipt publication"
+    }
+  ],
+  "warnings": [
+    "WARN apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts:46 [ts-double-cast] Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard."
+  ],
+  "artifact": {
+    "id": 14131514826,
+    "name": "astra-wp04-checks",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43641414497/artifacts/14131514826",
+    "zip_sha256": "346ee0b00bade9731d5a38b955ca146833c7c42eec7c5abedc77d0b1233d18ed",
+    "size_in_bytes": 15230,
+    "members": [
+      {
+        "name": "guards.log",
+        "sha256": "1110a8e6a027a2064c803c73c59759145bd74549304ad49f7469c538709f9933",
+        "bytes": 6036
+      },
+      {
+        "name": "output-schemas.ts",
+        "sha256": "33fd0a159ef9258e02c4777a3fb4d88b27a86930122e1e563d88ec3d1362d806",
+        "bytes": 205836
+      },
+      {
+        "name": "revisions.txt",
+        "sha256": "9a3089c52c318d3dea4b4e0a03c14de4a7332b93f61eac8433ad5cde3fc13b72",
+        "bytes": 123
+      },
+      {
+        "name": "typecheck.log",
+        "sha256": "0cce49ed17a272b35cda32961bce19ce118bab2aac71290749bdfe7f493abf53",
+        "bytes": 49
+      }
+    ],
+    "revisions_verified": [
+      "49d29bf4d6512d130307f46e145885949f213ea8",
+      "0d982446f0708975895b59fad3c94d0a53704f58",
+      "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    ]
+  },
+  "correction": {
+    "rule_blob": "71ce321c30465faaf957a08256bd6b7d007d4173",
+    "action": "Delete the three raw log copies from own receipts. Keep curated result records and references/hashes for canonical Actions logs/artifacts. Do not rename raw dumps or change/exempt the guard.",
+    "business_code_changed": false,
+    "gate_weakened": false,
+    "followup": "Scoped existing source-check workflow on the resulting receipt cleanup commit."
+  },
+  "limits": [
+    "Module check covers actual installation graph imported by mount regression, not complete browser spec/helpers graph.",
+    "No nominal UI PASS, composed product check or Omni execution proof follows from these static steps."
+  ]
+}

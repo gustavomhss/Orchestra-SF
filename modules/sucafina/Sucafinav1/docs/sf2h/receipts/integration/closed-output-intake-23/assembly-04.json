@@ -1,0 +1,1046 @@
+{
+  "schema": "sf2-selective-assembly-v3",
+  "mission": 23,
+  "increment": 4,
+  "target_parent": "0d5bd54a109774d4e3296e00c276be341fe39b00",
+  "portfolio": {
+    "source_commit": "ac7d29397db0f639237cdb39fb0754d59c1a929d",
+    "manifest_blob": "25888b9c7ba7ebb2259804b6b312b3c241725a59",
+    "applied_units": [
+      "P01"
+    ],
+    "atomic_scope": "All six P01 destinations in one commit",
+    "patch": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/portfolio-union/patches/0001-sensitivity-disclosure-and-replay.patch",
+    "patch_blob": "dd6251009abbf2c773b1a02111c5908bd8a8f959",
+    "reconstruction": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "preimage": "fe4ab56201fd1898905ac7bc810f0495a64f8602",
+        "postimage": "9d29046dd40adffc88985be5e1b1603b64491129",
+        "hunks": 3,
+        "exact_contexts": true,
+        "exact_published_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "preimage": "46a04597df74205add4531465f35d8a55ca1f8dd",
+        "postimage": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+        "hunks": 2,
+        "exact_contexts": true,
+        "exact_published_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts",
+        "preimage": null,
+        "postimage": "ca583dd473bdfb13299dfe470e301a6a113c0b73",
+        "hunks": 1,
+        "exact_contexts": true,
+        "exact_published_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+        "preimage": "76ea3fa6902105c7be42956dae99ea4e4f9a4c3b",
+        "postimage": "0444570a0a961c979f75388fb0708812f98497e5",
+        "hunks": 1,
+        "exact_contexts": true,
+        "exact_published_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+        "preimage": "a3b1cd5326dc4dfbbaa4a16cb0134c9d0fe15a4c",
+        "postimage": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83",
+        "hunks": 1,
+        "exact_contexts": true,
+        "exact_published_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "preimage": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+        "postimage": "7025de0601768ccc0bec76d8e0675882dee7cda9",
+        "hunks": 1,
+        "exact_contexts": true,
+        "exact_published_postimage": true
+      }
+    ],
+    "dependencies": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+        "required_reference_blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+        "policy": "Preservar sem alteração. Se divergente, reconciliar comportamento e nova preimage; não substituir pelo snapshot PR37/Finance herdado.",
+        "owner": "current admitted owner",
+        "actual_blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+        "required_reference_blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+        "policy": "Preservar sem alteração. Se divergente, reconciliar comportamento e nova preimage; não substituir pelo snapshot PR37/Finance herdado.",
+        "owner": "current admitted owner",
+        "actual_blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+        "required_reference_blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+        "policy": "Preservar sem alteração. Se divergente, reconciliar comportamento e nova preimage; não substituir pelo snapshot PR37/Finance herdado.",
+        "owner": "current admitted owner",
+        "actual_blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+        "required_reference_blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+        "policy": "Preservar sem alteração. Se divergente, reconciliar comportamento e nova preimage; não substituir pelo snapshot PR37/Finance herdado.",
+        "owner": "current admitted owner",
+        "actual_blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+        "required_reference_blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+        "policy": "Preservar sem alteração. Se divergente, reconciliar comportamento e nova preimage; não substituir pelo snapshot PR37/Finance herdado.",
+        "owner": "current admitted owner",
+        "actual_blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+        "required_reference_blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+        "policy": "Preservar sem alteração. Se divergente, reconciliar comportamento e nova preimage; não substituir pelo snapshot PR37/Finance herdado.",
+        "owner": "current admitted owner",
+        "actual_blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "required_reference_blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+        "policy": "Preservar sem alteração. Se divergente, reconciliar comportamento e nova preimage; não substituir pelo snapshot PR37/Finance herdado.",
+        "owner": "current admitted owner",
+        "actual_blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+        "required_reference_blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+        "policy": "Preservar sem alteração. Se divergente, reconciliar comportamento e nova preimage; não substituir pelo snapshot PR37/Finance herdado.",
+        "owner": "fixture owner",
+        "actual_blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope-fixture.ts",
+        "required_reference_blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+        "policy": "Preservar sem alteração. Se divergente, reconciliar comportamento e nova preimage; não substituir pelo snapshot PR37/Finance herdado.",
+        "owner": "fixture owner",
+        "actual_blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+        "required_reference_blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+        "policy": "Dependência/consumidor preservado; qualquer alteração requer análise do owner e seleção discriminante.",
+        "owner": "existing owner",
+        "actual_blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "required_reference_blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+        "policy": "Dependência/consumidor preservado; qualquer alteração requer análise do owner e seleção discriminante.",
+        "owner": "existing owner",
+        "actual_blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+        "required_reference_blob": "caa3b783b41f95287bba8a4bab3c652c8375c320",
+        "policy": "Dependência/consumidor preservado; qualquer alteração requer análise do owner e seleção discriminante.",
+        "owner": "existing owner",
+        "actual_blob": "caa3b783b41f95287bba8a4bab3c652c8375c320",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+        "required_reference_blob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+        "policy": "Dependência/consumidor preservado; qualquer alteração requer análise do owner e seleção discriminante.",
+        "owner": "existing owner",
+        "actual_blob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "required_reference_blob": "f8404c18abc040c49cf111eb4561ce4c2873a4c6",
+        "policy": "Dependência/consumidor preservado; qualquer alteração requer análise do owner e seleção discriminante.",
+        "owner": "session19 C12",
+        "actual_blob": "6ad51e47b22eca073a0a81731575c463d98673e4",
+        "matches": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-review.ts",
+        "required_reference_blob": "ae7a4476d686638512f3fc8bcf342a746259cacc",
+        "policy": "Dependência/consumidor preservado; qualquer alteração requer análise do owner e seleção discriminante.",
+        "owner": "existing owner",
+        "actual_blob": "ae7a4476d686638512f3fc8bcf342a746259cacc",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario-fixture.ts",
+        "required_reference_blob": "39a6164af40df18c4634196e31e84a8180c822a5",
+        "policy": "Dependência/consumidor preservado; qualquer alteração requer análise do owner e seleção discriminante.",
+        "owner": "existing owner",
+        "actual_blob": "39a6164af40df18c4634196e31e84a8180c822a5",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+        "required_reference_blob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+        "policy": "Dependência/consumidor preservado; qualquer alteração requer análise do owner e seleção discriminante.",
+        "owner": "existing owner",
+        "actual_blob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/renewal-sensitivity.test.ts",
+        "required_reference_blob": "fbd176312c247e445054aa86a5bf3d153eb9b56c",
+        "policy": "Dependência/consumidor preservado; qualquer alteração requer análise do owner e seleção discriminante.",
+        "owner": "existing owner",
+        "actual_blob": "fbd176312c247e445054aa86a5bf3d153eb9b56c",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/threshold-recertification.test.ts",
+        "required_reference_blob": "42ddb74c93873d0dec1e9d255ba90a2ae71cab7d",
+        "policy": "Dependência/consumidor preservado; qualquer alteração requer análise do owner e seleção discriminante.",
+        "owner": "existing owner",
+        "actual_blob": "42ddb74c93873d0dec1e9d255ba90a2ae71cab7d",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "required_reference_blob": "0dc89d86866620a8109051c68bc2d2b4d92c508f",
+        "policy": "Fixture compartilhada intocada. Companion source-scenario usa seu histórico com envelopes equivalentes; o teste admitido usa source-scenario-fixture com baseline único.",
+        "owner": "WP11/Finance",
+        "actual_blob": "0dc89d86866620a8109051c68bc2d2b4d92c508f",
+        "matches": true
+      }
+    ],
+    "dependency_resolution": "Preserve composed C12 apply6ad51e47. P01 does not alter or rely on the incompatible P02 controlled fixture. Finance18 product blobs and canonical proof dependencies are unchanged; Finance22 is not required/consumed.",
+    "held_units": [
+      {
+        "unit": "P02",
+        "patch": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/portfolio-union/patches/0002-human-choice-history-and-reservations.patch",
+        "patch_blob": "62f20cdd30eadc516d40802d2f821155fc2069bb",
+        "depends_on": [
+          "P01"
+        ],
+        "state": "HOLD_INCOMPATIBLE_RECEIPT_FIXTURE",
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+            "current_blob": "60693fea1a9fa238ecf57c43c73d8d113911b74a",
+            "proposed_blob": "3002c859033795cac7db65261a1ff44c44a61d43"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+            "current_blob": "9af706b6a1ab27229fb8514e117550036a13b249",
+            "proposed_blob": "8ae8e056f426e128ecec38a26d646896b7c28d81"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+            "current_blob": "f289bde6c2b97278a9b3a7cfe1462b41b0f1ab7a",
+            "proposed_blob": "dc7e73e53c3fc7c67e4340597dab6afa726b52cc"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+            "current_blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+            "proposed_blob": "07f7478f2b8072d9c4a5bb1dd4a831ac537efec8"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts",
+            "current_blob": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+            "proposed_blob": "bff4abba2f156cd2418d39f053b4d6a05bde4944"
+          }
+        ]
+      },
+      {
+        "unit": "P03",
+        "patch": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/portfolio-union/patches/0003-coverage-and-source-consumers.patch",
+        "patch_blob": "b3469f044db1029d69db853e89a18ae840d1a5ed",
+        "depends_on": [
+          "P01",
+          "P02"
+        ],
+        "state": "HOLD_DECLARED_DEPENDENCY_ON_P02",
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+            "current_blob": "2e103fe41fd5ba5a740247bb65a4ac13d262e7da",
+            "proposed_blob": "01584c151cde11035a0f5154ed1ecb77b8c0b7d8"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+            "current_blob": "6b2a318f73aa8adb67840958add758f151f0bade",
+            "proposed_blob": "599464bcbcfd1c885fd76098e3bbc061ce80d107"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+            "current_blob": null,
+            "proposed_blob": "47b5358c8dda3179045499388ce98871576a2aa9"
+          }
+        ]
+      },
+      {
+        "unit": "P04",
+        "patch": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/portfolio-union/patches/0004-portfolio-contract-notes.patch",
+        "patch_blob": "002672c53c25033e08846eaa110fe72b9db211cd",
+        "depends_on": [
+          "P01",
+          "P02",
+          "P03"
+        ],
+        "state": "HOLD_DECLARED_DEPENDENCY_ON_P02",
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+            "current_blob": "4bdad097bb82f3dc96a74090bacc567835295680",
+            "proposed_blob": "4816c7b8d5512ca34941f3f329ac7116a0412baf"
+          }
+        ]
+      }
+    ],
+    "held_dispositions": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+        "source_disposition": "SEMANTIC_PATCH",
+        "source_patch": "P04",
+        "target_preimage": "4bdad097bb82f3dc96a74090bacc567835295680",
+        "source_postimage": "4816c7b8d5512ca34941f3f329ac7116a0412baf",
+        "actual_postimage": "4bdad097bb82f3dc96a74090bacc567835295680",
+        "disposition": "HELD_PENDING_P02_C12_FIXTURE_AND_DECLARED_DEPENDENCIES",
+        "criteria": [
+          "WP13.T02.QLT.20",
+          "WP13.T03.QLT.01",
+          "WP13.T04.INV.01"
+        ],
+        "consumers": [
+          "UI/mesa WP01",
+          "BI WP05",
+          "WP11",
+          "C17"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+        "source_postimage": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+        "actual_postimage": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T04.CHK.01",
+          "WP13.T04.INV.01",
+          "WP13.INV.10"
+        ],
+        "consumers": [
+          "WP11 prepareChanges/addAlternative",
+          "HTTP",
+          "sf_portfolio_evaluate"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "source_disposition": "SEMANTIC_PATCH",
+        "source_patch": "P01",
+        "target_preimage": "fe4ab56201fd1898905ac7bc810f0495a64f8602",
+        "source_postimage": "9d29046dd40adffc88985be5e1b1603b64491129",
+        "actual_postimage": "9d29046dd40adffc88985be5e1b1603b64491129",
+        "disposition": "P01_APPLIED",
+        "criteria": [
+          "WP13.T03.CHK.01",
+          "WP13.T03.CHK.20",
+          "WP13.T03.QLT.01",
+          "WP13.INV.10"
+        ],
+        "consumers": [
+          "C08 sensitivity",
+          "criterion binding WP11",
+          "verificador",
+          "UI/BI"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+        "source_postimage": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+        "actual_postimage": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T02.CHK.03",
+          "WP13.T02.INV.20",
+          "WP13.T03.INV.18"
+        ],
+        "consumers": [
+          "Portfolio HTTP/native",
+          "candidatos",
+          "BI"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+        "source_postimage": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+        "actual_postimage": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T02.INV.18",
+          "WP13.T04.CHK.03",
+          "WP13.INV.10"
+        ],
+        "consumers": [
+          "WP11 portfolio binding",
+          "C08",
+          "HTTP read/list",
+          "C17"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+        "source_postimage": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+        "actual_postimage": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T03.CHK.18",
+          "WP13.T03.INV.18",
+          "WP13.INV.10"
+        ],
+        "consumers": [
+          "C08",
+          "criterion binding",
+          "HTTP readSensitivity",
+          "C17"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+        "source_postimage": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+        "actual_postimage": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T03.CHK.03",
+          "WP13.T03.QLT.01",
+          "WP13.T03.CMP.01"
+        ],
+        "consumers": [
+          "C07 v6",
+          "finalizador",
+          "UI/BI"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "247a0cdc456f386475f53765e6da2e1db156eba8",
+        "source_postimage": "247a0cdc456f386475f53765e6da2e1db156eba8",
+        "actual_postimage": "247a0cdc456f386475f53765e6da2e1db156eba8",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T03.CHK.01",
+          "WP13.T03.CHK.03",
+          "WP13.T03.CHK.20"
+        ],
+        "consumers": [
+          "Planner sensitivity",
+          "verificação",
+          "C07"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+        "source_postimage": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+        "actual_postimage": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T03.CHK.01",
+          "WP13.T03.CHK.03",
+          "WP13.T03.CHK.20",
+          "WP13.INV.10"
+        ],
+        "consumers": [
+          "Planner exact threshold",
+          "read-only replay",
+          "coverage interval"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "source_disposition": "SEMANTIC_PATCH",
+        "source_patch": "P01",
+        "target_preimage": "46a04597df74205add4531465f35d8a55ca1f8dd",
+        "source_postimage": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+        "actual_postimage": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+        "disposition": "P01_APPLIED",
+        "criteria": [
+          "WP13.T03.CHK.18",
+          "WP13.T03.CHK.20",
+          "WP13.INV.10",
+          "WP13.T04.CHK.03"
+        ],
+        "consumers": [
+          "WP11 criterion binding",
+          "C08 replay",
+          "C17",
+          "HTTP"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "d85a362360301686d2c5ca72f3938551c119b38a",
+        "source_postimage": "d85a362360301686d2c5ca72f3938551c119b38a",
+        "actual_postimage": "d85a362360301686d2c5ca72f3938551c119b38a",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T02.DOD.01",
+          "WP13.T03.DOD.01",
+          "WP13.INV.10"
+        ],
+        "consumers": [
+          "C08 + WP11 binding",
+          "dispatcher"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+        "source_disposition": "SEMANTIC_PATCH",
+        "source_patch": "P02",
+        "target_preimage": "60693fea1a9fa238ecf57c43c73d8d113911b74a",
+        "source_postimage": "3002c859033795cac7db65261a1ff44c44a61d43",
+        "actual_postimage": "60693fea1a9fa238ecf57c43c73d8d113911b74a",
+        "disposition": "HELD_PENDING_P02_C12_FIXTURE_AND_DECLARED_DEPENDENCIES",
+        "criteria": [
+          "WP13.T01.CHK.01",
+          "WP13.T01.CHK.03",
+          "WP13.T04.CHK.03"
+        ],
+        "consumers": [
+          "campaign current/historical/list",
+          "WP11",
+          "C17"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+        "source_postimage": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+        "actual_postimage": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T02.CHK.20",
+          "WP13.T02.CMP.20",
+          "WP13.T03.CHK.20"
+        ],
+        "consumers": [
+          "C10 coverage interval",
+          "Planner",
+          "dispatcher"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "source_disposition": "SEMANTIC_PATCH",
+        "source_patch": "P01",
+        "target_preimage": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+        "source_postimage": "7025de0601768ccc0bec76d8e0675882dee7cda9",
+        "actual_postimage": "7025de0601768ccc0bec76d8e0675882dee7cda9",
+        "disposition": "P01_APPLIED",
+        "criteria": [
+          "WP13.T03.CHK.01",
+          "WP13.T03.CHK.03",
+          "WP13.T03.CHK.20",
+          "WP13.INV.10"
+        ],
+        "consumers": [
+          "C07/C08/C10",
+          "WP11 binding",
+          "HTTP",
+          "dispatcher"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+        "source_postimage": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+        "actual_postimage": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T02.CHK.03",
+          "WP13.T02.CHK.20",
+          "WP13.T02.INV.20"
+        ],
+        "consumers": [
+          "Portfolio feasibility/coverage",
+          "dispatcher"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+        "source_disposition": "SEMANTIC_PATCH",
+        "source_patch": "P02",
+        "target_preimage": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+        "source_postimage": "07f7478f2b8072d9c4a5bb1dd4a831ac537efec8",
+        "actual_postimage": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+        "disposition": "HELD_PENDING_P02_C12_FIXTURE_AND_DECLARED_DEPENDENCIES",
+        "criteria": [
+          "WP13.T04.CHK.01",
+          "WP13.T04.CHK.02",
+          "WP13.T04.INV.01"
+        ],
+        "consumers": [
+          "WP11 prepared execution",
+          "C12",
+          "dispatcher"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+        "source_disposition": "SEMANTIC_PATCH",
+        "source_patch": "P02",
+        "target_preimage": "f289bde6c2b97278a9b3a7cfe1462b41b0f1ab7a",
+        "source_postimage": "dc7e73e53c3fc7c67e4340597dab6afa726b52cc",
+        "actual_postimage": "f289bde6c2b97278a9b3a7cfe1462b41b0f1ab7a",
+        "disposition": "HELD_PENDING_P02_C12_FIXTURE_AND_DECLARED_DEPENDENCIES",
+        "criteria": [
+          "WP13.T04.CHK.01",
+          "WP13.T04.CMP.01",
+          "WP13.T04.INV.01"
+        ],
+        "consumers": [
+          "preparePortfolioChoice/promotePortfolioAlternative",
+          "dispatcher"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_disposition": "SEMANTIC_PATCH",
+        "source_patch": "P02",
+        "target_preimage": "9af706b6a1ab27229fb8514e117550036a13b249",
+        "source_postimage": "8ae8e056f426e128ecec38a26d646896b7c28d81",
+        "actual_postimage": "9af706b6a1ab27229fb8514e117550036a13b249",
+        "disposition": "HELD_PENDING_P02_C12_FIXTURE_AND_DECLARED_DEPENDENCIES",
+        "criteria": [
+          "WP13.T04.CHK.03",
+          "WP13.INV.10",
+          "WP13.QLT.10"
+        ],
+        "consumers": [
+          "candidate history",
+          "campaign history",
+          "C13",
+          "C17"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+        "source_postimage": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+        "actual_postimage": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T03.CHK.18",
+          "WP13.INV.10"
+        ],
+        "consumers": [
+          "PersistentSensitivityPort",
+          "C08",
+          "WP11 binding"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistent-store.test.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+        "source_postimage": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+        "actual_postimage": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T03.CHK.18",
+          "WP13.T03.INV.18"
+        ],
+        "consumers": [
+          "sensitivity read",
+          "C08/WP11",
+          "C17"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "e20e97e54d60c156952fbc43fab356cf479221de",
+        "source_postimage": "e20e97e54d60c156952fbc43fab356cf479221de",
+        "actual_postimage": "e20e97e54d60c156952fbc43fab356cf479221de",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T03.INV.01",
+          "WP13.INV.10"
+        ],
+        "consumers": [
+          "PlannerSensitivity",
+          "dispatcher"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+        "source_disposition": "SEMANTIC_PATCH",
+        "source_patch": "P03",
+        "target_preimage": "2e103fe41fd5ba5a740247bb65a4ac13d262e7da",
+        "source_postimage": "01584c151cde11035a0f5154ed1ecb77b8c0b7d8",
+        "actual_postimage": "2e103fe41fd5ba5a740247bb65a4ac13d262e7da",
+        "disposition": "HELD_PENDING_P02_C12_FIXTURE_AND_DECLARED_DEPENDENCIES",
+        "criteria": [
+          "WP13.T02.CHK.01",
+          "WP13.T02.CHK.03",
+          "WP13.T02.CHK.20"
+        ],
+        "consumers": [
+          "C10 classification",
+          "PortfolioPort",
+          "dispatcher"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+        "source_disposition": "SEMANTIC_PATCH",
+        "source_patch": "P03",
+        "target_preimage": "6b2a318f73aa8adb67840958add758f151f0bade",
+        "source_postimage": "599464bcbcfd1c885fd76098e3bbc061ce80d107",
+        "actual_postimage": "6b2a318f73aa8adb67840958add758f151f0bade",
+        "disposition": "HELD_PENDING_P02_C12_FIXTURE_AND_DECLARED_DEPENDENCIES",
+        "criteria": [
+          "WP13.T04.CHK.03",
+          "WP13.T04.CMP.01",
+          "WP13.INV.10"
+        ],
+        "consumers": [
+          "HTTP reconcile",
+          "C13 historical/current source",
+          "dispatcher"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+        "source_postimage": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+        "actual_postimage": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T02.CHK.02",
+          "WP13.T03.CHK.01",
+          "WP13.INV.10"
+        ],
+        "consumers": [
+          "Todos os consumidores wp13 das fixtures",
+          "dispatcher"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope-fixture.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+        "source_postimage": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+        "actual_postimage": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T03.CHK.18",
+          "WP13.INV.10"
+        ],
+        "consumers": [
+          "Read-scope callback/lease/Request adversaries",
+          "C17"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+        "source_postimage": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+        "actual_postimage": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T03.CHK.18",
+          "WP13.INV.10"
+        ],
+        "consumers": [
+          "Read-scope/callback/authority",
+          "C17"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+        "source_postimage": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+        "actual_postimage": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T03.CHK.03",
+          "WP13.T03.QLT.01",
+          "WP13.T02.CHK.18"
+        ],
+        "consumers": [
+          "Planner units",
+          "Portfolio HTTP",
+          "C08",
+          "WP11",
+          "dispatcher"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+        "source_disposition": "SEMANTIC_PATCH",
+        "source_patch": "P01",
+        "target_preimage": "a3b1cd5326dc4dfbbaa4a16cb0134c9d0fe15a4c",
+        "source_postimage": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83",
+        "actual_postimage": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83",
+        "disposition": "P01_APPLIED",
+        "criteria": [
+          "WP13.T03.CHK.03",
+          "WP13.T03.QLT.01",
+          "WP13.T03.CMP.01"
+        ],
+        "consumers": [
+          "C07 v6",
+          "UI/BI",
+          "dispatcher"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+        "source_disposition": "SEMANTIC_PATCH",
+        "source_patch": "P01",
+        "target_preimage": "76ea3fa6902105c7be42956dae99ea4e4f9a4c3b",
+        "source_postimage": "0444570a0a961c979f75388fb0708812f98497e5",
+        "actual_postimage": "0444570a0a961c979f75388fb0708812f98497e5",
+        "disposition": "P01_APPLIED",
+        "criteria": [
+          "WP13.T03.CHK.01",
+          "WP13.T03.CHK.03",
+          "WP13.T03.CHK.20"
+        ],
+        "consumers": [
+          "Generic evaluator",
+          "Planner finalizer",
+          "dispatcher"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+        "source_postimage": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+        "actual_postimage": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T02.CHK.02",
+          "WP13.T02.CHK.20",
+          "WP13.T04.CHK.03"
+        ],
+        "consumers": [
+          "C08 source-only selection",
+          "C10",
+          "WP11 choice",
+          "UI/BI"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/term-defer-boundary.test.ts",
+        "source_disposition": "KEEP_CURRENT",
+        "source_patch": null,
+        "target_preimage": "edb551580d49c817141d3a850be4af36b0a7d647",
+        "source_postimage": "edb551580d49c817141d3a850be4af36b0a7d647",
+        "actual_postimage": "edb551580d49c817141d3a850be4af36b0a7d647",
+        "disposition": "KEEP_CURRENT",
+        "criteria": [
+          "WP13.T03.CHK.02",
+          "WP13.T03.INV.01"
+        ],
+        "consumers": [
+          "Planner canonical defer",
+          "sensitivity",
+          "dispatcher"
+        ]
+      }
+    ],
+    "source_artifacts_preserved": 88
+  },
+  "operations": {
+    "source_commit": "0042a95967ad651fe65ac0da216db6af86ed804c",
+    "mission_status": "ACTIVE_SOURCE_MISSION; EXPLICIT_PARTIAL_ASSEMBLY_OUTPUT_CONSUMED",
+    "authority": "Manifest/README explicitly transfer this package to session23 and order qualification after assembly; no global terminal handoff inferred.",
+    "manifest_blob": "065b53c497565e901a73bf69956446911a3e41da",
+    "patch_blob": "50b2fdf2211c3001c90810ea7c49ec38ee6bba26",
+    "reconstruction": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+        "preimage": "3dd5760da92346e267a3cc767c69c4d8bb51b31c",
+        "postimage": "8ba8d97ec138265454507852a5ab50b600b96c60",
+        "hunks": 5,
+        "exact_contexts": true,
+        "exact_published_postimage": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+        "preimage": "7224825eb470a2f172e7dc32172f83a6b05a5787",
+        "postimage": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+        "hunks": 1,
+        "exact_contexts": true,
+        "exact_published_postimage": true
+      }
+    ],
+    "direct_bindings": [
+      {
+        "path": "packages/app-shell/e2e/playwright.production.config.ts",
+        "blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+        "observed_blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+        "blob": "3dd5760da92346e267a3cc767c69c4d8bb51b31c",
+        "observed_blob": "3dd5760da92346e267a3cc767c69c4d8bb51b31c",
+        "match": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+        "blob": "7224825eb470a2f172e7dc32172f83a6b05a5787",
+        "observed_blob": "7224825eb470a2f172e7dc32172f83a6b05a5787",
+        "match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+        "observed_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+        "match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "blob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+        "observed_blob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+        "match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+        "blob": "f4fc6bc7c653213c61b8d05ecfad6bfd765df261",
+        "observed_blob": "f4fc6bc7c653213c61b8d05ecfad6bfd765df261",
+        "match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+        "blob": "4845de24285df2459991da7d9895aad95eb93b19",
+        "observed_blob": "4845de24285df2459991da7d9895aad95eb93b19",
+        "match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "observed_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/assets.ts",
+        "blob": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377",
+        "observed_blob": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377",
+        "match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+        "observed_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+        "match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+        "blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+        "observed_blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+        "match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+        "blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+        "observed_blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+        "match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/document-http.ts",
+        "blob": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+        "observed_blob": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+        "match": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/import-services.ts",
+        "blob": "53a1f34779598545cde83295c8ff98b861fabb72",
+        "observed_blob": "53a1f34779598545cde83295c8ff98b861fabb72",
+        "match": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/document-services.ts",
+        "blob": "9e63a31a088d1e17e69a4721aec0fdcd4a7146e4",
+        "observed_blob": "9e63a31a088d1e17e69a4721aec0fdcd4a7146e4",
+        "match": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/document-authority.ts",
+        "blob": "5cf7795dd466f0d2ec6eaa084194ff3c31d6f728",
+        "observed_blob": "5cf7795dd466f0d2ec6eaa084194ff3c31d6f728",
+        "match": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "blob": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+        "observed_blob": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+        "match": true
+      }
+    ],
+    "input_inventory_limit": "Direct17 bindings verified. Original bounded723-path inventory preserved as source observation, not exhaustive current transitive qualification.",
+    "required_source_paths": 5,
+    "original_receipts": 18,
+    "original_five_scenario_bodies_unchanged": true,
+    "production_config_unchanged": true,
+    "scanner": "Existing approved loopback ClamD required for later positive execution; no install/start in this mission."
+  },
+  "method": "Parsed published unified hunks; every removed/context line matched exact preimage, every result equalled the source full postimage bytes and Git blob. No fuzzy application or whole-file replacement of divergent target.",
+  "tests": "NOT_RUN",
+  "typechecks": "NOT_RUN",
+  "guards": "NOT_RUN",
+  "ci": "NOT_RUN",
+  "source_green_transferred": false
+}

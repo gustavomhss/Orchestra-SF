@@ -1,0 +1,102 @@
+# NOT_APPLIED — compose-resume / WP10 admitted Dashboard source owner
+# Proposal only; no runtime or typecheck acceptance is claimed.
+diff --git a/modules/sucafina/Sucafinav1/product/dashboard/sources.ts b/modules/sucafina/Sucafinav1/product/dashboard/sources.ts
+index c32c973c0b4111e4ac7df0c5d934e094277823f6..bc8b73756c0f6d6f4b72ccd12e6115e7b583313e 100644
+--- a/modules/sucafina/Sucafinav1/product/dashboard/sources.ts
++++ b/modules/sucafina/Sucafinav1/product/dashboard/sources.ts
+@@ -1,9 +1,10 @@
+ import { roleMap } from "../../runtime/admin.ts"
+ import { object } from "../../runtime/contract.ts"
+-import type { Actor } from "../../runtime/contract.ts"
++import type { Actor, Snapshot } from "../../runtime/contract.ts"
+ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+ import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
+ import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
++import { sfSourceIdentity } from "../integration/source-lifecycle.ts"
+ import type { SfScopedSourcePort, SfSourceScope } from "../integration/source-lifecycle.ts"
+ import type { DashboardSourceHost } from "./port.ts"
+ import type { DomainProjection, Period, SourceRef } from "../contracts/context.ts"
+@@ -106,8 +107,45 @@
+     const result = await resolveCurrent(reference, context)
+     return result.status === "ok" ? { status: "ok", value: result.value.evidence } : result
+   }
++  const reauthorize = async (incoming: unknown, context: TrustedDomainContext): Promise<PortResult<Extract<BusinessEvidenceRef, { kind: "record" }>>> => {
++    try {
++      const original = structuredClone(incoming), value = object(original), target = object(value.target)
++      if (value.schema !== "sf-evidence-v1" || value.kind !== "record" || typeof value.refId !== "string" || target.surface !== "dashboard" || target.recordType !== "hotTopics" || typeof target.recordId !== "string" || typeof target.incarnation !== "string" || typeof target.version !== "number" || !Number.isSafeInteger(target.version) || value.refId !== dashboardSourceSelector(target.incarnation, target.version) || value.installationId !== context.binding.installationId || value.projectId !== context.binding.projectId) return { status: "needs-input", reason: "invalid-original-source" }
++      const request = input.host.requestFor(context)
++      if (!request || request.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "source-authority-unavailable" }
++      const environment = await input.host.environment(request)
++      const inspectOriginal = (snapshot: Snapshot) => {
++        const matches = Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) => entry.alive && entry.incarnation === target.incarnation)
++        const entry = matches.length === 1 ? matches[0] : undefined
++        if (!entry || entry.version !== target.version || entry.scope.principalRef !== context.binding.principalRef || entry.scope.policyVersion !== context.binding.policyVersion || entry.scope.recordType !== "hotTopics" || entry.scope.recordId !== target.recordId) return undefined
++        const physical = sfSourceIdentity(snapshot, "hotTopics", entry.scope.recordId), selector = object(entry.scope.selector)
++        if (!physical || physical.incarnation !== entry.sourceIncarnation || selector.page !== "Hot Topics & Actions" || !Array.isArray(selector.fields) || !selector.fields.every((field) => typeof field === "string") || !isSfPeriod(selector.period) || selector.period.start !== environment.at.slice(0, 10) || selector.period.end !== selector.period.start) return undefined
++        const expected: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", kind: "record", refId: value.refId as string, installationId: context.binding.installationId, projectId: context.binding.projectId, refDigest: "", evidenceLevel: "observed", target: { surface: "dashboard", recordType: "hotTopics", recordId: entry.scope.recordId, incarnation: entry.incarnation, version: entry.version, fields: selector.fields as string[], period: selector.period, projectionDigest: entry.inputDigest } }
++        expected.refDigest = digestSfEvidenceRef(expected)
++        if (digestSfValue(expected) !== digestSfValue(original)) return undefined
++        return { physical: physical.incarnation, digest: entry.inputDigest, selection: { page: "Hot Topics & Actions", recordType: "hotTopics", recordId: entry.scope.recordId, fields: expected.target.fields, period: selector.period } }
++      }
++      const readOriginal = () => input.host.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: inspectOriginal(snapshot) }))
++      const before = await readOriginal()
++      if (!before || !await input.host.revalidate(context)) return { status: "stale", reason: "original-source-unavailable" }
++      // This real issuer checks current field/page/period access, even when canWrite is false.
++      const issued = await input.issueRecord(before.selection, context)
++      if (!issued) return { status: "denied", reason: "source-unavailable" }
++      const current = await resolve(dashboardSourceSelector(issued.source.incarnation, issued.source.version), context)
++      if (current.status !== "ok") return current
++      const checked = await input.host.persistence.transaction("dashboard", async (snapshot) => {
++        const prior = inspectOriginal(snapshot)
++        const matches = Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) => entry.alive && entry.incarnation === current.value.target.incarnation)
++        const scope = matches.length === 1 ? matches[0] : undefined
++        return { commit: false, value: !!prior && digestSfValue(prior) === digestSfValue(before) && !!scope && scope.sourceIncarnation === prior.physical && scope.version === current.value.target.version && scope.inputDigest === prior.digest && scope.scope.principalRef === context.binding.principalRef && scope.scope.accessRevision === context.binding.accessRevision && scope.scope.policyVersion === context.binding.policyVersion && scope.scope.recordType === "hotTopics" && scope.scope.recordId === before.selection.recordId && digestSfValue(object(scope.scope.selector).fields) === digestSfValue(before.selection.fields) && digestSfValue(object(scope.scope.selector).period) === digestSfValue(before.selection.period) }
++      })
++      const again = await resolve(current.value.refId, context)
++      if (!checked || again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(current.value) || request.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "source-or-authority-changed" }
++      return current
++    } catch { return { status: "unavailable", reason: "source-continuity-unavailable" } }
++  }
+   return {
+-    resolve,
++    resolve, reauthorize,
+     read: async (reference: string, context: TrustedDomainContext): Promise<PortResult<DomainProjection>> => {
+       const result = await resolveCurrent(reference, context)
+       if (result.status !== "ok") return result
+diff --git a/apps/cli/src/sucafina-product/dashboard-services.ts b/apps/cli/src/sucafina-product/dashboard-services.ts
+index 0891d178833165fff098e3c05f3a64c5f5b35043..37e1e65601bf5ebbdf89467c2d7aed61061115a4 100644
+--- a/apps/cli/src/sucafina-product/dashboard-services.ts
++++ b/apps/cli/src/sucafina-product/dashboard-services.ts
+@@ -118,7 +118,7 @@
+   }
+   const history = createDashboardHistoricalBindings({ host, observer, records: input.records, readProtectedCapture: readCapture })
+   return {
+-    issue, observer, select,
++    issue, observer, select, reauthorizeSource: input.records.reauthorize,
+     discover: async (request: { page: string; period?: Period }, context: TrustedDomainContext) => {
+       const source = host.requestFor(context)
+       if (!source || !await host.revalidate(context)) return { status: "denied" as const, reason: "dashboard-discovery-unavailable" }
+diff --git a/apps/cli/src/sucafina-product/dashboard-http.ts b/apps/cli/src/sucafina-product/dashboard-http.ts
+index c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c..642fda304f8d847b0e0046dfa99da90689e777e4 100644
+--- a/apps/cli/src/sucafina-product/dashboard-http.ts
++++ b/apps/cli/src/sucafina-product/dashboard-http.ts
+@@ -59,14 +59,16 @@
+   if (mode === "dashboard-review" && keys(payload, ["id"]) && text(payload.id)) return runtime.dashboard.readReview(payload.id, context)
+   if (mode === "dashboard-history" && keys(payload, ["id"]) && text(payload.id)) return runtime.dashboard.reopen(payload.id, context)
+   if (mode === "dashboard-capture" && keys(payload, ["sourceRef"]) && text(payload.sourceRef)) return runtime.dashboard.capture({ sourceRef: payload.sourceRef }, context)
+-  if (mode === "dashboard-hot-topic-source" && keys(payload, ["recordId", "period"]) && text(payload.recordId) && isSfPeriod(payload.period)) {
+-    const result = await runtime.dashboard.issue({ surface: "dashboard", recordType: "hotTopics", recordId: payload.recordId, fields: ["action", "due", "notes", "owner", "priority"], period: payload.period }, context)
++  if (mode === "dashboard-hot-topic-source" && keys(payload, ["recordId", "period"], ["originalEvidence"]) && text(payload.recordId) && isSfPeriod(payload.period)) {
++    const original = payload.originalEvidence === undefined ? undefined : object(payload.originalEvidence)
++    if (original && (!text(original.refId) || object(original.target).recordId !== payload.recordId || digestSfValue(object(original.target).period) !== digestSfValue(payload.period))) return { status: "denied" as const, reason: "original-source-selection-mismatch" }
++    const result = original ? await runtime.dashboard.reauthorizeSource(original, context) : await runtime.dashboard.issue({ surface: "dashboard", recordType: "hotTopics", recordId: payload.recordId, fields: ["action", "due", "notes", "owner", "priority"], period: payload.period }, context)
+     if (result.status !== "ok") return result
+     const request = runtime.authority.host.requestFor(context)
+     if (!request) return { status: "denied" as const, reason: "source-access-unavailable" }
+     const environment = await runtime.authority.host.environment(request)
+     return { status: "ok" as const, value: { targetEvidence: result.value, target: { surface: "dashboard" as const, type: "hotTopics", id: result.value.target.recordId,
+-      incarnation: result.value.target.incarnation, version: result.value.target.version, fields: result.value.target.fields, period: payload.period, observedAt: environment.at } } }
++      incarnation: result.value.target.incarnation, version: result.value.target.version, fields: result.value.target.fields, period: payload.period, observedAt: environment.at }, ...(original ? { continuity: { originalRef: original.refId, currentRef: result.value.refId } } : {}) } }
+   }
+   if (mode === "dashboard-hot-topic-draft" && isDraft(value)) return runtime.decisions.drafts.register(value, context)
+   if (mode === "dashboard-hot-topic-drafts" && keys(payload, ["caseRef"]) && isCaseRef(payload.caseRef)) return runtime.decisions.drafts.list({ caseRef: payload.caseRef }, context)

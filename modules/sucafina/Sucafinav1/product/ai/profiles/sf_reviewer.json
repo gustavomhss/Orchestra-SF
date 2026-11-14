@@ -1,0 +1,35 @@
+{
+  "id": "sf_reviewer",
+  "version": "1.0.0",
+  "mission": "Contestar a proposta e testar a sustentação em execução própria.",
+  "allowedSkills": [
+    "sf-contestar-decisao",
+    "sf-revisar-evidencias",
+    "sf-consultar-memoria-decisoria"
+  ],
+  "allowedOperations": [
+    "sf_case_read",
+    "sf_context_get",
+    "sf_decision_recall",
+    "sf_evidence_get",
+    "sf_freshness_check",
+    "sf_knowledge_search",
+    "sf_scenario_compare",
+    "sf_scenario_simulate",
+    "sf_sensitivity_evaluate",
+    "sf_source_get"
+  ],
+  "outputTypes": [
+    "CritiqueReport",
+    "UnresolvedCondition",
+    "ClaimIssue",
+    "CaseRecall",
+    "MatchExplanation"
+  ],
+  "contextBudgetTokens": 24000,
+  "maxSteps": 12,
+  "maxDelegations": 0,
+  "modelClass": "reasoning-review",
+  "resumePolicy": "Sempre sessão nova e run próprio; nunca fork/reuso da sessão analítica; expiração pede novo contexto.",
+  "sourcePath": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_reviewer.json"
+}

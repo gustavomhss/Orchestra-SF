@@ -1,0 +1,112 @@
+{
+  "mission": 24,
+  "identity": "operations-browser24",
+  "state": "IN_PROGRESS",
+  "branch": "astra-wp04",
+  "pr": 23,
+  "expected_parent": "39b50786b8d341d13f98ca2c5ada035a4bd7a46a",
+  "predecessor_handoff": {
+    "commit": "39b50786b8d341d13f98ca2c5ada035a4bd7a46a",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/operations/20261114-a1/HANDOFF.md",
+    "blob": "8f1c240f63cb9f9ab91bd9f3679170b882a3a491",
+    "state": "IMPLEMENTED_WITH_BLOCKED_DEPENDENCIES"
+  },
+  "authority": {
+    "mission_commit": "233e9acb7c048dda3d8174d87b76f1e8441f4917",
+    "mission_blob": "4d04b061cba169532e8448035fc19eedafa7f0c2",
+    "common_blob": "6dddb69b7f044e0467cfa4ab8dff60f560ca50b1",
+    "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "actor_pack_blob": "7327be5449328c356a0f5b242ddc9d2014175e41",
+    "pack_read": "complete; applicable mandatory appendices read",
+    "ci_protocol_blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb"
+  },
+  "published_input": {
+    "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+    "product_composition": "b62c32940d06c15c04f52b88209d5b4930cf1a3e",
+    "tree": "b9223690f64415a936eb38ad6f8796b21a8a7966",
+    "policy": "Run the already published composed input without changing its product/config/fixture bytes; no source-tree import or shared edit into astra-wp04."
+  },
+  "nominal_request": {
+    "package": "app",
+    "packageSelector": "packages/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/operations.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "dedup": {
+    "observed_total_recent": 954,
+    "matching_operations_inflight": [],
+    "old_collection_runs": [
+      43633572790,
+      43633311440
+    ],
+    "nominal_result": "NOT_RUN"
+  },
+  "known_mount_gaps": {
+    "selection_blob": "7224825eb470a2f172e7dc32172f83a6b05a5787",
+    "config_blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+    "host_blob": "3dd5760da92346e267a3cc767c69c4d8bb51b31c",
+    "state": "shared assembly patch being prepared for session23; no bypass"
+  },
+  "reads": [
+    {
+      "path": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    {
+      "path": "packages/app-shell/AGENTS.md",
+      "blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03"
+    },
+    {
+      "path": "packages/app-shell/e2e/AGENTS.md",
+      "blob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "path": "docs/src/best-practices-js.md",
+      "blob": "02e1e4db6baea68e725040646396e09a29584420",
+      "read": "complete"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "path": "docs/src/actionability.md",
+      "blob": "848df596771406a7c4d7b2e6120f95b01330a756",
+      "read": "complete"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "path": "docs/src/test-assertions-js.md",
+      "blob": "97eb22aa6c5839c4f83be974fef260221d6494e2",
+      "read": "complete"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "path": "docs/src/locators.md",
+      "blob": "a4307c3b47fc1cf6c048e5f94c98b5dcbb6bcb9a",
+      "read": "complete"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "path": "docs/src/network.md",
+      "blob": "fb24a1855d418e4c9291d8e2656dcc51c3dbf2e4",
+      "read": "complete"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "path": "docs/src/browser-contexts.md",
+      "blob": "d34759c18549026d7cba3558ce8357d6e441c4c7",
+      "read": "complete"
+    }
+  ],
+  "limits": [
+    "No local product tests or servers; remote GitHub MCP only.",
+    "No shared file changes; session23 is sole integrator.",
+    "C06 material, native/AM and human timing remain outside this five-case proof and unaccepted."
+  ]
+}

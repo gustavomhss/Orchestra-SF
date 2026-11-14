@@ -1,0 +1,110 @@
+{
+  "schema": "sf2h.work-g03.intake.v1",
+  "status": "PUBLISHED_CANDIDATE_PENDING_HOSTED_VALIDATION",
+  "assignment": {
+    "handoffCommit": "09a06b412ca624339b3634cf27d205a930e8f02e",
+    "handoffPath": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/work-split/work-g03.md",
+    "branch": "work-g03",
+    "target": "ui-work"
+  },
+  "normative": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "workPackages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "base": {
+    "commit": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+    "tree": "d0508747f0818b3467f44bac845ca6a878bdb7ea",
+    "pr": 47
+  },
+  "producer": {
+    "branch": "collab-resume",
+    "observedHead": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+    "observedTree": "0a5eea5d992e65153fae6999ce3e7e4d109f30b0",
+    "originCommit": "20821df310ebc6ea08ccab27e829008d72a04de6",
+    "priorHandoffPin": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+    "path": "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts",
+    "beforeBlob": "ec80e2916c8a06cbb471cf02e30bb1cb5ebd9cc0",
+    "consumedBlob": "cd9a67887f41986243809672572c972440c832ec",
+    "publishedSha256": "173a7250b9ff4687cfaabcc2773bdf42a3008fa551d4c2bbf8f66f2d4839392f",
+    "verbatim": true,
+    "extraClosure": [],
+    "reason": "Recognize only C08 conflict/product-state-changed as conflict/selection-not-committed; all other unavailable and authorization outcomes retain their existing classification.",
+    "diff": "One conditional substitution and the owner's additional terminal LF; imports, API and every other byte are unchanged."
+  },
+  "producerProof": {
+    "W": "20821df310ebc6ea08ccab27e829008d72a04de6",
+    "S": "161f5f9b547dcb7ca7868a70ab0ffa05413131b3",
+    "run": 43616934900,
+    "job": 132513933634,
+    "case": "a lost case-selection CAS is a known no-commit conflict and retains exact retry identity",
+    "caseResult": "PASS",
+    "caseMs": 724.17,
+    "runResult": "FAIL",
+    "runCounts": {
+      "pass": 29,
+      "fail": 4
+    },
+    "testBlob": "f19984edc18de56e1f97a60f538a25983cd9e367",
+    "notConsumerAcceptance": true
+  },
+  "consumer": {
+    "path": "modules/sucafina/Sucafinav1/product/ui/case-work-selection.ts",
+    "blob": "cc0bfcdbd7b31d1aa31d65300251b574aaad4fb9",
+    "unchanged": true
+  },
+  "proofPlan": {
+    "path": "modules/sucafina/Sucafinav1/test/product/work-split/work-g03/g03-conflict-review.test.ts",
+    "priorPath": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/selection-recovery.test.ts",
+    "priorBlob": "70c56df6b32d64b23a5ceb8f1819aca6e385749e",
+    "causalOracleCorrection": "A known precommit rejection locks submit/inputs until explicit review. Assert 409 and exact payload before waiting for the review state; never await enabled submit while rejected.",
+    "realRacePreserved": true,
+    "accept503AsConflict": false,
+    "originalAssertionsPreserved": true,
+    "added": [
+      "No write during review; fresh case/version reads",
+      "New key only after explicit review",
+      "Same case/source/period",
+      "Delivery loss after actual commit",
+      "Byte-identical retry with unchanged storage",
+      "Reload without autosave",
+      "Real session revocation, denied receipt replay, fresh authorized state observation"
+    ],
+    "effectAccounting": "One competitor commit and one separately reviewed user commit. Rejected attempt, retry, reload and revoked replay create no effect.",
+    "testDeadlineMs": 45000,
+    "fixtureAndUiDeadlinesChanged": false
+  },
+  "retainedProofs": {
+    "run": 43621603578,
+    "selectionReplay": "Prior scoped PASS preserved; new combined journey targets the causal producer intake and rejected-review transition.",
+    "directReply": "Prior scoped PASS, not rerun; no causal delta.",
+    "recipientReply": "Prior scoped PASS with conservative ACK; not rerun, no causal delta."
+  },
+  "staticGates": {
+    "commands": [
+      "bun typecheck (modules/sucafina)",
+      "bun run check:guards --base origin/dev"
+    ],
+    "runner": "Existing unchanged ui-work/static-gates.test.ts in GitHub Actions",
+    "priorForeignTypecheckDiagnostics": 9,
+    "allowFailure": false
+  },
+  "writeScope": {
+    "foreignProducerEdit": false,
+    "verbatimConsumptionOnly": true,
+    "sharedFixtureEdit": false,
+    "workflowEdit": false,
+    "ownerBranchEdit": false,
+    "localProductTests": false
+  },
+  "limits": [
+    "Component composition over real Collaboration HTTP, source issuers, C08/SQLite and encrypted operator session; decision case is protected seeded corpus.",
+    "No installed-host/native/global acceptance, no question attachment or historical reissue proof.",
+    "C03 answer confirmation/reuse and recipient receipt work remain separate slices.",
+    "WorkSignals is unmounted in this published fixture; no substitute or empty success added."
+  ],
+  "next": "Execute the exact canonical request in ci-request.01.json, archive W/S/run/job IDs and observed results."
+}

@@ -1,0 +1,125 @@
+{
+  "schema": "sf2-mission31-owner-patches-v1",
+  "owner": "session23",
+  "base": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "state": "COMPLETE_PATCH_ARTIFACTS_NOT_APPLIED_NOT_EXECUTED",
+  "authority": "Do not overwrite shared files. Check complete preimage blob and consume each patch by CAS in the owner composition.",
+  "order": [
+    [
+      "router-mount"
+    ],
+    [
+      "coverage-read",
+      "procurement-read"
+    ],
+    [
+      "comparison-rule"
+    ],
+    [
+      "history-read"
+    ]
+  ],
+  "validation": "All patches require owner Actions validation; they were not installed in Wc1, Wc2 or any tested product.",
+  "not_closed_by_these_patches": [
+    "typed pre-choice Procurement scenario producer and authoring controls",
+    "approval-before-Apply compatible prepared command",
+    "canonical historical capture availability and changed-source calculation continuity",
+    "wrong actor/incarnation/revoked access end-to-end negatives",
+    "native provider, critique and restart proofs"
+  ],
+  "patches": [
+    {
+      "name": "router-mount",
+      "manifest": "integration/router-mount/manifest.json",
+      "patch": "integration/router-mount/router-mount.patch",
+      "patch_sha256": "3d78c688488110854d3fe361c7f1a93979e0aa2131e8261ca591648bfd08b7d7",
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/installation.ts",
+          "preimage_blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109",
+          "postimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c"
+        },
+        {
+          "path": "apps/cli/test/sucafina-installation.test.ts",
+          "preimage_blob": null,
+          "postimage_blob": "6360d706352ec7e4fab097cb9e9152dc2ed5a101"
+        },
+        {
+          "path": "apps/cli/test/fixture/sucafina-installation.ts",
+          "preimage_blob": null,
+          "postimage_blob": "5c43c84dde0f44fbc51dffc3d53a5176bda5e900"
+        }
+      ]
+    },
+    {
+      "name": "coverage-read",
+      "manifest": "integration/coverage-read/manifest.json",
+      "patch": "integration/coverage-read/coverage-read.patch",
+      "patch_sha256": "50a0a926c46ec1283d1aa02193334fd01b7dd01114c8d498b13595364142214c",
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+          "preimage_blob": "77563520dbfa9cab5876c0312eba294cb579e11d",
+          "postimage_blob": "8ba78e4a49d289f1f0f50c2737989ff2ad1c26d6"
+        }
+      ]
+    },
+    {
+      "name": "procurement-read",
+      "manifest": "integration/procurement-read/manifest.json",
+      "patch": "integration/procurement-read/procurement-read.patch",
+      "patch_sha256": "2bb840628ed3bc13bdb5a29c24b829689df8864ddeadaefb0900d10eeb14114b",
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+          "preimage_blob": "8ba78e4a49d289f1f0f50c2737989ff2ad1c26d6",
+          "postimage_blob": "986450eb9b3a2bf9feb73f8071d8f05e38f1e515"
+        }
+      ]
+    },
+    {
+      "name": "comparison-rule",
+      "manifest": "integration/comparison-rule/manifest.json",
+      "patch": "integration/comparison-rule/comparison-rule.patch",
+      "patch_sha256": "3e960eb0a3a92cfe38fd8c7ef6b2b9a289730cd43a2708d531e7ec1821fed1ac",
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+          "preimage_blob": "e8a931a3d0788d0c6899e9550fbe069a4a5dc7de",
+          "postimage_blob": "149cc8fb12dd54b6622842cfa4e0c1a2e2bf4f93"
+        }
+      ]
+    },
+    {
+      "name": "history-read",
+      "manifest": "integration/history-read/manifest.json",
+      "patch": "integration/history-read/history-read.patch",
+      "patch_sha256": "33aea0e43b34c501cd1313c5af45288641a7360e34e7ce1fd5074ef5c0b2ecdc",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts",
+          "preimage_blob": "fafd1c99e96b0d5bac5d9a596b29252829870e62",
+          "postimage_blob": "da41f148e5b3592d700cdfb81d72ea23d8774500"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/case-management.ts",
+          "preimage_blob": "22cc1a0b08a5952a886fe159590ca0c40eb5f63e",
+          "postimage_blob": "5140fee739f874a5c2d8dfeaf95c3bbb3d6ff585"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/host-product.ts",
+          "preimage_blob": "74450e928e9bdf67df701f0a1e790ce5829016c7",
+          "postimage_blob": "f6e3d0473338553dc71340fe632d3de59b08deb9"
+        }
+      ]
+    }
+  ],
+  "later_observation": {
+    "ref": "52add8433f8ecf9d361ee635cda484142131ef84",
+    "preimages": "Six existing shared target paths still match all original C3 preimages. Procurement incremental preimage is the coverage patch postimage, not a current repository blob.",
+    "closure": "Current C6 includes other domain changes; no patch validation or E2E result is attributed to C6.",
+    "record": "../TARGET-OBSERVATION.json",
+    "additional_record": "07aa9831f1a85f01b42984891c899a887fb48db5",
+    "additional_record_note": "Complete compare from C6 has no change to the six existing patch targets; other runtime/tooling paths changed. Revalidate on owner candidate."
+  }
+}

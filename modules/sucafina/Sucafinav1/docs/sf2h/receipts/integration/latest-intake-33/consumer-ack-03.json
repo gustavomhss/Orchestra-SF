@@ -1,0 +1,60 @@
+{
+  "schema": "sf2-consumer-ack-v1",
+  "mission": 33,
+  "source": "Operations24 final revision",
+  "source_commit": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+  "source_product_commit": "49d29bf4d6512d130307f46e145885949f213ea8",
+  "source_product_tree": "0d982446f0708975895b59fad3c94d0a53704f58",
+  "candidate": "C7",
+  "parent_commit": "b19606b73f1ffc5a9e58702e939f1aa788dabfa1",
+  "status": "CONSUMED_EXPLICIT_TERMINAL_REVISION_IMPLEMENTATION_ONLY_PENDING_READBACK",
+  "manifest": "increment-03.json",
+  "exact_identity_receipt": "candidate-C7.json",
+  "material_paths": 3,
+  "original_receipts_copied": 53,
+  "earlier_records_preserved": 18,
+  "release": {
+    "state": "TERMINAL_SOURCE_EXPLICIT_WRITE_AUTHORITY_ENDED",
+    "handoff_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/HANDOFF.md",
+    "handoff_blob": "db119c0f9306619c47cf5258417c5ad961478231",
+    "delivery_blob": "435a754ca27d1e780853838ae06dab0f3e9ac3a3",
+    "mission33_authorization": "7150af3c3cea2a1dece40ffa3f13abe8fb10278d",
+    "consumer": "root sole sf2-stack writer; final dispatcher/acceptance S0"
+  },
+  "source_results": [
+    {
+      "id": 43641173533,
+      "status": "completed",
+      "conclusion": "failure",
+      "head_sha": "ca244e5b74ebb2f9a20262b4e7448aa7d528a15b",
+      "source_W": "49d29bf4d6512d130307f46e145885949f213ea8",
+      "observed_source": "3 PASS /2 FAIL"
+    },
+    {
+      "id": 43641839432,
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "837ff32d178fc754a38e9b42b117c49c5390257a",
+      "observed_source": "generation/module typecheck/guards PASS with11 inherited warnings"
+    }
+  ],
+  "pending": [
+    {
+      "owner": "S0/environment",
+      "action": "Provide previously approved real ClamD via SF_OPERATIONS_CLAMD_PORT; do not synthesize verdict or provision services here."
+    },
+    {
+      "owner": "S0 dispatcher",
+      "action": "Run the seven auxiliary cases and five nominal cases on the newly integrated candidate, plus E2E typechecks; current candidate result NOT_RUN."
+    },
+    {
+      "owner": "Operations/C06/native/human proof owners",
+      "action": "Close C06 material, native/AM and human timing obligations under original criteria."
+    }
+  ],
+  "functional_acceptance": false,
+  "tests": "NOT_RUN",
+  "ci": "NOT_RUN",
+  "AM": "NOT_RUN",
+  "source_PASS_transferred": false
+}

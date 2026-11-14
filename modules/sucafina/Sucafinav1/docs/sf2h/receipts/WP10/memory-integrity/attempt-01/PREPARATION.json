@@ -1,0 +1,93 @@
+{
+  "mission": "memory-integrity-preflight",
+  "number": 13,
+  "campaign": "sf2h-integral-20261112",
+  "branch": "astra-wp10",
+  "pr": 29,
+  "actor": "S0-B / Memory continuation",
+  "session": "memory-integrity-20261114",
+  "status": "PREPARED_NOT_RUN",
+  "originalHead": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+  "originalTree": "6f6d1e78bc287795f80068d3115cc02dc540131e",
+  "authority": {
+    "basis": "User's mission 13 plus reconciled terminal handoff in delivered head; previous delivery-only guard and PR terminal receipt published.",
+    "terminalHandoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/HANDOFF.md",
+    "terminalHandoffBlob": "ff67547a8b4bce811e3b34bbfc75aab530c150fc",
+    "lastDeliveryRun": 43630987389,
+    "rule": "No inference of closure from Git silence; no known active writer on this path; all ref writes expected-head fast-forward."
+  },
+  "sources": {
+    "mission": "3e3c329e9f4ab94d70c02d2cf69b030a9726769a",
+    "common": "c708ec0609dbfc95b259707d8c38481617f74f11",
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "S0BPackBlob": "7597a7e508228ac2878a9061887ac77fc70ad009",
+    "appendices": [
+      "ded082688fce327def0b48968fa3b89a5831029c",
+      "033737b1051b23443e633df7874c550629bf55a1"
+    ],
+    "AGENTS": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+  },
+  "defect": {
+    "run": 43624030665,
+    "job": 132535810515,
+    "historicalTestBlob": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+    "assertion": "historical-memory.test.ts:580 expected denied received ok",
+    "originalBudgets": {
+      "cooperative": 225000,
+      "bun": 240000
+    }
+  },
+  "causalFinding": "The installed stale wrapper reads BusinessContext.context. Procurement may resolve authorized historical C12 evidence independently of Atlas originals; therefore this resolution alone does not validate an Atlas capture. Canonical Atlas recall already rejects the corrupted capture.",
+  "baselineProbe": {
+    "selection": [
+      "./Sucafinav1/test/product/wp10/memory-integrity/preflight.test.ts"
+    ],
+    "testNamePattern": "rejects a corrupted Atlas original",
+    "runtimeDelta": "none",
+    "expected": "FAIL only at corrupted capture preflight expecting denied",
+    "fixture": "Synthetic case/choice and lifecycle metadata; production source issuance/C12/C08/SQLite/BCS/Atlas/scanner/wrapper. No native Session or model executed.",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts",
+        "sha256": "91e6aadee1ef2cf4436b2326ca122539cadb1406e9676573a4956bc61e4ef8be",
+        "bytes": 17764
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/preflight.test.ts",
+        "sha256": "fdfd9ec300569b35eae7d1d67c8f4fe2a39ba9afcf563ef6064b265602f499e2",
+        "bytes": 5268
+      }
+    ]
+  },
+  "intendedDelta": {
+    "paths": [
+      "apps/cli/src/sucafina-product/analysis-stale-commit.ts"
+    ],
+    "purpose": "Require the real Memory capture/continuity read under C08 and retain exact Request/headers/snapshot identities across awaits.",
+    "notApplied": true
+  },
+  "preserved": {
+    "historicalAssertionsAndBudgets": true,
+    "C09": "Reattach prior evidence without rerun",
+    "open": [
+      "R1-W23-C17-BETWEEN-OBSERVATIONS",
+      "X29 performance",
+      "UI U30 cancel visibility (session 12)",
+      "ACK (session 10)",
+      "exports (session 11)",
+      "13 external typecheck diagnostics",
+      "native AM01-AM06",
+      "all other terminal handoff limitations"
+    ]
+  },
+  "execution": {
+    "remote": "GitHub MCP only",
+    "tests": "GitHub Actions only",
+    "epic": false,
+    "fullSuite": false,
+    "localTests": false,
+    "merge": false,
+    "supervisorRestart": false,
+    "goalRestart": false
+  }
+}

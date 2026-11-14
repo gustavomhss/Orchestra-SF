@@ -1,0 +1,43 @@
+{
+  "schema": "sf-finance-journey-closure-intake-v1",
+  "mission": 18,
+  "actor_pack": "S4-C",
+  "branch": "finance-resume",
+  "pr": 42,
+  "previousHead": "454b97daf614176507711df889bd45743467f7af",
+  "previousTree": "acd25299e89145480785b84cbf758c6559dde033",
+  "authority": {
+    "receivedTerminalHandoff": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/HANDOFF-FINAL.md",
+      "blob": "976b71bc150fa5810a60ff5917e17bfd18701bc9"
+    },
+    "missionCommit": "a32285b2683b5000dafe93df99289547c7f410fb",
+    "missionBlob": "c8129f55def8293a43595e9ab7beda44d66654b1",
+    "leaseEpoch": 1,
+    "writer": "manual-session-18-finance-journey-closure",
+    "acceptance": "Received the published terminal handoff at the unchanged PR42 head; user explicitly assigns continuation. No active predecessor evidence, later branch commit or in-flight Finance test was observed.",
+    "ownership": "Only this mission's explicit write_paths. No takeover inferred from silence alone."
+  },
+  "reads": {
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "common": "c708ec0609dbfc95b259707d8c38481617f74f11",
+    "actorBlob": "c59d7593fe94808048a0377d365d0681482d7252",
+    "review": "29356ad7a554309e9a905749dd84e3f6bd0900ea",
+    "reviewCoverageBlob": "71dbf3cec182e7f9295d9f36c01b7cac7dba582a",
+    "CI": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "traceS6": "43631582858",
+    "original36": "43630462257"
+  },
+  "invariants": [
+    "All six qualified producer changes and prior receipts preserved.",
+    "Original coverage predicate is retained; equal data digests do not prove callback equivalence.",
+    "No budgets/assertions/fixtures/sources/engines/host-binding/C12 changes.",
+    "All product tests through the existing GitHub Actions snapshot protocol; no local tests."
+  ],
+  "hypothesis": {
+    "units": "Replace only duplicate direct sibling C08 envelopes within each of two independent observation phases; retain per-result authorization/source checks and original concurrent scalar-facade fallback.",
+    "counterproof": "Expected-red test verifies unchanged result and 8 authorizeCase/8 verifySources/16 explicit result-host checks before asserting 6 vs preimage12 direct result envelopes. External canonical producer callbacks still execute.",
+    "notClaimed": "End-to-end improvement or FIN-IND-005 closure before complete original journey."
+  },
+  "testStatus": "NOT_RUN"
+}

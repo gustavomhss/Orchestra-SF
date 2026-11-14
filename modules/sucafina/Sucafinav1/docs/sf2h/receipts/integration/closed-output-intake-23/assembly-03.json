@@ -1,0 +1,362 @@
+{
+  "schema": "sf2-selective-assembly-v2",
+  "mission": 23,
+  "increment": 3,
+  "source_commit": "556079fe2fb97c824504ec60a47798c6e0553539",
+  "target_parent": "c7c2ffdc113764f7bcf67c07ef2e86b49004bbb1",
+  "http": {
+    "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+    "preimage_blob": "81b7cd4ef5a73670642df42a2f891b9d95420dac",
+    "postimage_blob": "406187a4fe4e6f59a2cca5dc84c83758a063cd3a",
+    "instruction_blob": "922c89d144fc3b31dc8d16a12be2d53d44000108",
+    "patch_blob": "94aa40a748a709c327909d75013b68b35f083f1f",
+    "patch_sha256": "5a78be112c6951cf3926a32862d3c55331e0bfcb75245a505651923604467f6b",
+    "edits": [
+      {
+        "find": "import { decisionEditForm, decisionEditScript } from \"../ui/decision-edit.ts\"",
+        "replace": "import { decisionEditForm, decisionEditScript } from \"../ui/decision-edit.ts\"\nimport { decisionAlternativesForm, decisionAlternativesScript } from \"../ui/decision-alternatives.ts\"",
+        "required_occurrences": 1
+      },
+      {
+        "find": "decisionEditForm(caseOutput.value) + decisionChoiceForm(caseOutput.value)",
+        "replace": "decisionEditForm(caseOutput.value) + decisionAlternativesForm(caseOutput.value) + decisionChoiceForm(caseOutput.value)",
+        "required_occurrences": 1
+      },
+      {
+        "find": "${decisionEditScript}${decisionChoiceScript}",
+        "replace": "${decisionEditScript}${decisionAlternativesScript}${decisionChoiceScript}",
+        "required_occurrences": 1
+      }
+    ],
+    "unique_anchors": true,
+    "reverse_reconstruction_equals_preimage": true,
+    "git_created_blob_matches_published_postimage": true
+  },
+  "edit": {
+    "path": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+    "source_branch_base_blob": "e4257c9f091085ddc173fe669e2a290b597d179e",
+    "preimage_blob": "ebc7763548e3eaf476f36c17de72e1800f0fee2d",
+    "postimage_blob": "27bb8adbf3ca2fefce4bc8c756de7f12ce990baa",
+    "hunks": [
+      {
+        "id": "EDIT-01",
+        "old_line_start": 3,
+        "new_line_start": 3,
+        "old_text": "",
+        "new_text": "import { decisionFormContext, decisionScriptHelpers } from \"./decision-alternatives.ts\"\n",
+        "context_before": "import type { AuthorizedCaseProjection } from \"../contracts/business-context.ts\"\nimport { esc } from \"../../src/screen-shell.ts\"\n",
+        "context_after": "\n/** The server supplied the case and its current version; the domain validates every edit. */\n",
+        "old_utf16_offset": 129,
+        "new_utf16_offset": 129
+      },
+      {
+        "id": "EDIT-02",
+        "old_line_start": 4,
+        "new_line_start": 5,
+        "old_text": "/** The server supplied the case and its current version; the domain validates every edit. */\n",
+        "new_text": "/** Discovery yields authorized evidence; the existing case command validates every saved reference. */\n",
+        "context_before": "import { esc } from \"../../src/screen-shell.ts\"\n\n",
+        "context_after": "export function decisionEditForm(projection: AuthorizedCaseProjection) {\n  const item = projection.case\n",
+        "old_utf16_offset": 130,
+        "new_utf16_offset": 218
+      },
+      {
+        "id": "EDIT-03",
+        "old_line_start": 7,
+        "new_line_start": 8,
+        "old_text": "  const context = { caseRef: { id: item.id, incarnation: item.incarnation, version: item.version }, sourceRefs: item.sourceRefs,\n    criteria: item.criteria.map((criterion) => ({ id: criterion.id, required: criterion.required })) }\n  return `<details><summary>Edit decision</summary><form data-decision-edit data-context=\"${esc(JSON.stringify(context))}\"><label>Decision objective<input name=\"objective\" required value=\"${esc(item.objective)}\"></label><label>Start<input name=\"start\" type=\"date\" required value=\"${esc(item.horizon.start)}\"></label><label>End<input name=\"end\" type=\"date\" required value=\"${esc(item.horizon.end)}\"></label><label>Currency<input name=\"currency\" required value=\"${esc(item.currency)}\"></label><div data-decision-criteria>${item.criteria.map((criterion, index) => `<label>Criterion ${index + 1}<input name=\"criterion-${index}\" data-criterion-id=\"${esc(criterion.id)}\" required value=\"${esc(criterion.description)}\"></label>`).join(\"\")}</div><button>Save decision</button><p role=\"status\" aria-live=\"polite\"></p></form></details>`\n",
+        "new_text": "  const context = { ...decisionFormContext(projection), criteria: item.criteria.map((criterion) => ({ id: criterion.id, required: criterion.required })) }\n  const sources = item.sourceRefs.map((ref) => `<li>${esc(ref.kind === \"record\" ? ref.target.recordType + \" · \" + ref.target.recordId + \" · revision \" + ref.target.version : ref.kind + \" · \" + ref.evidenceLevel)}</li>`).join(\"\")\n  return `<details><summary>Edit decision</summary><form data-decision-edit data-context=\"${esc(JSON.stringify(context))}\"><label>Decision objective<input name=\"objective\" required value=\"${esc(item.objective)}\"></label><label>Start<input name=\"start\" type=\"date\" required value=\"${esc(item.horizon.start)}\"></label><label>End<input name=\"end\" type=\"date\" required value=\"${esc(item.horizon.end)}\"></label><label>Currency<input name=\"currency\" required value=\"${esc(item.currency)}\"></label><div data-decision-criteria>${item.criteria.map((criterion, index) => `<label>Criterion ${index + 1}<input name=\"criterion-${index}\" data-criterion-id=\"${esc(criterion.id)}\" required value=\"${esc(criterion.description)}\"></label>`).join(\"\")}</div><fieldset><legend>Evidence attached to this decision</legend><ul data-decision-sources>${sources}</ul><p>Inspect an authorized source, attach it to this draft, then save the decision. Source values and financial approvals are unchanged.</p><button type=\"button\" data-source-discover>Find Planner sources</button><label>Planner source<select name=\"source-option\" disabled><option value=\"\">Find sources first</option></select></label><button type=\"button\" data-source-inspect disabled>Inspect selected source</button><div data-source-preview aria-live=\"polite\"></div><button type=\"button\" data-source-attach disabled>Attach source to draft</button></fieldset><button type=\"submit\">Save decision</button><button type=\"button\" data-decision-retry hidden style=\"display:none\">Retry same request</button><button type=\"button\" data-decision-review hidden style=\"display:none\">Review current decision</button><p role=\"status\" aria-live=\"polite\"></p><div data-decision-conflict></div></form></details>`\n",
+        "context_before": "export function decisionEditForm(projection: AuthorizedCaseProjection) {\n  const item = projection.case\n",
+        "context_after": "}\n\n",
+        "old_utf16_offset": 328,
+        "new_utf16_offset": 426
+      },
+      {
+        "id": "EDIT-04",
+        "old_line_start": 16,
+        "new_line_start": 17,
+        "old_text": "  const status = form.querySelector('[role=status]'); const button = form.querySelector('button'); let inputs = [...form.querySelectorAll('input')]\n  const disabled = new Map(inputs.map((input) => [input, input.disabled]))\n  const removedDrafts = new Map()\n  context.criteria.forEach((criterion, index) => { const input = form.elements.namedItem('criterion-' + index); if (input) input.dataset.criterionId = criterion.id })\n  let intention; let conflictAttempt; let comparison; let reviewed; let needsReview = false; let busy = false; let closed = false; let completed = false\n  const active = () => !closed && form.isConnected\n",
+        "new_text": "  ${decisionScriptHelpers}\n  const submit = form.querySelector('button[type=submit]'); const retry = form.querySelector('[data-decision-retry]'); const review = form.querySelector('[data-decision-review]')\n  const discover = form.querySelector('[data-source-discover]'); const inspect = form.querySelector('[data-source-inspect]'); const attach = form.querySelector('[data-source-attach]')\n  const source = form.elements.namedItem('source-option'); const preview = form.querySelector('[data-source-preview]'); const list = form.querySelector('[data-decision-sources]'); const conflict = form.querySelector('[data-decision-conflict]')\n  const names = ['objective', 'start', 'end', 'currency']\n  const editable = () => [...form.querySelectorAll('input')].filter((input) => names.includes(input.name) || input.dataset.criterionId)\n  const disabled = new Map(editable().map((input) => [input, input.disabled])); const removedDrafts = new Map()\n  let refs = [...context.sourceRefs]; let options = []; let inspected; let pending; let comparison; let reviewed; let needsReview = false; let completed = false\n  const draft = () => ({ fields: Object.fromEntries(names.map((name) => [name, form.elements.namedItem(name).value])), criteria: new Map(editable().filter((input) => input.dataset.criterionId).map((input) => [input.dataset.criterionId, { value: input.value, disabled: disabled.get(input) }])) })\n  const scopeMatches = () => form.elements.namedItem('start').value === context.horizon.start && form.elements.namedItem('end').value === context.horizon.end && form.elements.namedItem('currency').value.trim() === context.currency\n  const additions = () => refs.filter((ref) => !context.sourceRefs.some((current) => same(current, ref)))\n  const sourceLabel = (ref) => ref.kind === 'record' ? ref.target.recordType + ' · ' + ref.target.recordId + ' · revision ' + ref.target.version : ref.kind + ' · ' + ref.evidenceLevel\n  const renderRefs = () => {\n    list.replaceChildren()\n    refs.forEach((ref) => { const item = document.createElement('li'); item.textContent = sourceLabel(ref) + (pending ? ' · retained in unconfirmed request' : context.sourceRefs.some((current) => same(current, ref)) ? '' : ' · not saved yet'); list.append(item) })\n  }\n",
+        "context_before": "  if (form.dataset.sfEditReady) return; form.dataset.sfEditReady = 'true'\n  let context = JSON.parse(form.dataset.context)\n",
+        "context_after": "  const controls = () => {\n    if (!active()) return\n",
+        "old_utf16_offset": 1619,
+        "new_utf16_offset": 2774
+      },
+      {
+        "id": "EDIT-05",
+        "old_line_start": 23,
+        "new_line_start": 34,
+        "old_text": "    if (!active()) return\n    button.disabled = completed || busy || needsReview; button.textContent = intention?.uncertain ? 'Retry same save' : 'Save decision'\n    inputs.forEach((input) => { input.disabled = completed || !!intention || disabled.get(input) })\n    form.querySelectorAll('[data-decision-conflict] button, [data-decision-structure-confirm]').forEach((input) => { input.disabled = busy || completed || !!intention })\n",
+        "new_text": "    if (!live()) return\n    const locked = busy || !!pending || completed\n    form.querySelectorAll('input, select, textarea, button').forEach((control) => { control.disabled = locked })\n    if (!locked) {\n      editable().forEach((input) => { input.disabled = disabled.get(input) || false })\n      source.disabled = !options.length || !scopeMatches(); inspect.disabled = !source.value || !scopeMatches(); attach.disabled = !inspected || !scopeMatches(); submit.disabled = needsReview\n    }\n    shown(retry, !!pending); retry.disabled = busy || !pending || completed\n    shown(review, !!pending || needsReview); review.disabled = busy || completed\n",
+        "context_before": "  const active = () => !closed && form.isConnected\n  const controls = () => {\n",
+        "context_after": "  }\n  const revoke = () => {\n",
+        "old_utf16_offset": 2274,
+        "new_utf16_offset": 5044
+      },
+      {
+        "id": "EDIT-06",
+        "old_line_start": 28,
+        "new_line_start": 44,
+        "old_text": "  const revoke = () => {\n    closed = true; context = undefined; comparison = undefined; reviewed = undefined; removedDrafts.clear()\n    if (intention) { intention.body = ''; intention.values = [] }; intention = undefined\n    if (conflictAttempt) { conflictAttempt.body = ''; conflictAttempt.values = [] }; conflictAttempt = undefined\n    inputs.forEach((input) => { input.value = ''; input.defaultValue = ''; input.removeAttribute('value'); input.disabled = true }); disabled.clear()\n    button.disabled = true; delete form.dataset.context; delete form.dataset.dirty\n    form.replaceChildren(status); status.textContent = 'Your access changed. Reload before editing this decision.'\n",
+        "new_text": "  const eraseDraft = () => {\n    editable().forEach((input) => { input.value = ''; input.defaultValue = ''; input.removeAttribute('value') })\n    refs = []; options = []; inspected = undefined; pending = undefined; comparison = undefined; reviewed = undefined; context = undefined; removedDrafts.clear(); disabled.clear(); delete form.dataset.context\n",
+        "context_before": "    form.querySelectorAll('[data-decision-conflict] button, [data-decision-structure-confirm]').forEach((input) => { input.disabled = busy || completed || !!intention })\n  }\n",
+        "context_after": "  }\n  addEventListener('sf-access-revoked', () => { if (form.isConnected) revoke() })\n",
+        "old_utf16_offset": 2710,
+        "new_utf16_offset": 5696
+      },
+      {
+        "id": "EDIT-07",
+        "old_line_start": 36,
+        "new_line_start": 48,
+        "old_text": "  addEventListener('sf-access-revoked', () => { if (form.isConnected) revoke() })\n  form.addEventListener('input', () => {\n    if (!active()) return\n    if (intention) { intention.values.forEach(([input, value]) => { input.value = value }); return }\n    form.dataset.dirty = 'true'\n  })\n",
+        "new_text": "  addEventListener('sf-access-revoked', eraseDraft)\n  const invalidateDiscovery = () => {\n    options = []; inspected = undefined; source.replaceChildren(new Option('Find sources first', '')); preview.replaceChildren(); delete preview.dataset.state\n  }\n  const inspectPlanner = async (refId, scope) => {\n    const result = await read('bi-data', { viewId: 'BI01', baseRef: refId, candidateRef: refId, currency: scope.currency, start: scope.horizon.start, end: scope.horizon.end })\n    const projection = result.projection\n    if (!projection || !sameAuthority(projection.context) || projection.context.surface !== 'planner' || projection.context.currency !== scope.currency || !same(projection.context.period, scope.horizon) || !Array.isArray(projection.values) || !Array.isArray(projection.components)) throw new Error('source-unavailable')\n    const supplied = projection.values.flatMap((value) => [...value.sourceRefs, ...(value.drilldown ? [value.drilldown] : [])])\n    const matches = supplied.filter((ref, index, all) => ref?.kind === 'record' && ref.refId === refId && ref.installationId === scope.authority.installationId && ref.projectId === scope.authority.projectId && ref.target.surface === 'planner' && ref.target.recordType === 'planner-version' && ref.target.period?.start <= scope.horizon.start && ref.target.period?.end >= scope.horizon.end && all.findIndex((other) => other.refDigest === ref.refDigest) === index)\n    if (matches.length !== 1) throw new Error('source-unavailable')\n    return { ref: matches[0], projection }\n  }\n  const revalidateSources = async (selected, scope) => {\n    for (const ref of selected) {\n      if (ref.kind !== 'record' || ref.target.surface !== 'planner' || ref.target.recordType !== 'planner-version') throw new Error('source-unavailable')\n      const current = await inspectPlanner(ref.refId, scope)\n      if (!same(current.ref, ref)) throw new Error('source-unavailable')\n    }\n  }\n",
+        "context_before": "    form.replaceChildren(status); status.textContent = 'Your access changed. Reload before editing this decision.'\n  }\n",
+        "context_after": "  const readCurrent = async () => {\n      const response = await fetch(location.href, { credentials: 'same-origin', cache: 'no-store', signal: AbortSignal.timeout(10000) })\n",
+        "old_utf16_offset": 3397,
+        "new_utf16_offset": 6051
+      },
+      {
+        "id": "EDIT-08",
+        "old_line_start": 43,
+        "new_line_start": 69,
+        "old_text": "      const response = await fetch(location.href, { credentials: 'same-origin', cache: 'no-store', signal: AbortSignal.timeout(10000) })\n      if (!active()) return\n      if (response.status === 401 || response.status === 403) { revoke(); return }\n      if (!response.ok) throw new Error('unavailable')\n      const html = await response.text(); if (!active()) return\n      const page = new DOMParser().parseFromString(html, 'text/html')\n      const previousRevision = document.querySelector('meta[name=\"sf-access-revision\"]')?.content\n      const nextRevision = response.headers.get('X-SF-Access-Revision') || page.querySelector('meta[name=\"sf-access-revision\"]')?.content\n      if (page.body.dataset.surface === 'signed-out' || page.querySelector('main[data-drawn=\"false\"]') || previousRevision && previousRevision !== nextRevision) { revoke(); return }\n      const current = [...page.querySelectorAll('[data-decision-edit]')].find((candidate) => { try { const ref = JSON.parse(candidate.dataset.context).caseRef; return ref.id === context.caseRef.id && ref.incarnation === context.caseRef.incarnation } catch { return false } })\n      if (!current) throw new Error('unavailable')\n      const currentContext = JSON.parse(current.dataset.context)\n      if (!Number.isSafeInteger(currentContext.caseRef.version) || currentContext.caseRef.version < context.caseRef.version || !Array.isArray(currentContext.sourceRefs) || !Array.isArray(currentContext.criteria) || !currentContext.criteria.length || currentContext.criteria.some((item) => !item.id || typeof item.id !== 'string' || typeof item.required !== 'boolean') || new Set(currentContext.criteria.map((item) => item.id)).size !== currentContext.criteria.length) throw new Error('unavailable')\n      const fields = Object.fromEntries(['objective', 'start', 'end', 'currency'].map((name) => { const field = current.elements.namedItem(name); if (!field) throw new Error('unavailable'); return [name, { value: field.value, disabled: field.disabled }] }))\n      const criteria = currentContext.criteria.map((item, index) => { const field = current.elements.namedItem('criterion-' + index); if (!field) throw new Error('unavailable'); return { ...item, description: field.value, disabled: field.disabled } })\n      return { context: currentContext, fields, criteria, signature: JSON.stringify({ context: currentContext, fields, criteria }) }\n",
+        "new_text": "    const response = await fetch(endpoint('workbench-case', { caseRef: context.caseSelector }), { credentials: 'same-origin', cache: 'no-store', signal: AbortSignal.timeout(10000) })\n    if (!live()) throw new Error('detached')\n    if (response.status === 401 || response.status === 403) { clearAccess(); throw new Error('denied') }\n    if (!response.ok) throw new Error('unavailable')\n    const html = await response.text(); if (!live()) throw new Error('detached')\n    const page = new DOMParser().parseFromString(html, 'text/html')\n    const previousRevision = document.querySelector('meta[name=\"sf-access-revision\"]')?.content\n    const revision = response.headers.get('X-SF-Access-Revision') || page.querySelector('meta[name=\"sf-access-revision\"]')?.content\n    if (page.body.dataset.surface === 'signed-out' || page.querySelector('main[data-drawn=\"false\"]') || previousRevision && previousRevision !== context.authority.accessRevision || revision && revision !== context.authority.accessRevision) { clearAccess(); throw new Error('denied') }\n    const current = [...page.querySelectorAll('[data-decision-edit]')].find((candidate) => { try { const ref = JSON.parse(candidate.dataset.context).caseRef; return ref.id === context.caseRef.id && ref.incarnation === context.caseRef.incarnation } catch { return false } })\n    if (!current) throw new Error('unavailable')\n    const currentContext = JSON.parse(current.dataset.context)\n    if (!sameAuthority(currentContext.authority) || currentContext.scope !== context.scope) { clearAccess(); throw new Error('denied') }\n    if (currentContext.caseSelector !== context.caseSelector || !Number.isSafeInteger(currentContext.caseRef.version) || currentContext.caseRef.version < context.caseRef.version || !Array.isArray(currentContext.sourceRefs) || !Array.isArray(currentContext.criteria) || !currentContext.criteria.length || currentContext.criteria.some((item) => !item.id || typeof item.id !== 'string' || typeof item.required !== 'boolean') || new Set(currentContext.criteria.map((item) => item.id)).size !== currentContext.criteria.length) throw new Error('unavailable')\n    const fields = Object.fromEntries(names.map((name) => { const field = current.elements.namedItem(name); if (!field) throw new Error('unavailable'); return [name, { value: field.value, disabled: field.disabled }] }))\n    if (!same(currentContext.horizon, { start: fields.start.value, end: fields.end.value }) || currentContext.currency !== fields.currency.value) throw new Error('unavailable')\n    const criteria = currentContext.criteria.map((item, index) => { const field = current.elements.namedItem('criterion-' + index); if (!field || field.dataset.criterionId !== item.id) throw new Error('unavailable'); return { ...item, description: field.value, disabled: field.disabled } })\n    return { context: currentContext, fields, criteria, signature: JSON.stringify({ context: currentContext, fields, criteria }) }\n",
+        "context_before": "  })\n  const readCurrent = async () => {\n",
+        "context_after": "  }\n  const draft = () => ({ fields: Object.fromEntries(inputs.filter((input) => !input.dataset.criterionId).map((input) => [input.name, input.value])), criteria: new Map(inputs.filter((input) => input.dataset.criterionId).map((input) => [input.dataset.criterionId, { value: input.value, disabled: disabled.get(input) }])) })\n",
+        "old_utf16_offset": 3720,
+        "new_utf16_offset": 8022
+      },
+      {
+        "id": "EDIT-09",
+        "old_line_start": 60,
+        "new_line_start": 88,
+        "old_text": "  const draft = () => ({ fields: Object.fromEntries(inputs.filter((input) => !input.dataset.criterionId).map((input) => [input.name, input.value])), criteria: new Map(inputs.filter((input) => input.dataset.criterionId).map((input) => [input.dataset.criterionId, { value: input.value, disabled: disabled.get(input) }])) })\n  const showRemovedDrafts = (panel) => {\n    panel.querySelectorAll('[data-decision-removed-entry]').forEach((node) => node.remove())\n    removedDrafts.forEach((value, id) => { const detail = document.createElement('p'); detail.dataset.decisionRemovedEntry = id; detail.textContent = 'Previously removed criterion ' + id + ' — your last entry: ' + value; panel.append(detail) })\n",
+        "new_text": "  const showRemovedDrafts = () => {\n    conflict.querySelectorAll('[data-decision-removed-entry]').forEach((node) => node.remove())\n    removedDrafts.forEach((value, id) => { const detail = document.createElement('p'); detail.dataset.decisionRemovedEntry = id; detail.textContent = 'Previously removed criterion ' + id + ' — your last entry: ' + value; conflict.append(detail) })\n",
+        "context_before": "      return { context: currentContext, fields, criteria, signature: JSON.stringify({ context: currentContext, fields, criteria }) }\n  }\n",
+        "context_after": "  }\n  const showComparison = (current) => {\n",
+        "old_utf16_offset": 6113,
+        "new_utf16_offset": 10969
+      },
+      {
+        "id": "EDIT-10",
+        "old_line_start": 65,
+        "new_line_start": 92,
+        "old_text": "",
+        "new_text": "  const rebuildCriteria = (criteria, retained) => {\n    const group = document.createElement('div'); group.dataset.decisionCriteria = 'true'\n    criteria.forEach((item, index) => {\n      const label = document.createElement('label'); label.textContent = 'Criterion ' + (index + 1)\n      const input = document.createElement('input'); input.name = 'criterion-' + index; input.dataset.criterionId = item.id; input.required = true\n      input.value = retained?.get(item.id)?.value ?? removedDrafts.get(item.id) ?? item.description; input.defaultValue = item.description\n      disabled.set(input, item.disabled || retained?.get(item.id)?.disabled || false); label.append(input); group.append(label)\n    })\n    form.querySelector('[data-decision-criteria]').replaceWith(group)\n    for (const input of disabled.keys()) if (!input.isConnected) disabled.delete(input)\n  }\n",
+        "context_before": "    removedDrafts.forEach((value, id) => { const detail = document.createElement('p'); detail.dataset.decisionRemovedEntry = id; detail.textContent = 'Previously removed criterion ' + id + ' — your last entry: ' + value; panel.append(detail) })\n  }\n",
+        "context_after": "  const showComparison = (current) => {\n    if (!active()) return\n",
+        "old_utf16_offset": 6818,
+        "new_utf16_offset": 11353
+      },
+      {
+        "id": "EDIT-11",
+        "old_line_start": 66,
+        "new_line_start": 104,
+        "old_text": "    if (!active()) return\n    needsReview = true; reviewed = undefined; comparison = current\n    const entries = draft()\n    form.querySelector('[data-decision-conflict]')?.remove()\n    const panel = document.createElement('div'); panel.dataset.decisionConflict = 'true'\n    const title = document.createElement('p'); title.textContent = current ? 'Current values and your entries:' : 'Current values are unavailable; your entries remain here.'; panel.append(title)\n",
+        "new_text": "    if (!live()) return\n    needsReview = true; reviewed = undefined; comparison = current; conflict.replaceChildren()\n    const entries = draft(); const title = document.createElement('p'); title.textContent = current ? 'Current values and your entries:' : 'Current values are unavailable; your entries remain here.'; conflict.append(title)\n",
+        "context_before": "  }\n  const showComparison = (current) => {\n",
+        "context_after": "    if (current) {\n      ;[['objective', 'Objective'], ['start', 'Start'], ['end', 'End'], ['currency', 'Currency']].forEach(([name, label]) => {\n",
+        "old_utf16_offset": 6858,
+        "new_utf16_offset": 12257
+      },
+      {
+        "id": "EDIT-12",
+        "old_line_start": 73,
+        "new_line_start": 108,
+        "old_text": "      ;[['objective', 'Objective'], ['start', 'Start'], ['end', 'End'], ['currency', 'Currency']].forEach(([name, label]) => {\n        const detail = document.createElement('p'); detail.textContent = label + ': current ' + current.fields[name].value + '; yours ' + String(entries.fields[name] || ''); panel.append(detail)\n      })\n      context.criteria.forEach((item, index) => {\n        const found = current.criteria.find((criterion) => criterion.id === item.id)\n        const detail = document.createElement('p'); detail.textContent = 'Criterion ' + (index + 1) + ' (' + item.id + '): current ' + (found ? found.description : 'removed') + '; yours ' + String(entries.criteria.get(item.id)?.value || ''); panel.append(detail)\n      })\n      const added = current.criteria.filter((item) => !entries.criteria.has(item.id))\n      const removed = context.criteria.filter((item) => !current.criteria.some((criterion) => criterion.id === item.id))\n      added.forEach((item) => { const detail = document.createElement('p'); detail.textContent = 'Added criterion ' + item.id + ': ' + item.description; panel.append(detail) })\n      if (added.length || removed.length) {\n        const detail = document.createElement('p'); detail.textContent = 'The criteria changed. Continuing keeps your entries for matching criterion IDs, adds the current new criteria, and omits the removed criteria from the next save. Removed entries remain in this comparison until you save.'; panel.append(detail)\n        const label = document.createElement('label'); const confirm = document.createElement('input'); confirm.type = 'checkbox'; confirm.dataset.decisionStructureConfirm = 'true'\n        label.append(confirm, document.createTextNode('I reviewed the added and removed criteria')); panel.append(label)\n",
+        "new_text": "      names.forEach((name) => { const line = document.createElement('p'); line.textContent = name[0].toUpperCase() + name.slice(1) + ': current ' + current.fields[name].value + '; yours ' + entries.fields[name]; conflict.append(line) })\n      entries.criteria.forEach((entry, id) => { const found = current.criteria.find((item) => item.id === id); const line = document.createElement('p'); line.textContent = 'Criterion ' + id + ': current ' + (found ? found.description : 'removed') + '; yours ' + entry.value; conflict.append(line) })\n      const added = current.criteria.filter((item) => !entries.criteria.has(item.id)); const removed = [...entries.criteria.keys()].filter((id) => !current.criteria.some((item) => item.id === id))\n      const changed = current.criteria.filter((item) => context.criteria.some((before) => before.id === item.id && before.required !== item.required))\n      added.forEach((item) => { const line = document.createElement('p'); line.textContent = 'Added criterion ' + item.id + ': ' + item.description; conflict.append(line) })\n      changed.forEach((item) => { const line = document.createElement('p'); line.textContent = 'Criterion ' + item.id + ': required is now ' + item.required; conflict.append(line) })\n      const evidence = document.createElement('p'); evidence.textContent = current.context.sourceRefs.length + ' current source(s) will be preserved together with the sources you added to this draft, after revalidation.'; conflict.append(evidence)\n      if (pending) {\n        const locked = document.createElement('p'); locked.textContent = 'The previous save is still unconfirmed. These values are for review only; the original request, key and entries stay locked.'; conflict.append(locked)\n      } else {\n        if (added.length || removed.length || changed.length) {\n          const detail = document.createElement('p'); detail.textContent = 'Continuing keeps your edits for matching criterion IDs, adds current new criteria and omits removed criteria from the next save. Removed entries remain visible until the save is confirmed.'; conflict.append(detail)\n          const label = document.createElement('label'); const confirm = document.createElement('input'); confirm.type = 'checkbox'; confirm.dataset.decisionStructureConfirm = 'true'; label.append(confirm, document.createTextNode('I reviewed the added and removed criteria')); conflict.append(label)\n        }\n        const adopt = document.createElement('button'); adopt.type = 'button'; adopt.dataset.decisionAdopt = 'true'; adopt.textContent = 'Use current version and keep my edits'; conflict.append(adopt)\n        adopt.addEventListener('click', async () => {\n          if (!live() || busy || pending || comparison !== current) return\n          const confirm = conflict.querySelector('[data-decision-structure-confirm]')\n          if (confirm && !confirm.checked) { status.textContent = 'Review the added and removed criteria before adopting the current version.'; confirm.focus(); return }\n          busy = true; controls(); status.textContent = 'Revalidating the current decision and the sources you added…'\n          try {\n            const fresh = await readCurrent()\n            if (fresh.signature !== current.signature) { showComparison(fresh); status.textContent = 'The decision changed again. Review the new comparison before continuing.'; return }\n            const extra = additions(); await revalidateSources(extra, fresh.context)\n            const fence = await readCurrent()\n            if (fence.signature !== fresh.signature) { showComparison(fence); status.textContent = 'The decision changed while its sources were checked. Review the new comparison.'; return }\n            const retained = draft()\n            retained.criteria.forEach((entry, id) => { if (!fresh.criteria.some((item) => item.id === id)) removedDrafts.set(id, entry.value) })\n            rebuildCriteria(fresh.criteria, retained.criteria)\n            names.forEach((name) => { const input = form.elements.namedItem(name); input.defaultValue = fresh.fields[name].value; disabled.set(input, disabled.get(input) || fresh.fields[name].disabled) })\n            refs = [...fresh.context.sourceRefs]\n            extra.forEach((ref) => { if (!refs.some((currentRef) => same(currentRef, ref))) refs.push(ref) })\n            context = fresh.context; form.dataset.context = JSON.stringify(context); reviewed = fresh.signature; comparison = undefined; needsReview = false\n            invalidateDiscovery(); renderRefs(); conflict.querySelectorAll('button, label').forEach((node) => node.remove()); showRemovedDrafts()\n            title.textContent = 'Current version reviewed. Your entries and the earlier comparison remain here for an explicit save.'; status.textContent = 'Current version adopted. Review your entries, then save explicitly.'\n          } catch { if (live()) status.textContent = 'The current decision or an added source could not be revalidated. Nothing was adopted; your entries and original version remain here.' }\n          finally { busy = false; if (!live()) eraseDraft(); else controls() }\n        })\n",
+        "context_before": "    const title = document.createElement('p'); title.textContent = current ? 'Current values and your entries:' : 'Current values are unavailable; your entries remain here.'; panel.append(title)\n    if (current) {\n",
+        "context_after": "      }\n      const adopt = document.createElement('button'); adopt.type = 'button'; adopt.dataset.decisionAdopt = 'true'; adopt.textContent = 'Use current version and keep my edits'; panel.append(adopt)\n",
+        "old_utf16_offset": 7343,
+        "new_utf16_offset": 12618
+      },
+      {
+        "id": "EDIT-13",
+        "old_line_start": 88,
+        "new_line_start": 147,
+        "old_text": "      const adopt = document.createElement('button'); adopt.type = 'button'; adopt.dataset.decisionAdopt = 'true'; adopt.textContent = 'Use current version and keep my edits'; panel.append(adopt)\n      adopt.addEventListener('click', async () => {\n        if (!active() || busy || intention || comparison !== current) return\n        const confirm = panel.querySelector('[data-decision-structure-confirm]')\n        if (confirm && !confirm.checked) { status.textContent = 'Review the added and removed criteria before adopting the current version.'; confirm.focus(); return }\n        busy = true; controls(); status.textContent = 'Checking the current decision before keeping your edits…'\n        try {\n          const fresh = await readCurrent(); if (!active() || !fresh) return\n          if (fresh.signature !== current.signature) { showComparison(fresh); status.textContent = 'The decision changed again. Review the new comparison before continuing.'; return }\n          const retained = draft()\n          // The comparison panel can be replaced by another authorized read.\n          // Keep removed drafts by criterion ID until the save is confirmed.\n          retained.criteria.forEach((entry, id) => { if (!fresh.criteria.some((item) => item.id === id)) removedDrafts.set(id, entry.value) })\n          showRemovedDrafts(panel)\n          const criteria = document.createElement('div'); criteria.dataset.decisionCriteria = 'true'\n          fresh.criteria.forEach((item, index) => {\n            const label = document.createElement('label'); label.textContent = 'Criterion ' + (index + 1)\n            const input = document.createElement('input'); input.name = 'criterion-' + index; input.dataset.criterionId = item.id; input.required = true\n            input.value = retained.criteria.get(item.id)?.value ?? item.description; input.defaultValue = item.description\n            disabled.set(input, item.disabled || retained.criteria.get(item.id)?.disabled || false); label.append(input); criteria.append(label)\n          })\n          const previous = form.querySelector('[data-decision-criteria]')\n          if (previous) previous.replaceWith(criteria)\n          else { inputs.filter((input) => input.dataset.criterionId).forEach((input) => input.closest('label')?.remove()); form.insertBefore(criteria, button) }\n          inputs.filter((input) => !input.isConnected).forEach((input) => disabled.delete(input))\n          inputs = [...form.querySelectorAll('input')].filter((input) => !input.hasAttribute('data-decision-structure-confirm'))\n          ;['objective', 'start', 'end', 'currency'].forEach((name) => { const input = form.elements.namedItem(name); disabled.set(input, disabled.get(input) || fresh.fields[name].disabled) })\n          context = fresh.context; form.dataset.context = JSON.stringify(context); reviewed = fresh.signature; comparison = undefined; needsReview = false\n          panel.querySelectorAll('button, label').forEach((node) => node.remove()); title.textContent = 'Reviewed current version. This comparison preserves the earlier entries; the form is ready for your review and save.'\n          status.textContent = 'Current version adopted. Review your entries, then save explicitly.'\n        } catch { if (active()) status.textContent = 'The current decision could not be revalidated. Your entries and original version remain here; retry the comparison.' }\n        finally { busy = false; controls() }\n      })\n",
+        "new_text": "",
+        "context_before": "        label.append(confirm, document.createTextNode('I reviewed the added and removed criteria')); panel.append(label)\n      }\n",
+        "context_after": "    }\n    const refresh = document.createElement('button'); refresh.type = 'button'; refresh.textContent = 'Reload current values for comparison'; panel.append(refresh)\n",
+        "old_utf16_offset": 9136,
+        "new_utf16_offset": 17736
+      },
+      {
+        "id": "EDIT-14",
+        "old_line_start": 122,
+        "new_line_start": 148,
+        "old_text": "    const refresh = document.createElement('button'); refresh.type = 'button'; refresh.textContent = 'Reload current values for comparison'; panel.append(refresh)\n",
+        "new_text": "    const refresh = document.createElement('button'); refresh.type = 'button'; refresh.textContent = 'Reload current values for comparison'; conflict.append(refresh)\n",
+        "context_before": "      })\n    }\n",
+        "context_after": "    refresh.addEventListener('click', async () => {\n      if (!active() || busy || intention) return\n",
+        "old_utf16_offset": 12582,
+        "new_utf16_offset": 17742
+      },
+      {
+        "id": "EDIT-15",
+        "old_line_start": 124,
+        "new_line_start": 150,
+        "old_text": "      if (!active() || busy || intention) return\n",
+        "new_text": "      if (!live() || busy) return\n",
+        "context_before": "    const refresh = document.createElement('button'); refresh.type = 'button'; refresh.textContent = 'Reload current values for comparison'; panel.append(refresh)\n    refresh.addEventListener('click', async () => {\n",
+        "context_after": "      busy = true; controls()\n      try { const fresh = await readCurrent(); if (fresh) showComparison(fresh) }\n",
+        "old_utf16_offset": 12797,
+        "new_utf16_offset": 17960
+      },
+      {
+        "id": "EDIT-16",
+        "old_line_start": 126,
+        "new_line_start": 152,
+        "old_text": "      try { const fresh = await readCurrent(); if (fresh) showComparison(fresh) }\n      catch { if (active()) { showComparison(undefined); status.textContent = 'Current values are unavailable; your entries and original version remain here.' } }\n      finally { busy = false; controls() }\n",
+        "new_text": "      try { showComparison(await readCurrent()) }\n      catch { if (live()) { showComparison(undefined); status.textContent = 'Current values are unavailable; your entries and original request remain here.' } }\n      finally { busy = false; if (!live()) eraseDraft(); else controls() }\n",
+        "context_before": "      if (!active() || busy || intention) return\n      busy = true; controls()\n",
+        "context_after": "    })\n    showRemovedDrafts(panel); form.append(panel); controls()\n",
+        "old_utf16_offset": 12876,
+        "new_utf16_offset": 18024
+      },
+      {
+        "id": "EDIT-17",
+        "old_line_start": 130,
+        "new_line_start": 156,
+        "old_text": "    showRemovedDrafts(panel); form.append(panel); controls()\n",
+        "new_text": "    showRemovedDrafts(); controls()\n",
+        "context_before": "      finally { busy = false; controls() }\n    })\n",
+        "context_after": "  }\n  const conflict = async (attempt) => {\n",
+        "old_utf16_offset": 13171,
+        "new_utf16_offset": 18317
+      },
+      {
+        "id": "EDIT-18",
+        "old_line_start": 132,
+        "new_line_start": 158,
+        "old_text": "  const conflict = async (attempt) => {\n    conflictAttempt = attempt; needsReview = true\n    status.textContent = 'The decision changed or its basis is in use. Your entries and the version you opened are preserved.'\n    try { const current = await readCurrent(); if (current) showComparison(current) }\n    catch { if (active()) { showComparison(undefined); status.textContent += ' Current values are unavailable; your entries remain here.' } }\n    finally { if (conflictAttempt === attempt) conflictAttempt = undefined }\n",
+        "new_text": "  const unconfirmed = (error) => {\n    if (!live()) return\n    status.textContent = error.rejected ? 'The retry was rejected, but the earlier save is still unconfirmed. Your entries, key and request stay locked.' : error.message === 'conflict' ? 'The outcome is still unconfirmed. Your entries and exact request are preserved; review current values or retry the same request.' : 'Could not confirm the save. Your entries are preserved; retry the same request.'\n    controls()\n",
+        "context_before": "    showRemovedDrafts(panel); form.append(panel); controls()\n  }\n",
+        "context_after": "  }\n  form.addEventListener('submit', async (event) => {\n",
+        "old_utf16_offset": 13236,
+        "new_utf16_offset": 18357
+      },
+      {
+        "id": "EDIT-19",
+        "old_line_start": 139,
+        "new_line_start": 163,
+        "old_text": "  form.addEventListener('submit', async (event) => {\n    event.preventDefault(); if (!active() || busy || completed || needsReview || button.disabled) return\n    busy = true; controls()\n    let attempt\n",
+        "new_text": "  const execute = async (saved) => {\n    if (busy || !live() || pending !== saved) return\n    const reconciling = saved.uncertain === true\n    busy = true; controls(); hold(); status.textContent = 'Saving decision…'\n",
+        "context_before": "    finally { if (conflictAttempt === attempt) conflictAttempt = undefined }\n  }\n",
+        "context_after": "    try {\n      if (!intention) {\n",
+        "old_utf16_offset": 13762,
+        "new_utf16_offset": 18837
+      },
+      {
+        "id": "EDIT-20",
+        "old_line_start": 144,
+        "new_line_start": 168,
+        "old_text": "      if (!intention) {\n        if (!form.reportValidity()) return\n        if (reviewed) {\n          let current\n          try { current = await readCurrent() } catch { if (active()) status.textContent = 'The current decision could not be revalidated. Nothing was sent; your entries remain here.'; return }\n          if (!active() || !current) return\n          if (current.signature !== reviewed) { showComparison(current); status.textContent = 'The decision changed after your review. Compare the current version before saving.'; return }\n        }\n        if (!form.reportValidity()) return\n        const fields = new FormData(form); const entries = draft()\n        const payload = { caseRef: context.caseRef, objective: String(fields.get('objective') || '').trim(), horizon: { start: fields.get('start'), end: fields.get('end') }, currency: String(fields.get('currency') || '').trim(), criteria: context.criteria.map((item) => ({ ...item, description: String(entries.criteria.get(item.id)?.value || '').trim() })), sourceRefs: context.sourceRefs }\n        intention = { key: crypto.randomUUID(), body: JSON.stringify(payload), values: inputs.map((input) => [input, input.value]), uncertain: false }\n      }\n      attempt = intention; const reconciling = attempt.uncertain\n      form.dataset.dirty = 'true'; inputs.forEach((input) => { input.disabled = true }); controls(); status.textContent = 'Saving decision…'\n      const url = new URL(location.href); url.search = '?sf=decision-edit'\n      const response = await fetch(url, { method: 'POST', credentials: 'same-origin', signal: AbortSignal.timeout(10000), headers: { 'Content-Type': 'application/json', 'Idempotency-Key': attempt.key }, body: attempt.body })\n      if (!active() || intention !== attempt) return\n      if (response.status === 401 || response.status === 403) { revoke(); return }\n      const result = await response.json(); if (!active() || intention !== attempt) return\n      if ([400, 409, 422].includes(response.status) && ['invalid', 'needs-input', 'conflict', 'stale'].includes(result?.status)) {\n        if (reconciling) { attempt.uncertain = true; status.textContent = 'The retry was rejected, but the earlier save is still unconfirmed. Your original entries are locked; check the saved decision before making another change.'; return }\n        intention = undefined\n        if (response.status === 409) await conflict(attempt)\n        else status.textContent = 'The save was rejected. Review the required fields and try again; your entries are preserved.'\n        return\n",
+        "new_text": "      const result = await send(saved); const payload = JSON.parse(saved.intent.body)\n      if (!result?.caseRef || result.caseRef.id !== payload.caseRef.id || result.caseRef.incarnation !== payload.caseRef.incarnation || result.caseRef.version !== payload.caseRef.version + 1) throw new Error('uncertain')\n      settle(); pending = undefined; completed = true; removedDrafts.clear(); delete form.dataset.dirty; status.textContent = 'Decision saved.'; location.assign(endpoint('workbench-case', { caseRef: context.caseSelector }))\n    } catch (error) {\n      if (!live()) return\n      if (error.rejected && !reconciling) {\n        try { settle() } catch { unconfirmed(error); return }\n        pending = undefined\n        if (error.status === 409 || error.message === 'conflict') {\n          try { showComparison(await readCurrent()) } catch { if (live()) showComparison(undefined) }\n          if (live()) status.textContent = 'The save was rejected because the decision changed or its basis is in use. Review the current version; your entries are preserved.'\n        } else status.textContent = 'The save was rejected. Review the required fields before making a new attempt; your entries are preserved.'\n      } else {\n        unconfirmed(error)\n        if (error.message === 'conflict') { try { showComparison(await readCurrent()) } catch { if (live()) showComparison(undefined) } }\n",
+        "context_before": "    let attempt\n    try {\n",
+        "context_after": "      }\n      const saved = result?.value?.caseRef\n",
+        "old_utf16_offset": 13974,
+        "new_utf16_offset": 19063
+      },
+      {
+        "id": "EDIT-21",
+        "old_line_start": 171,
+        "new_line_start": 184,
+        "old_text": "      const saved = result?.value?.caseRef\n      if (!response.ok || result?.status !== 'ok' || !saved || saved.id !== context.caseRef.id || saved.incarnation !== context.caseRef.incarnation || !Number.isSafeInteger(saved.version) || saved.version <= context.caseRef.version) throw new Error('unconfirmed')\n      intention = undefined; completed = true; removedDrafts.clear(); delete form.dataset.dirty; status.textContent = 'Decision saved.'; location.reload()\n    } catch { if (active() && attempt && intention === attempt) { attempt.uncertain = true; status.textContent = 'Could not confirm the save. Your original entries are locked; retry the same request.' } }\n    finally {\n      busy = false; controls()\n",
+        "new_text": "    } finally { busy = false; if (!live()) eraseDraft(); else controls() }\n  }\n  const restorePending = (saved) => {\n    const payload = JSON.parse(saved.intent.body)\n    if (!Array.isArray(payload.criteria) || !payload.criteria.length || payload.criteria.some((item) => typeof item.id !== 'string' || !item.id || typeof item.description !== 'string' || typeof item.required !== 'boolean') || !Array.isArray(payload.sourceRefs) || !payload.horizon || names.some((name) => typeof (name === 'start' || name === 'end' ? payload.horizon[name] : payload[name]) !== 'string')) throw new Error('invalid-retained-edit')\n    names.forEach((name) => { form.elements.namedItem(name).value = name === 'start' || name === 'end' ? payload.horizon[name] : payload[name] })\n    rebuildCriteria(payload.criteria, new Map(payload.criteria.map((item) => [item.id, { value: item.description }]))); refs = [...payload.sourceRefs]; renderRefs()\n  }\n  form.addEventListener('input', (event) => {\n    if (!live()) return\n    if (pending) { restorePending(pending); controls(); return }\n    if (busy) return\n    form.dataset.dirty = 'true'\n    if (['start', 'end', 'currency'].includes(event.target.name)) {\n      invalidateDiscovery(); controls()\n      if (!scopeMatches()) status.textContent = 'Save the new period or currency before discovering sources for that scope.'\n",
+        "context_before": "        return\n      }\n",
+        "context_after": "    }\n  })\n",
+        "old_utf16_offset": 16533,
+        "new_utf16_offset": 20455
+      },
+      {
+        "id": "EDIT-22",
+        "old_line_start": 179,
+        "new_line_start": 202,
+        "old_text": "",
+        "new_text": "  discover.addEventListener('click', async () => {\n    if (!live() || busy || pending || completed) return\n    if (!scopeMatches()) { status.textContent = 'Save the new period or currency before discovering sources.'; return }\n    busy = true; controls(); inspected = undefined; preview.replaceChildren(); delete preview.dataset.state; status.textContent = 'Finding authorized Planner sources…'\n    try {\n      const value = await read('bi-options', { viewId: 'BI01', start: context.horizon.start, end: context.horizon.end })\n      if (!Array.isArray(value.versions)) throw new Error('unavailable')\n      options = value.versions; source.replaceChildren(new Option('Choose a Planner source', ''))\n      options.forEach((item) => { if (typeof item.ref === 'string' && typeof item.label === 'string') source.append(new Option(item.label, item.ref)) })\n      status.textContent = options.length ? 'Choose a source to inspect its current values.' : 'No authorized Planner versions cover this period.'\n    } catch { if (live()) { options = []; source.replaceChildren(); status.textContent = 'Planner sources are unavailable. Your decision draft is preserved.' } }\n    finally { busy = false; if (!live()) eraseDraft(); else controls() }\n  })\n  source.addEventListener('change', () => { if (!live() || pending || busy) return; inspected = undefined; preview.replaceChildren(); delete preview.dataset.state; controls() })\n  inspect.addEventListener('click', async () => {\n    if (!live() || busy || pending || !scopeMatches()) return\n    const selected = options.filter((item) => item.ref === source.value)\n    if (selected.length !== 1) return\n    busy = true; controls(); inspected = undefined; preview.replaceChildren(); delete preview.dataset.state; status.textContent = 'Inspecting authorized source…'\n    try {\n      const result = await inspectPlanner(selected[0].ref, context)\n      inspected = { ref: result.ref, label: selected[0].label }; showProjection(preview, result.projection, inspected.label); status.textContent = 'Source inspected. Attach it to the draft, then save the decision.'\n    } catch { if (live()) status.textContent = 'The source is unavailable, changed or outside this decision scope. No reference was attached.' }\n    finally { busy = false; if (!live()) eraseDraft(); else controls() }\n  })\n  attach.addEventListener('click', () => {\n    if (!live() || busy || pending || !inspected || !scopeMatches()) return\n    if (refs.some((ref) => ref.refDigest === inspected.ref.refDigest)) { status.textContent = 'This exact source is already attached to the draft.'; return }\n    refs = [...refs, inspected.ref]; renderRefs(); form.dataset.dirty = 'true'; status.textContent = 'Source attached to the draft. Save decision to persist it.'\n  })\n  form.addEventListener('submit', async (event) => {\n    event.preventDefault(); if (!live() || busy || pending || completed || needsReview || !form.reportValidity()) return\n    busy = true; controls(); let dispatch\n    try {\n      const before = reviewed ? await readCurrent() : undefined\n      if (before && before.signature !== reviewed) { showComparison(before); status.textContent = 'The decision changed after your review. Compare the current version before saving.'; return }\n      const entries = draft()\n      const payload = { caseRef: context.caseRef, objective: entries.fields.objective.trim(), horizon: { start: entries.fields.start, end: entries.fields.end }, currency: entries.fields.currency.trim(), criteria: context.criteria.map((item) => ({ ...item, description: String(entries.criteria.get(item.id)?.value || '').trim() })), sourceRefs: refs }\n      if (!payload.objective || !payload.currency || payload.criteria.some((item) => !item.description) || payload.horizon.start > payload.horizon.end) { status.textContent = 'Enter an objective, currency and every criterion, with the end date on or after the start date.'; return }\n      await revalidateSources(additions(), { ...context, horizon: payload.horizon, currency: payload.currency })\n      if (before) {\n        const after = await readCurrent()\n        if (after.signature !== before.signature) { showComparison(after); status.textContent = 'The decision changed during source validation. Compare current values before saving.'; return }\n      }\n      pending = begin('decision-edit', payload, { removedCriteria: [...removedDrafts] }); dispatch = pending; form.dataset.dirty = 'true'\n    } catch { if (live()) status.textContent = 'The current decision or added source could not be revalidated. No new save was sent; your entries remain here.' }\n    finally { busy = false; if (!live()) eraseDraft(); else controls() }\n    if (dispatch && live()) await execute(dispatch)\n  })\n  retry.addEventListener('click', async () => { if (!busy && pending) await execute(pending) })\n  review.addEventListener('click', async () => {\n    if (!live() || busy) return\n    busy = true; controls()\n    try { showComparison(await readCurrent()) }\n    catch { if (live()) { showComparison(undefined); status.textContent = 'Current values are unavailable. Your entries and original request remain unchanged.' } }\n    finally { busy = false; if (!live()) eraseDraft(); else controls() }\n  })\n  try {\n    const saved = active()\n    if (saved?.intent.action === 'decision-edit') {\n      saved.uncertain = true; pending = saved\n      if (Array.isArray(saved.draft?.removedCriteria)) saved.draft.removedCriteria.forEach(([id, value]) => { if (typeof id === 'string' && typeof value === 'string') removedDrafts.set(id, value) })\n      restorePending(saved); showRemovedDrafts(); hold(); unconfirmed(new Error('uncertain'))\n    } else if (saved) { form.inert = true; form.dataset.decisionHeld = 'true'; status.textContent = 'Resolve the unconfirmed alternative request before editing the decision.' }\n    else controls()\n  } catch { form.querySelectorAll('input, select, textarea, button').forEach((control) => { control.disabled = true }); status.textContent = 'The retained edit cannot be verified. Reopen the current decision to reconcile it before another mutation.' }\n",
+        "context_before": "    }\n  })\n",
+        "context_after": "})\n`\n",
+        "old_utf16_offset": 17256,
+        "new_utf16_offset": 21814
+      }
+    ],
+    "application": "Apply from last hunk to first against the exact preimage. Offsets are JavaScript UTF-16 code units, not byte offsets.",
+    "source_postimage_reconstructed": true,
+    "reverse_reconstruction_equals_preimage": true,
+    "added_lines": 237,
+    "removed_lines": 148,
+    "reason": "Source branch base differs from bundle PR43. Terminal owner output explicitly reconciles the PR43 semantics in CONSUMER/HANDOFF; these complete hunks are generated against the actual PR43 target, not the old source branch.",
+    "preserved_semantics": [
+      "Criteria IDs and reordering",
+      "Explicit structural confirmation including required changes",
+      "removedDrafts across repeated comparisons",
+      "Current/draft comparison, explicit adoption and re-read before POST",
+      "Original idempotency key and payload after uncertain outcome",
+      "Revocation cleanup and no silent CAS rebase"
+    ],
+    "validation": "Static integral owner and target review; existing CAS regression remains NOT_RUN."
+  },
+  "spec": {
+    "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+    "preimage_blob": "2fa77a69a28ae399f30f4d0e7642c05e7f029077",
+    "postimage_blob": "a2515c40a71728299b0e9303168b6d822f2ba338",
+    "hunks": [
+      {
+        "id": "EDIT-01",
+        "old_line_start": 4,
+        "new_line_start": 4,
+        "old_text": "",
+        "new_text": "import { initialAlternativesJourney } from \"./decisions-support/initial-alternatives\"\n",
+        "context_before": "import { asRecord, assertCase, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, reopenCase, withInstallation } from \"./decisions-support/journey\"\nimport { loseCreationResponse } from \"./decisions-support/lost-response\"\n",
+        "context_after": "\n// Enrollment and the HttpOnly operator session are real. Do not retain auth in traces.\n",
+        "old_utf16_offset": 294,
+        "new_utf16_offset": 294
+      },
+      {
+        "id": "EDIT-02",
+        "old_line_start": 9,
+        "new_line_start": 10,
+        "old_text": "",
+        "new_text": "test(\"CI-UI-DECISIONS — attach authorized evidence, create two alternatives and recover one uncertain result\", async ({ page }, info) => {\n  test.setTimeout(180_000)\n  info.annotations.push({ type: \"proof-limit\", description: \"Initial alternatives with pending cost coverage; no complete financial comparison, financial approval, C12 Apply, native model or AM acceptance\" })\n  await withInstallation(page, info, async (installation, observations) => {\n    await initialAlternativesJourney(page, installation, observations)\n  })\n})\n\n",
+        "context_before": "test.describe.configure({ retries: 0 })\n\n",
+        "context_after": "// This selection remains red when its installed producers are missing. It does not\n// seed alternatives/choices, turn a dependency into a skip, or assert an expected failure.\n",
+        "old_utf16_offset": 451,
+        "new_utf16_offset": 537
+      },
+      {
+        "id": "EDIT-03",
+        "old_line_start": 157,
+        "new_line_start": 166,
+        "old_text": "",
+        "new_text": "\n",
+        "context_before": "  })\n})\n",
+        "context_after": "",
+        "old_utf16_offset": 11037,
+        "new_utf16_offset": 11655
+      }
+    ],
+    "application": "Apply from last hunk to first against the exact preimage. Offsets are JavaScript UTF-16 code units, not byte offsets.",
+    "source_postimage_reconstructed": true,
+    "reverse_reconstruction_equals_preimage": true,
+    "added_lines": 10,
+    "removed_lines": 0,
+    "original_three_tests_unchanged": true
+  },
+  "unchanged": [
+    "decision-apply.ts / C12 UI",
+    "decisions/apply.ts / Finance+C12 composed executor",
+    "application-attempt.ts",
+    "Memory business-context and CLI stale access",
+    "decision-controls.ts / optional coverage proposal not applied",
+    "Choice/Work/Sourcing/Analysis mounts, authorization, CSP and response headers"
+  ],
+  "optional_coverage": {
+    "state": "PROPOSAL_RETAINED_INERT_OWNER_ACCEPTANCE_PENDING",
+    "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+    "retained_blob": "77563520dbfa9cab5876c0312eba294cb579e11d",
+    "proposal_result_blob": "5a348c62d4e247db0f7ecaddaedc041177604d15",
+    "reason": "Separate optional producer change; no semantic producer change invented or implicitly accepted by assembly. Existing classification without retained receipt remains limited."
+  },
+  "execution": "NOT_RUN"
+}

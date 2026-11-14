@@ -1,0 +1,683 @@
+{
+  "schema": "sf-ui-recovery-checks-v1",
+  "branch": "ui-recovery",
+  "pullRequest": "https://github.com/gustavomhss/Orchestra-SF/pull/46",
+  "base": "2ee71fc90055814912654ae198f7a1dcf9583943",
+  "baseTree": "cf3676a469a1f8bcab05e322ee7a4a1ada0704c5",
+  "productHead": "c38a9eb54297baf20df47d296c8d25471ab341b9",
+  "productTree": "ebfaa2ab9d9f1291c05bf750143b8fc60997e179",
+  "deliveryRule": "The receipt commit adds only this receipts namespace to productHead. PR46 records the final delivery head/tree. No product or test changes follow W2.",
+  "status": "SCOPED_BEHAVIOR_VERIFIED; REQUIRED_STATIC_CHECKS_BLOCKED; EXTERNAL_LOOKUPS_OPEN",
+  "globalRelease": false,
+  "localProductTestsRun": false,
+  "agentsSpawned": false,
+  "remoteOperations": "GitHub MCP only",
+  "normative": {
+    "handoffCommit": "d3d411f7e2476a562a57aa7620823980eaf34e46",
+    "handoffBlob": "18b58bf661364a9b6e698901129e8365791b3a80",
+    "planCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "packsCommit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "wp01AndWp02CriteriaRetained": 153
+  },
+  "runs": [
+    {
+      "runId": 43620348596,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620348596",
+      "jobId": 132524430934,
+      "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620348596/job/132524430934",
+      "matrix": "test (ubuntu-24.04)",
+      "conclusion": "failure",
+      "W": "db56ec7fe2d1bf78dd2b26f13d708a79f9b23c71",
+      "WTree": "6b4b3c881a7581106938db4df9a7de0add1cb270",
+      "S": "1ae238b3119d0759902e100ac2a779001564489a",
+      "STree": "f8399216dc3ed9551fe69819d2a27a3447b95c30",
+      "observedHeadSha": "1ae238b3119d0759902e100ac2a779001564489a",
+      "temporaryBranch": "ci-run-linux-ui-recovery-db56ec7-c267677f-1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/ui-split/ui-recovery/recovery.test.ts",
+          "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "Sucafinav1/test/product/wp11/case-port.test.ts",
+          "-t",
+          "UI recovery|Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads|partial domain execution reconciles a durable receipt and never repeats it on retry",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "c267677fa7287b7c94ff2a96eeb6cc3df2a559a6f36540aab00dad1ea3bf5864",
+      "requestValidation": "PASS: validateRequest + locateTestPackage locally and Read request in Actions",
+      "deduplication": "No existing run for this unique product/request branch; previous own run completed before the next one was created.",
+      "envelopeProof": {
+        "compareUrl": "https://github.com/gustavomhss/Orchestra-SF/compare/db56ec7fe2d1bf78dd2b26f13d708a79f9b23c71...1ae238b3119d0759902e100ac2a779001564489a",
+        "mergeBase": "db56ec7fe2d1bf78dd2b26f13d708a79f9b23c71",
+        "aheadBy": 1,
+        "changedFiles": [
+          {
+            "path": ".ci-run.json",
+            "blob": "90d68ce6c1e7f95b6e8539e88154874a4b61589e",
+            "status": "added"
+          }
+        ],
+        "allOtherBlobsIdentical": true
+      },
+      "tests": [
+        {
+          "result": "PASS",
+          "name": "Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads",
+          "duration": "17934.82ms"
+        },
+        {
+          "result": "PASS",
+          "name": "partial domain execution reconciles a durable receipt and never repeats it on retry",
+          "duration": "236.26ms"
+        },
+        {
+          "result": "PASS",
+          "name": "UI recovery rejects an incomplete apply ACK then recovers the exact authorized receipt after reload",
+          "duration": "8601.36ms"
+        },
+        {
+          "result": "FAIL",
+          "name": "UI recovery reauthorizes the restored attempt and purges it on real denial without another effect",
+          "duration": "8758.30ms"
+        },
+        {
+          "result": "PASS",
+          "name": "UI recovery retains an ambiguous authoritative receipt outcome across repeated reloads without another apply",
+          "duration": "8830.05ms"
+        },
+        {
+          "result": "FAIL",
+          "name": "UI recovery distinguishes a lost first save without draftRef and never guesses its identity after reload",
+          "duration": "3060.57ms"
+        }
+      ],
+      "assertions": 123,
+      "omniPositiveControl": "2026-11-14T17:20:31.6429195Z omni positive control [72de14846a73d333b526a04e7a378113]: pass (declared: 5 test(s) in Sucafinav1/test/product/wp02/workbench-recovery.test.ts, Sucafinav1/test/product/ui-split/ui-recovery/recovery.test.ts); 5 omni spawn(s), 0 delegated.",
+      "browserDriverProofs": [
+        {
+          "consumer": "host-response-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4746
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4766
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4781,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 60,
+            "framesFromBrowser": 190,
+            "peakQueuedBytes": 2458,
+            "peakBufferedBytes": 1589,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "ui-recovery-invalid-ack",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4746
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4907
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4922,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 56,
+            "framesFromBrowser": 186,
+            "peakQueuedBytes": 2458,
+            "peakBufferedBytes": 1594,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "ui-recovery-ambiguous-receipt",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4746
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5179
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5194,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 74,
+            "framesFromBrowser": 231,
+            "peakQueuedBytes": 2458,
+            "peakBufferedBytes": 1595,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      ],
+      "artifacts": [],
+      "artifactRequirement": "No upload required by test-ci.yml for this Bun runner. Physical browser/cleanup proofs are in the job log.",
+      "jobLogSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620348596/job/132524430934",
+      "testLogExcerptSha256": "09a9a89a1b1253214d493b41cc3cbcff7a929f3794fe3e2946e2e5a5f1886c98",
+      "fullRetrievedJobLogSha256": "6f851680fdc09b085f11ea0f325b773cfa52d2e83810816c596f89819f4f0143"
+    },
+    {
+      "runId": 43620823146,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620823146",
+      "jobId": 132525878220,
+      "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620823146/job/132525878220",
+      "matrix": "test (ubuntu-24.04)",
+      "conclusion": "success",
+      "W": "c38a9eb54297baf20df47d296c8d25471ab341b9",
+      "WTree": "ebfaa2ab9d9f1291c05bf750143b8fc60997e179",
+      "S": "a5a2396c106a7762084ade10740bd7033c238960",
+      "STree": "66f6e23e0926e1778bd29cec5d14e8d799e314f5",
+      "observedHeadSha": "a5a2396c106a7762084ade10740bd7033c238960",
+      "temporaryBranch": "ci-run-linux-ui-recovery-c38a9eb-c6277031-2",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/ui-split/ui-recovery/recovery.test.ts",
+          "-t",
+          "UI recovery reauthorizes the restored attempt and purges it on real denial without another effect|UI recovery distinguishes a lost first save without draftRef and never guesses its identity after reload",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "c6277031f890db541d6db8b47adb960236c89ac4898c863927af39f0517d3a9e",
+      "requestValidation": "PASS: validateRequest + locateTestPackage locally and Read request in Actions",
+      "deduplication": "No existing run for this unique product/request branch; previous own run completed before the next one was created.",
+      "envelopeProof": {
+        "compareUrl": "https://github.com/gustavomhss/Orchestra-SF/compare/c38a9eb54297baf20df47d296c8d25471ab341b9...a5a2396c106a7762084ade10740bd7033c238960",
+        "mergeBase": "c38a9eb54297baf20df47d296c8d25471ab341b9",
+        "aheadBy": 1,
+        "changedFiles": [
+          {
+            "path": ".ci-run.json",
+            "blob": "8406294973b2ea90ffa6ac2c418a2bb4321e787f",
+            "status": "added"
+          }
+        ],
+        "allOtherBlobsIdentical": true
+      },
+      "tests": [
+        {
+          "result": "PASS",
+          "name": "UI recovery reauthorizes the restored attempt and purges it on real denial without another effect",
+          "duration": "23062.06ms"
+        },
+        {
+          "result": "PASS",
+          "name": "UI recovery distinguishes a lost first save without draftRef and never guesses its identity after reload",
+          "duration": "3190.40ms"
+        }
+      ],
+      "assertions": 46,
+      "omniPositiveControl": "2026-11-14T17:25:27.7483176Z omni positive control [9ea85d3918bf72a01d5321fa3316a0ec]: pass (declared: 2 test(s) in Sucafinav1/test/product/ui-split/ui-recovery/recovery.test.ts); 2 omni spawn(s), 0 delegated.",
+      "browserDriverProofs": [
+        {
+          "consumer": "ui-recovery-revocation",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4177
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4200
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4215,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 63,
+            "framesFromBrowser": 223,
+            "peakQueuedBytes": 2459,
+            "peakBufferedBytes": 1594,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "ui-recovery-first-save",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4177
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4335
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4350,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 39,
+            "framesFromBrowser": 137,
+            "peakQueuedBytes": 3961,
+            "peakBufferedBytes": 3635,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      ],
+      "artifacts": [],
+      "artifactRequirement": "No upload required by test-ci.yml for this Bun runner. Physical browser/cleanup proofs are in the job log.",
+      "jobLogSource": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620823146/job/132525878220",
+      "testLogExcerptSha256": "f654286f0c8c71339d7731cff351c1f698053d74be80215f9def5f14c5ffef82",
+      "fullRetrievedJobLogSha256": "5262cc6cba23700a3fde16b30f7db24b85ba1e2bbfba472d00d32ea40024f6c9"
+    }
+  ],
+  "correction": {
+    "W1FailurePreserved": true,
+    "W2Parent": "db56ec7fe2d1bf78dd2b26f13d708a79f9b23c71",
+    "productDelta": "One line forces display:none only for restored first-save outcome; display:'' keeps the previous layout for apply recovery.",
+    "testDelta": "The revoked actor remains denied by C08. A controlled administrative membership regrant is fixture input; the later HTTP admission/discovery remains production code. Assertions for purge, history, receipt and domain effect were retained.",
+    "revalidated": [
+      "UI recovery reauthorizes the restored attempt and purges it on real denial without another effect",
+      "UI recovery distinguishes a lost first save without draftRef and never guesses its identity after reload"
+    ],
+    "carryForward": {
+      "reason": "No rerun of green unaffected scenarios. The four successes remain attributed to W1, not a fictitious full green on W2. C12 engine, shared fixtures/config and original tests are identical; W2 only changes first-save visibility and the failed regrant setup.",
+      "ownTestBodies": [
+        {
+          "name": "UI recovery rejects an incomplete apply ACK then recovers the exact authorized receipt after reload",
+          "bodySha256": "8a07c3cffb584087a78fd659d95362a82aa268bd28510cc88579e86510376233",
+          "identicalInW1AndW2": true
+        },
+        {
+          "name": "UI recovery retains an ambiguous authoritative receipt outcome across repeated reloads without another apply",
+          "bodySha256": "ba062fca4cabfd82aef1d844fe52e2b5de0fd5f0bca1b131a626ca57f35e3fe8",
+          "identicalInW1AndW2": true
+        }
+      ],
+      "consumerHelperBlob": "8d6e0b0f6a67448ecd5bf9b62eff363d4a46bfbf"
+    }
+  },
+  "productAndTestBlobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "W1": "e8fef359d1c1900bb1c4326c6af92dbdaf16c4ab",
+      "W2": "06a4f77b691aa921fde3eee2c70f892fa1d99f41"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-recovery/fixture.ts",
+      "W1": "8d6e0b0f6a67448ecd5bf9b62eff363d4a46bfbf",
+      "W2": "8d6e0b0f6a67448ecd5bf9b62eff363d4a46bfbf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-recovery/recovery.test.ts",
+      "W1": "ceeba86ed5532a9ad14789a870bd942e70a30590",
+      "W2": "529f6b98b6215f750912ac87161555eb2d9a555d"
+    }
+  ],
+  "readOnlyBlobsIdenticalFromBaseThroughW1W2S1S2": [
+    {
+      "path": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+    },
+    {
+      "path": ".github/actions/setup-bun/action.yml",
+      "blob": "e2cda5b54676d4d1c35785aaef7aa69d66944597"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee"
+    },
+    {
+      "path": "script/test-ci-package.ts",
+      "blob": "a10c7b04ca6633f688b62069a9a9832aaa4543dd"
+    },
+    {
+      "path": "script/module-registry.json",
+      "blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903"
+    },
+    {
+      "path": "bun.lock",
+      "blob": "c190f0e6158ffff3a73fd0d84df72d3d1ba0b31f"
+    },
+    {
+      "path": "modules/sucafina/bunfig.toml",
+      "blob": "7000633db2c4f11e3f1aff351cd28c0df9affeca"
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "blob": "0fabcdd9148286629ba67bcbda4860783ab9c487"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/package.json",
+      "blob": "18911fee9313f8fb57c1a972bc70eec2f7864c55"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/tsconfig.json",
+      "blob": "51895f3c254e6020d116ca73d4a1c690f7562169"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "blob": "cd43fad88f3424ac160f32be743df17b80a74336"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+      "blob": "593a46dad67e490dcfdd4fdc1878353088138dc7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "blob": "f96b7353b3fb595c133b8af87edea11c56f1c028"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "blob": "ed68e903fdaaa313ea14b18f194ee319b6dbdf09"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+      "blob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "blob": "2b8aef91bb7f88db3ee467b32f76d4d3911e73c1"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "b289a4a376f937c2cf4b56a00a6c1247152c5798"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "4aca959eaba4f30aa7ee4f89eb95030afc2fa02b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "blob": "4bdd12ac162d61465557363953e25dfd99fad5e8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "blob": "a45436a6fef8598b7ef9eae33d061ddebf0aa43d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+      "blob": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "blob": "5e0b80a470958dd201db4283bde96d594935e68d"
+    }
+  ],
+  "publishedOwnerInputs": [
+    {
+      "branch": "compose-resume",
+      "initialHead": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+      "observedHead": "d86d119c15d1149fd6f463e07acce836b197eb4e",
+      "tree": "a34d95ee5992bbb9099f073baf66422eded90934",
+      "relevantBlobs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+          "blob": "d8a151c558227b3bd2612dbb6caba993efa85783"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+          "blob": "f8914c141ba5c72439f5fdba50e9153c4cd477d4"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+          "blob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c"
+        }
+      ],
+      "disposition": "READ_ONLY: relevant blobs unchanged at final observation; historical evidence published, first-save outcome route absent"
+    },
+    {
+      "branch": "collab-resume",
+      "initialHead": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+      "observedHead": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+      "tree": "39cec0a91dc5ebc2dde012d4d1d8b63166074373",
+      "disposition": "READ_ONLY; dashboard-http.ts not present at observed head; no C12 endpoint credited"
+    },
+    {
+      "branch": "astra-wp10",
+      "observedHead": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+      "httpBlob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+      "disposition": "READ_ONLY; published HTTP route set inspected; no first-save outcome lookup"
+    },
+    {
+      "branch": "finance-resume",
+      "observedHead": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+      "disposition": "READ_ONLY; no financial rules modified or qualified"
+    }
+  ],
+  "staticChecks": {
+    "packageTypecheck": {
+      "status": "BLOCKED",
+      "command": "bun typecheck",
+      "cwd": "modules/sucafina",
+      "runtime": "Bun 1.3.14",
+      "exitCode": 127,
+      "reason": "tsgo: command not found; no installed package dependencies. No typecheck PASS or zero-own-diagnostics claim."
+    },
+    "requiredGuards": {
+      "status": "BLOCKED",
+      "command": "bun run check:guards --base origin/dev",
+      "cwd": "repository root",
+      "resolvedLocalBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "exitCode": 1,
+      "missingGitObject": "077abf65b584aeaba002e67031eb099283332cd1",
+      "reason": "Incomplete local ancestor object graph; failed before guard evaluation. No remote baseline was substituted."
+    },
+    "scopedGuards": {
+      "status": "PASS",
+      "command": "bun run check:guards --base HEAD",
+      "resolvedLocalBase": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "rules": 78,
+      "gateFindings": 0,
+      "warnFindings": 0,
+      "errors": 0,
+      "limitation": "Supplemental slice delta only; not the required origin/dev gate.",
+      "changedPaths": 9,
+      "output": "guards: 78 rules, 9 changed paths, 0 gate and 0 warn findings, 0 errors"
+    },
+    "frontendSyntax": {
+      "status": "PASS",
+      "command": "node --check <extracted dashboardWorkbenchScript>",
+      "productExecuted": false
+    },
+    "whitespace": {
+      "status": "PASS",
+      "command": "git diff --check"
+    },
+    "ownerPatchContext": {
+      "status": "PASS_CONTEXT_ONLY",
+      "command": "git apply --check first-save-outcome.NOT_APPLIED.patch",
+      "base": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+      "alsoVerifiedSameBlobsAt": "d86d119c15d1149fd6f463e07acce836b197eb4e",
+      "applied": false,
+      "typechecked": false,
+      "executed": false
+    }
+  },
+  "priorChecksPreserved": {
+    "interfaceResumeRun": 43616465145,
+    "result": "31 pass / 1 fail at prior product ad94fd2d78be47cecfb91f801ce7764127667b60; not current credit. Original failed reload is now passed in run 43620348596.",
+    "priorStaticRun": 43617372378,
+    "resultStatic": "Historical owner diagnostics remain historical; not used as a current typecheck."
+  },
+  "preDeliveryGuardCorrection": {
+    "rule": "agent-scratch",
+    "observed": "3 gate findings for generated raw .log files under receipts",
+    "resolution": "Removed the three raw logs from the repository delta. Preserved structured receipts, log hashes and canonical Actions job links. No rename, ignore, approval or rule change.",
+    "status": "FIXED"
+  }
+}

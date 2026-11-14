@@ -1,0 +1,43 @@
+{
+  "runner": "ubuntu-24.04",
+  "bunVersionObserved": "1.3.14 (0d9b296a)",
+  "env": {},
+  "testWorkflow": {
+    "path": ".github/workflows/test-ci.yml",
+    "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+  },
+  "checkWorkflow": {
+    "path": ".github/workflows/astra-finance-resume-check.yml",
+    "blob": "e2dfcc92f92030f3d7849aa262e2f9d29cb4e4fb"
+  },
+  "validators": [
+    {
+      "path": "script/test-ci.ts",
+      "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee"
+    },
+    {
+      "path": "script/test-ci-package.ts",
+      "blob": "a10c7b04ca6633f688b62069a9a9832aaa4543dd"
+    }
+  ],
+  "AGENTS": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+  "bunLock": "c190f0e6158ffff3a73fd0d84df72d3d1ba0b31f",
+  "rootPackage": "3bac883dfbc44466be9afb54a1e175a9643ecdab",
+  "rootTsconfig": "65fa6c7f31c11e2a1ff643ea263f97815c6bac5d",
+  "moduleRegistry": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+  "modulePackage": "0fabcdd9148286629ba67bcbda4860783ab9c487",
+  "interface": {
+    "sha": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
+    "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb"
+  },
+  "noWorkflowConfigurationOrDependencyChanges": true
+}

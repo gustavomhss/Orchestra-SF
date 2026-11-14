@@ -1,0 +1,54 @@
+diff --git a/modules/sucafina/Sucafinav1/product/collaboration/host.ts b/modules/sucafina/Sucafinav1/product/collaboration/host.ts
+index 0376f81eb7978807106d259d6f65a9b4e1ed3a2a..f4a5b59ecf36f66a89794b747529704958f8d758 100644
+--- a/modules/sucafina/Sucafinav1/product/collaboration/host.ts
++++ b/modules/sucafina/Sucafinav1/product/collaboration/host.ts
+@@ -42,7 +42,7 @@
+ import { createThreadAnswerEvidence } from "./evidence.ts"
+ import { createThreadHistory } from "./thread-history.ts"
+ import { createThreadSourceContinuity } from "./thread-continuity.ts"
+-import type { ReviewThreadContextAuthorizer } from "./thread-context.ts"
++import type { ReviewThreadContextAuthorizer, ThreadSourceContext } from "./thread-context.ts"
+ import { createHistoricalThreadSourceRefresh } from "./thread-source-refresh.ts"
+ import { createAnswerReusePort } from "./answer-reuse.ts"
+ import { createAnswerWorkPort } from "./answer-work.ts"
+@@ -176,6 +176,10 @@
+     if (confirmed.some((person) => !person) || digestSfValue(current) !== digestSfValue(directory) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "recipient-directory-unavailable" }
+     return { status: "ok", value: confirmed.filter((person): person is { id: string; name: string } => !!person).sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id)) }
+   }
++  // A reference identifies a message; it does not authorize it. Derive it only
++  // from a thread already returned by the authenticated reader, then keep the
++  // canonical reread and answer-reuse source/commit fences below.
++  const answerReference = (questionId: string, message: { id: string; incarnation: string; version: number }) => `sf-thread-answer:${encodeURIComponent(questionId)}:${encodeURIComponent(message.id)}:${encodeURIComponent(message.incarnation)}:${message.version}`
+   const answerReuse = input.confirmationSource ? createAnswerReusePort<T>({
+     host: input.host,
+     state: input.state,
+@@ -188,21 +192,20 @@
+       if (visible.status !== "ok") return visible
+       const message = visible.value.messages.findLast((entry, index) => index > 0 && entry.authorRef === visible.value.recipientRef)
+       if (!message || visible.value.kind === "comment") return { status: "unavailable", reason: "answer-unavailable" }
+-      const evidence = await answerEvidence.issue(questionId, message.id, context)
+-      if (evidence.status !== "ok") return evidence
+       const raw = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[questionId] : undefined)
+-      if (raw.status !== "ok" || !isThread(raw.value) || raw.value.id !== questionId || digestSfValue(raw.value.messages) !== digestSfValue(visible.value.messages) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "answer-unavailable" }
+-      return { status: "ok", value: { id: message.id, ref: evidence.value.refId, authorRef: message.authorRef, questionId, body: message.body, digest: digestSfValue({ questionId, ...message }), threadDigest: digestSfValue(raw.value) } }
++      if (raw.status !== "ok" || !isThread(raw.value) || raw.value.id !== questionId || raw.value.recipientRef !== visible.value.recipientRef || raw.value.kind !== visible.value.kind || raw.value.state !== visible.value.state || digestSfValue(raw.value.messages) !== digestSfValue(visible.value.messages) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "answer-unavailable" }
++      return { status: "ok", value: { id: message.id, ref: answerReference(questionId, message), authorRef: message.authorRef, questionId, body: message.body, digest: digestSfValue({ questionId, ...message }), threadDigest: digestSfValue(raw.value) } }
+     },
+     belongsToQuestion: answerEvidence.belongsToQuestion,
+     scopeForAnswer: async (questionId, answerRef, context) => {
+-      if (!await answerEvidence.belongsToQuestion(questionId, answerRef, context)) return { status: "unavailable", reason: "answer-scope-unavailable" }
++      // Current-domain answers keep the actor-scoped source issued by the
++      // authenticated reader. Its observedVersion remains historical; do not
++      // replace its current scope with a different page's original incarnation.
+       const thread = await threadReads.read(questionId, context)
+-      const answer = await answerEvidence.resolve(answerRef, context)
+-      if (thread.status !== "ok" || answer.status !== "ok") return { status: "unavailable", reason: "answer-scope-unavailable" }
+-      const message = thread.value.messages.find((entry) => entry.id === answer.value.target.recordId && entry.incarnation === answer.value.target.incarnation && entry.version === answer.value.target.version && entry.authorRef === thread.value.recipientRef)
++      if (thread.status !== "ok" || thread.value.kind === "comment" || thread.value.id !== questionId) return { status: "unavailable", reason: "answer-scope-unavailable" }
++      const message = thread.value.messages.find((entry, index) => index > 0 && entry.authorRef === thread.value.recipientRef && answerReference(thread.value.id, entry) === answerRef)
+       if (!message) return { status: "unavailable", reason: "answer-scope-unavailable" }
+-      const basis = message.sourceContext ?? thread.value
++      const basis: ThreadSourceContext = message.sourceContext ?? thread.value
+       if (message.sourceContext?.reviewContext) return { status: "unavailable", reason: "review-answer-confirmation-scope-unavailable" }
+       if (!basis.evidenceRefs.length || basis.evidenceRefs.some((ref) => ref.kind !== "record")) return { status: "unavailable", reason: "answer-scope-unavailable" }
+       const evidence = basis.evidenceRefs as readonly Extract<BusinessEvidenceRef, { kind: "record" }>[]

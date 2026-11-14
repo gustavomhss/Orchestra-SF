@@ -1,0 +1,85 @@
+{
+  "mission": "memory-integrity-preflight",
+  "status": "IMPLEMENTATION_PREPARED_NOT_RUN",
+  "originalHead": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+  "productChange": {
+    "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+    "preimage": "9f574a7573538c2a46796dfd650fadbac052dc80",
+    "postimageSha256": "dfcc00c812438840269e5ccf479acc29abb3f125ece61b6c63754277a8fec454",
+    "changes": [
+      "Retain constructor Request rather than reading mutable input.request later",
+      "Decode original Memory skill input and reopen every selected case through real BusinessContextService.recall inside C08",
+      "Require every proof/output evidence ref in the returned canonical envelopes or dependencies",
+      "Deny missing reader, failed recall or missing required capture; no capture repair or digest rewrite",
+      "Pin input/call/output/headers, resolution bytes and initial all-surface snapshot before final awaits",
+      "Bind prepared commit to headers while preserving current human authorization and host revalidation"
+    ]
+  },
+  "compatibility": {
+    "publicContractsChanged": false,
+    "hostContextChanged": false,
+    "businessContextChanged": false,
+    "enginesChanged": false,
+    "optionalRecall": "Non-Memory/lifecycle callers keep their existing context-only contract; Memory fails closed without the real recall reader.",
+    "currentSourceRead": "C12 source continuity remains intact; Atlas capture integrity is separately required only for Memory.",
+    "emptyRecall": "Valid only when no required proof/output reference is missing.",
+    "originalHistorical": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "blob": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+      "budgets": [
+        225000,
+        240000
+      ],
+      "assertions": "unchanged"
+    }
+  },
+  "review": {
+    "reviewer": "memory_boundary_review",
+    "kind": "static preflight review, not FINAL independent campaign acceptance",
+    "initialFinding": "Empty recall must not grant a missing required capture",
+    "resolution": "Exact ref membership added; source response identity additionally pinned.",
+    "remainingRisk": "Functional behavior and recall cost under C08 require Actions."
+  },
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "sha256": "dfcc00c812438840269e5ccf479acc29abb3f125ece61b6c63754277a8fec454",
+      "bytes": 15760
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/identity.test.ts",
+      "sha256": "8bbe7de3a130e13b742d6586abea173223ddb3d9c6be2039107ae7661d30c147",
+      "bytes": 4955
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+      "sha256": "f251010a9013a70c06f72e3ad0fb29ff90c3a2b68e0190aeacf11037b4354211",
+      "bytes": 6487
+    }
+  ],
+  "proofs": [
+    {
+      "selection": "new memory-integrity tests",
+      "status": "NOT_RUN",
+      "count": 12
+    },
+    {
+      "selection": "historical-memory.test.ts original",
+      "status": "NOT_RUN",
+      "reason": "Only after focused positive delta; necessary to reach original final revocations."
+    },
+    {
+      "selection": "hosted astra-wp10-check",
+      "status": "NOT_RUN"
+    }
+  ],
+  "preservedPending": [
+    "Memory A27 until functional proof",
+    "C17 between observations",
+    "X29",
+    "U30 UI",
+    "native proofs",
+    "13 external typecheck errors",
+    "all inherited terminal handoff limits"
+  ]
+}

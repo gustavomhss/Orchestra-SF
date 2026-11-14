@@ -1,0 +1,55 @@
+{
+  "attempt": "MI04",
+  "status": "FAIL",
+  "W": "a00ba2a55190e9ee1fe52fa3030a9cc297b2825a",
+  "tree": "2b08f61fc8068bf9274099595eda3cbd749d3369",
+  "S": "6207445ef666eacc825425ac1d91a8b639e30b76",
+  "snapshotTree": "0b2b555d0642a1fa2773ab754531c9ac9d51aa14",
+  "branch": "ci-run-linux-astra-wp10-a00ba2a5-9f6d6f3e-mi04",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "requestSha256": "9f6d6f3e5a949573c5b05710150172c9541668c88ac9233b2485a807f3a743ef",
+  "requestBlob": "6d6531c8be34410efe3366662c437556ff65b1d0",
+  "run": 43633898208,
+  "job": 132566360130,
+  "cleanupJob": 132567825910,
+  "cleanup": "success",
+  "result": {
+    "pass": 0,
+    "fail": 1,
+    "expects": 1085,
+    "elapsedSeconds": 225.56,
+    "testDurationMs": 225025.56,
+    "error": "historical-memory exceeded its 225000ms cooperative deadline",
+    "lastMeasuredPhase": "stale.preserve",
+    "lastMeasuredPhaseMs": 23334,
+    "lastMeasuredElapsedMs": 213857,
+    "finalCorruptionAssertion": "NOT_REACHED",
+    "lastThreeRevocationAssertions": "NOT_REACHED"
+  },
+  "budgets": {
+    "cooperative": 225000,
+    "bun": 240000,
+    "assertions": "unchanged",
+    "originalTestBlob": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed"
+  },
+  "omni": {
+    "verdict": "pass",
+    "nonce": "864c9f0fbe1244712cd092484efae659",
+    "spawns": 2,
+    "delegated": 0
+  },
+  "causalNext": "Remove only repeated full recall introduced by Memory stale wrapper. Use the installed canonical capture reader plus current source proof under C08; keep complex topology on full canonical recall. No X29/source-engine optimization or budget change.",
+  "preparedCheckSnapshotNotDispatched": "1f6874b08e85ddad8eceddbeb040f827f09864b1"
+}

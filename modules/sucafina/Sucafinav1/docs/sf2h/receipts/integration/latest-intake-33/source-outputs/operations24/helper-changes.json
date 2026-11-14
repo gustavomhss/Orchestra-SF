@@ -1,0 +1,43 @@
+{
+  "source": "39b50786b8d341d13f98ca2c5ada035a4bd7a46a",
+  "product": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "preimage": "20a9978c41697ac135a91d5229abc295d6c71375",
+      "proposal": "imports.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "preimage": "21e00319151989a4c2337fe20d9c7de1d8374fa9",
+      "proposal": "documents.ts"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/ui.ts",
+      "blob": "2d59a6d4a5cb4b87590c326ada84347aa85c094e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1"
+    }
+  ],
+  "changes": [
+    "Open the real Planner version Manage dialog before editing its Name.",
+    "Retain isolated OPEX seed POSTs explicitly as fixture setup, no UI-creation coverage claim.",
+    "Create the supplier through its real visible create form.",
+    "Delete through exact same source delete form and accept the real confirm dialog, preserving CAS and asserting confirmed=true.",
+    "Sign out through actual UI in the reader tab, preserving the workbench cached reference for revocation checks."
+  ],
+  "functionalValidation": "NOT_RUN; static proposal only, root will validate through Actions."
+}
+

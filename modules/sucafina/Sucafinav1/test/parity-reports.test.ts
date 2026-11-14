@@ -7,7 +7,7 @@ import { empty } from "./fixture/persistence.ts"
 const actor = { id: "admin", canWrite: true, roles: ["admin"] }
 const environment = { at: "2026-11-12T12:00:00Z", id: () => "unused", directory: [] }
 
-test("IT Operations reports aggregate current pipe-key categories for the chosen year in PPTX and DOCX", async () => {
+test("IT Operations reports preserve authorized monthly measurements and never manufacture YTD totals", async () => {
   const snapshot = empty()
   snapshot.data.opsCats = ["IT Security", "Infrastructure", "Application"]
   snapshot.data.opsTickets = [
@@ -43,13 +43,19 @@ test("IT Operations reports aggregate current pipe-key categories for the chosen
     })
     if (!result.ok) throw new Error(`${format} report refused`)
     const text = await reportXmlText(result.bytes, format)
-    expect(text).toContain("Tickets Opened YTD")
-    expect(text).toContain("10")
-    expect(text).toContain("Tickets Closed YTD")
-    expect(text).toContain("7")
+    expect(text).toContain("YTD totals are unavailable")
+    expect(text).toContain("Opened: 5")
+    expect(text).toContain("Closed: 4")
+    expect(text).toContain("Opened: 2")
+    expect(text).toContain("Closed: 1")
+    expect(text).toContain("Opened: 3")
+    expect(text).toContain("Initial balance: unavailable")
     expect(text).toContain("Months w/ Data")
     expect(text).toContain("2")
-    expect(text).toContain("IT Operations recorded 10 ticket(s) opened and 7 closed year-to-date across 2 month(s) of data.")
+    expect(text).toContain("2026-01")
+    expect(text).toContain("2026-12")
+    expect(text).not.toContain("Tickets Opened YTD")
+    expect(text).not.toContain("Tickets Closed YTD")
     expect(text).not.toContain("900")
     expect(text).not.toContain("800")
     if (format === "pptx") {
@@ -140,8 +146,9 @@ test("report data distinguishes real zero metrics from absent year data", async 
   })
   if (!zeroReport.ok) throw new Error("Zero report refused")
   const zeroText = await reportXmlText(zeroReport.bytes, "docx")
-  expect(zeroText).toContain("Tickets Opened YTD: 0")
-  expect(zeroText).toContain("Tickets Closed YTD: 0")
+  expect(zeroText).toContain("Opened: 0")
+  expect(zeroText).toContain("Closed: 0")
+  expect(zeroText).toContain("Initial balance: unavailable")
   expect(zeroText).toContain("Months w/ Data: 1")
   expect(zeroText).toContain("Awareness Training: 0%")
   expect(zeroText).toContain("Patch Compliance: 0%")

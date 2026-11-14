@@ -1,0 +1,1609 @@
+{
+  "schema": "wp13-semantic-union-disposition-v1",
+  "mission": 21,
+  "finding": "WP13-SEMANTIC-UNION",
+  "status": "PATCH_PAYLOAD_COMPLETE_NOT_RUN",
+  "selection_rule": "Escolha por comportamento/autoridade/consumidor; nunca por data.",
+  "counts": {
+    "held": 31,
+    "KEEP_CURRENT": 19,
+    "SEMANTIC_PATCH": 12,
+    "TAKE_SOURCE": 0
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+      "disposition": "SEMANTIC_PATCH",
+      "reason": "Acrescenta o contrato das duas divulgações, reconstrução histórica estrita, seleção explícita de C08 e distinção reserva/dispatch. Mantém toda a documentação admitida, inclusive prova estrutural, cobertura qualificada e retries órfãos.",
+      "equivalence_or_union_evidence": "O texto PR37 acrescenta explicação útil mas sua substituição apagaria detalhes admitidos de certificar o subtotal e última autoridade. União por apêndice, sem trocar semântica do motor.",
+      "criteria": [
+        "WP13.T02.QLT.20",
+        "WP13.T03.QLT.01",
+        "WP13.T04.INV.01"
+      ],
+      "consumers": [
+        "UI/mesa WP01",
+        "BI WP05",
+        "WP11",
+        "C17"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "7b7779960f4ca5658bda5917f7033c51dad663f2"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "4bdad097bb82f3dc96a74090bacc567835295680"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "7b7779960f4ca5658bda5917f7033c51dad663f2"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "7b7779960f4ca5658bda5917f7033c51dad663f2"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "4bdad097bb82f3dc96a74090bacc567835295680",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "4bdad097bb82f3dc96a74090bacc567835295680",
+        "artifact": "preimages/product/portfolio/README.md.txt"
+      },
+      "postimage": {
+        "blob": "4816c7b8d5512ca34941f3f329ac7116a0412baf",
+        "artifact": "postimages/product/portfolio/README.md.txt"
+      },
+      "patch": "P04",
+      "apply": true,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mantém snapshot do pedido/caso e clones de operações; expectedDigest é fixado antes de aguardar resolveCandidate e as referências são copiadas.",
+      "equivalence_or_union_evidence": "A variante PR37 calcula o digest depois do callback e compartilha operações. A mesma proposta/seleção humana é suportada no admitido, com fronteiras de mutação adicionais.",
+      "criteria": [
+        "WP13.T04.CHK.01",
+        "WP13.T04.INV.01",
+        "WP13.INV.10"
+      ],
+      "consumers": [
+        "WP11 prepareChanges/addAlternative",
+        "HTTP",
+        "sf_portfolio_evaluate"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "3488f1d757fca6fd6527540679f4fb68a533aee0"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "3488f1d757fca6fd6527540679f4fb68a533aee0"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "3488f1d757fca6fd6527540679f4fb68a533aee0"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+        "artifact": "preimages/product/portfolio/handoff.ts.txt"
+      },
+      "postimage": {
+        "blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+        "artifact": "postimages/product/portfolio/handoff.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "disposition": "SEMANTIC_PATCH",
+      "reason": "Patch suplementar restrito ao finalizador: conserva recertificação da fronteira sem segunda busca e acrescenta known-components-threshold + known-subtotal-threshold. Reconstrói bundle-v1/pr37-v1/intelligence-v1/union-v1 sem reescrever resultados antigos. Restitui as observações originais de cenário/baseline de PR36 para resultados condicionados; a forma antiga de evidência é reproduzida apenas em replay autenticado.",
+      "equivalence_or_union_evidence": "Não incorpora a segunda busca da PR37. Fecha a ausência do identificador exigido por coverage-sensitivity-integration e renewal-sensitivity, mantendo a explicação PR37. Forma serializada não dispensa nenhuma prova.",
+      "criteria": [
+        "WP13.T03.CHK.01",
+        "WP13.T03.CHK.20",
+        "WP13.T03.QLT.01",
+        "WP13.INV.10"
+      ],
+      "consumers": [
+        "C08 sensitivity",
+        "criterion binding WP11",
+        "verificador",
+        "UI/BI"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "3dec070ca5f56f7bd03a09b4b19468c950d82214"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "fe4ab56201fd1898905ac7bc810f0495a64f8602"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "fe4ab56201fd1898905ac7bc810f0495a64f8602"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "fe4ab56201fd1898905ac7bc810f0495a64f8602"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "fe4ab56201fd1898905ac7bc810f0495a64f8602",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "fe4ab56201fd1898905ac7bc810f0495a64f8602",
+        "artifact": "preimages/product/portfolio/planner-sensitivity.ts.txt"
+      },
+      "postimage": {
+        "blob": "9d29046dd40adffc88985be5e1b1603b64491129",
+        "artifact": "postimages/product/portfolio/planner-sensitivity.ts.txt"
+      },
+      "patch": "P01",
+      "apply": true,
+      "requires_preimage_recheck": true,
+      "finance_owned": true,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN",
+      "intelligence_evidence": {
+        "commit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "ee1a9586231ec9027bb323a817c4a469c4b207a6"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mantém snapshots de entrada/saída da sensibilidade e rejeição de falha definitiva de critério, mesmo com cobertura incompleta.",
+      "equivalence_or_union_evidence": "O ramo failed já é semanticamente equivalente ao PR37; a variante remove clones no callback de sensibilidade. Não há comportamento novo a copiar.",
+      "criteria": [
+        "WP13.T02.CHK.03",
+        "WP13.T02.INV.20",
+        "WP13.T03.INV.18"
+      ],
+      "consumers": [
+        "Portfolio HTTP/native",
+        "candidatos",
+        "BI"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+        "artifact": "preimages/product/portfolio/port.ts.txt"
+      },
+      "postimage": {
+        "blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+        "artifact": "postimages/product/portfolio/port.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mantém análise corrente antes da última leitura de binding, que fecha a autoridade após os callbacks. Mantém recuperação C08/binding e histórico separado.",
+      "equivalence_or_union_evidence": "PR37 acrescenta uma leitura inicial redundante e desloca análise após a leitura final de binding. O admitido conserva a mesma persistência e um fechamento mais estrito.",
+      "criteria": [
+        "WP13.T02.INV.18",
+        "WP13.T04.CHK.03",
+        "WP13.INV.10"
+      ],
+      "consumers": [
+        "WP11 portfolio binding",
+        "C08",
+        "HTTP read/list",
+        "C17"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "1d68174e4e54551fef742630c77c5733cd6b1b7b"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "1d68174e4e54551fef742630c77c5733cd6b1b7b"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "1d68174e4e54551fef742630c77c5733cd6b1b7b"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+        "artifact": "preimages/product/portfolio/result-store.ts.txt"
+      },
+      "postimage": {
+        "blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+        "artifact": "postimages/product/portfolio/result-store.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mantém caminho de retry já vinculado sem recalcular/amostrar, checagem do pedido/prova/resultado e snapshots de kind/binding/lease/identidade da operação.",
+      "equivalence_or_union_evidence": "PR37 remove retry antecipado e identidades; seu fallback órfão permanece no admitido, com recusas stale/denied e última releitura canônica. A união não pode regredir esses comportamentos.",
+      "criteria": [
+        "WP13.T03.CHK.18",
+        "WP13.T03.INV.18",
+        "WP13.INV.10"
+      ],
+      "consumers": [
+        "C08",
+        "criterion binding",
+        "HTTP readSensitivity",
+        "C17"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "33a8d973c045769b456342499e1c247d524f6c53"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "33a8d973c045769b456342499e1c247d524f6c53"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "33a8d973c045769b456342499e1c247d524f6c53"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+        "artifact": "preimages/product/portfolio/sensitivity-store.ts.txt"
+      },
+      "postimage": {
+        "blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+        "artifact": "postimages/product/portfolio/sensitivity-store.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mantém recusa de exact se algum ponto é null, além de estados unavailable/incompatible e proteção contra mutação nos callbacks.",
+      "equivalence_or_union_evidence": "PR37 aceita as mesmas divulgações condicionadas mas perde a recusa de ponto null. Os seus asserts adicionais entram no teste, sem retirar a proteção.",
+      "criteria": [
+        "WP13.T03.CHK.03",
+        "WP13.T03.QLT.01",
+        "WP13.T03.CMP.01"
+      ],
+      "consumers": [
+        "C07 v6",
+        "finalizador",
+        "UI/BI"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+        "artifact": "preimages/product/portfolio/sensitivity-v6.ts.txt"
+      },
+      "postimage": {
+        "blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+        "artifact": "postimages/product/portfolio/sensitivity-v6.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mantém exact apenas para componentes quantificados e, quando incompleto, certificado scope=known-subtotal. A explicação PR37 entra no finalizador canônico com compatibilidade de replay.",
+      "equivalence_or_union_evidence": "PR37 remove o marcador de escopo obrigatório. Copiar esse algoritmo permitiria scalar genérico em cobertura incompleta. O novo teste discrimina scope ausente de scope certificado; nenhum total null vira zero.",
+      "criteria": [
+        "WP13.T03.CHK.01",
+        "WP13.T03.CHK.03",
+        "WP13.T03.CHK.20"
+      ],
+      "consumers": [
+        "Planner sensitivity",
+        "verificação",
+        "C07"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "247a0cdc456f386475f53765e6da2e1db156eba8"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+        "artifact": "preimages/product/portfolio/sensitivity.ts.txt"
+      },
+      "postimage": {
+        "blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+        "artifact": "postimages/product/portfolio/sensitivity.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mantém PlannerDirectIntervalProof, identidade/fixedComponentsDigest/componentIds, metadados e ambos os previews IEEE adjacentes atuais.",
+      "equivalence_or_union_evidence": "PR37 retira a ligação estrutural usada pela recertificação de Finance. Fonte e bundle de Finance mantêm o mesmo blob admitido; não substituir.",
+      "criteria": [
+        "WP13.T03.CHK.01",
+        "WP13.T03.CHK.03",
+        "WP13.T03.CHK.20",
+        "WP13.INV.10"
+      ],
+      "consumers": [
+        "Planner exact threshold",
+        "read-only replay",
+        "coverage interval"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "056a857364cf8a6c2a2bc97bf107276612edf55d"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+        "artifact": "preimages/product/portfolio/threshold-proof.ts.txt"
+      },
+      "postimage": {
+        "blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+        "artifact": "postimages/product/portfolio/threshold-proof.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": true,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "disposition": "SEMANTIC_PATCH",
+      "reason": "Patch suplementar seleciona somente uma das serializações explícitas bundle, PR37, Intelligence e união para o finalizador; comparação integral de resultDigest continua obrigatória após provas novas.",
+      "equivalence_or_union_evidence": "Preserva todos os callbacks e fences Finance, inclusive Request/headers/lease/poison/publicação. PR37 repetiria busca e perderia prova estrutural. Não há tolerância genérica de campos/digests nem prova persistida reutilizada.",
+      "criteria": [
+        "WP13.T03.CHK.18",
+        "WP13.T03.CHK.20",
+        "WP13.INV.10",
+        "WP13.T04.CHK.03"
+      ],
+      "consumers": [
+        "WP11 criterion binding",
+        "C08 replay",
+        "C17",
+        "HTTP"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "912df8ecd8552b245e124b93c46644c92a32f3ac"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "46a04597df74205add4531465f35d8a55ca1f8dd"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "46a04597df74205add4531465f35d8a55ca1f8dd"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "46a04597df74205add4531465f35d8a55ca1f8dd"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "46a04597df74205add4531465f35d8a55ca1f8dd",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "46a04597df74205add4531465f35d8a55ca1f8dd",
+        "artifact": "preimages/product/portfolio/verification.ts.txt"
+      },
+      "postimage": {
+        "blob": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+        "artifact": "postimages/product/portfolio/verification.ts.txt"
+      },
+      "patch": "P01",
+      "apply": true,
+      "requires_preimage_recheck": true,
+      "finance_owned": true,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN",
+      "intelligence_evidence": {
+        "commit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+        "blob": "b2ac17f210886353d3596fc6a891242c7ea40f0a"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Preserva recuperação órfã de comparação, portfólio e sensibilidade e os asserts de não duplicação.",
+      "equivalence_or_union_evidence": "PR37 conserva só a primeira recuperação e usa fixture mais ampla. O admitido contém essa recuperação e os negativos adicionais; a fixture compartilhada permanece intocada.",
+      "criteria": [
+        "WP13.T02.DOD.01",
+        "WP13.T03.DOD.01",
+        "WP13.INV.10"
+      ],
+      "consumers": [
+        "C08 + WP11 binding",
+        "dispatcher"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "6c92ae341623724fde5843292fdd81b3799eef93"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "d85a362360301686d2c5ca72f3938551c119b38a"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "6c92ae341623724fde5843292fdd81b3799eef93"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "6c92ae341623724fde5843292fdd81b3799eef93"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "d85a362360301686d2c5ca72f3938551c119b38a",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "d85a362360301686d2c5ca72f3938551c119b38a",
+        "artifact": "preimages/test/product/wp13/analysis-recovery.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "d85a362360301686d2c5ca72f3938551c119b38a",
+        "artifact": "postimages/test/product/wp13/analysis-recovery.test.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+      "disposition": "SEMANTIC_PATCH",
+      "reason": "Acrescenta histórico autenticado no mesmo owner N/N e mantém o teste admitido de fonte avançada/revogação. Usa um único Request no helper local, mantendo access.allowed no case reader.",
+      "equivalence_or_union_evidence": "PR37 acrescenta N/N mas remove o teste de avanço de fonte e access.allowed. Só o acréscimo e o Request estável Finance são incorporados; nenhuma expectativa existente muda.",
+      "criteria": [
+        "WP13.T01.CHK.01",
+        "WP13.T01.CHK.03",
+        "WP13.T04.CHK.03"
+      ],
+      "consumers": [
+        "campaign current/historical/list",
+        "WP11",
+        "C17"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "e83d632e6cd26ad360a9ea7ff72ba04a31c97eb4"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "60693fea1a9fa238ecf57c43c73d8d113911b74a"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "4c304ac6e0357ec9d2731955c9acfae6580a6bbc"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "4c304ac6e0357ec9d2731955c9acfae6580a6bbc"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "60693fea1a9fa238ecf57c43c73d8d113911b74a",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "60693fea1a9fa238ecf57c43c73d8d113911b74a",
+        "artifact": "preimages/test/product/wp13/campaign.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "3002c859033795cac7db65261a1ff44c44a61d43",
+        "artifact": "postimages/test/product/wp13/campaign.test.ts.txt"
+      },
+      "patch": "P02",
+      "apply": true,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mantém todos os estados omitted/null/zero/confirmed e adversários de fonte/regra/acesso/objeto emprestado no orçamento agregado original.",
+      "equivalence_or_union_evidence": "PR37 reorganiza loops em testes separados, sem novo comportamento. Não multiplica o orçamento nem altera o timeout.",
+      "criteria": [
+        "WP13.T02.CHK.20",
+        "WP13.T02.CMP.20",
+        "WP13.T03.CHK.20"
+      ],
+      "consumers": [
+        "C10 coverage interval",
+        "Planner",
+        "dispatcher"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "ea5f94f0c3f036625688c7e60ce9ee9c4ad328d2"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "ea5f94f0c3f036625688c7e60ce9ee9c4ad328d2"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "ea5f94f0c3f036625688c7e60ce9ee9c4ad328d2"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+        "artifact": "preimages/test/product/wp13/coverage-preview.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+        "artifact": "postimages/test/product/wp13/coverage-preview.test.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "disposition": "SEMANTIC_PATCH",
+      "reason": "Preserva integralmente as três jornadas admitidas, asserts de contagem/egress/retry e budgets. Acrescenta scalar falso PR37 e três serializações históricas com persistência/vínculo real, replay sem recálculo, adulteração e revogação.",
+      "equivalence_or_union_evidence": "PR37 retirava instrumentação/asserções e reduzia amostragem dos testes existentes. Nada disso é transplantado. Apenas os novos casos usam dois endpoints, cuja prova estrutural/adjacente continua canônica.",
+      "criteria": [
+        "WP13.T03.CHK.01",
+        "WP13.T03.CHK.03",
+        "WP13.T03.CHK.20",
+        "WP13.INV.10"
+      ],
+      "consumers": [
+        "C07/C08/C10",
+        "WP11 binding",
+        "HTTP",
+        "dispatcher"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "4195ec55c7d9cdfe5e308d192414562bb998d7c0"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "192653d276d45efc073df2aea5f8c2170564bd7c"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "192653d276d45efc073df2aea5f8c2170564bd7c"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+        "artifact": "preimages/test/product/wp13/coverage-sensitivity-integration.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "7025de0601768ccc0bec76d8e0675882dee7cda9",
+        "artifact": "postimages/test/product/wp13/coverage-sensitivity-integration.test.ts.txt"
+      },
+      "patch": "P01",
+      "apply": true,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mantém unknown financeiro com cobertura parcial e failed definitivo independente da completude financeira.",
+      "equivalence_or_union_evidence": "PR37 só renomeia variáveis e perde um teste extra de unknown. Assertivas de failed e de gaps já estão presentes.",
+      "criteria": [
+        "WP13.T02.CHK.03",
+        "WP13.T02.CHK.20",
+        "WP13.T02.INV.20"
+      ],
+      "consumers": [
+        "Portfolio feasibility/coverage",
+        "dispatcher"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "0a5f3d28435378bae4637d629ff991fb03993f27"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "0a5f3d28435378bae4637d629ff991fb03993f27"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "0a5f3d28435378bae4637d629ff991fb03993f27"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+        "artifact": "preimages/test/product/wp13/coverage.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+        "artifact": "postimages/test/product/wp13/coverage.test.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "disposition": "SEMANTIC_PATCH",
+      "reason": "Mantém todas as expectativas do teste controlado original. Corrige Request estável e modela indisponibilidade do produtor antes da reserva, verificando zero applicationAttempts para a segunda mudança.",
+      "equivalence_or_union_evidence": "A jornada real C08 de PR37 já está admitida em handoff-c08-integration.test.ts e recebe patch suplementar. Falha após reserva permanece sob contrato receipt-required e handoff-domain-integration; não é convertida em retry cego.",
+      "criteria": [
+        "WP13.T04.CHK.01",
+        "WP13.T04.CHK.02",
+        "WP13.T04.INV.01"
+      ],
+      "consumers": [
+        "WP11 prepared execution",
+        "C12",
+        "dispatcher"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "d5327a70410a6c52c64b534056939cbfc9eb9483"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "bff4abba2f156cd2418d39f053b4d6a05bde4944"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "bff4abba2f156cd2418d39f053b4d6a05bde4944"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+        "artifact": "preimages/test/product/wp13/handoff-integration.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "07f7478f2b8072d9c4a5bb1dd4a831ac537efec8",
+        "artifact": "postimages/test/product/wp13/handoff-integration.test.ts.txt"
+      },
+      "patch": "P02",
+      "apply": true,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts"
+      ],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+      "disposition": "SEMANTIC_PATCH",
+      "reason": "Acrescenta o assert PR37 de zero novo prepare após choiceId errado; conserva todos os testes admitidos de mutação e digest de observação.",
+      "equivalence_or_union_evidence": "PR37 omite dois adversários de mutação. União é um assert adicional; nenhum teste é removido ou reordenado.",
+      "criteria": [
+        "WP13.T04.CHK.01",
+        "WP13.T04.CMP.01",
+        "WP13.T04.INV.01"
+      ],
+      "consumers": [
+        "preparePortfolioChoice/promotePortfolioAlternative",
+        "dispatcher"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "22e9e17fdfc2fb07f6a5ef3c23e521fc3781c25f"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "f289bde6c2b97278a9b3a7cfe1462b41b0f1ab7a"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "22e9e17fdfc2fb07f6a5ef3c23e521fc3781c25f"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "22e9e17fdfc2fb07f6a5ef3c23e521fc3781c25f"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "f289bde6c2b97278a9b3a7cfe1462b41b0f1ab7a",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "f289bde6c2b97278a9b3a7cfe1462b41b0f1ab7a",
+        "artifact": "preimages/test/product/wp13/handoff.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "dc7e73e53c3fc7c67e4340597dab6afa726b52cc",
+        "artifact": "postimages/test/product/wp13/handoff.test.ts.txt"
+      },
+      "patch": "P02",
+      "apply": true,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "disposition": "SEMANTIC_PATCH",
+      "reason": "Mantém snapshots contra objeto compartilhado e escolha com C08 equivalente/ledger exato. Acrescenta contagem zero de binding quando owner é futuro e o contraexemplo Finance de CAS na última callback.",
+      "equivalence_or_union_evidence": "A escolha por witness entre escritas equivalentes já está no corpo admitido, apesar de título diferente. Não troca fixture otimizada. CAS final deve recusar sem disclosure e sem alterar estado/storageVersion; novo read precisa executar de novo.",
+      "criteria": [
+        "WP13.T04.CHK.03",
+        "WP13.INV.10",
+        "WP13.QLT.10"
+      ],
+      "consumers": [
+        "candidate history",
+        "campaign history",
+        "C13",
+        "C17"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "606591b793eecf9a97ba1459dd0c02d6f9d352f7"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "9af706b6a1ab27229fb8514e117550036a13b249"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "d1ae1a8bb747c1bb8779da133de4df22c81fa3b4"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "d1ae1a8bb747c1bb8779da133de4df22c81fa3b4"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "9af706b6a1ab27229fb8514e117550036a13b249",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "9af706b6a1ab27229fb8514e117550036a13b249",
+        "artifact": "preimages/test/product/wp13/history-provenance.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "8ae8e056f426e128ecec38a26d646896b7c28d81",
+        "artifact": "postimages/test/product/wp13/history-provenance.test.ts.txt"
+      },
+      "patch": "P02",
+      "apply": true,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mantém os asserts de quantidade de avaliações antes/depois de retry e perda de resposta de binding.",
+      "equivalence_or_union_evidence": "PR37 remove exclusivamente os contadores que discriminam recálculo indevido. Demais cenários estão contidos no admitido.",
+      "criteria": [
+        "WP13.T03.CHK.18",
+        "WP13.INV.10"
+      ],
+      "consumers": [
+        "PersistentSensitivityPort",
+        "C08",
+        "WP11 binding"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "4efa414f8ecadde5799e7246337863b145373210"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "63f262129fb37adf74013f58ea5fc56bb4ecd79e"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "4efa414f8ecadde5799e7246337863b145373210"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "4efa414f8ecadde5799e7246337863b145373210"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+        "artifact": "preimages/test/product/wp13/persistence-recovery.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+        "artifact": "postimages/test/product/wp13/persistence-recovery.test.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistent-store.test.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mantém o teste de fechamento da amostragem com bound reader e revogação durante releituras.",
+      "equivalence_or_union_evidence": "PR37 apaga esse último teste; os demais testes são equivalentes. Nenhuma mudança necessária.",
+      "criteria": [
+        "WP13.T03.CHK.18",
+        "WP13.T03.INV.18"
+      ],
+      "consumers": [
+        "sensitivity read",
+        "C08/WP11",
+        "C17"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "ea54e03a06787a74c603c4e14a2c80d09a8c9700"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "ea54e03a06787a74c603c4e14a2c80d09a8c9700"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "ea54e03a06787a74c603c4e14a2c80d09a8c9700"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+        "artifact": "preimages/test/product/wp13/persistent-store.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+        "artifact": "postimages/test/product/wp13/persistent-store.test.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mantém os dois adversários: mutação do request emprestado e reuso mutável da fonte.",
+      "equivalence_or_union_evidence": "PR37 só troca RuntimeFixture pela fixture mais ampla. Assertivas são equivalentes; não substituir fixture compartilhada ou introduzir trabalho de setup adicional.",
+      "criteria": [
+        "WP13.T03.INV.01",
+        "WP13.INV.10"
+      ],
+      "consumers": [
+        "PlannerSensitivity",
+        "dispatcher"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "33193aabe586aee6bdedb8a8a06238783ece25a2"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "e20e97e54d60c156952fbc43fab356cf479221de"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "33193aabe586aee6bdedb8a8a06238783ece25a2"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "33193aabe586aee6bdedb8a8a06238783ece25a2"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "e20e97e54d60c156952fbc43fab356cf479221de",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "e20e97e54d60c156952fbc43fab356cf479221de",
+        "artifact": "preimages/test/product/wp13/planner-sensitivity-boundary.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "e20e97e54d60c156952fbc43fab356cf479221de",
+        "artifact": "postimages/test/product/wp13/planner-sensitivity-boundary.test.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+      "disposition": "SEMANTIC_PATCH",
+      "reason": "Preserva todo o conjunto admitido, inclusive egress positivo/negativo. Acrescenta o cenário PR37 cuja cobertura completa vem de assessCostCoverage canônico.",
+      "equivalence_or_union_evidence": "A fonte troca o teste de failed ceiling e reduz o teste egress. União conserva ambos os testes antigos e acrescenta a variante de classificação real, com todos os imports.",
+      "criteria": [
+        "WP13.T02.CHK.01",
+        "WP13.T02.CHK.03",
+        "WP13.T02.CHK.20"
+      ],
+      "consumers": [
+        "C10 classification",
+        "PortfolioPort",
+        "dispatcher"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "57ec7d22fc2fa20506547ae5d4a3bca40a91db04"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "2e103fe41fd5ba5a740247bb65a4ac13d262e7da"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "57ec7d22fc2fa20506547ae5d4a3bca40a91db04"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "57ec7d22fc2fa20506547ae5d4a3bca40a91db04"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "2e103fe41fd5ba5a740247bb65a4ac13d262e7da",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "2e103fe41fd5ba5a740247bb65a4ac13d262e7da",
+        "artifact": "preimages/test/product/wp13/portfolio.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "01584c151cde11035a0f5154ed1ecb77b8c0b7d8",
+        "artifact": "postimages/test/product/wp13/portfolio.test.ts.txt"
+      },
+      "patch": "P03",
+      "apply": true,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "disposition": "SEMANTIC_PATCH",
+      "reason": "Mantém todos os asserts e readHistoricalCalculation exigido. Transplanta só o helper HTTP local Finance com LocalStore real e Request estável, que fecha o read-snapshot do produto.",
+      "equivalence_or_union_evidence": "PR37 perde a assinatura readHistoricalCalculation. Finance ajusta a montagem do teste para a fronteira já existente; observações de domínio seguem declaradamente controladas e producers não usados lançam erro.",
+      "criteria": [
+        "WP13.T04.CHK.03",
+        "WP13.T04.CMP.01",
+        "WP13.INV.10"
+      ],
+      "consumers": [
+        "HTTP reconcile",
+        "C13 historical/current source",
+        "dispatcher"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "553e171d14ea8e7318ad245375cd6d2597b66d4a"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "6b2a318f73aa8adb67840958add758f151f0bade"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "d92851b34785490feccbfa17099281e7bf9989a3"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "d92851b34785490feccbfa17099281e7bf9989a3"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "6b2a318f73aa8adb67840958add758f151f0bade",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "6b2a318f73aa8adb67840958add758f151f0bade",
+        "artifact": "preimages/test/product/wp13/reconciliation.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "599464bcbcfd1c885fd76098e3bbc061ce80d107",
+        "artifact": "postimages/test/product/wp13/reconciliation.test.ts.txt"
+      },
+      "patch": "P03",
+      "apply": true,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mantém integralmente a fixture compartilhada admitida e as variantes Analysis/Runtime completas.",
+      "equivalence_or_union_evidence": "A fonte substitui variantes pequenas pela fixture geral e não é uma adição de capacidade. A instrução da missão proíbe alteração de fixture compartilhada; testes novos usam exports existentes.",
+      "criteria": [
+        "WP13.T02.CHK.02",
+        "WP13.T03.CHK.01",
+        "WP13.INV.10"
+      ],
+      "consumers": [
+        "Todos os consumidores wp13 das fixtures",
+        "dispatcher"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "ecc4678cf757e68c5763f8bc99d5f3573df86bc5"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "ecc4678cf757e68c5763f8bc99d5f3573df86bc5"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "ecc4678cf757e68c5763f8bc99d5f3573df86bc5"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+        "artifact": "preimages/test/product/wp13/sensitivity-fixture.ts.txt"
+      },
+      "postimage": {
+        "blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+        "artifact": "postimages/test/product/wp13/sensitivity-fixture.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope-fixture.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mesmo blob entre PR37 e bundle; preservado byte a byte.",
+      "equivalence_or_union_evidence": "Equivalência exata de blob d337b1cd730c3ecd4efb40329551a27e8d932e08. Nenhuma escrita necessária.",
+      "criteria": [
+        "WP13.T03.CHK.18",
+        "WP13.INV.10"
+      ],
+      "consumers": [
+        "Read-scope callback/lease/Request adversaries",
+        "C17"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+        "artifact": "preimages/test/product/wp13/sensitivity-read-scope-fixture.ts.txt"
+      },
+      "postimage": {
+        "blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+        "artifact": "postimages/test/product/wp13/sensitivity-read-scope-fixture.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mesmo blob entre PR37 e bundle, com todos os negativos de leitura. Mantém testes; documentação explicita recriação de serviços versus reabertura real.",
+      "equivalence_or_union_evidence": "Equivalência exata de blob 56d4f7342696245fae89fd00d15a037dd9cb33a4. Finance só esclarece comentário de service recreation; não se transporta isso como prova de restart.",
+      "criteria": [
+        "WP13.T03.CHK.18",
+        "WP13.INV.10"
+      ],
+      "consumers": [
+        "Read-scope/callback/authority",
+        "C17"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "a25539d00f8a43f2e7e3be02a16c29ba1c0272f2"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "a25539d00f8a43f2e7e3be02a16c29ba1c0272f2"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+        "artifact": "preimages/test/product/wp13/sensitivity-read-scope.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+        "artifact": "postimages/test/product/wp13/sensitivity-read-scope.test.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mantém a jornada única EUR→USD sem FX, consumidores HTTP, bindings/replay, duplicidade cross-case e fonte/regra/autoridade stale.",
+      "equivalence_or_union_evidence": "PR37 divide o mesmo corpo em três fixtures/testes; comparadas as expectativas, os discriminantes já existem no admitido (inclusive missing-fx, valores null e zero exact calls). Não divide a jornada nem muda seus budgets.",
+      "criteria": [
+        "WP13.T03.CHK.03",
+        "WP13.T03.QLT.01",
+        "WP13.T02.CHK.18"
+      ],
+      "consumers": [
+        "Planner units",
+        "Portfolio HTTP",
+        "C08",
+        "WP11",
+        "dispatcher"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "bf07b1c804138f04e01f9cf5a518b6d89ab24b9a"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "bf07b1c804138f04e01f9cf5a518b6d89ab24b9a"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "bf07b1c804138f04e01f9cf5a518b6d89ab24b9a"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+        "artifact": "preimages/test/product/wp13/sensitivity-units-boundary.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+        "artifact": "postimages/test/product/wp13/sensitivity-units-boundary.test.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+      "disposition": "SEMANTIC_PATCH",
+      "reason": "Acrescenta conservação exata de unresolvedConditions/thresholdEvidence, recusa unavailable e evidenceRefs vazias. Preserva o assert de amostra null e adversários de callback.",
+      "equivalence_or_union_evidence": "União aditiva das expectativas PR37; não substitui o bloco que na fonte removia o caso null.",
+      "criteria": [
+        "WP13.T03.CHK.03",
+        "WP13.T03.QLT.01",
+        "WP13.T03.CMP.01"
+      ],
+      "consumers": [
+        "C07 v6",
+        "UI/BI",
+        "dispatcher"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "26f2ad65abc551c33561420cf7e23b04522255f6"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "a3b1cd5326dc4dfbbaa4a16cb0134c9d0fe15a4c"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "26f2ad65abc551c33561420cf7e23b04522255f6"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "26f2ad65abc551c33561420cf7e23b04522255f6"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "a3b1cd5326dc4dfbbaa4a16cb0134c9d0fe15a4c",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "a3b1cd5326dc4dfbbaa4a16cb0134c9d0fe15a4c",
+        "artifact": "preimages/test/product/wp13/sensitivity-v6.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83",
+        "artifact": "postimages/test/product/wp13/sensitivity-v6.test.ts.txt"
+      },
+      "patch": "P01",
+      "apply": true,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+      "disposition": "SEMANTIC_PATCH",
+      "reason": "Mantém todos os testes existentes e acrescenta o discriminante scope ausente versus known-subtotal certificado, sempre condicionado e sem tratar training como zero.",
+      "equivalence_or_union_evidence": "A única diferença da fonte original é um título. O teste suplementar protege a regra admitida que a versão PR37 do runtime perderia.",
+      "criteria": [
+        "WP13.T03.CHK.01",
+        "WP13.T03.CHK.03",
+        "WP13.T03.CHK.20"
+      ],
+      "consumers": [
+        "Generic evaluator",
+        "Planner finalizer",
+        "dispatcher"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "a77713b4a8dff26a7d105775633a9f15c1248f21"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "76ea3fa6902105c7be42956dae99ea4e4f9a4c3b"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "a77713b4a8dff26a7d105775633a9f15c1248f21"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "a77713b4a8dff26a7d105775633a9f15c1248f21"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "76ea3fa6902105c7be42956dae99ea4e4f9a4c3b",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "76ea3fa6902105c7be42956dae99ea4e4f9a4c3b",
+        "artifact": "preimages/test/product/wp13/sensitivity.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "0444570a0a961c979f75388fb0708812f98497e5",
+        "artifact": "postimages/test/product/wp13/sensitivity.test.ts.txt"
+      },
+      "patch": "P01",
+      "apply": true,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mantém a jornada admitida com baselineMutation reutilizado e unicidade C08. A variante PR37/Finance entra no novo semantic-union-source-scenario.test.ts, sem substituir a fixture especializada.",
+      "equivalence_or_union_evidence": "Os cenários são distintos: original exige único envelope/referência original; adicional preserva envelopes equivalentes e seleção explícita autenticada, recusa descoberta ambígua, fonte nua→C10 e escopo/autoridade. Nenhum escolhe por data, elimina duplicatas ou enfraquece discovery.",
+      "criteria": [
+        "WP13.T02.CHK.02",
+        "WP13.T02.CHK.20",
+        "WP13.T04.CHK.03"
+      ],
+      "consumers": [
+        "C08 source-only selection",
+        "C10",
+        "WP11 choice",
+        "UI/BI"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "a2cf45f6c343c384c37a36e0c36437e379178b43"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "01d7a1a299c61ebe824634c39e3d598cf2f59dc3"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "01d7a1a299c61ebe824634c39e3d598cf2f59dc3"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+        "artifact": "preimages/test/product/wp13/source-scenario.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+        "artifact": "postimages/test/product/wp13/source-scenario.test.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts"
+      ],
+      "functional_status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/term-defer-boundary.test.ts",
+      "disposition": "KEEP_CURRENT",
+      "reason": "Mesmo blob entre PR37 e bundle; conserva prova de defer mensal sem economia fictícia.",
+      "equivalence_or_union_evidence": "Equivalência exata de blob edb551580d49c817141d3a850be4af36b0a7d647. Isso não cobre sozinho um contrato com regra de cancelamento; essa obrigação permanece aberta.",
+      "criteria": [
+        "WP13.T03.CHK.02",
+        "WP13.T03.INV.01"
+      ],
+      "consumers": [
+        "Planner canonical defer",
+        "sensitivity",
+        "dispatcher"
+      ],
+      "source": {
+        "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "edb551580d49c817141d3a850be4af36b0a7d647"
+      },
+      "admitted": {
+        "commit": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+        "blob": "edb551580d49c817141d3a850be4af36b0a7d647"
+      },
+      "finance_observed": {
+        "commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "blob": "edb551580d49c817141d3a850be4af36b0a7d647"
+      },
+      "finance_refreshed": {
+        "commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "blob": "edb551580d49c817141d3a850be4af36b0a7d647"
+      },
+      "target_refreshed": {
+        "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "blob": "edb551580d49c817141d3a850be4af36b0a7d647",
+        "equals_reference": true
+      },
+      "preimage": {
+        "blob": "edb551580d49c817141d3a850be4af36b0a7d647",
+        "artifact": "preimages/test/product/wp13/term-defer-boundary.test.ts.txt"
+      },
+      "postimage": {
+        "blob": "edb551580d49c817141d3a850be4af36b0a7d647",
+        "artifact": "postimages/test/product/wp13/term-defer-boundary.test.ts.txt"
+      },
+      "patch": null,
+      "apply": false,
+      "requires_preimage_recheck": true,
+      "finance_owned": false,
+      "supplemental_paths": [],
+      "functional_status": "NOT_RUN"
+    }
+  ]
+}

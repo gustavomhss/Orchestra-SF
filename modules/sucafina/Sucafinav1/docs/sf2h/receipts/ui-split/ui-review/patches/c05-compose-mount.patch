@@ -1,0 +1,21 @@
+# NOT_APPLIED: owner proposal; no shared source file was modified.
+diff --git a/apps/cli/src/sucafina-product/business-services.ts b/apps/cli/src/sucafina-product/business-services.ts
+index b3595989d0c08159c96484d96bd40a149a9721e6..0bc8d84256e04909fdcd08af574531f38049a974 100644
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -124,7 +124,6 @@
+   const dashboardRecords = createDashboardRecordEvidenceHost({ host, scopedSources: input.persistence,
+     issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: input.persistence }) })
+   const dashboard = createDashboardPort({ host, sources: dashboardSources, recordEvidence: dashboardRecords })
+-  const dashboardServices = createSfDashboardServices({ authority: input.authority, scopedSources: input.persistence, dashboard, sources: dashboardSources, records: dashboardRecords, dashboardHostWrites })
+   const evidence: { current?: BusinessContextService } = {}
+   const recall: { current?: ReturnType<typeof createSfCaseRecall> } = {}
+   const caseRecall: ReturnType<typeof createSfCaseRecall> = (request, call) => recall.current
+@@ -151,6 +150,7 @@
+     recall: (request, call) => evidence.current ? evidence.current.recall(request, call) : Promise.reject(new Error("SF_ATLAS_UNAVAILABLE")),
+     emitFromLedger: (ref, call) => evidence.current ? evidence.current.emitFromLedger(ref, call) : Promise.resolve({ status: "unavailable", sourceEventId: ref.kind === "case-event" ? ref.target.eventId : "", scanner: { name: "", version: "", status: "unavailable" }, reason: "atlas-unavailable" }),
+   }
++  const dashboardServices = createSfDashboardServices({ authority: input.authority, scopedSources: input.persistence, dashboard, sources: dashboardSources, records: dashboardRecords, dashboardHostWrites, evidence: context })
+   const operationIdentity = (call: TrustedDomainContext) => call.kind === "ui" ? input.authority.ui.operationIdentity(call) : input.authority.native.operationIdentity?.(call)
+   const authorizeCase = async (value: DecisionCase, call: TrustedDomainContext) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call)
+   let scenarioOperationAccess: ReturnType<typeof createSfScenarioOperationAccess> | undefined
