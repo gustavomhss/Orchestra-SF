@@ -1,3 +1,4 @@
+import { decodeSfSkillInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
@@ -16,15 +17,21 @@ import type { createSfAnalysisLifecycleContext } from "./analysis-run-context.ts
 export function createSfStaleAnalysisAccess(input: {
   authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "human">
   persistence: Pick<Persistence, "transactionAll" | "currentSnapshots">
-  context: Pick<BusinessContextService, "context">
+  context: Pick<BusinessContextService, "context"> & Partial<Pick<BusinessContextService, "recall">>
   request: Request
   start: unknown
   proof: { runRef: string; caseRef: SfNativeRunRecord["caseRef"]; contextFingerprint: string; evidenceRefs: readonly BusinessEvidenceRef[] }
   lifecycle?: Pick<ReturnType<typeof createSfAnalysisLifecycleContext>, "owns">
 }) {
+  const request = input.request
   const proof = structuredClone(input.proof)
   const start = structuredClone(input.start)
-  const prepared = new WeakMap<TrustedDomainContext, { identity: string; fences: string }>()
+  const memory = object(object(start).request).skillId === "sf-consultar-memoria-decisoria"
+    ? decodeSfSkillInput("DecisionRecallInput", object(start).skillInput) : undefined
+  const headers = () => digestSfValue([...request.headers.entries()])
+  const accessIdentity = (record: SfNativeRunRecord, call: TrustedDomainContext, output?: ContributionEnvelope) =>
+    digestSfValue([record, output, call.kind, call.binding, headers()])
+  const prepared = new WeakMap<TrustedDomainContext, { identity: string; fences: string; headers: string }>()
   const cancellations = new WeakMap<TrustedDomainContext, { request: Request; record: SfNativeRunRecord }>()
   const recordIdentity = (record: SfNativeRunRecord, call: TrustedDomainContext, output?: ContributionEnvelope) => {
     const { updatedAt: _clock, reason: _reason, ...value } = record
@@ -34,18 +41,19 @@ export function createSfStaleAnalysisAccess(input: {
     digestSfValue(Object.fromEntries(Object.entries(snapshots).map(([surface, snapshot]) => [surface, sfRunSourceFence(snapshot)])))
   const refsFor = (output?: ContributionEnvelope) => structuredClone([...proof.evidenceRefs, ...(output?.evidenceRefs ?? [])])
     .filter((ref, index, all) => all.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index)
-  const locked = async (record: SfNativeRunRecord, call: TrustedDomainContext, output?: ContributionEnvelope, preparing = false): Promise<PortResult<{ sourceFence: string }>> => {
+  const locked = async (record: SfNativeRunRecord, call: TrustedDomainContext, output?: ContributionEnvelope, preparing = false, identity = accessIdentity(record, call, output)): Promise<PortResult<{ sourceFence: string }>> => {
     const denied = () => ({ status: "denied", reason: "analysis-stale-access-unavailable" } as const)
     try {
       const snapshots = input.persistence.currentSnapshots?.()
-      const identity = digestSfValue([record, output, call.kind, call.binding])
-      if (!snapshots || record.state !== "stale" || record.runRef !== proof.runRef || record.contextFingerprint !== proof.contextFingerprint ||
-        digestSfValue(record.caseRef) !== digestSfValue(proof.caseRef) || input.request.signal.aborted ||
-        input.authority.host.requestFor(call) !== input.request || record.principalRef !== call.binding.principalRef ||
+      const snapshotIdentity = digestSfValue(snapshots)
+      if (preparing) prepared.delete(call)
+      if (!snapshots || identity !== accessIdentity(record, call, output) || record.state !== "stale" || record.runRef !== proof.runRef || record.contextFingerprint !== proof.contextFingerprint ||
+        digestSfValue(record.caseRef) !== digestSfValue(proof.caseRef) || request.signal.aborted ||
+        input.authority.host.requestFor(call) !== request || record.principalRef !== call.binding.principalRef ||
         record.policyVersion !== call.binding.policyVersion || record.accessRevision !== call.binding.accessRevision ||
         !await input.authority.human.authorize(call, "analysis.start", start) || !await input.authority.host.revalidate(call)) return denied()
       const prior = prepared.get(call)
-      if (!preparing && (!prior || prior.identity !== recordIdentity(record, call, output) || prior.fences !== fences(snapshots)))
+      if (!preparing && (!prior || prior.identity !== recordIdentity(record, call, output) || prior.fences !== fences(snapshots) || prior.headers !== headers()))
         return { status: "stale", reason: "analysis-stale-source-changed" }
       const current = object(object(object(snapshots.dashboard.data.__sfProductV1).cases)[record.caseRef.id])
       if (current.incarnation !== record.caseRef.incarnation || typeof current.version !== "number" || !Number.isSafeInteger(current.version) ||
@@ -58,27 +66,41 @@ export function createSfStaleAnalysisAccess(input: {
         source.accessRevision !== call.binding.accessRevision || !source.currentRef || !valid(source.currentRef) || !source.authorizedProjection ||
         (source.state === "fresh" ? digestSfValue(source.currentRef) !== digestSfValue(source.ref)
           : source.state !== "historical" || !Array.isArray(source.differences)))) return denied()
-      // The real context producer verifies original capture and continuity. No old fingerprint
-      // is accepted as authority, and no await is left after these final identity checks.
+      const sourceIdentity = digestSfValue(sources)
+      if (memory) {
+        if (!input.context.recall || !memory.ok || digestSfValue(memory.value.currentCase) !== digestSfValue(proof.caseRef) ||
+          memory.value.query !== object(object(start).request).objective) return denied()
+        // C12 can authorize a historical source independently of its Atlas capture.
+        // Reopen the real Atlas reader for every selected case under this C08 lock.
+        // No persisted fingerprint or previous recall is an authorization grant.
+        try {
+          const recalled = await input.context.recall({ caseRefs: structuredClone(memory.value.recallScope.cases), query: memory.value.query }, call)
+          const captured = recalled.flatMap((record) => [...record.envelope.evidenceRefs, ...record.envelope.dependencies])
+          if (refs.some((ref) => !captured.some((capture) => digestSfValue(capture) === digestSfValue(ref)))) return denied()
+        } catch { return denied() }
+      }
+      // Pin bytes before the awaits: currentSnapshots can return the same mutable
+      // object, and Request identity alone does not pin its authorization headers.
       if (!await input.authority.human.authorize(call, "analysis.start", start) || !await input.authority.host.revalidate(call) ||
-        input.authority.host.requestFor(call) !== input.request || input.request.signal.aborted ||
-        identity !== digestSfValue([record, output, call.kind, call.binding]) ||
-        digestSfValue(input.persistence.currentSnapshots?.()) !== digestSfValue(snapshots)) return denied()
-      if (preparing) prepared.set(call, { identity: recordIdentity(record, call, output), fences: fences(snapshots) })
+        input.authority.host.requestFor(call) !== request || request.signal.aborted ||
+        identity !== accessIdentity(record, call, output) || sourceIdentity !== digestSfValue(sources) ||
+        digestSfValue(input.persistence.currentSnapshots?.()) !== snapshotIdentity) return denied()
+      if (preparing) prepared.set(call, { identity: recordIdentity(record, call, output), fences: fences(snapshots), headers: headers() })
       return { status: "ok", value: { sourceFence: sfRunSourceFence(snapshots.dashboard) } }
     } catch {
       return { status: "unavailable", reason: "analysis-stale-access-unavailable" }
     }
   }
   const preflight = async (record: SfNativeRunRecord, call: TrustedDomainContext, output?: ContributionEnvelope): Promise<PortResult<{ sourceFence: string }>> => {
-      if (input.persistence.currentSnapshots?.()) return locked(record, call, output, true)
+      const identity = accessIdentity(record, call, output)
+      if (input.persistence.currentSnapshots?.()) return locked(record, call, output, true, identity)
       if (!input.persistence.transactionAll) return { status: "unavailable", reason: "analysis-stale-scope-unavailable" }
-      if (input.authority.host.requestFor(call) !== input.request || input.request.signal.aborted ||
+      if (input.authority.host.requestFor(call) !== request || request.signal.aborted ||
         !await input.authority.human.authorize(call, "analysis.start", start)) return { status: "denied", reason: "analysis-stale-access-unavailable" }
       // Scoped source identities may refresh on the first read. Finish that work before
       // entering C08; the second real read and the commit both retain the shared lock.
       await input.context.context({ refs: refsFor(output) }, call)
-      return input.persistence.transactionAll(async () => ({ commit: false, value: await locked(record, call, output, true) }), { signal: input.request.signal })
+      return input.persistence.transactionAll(async () => ({ commit: false, value: await locked(record, call, output, true, identity) }), { signal: request.signal })
   }
   return {
     preflight,
@@ -158,3 +180,4 @@ export function createSfStaleAnalysisAccess(input: {
     },
   }
 }
+

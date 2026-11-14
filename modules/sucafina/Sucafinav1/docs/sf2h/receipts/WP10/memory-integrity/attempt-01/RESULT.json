@@ -1,0 +1,36 @@
+{
+  "mission": "memory-integrity-preflight",
+  "status": "FAIL",
+  "interpretation": "Counterproof reproduced the delivered MemoryA27 defect; not a functional PASS.",
+  "productW": "6cf5d78ba412f97aa4dd8648bfec340a27060d3b",
+  "productParent": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+  "snapshotS": "453a8abbd36a2d0bb6c2f5a38c8ac3d4261409dc",
+  "requestSha256": "91af974716ff6d1e0279b73be3b6e87031ea615e616fbb3e502ee8628cdac9ae",
+  "requestBlob": "e846d9be8dc314e41ce1e04d2f188145411c2c7c",
+  "runId": 43632659610,
+  "jobId": 132562475071,
+  "cleanupJobId": 132563016248,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632659610",
+  "result": {
+    "pass": 0,
+    "fail": 1,
+    "filtered": 1,
+    "expectCalls": 15,
+    "selectedTests": 1,
+    "selectedFiles": 1,
+    "elapsedSeconds": 21.34,
+    "failure": "preflight.test.ts:37: Expected denied; Received ok",
+    "precedingAssertions": "Fresh and historical captures accepted; real Atlas recall returned unavailable after original projection corruption without digest recomputation; independent C12 historical context remained valid.",
+    "cleanup": "success",
+    "artifacts": []
+  },
+  "omni": {
+    "verdict": "pass",
+    "mode": "strict",
+    "nonce": "23e924370675631efb4b59f6cb5135c2",
+    "spawns": 2,
+    "delegated": 0
+  },
+  "runtimeChanged": false,
+  "localTests": "NOT_RUN"
+}
