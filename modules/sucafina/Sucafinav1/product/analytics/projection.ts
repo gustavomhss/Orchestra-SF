@@ -13,6 +13,7 @@ export function sameBiProjection(left: DomainProjection, right: DomainProjection
   const normalize = (projection: DomainProjection) => ({
     ...projection,
     context: { ...projection.context, sourceRefs: projection.context.sourceRefs.map((reference) => ({ ...reference, observedAt: "" })) },
+    ...(projection.comparison ? { comparison: { ...projection.comparison, context: { ...projection.comparison.context, sourceRefs: projection.comparison.context.sourceRefs.map((reference) => ({ ...reference, observedAt: "" })) } } } : {}),
     components: components(projection.components),
     ...(projection.decision?.kind === "scenario" ? { decision: { ...projection.decision, scenario: { ...projection.decision.scenario, components: components(projection.decision.scenario.components) } } }
       : projection.decision?.kind === "portfolio" ? { decision: { ...projection.decision, portfolio: { ...projection.decision.portfolio, combinations: projection.decision.portfolio.combinations.map((combination) => ({ ...combination, components: components(combination.components), ...(combination.analysis ? { analysis: { ...combination.analysis, scenario: { ...combination.analysis.scenario, components: components(combination.analysis.scenario.components) } } } : {}) })) } } }

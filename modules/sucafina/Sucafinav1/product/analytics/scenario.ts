@@ -16,7 +16,7 @@ export type ScenarioBiHost = {
 /** Select persisted result references through the authenticated host; no result is recomputed here. */
 export function bindStoredScenarioBiPort(input: {
   readProjection: (request: StoredScenarioSelection, context: TrustedDomainContext) => Promise<PortResult<DomainProjection>>
-  resolve: (request: BiViewRequest, context: TrustedDomainContext) => Promise<PortResult<{ scenarioResultRef: string; comparisonRef: string; sensitivityResultRef?: string; present: (projection: DomainProjection) => BiPresentation }>>
+  resolve: (request: BiViewRequest, context: TrustedDomainContext) => Promise<PortResult<{ scenarioResultRef: string; comparisonRef: string; sensitivityResultRef?: string; advantageComparisonRef?: string; present: (projection: DomainProjection) => BiPresentation }>>
   revalidate: BiPresentationPort["revalidate"]
 }): ScenarioBiHost {
   return {
@@ -28,7 +28,7 @@ export function bindStoredScenarioBiPort(input: {
       if (resolved.status !== "ok") return resolved
       if (digestSfValue(forwarded) !== digestSfValue(request)) return { status: "stale", reason: "selection-changed" }
       const present = resolved.value.present
-      const selection: StoredScenarioSelection = { selectionRef: request.selectionRef, scenarioResultRef: resolved.value.scenarioResultRef, comparisonRef: resolved.value.comparisonRef, ...(resolved.value.sensitivityResultRef ? { sensitivityResultRef: resolved.value.sensitivityResultRef } : {}) }
+      const selection: StoredScenarioSelection = { selectionRef: request.selectionRef, scenarioResultRef: resolved.value.scenarioResultRef, comparisonRef: resolved.value.comparisonRef, ...(resolved.value.sensitivityResultRef ? { sensitivityResultRef: resolved.value.sensitivityResultRef } : {}), ...(resolved.value.advantageComparisonRef !== undefined ? { advantageComparisonRef: resolved.value.advantageComparisonRef } : {}) }
       if (!selection.scenarioResultRef.trim() || !selection.comparisonRef.trim() || (request.viewId === "BI11" && !selection.sensitivityResultRef?.trim())) return { status: "unavailable", reason: "decision-unavailable" }
       const selected = structuredClone(selection)
       const projection = structuredClone(await input.readProjection(selected, context))
@@ -37,6 +37,7 @@ export function bindStoredScenarioBiPort(input: {
       if (projection.value.context.period.start !== request.period.start || projection.value.context.period.end !== request.period.end) return { status: "stale", reason: "period-mismatch" }
       const decision = projection.value.decision
       if (decision?.kind !== "scenario" || decision.scenarioResultRef !== selection.scenarioResultRef || decision.comparisonRef !== selection.comparisonRef || (selection.sensitivityResultRef && (!("sensitivityResultRef" in decision) || decision.sensitivityResultRef !== selection.sensitivityResultRef || !decision.sensitivity)) || (request.viewId === "BI11" && !decision.sensitivity)) return { status: "stale", reason: "decision-reference-mismatch" }
+      if (selection.advantageComparisonRef !== undefined && projection.value.comparison?.comparisonRef !== selection.advantageComparisonRef) return { status: "stale", reason: "advantage-reference-mismatch" }
       const presentationInput = structuredClone(projection.value)
       const presentation = structuredClone(present(presentationInput))
       if (!sameBiProjection(presentationInput, projection.value)) return { status: "stale", reason: "projection-changed-by-presentation" }
