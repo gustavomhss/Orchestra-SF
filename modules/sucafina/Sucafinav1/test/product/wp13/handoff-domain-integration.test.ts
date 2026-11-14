@@ -4,6 +4,7 @@ import { join } from "node:path"
 import { expect, test } from "bun:test"
 import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
 import { createPreparedExecution } from "../../../product/decisions/apply.ts"
+import { applicationAttempts } from "../../../product/decisions/application-attempt.ts"
 import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
 import { proposalReviewDigest, receiptProofTransactionKey, receiptReviewBinding } from "../../../product/decisions/receipt-review-binding.ts"
 import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
@@ -44,7 +45,11 @@ import type { PortfolioHost } from "../../../product/portfolio/port.ts"
 // Admission, case coverage and selection are explicit host seams. Source incarnation,
 // domain projection, previews, commands, SQLite commits, review bindings and receipts
 // use the published producers. No fixture mutation applies a financial value.
-test("portfolio C08 choice resumes after an unconfirmed change and a Procurement precommit storage failure with durable receipts", async () => {
+test("portfolio C08 choice applies two confirmed domain changes with durable receipts and preserves the conditioned choice", () => canonicalHandoff(false))
+
+test("portfolio C08 choice preserves a receipt-required reservation after a real Procurement precommit failure without redispatch", () => canonicalHandoff(true))
+
+async function canonicalHandoff(failBeforeCommit: boolean) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-portfolio-domain-handoff-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
@@ -191,7 +196,7 @@ test("portfolio C08 choice resumes after an unconfirmed change and a Procurement
       environment: () => domains.environment,
       createId: randomUUID, now: () => domains.at, reviewDigestFor,
     })
-    const execution = createPreparedExecution({
+    const executionInput: Parameters<typeof createPreparedExecution>[0] = {
       state, host, apply, reviewDigestFor,
       revalidateProducer: async (request, context) => {
         const change = saved.value!.preparedChanges.find((item) => item.id === request.changeId)
@@ -209,7 +214,8 @@ test("portfolio C08 choice resumes after an unconfirmed change and a Procurement
         const ref: Extract<BusinessEvidenceRef, { kind: "receipt" }> = { schema: "sf-evidence-v1", refId: `receipt-ref-${receipt.id}`, installationId: "install", projectId: "project", refDigest: "", evidenceLevel: "observed", kind: "receipt", target: { surface: receipt.surface, receiptId: receipt.id, idempotencyKey: receipt.idempotencyKey, targetIncarnation: receipt.targetIncarnation, commandDigest: receipt.commandDigest, version: receipt.version } }
         return { state: receipt.result.ok ? "applied" : "conflict", evidence: { ...ref, refDigest: digestSfEvidenceRef(ref) } }
       },
-    })
+    }
+    const execution = createPreparedExecution(executionInput)
     const firstChange = saved.value.preparedChanges[0]!
     const secondChange = saved.value.preparedChanges[1]!
     const firstRequest = { caseRef: { id: decision.id, incarnation: decision.incarnation, version: saved.value.version }, changeId: firstChange.id, choiceId: choice.id }
@@ -250,31 +256,58 @@ test("portfolio C08 choice resumes after an unconfirmed change and a Procurement
     expect(receiptsBeforeFailure.value.receipts).toHaveLength(1)
     expect(receiptsBeforeFailure.value.proofs[1]).toBeUndefined()
 
-    // WP13.T04.CHK.02: the canonical Procurement command runs on the staged
-    // snapshot, then the driver boundary throws before SQLite commits. This is a
-    // transient storage failure, not a CAS conflict or a revoked authorization.
-    domains.fault.procurementPrecommitArmed = true
-    expect(await execution(secondRequest, binding)).toEqual({ status: "unavailable", reason: "domain-application-unavailable" })
-    expect(domains.fault).toEqual({ procurementPrecommitArmed: false, failures: 1, stagedRevision: 1, code: "WP13_TEST_PROCUREMENT_PRECOMMIT_STORAGE_FAILURE" })
-    expect(producerCalls).toEqual(["planner", "procurement"])
-    expect(await domains.snapshots()).toEqual(partialDomains)
-    expect(await amounts()).toEqual([40, 50])
-    expect(await durableReceipts()).toEqual(receiptsBeforeFailure)
-    const afterFailure = await cases.read({ caseRef: caseSelector }, binding)
-    expect(afterFailure).toEqual(partial)
-    expect(await execution(firstRequest, binding)).toEqual(firstExecution)
-    expect(producerCalls).toEqual(["planner", "procurement"])
-    expect(await domains.snapshots()).toEqual(partialDomains)
+    if (failBeforeCommit) {
+      // WP13.T04.CHK.02: the canonical Procurement command runs on the staged
+      // snapshot, then the driver boundary throws before SQLite commits. This is a
+      // transient storage failure, not a CAS conflict or a revoked authorization.
+      domains.fault.procurementPrecommitArmed = true
+      expect(await execution(secondRequest, binding)).toEqual({ status: "unavailable", reason: "domain-application-unavailable" })
+      expect(domains.fault).toEqual({ procurementPrecommitArmed: false, failures: 1, stagedRevision: 1, code: "WP13_TEST_PROCUREMENT_PRECOMMIT_STORAGE_FAILURE" })
+      expect(producerCalls).toEqual(["planner", "procurement"])
+      expect(await domains.snapshots()).toEqual(partialDomains)
+      expect(await amounts()).toEqual([40, 50])
+      expect(await durableReceipts()).toEqual(receiptsBeforeFailure)
+      const afterFailure = await cases.read({ caseRef: caseSelector }, binding)
+      expect(afterFailure).toEqual(partial)
+      expect(await execution(firstRequest, binding)).toEqual(firstExecution)
+      expect(producerCalls).toEqual(["planner", "procurement"])
+      expect(await domains.snapshots()).toEqual(partialDomains)
 
-    // The failed transaction committed neither its domain effect nor its receipt.
-    // Retrying the same WP11 request invokes Procurement again and commits once;
-    // the completed Planner command is recovered from its existing receipt.
+      // WP11 reserves before dispatch. Even this known injected rollback is not
+      // a domain receipt: a new invocation must not infer a permission to retry.
+      const attempts = await state.read(new Request("https://example.test"), "cases", (productState) => applicationAttempts(productState, secondRequest))
+      if (attempts.status !== "ok") throw new Error(`Durable application reservation: ${JSON.stringify(attempts)}`)
+      expect(attempts.value).toHaveLength(1)
+      expect(attempts.value[0]?.value).toMatchObject({ schema: "sf-decision-application-attempt-v1", state: "receipt-required", changeId: secondChange.id, choiceId: choice.id, reviewBinding: receiptReviewBinding(secondChange, reviews.get(secondChange.id)!), principalRef: "principal" })
+      const unresolved = { status: "unavailable", reason: "application-indeterminate-reconciliation-required" }
+      expect(await execution(secondRequest, binding)).toEqual(unresolved)
+      // A reconstructed executor sees the same durable reservation; the missing
+      // authoritative receipt never turns into an in-memory retry allowance.
+      expect(await createPreparedExecution(executionInput)(secondRequest, binding)).toEqual(unresolved)
+      expect(producerCalls).toEqual(["planner", "procurement"])
+      expect(domains.fault.failures).toBe(1)
+      expect(await domains.snapshots()).toEqual(partialDomains)
+      expect(await amounts()).toEqual([40, 50])
+      expect(await durableReceipts()).toEqual(receiptsBeforeFailure)
+      expect(await state.read(new Request("https://example.test"), "cases", (productState) => applicationAttempts(productState, secondRequest))).toEqual(attempts)
+      expect(await cases.read({ caseRef: caseSelector }, binding)).toEqual(partial)
+      expect(partial.value.case.state).toBe("partially-applied")
+      expect(partial.value.case.preparedChanges.map((change) => change.state)).toEqual(["applied", "planned"])
+      expect(partial.value.case.receipts).toHaveLength(1)
+      expect(partial.value.case.choices).toEqual([choice])
+      expect(partial.value.case.choices[0]?.comparison?.completeDifference).toBeNull()
+      expect(await mutations.recordChoice(choiceRequest, binding)).toEqual(chosen)
+      return
+    }
+
+    // The successful branch proves both real domain applications. The failure
+    // branch above retains a partial case instead of manufacturing a receipt.
     const secondExecution = await execution(secondRequest, binding)
     if (secondExecution.status !== "ok") throw new Error(`Procurement canonical application: ${JSON.stringify(secondExecution)}`)
     expect(secondExecution.value).toMatchObject({ surface: "procurement", result: { ok: true }, version: 1 })
     expect(await amounts()).toEqual([40, 60])
-    expect(producerCalls).toEqual(["planner", "procurement", "procurement"])
-    expect(domains.fault.failures).toBe(1)
+    expect(producerCalls).toEqual(["planner", "procurement"])
+    expect(domains.fault.failures).toBe(0)
     const completed = await cases.read({ caseRef: caseSelector }, binding)
     if (completed.status !== "ok") throw new Error(`Completed case: ${JSON.stringify(completed)}`)
     expect(completed.value.case.state).toBe("applied")
@@ -294,7 +327,7 @@ test("portfolio C08 choice resumes after an unconfirmed change and a Procurement
     confirmations.apply.clear()
     expect(await execution(secondRequest, binding)).toEqual(secondExecution)
     expect(await execution(firstRequest, binding)).toEqual(firstExecution)
-    expect(producerCalls).toEqual(["planner", "procurement", "procurement"])
+    expect(producerCalls).toEqual(["planner", "procurement"])
     expect(await domains.snapshots()).toEqual(official)
     expect((await cases.read({ caseRef: caseSelector }, binding))).toEqual(completed)
     const durable = await state.read(new Request("https://example.test"), "receipts", (productState) => ({ receipts: Object.values(productState.receipts), proofs: saved.value!.preparedChanges.map((change) => productState.transactions[receiptProofTransactionKey("principal", change.target.id, change.idempotencyKey)]), comparison: productState.decisionResults?.[comparisonRecord.value.resultRef], scenario: productState.decisionResults?.[scenarioResults[1]!] }))
@@ -310,7 +343,7 @@ test("portfolio C08 choice resumes after an unconfirmed change and a Procurement
     await store.dispose()
     await rm(directory, { recursive: true, force: true })
   }
-})
+}
 
 async function canonicalDomains(store: Awaited<ReturnType<typeof openLocalStore>>) {
   const at = "2027-01-01T00:00:00Z"
@@ -351,11 +384,12 @@ async function canonicalDomains(store: Awaited<ReturnType<typeof openLocalStore>
     snapshot.versions["requests:PR-1"] = { version: 0, by: "principal" }
     return { commit: true, value: true }
   })
+  const admittedRequest = new Request("https://example.test/controlled-domain-admission")
   const host: DomainPortHost = {
     persistence,
     authenticate: async (_request, scope) => ({ id: "principal", canWrite: true, roles: [{ surface: scope?.surface ?? "procurement", role: scope?.surface === "planner" ? "finance" : "requester" }] }),
     environment: async () => environment,
-    requestFor: () => new Request("https://example.test/controlled-domain-admission"),
+    requestFor: () => admittedRequest,
     revalidate: async (context) => context.kind === "ui" && context.binding.installationId === "install" && context.binding.projectId === "project" && context.binding.principalRef === "principal" && context.binding.accessRevision === "access" && context.binding.policyVersion === "policy",
   }
   const unavailable = async () => ({ status: "unavailable" as const, reason: "outside-this-fixture" })

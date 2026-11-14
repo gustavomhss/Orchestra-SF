@@ -1,11 +1,13 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessContextService } from "../contracts/business-context.ts"
-import type { DecisionCasePort, DomainPortHost, PortResult } from "../contracts/ports.ts"
+import type { DecisionCasePort, PortResult } from "../contracts/ports.ts"
 import type { SfStoredDecisionResult } from "../contracts/state.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { parseCaseRef } from "../decisions/case-port.ts"
 import type { PortfolioBinding } from "../decisions/portfolio-bindings.ts"
 import type { createPortfolioCandidateHistoryReader } from "./proof.ts"
+import { readPortfolioSnapshot } from "./read-snapshot.ts"
+import type { PortfolioReadHost } from "./read-snapshot.ts"
 
 export function createPortfolioHistoricalProvenance(input: {
   readHistoricalBinding: (request: { caseRef: { id: string; incarnation: string; version: number }; resultRef: string }, context: TrustedDomainContext) => Promise<PortResult<{ binding: PortfolioBinding; selection: unknown }>>
@@ -13,9 +15,9 @@ export function createPortfolioHistoricalProvenance(input: {
   cases: DecisionCasePort
   readHistoricalCandidate?: ReturnType<typeof createPortfolioCandidateHistoryReader>
   evidence: BusinessContextService
-  host: Pick<DomainPortHost, "revalidate">
+  host: PortfolioReadHost
 }) {
-  return async (incoming: SfStoredDecisionResult, context: TrustedDomainContext) => {
+  const read = async (incoming: SfStoredDecisionResult, context: TrustedDomainContext) => {
     const stored = structuredClone(incoming)
     const storedDigest = digestSfValue(stored)
     if (stored.kind !== "portfolio" || !stored.resultRef.trim() || !stored.requestDigest.trim() || !stored.resultDigest.trim() || !stored.sourceRefs.length) return false
@@ -67,4 +69,5 @@ export function createPortfolioHistoricalProvenance(input: {
     const second = await inspect()
     return !!second && digestSfValue(first) === digestSfValue(second) && await input.host.revalidate(context).catch(() => false) && digestSfValue(incoming) === storedDigest
   }
+  return (incoming: SfStoredDecisionResult, context: TrustedDomainContext) => readPortfolioSnapshot(input.host, context, incoming, () => read(incoming, context), false)
 }

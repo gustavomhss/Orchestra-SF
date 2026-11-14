@@ -1,0 +1,63 @@
+name: Finance resume scoped checks
+
+on:
+  push:
+    branches: [astra-check-fresume]
+
+permissions:
+  contents: read
+
+jobs:
+  finance-checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact product commit
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Record product and guard base
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git merge-base --is-ancestor ec052c2c3bef96f492512f3d5f663919580f25c8 HEAD
+          git fetch --no-tags origin dev:refs/remotes/origin/dev
+          export SF_FINANCE_RESUME_CHECK_EVIDENCE="$RUNNER_TEMP/finance-resume-evidence"
+          echo "SF_FINANCE_RESUME_CHECK_EVIDENCE=$SF_FINANCE_RESUME_CHECK_EVIDENCE" >> "$GITHUB_ENV"
+          mkdir -p "$SF_FINANCE_RESUME_CHECK_EVIDENCE"
+          node --input-type=module <<'NODE'
+          import { execFileSync } from 'node:child_process'
+          import { writeFileSync } from 'node:fs'
+          const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim()
+          const source = { productSha: process.env.GITHUB_SHA, productTree: git('rev-parse', 'HEAD^{tree}'), guardBase: git('rev-parse', 'origin/dev'), mergeBase: git('merge-base', 'HEAD', 'origin/dev'), recovery: 'ec052c2c3bef96f492512f3d5f663919580f25c8' }
+          writeFileSync(process.env.SF_FINANCE_RESUME_CHECK_EVIDENCE + '/source.json', JSON.stringify(source, null, 2) + '\n')
+          process.stdout.write(JSON.stringify(source) + '\n')
+          NODE
+      - name: Setup Bun
+        id: setup
+        uses: ./.github/actions/setup-bun
+      - name: Typecheck Sucafina package
+        if: always() && steps.setup.outcome == 'success'
+        working-directory: modules/sucafina
+        run: |
+          set -o pipefail
+          bun typecheck 2>&1 | tee "$SF_FINANCE_RESUME_CHECK_EVIDENCE/typecheck.log"
+      - name: Guardrails against origin/dev
+        if: always() && steps.setup.outcome == 'success'
+        run: |
+          set -o pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$SF_FINANCE_RESUME_CHECK_EVIDENCE/guards.log"
+      - name: Upload exact check evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: finance-resume-checks-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/finance-resume-evidence
+          if-no-files-found: error
+          retention-days: 14
+
+

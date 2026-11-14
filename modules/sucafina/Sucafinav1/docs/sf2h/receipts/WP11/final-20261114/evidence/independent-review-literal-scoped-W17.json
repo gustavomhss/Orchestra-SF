@@ -1,0 +1,60 @@
+{
+  "schema": "wp11-independent-literal-scoped-review-v1",
+  "reviewedAtUtc": "2026-11-14T13:23:29.315254+00:00",
+  "proposal": {
+    "path": "requirements/literal-scoped-proposal-W17.json",
+    "sha256": "e0460f0004671a51a1364a5716592747ad72a1e619c74e21bb7d8ed10279659e"
+  },
+  "result": "NO_STATIC_BLOCKER_WITH_DECLARED_SCOPE",
+  "criterionCount": 12,
+  "criteria": [
+    "WP11.DOD.01",
+    "WP11.INV.01",
+    "WP11.INV.20",
+    "WP11.CMP.20",
+    "WP11.T02.INV.01",
+    "WP11.T02.INV.20",
+    "WP11.T02.CMP.20",
+    "WP11.T02.CHK.21",
+    "WP11.T03.CHK.20",
+    "WP11.T03.CHK.03",
+    "WP11.T04.CHK.01",
+    "WP11.T04.QLT.01"
+  ],
+  "checks": [
+    "Compared every clause mapping with the retained hosted fact assertions and their explicit limits; reviewed real source assertions for renewal-choice-history, composite-coverage, renewal-implementation-quote, coverage-access and application-indeterminate.",
+    "H7 is a same-case source-only complete observation after separately confirmed quote, not conversion of the original three hypothetical operations to facts; original choice and its coverage remain immutable.",
+    "Current-choice lifecycle promotion creates a revised alternative, not a new ChoiceRecord. Subsequent-choice claims require the separate B1B source observations.",
+    "T04 recovery is service/C08/HTTP exposure, not installed UI rendering. Receipt-only effects and restricted receipt denial are explicitly exercised.",
+    "DOD01 restart closes the original writer/UI before the collaborator reader; the earlier simultaneous second connection is not used as the sole restart proof.",
+    "References to financial effect -10000 must remain expressed as advantage/savings, while alternative-minus-baseline cost difference is +10000. The proposed clause text already labels the observation advantage where ambiguity matters."
+  ],
+  "qualificationRequired": [
+    "Source executions retain their original product SHA, snapshot and run IDs.",
+    "Candidate qualification must use byte identity or the separately reviewed unchanged symbols plus completed relevant focused regressions; no automatic status promotion from this review.",
+    "Installed UI, native/MCP, resident/global gates, formal Procurement awaiting-approval and broader named consumers remain unestablished."
+  ],
+  "specificBoundaryNotes": [
+    {
+      "criteria": [
+        "WP11.T02.CHK.21",
+        "WP11.T03.CHK.20"
+      ],
+      "note": "250000 complete belongs to the new operations:[] observation; current-choice replay with three hypothetical operations remains conditioned/total:null despite complete coverage."
+    },
+    {
+      "criteria": [
+        "WP11.T02.INV.20"
+      ],
+      "note": "Tax category treatment is explicit supported N/A/inventory classification, not a tax calculation or business confirmation."
+    },
+    {
+      "criteria": [
+        "WP11.T04.QLT.01"
+      ],
+      "note": "not-attempted is observed directly at service boundary; receipt-required/reconciled and private denial also have HTTP assertions. Do not imply every variant has an installed screen."
+    }
+  ],
+  "localProductExecution": false,
+  "repositoryWrites": false
+}

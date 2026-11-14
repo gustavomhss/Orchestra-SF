@@ -1,0 +1,2381 @@
+{
+  "schema": "sf2h-finance-resume-additive-criteria-v1",
+  "wp": "WP05",
+  "date_utc": "2026-11-14",
+  "scope": "WP03/WP05 contribution to finance-resume; updated additive map over unchanged PR35 evidence. Other financial work packages have separate receipts.",
+  "canonical_plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "pack_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+  "baseline_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+  "canonical_criterion_count": 108,
+  "criterion_count": 108,
+  "inherited_receipt": {
+    "commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+    "git_blob": "7996b5467f8d3078614663b6afa055b086ea57d0",
+    "sha256": "9aeee98a9a1abcb6dffd232a1c39aa7548f75738e4f180ebaf52cea69e5d5457",
+    "bytes": 649323
+  },
+  "row_digest_encoding": "SHA256 of UTF-8 JSON with sorted keys, ensure_ascii=false, compact separators and no trailing newline; all array orders preserved.",
+  "evidence_precedence": "This file adds source/implementation observations only. The exact inherited receipt and rows remain authoritative for their recorded execution pins. New Actions outcomes must be attached with their own product/snapshot identities; they do not rewrite earlier failures.",
+  "summary": {
+    "historical_classifications_only": {
+      "PARTIAL": 22,
+      "VERIFIED_SCOPED": 49,
+      "BLOCKED_EXTERNAL": 37
+    },
+    "new_implementation_branches_pending_actions": 0,
+    "source_inspection_annotated_criteria": 25,
+    "not_accepted": 108,
+    "accepted": 0
+  },
+  "integrated_acceptance": false,
+  "ready": false,
+  "done": false,
+  "observation_receipt": "consumer-reconciliation.json",
+  "criteria": [
+    {
+      "criterion_id": "WP05.DOD.01",
+      "criterion": "Os oito gráficos têm pergunta explícita, eixos/unidades, fonte C02, comportamento de ausência e drilldown exportado, com evidências verificáveis para cada um.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/0",
+        "row_sha256": "b53320d278cfde1ae3685bc046b63167047c476bfe486ac8f28b7b83b9edc797",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.DOD.02",
+      "criterion": "Os gráficos são consumidores do C02 real: o pacote não calcula salários, OPEX/CAPEX, alçadas, ranking, aging ou métricas de tickets a partir de dados brutos.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/1",
+        "row_sha256": "8985fb83ee1b25ddadbab7a89b594e4e82b2bec1d86b7de299e75cfb5668a242",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-01"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.DOD.03",
+      "criterion": "A entrega inclui tabela equivalente, operações por teclado e recibo de filtros/referências; WP10 verifica os gráficos nos entrypoints comuns com os produtores reais.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/2",
+        "row_sha256": "2767559c523b04a3b046a5253b63a181c7541bc53dc1157fb42c9e02146b3c19",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-03",
+          "BI-LIMIT-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.DOD.04",
+      "criterion": "Oito perguntas analíticas originais e três perguntas de decisão funcionam com o motor canônico, suas fontes e tabelas equivalentes; não basta renderizar novos gráficos vazios.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/3",
+        "row_sha256": "b317e75103c26d4961a2a275de4e304ec9b3d6a73979e92051dddaf21717c195",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-01",
+          "BI-LIMIT-01",
+          "BI-LIMIT-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.DOD.20",
+      "criterion": "BI e tabela consomem coverage/result refs reais junto às marcas.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/4",
+        "row_sha256": "99fb4bae68d5bfbb0d85ad63bffbb9065ec431b501c94a564eb82a70194f324f",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-02",
+          "BI-CONSUMER-03"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.DOD.10",
+      "criterion": "As entregas residentes atribuídas a WP05 têm produção, consumo e provas reais completos.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/5",
+        "row_sha256": "b84d6bfdc0bb60e65833e16cd567ca646bb3a82aa4ced60d31cb824b98d0da5a",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.INV.01",
+      "criterion": "A mesma seleção contextual do domínio produz os mesmos valores no gráfico e no detalhe; moeda, período, versão e recorte autorizado não mudam silenciosamente no drilldown.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/6",
+        "row_sha256": "3c4f9d1cd3f46e121200a8e8f5d54abfea68542ed4101f68dc1c317fb5e01702",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-02",
+          "BI-CONSUMER-03"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.INV.02",
+      "criterion": "Ausente não é zero, estoque não é funil/coorte, prazo planejado não é conclusão real e idade sem evento comprovado não é duração conhecida.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/7",
+        "row_sha256": "c770fb71c21ff60ce189717efa51d854751a175463f44b1fcdd9c17618065a72",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.INV.03",
+      "criterion": "Componentes financeiros são os fornecidos por C02; diferenças não reconciliadas ficam visíveis e não são escondidas por uma parcela de ajuste criada no BI.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/8",
+        "row_sha256": "f6c356f4ace121f08c08d39edbf971edabb88369a6a60ada98d89e96ddc08c47",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-01",
+          "BI-CONSUMER-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.INV.20",
+      "criterion": "Gráfico não calcula completude nem converte lacuna em zero, ganho confirmado ou ajuste residual.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/9",
+        "row_sha256": "23aecfcc8a7871a98ad4e77e711a72b9fab2a5cc9b28225aca21fccaf9bb1359",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.INV.10",
+      "criterion": "WP05 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/10",
+        "row_sha256": "693c1c8b587fdf96b5446fb07511340942a09dfc62a7f75fd3620ca359d9ee09",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.QLT.01",
+      "criterion": "Cada gráfico permite responder uma pergunta concreta sem depender apenas de cor, hover ou memória da escala.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/11",
+        "row_sha256": "3da9c7cee9f40643acdd9868c207f8ff3e7f329b6933048a719f905120c46144",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.QLT.02",
+      "criterion": "Sinais, unidades, eixos, arredondamento e granularidade ficam claros; FTE e moeda usam painéis alinhados em vez de um eixo duplo que sugira equivalência.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/12",
+        "row_sha256": "02a6ace622b4c461ad0510c60a4059ce1ec298dbced20601b6c3fb171f1efb02",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.QLT.03",
+      "criterion": "Estados vazio, parcial, indisponível e restrito são distintos e não inventam números para preencher espaço.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/13",
+        "row_sha256": "1e1bdc3af7c80c848125e9faef3b9f02c229e1ceb8c367d7dc21ef114f55683b",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-01",
+          "BI-LIMIT-01"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.QLT.20",
+      "criterion": "Rótulo de condicionado acompanha valor/limiar e a lista acessível explica categorias sem quantificação.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/14",
+        "row_sha256": "a3eb9785da98499dfc378787079216130e56432cd712ae67aa9ef8e180a4e8dd",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.QLT.10",
+      "criterion": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/15",
+        "row_sha256": "b9133c72fa58eceac46654d12b4a355c60cf1ed2813e484639d1fcd5de3e1cdb",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.CMP.01",
+      "criterion": "Cobrir os oito gráficos, seus filtros e caminhos de drilldown, incluindo dados parciais, negativos, nulos e séries/tempos indisponíveis.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/16",
+        "row_sha256": "dca04e1ec07530651304bb8b98d32f8635605125fee954bb29a326c5e7c1dfb4",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.CMP.02",
+      "criterion": "Cobrir navegação por teclado, tabela equivalente, foco/retorno e contexto de dados restritos em cada par de gráficos.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/17",
+        "row_sha256": "91beba7a1ebdc776faefa41062a6cbeefb57a73a1ae664b72a61fae22d58eb8c",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.CMP.03",
+      "criterion": "Identificar o produtor C02 e a referência de origem de cada marca ou agregado; fixtures de contrato não substituem a prova final com consumidores reais.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/18",
+        "row_sha256": "816b384f8966f3598e8e006202b60a6c2a141a04871873fbab4af320f0fb5cbd",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-01",
+          "BI-LIMIT-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.CMP.04",
+      "criterion": "Oito perguntas analíticas originais e três perguntas de decisão funcionam com o motor canônico, suas fontes e tabelas equivalentes; não basta renderizar novos gráficos vazios.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/19",
+        "row_sha256": "98d698f67e001a2155473343667f14f9f17ee65e14f765373ccbfab4cac36815",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-LIMIT-01",
+          "BI-LIMIT-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.CMP.20",
+      "criterion": "Cobrir omissão inteira, pending, zero confirmado, fonte restrita e atualização que inverte a diferença.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/20",
+        "row_sha256": "52be643ef62c22d69281fcedbe2795c7464c925c65ce36a8cf494ac044489efa",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.CMP.10",
+      "criterion": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/21",
+        "row_sha256": "bda4b32c6a4b59ebe8d208ef121083d0939918986023c4e8be00fdee82506420",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.SUC.01",
+      "criterion": "Nos roteiros, o usuário identifica desvio, contribuição, capacidade ou pendência e abre os registros que explicam o resultado sem refazer filtros.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/22",
+        "row_sha256": "51a05338ab7a45b728a97196168700af4182b0731ace58e6956edd97779500d2",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.SUC.02",
+      "criterion": "Mudar os valores projetados pelo domínio muda as marcas correspondentes; inserir um cálculo divergente, zero fictício ou registro fora do recorte faz uma verificação falhar.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/23",
+        "row_sha256": "ea02aed1ee5cc54ddd0d5fef387634cba78f9d0f3b100408cab3a6522bb6d6d7",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.SUC.03",
+      "criterion": "Oito visualizações funcionam com dados disponíveis e degradam honestamente quando o C02 não suporta uma série, componente ou data.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/24",
+        "row_sha256": "809eb1be2bb69f940428609de025605a13c1a88ad575222f312cadbdae0bcfff",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.SUC.20",
+      "criterion": "Usuário encontra a categoria que muda a comparação e abre sua origem com o mesmo contexto.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/25",
+        "row_sha256": "f95c1aebe160b0f4cea29012172959f474401cb5967374d3ac381bc34e7200d1",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-03",
+          "BI-LIMIT-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.SUC.10",
+      "criterion": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/26",
+        "row_sha256": "da60168b9f09dfed0de8d368845e01e6cd4dda72f1867792db15d8bf8fbb86a8",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T01.DOD.01",
+      "criterion": "Trajetória e waterfall estão exportados com tabela equivalente e produtor C02 identificável.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/27",
+        "row_sha256": "663eae172cdf6b1f20492aec51f2937dcd96d0ecffefcbb5bbd3d28c1f681608",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T01.DOD.02",
+      "criterion": "Granularidade, lacunas e reconciliação têm resultados esperados e falhas demonstráveis.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/28",
+        "row_sha256": "140bf0a7e382480aad28fd50aff44ad2c6a7e3ab296cdf98cdd647dd36fcac74",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T01.INV.01",
+      "criterion": "Nenhum mês, realizado ou contribuição é fabricado para completar a visualização.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/29",
+        "row_sha256": "fe85870108729f4d6618ebd434e1af03e28aacf990d25e93f025ee7a0409418e",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T01.INV.02",
+      "criterion": "O waterfall usa valores de domínio e não recalcula a semântica do cenário.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/30",
+        "row_sha256": "cda5cb77278c608ffa46ae389908af73eb543ac26cc0943bdc6c602de144d42e",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T01.QLT.01",
+      "criterion": "Competência, moeda, referência e cenário ficam legíveis na própria visualização.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/31",
+        "row_sha256": "4e7cdacdbfb76a9c10638c0447e7b368a42706c04f1a2aadf89addde06a5d483",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T01.QLT.02",
+      "criterion": "Lacunas e contribuições negativas preservam significado em cor e texto.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/32",
+        "row_sha256": "714ad334f60fa863abb06d29382664c77dd65a616ae337f8b39f1cc4b94b9d97",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T01.CMP.01",
+      "criterion": "Cobrir trajetória completa/parcial/anual e waterfall com aumentos, reduções, zero e falha de reconciliação.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/33",
+        "row_sha256": "f78b131e9bee391b0e5abd3ecb1e53216127b2e608a4958e5d7c33d4ae1a269c",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T01.CMP.02",
+      "criterion": "Cobrir seleção por mouse/teclado e equivalência entre marcas e tabela.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/34",
+        "row_sha256": "a3ddcd275f1d2fd7c05f39409ac3a201fe0367e5c55c4f5054d0dc6acb1fd3e3",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T01.SUC.01",
+      "criterion": "O usuário distingue o que é orçamento, realizado disponível e outlook sem tratar previsão como realizado.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/35",
+        "row_sha256": "af6b293a2e96f368a629584b228220106a7fc71fd007a472ce1ddf9be8de7291",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T01.SUC.02",
+      "criterion": "O usuário explica o delta de um cenário por seus componentes e acessa sua origem com o contexto preservado.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/36",
+        "row_sha256": "e27ef0d1c86fb3ddc3cf815b52e014b9d5afbb4cb7c7555af70bd3c9512ce865",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T01.CHK.01",
+      "criterion": "Receber apenas total anual sem distribuição mensal: a trajetória não gera 12 pontos por divisão/interpolação; informa granularidade disponível e não aparenta conhecer um perfil mensal.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/37",
+        "row_sha256": "efbbd32b2dfb3548c07d35ac341b26412796c1fc045c9efd0656b09eb7ab506b",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T01.CHK.02",
+      "criterion": "Dado actual desconhecido em uma competência e zero confirmado em outra: o primeiro produz lacuna/indisponibilidade, o segundo marca zero; os dois casos não compartilham tooltip/representação.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/38",
+        "row_sha256": "163072851c4315348561fa720d60d610827d019a2ba42303972fec26b815eb69",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T01.CHK.03",
+      "criterion": "Usar cenário C02 com referência 100, contribuições +20 e -5 e final 115: waterfall termina em 115 e cada seleção preserva seu componente; trocar o final para 116 deve sinalizar não reconciliação, não criar '+1 ajuste'.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/39",
+        "row_sha256": "a452f46e77abfd5ce8404119e24c7dd91b7d487af92c5b426cae273b588801da",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T01.CHK.04",
+      "criterion": "Alterar moeda, competência ou versão entre contexto e projeção: o gráfico recusa a mistura ou apresenta grupos explicitamente separados conforme C02, sem sobrepor valores incompatíveis.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/40",
+        "row_sha256": "ce59796420b5eb6f01fc8ed3bb38a29a96b34f1ddff7bfce0ac520ee8a7b7633",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T01.CHK.05",
+      "criterion": "Abrir uma contribuição por teclado: destino recebe a referência e os filtros exatos e retorna mantendo foco; componente sem autorização nunca aparece no gráfico ou na tabela.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/41",
+        "row_sha256": "57ba566a3a099643484767a83c5484ee1a3d2aa296f54933cd45071d05229049",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T02.DOD.01",
+      "criterion": "Contribuições e FTE/custo estão exportados com eixos, unidades, tabelas e referências reais.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/42",
+        "row_sha256": "a029dbb3dac4fda45bae37707b28ba4190d47c5926ef3d49fb6432fadfa5d994",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T02.DOD.02",
+      "criterion": "A entrega documenta a origem de agrupamentos e o tratamento de componentes restritos/ausentes.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/43",
+        "row_sha256": "c620d248184f253091aec3d7fb6ab0af8e8e934019738a1db0d11d03668a36a3",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T02.INV.01",
+      "criterion": "Sinal da contribuição e unidade de cada medida não são alterados por ordenação ou formatação.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/44",
+        "row_sha256": "8b5c342c67ec4de0d56f0ad00e5d7c7250297eb7966421fa093ae18e87ab0844",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T02.INV.02",
+      "criterion": "FTE e custo permanecem medidas distintas e os dados pessoais ausentes do C02 não são reconstruídos.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/45",
+        "row_sha256": "6d55926572fc8b0fd47d49db7bc62c2bcc82c4c355775696c1e48bb9dec287ad",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T02.QLT.01",
+      "criterion": "As maiores contribuições positivas e negativas são comparáveis sem um gráfico visualmente dominado por valores absolutos.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/46",
+        "row_sha256": "22529167c1bcc53280b03cff4a8ef36fe644e468108333cad73b2527415a21dd",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T02.QLT.02",
+      "criterion": "Painéis alinhados mostram o mesmo recorte e usam escalas explícitas sem eixo duplo enganoso.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/47",
+        "row_sha256": "e88f46c2d9dbdf2189f3ce645516cc0bd0c50149773fb74f53f2d99272c5c3d5",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T02.CMP.01",
+      "criterion": "Cobrir positivos, negativos, zero, desconhecido, Top N parcial e agrupamento reconciliado.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/48",
+        "row_sha256": "ffebe69b4e0619f45c5c7938fdd806dc7561fd7ca9a50b012ba9cba1e33ccf0f",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T02.CMP.02",
+      "criterion": "Cobrir recorte agregado e restrito, filtro conjunto e drilldown autorizado dos dois painéis.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/49",
+        "row_sha256": "d6cfc754cb56dfa87deeb76efe06420187e5f5d6fb9a2a092717a5ff283e7da1",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T02.SUC.01",
+      "criterion": "O usuário localiza quem aumenta e quem reduz o desvio e consegue abrir o componente correspondente.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/50",
+        "row_sha256": "a51ac72a9545e5f5c796913eec49c0845b2aad746eca00b122d059e514f4df06",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T02.SUC.02",
+      "criterion": "O usuário compara capacidade e custo sem inferir produtividade ou custo unitário que o domínio não fornece.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/51",
+        "row_sha256": "7211bd7bf7f138b15ad138fa53a073392c63a8cb3e8ec7356247de93f21e046b",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T02.CHK.01",
+      "criterion": "Projetar contribuições +40 e -30: mostrar ambas com sinais corretos e delta 10 somente quando fornecido/reconciliado pelo C02; usar valor absoluto ou omitir a contribuição negativa deve falhar.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/52",
+        "row_sha256": "49f5767723fdf622feda0ce1e030f0a62e0f78615a52a3fff96dc62178f201cd",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T02.CHK.02",
+      "criterion": "Receber Top N sem agregado do restante: não apresentar o subtotal como total; com 'outros' C02, a marca e o drilldown preservam os componentes definidos pelo produtor.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/53",
+        "row_sha256": "cd7a9d9b563b62e9f32efd22c8b996645e42ae65d704fc9270467062f87822ab",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T02.CHK.03",
+      "criterion": "No mesmo recorte, FTE confirmado como zero e custo ausente: mostrar zero de FTE e custo indisponível, sem converter nenhum deles no outro ou presumir custo zero.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/54",
+        "row_sha256": "c0ce5dc2c241c0c17a18dd351877e7b69d1e5838f6240df74025f23412a44134",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T02.CHK.04",
+      "criterion": "Aplicar um filtro/período: ambos os painéis usam o mesmo contexto, mantendo unidades e escalas separadas; nomes/custos pessoais removidos pelo C02 não podem aparecer em tooltip, tabela ou referência.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/55",
+        "row_sha256": "76755e798a998a854f8e91bb46bbc8f9b5c5cd9b3c50925801e9c7d462b51b69",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T02.CHK.05",
+      "criterion": "Navegar categoria por teclado e abrir detalhe: manter grupo, período, moeda, versão e retorno de foco; nenhuma seleção depende exclusivamente de hover.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/56",
+        "row_sha256": "1d2c9868b7a2410621b7aaa6da93f996dbc6063cfc5647a36bc7ec5f1f662daa",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T03.DOD.01",
+      "criterion": "Estoque e aging consomem as projeções reais de Procurement e têm drilldown para os pedidos correspondentes.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/57",
+        "row_sha256": "e010e71974a6ac9de291765bdb718c9e2e0071381c5354a28c6b7a74ae184242",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T03.DOD.02",
+      "criterion": "Estoque/coorte e idade comprovada/indisponível estão diferenciados na UI e nas contraprovas.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/58",
+        "row_sha256": "308b71f64754b37aa3f2bf53bde06f58d26febb7c585d0260511b097c094ace6",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T03.INV.01",
+      "criterion": "A quantidade em etapas atuais não é convertida em taxa de conversão, abandono ou produtividade.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/59",
+        "row_sha256": "54d7488410515d80525511939edec0da24c1e2c3b885df553913f9980518bf39",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T03.INV.02",
+      "criterion": "Analytics não inventa idade nem exclui do universo os pedidos sem evento confiável.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/60",
+        "row_sha256": "672ce8f4defac6c7973925a7d613c73861e187a8ee44c0daa4ab36e2da79f5cc",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T03.QLT.01",
+      "criterion": "Título e legenda deixam claro que a primeira visualização é estoque e a segunda é tempo na etapa.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/61",
+        "row_sha256": "e40d34727f1dcb3a164fc95edf71a6d32f1c2659f634ec059b6967d26f9b2ae9",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T03.QLT.02",
+      "criterion": "Responsável desconhecido, idade indisponível e prazo informado são distinguíveis sem uso exclusivo de cor.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/62",
+        "row_sha256": "b4bb13f6eadc5f722cd53c806609c827f00af7a75103b490e154404e984629b9",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T03.CMP.01",
+      "criterion": "Cobrir todas as etapas abertas e aprovações, holder ausente, rejeição/ressubmissão e histórico insuficiente.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/63",
+        "row_sha256": "16d24d4c1b2fec6a459001c27c61b1e90bea3e247c44183bf10b536eb3905e18",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T03.CMP.02",
+      "criterion": "Cobrir filtros por papel e reconciliação entre agregado, pontos e lista autorizada.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/64",
+        "row_sha256": "13455bdd11ac6b70e5a96b44776078628d12809c65aaefad0b26401485387916",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T03.SUC.01",
+      "criterion": "O gestor identifica concentração de trabalho e abre seus pedidos sem inferir uma conversão inexistente.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/65",
+        "row_sha256": "5f86ed2768a50b511aa5b5d4b670996fead2e3efc782914570f755d86f6d26df",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T03.SUC.02",
+      "criterion": "O aprovador encontra o pedido mais antigo dentre os tempos comprovados e vê quantos não podem ser comparados.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/66",
+        "row_sha256": "643dcd52373844d034b07815fb1b14ba931f8e0f7f486683de1f5e6813a1d4da",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T03.CHK.01",
+      "criterion": "Dado estoque com 7 PRs, 2 sourcings e 3 POs distintos: mostrar contagens atuais sem taxas entre barras, abandono ou conversão; rejeição/retorno muda a etapa de um pedido sem criar uma coorte histórica.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/67",
+        "row_sha256": "38cf6a4f48123ea6875bd0f6fca8c7bfdc23635c0efdf08b5f7f9ec9f6ef0fca",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T03.CHK.02",
+      "criterion": "Receber do C02 pedido ressubmetido há 2 dias e salvo hoje: aging continua 2 dias; analytics não recalcula pelo save nem lê o histórico bruto.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/68",
+        "row_sha256": "1b2178885731e0935194d133f8e70f2b0ed3864e05d4208bf2acf5239275f4f7",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T03.CHK.03",
+      "criterion": "Dois pedidos sem entrada comprovada: ambos aparecem no grupo 'idade indisponível' e no denominador autorizado; não entram em zero dias ou numa média fabricada.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/69",
+        "row_sha256": "2021bb1cb62fb9d5fba262a085a5014779fa61eb2e0e528dae242b24dd14113e",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T03.CHK.04",
+      "criterion": "Filtrar por requester restrito: contagem das barras, pontos e tabela corresponde exatamente aos pedidos visíveis no domínio; pedido alheio não vaza por agregado ou drilldown.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/70",
+        "row_sha256": "4e0eab2a02f8172806ea32e4d8c49672a8bc7a4278c463eb1a1d9879c312259b",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T03.CHK.05",
+      "criterion": "Clicar numa etapa e depois num pedido mantém o filtro e abre a referência correta; linha de SLA só existe se recebida com política/origem explícita, não pelo mero uso de uma cor vermelha.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/71",
+        "row_sha256": "4148366cbda6317d9c074735a877062d7b59f0df6d146c8f9f339b0c3ae35abc",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.DOD.01",
+      "criterion": "Tickets e agenda estão exportados e o catálogo identifica os oito gráficos, produtores e destinos reais.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/72",
+        "row_sha256": "227a6a5676c3e54021b2ba58cc3c43d8cfe110cd34f80f42673c0094cc0a7f72",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.DOD.02",
+      "criterion": "O recibo de interação/ausência/restrição permite a WP10 verificar composição sem descobrir contratos novos.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/73",
+        "row_sha256": "c3487dffcf1de879034ea939fbf7b3fd384c1a636bba6288a15db5cea7213897",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-01",
+          "BI-CONSUMER-03",
+          "BI-LIMIT-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.DOD.18",
+      "criterion": "Descritores C16 de sf_bi_view são implementados e consumidos por T06 com referências reais.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/74",
+        "row_sha256": "0083db1ae8fc75654756f8fc03672fba7f7df2d319774c1d86205f4d8035fef5",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.INV.01",
+      "criterion": "Fotografia atual não se transforma em histórico de tickets e data planejada não se transforma em conclusão.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/75",
+        "row_sha256": "e915cc57e091a95dc420b1a2dacad0eeee9eaaf2d7eeab7644cf8e867ea79b00",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.INV.02",
+      "criterion": "Nenhum marco sem data recebe data artificial e nenhuma fonte restrita é recuperada fora do C02.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/76",
+        "row_sha256": "64f93d74755d646508c48e7805191f2bc4eed1dc89adcd7798636d185c5287b5",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.INV.18",
+      "criterion": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/77",
+        "row_sha256": "e6568b9caf2959cc1ba6ee215a4e221ee80ea2c49cee14e99de72bafb393ec0a",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-02",
+          "BI-CONSUMER-03"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.QLT.01",
+      "criterion": "A operação distingue entrada, conclusão, planejamento e desconhecido com texto, formas e unidades claros.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/78",
+        "row_sha256": "9334e1f22da8d3f030135bf1d1d2f2ec600240498750ec10d5f965fecf3666e4",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.QLT.02",
+      "criterion": "Os oito gráficos têm interação equivalente por teclado/tabela e retorno contextual previsível.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/79",
+        "row_sha256": "aeba113f4e4d051e5b3f94cbbc7cb0db9afd07b2367ca921d3ec952ffde15b8b",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.QLT.18",
+      "criterion": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/80",
+        "row_sha256": "3232bc6c251836c670df33ba56c5188129f43c8829899a330a4880d54b5ff82e",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.CMP.01",
+      "criterion": "Cobrir tickets com série válida e só fotografia, além de marcos planejados, concluídos e sem data.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/81",
+        "row_sha256": "de69c4cc52f2d4b5b18f33358a455cd4ad9857a4f0465dcfdce79aa6d9ddc935",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.CMP.02",
+      "criterion": "Fechar o catálogo de oito gráficos com estados vazio/parcial/restrito, filtros e drilldowns verificáveis.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/82",
+        "row_sha256": "e53e6348d1b8c27e38c593865f8e75579fde8058d1a785890ef6e59cbdfc95dc",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.CMP.18",
+      "criterion": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/83",
+        "row_sha256": "0aa6e925885d80b7bb0b114041f19924e7563b909640a004e2cbe9895447e566",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.SUC.01",
+      "criterion": "O time identifica o que entrou/foi concluído quando há evidência e localiza os marcos do horizonte sem interpretar planejado como entregue.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/84",
+        "row_sha256": "f8ab5627aab1a4d021d2498f4b4cdceedfc10a128372df22347ea6a49e2a302f",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.SUC.02",
+      "criterion": "WP10 compõe o catálogo e verifica os consumidores reais sem refazer cálculo financeiro ou aceitar uma demonstração desconectada como entrega.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/85",
+        "row_sha256": "bd765f279b36f9739540b8fd246be7db947ae33703f9e00f43cf501dffeba646",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-01",
+          "BI-CONSUMER-03",
+          "BI-LIMIT-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.SUC.18",
+      "criterion": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/86",
+        "row_sha256": "cc15be9388df070fd7b90fd12dd3cfbad8cdb12dea5a1a22e919e34e82fc4005",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.CHK.01",
+      "criterion": "Receber apenas contagem/status atual de tickets sem eventos ou agregados datados: mostrar fotografia com data de referência, sem série semanal nem taxa de resolução inventada; ao fornecer série C02 válida, os pontos reproduzem cada período.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/87",
+        "row_sha256": "4a1f3052b859fa33ded456d89c61676715b680246db6a64a14db652f14ee9c32",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.CHK.02",
+      "criterion": "Ticket aberto num período e fechado em outro segue os eventos/projeção do produtor; mover apenas status atual não deve retroativamente reescrever uma série histórica fornecida.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/88",
+        "row_sha256": "8e8a406f5610ec636e28342193b0dde817336e91e017e6fbd7b318956b8f47c1",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.CHK.03",
+      "criterion": "Marco planejado, marco concluído e marco sem data: os dois primeiros são distinguíveis e o terceiro permanece listado sem receber hoje, primeiro dia do mês ou outro fallback.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/89",
+        "row_sha256": "a9ddb397ea325e80425841691c15c719f98baaa2312d234a50bb1a9ab9f03edb",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.CHK.04",
+      "criterion": "Para os oito gráficos, abrir por teclado uma marca/agregado com filtro, voltar e comparar com o detalhe: referência, versão, período, moeda, recorte e foco são preservados; falhar se o destino cair num overview sem a seleção.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/90",
+        "row_sha256": "024e2d10ccd3f07887d07360c43f7a4be95b7ca5bd80202456ae0796e32ea1d9",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-03",
+          "BI-LIMIT-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.CHK.05",
+      "criterion": "Injetar valor ausente, componente restrito e série parcial nos consumidores reais de C02: nenhum aparece como zero ou dado completo em marca, tooltip ou tabela; registrar qual produtor/caso foi usado.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/91",
+        "row_sha256": "1866737b4ac5b2fa32733954ae6f12944db46d445253fa23b1f81b8c02352654",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.CHK.06",
+      "criterion": "No handoff, cada gráfico aponta seu produtor real e check de composição WP10; um stub/fixture sem produtor identificável impede classificar o gráfico como integrado.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/92",
+        "row_sha256": "ef3313ae87c58a3867b548a00c3cd1c543af9ae81fc7683ee8b90756237b4404",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-01",
+          "BI-LIMIT-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T04.CHK.18",
+      "criterion": "Executar sf_bi_view pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/93",
+        "row_sha256": "901bedcce1cbe700b1d4f0ede8f71a52c8b3a5ccfa4723d4ed24e2301a820f27",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-03",
+          "BI-LIMIT-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T05.DOD.01",
+      "criterion": "As três perguntas analíticas novas e as oito antigas são respondidas com produtores reais e valores reconciliados.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/94",
+        "row_sha256": "cceec573f82e156391390bb179fdd6f18a9b1134868952bd59be804123eff118",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-LIMIT-01",
+          "BI-LIMIT-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T05.DOD.20",
+      "criterion": "BI e tabela consomem coverage/result refs reais junto às marcas.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/95",
+        "row_sha256": "70db83df34211d6b5ad0b6f29662072cee61979e0ae55fc1cc94cbbf9e197e28",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-02",
+          "BI-CONSUMER-03"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T05.INV.01",
+      "criterion": "Geometria usa o resultado do motor; visualização não recalcula regra de negócio nem estima probabilidades ausentes.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/96",
+        "row_sha256": "4b3346d001cf3f3fe59291e757775d5108b457748823c77c5726b9a66ff1108c",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-01",
+          "BI-CONSUMER-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T05.INV.20",
+      "criterion": "Gráfico não calcula completude nem converte lacuna em zero, ganho confirmado ou ajuste residual.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/97",
+        "row_sha256": "11e1ac4a1f48ec4d4955b50b9bc87f49dc42974e2eccf0bc78fff8e958c934f2",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T05.QLT.01",
+      "criterion": "Rótulos legíveis, sinais/unidades claros, comparação no mesmo horizonte e dados acessíveis por tabela e teclado.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/98",
+        "row_sha256": "ab48ba739d74f92b96566f41be764db7b559f3b5fc161af985bab12ed727429d",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T05.QLT.20",
+      "criterion": "Rótulo de condicionado acompanha valor/limiar e a lista acessível explica categorias sem quantificação.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/99",
+        "row_sha256": "2d767769238fded8b49c4f340ceb3f22816929f6c0123d8eeed186284b9f45f2",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T05.CMP.01",
+      "criterion": "Cobrir custo incerto, componente ausente, moeda, limite atingido/não atingido, cenário inviável e referência removida.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/100",
+        "row_sha256": "2401057f622686e432d6450d11d5eb32e25909e91a871ce929326d1a240ecb0d",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T05.CMP.20",
+      "criterion": "Cobrir omissão inteira, pending, zero confirmado, fonte restrita e atualização que inverte a diferença.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/101",
+        "row_sha256": "522a42b6481738dbed48bc55adfea341ec6d2f0bc072ea27b7e092ca697268f1",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T05.SUC.01",
+      "criterion": "Usuário identifica qual componente ou premissa inverte a escolha e abre sua origem sem perder o caso.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/102",
+        "row_sha256": "016ac1cff611b2113b9da4b539b8d07f5b0d483c500682f316e23e10b8d2657b",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-03",
+          "BI-LIMIT-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T05.SUC.20",
+      "criterion": "Usuário encontra a categoria que muda a comparação e abre sua origem com o mesmo contexto.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/103",
+        "row_sha256": "cef4918baacbdabd40946f91eba70f1f0d3b6d1abead3a36378d4f3a20912b97",
+        "historical_classification": "BLOCKED_EXTERNAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-03",
+          "BI-LIMIT-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T05.CHK.01",
+      "criterion": "Com outros custos 165 mil e referência 240 mil/meta 20 mil, limiteimplantação 55 mil provém do engine.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/104",
+        "row_sha256": "77ebee33ef3c4ba6123679d1134a14e292c834539b711cd951efb62eb4d94dc3",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T05.CHK.02",
+      "criterion": "Atraso sem regra financeira não inventa economia ou obrigação eliminada.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/105",
+        "row_sha256": "1a27e1072b556c7b3dd0c9c23f21ba6910b13f7d96e928a668699281689f05b6",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "INHERITED_EVIDENCE_PRESERVED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [],
+        "scope": "No new implementation or execution claim for this criterion in the WP03/WP05 resume slice."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T05.CHK.03",
+      "criterion": "Tabela e marcas retornam exatamente os mesmos valores autorizados.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/106",
+        "row_sha256": "2f0c66b18eca0a85eee1183a7bf5d5c4daffded842776aa6ba6e8e5ffb907cd2",
+        "historical_classification": "VERIFIED_SCOPED",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-02",
+          "BI-LIMIT-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    },
+    {
+      "criterion_id": "WP05.T05.CHK.20",
+      "criterion": "A mesma revisão de AI-RENEWAL-OMITTED-CATEGORY aparece no gráfico e tabela: pending sem barra zero; training = 40000 altera total210000→250000 e diferença 30000→-10000, com fontes e snapshot histórico preservados.",
+      "inherited": {
+        "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "json_pointer": "/criteria/107",
+        "row_sha256": "fe1bc7d5cdfa605dd0ccc1b7ad3153bbd81e549877b243c2adb1b05ca1593139",
+        "historical_classification": "PARTIAL",
+        "proofs_and_limits": "Retained verbatim in the referenced original row, including all historical failures, run IDs, selected-file observations and canonical proof bindings."
+      },
+      "resume": {
+        "status": "PINNED_SOURCE_CONSUMPTION_INSPECTED_NO_NEW_EXECUTION",
+        "criterion_fully_accepted": false,
+        "run_ids": [],
+        "observation_refs": [
+          "BI-CONSUMER-02",
+          "BI-CONSUMER-03",
+          "BI-LIMIT-02"
+        ],
+        "scope": "Source-level producer/consumer binding inspection only. No whole-criterion promotion or installed/native/C17 acceptance."
+      },
+      "acceptance_status": "NOT_ACCEPTED",
+      "criterion_fully_accepted": false
+    }
+  ]
+}

@@ -30,10 +30,18 @@ function snapshot() {
 test("C02 preserves explicit numeric HR identity, known zero and independent actual/forecast for finance and viewer", async () => {
   const fixture = await plannerFixture(snapshot())
   try {
+    const prepare = async (principal: string) => {
+      const context = await fixture.admit("sf-human:planner.read", {}, principal, true)
+      const source = await fixture.issueSource("v0", context)
+      if (source.status !== "ok") throw new Error("The real issuer refused the readable legacy source")
+      return { principal, context, source: source.value }
+    }
+    const prepared = [await prepare("finance"), await prepare("viewer")]
+    // Issuing a source legitimately registers its scope. Freeze only after both
+    // actors have their real references so the following reads must be unchanged.
     const before = await fixture.readSnapshot()
     const observed: Record<string, unknown> = {}
-    for (const principal of ["finance", "viewer"]) {
-      const context = await fixture.admit("sf-human:planner.read", {}, principal, true)
+    for (const { principal, context, source } of prepared) {
       const request = fixture.host.requestFor(context)
       if (!request) throw new Error("The real UI admission has no current request")
       const environment = await fixture.host.environment(request)
@@ -46,10 +54,8 @@ test("C02 preserves explicit numeric HR identity, known zero and independent act
       }
       expect(rows(summary.lines).find((line) => line.id === "HR:MissingNumber")?.budget).toEqual(Array(12).fill(0))
       expect(rows(summary.lines).find((line) => line.id === "HR:ExplicitNumber")?.budget).toEqual(Array(12).fill(20000))
-      const source = await fixture.issueSource("v0", context)
-      if (source.status !== "ok") throw new Error("The real issuer refused the readable legacy source")
-      const comparison = await fixture.planner.compareForecast({ baseRef: source.value.evidence.refId,
-        candidateRef: source.value.evidence.refId, period: plannerPeriod, currency: "USD" }, context)
+      const comparison = await fixture.planner.compareForecast({ baseRef: source.evidence.refId,
+        candidateRef: source.evidence.refId, period: plannerPeriod, currency: "USD" }, context)
       if (comparison.status !== "ok") throw new Error("The real comparison did not return its qualified source")
       const projection = comparison.value.baseline
       const cell = (id: string) => projection.values.find((value) => value.id === id)

@@ -1,0 +1,29 @@
+{
+  "schema": "sf-finance-resume-check-authority-v1",
+  "authorization": "User requests AGENTS checks under pinned CI.md; CI.md section Typecheck e guards authorizes a minimal scoped hosted check workflow included in the PR.",
+  "source": {
+    "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md"
+  },
+  "reason": "Current command environment has no complete repository package installation. Product tests remain exclusively in test-ci GitHub Actions. Hosted check uses existing setup-bun and exact checked product SHA.",
+  "path": ".github/workflows/astra-finance-resume-check.yml",
+  "trigger": {
+    "push_branch_only": "astra-check-fresume",
+    "contents": "read"
+  },
+  "commands": [
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev"
+    }
+  ],
+  "guard_base": "origin/dev fetched and SHA recorded inside hosted runner",
+  "existing_workflows": "preserved byte-for-byte",
+  "previous_branches": "not modified",
+  "local_product_tests": "NOT_RUN",
+  "product_scope_exception": "Only supporting check workflow. No host, contract, artifact-store, UI, AI, engine, Azure, deploy, identity or financial-policy changes."
+}

@@ -1,0 +1,82 @@
+{
+  "schema": "sf-wp13-own-delta-v1",
+  "base": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "ref": "astra-wp13",
+    "commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+    "tree": "f9e4e23db0b3bc941599efba5341a653bb4ca3d9"
+  },
+  "target_branch": "finance-resume",
+  "authorship": {
+    "agent": "Astra /root/wp13",
+    "upstream_implementation": "PR37 astra-wp13, exact own-only intake retained",
+    "local_product_tests": "NOT_RUN",
+    "hosted_product_tests": "PENDING_PARENT_DISPATCH"
+  },
+  "ownership": "WP13 product/portfolio and test/product/wp13 only",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign-proposals.ts",
+      "operation": "modify",
+      "base_blob": "5d09df9ff7f2c1cc81993459116ea8267dfbb78a",
+      "new_blob": "3ad0b190ad5d50c33e99d3c622831b6f0cc6cdac",
+      "sha256": "ed7897aef1628cf2d91346b1ed5c84dfbc20bf2daaca8a8430dce90c69fe4e3c",
+      "bytes": 2856,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/overlay/modules/sucafina/Sucafinav1/product/portfolio/campaign-proposals.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+      "operation": "modify",
+      "base_blob": "caa3b783b41f95287bba8a4bab3c652c8375c320",
+      "new_blob": "de5846f024f85ad8203fa12adf27212c23850d4f",
+      "sha256": "05fff1d17d587907226953ebf1d6d7a6a86d00d9a81b8af3b9ac4e1689bfc8cd",
+      "bytes": 8076,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/overlay/modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "operation": "modify",
+      "base_blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+      "new_blob": "19ac96241c24fbcd2038c70b961fa5a8d25d4418",
+      "sha256": "8d25df2912a1a17e3a52db30cbb9d63a9f83a0e28c87dd4f9298fc1040defd28",
+      "bytes": 14138,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/overlay/modules/sucafina/Sucafinav1/product/portfolio/proof.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "operation": "add",
+      "base_blob": null,
+      "new_blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+      "sha256": "9982156692099d6f9663794186c8398632a5c33abd3615809cfe8ec6e8e409a1",
+      "bytes": 4193,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/overlay/modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+      "operation": "modify",
+      "base_blob": "aedc80310eee2752d067dd52afa6312a9558b87a",
+      "new_blob": "387e78deeb6a1e97a21a68bd84839c3f1e979254",
+      "sha256": "d6bc2c1441b3d41297d2153f65226dcc9ce884716843a798c2f07d7b9151668d",
+      "bytes": 22664,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/overlay/modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "operation": "modify",
+      "base_blob": "606591b793eecf9a97ba1459dd0c02d6f9d352f7",
+      "new_blob": "d1ae1a8bb747c1bb8779da133de4df22c81fa3b4",
+      "sha256": "e3c3303590546b8dcc65729c772760de4a375bbc4ba9e6773fc6af53b651933a",
+      "bytes": 31453,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/overlay/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "operation": "modify",
+      "base_blob": "a2cf45f6c343c384c37a36e0c36437e379178b43",
+      "new_blob": "01d7a1a299c61ebe824634c39e3d598cf2f59dc3",
+      "sha256": "be913d84515c8a6b080d983a29a5fc9242301fad8d48b4d32b6b322ca48aed4c",
+      "bytes": 43316,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/overlay/modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts"
+    }
+  ]
+}

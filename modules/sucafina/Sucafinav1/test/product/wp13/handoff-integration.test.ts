@@ -4,6 +4,7 @@ import { join } from "node:path"
 import { expect, test } from "bun:test"
 import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
 import { createPreparedExecution } from "../../../product/decisions/apply.ts"
+import { applicationAttempts } from "../../../product/decisions/application-attempt.ts"
 import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
 import { proposalReviewDigest, receiptProofTransactionKey, receiptReviewBinding } from "../../../product/decisions/receipt-review-binding.ts"
 import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
@@ -25,7 +26,7 @@ import { createPortfolioPort } from "../../../product/portfolio/port.ts"
 import { portfolioEvaluationDigest, preparePortfolioChoice } from "../../../product/portfolio/handoff.ts"
 import type { PortfolioHost } from "../../../product/portfolio/port.ts"
 
-test("portfolio handoff records a human choice against C08, prepares two changes, and resumes application without repeating a receipt", async () => {
+test("portfolio handoff retains C08 choice and resumes after pre-dispatch producer unavailability without repeating a receipt", async () => {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-portfolio-handoff-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
@@ -58,7 +59,8 @@ test("portfolio handoff records a human choice against C08, prepares two changes
     const state = createSfProductState({ persistence: store, createId: () => "product-state-inc", resolveTarget: async (_request, _snapshot, _namespace, targetRef) => targetRef === decision.id ? { incarnation: decision.incarnation } : targetRef === "forecast-a" ? { incarnation: "target-inc-0" } : targetRef === "contract-b" ? { incarnation: "target-inc-1" } : undefined, authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
     await state.transaction(new Request("https://example.test"), { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed-case", commandDigest: "a".repeat(64), targetRef: decision.id, targetIncarnation: decision.incarnation }, async (productState) => { productState.cases[decision.id] = decision; return { commit: true, value: true } })
     const evidence: BusinessContextService = { context: async ({ refs }) => refs.map((ref) => ({ ref, state: "fresh", accessRevision: "access", checkedAt: "2027-01-01" })), resolve: async () => { throw new Error("unused") }, recall: async () => [], emitFromLedger: async () => { throw new Error("unused") } }
-    const host: DomainPortHost = { persistence: store, authenticate: async () => ({ id: "principal", roles: [{ surface: "planner", role: "finance" }, { surface: "procurement", role: "buyer" }], canWrite: true }), environment: async () => ({ at: "2027-01-01T00:00:00Z", id: () => "unused", directory: [] }), requestFor: () => new Request("https://example.test"), revalidate: async (context) => context.kind === "ui" && context.binding.principalRef === "principal" && context.binding.accessRevision === "access" }
+    const admittedRequest = new Request("https://example.test")
+    const host: DomainPortHost = { persistence: store, authenticate: async () => ({ id: "principal", roles: [{ surface: "planner", role: "finance" }, { surface: "procurement", role: "buyer" }], canWrite: true }), environment: async () => ({ at: "2027-01-01T00:00:00Z", id: () => "unused", directory: [] }), requestFor: () => admittedRequest, revalidate: async (context) => context.kind === "ui" && context.binding.principalRef === "principal" && context.binding.accessRevision === "access" }
     const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "install:cases", incarnation: "install-inc" }, operationIdentity: () => "case-operation", authorizeCase: async () => true, verifyScenarioOperations: async () => true, evidence, createId: () => "case-event", now: () => "2027-01-01T00:00:00Z" })
     const domain = { procurementFails: true, plannerCalls: 0, procurementCalls: 0, receiptSequence: 0 }
     for (const [index, surface] of (["planner", "procurement"] as const).entries()) {
@@ -190,6 +192,10 @@ test("portfolio handoff records a human choice against C08, prepares two changes
       const change = saved.value!.preparedChanges.find((item) => item.id === request.changeId)
       const digest = change && reviewDigestFor(context, request, change)
       if (!change || !digest) return { status: "unavailable", reason: "review-producer-unavailable" }
+      // This controlled producer is unavailable before dispatch. A failure after
+      // WP11's durable reservation is a different case: receipt-required, covered
+      // with the real domain rollback in handoff-domain-integration.test.ts.
+      if (change.target.surface === "procurement" && domain.procurementFails) return { status: "unavailable", reason: "review-producer-unavailable" }
       const version = await store.transaction(change.target.surface, async (snapshot) => ({ commit: false, value: snapshot.versions.wp13Amount?.version }))
       return version === change.expectedVersion ? { status: "ok", value: { reviewDigest: digest } } : { status: "stale", reason: "review-source-changed" }
     }, authorizeCase: async () => true, authorizeApplication: async (request, change, trusted) => trusted.kind === "ui" && request.choiceId === choice.id && change.caseId === decision.id && ["planner:forecast-a", "procurement:contract-b"].includes(`${change.target.surface}:${change.target.id}`), confirmApplication: async () => confirmations.apply, operationIdentity: () => "apply-operation", classifyReceipt: async (receipt) => {
@@ -229,6 +235,9 @@ test("portfolio handoff records a human choice against C08, prepares two changes
     expect(partial.value.case.preparedChanges.map((change) => change.state)).toEqual(["applied", "planned"])
     expect(domain.procurementCalls).toBe(0)
     expect(await amounts()).toEqual([40, 50])
+    const beforeDispatch = await state.read(admittedRequest, "cases", (productState) => applicationAttempts(productState, { caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: secondChange.id, choiceId: choice.id }))
+    expect(beforeDispatch.status).toBe("ok")
+    expect(beforeDispatch.status === "ok" && beforeDispatch.value).toEqual([])
     domain.procurementFails = false
     expect((await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).status).toBe("ok")
     const beforeResume = await cases.read({ caseRef: caseSelector }, binding)

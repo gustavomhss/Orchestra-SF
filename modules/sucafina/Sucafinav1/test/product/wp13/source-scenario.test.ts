@@ -22,6 +22,7 @@ import { createStoredPlannerScenarioHost } from "../../../product/planner/stored
 import { createPortfolioAnalysis } from "../../../product/portfolio/analysis.ts"
 import { createDecisionCandidateResolver, portfolioCandidateRef } from "../../../product/portfolio/candidates.ts"
 import { createProductionPortfolio } from "../../../product/portfolio/production.ts"
+import { readPortfolioSnapshot } from "../../../product/portfolio/read-snapshot.ts"
 import { createPortfolioSelectionResolver } from "../../../product/portfolio/selection.ts"
 import { sfRunSourceFence } from "../../../product/ai/run-store.ts"
 import type { Snapshot } from "../../../runtime/contract.ts"
@@ -262,7 +263,15 @@ async function composePortfolio(history: Awaited<ReturnType<typeof createRenewal
     try { expect((await forecastCoverage(phase.baselineScenario.baseRef, context)).status).toBe("stale") }
     finally { scenarios.resolve = resolve }
   }
-  const planner = createPlannerPort({ host, sources, scenarios, evidence: phase.evidence, criteria: { evaluate: (request, trusted) => rules.evaluate({ caseRef: phase.caseRef, ...request }, trusted) } })
+  const canonicalPlanner = createPlannerPort({ host, sources, scenarios, evidence: phase.evidence, criteria: { evaluate: (request, trusted) => rules.evaluate({ caseRef: phase.caseRef, ...request }, trusted) } })
+  // Each complete read-only calculation gets a fresh immutable root. All actual
+  // producer/evidence checks remain inside it; persistence and human writes stay
+  // outside and must obtain their own later CAS. No proof survives this call.
+  const planner: typeof canonicalPlanner = {
+    ...canonicalPlanner,
+    compareScenarios: (request, trusted) => readPortfolioSnapshot(host, trusted, request, () => canonicalPlanner.compareScenarios(request, trusted), { status: "unavailable", reason: "source-comparison-snapshot-unavailable" }),
+    simulateScenario: (request, trusted) => readPortfolioSnapshot(host, trusted, request, () => canonicalPlanner.simulateScenario(request, trusted), { status: "unavailable", reason: "source-simulation-snapshot-unavailable" }),
+  }
   const comparisonBindings = createCriterionComparisonBindings({ state, host, rules, results: phase.results, authorizeCase, verifyBinding: async (binding, result, trusted) => {
     const compared = await planner.compareScenarios(binding.request, trusted)
     return result.kind === "comparison" && compared.status === "ok" && digestSfValue(compared.value) === result.resultDigest
@@ -285,7 +294,7 @@ async function composePortfolio(history: Awaited<ReturnType<typeof createRenewal
   // Explicit fixture selection of the phase's persisted producer refs, not installed
   // alternative-only discovery. Every value still comes from fresh C08/case reads and
   // the canonical Planner comparison; no duplicate record is deleted or picked by age.
-  const compare: ReturnType<typeof createDecisionComparisonService> = async (incoming, trusted) => {
+  const compareSelected: ReturnType<typeof createDecisionComparisonService> = async (incoming, trusted) => {
     const incomingDigest = digestSfValue(incoming)
     const request = structuredClone({ caseRef: incoming.caseRef, baselineAlternativeId: incoming.baselineAlternativeId, alternativeId: incoming.alternativeId, criteria: incoming.criteria })
     if (digestSfValue(request) !== digestSfValue(comparisonRequest)) return { status: "needs-input", reason: "fixture-comparison-selection-mismatch" }
@@ -331,6 +340,7 @@ async function composePortfolio(history: Awaited<ReturnType<typeof createRenewal
       return { status: "stale", reason: "fixture-comparison-source-changed" }
     return { status: "ok", value: { request: requested, comparison: compared.value } }
   }
+  const compare: typeof compareSelected = (incoming, trusted) => readPortfolioSnapshot(host, trusted, incoming, () => compareSelected(incoming, trusted), { status: "unavailable", reason: "fixture-comparison-snapshot-unavailable" })
   if (baselineHistory) {
     expect((await compare({ ...comparisonRequest, baselineAlternativeId: "selected", alternativeId: "baseline" }, context)).status).toBe("needs-input")
     expect((await compare({ ...comparisonRequest, caseRef: { ...phase.caseRef, version: phase.caseRef.version + 1 } }, context)).status).toBe("needs-input")

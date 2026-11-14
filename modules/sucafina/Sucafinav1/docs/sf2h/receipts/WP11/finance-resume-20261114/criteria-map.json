@@ -1,0 +1,4591 @@
+{
+  "schema": "sf-finance-resume-wp11-criteria-v1",
+  "status": "SOURCE_MAP_RETAINED_CANDIDATE_QUALIFICATION_PENDING",
+  "canonicalSource": {
+    "handoffPin": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "planPin": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "handoffUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/a3d29d011ba3607a57914701300f09117a3e2de9/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP11.md",
+    "literalCriterionCount": 83,
+    "idsAndTextsVerifiedAgainstFullPack": true
+  },
+  "sourceCandidate": {
+    "label": "W19",
+    "productSha": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1",
+    "tree": "47e634b81b9a64fef462cb670373aa832b88b76b",
+    "runtimeByteIdenticalToW18": true,
+    "ready": false,
+    "integratedAccepted": false
+  },
+  "sourceMap": {
+    "commit": "e8949be0e31952d5be4987c099003cd0b46e2add",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/CRITERIA.json",
+    "blob": "c71031ea23e27b8c48b170a0a785afbc8cf07c9d",
+    "counts": {
+      "VERIFIED_SCOPED": 32,
+      "PARTIAL": 23,
+      "BLOCKED": 26,
+      "NOT_ESTABLISHED": 2
+    }
+  },
+  "criteria": [
+    {
+      "id": "WP11.DOD.01",
+      "text": "Caso e escolhas sobrevivem a reinício e são compartilhados conforme autorização.",
+      "scope": "WP11",
+      "family": "dod",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "H7 fecha driver/UI antigos, recria reader/C08/UI, verifica concessão antiga revogada e relê MESMA ChoiceRecord/digest e nova alternativa. Colaborador já persistido recebe nova admissão privada, lê o caso e seu evento; outsider e autoridade posteriormente revogada são negados.",
+      "primaryEvidenceRefs": [
+        "W17_H7_ASSERT_01"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W17_H7_ASSERT_01",
+        "W9_AR2_ASSERT_01",
+        "W14_B1A_ASSERT_04",
+        "W14_B1A_ASSERT_05",
+        "W17_H7_ASSERT_21",
+        "W17_B1B_ASSERT_01",
+        "W18_E1_ASSERT_01",
+        "W18_E1_ASSERT_10",
+        "W18_E1_ASSERT_19"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_01",
+        "W6_AR1_ASSERT_02",
+        "W6_AR1_ASSERT_11",
+        "W11_F1_ASSERT_04",
+        "W11_F1_ASSERT_13",
+        "W11_F1_ASSERT_15",
+        "W16_R2Q_ASSERT_07",
+        "W17_H7_ASSERT_02",
+        "W17_H7_ASSERT_11"
+      ],
+      "limits": [
+        "Provider/UI privados reais e SQLite na fixture; membership e declaração de escopo são inputs explícitos. Sem testemunho de instalação/native/browser."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [
+        {
+          "clause": "Caso e escolhas sobrevivem a reinício",
+          "observed": "H7 fecha driver/UI antigos, recria reader/C08/UI, verifica concessão antiga revogada e relê MESMA ChoiceRecord/digest e nova alternativa."
+        },
+        {
+          "clause": "São compartilhados conforme autorização",
+          "observed": "Colaborador já persistido recebe nova admissão privada, lê o caso e seu evento; outsider e autoridade posteriormente revogada são negados."
+        }
+      ],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.DOD.02",
+      "text": "Mudanças propostas chegam aos domínios reais e execução parcial é retomável no candidato integrado.",
+      "scope": "WP11",
+      "family": "dod",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "AR3 prova escolha → proposta → aplicação Planner; AR2 prova os dois domínios a partir de propostas seed. Falta a mesma jornada integrada gerar propostas humanas para Planner e Procurement e recuperar o parcial.",
+      "primaryEvidenceRefs": [
+        "W9_AR2_ASSERT_02",
+        "W9_AR2_ASSERT_03",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W14_R1_ASSERT_01"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W9_AR2_ASSERT_02",
+        "W9_AR2_ASSERT_03",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W14_R1_ASSERT_01"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_17",
+        "W6_AR1_ASSERT_24",
+        "W11_F1_ASSERT_27"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "AR3 prova escolha → proposta → aplicação Planner; AR2 prova os dois domínios a partir de propostas seed. Falta a mesma jornada integrada gerar propostas humanas para Planner e Procurement e recuperar o parcial."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP04",
+        "S0"
+      ],
+      "closureClass": "INTEGRATED_CONSUMER",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.DOD.20",
+      "text": "Alternativas persistem inventário, avaliação de categorias e comparação C10 consumidos por UI, BI, crítica e portfólio.",
+      "scope": "WP11",
+      "family": "dod",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "BI agora consome resultados reais e seu renderer foi exercitado em Chrome. Ainda falta o mesmo cálculo/C10 no módulo WP01 montado, na crítica e em portfólio canônico não vazio, sem substitutos de seleção.",
+      "primaryEvidenceRefs": [
+        "W11_F1_ASSERT_33",
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W14_B1A_ASSERT_01",
+        "W17_H7_ASSERT_01",
+        "W17_B1B_ASSERT_03"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W11_F1_ASSERT_33",
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W14_B1A_ASSERT_01",
+        "W17_H7_ASSERT_01",
+        "W17_B1B_ASSERT_03",
+        "W11_F1_ASSERT_19",
+        "W11_F1_ASSERT_22",
+        "W11_F1_ASSERT_32"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_20",
+        "W6_C1_ASSERT_06",
+        "W6_C1_ASSERT_13",
+        "W6_C1_ASSERT_14",
+        "W6_C1_PRODUCER_08"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "BI agora consome resultados reais e seu renderer foi exercitado em Chrome. Ainda falta o mesmo cálculo/C10 no módulo WP01 montado, na crítica e em portfólio canônico não vazio, sem substitutos de seleção."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP05",
+        "WP12",
+        "WP13",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "NAMED_CONSUMERS",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.DOD.10",
+      "text": "As entregas residentes atribuídas a WP11 têm produção, consumo e provas reais completos.",
+      "scope": "WP11",
+      "family": "dod",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "As entregas residentes têm implementação e consumo parcial em fonte, mas não produção/consumo/provas reais completos na instalação com os recursos externos exigidos.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "As entregas residentes têm implementação e consumo parcial em fonte, mas não produção/consumo/provas reais completos na instalação com os recursos externos exigidos."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.INV.01",
+      "text": "Escolha não é aprovação e simulação não grava em fonte oficial.",
+      "scope": "WP11",
+      "family": "invariants",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "AR3 exige grants distintos para escolher, preparar e aplicar; escolher não produz preparedChanges/receipts/dispatch. H7 e lifecycle mantêm essa ausência. B1A e lifecycle preservam snapshots oficiais; atualização de cotação é um comando/setup separado, não efeito do comparador ou da escolha.",
+      "primaryEvidenceRefs": [
+        "W11_AR3_attempt2_ASSERT_02",
+        "W14_B1A_ASSERT_03",
+        "W17_H7_ASSERT_01",
+        "W17_H7_ASSERT_21"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W11_AR3_attempt2_ASSERT_02",
+        "W14_B1A_ASSERT_03",
+        "W17_H7_ASSERT_01",
+        "W17_H7_ASSERT_21",
+        "W11_F1_ASSERT_28",
+        "W11_F1_ASSERT_35",
+        "W12_F2_ASSERT_06",
+        "W12_F2_ASSERT_07",
+        "W12_F2_ASSERT_08",
+        "W12_F2_ASSERT_09",
+        "W12_F2_ASSERT_10",
+        "W12_F2_ASSERT_11",
+        "W13_F3_ASSERT_01",
+        "W13_F3_ASSERT_02",
+        "W13_F3_ASSERT_03",
+        "W13_F3_ASSERT_04",
+        "W13_F3_ASSERT_05",
+        "W13_F3_ASSERT_06",
+        "W14_R1_ASSERT_06",
+        "W14_R1_ASSERT_07",
+        "W14_B1A_ASSERT_04",
+        "W16_R2Q_ASSERT_01",
+        "W16_R2Q_ASSERT_02",
+        "W16_R2Q_ASSERT_03",
+        "W16_R2Q_ASSERT_04",
+        "W16_R2Q_ASSERT_05",
+        "W17_B1B_ASSERT_01",
+        "W17_B1B_ASSERT_02",
+        "W18_E1_ASSERT_07"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_08",
+        "W6_AR1_ASSERT_15",
+        "W6_AR1_ASSERT_16",
+        "W6_C1_ASSERT_04",
+        "W6_C1_ASSERT_07",
+        "W6_C1_PRODUCER_04",
+        "W6_C1_PRODUCER_05",
+        "W11_F1_ASSERT_10",
+        "W11_F1_ASSERT_26",
+        "W11_F1_ASSERT_37",
+        "W12_F2_ASSERT_01",
+        "W12_F2_ASSERT_02",
+        "W12_F2_ASSERT_03",
+        "W12_F2_ASSERT_04",
+        "W12_F2_ASSERT_05",
+        "W16_R2Q_ASSERT_07",
+        "W17_H7_ASSERT_08"
+      ],
+      "limits": [
+        "Prova separação de poderes no serviço e Planner. Não prova estado awaiting-approval de Procurement nem pessoa real clicando."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [
+        {
+          "clause": "Escolha não é aprovação",
+          "observed": "AR3 exige grants distintos para escolher, preparar e aplicar; escolher não produz preparedChanges/receipts/dispatch. H7 e lifecycle mantêm essa ausência."
+        },
+        {
+          "clause": "Simulação não grava em fonte oficial",
+          "observed": "B1A e lifecycle preservam snapshots oficiais; atualização de cotação é um comando/setup separado, não efeito do comparador ou da escolha."
+        }
+      ],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.INV.02",
+      "text": "Não há transação global presumida nem efeito repetido em retry.",
+      "scope": "WP11",
+      "family": "invariants",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "O commit Planner é conservado quando Procurement conflita; receipts e ordem persistem após restart. Retry exato, resposta perdida e reserva sem receipt não geram novo dispatch; reconciliação exige receipt autoritativo.",
+      "primaryEvidenceRefs": [
+        "W9_AR2_ASSERT_02",
+        "W9_AR2_ASSERT_03",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W14_R1_ASSERT_01"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W9_AR2_ASSERT_02",
+        "W9_AR2_ASSERT_03",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W14_R1_ASSERT_01",
+        "W11_F1_ASSERT_03",
+        "W11_F1_ASSERT_14",
+        "W11_F1_ASSERT_23",
+        "W11_F1_ASSERT_24",
+        "W11_F1_ASSERT_28",
+        "W14_R1_ASSERT_06",
+        "W18_E1_ASSERT_05",
+        "W18_E1_ASSERT_09"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_06",
+        "W6_AR1_ASSERT_10",
+        "W6_AR1_ASSERT_15",
+        "W6_AR1_ASSERT_17",
+        "W6_AR1_ASSERT_21",
+        "W6_AR1_ASSERT_22",
+        "W6_AR1_ASSERT_24",
+        "W6_C1_ASSERT_01",
+        "W6_C1_ASSERT_03",
+        "W6_C1_ASSERT_07",
+        "W11_F1_ASSERT_08",
+        "W11_F1_ASSERT_12",
+        "W11_F1_ASSERT_26",
+        "W11_F1_ASSERT_27",
+        "W17_H7_ASSERT_06",
+        "W17_H7_ASSERT_10"
+      ],
+      "limits": [
+        "As propostas entre domínios são seed explícito. A conclusão não supõe retry de parent portfolio/native ou aprovação formal; esses gates são distintos."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.INV.20",
+      "text": "Soma reconciliada não prova cobertura. Categoria ausente/pending não vira zero; escolha preserva a condição conhecida na época.",
+      "scope": "WP11",
+      "family": "invariants",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Composição real 210000 permanece total:null quando training não tem categoria ou preço confirmado; C10 é certificado separadamente. B1A distingue omitted e null de zero e preço 40000; os desconhecidos mantêm razão/pending. H7 preserva digest/razão/210000/pending da escolha após fonte confirmada 250000, intervalo e restart com colaborador.",
+      "primaryEvidenceRefs": [
+        "W14_B1A_ASSERT_01",
+        "W14_B1A_ASSERT_02",
+        "W17_H7_ASSERT_01"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W14_B1A_ASSERT_01",
+        "W14_B1A_ASSERT_02",
+        "W17_H7_ASSERT_01",
+        "W11_F1_ASSERT_16",
+        "W11_F1_ASSERT_17",
+        "W11_F1_ASSERT_18",
+        "W11_F1_ASSERT_21",
+        "W11_F1_ASSERT_31",
+        "W11_F1_ASSERT_33",
+        "W11_F1_ASSERT_35",
+        "W11_F1_ASSERT_36",
+        "W12_F2_ASSERT_06",
+        "W12_F2_ASSERT_07",
+        "W12_F2_ASSERT_08",
+        "W12_F2_ASSERT_09",
+        "W12_F2_ASSERT_10",
+        "W12_F2_ASSERT_11",
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W14_B1A_ASSERT_03",
+        "W14_B1A_ASSERT_04",
+        "W16_R2Q_ASSERT_01",
+        "W16_R2Q_ASSERT_02",
+        "W16_R2Q_ASSERT_03",
+        "W16_R2Q_ASSERT_04",
+        "W16_R2Q_ASSERT_05",
+        "W17_H7_ASSERT_21",
+        "W17_B1B_ASSERT_01",
+        "W17_B1B_ASSERT_02",
+        "W17_B1B_ASSERT_03",
+        "W18_E1_ASSERT_02",
+        "W18_E1_ASSERT_03",
+        "W18_E1_ASSERT_06",
+        "W18_E1_ASSERT_10"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_03",
+        "W6_AR1_ASSERT_04",
+        "W6_AR1_ASSERT_07",
+        "W6_AR1_ASSERT_11",
+        "W6_C1_ASSERT_04",
+        "W6_C1_ASSERT_05",
+        "W6_C1_ASSERT_08",
+        "W6_C1_ASSERT_09",
+        "W6_C1_ASSERT_10",
+        "W6_C1_ASSERT_11",
+        "W6_C1_ASSERT_12",
+        "W6_C1_ASSERT_14",
+        "W6_C1_PRODUCER_02",
+        "W6_C1_PRODUCER_04",
+        "W6_C1_PRODUCER_05",
+        "W6_C1_PRODUCER_06",
+        "W11_F1_ASSERT_05",
+        "W11_F1_ASSERT_06",
+        "W11_F1_ASSERT_09",
+        "W11_F1_ASSERT_13",
+        "W16_R2Q_ASSERT_07",
+        "W17_H7_ASSERT_03",
+        "W17_H7_ASSERT_04",
+        "W17_H7_ASSERT_07",
+        "W17_H7_ASSERT_11"
+      ],
+      "limits": [
+        "Resultado posterior completo é nova observação source-only; não converte a hipótese original em fato."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [
+        {
+          "clause": "Soma reconciliada não prova cobertura",
+          "observed": "Composição real 210000 permanece total:null quando training não tem categoria ou preço confirmado; C10 é certificado separadamente."
+        },
+        {
+          "clause": "Categoria ausente/pending não vira zero",
+          "observed": "B1A distingue omitted e null de zero e preço 40000; os desconhecidos mantêm razão/pending."
+        },
+        {
+          "clause": "Escolha conserva a condição da época",
+          "observed": "H7 preserva digest/razão/210000/pending da escolha após fonte confirmada 250000, intervalo e restart com colaborador."
+        }
+      ],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.INV.10",
+      "text": "WP11 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+      "scope": "WP11",
+      "family": "invariants",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Grants/CAS, import e ownership têm provas próprias. Identidade/captura e acessos do host residente instalado ainda não foram observados no fluxo native/MCP.",
+      "primaryEvidenceRefs": [
+        "W19_E2_ASSERT_02",
+        "W19_E2_ASSERT_03",
+        "W19_E2_ASSERT_04",
+        "W19_E2_ASSERT_05",
+        "W19_E2_ASSERT_06",
+        "W19_E2_ASSERT_07"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W19_E2_ASSERT_02",
+        "W19_E2_ASSERT_03",
+        "W19_E2_ASSERT_04",
+        "W19_E2_ASSERT_05",
+        "W19_E2_ASSERT_06",
+        "W19_E2_ASSERT_07",
+        "W11_F1_ASSERT_20",
+        "W11_F1_ASSERT_22",
+        "W11_F1_ASSERT_25",
+        "W11_F1_ASSERT_29",
+        "W11_F1_ASSERT_34",
+        "W11_F1_ASSERT_35",
+        "W9_AR2_ASSERT_01",
+        "W9_AR2_ASSERT_04",
+        "W11_AR3_attempt2_ASSERT_01",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W12_F2_ASSERT_06",
+        "W12_F2_ASSERT_07",
+        "W12_F2_ASSERT_08",
+        "W12_F2_ASSERT_09",
+        "W12_F2_ASSERT_10",
+        "W12_F2_ASSERT_11",
+        "W13_F3_ASSERT_01",
+        "W13_F3_ASSERT_02",
+        "W13_F3_ASSERT_03",
+        "W13_F3_ASSERT_04",
+        "W13_F3_ASSERT_05",
+        "W13_F3_ASSERT_06",
+        "W14_R1_ASSERT_02",
+        "W14_R1_ASSERT_03",
+        "W14_R1_ASSERT_04",
+        "W14_R1_ASSERT_06",
+        "W14_R1_ASSERT_07",
+        "W14_B1A_ASSERT_05",
+        "W15_H6_ASSERT_01",
+        "W15_H6_ASSERT_02",
+        "W15_H6_ASSERT_03",
+        "W15_H6_ASSERT_04",
+        "W15_H6_ASSERT_05",
+        "W15_H6_ASSERT_06",
+        "W15_H6_ASSERT_07",
+        "W16_R2Q_ASSERT_06",
+        "W17_H7_ASSERT_14",
+        "W17_H7_ASSERT_16",
+        "W17_H7_ASSERT_17",
+        "W17_H7_ASSERT_18",
+        "W17_B1B_ASSERT_02",
+        "W18_E1_ASSERT_08",
+        "W18_E1_ASSERT_18",
+        "W18_E1_ASSERT_19",
+        "W18_E1_ASSERT_20",
+        "W18_E1_ASSERT_21",
+        "W19_E2_ASSERT_01"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_01",
+        "W6_AR1_ASSERT_09",
+        "W6_AR1_ASSERT_12",
+        "W6_AR1_ASSERT_13",
+        "W6_AR1_ASSERT_15",
+        "W6_AR1_ASSERT_16",
+        "W6_AR1_ASSERT_19",
+        "W6_AR1_ASSERT_23",
+        "W6_C1_ASSERT_02",
+        "W6_C1_ASSERT_04",
+        "W6_C1_ASSERT_13",
+        "W9_H3_BATCH_ASSERT_03",
+        "W9_H3_BATCH_ASSERT_05",
+        "W9_H3_BATCH_ASSERT_06",
+        "W9_H3_BATCH_ASSERT_07",
+        "W11_F1_ASSERT_01",
+        "W11_F1_ASSERT_11",
+        "W11_F1_ASSERT_15",
+        "W11_F1_ASSERT_26",
+        "W11_F1_ASSERT_37",
+        "W12_F2_ASSERT_01",
+        "W12_F2_ASSERT_02",
+        "W12_F2_ASSERT_03",
+        "W12_F2_ASSERT_04",
+        "W12_F2_ASSERT_05",
+        "W17_H7_ASSERT_09",
+        "W17_H7_ASSERT_22",
+        "W17_H7_ASSERT_23",
+        "W18_E1_ASSERT_11",
+        "W18_E1_ASSERT_12",
+        "W18_E1_ASSERT_13",
+        "W18_E1_ASSERT_14",
+        "W18_E1_ASSERT_15",
+        "W18_E1_ASSERT_16",
+        "W18_E1_ASSERT_17"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "Grants/CAS, import e ownership têm provas próprias. Identidade/captura e acessos do host residente instalado ainda não foram observados no fluxo native/MCP."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_AUTHORITY",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.QLT.01",
+      "text": "Fontes, versões, hipóteses e efeitos são inspecionáveis.",
+      "scope": "WP11",
+      "family": "quality_standards",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Leitores expõem refs/versões de cálculos e escolhas, premissa versus fonte oficial, preview de alteração e receipt autorizado. O renderer BI exercitado mostra componentes e encaminha a referência exata de sua fonte.",
+      "primaryEvidenceRefs": [
+        "W11_AR3_attempt2_ASSERT_01",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W9_AR2_ASSERT_01",
+        "W14_R1_ASSERT_07",
+        "W14_R1_ASSERT_01",
+        "W17_B1B_ASSERT_03"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W11_AR3_attempt2_ASSERT_01",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W9_AR2_ASSERT_01",
+        "W14_R1_ASSERT_07",
+        "W14_R1_ASSERT_01",
+        "W17_B1B_ASSERT_03",
+        "W11_F1_ASSERT_19",
+        "W11_F1_ASSERT_22",
+        "W11_F1_ASSERT_32",
+        "W11_F1_ASSERT_33",
+        "W13_F3_ASSERT_01",
+        "W13_F3_ASSERT_02",
+        "W13_F3_ASSERT_03",
+        "W13_F3_ASSERT_04",
+        "W13_F3_ASSERT_05",
+        "W13_F3_ASSERT_06",
+        "W14_B1A_ASSERT_05",
+        "W17_H7_ASSERT_01",
+        "W17_H7_ASSERT_15",
+        "W17_H7_ASSERT_21",
+        "W17_B1B_ASSERT_01",
+        "W17_B1B_ASSERT_02",
+        "W18_E1_ASSERT_18"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_16",
+        "W6_AR1_ASSERT_20",
+        "W6_AR1_ASSERT_24",
+        "W6_C1_ASSERT_06",
+        "W6_C1_ASSERT_13",
+        "W6_C1_ASSERT_14",
+        "W6_C1_PRODUCER_01",
+        "W6_C1_PRODUCER_07",
+        "W6_C1_PRODUCER_08",
+        "W9_H3_BATCH_ASSERT_04",
+        "W11_F1_ASSERT_27",
+        "W11_F1_ASSERT_37",
+        "W12_F2_ASSERT_01",
+        "W12_F2_ASSERT_02",
+        "W12_F2_ASSERT_03",
+        "W12_F2_ASSERT_04",
+        "W12_F2_ASSERT_05",
+        "W16_R2Q_ASSERT_07"
+      ],
+      "limits": [
+        "Inspeção pelo serviço/HTTP e renderer de fixture. Reopen C17 com writer vivo não é restart integral; acesso revogado pode recusar a projeção. Não é UI instalada ou navegação empresarial real."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.QLT.02",
+      "text": "Falha conserva trabalho e estado de cada mudança.",
+      "scope": "WP11",
+      "family": "quality_standards",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falha conserva o commit já aplicado, o estado conflitante da mudança seguinte e os receipts. A reserva indeterminada sobrevive a concorrência e restart; o rascunho perdedor no CAS continua recuperável.",
+      "primaryEvidenceRefs": [
+        "W9_AR2_ASSERT_02",
+        "W9_AR2_ASSERT_03",
+        "W14_R1_ASSERT_01",
+        "W18_E1_ASSERT_19"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W9_AR2_ASSERT_02",
+        "W9_AR2_ASSERT_03",
+        "W14_R1_ASSERT_01",
+        "W18_E1_ASSERT_19",
+        "W11_F1_ASSERT_03",
+        "W11_F1_ASSERT_23",
+        "W11_F1_ASSERT_24",
+        "W14_R1_ASSERT_06",
+        "W18_E1_ASSERT_05",
+        "W18_E1_ASSERT_09"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_06",
+        "W6_AR1_ASSERT_10",
+        "W6_AR1_ASSERT_15",
+        "W6_AR1_ASSERT_17",
+        "W6_AR1_ASSERT_21",
+        "W6_AR1_ASSERT_22",
+        "W6_AR1_ASSERT_24",
+        "W6_C1_ASSERT_03",
+        "W11_F1_ASSERT_08",
+        "W11_F1_ASSERT_12",
+        "W11_F1_ASSERT_26",
+        "W11_F1_ASSERT_27",
+        "W17_H7_ASSERT_06",
+        "W17_H7_ASSERT_10"
+      ],
+      "limits": [
+        "Trabalho e estados persistidos no serviço/C08; não é prova de formulário ainda não salvo ou de tela de recuperação montada."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.QLT.20",
+      "text": "Subtotal, total coberto, diferença condicionada e benefício calculado confirmado têm rótulos e fontes distinguíveis.",
+      "scope": "WP11",
+      "family": "quality_standards",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "B1B mostra subtotal, total indisponível/completo, sinal da diferença de custo e origem no renderer BI. A distinção completa de rótulos entre diferença condicionada e benefício calculado confirmado em todos os consumidores ainda não foi observada.",
+      "primaryEvidenceRefs": [
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W17_H7_ASSERT_01",
+        "W17_B1B_ASSERT_03"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W17_H7_ASSERT_01",
+        "W17_B1B_ASSERT_03"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_C1_PRODUCER_06",
+        "W6_C1_PRODUCER_07"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "B1B mostra subtotal, total indisponível/completo, sinal da diferença de custo e origem no renderer BI. A distinção completa de rótulos entre diferença condicionada e benefício calculado confirmado em todos os consumidores ainda não foi observada."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP05",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "PRESENTATION_SCOPE",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.QLT.10",
+      "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+      "scope": "WP11",
+      "family": "quality_standards",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Portas e HTTP usam payloads fechados, versões/digests verificáveis e estados/códigos discriminantes para conflito, revogação, stale, indisponibilidade e receipt requerido. Revisões de regra e histórico preservam identidades exatas.",
+      "primaryEvidenceRefs": [
+        "W14_R1_ASSERT_04",
+        "W14_R1_ASSERT_05",
+        "W18_E1_ASSERT_18",
+        "W19_E2_ASSERT_01",
+        "W19_E2_ASSERT_07",
+        "W11_AR3_attempt2_ASSERT_01",
+        "W14_R1_ASSERT_01"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W14_R1_ASSERT_04",
+        "W14_R1_ASSERT_05",
+        "W18_E1_ASSERT_18",
+        "W19_E2_ASSERT_01",
+        "W19_E2_ASSERT_07",
+        "W11_AR3_attempt2_ASSERT_01",
+        "W14_R1_ASSERT_01",
+        "W11_F1_ASSERT_14",
+        "W11_F1_ASSERT_19",
+        "W11_F1_ASSERT_22",
+        "W11_F1_ASSERT_23",
+        "W11_F1_ASSERT_24",
+        "W11_F1_ASSERT_29",
+        "W11_F1_ASSERT_32",
+        "W11_F1_ASSERT_33",
+        "W9_AR2_ASSERT_01",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W13_F3_ASSERT_01",
+        "W13_F3_ASSERT_02",
+        "W13_F3_ASSERT_03",
+        "W13_F3_ASSERT_04",
+        "W13_F3_ASSERT_05",
+        "W13_F3_ASSERT_06",
+        "W14_R1_ASSERT_02",
+        "W14_R1_ASSERT_03",
+        "W14_R1_ASSERT_07",
+        "W14_B1A_ASSERT_05",
+        "W15_H6_ASSERT_01",
+        "W15_H6_ASSERT_02",
+        "W15_H6_ASSERT_03",
+        "W15_H6_ASSERT_04",
+        "W15_H6_ASSERT_05",
+        "W15_H6_ASSERT_06",
+        "W15_H6_ASSERT_07",
+        "W16_R2Q_ASSERT_06",
+        "W17_H7_ASSERT_12",
+        "W17_H7_ASSERT_13",
+        "W17_H7_ASSERT_16",
+        "W17_H7_ASSERT_19",
+        "W17_H7_ASSERT_20",
+        "W17_H7_ASSERT_21",
+        "W18_E1_ASSERT_04",
+        "W18_E1_ASSERT_05",
+        "W18_E1_ASSERT_20",
+        "W18_E1_ASSERT_21",
+        "W19_E2_ASSERT_02",
+        "W19_E2_ASSERT_03",
+        "W19_E2_ASSERT_04",
+        "W19_E2_ASSERT_05",
+        "W19_E2_ASSERT_06"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_05",
+        "W6_AR1_ASSERT_06",
+        "W6_AR1_ASSERT_13",
+        "W6_AR1_ASSERT_14",
+        "W6_AR1_ASSERT_16",
+        "W6_AR1_ASSERT_17",
+        "W6_AR1_ASSERT_18",
+        "W6_AR1_ASSERT_20",
+        "W6_AR1_ASSERT_21",
+        "W6_AR1_ASSERT_22",
+        "W6_AR1_ASSERT_24",
+        "W6_C1_ASSERT_01",
+        "W6_C1_ASSERT_02",
+        "W6_C1_ASSERT_06",
+        "W6_C1_ASSERT_13",
+        "W6_C1_ASSERT_14",
+        "W6_C1_PRODUCER_01",
+        "W6_C1_PRODUCER_08",
+        "W9_H3_BATCH_ASSERT_01",
+        "W9_H3_BATCH_ASSERT_02",
+        "W9_H3_BATCH_ASSERT_05",
+        "W9_H3_BATCH_ASSERT_08",
+        "W9_H3_BATCH_ASSERT_09",
+        "W11_F1_ASSERT_01",
+        "W11_F1_ASSERT_02",
+        "W11_F1_ASSERT_07",
+        "W11_F1_ASSERT_08",
+        "W11_F1_ASSERT_27",
+        "W11_F1_ASSERT_30",
+        "W11_F1_ASSERT_37",
+        "W12_F2_ASSERT_01",
+        "W12_F2_ASSERT_02",
+        "W12_F2_ASSERT_03",
+        "W12_F2_ASSERT_04",
+        "W12_F2_ASSERT_05",
+        "W16_R2Q_ASSERT_07",
+        "W17_H7_ASSERT_05",
+        "W17_H7_ASSERT_06",
+        "W17_H7_ASSERT_22",
+        "W17_H7_ASSERT_23",
+        "W18_E1_ASSERT_11",
+        "W18_E1_ASSERT_12",
+        "W18_E1_ASSERT_13",
+        "W18_E1_ASSERT_14",
+        "W18_E1_ASSERT_15",
+        "W18_E1_ASSERT_16",
+        "W18_E1_ASSERT_17"
+      ],
+      "limits": [
+        "Contratos concretos e execução hospedada no escopo declarado. O typecheck do pacote continua falho por 130 diagnósticos estrangeiros; montagem/native não são inferidos."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.CMP.01",
+      "text": "Cobrir intenção/alternativas/premissas/escolha/propostas/recibos, concorrência, import e revogação.",
+      "scope": "WP11",
+      "family": "completeness_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Há asserções concretas de intenção, alternativas, premissas, escolhas, propostas e receipts, além de concorrência, import malicioso/encarnação e revogação. E1/E2 fecham os retornos tardios de intenção/rascunho com CAS real.",
+      "primaryEvidenceRefs": [
+        "W18_E1_ASSERT_01",
+        "W18_E1_ASSERT_19",
+        "W14_B1A_ASSERT_05",
+        "W14_R1_ASSERT_07",
+        "W17_B1B_ASSERT_02",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W9_AR2_ASSERT_04",
+        "W19_E2_ASSERT_01",
+        "W19_E2_ASSERT_07"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W18_E1_ASSERT_01",
+        "W18_E1_ASSERT_19",
+        "W14_B1A_ASSERT_05",
+        "W14_R1_ASSERT_07",
+        "W17_B1B_ASSERT_02",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W9_AR2_ASSERT_04",
+        "W19_E2_ASSERT_01",
+        "W19_E2_ASSERT_07",
+        "W11_F1_ASSERT_03",
+        "W11_F1_ASSERT_14",
+        "W11_F1_ASSERT_20",
+        "W11_F1_ASSERT_23",
+        "W11_F1_ASSERT_24",
+        "W11_F1_ASSERT_25",
+        "W11_F1_ASSERT_29",
+        "W11_F1_ASSERT_34",
+        "W11_F1_ASSERT_35",
+        "W9_AR2_ASSERT_01",
+        "W9_AR2_ASSERT_02",
+        "W9_AR2_ASSERT_03",
+        "W11_AR3_attempt2_ASSERT_01",
+        "W12_F2_ASSERT_06",
+        "W12_F2_ASSERT_07",
+        "W12_F2_ASSERT_08",
+        "W12_F2_ASSERT_09",
+        "W12_F2_ASSERT_10",
+        "W12_F2_ASSERT_11",
+        "W13_F3_ASSERT_01",
+        "W13_F3_ASSERT_02",
+        "W13_F3_ASSERT_03",
+        "W13_F3_ASSERT_04",
+        "W13_F3_ASSERT_05",
+        "W13_F3_ASSERT_06",
+        "W14_R1_ASSERT_01",
+        "W14_R1_ASSERT_02",
+        "W14_R1_ASSERT_03",
+        "W14_R1_ASSERT_06",
+        "W14_B1A_ASSERT_03",
+        "W14_B1A_ASSERT_04",
+        "W15_H6_ASSERT_01",
+        "W15_H6_ASSERT_02",
+        "W15_H6_ASSERT_03",
+        "W15_H6_ASSERT_04",
+        "W15_H6_ASSERT_05",
+        "W15_H6_ASSERT_06",
+        "W15_H6_ASSERT_07",
+        "W17_H7_ASSERT_01",
+        "W17_H7_ASSERT_21",
+        "W17_B1B_ASSERT_01",
+        "W18_E1_ASSERT_05",
+        "W18_E1_ASSERT_06",
+        "W18_E1_ASSERT_07",
+        "W18_E1_ASSERT_08",
+        "W18_E1_ASSERT_09",
+        "W18_E1_ASSERT_10",
+        "W18_E1_ASSERT_18",
+        "W18_E1_ASSERT_20",
+        "W18_E1_ASSERT_21",
+        "W19_E2_ASSERT_02",
+        "W19_E2_ASSERT_03",
+        "W19_E2_ASSERT_04",
+        "W19_E2_ASSERT_05",
+        "W19_E2_ASSERT_06"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_01",
+        "W6_AR1_ASSERT_02",
+        "W6_AR1_ASSERT_06",
+        "W6_AR1_ASSERT_07",
+        "W6_AR1_ASSERT_08",
+        "W6_AR1_ASSERT_09",
+        "W6_AR1_ASSERT_10",
+        "W6_AR1_ASSERT_11",
+        "W6_AR1_ASSERT_12",
+        "W6_AR1_ASSERT_15",
+        "W6_AR1_ASSERT_16",
+        "W6_AR1_ASSERT_17",
+        "W6_AR1_ASSERT_19",
+        "W6_AR1_ASSERT_21",
+        "W6_AR1_ASSERT_22",
+        "W6_AR1_ASSERT_23",
+        "W6_AR1_ASSERT_24",
+        "W6_C1_ASSERT_01",
+        "W6_C1_ASSERT_02",
+        "W6_C1_ASSERT_03",
+        "W6_C1_ASSERT_04",
+        "W11_F1_ASSERT_04",
+        "W11_F1_ASSERT_08",
+        "W11_F1_ASSERT_09",
+        "W11_F1_ASSERT_10",
+        "W11_F1_ASSERT_11",
+        "W11_F1_ASSERT_12",
+        "W11_F1_ASSERT_13",
+        "W11_F1_ASSERT_15",
+        "W11_F1_ASSERT_26",
+        "W11_F1_ASSERT_27",
+        "W11_F1_ASSERT_37",
+        "W12_F2_ASSERT_01",
+        "W12_F2_ASSERT_02",
+        "W12_F2_ASSERT_03",
+        "W12_F2_ASSERT_04",
+        "W12_F2_ASSERT_05",
+        "W16_R2Q_ASSERT_07",
+        "W17_H7_ASSERT_02",
+        "W17_H7_ASSERT_06",
+        "W17_H7_ASSERT_07",
+        "W17_H7_ASSERT_08",
+        "W17_H7_ASSERT_09",
+        "W17_H7_ASSERT_10",
+        "W17_H7_ASSERT_11",
+        "W17_H7_ASSERT_22",
+        "W17_H7_ASSERT_23",
+        "W18_E1_ASSERT_11",
+        "W18_E1_ASSERT_12",
+        "W18_E1_ASSERT_13",
+        "W18_E1_ASSERT_14",
+        "W18_E1_ASSERT_15",
+        "W18_E1_ASSERT_16",
+        "W18_E1_ASSERT_17"
+      ],
+      "limits": [
+        "Cobertura própria de serviços, HTTP e produtores reais; não agrega paridade native/MCP nem consumidores instalados ainda ausentes."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.CMP.20",
+      "text": "Cobrir categoria incluída, inaplicável suportada, pendente, inteiramente omitida, zero confirmado e custo posterior que inverte a comparação.",
+      "scope": "WP11",
+      "family": "completeness_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "B1A reconhece todas as categorias, componentes compartilhados e justificativas de escopo com evidência real do classificador. B1A usa quatro ramos explícitos; H7 remove training por inteiro e deriva missing-category. H7 revisa a mesma fonte/caso para 250000 e vantagem-10000, com critério failed e teto 15000.",
+      "primaryEvidenceRefs": [
+        "W14_B1A_ASSERT_01",
+        "W14_B1A_ASSERT_02",
+        "W14_B1A_ASSERT_03",
+        "W17_H7_ASSERT_01"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W14_B1A_ASSERT_01",
+        "W14_B1A_ASSERT_02",
+        "W14_B1A_ASSERT_03",
+        "W17_H7_ASSERT_01",
+        "W11_F1_ASSERT_21",
+        "W11_F1_ASSERT_36",
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W16_R2Q_ASSERT_01",
+        "W16_R2Q_ASSERT_02",
+        "W16_R2Q_ASSERT_04",
+        "W17_B1B_ASSERT_01",
+        "W17_B1B_ASSERT_03",
+        "W18_E1_ASSERT_02",
+        "W18_E1_ASSERT_03"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_03",
+        "W6_AR1_ASSERT_04",
+        "W6_C1_ASSERT_05",
+        "W6_C1_ASSERT_12",
+        "W6_C1_PRODUCER_02",
+        "W6_C1_PRODUCER_06",
+        "W11_F1_ASSERT_05",
+        "W11_F1_ASSERT_06",
+        "W17_H7_ASSERT_03",
+        "W17_H7_ASSERT_04"
+      ],
+      "limits": [
+        "As fontes e confirmações de escopo são sintéticas explícitas; producers reais. O literal não é cobertura de todos os consumidores nomeados em DOD 20."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [
+        {
+          "clause": "Incluída e N/A suportada",
+          "observed": "B1A reconhece todas as categorias, componentes compartilhados e justificativas de escopo com evidência real do classificador."
+        },
+        {
+          "clause": "Pending, omitted e zero confirmado",
+          "observed": "B1A usa quatro ramos explícitos; H7 remove training por inteiro e deriva missing-category."
+        },
+        {
+          "clause": "Custo posterior inverte a comparação",
+          "observed": "H7 revisa a mesma fonte/caso para 250000 e vantagem-10000, com critério failed e teto 15000."
+        }
+      ],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.CMP.10",
+      "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+      "scope": "WP11",
+      "family": "completeness_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "A matriz de obrigações residentes 5/18/8/C17 conserva owners/paths e contratos, mas faltam consumidores instalados, negativos completos por transporte e replay native/parent não vazio; o pacote não foi aceito como integral.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [
+        "W6_C1_PRODUCER_01"
+      ],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "A matriz de obrigações residentes 5/18/8/C17 conserva owners/paths e contratos, mas faltam consumidores instalados, negativos completos por transporte e replay native/parent não vazio; o pacote não foi aceito como integral."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.SUC.01",
+      "text": "Uma decisão passa de pergunta a trabalho executável e pode ser retomada sem reconstruir sua razão.",
+      "scope": "WP11",
+      "family": "success_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Os serviços preservam razão/valores e chegam a uma aplicação real. Falta a jornada instalada de pergunta → escolha → trabalho, retomada pelo usuário sem reconstrução manual.",
+      "primaryEvidenceRefs": [
+        "W11_AR3_attempt2_ASSERT_02",
+        "W18_E1_ASSERT_19"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W11_AR3_attempt2_ASSERT_02",
+        "W18_E1_ASSERT_19"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_01",
+        "W11_F1_ASSERT_15"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "Os serviços preservam razão/valores e chegam a uma aplicação real. Falta a jornada instalada de pergunta → escolha → trabalho, retomada pelo usuário sem reconstrução manual."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "USER_JOURNEY",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.SUC.20",
+      "text": "Usuário vê o que falta, confirma uma categoria e obtém reavaliação reproduzível sem perder a base da escolha original.",
+      "scope": "WP11",
+      "family": "success_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "H7/B1B qualificam reavaliação e preservação histórica; a confirmação de escopo/cotação é entrada de fixture. Falta observar o usuário resolver a categoria pelo fluxo montado.",
+      "primaryEvidenceRefs": [
+        "W17_H7_ASSERT_01",
+        "W17_B1B_ASSERT_02",
+        "W17_B1B_ASSERT_03"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W17_H7_ASSERT_01",
+        "W17_B1B_ASSERT_02",
+        "W17_B1B_ASSERT_03",
+        "W14_R1_ASSERT_05"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_14",
+        "W11_F1_ASSERT_02"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "H7/B1B qualificam reavaliação e preservação histórica; a confirmação de escopo/cotação é entrada de fixture. Falta observar o usuário resolver a categoria pelo fluxo montado."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "USER_JOURNEY",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.SUC.10",
+      "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+      "scope": "WP11",
+      "family": "success_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta execução resident real e consumo instalado da sua saída com replay reprodutível. Nenhum verdict not-applicable de omni vale como execução positiva.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [
+        "W6_C1_PRODUCER_01"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "Falta execução resident real e consumo instalado da sua saída com replay reprodutível. Nenhum verdict not-applicable de omni vale como execução positiva."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_CONSUMER",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T01.CHK.01",
+      "text": "Criar caso em uma sessão, reiniciar provider real e ler em outra identidade autorizada conserva conteúdo/versão/autoria; ator sem acesso recebe projeção reduzida ou recusa.",
+      "scope": "WP11.T01",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Reinício real, segundo principal, conteúdo/versão/autoria e recusa de outsider executados.",
+      "primaryEvidenceRefs": [
+        "W18_E1_ASSERT_19"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W18_E1_ASSERT_19",
+        "W18_E1_ASSERT_01",
+        "W19_E2_ASSERT_01",
+        "W19_E2_ASSERT_02",
+        "W19_E2_ASSERT_03",
+        "W19_E2_ASSERT_04",
+        "W19_E2_ASSERT_05",
+        "W19_E2_ASSERT_06",
+        "W19_E2_ASSERT_07"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_01",
+        "W6_AR1_ASSERT_02",
+        "W11_F1_ASSERT_04",
+        "W11_F1_ASSERT_15",
+        "W17_H7_ASSERT_02",
+        "W18_E1_ASSERT_11",
+        "W18_E1_ASSERT_12",
+        "W18_E1_ASSERT_13",
+        "W18_E1_ASSERT_14",
+        "W18_E1_ASSERT_15",
+        "W18_E1_ASSERT_16",
+        "W18_E1_ASSERT_17"
+      ],
+      "limits": [
+        "Conclusão do texto literal no escopo dos serviços/produtores/fixtures descritos. Não substitui aceite instalado, native/MCP ou aprovação formal."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T01.CHK.02",
+      "text": "Duas atualizações com expected version idêntica produzem um commit e um conflito com rascunho recuperável, sem perda de dado.",
+      "scope": "WP11.T01",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Duas identidades operacionais concorrentes com mesma expected version produzem um commit e um conflito; rascunho perdedor é recuperável.",
+      "primaryEvidenceRefs": [
+        "W18_E1_ASSERT_19"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W18_E1_ASSERT_19",
+        "W11_F1_ASSERT_34"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_01",
+        "W6_AR1_ASSERT_12",
+        "W11_F1_ASSERT_15"
+      ],
+      "limits": [
+        "Conclusão do texto literal no escopo dos serviços/produtores/fixtures descritos. Não substitui aceite instalado, native/MCP ou aprovação formal."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T01.CHK.03",
+      "text": "Import JSON malicioso ou troca de registro com ID reutilizado não fabrica confirmação, não apaga histórico confiável nem mantém vínculo à encarnação antiga como válido.",
+      "scope": "WP11.T01",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Import malicioso e reuso de ID são exercitados pelo importador/provider reais, conservando confirmação/histórico confiáveis e invalidando a encarnação antiga.",
+      "primaryEvidenceRefs": [
+        "W14_B1A_ASSERT_05"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W14_B1A_ASSERT_05"
+      ],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Conclusão do texto literal no escopo dos serviços/produtores/fixtures descritos. Não substitui aceite instalado, native/MCP ou aprovação formal."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T01.CHK.18",
+      "text": "Executar sf_case_read, sf_case_draft pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "scope": "WP11.T01",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T01.DOD.01",
+      "text": "Caso é criado, retomado e atualizado no provider real da composição; adapter em memória isolado não fecha DoD.",
+      "scope": "WP11.T01",
+      "family": "dod",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "O provider SQLite/C08 real cria, relê e edita casos nos testes. A montagem instalada usa a composição do owner WP10, que não foi exercitada neste candidato.",
+      "primaryEvidenceRefs": [
+        "W11_F1_ASSERT_34",
+        "W14_R1_ASSERT_04",
+        "W17_H7_ASSERT_01",
+        "W18_E1_ASSERT_01",
+        "W18_E1_ASSERT_19"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W11_F1_ASSERT_34",
+        "W14_R1_ASSERT_04",
+        "W17_H7_ASSERT_01",
+        "W18_E1_ASSERT_01",
+        "W18_E1_ASSERT_19"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_01",
+        "W6_AR1_ASSERT_02",
+        "W6_AR1_ASSERT_12",
+        "W6_AR1_ASSERT_13",
+        "W11_F1_ASSERT_01",
+        "W11_F1_ASSERT_04",
+        "W11_F1_ASSERT_15",
+        "W17_H7_ASSERT_02"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "O provider SQLite/C08 real cria, relê e edita casos nos testes. A montagem instalada usa a composição do owner WP10, que não foi exercitada neste candidato."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "INSTALLED_PROVIDER",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T01.DOD.18",
+      "text": "Descritores C16 de sf_case_read, sf_case_draft são implementados e consumidos por T06 com referências reais.",
+      "scope": "WP11.T01",
+      "family": "dod",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T01.INV.01",
+      "text": "Ator e autorização vêm do host; versão e histórico não são escolhidos pelo modelo nem importados como confiança.",
+      "scope": "WP11.T01",
+      "family": "invariants",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Grants/CAS e import real conservam identidade e autorização do host; roles, autoria, versões e história não são confiados ao payload importado.",
+      "primaryEvidenceRefs": [
+        "W18_E1_ASSERT_19",
+        "W11_F1_ASSERT_34",
+        "W14_B1A_ASSERT_05"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W18_E1_ASSERT_19",
+        "W11_F1_ASSERT_34",
+        "W14_B1A_ASSERT_05",
+        "W11_F1_ASSERT_20",
+        "W11_F1_ASSERT_29",
+        "W11_AR3_attempt2_ASSERT_01",
+        "W13_F3_ASSERT_01",
+        "W13_F3_ASSERT_02",
+        "W13_F3_ASSERT_03",
+        "W13_F3_ASSERT_04",
+        "W13_F3_ASSERT_05",
+        "W13_F3_ASSERT_06",
+        "W14_R1_ASSERT_02",
+        "W14_R1_ASSERT_03",
+        "W14_R1_ASSERT_04",
+        "W15_H6_ASSERT_01",
+        "W15_H6_ASSERT_02",
+        "W15_H6_ASSERT_03",
+        "W15_H6_ASSERT_04",
+        "W15_H6_ASSERT_05",
+        "W15_H6_ASSERT_06",
+        "W15_H6_ASSERT_07",
+        "W17_H7_ASSERT_14",
+        "W17_H7_ASSERT_19",
+        "W18_E1_ASSERT_08",
+        "W18_E1_ASSERT_20",
+        "W18_E1_ASSERT_21",
+        "W19_E2_ASSERT_01",
+        "W19_E2_ASSERT_02",
+        "W19_E2_ASSERT_03",
+        "W19_E2_ASSERT_04",
+        "W19_E2_ASSERT_05",
+        "W19_E2_ASSERT_06",
+        "W19_E2_ASSERT_07"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_01",
+        "W6_AR1_ASSERT_09",
+        "W6_AR1_ASSERT_12",
+        "W6_AR1_ASSERT_13",
+        "W6_AR1_ASSERT_19",
+        "W6_C1_ASSERT_02",
+        "W9_H3_BATCH_ASSERT_03",
+        "W9_H3_BATCH_ASSERT_08",
+        "W11_F1_ASSERT_01",
+        "W11_F1_ASSERT_11",
+        "W11_F1_ASSERT_15",
+        "W12_F2_ASSERT_01",
+        "W12_F2_ASSERT_02",
+        "W12_F2_ASSERT_03",
+        "W12_F2_ASSERT_04",
+        "W12_F2_ASSERT_05",
+        "W17_H7_ASSERT_09",
+        "W17_H7_ASSERT_22",
+        "W17_H7_ASSERT_23",
+        "W18_E1_ASSERT_11",
+        "W18_E1_ASSERT_12",
+        "W18_E1_ASSERT_13",
+        "W18_E1_ASSERT_14",
+        "W18_E1_ASSERT_15",
+        "W18_E1_ASSERT_16",
+        "W18_E1_ASSERT_17"
+      ],
+      "limits": [
+        "Conclusão do texto literal no escopo dos serviços/produtores/fixtures descritos. Não substitui aceite instalado, native/MCP ou aprovação formal."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T01.INV.18",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "scope": "WP11.T01",
+      "family": "invariants",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T01.QLT.01",
+      "text": "Falhas distinguem acesso, referência inválida e versão antiga; cada seção mantém origem/período/versão próprios.",
+      "scope": "WP11.T01",
+      "family": "quality_standards",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Acesso, referência/encarnação e stale têm códigos e negativos reais. A prova ainda não observa cada seção da projeção completa com origem, período e versão próprios no consumidor; os testes de caso vazio e readers de cálculo não cobrem essa enumeração inteira.",
+      "primaryEvidenceRefs": [
+        "W19_E2_ASSERT_02",
+        "W19_E2_ASSERT_03",
+        "W19_E2_ASSERT_04",
+        "W19_E2_ASSERT_05",
+        "W19_E2_ASSERT_06",
+        "W19_E2_ASSERT_07"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W19_E2_ASSERT_02",
+        "W19_E2_ASSERT_03",
+        "W19_E2_ASSERT_04",
+        "W19_E2_ASSERT_05",
+        "W19_E2_ASSERT_06",
+        "W19_E2_ASSERT_07",
+        "W11_F1_ASSERT_20",
+        "W11_F1_ASSERT_34",
+        "W14_R1_ASSERT_02",
+        "W14_R1_ASSERT_03",
+        "W14_R1_ASSERT_04",
+        "W17_H7_ASSERT_12",
+        "W17_H7_ASSERT_14",
+        "W17_H7_ASSERT_15",
+        "W17_H7_ASSERT_20",
+        "W18_E1_ASSERT_04",
+        "W18_E1_ASSERT_08",
+        "W18_E1_ASSERT_19",
+        "W18_E1_ASSERT_20",
+        "W18_E1_ASSERT_21",
+        "W19_E2_ASSERT_01"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_01",
+        "W6_AR1_ASSERT_05",
+        "W6_AR1_ASSERT_09",
+        "W6_AR1_ASSERT_12",
+        "W6_AR1_ASSERT_13",
+        "W6_AR1_ASSERT_19",
+        "W9_H3_BATCH_ASSERT_01",
+        "W9_H3_BATCH_ASSERT_03",
+        "W9_H3_BATCH_ASSERT_04",
+        "W9_H3_BATCH_ASSERT_09",
+        "W11_F1_ASSERT_01",
+        "W11_F1_ASSERT_07",
+        "W11_F1_ASSERT_11",
+        "W11_F1_ASSERT_15",
+        "W17_H7_ASSERT_05",
+        "W17_H7_ASSERT_09",
+        "W17_H7_ASSERT_22",
+        "W17_H7_ASSERT_23",
+        "W18_E1_ASSERT_11",
+        "W18_E1_ASSERT_12",
+        "W18_E1_ASSERT_13",
+        "W18_E1_ASSERT_14",
+        "W18_E1_ASSERT_15",
+        "W18_E1_ASSERT_16",
+        "W18_E1_ASSERT_17"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "Acesso, referência/encarnação e stale têm códigos e negativos reais. A prova ainda não observa cada seção da projeção completa com origem, período e versão próprios no consumidor; os testes de caso vazio e readers de cálculo não cobrem essa enumeração inteira."
+      ],
+      "remainingOwners": [
+        "WP11",
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "SECTION_PROVENANCE",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T01.QLT.18",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "scope": "WP11.T01",
+      "family": "quality_standards",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T01.CMP.01",
+      "text": "Cobrir rascunho, objetivo corrigido, referência revogada/substituída, concorrência e reinício.",
+      "scope": "WP11.T01",
+      "family": "completeness_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Rascunho/objetivo/CAS/revogação/restart observados são complementados pela substituição real de referência e encarnação no import.",
+      "primaryEvidenceRefs": [
+        "W18_E1_ASSERT_01",
+        "W18_E1_ASSERT_08",
+        "W18_E1_ASSERT_19",
+        "W11_F1_ASSERT_34",
+        "W14_B1A_ASSERT_05"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W18_E1_ASSERT_01",
+        "W18_E1_ASSERT_08",
+        "W18_E1_ASSERT_19",
+        "W11_F1_ASSERT_34",
+        "W14_B1A_ASSERT_05",
+        "W11_F1_ASSERT_20",
+        "W17_H7_ASSERT_01",
+        "W17_H7_ASSERT_16",
+        "W17_H7_ASSERT_17",
+        "W17_H7_ASSERT_18",
+        "W17_H7_ASSERT_19",
+        "W17_H7_ASSERT_21",
+        "W18_E1_ASSERT_20",
+        "W18_E1_ASSERT_21",
+        "W19_E2_ASSERT_01",
+        "W19_E2_ASSERT_02",
+        "W19_E2_ASSERT_03",
+        "W19_E2_ASSERT_04",
+        "W19_E2_ASSERT_05",
+        "W19_E2_ASSERT_06",
+        "W19_E2_ASSERT_07"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_01",
+        "W6_AR1_ASSERT_02",
+        "W6_AR1_ASSERT_09",
+        "W6_AR1_ASSERT_12",
+        "W6_AR1_ASSERT_19",
+        "W9_H3_BATCH_ASSERT_05",
+        "W9_H3_BATCH_ASSERT_06",
+        "W9_H3_BATCH_ASSERT_07",
+        "W9_H3_BATCH_ASSERT_08",
+        "W11_F1_ASSERT_04",
+        "W11_F1_ASSERT_11",
+        "W11_F1_ASSERT_15",
+        "W16_R2Q_ASSERT_07",
+        "W17_H7_ASSERT_02",
+        "W17_H7_ASSERT_09",
+        "W17_H7_ASSERT_22",
+        "W17_H7_ASSERT_23",
+        "W18_E1_ASSERT_11",
+        "W18_E1_ASSERT_12",
+        "W18_E1_ASSERT_13",
+        "W18_E1_ASSERT_14",
+        "W18_E1_ASSERT_15",
+        "W18_E1_ASSERT_16",
+        "W18_E1_ASSERT_17"
+      ],
+      "limits": [
+        "Conclusão do texto literal no escopo dos serviços/produtores/fixtures descritos. Não substitui aceite instalado, native/MCP ou aprovação formal."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T01.CMP.18",
+      "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+      "scope": "WP11.T01",
+      "family": "completeness_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T01.SUC.01",
+      "text": "André e um colaborador autorizado retomam a mesma pergunta e seus dados sem reconstruir contexto.",
+      "scope": "WP11.T01",
+      "family": "success_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "H7 fecha o mesmo caso/escolha para colaborador autorizado após novo provider/UI. Ainda não há retomada observada por André e colaborador no módulo instalado.",
+      "primaryEvidenceRefs": [
+        "W17_H7_ASSERT_01",
+        "W18_E1_ASSERT_19"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W17_H7_ASSERT_01",
+        "W18_E1_ASSERT_19"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_01",
+        "W11_F1_ASSERT_15"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "H7 fecha o mesmo caso/escolha para colaborador autorizado após novo provider/UI. Ainda não há retomada observada por André e colaborador no módulo instalado."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "USER_JOURNEY",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T01.SUC.18",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "scope": "WP11.T01",
+      "family": "success_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.CHK.01",
+      "text": "AI-RENEWAL com inventário completo e fontes sintéticas confirmadas: 240000 vs 60000+45000+105000 = 210000; diferença 30000; implantação 70000 produz 235000 e diferença 5000. Taxas/migração/treinamento explicitamente cobertos ou inaplicáveis não são somados duas vezes.",
+      "scope": "WP11.T02",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "O teste próprio observa todos os números literais de fontes sintéticas confirmadas pelo Planner, inventário completo e categorias compartilhadas sem dupla soma.",
+      "primaryEvidenceRefs": [
+        "W14_B1A_ASSERT_03"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W14_B1A_ASSERT_03",
+        "W14_B1A_ASSERT_01",
+        "W17_B1B_ASSERT_01"
+      ],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Conclusão do texto literal no escopo dos serviços/produtores/fixtures descritos. Não substitui aceite instalado, native/MCP ou aprovação formal."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.CHK.02",
+      "text": "Operação que substituiria contribuição já vinculada troca o componente uma vez; o teste com inclusão duplicada é recusado ou reconciliado pelo domínio.",
+      "scope": "WP11.T02",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Replace modifica a contribuição uma única vez e include duplicado é recusado pelo executor canônico; snapshots oficiais ficam intactos.",
+      "primaryEvidenceRefs": [
+        "W14_B1A_ASSERT_03"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W14_B1A_ASSERT_03",
+        "W16_R2Q_ASSERT_01",
+        "W17_B1B_ASSERT_01"
+      ],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Conclusão do texto literal no escopo dos serviços/produtores/fixtures descritos. Não substitui aceite instalado, native/MCP ou aprovação formal."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.CHK.03",
+      "text": "Moeda sem FX, custo de saída pending e desconto hipotético mantêm comparação conditioned. Valor 0 confirmado difere de null, categoria omitted e declaração not-applicable sem evidência; nenhum estado desconhecido é promovido a zero.",
+      "scope": "WP11.T02",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "R2Q fecha FX ausente com amount:null/conditioned. B1A já observou contract_exit pending e desconto hipotético no produtor real, zero/null/omitted e N/A sem suporte; F1 preserva a distinção no validador C10. Nenhuma parte desse literal requer afirmar conclusão do histórico H7 ou sessão instalada.",
+      "primaryEvidenceRefs": [
+        "W16_R2Q_ASSERT_04",
+        "W14_B1A_ASSERT_02",
+        "W14_B1A_ASSERT_03",
+        "W11_F1_ASSERT_21"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W16_R2Q_ASSERT_04",
+        "W14_B1A_ASSERT_02",
+        "W14_B1A_ASSERT_03",
+        "W11_F1_ASSERT_21",
+        "W11_F1_ASSERT_18",
+        "W11_F1_ASSERT_31",
+        "W11_F1_ASSERT_36",
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W16_R2Q_ASSERT_01",
+        "W16_R2Q_ASSERT_02",
+        "W16_R2Q_ASSERT_03",
+        "W16_R2Q_ASSERT_05",
+        "W18_E1_ASSERT_03"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_04",
+        "W6_C1_ASSERT_05",
+        "W6_C1_ASSERT_10",
+        "W6_C1_ASSERT_11",
+        "W6_C1_ASSERT_12",
+        "W6_C1_PRODUCER_05",
+        "W6_C1_PRODUCER_06",
+        "W11_F1_ASSERT_06",
+        "W17_H7_ASSERT_04"
+      ],
+      "limits": [
+        "Conclusão do texto literal no escopo dos serviços/produtores/fixtures descritos. Não substitui aceite instalado, native/MCP ou aprovação formal."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.CHK.20",
+      "text": "AI-RENEWAL-OMITTED-CATEGORY remove training da entrada, sem linha, sem pending pré-cadastrado e com implementação explicitamente sem treinamento: validador deriva missing-category e knownSubtotal 210000; completeDifference/total coberto ficam indisponíveis e a comparação é conditioned em todos os consumidores.",
+      "scope": "WP11.T02",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "A omissão é derivada sem linha/pending pré-cadastrado no produtor e consumida pelo BI. O trecho “em todos os consumidores” permanece sem UI WP01 montada, crítica e portfólio não vazio reais.",
+      "primaryEvidenceRefs": [
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W14_B1A_ASSERT_02",
+        "W17_H7_ASSERT_01",
+        "W17_B1B_ASSERT_03",
+        "W18_E1_ASSERT_02"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W14_B1A_ASSERT_02",
+        "W17_H7_ASSERT_01",
+        "W17_B1B_ASSERT_03",
+        "W18_E1_ASSERT_02",
+        "W11_F1_ASSERT_21"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_03",
+        "W6_C1_ASSERT_12",
+        "W6_C1_PRODUCER_02",
+        "W6_C1_PRODUCER_03",
+        "W6_C1_PRODUCER_06",
+        "W11_F1_ASSERT_05",
+        "W17_H7_ASSERT_03"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "A omissão é derivada sem linha/pending pré-cadastrado no produtor e consumida pelo BI. O trecho “em todos os consumidores” permanece sem UI WP01 montada, crítica e portfólio não vazio reais."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP05",
+        "WP12",
+        "WP13",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "NAMED_CONSUMERS",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.CHK.21",
+      "text": "Na mesma variante, confirmar novo componente training=40000 com fonte torna cobertura completa, total 250000, diferença -10000 e teto de implantação15000. A comparação de custo se inverte, condição mínima 20000 falha e a escolha original mantém subtotal 210000/ressalva pending/versões.",
+      "scope": "WP11.T02",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Cópia/save real produz 12 forecasts confirmados na nova fonte; mesmo caseId/incarnation e versão posterior. H7 assert total 250000 completo, vantagem-10000, teto canônico 15000 e rule failed. O cenário/rule da fixture usa critério 20000; assert failed, ChoiceRecord 210000/pending/digest e versões originais preservados após restart.",
+      "primaryEvidenceRefs": [
+        "W17_H7_ASSERT_01"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W17_H7_ASSERT_01",
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W14_B1A_ASSERT_02",
+        "W17_B1B_ASSERT_03"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_C1_PRODUCER_02",
+        "W6_C1_PRODUCER_03",
+        "W6_C1_PRODUCER_06"
+      ],
+      "limits": [
+        "Confirmação é input explícito de fonte sintética; o resultado completo é nova observação de fonte, e não hipótese original promovida. Sem consumidores adicionais inferidos."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [
+        {
+          "clause": "Mesma variante, componente training 40000 com fonte",
+          "observed": "Cópia/save real produz 12 forecasts confirmados na nova fonte; mesmo caseId/incarnation e versão posterior."
+        },
+        {
+          "clause": "Cobertura completa,250000,diferença-10000,teto 15000",
+          "observed": "H7 assert total 250000 completo, vantagem-10000, teto canônico 15000 e rule failed."
+        },
+        {
+          "clause": "Condição mínima 20000 falha e escolha anterior intacta",
+          "observed": "O cenário/rule da fixture usa critério 20000; assert failed, ChoiceRecord 210000/pending/digest e versões originais preservados após restart."
+        }
+      ],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.CHK.18",
+      "text": "Executar sf_alternative_draft pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "scope": "WP11.T02",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.DOD.01",
+      "text": "Alternativas persistidas consomem cálculo real WP03 e são editáveis no consumidor WP01.",
+      "scope": "WP11.T02",
+      "family": "dod",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Persistência e cálculo WP03/C17 são reais e qualificados. Falta editar a alternativa no consumidor WP01 montado com a mesma base/autoridade.",
+      "primaryEvidenceRefs": [
+        "W11_F1_ASSERT_33",
+        "W9_AR2_ASSERT_01",
+        "W11_AR3_attempt2_ASSERT_01",
+        "W14_R1_ASSERT_05",
+        "W17_H7_ASSERT_01",
+        "W17_H7_ASSERT_21"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W11_F1_ASSERT_33",
+        "W9_AR2_ASSERT_01",
+        "W11_AR3_attempt2_ASSERT_01",
+        "W14_R1_ASSERT_05",
+        "W17_H7_ASSERT_01",
+        "W17_H7_ASSERT_21",
+        "W11_F1_ASSERT_14",
+        "W11_F1_ASSERT_22",
+        "W11_F1_ASSERT_32"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_14",
+        "W6_AR1_ASSERT_20",
+        "W6_C1_ASSERT_01",
+        "W6_C1_ASSERT_13",
+        "W6_C1_ASSERT_14",
+        "W11_F1_ASSERT_02",
+        "W16_R2Q_ASSERT_07"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "Persistência e cálculo WP03/C17 são reais e qualificados. Falta editar a alternativa no consumidor WP01 montado com a mesma base/autoridade."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "WP01_EDIT",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.DOD.20",
+      "text": "Alternativa persistida entrega cálculo WP03 e cobertura C10 reais a todos os consumidores nomeados.",
+      "scope": "WP11.T02",
+      "family": "dod",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Planner/C10, persistência e BI têm prova; a entrega do mesmo resultado a cada consumidor nomeado ainda não inclui crítica e portfólio reais não vazios.",
+      "primaryEvidenceRefs": [
+        "W11_F1_ASSERT_33",
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W14_B1A_ASSERT_01",
+        "W17_H7_ASSERT_01",
+        "W17_B1B_ASSERT_03"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W11_F1_ASSERT_33",
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W14_B1A_ASSERT_01",
+        "W17_H7_ASSERT_01",
+        "W17_B1B_ASSERT_03",
+        "W11_F1_ASSERT_19",
+        "W11_F1_ASSERT_22",
+        "W11_F1_ASSERT_32"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_20",
+        "W6_C1_ASSERT_06",
+        "W6_C1_ASSERT_13",
+        "W6_C1_ASSERT_14",
+        "W6_C1_PRODUCER_08"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "Planner/C10, persistência e BI têm prova; a entrega do mesmo resultado a cada consumidor nomeado ainda não inclui crítica e portfólio reais não vazios."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP05",
+        "WP12",
+        "WP13",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "NAMED_CONSUMERS",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.DOD.18",
+      "text": "Descritores C16 de sf_alternative_draft são implementados e consumidos por T06 com referências reais.",
+      "scope": "WP11.T02",
+      "family": "dod",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.INV.01",
+      "text": "Simulação não altera oficial/actual/compra; ausência não vira zero e hipótese não vira compromisso.",
+      "scope": "WP11.T02",
+      "family": "invariants",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "B1A/R2Q conservam o snapshot Planner completo e não criam efeitos/receipts; AR3 só despacha após grant específico. Premissa março não altera Dashboard maio. FX/taxa/mês ausente continuam null/absent apesar de normalização legada; zero requer operação ou fonte explícita. Operations produzem evidenceState hypothetical, total:null e conditioned; não geram compra/aplicação pela simulação.",
+      "primaryEvidenceRefs": [
+        "W14_B1A_ASSERT_03",
+        "W16_R2Q_ASSERT_01",
+        "W16_R2Q_ASSERT_02",
+        "W16_R2Q_ASSERT_03",
+        "W16_R2Q_ASSERT_04",
+        "W16_R2Q_ASSERT_05",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W14_R1_ASSERT_07"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W14_B1A_ASSERT_03",
+        "W16_R2Q_ASSERT_01",
+        "W16_R2Q_ASSERT_02",
+        "W16_R2Q_ASSERT_03",
+        "W16_R2Q_ASSERT_04",
+        "W16_R2Q_ASSERT_05",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W14_R1_ASSERT_07",
+        "W11_F1_ASSERT_14",
+        "W11_F1_ASSERT_16",
+        "W11_F1_ASSERT_18",
+        "W9_AR2_ASSERT_01",
+        "W11_AR3_attempt2_ASSERT_01",
+        "W12_F2_ASSERT_06",
+        "W12_F2_ASSERT_07",
+        "W12_F2_ASSERT_08",
+        "W12_F2_ASSERT_09",
+        "W12_F2_ASSERT_10",
+        "W12_F2_ASSERT_11",
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W14_R1_ASSERT_02",
+        "W14_R1_ASSERT_03",
+        "W14_B1A_ASSERT_01",
+        "W15_H6_ASSERT_01",
+        "W15_H6_ASSERT_02",
+        "W15_H6_ASSERT_03",
+        "W15_H6_ASSERT_04",
+        "W15_H6_ASSERT_05",
+        "W15_H6_ASSERT_06",
+        "W15_H6_ASSERT_07",
+        "W17_H7_ASSERT_01",
+        "W17_B1B_ASSERT_01",
+        "W18_E1_ASSERT_18"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_16",
+        "W6_AR1_ASSERT_18",
+        "W6_C1_ASSERT_01",
+        "W6_C1_ASSERT_08",
+        "W6_C1_ASSERT_10",
+        "W6_C1_PRODUCER_04",
+        "W6_C1_PRODUCER_05",
+        "W11_F1_ASSERT_30",
+        "W11_F1_ASSERT_37"
+      ],
+      "limits": [
+        "O cenário não despacha Procurement; isso é ausência de efeito, não prova de aprovação formal. Negativos financeiros mantêm os limites sintéticos de fonte."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [
+        {
+          "clause": "Simulação não altera oficial/actual/compra",
+          "observed": "B1A/R2Q conservam o snapshot Planner completo e não criam efeitos/receipts; AR3 só despacha após grant específico. Premissa março não altera Dashboard maio."
+        },
+        {
+          "clause": "Ausência não vira zero",
+          "observed": "FX/taxa/mês ausente continuam null/absent apesar de normalização legada; zero requer operação ou fonte explícita."
+        },
+        {
+          "clause": "Hipótese não vira compromisso",
+          "observed": "Operations produzem evidenceState hypothetical, total:null e conditioned; não geram compra/aplicação pela simulação."
+        }
+      ],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.INV.20",
+      "text": "Nenhuma categoria some por não ter linha; cobertura não soma parcelas nem inventa valor, imposto ou fato confirmado.",
+      "scope": "WP11.T02",
+      "family": "invariants",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "C10 deriva missing-category para training omitido em fonte/cenário completos. B1A vínculos compartilhados referem uma contribuição; implantação 70000 produz 235000/5000 uma vez e include duplicado é recusado. N/A sem suporte é pending, FX ausente não vira zero, cobertura completa de hipótese continua total:null; inventário precisa listar as categorias.",
+      "primaryEvidenceRefs": [
+        "W14_B1A_ASSERT_01",
+        "W14_B1A_ASSERT_02",
+        "W14_B1A_ASSERT_03",
+        "W11_F1_ASSERT_21",
+        "W17_H7_ASSERT_01"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W14_B1A_ASSERT_01",
+        "W14_B1A_ASSERT_02",
+        "W14_B1A_ASSERT_03",
+        "W11_F1_ASSERT_21",
+        "W17_H7_ASSERT_01",
+        "W11_F1_ASSERT_16",
+        "W11_F1_ASSERT_17",
+        "W11_F1_ASSERT_18",
+        "W11_F1_ASSERT_31",
+        "W11_F1_ASSERT_33",
+        "W11_F1_ASSERT_36",
+        "W12_F2_ASSERT_06",
+        "W12_F2_ASSERT_07",
+        "W12_F2_ASSERT_08",
+        "W12_F2_ASSERT_09",
+        "W12_F2_ASSERT_10",
+        "W12_F2_ASSERT_11",
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W16_R2Q_ASSERT_01",
+        "W16_R2Q_ASSERT_02",
+        "W16_R2Q_ASSERT_03",
+        "W16_R2Q_ASSERT_04",
+        "W16_R2Q_ASSERT_05",
+        "W17_B1B_ASSERT_01",
+        "W17_B1B_ASSERT_03",
+        "W18_E1_ASSERT_02",
+        "W18_E1_ASSERT_03"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_03",
+        "W6_AR1_ASSERT_04",
+        "W6_C1_ASSERT_05",
+        "W6_C1_ASSERT_08",
+        "W6_C1_ASSERT_09",
+        "W6_C1_ASSERT_10",
+        "W6_C1_ASSERT_11",
+        "W6_C1_ASSERT_12",
+        "W6_C1_ASSERT_14",
+        "W6_C1_PRODUCER_02",
+        "W6_C1_PRODUCER_04",
+        "W6_C1_PRODUCER_05",
+        "W6_C1_PRODUCER_06",
+        "W11_F1_ASSERT_05",
+        "W11_F1_ASSERT_06",
+        "W17_H7_ASSERT_03",
+        "W17_H7_ASSERT_04"
+      ],
+      "limits": [
+        "Prova canônica nos casos exercitados, com inventário e fonte declarados. Não alegar autoanálise tributária ou confirmação empresarial."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [
+        {
+          "clause": "Nenhuma categoria some por falta de linha",
+          "observed": "C10 deriva missing-category para training omitido em fonte/cenário completos."
+        },
+        {
+          "clause": "Cobertura não soma parcelas",
+          "observed": "B1A vínculos compartilhados referem uma contribuição; implantação 70000 produz 235000/5000 uma vez e include duplicado é recusado."
+        },
+        {
+          "clause": "Sem inventar valor, imposto ou confirmação",
+          "observed": "N/A sem suporte é pending, FX ausente não vira zero, cobertura completa de hipótese continua total:null; inventário precisa listar as categorias."
+        }
+      ],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.INV.18",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "scope": "WP11.T02",
+      "family": "invariants",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.QLT.01",
+      "text": "Todo total pode ser reconciliado aos componentes com moeda, período e origem; campos inválidos têm erro específico.",
+      "scope": "WP11.T02",
+      "family": "quality_standards",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Os totais exercitados reconciliam componentes, moeda, horizonte e erros de alvo/base. Não foi qualificada no candidato a enumeração de origem A/B de todo total e dos campos editáveis inválidos no consumidor de alternativas; o teste planner-origins W6 fica histórico.",
+      "primaryEvidenceRefs": [
+        "W16_R2Q_ASSERT_04",
+        "W16_R2Q_ASSERT_05",
+        "W17_H7_ASSERT_01",
+        "W17_H7_ASSERT_13",
+        "W17_B1B_ASSERT_01",
+        "W17_B1B_ASSERT_03"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W16_R2Q_ASSERT_04",
+        "W16_R2Q_ASSERT_05",
+        "W17_H7_ASSERT_01",
+        "W17_H7_ASSERT_13",
+        "W17_B1B_ASSERT_01",
+        "W17_B1B_ASSERT_03",
+        "W14_B1A_ASSERT_03"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_C1_PRODUCER_07",
+        "W9_H3_BATCH_ASSERT_02"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "Os totais exercitados reconciliam componentes, moeda, horizonte e erros de alvo/base. Não foi qualificada no candidato a enumeração de origem A/B de todo total e dos campos editáveis inválidos no consumidor de alternativas; o teste planner-origins W6 fica histórico."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP05",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "TOTAL_ORIGIN_PRESENTATION",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.QLT.20",
+      "text": "Cada categoria mostra referência de parcela, motivo suportado de inaplicabilidade ou pergunta pendente; subtotal e total ficam distintos.",
+      "scope": "WP11.T02",
+      "family": "quality_standards",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "C10 e BI distinguem training pendente/completo e componentes; não foi observada no fluxo montado a apresentação de cada categoria com referência, motivo N/A suportado ou pergunta pendente.",
+      "primaryEvidenceRefs": [
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W14_B1A_ASSERT_02",
+        "W17_H7_ASSERT_01",
+        "W17_B1B_ASSERT_03"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W14_B1A_ASSERT_02",
+        "W17_H7_ASSERT_01",
+        "W17_B1B_ASSERT_03"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_C1_PRODUCER_06",
+        "W6_C1_PRODUCER_07"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "C10 e BI distinguem training pendente/completo e componentes; não foi observada no fluxo montado a apresentação de cada categoria com referência, motivo N/A suportado ou pergunta pendente."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP05",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "CATEGORY_PRESENTATION",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.QLT.18",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "scope": "WP11.T02",
+      "family": "quality_standards",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.CMP.01",
+      "text": "Cobrir mesma base, base incompatível, operação inválida, alternativa incompleta e mudança de critério.",
+      "scope": "WP11.T02",
+      "family": "completeness_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Mesma base e bases incompatíveis, alvo inválido e cobertura incompleta são discriminados por produtores canônicos. Outra operação aceita regra 2, altera 150 para 50, reavalia a métrica controlada e conserva os dois registros históricos.",
+      "primaryEvidenceRefs": [
+        "W14_B1A_ASSERT_03",
+        "W17_H7_ASSERT_01",
+        "W18_E1_ASSERT_18"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W14_B1A_ASSERT_03",
+        "W17_H7_ASSERT_01",
+        "W18_E1_ASSERT_18",
+        "W9_AR2_ASSERT_01",
+        "W11_AR3_attempt2_ASSERT_01",
+        "W12_F2_ASSERT_06",
+        "W12_F2_ASSERT_07",
+        "W12_F2_ASSERT_08",
+        "W12_F2_ASSERT_09",
+        "W12_F2_ASSERT_10",
+        "W12_F2_ASSERT_11",
+        "W16_R2Q_ASSERT_01",
+        "W16_R2Q_ASSERT_03",
+        "W17_H7_ASSERT_16",
+        "W17_H7_ASSERT_21"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_18",
+        "W6_C1_PRODUCER_03",
+        "W6_C1_PRODUCER_05",
+        "W9_H3_BATCH_ASSERT_05",
+        "W11_F1_ASSERT_30",
+        "W16_R2Q_ASSERT_07"
+      ],
+      "limits": [
+        "A mudança da regra usa métrica 100 sintética e gates controlados; não a confundir com mudança de resultado financeiro ou com nova escolha."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.CMP.20",
+      "text": "Cobrir inventário ausente, categoria omitida, not-applicable sem suporte, zero confirmado, fonte revogada, inclusão compartilhada e custo posterior inversor.",
+      "scope": "WP11.T02",
+      "family": "completeness_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "F1 coverage-access invalida inventário incompleto com inventory-unavailable; H7/B1A derivam training omitted. B1A/F1 recusam N/A sem refs/justificativa suportada e distinguem zero/null. B1A nega certificado após revogar evidência e mantém três categorias vinculadas ao mesmo componente sem soma dupla. H7 prova a mesma revisão 250000 e vantagem-10000, sem reescrever a escolha anterior.",
+      "primaryEvidenceRefs": [
+        "W11_F1_ASSERT_21",
+        "W14_B1A_ASSERT_01",
+        "W14_B1A_ASSERT_02",
+        "W14_B1A_ASSERT_03",
+        "W17_H7_ASSERT_01"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W11_F1_ASSERT_21",
+        "W14_B1A_ASSERT_01",
+        "W14_B1A_ASSERT_02",
+        "W14_B1A_ASSERT_03",
+        "W17_H7_ASSERT_01",
+        "W11_F1_ASSERT_17",
+        "W11_F1_ASSERT_31",
+        "W11_F1_ASSERT_36",
+        "W12_F2_ASSERT_06",
+        "W12_F2_ASSERT_07",
+        "W12_F2_ASSERT_08",
+        "W12_F2_ASSERT_09",
+        "W12_F2_ASSERT_10",
+        "W12_F2_ASSERT_11",
+        "W13_C2_ASSERT_01",
+        "W13_C2_ASSERT_02",
+        "W16_R2Q_ASSERT_01",
+        "W16_R2Q_ASSERT_02",
+        "W16_R2Q_ASSERT_04",
+        "W16_R2Q_ASSERT_06",
+        "W17_H7_ASSERT_17",
+        "W17_H7_ASSERT_18",
+        "W17_B1B_ASSERT_01",
+        "W18_E1_ASSERT_02",
+        "W18_E1_ASSERT_03",
+        "W18_E1_ASSERT_08"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_03",
+        "W6_AR1_ASSERT_04",
+        "W6_AR1_ASSERT_09",
+        "W6_C1_ASSERT_05",
+        "W6_C1_ASSERT_09",
+        "W6_C1_ASSERT_11",
+        "W6_C1_ASSERT_12",
+        "W6_C1_PRODUCER_03",
+        "W6_C1_PRODUCER_04",
+        "W6_C1_PRODUCER_06",
+        "W9_H3_BATCH_ASSERT_06",
+        "W9_H3_BATCH_ASSERT_07",
+        "W11_F1_ASSERT_05",
+        "W11_F1_ASSERT_06",
+        "W11_F1_ASSERT_11",
+        "W17_H7_ASSERT_03",
+        "W17_H7_ASSERT_04",
+        "W17_H7_ASSERT_09"
+      ],
+      "limits": [
+        "Revogação do certificado é uma resolução de evidência controlada; o teste não é demonstração de ACL empresarial externa ou portfólio montado."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [
+        {
+          "clause": "Inventário ausente e categoria omitida",
+          "observed": "F1 coverage-access invalida inventário incompleto com inventory-unavailable; H7/B1A derivam training omitted."
+        },
+        {
+          "clause": "N/A sem suporte e zero confirmado",
+          "observed": "B1A/F1 recusam N/A sem refs/justificativa suportada e distinguem zero/null."
+        },
+        {
+          "clause": "Fonte revogada e inclusão compartilhada",
+          "observed": "B1A nega certificado após revogar evidência e mantém três categorias vinculadas ao mesmo componente sem soma dupla."
+        },
+        {
+          "clause": "Custo posterior inversor",
+          "observed": "H7 prova a mesma revisão 250000 e vantagem-10000, sem reescrever a escolha anterior."
+        }
+      ],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.CMP.18",
+      "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "scope": "WP11.T02",
+      "family": "completeness_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.SUC.01",
+      "text": "O usuário altera uma premissa e obtém uma comparação que pode explicar e reproduzir.",
+      "scope": "WP11.T02",
+      "family": "success_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Cálculo reproduzível e revisões de premissa existem, mas ainda não há observação de um usuário editar, explicar e reproduzir a comparação pelo fluxo instalado.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "Cálculo reproduzível e revisões de premissa existem, mas ainda não há observação de um usuário editar, explicar e reproduzir a comparação pelo fluxo instalado."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "HUMAN_UNDERSTANDING",
+      "clauseMapping": [],
+      "sourceStatus": "NOT_ESTABLISHED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.SUC.20",
+      "text": "O usuário compreende a ressalva e resolve a informação que altera a comparação, sem refazer manualmente os números.",
+      "scope": "WP11.T02",
+      "family": "success_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Nenhum teste de serviço/renderer demonstra compreensão humana da ressalva ou resolução pelo usuário sem refazer números; esse resultado de uso não foi estabelecido.",
+      "primaryEvidenceRefs": [
+        "W17_B1B_ASSERT_03"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W17_B1B_ASSERT_03"
+      ],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "Nenhum teste de serviço/renderer demonstra compreensão humana da ressalva ou resolução pelo usuário sem refazer números; esse resultado de uso não foi estabelecido."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "HUMAN_UNDERSTANDING",
+      "clauseMapping": [],
+      "sourceStatus": "NOT_ESTABLISHED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T02.SUC.18",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "scope": "WP11.T02",
+      "family": "success_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T03.CHK.01",
+      "text": "Registrar escolha preserva a base financeira; alteração posterior de cotação e nova escolha não modificam o registro original.",
+      "scope": "WP11.T03",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "A revisão de cotação não reescreve a ChoiceRecord original. Novas operações com grants privados distintos registram a segunda e a terceira escolhas, mantendo digests, razões e resultados anteriores.",
+      "primaryEvidenceRefs": [
+        "W17_B1B_ASSERT_01",
+        "W17_B1B_ASSERT_02"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W17_B1B_ASSERT_01",
+        "W17_B1B_ASSERT_02",
+        "W11_F1_ASSERT_19",
+        "W11_F1_ASSERT_35",
+        "W11_AR3_attempt2_ASSERT_01",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W14_B1A_ASSERT_04",
+        "W17_H7_ASSERT_01",
+        "W17_H7_ASSERT_21",
+        "W18_E1_ASSERT_06",
+        "W18_E1_ASSERT_10"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_07",
+        "W6_AR1_ASSERT_11",
+        "W6_C1_ASSERT_04",
+        "W6_C1_ASSERT_06",
+        "W6_C1_PRODUCER_08",
+        "W11_F1_ASSERT_09",
+        "W11_F1_ASSERT_13",
+        "W16_R2Q_ASSERT_07",
+        "W17_H7_ASSERT_07",
+        "W17_H7_ASSERT_11"
+      ],
+      "limits": [
+        "Os grants são privados reais invocados por teste. Não é testemunho de pessoa real na instalação."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T03.CHK.02",
+      "text": "Escolher alternativa não aprova PR/PO, não aplica cenário oficial nem cria ação automaticamente; propostas mostram destino e confirmação cabível.",
+      "scope": "WP11.T03",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Os grants separam escolher, preparar e aplicar; nada aplica automaticamente. Falta a proposta no destino integrado e o percurso formal PR/PO com a confirmação cabível, sem aprovação implícita.",
+      "primaryEvidenceRefs": [
+        "W13_F3_ASSERT_06",
+        "W14_R1_ASSERT_06",
+        "W14_B1A_ASSERT_04",
+        "W17_H7_ASSERT_21",
+        "W17_B1B_ASSERT_02",
+        "W18_E1_ASSERT_07"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W13_F3_ASSERT_06",
+        "W14_R1_ASSERT_06",
+        "W14_B1A_ASSERT_04",
+        "W17_H7_ASSERT_21",
+        "W17_B1B_ASSERT_02",
+        "W18_E1_ASSERT_07",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W13_F3_ASSERT_01",
+        "W13_F3_ASSERT_02",
+        "W13_F3_ASSERT_03",
+        "W13_F3_ASSERT_04",
+        "W13_F3_ASSERT_05"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_08",
+        "W6_AR1_ASSERT_15",
+        "W11_F1_ASSERT_10",
+        "W11_F1_ASSERT_26",
+        "W12_F2_ASSERT_01",
+        "W12_F2_ASSERT_02",
+        "W12_F2_ASSERT_03",
+        "W12_F2_ASSERT_04",
+        "W12_F2_ASSERT_05",
+        "W16_R2Q_ASSERT_07",
+        "W17_H7_ASSERT_08"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "Os grants separam escolher, preparar e aplicar; nada aplica automaticamente. Falta a proposta no destino integrado e o percurso formal PR/PO com a confirmação cabível, sem aprovação implícita."
+      ],
+      "remainingOwners": [
+        "WP04",
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "DOMAIN_PROPOSAL_PRESENTATION",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T03.CHK.03",
+      "text": "Responsável confirma março enquanto projeto oficial segue maio: cenário usa premissa declarada, divergência permanece visível e atualização oficial exige comando próprio.",
+      "scope": "WP11.T03",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Admissão privada real permite a confirmação declarada; Dashboard real continua maio. Planner canônico consome março; serviço/HTTP devolvem as duas datas e suas evidências, com recusa de drift. Somente o comando separado do domínio altera a data oficial.",
+      "primaryEvidenceRefs": [
+        "W14_R1_ASSERT_07"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W14_R1_ASSERT_07"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_16",
+        "W11_F1_ASSERT_37"
+      ],
+      "limits": [
+        "Visibilidade demonstrada no serviço/HTTP, não renderização instalada. Obrigações de UI/native/SUC permanecem separadas."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [
+        {
+          "clause": "Responsável confirma março enquanto oficial maio",
+          "observed": "Admissão privada real permite a confirmação declarada; Dashboard real continua maio."
+        },
+        {
+          "clause": "Cenário usa premissa e divergência visível",
+          "observed": "Planner canônico consome março; serviço/HTTP devolvem as duas datas e suas evidências, com recusa de drift."
+        },
+        {
+          "clause": "Oficial exige comando próprio",
+          "observed": "Somente o comando separado do domínio altera a data oficial."
+        }
+      ],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T03.CHK.20",
+      "text": "Registrar escolha condicionada na variante de treinamento omitido; confirmar treinamento 40000 depois conserva a escolha/subtotal/ressalva originais e apresenta nova alternativa250000/diferença -10000 sem reescrever a razão histórica ou autoalterar a escolha.",
+      "scope": "WP11.T03",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "A escolha original guarda 210000/total:null/pending e training missing, sem preparar/aplicar. H7 revisa fonte no mesmo caso/encarnação e compara canonicamente; nova alternativa completa e inversão são asserts efetivos. Mantém uma ChoiceRecord, digest e choice-recorded únicos, reconsidering e ausência de prepared changes/receipts; colaboração após restart lê o mesmo histórico.",
+      "primaryEvidenceRefs": [
+        "W17_H7_ASSERT_01"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W17_H7_ASSERT_01",
+        "W11_F1_ASSERT_35",
+        "W14_B1A_ASSERT_04",
+        "W17_H7_ASSERT_21",
+        "W17_B1B_ASSERT_02",
+        "W17_B1B_ASSERT_03",
+        "W18_E1_ASSERT_06"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_07",
+        "W6_C1_ASSERT_04",
+        "W11_F1_ASSERT_09",
+        "W16_R2Q_ASSERT_07",
+        "W17_H7_ASSERT_07"
+      ],
+      "limits": [
+        "A confirmação de cotação/escopo e a escolha inicial são fronteiras declaradas de fixture; B1B qualifica as operações privadas para escolhas subsequentes. Não há pessoa real ou native demonstrados."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [
+        {
+          "clause": "Registrar escolha condicionada com training omitido",
+          "observed": "A escolha original guarda 210000/total:null/pending e training missing, sem preparar/aplicar."
+        },
+        {
+          "clause": "Confirmar 40000 depois apresenta 250000 e diferença-10000",
+          "observed": "H7 revisa fonte no mesmo caso/encarnação e compara canonicamente; nova alternativa completa e inversão são asserts efetivos."
+        },
+        {
+          "clause": "Razão/ressalvas anteriores sem reescrever ou autoescolher",
+          "observed": "Mantém uma ChoiceRecord, digest e choice-recorded únicos, reconsidering e ausência de prepared changes/receipts; colaboração após restart lê o mesmo histórico."
+        }
+      ],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T03.CHK.18",
+      "text": "Executar sf_change_prepare pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "scope": "WP11.T03",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T03.DOD.01",
+      "text": "Escolha humana gera propostas revisáveis que chegam aos consumidores reais de cada domínio.",
+      "scope": "WP11.T03",
+      "family": "dod",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "A proposta humana e o review/aplicação Planner são reais. As propostas Procurement nos testes de execução são seed; falta sua geração pela escolha humana e entrega ao consumidor real.",
+      "primaryEvidenceRefs": [
+        "W11_AR3_attempt2_ASSERT_02"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W11_AR3_attempt2_ASSERT_02"
+      ],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "A proposta humana e o review/aplicação Planner são reais. As propostas Procurement nos testes de execução são seed; falta sua geração pela escolha humana e entrega ao consumidor real."
+      ],
+      "remainingOwners": [
+        "WP04",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "HUMAN_PROCUREMENT_PROPOSAL",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T03.DOD.18",
+      "text": "Descritores C16 de sf_change_prepare são implementados e consumidos por T06 com referências reais.",
+      "scope": "WP11.T03",
+      "family": "dod",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T03.INV.01",
+      "text": "Escolha gerencial não equivale a aprovação formal; UI ou IA não delegam autoridade inexistente.",
+      "scope": "WP11.T03",
+      "family": "invariants",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "A separação de grants é comprovada no serviço. A aprovação Procurement e o transporte IA/native completo ainda não foram certificados; submit_pr não suportado não prova autorização formal.",
+      "primaryEvidenceRefs": [
+        "W14_R1_ASSERT_07",
+        "W14_B1A_ASSERT_04",
+        "W17_H7_ASSERT_21",
+        "W17_B1B_ASSERT_02",
+        "W18_E1_ASSERT_07",
+        "W18_E1_ASSERT_10"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W14_R1_ASSERT_07",
+        "W14_B1A_ASSERT_04",
+        "W17_H7_ASSERT_21",
+        "W17_B1B_ASSERT_02",
+        "W18_E1_ASSERT_07",
+        "W18_E1_ASSERT_10",
+        "W11_F1_ASSERT_28",
+        "W11_F1_ASSERT_29",
+        "W11_F1_ASSERT_35",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W13_F3_ASSERT_01",
+        "W13_F3_ASSERT_02",
+        "W13_F3_ASSERT_03",
+        "W13_F3_ASSERT_04",
+        "W13_F3_ASSERT_05",
+        "W13_F3_ASSERT_06",
+        "W14_R1_ASSERT_05",
+        "W14_R1_ASSERT_06"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_08",
+        "W6_AR1_ASSERT_11",
+        "W6_AR1_ASSERT_14",
+        "W6_AR1_ASSERT_15",
+        "W6_AR1_ASSERT_16",
+        "W6_C1_ASSERT_02",
+        "W6_C1_ASSERT_04",
+        "W6_C1_ASSERT_07",
+        "W11_F1_ASSERT_02",
+        "W11_F1_ASSERT_10",
+        "W11_F1_ASSERT_13",
+        "W11_F1_ASSERT_26",
+        "W11_F1_ASSERT_37",
+        "W12_F2_ASSERT_01",
+        "W12_F2_ASSERT_02",
+        "W12_F2_ASSERT_03",
+        "W12_F2_ASSERT_04",
+        "W12_F2_ASSERT_05",
+        "W16_R2Q_ASSERT_07",
+        "W17_H7_ASSERT_08",
+        "W17_H7_ASSERT_11"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "A separação de grants é comprovada no serviço. A aprovação Procurement e o transporte IA/native completo ainda não foram certificados; submit_pr não suportado não prova autorização formal."
+      ],
+      "remainingOwners": [
+        "WP04",
+        "WP10",
+        "WP12",
+        "S0"
+      ],
+      "closureClass": "FORMAL_APPROVAL_AUTHORITY",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T03.INV.18",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "scope": "WP11.T03",
+      "family": "invariants",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T03.QLT.01",
+      "text": "Cada proposta mostra alteração, motivo, destino e estado; a justificativa continua vinculada aos números debatidos.",
+      "scope": "WP11.T03",
+      "family": "quality_standards",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "O preview Planner conserva alteração, razão, destino, estado e números; falta qualificar a apresentação de cada proposta/destino na composição instalada, inclusive Procurement.",
+      "primaryEvidenceRefs": [
+        "W11_AR3_attempt2_ASSERT_02",
+        "W14_R1_ASSERT_06",
+        "W17_B1B_ASSERT_02",
+        "W18_E1_ASSERT_07"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W11_AR3_attempt2_ASSERT_02",
+        "W14_R1_ASSERT_06",
+        "W17_B1B_ASSERT_02",
+        "W18_E1_ASSERT_07"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_08",
+        "W6_AR1_ASSERT_15",
+        "W11_F1_ASSERT_10",
+        "W11_F1_ASSERT_26",
+        "W17_H7_ASSERT_08"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "O preview Planner conserva alteração, razão, destino, estado e números; falta qualificar a apresentação de cada proposta/destino na composição instalada, inclusive Procurement."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP04",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "PROPOSAL_PRESENTATION",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T03.QLT.18",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "scope": "WP11.T03",
+      "family": "quality_standards",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T03.CMP.01",
+      "text": "Cobrir escolher, manter escolha sob nova justificativa, substituir escolha, rejeitar proposta e conflito da fonte.",
+      "scope": "WP11.T03",
+      "family": "completeness_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "O conjunto executado cobre escolher, substituir e manter sob nova razão, rejeitar uma proposta não despachada e recusar conflito/revisão de fonte. Promoção de alternativa e nova ChoiceRecord são fatos distintos.",
+      "primaryEvidenceRefs": [
+        "W17_B1B_ASSERT_02",
+        "W14_R1_ASSERT_06",
+        "W17_H7_ASSERT_01",
+        "W17_H7_ASSERT_21"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W17_B1B_ASSERT_02",
+        "W14_R1_ASSERT_06",
+        "W17_H7_ASSERT_01",
+        "W17_H7_ASSERT_21",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W14_B1A_ASSERT_04"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_15",
+        "W11_F1_ASSERT_26"
+      ],
+      "limits": [
+        "Rejeição parte de proposta semeada; escolha/revisão usam grants privados. A jornada humana integrada entre todos os domínios permanece separada."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T03.CMP.18",
+      "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "scope": "WP11.T03",
+      "family": "completeness_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T03.SUC.01",
+      "text": "A equipe consegue continuar o trabalho a partir da escolha sem transcrever sua justificativa e seus valores.",
+      "scope": "WP11.T03",
+      "family": "success_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Continuidade de valores/razão é provada por serviços e grants reais. A equipe continuar esse trabalho no consumidor instalado sem transcrição ainda não foi observada.",
+      "primaryEvidenceRefs": [
+        "W11_AR3_attempt2_ASSERT_02"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W11_AR3_attempt2_ASSERT_02"
+      ],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "Continuidade de valores/razão é provada por serviços e grants reais. A equipe continuar esse trabalho no consumidor instalado sem transcrição ainda não foi observada."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "USER_JOURNEY",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T03.SUC.18",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "scope": "WP11.T03",
+      "family": "success_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T04.CHK.01",
+      "text": "Aplicar Planner com sucesso e recusar Procurement mantém o primeiro resultado e exibe parcial; retomada não reaplica o Planner.",
+      "scope": "WP11.T04",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Comandos reais: Planner 42/receipt atômico, Procurement 409 após CAS concorrente; caso expõe partially-applied e estados/receipts em ordem. Retries em ambas ordens e após dispose/reopen não executam nem revisam domínio novamente; snapshots oficiais permanecem iguais.",
+      "primaryEvidenceRefs": [
+        "W9_AR2_ASSERT_02"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W9_AR2_ASSERT_02"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_17"
+      ],
+      "limits": [
+        "Escolha/propostas são seed e confirmação é controle explícito; a exibição é a projeção do serviço/C08. Não é jornada humana instalada entre domínios."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [
+        {
+          "clause": "Planner sucesso, Procurement recusa e parcial",
+          "observed": "Comandos reais: Planner 42/receipt atômico, Procurement 409 após CAS concorrente; caso expõe partially-applied e estados/receipts em ordem."
+        },
+        {
+          "clause": "Retomada não reaplica Planner",
+          "observed": "Retries em ambas ordens e após dispose/reopen não executam nem revisam domínio novamente; snapshots oficiais permanecem iguais."
+        }
+      ],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T04.CHK.02",
+      "text": "Perder resposta depois do commit e reenviar a mesma correlação resulta em um efeito; caso sem receipt autoritativo fica indeterminado e exige reconciliação, nunca retry cego.",
+      "scope": "WP11.T04",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Resposta perdida e ausência de receipt autoritativo demonstradas separadamente com domínio/C08 reais; não há retry cego após reserva durável.",
+      "primaryEvidenceRefs": [
+        "W11_F1_ASSERT_24",
+        "W14_R1_ASSERT_01"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W11_F1_ASSERT_24",
+        "W14_R1_ASSERT_01",
+        "W11_F1_ASSERT_03",
+        "W11_F1_ASSERT_23",
+        "W18_E1_ASSERT_09"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_10",
+        "W6_AR1_ASSERT_21",
+        "W6_AR1_ASSERT_22",
+        "W6_AR1_ASSERT_24",
+        "W6_C1_ASSERT_03",
+        "W11_F1_ASSERT_12",
+        "W11_F1_ASSERT_27",
+        "W17_H7_ASSERT_10"
+      ],
+      "limits": [
+        "Conclusão do texto literal no escopo dos serviços/produtores/fixtures descritos. Não substitui aceite instalado, native/MCP ou aprovação formal."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T04.CHK.03",
+      "text": "Revogar permissão entre preparação e aplicação recusa a mudança pendente e não expõe resultado restrito em recibo agregado.",
+      "scope": "WP11.T04",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Caso permanece acessível enquanto a aplicação/receipt Procurement são revogados; aggregate não expõe value restrito.",
+      "primaryEvidenceRefs": [
+        "W9_AR2_ASSERT_04"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W9_AR2_ASSERT_04",
+        "W11_F1_ASSERT_20",
+        "W11_F1_ASSERT_25"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_19",
+        "W6_AR1_ASSERT_23"
+      ],
+      "limits": [
+        "Conclusão do texto literal no escopo dos serviços/produtores/fixtures descritos. Não substitui aceite instalado, native/MCP ou aprovação formal."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T04.CHK.18",
+      "text": "Executar sf_receipt_get pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "scope": "WP11.T04",
+      "family": "checks",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T04.DOD.01",
+      "text": "O módulo integrado recupera falha parcial e resposta perdida usando recibos reais de domínio.",
+      "scope": "WP11.T04",
+      "family": "dod",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Receipts e recuperação reais são qualificados nas composições próprias. Falta o módulo integrado expor e consumir a recuperação da mesma jornada humana entre domínios.",
+      "primaryEvidenceRefs": [
+        "W9_AR2_ASSERT_02",
+        "W9_AR2_ASSERT_03",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W14_R1_ASSERT_01"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W9_AR2_ASSERT_02",
+        "W9_AR2_ASSERT_03",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W14_R1_ASSERT_01"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_17",
+        "W6_AR1_ASSERT_24",
+        "W11_F1_ASSERT_27"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "Receipts e recuperação reais são qualificados nas composições próprias. Falta o módulo integrado expor e consumir a recuperação da mesma jornada humana entre domínios."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP04",
+        "S0"
+      ],
+      "closureClass": "INTEGRATED_RECOVERY",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T04.DOD.02",
+      "text": "Recuperação consulta recibos de domínio gravados atomicamente com a mutação e reconcilia o caso; a prova inclui resposta perdida após commit e ausência de efeito duplicado.",
+      "scope": "WP11.T04",
+      "family": "dod",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Receipt real é gravado atomicamente com mutação Planner; recuperação pós-commit e retry não repetem efeito.",
+      "primaryEvidenceRefs": [
+        "W11_F1_ASSERT_23",
+        "W11_F1_ASSERT_24"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W11_F1_ASSERT_23",
+        "W11_F1_ASSERT_24",
+        "W11_F1_ASSERT_03",
+        "W11_F1_ASSERT_28",
+        "W9_AR2_ASSERT_02",
+        "W9_AR2_ASSERT_03",
+        "W11_AR3_attempt2_ASSERT_02",
+        "W14_R1_ASSERT_01"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_17",
+        "W6_AR1_ASSERT_21",
+        "W6_AR1_ASSERT_22",
+        "W6_AR1_ASSERT_24",
+        "W6_C1_ASSERT_03",
+        "W6_C1_ASSERT_07",
+        "W11_F1_ASSERT_27"
+      ],
+      "limits": [
+        "Conclusão do texto literal no escopo dos serviços/produtores/fixtures descritos. Não substitui aceite instalado, native/MCP ou aprovação formal."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T04.DOD.18",
+      "text": "Descritores C16 de sf_receipt_get são implementados e consumidos por T06 com referências reais.",
+      "scope": "WP11.T04",
+      "family": "dod",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T04.INV.01",
+      "text": "Não existe promessa de transação global; um erro posterior não desfaz ou oculta commits anteriores.",
+      "scope": "WP11.T04",
+      "family": "invariants",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falha Procurement posterior preserva o commit Planner e receipts parciais após reinício; não existe rollback global presumido.",
+      "primaryEvidenceRefs": [
+        "W9_AR2_ASSERT_02"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W9_AR2_ASSERT_02",
+        "W11_F1_ASSERT_03",
+        "W11_F1_ASSERT_23",
+        "W11_F1_ASSERT_24",
+        "W11_F1_ASSERT_28",
+        "W9_AR2_ASSERT_03"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_17",
+        "W6_AR1_ASSERT_21",
+        "W6_AR1_ASSERT_22",
+        "W6_C1_ASSERT_03",
+        "W6_C1_ASSERT_07"
+      ],
+      "limits": [
+        "Conclusão do texto literal no escopo dos serviços/produtores/fixtures descritos. Não substitui aceite instalado, native/MCP ou aprovação formal."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T04.INV.18",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "scope": "WP11.T04",
+      "family": "invariants",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T04.QLT.01",
+      "text": "Estado informa efeito comprovado e ação de recuperação; correlação estável independe de narrativa IA.",
+      "scope": "WP11.T04",
+      "family": "quality_standards",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "HTTP/status distingue not-attempted, receipt-required e reconciled; sem receipt autoritativo não expõe applied; restauração do receipt exato reconcilia. Reserva durável por caso/encarnação/change e receipt vinculados sobrevivem retries com operações/atores distintos e restart; narrativas não autorizam dispatch adicional. Revogação de receipt/domain recusa agregado apesar de caso acessível; HTTP retorna causa explícita sem projectionvalue.",
+      "primaryEvidenceRefs": [
+        "W14_R1_ASSERT_01",
+        "W9_AR2_ASSERT_02",
+        "W9_AR2_ASSERT_04"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W14_R1_ASSERT_01",
+        "W9_AR2_ASSERT_02",
+        "W9_AR2_ASSERT_04",
+        "W11_F1_ASSERT_23",
+        "W11_F1_ASSERT_24",
+        "W9_AR2_ASSERT_03",
+        "W18_E1_ASSERT_05",
+        "W18_E1_ASSERT_09"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_06",
+        "W6_AR1_ASSERT_10",
+        "W6_AR1_ASSERT_17",
+        "W6_AR1_ASSERT_21",
+        "W6_AR1_ASSERT_22",
+        "W6_AR1_ASSERT_24",
+        "W11_F1_ASSERT_08",
+        "W11_F1_ASSERT_12",
+        "W11_F1_ASSERT_27",
+        "W17_H7_ASSERT_06",
+        "W17_H7_ASSERT_10"
+      ],
+      "limits": [
+        "São estados e ação de reconciliação no serviço/HTTP; layout de recuperação montado e compreensão humana continuam em SUC/integrado."
+      ],
+      "remaining": [],
+      "remainingOwners": [],
+      "closureClass": "OWN_LITERAL_QUALIFIED",
+      "clauseMapping": [
+        {
+          "clause": "Estado informa efeito comprovado e recuperação",
+          "observed": "HTTP/status distingue not-attempted, receipt-required e reconciled; sem receipt autoritativo não expõe applied; restauração do receipt exato reconcilia."
+        },
+        {
+          "clause": "Correlação estável independe da narrativa",
+          "observed": "Reserva durável por caso/encarnação/change e receipt vinculados sobrevivem retries com operações/atores distintos e restart; narrativas não autorizam dispatch adicional."
+        },
+        {
+          "clause": "Resultado restrito permanece privado",
+          "observed": "Revogação de receipt/domain recusa agregado apesar de caso acessível; HTTP retorna causa explícita sem projectionvalue."
+        }
+      ],
+      "sourceStatus": "VERIFIED_SCOPED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T04.QLT.18",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "scope": "WP11.T04",
+      "family": "quality_standards",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T04.CMP.01",
+      "text": "Cobrir sucesso total, sucesso parcial, conflito, pendência de aprovação, permissão revogada e resultado desconhecido.",
+      "scope": "WP11.T04",
+      "family": "completeness_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Sucesso total/parcial, conflito, revogação e indeterminado têm prova. Falta resultado approval-pending de produtor de domínio; recusar submit_pr não equivale a esse estado.",
+      "primaryEvidenceRefs": [
+        "W9_AR2_ASSERT_03",
+        "W9_AR2_ASSERT_04",
+        "W14_R1_ASSERT_01",
+        "W14_R1_ASSERT_06",
+        "W18_E1_ASSERT_05",
+        "W18_E1_ASSERT_09"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W9_AR2_ASSERT_03",
+        "W9_AR2_ASSERT_04",
+        "W14_R1_ASSERT_01",
+        "W14_R1_ASSERT_06",
+        "W18_E1_ASSERT_05",
+        "W18_E1_ASSERT_09",
+        "W11_F1_ASSERT_23",
+        "W11_F1_ASSERT_24",
+        "W11_F1_ASSERT_25",
+        "W9_AR2_ASSERT_02"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_06",
+        "W6_AR1_ASSERT_10",
+        "W6_AR1_ASSERT_15",
+        "W6_AR1_ASSERT_17",
+        "W6_AR1_ASSERT_21",
+        "W6_AR1_ASSERT_22",
+        "W6_AR1_ASSERT_23",
+        "W6_AR1_ASSERT_24",
+        "W11_F1_ASSERT_08",
+        "W11_F1_ASSERT_12",
+        "W11_F1_ASSERT_26",
+        "W11_F1_ASSERT_27",
+        "W17_H7_ASSERT_06",
+        "W17_H7_ASSERT_10"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "Sucesso total/parcial, conflito, revogação e indeterminado têm prova. Falta resultado approval-pending de produtor de domínio; recusar submit_pr não equivale a esse estado."
+      ],
+      "remainingOwners": [
+        "WP04",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "APPROVAL_PENDING_PRODUCER",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T04.CMP.18",
+      "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "scope": "WP11.T04",
+      "family": "completeness_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T04.SUC.01",
+      "text": "O usuário sabe o que já foi feito e retoma só o restante, com ausência verificável de efeitos duplicados.",
+      "scope": "WP11.T04",
+      "family": "success_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Estados, receipts e ausência de efeito repetido são provados por serviço/HTTP. Falta observar o usuário identificar o que foi feito e retomar somente o restante na tela instalada.",
+      "primaryEvidenceRefs": [
+        "W11_F1_ASSERT_23",
+        "W11_F1_ASSERT_24",
+        "W9_AR2_ASSERT_02",
+        "W9_AR2_ASSERT_03",
+        "W14_R1_ASSERT_01"
+      ],
+      "qualifiedEvidenceRefs": [
+        "W11_F1_ASSERT_23",
+        "W11_F1_ASSERT_24",
+        "W9_AR2_ASSERT_02",
+        "W9_AR2_ASSERT_03",
+        "W14_R1_ASSERT_01"
+      ],
+      "historicalEvidenceRefs": [
+        "W6_AR1_ASSERT_17",
+        "W6_AR1_ASSERT_21",
+        "W6_AR1_ASSERT_22",
+        "W6_AR1_ASSERT_24",
+        "W11_F1_ASSERT_27"
+      ],
+      "limits": [
+        "As subprovas indicadas não cobrem a parcela literal remanescente."
+      ],
+      "remaining": [
+        "Estados, receipts e ausência de efeito repetido são provados por serviço/HTTP. Falta observar o usuário identificar o que foi feito e retomar somente o restante na tela instalada."
+      ],
+      "remainingOwners": [
+        "WP01",
+        "WP10",
+        "S0"
+      ],
+      "closureClass": "USER_RECOVERY",
+      "clauseMapping": [],
+      "sourceStatus": "PARTIAL",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    },
+    {
+      "id": "WP11.T04.SUC.18",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "scope": "WP11.T04",
+      "family": "success_criteria",
+      "proofPackages": [
+        "E10",
+        "E12"
+      ],
+      "summary": "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova.",
+      "primaryEvidenceRefs": [],
+      "qualifiedEvidenceRefs": [],
+      "historicalEvidenceRefs": [],
+      "limits": [
+        "Nenhum PASS de fixture é convertido em prova native/residente."
+      ],
+      "remaining": [
+        "Falta sessão/residência instalada e execução UI/native/MCP equivalente, com concessão privada, revogação e referência real do destino. Descritores e wiring publicados não substituem essa prova."
+      ],
+      "remainingOwners": [
+        "WP10",
+        "WP12",
+        "WP13",
+        "S0"
+      ],
+      "closureClass": "RESIDENT_NATIVE_EXTERNAL",
+      "clauseMapping": [],
+      "sourceStatus": "BLOCKED",
+      "financeResumeQualification": "PENDING_ROOT_CANDIDATE_EVIDENCE; SOURCE_DISPOSITION_PRESERVED",
+      "sourceCandidate": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1"
+    }
+  ],
+  "sourceExecutionsRelevantToDelta": {
+    "run-43597644083-attempt-1": {
+      "id": "run-43597644083-attempt-1",
+      "selection": "W17-H7",
+      "kind": "hosted-surgical-tests",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "productTree": "68e75187628ae046a9249238bb14226ebf0ec625",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43597644083",
+      "jobs": [
+        {
+          "id": 132455462361,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 132457073104,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "summary": {
+        "pass": 23,
+        "fail": 0,
+        "tests": 23,
+        "files": 5,
+        "durationSeconds": 260.67
+      },
+      "observedCounts": {
+        "pass": 23,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "ownObservedCounts": {
+        "pass": 23,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "requestedButNotObserved": [],
+      "failureClassification": null,
+      "claimBoundary": [
+        "All23tests execute on literal W17 product26bb96b22fbfe610eef1714036dbaa068ec7c371 and snapshot15918cc41d13485a2f77149f94f872e88e5b0e8e. Earlier H1-H6 failures remain retained.",
+        "History duration177754.86ms is below its unchanged180000ms test budget by2245.14ms. This single observation establishes successful completion, not a broad performance margin or repeatability guarantee.",
+        "Timing counters are inclusive/overlapping wall-time instrumentation, not CPU time. Maximum serialized state1367034bytes is not process memory usage.",
+        "Historical financial facts, scope declarations and initial membership are explicit fixture inputs. The original historical choice uses fixture confirmation callbacks; restarted UI admissions are real fixture UI machinery, not an installed/native session or external business user.",
+        "Current-choice-lifecycle has separate fixture switches for choice/preview/promotion, keeps250000 total:null/conditioned due to retained hypothetical operations, and reuses UI context/principal after driver reopen. It does not record a second choice; B1B covers the separate requested human-choice revision journey.",
+        "The changed read() is qualified by focused cases and real consumers. Other graphs containing the module are not byte-equivalent and retain their original SHA/run observations; no hidden full-suite or broad pass transfer is claimed.",
+        "Draft/prepareIntentForCase egress proposals are separate, unqualified follow-up hypotheses and not covered by these new read() race tests.",
+        "Canonical omni not-applicable verdict establishes no omni execution.",
+        "No local product tests/typecheck/build/install executed."
+      ],
+      "receipts": {
+        "evidence": {
+          "path": "evidence/wp11-W17-H7-evidence-meta.json",
+          "sha256": "a8625ff548f119584733347ad62e625256678f1371d7667acc94def1a2a69af4",
+          "bytes": 55306
+        },
+        "log": {
+          "path": "evidence/wp11-W17-H7-tests.log",
+          "sha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+          "bytes": 88942
+        },
+        "observed": {
+          "path": "evidence/wp11-W17-H7-tests-observed.json",
+          "sha256": "bd69728912f2e9ac1099034f3f928772659d0901e4b9f8406310846e0c956ad2",
+          "bytes": 46581
+        }
+      },
+      "protocol": {
+        "nonces": [
+          "ba2dc1296cc9211f983aadd2f692f128"
+        ],
+        "validPassingVerdict": true,
+        "canonicalVerdicts": [
+          "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        ],
+        "protocolErrors": []
+      },
+      "artifacts": []
+    },
+    "run-43598265482-attempt-1": {
+      "id": "run-43598265482-attempt-1",
+      "selection": "W17-B1B",
+      "kind": "hosted-surgical-tests",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "productTree": "68e75187628ae046a9249238bb14226ebf0ec625",
+      "snapshotSha": "703ec33ec1498db4d5c3da4cdec5b244c174665f",
+      "requestBlob": "ca4ea5de4a46c0a2d1e8aea6ddcc93bbf5a79593",
+      "runId": 43598265482,
+      "runAttempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43598265482",
+      "jobs": [
+        {
+          "id": 132457317119,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 132459117735,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "summary": {
+        "pass": 3,
+        "fail": 0,
+        "tests": 3,
+        "files": 3,
+        "durationSeconds": 329.72
+      },
+      "observedCounts": {
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "ownObservedCounts": {
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "requestedButNotObserved": [],
+      "failureClassification": null,
+      "claimBoundary": [
+        "All three passes belong to literal W17 product26bb96b22fbfe610eef1714036dbaa068ec7c371 and snapshot703ec33ec1498db4d5c3da4cdec5b244c174665f. Future draft/prepareIntent changes are separate and are not claimed tested here.",
+        "Source amounts/scope are explicit synthetic fixture data processed by canonical Planner/C10/C08. Human admission/intent binding is real private fixture machinery; no external person, installed native/MCP session or business approval is inferred.",
+        "The second SQLite connection in implementation history is opened while the original writer is still alive. Full original-store/UI shutdown and collaborator reopening is the separate W17H7 proof.",
+        "BI render/read does not prepare or execute a domain command and does not establish new human choice; the separate renewal-choice-revision test establishes the three fixture choices.",
+        "The BI renderer is built and executed only in hosted CI. No local product test/typecheck/build/install occurred.",
+        "Canonical omni verdict is not applicable; this run proves no omni spawn.",
+        "Trace durations are inclusive overlapping wall time; serialized state bytes are not process memory. Each of the three fixtures starts its own trace with a shared label; file boundaries distinguish observations.",
+        "Existing global package typecheck still fails with130 foreign diagnostics and0 own; this surgical test success is not global integration acceptance."
+      ],
+      "receipts": {
+        "evidence": {
+          "path": "evidence/wp11-W17-B1B-evidence-meta.json",
+          "sha256": "a5d2f18fa1560e754b29312cfc3320a39a33a12d177d3359fe1a7c8f593f932e",
+          "bytes": 40836
+        },
+        "log": {
+          "path": "evidence/wp11-W17-B1B-tests.log",
+          "sha256": "d3321461f2d3ecf53359f059c18f7834be6c46eb3962534195bd65c803458909",
+          "bytes": 90121
+        },
+        "observed": {
+          "path": "evidence/wp11-W17-B1B-tests-observed.json",
+          "sha256": "84efa068a62a68062cdaf70d69245590d8b002c29c39984e358560acd9b78478",
+          "bytes": 32215
+        }
+      },
+      "protocol": {
+        "nonces": [
+          "c74c8831c7bbdb89e38118a931c0daea"
+        ],
+        "validPassingVerdict": true,
+        "canonicalVerdicts": [
+          "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        ],
+        "protocolErrors": []
+      },
+      "artifacts": []
+    },
+    "run-43599284081-attempt-1": {
+      "id": "run-43599284081-attempt-1",
+      "selection": "W18-E1",
+      "kind": "hosted-surgical-tests",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "productTree": "0b15197ed7fbe954d14aec78b13d03e3293e9c94",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43599284081",
+      "jobs": [
+        {
+          "id": 132460358481,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 132460868110,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "summary": {
+        "pass": 21,
+        "fail": 0,
+        "tests": 21,
+        "files": 5,
+        "durationSeconds": 0.611
+      },
+      "observedCounts": {
+        "pass": 21,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "ownObservedCounts": {
+        "pass": 21,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "requestedButNotObserved": [],
+      "failureClassification": null,
+      "claimBoundary": [
+        "Literal W18 product1c262ba4548c53ae014a2fd21d1e6dc085cb6f13/snapshot438ac548f7cae91fd907d41052682f6bb945c54d. No test observation is relabeled W19.",
+        "W18 typecheck separately failed with1 own fixture optional-string overload and130 unchanged foreign diagnostics; runtime test success does not make the check green. The explicit narrowing guard is a later fixture-only correction requiring its own check and7test rerun.",
+        "The7new cases have no financial alternatives, choice, prepared mutation or domain effect. UI/native boundary proof is scoped: real consumed fixture UI for explicit-case intent; existing native wrapper baseline uses a controlled context, not an installed session.",
+        "Criterion metric100, context/authority and rule inputs are controlled fixture values. This proves actual rule persistence/revision/replay, not a new financial producer result, business decision or ChoiceRecord.",
+        "No read() or H7fixture byte changes occurred in this wave. Prior history/batch/lifecycle observations retain W17 provenance and function-level scope qualification; imported module graphs are not claimed byte-identical.",
+        "WP01HTTP real draft consumer remains an explicit S0/foreign qualification gap due its incompatible constructor; WP11HTTP and case-operation-access do not invoke the changed symbols.",
+        "Canonical not-applicable control proves no omni execution. No local product test/typecheck/build/install or remote mutation."
+      ],
+      "receipts": {
+        "evidence": {
+          "path": "evidence/wp11-W18-E1-evidence-meta.json",
+          "sha256": "a5cba70b007e77e1d62c642e663701df4e42fb98fa93df97e2d08e6fa3f707b5",
+          "bytes": 22514
+        },
+        "log": {
+          "path": "evidence/wp11-W18-E1-tests.log",
+          "sha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de",
+          "bytes": 71837
+        },
+        "observed": {
+          "path": "evidence/wp11-W18-E1-tests-observed.json",
+          "sha256": "d3fc545adcaae9a31ff4d070243ef58f0f616f594bbd5e0a81f68e00113d1bf7",
+          "bytes": 14624
+        }
+      },
+      "protocol": {
+        "nonces": [
+          "6eec271ab5d82aba2cf0aa9e2934f3f9"
+        ],
+        "validPassingVerdict": true,
+        "canonicalVerdicts": [
+          "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        ],
+        "protocolErrors": []
+      },
+      "artifacts": []
+    },
+    "run-43599586885-attempt-1": {
+      "id": "run-43599586885-attempt-1",
+      "selection": "W19-checks",
+      "kind": "hosted-scoped-checks",
+      "productSha": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1",
+      "productTree": "47e634b81b9a64fef462cb670373aa832b88b76b",
+      "snapshotSha": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1",
+      "requestBlob": null,
+      "runId": 43599586885,
+      "runAttempt": 1,
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43599586885",
+      "jobs": [
+        {
+          "id": 132461269948,
+          "name": "wp11-checks",
+          "status": "completed",
+          "conclusion": "failure"
+        }
+      ],
+      "typecheck": {
+        "conclusion": "failure",
+        "ownDiagnostics": 0,
+        "foreignDiagnostics": 130,
+        "removedSinceW18": [
+          {
+            "path": "test/product/wp11/case-egress-fence.test.ts",
+            "line": 116,
+            "column": 45,
+            "code": "TS2769",
+            "message": "No overload matches this call.",
+            "ownership": "own"
+          }
+        ],
+        "addedSinceW18": [],
+        "foreignDiagnosticsIdenticalToW17": true,
+        "sameLogBytesAsW17": true
+      },
+      "guards": {
+        "rules": 78,
+        "changedPaths": 864,
+        "gates": 0,
+        "warnings": 12,
+        "errors": 0,
+        "conclusion": "success"
+      },
+      "claimBoundary": [
+        "The explicit fixture guard removes the1own W18 diagnostic. W19 package typecheck remains FAILED with130 foreign diagnostics and zero own; no package-green or integration acceptance is claimed.",
+        "W19 typecheck bytes are identical to W17 and the prior W7 foreign baseline. No foreign implementation or test is silently fixed here.",
+        "Guard78rules/864changedpaths/12warnings/0gates/0errors completed success. This check is not a product-test or epic-suite result.",
+        "Artifact downloaded only from the MCP-provided signed URL; archive digest, safe extraction and sourceW/tree match verified.",
+        "No local product test/typecheck/build/guard/install or remote mutation."
+      ],
+      "receipts": {
+        "evidence": {
+          "path": "evidence/wp11-W19-evidence-meta.json",
+          "sha256": "73f7da7a8f24dfd91833bedcf86c0f7cb15a80dee9849bc3548a60650eb2be01",
+          "bytes": 5226
+        },
+        "log": {
+          "path": "evidence/wp11-W19-check.log",
+          "sha256": "d9218a631b5fe94695e6a24499b16ab575e3e8ad380639659cb4348e6df9d9ee",
+          "bytes": 128627
+        }
+      },
+      "protocol": {
+        "applicable": false,
+        "reason": "This workflow performs typecheck/guards, not product tests or omni execution."
+      },
+      "artifact": {
+        "id": 14115802181,
+        "zipSha256": "acc1035b3cd0facc3b3bc2f9735fa597509856b245aebfb2976fa21a3e851bb1",
+        "archive": "wp11-W19-checks.zip",
+        "sourceMatched": true,
+        "localArchiveDigestMatchesReceipt": true
+      }
+    },
+    "run-43599613374-attempt-1": {
+      "id": "run-43599613374-attempt-1",
+      "selection": "W19-E2",
+      "kind": "hosted-surgical-tests",
+      "productSha": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1",
+      "productTree": "47e634b81b9a64fef462cb670373aa832b88b76b",
+      "snapshotSha": "00c5f5845c80863d0bab37def7a71c006b430a15",
+      "requestBlob": "a0b08a035c38d62d2e11a594a91f67b6a53587b1",
+      "runId": 43599613374,
+      "runAttempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43599613374",
+      "jobs": [
+        {
+          "id": 132461349543,
+          "name": "test (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 132461792309,
+          "name": "cleanup",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "summary": {
+        "pass": 7,
+        "fail": 0,
+        "tests": 7,
+        "files": 1,
+        "durationSeconds": 0.324
+      },
+      "observedCounts": {
+        "pass": 7,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "ownObservedCounts": {
+        "pass": 7,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "requestedButNotObserved": [],
+      "failureClassification": null,
+      "claimBoundary": [
+        "Literal W19 producta3b57d475e7b564fa7b05932d3a81c5836e3e3c1/snapshot00c5f5845c80863d0bab37def7a71c006b430a15; this is a focused7test rerun, not another21test E1 run.",
+        "The14other E1 passes remain observed on W18. Runtime case-port206271d is byte-identical W18→W19 and no other product code changed; separate final impact records qualify reuse without relabeling original SHAs.",
+        "The real-created cases are deliberately empty, without financial calculations, human ChoiceRecords, prepared commands or domain application. The intent helper uses consumed fixture UI, not installed native/MCP.",
+        "W19 scoped check removes the1own diagnostic but still fails globally on130 unchanged foreign diagnostics. Surgical tests plus zero own diagnostics do not authorize integration or deployment.",
+        "Canonical not-applicable control proves no omni execution. No local product test/typecheck/build/install or remote mutation."
+      ],
+      "receipts": {
+        "evidence": {
+          "path": "evidence/wp11-W19-E2-evidence-meta.json",
+          "sha256": "521ca06685a992cf1bcf60fa4f67081f0bd0990d004d9515156ba3f6c17b5877",
+          "bytes": 13042
+        },
+        "log": {
+          "path": "evidence/wp11-W19-E2-tests.log",
+          "sha256": "4a2be6e02241e7d0bda07a7e32712ac56f906ef1ef70131d0710c565034ccf14",
+          "bytes": 70915
+        },
+        "observed": {
+          "path": "evidence/wp11-W19-E2-tests-observed.json",
+          "sha256": "a09d6522ee235c9054b0c2d0f84a9329ea7d226cededf21a6a19a915dcce4fd0",
+          "bytes": 6447
+        }
+      },
+      "protocol": {
+        "nonces": [
+          "6c4b6f67f00809e8064c57b33cbb7dc2"
+        ],
+        "validPassingVerdict": true,
+        "canonicalVerdicts": [
+          "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        ],
+        "protocolErrors": []
+      },
+      "artifacts": []
+    }
+  },
+  "financePreexistingEvidence": {
+    "productSha": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+    "productTree": "052583ce35edbadd4b7ec68ffe021bb59e05a20f",
+    "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+    "run43599384924": {
+      "pass": 17,
+      "assertions": 197,
+      "durationSeconds": 375.28,
+      "claim": "Original Finance W33 observation; grouped verifier retained. Not relabeled to new candidate."
+    }
+  },
+  "newEvidencePending": [
+    {
+      "paths": [
+        "test/product/wp11/current-choice-read-fence.test.ts",
+        "test/product/wp11/case-lease-egress.test.ts"
+      ],
+      "criteria": [
+        "WP11.T01.INV.01",
+        "WP11.T01.CHK.01",
+        "WP11.T01.CMP.01",
+        "WP11.QLT.10"
+      ],
+      "scope": "Late real UI lease ended/replaced/expired after final C08 namespace authorize; no result projection escapes; original data and signal preserved. Code and tests prepared, Actions result pending."
+    }
+  ],
+  "notEstablished": [
+    "Global/integrated acceptance",
+    "Installed UI/native/MCP parity",
+    "External person understanding/approval",
+    "Formal approval-pending producer",
+    "All named consumers receiving identical canonical result in installed composition"
+  ],
+  "sourceMapPreservation": "83 literal IDs/texts preserved. Source VERIFIED_SCOPED applies only to source qualified candidate and explicit clauses; no source status is silently transferred to finance-resume."
+}

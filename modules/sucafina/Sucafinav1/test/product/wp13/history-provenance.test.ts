@@ -309,6 +309,51 @@ test("historical chosen candidate selects its witnessed C08 among equivalent wri
   }
 })
 
+test("historical candidate refuses a real case CAS in its last callback while the authority remains live", async () => {
+  const fixture = await revisedCandidate()
+  try {
+    const world = fixture.world
+    const initial = await world.state.read(world.request, "cases", (state) => ({ decision: state.cases[world.caseRef.id], result: state.decisionResults?.[fixture.scenarioResultRef] }))
+    if (initial.status !== "ok" || !initial.value.decision || !initial.value.result) throw new Error("Historical read counterexample requires the actual persisted case and C08")
+    let validations = 0
+    let attempts = 0
+    let attemptedCommits = 0
+    let writeRejected = false
+    const host = { ...world.host, revalidate: async (context: TrustedDomainContext) => {
+      validations++
+      // The reader has completed two full provenance observations. Its final
+      // callback tries an authorized, versioned write and swallows the refusal.
+      if (validations === 4) {
+        attempts++
+        await world.state.transaction(world.request, { namespace: "cases", expectedStorageVersion: initial.storageVersion, targetRef: world.caseRef.id, targetIncarnation: world.caseRef.incarnation, idempotencyKey: "wp13-history-final-case-cas", commandDigest: digestSfValue("wp13-history-final-case-cas") }, async (state) => {
+          const decision = state.cases[world.caseRef.id]
+          if (!decision) throw new Error("Case disappeared")
+          attemptedCommits++
+          state.cases[world.caseRef.id] = { ...decision, version: decision.version + 1, participants: [] }
+          return { commit: true, value: true }
+        }).catch(() => { writeRejected = true })
+      }
+      return world.host.revalidate(context)
+    } }
+    const read = createPortfolioCandidateHistoryReader({ state: world.state, cases: world.cases, results: world.results, evidence: world.evidenceService, host })
+    const rejected = await read(fixture.expected, world.context)
+    expect(rejected.status).not.toBe("ok")
+    expect(Object.hasOwn(rejected, "value")).toBe(false)
+    expect(attempts).toBe(1)
+    expect(attemptedCommits).toBe(1)
+    expect(writeRejected).toBe(true)
+    expect(await world.host.revalidate(world.context)).toBe(true)
+    const after = await world.state.read(world.request, "cases", (state) => ({ decision: state.cases[world.caseRef.id], result: state.decisionResults?.[fixture.scenarioResultRef] }))
+    expect(after.status === "ok" && after.value).toEqual(initial.value)
+    expect(after.status === "ok" && after.storageVersion).toBe(initial.storageVersion)
+    // A fresh call executes all readers again; failed root state is never cached.
+    const normal = createPortfolioCandidateHistoryReader({ state: world.state, cases: world.cases, results: world.results, evidence: world.evidenceService, host: world.host })
+    expect((await normal(fixture.expected, world.context)).status).toBe("ok")
+  } finally {
+    await fixture.world.cleanup()
+  }
+}, 120000)
+
 async function revisedCandidate() {
   const world = await createWp13SensitivityFixture()
   try {

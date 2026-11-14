@@ -1,0 +1,384 @@
+{
+  "source": {
+    "productSha": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1",
+    "productTree": "47e634b81b9a64fef462cb670373aa832b88b76b",
+    "snapshotSha": "00c5f5845c80863d0bab37def7a71c006b430a15",
+    "snapshotTree": "cfde0de52d4d3a04921dadd98819907e6abad18c",
+    "branch": "ci-run-linux-astra-wp11-a3b57d4-ce58be6a-e2",
+    "requestSha256": "ce58be6accda23d28592f00639e78ff9fe79cd03d731026f13124c1c789cc533",
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "a0b08a035c38d62d2e11a594a91f67b6a53587b1"
+  },
+  "run": {
+    "id": 43599613374,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-14T13:24:35Z",
+    "updatedAt": "2026-11-14T13:26:28Z",
+    "headSha": "00c5f5845c80863d0bab37def7a71c006b430a15",
+    "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43599613374",
+    "runAttempt": 1
+  },
+  "jobs": [
+    {
+      "id": 132461349543,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43599613374,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132461792309,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43599613374,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "tests": {
+    "summary": {
+      "pass": 7,
+      "fail": 0,
+      "tests": 7,
+      "files": 1,
+      "durationSeconds": 0.324
+    },
+    "ownObservedCounts": {
+      "pass": 7,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0
+    },
+    "failures": [],
+    "hasCompletedBunSummary": true,
+    "requestedButNotObserved": [],
+    "fileResults": [
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "reportedTests": 7,
+        "counts": {
+          "pass": 7,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 120.23,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+          "line": 830,
+          "timestamp": "2026-11-14T13:26:18.3473844Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+          "status": "pass",
+          "name": "prepare-intent suppresses same-version content changed by host check 3 before its response",
+          "line": 837,
+          "timestamp": "2026-11-14T13:26:18.5050931Z",
+          "durationMs": 18.22
+        }
+      }
+    ],
+    "observedTests": [
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "status": "pass",
+        "name": "draft suppresses membership changed by host check 3 before its response",
+        "line": 831,
+        "timestamp": "2026-11-14T13:26:18.4133234Z",
+        "durationMs": 28.54
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "status": "pass",
+        "name": "draft suppresses incarnation changed by host check 3 before its response",
+        "line": 832,
+        "timestamp": "2026-11-14T13:26:18.4262333Z",
+        "durationMs": 12.92
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "status": "pass",
+        "name": "draft suppresses same-version content changed by host check 3 before its response",
+        "line": 833,
+        "timestamp": "2026-11-14T13:26:18.4377766Z",
+        "durationMs": 11.55
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "status": "pass",
+        "name": "prepare-intent suppresses membership changed by host check 5 before its response",
+        "line": 834,
+        "timestamp": "2026-11-14T13:26:18.4564019Z",
+        "durationMs": 18.6
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "status": "pass",
+        "name": "prepare-intent suppresses incarnation changed by host check 5 before its response",
+        "line": 835,
+        "timestamp": "2026-11-14T13:26:18.4723437Z",
+        "durationMs": 15.94
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "status": "pass",
+        "name": "prepare-intent suppresses same-version content changed by host check 5 before its response",
+        "line": 836,
+        "timestamp": "2026-11-14T13:26:18.4868343Z",
+        "durationMs": 14.46
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "status": "pass",
+        "name": "prepare-intent suppresses same-version content changed by host check 3 before its response",
+        "line": 837,
+        "timestamp": "2026-11-14T13:26:18.5050931Z",
+        "durationMs": 18.22
+      }
+    ],
+    "sourceFiles": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "blob": "40f814167314c329b30d15db3dadbeaad4cfcb55",
+        "sha256": "e06e00d84fbd8c18f08ce251a2e3bbdedc6bfb8098e4c916af5835cddd828811"
+      }
+    ]
+  },
+  "protocol": {
+    "nonces": [
+      "6c4b6f67f00809e8064c57b33cbb7dc2"
+    ],
+    "observedVerdicts": [
+      "omni positive control [6c4b6f67f00809e8064c57b33cbb7dc2]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [6c4b6f67f00809e8064c57b33cbb7dc2]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "runtime": {
+    "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+    "blob": "206271d33bcfb7786ee80ef0dfad50eb80e4fee2",
+    "sha256": "82f7865ae309d1fa3ef5d9138f373029d7b3d4a40db203f6a2cae48523282450",
+    "byteIdenticalToW18": true
+  },
+  "proof": [
+    "All7real UI/C08/SQLite case-egress negatives passed after the one-line explicit evidence guard. Draft refuses membership/version, incarnation and same-version changes; prepareIntent refuses all three at its final host callback and a same-version change between its two reads.",
+    "Each successful hostile CAS is verified outside callback catches, persisted storageVersion2 and exact changed fields are checked, and the original global UI lease stays live. No stale value is released; draft uses2C08case reads and intent4.",
+    "The explicit guard executes in every passing case and narrows captured case/digest without casts, deleted assertions or a timeout increase."
+  ],
+  "claimBoundary": [
+    "Literal W19 producta3b57d475e7b564fa7b05932d3a81c5836e3e3c1/snapshot00c5f5845c80863d0bab37def7a71c006b430a15; this is a focused7test rerun, not another21test E1 run.",
+    "The14other E1 passes remain observed on W18. Runtime case-port206271d is byte-identical W18→W19 and no other product code changed; separate final impact records qualify reuse without relabeling original SHAs.",
+    "The real-created cases are deliberately empty, without financial calculations, human ChoiceRecords, prepared commands or domain application. The intent helper uses consumed fixture UI, not installed native/MCP.",
+    "W19 scoped check removes the1own diagnostic but still fails globally on130 unchanged foreign diagnostics. Surgical tests plus zero own diagnostics do not authorize integration or deployment.",
+    "Canonical not-applicable control proves no omni execution. No local product test/typecheck/build/install or remote mutation."
+  ],
+  "files": {
+    "wp11-W19-E2-tests.log": {
+      "sha256": "4a2be6e02241e7d0bda07a7e32712ac56f906ef1ef70131d0710c565034ccf14",
+      "bytes": 70915
+    },
+    "wp11-W19-E2-tests-observed.json": {
+      "sha256": "a09d6522ee235c9054b0c2d0f84a9329ea7d226cededf21a6a19a915dcce4fd0",
+      "bytes": 6447
+    },
+    "wp11-W19-E2-remote-final.json": {
+      "sha256": "28ba9810f09a2ed9d31d17f8687ae64041c02e3590b3c0f941d6d83c0c9fd342",
+      "bytes": 5333
+    },
+    "parse-hosted-test-log.py": {
+      "sha256": "e8055e8bbcf9b994052e0f4d2af69542c17ee5aca12d27ce4dcddef499061726",
+      "bytes": 7583
+    }
+  }
+}

@@ -1,4 +1,8 @@
 import { expect, test } from "bun:test"
+import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+import { openLocalStore } from "../../../runtime/local-store.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { AuthorizedCaseProjection, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { CommandReceiptView, ProjectionComponent, SourceRef } from "../../../product/contracts/context.ts"
@@ -334,25 +338,36 @@ function httpHarness() {
 }
 
 function httpProduct(input: Parameters<typeof createPortfolioReconciliation>[0]) {
-  // Only the real public HTTP adapter and reconciliation are exercised. Unrelated ports
-  // fail on use, so this controlled entry-boundary test cannot fabricate domain work.
-  const unused = async (): Promise<never> => { throw new Error("Unexpected unrelated portfolio operation") }
-  const unusedRequest = (): never => { throw new Error("Unexpected domain request") }
-  return createPortfolioProduct({
-    host: { persistence: { transaction: unused }, authenticate: unused, environment: unused, requestFor: unusedRequest, revalidate: input.host.revalidate },
-    cases: { draft: unused, prepareIntent: unused, read: input.cases.read },
-    evidence: { resolve: unused, context: input.evidence.context, recall: unused, emitFromLedger: unused },
-    planner: { planner: { compareForecast: unused, simulateScenario: unused, compareScenarios: unused, evaluateSensitivity: unused }, sources: { resolveForecastSource: unused, resolveForecastCoverage: unused }, scenarios: { resolve: unused } },
-    results: { write: unused, read: unused, readForCalculation: unused, readHistoricalScenario: unused, readByRequest: unused },
-    rules: { register: unused, resolve: unused, evaluate: unused },
-    selection: { register: unused, read: unused, inspect: unused },
-    portfolioBindings: { proofs: unused, bind: unused, read: unused, list: unused, readHistoricalBinding: unused },
-    comparisonBindings: { bind: unused, read: unused, proofs: unused },
-    sensitivityBindings: { bind: unused, read: unused },
-    decisions: { prepareChanges: unused },
-    createReceipt: unused,
-    caseFor: input.caseFor,
-    idempotencyKey: unused,
-    reconciliation: input,
-  })
+  // Only the real public HTTP adapter and reconciliation are exercised. Its read
+  // fence now owns a real LocalStore root and one stable admitted Request. Domain
+  // observations remain the controlled unit fixture; unrelated producers fail on use.
+  return { http: { reconcile: async (request: PortfolioReconciliationRequest, trusted: TrustedDomainContext) => {
+    const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-portfolio-http-read-"))
+    await chmod(directory, 0o700)
+    const store = await openLocalStore(directory)
+    const admittedRequest = new Request("https://example.test/controlled-reconciliation")
+    try {
+      const unused = async (): Promise<never> => { throw new Error("Unexpected unrelated portfolio operation") }
+      return await createPortfolioProduct({
+        host: { persistence: store, authenticate: unused, environment: unused, requestFor: () => admittedRequest, revalidate: input.host.revalidate },
+        cases: { draft: unused, prepareIntent: unused, read: input.cases.read },
+        evidence: { resolve: unused, context: input.evidence.context, recall: unused, emitFromLedger: unused },
+        planner: { planner: { compareForecast: unused, simulateScenario: unused, compareScenarios: unused, evaluateSensitivity: unused }, sources: { resolveForecastSource: unused, resolveForecastCoverage: unused }, scenarios: { resolve: unused } },
+        results: { write: unused, read: unused, readForCalculation: unused, readHistoricalScenario: unused, readByRequest: unused },
+        rules: { register: unused, resolve: unused, evaluate: unused },
+        selection: { register: unused, read: unused, inspect: unused },
+        portfolioBindings: { proofs: unused, bind: unused, read: unused, list: unused, readHistoricalBinding: unused },
+        comparisonBindings: { bind: unused, read: unused, proofs: unused },
+        sensitivityBindings: { bind: unused, read: unused },
+        decisions: { prepareChanges: unused },
+        createReceipt: unused,
+        caseFor: input.caseFor,
+        idempotencyKey: unused,
+        reconciliation: input,
+      }).http.reconcile(request, trusted)
+    } finally {
+      await store.dispose()
+      await rm(directory, { recursive: true, force: true })
+    }
+  } } }
 }

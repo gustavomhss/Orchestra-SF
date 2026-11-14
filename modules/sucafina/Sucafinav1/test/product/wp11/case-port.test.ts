@@ -23,7 +23,8 @@ test("case draft survives a real store reopen, exact retry is idempotent and rev
   const open = async () => {
     const store = await openLocalStore(directory)
     const state = createSfProductState({ persistence: store, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: "installation-incarnation" }), authorize: async () => access.allowed ? { principalRef: "principal", policyVersion: "policy", accessRevision: "access" } : undefined })
-    const cases = createDecisionCasePort({ state, host: { requestFor: () => new Request("https://example.test/"), revalidate: async () => access.allowed }, creationTarget: { ref: "installation:install:cases", incarnation: "installation-incarnation" }, operationIdentity: () => "operation-1", authorizeCase: async () => access.allowed, verifyScenarioOperations: async () => access.allowed, evidence, createId: () => `id-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
+    const retainedRequest = new Request("https://example.test/")
+    const cases = createDecisionCasePort({ state, host: { requestFor: () => retainedRequest, revalidate: async () => access.allowed }, creationTarget: { ref: "installation:install:cases", incarnation: "installation-incarnation" }, operationIdentity: () => "operation-1", authorizeCase: async () => access.allowed, verifyScenarioOperations: async () => access.allowed, evidence, createId: () => `id-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
     return { store, cases }
   }
   try {
@@ -176,7 +177,8 @@ test("revoked source suppresses an otherwise authorized case", async () => {
     const evidence: BusinessContextService = { context: async ({ refs }) => refs.map((item) => ({ ref: item, state: source.fresh ? "fresh" as const : "revoked" as const, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" })).reverse(), resolve: async () => { throw new Error("unused") }, recall: async () => [], emitFromLedger: async () => { throw new Error("unused") } }
     const state = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async (_request, _snapshot, _namespace, targetRef) => ({ incarnation: targetRef === "installation:install:cases" ? "installation-inc" : "source-case-2" }), authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
     const ids = { n: 0 }
-    const cases = createDecisionCasePort({ state, host: { requestFor: () => new Request("https://example.test/"), revalidate: async () => true }, creationTarget: { ref: "installation:install:cases", incarnation: "installation-inc" }, operationIdentity: () => "operation", authorizeCase: async () => true, verifyScenarioOperations: async () => true, evidence, createId: () => `source-case-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
+    const retainedRequest = new Request("https://example.test/")
+    const cases = createDecisionCasePort({ state, host: { requestFor: () => retainedRequest, revalidate: async () => true }, creationTarget: { ref: "installation:install:cases", incarnation: "installation-inc" }, operationIdentity: () => "operation", authorizeCase: async () => true, verifyScenarioOperations: async () => true, evidence, createId: () => `source-case-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
     const draft = await cases.draft({ objective: "source-bound", currency: "USD", horizon: { start: "2027-01-01", end: "2027-12-31" }, criteria: ["cost"], sourceRefs: [ref] }, binding)
     expect(draft.status).toBe("ok")
     if (draft.status !== "ok") return
@@ -272,7 +274,8 @@ test("human choice persists a versioned snapshot and ledger using the planner co
     const unavailable = async () => ({ status: "unavailable" as const, reason: "unused" })
     const { createDecisionProposalService } = await import("../../../product/decisions/proposals.ts")
     const evidence: BusinessContextService = { context: async ({ refs }) => refs.map((ref) => ({ ref, state: "fresh" as const, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" })), resolve: async () => { throw new Error("unused") }, recall: async () => [], emitFromLedger: async () => { throw new Error("unused") } }
-    const host = { requestFor: () => new Request("https://example.test"), revalidate: async () => true }
+    const retainedRequest = new Request("https://example.test")
+    const host = { requestFor: () => retainedRequest, revalidate: async () => true }
     const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "case", incarnation: "inc" }, operationIdentity: () => "operation", authorizeCase: async () => true, verifyScenarioOperations: async () => true, evidence, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
     const alternative = createDecisionProposalService({ cases, host, planner: { compareForecast: unavailable, simulateScenario: async () => ({ status: "ok", value: simulation.value }), compareScenarios: async () => ({ status: "ok", value: comparison }), evaluateSensitivity: unavailable }, sources: { resolveForecastSource: unavailable, resolveForecastCoverage: async () => ({ status: "ok", value: { coverageRef: "coverage-2", basis: decision.costCoverageBases[0], assessment: simulation.value.costCoverage } }) }, resolveAlternative: async () => ({ status: "ok", value: { scenario: { baseRef: "base", operations: [], assumptions: [] }, coverageRef: "coverage-2" } }), authorizeProposal: async () => true })
     const descriptors = createDecisionCapabilities({ cases, alternative, requiredAuthority: { read: [], draft: [], receipt: [], alternative: [], change: [] }, createReceipt: (_context, operation, inputDigest, resultDigest) => ({ kind: "ui", operation, handlerExport: "draftAlternative", inputDigest, resultDigest, principalRef: "principal", callId: "call", requestId: "request", accessRevision: "access", at: "2026-11-13T00:00:00Z" }) })

@@ -1,0 +1,1184 @@
+{
+  "log": "ci-analysis/wp11-W6-AR1-tests.log",
+  "logSha256": "fa60d15e07db1909d099724a4b3e8eaec02b1721aac971d8ed9836037d8bfa58",
+  "metadata": {
+    "productSha": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+    "productTree": "e63f555351ec6a21402319797e044fd51e8eb4fb",
+    "snapshotSha": "5e20813965995ee1a6745a3fe1908ac34db57ec4",
+    "snapshotTree": "d965bf95f463ee029b6962a7fafd5534462483e5",
+    "branch": "ci-run-linux-astra-wp11-11261a5-1db8dc97-ar1",
+    "requestSha256": "1db8dc97575dbe65923a10bf6f1eab0d50e7e498913edae90c23815a6215ebe4",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+        "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+        "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+        "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+        "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "Sucafinav1/test/product/wp11/case-management.test.ts",
+        "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+        "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+        "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+        "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+        "Sucafinav1/test/product/wp11/http.test.ts",
+        "Sucafinav1/test/product/wp11/result-store.test.ts",
+        "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+        "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+        "--timeout",
+        "180000"
+      ],
+      "env": {}
+    },
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "6ceb3f5f34018f01b5f97590926c25f3908cfa31",
+    "runIds": [
+      43586380221
+    ]
+  },
+  "summary": {
+    "pass": 24,
+    "fail": 2,
+    "tests": 26,
+    "files": 14,
+    "durationSeconds": 182.38
+  },
+  "omniPositiveControl": {
+    "nonces": [
+      "b9238ce8810cba07703cadbd6bcb7db8"
+    ],
+    "observedVerdicts": [
+      "omni positive control [b9238ce8810cba07703cadbd6bcb7db8]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [b9238ce8810cba07703cadbd6bcb7db8]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "requestedFiles": [
+    "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+    "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+    "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+    "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+    "Sucafinav1/test/product/wp11/case-port.test.ts",
+    "Sucafinav1/test/product/wp11/case-management.test.ts",
+    "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+    "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+    "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+    "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+    "Sucafinav1/test/product/wp11/http.test.ts",
+    "Sucafinav1/test/product/wp11/result-store.test.ts",
+    "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+    "Sucafinav1/test/product/wp11/calculation-history.test.ts"
+  ],
+  "observedFiles": [
+    "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+    "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+    "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+    "Sucafinav1/test/product/wp11/case-port.test.ts",
+    "Sucafinav1/test/product/wp11/case-management.test.ts",
+    "Sucafinav1/test/product/wp11/http.test.ts",
+    "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+    "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+    "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+    "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+    "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+    "Sucafinav1/test/product/wp11/result-store.test.ts",
+    "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+    "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts"
+  ],
+  "fileSummaries": [
+    {
+      "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 281.66,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+        "line": 828,
+        "timestamp": "2026-11-14T10:41:50.6483716Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+        "status": "pass",
+        "name": "a dispatched change without its authoritative receipt stays indeterminate across concurrent actors and restart",
+        "line": 829,
+        "timestamp": "2026-11-14T10:41:50.9913147Z",
+        "durationMs": 281.66
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 18.88,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+        "line": 831,
+        "timestamp": "2026-11-14T10:41:50.9914546Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+        "status": "fail",
+        "name": "an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result",
+        "line": 841,
+        "timestamp": "2026-11-14T10:41:51.2094273Z",
+        "durationMs": 18.88
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 180012.72,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+        "line": 843,
+        "timestamp": "2026-11-14T10:41:51.2095065Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+        "status": "fail",
+        "name": "nested C17 calculations reopen through persisted canonical requests and replay every ancestor",
+        "line": 851,
+        "timestamp": "2026-11-14T10:44:51.2269748Z",
+        "durationMs": 180012.72,
+        "timeoutMs": 180000
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "reportedTests": 10,
+      "counts": {
+        "pass": 10,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 236.35,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "line": 854,
+        "timestamp": "2026-11-14T10:44:51.2294565Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "status": "pass",
+        "name": "human choice persists a versioned snapshot and ledger using the planner comparison",
+        "line": 864,
+        "timestamp": "2026-11-14T10:44:51.4717591Z",
+        "durationMs": 167.58
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-management.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 15.84,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/case-management.test.ts",
+        "line": 866,
+        "timestamp": "2026-11-14T10:44:51.4718980Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/case-management.test.ts",
+        "status": "pass",
+        "name": "case listing and editing recheck access, actor intent, CAS and exact retry",
+        "line": 867,
+        "timestamp": "2026-11-14T10:44:51.4896242Z",
+        "durationMs": 15.84
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/http.test.ts",
+      "reportedTests": 2,
+      "counts": {
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 12.91,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/http.test.ts",
+        "line": 869,
+        "timestamp": "2026-11-14T10:44:51.4897248Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/http.test.ts",
+        "status": "pass",
+        "name": "current-choice HTTP binds both human steps and only promotion permits a historical retry",
+        "line": 871,
+        "timestamp": "2026-11-14T10:44:51.5042709Z",
+        "durationMs": 1.61
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 33.67,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+        "line": 873,
+        "timestamp": "2026-11-14T10:44:51.5043953Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+        "status": "pass",
+        "name": "a separate human rejection cancels only an undispatched proposal, retains the choice and reconciles retries",
+        "line": 874,
+        "timestamp": "2026-11-14T10:44:51.5390790Z",
+        "durationMs": 33.67
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 609.51,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+        "line": 876,
+        "timestamp": "2026-11-14T10:44:51.5392209Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+        "status": "pass",
+        "name": "a human-confirmed March assumption keeps the official May project and exposes the divergence until a separate domain command",
+        "line": 877,
+        "timestamp": "2026-11-14T10:44:52.1523170Z",
+        "durationMs": 609.51
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 497.8,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+        "line": 879,
+        "timestamp": "2026-11-14T10:44:52.1524127Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+        "status": "pass",
+        "name": "Planner applies and Procurement conflicts in one durable case; ordered receipts replay after restart without effects",
+        "line": 880,
+        "timestamp": "2026-11-14T10:44:52.6556323Z",
+        "durationMs": 497.8
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 40.67,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+        "line": 882,
+        "timestamp": "2026-11-14T10:44:52.6557422Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+        "status": "pass",
+        "name": "explicit criterion rule is versioned, authorized and evaluated using the domain metric",
+        "line": 883,
+        "timestamp": "2026-11-14T10:44:52.6997531Z",
+        "durationMs": 40.67
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 8.15,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+        "line": 885,
+        "timestamp": "2026-11-14T10:44:52.6998994Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+        "status": "pass",
+        "name": "case projection denies an inaccessible operation even with no result components",
+        "line": 886,
+        "timestamp": "2026-11-14T10:44:52.7093370Z",
+        "durationMs": 8.15
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 47.32,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/result-store.test.ts",
+        "line": 888,
+        "timestamp": "2026-11-14T10:44:52.7094543Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/result-store.test.ts",
+        "status": "pass",
+        "name": "decision result persistence binds retries, current case and source authority",
+        "line": 889,
+        "timestamp": "2026-11-14T10:44:52.7574584Z",
+        "durationMs": 47.32
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 25.8,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+        "line": 891,
+        "timestamp": "2026-11-14T10:44:52.7575867Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+        "status": "pass",
+        "name": "a reopened case admits a second principal and concurrent human edits preserve one commit and its receipt",
+        "line": 892,
+        "timestamp": "2026-11-14T10:44:52.7853112Z",
+        "durationMs": 25.8
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "reportedTests": 3,
+      "counts": {
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 227.0,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+        "line": 894,
+        "timestamp": "2026-11-14T10:44:52.7854918Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+        "status": "pass",
+        "name": "real prepared execution reconciles revoked without repeating Planner effects",
+        "line": 897,
+        "timestamp": "2026-11-14T10:44:53.0148229Z",
+        "durationMs": 76.19
+      }
+    }
+  ],
+  "lastObservedFile": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+  "lastReportedTest": {
+    "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+    "status": "pass",
+    "name": "real prepared execution reconciles revoked without repeating Planner effects",
+    "line": 897,
+    "timestamp": "2026-11-14T10:44:53.0148229Z",
+    "durationMs": 76.19
+  },
+  "hasCompletedBunSummary": true,
+  "requestedButNotObserved": [],
+  "observedButNotRequested": [],
+  "ownObservedCounts": {
+    "pass": 24,
+    "fail": 2,
+    "skip": 0,
+    "todo": 0
+  },
+  "observedTests": [
+    {
+      "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "status": "pass",
+      "name": "a dispatched change without its authoritative receipt stays indeterminate across concurrent actors and restart",
+      "line": 829,
+      "timestamp": "2026-11-14T10:41:50.9913147Z",
+      "durationMs": 281.66
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "status": "fail",
+      "name": "an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result",
+      "line": 841,
+      "timestamp": "2026-11-14T10:41:51.2094273Z",
+      "durationMs": 18.88
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "status": "fail",
+      "name": "nested C17 calculations reopen through persisted canonical requests and replay every ancestor",
+      "line": 851,
+      "timestamp": "2026-11-14T10:44:51.2269748Z",
+      "durationMs": 180012.72,
+      "timeoutMs": 180000
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "case draft survives a real store reopen, exact retry is idempotent and revoked access is denied",
+      "line": 855,
+      "timestamp": "2026-11-14T10:44:51.2617884Z",
+      "durationMs": 26.48
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "an entirely omitted renewal category remains pending",
+      "line": 856,
+      "timestamp": "2026-11-14T10:44:51.2631449Z",
+      "durationMs": 1.45
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "coverage distinguishes a sourced zero from an omitted category",
+      "line": 857,
+      "timestamp": "2026-11-14T10:44:51.2645956Z",
+      "durationMs": 1.45
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "case references encode both identities without accepting ambiguous aliases",
+      "line": 858,
+      "timestamp": "2026-11-14T10:44:51.2647045Z",
+      "durationMs": 0.13
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "receipt reconciliation preserves partial application and rejects changed identity",
+      "line": 859,
+      "timestamp": "2026-11-14T10:44:51.2650879Z",
+      "durationMs": 0.35
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "a conditional human choice freezes the comparison and cost gap",
+      "line": 860,
+      "timestamp": "2026-11-14T10:44:51.2664597Z",
+      "durationMs": 1.36
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "preparing a change preserves the domain command and never applies it",
+      "line": 861,
+      "timestamp": "2026-11-14T10:44:51.2671862Z",
+      "durationMs": 0.72
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "revoked source suppresses an otherwise authorized case",
+      "line": 862,
+      "timestamp": "2026-11-14T10:44:51.2830967Z",
+      "durationMs": 15.88
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "partial domain execution reconciles a durable receipt and never repeats it on retry",
+      "line": 863,
+      "timestamp": "2026-11-14T10:44:51.3040675Z",
+      "durationMs": 20.95
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "human choice persists a versioned snapshot and ledger using the planner comparison",
+      "line": 864,
+      "timestamp": "2026-11-14T10:44:51.4717591Z",
+      "durationMs": 167.58
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-management.test.ts",
+      "status": "pass",
+      "name": "case listing and editing recheck access, actor intent, CAS and exact retry",
+      "line": 867,
+      "timestamp": "2026-11-14T10:44:51.4896242Z",
+      "durationMs": 15.84
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/http.test.ts",
+      "status": "pass",
+      "name": "decision HTTP uses the real human admission and case CAS",
+      "line": 870,
+      "timestamp": "2026-11-14T10:44:51.5026408Z",
+      "durationMs": 11.3
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/http.test.ts",
+      "status": "pass",
+      "name": "current-choice HTTP binds both human steps and only promotion permits a historical retry",
+      "line": 871,
+      "timestamp": "2026-11-14T10:44:51.5042709Z",
+      "durationMs": 1.61
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+      "status": "pass",
+      "name": "a separate human rejection cancels only an undispatched proposal, retains the choice and reconciles retries",
+      "line": 874,
+      "timestamp": "2026-11-14T10:44:51.5390790Z",
+      "durationMs": 33.67
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+      "status": "pass",
+      "name": "a human-confirmed March assumption keeps the official May project and exposes the divergence until a separate domain command",
+      "line": 877,
+      "timestamp": "2026-11-14T10:44:52.1523170Z",
+      "durationMs": 609.51
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "status": "pass",
+      "name": "Planner applies and Procurement conflicts in one durable case; ordered receipts replay after restart without effects",
+      "line": 880,
+      "timestamp": "2026-11-14T10:44:52.6556323Z",
+      "durationMs": 497.8
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "status": "pass",
+      "name": "explicit criterion rule is versioned, authorized and evaluated using the domain metric",
+      "line": 883,
+      "timestamp": "2026-11-14T10:44:52.6997531Z",
+      "durationMs": 40.67
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+      "status": "pass",
+      "name": "case projection denies an inaccessible operation even with no result components",
+      "line": 886,
+      "timestamp": "2026-11-14T10:44:52.7093370Z",
+      "durationMs": 8.15
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "status": "pass",
+      "name": "decision result persistence binds retries, current case and source authority",
+      "line": 889,
+      "timestamp": "2026-11-14T10:44:52.7574584Z",
+      "durationMs": 47.32
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+      "status": "pass",
+      "name": "a reopened case admits a second principal and concurrent human edits preserve one commit and its receipt",
+      "line": 892,
+      "timestamp": "2026-11-14T10:44:52.7853112Z",
+      "durationMs": 25.8
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "status": "pass",
+      "name": "real prepared execution reconciles normal without repeating Planner effects",
+      "line": 895,
+      "timestamp": "2026-11-14T10:44:52.8619799Z",
+      "durationMs": 74.16
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "status": "pass",
+      "name": "real prepared execution reconciles lost-response without repeating Planner effects",
+      "line": 896,
+      "timestamp": "2026-11-14T10:44:52.9386108Z",
+      "durationMs": 76.65
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "status": "pass",
+      "name": "real prepared execution reconciles revoked without repeating Planner effects",
+      "line": 897,
+      "timestamp": "2026-11-14T10:44:53.0148229Z",
+      "durationMs": 76.19
+    }
+  ],
+  "failures": [
+    {
+      "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "status": "fail",
+      "name": "an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result",
+      "line": 841,
+      "timestamp": "2026-11-14T10:41:51.2094273Z",
+      "durationMs": 18.88
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "status": "fail",
+      "name": "nested C17 calculations reopen through persisted canonical requests and replay every ancestor",
+      "line": 851,
+      "timestamp": "2026-11-14T10:44:51.2269748Z",
+      "durationMs": 180012.72,
+      "timeoutMs": 180000
+    }
+  ],
+  "fixtureTrace": {
+    "observations": [
+      {
+        "line": 844,
+        "label": "calculation-persistence",
+        "phase": "bootstrap-start",
+        "elapsedMs": 0,
+        "budgetMs": 180000,
+        "counts": {}
+      },
+      {
+        "line": 845,
+        "label": "calculation-persistence",
+        "phase": "bootstrap-complete",
+        "elapsedMs": 20,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.transaction.cases": {
+            "calls": 1,
+            "elapsedMs": 2,
+            "maximumMs": 2
+          },
+          "host.revalidate": {
+            "calls": 4,
+            "elapsedMs": 0,
+            "maximumMs": 0
+          },
+          "c08.read.cases": {
+            "calls": 1,
+            "elapsedMs": 1,
+            "maximumMs": 1
+          }
+        },
+        "stateBytes": 3020,
+        "transactionsBytes": 450,
+        "casesBytes": 2165,
+        "resultBytes": 2,
+        "transactions": 1,
+        "cases": 1,
+        "results": 0
+      },
+      {
+        "line": 846,
+        "label": "calculation-persistence",
+        "phase": "persist:inner:complete",
+        "elapsedMs": 596,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.transaction.cases": {
+            "calls": 2,
+            "elapsedMs": 7,
+            "maximumMs": 5
+          },
+          "host.revalidate": {
+            "calls": 205,
+            "elapsedMs": 2,
+            "maximumMs": 1
+          },
+          "c08.read.cases": {
+            "calls": 19,
+            "elapsedMs": 36,
+            "maximumMs": 3
+          },
+          "source.resolve": {
+            "calls": 50,
+            "elapsedMs": 355,
+            "maximumMs": 11
+          },
+          "source.coverage": {
+            "calls": 36,
+            "elapsedMs": 1,
+            "maximumMs": 1
+          },
+          "evidence.recordProjection": {
+            "calls": 15,
+            "elapsedMs": 305,
+            "maximumMs": 24
+          },
+          "c08.read.preferences": {
+            "calls": 4,
+            "elapsedMs": 8,
+            "maximumMs": 2
+          },
+          "c08.transaction.preferences": {
+            "calls": 1,
+            "elapsedMs": 8,
+            "maximumMs": 8
+          }
+        },
+        "stateBytes": 53729,
+        "transactionsBytes": 26184,
+        "casesBytes": 2165,
+        "resultBytes": 23889,
+        "transactions": 3,
+        "cases": 1,
+        "results": 1
+      },
+      {
+        "line": 847,
+        "label": "calculation-persistence",
+        "phase": "inner-evidence:complete",
+        "elapsedMs": 1711,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.transaction.cases": {
+            "calls": 2,
+            "elapsedMs": 7,
+            "maximumMs": 5
+          },
+          "host.revalidate": {
+            "calls": 563,
+            "elapsedMs": 4,
+            "maximumMs": 1
+          },
+          "c08.read.cases": {
+            "calls": 44,
+            "elapsedMs": 88,
+            "maximumMs": 5
+          },
+          "source.resolve": {
+            "calls": 150,
+            "elapsedMs": 1091,
+            "maximumMs": 11
+          },
+          "source.coverage": {
+            "calls": 108,
+            "elapsedMs": 2,
+            "maximumMs": 1
+          },
+          "evidence.recordProjection": {
+            "calls": 45,
+            "elapsedMs": 905,
+            "maximumMs": 24
+          },
+          "c08.read.preferences": {
+            "calls": 10,
+            "elapsedMs": 21,
+            "maximumMs": 3
+          },
+          "c08.transaction.preferences": {
+            "calls": 1,
+            "elapsedMs": 8,
+            "maximumMs": 8
+          },
+          "c17.request:decision-result:wp11-calculation-1": {
+            "calls": 2,
+            "elapsedMs": 672,
+            "maximumMs": 340
+          },
+          "c17.result:decision-result:wp11-calculation-1": {
+            "calls": 2,
+            "elapsedMs": 265,
+            "maximumMs": 134
+          },
+          "planner.replay.nested": {
+            "calls": 2,
+            "elapsedMs": 104,
+            "maximumMs": 53
+          }
+        },
+        "stateBytes": 53729,
+        "transactionsBytes": 26184,
+        "casesBytes": 2165,
+        "resultBytes": 23889,
+        "transactions": 3,
+        "cases": 1,
+        "results": 1
+      },
+      {
+        "line": 848,
+        "label": "calculation-persistence",
+        "phase": "persist:outer:complete",
+        "elapsedMs": 29656,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.transaction.cases": {
+            "calls": 3,
+            "elapsedMs": 19,
+            "maximumMs": 12
+          },
+          "host.revalidate": {
+            "calls": 6816,
+            "elapsedMs": 92,
+            "maximumMs": 5
+          },
+          "c08.read.cases": {
+            "calls": 470,
+            "elapsedMs": 1483,
+            "maximumMs": 9
+          },
+          "source.resolve": {
+            "calls": 1900,
+            "elapsedMs": 21024,
+            "maximumMs": 31
+          },
+          "source.coverage": {
+            "calls": 1368,
+            "elapsedMs": 50,
+            "maximumMs": 5
+          },
+          "evidence.recordProjection": {
+            "calls": 570,
+            "elapsedMs": 16761,
+            "maximumMs": 73
+          },
+          "c08.read.preferences": {
+            "calls": 116,
+            "elapsedMs": 388,
+            "maximumMs": 8
+          },
+          "c08.transaction.preferences": {
+            "calls": 2,
+            "elapsedMs": 22,
+            "maximumMs": 14
+          },
+          "c17.request:decision-result:wp11-calculation-1": {
+            "calls": 36,
+            "elapsedMs": 17516,
+            "maximumMs": 563
+          },
+          "c17.result:decision-result:wp11-calculation-1": {
+            "calls": 36,
+            "elapsedMs": 6637,
+            "maximumMs": 221
+          },
+          "planner.replay.nested": {
+            "calls": 36,
+            "elapsedMs": 2687,
+            "maximumMs": 89
+          },
+          "evidence.calculation": {
+            "calls": 11,
+            "elapsedMs": 17193,
+            "maximumMs": 1750
+          }
+        },
+        "stateBytes": 112975,
+        "transactionsBytes": 56196,
+        "casesBytes": 2165,
+        "resultBytes": 50539,
+        "transactions": 5,
+        "cases": 1,
+        "results": 2
+      },
+      {
+        "line": 849,
+        "label": "calculation-persistence",
+        "phase": "outer-evidence:complete",
+        "elapsedMs": 149144,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.transaction.cases": {
+            "calls": 3,
+            "elapsedMs": 19,
+            "maximumMs": 12
+          },
+          "host.revalidate": {
+            "calls": 31744,
+            "elapsedMs": 319,
+            "maximumMs": 5
+          },
+          "c08.read.cases": {
+            "calls": 2152,
+            "elapsedMs": 7520,
+            "maximumMs": 9
+          },
+          "source.resolve": {
+            "calls": 8900,
+            "elapsedMs": 106450,
+            "maximumMs": 33
+          },
+          "source.coverage": {
+            "calls": 6408,
+            "elapsedMs": 158,
+            "maximumMs": 5
+          },
+          "evidence.recordProjection": {
+            "calls": 2670,
+            "elapsedMs": 84291,
+            "maximumMs": 75
+          },
+          "c08.read.preferences": {
+            "calls": 537,
+            "elapsedMs": 1910,
+            "maximumMs": 9
+          },
+          "c08.transaction.preferences": {
+            "calls": 2,
+            "elapsedMs": 22,
+            "maximumMs": 14
+          },
+          "c17.request:decision-result:wp11-calculation-1": {
+            "calls": 172,
+            "elapsedMs": 89133,
+            "maximumMs": 580
+          },
+          "c17.result:decision-result:wp11-calculation-1": {
+            "calls": 172,
+            "elapsedMs": 33913,
+            "maximumMs": 223
+          },
+          "planner.replay.nested": {
+            "calls": 176,
+            "elapsedMs": 27672,
+            "maximumMs": 3531
+          },
+          "evidence.calculation": {
+            "calls": 43,
+            "elapsedMs": 72867,
+            "maximumMs": 1807
+          },
+          "c17.request:decision-result:wp11-calculation-2": {
+            "calls": 4,
+            "elapsedMs": 70333,
+            "maximumMs": 17615
+          },
+          "c17.result:decision-result:wp11-calculation-2": {
+            "calls": 4,
+            "elapsedMs": 28053,
+            "maximumMs": 7058
+          }
+        },
+        "stateBytes": 112975,
+        "transactionsBytes": 56196,
+        "casesBytes": 2165,
+        "resultBytes": 50539,
+        "transactions": 5,
+        "cases": 1,
+        "results": 2
+      },
+      {
+        "line": 850,
+        "label": "calculation-persistence",
+        "phase": "outer-evidence:complete",
+        "elapsedMs": 180009,
+        "budgetMs": 180000,
+        "status": "deadline-exceeded",
+        "counts": {
+          "c08.transaction.cases": {
+            "calls": 3,
+            "elapsedMs": 19,
+            "maximumMs": 12
+          },
+          "host.revalidate": {
+            "calls": 38116,
+            "elapsedMs": 345,
+            "maximumMs": 5
+          },
+          "c08.read.cases": {
+            "calls": 2585,
+            "elapsedMs": 9125,
+            "maximumMs": 10
+          },
+          "source.resolve": {
+            "calls": 10689,
+            "elapsedMs": 128155,
+            "maximumMs": 33
+          },
+          "source.coverage": {
+            "calls": 7690,
+            "elapsedMs": 167,
+            "maximumMs": 5
+          },
+          "evidence.recordProjection": {
+            "calls": 3210,
+            "elapsedMs": 101472,
+            "maximumMs": 75
+          },
+          "c08.read.preferences": {
+            "calls": 647,
+            "elapsedMs": 2629,
+            "maximumMs": 48
+          },
+          "c08.transaction.preferences": {
+            "calls": 2,
+            "elapsedMs": 22,
+            "maximumMs": 14
+          },
+          "c17.request:decision-result:wp11-calculation-1": {
+            "calls": 207,
+            "elapsedMs": 107907,
+            "maximumMs": 580
+          },
+          "c17.result:decision-result:wp11-calculation-1": {
+            "calls": 207,
+            "elapsedMs": 40740,
+            "maximumMs": 223
+          },
+          "planner.replay.nested": {
+            "calls": 210,
+            "elapsedMs": 30432,
+            "maximumMs": 3531
+          },
+          "evidence.calculation": {
+            "calls": 51,
+            "elapsedMs": 85258,
+            "maximumMs": 1819
+          },
+          "c17.request:decision-result:wp11-calculation-2": {
+            "calls": 5,
+            "elapsedMs": 70333,
+            "maximumMs": 17615
+          },
+          "c17.result:decision-result:wp11-calculation-2": {
+            "calls": 4,
+            "elapsedMs": 28053,
+            "maximumMs": 7058
+          }
+        }
+      }
+    ],
+    "parseErrors": [],
+    "lastByLabel": {
+      "calculation-persistence": {
+        "line": 850,
+        "label": "calculation-persistence",
+        "phase": "outer-evidence:complete",
+        "elapsedMs": 180009,
+        "budgetMs": 180000,
+        "status": "deadline-exceeded",
+        "counts": {
+          "c08.transaction.cases": {
+            "calls": 3,
+            "elapsedMs": 19,
+            "maximumMs": 12
+          },
+          "host.revalidate": {
+            "calls": 38116,
+            "elapsedMs": 345,
+            "maximumMs": 5
+          },
+          "c08.read.cases": {
+            "calls": 2585,
+            "elapsedMs": 9125,
+            "maximumMs": 10
+          },
+          "source.resolve": {
+            "calls": 10689,
+            "elapsedMs": 128155,
+            "maximumMs": 33
+          },
+          "source.coverage": {
+            "calls": 7690,
+            "elapsedMs": 167,
+            "maximumMs": 5
+          },
+          "evidence.recordProjection": {
+            "calls": 3210,
+            "elapsedMs": 101472,
+            "maximumMs": 75
+          },
+          "c08.read.preferences": {
+            "calls": 647,
+            "elapsedMs": 2629,
+            "maximumMs": 48
+          },
+          "c08.transaction.preferences": {
+            "calls": 2,
+            "elapsedMs": 22,
+            "maximumMs": 14
+          },
+          "c17.request:decision-result:wp11-calculation-1": {
+            "calls": 207,
+            "elapsedMs": 107907,
+            "maximumMs": 580
+          },
+          "c17.result:decision-result:wp11-calculation-1": {
+            "calls": 207,
+            "elapsedMs": 40740,
+            "maximumMs": 223
+          },
+          "planner.replay.nested": {
+            "calls": 210,
+            "elapsedMs": 30432,
+            "maximumMs": 3531
+          },
+          "evidence.calculation": {
+            "calls": 51,
+            "elapsedMs": 85258,
+            "maximumMs": 1819
+          },
+          "c17.request:decision-result:wp11-calculation-2": {
+            "calls": 5,
+            "elapsedMs": 70333,
+            "maximumMs": 17615
+          },
+          "c17.result:decision-result:wp11-calculation-2": {
+            "calls": 4,
+            "elapsedMs": 28053,
+            "maximumMs": 7058
+          }
+        }
+      }
+    },
+    "maximumObservedSerializedStateBytes": 112975,
+    "boundary": "Counts and inclusive overlapping wall durations are fixture instrumentation; serialized state bytes are not sampled process memory or exclusive CPU time."
+  }
+}

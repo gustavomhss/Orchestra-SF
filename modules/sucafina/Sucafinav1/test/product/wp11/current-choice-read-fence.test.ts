@@ -33,14 +33,16 @@ function pendingResult(id: string, reference: RecordEvidence, alternativeVersion
  * Real UI admission, SQLite transactions and result-store reads exercise the authorization race.
  * This does not replace the canonical choice/preview/promotion or native-session journeys.
  */
-for (const revocation of ["membership", "preferences read"] as const) test(`current-choice read suppresses its binding when ${revocation} changes during the final case authorization`, async () => {
+for (const revocation of ["membership", "preferences read", "finished lease", "replacement lease"] as const) test(`current-choice read suppresses its binding when ${revocation} changes during the final ${revocation === "membership" || revocation === "preferences read" ? "case" : "C08 namespace"} authorization`, async () => {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-current-choice-read-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
   const request = new Request("https://example.test/current-choice-read", { headers: { authorization: "reader-fixture" } })
+  const replacementRequest = new Request("https://example.test/current-choice-read", { headers: { authorization: "reader-fixture" } })
   const identity = { installationId: "install", projectId: "project", principalRef: "principal", policyVersion: "policy", accessRevision: "access" }
-  const ui = createSfUiAuthority({ authorize: async (incoming) => incoming === request && incoming.headers.get("authorization") === "reader-fixture" ? identity : undefined, commandIdentity: async () => "read-current-choice", createId: () => "ui-request", now: () => Date.parse(at) })
+  const ui = createSfUiAuthority({ authorize: async (incoming) => (incoming === request || incoming === replacementRequest) && incoming.headers.get("authorization") === "reader-fixture" ? identity : undefined, commandIdentity: async () => "read-current-choice", createId: () => "ui-request", now: () => Date.parse(at) })
   let admittedContext: TrustedUiContext | undefined
+  let replacementContext: TrustedUiContext | undefined
   try {
     const caseRef = { id: "case", incarnation: "case-incarnation", version: 2 }
     const intentDigest = digestSfValue({ caseRef })
@@ -51,7 +53,23 @@ for (const revocation of ["membership", "preferences read"] as const) test(`curr
     const host: Pick<DomainPortHost, "requestFor" | "revalidate"> = { requestFor: (trusted) => trusted.kind === "ui" ? ui.requestFor(trusted) : undefined, revalidate: (trusted) => trusted.kind === "ui" ? ui.revalidate(trusted) : Promise.resolve(false) }
     const writes = new WeakSet<object>()
     const access = { preferencesRead: true, preferencesWrite: true }
-    const state = createSfProductState({ persistence: store, proposalCoverageWrites: writes, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: caseRef.incarnation }), authorize: async (incoming, _snapshot, namespace, mode) => incoming === request && (namespace !== "preferences" || (mode === "read" ? access.preferencesRead : access.preferencesWrite)) && await ui.revalidate(context) ? { principalRef: identity.principalRef, policyVersion: identity.policyVersion, accessRevision: identity.accessRevision } : undefined })
+    const race = { armed: false, authorizations: 0, applied: false, namespaceFence: false, finalAuthorizations: 0 }
+    const lateLease = revocation === "finished lease" || revocation === "replacement lease"
+    const state = createSfProductState({ persistence: store, proposalCoverageWrites: writes, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: caseRef.incarnation }), authorize: async (incoming, _snapshot, namespace, mode) => {
+      // Like product-authority, namespace authorization authenticates the
+      // Request/principal; it does not attest the separately retained UI lease.
+      if (incoming !== request || namespace === "preferences" && !(mode === "read" ? access.preferencesRead : access.preferencesWrite)) return undefined
+      if (race.namespaceFence && namespace === "cases" && mode === "read" && ++race.finalAuthorizations === 2) {
+        ui.finish(context)
+        if (revocation === "replacement lease") {
+          const next = await ui.admit(replacementRequest, "sf_case_read", intentDigest)
+          if (next.status !== "ok" || !await ui.validate(next.value, "sf_case_read", intentDigest)) throw new Error("Replacement UI admission unavailable")
+          replacementContext = next.value
+        }
+        race.applied = true
+      }
+      return { principalRef: identity.principalRef, policyVersion: identity.policyVersion, accessRevision: identity.accessRevision }
+    } })
     const originalSource = source("original-source", 1)
     const currentSource = source("current-source", 2)
     const originalScenario: ScenarioRequest = { baseRef: originalSource.refId, operations: [], assumptions: [] }
@@ -79,7 +97,6 @@ for (const revocation of ["membership", "preferences read"] as const) test(`curr
     // Reading a retained binding must not require permission to write it.
     access.preferencesWrite = false
 
-    const race = { armed: false, authorizations: 0, applied: false }
     let unexpectedProducerCalls = 0
     const unused = (): never => { unexpectedProducerCalls += 1; throw new Error("Reader must not calculate, prepare, promote or dispatch") }
     const unusedAsync = async (): Promise<never> => unused()
@@ -101,10 +118,11 @@ for (const revocation of ["membership", "preferences read"] as const) test(`curr
               return { commit: true, value: true }
             })
             if (removed.status !== "ok" || !removed.value) throw new Error("Membership race did not commit")
-          } else {
+          } else if (revocation === "preferences read") {
             access.preferencesRead = false
           }
-          race.applied = true
+          race.namespaceFence = lateLease
+          race.applied = !lateLease
         }
         // The callback legitimately authorized the supplied snapshot. The global
         // UI lease remains valid; final case and namespace fences must see the change.
@@ -114,10 +132,19 @@ for (const revocation of ["membership", "preferences read"] as const) test(`curr
     expect(await preview.read(promotion, context)).toEqual({ status: "ok", value: binding })
     race.armed = true
     const read = await preview.read(promotion, context)
-    expect(race).toEqual({ armed: true, authorizations: 2, applied: true })
+    expect(race).toEqual({ armed: true, authorizations: 2, applied: true, namespaceFence: lateLease, finalAuthorizations: lateLease ? 2 : 0 })
     expect(read).toEqual({ status: "stale", reason: "choice-preview-changed" })
     expect(read).not.toHaveProperty("value")
-    expect(await ui.revalidate(context)).toBe(true)
+    expect(await ui.revalidate(context)).toBe(!lateLease)
+    expect(ui.requestFor(context)).toBe(lateLease ? undefined : request)
+    expect(request.signal.aborted).toBe(false)
+    if (revocation === "replacement lease") {
+      if (!replacementContext) throw new Error("Replacement lease was not admitted")
+      expect(replacementContext).not.toBe(context)
+      expect(await ui.revalidate(replacementContext)).toBe(true)
+      expect(ui.requestFor(replacementContext)).toBe(replacementRequest)
+      expect(replacementContext.binding.principalRef).toBe(context.binding.principalRef)
+    }
     const after = await state.read(request, "cases", (stored) => stored.cases[caseRef.id])
     expect(after).toMatchObject({ status: "ok", value: { version: revocation === "membership" ? 3 : 2, participants: revocation === "membership" ? [] : [identity.principalRef], choices: [choice], preparedChanges: [], receipts: [] } })
     if (revocation === "preferences read") expect(await state.read(request, "preferences", () => true)).toEqual({ status: "denied", reason: "product-access-unavailable" })
@@ -125,7 +152,9 @@ for (const revocation of ["membership", "preferences read"] as const) test(`curr
     expect(unexpectedProducerCalls).toBe(0)
   } finally {
     if (admittedContext) ui.finish(admittedContext)
+    if (replacementContext) ui.finish(replacementContext)
     await store.dispose()
     await rm(directory, { recursive: true, force: true })
   }
 })
+

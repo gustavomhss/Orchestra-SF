@@ -1,0 +1,2124 @@
+{
+  "schema": "wp11-W17-H7-observed-assertions-v1",
+  "preparedAtUtc": "2026-11-14T13:12:11.568560+00:00",
+  "status": "HOSTED_OBSERVED_NOT_GLOBAL_ACCEPTANCE",
+  "metadata": {
+    "path": "ci-analysis/wp11-W17-H7-evidence-meta.json",
+    "sha256": "a8625ff548f119584733347ad62e625256678f1371d7667acc94def1a2a69af4"
+  },
+  "source": {
+    "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+    "productTree": "68e75187628ae046a9249238bb14226ebf0ec625",
+    "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+    "snapshotTree": "f2778ed0742a971a18dc7f36972b7bb8a08bce38",
+    "branch": "ci-run-linux-astra-wp11-26bb96b-40c51f29-h7",
+    "requestSha256": "40c51f2941eae028a573e73873bf7ee8818618b6f0bdfe7ddfc07652028cc820",
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4"
+  },
+  "run": {
+    "id": 43597644083,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-14T13:01:19Z",
+    "updatedAt": "2026-11-14T13:07:47Z",
+    "headSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+    "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43597644083",
+    "runAttempt": 1
+  },
+  "summary": {
+    "pass": 23,
+    "fail": 0,
+    "tests": 23,
+    "files": 5,
+    "durationSeconds": 260.67
+  },
+  "assertionEvidence": [
+    {
+      "id": "W17_H7_ASSERT_01",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "testBlob": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+      "testSha256": "47597f1233478dacd6b4395a811105b44abf072d465341325d4d4834494083bf",
+      "test": "the same durable choice preserves omitted training while a confirmed source revision reverses cost and criterion",
+      "logLine": 827,
+      "durationMs": 177754.86,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "O cenário composto inicial usa três operações replace processadas pelo simulador canônico Planner sobre fontes persistidas da fixture. Training é inteiramente omitido e C10 deriva a categoria pending; resultado210000/total:null, knownDifference -30000/completeDifference:null, vantagem30000 e teto canônico55000.",
+        "A escolha conserva resultado210000, cobertura pending e training ausente, sem propostas ou recibos. A revisão é no MESMO caso/encarnação com versão posterior.",
+        "O comando real de cotação declara doze forecasts de treinamento: onze zeros confirmed e40000 em novembro. A nova observação source-only é completa250000, todos os componentes confirmed; diferença de custo10000, vantagem -10000 e critério20000 failed.",
+        "O produtor canônico encontra teto posterior15000. O caso permanece reconsidering com uma escolha cujo digest/razão/resultado originais não mudaram, sem propostas/recibos; source locked conflita sem alteração, retry exato conserva um único choice-recorded.",
+        "O proof estrutural atual e C10 produzem certificado de intervalo implementation:11 entre10000 e70000. Remover o parameterOperation do proof source-only impede a emissão do certificado.",
+        "Uma segunda conexão relê o resultado completo250000. Depois a fixture fecha de fato writer e UI originais, cria outro provider/UI/read port e admite o colaborador já persistido: lê a MESMA escolha/digest, versões, estado e novo resultado; o host original está revogado.",
+        "O colaborador tem principal próprio e um único choice-recorded. Um outsider é denied/case-access-unavailable; revogar a nova autoridade também nega a leitura. Todas as asserções e cleanup terminaram dentro do orçamento original180000."
+      ],
+      "limits": [
+        "A escolha inicial e as declarações de escopo/cotação são entradas explícitas da fixture; não atribuir confirmação empresarial a uma pessoa real. A nova admissão privada e C08/Planner/produtores/restart são reais.",
+        "A comparação completa250000 é uma nova observação de fonte confirmada com operations:[], não uma promoção da hipótese original a fato. A ChoiceRecord com três operações,210000 e ressalva permanece imutável.",
+        "PortfolioSelection usado no certificado é construído explicitamente. O teste não qualifica consumidor de portfólio/critic integrado com combinação não vazia.",
+        "PASS177754.86ms deixa cerca2.25s de margem sobre180000; não prova folga de desempenho, estabilidade temporal geral ou otimização do host instalado.",
+        "Esta execução não registra uma segunda ChoiceRecord nem comprova UI/native/MCP montado. B1B e as obrigações residentes permanecem separados."
+      ],
+      "supportsCriteria": [
+        "WP11.DOD.01",
+        "WP11.DOD.20",
+        "WP11.INV.01",
+        "WP11.INV.20",
+        "WP11.QLT.01",
+        "WP11.QLT.20",
+        "WP11.CMP.01",
+        "WP11.CMP.20",
+        "WP11.T01.DOD.01",
+        "WP11.T01.CMP.01",
+        "WP11.T02.CHK.20",
+        "WP11.T02.CHK.21",
+        "WP11.T02.DOD.01",
+        "WP11.T02.DOD.20",
+        "WP11.T02.INV.01",
+        "WP11.T02.INV.20",
+        "WP11.T02.QLT.01",
+        "WP11.T02.QLT.20",
+        "WP11.T02.CMP.01",
+        "WP11.T02.CMP.20",
+        "WP11.T03.CHK.01",
+        "WP11.T03.CHK.20"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE"
+    },
+    {
+      "id": "W17_H7_ASSERT_02",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "case draft survives a real store reopen, exact retry is idempotent and revoked access is denied",
+      "logLine": 830,
+      "durationMs": 17.59,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "Draft/read use actual local persistence, a store reopen, same-content idempotency and denied revoked access."
+      ],
+      "limits": [
+        "Fixture authority/evidence inputs are controlled; the second-principal assertion comes from the separate authority-concurrency test."
+      ],
+      "supportsCriteria": [
+        "WP11.DOD.01",
+        "WP11.CMP.01",
+        "WP11.T01.CHK.01",
+        "WP11.T01.DOD.01",
+        "WP11.T01.CMP.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W11_F1_ASSERT_04",
+        "sameTestBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_03",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "an entirely omitted renewal category remains pending",
+      "logLine": 831,
+      "durationMs": 0.42,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "The real coverage evaluator derives the absent renewal category as pending rather than numeric zero."
+      ],
+      "limits": [
+        "Small validator inputs are synthetic; this does not exercise all named consumers or the canonical210000 financial journey."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.20",
+        "WP11.CMP.20",
+        "WP11.T02.CHK.20",
+        "WP11.T02.INV.20",
+        "WP11.T02.CMP.20"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W11_F1_ASSERT_05",
+        "sameTestBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_04",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "coverage distinguishes a sourced zero from an omitted category",
+      "logLine": 832,
+      "durationMs": 0.93,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "Sourced numeric zero and absence are different inputs/states in the real coverage evaluator."
+      ],
+      "limits": [
+        "This is the zero-versus-missing discriminant only; FX, exit cost and hypothetical discount require their own producer tests."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.20",
+        "WP11.CMP.20",
+        "WP11.T02.CHK.03",
+        "WP11.T02.INV.20",
+        "WP11.T02.CMP.20"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W11_F1_ASSERT_06",
+        "sameTestBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_05",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "case references encode both identities without accepting ambiguous aliases",
+      "logLine": 833,
+      "durationMs": 0.1,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "Case reference parsing binds both case ID and incarnation and rejects ambiguous aliases."
+      ],
+      "limits": [
+        "Reference syntax alone is not source reincarnation/import protection or UI/native parity."
+      ],
+      "supportsCriteria": [
+        "WP11.QLT.10",
+        "WP11.T01.QLT.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W11_F1_ASSERT_07",
+        "sameTestBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_06",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "receipt reconciliation preserves partial application and rejects changed identity",
+      "logLine": 834,
+      "durationMs": 0.64,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "The reconciliation function preserves a partial result and rejects changed receipt identity."
+      ],
+      "limits": [
+        "Receipt payload is a controlled fixture. Authoritative atomic domain receipts are proved separately by the execution tests."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.02",
+        "WP11.QLT.02",
+        "WP11.QLT.10",
+        "WP11.CMP.01",
+        "WP11.T04.QLT.01",
+        "WP11.T04.CMP.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W11_F1_ASSERT_08",
+        "sameTestBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_07",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "a conditional human choice freezes the comparison and cost gap",
+      "logLine": 835,
+      "durationMs": 0.66,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "A conditional choice keeps its comparison and gap snapshot after the input objects change."
+      ],
+      "limits": [
+        "This isolated snapshot discriminant is not the later40000 same-revisão de fonte or a second human choice."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.20",
+        "WP11.CMP.01",
+        "WP11.T03.CHK.01",
+        "WP11.T03.CHK.20"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W11_F1_ASSERT_09",
+        "sameTestBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_08",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "preparing a change preserves the domain command and never applies it",
+      "logLine": 836,
+      "durationMs": 0.35,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "Preparation retains the supplied domain command and does not call the effecting application path."
+      ],
+      "limits": [
+        "A controlled command fixture does not establish the actual domain producer-to-consumer chain; that chain has separate hosted tests pending."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.01",
+        "WP11.CMP.01",
+        "WP11.T03.CHK.02",
+        "WP11.T03.INV.01",
+        "WP11.T03.QLT.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W11_F1_ASSERT_10",
+        "sameTestBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_09",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "revoked source suppresses an otherwise authorized case",
+      "logLine": 837,
+      "durationMs": 11.05,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "Case access remains otherwise authorized while revoked business source evidence suppresses the case projection."
+      ],
+      "limits": [
+        "Source resolver revocation is controlled; this is not native transport revocation or every-domain receipt ACL."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.CMP.01",
+        "WP11.T01.INV.01",
+        "WP11.T01.QLT.01",
+        "WP11.T01.CMP.01",
+        "WP11.T02.CMP.20"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W11_F1_ASSERT_11",
+        "sameTestBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_10",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "partial domain execution reconciles a durable receipt and never repeats it on retry",
+      "logLine": 838,
+      "durationMs": 14.04,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "Decision case reconciliation writes the supplied durable receipt once and exact retry does not invoke the supplied effecting port again."
+      ],
+      "limits": [
+        "The domain port is a fixture. Real authoritative Planner/Procurement behavior is supported by other tests, not inferred from this name."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.02",
+        "WP11.QLT.02",
+        "WP11.CMP.01",
+        "WP11.T04.CHK.02",
+        "WP11.T04.QLT.01",
+        "WP11.T04.CMP.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W11_F1_ASSERT_12",
+        "sameTestBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_11",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "human choice persists a versioned snapshot and ledger using the planner comparison",
+      "logLine": 839,
+      "durationMs": 126.3,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "Actual case mutation persists one versioned choice and one ledger event using the canonical Planner comparison output."
+      ],
+      "limits": [
+        "Scenario inputs and grant seams are fixtures. No later quote/new choice or mounted human journey is established by this single assertion."
+      ],
+      "supportsCriteria": [
+        "WP11.DOD.01",
+        "WP11.INV.20",
+        "WP11.CMP.01",
+        "WP11.T03.CHK.01",
+        "WP11.T03.INV.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W11_F1_ASSERT_13",
+        "sameTestBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_12",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "testBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "testSha256": "6a2576aa4495ec03a38c67f9c5453cd0a9cec3455f21306e435bc269cced8bce",
+      "test": "one sibling batch shares only its two canonical case observations and retains every result reread",
+      "logLine": 842,
+      "durationMs": 2858.19,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "Uma chamada de lote observa o caso duas vezes e relê individualmente cada resultado; a próxima chamada faz novas observações.",
+        "Referências duplicadas conservam ordem e cardinalidade, mas seus resultados, bases e projeções são objetos independentes."
+      ],
+      "limits": [
+        "Admissão UI privada, source issuer, Planner e C08 são reais nesta fixture; inventário de cobertura e membership são entradas explícitas do teste.",
+        "Não exercita UI montada, transporte native/MCP, sessão residente nem aprovação formal de domínio."
+      ],
+      "supportsCriteria": [
+        "WP11.QLT.10",
+        "WP11.T01.QLT.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W9_H3_BATCH_ASSERT_01",
+        "sameTestBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_13",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "testBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "testSha256": "6a2576aa4495ec03a38c67f9c5453cd0a9cec3455f21306e435bc269cced8bce",
+      "test": "units emit the identical binding with six canonical case reads, while a legacy host still performs ten",
+      "logLine": 855,
+      "durationMs": 6567.42,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "O emissor canônico de unidades produz o mesmo binding para host em lote e legado, com moeda USD e engine planner-runtime-v1.",
+        "As contagens esperadas são seis leituras de caso no caminho em lote e dez no legado, preservando doze leituras de resultado."
+      ],
+      "limits": [
+        "Admissão UI privada, source issuer, Planner e C08 são reais nesta fixture; inventário de cobertura e membership são entradas explícitas do teste.",
+        "Não exercita UI montada, transporte native/MCP, sessão residente nem aprovação formal de domínio."
+      ],
+      "supportsCriteria": [
+        "WP11.QLT.10",
+        "WP11.T02.QLT.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W9_H3_BATCH_ASSERT_02",
+        "sameTestBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_14",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "testBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "testSha256": "6a2576aa4495ec03a38c67f9c5453cd0a9cec3455f21306e435bc269cced8bce",
+      "test": "comparison starts independent batches for its initial and final observations",
+      "logLine": 856,
+      "durationMs": 3445.1,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "A comparação condicionada inicia lotes independentes para observações iniciais e finais.",
+        "Duas admissões independentes não compartilham observações; principal não participante recebe denied."
+      ],
+      "limits": [
+        "Admissão UI privada, source issuer, Planner e C08 são reais nesta fixture; inventário de cobertura e membership são entradas explícitas do teste.",
+        "Não exercita UI montada, transporte native/MCP, sessão residente nem aprovação formal de domínio."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.T01.INV.01",
+        "WP11.T01.QLT.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W9_H3_BATCH_ASSERT_03",
+        "sameTestBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_15",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "testBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "testSha256": "6a2576aa4495ec03a38c67f9c5453cd0a9cec3455f21306e435bc269cced8bce",
+      "test": "different cases and historical producer versions form separate groups and retain order, cardinality and refusal",
+      "logLine": 857,
+      "durationMs": 3425.94,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "Casos distintos e versões históricas distintas formam grupos separados, mantendo ordem e cardinalidade.",
+        "Resultado ausente conserva a recusa específica result-unavailable sem substituir o item."
+      ],
+      "limits": [
+        "Admissão UI privada, source issuer, Planner e C08 são reais nesta fixture; inventário de cobertura e membership são entradas explícitas do teste.",
+        "Não exercita UI montada, transporte native/MCP, sessão residente nem aprovação formal de domínio."
+      ],
+      "supportsCriteria": [
+        "WP11.QLT.01",
+        "WP11.T01.QLT.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W9_H3_BATCH_ASSERT_04",
+        "sameTestBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_16",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "testBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "testSha256": "6a2576aa4495ec03a38c67f9c5453cd0a9cec3455f21306e435bc269cced8bce",
+      "test": "ledger, alternative and coverage changes between phases invalidate every sibling without a version shortcut",
+      "logLine": 858,
+      "durationMs": 2845.92,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "CAS reais que alteram ledger, alternativa ou cobertura entre fases tornam todos os irmãos stale/case-changed.",
+        "A comparação usa o digest completo do caso e detecta mudança que conserva seu número de versão."
+      ],
+      "limits": [
+        "Admissão UI privada, source issuer, Planner e C08 são reais nesta fixture; inventário de cobertura e membership são entradas explícitas do teste.",
+        "Não exercita UI montada, transporte native/MCP, sessão residente nem aprovação formal de domínio."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.QLT.10",
+        "WP11.T01.CMP.01",
+        "WP11.T02.CMP.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W9_H3_BATCH_ASSERT_05",
+        "sameTestBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_17",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "testBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "testSha256": "6a2576aa4495ec03a38c67f9c5453cd0a9cec3455f21306e435bc269cced8bce",
+      "test": "authority revoked after result rereads is rejected by the fresh final case observation",
+      "logLine": 859,
+      "durationMs": 752.7,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "Revogação do host após a quarta releitura de resultado é recusada pela observação final fresca do caso."
+      ],
+      "limits": [
+        "Admissão UI privada, source issuer, Planner e C08 são reais nesta fixture; inventário de cobertura e membership são entradas explícitas do teste.",
+        "Não exercita UI montada, transporte native/MCP, sessão residente nem aprovação formal de domínio."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.T01.CMP.01",
+        "WP11.T02.CMP.20"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W9_H3_BATCH_ASSERT_06",
+        "sameTestBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_18",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "testBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "testSha256": "6a2576aa4495ec03a38c67f9c5453cd0a9cec3455f21306e435bc269cced8bce",
+      "test": "a real Planner source change during projection invalidates both stored siblings",
+      "logLine": 860,
+      "durationMs": 695.34,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "Uma mutação real Planner durante a projeção invalida os dois resultados persistidos com result-access-unavailable."
+      ],
+      "limits": [
+        "Admissão UI privada, source issuer, Planner e C08 são reais nesta fixture; inventário de cobertura e membership são entradas explícitas do teste.",
+        "Não exercita UI montada, transporte native/MCP, sessão residente nem aprovação formal de domínio."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.T01.CMP.01",
+        "WP11.T02.CMP.20"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W9_H3_BATCH_ASSERT_07",
+        "sameTestBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_19",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "testBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "testSha256": "6a2576aa4495ec03a38c67f9c5453cd0a9cec3455f21306e435bc269cced8bce",
+      "test": "retained store and case callback objects cannot rewrite an earlier observation",
+      "logLine": 861,
+      "durationMs": 1069.55,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "Uma mutação real do caso não pode ser ocultada reescrevendo objetos anteriormente retornados por callbacks; o lote permanece stale."
+      ],
+      "limits": [
+        "Admissão UI privada, source issuer, Planner e C08 são reais nesta fixture; inventário de cobertura e membership são entradas explícitas do teste.",
+        "Não exercita UI montada, transporte native/MCP, sessão residente nem aprovação formal de domínio."
+      ],
+      "supportsCriteria": [
+        "WP11.QLT.10",
+        "WP11.T01.INV.01",
+        "WP11.T01.CMP.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W9_H3_BATCH_ASSERT_08",
+        "sameTestBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_20",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "testBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "testSha256": "6a2576aa4495ec03a38c67f9c5453cd0a9cec3455f21306e435bc269cced8bce",
+      "test": "batch refusals and malformed cardinality never fall back to individual resolution",
+      "logLine": 862,
+      "durationMs": 1688.55,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "Cardinalidade inválida e recusa explícita do lote não acionam o resolvedor individual.",
+        "Um host que só oferece o resolvedor legado continua calculando a projeção real, com quatro observações de caso."
+      ],
+      "limits": [
+        "Admissão UI privada, source issuer, Planner e C08 são reais nesta fixture; inventário de cobertura e membership são entradas explícitas do teste.",
+        "Não exercita UI montada, transporte native/MCP, sessão residente nem aprovação formal de domínio."
+      ],
+      "supportsCriteria": [
+        "WP11.QLT.10",
+        "WP11.T01.QLT.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W9_H3_BATCH_ASSERT_09",
+        "sameTestBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_21",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "testBlob": "45d2821fbd01c13183d450f1347e9017adba9fe2",
+      "testSha256": "6db9a23b59b2e444e30128dbd5659a8f5a07a551fc247d1651f90f5e2b15a18c",
+      "test": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+      "logLine": 865,
+      "durationMs": 59196.65,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "O produtor canônico registra a escolha original 210000/total:null/conditioned, training omitido e três operações. Preview e promoção têm gates separados na fixture; ausência de confirmação, versão alternativa errada e digest adulterado são recusados.",
+        "Uma cotação explícita de treinamento 40000 é inserida na fonte da fixture. Current-choice, persistência e C10 reais reexecutam o cenário original e produzem nova alternativa 250000, cobertura complete, mas comparisonStatus conditioned e total:null porque as três operações continuam hipotéticas.",
+        "Preview não altera a escolha nem a alternativa original. Revogação de fonte controlada nega leitura/promoção. Um CAS real avança o caso de versão 2 para 3 durante source verification; binding antigo não escapa e promoção antiga fica stale. Novo preview autorizado promove a alternativa na versão 4.",
+        "Retry exato de promoção retorna o mesmo resultado e payload divergente conflita. Após dispose do driver original e abertura de outro, o estado reconsidering, a escolha/digest/razão originais, um único choice-recorded, alternativa versão 2 e resultado persistido permanecem.",
+        "Não há prepared changes ou receipts; snapshots Planner posteriores à cotação são idênticos antes/depois do workflow e do retry após reopen. A observação do matcher usa clone e prova digest integral dos inputs de cobertura inalterado."
+      ],
+      "limits": [
+        "Observação hospedada no SHA e snapshot registrados; não houve execução local.",
+        "As referências, identidade financeira e dados iniciais são entradas explícitas da fixture. O teste não estabelece sessão native, UI montada ou confirmação empresarial real.",
+        "Escolha/preview/promoção usam switches explícitos e a escolha inicial usa authorizeCase/authorizeMutation permissivos. Gates separados nesta fixture não equivalem aos grants humanos privados reais do teste choice-prepared-execution.",
+        "A cotação usa uma transação explícita de setup, referências sintéticas e verificador de continuidade da fixture. O snapshot Planner é real; a emissão da nova fonte não é testemunho instalado do issuer.",
+        "Reabre o driver após dispose, mas reutiliza o contexto UI/host e o mesmo principal. Não prova novo colaborador ou encerramento/recriação de toda a sessão.",
+        "Promover alternativa não registra uma segunda ChoiceRecord. Este PASS não fecha substituir/manter escolha com nova justificativa, nem a história integral com threshold/intervalo/colaborador.",
+        "O resultado novo é 250000/total:null/conditioned. Não confundir coverageState complete com confirmação financeira de todas as operações. O isolamento do matcher não é prova causal exclusiva da falha anterior."
+      ],
+      "supportsCriteria": [
+        "WP11.DOD.01",
+        "WP11.INV.01",
+        "WP11.INV.20",
+        "WP11.QLT.01",
+        "WP11.QLT.10",
+        "WP11.CMP.01",
+        "WP11.T01.CMP.01",
+        "WP11.T02.DOD.01",
+        "WP11.T02.CMP.01",
+        "WP11.T03.CHK.01",
+        "WP11.T03.CHK.02",
+        "WP11.T03.CHK.20",
+        "WP11.T03.INV.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE",
+      "assertionSourceReview": {
+        "priorFact": "W16_R2Q_ASSERT_07",
+        "sameTestBlob": "45d2821fbd01c13183d450f1347e9017adba9fe2",
+        "interpretation": "Asserções do mesmo arquivo revisado, agora executadas diretamente no W17; não é transferência da execução anterior."
+      }
+    },
+    {
+      "id": "W17_H7_ASSERT_22",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "testBlob": "67b8b179a3fba332933d8ad00820df82b7ab258e",
+      "testSha256": "8b03c302aec54800e951e623c1e9b15bc31e3322ad75c964da910350b504d45a",
+      "test": "case read suppresses its projection when membership changes during the final host revalidation",
+      "logLine": 868,
+      "durationMs": 16.49,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "Controle positivo usa UI privada, provider C08 e SQLite reais para ler um caso autorizado.",
+        "Durante a revalidação final do host, CAS real remove o participante e avança a versão de negócio. O storageVersion avança, enquanto a concessão global e o request da UI continuam válidos.",
+        "O port retorna stale/case-changed sem value após sua segunda e última leitura C08. O marcador do commit é verificado fora do catch; o digest da fixture observada não foi adulterado e exatamente duas leituras cases foram feitas."
+      ],
+      "limits": [
+        "Fixture semeia caso vazio, com autoridade e CAS reais. Não demonstra cálculo financeiro, escolha humana, native/session ou efeitos do domínio.",
+        "A cerca verificada é createDecisionCasePort.read; draft e prepareIntentForCase exigem suas próprias verificações finais."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.QLT.10",
+        "WP11.CMP.01",
+        "WP11.T01.INV.01",
+        "WP11.T01.CMP.01",
+        "WP11.T01.QLT.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE"
+    },
+    {
+      "id": "W17_H7_ASSERT_23",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "15918cc41d13485a2f77149f94f872e88e5b0e8e",
+      "runId": 43597644083,
+      "runAttempt": 1,
+      "jobId": 132455462361,
+      "requestBlob": "2cd461a494a72b536ecda619550ee5f57def1ea4",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "testBlob": "67b8b179a3fba332933d8ad00820df82b7ab258e",
+      "testSha256": "8b03c302aec54800e951e623c1e9b15bc31e3322ad75c964da910350b504d45a",
+      "test": "case read suppresses its projection when same-version content changes during the final host revalidation",
+      "logLine": 869,
+      "durationMs": 7.52,
+      "log": "ci-analysis/wp11-W17-H7-tests.log",
+      "logSha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "assertions": [
+        "Controle positivo usa UI privada, provider C08 e SQLite reais para ler um caso autorizado.",
+        "Durante a revalidação final do host, CAS real altera o objetivo conservando a versão de negócio. O storageVersion avança, enquanto a concessão global e o request da UI continuam válidos.",
+        "O port retorna stale/case-changed sem value após sua segunda e última leitura C08. O marcador do commit é verificado fora do catch; o digest da fixture observada não foi adulterado e exatamente duas leituras cases foram feitas."
+      ],
+      "limits": [
+        "Fixture semeia caso vazio, com autoridade e CAS reais. Não demonstra cálculo financeiro, escolha humana, native/session ou efeitos do domínio.",
+        "A cerca verificada é createDecisionCasePort.read; draft e prepareIntentForCase exigem suas próprias verificações finais."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.QLT.10",
+        "WP11.CMP.01",
+        "WP11.T01.INV.01",
+        "WP11.T01.CMP.01",
+        "WP11.T01.QLT.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE"
+    }
+  ],
+  "fixtureTrace": {
+    "observations": [
+      {
+        "line": 811,
+        "label": "renewal-choice-history",
+        "phase": "bootstrap-start",
+        "elapsedMs": 0,
+        "budgetMs": 180000,
+        "counts": {}
+      },
+      {
+        "line": 812,
+        "label": "renewal-choice-history",
+        "phase": "bootstrap-complete",
+        "elapsedMs": 48,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 1,
+            "elapsedMs": 2,
+            "maximumMs": 2
+          }
+        },
+        "stateBytes": 38210,
+        "transactionsBytes": 415,
+        "casesBytes": 37395,
+        "resultBytes": 2,
+        "transactions": 1,
+        "cases": 1,
+        "results": 0
+      },
+      {
+        "line": 813,
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-omitted:start",
+        "elapsedMs": 51,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2,
+            "elapsedMs": 4,
+            "maximumMs": 2
+          }
+        },
+        "stateBytes": 38210,
+        "transactionsBytes": 415,
+        "casesBytes": 37395,
+        "resultBytes": 2,
+        "transactions": 1,
+        "cases": 1,
+        "results": 0
+      },
+      {
+        "line": 814,
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-omitted:complete",
+        "elapsedMs": 15473,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 546,
+            "elapsedMs": 5890,
+            "maximumMs": 30
+          },
+          "host.revalidate": {
+            "calls": 2578,
+            "elapsedMs": 1481,
+            "maximumMs": 13
+          },
+          "operation-source": {
+            "calls": 846,
+            "elapsedMs": 20,
+            "maximumMs": 1
+          },
+          "operation-coverage": {
+            "calls": 462,
+            "elapsedMs": 2,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 96,
+            "elapsedMs": 819,
+            "maximumMs": 15
+          },
+          "c08.transaction.preferences": {
+            "calls": 3,
+            "elapsedMs": 60,
+            "maximumMs": 31
+          },
+          "classified-source": {
+            "calls": 39,
+            "elapsedMs": 5,
+            "maximumMs": 1
+          },
+          "classified-coverage": {
+            "calls": 41,
+            "elapsedMs": 1583,
+            "maximumMs": 63
+          },
+          "c08.transaction.cases": {
+            "calls": 5,
+            "elapsedMs": 175,
+            "maximumMs": 42
+          },
+          "planner.verifyOperation": {
+            "calls": 96,
+            "elapsedMs": 6403,
+            "maximumMs": 74
+          },
+          "planner.verifySourceOnly": {
+            "calls": 96,
+            "elapsedMs": 2342,
+            "maximumMs": 31
+          },
+          "planner.verifySourceProjection": {
+            "calls": 192,
+            "elapsedMs": 1581,
+            "maximumMs": 14
+          }
+        },
+        "stateBytes": 540335,
+        "transactionsBytes": 159999,
+        "casesBytes": 53809,
+        "resultBytes": 111960,
+        "transactions": 9,
+        "cases": 1,
+        "results": 5
+      },
+      {
+        "line": 815,
+        "label": "renewal-choice-history",
+        "phase": "threshold-before:start",
+        "elapsedMs": 15485,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 547,
+            "elapsedMs": 5902,
+            "maximumMs": 30
+          },
+          "host.revalidate": {
+            "calls": 2578,
+            "elapsedMs": 1481,
+            "maximumMs": 13
+          },
+          "operation-source": {
+            "calls": 846,
+            "elapsedMs": 20,
+            "maximumMs": 1
+          },
+          "operation-coverage": {
+            "calls": 462,
+            "elapsedMs": 2,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 96,
+            "elapsedMs": 819,
+            "maximumMs": 15
+          },
+          "c08.transaction.preferences": {
+            "calls": 3,
+            "elapsedMs": 60,
+            "maximumMs": 31
+          },
+          "classified-source": {
+            "calls": 39,
+            "elapsedMs": 5,
+            "maximumMs": 1
+          },
+          "classified-coverage": {
+            "calls": 41,
+            "elapsedMs": 1583,
+            "maximumMs": 63
+          },
+          "c08.transaction.cases": {
+            "calls": 5,
+            "elapsedMs": 175,
+            "maximumMs": 42
+          },
+          "planner.verifyOperation": {
+            "calls": 96,
+            "elapsedMs": 6403,
+            "maximumMs": 74
+          },
+          "planner.verifySourceOnly": {
+            "calls": 96,
+            "elapsedMs": 2342,
+            "maximumMs": 31
+          },
+          "planner.verifySourceProjection": {
+            "calls": 192,
+            "elapsedMs": 1581,
+            "maximumMs": 14
+          }
+        },
+        "stateBytes": 540335,
+        "transactionsBytes": 159999,
+        "casesBytes": 53809,
+        "resultBytes": 111960,
+        "transactions": 9,
+        "cases": 1,
+        "results": 5
+      },
+      {
+        "line": 816,
+        "label": "renewal-choice-history",
+        "phase": "threshold-before:complete",
+        "elapsedMs": 30453,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 1022,
+            "elapsedMs": 11267,
+            "maximumMs": 30
+          },
+          "host.revalidate": {
+            "calls": 5004,
+            "elapsedMs": 2922,
+            "maximumMs": 13
+          },
+          "operation-source": {
+            "calls": 1666,
+            "elapsedMs": 40,
+            "maximumMs": 1
+          },
+          "operation-coverage": {
+            "calls": 898,
+            "elapsedMs": 3,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 204,
+            "elapsedMs": 2107,
+            "maximumMs": 17
+          },
+          "c08.transaction.preferences": {
+            "calls": 3,
+            "elapsedMs": 60,
+            "maximumMs": 31
+          },
+          "classified-source": {
+            "calls": 120,
+            "elapsedMs": 7,
+            "maximumMs": 1
+          },
+          "classified-coverage": {
+            "calls": 113,
+            "elapsedMs": 5277,
+            "maximumMs": 70
+          },
+          "c08.transaction.cases": {
+            "calls": 5,
+            "elapsedMs": 175,
+            "maximumMs": 42
+          },
+          "planner.verifyOperation": {
+            "calls": 192,
+            "elapsedMs": 12873,
+            "maximumMs": 78
+          },
+          "planner.verifySourceOnly": {
+            "calls": 192,
+            "elapsedMs": 4675,
+            "maximumMs": 31
+          },
+          "planner.verifySourceProjection": {
+            "calls": 384,
+            "elapsedMs": 3138,
+            "maximumMs": 14
+          }
+        },
+        "stateBytes": 540335,
+        "transactionsBytes": 159999,
+        "casesBytes": 53809,
+        "resultBytes": 111960,
+        "transactions": 9,
+        "cases": 1,
+        "results": 5
+      },
+      {
+        "line": 817,
+        "label": "renewal-choice-history",
+        "phase": "choice-recorded",
+        "elapsedMs": 43205,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 1426,
+            "elapsedMs": 16128,
+            "maximumMs": 30
+          },
+          "host.revalidate": {
+            "calls": 7126,
+            "elapsedMs": 4268,
+            "maximumMs": 13
+          },
+          "operation-source": {
+            "calls": 2398,
+            "elapsedMs": 55,
+            "maximumMs": 1
+          },
+          "operation-coverage": {
+            "calls": 1294,
+            "elapsedMs": 5,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 244,
+            "elapsedMs": 2537,
+            "maximumMs": 17
+          },
+          "c08.transaction.preferences": {
+            "calls": 3,
+            "elapsedMs": 60,
+            "maximumMs": 31
+          },
+          "classified-source": {
+            "calls": 148,
+            "elapsedMs": 9,
+            "maximumMs": 1
+          },
+          "classified-coverage": {
+            "calls": 139,
+            "elapsedMs": 6349,
+            "maximumMs": 70
+          },
+          "c08.transaction.cases": {
+            "calls": 6,
+            "elapsedMs": 225,
+            "maximumMs": 50
+          },
+          "planner.verifyOperation": {
+            "calls": 276,
+            "elapsedMs": 18595,
+            "maximumMs": 78
+          },
+          "planner.verifySourceOnly": {
+            "calls": 276,
+            "elapsedMs": 6822,
+            "maximumMs": 32
+          },
+          "planner.verifySourceProjection": {
+            "calls": 552,
+            "elapsedMs": 4608,
+            "maximumMs": 14
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 10,
+            "maximumMs": 10
+          }
+        },
+        "stateBytes": 694502,
+        "transactionsBytes": 262591,
+        "casesBytes": 102163,
+        "resultBytes": 111960,
+        "transactions": 10,
+        "cases": 1,
+        "results": 5
+      },
+      {
+        "line": 818,
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-confirmed:start",
+        "elapsedMs": 43273,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 1429,
+            "elapsedMs": 16178,
+            "maximumMs": 30
+          },
+          "host.revalidate": {
+            "calls": 7126,
+            "elapsedMs": 4268,
+            "maximumMs": 13
+          },
+          "operation-source": {
+            "calls": 2398,
+            "elapsedMs": 55,
+            "maximumMs": 1
+          },
+          "operation-coverage": {
+            "calls": 1294,
+            "elapsedMs": 5,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 244,
+            "elapsedMs": 2537,
+            "maximumMs": 17
+          },
+          "c08.transaction.preferences": {
+            "calls": 3,
+            "elapsedMs": 60,
+            "maximumMs": 31
+          },
+          "classified-source": {
+            "calls": 148,
+            "elapsedMs": 9,
+            "maximumMs": 1
+          },
+          "classified-coverage": {
+            "calls": 139,
+            "elapsedMs": 6349,
+            "maximumMs": 70
+          },
+          "c08.transaction.cases": {
+            "calls": 6,
+            "elapsedMs": 225,
+            "maximumMs": 50
+          },
+          "planner.verifyOperation": {
+            "calls": 276,
+            "elapsedMs": 18595,
+            "maximumMs": 78
+          },
+          "planner.verifySourceOnly": {
+            "calls": 276,
+            "elapsedMs": 6822,
+            "maximumMs": 32
+          },
+          "planner.verifySourceProjection": {
+            "calls": 552,
+            "elapsedMs": 4608,
+            "maximumMs": 14
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 10,
+            "maximumMs": 10
+          }
+        },
+        "stateBytes": 694502,
+        "transactionsBytes": 262591,
+        "casesBytes": 102163,
+        "resultBytes": 111960,
+        "transactions": 10,
+        "cases": 1,
+        "results": 5
+      },
+      {
+        "line": 819,
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-confirmed:complete",
+        "elapsedMs": 98826,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2092,
+            "elapsedMs": 36072,
+            "maximumMs": 69
+          },
+          "host.revalidate": {
+            "calls": 11691,
+            "elapsedMs": 7448,
+            "maximumMs": 24
+          },
+          "operation-source": {
+            "calls": 3012,
+            "elapsedMs": 11885,
+            "maximumMs": 48
+          },
+          "operation-coverage": {
+            "calls": 1396,
+            "elapsedMs": 5,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 326,
+            "elapsedMs": 4674,
+            "maximumMs": 35
+          },
+          "c08.transaction.preferences": {
+            "calls": 6,
+            "elapsedMs": 260,
+            "maximumMs": 92
+          },
+          "classified-source": {
+            "calls": 170,
+            "elapsedMs": 208,
+            "maximumMs": 22
+          },
+          "classified-coverage": {
+            "calls": 165,
+            "elapsedMs": 9860,
+            "maximumMs": 175
+          },
+          "c08.transaction.cases": {
+            "calls": 11,
+            "elapsedMs": 703,
+            "maximumMs": 105
+          },
+          "planner.verifyOperation": {
+            "calls": 276,
+            "elapsedMs": 18595,
+            "maximumMs": 78
+          },
+          "planner.verifySourceOnly": {
+            "calls": 532,
+            "elapsedMs": 33896,
+            "maximumMs": 135
+          },
+          "planner.verifySourceProjection": {
+            "calls": 1064,
+            "elapsedMs": 15560,
+            "maximumMs": 29
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 10,
+            "maximumMs": 10
+          }
+        },
+        "stateBytes": 1367034,
+        "transactionsBytes": 567628,
+        "casesBytes": 115934,
+        "resultBytes": 250925,
+        "transactions": 18,
+        "cases": 1,
+        "results": 10
+      },
+      {
+        "line": 820,
+        "label": "renewal-choice-history",
+        "phase": "training-revised",
+        "elapsedMs": 98864,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2093,
+            "elapsedMs": 36110,
+            "maximumMs": 69
+          },
+          "host.revalidate": {
+            "calls": 11691,
+            "elapsedMs": 7448,
+            "maximumMs": 24
+          },
+          "operation-source": {
+            "calls": 3012,
+            "elapsedMs": 11885,
+            "maximumMs": 48
+          },
+          "operation-coverage": {
+            "calls": 1396,
+            "elapsedMs": 5,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 326,
+            "elapsedMs": 4674,
+            "maximumMs": 35
+          },
+          "c08.transaction.preferences": {
+            "calls": 6,
+            "elapsedMs": 260,
+            "maximumMs": 92
+          },
+          "classified-source": {
+            "calls": 170,
+            "elapsedMs": 208,
+            "maximumMs": 22
+          },
+          "classified-coverage": {
+            "calls": 165,
+            "elapsedMs": 9860,
+            "maximumMs": 175
+          },
+          "c08.transaction.cases": {
+            "calls": 11,
+            "elapsedMs": 703,
+            "maximumMs": 105
+          },
+          "planner.verifyOperation": {
+            "calls": 276,
+            "elapsedMs": 18595,
+            "maximumMs": 78
+          },
+          "planner.verifySourceOnly": {
+            "calls": 532,
+            "elapsedMs": 33896,
+            "maximumMs": 135
+          },
+          "planner.verifySourceProjection": {
+            "calls": 1064,
+            "elapsedMs": 15560,
+            "maximumMs": 29
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 10,
+            "maximumMs": 10
+          }
+        },
+        "stateBytes": 1367034,
+        "transactionsBytes": 567628,
+        "casesBytes": 115934,
+        "resultBytes": 250925,
+        "transactions": 18,
+        "cases": 1,
+        "results": 10
+      },
+      {
+        "line": 821,
+        "label": "renewal-choice-history",
+        "phase": "threshold-after:start",
+        "elapsedMs": 98900,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2094,
+            "elapsedMs": 36145,
+            "maximumMs": 69
+          },
+          "host.revalidate": {
+            "calls": 11691,
+            "elapsedMs": 7448,
+            "maximumMs": 24
+          },
+          "operation-source": {
+            "calls": 3012,
+            "elapsedMs": 11885,
+            "maximumMs": 48
+          },
+          "operation-coverage": {
+            "calls": 1396,
+            "elapsedMs": 5,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 326,
+            "elapsedMs": 4674,
+            "maximumMs": 35
+          },
+          "c08.transaction.preferences": {
+            "calls": 6,
+            "elapsedMs": 260,
+            "maximumMs": 92
+          },
+          "classified-source": {
+            "calls": 170,
+            "elapsedMs": 208,
+            "maximumMs": 22
+          },
+          "classified-coverage": {
+            "calls": 165,
+            "elapsedMs": 9860,
+            "maximumMs": 175
+          },
+          "c08.transaction.cases": {
+            "calls": 11,
+            "elapsedMs": 703,
+            "maximumMs": 105
+          },
+          "planner.verifyOperation": {
+            "calls": 276,
+            "elapsedMs": 18595,
+            "maximumMs": 78
+          },
+          "planner.verifySourceOnly": {
+            "calls": 532,
+            "elapsedMs": 33896,
+            "maximumMs": 135
+          },
+          "planner.verifySourceProjection": {
+            "calls": 1064,
+            "elapsedMs": 15560,
+            "maximumMs": 29
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 10,
+            "maximumMs": 10
+          }
+        },
+        "stateBytes": 1367034,
+        "transactionsBytes": 567628,
+        "casesBytes": 115934,
+        "resultBytes": 250925,
+        "transactions": 18,
+        "cases": 1,
+        "results": 10
+      },
+      {
+        "line": 822,
+        "label": "renewal-choice-history",
+        "phase": "threshold-after:complete",
+        "elapsedMs": 157944,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2737,
+            "elapsedMs": 56069,
+            "maximumMs": 71
+          },
+          "host.revalidate": {
+            "calls": 16132,
+            "elapsedMs": 10486,
+            "maximumMs": 24
+          },
+          "operation-source": {
+            "calls": 3592,
+            "elapsedMs": 23044,
+            "maximumMs": 48
+          },
+          "operation-coverage": {
+            "calls": 1464,
+            "elapsedMs": 5,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 482,
+            "elapsedMs": 9698,
+            "maximumMs": 39
+          },
+          "c08.transaction.preferences": {
+            "calls": 6,
+            "elapsedMs": 260,
+            "maximumMs": 92
+          },
+          "classified-source": {
+            "calls": 287,
+            "elapsedMs": 2105,
+            "maximumMs": 25
+          },
+          "classified-coverage": {
+            "calls": 269,
+            "elapsedMs": 28540,
+            "maximumMs": 215
+          },
+          "c08.transaction.cases": {
+            "calls": 11,
+            "elapsedMs": 703,
+            "maximumMs": 105
+          },
+          "planner.verifyOperation": {
+            "calls": 276,
+            "elapsedMs": 18595,
+            "maximumMs": 78
+          },
+          "planner.verifySourceOnly": {
+            "calls": 788,
+            "elapsedMs": 61321,
+            "maximumMs": 141
+          },
+          "planner.verifySourceProjection": {
+            "calls": 1576,
+            "elapsedMs": 26675,
+            "maximumMs": 29
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 10,
+            "maximumMs": 10
+          }
+        },
+        "stateBytes": 1367034,
+        "transactionsBytes": 567628,
+        "casesBytes": 115934,
+        "resultBytes": 250925,
+        "transactions": 18,
+        "cases": 1,
+        "results": 10
+      },
+      {
+        "line": 823,
+        "label": "renewal-choice-history",
+        "phase": "interval-proof:complete",
+        "elapsedMs": 176973,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2952,
+            "elapsedMs": 62889,
+            "maximumMs": 71
+          },
+          "host.revalidate": {
+            "calls": 17556,
+            "elapsedMs": 11428,
+            "maximumMs": 24
+          },
+          "operation-source": {
+            "calls": 3776,
+            "elapsedMs": 26682,
+            "maximumMs": 48
+          },
+          "operation-coverage": {
+            "calls": 1488,
+            "elapsedMs": 5,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 524,
+            "elapsedMs": 11071,
+            "maximumMs": 39
+          },
+          "c08.transaction.preferences": {
+            "calls": 6,
+            "elapsedMs": 260,
+            "maximumMs": 92
+          },
+          "classified-source": {
+            "calls": 311,
+            "elapsedMs": 2517,
+            "maximumMs": 25
+          },
+          "classified-coverage": {
+            "calls": 294,
+            "elapsedMs": 33292,
+            "maximumMs": 215
+          },
+          "c08.transaction.cases": {
+            "calls": 12,
+            "elapsedMs": 737,
+            "maximumMs": 105
+          },
+          "planner.verifyOperation": {
+            "calls": 276,
+            "elapsedMs": 18595,
+            "maximumMs": 78
+          },
+          "planner.verifySourceOnly": {
+            "calls": 868,
+            "elapsedMs": 69987,
+            "maximumMs": 141
+          },
+          "planner.verifySourceProjection": {
+            "calls": 1736,
+            "elapsedMs": 30160,
+            "maximumMs": 29
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 10,
+            "maximumMs": 10
+          }
+        },
+        "stateBytes": 1367034,
+        "transactionsBytes": 567628,
+        "casesBytes": 115934,
+        "resultBytes": 250925,
+        "transactions": 18,
+        "cases": 1,
+        "results": 10
+      },
+      {
+        "line": 824,
+        "label": "renewal-choice-history",
+        "phase": "history-reopened:complete",
+        "elapsedMs": 177069,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2953,
+            "elapsedMs": 62919,
+            "maximumMs": 71
+          },
+          "host.revalidate": {
+            "calls": 17561,
+            "elapsedMs": 11433,
+            "maximumMs": 24
+          },
+          "operation-source": {
+            "calls": 3776,
+            "elapsedMs": 26682,
+            "maximumMs": 48
+          },
+          "operation-coverage": {
+            "calls": 1488,
+            "elapsedMs": 5,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 524,
+            "elapsedMs": 11071,
+            "maximumMs": 39
+          },
+          "c08.transaction.preferences": {
+            "calls": 6,
+            "elapsedMs": 260,
+            "maximumMs": 92
+          },
+          "classified-source": {
+            "calls": 311,
+            "elapsedMs": 2517,
+            "maximumMs": 25
+          },
+          "classified-coverage": {
+            "calls": 294,
+            "elapsedMs": 33292,
+            "maximumMs": 215
+          },
+          "c08.transaction.cases": {
+            "calls": 12,
+            "elapsedMs": 737,
+            "maximumMs": 105
+          },
+          "planner.verifyOperation": {
+            "calls": 276,
+            "elapsedMs": 18595,
+            "maximumMs": 78
+          },
+          "planner.verifySourceOnly": {
+            "calls": 868,
+            "elapsedMs": 69987,
+            "maximumMs": 141
+          },
+          "planner.verifySourceProjection": {
+            "calls": 1736,
+            "elapsedMs": 30160,
+            "maximumMs": 29
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 10,
+            "maximumMs": 10
+          }
+        },
+        "stateBytes": 1367034,
+        "transactionsBytes": 567628,
+        "casesBytes": 115934,
+        "resultBytes": 250925,
+        "transactions": 18,
+        "cases": 1,
+        "results": 10
+      },
+      {
+        "line": 825,
+        "label": "renewal-choice-history",
+        "phase": "restart:start",
+        "elapsedMs": 177103,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2954,
+            "elapsedMs": 62953,
+            "maximumMs": 71
+          },
+          "host.revalidate": {
+            "calls": 17561,
+            "elapsedMs": 11433,
+            "maximumMs": 24
+          },
+          "operation-source": {
+            "calls": 3776,
+            "elapsedMs": 26682,
+            "maximumMs": 48
+          },
+          "operation-coverage": {
+            "calls": 1488,
+            "elapsedMs": 5,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 524,
+            "elapsedMs": 11071,
+            "maximumMs": 39
+          },
+          "c08.transaction.preferences": {
+            "calls": 6,
+            "elapsedMs": 260,
+            "maximumMs": 92
+          },
+          "classified-source": {
+            "calls": 311,
+            "elapsedMs": 2517,
+            "maximumMs": 25
+          },
+          "classified-coverage": {
+            "calls": 294,
+            "elapsedMs": 33292,
+            "maximumMs": 215
+          },
+          "c08.transaction.cases": {
+            "calls": 12,
+            "elapsedMs": 737,
+            "maximumMs": 105
+          },
+          "planner.verifyOperation": {
+            "calls": 276,
+            "elapsedMs": 18595,
+            "maximumMs": 78
+          },
+          "planner.verifySourceOnly": {
+            "calls": 868,
+            "elapsedMs": 69987,
+            "maximumMs": 141
+          },
+          "planner.verifySourceProjection": {
+            "calls": 1736,
+            "elapsedMs": 30160,
+            "maximumMs": 29
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 10,
+            "maximumMs": 10
+          }
+        },
+        "stateBytes": 1367034,
+        "transactionsBytes": 567628,
+        "casesBytes": 115934,
+        "resultBytes": 250925,
+        "transactions": 18,
+        "cases": 1,
+        "results": 10
+      },
+      {
+        "line": 826,
+        "label": "renewal-choice-history",
+        "phase": "history-restarted-collaborator:complete",
+        "elapsedMs": 177751,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2959,
+            "elapsedMs": 63104,
+            "maximumMs": 71
+          },
+          "host.revalidate": {
+            "calls": 17562,
+            "elapsedMs": 11433,
+            "maximumMs": 24
+          },
+          "operation-source": {
+            "calls": 3776,
+            "elapsedMs": 26682,
+            "maximumMs": 48
+          },
+          "operation-coverage": {
+            "calls": 1488,
+            "elapsedMs": 5,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 524,
+            "elapsedMs": 11071,
+            "maximumMs": 39
+          },
+          "c08.transaction.preferences": {
+            "calls": 6,
+            "elapsedMs": 260,
+            "maximumMs": 92
+          },
+          "classified-source": {
+            "calls": 311,
+            "elapsedMs": 2517,
+            "maximumMs": 25
+          },
+          "classified-coverage": {
+            "calls": 294,
+            "elapsedMs": 33292,
+            "maximumMs": 215
+          },
+          "c08.transaction.cases": {
+            "calls": 12,
+            "elapsedMs": 737,
+            "maximumMs": 105
+          },
+          "planner.verifyOperation": {
+            "calls": 276,
+            "elapsedMs": 18595,
+            "maximumMs": 78
+          },
+          "planner.verifySourceOnly": {
+            "calls": 872,
+            "elapsedMs": 70649,
+            "maximumMs": 177
+          },
+          "planner.verifySourceProjection": {
+            "calls": 1744,
+            "elapsedMs": 30425,
+            "maximumMs": 45
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 10,
+            "maximumMs": 10
+          },
+          "restarted.revalidate": {
+            "calls": 39,
+            "elapsedMs": 173,
+            "maximumMs": 24
+          }
+        },
+        "stateBytes": 1367034,
+        "transactionsBytes": 567628,
+        "casesBytes": 115934,
+        "resultBytes": 250925,
+        "transactions": 18,
+        "cases": 1,
+        "results": 10
+      }
+    ],
+    "parseErrors": [],
+    "lastByLabel": {
+      "renewal-choice-history": {
+        "line": 826,
+        "label": "renewal-choice-history",
+        "phase": "history-restarted-collaborator:complete",
+        "elapsedMs": 177751,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2959,
+            "elapsedMs": 63104,
+            "maximumMs": 71
+          },
+          "host.revalidate": {
+            "calls": 17562,
+            "elapsedMs": 11433,
+            "maximumMs": 24
+          },
+          "operation-source": {
+            "calls": 3776,
+            "elapsedMs": 26682,
+            "maximumMs": 48
+          },
+          "operation-coverage": {
+            "calls": 1488,
+            "elapsedMs": 5,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 524,
+            "elapsedMs": 11071,
+            "maximumMs": 39
+          },
+          "c08.transaction.preferences": {
+            "calls": 6,
+            "elapsedMs": 260,
+            "maximumMs": 92
+          },
+          "classified-source": {
+            "calls": 311,
+            "elapsedMs": 2517,
+            "maximumMs": 25
+          },
+          "classified-coverage": {
+            "calls": 294,
+            "elapsedMs": 33292,
+            "maximumMs": 215
+          },
+          "c08.transaction.cases": {
+            "calls": 12,
+            "elapsedMs": 737,
+            "maximumMs": 105
+          },
+          "planner.verifyOperation": {
+            "calls": 276,
+            "elapsedMs": 18595,
+            "maximumMs": 78
+          },
+          "planner.verifySourceOnly": {
+            "calls": 872,
+            "elapsedMs": 70649,
+            "maximumMs": 177
+          },
+          "planner.verifySourceProjection": {
+            "calls": 1744,
+            "elapsedMs": 30425,
+            "maximumMs": 45
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 10,
+            "maximumMs": 10
+          },
+          "restarted.revalidate": {
+            "calls": 39,
+            "elapsedMs": 173,
+            "maximumMs": 24
+          }
+        },
+        "stateBytes": 1367034,
+        "transactionsBytes": 567628,
+        "casesBytes": 115934,
+        "resultBytes": 250925,
+        "transactions": 18,
+        "cases": 1,
+        "results": 10
+      }
+    },
+    "maximumObservedSerializedStateBytes": 1367034,
+    "boundary": "Counts and inclusive overlapping wall durations are fixture instrumentation; serialized state bytes are not sampled process memory or exclusive CPU time."
+  },
+  "priorFailures": "H1-H6 e falha de fonte H3 permanecem históricas; H7 é o primeiro PASS integral desse mesmo nome, no W17. Não apagar tentativas anteriores nem transportar tempo/performance para outros ambientes.",
+  "scopeReviewInputs": [
+    {
+      "path": "ci-analysis/case-read-W16-symbol-impact.json",
+      "sha256": "eb9ab7cf9fbcf9a621d40f40ffc9e30799a8c6f8a1804feed436117d585a9e82"
+    },
+    {
+      "path": "ci-analysis/independent-review-case-read-fence.json",
+      "sha256": "b75dc304b7a4506eb34bde8fbcd415b078b12904ae2da21d7abd542a679bac0b"
+    }
+  ],
+  "candidateRule": "O gate focado da função read foi executado no W17. Grafos com helper inalterado ou função afetada devem ser citados como revisão de impacto e regressão pertinente, nunca como identidade byte a byte. H7 não qualifica os egress draft/prepareIntent futuros.",
+  "noLocalProductExecution": true,
+  "noRepositoryWrites": true
+}

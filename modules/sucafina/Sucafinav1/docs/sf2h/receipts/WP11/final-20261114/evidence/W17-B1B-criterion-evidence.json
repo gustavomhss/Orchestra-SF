@@ -1,0 +1,176 @@
+{
+  "schema": "wp11-W17-B1B-observed-assertions-v1",
+  "preparedAtUtc": "2026-11-14T13:21:18.275763+00:00",
+  "status": "HOSTED_OBSERVED_NOT_GLOBAL_ACCEPTANCE",
+  "metadata": {
+    "path": "ci-analysis/wp11-W17-B1B-evidence-meta.json",
+    "sha256": "a5d2f18fa1560e754b29312cfc3320a39a33a12d177d3359fe1a7c8f593f932e"
+  },
+  "source": {
+    "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+    "productTree": "68e75187628ae046a9249238bb14226ebf0ec625",
+    "snapshotSha": "703ec33ec1498db4d5c3da4cdec5b244c174665f",
+    "snapshotTree": "164a013f24e1b6f279840697ba5a7a27cdfb2d34",
+    "branch": "ci-run-linux-astra-wp11-26bb96b-be916688-b1b",
+    "requestSha256": "be9166881a0d4598209a81083f04076a2ef185cc6e32ebda5a47eb14f0ace88c",
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "ca4ea5de4a46c0a2d1e8aea6ddcc93bbf5a79593"
+  },
+  "run": {
+    "id": 43598265482,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-14T13:08:38Z",
+    "updatedAt": "2026-11-14T13:15:52Z",
+    "headSha": "703ec33ec1498db4d5c3da4cdec5b244c174665f",
+    "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43598265482",
+    "runAttempt": 1
+  },
+  "summary": {
+    "pass": 3,
+    "fail": 0,
+    "tests": 3,
+    "files": 3,
+    "durationSeconds": 329.72
+  },
+  "assertionEvidence": [
+    {
+      "id": "W17_B1B_ASSERT_01",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "703ec33ec1498db4d5c3da4cdec5b244c174665f",
+      "runId": 43598265482,
+      "runAttempt": 1,
+      "jobId": 132457317119,
+      "requestBlob": "ca4ea5de4a46c0a2d1e8aea6ddcc93bbf5a79593",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/implementation-quote-history.test.ts",
+      "testBlob": "5e4519aaf1cc7d9bb17a1ec93b81ea950084bb2a",
+      "testSha256": "27eb70fbc494366d90d8153f6c5a1d9efebf8583090462ba53d24dd514c29253",
+      "test": "a confirmed implementation quote of 70000 yields 235000 and 5000 advantage in the same case while preserving shared scope and the human choice",
+      "logLine": 817,
+      "durationMs": 86835.16,
+      "log": "ci-analysis/wp11-W17-B1B-tests.log",
+      "logSha256": "d3321461f2d3ecf53359f059c18f7834be6c46eb3962534195bd65c803458909",
+      "assertions": [
+        "No MESMO caso/encarnação, a alternativa composta inicial tem subtotal210000/cobertura complete/vantagem30000. Uma escolha preserva esse resultado e a cotação subsequente é uma nova fonte, não mutação da observação inicial.",
+        "Copy/save reais da versão de Planner registram implantação70000. Nova observação source-only tem235000/total235000/complete, bridge60000, implantação70000 e serviço105000 confirmed. Não há componente training adicional: implantação/migração/treinamento compartilham a única contribuição implementation:11.",
+        "Comparação canônica tem custo -5000/vantagem5000 e critério failed. Motivos N/A e cobertura compartilhada são os mesmos; contrato/saída/custos internos/outros não são recontados.",
+        "ChoiceRecord/digest original, source projection original e sua referência fresh permanecem intactos, sem propostas/recibos. Segunda conexão lê a versão e resultado235000 corretos."
+      ],
+      "limits": [
+        "Escolha e declarações de fonte/escopo usam a fixture sintética publicada. Produtores, comandos de cotação, C10 e persistência são reais; não é confirmação humana montada.",
+        "A segunda conexão é aberta enquanto o writer original permanece vivo. Não atribuir reinício integral; este foi qualificado separadamente em H7."
+      ],
+      "supportsCriteria": [
+        "WP11.DOD.01",
+        "WP11.INV.01",
+        "WP11.INV.20",
+        "WP11.QLT.01",
+        "WP11.CMP.01",
+        "WP11.CMP.20",
+        "WP11.T02.CHK.01",
+        "WP11.T02.CHK.02",
+        "WP11.T02.INV.01",
+        "WP11.T02.INV.20",
+        "WP11.T02.QLT.01",
+        "WP11.T02.CMP.20",
+        "WP11.T03.CHK.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE"
+    },
+    {
+      "id": "W17_B1B_ASSERT_02",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "703ec33ec1498db4d5c3da4cdec5b244c174665f",
+      "runId": 43598265482,
+      "runAttempt": 1,
+      "jobId": 132457317119,
+      "requestBlob": "ca4ea5de4a46c0a2d1e8aea6ddcc93bbf5a79593",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+      "testBlob": "c2901936d6730b56422b2c495069c0ed0a0705ce",
+      "testSha256": "c2e64202f5d7b474b572bd7e6323e4ff2ade0892014b25e1aa6fc26a76471ce6",
+      "test": "new human operations replace a choice after the quote revision and retain that choice with a new reason without rewriting any history",
+      "logLine": 826,
+      "durationMs": 142492.36,
+      "log": "ci-analysis/wp11-W17-B1B-tests.log",
+      "logSha256": "d3321461f2d3ecf53359f059c18f7834be6c46eb3962534195bd65c803458909",
+      "assertions": [
+        "Três escolhas são registradas por três admissões UI privadas reais e três operationIdentity distintos: escolha condicionada da transição, substituição pela renovação após cotação e manutenção da renovação com nova justificativa.",
+        "Origem não confiável é negada. O grant inicial não autoriza apply nem o payload da segunda escolha; o grant da segunda escolha não autoriza a terceira. Nova admissão com operationIdentity reutilizada e conteúdo diferente conflita sem alteração.",
+        "A revisão de fonte produz250000 completo e critério failed; a segunda escolha usa renovação240000 e comparação invertida -10000/complete. A regra anterior não é silenciosamente vinculada à comparação invertida: seu critério permanece unknown.",
+        "Três ChoiceRecords têm IDs distintos e ledger choice-recorded com outputDigest de cada registro. As duas primeiras razões/resultados/digests continuam idênticos; a terceira conserva números/comparação da segunda com nova razão.",
+        "Retries exatos das três operações recuperam seus resultados sem quarta escolha. Os três receipts privados C08 conservam os commandDigests exatos. O snapshot oficial Planner pós-cotação permanece igual, sem preparedChanges/receipts de aplicação."
+      ],
+      "limits": [
+        "As admissões privadas reais são chamadas pelo teste, não por uma pessoa no browser. Revisão de cotação e escopo financeiro continuam inputs sintéticos explícitos.",
+        "Muda a escolha e sua justificativa, não a definição do threshold da regra. A revisão aceita de critério tem regressão própria ainda sem execução nesta observação.",
+        "Nenhum comando Planner/Procurement é aplicado por escolher. Não atribuir aprovação formal ou jornada native/MCP."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.01",
+        "WP11.INV.10",
+        "WP11.INV.20",
+        "WP11.QLT.01",
+        "WP11.CMP.01",
+        "WP11.T03.CHK.01",
+        "WP11.T03.CHK.02",
+        "WP11.T03.CHK.20",
+        "WP11.T03.INV.01",
+        "WP11.T03.QLT.01",
+        "WP11.T03.CMP.01"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE"
+    },
+    {
+      "id": "W17_B1B_ASSERT_03",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "snapshotSha": "703ec33ec1498db4d5c3da4cdec5b244c174665f",
+      "runId": 43598265482,
+      "runAttempt": 1,
+      "jobId": 132457317119,
+      "requestBlob": "ca4ea5de4a46c0a2d1e8aea6ddcc93bbf5a79593",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "testBlob": "9ecb910e6a45fda0f77125fdb6832ad650a011df",
+      "testSha256": "dfddc21e304216449494f87fd6c0a3ce6a40368b31cb50589ebadb79b1d946cb",
+      "test": "same-case BI preserves the human choice while the confirmed training revision changes its current source result and table",
+      "logLine": 984,
+      "durationMs": 100185.32,
+      "log": "ci-analysis/wp11-W17-B1B-tests.log",
+      "logSha256": "d3321461f2d3ecf53359f059c18f7834be6c46eb3962534195bd65c803458909",
+      "assertions": [
+        "O consumidor createStoredScenarioBiProjection usa resultados correntes e projeção canônica Planner: antes210000/total:null/pending sem training; depois nova fonte250000/total250000/complete e training:11=40000confirmed. Nova resultRef pertence à versão atual do mesmo caso.",
+        "O caso conserva a ChoiceRecord original condicionada, sem propostas/recibos/aplicação. A projeção antes continua imutável; reler sua seleção antiga depois da revisão retorna recusa sem value.",
+        "Chrome real executa o renderer BI09 para ambas as observações. A tabela exibida coincide com cada componente do domínio, moeda, período e evidenceState; ausência aparece Indisponível. Antes mostra total indisponível/training pendente/diferença -30000; depois mostra Completa·USD, total250000 e diferença10000, com explicação do sentido da comparação.",
+        "Os marcadores de horizonte correspondem aos componentes com origem. Click, Enter e botão da linha training retornam exatamente sua referência de origem ao callback. Nenhuma fórmula é reconstruída no renderer ou no teste."
+      ],
+      "limits": [
+        "O browser é Chrome real numa instalação temporária autenticada, mas a inspeção navega para about:blank e injeta o renderer/projeção observada. Isso prova DOM/componente BI com dados reais de produtor; não o fluxo montado de dados pelo host WP10.",
+        "Callbacks de origem gravam dataset para conferir a referência exata; não navegam ao domínio nem qualificam a autorização de drilldown instalada.",
+        "Declarações de fonte/cobertura e escolha inicial são fronteiras explícitas da fixture. Não representa pessoa real, native/omni, crítico ou portfólio integrado."
+      ],
+      "supportsCriteria": [
+        "WP11.DOD.20",
+        "WP11.INV.20",
+        "WP11.QLT.01",
+        "WP11.QLT.20",
+        "WP11.CMP.20",
+        "WP11.T02.CHK.20",
+        "WP11.T02.CHK.21",
+        "WP11.T02.DOD.20",
+        "WP11.T02.INV.20",
+        "WP11.T02.QLT.01",
+        "WP11.T02.QLT.20",
+        "WP11.T02.SUC.20",
+        "WP11.T03.CHK.20"
+      ],
+      "currentCandidateStatus": "PASS_EXECUTED_ON_LITERAL_CURRENT_CANDIDATE"
+    }
+  ],
+  "browserScope": "Chrome real e renderer BI com projeções reais, inspecionado em about:blank. Sem afirmação de fluxo montado, navegação autorizada de origem, omni/native ou pessoa real.",
+  "noLocalProductExecution": true,
+  "noRepositoryWrites": true
+}

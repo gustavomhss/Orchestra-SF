@@ -1,0 +1,755 @@
+{
+  "schema": "wp11-criterion-evidence-v2",
+  "status": "OBSERVED_HOSTED_ONLY",
+  "metadata": {
+    "path": "ci-analysis/wp11-W18-E1-evidence-meta.json",
+    "sha256": "a5cba70b007e77e1d62c642e663701df4e42fb98fa93df97e2d08e6fa3f707b5"
+  },
+  "source": {
+    "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+    "productTree": "0b15197ed7fbe954d14aec78b13d03e3293e9c94",
+    "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+    "snapshotTree": "90d81ba30ef1e2c2c7e9e39969dd9ca0e7d7ea66",
+    "branch": "ci-run-linux-astra-wp11-1c262ba-0005dbd7-e1",
+    "requestSha256": "0005dbd7f97aa1e383b531693a843883abe11e8ff0cade1b1ee8170a04e68e62",
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d"
+  },
+  "run": {
+    "id": 43599284081,
+    "runAttempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43599284081"
+  },
+  "summary": {
+    "pass": 21,
+    "fail": 0,
+    "tests": 21,
+    "files": 5,
+    "durationSeconds": 0.611
+  },
+  "assertionEvidence": [
+    {
+      "assertions": [
+        "Draft/read use actual local persistence, a store reopen, same-content idempotency and denied revoked access."
+      ],
+      "limits": [
+        "Fixture authority/evidence inputs are controlled; the second-principal assertion comes from the separate authority-concurrency test."
+      ],
+      "supportsCriteria": [
+        "WP11.DOD.01",
+        "WP11.CMP.01",
+        "WP11.T01.CHK.01",
+        "WP11.T01.DOD.01",
+        "WP11.T01.CMP.01"
+      ],
+      "id": "W18_E1_ASSERT_01",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "case draft survives a real store reopen, exact retry is idempotent and revoked access is denied",
+      "logLine": 811,
+      "durationMs": 38.03,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "The real coverage evaluator derives the absent renewal category as pending rather than numeric zero."
+      ],
+      "limits": [
+        "Small validator inputs are synthetic; this does not exercise all named consumers or the canonical210000 financial journey."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.20",
+        "WP11.CMP.20",
+        "WP11.T02.CHK.20",
+        "WP11.T02.INV.20",
+        "WP11.T02.CMP.20"
+      ],
+      "id": "W18_E1_ASSERT_02",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "an entirely omitted renewal category remains pending",
+      "logLine": 812,
+      "durationMs": 1.52,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "Sourced numeric zero and absence are different inputs/states in the real coverage evaluator."
+      ],
+      "limits": [
+        "This is the zero-versus-missing discriminant only; FX, exit cost and hypothetical discount require their own producer tests."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.20",
+        "WP11.CMP.20",
+        "WP11.T02.CHK.03",
+        "WP11.T02.INV.20",
+        "WP11.T02.CMP.20"
+      ],
+      "id": "W18_E1_ASSERT_03",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "coverage distinguishes a sourced zero from an omitted category",
+      "logLine": 813,
+      "durationMs": 1.26,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "Case reference parsing binds both case ID and incarnation and rejects ambiguous aliases."
+      ],
+      "limits": [
+        "Reference syntax alone is not source reincarnation/import protection or UI/native parity."
+      ],
+      "supportsCriteria": [
+        "WP11.QLT.10",
+        "WP11.T01.QLT.01"
+      ],
+      "id": "W18_E1_ASSERT_04",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "case references encode both identities without accepting ambiguous aliases",
+      "logLine": 814,
+      "durationMs": 0.1,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "The reconciliation function preserves a partial result and rejects changed receipt identity."
+      ],
+      "limits": [
+        "Receipt payload is a controlled fixture. Authoritative atomic domain receipts are proved separately by the execution tests."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.02",
+        "WP11.QLT.02",
+        "WP11.QLT.10",
+        "WP11.CMP.01",
+        "WP11.T04.QLT.01",
+        "WP11.T04.CMP.01"
+      ],
+      "id": "W18_E1_ASSERT_05",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "receipt reconciliation preserves partial application and rejects changed identity",
+      "logLine": 815,
+      "durationMs": 0.56,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "A conditional choice keeps its comparison and gap snapshot after the input objects change."
+      ],
+      "limits": [
+        "This isolated snapshot discriminant is not the later40000 same-revisão de fonte or a second human choice."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.20",
+        "WP11.CMP.01",
+        "WP11.T03.CHK.01",
+        "WP11.T03.CHK.20"
+      ],
+      "id": "W18_E1_ASSERT_06",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "a conditional human choice freezes the comparison and cost gap",
+      "logLine": 816,
+      "durationMs": 1.18,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "Preparation retains the supplied domain command and does not call the effecting application path."
+      ],
+      "limits": [
+        "A controlled command fixture does not establish the actual domain producer-to-consumer chain; that chain has separate hosted tests pending."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.01",
+        "WP11.CMP.01",
+        "WP11.T03.CHK.02",
+        "WP11.T03.INV.01",
+        "WP11.T03.QLT.01"
+      ],
+      "id": "W18_E1_ASSERT_07",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "preparing a change preserves the domain command and never applies it",
+      "logLine": 817,
+      "durationMs": 0.62,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "Case access remains otherwise authorized while revoked business source evidence suppresses the case projection."
+      ],
+      "limits": [
+        "Source resolver revocation is controlled; this is not native transport revocation or every-domain receipt ACL."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.CMP.01",
+        "WP11.T01.INV.01",
+        "WP11.T01.QLT.01",
+        "WP11.T01.CMP.01",
+        "WP11.T02.CMP.20"
+      ],
+      "id": "W18_E1_ASSERT_08",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "revoked source suppresses an otherwise authorized case",
+      "logLine": 818,
+      "durationMs": 28.66,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "Decision case reconciliation writes the supplied durable receipt once and exact retry does not invoke the supplied effecting port again."
+      ],
+      "limits": [
+        "The domain port is a fixture. Real authoritative Planner/Procurement behavior is supported by other tests, not inferred from this name."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.02",
+        "WP11.QLT.02",
+        "WP11.CMP.01",
+        "WP11.T04.CHK.02",
+        "WP11.T04.QLT.01",
+        "WP11.T04.CMP.01"
+      ],
+      "id": "W18_E1_ASSERT_09",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "partial domain execution reconciles a durable receipt and never repeats it on retry",
+      "logLine": 819,
+      "durationMs": 19.85,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "Actual case mutation persists one versioned choice and one ledger event using the canonical Planner comparison output."
+      ],
+      "limits": [
+        "Scenario inputs and grant seams are fixtures. No later quote/new choice or mounted human journey is established by this single assertion."
+      ],
+      "supportsCriteria": [
+        "WP11.DOD.01",
+        "WP11.INV.20",
+        "WP11.CMP.01",
+        "WP11.T03.CHK.01",
+        "WP11.T03.INV.01"
+      ],
+      "id": "W18_E1_ASSERT_10",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "testBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "testSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "test": "human choice persists a versioned snapshot and ledger using the planner comparison",
+      "logLine": 820,
+      "durationMs": 165.25,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "O caminho draft usa criação real de caso vazio, admissão privada UI consumida e SQLite/C08. No callback host.revalidate número 3, um CAS real remove o participante e avança a versão do caso para 2.",
+        "O commit hostil e os campos persistidos em storageVersion 2 são verificados fora de qualquer catch. A autoridade global e o lease UI continuam válidos; a resposta é denied/case-access-unavailable, sem value.",
+        "O caminho termina com 3 chamadas do host e 2 leituras C08 do caso. O digest do payload original não muda, não há consulta de evidência empresarial, escolha, prepared change ou receipt."
+      ],
+      "limits": [
+        "O caso foi criado de verdade, mas é deliberadamente vazio: o teste não calcula valores financeiros nem registra uma escolha humana ou efeito de domínio.",
+        "O helper de intenção com caso explícito usa uma admissão UI privada da fixture; não demonstra sessão native/MCP instalada, pessoa real ou paridade entre superfícies."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.QLT.10",
+        "WP11.CMP.01",
+        "WP11.T01.CHK.01",
+        "WP11.T01.INV.01",
+        "WP11.T01.QLT.01",
+        "WP11.T01.CMP.01"
+      ],
+      "id": "W18_E1_ASSERT_11",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "testBlob": "0d344369ce375c0cb35633c7eac2f6b8dd11b153",
+      "testSha256": "5cab79a445db29e70f9358aab5429ae407ab50d5db9898051093ced7600519b5",
+      "test": "draft suppresses membership changed by host check 3 before its response",
+      "logLine": 823,
+      "durationMs": 17.51,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "O caminho draft usa criação real de caso vazio, admissão privada UI consumida e SQLite/C08. No callback host.revalidate número 3, um CAS real troca somente a encarnação por replacement-incarnation, sem alterar a versão de negócio.",
+        "O commit hostil e os campos persistidos em storageVersion 2 são verificados fora de qualquer catch. A autoridade global e o lease UI continuam válidos; a resposta é denied/case-access-unavailable, sem value.",
+        "O caminho termina com 3 chamadas do host e 2 leituras C08 do caso. O digest do payload original não muda, não há consulta de evidência empresarial, escolha, prepared change ou receipt."
+      ],
+      "limits": [
+        "O caso foi criado de verdade, mas é deliberadamente vazio: o teste não calcula valores financeiros nem registra uma escolha humana ou efeito de domínio.",
+        "O helper de intenção com caso explícito usa uma admissão UI privada da fixture; não demonstra sessão native/MCP instalada, pessoa real ou paridade entre superfícies."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.QLT.10",
+        "WP11.CMP.01",
+        "WP11.T01.CHK.01",
+        "WP11.T01.INV.01",
+        "WP11.T01.QLT.01",
+        "WP11.T01.CMP.01"
+      ],
+      "id": "W18_E1_ASSERT_12",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "testBlob": "0d344369ce375c0cb35633c7eac2f6b8dd11b153",
+      "testSha256": "5cab79a445db29e70f9358aab5429ae407ab50d5db9898051093ced7600519b5",
+      "test": "draft suppresses incarnation changed by host check 3 before its response",
+      "logLine": 824,
+      "durationMs": 10.17,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "O caminho draft usa criação real de caso vazio, admissão privada UI consumida e SQLite/C08. No callback host.revalidate número 3, um CAS real altera objetivo e descrição do critério conservando versão de negócio 1.",
+        "O commit hostil e os campos persistidos em storageVersion 2 são verificados fora de qualquer catch. A autoridade global e o lease UI continuam válidos; a resposta é stale/case-changed, sem value.",
+        "O caminho termina com 3 chamadas do host e 2 leituras C08 do caso. O digest do payload original não muda, não há consulta de evidência empresarial, escolha, prepared change ou receipt."
+      ],
+      "limits": [
+        "O caso foi criado de verdade, mas é deliberadamente vazio: o teste não calcula valores financeiros nem registra uma escolha humana ou efeito de domínio.",
+        "O helper de intenção com caso explícito usa uma admissão UI privada da fixture; não demonstra sessão native/MCP instalada, pessoa real ou paridade entre superfícies."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.QLT.10",
+        "WP11.CMP.01",
+        "WP11.T01.CHK.01",
+        "WP11.T01.INV.01",
+        "WP11.T01.QLT.01",
+        "WP11.T01.CMP.01"
+      ],
+      "id": "W18_E1_ASSERT_13",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "testBlob": "0d344369ce375c0cb35633c7eac2f6b8dd11b153",
+      "testSha256": "5cab79a445db29e70f9358aab5429ae407ab50d5db9898051093ced7600519b5",
+      "test": "draft suppresses same-version content changed by host check 3 before its response",
+      "logLine": 825,
+      "durationMs": 10.23,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "O caminho prepare-intent usa criação real de caso vazio, admissão privada UI consumida e SQLite/C08. No callback host.revalidate número 5, um CAS real remove o participante e avança a versão do caso para 2.",
+        "O commit hostil e os campos persistidos em storageVersion 2 são verificados fora de qualquer catch. A autoridade global e o lease UI continuam válidos; a resposta é stale/case-changed, sem value.",
+        "O caminho termina com 5 chamadas do host e 4 leituras C08 do caso. O digest do payload original não muda, não há consulta de evidência empresarial, escolha, prepared change ou receipt."
+      ],
+      "limits": [
+        "O caso foi criado de verdade, mas é deliberadamente vazio: o teste não calcula valores financeiros nem registra uma escolha humana ou efeito de domínio.",
+        "O helper de intenção com caso explícito usa uma admissão UI privada da fixture; não demonstra sessão native/MCP instalada, pessoa real ou paridade entre superfícies."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.QLT.10",
+        "WP11.CMP.01",
+        "WP11.T01.CHK.01",
+        "WP11.T01.INV.01",
+        "WP11.T01.QLT.01",
+        "WP11.T01.CMP.01"
+      ],
+      "id": "W18_E1_ASSERT_14",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "testBlob": "0d344369ce375c0cb35633c7eac2f6b8dd11b153",
+      "testSha256": "5cab79a445db29e70f9358aab5429ae407ab50d5db9898051093ced7600519b5",
+      "test": "prepare-intent suppresses membership changed by host check 5 before its response",
+      "logLine": 826,
+      "durationMs": 13.27,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "O caminho prepare-intent usa criação real de caso vazio, admissão privada UI consumida e SQLite/C08. No callback host.revalidate número 5, um CAS real troca somente a encarnação por replacement-incarnation, sem alterar a versão de negócio.",
+        "O commit hostil e os campos persistidos em storageVersion 2 são verificados fora de qualquer catch. A autoridade global e o lease UI continuam válidos; a resposta é stale/case-changed, sem value.",
+        "O caminho termina com 5 chamadas do host e 4 leituras C08 do caso. O digest do payload original não muda, não há consulta de evidência empresarial, escolha, prepared change ou receipt."
+      ],
+      "limits": [
+        "O caso foi criado de verdade, mas é deliberadamente vazio: o teste não calcula valores financeiros nem registra uma escolha humana ou efeito de domínio.",
+        "O helper de intenção com caso explícito usa uma admissão UI privada da fixture; não demonstra sessão native/MCP instalada, pessoa real ou paridade entre superfícies."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.QLT.10",
+        "WP11.CMP.01",
+        "WP11.T01.CHK.01",
+        "WP11.T01.INV.01",
+        "WP11.T01.QLT.01",
+        "WP11.T01.CMP.01"
+      ],
+      "id": "W18_E1_ASSERT_15",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "testBlob": "0d344369ce375c0cb35633c7eac2f6b8dd11b153",
+      "testSha256": "5cab79a445db29e70f9358aab5429ae407ab50d5db9898051093ced7600519b5",
+      "test": "prepare-intent suppresses incarnation changed by host check 5 before its response",
+      "logLine": 827,
+      "durationMs": 17.06,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "O caminho prepare-intent usa criação real de caso vazio, admissão privada UI consumida e SQLite/C08. No callback host.revalidate número 5, um CAS real altera objetivo e descrição do critério conservando versão de negócio 1.",
+        "O commit hostil e os campos persistidos em storageVersion 2 são verificados fora de qualquer catch. A autoridade global e o lease UI continuam válidos; a resposta é stale/case-changed, sem value.",
+        "O caminho termina com 5 chamadas do host e 4 leituras C08 do caso. O digest do payload original não muda, não há consulta de evidência empresarial, escolha, prepared change ou receipt."
+      ],
+      "limits": [
+        "O caso foi criado de verdade, mas é deliberadamente vazio: o teste não calcula valores financeiros nem registra uma escolha humana ou efeito de domínio.",
+        "O helper de intenção com caso explícito usa uma admissão UI privada da fixture; não demonstra sessão native/MCP instalada, pessoa real ou paridade entre superfícies."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.QLT.10",
+        "WP11.CMP.01",
+        "WP11.T01.CHK.01",
+        "WP11.T01.INV.01",
+        "WP11.T01.QLT.01",
+        "WP11.T01.CMP.01"
+      ],
+      "id": "W18_E1_ASSERT_16",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "testBlob": "0d344369ce375c0cb35633c7eac2f6b8dd11b153",
+      "testSha256": "5cab79a445db29e70f9358aab5429ae407ab50d5db9898051093ced7600519b5",
+      "test": "prepare-intent suppresses same-version content changed by host check 5 before its response",
+      "logLine": 828,
+      "durationMs": 12.71,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "O caminho prepare-intent usa criação real de caso vazio, admissão privada UI consumida e SQLite/C08. No callback host.revalidate número 3, um CAS real altera objetivo e descrição do critério conservando versão de negócio 1.",
+        "O commit hostil e os campos persistidos em storageVersion 2 são verificados fora de qualquer catch. A autoridade global e o lease UI continuam válidos; a resposta é stale/case-changed, sem value.",
+        "O caminho termina com 5 chamadas do host e 4 leituras C08 do caso. O digest do payload original não muda, não há consulta de evidência empresarial, escolha, prepared change ou receipt."
+      ],
+      "limits": [
+        "O caso foi criado de verdade, mas é deliberadamente vazio: o teste não calcula valores financeiros nem registra uma escolha humana ou efeito de domínio.",
+        "O helper de intenção com caso explícito usa uma admissão UI privada da fixture; não demonstra sessão native/MCP instalada, pessoa real ou paridade entre superfícies."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.QLT.10",
+        "WP11.CMP.01",
+        "WP11.T01.CHK.01",
+        "WP11.T01.INV.01",
+        "WP11.T01.QLT.01",
+        "WP11.T01.CMP.01"
+      ],
+      "id": "W18_E1_ASSERT_17",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "testBlob": "0d344369ce375c0cb35633c7eac2f6b8dd11b153",
+      "testSha256": "5cab79a445db29e70f9358aab5429ae407ab50d5db9898051093ced7600519b5",
+      "test": "prepare-intent suppresses same-version content changed by host check 3 before its response",
+      "logLine": 829,
+      "durationMs": 13.12,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "O registry C08/SQLite recusa ausência de grant de commit, persiste a regra 1 e seu retry exato, recusa conteúdo diferente sob a mesma identidade e mantém unknown quando a métrica está conditioned.",
+        "Com a métrica controlada 100 confirmed, a regra lte 150 fica satisfied. Uma operação distinta intent-revision, com expectedRuleVersion 1, aceita limite 50 e cria regra 2 com outra ruleRef; a mesma métrica passa a failed vinculada à nova regra.",
+        "O teste lê o ponteiro atual e os dois registros históricos completos em preferences. A regra 1 e a primeira avaliação conservam seus digests; o retry exato da regra 2 não cria terceira versão.",
+        "Outra operação com expectedRuleVersion 0 retorna stale/criterion-rule-changed. Repetir a operação original após a revisão retorna unavailable/criterion-replay-unavailable e preserva todo o histórico. Unidade incompatível fica unknown e autoridade revogada nega a leitura."
+      ],
+      "limits": [
+        "O readMetric retorna 100 sintético, e contexto, autorização e grants são controles explícitos da fixture. O registry protegido, CAS, duas versões, histórico e replay são reais.",
+        "Não é cálculo financeiro Planner, confirmação empresarial de critério, nova ChoiceRecord ou sessão native/UI montada."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.QLT.01",
+        "WP11.QLT.10",
+        "WP11.CMP.01",
+        "WP11.T02.CMP.01",
+        "WP11.T02.INV.01"
+      ],
+      "id": "W18_E1_ASSERT_18",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "testBlob": "403bccda901a88d713b4b6a5cdbd9f0c17a31144",
+      "testSha256": "c961e7692094255d60fbbf59472f34722ea7ea0fabe125aa3333677a350f5a40",
+      "test": "explicit criterion rule is versioned, authorized and evaluated using the domain metric",
+      "logLine": 832,
+      "durationMs": 58.11,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "The actual SQLite store is disposed and reopened; a separately admitted collaborator reads the exact stored case/version; the original author is read from the durable creation transaction.",
+        "A separately admitted outsider receives case-access-unavailable.",
+        "Two distinct human edit grants reach the real provider with the same expected version. Exactly one commits and one conflicts; exactly one edit receipt persists.",
+        "Exact retry returns the prior result, changed content under the same command identity conflicts, and the unchanged losing draft can be separately authorized and rebased."
+      ],
+      "limits": [
+        "Membership is an explicit host fixture grant. No end-user sharing UI/native session is exercised.",
+        "The case has no business alternatives or choices; it closes the literal case lifecycle/concurrency assertions but alone does not close same financial choice sharing."
+      ],
+      "supportsCriteria": [
+        "WP11.DOD.01",
+        "WP11.INV.10",
+        "WP11.CMP.01",
+        "WP11.SUC.01",
+        "WP11.T01.CHK.01",
+        "WP11.T01.CHK.02",
+        "WP11.T01.DOD.01",
+        "WP11.T01.INV.01",
+        "WP11.T01.QLT.01",
+        "WP11.T01.CMP.01",
+        "WP11.T01.SUC.01"
+      ],
+      "id": "W18_E1_ASSERT_19",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+      "testBlob": "4ab80cd8cdb2f2e310f7eb55908919d32f8e2444",
+      "testSha256": "1d767f978511bab481e577971b9b8e8ae3140b67374985d12482e27d9f5c3ccc",
+      "test": "a reopened case admits a second principal and concurrent human edits preserve one commit and its receipt",
+      "logLine": 835,
+      "durationMs": 25.22,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "Controle positivo usa UI privada, provider C08 e SQLite reais para ler um caso autorizado.",
+        "Durante a revalidação final do host, CAS real remove o participante e avança a versão de negócio. O storageVersion avança, enquanto a concessão global e o request da UI continuam válidos.",
+        "O port retorna stale/case-changed sem value após sua segunda e última leitura C08. O marcador do commit é verificado fora do catch; o digest da fixture observada não foi adulterado e exatamente duas leituras cases foram feitas."
+      ],
+      "limits": [
+        "Fixture semeia caso vazio, com autoridade e CAS reais. Não demonstra cálculo financeiro, escolha humana, native/session ou efeitos do domínio.",
+        "A cerca verificada é createDecisionCasePort.read; draft e prepareIntentForCase exigem suas próprias verificações finais."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.QLT.10",
+        "WP11.CMP.01",
+        "WP11.T01.INV.01",
+        "WP11.T01.CMP.01",
+        "WP11.T01.QLT.01"
+      ],
+      "id": "W18_E1_ASSERT_20",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "testBlob": "67b8b179a3fba332933d8ad00820df82b7ab258e",
+      "testSha256": "8b03c302aec54800e951e623c1e9b15bc31e3322ad75c964da910350b504d45a",
+      "test": "case read suppresses its projection when membership changes during the final host revalidation",
+      "logLine": 838,
+      "durationMs": 10.52,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    },
+    {
+      "assertions": [
+        "Controle positivo usa UI privada, provider C08 e SQLite reais para ler um caso autorizado.",
+        "Durante a revalidação final do host, CAS real altera o objetivo conservando a versão de negócio. O storageVersion avança, enquanto a concessão global e o request da UI continuam válidos.",
+        "O port retorna stale/case-changed sem value após sua segunda e última leitura C08. O marcador do commit é verificado fora do catch; o digest da fixture observada não foi adulterado e exatamente duas leituras cases foram feitas."
+      ],
+      "limits": [
+        "Fixture semeia caso vazio, com autoridade e CAS reais. Não demonstra cálculo financeiro, escolha humana, native/session ou efeitos do domínio.",
+        "A cerca verificada é createDecisionCasePort.read; draft e prepareIntentForCase exigem suas próprias verificações finais."
+      ],
+      "supportsCriteria": [
+        "WP11.INV.10",
+        "WP11.QLT.10",
+        "WP11.CMP.01",
+        "WP11.T01.INV.01",
+        "WP11.T01.CMP.01",
+        "WP11.T01.QLT.01"
+      ],
+      "id": "W18_E1_ASSERT_21",
+      "status": "PASS_ON_RECORDED_SOURCE",
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "runId": 43599284081,
+      "runAttempt": 1,
+      "jobId": 132460358481,
+      "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "testBlob": "67b8b179a3fba332933d8ad00820df82b7ab258e",
+      "testSha256": "8b03c302aec54800e951e623c1e9b15bc31e3322ad75c964da910350b504d45a",
+      "test": "case read suppresses its projection when same-version content changes during the final host revalidation",
+      "logLine": 839,
+      "durationMs": 10.38,
+      "log": "ci-analysis/wp11-W18-E1-tests.log",
+      "logSha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de"
+    }
+  ],
+  "claimBoundary": [
+    "Literal W18 product1c262ba4548c53ae014a2fd21d1e6dc085cb6f13/snapshot438ac548f7cae91fd907d41052682f6bb945c54d. No test observation is relabeled W19.",
+    "W18 typecheck separately failed with1 own fixture optional-string overload and130 unchanged foreign diagnostics; runtime test success does not make the check green. The explicit narrowing guard is a later fixture-only correction requiring its own check and7test rerun.",
+    "The7new cases have no financial alternatives, choice, prepared mutation or domain effect. UI/native boundary proof is scoped: real consumed fixture UI for explicit-case intent; existing native wrapper baseline uses a controlled context, not an installed session.",
+    "Criterion metric100, context/authority and rule inputs are controlled fixture values. This proves actual rule persistence/revision/replay, not a new financial producer result, business decision or ChoiceRecord.",
+    "No read() or H7fixture byte changes occurred in this wave. Prior history/batch/lifecycle observations retain W17 provenance and function-level scope qualification; imported module graphs are not claimed byte-identical.",
+    "WP01HTTP real draft consumer remains an explicit S0/foreign qualification gap due its incompatible constructor; WP11HTTP and case-operation-access do not invoke the changed symbols.",
+    "Canonical not-applicable control proves no omni execution. No local product test/typecheck/build/install or remote mutation."
+  ],
+  "noLocalProductExecution": true,
+  "noRepositoryWrites": true
+}

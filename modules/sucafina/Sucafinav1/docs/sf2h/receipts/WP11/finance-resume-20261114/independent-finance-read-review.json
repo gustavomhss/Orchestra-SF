@@ -1,0 +1,219 @@
+{
+  "schema": "finance-resume-independent-read-fence-review-v1",
+  "reviewer": "Astra Finance WP03/WP05 subagent; not author of reviewed WP11/WP13 production code",
+  "date_utc": "2026-11-14",
+  "status": "NO_ADDITIONAL_CONCRETE_BLOCK_FOUND_STATIC_ONLY",
+  "scope": "Complete read-snapshot helper and three wrapper files; current-choice read and case-port final egress fences; listed counterproof files; real LocalStore/state-provider/UI-authority sources. No global financial or integrated acceptance.",
+  "files": {
+    "wp13": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+        "workspace_source": "work-wp13/overlay/",
+        "git_blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+        "sha256": "9982156692099d6f9663794186c8398632a5c33abd3615809cfe8ec6e8e409a1",
+        "bytes": 4193
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "workspace_source": "work-wp13/overlay/",
+        "git_blob": "19ac96241c24fbcd2038c70b961fa5a8d25d4418",
+        "sha256": "8d25df2912a1a17e3a52db30cbb9d63a9f83a0e28c87dd4f9298fc1040defd28",
+        "bytes": 14138
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+        "workspace_source": "work-wp13/overlay/",
+        "git_blob": "de5846f024f85ad8203fa12adf27212c23850d4f",
+        "sha256": "05fff1d17d587907226953ebf1d6d7a6a86d00d9a81b8af3b9ac4e1689bfc8cd",
+        "bytes": 8076
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+        "workspace_source": "work-wp13/overlay/",
+        "git_blob": "387e78deeb6a1e97a21a68bd84839c3f1e979254",
+        "sha256": "d6bc2c1441b3d41297d2153f65226dcc9ce884716843a798c2f07d7b9151668d",
+        "bytes": 22664
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "workspace_source": "work-wp13/overlay/",
+        "git_blob": "d1ae1a8bb747c1bb8779da133de4df22c81fa3b4",
+        "sha256": "e3c3303590546b8dcc65729c772760de4a375bbc4ba9e6773fc6af53b651933a",
+        "bytes": 31453
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+        "workspace_source": "work-wp13/overlay/",
+        "git_blob": "c8720ec894e7eaa004ee021346c5dd0034e7f0a0",
+        "sha256": "cc152772ab519e0649c372cd3f2524d68238aa4326325bcfb39091cd7178ee54",
+        "bytes": 43300
+      }
+    ],
+    "wp11": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "workspace_source": "work-wp11/overlay/",
+        "git_blob": "c27e908140ba34ffea39078a78626f47943a8444",
+        "sha256": "a19b69ddc019504252db750d6d8cd588880caf6c6c23b1ef340344232004b626",
+        "bytes": 17766
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "workspace_source": "work-wp11/overlay/",
+        "git_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6",
+        "sha256": "43ce8b8f833a5f401fc9d26d1d85c9a806dd1736d3f3b059dcc9a05681bf5ecb",
+        "bytes": 18035
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "workspace_source": "work-wp11/overlay/",
+        "git_blob": "87e24342ee27b98e26b29a69a2f8de6b7bf7206c",
+        "sha256": "a37c13ad494b7a498b5e75eba28aa681da86509727fb59842d925a4099df5ab1",
+        "bytes": 15690
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+        "workspace_source": "work-wp11/overlay/",
+        "git_blob": "185d8f144c789550c0aa62baf557bed63c830320",
+        "sha256": "7a4e4e1277fff23e30667b8fe5fc24878797ecd4d61f8329eb29092896abe96f",
+        "bytes": 7238
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "workspace_source": "work-wp11/overlay/",
+        "git_blob": "40f814167314c329b30d15db3dadbeaad4cfcb55",
+        "sha256": "e06e00d84fbd8c18f08ce251a2e3bbdedc6bfb8098e4c916af5835cddd828811",
+        "bytes": 10043
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+        "workspace_source": "work-wp11/overlay/",
+        "git_blob": "67b8b179a3fba332933d8ad00820df82b7ab258e",
+        "sha256": "8b03c302aec54800e951e623c1e9b15bc31e3322ad75c964da910350b504d45a",
+        "bytes": 8384
+      }
+    ],
+    "real_dependencies": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "workspace_source": "repo/",
+        "git_blob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+        "sha256": "c8ce4f6d20eb89d2adebc6577692c310b65310be251784b109431bc18a7c26e5",
+        "bytes": 24537
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "workspace_source": "repo/",
+        "git_blob": "b7988a2963a2797a96ea19ab2b3a481564548213",
+        "sha256": "f988cc1c91c340628c80523d587bfeec27e92971d6ff467233f9bbb4fff0dfbe",
+        "bytes": 12807
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+        "workspace_source": "repo/",
+        "git_blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+        "sha256": "b6e875b8fc9ff731d225af16f84966bf78f6c1f65aefb852ef52a2983c6ec93e",
+        "bytes": 6876
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "workspace_source": "repo/",
+        "git_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+        "sha256": "c3b11a2acabf6539c09e33489accfc53d8ee61a38063294c7d9003b74c753291",
+        "bytes": 3612
+      }
+    ]
+  },
+  "findings": [],
+  "observations": [
+    {
+      "id": "WP13-REVIEW-SNAPSHOT",
+      "files": [
+        "product/portfolio/read-snapshot.ts:37-57",
+        "runtime/local-store.ts:172-269"
+      ],
+      "assessment": "The complete work callback runs in one fresh read-only root transaction. LocalStore captures dashboard/planner/procurement together, returns cloned currentSnapshots and rejects forbidden nested writes/readers before its Promise returns. readPortfolioSnapshot waits for that completion before releasing a value. Existing proof/reconciliation observations remain inside the callback rather than being replaced by cached evidence."
+    },
+    {
+      "id": "WP13-REVIEW-POISON",
+      "files": [
+        "runtime/local-store.ts:112-119",
+        "runtime/local-store.ts:177-215",
+        "runtime/local-store.ts:263-266",
+        "test/product/wp13/history-provenance.test.ts:312-352"
+      ],
+      "assessment": "A nested transaction whose callback requests commit marks the shared root poisoned and throws. Catching that error does not clear poison. The outer transaction rejects, and readPortfolioSnapshot returns its refused outcome. The new historical test explicitly requires the real callback to run, attemptedCommits=1, writeRejected=true, no result value, unchanged case/C08/storageVersion and a successful fresh call; a swallowed unrelated exception cannot satisfy those assertions."
+    },
+    {
+      "id": "WP13-REVIEW-IDENTITY",
+      "files": [
+        "product/portfolio/read-snapshot.ts:18-41",
+        "product/portfolio/read-snapshot.ts:49-57"
+      ],
+      "assessment": "The helper captures persistence/transaction/currentSnapshots/requestFor/revalidate identities, retained Request object and its method/url/headers, the complete context binding and incoming payload. It checks after work and after final revalidation, including after the LocalStore returns. Nested use requires the same live helper-created scope, persistence, Request and authority digest. An unrelated existing transaction is refused."
+    },
+    {
+      "id": "WP13-REVIEW-REVOCATION",
+      "files": [
+        "product/portfolio/read-snapshot.ts:39-41",
+        "product/portfolio/read-snapshot.ts:50-59",
+        "product/portfolio/proof.ts:84-94",
+        "product/portfolio/history-provenance.ts:66-72",
+        "product/portfolio/reconciliation.ts:108-119"
+      ],
+      "assessment": "Successful work is revalidated inside the snapshot and synchronously rechecked at egress. Request abort, lease loss/replacement, changed context/input/transport or changed host functions refuse output. The three wrappers retain their two observations and produce cloned values or a boolean. Failure handling does not turn timeout/poison into success."
+    },
+    {
+      "id": "WP13-REVIEW-CONCURRENCY",
+      "files": [
+        "product/portfolio/read-snapshot.ts:7-8",
+        "product/portfolio/read-snapshot.ts:36-59",
+        "runtime/local-store.ts:97-168",
+        "runtime/local-store.ts:263-266"
+      ],
+      "assessment": "No result or authorization cache exists between calls. AsyncLocalStorage scopes are per chain, open is cleared in finally, and LocalStore rejects unjoined nested readers and writes. Writer admission remains owned by LocalStore. This is source reasoning; there is no new dedicated concurrent/detached-call execution proof for this wrapper."
+    },
+    {
+      "id": "WP13-REVIEW-MALFORMED",
+      "files": [
+        "product/portfolio/read-snapshot.ts:17-35",
+        "product/portfolio/read-snapshot.ts:61-63"
+      ],
+      "assessment": "Author moved request lookup and digest/fingerprint setup into try before freeze. Malformed captured values now follow the refused path instead of escaping as a rejected Promise. The legacy no-persistence/no-requestFor fallback stays unchanged."
+    },
+    {
+      "id": "WP11-REVIEW-CURRENT-CHOICE",
+      "files": [
+        "product/decisions/current-choice-preview.ts:117-128",
+        "product/host-binding/state-provider.ts:20-31",
+        "product/integration/ui-authority.ts:20-32",
+        "product/integration/ui-authority.ts:70-72",
+        "test/product/wp11/current-choice-read-fence.test.ts:36-162"
+      ],
+      "assessment": "The final combined state read remains after external authorization and source checks. C08 reauthorizes the namespace after its callback but does not own the retained UI lease. The added synchronous requestFor equality catches finish/replacement/expiry without another awaited callback after the final snapshot. Test variants retain real UI admission, SQLite and result-store reads; finance remains unknown in this reader-only fixture."
+    },
+    {
+      "id": "WP11-REVIEW-CASE-EGRESS",
+      "files": [
+        "product/decisions/case-port.ts:54-62",
+        "product/decisions/case-port.ts:82-103",
+        "product/decisions/case-port.ts:108-127",
+        "test/product/wp11/case-read-fence.test.ts",
+        "test/product/wp11/case-egress-fence.test.ts",
+        "test/product/wp11/case-lease-egress.test.ts"
+      ],
+      "assessment": "Draft/read/explicit-case intent compare complete final case snapshots after external callbacks and inspect the live retained Request synchronously. Same-version content changes are detected by whole-object digests; live actor/global lease alone cannot attest old case membership. Negative tests require a real committed race or actual finish/expiry with no abort, and maintain positive controls."
+    }
+  ],
+  "limits": [
+    "No product code was imported, tests executed or typecheck invoked locally for this review.",
+    "GitHub Actions outcomes must be attached by the root at the exact reviewed blobs; this report is not a substitute.",
+    "The helper supplies LocalStore snapshot semantics only. Remote evidence resolvers retain their own repeated checks; no distributed transaction guarantee is introduced.",
+    "Hosts that omit persistence/requestFor retain the old independent-reader behavior; no snapshot guarantee is claimed for that fallback.",
+    "No new dedicated wrapper tests of concurrent roots, escaped/unjoined callbacks or all host mutation variants are claimed. Existing LocalStore logic supplies the inspected mechanism.",
+    "Human choice, domain application, complete/conditioned totals, threshold oracles, native sessions and installed consumers are outside this cold review."
+  ],
+  "product_tests_run_locally": false,
+  "edits_to_reviewed_files": false,
+  "integrated_acceptance": false
+}

@@ -1,0 +1,3807 @@
+{
+  "schema": "wp11-case-read-symbol-impact-v1",
+  "productSha": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+  "productTree": "40c122b24b0e46ed627a5cac506f70575aae6cfd",
+  "changedProductPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+  "baseBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+  "reviewedCandidateBlob": "e646386af209978f2a931a10a070061ba0c97cbe",
+  "newRegression": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+  "scope": "All tracked WP11 test roots at W16, previously observed passing consumer roots, and planned WP05 choice-history-bi. New case-read regression is separately required.",
+  "sourceGraphArtifact": {
+    "path": "ci-analysis/case-read-W16-static-impact.json",
+    "sha256": "d14044adf758dc6143d249cd073045f611f463391b448e2005bbb0c17c2d862f"
+  },
+  "changedExports": {
+    "createDecisionCasePort.read": "Second C08 observation moved after final callbacks; full-case/ref digest and cancellation fence.",
+    "encodeCaseRef": "unchanged",
+    "parseCaseRef": "unchanged",
+    "createDecisionCasePort.draft": "unchanged",
+    "createDecisionCasePort.prepareIntentForCase": "unchanged; internally delegates read"
+  },
+  "roots": [
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "rootBlob": "a0a67918c69a636120daa66877669020803c108e",
+      "classification": "NO_CASE_PORT_IMPORT_DEPENDENCY",
+      "reason": "",
+      "closureFileCount": 54,
+      "wholeFileGraphContainsChangedModule": false,
+      "wholeFileGraphByteEquivalentAfterChange": "not-determined-for-other-changes",
+      "casePortReferences": [],
+      "constructorSites": [],
+      "valueImportChain": null,
+      "typeInclusiveImportChain": null,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+      "rootBlob": "6d1c715d5f20c478e51370c39c4ef145b93930ae",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 86,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "calls": [
+            {
+              "line": 147,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => \"wp05-case\", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence: evidenceService, createId: () => \"unused\", now })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "specifier": "../wp05/engine-fixture.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "specifier": "../wp05/engine-fixture.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+      "rootBlob": "5c0a15b19d6cff2f47e7ec292babf9cf98d2288f",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 61,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 15,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "calls": [
+            {
+              "line": 97,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => control.operation, authorizeCase, verifyScenarioOperations: async (value) => control.allowed && control.sourceFresh && value.alternatives.every((entry) => entry.scenario.operations.length === 0 && entry.scenario.assumptions.length === 0), evidence, createId: () => \"unused\", now: () => at })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 15,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 15,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts",
+      "rootBlob": "f841235bd6b4683a858ddd60c3a275bffaa0200c",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 61,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts",
+          "calls": [
+            {
+              "line": 33,
+              "source": "const cases = createDecisionCasePort({ state, host: { requestFor: () => source, revalidate: async () => access.allowed }, creationTarget: { ref: \"case\", incarnation: \"inc\" }, operationIdentity: () => \"op\", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value) => access.allowed && value.alternatives.length === 0 && value.choices.length === 0 && value.preparedChanges.length === 0, evidence: { resolve: async () => { throw new Error(\"unexpected evidence lookup\") }, context: async () => [], recall: async () => [], emitFromLedger: async () => { throw new Error(\"unused\") } }, createId: () => \"id\", now: () => \"2026-11-13T00:00:00Z\" })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp03/persistence.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+      "rootBlob": "2c6a3519024d2cca0fcf5256dcf9055fa1d7ae26",
+      "classification": "UNCHANGED_REFERENCE_HELPERS_ONLY_NO_REAL_CASE_READER_CONSTRUCTION",
+      "reason": "Closure references encodeCaseRef/parseCaseRef or their consumers, but contains no value import/constructor call of createDecisionCasePort. Where a cases port exists, it is supplied as an isolated test adapter. The changed read implementation is not composed by this root.",
+      "closureFileCount": 86,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+          "specifier": "../../../product/planner/sensitivity-units.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+          "specifier": "../../../product/planner/sensitivity-units.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+      "rootBlob": "32528471bcaa141b580631aa4fc021327b8b20e7",
+      "classification": "NO_CASE_PORT_IMPORT_DEPENDENCY",
+      "reason": "",
+      "closureFileCount": 88,
+      "wholeFileGraphContainsChangedModule": false,
+      "wholeFileGraphByteEquivalentAfterChange": "not-determined-for-other-changes",
+      "casePortReferences": [],
+      "constructorSites": [],
+      "valueImportChain": null,
+      "typeInclusiveImportChain": null,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-persistence-fences.test.ts",
+      "rootBlob": "73802762a47ce5570db3a1e5030592efd4a26ab0",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 86,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-persistence-fences.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 4,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "calls": [
+            {
+              "line": 147,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => \"wp05-case\", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence: evidenceService, createId: () => \"unused\", now })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-persistence-fences.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 4,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-persistence-fences.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 4,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "rootBlob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+      "classification": "NO_CASE_PORT_IMPORT_DEPENDENCY",
+      "reason": "",
+      "closureFileCount": 89,
+      "wholeFileGraphContainsChangedModule": false,
+      "wholeFileGraphByteEquivalentAfterChange": "not-determined-for-other-changes",
+      "casePortReferences": [],
+      "constructorSites": [],
+      "valueImportChain": null,
+      "typeInclusiveImportChain": null,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "rootBlob": "46b31d8a8d9038f74c0d0b825078ecc8229fe6d4",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 91,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "calls": [
+            {
+              "line": 147,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => \"wp05-case\", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence: evidenceService, createId: () => \"unused\", now })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+          "specifier": "../wp05/engine-fixture.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+          "specifier": "../wp05/engine-fixture.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+      "rootBlob": "fb064484e366b081f84591203704f9f0559c8cad",
+      "classification": "UNCHANGED_REFERENCE_HELPERS_ONLY_NO_REAL_CASE_READER_CONSTRUCTION",
+      "reason": "Closure references encodeCaseRef/parseCaseRef or their consumers, but contains no value import/constructor call of createDecisionCasePort. Where a cases port exists, it is supplied as an isolated test adapter. The changed read implementation is not composed by this root.",
+      "closureFileCount": 176,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 13,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "parseCaseRef"
+          ],
+          "statement": "import { parseCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+          "specifier": "./browser.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/browser.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/browser.ts",
+          "specifier": "../../fixture/local-browser.ts",
+          "line": 2,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/fixture/local-browser.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/fixture/local-browser.ts",
+          "specifier": "../../local/entry.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/local/entry.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "specifier": "../product/interface/http.ts",
+          "line": 26,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/interface/http.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+          "specifier": "./browser.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/browser.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/browser.ts",
+          "specifier": "../../fixture/local-browser.ts",
+          "line": 2,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/fixture/local-browser.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/fixture/local-browser.ts",
+          "specifier": "../../local/entry.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/local/entry.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "specifier": "../product/interface/http.ts",
+          "line": 26,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/interface/http.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+          "specifier": "../routines/factory.ts",
+          "line": 14,
+          "explicitTypeOnly": true
+        }
+      ]
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "rootBlob": "9ecb910e6a45fda0f77125fdb6832ad650a011df",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 195,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 13,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "parseCaseRef"
+          ],
+          "statement": "import { parseCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort",
+            "encodeCaseRef"
+          ],
+          "statement": "import { createDecisionCasePort, encodeCaseRef } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+          "calls": [
+            {
+              "line": 103,
+              "source": "const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: () => current.identity, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => `wp11-history-case-${++current.next}`, now })"
+            }
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+          "calls": [
+            {
+              "line": 83,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: ref.id, incarnation: ref.incarnation }, operationIdentity: (context) => context.kind === \"ui\" ? ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.id === ref.id && value.incarnation === ref.incarnation && value.participants.includes(context.binding.principalRef) && await host.revalidate(context), verifyScenarioOperations: async (value, context) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => \"unused-restarted-case\", now: () => \"2026-11-13T03:00:00Z\" })"
+            }
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "calls": [
+            {
+              "line": 147,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => \"wp05-case\", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence: evidenceService, createId: () => \"unused\", now })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+          "specifier": "../routines/factory.ts",
+          "line": 14,
+          "explicitTypeOnly": true
+        }
+      ]
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "rootBlob": "1ab7dd28bfbb9fef868f0992cb1653e00a151114",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 89,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "calls": [
+            {
+              "line": 147,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => \"wp05-case\", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence: evidenceService, createId: () => \"unused\", now })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "specifier": "./engine-fixture.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "specifier": "./engine-fixture.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp05/planner-origins.test.ts",
+      "rootBlob": "bf92905dccfd01eaedc624841d808d5ce21b6f21",
+      "classification": "UNCHANGED_REFERENCE_HELPERS_ONLY_NO_REAL_CASE_READER_CONSTRUCTION",
+      "reason": "Closure references encodeCaseRef/parseCaseRef or their consumers, but contains no value import/constructor call of createDecisionCasePort. Where a cases port exists, it is supplied as an isolated test adapter. The changed read implementation is not composed by this root.",
+      "closureFileCount": 169,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 13,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "parseCaseRef"
+          ],
+          "statement": "import { parseCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/planner-origins.test.ts",
+          "specifier": "./browser.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/browser.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/browser.ts",
+          "specifier": "../../fixture/local-browser.ts",
+          "line": 2,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/fixture/local-browser.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/fixture/local-browser.ts",
+          "specifier": "../../local/entry.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/local/entry.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "specifier": "../product/interface/http.ts",
+          "line": 26,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/interface/http.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/planner-origins.test.ts",
+          "specifier": "./browser.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/browser.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/browser.ts",
+          "specifier": "../../fixture/local-browser.ts",
+          "line": 2,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/fixture/local-browser.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/fixture/local-browser.ts",
+          "specifier": "../../local/entry.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/local/entry.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "specifier": "../product/interface/http.ts",
+          "line": 26,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/interface/http.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+          "specifier": "../routines/factory.ts",
+          "line": 14,
+          "explicitTypeOnly": true
+        }
+      ]
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+      "rootBlob": "bd00deb467e5df32c426f200deb83c8d31f6dd3a",
+      "classification": "NO_CASE_PORT_IMPORT_DEPENDENCY",
+      "reason": "",
+      "closureFileCount": 61,
+      "wholeFileGraphContainsChangedModule": false,
+      "wholeFileGraphByteEquivalentAfterChange": "not-determined-for-other-changes",
+      "casePortReferences": [],
+      "constructorSites": [],
+      "valueImportChain": null,
+      "typeInclusiveImportChain": null,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "rootBlob": "aa7fa9b776e421f0141bdabc34353d2d53123233",
+      "classification": "NO_CASE_PORT_IMPORT_DEPENDENCY",
+      "reason": "",
+      "closureFileCount": 64,
+      "wholeFileGraphContainsChangedModule": false,
+      "wholeFileGraphByteEquivalentAfterChange": "not-determined-for-other-changes",
+      "casePortReferences": [],
+      "constructorSites": [],
+      "valueImportChain": null,
+      "typeInclusiveImportChain": null,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+      "rootBlob": "7678e7737a9a0079f8ede1ccce34bd1605e81def",
+      "classification": "NO_CASE_PORT_IMPORT_DEPENDENCY",
+      "reason": "",
+      "closureFileCount": 47,
+      "wholeFileGraphContainsChangedModule": false,
+      "wholeFileGraphByteEquivalentAfterChange": "not-determined-for-other-changes",
+      "casePortReferences": [],
+      "constructorSites": [],
+      "valueImportChain": null,
+      "typeInclusiveImportChain": null,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+      "rootBlob": "245a23677bf2bc317a768675fa7b267c9e999c1a",
+      "classification": "UNCHANGED_REFERENCE_HELPERS_ONLY_NO_REAL_CASE_READER_CONSTRUCTION",
+      "reason": "Closure references encodeCaseRef/parseCaseRef or their consumers, but contains no value import/constructor call of createDecisionCasePort. Where a cases port exists, it is supplied as an isolated test adapter. The changed read implementation is not composed by this root.",
+      "closureFileCount": 63,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/analysis-promotion.ts",
+          "specifier": "./case-port.ts",
+          "line": 11,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        }
+      ],
+      "constructorSites": [],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+          "specifier": "../../../product/decisions/analysis-promotion.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/analysis-promotion.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/analysis-promotion.ts",
+          "specifier": "./case-port.ts",
+          "line": 11,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+          "specifier": "../../../product/decisions/analysis-promotion.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/analysis-promotion.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/analysis-promotion.ts",
+          "specifier": "./case-port.ts",
+          "line": 11,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "rootBlob": "d13ec6d28ff5eb89bb00e8db39ef9065aab394a2",
+      "classification": "UNCHANGED_REFERENCE_HELPERS_ONLY_NO_REAL_CASE_READER_CONSTRUCTION",
+      "reason": "Closure references encodeCaseRef/parseCaseRef or their consumers, but contains no value import/constructor call of createDecisionCasePort. Where a cases port exists, it is supplied as an isolated test adapter. The changed read implementation is not composed by this root.",
+      "closureFileCount": 128,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+          "specifier": "./case-port.ts",
+          "line": 25,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+          "specifier": "./case-port.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+          "specifier": "./case-port.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/coverage-catalog.ts",
+          "specifier": "./case-port.ts",
+          "line": 4,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "specifier": "./case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/choice-catalog.ts",
+          "specifier": "./case-port.ts",
+          "line": 4,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/change-proposal-store.ts",
+          "specifier": "./case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/assumption-divergence.ts",
+          "specifier": "./case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/analysis-promotion.ts",
+          "specifier": "./case-port.ts",
+          "line": 11,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        }
+      ],
+      "constructorSites": [],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+          "specifier": "../../../product/decisions/http.ts",
+          "line": 19,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/http.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+          "specifier": "./case-port.ts",
+          "line": 25,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+          "specifier": "../../../product/decisions/http.ts",
+          "line": 19,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/http.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+          "specifier": "./case-port.ts",
+          "line": 25,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+      "rootBlob": "7427441bfb0fbc795f810265b302cd9563ea5bea",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 102,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/assumption-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 11,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+          "specifier": "./case-port.ts",
+          "line": 25,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+          "specifier": "./case-port.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+          "specifier": "./case-port.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/coverage-catalog.ts",
+          "specifier": "./case-port.ts",
+          "line": 4,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "specifier": "./case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/choice-catalog.ts",
+          "specifier": "./case-port.ts",
+          "line": 4,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/change-proposal-store.ts",
+          "specifier": "./case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/assumption-divergence.ts",
+          "specifier": "./case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/analysis-promotion.ts",
+          "specifier": "./case-port.ts",
+          "line": 11,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/assumption-fixture.ts",
+          "calls": [
+            {
+              "line": 121,
+              "source": "const cases = createDecisionCasePort({ state, host, operationIdentity, authorizeCase, creationTarget: { ref: \"create-case\", incarnation: \"create-incarnation\" }, evidence, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), createId, now: () => at })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "rootBlob": "9f804318ece7b82c9119508e24763ada47ce294d",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 98,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort",
+            "encodeCaseRef"
+          ],
+          "statement": "import { createDecisionCasePort, encodeCaseRef } from \"../../../product/decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "calls": [
+            {
+              "line": 94,
+              "source": "const cases = createDecisionCasePort({ state, host: fixture.host, authorizeCase, evidence, creationTarget: { ref: originalCaseRef.id, incarnation: originalCaseRef.incarnation }, operationIdentity: () => \"history-case\", verifyScenarioOperations: async (value) => value.alternatives.length === 0, createId: () => \"unused\", now: () => plannerAt })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "rootBlob": "a120cda86e58c479d8d2cab34f85a908c8a4e578",
+      "classification": "NO_CASE_PORT_IMPORT_DEPENDENCY",
+      "reason": "",
+      "closureFileCount": 95,
+      "wholeFileGraphContainsChangedModule": false,
+      "wholeFileGraphByteEquivalentAfterChange": "not-determined-for-other-changes",
+      "casePortReferences": [],
+      "constructorSites": [],
+      "valueImportChain": null,
+      "typeInclusiveImportChain": null,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+      "rootBlob": "4ab80cd8cdb2f2e310f7eb55908919d32f8e2444",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 55,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort",
+            "encodeCaseRef"
+          ],
+          "statement": "import { createDecisionCasePort, encodeCaseRef } from \"../../../product/decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+          "calls": [
+            {
+              "line": 84,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget, operationIdentity, authorizeCase, evidence,"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+      "rootBlob": "90333c12d277942667810d6ed802e019e799f837",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 111,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "calls": [
+            {
+              "line": 147,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => \"wp05-case\", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence: evidenceService, createId: () => \"unused\", now })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+          "specifier": "../wp05/engine-fixture.ts",
+          "line": 18,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+          "specifier": "../wp05/engine-fixture.ts",
+          "line": 18,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/case-management.test.ts",
+      "rootBlob": "3ac68df95f0f0e670263f34d9b0832a32c3fe55c",
+      "classification": "NO_CASE_PORT_IMPORT_DEPENDENCY",
+      "reason": "",
+      "closureFileCount": 47,
+      "wholeFileGraphContainsChangedModule": false,
+      "wholeFileGraphByteEquivalentAfterChange": "not-determined-for-other-changes",
+      "casePortReferences": [],
+      "constructorSites": [],
+      "valueImportChain": null,
+      "typeInclusiveImportChain": null,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+      "rootBlob": "481c41b0c6422839967fd62f01db02ec87fb5b73",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 50,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort",
+            "encodeCaseRef"
+          ],
+          "statement": "import { createDecisionCasePort, encodeCaseRef } from \"../../../product/decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+          "calls": [
+            {
+              "line": 23,
+              "source": "const cases = createDecisionCasePort({ state, host: { requestFor: () => new Request(\"https://example.test\"), revalidate: async () => true }, creationTarget: { ref: \"case\", incarnation: \"inc\" }, operationIdentity: () => \"intent\", authorizeCase: async () => true, verifyScenarioOperations: async (value) => { scope.calls += 1; return scope.allowed && value.alternatives[0]?.scenario.operations[0]?.targetRef === \"restricted\" && value.alternatives[0]?.scenario.operations[0]?.replacementRef === \"restricted-replacement\" }, evidence, createId: () => \"unused\", now: () => \"2026-11-13T00:00:00Z\" })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "rootBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 67,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort",
+            "encodeCaseRef",
+            "parseCaseRef"
+          ],
+          "statement": "import { createDecisionCasePort, encodeCaseRef, parseCaseRef } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/proposals.ts",
+          "specifier": "./case-port.ts",
+          "line": 4,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "parseCaseRef"
+          ],
+          "statement": "import { parseCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/change-proposal-store.ts",
+          "specifier": "./case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+          "specifier": "./case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/choice-result-lookup.ts",
+          "specifier": "./case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+          "calls": [
+            {
+              "line": 26,
+              "source": "const cases = createDecisionCasePort({ state, host: { requestFor: () => new Request(\"https://example.test/\"), revalidate: async () => access.allowed }, creationTarget: { ref: \"installation:install:cases\", incarnation: \"installation-incarnation\" }, operationIdentity: () => \"operation-1\", authorizeCase: async () => access.allowed, verifyScenarioOperations: async () => access.allowed, evidence, createId: () => `id-${++ids.n}`, now: () => \"2026-11-13T00:00:00Z\" })"
+            },
+            {
+              "line": 179,
+              "source": "const cases = createDecisionCasePort({ state, host: { requestFor: () => new Request(\"https://example.test/\"), revalidate: async () => true }, creationTarget: { ref: \"installation:install:cases\", incarnation: \"installation-inc\" }, operationIdentity: () => \"operation\", authorizeCase: async () => true, verifyScenarioOperations: async () => true, evidence, createId: () => `source-case-${++ids.n}`, now: () => \"2026-11-13T00:00:00Z\" })"
+            },
+            {
+              "line": 276,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: \"case\", incarnation: \"inc\" }, operationIdentity: () => \"operation\", authorizeCase: async () => true, verifyScenarioOperations: async () => true, evidence, createId: () => \"unused\", now: () => \"2026-11-13T00:00:00Z\" })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+      "rootBlob": "abf5bb9f6fe4ecff2ab1e9a55d91c96c6118827b",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 93,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "calls": [
+            {
+              "line": 147,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => \"wp05-case\", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence: evidenceService, createId: () => \"unused\", now })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+          "specifier": "../wp05/engine-fixture.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+          "specifier": "../wp05/engine-fixture.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+      "rootBlob": "326a262f17914de6675657dd1e6f82baec31e5c3",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 115,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "calls": [
+            {
+              "line": 155,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: (binding) => binding.kind === \"ui\" ? ui.operationIdentity(binding) : undefined,"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+      "rootBlob": "27e0580d6c9ba7b4c549bc33e5d252a7ce74ae66",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 94,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+          "specifier": "./case-port.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+          "specifier": "./case-port.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "calls": [
+            {
+              "line": 147,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => \"wp05-case\", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence: evidenceService, createId: () => \"unused\", now })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+          "specifier": "../wp05/engine-fixture.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+          "specifier": "../wp05/engine-fixture.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "rootBlob": "75714114bc555d017c7c801a5de486b92ab7d9f6",
+      "classification": "NO_CASE_PORT_IMPORT_DEPENDENCY",
+      "reason": "",
+      "closureFileCount": 53,
+      "wholeFileGraphContainsChangedModule": false,
+      "wholeFileGraphByteEquivalentAfterChange": "not-determined-for-other-changes",
+      "casePortReferences": [],
+      "constructorSites": [],
+      "valueImportChain": null,
+      "typeInclusiveImportChain": null,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+      "rootBlob": "26ab8393f653e60fd6903c8aa3c1079051e49f97",
+      "classification": "NO_CASE_PORT_IMPORT_DEPENDENCY",
+      "reason": "",
+      "closureFileCount": 46,
+      "wholeFileGraphContainsChangedModule": false,
+      "wholeFileGraphByteEquivalentAfterChange": "not-determined-for-other-changes",
+      "casePortReferences": [],
+      "constructorSites": [],
+      "valueImportChain": null,
+      "typeInclusiveImportChain": null,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+      "rootBlob": "b7b8b59ca121e03aea5ae7e9f0b43bd46390b6a7",
+      "classification": "NO_CASE_PORT_IMPORT_DEPENDENCY",
+      "reason": "",
+      "closureFileCount": 44,
+      "wholeFileGraphContainsChangedModule": false,
+      "wholeFileGraphByteEquivalentAfterChange": "not-determined-for-other-changes",
+      "casePortReferences": [],
+      "constructorSites": [],
+      "valueImportChain": null,
+      "typeInclusiveImportChain": null,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "rootBlob": "ea9146c2bf47822f4a7fb47f540b0f66afa35615",
+      "classification": "NO_CASE_PORT_IMPORT_DEPENDENCY",
+      "reason": "",
+      "closureFileCount": 52,
+      "wholeFileGraphContainsChangedModule": false,
+      "wholeFileGraphByteEquivalentAfterChange": "not-determined-for-other-changes",
+      "casePortReferences": [],
+      "constructorSites": [],
+      "valueImportChain": null,
+      "typeInclusiveImportChain": null,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "rootBlob": "296a878ea43768d2df3b2d75396ae07e411f2168",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 108,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 19,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort",
+            "encodeCaseRef"
+          ],
+          "statement": "import { createDecisionCasePort, encodeCaseRef } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+          "calls": [
+            {
+              "line": 485,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseId, incarnation: caseIncarnation }, operationIdentity: (binding) => binding.kind === \"ui\" ? ui.operationIdentity(binding) : undefined, authorizeCase, verifyScenarioOperations: async (decision) => decision.alternatives.every((alternative) => alternative.scenario.operations.length === 0 && alternative.scenario.assumptions.length === 0), evidence, createId: randomUUID, now: () => at })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 19,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 19,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "rootBlob": "45d2821fbd01c13183d450f1347e9017adba9fe2",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 117,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/proposal-coverage.ts",
+          "specifier": "./case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef",
+            "parseCaseRef"
+          ],
+          "statement": "import { encodeCaseRef, parseCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "specifier": "./case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "calls": [
+            {
+              "line": 147,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => \"wp05-case\", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence: evidenceService, createId: () => \"unused\", now })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+          "specifier": "../../../product/decisions/current-choice-preview.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "specifier": "./case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+          "specifier": "../../../product/decisions/current-choice-preview.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "specifier": "./case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "rootBlob": "46b004a1b374229ad46077930134ba0469213087",
+      "classification": "UNCHANGED_REFERENCE_HELPERS_ONLY_NO_REAL_CASE_READER_CONSTRUCTION",
+      "reason": "Closure references encodeCaseRef/parseCaseRef or their consumers, but contains no value import/constructor call of createDecisionCasePort. Where a cases port exists, it is supplied as an isolated test adapter. The changed read implementation is not composed by this root.",
+      "closureFileCount": 66,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "specifier": "./case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        }
+      ],
+      "constructorSites": [],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+          "specifier": "../../../product/decisions/current-choice-preview.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "specifier": "./case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+          "specifier": "../../../product/decisions/current-choice-preview.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "specifier": "./case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "rootBlob": "62365bd79c1f90b6ee90e64746678bfe779011cf",
+      "classification": "UNCHANGED_REFERENCE_HELPERS_ONLY_NO_REAL_CASE_READER_CONSTRUCTION",
+      "reason": "Closure references encodeCaseRef/parseCaseRef or their consumers, but contains no value import/constructor call of createDecisionCasePort. Where a cases port exists, it is supplied as an isolated test adapter. The changed read implementation is not composed by this root.",
+      "closureFileCount": 98,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+          "specifier": "../../../product/planner/product.ts",
+          "line": 13,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/planner/product.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+          "specifier": "./stored-scenarios.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+          "specifier": "../../../product/planner/product.ts",
+          "line": 13,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/planner/product.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+          "specifier": "./stored-scenarios.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "rootBlob": "f3f66378b7e310565e46eef1767f8110675d38de",
+      "classification": "NO_CASE_PORT_IMPORT_DEPENDENCY",
+      "reason": "",
+      "closureFileCount": 93,
+      "wholeFileGraphContainsChangedModule": false,
+      "wholeFileGraphByteEquivalentAfterChange": "not-determined-for-other-changes",
+      "casePortReferences": [],
+      "constructorSites": [],
+      "valueImportChain": null,
+      "typeInclusiveImportChain": null,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/http.test.ts",
+      "rootBlob": "864325e74086a6a39b7240cfddcd5ff16064160f",
+      "classification": "UNCHANGED_REFERENCE_HELPERS_ONLY_NO_REAL_CASE_READER_CONSTRUCTION",
+      "reason": "Closure references encodeCaseRef/parseCaseRef or their consumers, but contains no value import/constructor call of createDecisionCasePort. Where a cases port exists, it is supplied as an isolated test adapter. The changed read implementation is not composed by this root.",
+      "closureFileCount": 86,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "specifier": "./case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+          "specifier": "./case-port.ts",
+          "line": 25,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+          "specifier": "./case-port.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+          "specifier": "./case-port.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/coverage-catalog.ts",
+          "specifier": "./case-port.ts",
+          "line": 4,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/choice-catalog.ts",
+          "specifier": "./case-port.ts",
+          "line": 4,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/change-proposal-store.ts",
+          "specifier": "./case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/assumption-divergence.ts",
+          "specifier": "./case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/analysis-promotion.ts",
+          "specifier": "./case-port.ts",
+          "line": 11,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        }
+      ],
+      "constructorSites": [],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/http.test.ts",
+          "specifier": "../../../product/decisions/http.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/http.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+          "specifier": "./case-port.ts",
+          "line": 25,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/http.test.ts",
+          "specifier": "../../../product/decisions/http.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/http.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+          "specifier": "./case-port.ts",
+          "line": 25,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/implementation-quote-history.test.ts",
+      "rootBlob": "5e4519aaf1cc7d9bb17a1ec93b81ea950084bb2a",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 101,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort",
+            "encodeCaseRef"
+          ],
+          "statement": "import { createDecisionCasePort, encodeCaseRef } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+          "calls": [
+            {
+              "line": 103,
+              "source": "const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: () => current.identity, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => `wp11-history-case-${++current.next}`, now })"
+            }
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+          "calls": [
+            {
+              "line": 83,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: ref.id, incarnation: ref.incarnation }, operationIdentity: (context) => context.kind === \"ui\" ? ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.id === ref.id && value.incarnation === ref.incarnation && value.participants.includes(context.binding.principalRef) && await host.revalidate(context), verifyScenarioOperations: async (value, context) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => \"unused-restarted-case\", now: () => \"2026-11-13T03:00:00Z\" })"
+            }
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "calls": [
+            {
+              "line": 147,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => \"wp05-case\", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence: evidenceService, createId: () => \"unused\", now })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/implementation-quote-history.test.ts",
+          "specifier": "./renewal-choice-fixture.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/implementation-quote-history.test.ts",
+          "specifier": "./renewal-choice-fixture.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "rootBlob": "d01bf28e150197deb8dd2b06469f57a7dc0b0b5b",
+      "classification": "UNCHANGED_REFERENCE_HELPERS_ONLY_NO_REAL_CASE_READER_CONSTRUCTION",
+      "reason": "Closure references encodeCaseRef/parseCaseRef or their consumers, but contains no value import/constructor call of createDecisionCasePort. Where a cases port exists, it is supplied as an isolated test adapter. The changed read implementation is not composed by this root.",
+      "closureFileCount": 95,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+          "specifier": "../../../product/planner/product.ts",
+          "line": 13,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/planner/product.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+          "specifier": "./stored-scenarios.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+          "specifier": "../../../product/planner/product.ts",
+          "line": 13,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/planner/product.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+          "specifier": "./stored-scenarios.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+      "rootBlob": "5d5491cd95fb989f1233ba49db6185214e980899",
+      "classification": "TYPE_ONLY_DEPENDENCY",
+      "reason": "",
+      "closureFileCount": 57,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+          "specifier": "./case-port.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+          "specifier": "./case-port.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        }
+      ],
+      "constructorSites": [],
+      "valueImportChain": null,
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+          "specifier": "../../../product/decisions/portfolio-selection.ts",
+          "line": 10,
+          "explicitTypeOnly": true,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+          "specifier": "./comparison.ts",
+          "line": 7,
+          "explicitTypeOnly": true,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+          "specifier": "./case-port.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "rootBlob": "3d1380e7aaacd894d082fdeb06cfaaa51bf92dbb",
+      "classification": "NO_CASE_PORT_IMPORT_DEPENDENCY",
+      "reason": "",
+      "closureFileCount": 52,
+      "wholeFileGraphContainsChangedModule": false,
+      "wholeFileGraphByteEquivalentAfterChange": "not-determined-for-other-changes",
+      "casePortReferences": [],
+      "constructorSites": [],
+      "valueImportChain": null,
+      "typeInclusiveImportChain": null,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+      "rootBlob": "1ec3fa08e6ef4bdb226a5c26838b01553606872e",
+      "classification": "UNCHANGED_REFERENCE_HELPERS_ONLY_NO_REAL_CASE_READER_CONSTRUCTION",
+      "reason": "Closure references encodeCaseRef/parseCaseRef or their consumers, but contains no value import/constructor call of createDecisionCasePort. Where a cases port exists, it is supplied as an isolated test adapter. The changed read implementation is not composed by this root.",
+      "closureFileCount": 86,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+          "specifier": "./case-port.ts",
+          "line": 25,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+          "specifier": "./case-port.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+          "specifier": "./case-port.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/coverage-catalog.ts",
+          "specifier": "./case-port.ts",
+          "line": 4,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+          "specifier": "./case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/choice-catalog.ts",
+          "specifier": "./case-port.ts",
+          "line": 4,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/change-proposal-store.ts",
+          "specifier": "./case-port.ts",
+          "line": 12,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/assumption-divergence.ts",
+          "specifier": "./case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/analysis-promotion.ts",
+          "specifier": "./case-port.ts",
+          "line": 11,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        }
+      ],
+      "constructorSites": [],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+          "specifier": "../../../product/decisions/http.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/http.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+          "specifier": "./case-port.ts",
+          "line": 25,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+          "specifier": "../../../product/decisions/http.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/http.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+          "specifier": "./case-port.ts",
+          "line": 25,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "rootBlob": "73f0e3b3b7e5579f2cc645503d78f067d9b832c9",
+      "classification": "UNCHANGED_REFERENCE_HELPERS_ONLY_NO_REAL_CASE_READER_CONSTRUCTION",
+      "reason": "Closure references encodeCaseRef/parseCaseRef or their consumers, but contains no value import/constructor call of createDecisionCasePort. Where a cases port exists, it is supplied as an isolated test adapter. The changed read implementation is not composed by this root.",
+      "closureFileCount": 110,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+          "specifier": "../../../product/planner/product.ts",
+          "line": 19,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/planner/product.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+          "specifier": "./stored-scenarios.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+          "specifier": "../../../product/planner/product.ts",
+          "line": 19,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/planner/product.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+          "specifier": "./stored-scenarios.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+      "rootBlob": "be3f5a5116a09dea9c3549cc709bc6f99b23196f",
+      "classification": "UNCHANGED_REFERENCE_HELPERS_ONLY_NO_REAL_CASE_READER_CONSTRUCTION",
+      "reason": "Closure references encodeCaseRef/parseCaseRef or their consumers, but contains no value import/constructor call of createDecisionCasePort. Where a cases port exists, it is supplied as an isolated test adapter. The changed read implementation is not composed by this root.",
+      "closureFileCount": 53,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/proposal-coverage.ts",
+          "specifier": "./case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef",
+            "parseCaseRef"
+          ],
+          "statement": "import { encodeCaseRef, parseCaseRef } from \"./case-port.ts\""
+        }
+      ],
+      "constructorSites": [],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+          "specifier": "../../../product/decisions/proposal-coverage.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/proposal-coverage.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/proposal-coverage.ts",
+          "specifier": "./case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+          "specifier": "../../../product/decisions/proposal-coverage.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/proposal-coverage.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/proposal-coverage.ts",
+          "specifier": "./case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "rootBlob": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 106,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort",
+            "encodeCaseRef"
+          ],
+          "statement": "import { createDecisionCasePort, encodeCaseRef } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+          "specifier": "./case-port.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+          "specifier": "./case-port.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+          "calls": [
+            {
+              "line": 103,
+              "source": "const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: () => current.identity, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => `wp11-history-case-${++current.next}`, now })"
+            }
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+          "calls": [
+            {
+              "line": 83,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: ref.id, incarnation: ref.incarnation }, operationIdentity: (context) => context.kind === \"ui\" ? ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.id === ref.id && value.incarnation === ref.incarnation && value.participants.includes(context.binding.principalRef) && await host.revalidate(context), verifyScenarioOperations: async (value, context) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => \"unused-restarted-case\", now: () => \"2026-11-13T03:00:00Z\" })"
+            }
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "calls": [
+            {
+              "line": 147,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => \"wp05-case\", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence: evidenceService, createId: () => \"unused\", now })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+          "specifier": "./renewal-choice-fixture.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+          "specifier": "./renewal-choice-fixture.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+      "rootBlob": "c2901936d6730b56422b2c495069c0ed0a0705ce",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 103,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort",
+            "encodeCaseRef"
+          ],
+          "statement": "import { createDecisionCasePort, encodeCaseRef } from \"../../../product/decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+          "calls": [
+            {
+              "line": 110,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: (context) => context.kind === \"ui\" ? ui.operationIdentity(context) : undefined, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => `unused-human-case-${++controls.event}`, now: () => at })"
+            }
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "calls": [
+            {
+              "line": 147,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => \"wp05-case\", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence: evidenceService, createId: () => \"unused\", now })"
+            }
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+          "calls": [
+            {
+              "line": 103,
+              "source": "const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: () => current.identity, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => `wp11-history-case-${++current.next}`, now })"
+            }
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+          "calls": [
+            {
+              "line": 83,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: ref.id, incarnation: ref.incarnation }, operationIdentity: (context) => context.kind === \"ui\" ? ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.id === ref.id && value.incarnation === ref.incarnation && value.participants.includes(context.binding.principalRef) && await host.revalidate(context), verifyScenarioOperations: async (value, context) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => \"unused-restarted-case\", now: () => \"2026-11-13T03:00:00Z\" })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+          "specifier": "./renewal-choice-fixture.ts",
+          "line": 4,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+          "specifier": "./renewal-choice-fixture.ts",
+          "line": 4,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+      "rootBlob": "39c8b0e9138c36d5bd4a92726279633f69381cf6",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 89,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "calls": [
+            {
+              "line": 147,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => \"wp05-case\", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence: evidenceService, createId: () => \"unused\", now })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+          "specifier": "../wp05/engine-fixture.ts",
+          "line": 13,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+          "specifier": "../wp05/engine-fixture.ts",
+          "line": 13,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "rootBlob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "classification": "CONSTANT_ONLY_FIXTURE_IMPORT_NO_CASE_READER_CALL",
+      "reason": "createRenewalSourceFixture imports only wp05Horizon from engine-fixture. It seeds C08 directly and uses Planner simulation; neither WP05 fixture factory nor createDecisionCasePort executes. All7 tests call createRenewalOperationVerifier, not a case port.",
+      "closureFileCount": 88,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "calls": [
+            {
+              "line": 147,
+              "source": "const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => \"wp05-case\", authorizeCase: async () => access.allowed, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence: evidenceService, createId: () => \"unused\", now })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+          "specifier": "./renewal-source-fixture.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+          "specifier": "../wp05/engine-fixture.ts",
+          "line": 18,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+          "specifier": "./renewal-source-fixture.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+          "specifier": "../wp05/engine-fixture.ts",
+          "line": 18,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 10,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/result-store.test.ts",
+      "rootBlob": "897c29bf0ac5809776b1b02e779ab735d34a2224",
+      "classification": "NO_CASE_PORT_IMPORT_DEPENDENCY",
+      "reason": "",
+      "closureFileCount": 51,
+      "wholeFileGraphContainsChangedModule": false,
+      "wholeFileGraphByteEquivalentAfterChange": "not-determined-for-other-changes",
+      "casePortReferences": [],
+      "constructorSites": [],
+      "valueImportChain": null,
+      "typeInclusiveImportChain": null,
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "rootBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "classification": "REAL_CASE_READER_COMPOSITION_AFFECTED",
+      "reason": "This root composes the real factory directly or through its called fixture factory. File granularity can include multiple tests; no per-assertion coverage is inferred.",
+      "closureFileCount": 97,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "createDecisionCasePort"
+          ],
+          "statement": "import { createDecisionCasePort } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 5,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../decisions/case-port.ts\""
+        }
+      ],
+      "constructorSites": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+          "calls": [
+            {
+              "line": 76,
+              "source": "const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => \"batch-case\", authorizeCase, verifyScenarioOperations: async (value, trusted) => (await Promise.all(value.alternatives.map((alternative) => verifyOperations(alternative.scenario, trusted)))).every(Boolean), evidence, createId: () => \"unused\", now: () => plannerAt })"
+            }
+          ]
+        }
+      ],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "specifier": "../../../product/planner/sensitivity-units.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "specifier": "../../../product/planner/sensitivity-units.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts"
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 9,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    },
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "rootBlob": "af081946dfffcb885059bff9e56c691460ff1a56",
+      "classification": "UNCHANGED_REFERENCE_HELPERS_ONLY_NO_REAL_CASE_READER_CONSTRUCTION",
+      "reason": "Closure references encodeCaseRef/parseCaseRef or their consumers, but contains no value import/constructor call of createDecisionCasePort. Where a cases port exists, it is supplied as an isolated test adapter. The changed read implementation is not composed by this root.",
+      "closureFileCount": 57,
+      "wholeFileGraphContainsChangedModule": true,
+      "wholeFileGraphByteEquivalentAfterChange": false,
+      "casePortReferences": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"../../../product/decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 3,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "parseCaseRef"
+          ],
+          "statement": "import { parseCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+          "specifier": "../decisions/case-port.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "parseCaseRef"
+          ],
+          "statement": "import { parseCaseRef } from \"../decisions/case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+          "specifier": "./case-port.ts",
+          "line": 8,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        },
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+          "specifier": "./case-port.ts",
+          "line": 6,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "importedSymbols": [
+            "encodeCaseRef"
+          ],
+          "statement": "import { encodeCaseRef } from \"./case-port.ts\""
+        }
+      ],
+      "constructorSites": [],
+      "valueImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "typeInclusiveImportChain": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+          "specifier": "../../../product/decisions/case-port.ts",
+          "line": 7,
+          "explicitTypeOnly": false,
+          "resolvedPath": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        }
+      ],
+      "unresolvedRelativeSpecifiers": []
+    }
+  ],
+  "counts": {
+    "CONSTANT_ONLY_FIXTURE_IMPORT_NO_CASE_READER_CALL": 1,
+    "NO_CASE_PORT_IMPORT_DEPENDENCY": 15,
+    "REAL_CASE_READER_COMPOSITION_AFFECTED": 23,
+    "TYPE_ONLY_DEPENDENCY": 1,
+    "UNCHANGED_REFERENCE_HELPERS_ONLY_NO_REAL_CASE_READER_CONSTRUCTION": 13
+  },
+  "proposedFocusedHostedQualification": {
+    "rootProvidedPlan": [
+      "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts"
+    ],
+    "reason": "Two discriminating races plus retained case-port lifecycle/authorization tests, all9 real batch producer fences, current quote replay/promotion lifecycle and full long history. Additional B1B implementation quote history/new human choice/BI consumers already planned also compose read. No automatic broad producer rerun is requested.",
+    "noExtraSourceAdmissionRunForThisDelta": true,
+    "sourceAdmissionBoundary": "Its7 literal W15 passes remain source-admission evidence at W15; no W17 pass relabeling.",
+    "noExtraC17PersistenceRunForThisDelta": "calculation-persistence.test.ts has no import chain to case-port and its117s W9 result remains literal."
+  },
+  "qualificationPolicy": [
+    "Every graph containing case-port has changed bytes; unchanged helper use is a scoped semantic assessment, never a whole-graph byte-equivalence claim.",
+    "Real-reader consumers retain original SHA/run evidence; the proposed focused qualification is the explicit changed-function gate. A conservative factory composition list is not a demand to re-run all slow producers.",
+    "H7 separately changes two own fixture compositions and keeps its4 affected roots, including WP05 choice-history-bi.",
+    "Two unresolved relative type imports in old WP05 capacity/planner-origin graphs refer to foreign missing routines/factory.ts and remain disclosed; no missing-code acceptance is inferred."
+  ],
+  "limits": [
+    "Static relative graph and reviewed named-import/call-site inspection, not runtime coverage or TypeScript execution.",
+    "Computed dynamic imports, external package internals, and filesystem Bun.build entrypoints are outside this graph.",
+    "No local product execution; no repo or remote changes by this metadata operation."
+  ]
+}

@@ -1,7 +1,7 @@
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { AuthorizedCaseProjection, BusinessContextService, BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { ProjectionComponent, SourceRef } from "../contracts/context.ts"
-import type { DecisionCasePort, DomainPortHost, PortResult } from "../contracts/ports.ts"
+import type { DecisionCasePort, PortResult } from "../contracts/ports.ts"
 import type { SfStoredDecisionResult } from "../contracts/state.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
@@ -10,6 +10,8 @@ import { classifySfMaterialChange } from "../decision-memory/materiality.ts"
 import type { MaterialChangeEvent, MaterialCondition } from "../decision-memory/materiality.ts"
 import { plannerComponentDigest } from "../planner/comparison.ts"
 import type { PortfolioCandidate } from "./port.ts"
+import { readPortfolioSnapshot } from "./read-snapshot.ts"
+import type { PortfolioReadHost } from "./read-snapshot.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 export type PortfolioReconciliationRequest = { caseRef: CaseRef; portfolioResultRef: string; combinationId: string; choiceId: string }
@@ -27,10 +29,10 @@ export type PortfolioReconciliationHost = {
 export function createPortfolioReconciliation(input: PortfolioReconciliationHost & {
   cases: Pick<DecisionCasePort, "read">
   evidence: Pick<BusinessContextService, "context">
-  host: Pick<DomainPortHost, "revalidate">
+  host: PortfolioReadHost
   caseFor: (context: TrustedDomainContext) => Promise<PortResult<CaseRef>>
 }) {
-  return async (incoming: PortfolioReconciliationRequest, context: TrustedDomainContext) => {
+  const read = async (incoming: PortfolioReconciliationRequest, context: TrustedDomainContext) => {
     try {
       const authorityDigest = digestSfValue({ kind: context.kind, binding: context.binding })
       const authorityUnchanged = () => digestSfValue({ kind: context.kind, binding: context.binding }) === authorityDigest
@@ -114,6 +116,7 @@ export function createPortfolioReconciliation(input: PortfolioReconciliationHost
       return { status: "ok", value: structuredClone(second.value) } as const
     } catch { return { status: "unavailable", reason: "portfolio-reconciliation-unavailable" } as const }
   }
+  return (incoming: PortfolioReconciliationRequest, context: TrustedDomainContext) => readPortfolioSnapshot<Awaited<ReturnType<typeof read>>>(input.host, context, incoming, () => read(incoming, context), { status: "unavailable", reason: "portfolio-reconciliation-snapshot-unavailable" })
 }
 
 /** Fingerprint the domain-produced component value, never recompute a monetary effect.

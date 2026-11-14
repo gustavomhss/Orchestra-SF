@@ -1,0 +1,34 @@
+{
+  "schema": "wp11-independent-inspectability-review-W19-v1",
+  "candidateSha": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1",
+  "criterion": "WP11.QLT.01",
+  "literal": "Fontes, versões, hipóteses e efeitos são inspecionáveis.",
+  "recommendation": "VERIFIED_SCOPED",
+  "finding": "No additional own implementation gap identified in the literal service/HTTP and exercised BI-renderer inspection scope.",
+  "sourceFacts": [
+    {
+      "runId": 43591612696,
+      "scope": "AR3 calculation-history and choice-prepared-execution retain and expose exact source/result versions, calculation provenance and authorized receipt boundaries."
+    },
+    {
+      "runId": 43590675088,
+      "scope": "AR2 persists nested calculation references and preserves domain receipts/state; the additional live SQLite connection is not labelled a process restart."
+    },
+    {
+      "runId": 43594721768,
+      "scope": "R1 assumption divergence exposes declared March versus official May with evidence; application status distinguishes receipt-required/reconciled and refuses restricted receipt values."
+    },
+    {
+      "runId": 43598265482,
+      "scope": "B1B observes historical-choice comparison in the real exercised BI renderer with explicit fixture provenance and immutable choice."
+    }
+  ],
+  "limits": [
+    "Service/HTTP and renderer fixture inspection do not imply installed UI, native/provider session or business-human acceptance.",
+    "A revoked source or receipt may correctly make inspection unavailable; inspectability is scoped by current authority.",
+    "The BI root retains the explicit pre-existing missing type-only routines/factory reference; package-wide typecheck remains failed.",
+    "Original execution SHAs/runs remain attached to facts; final qualification uses the separate candidate-audit.manifest.json."
+  ],
+  "localProductExecution": false,
+  "repositoryWrites": false
+}

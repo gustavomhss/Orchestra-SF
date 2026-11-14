@@ -9,6 +9,8 @@ import type { createSfDecisionResultStore } from "../decisions/result-store.ts"
 import { parseCaseRef } from "../decisions/case-port.ts"
 import { portfolioCandidateRef } from "./candidates.ts"
 import type { PortfolioCandidate } from "./port.ts"
+import { readPortfolioSnapshot } from "./read-snapshot.ts"
+import type { PortfolioReadHost } from "./read-snapshot.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type HistoricalCandidate = { candidate: PortfolioCandidate; originalCaseRef: CaseRef; currentCaseRef: CaseRef; scenarioResultRef: string; provenanceDigest: string }
@@ -19,9 +21,9 @@ export function createPortfolioCandidateHistoryReader(input: {
   cases: Pick<DecisionCasePort, "read">
   results: Pick<ReturnType<typeof createSfDecisionResultStore>, "readHistoricalScenario">
   evidence: BusinessContextService
-  host: Pick<DomainPortHost, "requestFor" | "revalidate">
+  host: Pick<DomainPortHost, "requestFor" | "revalidate"> & PortfolioReadHost
 }) {
-  return async (incoming: { ref: string; candidateDigest: string }, context: TrustedDomainContext): Promise<PortResult<HistoricalCandidate>> => {
+  const read = async (incoming: { ref: string; candidateDigest: string }, context: TrustedDomainContext): Promise<PortResult<HistoricalCandidate>> => {
     try {
       const request = structuredClone(incoming)
       const selected = selector(request.ref)
@@ -89,6 +91,7 @@ export function createPortfolioCandidateHistoryReader(input: {
       return { status: "ok", value: structuredClone(second.value) }
     } catch { return { status: "unavailable", reason: "portfolio-history-candidate-unavailable" } }
   }
+  return (incoming: { ref: string; candidateDigest: string }, context: TrustedDomainContext) => readPortfolioSnapshot<PortResult<HistoricalCandidate>>(input.host, context, incoming, () => read(incoming, context), { status: "unavailable", reason: "portfolio-history-candidate-snapshot-unavailable" })
 }
 
 function selector(ref: string) {

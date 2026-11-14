@@ -1,0 +1,51 @@
+{
+  "source": {
+    "productSha": "be50d42d6a2c030d57d17038dec267ebd33ea78c",
+    "productTree": "39c335642dd594713694adf92436396d9217793f",
+    "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "seed": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a"
+  },
+  "checks": {
+    "runId": 43584569598,
+    "jobId": 132416199953,
+    "artifactId": 14110215612,
+    "status": "completed",
+    "conclusion": "failure",
+    "typecheck": {
+      "conclusion": "failure",
+      "ownDiagnostics": 0,
+      "foreignDiagnostics": 133
+    },
+    "guards": {
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 724,
+      "warnings": 12,
+      "gates": 0,
+      "errors": 0
+    },
+    "artifact": {
+      "id": 14110215612,
+      "name": "astra-wp11-checks-be50d42d6a2c030d57d17038dec267ebd33ea78c-1",
+      "zipSha256": "16ea040408e3f9f5c1f2934ad9e98a320151cd709411b92acb09d294af5c1964",
+      "remoteDigestMatched": true,
+      "sourceMatched": true,
+      "files": {
+        "guards.log": {
+          "sha256": "ad5c6f2b655012b20331d4b6789c81adae0739115de81196e0bb9d915ad26fd7",
+          "bytes": 4861
+        },
+        "source.json": {
+          "sha256": "e65494ce9195309c6387a46af96f12d87b8814633f614f8239c07b668409ba8b",
+          "bytes": 296
+        },
+        "typecheck.log": {
+          "sha256": "cf932a16d686738b7c449c9256f7e8dd5bc4693c920f3c935279e78f0f6f7135",
+          "bytes": 64553
+        }
+      }
+    }
+  },
+  "claimBoundary": "Full package typecheck remains failure with133foreign diagnostics. Zeroown is not a green package check. W5 A1 tests are separately recorded and failed1test."
+}

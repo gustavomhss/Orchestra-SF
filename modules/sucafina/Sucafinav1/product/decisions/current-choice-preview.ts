@@ -119,7 +119,10 @@ export function createCurrentChoicePreview(input: {
       // Observe the case, both results and the binding together after callbacks
       // and namespace authorization, with no external callback after this fence.
       const final = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { decision: state.cases[request.caseRef.id], result: state.decisionResults?.[request.resultRef], producer: state.decisionResults?.[binding.producerResultRef], binding: readCurrentChoiceBinding(state, request) } : undefined)
-      if (final.status !== "ok" || !final.value?.decision || digestSfValue(final.value.decision) !== digestSfValue(current.value) || digestSfValue(final.value.result) !== digestSfValue(result.value) || digestSfValue(final.value.producer) !== digestSfValue(producer.value) || !final.value.binding || digestSfValue(final.value.binding) !== digestSfValue(bindingAgain.value) || source.signal.aborted) return { status: "stale", reason: "choice-preview-changed" }
+      // C08 reauthorizes its namespace after the reader callback. That check
+      // does not own the UI/native lease; inspect its retained Request without
+      // another asynchronous callback after the final data observation.
+      if (final.status !== "ok" || !final.value?.decision || digestSfValue(final.value.decision) !== digestSfValue(current.value) || digestSfValue(final.value.result) !== digestSfValue(result.value) || digestSfValue(final.value.producer) !== digestSfValue(producer.value) || !final.value.binding || digestSfValue(final.value.binding) !== digestSfValue(bindingAgain.value) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "choice-preview-changed" }
       return { status: "ok", value: structuredClone(final.value.binding) }
     } catch { return { status: "unavailable", reason: "choice-preview-unavailable" } }
   }

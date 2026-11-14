@@ -1,0 +1,87 @@
+{
+  "schema": "sf-wp13-own-retry-reconciliation-v1",
+  "source": {
+    "head": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+    "tree": "f9e4e23db0b3bc941599efba5341a653bb4ca3d9"
+  },
+  "target": "finance-resume",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "operation": "modify",
+      "base_blob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+      "new_blob": "1438625ca251804cb89c3be4a2f680a9d20eee4c",
+      "sha256": "0b30c0bacdd563f50408da39993477e205b10e15ef5f9135732e8f58c61fef51",
+      "bytes": 50333,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/retry-overlay/modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "operation": "modify",
+      "base_blob": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+      "new_blob": "bff4abba2f156cd2418d39f053b4d6a05bde4944",
+      "sha256": "70d791fc95b7989181a2ba776fce740a8c5e4e7f08fc092d666dc4c538811584",
+      "bytes": 32904,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/retry-overlay/modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "operation": "modify",
+      "base_blob": "553e171d14ea8e7318ad245375cd6d2597b66d4a",
+      "new_blob": "5c53193ea3f2ac32bf2b5fd4a508215682c4b11c",
+      "sha256": "65e9cebd07cf99fe85b8cca52e04239d50271fdd03d7f822ef338bc0efa66de2",
+      "bytes": 34160,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/retry-overlay/modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts"
+    }
+  ],
+  "scope": "Three WP13 owned consumer harnesses only. Real LocalStore for HTTP read scope; stable Request identity; current WP11 reservation contract. Product code and all foreign paths unchanged.",
+  "justification": "The prior test expected another domain dispatch after a known injected precommit rollback. Current WP11 durably reserves before the domain call and correctly treats a missing authoritative receipt as unresolved. Preserve real two-domain success in a distinct case and keep/strengthen the precommit case, retaining all numerical, receipt, choice and C08 oracles. A stable Request now matches the current authority contract.",
+  "assertions": {
+    "before": 76,
+    "after": 93,
+    "removed_or_updated": {
+      "expect(producerCalls).toEqual([\"planner\", \"procurement\", \"procurement\"])": 2
+    },
+    "explanation": "Two obsolete expectations of a second Procurement dispatch are replaced with one actual dispatch. The failure count1 remains in the precommit branch; successful branch additionally requires0."
+  },
+  "selectors": [
+    "Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+    "Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+    "Sucafinav1/test/product/wp13/reconciliation.test.ts"
+  ],
+  "local_product_execution": false,
+  "hosted_proof": "PENDING",
+  "acceptance": "NO_GLOBAL_ACCEPTANCE",
+  "assertion_audit": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "before": 76,
+      "after": 93,
+      "removed_or_updated": {
+        "expect(producerCalls).toEqual([\"planner\", \"procurement\", \"procurement\"])": 2
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "before": 57,
+      "after": 59,
+      "removed_or_updated": {}
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "before": 69,
+      "after": 69,
+      "removed_or_updated": {}
+    }
+  ],
+  "additional_harness_justification": [
+    "HTTP fixture used persistence/requestFor stubs that threw on use. New snapshot ownership correctly reaches them; replace only fixture lifecycle with real LocalStore and one admitted Request, retaining controlled observations and every existing assertion.",
+    "Controlled handoff producer is now unavailable at mandatory revalidateProducer preflight, before any reservation. New assertion verifies no applicationAttempt. It can later recover without claiming a missing post-dispatch receipt authorizes retry. Real post-dispatch precommit rollback is covered separately.",
+    "stored.test.ts/campaign.test.ts new-Request mocks do not call the changed case/snapshot wrappers and were not modified."
+  ],
+  "independent_review": {
+    "reviewer": "/root/wp11",
+    "scope": "handoff-domain-integration.test.ts version1438625ca251804cb89c3be4a2f680a9d20eee4c",
+    "result": "No static blocker against Finance apply964a53310c340f4496d7410d66f8b852270b75f1/application-attemptd7ef49df787cc4b058f0992b1fbbdc5c0cb6634e/prepared-apply90c3e981d8418c562342660bd3d56d03f9995383. Hosted evidence pending; executor reconstruction is not cold provider restart."
+  }
+}

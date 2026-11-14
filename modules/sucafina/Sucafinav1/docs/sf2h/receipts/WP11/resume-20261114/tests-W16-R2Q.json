@@ -1,0 +1,199 @@
+{
+  "log": "ci-analysis/wp11-W16-R2Q-tests.log",
+  "logSha256": "c3b1cd6c2f4c774726e9dca81e762c4673adac819167e10af3e79f187f8ef9ef",
+  "metadata": {
+    "productSha": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+    "productTree": "40c122b24b0e46ed627a5cac506f70575aae6cfd",
+    "snapshotSha": "647d83688758290841ac077035a7cf1b9d9547c5",
+    "snapshotTree": "90631b54394aa8f06b8aec674205a18a632d3571",
+    "branch": "ci-run-linux-astra-wp11-dc9d432-531ab784-r2q",
+    "requestSha256": "531ab7849976e0b2d8b109a51c5ebb1bc53bbf809892836e832b84e52e62b171",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+        "--timeout",
+        "180000"
+      ],
+      "env": {}
+    },
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "e36a50df261dee457f9103ea9545223b572409ae",
+    "runIds": [
+      43596513008
+    ],
+    "selectionReason": "Lifecycle R2 after isolated assertion input; six short Planner qualification cases affected by the published W9 scenario-comparison-port batch delta. The older W6 graph was not identical. No epic selection."
+  },
+  "summary": {
+    "pass": 7,
+    "fail": 0,
+    "tests": 7,
+    "files": 2,
+    "durationSeconds": 59.52
+  },
+  "omniPositiveControl": {
+    "nonces": [
+      "25ef0e6fcc890b386daacd044162b31d"
+    ],
+    "observedVerdicts": [
+      "omni positive control [25ef0e6fcc890b386daacd044162b31d]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [25ef0e6fcc890b386daacd044162b31d]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "requestedFiles": [
+    "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+    "Sucafinav1/test/product/wp03/scenario-qualification.test.ts"
+  ],
+  "observedFiles": [
+    "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+    "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts"
+  ],
+  "fileSummaries": [
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "reportedTests": 6,
+      "counts": {
+        "pass": 6,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 1140.19,
+      "header": {
+        "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+        "line": 810,
+        "timestamp": "2026-11-14T12:49:05.3323408Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+        "status": "pass",
+        "name": "a self-comparison reads once per source observation and still rejects revocation at final revalidation",
+        "line": 816,
+        "timestamp": "2026-11-14T12:49:06.0999465Z",
+        "durationMs": 174.25
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 58205.08,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "line": 818,
+        "timestamp": "2026-11-14T12:49:06.1000756Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "status": "pass",
+        "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+        "line": 819,
+        "timestamp": "2026-11-14T12:50:04.3152352Z",
+        "durationMs": 58205.08
+      }
+    }
+  ],
+  "lastObservedFile": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+  "lastReportedTest": {
+    "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+    "status": "pass",
+    "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+    "line": 819,
+    "timestamp": "2026-11-14T12:50:04.3152352Z",
+    "durationMs": 58205.08
+  },
+  "hasCompletedBunSummary": true,
+  "requestedButNotObserved": [],
+  "observedButNotRequested": [],
+  "ownObservedCounts": {
+    "pass": 1,
+    "fail": 0,
+    "skip": 0,
+    "todo": 0
+  },
+  "observedTests": [
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "status": "pass",
+      "name": "replace and include qualify an absent forecast from the real post-command copy, including explicit zero",
+      "line": 811,
+      "timestamp": "2026-11-14T12:49:05.3324087Z",
+      "durationMs": 372.68
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "status": "pass",
+      "name": "a row save preserves an untouched missing December while an explicit December zero is hypothetical",
+      "line": 812,
+      "timestamp": "2026-11-14T12:49:05.6358371Z",
+      "durationMs": 303.45
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "status": "pass",
+      "name": "deferral quantifies its origin and destination while preserving a third missing month on the same row",
+      "line": 813,
+      "timestamp": "2026-11-14T12:49:05.7053330Z",
+      "durationMs": 69.48
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "status": "pass",
+      "name": "an explicit foreign forecast without FX stays absent instead of publishing the engine's legacy zero",
+      "line": 814,
+      "timestamp": "2026-11-14T12:49:05.7893652Z",
+      "durationMs": 84.03
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "status": "pass",
+      "name": "a hypothetical HR forecast remains quantifiable when its independent budget rate is absent",
+      "line": 815,
+      "timestamp": "2026-11-14T12:49:05.9257117Z",
+      "durationMs": 136.3
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "status": "pass",
+      "name": "a self-comparison reads once per source observation and still rejects revocation at final revalidation",
+      "line": 816,
+      "timestamp": "2026-11-14T12:49:06.0999465Z",
+      "durationMs": 174.25
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "status": "pass",
+      "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+      "line": 819,
+      "timestamp": "2026-11-14T12:50:04.3152352Z",
+      "durationMs": 58205.08
+    }
+  ],
+  "failures": [],
+  "fixtureTrace": {
+    "observations": [],
+    "parseErrors": [],
+    "lastByLabel": {},
+    "maximumObservedSerializedStateBytes": null,
+    "boundary": "Counts and inclusive overlapping wall durations are fixture instrumentation; serialized state bytes are not sampled process memory or exclusive CPU time."
+  }
+}

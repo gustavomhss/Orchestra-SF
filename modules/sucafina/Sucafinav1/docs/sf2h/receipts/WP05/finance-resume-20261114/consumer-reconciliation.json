@@ -1,0 +1,255 @@
+{
+  "schema": "sf2h-finance-resume-wp05-consumer-reconciliation-v1",
+  "date_utc": "2026-11-14",
+  "status": "PINNED_SOURCE_CONSUMPTION_CONFIRMED_WITH_EXPLICIT_REMAINING_GAPS",
+  "scope": "Source review of actual producer adapters and pinned consumer code, not an execution or installation claim",
+  "baseline_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+  "canonical_plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "pack_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+  "consumer_pins": {
+    "compose_pr": 32,
+    "compose_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+    "interface_pr": 31,
+    "interface_head": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+    "target_branch": "sf2-stack",
+    "target_head": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "target_disposition": "Consumer branch inspections are not claimed merged or installed in sf2-stack"
+  },
+  "origins": [
+    {
+      "pr": 22,
+      "head": "90c467cea436daa24987ad68a588a7d80f91064e",
+      "disposition": "Already consumed by PR35; no head delta"
+    },
+    {
+      "pr": 24,
+      "head": "0881fee21f07bf8a9a1153d7d55727837cdf497a",
+      "disposition": "Already consumed by PR35; no head delta"
+    }
+  ],
+  "consumer_files": [
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "commit": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "git_blob": "fdd314e62d43a4efa31579902ec04e889646ff10",
+      "sha256": "8e3d33a9c9ec24af868aa131701d6a1178d2e3b74f61d8ad8f01080278aa1793",
+      "bytes": 18184,
+      "access": "Read-only via GitHub MCP; not imported or executed locally"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/bi-selections.ts",
+      "commit": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "git_blob": "83c754aa57cb83e75952f93fda66667437bc35f6",
+      "sha256": "4e15111d6ed78f8dc50d033c711e4636b5dabb0017b55f1e82c2c373a22667de",
+      "bytes": 3085,
+      "access": "Read-only via GitHub MCP; not imported or executed locally"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-bi-navigation.ts",
+      "commit": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "git_blob": "94a27e2069565c9e5ea7c7d306e4cd127ee01dfb",
+      "sha256": "a2e145d2f710f2f63917c63e6e3f9218b389fc09747cfca427a4dee79434d3b7",
+      "bytes": 23914,
+      "access": "Read-only via GitHub MCP; not imported or executed locally"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-bi-navigation-view.ts",
+      "commit": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "git_blob": "b34e8dba731e452bd05fb5ef28612f1d6c464fd3",
+      "sha256": "4c42cde3ae00bf0524c79d3a22dcf65f9cc1cb0b3d97504abaf1ed0acd46fa8a",
+      "bytes": 3509,
+      "access": "Read-only via GitHub MCP; not imported or executed locally"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "commit": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "git_blob": "48af8ba650ef4a4daa84584f765d17e9ff5b3273",
+      "sha256": "62fb5b12cb68e505bc9a785a064f871cd922b0ed0fe6729327e6136f5ab89289",
+      "bytes": 27165,
+      "access": "Read-only via GitHub MCP; not imported or executed locally"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "commit": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "git_blob": "714f0c392df119f6049ec4b8fc624a4daeb64e5e",
+      "sha256": "721aad2a4da818e3d713b1c0451859824dda7d888149ad699514f1452fbe49ac",
+      "bytes": 18603,
+      "access": "Read-only via GitHub MCP; not imported or executed locally"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/planner-monthly.ts",
+      "commit": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "git_blob": "75d16e5fd0fd39a9396e2cee1927ac992474ba40",
+      "sha256": "91c8fffc79bac399b8cda7c7e5d263ce44fc0732d3bedef58d04c69f137aacf8",
+      "bytes": 14900,
+      "access": "Read-only via GitHub MCP; not imported or executed locally"
+    }
+  ],
+  "own_files_inspected_and_unchanged": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "base_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "git_blob": "b7174b16b485323f767d63e6842f3d61284245eb",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+      "base_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "git_blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/portfolio.ts",
+      "base_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "git_blob": "4fd2a1ec2fc8cc78b21699e5a008362fec588444",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/decision-view.ts",
+      "base_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "git_blob": "bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8",
+      "unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/portfolio-view.ts",
+      "base_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "git_blob": "35c94e7274127926cef17aa40664db075074d4d4",
+      "unchanged": true
+    }
+  ],
+  "observations": [
+    {
+      "id": "BI-CONSUMER-01",
+      "state": "CONFIRMED_IN_PINNED_SOURCE",
+      "producer_consumption": "createSfBiServices binds the existing factory to real Dashboard, Planner, Procurement, scenario result-store and persisted portfolio producers. Planner BI01/04 call plannerMonthlyPresentation/plannerCapacityPresentation; BI02/03 call plannerDifferencePresentation. No foreign producer or analytics formula was copied.",
+      "views": {
+        "dashboard": [
+          "BI01",
+          "BI07",
+          "BI08"
+        ],
+        "planner": [
+          "BI01",
+          "BI04"
+        ],
+        "projected_planner": [
+          "BI02",
+          "BI03"
+        ],
+        "procurement": [
+          "BI05",
+          "BI06"
+        ],
+        "scenario": [
+          "BI09",
+          "BI10",
+          "BI11"
+        ],
+        "portfolio_when_available": [
+          "BI09",
+          "BI10"
+        ]
+      },
+      "files": [
+        "apps/cli/src/sucafina-product/bi-services.ts"
+      ],
+      "execution_claim": false
+    },
+    {
+      "id": "BI-CONSUMER-02",
+      "state": "CONFIRMED_IN_PINNED_SOURCE",
+      "producer_consumption": "advantageComparisonRef reaches createStoredScenarioBiProjection unchanged. The WP05 adapter reads the separately persisted direct/inverse comparison, validates exact pair/case/currency/period and rereads results. It publishes the producer knownDifference verbatim. The host preserves Request identity/headers, selection and binding checks around awaits and deliberately does not reuse the original-pair completed-proof scope for the inverse selection.",
+      "files": [
+        "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+        "apps/cli/src/sucafina-product/bi-services.ts",
+        "apps/cli/src/sucafina-product/bi-selections.ts"
+      ],
+      "boundaries": [
+        "No reciprocal synthesis",
+        "No newly inferred complete coverage",
+        "No promotion of historical C17 to current authorization",
+        "No zero replacement for absent amount"
+      ],
+      "execution_claim": false
+    },
+    {
+      "id": "BI-CONSUMER-03",
+      "state": "CONFIRMED_IN_PINNED_SOURCE",
+      "producer_consumption": "Decision navigation includes source, evidence, result, coverage, question and case targets in an exact projection snapshot. It includes the separate inverse comparison ref. Tokens describe membership, not grants. Detail and current projection are reopened; the case, source Request and authority are checked before egress. HTTP admits a fresh C16 call; browser retains a focus identity for restoration. Source resolution requires fresh current evidence even when the displayed result was persisted.",
+      "files": [
+        "apps/cli/src/sucafina-product/extended-bi-navigation.ts",
+        "apps/cli/src/sucafina-product/extended-http.ts",
+        "apps/cli/src/sucafina-product/extended-bi-browser.ts"
+      ],
+      "execution_claim": false,
+      "all_eight_native_destinations_proven": false
+    }
+  ],
+  "remaining_gaps": [
+    {
+      "id": "BI-LIMIT-01",
+      "status": "OPEN",
+      "owners": [
+        "WP11/WP13 canonical presentation producer",
+        "WP10/Compose consumer wiring"
+      ],
+      "scope": "Producer-backed BI09 waterfall and BI10 timeline presentation plans",
+      "evidence": "bi-services.ts decisionPresentation still returns series:[] and explicitly declares a producer-owned waterfall/timeline plan unavailable. The service unavailable list contains decision-bi-waterfall-plan-unavailable and decision-bi-timeline-plan-unavailable.",
+      "minimum_next_delta": "Producer publishes canonical plan/value identities and Compose consumes them. WP05 already consumes plans and equivalent tables; it must not invent cumulative money or date-impact rules. A component-period table/timeline does not itself prove that a date changes financial cost or viability.",
+      "criterion_ids": [
+        "WP05.DOD.04",
+        "WP05.CMP.04",
+        "WP05.T05.DOD.01"
+      ],
+      "own_patch_applied": false
+    },
+    {
+      "id": "BI-LIMIT-02",
+      "status": "OPEN",
+      "owners": [
+        "WP10/Compose",
+        "S0 integration",
+        "respective native/runtime owners"
+      ],
+      "scope": "Exact mounted consumers, all eight original chart destinations/focus, C17 replay and UI/native/MCP parity on the final bundle",
+      "evidence": "This audit inspects published consumer files; it neither runs a browser nor dispatches product CI. Inherited PR35 scoped evidence remains at its original SHAs.",
+      "minimum_next_delta": "Reconcile and consume full producer files in the composition candidate, then attach owner-scoped existing or changed Actions/native evidence with exact W/S/C/D and consumer pins.",
+      "own_patch_applied": false
+    },
+    {
+      "id": "PLANNER-UI-LIMIT-01",
+      "status": "OPEN_OWNER_DELTA_PRESERVED",
+      "owners": [
+        "WP01/Interface",
+        "WP10/Compose"
+      ],
+      "scope": "Monthly before/after preview, annual/spread/reset and explicit conflict rebase",
+      "evidence": "Interface9d65 planner-monthly.ts remains blob3adef2d68f54f2e04f9532751f5ddc9bed7e4b60 from the prior Finance owner-delta; current monthly paths preserve dirty cells, uncertain retry key/body and revocation. This receipt does not claim the historical proposed patch was consumed.",
+      "owner_delta_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/owner-deltas.md",
+      "minimum_next_delta": "Owner must reconcile its current whole files with the existing delimited delta and preserve retry/revocation behavior; no foreign UI mutation in finance-resume.",
+      "own_patch_applied": false
+    }
+  ],
+  "historical_reuse": {
+    "receipt_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/product-tests.json",
+    "S26": {
+      "product_sha": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "snapshot_sha": "62223d922ddeb4db39c28213ab8190b01bd0617e",
+      "run_id": 43599387716,
+      "recorded_outcome": "1 pass / 0 fail / 86 assertions",
+      "scope": "Existing same-case BI choice/history observation; not an execution of the current Compose head"
+    },
+    "policy": "Reuse original evidence for identical inspected producer blobs within its recorded scope; do not assign a new run to documentation or infer integrated acceptance from a component pass."
+  },
+  "no_own_code_delta": "No additional concrete WP05 defect was found in the inspected consumer adapters. Inventing an analytics calculation would violate the canonical producer boundary.",
+  "new_actions_requested_by_this_subagent": [],
+  "product_tests_run_locally": false,
+  "foreign_files_edited": [],
+  "criterion_map": "criteria.json",
+  "criterion_count": 108,
+  "integrated_acceptance": false,
+  "ready": false,
+  "done": false,
+  "source_change_rule": "Any later movement of an origin/consumer head requires a new reconciliation against these pins; never substitute its new tree automatically."
+}

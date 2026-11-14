@@ -1,0 +1,609 @@
+{
+  "source": {
+    "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+    "productTree": "0b15197ed7fbe954d14aec78b13d03e3293e9c94",
+    "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+    "snapshotTree": "90d81ba30ef1e2c2c7e9e39969dd9ca0e7d7ea66",
+    "branch": "ci-run-linux-astra-wp11-1c262ba-0005dbd7-e1",
+    "requestSha256": "0005dbd7f97aa1e383b531693a843883abe11e8ff0cade1b1ee8170a04e68e62",
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "a2981b5e9141f4dd7fb30aa742aacca72915381d"
+  },
+  "run": {
+    "id": 43599284081,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-14T13:20:39Z",
+    "updatedAt": "2026-11-14T13:22:45Z",
+    "headSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+    "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43599284081",
+    "runAttempt": 1
+  },
+  "jobs": [
+    {
+      "id": 132460358481,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43599284081,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132460868110,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43599284081,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "tests": {
+    "summary": {
+      "pass": 21,
+      "fail": 0,
+      "tests": 21,
+      "files": 5,
+      "durationSeconds": 0.611
+    },
+    "ownObservedCounts": {
+      "pass": 21,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0
+    },
+    "failures": [],
+    "hasCompletedBunSummary": true,
+    "requestedButNotObserved": [],
+    "fileResults": [
+      {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "reportedTests": 10,
+        "counts": {
+          "pass": 10,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 257.03,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+          "line": 810,
+          "timestamp": "2026-11-14T13:22:36.3417094Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+          "status": "pass",
+          "name": "human choice persists a versioned snapshot and ledger using the planner comparison",
+          "line": 820,
+          "timestamp": "2026-11-14T13:22:36.6209190Z",
+          "durationMs": 165.25
+        }
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "reportedTests": 7,
+        "counts": {
+          "pass": 7,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 94.07,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+          "line": 822,
+          "timestamp": "2026-11-14T13:22:36.6210026Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+          "status": "pass",
+          "name": "prepare-intent suppresses same-version content changed by host check 3 before its response",
+          "line": 829,
+          "timestamp": "2026-11-14T13:22:36.7172829Z",
+          "durationMs": 13.12
+        }
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+        "reportedTests": 1,
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 58.11,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+          "line": 831,
+          "timestamp": "2026-11-14T13:22:36.7173412Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+          "status": "pass",
+          "name": "explicit criterion rule is versioned, authorized and evaluated using the domain metric",
+          "line": 832,
+          "timestamp": "2026-11-14T13:22:36.7778985Z",
+          "durationMs": 58.11
+        }
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+        "reportedTests": 1,
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 25.22,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+          "line": 834,
+          "timestamp": "2026-11-14T13:22:36.7779847Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+          "status": "pass",
+          "name": "a reopened case admits a second principal and concurrent human edits preserve one commit and its receipt",
+          "line": 835,
+          "timestamp": "2026-11-14T13:22:36.8051843Z",
+          "durationMs": 25.22
+        }
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+        "reportedTests": 2,
+        "counts": {
+          "pass": 2,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 20.9,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+          "line": 837,
+          "timestamp": "2026-11-14T13:22:36.8052446Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+          "status": "pass",
+          "name": "case read suppresses its projection when same-version content changes during the final host revalidation",
+          "line": 839,
+          "timestamp": "2026-11-14T13:22:36.8271883Z",
+          "durationMs": 10.38
+        }
+      }
+    ],
+    "observedTests": [
+      {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "status": "pass",
+        "name": "case draft survives a real store reopen, exact retry is idempotent and revoked access is denied",
+        "line": 811,
+        "timestamp": "2026-11-14T13:22:36.4018497Z",
+        "durationMs": 38.03
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "status": "pass",
+        "name": "an entirely omitted renewal category remains pending",
+        "line": 812,
+        "timestamp": "2026-11-14T13:22:36.4032227Z",
+        "durationMs": 1.52
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "status": "pass",
+        "name": "coverage distinguishes a sourced zero from an omitted category",
+        "line": 813,
+        "timestamp": "2026-11-14T13:22:36.4044743Z",
+        "durationMs": 1.26
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "status": "pass",
+        "name": "case references encode both identities without accepting ambiguous aliases",
+        "line": 814,
+        "timestamp": "2026-11-14T13:22:36.4045994Z",
+        "durationMs": 0.1
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "status": "pass",
+        "name": "receipt reconciliation preserves partial application and rejects changed identity",
+        "line": 815,
+        "timestamp": "2026-11-14T13:22:36.4052028Z",
+        "durationMs": 0.56
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "status": "pass",
+        "name": "a conditional human choice freezes the comparison and cost gap",
+        "line": 816,
+        "timestamp": "2026-11-14T13:22:36.4063687Z",
+        "durationMs": 1.18
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "status": "pass",
+        "name": "preparing a change preserves the domain command and never applies it",
+        "line": 817,
+        "timestamp": "2026-11-14T13:22:36.4070033Z",
+        "durationMs": 0.62
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "status": "pass",
+        "name": "revoked source suppresses an otherwise authorized case",
+        "line": 818,
+        "timestamp": "2026-11-14T13:22:36.4357682Z",
+        "durationMs": 28.66
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "status": "pass",
+        "name": "partial domain execution reconciles a durable receipt and never repeats it on retry",
+        "line": 819,
+        "timestamp": "2026-11-14T13:22:36.4556113Z",
+        "durationMs": 19.85
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "status": "pass",
+        "name": "human choice persists a versioned snapshot and ledger using the planner comparison",
+        "line": 820,
+        "timestamp": "2026-11-14T13:22:36.6209190Z",
+        "durationMs": 165.25
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "status": "pass",
+        "name": "draft suppresses membership changed by host check 3 before its response",
+        "line": 823,
+        "timestamp": "2026-11-14T13:22:36.6406242Z",
+        "durationMs": 17.51
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "status": "pass",
+        "name": "draft suppresses incarnation changed by host check 3 before its response",
+        "line": 824,
+        "timestamp": "2026-11-14T13:22:36.6508192Z",
+        "durationMs": 10.17
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "status": "pass",
+        "name": "draft suppresses same-version content changed by host check 3 before its response",
+        "line": 825,
+        "timestamp": "2026-11-14T13:22:36.6610376Z",
+        "durationMs": 10.23
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "status": "pass",
+        "name": "prepare-intent suppresses membership changed by host check 5 before its response",
+        "line": 826,
+        "timestamp": "2026-11-14T13:22:36.6743123Z",
+        "durationMs": 13.27
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "status": "pass",
+        "name": "prepare-intent suppresses incarnation changed by host check 5 before its response",
+        "line": 827,
+        "timestamp": "2026-11-14T13:22:36.6914106Z",
+        "durationMs": 17.06
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "status": "pass",
+        "name": "prepare-intent suppresses same-version content changed by host check 5 before its response",
+        "line": 828,
+        "timestamp": "2026-11-14T13:22:36.7041439Z",
+        "durationMs": 12.71
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "status": "pass",
+        "name": "prepare-intent suppresses same-version content changed by host check 3 before its response",
+        "line": 829,
+        "timestamp": "2026-11-14T13:22:36.7172829Z",
+        "durationMs": 13.12
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+        "status": "pass",
+        "name": "explicit criterion rule is versioned, authorized and evaluated using the domain metric",
+        "line": 832,
+        "timestamp": "2026-11-14T13:22:36.7778985Z",
+        "durationMs": 58.11
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+        "status": "pass",
+        "name": "a reopened case admits a second principal and concurrent human edits preserve one commit and its receipt",
+        "line": 835,
+        "timestamp": "2026-11-14T13:22:36.8051843Z",
+        "durationMs": 25.22
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+        "status": "pass",
+        "name": "case read suppresses its projection when membership changes during the final host revalidation",
+        "line": 838,
+        "timestamp": "2026-11-14T13:22:36.8168537Z",
+        "durationMs": 10.52
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+        "status": "pass",
+        "name": "case read suppresses its projection when same-version content changes during the final host revalidation",
+        "line": 839,
+        "timestamp": "2026-11-14T13:22:36.8271883Z",
+        "durationMs": 10.38
+      }
+    ],
+    "sourceFiles": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "blob": "0d344369ce375c0cb35633c7eac2f6b8dd11b153",
+        "sha256": "5cab79a445db29e70f9358aab5429ae407ab50d5db9898051093ced7600519b5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+        "blob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+        "sha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+        "blob": "67b8b179a3fba332933d8ad00820df82b7ab258e",
+        "sha256": "8b03c302aec54800e951e623c1e9b15bc31e3322ad75c964da910350b504d45a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+        "blob": "4ab80cd8cdb2f2e310f7eb55908919d32f8e2444",
+        "sha256": "1d767f978511bab481e577971b9b8e8ae3140b67374985d12482e27d9f5c3ccc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+        "blob": "403bccda901a88d713b4b6a5cdbd9f0c17a31144",
+        "sha256": "c961e7692094255d60fbbf59472f34722ea7ea0fabe125aa3333677a350f5a40"
+      }
+    ]
+  },
+  "protocol": {
+    "nonces": [
+      "6eec271ab5d82aba2cf0aa9e2934f3f9"
+    ],
+    "observedVerdicts": [
+      "omni positive control [6eec271ab5d82aba2cf0aa9e2934f3f9]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [6eec271ab5d82aba2cf0aa9e2934f3f9]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "proof": [
+    "All7new egress negatives passed on the changed draft/prepareIntent runtime: final-callback membership/version removal, incarnation replacement and same-version content for both paths, plus same-version content during the between-reads prepareIntent callback.",
+    "Each egress negative uses a real consumed UI lease, real draft creation and SQLite/C08 CAS; commit and persisted mutation/storageVersion2 are asserted outside callback catches. Global authority remains live; no stale value is released. Counts remain2case observations for draft and4for the two intent reads.",
+    "The10existing case-port tests pass, including actual draft, unchanged exact creation retry, store reopen, native-intent wrapper fixture and source-scope checks. The short real second-principal/concurrent-edit test and both unchanged W17 read fences also pass.",
+    "The extended criterion-rules fixture accepts distinct operation+expectedRuleVersion1 to create rule2, changes threshold150→50 and evaluates the controlled metric100 from satisfied to failed. The live pointer and both real stored history records/digests are read; exact rule2 retry preserves history and superseded rule1 retry is unavailable."
+  ],
+  "claimBoundary": [
+    "Literal W18 product1c262ba4548c53ae014a2fd21d1e6dc085cb6f13/snapshot438ac548f7cae91fd907d41052682f6bb945c54d. No test observation is relabeled W19.",
+    "W18 typecheck separately failed with1 own fixture optional-string overload and130 unchanged foreign diagnostics; runtime test success does not make the check green. The explicit narrowing guard is a later fixture-only correction requiring its own check and7test rerun.",
+    "The7new cases have no financial alternatives, choice, prepared mutation or domain effect. UI/native boundary proof is scoped: real consumed fixture UI for explicit-case intent; existing native wrapper baseline uses a controlled context, not an installed session.",
+    "Criterion metric100, context/authority and rule inputs are controlled fixture values. This proves actual rule persistence/revision/replay, not a new financial producer result, business decision or ChoiceRecord.",
+    "No read() or H7fixture byte changes occurred in this wave. Prior history/batch/lifecycle observations retain W17 provenance and function-level scope qualification; imported module graphs are not claimed byte-identical.",
+    "WP01HTTP real draft consumer remains an explicit S0/foreign qualification gap due its incompatible constructor; WP11HTTP and case-operation-access do not invoke the changed symbols.",
+    "Canonical not-applicable control proves no omni execution. No local product test/typecheck/build/install or remote mutation."
+  ],
+  "files": {
+    "wp11-W18-E1-tests.log": {
+      "sha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de",
+      "bytes": 71837
+    },
+    "wp11-W18-E1-tests-observed.json": {
+      "sha256": "d3fc545adcaae9a31ff4d070243ef58f0f616f594bbd5e0a81f68e00113d1bf7",
+      "bytes": 14624
+    },
+    "wp11-W18-E1-remote-final.json": {
+      "sha256": "9dffe584184793f4c539c66dc80af214dee677156a49de487a4b565723016daa",
+      "bytes": 5333
+    },
+    "parse-hosted-test-log.py": {
+      "sha256": "e8055e8bbcf9b994052e0f4d2af69542c17ee5aca12d27ce4dcddef499061726",
+      "bytes": 7583
+    }
+  }
+}

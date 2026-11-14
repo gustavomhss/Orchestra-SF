@@ -1,0 +1,261 @@
+{
+  "schema": "sf2h-finance-resume-wp03-rate-identity-v1",
+  "date_utc": "2026-11-14",
+  "finding_id": "WP12-OWNER-PLANNER-NUMERIC-RATE-IDENTITY-01",
+  "status": "S1_FAILURE_PRESERVED_FIXTURE_SETUP_CORRECTED_PENDING_RESELECTED_ACTIONS",
+  "baseline": {
+    "branch": "finance-resume",
+    "commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "tree": "ec517fa26571228bc1ce5e3698fcfc9c5d137ae3",
+    "original_branch": "astra-finance",
+    "original_pr": 35
+  },
+  "authorship": {
+    "finding_owner": "WP12",
+    "independent_source_reviewer": "compose_typecheck (as identified in the preserved WP12 review)",
+    "implementation_owner": "Astra Finance / WP03",
+    "public_publisher": "Root finance-resume writer",
+    "statement": "Credits the WP12 proposed canonical-getter correction. The port result is byte-identical to its proposed blob; the runtime change was deliberately reapplied to the newer Finance runtime without replacing that file with WP12's older base. The broader tests are a separate WP03 file."
+  },
+  "origin": {
+    "pr": 39,
+    "commit": "dd92b67fa836bb40bbe74d9076ff7e967d764dd5",
+    "reported_on_pr": 35,
+    "comment_id": 6880372117,
+    "comment_url": "https://github.com/gustavomhss/Orchestra-SF/pull/35#issuecomment-6880372117",
+    "proposal_state": "NOT_APPLIED_NOT_RUN at the origin; this receipt does not relabel the origin as executed",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/README.md",
+        "git_blob": "da3b63a944731b321f8df1fa0ea532774fcd2227",
+        "sha256": "63eb7e0f3a2ffaf6d21f15660e8065e44a38d6d19b35f0af1c68f9a8861f7907",
+        "bytes": 3121
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/author-freeze.json",
+        "git_blob": "aa3a96554f915583b972080ff4af51921a293935",
+        "sha256": "31048a56aab82e17cb6d0928c3a1b30284b94412ec6f67114ef9557ac32fe98c",
+        "bytes": 10268
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/owner-delta.json",
+        "git_blob": "95040f8e10c400114ef8eb6f4ecb496ff493dcaa",
+        "sha256": "b518528c8e65fe45eb85117eb78435e1e1e8f4f8f7fea04609af549d8b1c926f",
+        "bytes": 4497
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/proposal.json",
+        "git_blob": "956c00bddd1d4680fe6250b9c8cd38b1e5f4bba2",
+        "sha256": "4acf8f461444ac65e2db969e19a3c11beade94db26f6208d43a15dcbc59936d8",
+        "bytes": 2558
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/proposed-owner-fix.NOT_APPLIED.patch",
+        "git_blob": "9b48ce67c0b2063be4478938df5d8a798e66be68",
+        "sha256": "5298c0ec1cc0cdc3bee5aa7255c35d97a9836764b93376ff14334c8e068f8aba",
+        "bytes": 2108
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/proposed-owner-test.NOT_RUN.patch",
+        "git_blob": "1f910bb6a36c3a67f26f54247fc70f77c331d395",
+        "sha256": "992693de8300556107eaa8767bea163bc09455db7b5f8020bf873315e8fb7aaa",
+        "bytes": 3452
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/review.json",
+        "git_blob": "075d55dd795e282fe1363a819b1e289d9beacc00",
+        "sha256": "96431d944719b64e8e64aafc2ed1bdf02e3f80f09eff27288d0790e3fe6f797e",
+        "bytes": 28443
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/planner-rate-normalization/source-pins.json",
+        "git_blob": "bf26e3753394ab195bcef029fd21ea52fa294744",
+        "sha256": "bcfeb11aa8656f132310df531907921fd134864fed5dde318078a42c73032a0b",
+        "bytes": 5783
+      }
+    ]
+  },
+  "inputs": [
+    {
+      "pr": 22,
+      "branch": "astra-wp03",
+      "head": "90c467cea436daa24987ad68a588a7d80f91064e",
+      "pr_author_login": "gustavomhss",
+      "disposition": "ALREADY_CONSUMED_IN_PR35; current observed head equals the consumed head; no duplicate source intake"
+    },
+    {
+      "pr": 24,
+      "branch": "astra-wp05",
+      "head": "0881fee21f07bf8a9a1153d7d55727837cdf497a",
+      "pr_author_login": "gustavomhss",
+      "disposition": "ALREADY_CONSUMED_IN_PR35; current observed head equals the consumed head; no duplicate source intake"
+    }
+  ],
+  "ownership": {
+    "pack_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "owned_paths": [
+      "runtime/planner.ts",
+      "product/planner/**",
+      "test/product/wp03/**",
+      "docs/sf2h/receipts/WP03/**"
+    ],
+    "path_root": "modules/sucafina/Sucafinav1/",
+    "foreign_source_edits": []
+  },
+  "mechanism": {
+    "before": "The domain normalizes explicit numeric rateId through versionOf/identified; the private qualifier retained raw positions and text(number) became empty, incorrectly enabling autoRate. A dangling rate could therefore be published as confirmed zero.",
+    "after": "plannerHeadcountInputs exposes only versionOf(row).hc to the internal qualifier. The qualifier and canonical domain use the same normalized identities. Raw presence checks remain separate; normalized inputs do not leave the private qualification object.",
+    "preserved": [
+      "Existing financial formulas and canonical legacy zero",
+      "Rate policy, explicit/automatic distinction, FX and currency",
+      "Actual/forecast independence",
+      "Role-based aggregate visibility and private HR redaction",
+      "Source/coverage digests and every readPair/source/coverage/authority fence",
+      "Snapshot immutability and no official-state mutation"
+    ]
+  },
+  "proposal_reconciliation": {
+    "origin_runtime_base": "c487332777d4053be7a2b177ea598efb77ca0d66",
+    "origin_runtime_proposed": "8168c4b8fea256d0dbf4a961c4b14284d4999dec",
+    "finance_runtime_base": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+    "finance_runtime_candidate": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+    "origin_port_proposed_equals_finance_candidate": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+    "origin_port_hr_test_not_replaced": true,
+    "decision": "Use the proposed getter boundary on the full current Finance runtime; preserve the original port-hr tests and add discriminating regression controls in a new owned file."
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "base_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+      "new_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+      "sha256": "fd1ecc25adbdda1fabe43068ba68fd42b58aa720b70c5fbcae8e3a004ed87b52",
+      "bytes": 106735
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "base_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "new_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+      "sha256": "935554c57a6c85649b3b220a7b21ddecdda46323035b14f69296aedf8f5b7e9f",
+      "bytes": 26118
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+      "base_blob": null,
+      "new_blob": "130c4940746088518376aa4c325bd68ade46aa87",
+      "sha256": "2b682c515a1c6d79175299bfd95497d0c735fc79d785ce1c428d1398d0827d44",
+      "bytes": 7722
+    }
+  ],
+  "new_test": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+    "test_count": 2,
+    "cases": [
+      {
+        "name": "C02 preserves explicit numeric HR identity, known zero and independent actual/forecast for finance and viewer",
+        "discriminants": [
+          "Dangling numeric 999 remains missing despite a compatible automatic card",
+          "Dangling string 999 control",
+          "Valid numeric rateId 7 selects the explicit card",
+          "Explicit numeric zero card remains confirmed zero",
+          "Empty rateId selects the real automatic card",
+          "Actual 0/20 and forecast 15/0 remain independently confirmed",
+          "FTE remains 5 while HR budget is absent",
+          "Finance/viewer permitted aggregates agree and private keys remain absent",
+          "Snapshot is unchanged"
+        ]
+      },
+      {
+        "name": "qualified HR self-comparison still refuses revocation during the final coverage observation",
+        "discriminants": [
+          "Real source/coverage readers with revocation after the second coverage read",
+          "Exactly two source and two coverage observations for a same-selector comparison",
+          "stale/coverage-or-authority-changed with no value",
+          "No snapshot mutation"
+        ]
+      }
+    ],
+    "fixture": "Real plannerFixture / SQLite / private product UI authority and source issuer; no fabricated producer result",
+    "scope_limit": "Harness proves the selected producer path after Actions executes it; it does not certify installed UI/native/MCP or global acceptance."
+  },
+  "validation": {
+    "product_tests_run_locally": false,
+    "typecheck_run_by_this_subagent": false,
+    "new_actions_run_ids": [
+      43615424219
+    ],
+    "status": "S1_FAILURE_PRESERVED_PENDING_CHANGED_TEST_ACTIONS",
+    "surgical_selection": [
+      "test/product/wp03/rate-identity-qualification.test.ts",
+      "test/product/wp03/port-hr.test.ts",
+      "test/product/wp03/scenario-qualification.test.ts"
+    ],
+    "reason": "New identity regression plus unchanged private-qualification and scenario revalidation consumers. No repeat of the entire epic.",
+    "S1": {
+      "product_sha": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+      "product_tree": "de5d3f65d6d262c05a6447aa21f26c63dfbbf1c1",
+      "snapshot_sha": "1ee667356ad01f211e7473d2ad5e2fae4b670a9d",
+      "snapshot_tree": "403de749d387114621a6c9b3f29ec649da6a67e4",
+      "run_id": 43615424219,
+      "job_id": 132509297971,
+      "conclusion": "failure",
+      "pass": 8,
+      "fail": 1,
+      "expect_count": 254,
+      "executed_new_test_blob": "6f701bd265cbfb3dfa4201154d9f76e3d248dc2f",
+      "log_sha256": "324b70b713707b3fd3d211ef5ee27fc0e66f54f872c3315cbec3695492d14fe4",
+      "failure": "The whole-snapshot equality at rate-identity-qualification.test.ts:84 included 46 legitimate source-scope registration lines because before was captured before issuing the finance/viewer references. All preceding financial/privacy assertions and the final-coverage revocation case completed.",
+      "correction": "Prepare both real admissions and source references before freezing before, then run reads using those references. Preserve the whole-snapshot assertion and all other assertions. No production file changed.",
+      "next_selection": [
+        "test/product/wp03/rate-identity-qualification.test.ts"
+      ],
+      "accepts_criterion": false
+    },
+    "required_checks": [
+      "bun typecheck from modules/sucafina",
+      "bun run check:guards --base origin/dev"
+    ],
+    "ci_protocol_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "ci_protocol_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md"
+  },
+  "historical_proofs": [
+    {
+      "selection": "S24",
+      "product_sha": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+      "snapshot_sha": "b791d889a6f14ea0b9f9ff2b950bf10da4fe5090",
+      "run_id": 43597456215,
+      "recorded_outcome": "7 pass / 0 fail / 247 assertions",
+      "scope": "Inherited PR35 evidence only; not a run of the numeric-rate correction"
+    },
+    {
+      "selection": "S25",
+      "product_sha": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "snapshot_sha": "34c2647395a03749e5bbc795bcf1656be5d10a03",
+      "run_id": 43599384924,
+      "recorded_outcome": "17 pass / 0 fail / 197 assertions",
+      "scope": "Inherited PR35 evidence only"
+    }
+  ],
+  "criteria": [
+    "WP03.T01.INV.01",
+    "WP03.T01.INV.03",
+    "WP03.T01.CHK.04",
+    "WP03.T03.CHK.02",
+    "WP03.T03.CHK.05",
+    "WP03.T03.INV.02",
+    "WP03.T03.CMP.01",
+    "WP03.T03.SUC.02",
+    "WP03.QLT.01",
+    "WP03.T01.CHK.18"
+  ],
+  "criterion_map": "criteria.json",
+  "consumer_reconciliation": "../../WP05/finance-resume-20261114/consumer-reconciliation.json",
+  "remaining": [
+    "Publish candidate commit/tree/blobs and attach exact product/snapshot/run/check outcomes",
+    "WP12/Compose must reconcile the published full owner files before consuming them; their prior HOLD is not automatically superseded",
+    "Old source digests remain historical; reissue/revalidate affected current references rather than rewriting archived evidence",
+    "Installed UI/native/MCP, aggregate complete-work-package acceptance and external UI obligations remain separate"
+  ],
+  "integrated_acceptance": false,
+  "ready": false,
+  "done": false
+}

@@ -1,0 +1,638 @@
+{
+  "log": "ci-analysis/wp11-W5-A1-tests.log",
+  "logSha256": "70a01ae9643b0a094a298c1a3bddbefeac890fc85165e6fc33f3a2f68850e217",
+  "metadata": {
+    "productSha": "be50d42d6a2c030d57d17038dec267ebd33ea78c",
+    "productTree": "39c335642dd594713694adf92436396d9217793f",
+    "snapshotSha": "d21a4dac299d57d2571adc11e4b368a44bb27b60",
+    "snapshotTree": "8b627d790cca61bb295e7e3801b360963e73169d",
+    "branch": "ci-run-linux-astra-wp11-be50d42-aa2e6300-a1",
+    "requestSha256": "aa2e63002f88ad7b80bd68132d77d7c036ee9fd055312fe38cf9d8faf476454d",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+        "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+        "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+        "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+        "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "Sucafinav1/test/product/wp11/case-management.test.ts",
+        "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+        "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+        "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+        "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+        "Sucafinav1/test/product/wp11/http.test.ts",
+        "Sucafinav1/test/product/wp11/result-store.test.ts",
+        "--timeout",
+        "180000"
+      ],
+      "env": {}
+    },
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "a19660a50b0a1dbb25ba9a81739151384cdb979e",
+    "runIds": [
+      43584601515
+    ],
+    "tests": {
+      "runId": 43584601515,
+      "jobId": 132416299515,
+      "cleanupJobId": 132416683947,
+      "status": "completed",
+      "conclusion": "failure",
+      "summary": {
+        "pass": 23,
+        "fail": 1,
+        "tests": 24,
+        "files": 12,
+        "durationSeconds": 2.28
+      },
+      "ownObservedCounts": {
+        "pass": 23,
+        "fail": 1,
+        "skip": 0,
+        "todo": 0
+      },
+      "omniPositiveControl": {
+        "nonces": [
+          "56bdb5e1632c48b3ee68f8d0aa99277f"
+        ],
+        "observedVerdicts": [
+          "omni positive control [56bdb5e1632c48b3ee68f8d0aa99277f]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        ],
+        "matchingVerdicts": [
+          "omni positive control [56bdb5e1632c48b3ee68f8d0aa99277f]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        ],
+        "validPassingVerdict": true,
+        "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+      },
+      "requestedButNotObserved": [],
+      "logSha256": "70a01ae9643b0a094a298c1a3bddbefeac890fc85165e6fc33f3a2f68850e217",
+      "artifacts": [],
+      "claimBoundary": "All12requestedfiles observed,23pass1fail. This run is a failure, not a green selection. No omni spawn occurred."
+    }
+  },
+  "summary": {
+    "pass": 23,
+    "fail": 1,
+    "tests": 24,
+    "files": 12,
+    "durationSeconds": 2.28
+  },
+  "omniPositiveControl": {
+    "nonces": [
+      "56bdb5e1632c48b3ee68f8d0aa99277f"
+    ],
+    "observedVerdicts": [
+      "omni positive control [56bdb5e1632c48b3ee68f8d0aa99277f]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [56bdb5e1632c48b3ee68f8d0aa99277f]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "requestedFiles": [
+    "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+    "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+    "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+    "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+    "Sucafinav1/test/product/wp11/case-port.test.ts",
+    "Sucafinav1/test/product/wp11/case-management.test.ts",
+    "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+    "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+    "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+    "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+    "Sucafinav1/test/product/wp11/http.test.ts",
+    "Sucafinav1/test/product/wp11/result-store.test.ts"
+  ],
+  "observedFiles": [
+    "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+    "Sucafinav1/test/product/wp11/case-port.test.ts",
+    "Sucafinav1/test/product/wp11/case-management.test.ts",
+    "Sucafinav1/test/product/wp11/http.test.ts",
+    "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+    "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+    "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+    "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+    "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+    "Sucafinav1/test/product/wp11/result-store.test.ts",
+    "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+    "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts"
+  ],
+  "fileSummaries": [
+    {
+      "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 283.02,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+        "line": 829,
+        "timestamp": "2026-11-14T10:19:29.4337273Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+        "status": "pass",
+        "name": "a dispatched change without its authoritative receipt stays indeterminate across concurrent actors and restart",
+        "line": 830,
+        "timestamp": "2026-11-14T10:19:29.7826032Z",
+        "durationMs": 283.02
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "reportedTests": 10,
+      "counts": {
+        "pass": 9,
+        "fail": 1,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 197.81,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "line": 832,
+        "timestamp": "2026-11-14T10:19:29.7827332Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "status": "fail",
+        "name": "human choice persists a versioned snapshot and ledger using the planner comparison",
+        "line": 855,
+        "timestamp": "2026-11-14T10:19:29.9873257Z",
+        "durationMs": 132.75
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-management.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 18.8,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/case-management.test.ts",
+        "line": 857,
+        "timestamp": "2026-11-14T10:19:29.9873887Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/case-management.test.ts",
+        "status": "pass",
+        "name": "case listing and editing recheck access, actor intent, CAS and exact retry",
+        "line": 858,
+        "timestamp": "2026-11-14T10:19:30.0065759Z",
+        "durationMs": 18.8
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/http.test.ts",
+      "reportedTests": 2,
+      "counts": {
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 12.14,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/http.test.ts",
+        "line": 860,
+        "timestamp": "2026-11-14T10:19:30.0066851Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/http.test.ts",
+        "status": "pass",
+        "name": "current-choice HTTP binds both human steps and only promotion permits a historical retry",
+        "line": 862,
+        "timestamp": "2026-11-14T10:19:30.0200015Z",
+        "durationMs": 1.39
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 30.67,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+        "line": 864,
+        "timestamp": "2026-11-14T10:19:30.0201261Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+        "status": "pass",
+        "name": "a separate human rejection cancels only an undispatched proposal, retains the choice and reconciles retries",
+        "line": 865,
+        "timestamp": "2026-11-14T10:19:30.0517577Z",
+        "durationMs": 30.67
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 633.11,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+        "line": 867,
+        "timestamp": "2026-11-14T10:19:30.0519564Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+        "status": "pass",
+        "name": "a human-confirmed March assumption keeps the official May project and exposes the divergence until a separate domain command",
+        "line": 868,
+        "timestamp": "2026-11-14T10:19:30.6880690Z",
+        "durationMs": 633.11
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 486.66,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+        "line": 870,
+        "timestamp": "2026-11-14T10:19:30.6881615Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+        "status": "pass",
+        "name": "Planner applies and Procurement conflicts in one durable case; ordered receipts replay after restart without effects",
+        "line": 871,
+        "timestamp": "2026-11-14T10:19:31.1798842Z",
+        "durationMs": 486.66
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 39.42,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+        "line": 873,
+        "timestamp": "2026-11-14T10:19:31.1800305Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+        "status": "pass",
+        "name": "explicit criterion rule is versioned, authorized and evaluated using the domain metric",
+        "line": 874,
+        "timestamp": "2026-11-14T10:19:31.2223263Z",
+        "durationMs": 39.42
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 7.78,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+        "line": 876,
+        "timestamp": "2026-11-14T10:19:31.2224154Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+        "status": "pass",
+        "name": "case projection denies an inaccessible operation even with no result components",
+        "line": 877,
+        "timestamp": "2026-11-14T10:19:31.2311569Z",
+        "durationMs": 7.78
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 45.7,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/result-store.test.ts",
+        "line": 879,
+        "timestamp": "2026-11-14T10:19:31.2312397Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/result-store.test.ts",
+        "status": "pass",
+        "name": "decision result persistence binds retries, current case and source authority",
+        "line": 880,
+        "timestamp": "2026-11-14T10:19:31.2775287Z",
+        "durationMs": 45.7
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 26.44,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+        "line": 882,
+        "timestamp": "2026-11-14T10:19:31.2776568Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+        "status": "pass",
+        "name": "a reopened case admits a second principal and concurrent human edits preserve one commit and its receipt",
+        "line": 883,
+        "timestamp": "2026-11-14T10:19:31.3057012Z",
+        "durationMs": 26.44
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "reportedTests": 3,
+      "counts": {
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 232.66,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+        "line": 885,
+        "timestamp": "2026-11-14T10:19:31.3058004Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+        "status": "pass",
+        "name": "real prepared execution reconciles revoked without repeating Planner effects",
+        "line": 888,
+        "timestamp": "2026-11-14T10:19:31.5407386Z",
+        "durationMs": 76.5
+      }
+    }
+  ],
+  "lastObservedFile": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+  "lastReportedTest": {
+    "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+    "status": "pass",
+    "name": "real prepared execution reconciles revoked without repeating Planner effects",
+    "line": 888,
+    "timestamp": "2026-11-14T10:19:31.5407386Z",
+    "durationMs": 76.5
+  },
+  "hasCompletedBunSummary": true,
+  "requestedButNotObserved": [],
+  "observedButNotRequested": [],
+  "ownObservedCounts": {
+    "pass": 23,
+    "fail": 1,
+    "skip": 0,
+    "todo": 0
+  },
+  "observedTests": [
+    {
+      "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "status": "pass",
+      "name": "a dispatched change without its authoritative receipt stays indeterminate across concurrent actors and restart",
+      "line": 830,
+      "timestamp": "2026-11-14T10:19:29.7826032Z",
+      "durationMs": 283.02
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "case draft survives a real store reopen, exact retry is idempotent and revoked access is denied",
+      "line": 833,
+      "timestamp": "2026-11-14T10:19:29.8138854Z",
+      "durationMs": 26.01
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "an entirely omitted renewal category remains pending",
+      "line": 834,
+      "timestamp": "2026-11-14T10:19:29.8152635Z",
+      "durationMs": 1.49
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "coverage distinguishes a sourced zero from an omitted category",
+      "line": 835,
+      "timestamp": "2026-11-14T10:19:29.8167723Z",
+      "durationMs": 1.51
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "case references encode both identities without accepting ambiguous aliases",
+      "line": 836,
+      "timestamp": "2026-11-14T10:19:29.8169026Z",
+      "durationMs": 0.13
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "receipt reconciliation preserves partial application and rejects changed identity",
+      "line": 837,
+      "timestamp": "2026-11-14T10:19:29.8172294Z",
+      "durationMs": 0.33
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "a conditional human choice freezes the comparison and cost gap",
+      "line": 838,
+      "timestamp": "2026-11-14T10:19:29.8186157Z",
+      "durationMs": 1.37
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "preparing a change preserves the domain command and never applies it",
+      "line": 839,
+      "timestamp": "2026-11-14T10:19:29.8193249Z",
+      "durationMs": 0.71
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "revoked source suppresses an otherwise authorized case",
+      "line": 840,
+      "timestamp": "2026-11-14T10:19:29.8351308Z",
+      "durationMs": 15.71
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "partial domain execution reconciles a durable receipt and never repeats it on retry",
+      "line": 841,
+      "timestamp": "2026-11-14T10:19:29.8529744Z",
+      "durationMs": 17.8
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "fail",
+      "name": "human choice persists a versioned snapshot and ledger using the planner comparison",
+      "line": 855,
+      "timestamp": "2026-11-14T10:19:29.9873257Z",
+      "durationMs": 132.75
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-management.test.ts",
+      "status": "pass",
+      "name": "case listing and editing recheck access, actor intent, CAS and exact retry",
+      "line": 858,
+      "timestamp": "2026-11-14T10:19:30.0065759Z",
+      "durationMs": 18.8
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/http.test.ts",
+      "status": "pass",
+      "name": "decision HTTP uses the real human admission and case CAS",
+      "line": 861,
+      "timestamp": "2026-11-14T10:19:30.0186029Z",
+      "durationMs": 10.75
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/http.test.ts",
+      "status": "pass",
+      "name": "current-choice HTTP binds both human steps and only promotion permits a historical retry",
+      "line": 862,
+      "timestamp": "2026-11-14T10:19:30.0200015Z",
+      "durationMs": 1.39
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+      "status": "pass",
+      "name": "a separate human rejection cancels only an undispatched proposal, retains the choice and reconciles retries",
+      "line": 865,
+      "timestamp": "2026-11-14T10:19:30.0517577Z",
+      "durationMs": 30.67
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+      "status": "pass",
+      "name": "a human-confirmed March assumption keeps the official May project and exposes the divergence until a separate domain command",
+      "line": 868,
+      "timestamp": "2026-11-14T10:19:30.6880690Z",
+      "durationMs": 633.11
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "status": "pass",
+      "name": "Planner applies and Procurement conflicts in one durable case; ordered receipts replay after restart without effects",
+      "line": 871,
+      "timestamp": "2026-11-14T10:19:31.1798842Z",
+      "durationMs": 486.66
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "status": "pass",
+      "name": "explicit criterion rule is versioned, authorized and evaluated using the domain metric",
+      "line": 874,
+      "timestamp": "2026-11-14T10:19:31.2223263Z",
+      "durationMs": 39.42
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+      "status": "pass",
+      "name": "case projection denies an inaccessible operation even with no result components",
+      "line": 877,
+      "timestamp": "2026-11-14T10:19:31.2311569Z",
+      "durationMs": 7.78
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "status": "pass",
+      "name": "decision result persistence binds retries, current case and source authority",
+      "line": 880,
+      "timestamp": "2026-11-14T10:19:31.2775287Z",
+      "durationMs": 45.7
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+      "status": "pass",
+      "name": "a reopened case admits a second principal and concurrent human edits preserve one commit and its receipt",
+      "line": 883,
+      "timestamp": "2026-11-14T10:19:31.3057012Z",
+      "durationMs": 26.44
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "status": "pass",
+      "name": "real prepared execution reconciles normal without repeating Planner effects",
+      "line": 886,
+      "timestamp": "2026-11-14T10:19:31.3900338Z",
+      "durationMs": 81.98
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "status": "pass",
+      "name": "real prepared execution reconciles lost-response without repeating Planner effects",
+      "line": 887,
+      "timestamp": "2026-11-14T10:19:31.4641669Z",
+      "durationMs": 74.18
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "status": "pass",
+      "name": "real prepared execution reconciles revoked without repeating Planner effects",
+      "line": 888,
+      "timestamp": "2026-11-14T10:19:31.5407386Z",
+      "durationMs": 76.5
+    }
+  ],
+  "failures": [
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "fail",
+      "name": "human choice persists a versioned snapshot and ledger using the planner comparison",
+      "line": 855,
+      "timestamp": "2026-11-14T10:19:29.9873257Z",
+      "durationMs": 132.75
+    }
+  ]
+}
