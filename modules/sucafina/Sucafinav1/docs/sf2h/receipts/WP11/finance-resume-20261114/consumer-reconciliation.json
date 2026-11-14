@@ -1,0 +1,982 @@
+{
+  "schema": "sf-finance-consumer-reconciliation-v1",
+  "reviewDate": "2026-11-14",
+  "repository": "gustavomhss/Orchestra-SF",
+  "reviewer": {
+    "agent": "cold_review",
+    "independent": true,
+    "productAuthorship": false,
+    "role": "Revisão estática independente dos consumidores; sem aceite instalado"
+  },
+  "finance": {
+    "pr": 42,
+    "branch": "finance-resume",
+    "head": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+    "tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+    "publicationEvidence": "intake/published-R4.json",
+    "scope": "R4 publicado, incluindo R2/R3 ancestrais; nenhum avanço posterior foi substituído automaticamente"
+  },
+  "sourcePins": [
+    {
+      "pr": 32,
+      "owner": "WP10/composição",
+      "branch": "astra-compose",
+      "head": "9048e0e65351a5bd80768458a79fed94a4993db7"
+    },
+    {
+      "pr": 31,
+      "owner": "Interface",
+      "branch": "astra-interface",
+      "head": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241"
+    },
+    {
+      "pr": 36,
+      "owner": "Inteligência/IA",
+      "branch": "astra-intelligence",
+      "head": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9"
+    },
+    {
+      "pr": 39,
+      "owner": "WP12/Reviews",
+      "head": "812f8427423dc143cefc2731edc3485eeb8d1f04"
+    }
+  ],
+  "result": "SOURCE_RECONCILED_WITH_OPEN_COMPOSITION_DELTAS",
+  "installedStatus": "NOT_EXERCISED",
+  "globalAcceptance": false,
+  "statusDefinitions": {
+    "SOURCE_CONSUMPTION_CONFIRMED": "Chamadas, factories e adapters reais confirmados em arquivos do pin; não prova instalação, typecheck da combinação nem execução.",
+    "OWNER_IMPLEMENTED_PENDING_COMPOSITION": "Implementação existe no owner indicado, mas os arquivos do consumidor/Finance examinados ainda não a ligam ou não contêm o blob correspondente.",
+    "COMPOSITION_BINDING_NOT_IMPLEMENTED_AT_PIN": "Ligação concreta não existe nas factories/entry point/rotas examinadas nesse pin; não é uma busca de ausência em todo o repositório.",
+    "OPEN_INSTALLED_CONSUMER_SEAM_FAIL_CLOSED": "Incompatibilidade concreta no encadeamento dos blobs examinados, inferida do código; instalação combinada não executada.",
+    "OPEN_SHARED_CONTRACT_INTERPRETATION": "Tensão normativa aberta; precedente de código não altera contrato nem concede PASS."
+  },
+  "method": {
+    "remote": "Somente GitHub MCP fetch/fetch_file em refs imutáveis. Reutilizados três receipts MCP do parent; demais bytes obtidos por fetch_file.",
+    "local": "Leitura, busca textual, hashing de bytes e escrita deste receipt próprio. Nenhum teste de produto, runtime ou bundle executado.",
+    "scope": "Seams conhecidos em apps/cli/src/sucafina-product e os producers diretamente relevantes de Finance, Interface, IA e WP12.",
+    "hashVerification": {
+      "algorithm": "Git SHA-1 blob header + exact UTF-8 bytes, mais SHA-256",
+      "files": 37,
+      "mismatches": 0
+    },
+    "productTestsRun": [],
+    "githubActionsObservedByThisReview": [],
+    "remoteMutations": [],
+    "foreignEdits": [],
+    "directoryListing": "PR32 apps/cli/src/sucafina-product foi usado somente para localizar arquivos; ausência não inferida só pelos nomes.",
+    "unsuccessfulProbe": "Uma tentativa inicial de product/integration/state-provider.ts retornou 404. Corrigido para o path real product/host-binding/state-provider.ts; não contado como falta de implementação."
+  },
+  "consumers": [
+    {
+      "id": "CON-01",
+      "workPackages": [
+        "WP03",
+        "WP11"
+      ],
+      "contracts": [
+        "C02",
+        "C08",
+        "C10"
+      ],
+      "status": "SOURCE_CONSUMPTION_CONFIRMED",
+      "sourceFiles": [
+        "compose-host-context",
+        "compose-business-services",
+        "scenario-operation-access",
+        "finance-stored-scenarios",
+        "finance-case-port"
+      ],
+      "symbols": [
+        "createSfHostRuntime",
+        "createSfBusinessServices",
+        "createPlannerProduct",
+        "createPlannerCoverageRouter",
+        "createPlannerResultPersistence",
+        "createSfPlannerCalculationServices",
+        "createSfScenarioOperationAccess"
+      ],
+      "calls": [
+        "host-context cria business com authority/persistence e o conjunto privado proposalCoverageWrites.",
+        "business cria cases com verifyScenarioOperations e results C08; liga sources, coverageFor e storedScenarios a createPlannerProduct.",
+        "coverageFor reabre cobertura de proposta, baseline ou decisão; critérios delegam ao decisionDomain ligado posteriormente.",
+        "createPlannerResultPersistence usa results/scenarios/resolveCase; cálculo usa planner.simulateScenario e readers de fonte reais.",
+        "createSfScenarioOperationAccess autoriza seletores guardados nas operações, com projeção Planner, fontes, recordedPlanner, evidência procurement e revalidação."
+      ],
+      "preservation": "Sem substituição por defaults: faltas de cobertura/seleção/critério retornam estado explícito. Não inferir cobertura completa para toda entrada a partir da existência da factory.",
+      "installed": "NOT_EXERCISED",
+      "openDeltas": [
+        "DELTA-01"
+      ]
+    },
+    {
+      "id": "CON-02",
+      "workPackages": [
+        "WP03",
+        "WP05"
+      ],
+      "contracts": [
+        "C02",
+        "C10"
+      ],
+      "status": "SOURCE_CONSUMPTION_CONFIRMED",
+      "sourceFiles": [
+        "bi-services",
+        "extended-business-services",
+        "interface-dashboard-scope",
+        "interface-dashboard-port"
+      ],
+      "symbols": [
+        "createSfBiServices",
+        "createSfBiFactory",
+        "createSfAuthorizedScenarioBiProjection",
+        "dispatchBiPresentation"
+      ],
+      "calls": [
+        "Factory liga dashboard BI01/BI07/BI08, Planner BI01/BI04 e projectedPlanner BI02/BI03, procurement BI05/BI06 e seleções de decisão persistidas.",
+        "readProjection resolve business.plannerProduct.scenarios; results C08 e sensibilidade persistida compõem scenarioProjection.",
+        "Adapter de cenário compara selectionRef, refs da dupla, Request retida, digest de binding, método/URL/headers e revalida após awaits.",
+        "PR31 scope converte datas inválidas de milestone para null; port emite absence/missing com fonte e mantém moeda unspecified onde não foi demonstrada."
+      ],
+      "installed": "NOT_EXERCISED",
+      "openDeltas": [
+        "DELTA-02",
+        "DELTA-03"
+      ]
+    },
+    {
+      "id": "CON-03",
+      "workPackages": [
+        "WP03",
+        "WP05"
+      ],
+      "contracts": [
+        "C02",
+        "C08",
+        "C10"
+      ],
+      "status": "OWNER_IMPLEMENTED_PENDING_COMPOSITION",
+      "sourceFiles": [
+        "finance-scenario-bi",
+        "finance-bi-factory",
+        "bi-services"
+      ],
+      "symbols": [
+        "createPlannerScenarioBiHost",
+        "plannerScenarioBiPresentation",
+        "createSfBiFactory.projectedScenario"
+      ],
+      "calls": [
+        "Finance R4 implementa produtor BI09/BI10 a partir da dupla C08 e dos componentes calculados pelo Planner; não reconstitui cobertura na apresentação.",
+        "Finance R4 aceita projectedScenario com ScenarioBiHost e restringe suas views a BI09/BI10.",
+        "PR32 ainda registra scenario.views=[BI09,BI10,BI11], e decisionPresentation devolve series=[] com limitations de plano indisponível; projectedScenario não é fornecido."
+      ],
+      "preservation": "Planejar a ligação movendo BI09/BI10 para projectedScenario e mantendo BI11 no adapter antigo; a factory rejeita duplicação view:producer. Resolver DELTA-01 antes de alegar execução positiva.",
+      "installed": "NOT_EXERCISED",
+      "openDeltas": [
+        "DELTA-01",
+        "DELTA-02"
+      ]
+    },
+    {
+      "id": "CON-04",
+      "workPackages": [
+        "WP11",
+        "WP13"
+      ],
+      "contracts": [
+        "C08",
+        "C10"
+      ],
+      "status": "SOURCE_CONSUMPTION_CONFIRMED",
+      "sourceFiles": [
+        "compose-portfolio-authority",
+        "decision-domain-services",
+        "portfolio-services",
+        "compose-host-context"
+      ],
+      "symbols": [
+        "createCriterionRuleRegistry",
+        "createPlannerSensitivityUnits",
+        "createDecisionComparisonService",
+        "createDecisionPortfolioSelection",
+        "createCriterionComparisonBindings",
+        "createCriterionResultBindings",
+        "createPortfolioResultBindings",
+        "createPortfolioProofVerifier"
+      ],
+      "calls": [
+        "Composição compartilha portfolioServices no decisionDomain; não cria uma autoridade independente para as mesmas seleções.",
+        "readMetric reabre dois cenários e mantém knownDifference, currency, horizon e evidenceRefs; marca confirmed somente se comparisonStatus é complete, senão conditioned.",
+        "Bindings C08 usam verifyBinding/verifySnapshot e o proof verifier; unidades e sensibilidade persistida são passadas ao produto.",
+        "Regras humanas são verificadas por intent, evidence e snapshot, com resultados canônicos reabertos."
+      ],
+      "preservation": "Constatação de consumo, não demonstração de threshold exato em todas as combinações ou aceite dos cálculos instalados.",
+      "installed": "NOT_EXERCISED"
+    },
+    {
+      "id": "CON-05",
+      "workPackages": [
+        "WP11",
+        "WP13"
+      ],
+      "contracts": [
+        "C08",
+        "C10",
+        "C12"
+      ],
+      "status": "SOURCE_CONSUMPTION_CONFIRMED",
+      "sourceFiles": [
+        "compose-portfolio-preparation",
+        "portfolio-services",
+        "compose-portfolio-http",
+        "extended-business-services"
+      ],
+      "symbols": [
+        "createSfPortfolioPreparation",
+        "createDecisionMutations",
+        "createSfPortfolioHandoff",
+        "createProcurementDecisionHost",
+        "createSfPortfolioHttp"
+      ],
+      "calls": [
+        "confirmChoice exige caseRef/alternativeId exatos do payload humano e authority.human.authorize.",
+        "resolveChoiceValues reabre caso, regras e métricas duas vezes, verifica moeda/período, compara o caso completo e a intenção humana antes de devolver valores.",
+        "prepareDomainCommands delega ao host de domínio procurement quando sua autoridade privada existe; ausência retorna unavailable.",
+        "prepare/promote de portfólio passam por handoff.run e mutations.replayPortfolio; HTTP separa escolha, preparação, promoção, preview, avaliação e sensibilidade."
+      ],
+      "preservation": "Solver, preview ou resultado guardado não foram tratados como escolha/aplicação. A leitura não comprova suporte de preparação para cada superfície ou operação possível.",
+      "installed": "NOT_EXERCISED"
+    },
+    {
+      "id": "CON-06",
+      "workPackages": [
+        "WP13"
+      ],
+      "contracts": [
+        "C08",
+        "C10",
+        "C17"
+      ],
+      "status": "SOURCE_CONSUMPTION_CONFIRMED",
+      "sourceFiles": [
+        "portfolio-services",
+        "compose-portfolio-authority",
+        "finance-portfolio-product"
+      ],
+      "symbols": [
+        "createPortfolioProduct",
+        "createPortfolioAnalysis",
+        "createPortfolioSelectionResolver",
+        "createDecisionCandidateResolver"
+      ],
+      "calls": [
+        "Produto é construído com cases/evidence, Planner real, results, critérios, seleção, bindings, mutations, caseFor e idempotencyKey.",
+        "Product contribution expõe cálculo e persistência de portfólio/sensibilidade aos consumidores e descriptors existentes.",
+        "Reconciliation é opcional na factory Finance; não foi fornecida nas duas instâncias examinadas da composição."
+      ],
+      "installed": "NOT_EXERCISED",
+      "openDeltas": [
+        "DELTA-07"
+      ]
+    },
+    {
+      "id": "CON-07",
+      "workPackages": [
+        "WP11",
+        "WP13"
+      ],
+      "contracts": [
+        "C08",
+        "C17"
+      ],
+      "status": "SOURCE_CONSUMPTION_CONFIRMED",
+      "sourceFiles": [
+        "compose-review-services",
+        "review-portfolio-history",
+        "wp12-decision-access",
+        "finance-history-provenance",
+        "finance-proof"
+      ],
+      "symbols": [
+        "createSfReviewPortfolioHistory",
+        "createPortfolioHistory",
+        "createPortfolioHistoricalProvenance",
+        "createReviewDecisionAccess"
+      ],
+      "calls": [
+        "Review da composição já fornece portfolioHistory/currentCase ao adapter WP12; scopeFor deriva o caso de resultado C08 e reabre o registro.",
+        "WP12 PR39 reabre cenário histórico, comparação e sensibilidade; se o portfólio corrente não puder ser lido, exige portfolioHistory/currentCase, estado historical, digest do resultado e mesma encarnação.",
+        "Finance provenance autentica binding, seleção, candidatos e evidência histórica dentro de readPortfolioSnapshot; caso com operações passa pelo verifier da composição.",
+        "readHistoricalCandidate não é fornecido pelo adapter PR32, embora Finance proof.ts já implemente o leitor."
+      ],
+      "installed": "NOT_EXERCISED",
+      "openDeltas": [
+        "DELTA-01",
+        "DELTA-06"
+      ]
+    },
+    {
+      "id": "CON-08",
+      "workPackages": [
+        "WP13"
+      ],
+      "contracts": [
+        "C08",
+        "C17"
+      ],
+      "status": "OWNER_IMPLEMENTED_PENDING_COMPOSITION",
+      "sourceFiles": [
+        "finance-campaign",
+        "finance-campaign-proposals",
+        "compose-state-provider",
+        "finance-state-provider",
+        "ai-contribution-reader",
+        "finance-ai-reader",
+        "compose-host-context",
+        "portfolio-services",
+        "compose-portfolio-http"
+      ],
+      "symbols": [
+        "createPortfolioCampaign",
+        "createCampaignProposalReader",
+        "createCampaignHistoricalProposalReader",
+        "createSfHistoricalContributionReader",
+        "createSfProductStateProvider"
+      ],
+      "calls": [
+        "Finance já implementa save/read/list e leitura histórica da campanha, seleção humana, commitments de fontes reais, candidates e prova de propostas.",
+        "save pede sourceFence=all e checkNamespaces para cases/contributions, protege callback com proposalCoverageWrites e verifica fence no commit.",
+        "PR32 provider já implementa namespace bi-artifacts, checkNamespaces, sourceFence=all e prefixo sf:portfolio:campaign: no guard privado.",
+        "PR36 já implementa contribuição histórica autorizada e repete verifyHistorical; Finance mantém a assinatura estrutural sem implementar esse produtor IA.",
+        "Nos entry points, factories e HTTP examinados do PR32 não há instância de createPortfolioCampaign nem ligação dos readers históricos de campanha."
+      ],
+      "installed": "NOT_EXERCISED",
+      "openDeltas": [
+        "DELTA-04",
+        "DELTA-05"
+      ]
+    },
+    {
+      "id": "CON-09",
+      "workPackages": [
+        "WP03",
+        "WP11",
+        "WP13"
+      ],
+      "contracts": [
+        "C02",
+        "C08",
+        "C10",
+        "C17"
+      ],
+      "status": "SOURCE_CONSUMPTION_CONFIRMED",
+      "sourceFiles": [
+        "compose-host-context",
+        "compose-business-services",
+        "memory-services",
+        "ai-run-store",
+        "finance-ai-run-store",
+        "compose-installation"
+      ],
+      "symbols": [
+        "createSfAtlasBusiness",
+        "initializeAtlas",
+        "probeSfAtlasScanner",
+        "createSfMemoryServices",
+        "sfRunSourceFence",
+        "loadSfInstallation"
+      ],
+      "calls": [
+        "business prepara Atlas com as mesmas fontes, planner.port/project/readEvidence, cases, calculation/calculationHistorical e lockedSourceFences.",
+        "host-context chama initializeAtlas somente após obter o scanner no contexto Effect e usa metadados de contrato/bundle/skill.",
+        "memory-services consome cenários, Planner materiality, observed projection, signal registry e outcomes; mantém unavailable explícito para native-watch sem admissão.",
+        "PR36 sfRunSourceFence inclui sfBlobGenerations; Finance R4 ainda usa blob anterior sem essa dimensão."
+      ],
+      "preservation": "C17 de instalação, scanner operacional, reabertura após reinício e replay com runtime real não foram exercitados. Código de inicialização não é prova de processo instalado ou persistência real.",
+      "installed": "NOT_EXERCISED",
+      "openDeltas": [
+        "DELTA-01",
+        "DELTA-05"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "id": "DELTA-01",
+      "status": "OPEN_INSTALLED_CONSUMER_SEAM_FAIL_CLOSED",
+      "owner": "WP10/composição",
+      "title": "readSourceFences abre transactionAll dentro da raiz readonly da Finance",
+      "sourceFiles": [
+        "finance-read-snapshot",
+        "finance-history-provenance",
+        "finance-case-port",
+        "compose-business-services",
+        "scenario-operation-access",
+        "compose-local-store",
+        "finance-scenario-bi",
+        "finance-stored-scenarios"
+      ],
+      "chain": [
+        "Review PR32 createSfReviewPortfolioHistory passa host completo ao createPortfolioHistoricalProvenance Finance.",
+        "createPortfolioHistoricalProvenance abre readPortfolioSnapshot; dentro dele inspect chama cases.read para cada candidato.",
+        "Finance createDecisionCasePort.read chama verifyScenarioOperations para o caso.",
+        "business-services PR32 delega ao createSfScenarioOperationAccess; quando alternatives/choices contêm scenario.operations, este chama readSourceFences antes e depois da prova.",
+        "readSourceFences PR32 chama persistence.transactionAll mesmo se currentSnapshots já existe; lockedSourceFences é outra closure e não é usada nesse ramo.",
+        "LocalStore PR32 transactionAll chama operation(true); scope herdado marca root.poisoned e lança Nested local writes are forbidden antes de work.",
+        "O helper Finance devolve a recusa (history false; BI denied/unavailable), e a raiz também rejeita poison mesmo se um callback engolir a exceção."
+      ],
+      "conditions": "A chamada exige caso/candidato com operação e passa pelas verificações anteriores. Uma vez alcançado o nested transactionAll, a recusa decorre diretamente do código. Não foi executada a combinação instalada.",
+      "affected": "Histórico Review após incorporar Finance nova e, ao ligar projectedScenario, BI09/BI10 via storedScenarios/cases.read; leitores WP13 equivalentes precisam da mesma reconciliação.",
+      "requiredDelta": "Owner deve reconciliar o callback privado de fences com o snapshot destacado da raiz readonly própria, conservando as três sfRunSourceFence, identidade/binding/Request/lease e poison/acceptance checks. transactionAll só pode ser usado fora desse scope; nenhum grant provisório pode sobreviver à rejeição da raiz. Requer revisão WP10/S0 e evidência hospedada cirúrgica.",
+      "notClaimed": "Não atribuir a esta seam os timeouts S2 da fixture, que usa currentSnapshots quando disponível. Não é licença para remover replay, assertions ou checks."
+    },
+    {
+      "id": "DELTA-02",
+      "status": "COMPOSITION_BINDING_NOT_IMPLEMENTED_AT_PIN",
+      "owner": "WP10/composição",
+      "title": "BI09/BI10 canônicos existem na Finance, mas o consumidor continua no plano vazio",
+      "sourceFiles": [
+        "finance-scenario-bi",
+        "finance-bi-factory",
+        "bi-services"
+      ],
+      "alreadyImplemented": "createPlannerScenarioBiHost e projectedScenario na Finance R4.",
+      "pending": "Instanciar o produtor com host/results/scenarios e o ScenarioBiHost da seleção existente; mover BI09/BI10 de scenario para projectedScenario, deixando BI11 e os fluxos de portfólio separados. Preservar bind de caso, C16, seleção de produtor, fontes e revalidação; resolver DELTA-01.",
+      "observableAtPin": "decisionPresentation devolve series=[] e mensagens de waterfall/timeline não disponíveis para BI09/BI10. Não há projectedScenario na chamada da factory PR32.",
+      "installed": "NOT_EXERCISED"
+    },
+    {
+      "id": "DELTA-03",
+      "status": "OWNER_IMPLEMENTED_PENDING_COMPOSITION",
+      "owner": "Interface/WP10",
+      "title": "Datas ausentes de BI08 já corrigidas no owner Interface, ainda antigas na Finance",
+      "sourceFiles": [
+        "interface-dashboard-scope",
+        "interface-dashboard-port",
+        "finance-dashboard-scope",
+        "finance-dashboard-port"
+      ],
+      "alreadyImplemented": "scope f53d0509... normaliza data inválida para null; port b5acfaf9... registra ausência/missing, sem zero ou data inventada.",
+      "pending": "Reconciliar os blobs owner nos paths alheios pela composição; Finance não os copiou.",
+      "cautions": "Não confundir esta evidência de source com verificação de todas as séries Dashboard, moeda/FX ou instalação de BI08."
+    },
+    {
+      "id": "DELTA-04",
+      "status": "OWNER_IMPLEMENTED_PENDING_COMPOSITION",
+      "owner": "WP10/provider compartilhado",
+      "title": "Provider de campanhas e CAS multins já existem na origem compartilhada",
+      "sourceFiles": [
+        "compose-state-provider",
+        "finance-state-provider",
+        "finance-campaign"
+      ],
+      "alreadyImplemented": "PR32 state-provider 2fd55c7304add0829d7434917c80664fe86356b9 implementa campanha no guard proposalCoverageWrites, checkNamespaces, sourceFence=all e bi-artifacts.",
+      "financeAtPin": "R4 conserva provider b7988a2963a2797a96ea19ab2b3a481564548213: guard somente proposal-coverage/criterion-rule; sem checkNamespaces/sourceFence=all/bi-artifacts.",
+      "pending": "Reconciliar provider/contratos/artifact-store compartilhados pelo owner; não reutilizar blob antigo para declarar replay ou guard de campanhas instalado.",
+      "distinction": "A implementação do provider não está faltando na origem. A ligação da factory de campanha permanece uma tarefa separada DELTA-05."
+    },
+    {
+      "id": "DELTA-05",
+      "status": "COMPOSITION_BINDING_NOT_IMPLEMENTED_AT_PIN",
+      "owner": "WP10/composição + IA",
+      "title": "Campanhas e proposta histórica precisam de ligação aos produtores existentes",
+      "sourceFiles": [
+        "finance-campaign",
+        "finance-campaign-proposals",
+        "ai-contribution-reader",
+        "finance-ai-reader",
+        "ai-run-store",
+        "finance-ai-run-store",
+        "compose-host-context",
+        "portfolio-services",
+        "extended-business-services",
+        "compose-portfolio-http",
+        "compose-analysis-services"
+      ],
+      "alreadyImplemented": [
+        "Finance createPortfolioCampaign, reader atual e reader histórico de proposta.",
+        "IA PR36 createSfHistoricalContributionReader em db9faeec0e1d35c0724a25a0d9cf53fee93961ee.",
+        "IA PR36 sfRunSourceFence inclui sfBlobGenerations em 978e4d54d2d54d1308152b7a4e9625f5c54b36ae."
+      ],
+      "pending": [
+        "Reconciliar os deltas IA através do owner, sem transformar a seam estrutural TypeScript da Finance em alegação de runtime instalado.",
+        "Criar a ligação de campanha no root examinado com cases, candidate resolver/validator, commitments contracts/records, fences, autorização e WeakSet privado.",
+        "Ligar contribuição histórica com callback verifyHistorical real de fontes e replay, e currentCase; não fornecer callback permissivo.",
+        "Expor as ações/seletor de campanha pelo owner apropriado com autorização humana e histórico, sem confundir sf-compor-portfolio existente com gestão de campanha."
+      ],
+      "scopeOfAbsence": "Factories/entry point/HTTP examinados, listados em sourceFiles. Não é declaração de ausência em qualquer outro instalador externo ou todo o repositório.",
+      "installed": "NOT_EXERCISED"
+    },
+    {
+      "id": "DELTA-06",
+      "status": "OWNER_IMPLEMENTED_PENDING_COMPOSITION",
+      "owner": "WP10/composição",
+      "title": "Review não fornece leitor histórico de candidato quando a alternativa já mudou",
+      "sourceFiles": [
+        "review-portfolio-history",
+        "finance-history-provenance",
+        "finance-proof",
+        "wp12-decision-access"
+      ],
+      "alreadyImplemented": "Finance createPortfolioCandidateHistoryReader e fallback readHistoricalCandidate em provenance; WP12 fallback portfolioHistory/currentCase também existe.",
+      "pending": "Compor o leitor histórico autenticado no createPortfolioHistoricalProvenance já usado por Review, com state/cases/results/evidence/host reais; manter digest/prova de candidatura original e encarnação.",
+      "impact": "No pin PR32, quando a alternativa exata original não está mais em case.alternatives, o adapter não fornece o fallback e provenance recusa. Histórico não deve ser reconstruído da alternativa atual.",
+      "dependency": "DELTA-01 precisa ser resolvido sem remover a cerca do histórico."
+    },
+    {
+      "id": "DELTA-07",
+      "status": "COMPOSITION_BINDING_NOT_IMPLEMENTED_AT_PIN",
+      "owner": "WP10/composição + owner de materialidade",
+      "title": "Reconciliação de aplicação WP13 existe, mas não recebe host na composição examinada",
+      "sourceFiles": [
+        "finance-portfolio-product",
+        "portfolio-services",
+        "decision-domain-services",
+        "compose-portfolio-http"
+      ],
+      "alreadyImplemented": "createPortfolioProduct aceita reconciliation e expõe reconciliation/http.reconcile na Finance.",
+      "pending": "Fornecer PortfolioReconciliationHost de resultados/bindings históricos, recibos e projeção atual/materialidade e expor consumo autorizado. As duas chamadas createPortfolioProduct examinadas omitem reconciliation; HTTP examinado não possui rota de reconciliação.",
+      "impact": "Com a factory atual e sem esse input, a operação responde portfolio-reconciliation-producer-unavailable. Solver, escolha e recibo isolado não demonstram aplicação reconciliada."
+    }
+  ],
+  "normativeOpen": {
+    "id": "FIN-R2-REV-01",
+    "status": "OPEN_SHARED_CONTRACT_INTERPRETATION",
+    "owner": "WP10/S0",
+    "criterion": "sf2h-integral-20261112.INV.11",
+    "canonicalEvidence": {
+      "path": "intake/COMMON.md",
+      "heading": "Invariantes",
+      "literal": "Leituras entre superfícies não ocorrem dentro de uma transaction já aberta."
+    },
+    "interpretation": "C08/C17 e os anexos canônicos de execução foram registrados na revisão R2. Não há nova reconciliação normativa autorizada nesta revisão.",
+    "implementationBoundary": "readPortfolioSnapshot cria uma raiz nova. Nenhuma transaction previamente aberta pelo chamador é aceita: currentSnapshots preexistente sem o scope próprio compatível é recusado antes de work. Apenas descendentes do mesmo helper aberto, persistence, Request e binding podem participar.",
+    "distinction": "LocalStore suportar leituras nested e W33/W20 oferecerem precedentes não concede PASS ao axioma. DELTA-01 é incompatibilidade concreta adicional, separada desta interpretação.",
+    "globalAcceptance": false
+  },
+  "retainedSemantics": [
+    "Ausência, pending, zero e total completo continuam distintos; consumo de knownDifference não demonstra custo completo.",
+    "Moeda/FX e períodos devem vir dos producers e fontes; unspecified/null não autorizam normalização silenciosa.",
+    "Autorização, Request privada, encarnação e evidência atual/histórica permanecem condições dos consumers.",
+    "Escolha humana, preparação e execução/aplicação têm etapas diferentes; este mapa não promove solver, timeout ou histórico a sucesso.",
+    "Nenhum contrato, host compartilhado, artifact-store, engine ou política financeira foi editado."
+  ],
+  "limitations": [
+    "Revisão de source-level, não composição instalada nem execução funcional; sem aceite global.",
+    "Não foi realizado typecheck da combinação dos quatro heads de origem, nem testes locais ou dispatch de Actions por este revisor.",
+    "IDs de checks e runs pertencem ao handoff do parent e não foram reaproveitados como prova de execução destes consumers.",
+    "A API do instalador aceita factory externa explícita; somente a cadeia de composição examinada foi reconciliada.",
+    "Novos heads de origem ou produto exigem novo diff/reconciliação; este receipt não autoriza substituição automática.",
+    "Não houve busca exaustiva de todos os WPs/303 critérios; os anexos normativos não foram reinterpretados."
+  ],
+  "sourceFiles": [
+    {
+      "id": "ai-contribution-reader",
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "ref": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blob": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee",
+      "sha256": "f0e7ccad88ad4d2ab0fd66f1d4963f090782d68abe24bb4720826f8b6c6cebca",
+      "bytes": 12059,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/48486a2186c0cc07a3a5558e34e2aa94c89ad5e9/modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "ai-run-store",
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "ref": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "sha256": "296e85bbeb97370706294baedfe0b04a826adc003a6058c110168d4810de31f2",
+      "bytes": 27602,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/48486a2186c0cc07a3a5558e34e2aa94c89ad5e9/modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "bi-services",
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "b6a84dd807207e9b6791dc10f1419ec756ea1167",
+      "sha256": "a0fce1e8e8f030874246616ad7777b2f4ac7fca4706d265502883fd099b03a95",
+      "bytes": 18183,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/bi-services.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "compose-analysis-services",
+      "path": "apps/cli/src/sucafina-product/analysis-services.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "900f199800b683503267b011af2c255be841a3a1",
+      "sha256": "cf5596f0600053b4d7f88d05102365d62b0f9d185f39581fdb7d7863a450080e",
+      "bytes": 20244,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/analysis-services.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "compose-business-services",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "b3595989d0c08159c96484d96bd40a149a9721e6",
+      "sha256": "87f1c486e6e37f7a928cc5473c1a727611b4267d4261fef1e83b4f3260addf9f",
+      "bytes": 61687,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/business-services.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "compose-host-context",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "sha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+      "bytes": 74908,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/host-context.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "compose-installation",
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109",
+      "sha256": "b480f09a5a0269988ac15e5c9cd38a0793caa2d94f00833564bc7b993bc4edd1",
+      "bytes": 2463,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/installation.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "compose-local-store",
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "sha256": "e82f739cb1845c0c7fdd90d50a5de0a62d6c3f79d4c981289b63880e7a8e5460",
+      "bytes": 25981,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "compose-portfolio-authority",
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "86555f4165b36dbf6bc0468a5ce1885e5a87a6d1",
+      "sha256": "25e025636945b39765e46fdafdee1817db333b8a863a0a90c4260533415dd33c",
+      "bytes": 10468,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "compose-portfolio-http",
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "c434de513cb7ceae4acad1fc595e776785ec85af",
+      "sha256": "37b52ca56bf3ad3fce18e642ee4fe8ff30e8955a116f71bbf22b12e971abaf18",
+      "bytes": 11760,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/portfolio-http.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "compose-portfolio-preparation",
+      "path": "apps/cli/src/sucafina-product/portfolio-preparation.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "a661aaa134e046b093b300c260870e38c967aa10",
+      "sha256": "7b84489ea7d49d5cd37911e5ef64147662453d61cf9042f2b11affc52cf18796",
+      "bytes": 8808,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/portfolio-preparation.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "compose-review-services",
+      "path": "apps/cli/src/sucafina-product/review-services.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "e795aa2e8667a0da134a00ce6012fe1f7f1dc712",
+      "sha256": "1878bc879f73501d8ac23d446d98f1471f617d9dfe6ae7f3382a0cd9ae0662da",
+      "bytes": 7837,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/review-services.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "compose-state-provider",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "sha256": "de25a3d2c5fc8725debb538ec0efb45b3a3c986ff478156cce734038f87d7268",
+      "bytes": 19836,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "decision-domain-services",
+      "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "6facc71b1351aea04ed3e7d51d1d0ed5d81c24d9",
+      "sha256": "9b7e36cc1ba84d075bda947151f7c3ca63c34ef6616596ec1c9107760e3c8b70",
+      "bytes": 17331,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "extended-business-services",
+      "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "a57e9d39f81e8a064f903765e70533bdffea4ba2",
+      "sha256": "69762e50794e88f70407095367f1c63cab1e6638896f9ec10e866740605a9d9d",
+      "bytes": 9732,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/extended-business-services.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "finance-ai-reader",
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "ref": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "blob": "b37ba4c19209fa58b8fdf62ab23787058955c5eb",
+      "sha256": "a284b6602f2d824d955e4497d63771cf1831392c1c997a4a06b75fe2339ebc9d",
+      "bytes": 4113,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/229d66fa59ceebbc4b3683565670698f2cf3aa65/modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "finance-ai-run-store",
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "ref": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "blob": "9fb3be23997d87a5544dec543bf6e02fb7835b19",
+      "sha256": "be2569f9379b5497b81b24ed7039acb1ca4fd6eb789496a6707ae752f5d89836",
+      "bytes": 13662,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/229d66fa59ceebbc4b3683565670698f2cf3aa65/modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "finance-bi-factory",
+      "path": "modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+      "ref": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "blob": "9cc4cc81538a7247cd87893f958acf5665194eb5",
+      "sha256": "8ad91d7b1adc0d7b44027ceadf729b6c3e8ceea9e3f2bfbacaf21dfbd5325673",
+      "bytes": 6961,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/229d66fa59ceebbc4b3683565670698f2cf3aa65/modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "finance-campaign-proposals",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign-proposals.ts",
+      "ref": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "blob": "3ad0b190ad5d50c33e99d3c622831b6f0cc6cdac",
+      "sha256": "ed7897aef1628cf2d91346b1ed5c84dfbc20bf2daaca8a8430dce90c69fe4e3c",
+      "bytes": 2856,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/229d66fa59ceebbc4b3683565670698f2cf3aa65/modules/sucafina/Sucafinav1/product/portfolio/campaign-proposals.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "finance-campaign",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+      "ref": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "blob": "475e7532bbef2ede5fc91d1c7092e4b000e1fbde",
+      "sha256": "18f8c4769d8df05921bda4c29ef72828ed9fb4148009219aaac5c5011d4e8f26",
+      "bytes": 35021,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/229d66fa59ceebbc4b3683565670698f2cf3aa65/modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "finance-case-port",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "ref": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6",
+      "sha256": "43ce8b8f833a5f401fc9d26d1d85c9a806dd1736d3f3b059dcc9a05681bf5ecb",
+      "bytes": 18035,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/229d66fa59ceebbc4b3683565670698f2cf3aa65/modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "finance-dashboard-port",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+      "ref": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "blob": "1df365d4d41292d086bd27763248cab8c248d2ff",
+      "sha256": "d347198fe0ae31984e340b59d95637cefb832e7027dc198256a0e70b777a7fba",
+      "bytes": 32229,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/229d66fa59ceebbc4b3683565670698f2cf3aa65/modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "finance-dashboard-scope",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/scope.ts",
+      "ref": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "blob": "0e5df729ea0e793ec0784d4c2278c72a49fd77ed",
+      "sha256": "ed6c12264c8c57db135a1b14a147590c5a85b701726eb11ef72b1ca171682850",
+      "bytes": 9553,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/229d66fa59ceebbc4b3683565670698f2cf3aa65/modules/sucafina/Sucafinav1/product/dashboard/scope.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "finance-history-provenance",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+      "ref": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "blob": "de5846f024f85ad8203fa12adf27212c23850d4f",
+      "sha256": "05fff1d17d587907226953ebf1d6d7a6a86d00d9a81b8af3b9ac4e1689bfc8cd",
+      "bytes": 8076,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/229d66fa59ceebbc4b3683565670698f2cf3aa65/modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "finance-portfolio-product",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "ref": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "blob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+      "sha256": "b4d5f22cc08da980addedbe25c72428f112162993a977a0e5674892ea67dedd8",
+      "bytes": 11948,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/229d66fa59ceebbc4b3683565670698f2cf3aa65/modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "finance-proof",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "ref": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "blob": "19ac96241c24fbcd2038c70b961fa5a8d25d4418",
+      "sha256": "8d25df2912a1a17e3a52db30cbb9d63a9f83a0e28c87dd4f9298fc1040defd28",
+      "bytes": 14138,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/229d66fa59ceebbc4b3683565670698f2cf3aa65/modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "finance-read-snapshot",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "ref": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+      "sha256": "9982156692099d6f9663794186c8398632a5c33abd3615809cfe8ec6e8e409a1",
+      "bytes": 4193,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/229d66fa59ceebbc4b3683565670698f2cf3aa65/modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "finance-scenario-bi",
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+      "ref": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "blob": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b",
+      "sha256": "fb69c81e2ca30af08d67c6a185cd33da64d272759a8e2f2bcb5d64a893928918",
+      "bytes": 16784,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/229d66fa59ceebbc4b3683565670698f2cf3aa65/modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "finance-state-provider",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "ref": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "blob": "b7988a2963a2797a96ea19ab2b3a481564548213",
+      "sha256": "f988cc1c91c340628c80523d587bfeec27e92971d6ff467233f9bbb4fff0dfbe",
+      "bytes": 12807,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/229d66fa59ceebbc4b3683565670698f2cf3aa65/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "finance-stored-scenarios",
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "ref": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "blob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "sha256": "771b060898fce1b1d851461bee7df743014ab55f9c0994a0331f2664a1c8bfd1",
+      "bytes": 6407,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/229d66fa59ceebbc4b3683565670698f2cf3aa65/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "interface-dashboard-port",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+      "ref": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "blob": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811",
+      "sha256": "e3774ecdbc161eb827bf60a9c13bf7247ef0fcb2c86fada534a5456df6fb18fd",
+      "bytes": 38355,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9d65ea8fcd8ce6ea1249dc669e0fcc248b540241/modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "interface-dashboard-scope",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/scope.ts",
+      "ref": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "blob": "f53d0509b6f727947ec9b00888bce9dae1420094",
+      "sha256": "ef51b92ed54be17927014868a7beeb1cdaeb892b84aa3f0d34e8c2636c52541c",
+      "bytes": 9988,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9d65ea8fcd8ce6ea1249dc669e0fcc248b540241/modules/sucafina/Sucafinav1/product/dashboard/scope.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "memory-services",
+      "path": "apps/cli/src/sucafina-product/memory-services.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "85c3021dec21ab942a8fab04524d48295fd918f7",
+      "sha256": "f08c39347bfb9998af6e6a1fea8acfe02e4ab02eed6d5b19d83b5c3057d0d171",
+      "bytes": 21172,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/memory-services.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "portfolio-services",
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "83c525e733b2cb21637734e3b1e07950e72f4f97",
+      "sha256": "034f02c64c3da409c8117530e0eaf80071f5c9ba69228c53c09561d0a3b0d149",
+      "bytes": 9125,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/portfolio-services.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "review-portfolio-history",
+      "path": "apps/cli/src/sucafina-product/review-portfolio-history.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "4d11a5c8c81d99f117709fc65327373055ee2cc1",
+      "sha256": "f7dfeb4ac76bcd016c183359169551ee6ede29fe295e6cf80c379c6b95566279",
+      "bytes": 7222,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/review-portfolio-history.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "scenario-operation-access",
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "blob": "aa1be4cfb8f501b3fccddb269efce5567bcdd447",
+      "sha256": "9d59609b2a66ac9f0a6dab22e479398cffd6cf656687a1f215a949ec0d8f0290",
+      "bytes": 10118,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9048e0e65351a5bd80768458a79fed94a4993db7/apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    },
+    {
+      "id": "wp12-decision-access",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/decision-access.ts",
+      "ref": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+      "blob": "1b75f4b1786bb351c15821d76a31030fba677e7e",
+      "sha256": "d7e9cc9215470d724d0d0452f2239d24a7b2fe0fa1ef2688c8adc9481421bdeb",
+      "bytes": 5482,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/812f8427423dc143cefc2731edc3485eeb8d1f04/modules/sucafina/Sucafinav1/product/reviews/decision-access.ts",
+      "remote": "GitHub MCP fetch_file at immutable ref; probes1-3 reused from parent MCP receipt",
+      "review": "focused source-level reads; not full-file audit unless stated"
+    }
+  ]
+}

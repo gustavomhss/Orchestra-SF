@@ -1,0 +1,938 @@
+{
+  "schema": "sf-finance-wp13-terminal-run-supplement-v1",
+  "purpose": "Append the terminal S5 observations and narrow R5 test correction without rewriting the earlier 68-criterion map, triage, S2 diagnosis or historical source inputs.",
+  "product": {
+    "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+    "tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+    "label": "R4",
+    "parents": [
+      "9de58454924b072b6e571b5b4ebcd70f95e596df"
+    ]
+  },
+  "run": {
+    "id": 43619812123,
+    "job_id": 132522704978,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619812123",
+    "status": "completed",
+    "conclusion": "failure",
+    "snapshot": "07f905d3a309b9752525ef34aeafbc5d870bd54a",
+    "snapshot_tree": "723fadf3a3b616b269b9fa8052d760cd643e80c2",
+    "request_sha256": "8006a8b7dd76303ef629715806c92b750621e015e3e6cad29feb1bf9ac10e9e8",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "./Sucafinav1/test/product/wp13/reconciliation.test.ts",
+        "./Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+        "./Sucafinav1/test/product/wp13/source-scenario.test.ts",
+        "./Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+        "./Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+        "./Sucafinav1/test/product/wp13/campaign-request.test.ts",
+        "./Sucafinav1/test/product/wp13/campaign.test.ts",
+        "./Sucafinav1/test/product/wp13/persistent-store.test.ts",
+        "./Sucafinav1/test/product/wp13/stored-store.test.ts",
+        "./Sucafinav1/test/product/wp13/candidates-store.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "log": {
+      "local_path": "requests/S5-job.log",
+      "blob": "73fd2b39e80b894b98c29985a2745b9ed4c3c505",
+      "sha256": "05abcead114c190cb6380d73478af1ead5522135f3faffdc5d6e2615698056d1",
+      "bytes": 94593
+    }
+  },
+  "summary_observed": {
+    "pass": 56,
+    "fail": 3,
+    "assertions": 582,
+    "tests": 59,
+    "files": 11,
+    "duration_seconds": 281.99
+  },
+  "files_observed": {
+    "history-provenance.test.ts": {
+      "tests": [
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio historical provenance > accepts an original binding and selection when current case and evidence remain authorized",
+          "duration_ms": 4.0
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio historical provenance > accepts authenticated source history at the same case version and still rejects revocation",
+          "duration_ms": 1.26
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio historical provenance > rejects a candidate whose case incarnation was replaced",
+          "duration_ms": 0.25
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio historical provenance > rejects revoked historical sources",
+          "duration_ms": 0.4
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio historical provenance > rejects a historical candidate missing from the authorized case",
+          "duration_ms": 0.31
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio historical provenance > rejects a same-version alternative whose original payload changed",
+          "duration_ms": 0.27
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio historical provenance > rejects ambiguous duplicate alternatives and a case older than the candidate",
+          "duration_ms": 0.38
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio historical provenance > rejects a binding supplied for a different current owner case",
+          "duration_ms": 0.09
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio historical provenance > keeps the first candidate observation when the provider reuses mutable objects",
+          "duration_ms": 0.69
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio historical provenance > rejects caller mutation during historical provenance verification",
+          "duration_ms": 0.67
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio historical provenance > rejects an owner observation changed during the first binding read",
+          "duration_ms": 0.73
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio historical provenance > rejects a binding whose digest does not cover its contents",
+          "duration_ms": 0.21
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio historical provenance > rejects a selection that differs from the binding proof",
+          "duration_ms": 0.19
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio historical provenance > rejects a binding that changes between provenance passes",
+          "duration_ms": 0.64
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "historical portfolio reads the original C08 candidate after WP11 replaces alternative v1 with v2",
+          "duration_ms": 6169.9
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "historical candidate rejects a naked digest when the original C08 case snapshot and choice are absent",
+          "duration_ms": 5857.94
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "historical candidate rejects changed C08 request ancestry and revoked evidence",
+          "duration_ms": 7699.66
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "historical chosen candidate selects its witnessed C08 among equivalent writes and requires the exact WP11 ledger",
+          "duration_ms": 6773.58
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "historical candidate refuses a real case CAS in its last callback while the authority remains live",
+          "duration_ms": 5447.2
+        }
+      ],
+      "trace": [],
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "blob_at_observation": "d1ae1a8bb747c1bb8779da133de4df22c81fa3b4",
+      "pass": 19,
+      "fail": 0,
+      "complete_file": true
+    },
+    "reconciliation.test.ts": {
+      "tests": [
+        {
+          "outcome": "pass",
+          "name_literal": "reconciliation preserves the chosen composition and WP11 partial/retry receipts without writing",
+          "duration_ms": 19.96
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "reconciliation retains independent evidence and command revisions while binding effects and receipts",
+          "duration_ms": 21.18
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "reconciliation sends a source-bound price observation to the WP14 classifier while retaining original null and currency",
+          "duration_ms": 8.36
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "a global criterion change cannot attribute a different component's price to an unchanged component",
+          "duration_ms": 6.25
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "reconciliation refuses a substituted historical selection even when its numbers match the choice",
+          "duration_ms": 1.27
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "reconciliation refuses receipt substitution, revoked sources and a different current principal",
+          "duration_ms": 2.24
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "reconciliation rejects a changed ledger, borrowed callback mutation and a changed read during egress",
+          "duration_ms": 6.69
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "reconciliation does not reinterpret another source or missing data as a material price signal",
+          "duration_ms": 8.25
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "reconciliation refuses authority mutation after the final successful revalidation",
+          "duration_ms": 21.68
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "HTTP reconciliation preserves the admitted selection when authorization mutates the caller request",
+          "duration_ms": 36.4
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "HTTP reconciliation fences authority from ingress before the core captures it",
+          "duration_ms": 13.84
+        }
+      ],
+      "trace": [],
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "blob_at_observation": "d92851b34785490feccbfa17099281e7bf9989a3",
+      "pass": 11,
+      "fail": 0,
+      "complete_file": true
+    },
+    "reconciliation-price-integration.test.ts": {
+      "tests": [
+        {
+          "outcome": "pass",
+          "name_literal": "a real 45000 to 70000 quote on the same source changes its portfolio condition while preserving the human choice and C08 composition",
+          "duration_ms": 65876.99
+        }
+      ],
+      "trace": [
+        {
+          "label": "renewal-choice-history",
+          "phase": "bootstrap-start",
+          "elapsedMs": 0,
+          "budgetMs": 180000,
+          "counts": {}
+        },
+        {
+          "label": "renewal-choice-history",
+          "phase": "bootstrap-complete",
+          "elapsedMs": 38,
+          "budgetMs": 180000,
+          "counts": {
+            "c08.read.cases": {
+              "calls": 1,
+              "elapsedMs": 2,
+              "maximumMs": 2
+            }
+          },
+          "stateBytes": 38210,
+          "transactionsBytes": 415,
+          "casesBytes": 37395,
+          "resultBytes": 2,
+          "transactions": 1,
+          "cases": 1,
+          "results": 0
+        },
+        {
+          "label": "renewal-choice-history",
+          "phase": "prepare:transition-bundled:start",
+          "elapsedMs": 40,
+          "budgetMs": 180000,
+          "counts": {
+            "c08.read.cases": {
+              "calls": 2,
+              "elapsedMs": 3,
+              "maximumMs": 2
+            }
+          },
+          "stateBytes": 38210,
+          "transactionsBytes": 415,
+          "casesBytes": 37395,
+          "resultBytes": 2,
+          "transactions": 1,
+          "cases": 1,
+          "results": 0
+        },
+        {
+          "label": "renewal-choice-history",
+          "phase": "prepare:transition-bundled:complete",
+          "elapsedMs": 10431,
+          "budgetMs": 180000,
+          "counts": {
+            "c08.read.cases": {
+              "calls": 546,
+              "elapsedMs": 5582,
+              "maximumMs": 28
+            },
+            "host.revalidate": {
+              "calls": 2962,
+              "elapsedMs": 80,
+              "maximumMs": 4
+            },
+            "operation-source": {
+              "calls": 846,
+              "elapsedMs": 36,
+              "maximumMs": 2
+            },
+            "operation-coverage": {
+              "calls": 462,
+              "elapsedMs": 12,
+              "maximumMs": 3
+            },
+            "c08.read.preferences": {
+              "calls": 96,
+              "elapsedMs": 815,
+              "maximumMs": 16
+            },
+            "c08.transaction.preferences": {
+              "calls": 3,
+              "elapsedMs": 53,
+              "maximumMs": 31
+            },
+            "classified-source": {
+              "calls": 39,
+              "elapsedMs": 1,
+              "maximumMs": 1
+            },
+            "classified-coverage": {
+              "calls": 41,
+              "elapsedMs": 1505,
+              "maximumMs": 61
+            },
+            "c08.transaction.cases": {
+              "calls": 5,
+              "elapsedMs": 154,
+              "maximumMs": 39
+            },
+            "planner.verifySourceOnly": {
+              "calls": 96,
+              "elapsedMs": 221,
+              "maximumMs": 5
+            },
+            "planner.verifyOperation": {
+              "calls": 96,
+              "elapsedMs": 1141,
+              "maximumMs": 17
+            },
+            "planner.verifySourceProjection": {
+              "calls": 192,
+              "elapsedMs": 160,
+              "maximumMs": 4
+            }
+          },
+          "stateBytes": 561983,
+          "transactionsBytes": 162689,
+          "casesBytes": 54721,
+          "resultBytes": 113738,
+          "transactions": 9,
+          "cases": 1,
+          "results": 5
+        }
+      ],
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+      "blob_at_observation": "ce02051d09115665056d36382bde5f1dbd0d9238",
+      "pass": 1,
+      "fail": 0,
+      "complete_file": true
+    },
+    "source-scenario.test.ts": {
+      "tests": [
+        {
+          "outcome": "fail",
+          "name_literal": "portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed",
+          "duration_ms": 180030.89
+        }
+      ],
+      "trace": [
+        {
+          "label": "renewal-choice-history",
+          "phase": "bootstrap-start",
+          "elapsedMs": 0,
+          "budgetMs": 180000,
+          "counts": {}
+        },
+        {
+          "label": "renewal-choice-history",
+          "phase": "bootstrap-complete",
+          "elapsedMs": 23,
+          "budgetMs": 180000,
+          "counts": {
+            "c08.read.cases": {
+              "calls": 1,
+              "elapsedMs": 1,
+              "maximumMs": 1
+            }
+          },
+          "stateBytes": 38210,
+          "transactionsBytes": 415,
+          "casesBytes": 37395,
+          "resultBytes": 2,
+          "transactions": 1,
+          "cases": 1,
+          "results": 0
+        },
+        {
+          "label": "renewal-choice-history",
+          "phase": "prepare:transition-omitted:start",
+          "elapsedMs": 25,
+          "budgetMs": 180000,
+          "counts": {
+            "c08.read.cases": {
+              "calls": 2,
+              "elapsedMs": 2,
+              "maximumMs": 1
+            }
+          },
+          "stateBytes": 38210,
+          "transactionsBytes": 415,
+          "casesBytes": 37395,
+          "resultBytes": 2,
+          "transactions": 1,
+          "cases": 1,
+          "results": 0
+        },
+        {
+          "label": "renewal-choice-history",
+          "phase": "prepare:transition-omitted:complete",
+          "elapsedMs": 10122,
+          "budgetMs": 180000,
+          "counts": {
+            "c08.read.cases": {
+              "calls": 546,
+              "elapsedMs": 5401,
+              "maximumMs": 32
+            },
+            "host.revalidate": {
+              "calls": 2962,
+              "elapsedMs": 79,
+              "maximumMs": 4
+            },
+            "operation-source": {
+              "calls": 846,
+              "elapsedMs": 44,
+              "maximumMs": 3
+            },
+            "operation-coverage": {
+              "calls": 462,
+              "elapsedMs": 10,
+              "maximumMs": 1
+            },
+            "c08.read.preferences": {
+              "calls": 96,
+              "elapsedMs": 787,
+              "maximumMs": 16
+            },
+            "c08.transaction.preferences": {
+              "calls": 3,
+              "elapsedMs": 58,
+              "maximumMs": 37
+            },
+            "classified-source": {
+              "calls": 39,
+              "elapsedMs": 0,
+              "maximumMs": 0
+            },
+            "classified-coverage": {
+              "calls": 41,
+              "elapsedMs": 1442,
+              "maximumMs": 60
+            },
+            "c08.transaction.cases": {
+              "calls": 5,
+              "elapsedMs": 150,
+              "maximumMs": 34
+            },
+            "planner.verifySourceOnly": {
+              "calls": 96,
+              "elapsedMs": 217,
+              "maximumMs": 6
+            },
+            "planner.verifyOperation": {
+              "calls": 96,
+              "elapsedMs": 1098,
+              "maximumMs": 19
+            },
+            "planner.verifySourceProjection": {
+              "calls": 192,
+              "elapsedMs": 160,
+              "maximumMs": 5
+            }
+          },
+          "stateBytes": 540335,
+          "transactionsBytes": 159999,
+          "casesBytes": 53809,
+          "resultBytes": 111960,
+          "transactions": 9,
+          "cases": 1,
+          "results": 5
+        },
+        {
+          "label": "renewal-choice-history",
+          "phase": "prepare:transition-omitted:complete",
+          "elapsedMs": 180011,
+          "budgetMs": 180000,
+          "status": "deadline-exceeded",
+          "counts": {
+            "c08.read.cases": {
+              "calls": 6569,
+              "elapsedMs": 115938,
+              "maximumMs": 57
+            },
+            "host.revalidate": {
+              "calls": 54676,
+              "elapsedMs": 771,
+              "maximumMs": 12
+            },
+            "operation-source": {
+              "calls": 14830,
+              "elapsedMs": 604,
+              "maximumMs": 3
+            },
+            "operation-coverage": {
+              "calls": 7814,
+              "elapsedMs": 134,
+              "maximumMs": 4
+            },
+            "c08.read.preferences": {
+              "calls": 96,
+              "elapsedMs": 787,
+              "maximumMs": 16
+            },
+            "c08.transaction.preferences": {
+              "calls": 3,
+              "elapsedMs": 58,
+              "maximumMs": 37
+            },
+            "classified-source": {
+              "calls": 39,
+              "elapsedMs": 0,
+              "maximumMs": 0
+            },
+            "classified-coverage": {
+              "calls": 41,
+              "elapsedMs": 1442,
+              "maximumMs": 60
+            },
+            "c08.transaction.cases": {
+              "calls": 5,
+              "elapsedMs": 150,
+              "maximumMs": 34
+            },
+            "planner.verifySourceOnly": {
+              "calls": 1754,
+              "elapsedMs": 3439,
+              "maximumMs": 9
+            },
+            "planner.verifyOperation": {
+              "calls": 1754,
+              "elapsedMs": 20845,
+              "maximumMs": 33
+            },
+            "planner.verifySourceProjection": {
+              "calls": 3508,
+              "elapsedMs": 2692,
+              "maximumMs": 7
+            }
+          }
+        }
+      ],
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "blob_at_observation": "01d7a1a299c61ebe824634c39e3d598cf2f59dc3",
+      "pass": 0,
+      "fail": 1,
+      "complete_file": false
+    },
+    "handoff-domain-integration.test.ts": {
+      "tests": [
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio C08 choice applies two confirmed domain changes with durable receipts and preserves the conditioned choice",
+          "duration_ms": 1402.93
+        },
+        {
+          "outcome": "fail",
+          "name_literal": "portfolio C08 choice preserves a receipt-required reservation after a real Procurement precommit failure without redispatch",
+          "duration_ms": 1219.26
+        }
+      ],
+      "trace": [],
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "blob_at_observation": "56befede439f9d08233a75fc7b9c25c013e73b4c",
+      "pass": 1,
+      "fail": 1,
+      "complete_file": false
+    },
+    "handoff-integration.test.ts": {
+      "tests": [
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio handoff retains C08 choice and resumes after pre-dispatch producer unavailability without repeating a receipt",
+          "duration_ms": 598.86
+        }
+      ],
+      "trace": [],
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "blob_at_observation": "bff4abba2f156cd2418d39f053b4d6a05bde4944",
+      "pass": 1,
+      "fail": 0,
+      "complete_file": true
+    },
+    "campaign-request.test.ts": {
+      "tests": [
+        {
+          "outcome": "pass",
+          "name_literal": "campaign read retains its original UI request after the last callback (finished)",
+          "duration_ms": 42.9
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "campaign read retains its original UI request after the last callback (replacement)",
+          "duration_ms": 36.28
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "campaign readOriginal retains its original UI request after the last callback (finished)",
+          "duration_ms": 36.28
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "campaign readOriginal retains its original UI request after the last callback (replacement)",
+          "duration_ms": 34.34
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "campaign readHistorical retains its original UI request after the last callback (finished)",
+          "duration_ms": 32.54
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "campaign readHistorical retains its original UI request after the last callback (replacement)",
+          "duration_ms": 31.92
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "campaign list retains its original UI request after the last callback (finished)",
+          "duration_ms": 40.05
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "campaign list retains its original UI request after the last callback (replacement)",
+          "duration_ms": 38.47
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "campaign listHistorical retains its original UI request after the last callback (finished)",
+          "duration_ms": 38.1
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "campaign listHistorical retains its original UI request after the last callback (replacement)",
+          "duration_ms": 43.17
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "absent campaign retains the UI request after its final namespace authorization (finished)",
+          "duration_ms": 9.27
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "absent campaign retains the UI request after its final namespace authorization (replacement)",
+          "duration_ms": 8.79
+        }
+      ],
+      "trace": [],
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign-request.test.ts",
+      "blob_at_observation": "a284bb02a1b8d4ef734ebcaeab64f07d718a04b8",
+      "pass": 12,
+      "fail": 0,
+      "complete_file": true
+    },
+    "campaign.test.ts": {
+      "tests": [
+        {
+          "outcome": "pass",
+          "name_literal": "multi-case campaign keeps owner separate, provisional AI, order and exact retry",
+          "duration_ms": 43.17
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "revoked and stale sources and a moved proposal do not replace the campaign",
+          "duration_ms": 17.02
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "a locked fence that differs from the pre-lock fingerprint does not commit",
+          "duration_ms": 8.03
+        },
+        {
+          "outcome": "fail",
+          "name_literal": "campaign metadata needs the host's private writer grant",
+          "duration_ms": 12.92
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "campaign rejects a candidate in another currency or horizon before any write",
+          "duration_ms": 8.12
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "a saved campaign remains authenticated historical data at the same owner case version",
+          "duration_ms": 15.77
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "a prior campaign is separately marked historical after the owner case advances",
+          "duration_ms": 23.29
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "campaign history binds a replaced candidate to the trusted historical port and original digest",
+          "duration_ms": 18.98
+        }
+      ],
+      "trace": [],
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+      "blob_at_observation": "4c304ac6e0357ec9d2731955c9acfae6580a6bbc",
+      "pass": 7,
+      "fail": 1,
+      "complete_file": false
+    },
+    "persistent-store.test.ts": {
+      "tests": [
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio uses the C08 decision store for durable refs and revalidates access",
+          "duration_ms": 28.35
+        },
+        {
+          "outcome": "pass",
+          "name_literal": "refuses to persist analysis whose referenced scenario differs",
+          "duration_ms": 0.48
+        }
+      ],
+      "trace": [],
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistent-store.test.ts",
+      "blob_at_observation": "ea54e03a06787a74c603c4e14a2c80d09a8c9700",
+      "pass": 2,
+      "fail": 0,
+      "complete_file": true
+    },
+    "stored-store.test.ts": {
+      "tests": [
+        {
+          "outcome": "pass",
+          "name_literal": "stored contribution survives reopen and remains case-authorized",
+          "duration_ms": 9.08
+        }
+      ],
+      "trace": [],
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts",
+      "blob_at_observation": "601af4ad1f504c9c7be47dce4e72d84587a38856",
+      "pass": 1,
+      "fail": 0,
+      "complete_file": true
+    },
+    "candidates-store.test.ts": {
+      "tests": [
+        {
+          "outcome": "pass",
+          "name_literal": "portfolio resolves a persisted decision alternative and respects revocation",
+          "duration_ms": 8.8
+        }
+      ],
+      "trace": [],
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/candidates-store.test.ts",
+      "blob_at_observation": "fbecfabcd66aab023279d9b7ee3c14beccf1fcad",
+      "pass": 1,
+      "fail": 0,
+      "complete_file": true
+    }
+  },
+  "scope_of_reuse": {
+    "complete_files": [
+      "history-provenance.test.ts",
+      "reconciliation.test.ts",
+      "reconciliation-price-integration.test.ts",
+      "handoff-integration.test.ts",
+      "campaign-request.test.ts",
+      "persistent-store.test.ts",
+      "stored-store.test.ts",
+      "candidates-store.test.ts"
+    ],
+    "complete_file_count": 8,
+    "complete_file_pass_cases": 48,
+    "individual_passes_in_failed_files": "The real two-domain positive and seven campaign cases completed on R4. They do not make either failed file complete.",
+    "no_automatic_head_reattribution": "These observations bind the exact R4 product and S5 snapshot above. R5 changes only the failing handoff expectation in this WP13 delta; further reuse must include the relevant dependency/blob comparison.",
+    "acceptance": "No global WP13, Finance, installed consumer or canonical axiom acceptance is declared."
+  },
+  "closed_runtime_observations_at_R4": [
+    {
+      "area": "Historical provenance and final CAS",
+      "file": "history-provenance.test.ts",
+      "pass_cases": 19,
+      "meaning": "Original C08 lineage and chosen history remained exact; the real final-callback case CAS was attempted and refused while authority stayed live. Readonly root success/poison semantics are runtime-observed for this case, not an INV.11 normative waiver."
+    },
+    {
+      "area": "Reconciliation",
+      "file": "reconciliation.test.ts",
+      "pass_cases": 11,
+      "meaning": "Preserved chosen composition, source identity, independent revisions, null/currency and partial receipts; mutation/revocation/egress cases and the admitted HTTP request completed."
+    },
+    {
+      "area": "Real price movement",
+      "file": "reconciliation-price-integration.test.ts",
+      "pass_cases": 1,
+      "meaning": "Canonical same-source 45000→70000 quote changed the portfolio condition while preserving human choice and C08 composition; 65876.99 ms."
+    },
+    {
+      "area": "Human prepared execution",
+      "file": "handoff-domain-integration.test.ts",
+      "pass_cases": 1,
+      "meaning": "The positive branch applied both actual Planner and Procurement commands, preserved conditioned choice and retained both durable receipts. The indeterminate failure branch still requires the R5 requalification below."
+    },
+    {
+      "area": "Pre-dispatch unavailable recovery",
+      "file": "handoff-integration.test.ts",
+      "pass_cases": 1,
+      "meaning": "Canonical handoff resumed after producer unavailability before a reservation/dispatch, without repeating an existing receipt. This does not authorize retry after a receipt-required reservation."
+    },
+    {
+      "area": "Campaign request egress",
+      "file": "campaign-request.test.ts",
+      "pass_cases": 12,
+      "meaning": "All five readers reject finished/replaced actual UI leases after the final callback, plus both absent-campaign cases. It does not establish complete multi-source atomicity or the private writer grant."
+    },
+    {
+      "area": "Actual LocalStore reopen",
+      "files": [
+        "persistent-store.test.ts",
+        "stored-store.test.ts",
+        "candidates-store.test.ts"
+      ],
+      "pass_cases": 4,
+      "meaning": "Each existing fixture disposes and reopens the real LocalStore while retaining the stable Request. Durable refs, stored contribution and persisted alternative/revocation completed on the current producer closure. This is broader than service reconstruction and narrower than the complete Atlas/provider C17 campaign."
+    }
+  ],
+  "failure_analysis": [
+    {
+      "id": "WP13_SOURCE_SCENARIO_TIMEOUT",
+      "file": "source-scenario.test.ts",
+      "status": "OPEN_CURRENT_FULL_PRODUCT_PROOF",
+      "observed_duration_ms": 180030.89,
+      "unchanged_budget_ms": 180000,
+      "observed_trace": "The omitted-source fixture preparation completed at 10122 ms. Its final recorded label stayed prepare:transition-omitted:complete; no later confirmed-training preparation began before the deadline. The counter at 180011 ms recorded 6569 C08 case reads/115938 ms, 54676 host revalidations/771 ms, 1754 full operation verifications/20845 ms and 3508 source projections/2692 ms. These nested totals are observations and must not be summed as an allocation profile.",
+      "interpretation": "R2 grouped complete canonical comparisons, simulation and explicit selected-pair reads, and WP11 grouped the complete case verifier. The current full source-only portfolio/history test still exceeds its original budget. The trace establishes repeated authorized reads after preparation; it does not identify the exact statement reached in the subsequent test body.",
+      "own_delta": "No assertion, parameter, financial oracle or timeout is changed. No safe further own-only optimization was established in this diagnosis. C08 full-state clones and composition reuse require the reconciled owner work already described in S2-terminal-diagnosis.json; no blanket provider blame or claimed measured speedup.",
+      "oracles_preserved": [
+        "Exact complete 240000 USD baseline",
+        "Explicit 20000 USD advantage rule",
+        "Omitted training remains absent/pending rather than zero",
+        "Confirmed 40000 training creates 250000 total and 10000 difference",
+        "Complete N-A and shared implementation/migration classification",
+        "Exact C08 ancestry, both criterion bindings, unchanged chosen history, later source revocation"
+      ]
+    },
+    {
+      "id": "WP13_HANDOFF_RESERVATION_ENVELOPE",
+      "file": "handoff-domain-integration.test.ts",
+      "status": "OWN_TEST_EXPECTATION_CORRECTED_R5_PENDING_ACTIONS",
+      "observed_failure": "The first post-failure receipts read returned aggregateRevision 11 while the pre-dispatch envelope expected 10. Receipt namespace storageVersion 1, incarnation, receipt, missing Procurement proof and existing Planner proof were unchanged in the complete diff.",
+      "canonical_reason": "WP11 commits the receipt-required application reservation in the cases namespace before dispatch. The injected Procurement command and receipt transaction then roll back. Exactly one aggregate revision is therefore required, while the receipts namespace contents and version must remain unchanged.",
+      "correction_manifest": "delta-wp13-R5-reservation-manifest.json",
+      "before_blob": "e3a0395a9ad33d6fb0ed161f69a246fa14664bd2",
+      "after_blob": "56befede439f9d08233a75fc7b9c25c013e73b4c",
+      "correction": "Expected envelope is { ...receiptsBeforeFailure, aggregateRevision: receiptsBeforeFailure.aggregateRevision + 1 }; both whole-envelope deep-equality assertions retain every other field, including nested proof revisions. The second equality requires no additional revision after ordinary and reconstructed-executor retries.",
+      "assertion_lines": {
+        "before": 93,
+        "after": 93
+      },
+      "unchanged_checks": [
+        "Full Planner/Procurement snapshot rollback",
+        "Amounts 40/50 after the injected failure",
+        "Exactly one dispatch per attempted domain",
+        "Receipt-required attempt persisted with exact review binding",
+        "Both retries return application-indeterminate-reconciliation-required",
+        "No Procurement receipt manufactured",
+        "Exact attempt envelope equality after retries",
+        "Choice, prepared changes and partial case unchanged",
+        "Separate real two-domain positive remains intact"
+      ],
+      "independent_static_review": {
+        "reviewer": "WP11 owner",
+        "result": "NO_CRITICAL_FINDING",
+        "blob": "56befede439f9d08233a75fc7b9c25c013e73b4c",
+        "finding": "The aggregate increment matches the separate cases reservation; receipt storageVersion/incarnation/value/proofs stay exact, including the inner Planner proof aggregate revision. The stable expected envelope prevents retry increments. No local execution was performed."
+      },
+      "limit": "S5 stopped this branch at its first envelope assertion. It does not prove the later no-redispatch assertions executed successfully in this run. The unchanged complete test file is the narrow next R5 selection."
+    },
+    {
+      "id": "WP10_CAMPAIGN_PRIVATE_WRITER_GRANT",
+      "file": "campaign.test.ts",
+      "status": "OPEN_SHARED_SECURITY_ORACLE_OBSERVED_UNSAFE",
+      "observed_failure": "With the provider deliberately lacking its private proposalCoverageWrites grant, campaign.save returned status ok and a campaign value. The canonical expectation is unavailable/campaign-locked-proof-unavailable. The following absence assertion did not run because the first assertion failed.",
+      "distinction": "This is an actual hosted unsafe outcome at the shared provider seam, not a missing test, a timeout or a fail-closed source-read incompatibility. Other campaign positives and request guards do not discharge it.",
+      "finance_provider": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "blob": "b7988a2963a2797a96ea19ab2b3a481564548213"
+      },
+      "known_source_provider_input": {
+        "pr": 37,
+        "head": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+        "blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+        "limit": "Source contains additional foreign changes. It is an input for reconciliation, not an authorization to replace the Finance provider."
+      },
+      "route": {
+        "owner": "WP10/composition",
+        "composition_pr": 32,
+        "composition_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+        "request": "Reconcile the provider guard for sf:portfolio:campaign metadata with the root-private writer capability, together with the existing sourceFence/checkNamespaces contract. Preserve the canonical expected denial and confirm no campaign/history write is retained when the grant is absent. Do not remove the assertion or copy the foreign provider wholesale."
+      },
+      "own_action": "The negative test remains unchanged. Host, state contract and artifact-store were not edited."
+    }
+  ],
+  "criteria_map_relation": {
+    "map_preserved": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-map.json",
+    "triage_preserved": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json",
+    "prior_diagnosis_preserved": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/S2-terminal-diagnosis.json",
+    "interpretation": "Append these observations to the earlier proof requirements. EGRESS, CAMPAIGN_REQUEST and REOPEN_CLOSURE have the bounded R4 complete-file observations above. HANDOFF has one remaining current test correction; SOURCE_SCENARIO and full SENSITIVITY remain incomplete. Shared campaign authorization, installed read-fence composition and INV.11 interpretation remain open. Canonical statuses are not rewritten and global acceptance is not declared."
+  },
+  "tests_policy": {
+    "local_product_execution": false,
+    "local_typecheck": false,
+    "local_profiling": false,
+    "tests_launched_by_subagent": false,
+    "assertions_removed": false,
+    "timeouts_changed": false,
+    "foreign_paths_modified": false,
+    "runtime_restarted": false
+  }
+}

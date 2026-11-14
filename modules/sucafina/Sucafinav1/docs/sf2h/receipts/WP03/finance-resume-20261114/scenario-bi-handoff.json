@@ -1,0 +1,279 @@
+{
+  "schema": "sf-finance-scenario-bi-handoff-v1",
+  "date_utc": "2026-11-14",
+  "owner": "Astra Finance WP03/WP05",
+  "authorship": "New producer and owned Analytics route/labels written by the WP03/WP05 resume lane. Existing Planner financial producers, C08 readers and WP13 readonly helper reused without copying their formulas or changing their files.",
+  "publication": {
+    "branch": "finance-resume",
+    "PR": 42,
+    "base_PR": 35,
+    "commit": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+    "tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+    "parent_reported": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+    "root_is_sole_publisher": true
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+      "baseBlob": null,
+      "blob": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b",
+      "sha256": "fb69c81e2ca30af08d67c6a185cd33da64d272759a8e2f2bcb5d64a893928918",
+      "bytes": 16784
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+      "baseBlob": "93bc4fb74dee9c55fa3e396bd7108ebc9d3da895",
+      "blob": "9cc4cc81538a7247cd87893f958acf5665194eb5",
+      "sha256": "8ad91d7b1adc0d7b44027ceadf729b6c3e8ceea9e3f2bfbacaf21dfbd5325673",
+      "bytes": 6961
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+      "baseBlob": "98d2510a3a44e45ab341aed6a1f2560339ec8578",
+      "blob": "fef3b0546384fcb0739fcf11ef531406c60ad760",
+      "sha256": "76e837580584d7ae787fd7461655579b7f4ef1677e07bb081145a20606b38bd0",
+      "bytes": 9063
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-fixture.ts",
+      "baseBlob": null,
+      "blob": "14445a3e32ab1c906a993fd628d011b8d22659c9",
+      "sha256": "0d840930ad5c848147295a44a6509dc5971548f17f65b278ac28713e1d8f4f84",
+      "bytes": 14475
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+      "baseBlob": null,
+      "blob": "f35fbae07684e507421a009244b603530f16b1e9",
+      "sha256": "6eb27361398464017f5cd34a2a59da471c5068f759a96aa1ca6e40ee2e2e4330",
+      "bytes": 11594
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-complete.test.ts",
+      "baseBlob": null,
+      "blob": "edad0b7bf1c54b3654b5a0595bcfb6e34d38102b",
+      "sha256": "54789bd3ad9780826b8d09cdc10b8703352c99cfddab563391bf77e53cf298f2",
+      "bytes": 6320
+    }
+  ],
+  "APIs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+      "name": "plannerScenarioBiPresentation",
+      "arguments": "projection: DomainProjection, pair: { baseline: ResolvedScenario; candidate: ResolvedScenario }, viewId: BI09|BI10",
+      "returns": "PortResult<{ projection: DomainProjection; presentation: BiPresentation }>",
+      "boundary": "Pure producer. The input is an authorized canonical C02/C08 pair; the caller owns resolving and revalidating that pair."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+      "name": "createPlannerScenarioBiHost",
+      "arguments": "{ host: DomainPortHost; results: Pick<createSfDecisionResultStore, read>; scenarios: PlannerScenarioHost; scenario: ScenarioBiHost }",
+      "returns": "ScenarioBiHost",
+      "boundary": "Protected real selection adapter. It verifies paired C08 records and resolved C02 scenarios twice, exact case/result/context identity, readonly snapshots and final authority. No cross-invocation observation cache."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+      "name": "createSfBiFactory.projectedScenario",
+      "arguments": "{ views: [BI09, BI10]; host: ScenarioBiHost }",
+      "boundary": "Optional producer route with the same scenario producer identity. Existing duplicate (view,producer) rejection remains. BI11 stays on the existing stored sensitivity route."
+    }
+  ],
+  "reused_dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/bi-difference.ts",
+      "blob_at_R2": "86ef1b9781ee46bc8cb30eeabc66870332094e7d",
+      "modified_by_bundle": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/version-comparison.ts",
+      "blob_at_R2": "067cecc3bd2c03ba00ff5ca5e269d911bf3c3869",
+      "modified_by_bundle": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/comparison.ts",
+      "blob_at_R2": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84",
+      "modified_by_bundle": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "blob_at_R2": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "modified_by_bundle": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+      "blob_at_R2": "f5bb6d732ffc588626553097d53d3c0e1457a81c",
+      "modified_by_bundle": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "blob_at_R2": "b7174b16b485323f767d63e6842f3d61284245eb",
+      "modified_by_bundle": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "blob_at_R2": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+      "modified_by_bundle": false
+    }
+  ],
+  "behavior": {
+    "BI09": [
+      "Canonical scenario components feed plannerDifferencePresentation. The existing producer computes contribution geometry; Analytics adds no financial formula.",
+      "knownSubtotal, total, knownDifference and completeDifference remain separately named exact canonical outputs, including null. A reconciled waterfall does not promote coverage.",
+      "Complete C10 comparisons are accepted only with both canonical results complete and non-null totals, consistent with comparison.ts. Unknown components, missing FX or incompatible periods do not become zero or relabelled money.",
+      "Coverage evidence, document/calculation references, original comparison and the optional inverse comparison remain attached. Shared/N-A categories are not added as extra costs."
+    ],
+    "BI10": [
+      "comparePlannerVersions supplies already-calculated before/after/delta values for changed components. The timeline uses only explicit component-period boundaries.",
+      "Deferring45k fromNovember toDecember produces−45k/+45k in those periods and zero annual saving; no invented payment, completion, interest or contract deadline.",
+      "A period boundary is labelled as a period boundary. The item remains unknown as a business completion state; hypothetical/estimated component evidence remains explicit."
+    ],
+    "readonly_and_authority": [
+      "Reuse unchanged readPortfolioSnapshot around the entire adapter, including source/resolver callbacks and final authorization.",
+      "Reject changed requests, mismatched context/case/result/projection, changed second observation and final revocation.",
+      "A nested write that is caught by its callback poisons the real LocalStore read scope. No durable state, choice, prepared change or applied receipt is created by a BI read."
+    ]
+  },
+  "proof_status": {
+    "product_tests_run_locally": false,
+    "S8": {
+      "status": "DISPATCHED_NO_CONCLUSION_OBSERVED",
+      "snapshot_sha": "f004a08d124a43f67bfc2bd41debe06ecad7b13e",
+      "request_sha256": "e19fb141c60344c87289741c772705ceb4542986db85f8185807b5f0a10fab32",
+      "selectors": [
+        "./Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+        "./Sucafinav1/test/product/wp03/scenario-bi-complete.test.ts",
+        "./Sucafinav1/test/product/wp05/factory-selection.test.ts"
+      ]
+    },
+    "new_tests": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+        "cases": 4,
+        "covers": [
+          "actual Planner/LocalStore/C08/factory route with250k/240k conditioned results and inverse−10k",
+          "zero/null/missing FX and full snapshot equality",
+          "actual defer operation, explicit monthly effects and annual saving zero",
+          "input mutation, changed second projection, attempted swallowed write, cross-currency context and final lease revocation"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-complete.test.ts",
+        "cases": 1,
+        "covers": [
+          "existing WP11 real renewal classification plus domain CAS gives source-only235k versus240k and completeDifference−5k",
+          "N-A categories and training/migration sharing the implementation component do not duplicate its70k cost",
+          "full durable snapshot equality and absence of choice/prepared/applied records"
+        ],
+        "limit": "This complete-result producer proof reuses the persisted WP11 harness. It is not an installed browser journey or a newly admitted complete-case sf_bi_view request."
+      }
+    ],
+    "CHECK_R3": {
+      "run_id": 43618360251,
+      "job_id": 132518291837,
+      "product_sha": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+      "product_tree": "6f2cb4d131ba5437f70d7700e3274cc26a22630c",
+      "conclusion": "failure",
+      "job_log_sha256": "17742cc8a3b3da52eb8172c3a4a40390bbaaaff168f45538aa28cd34e275ba7f",
+      "job_log_bytes": 139432,
+      "typecheck": {
+        "status": "failure",
+        "diagnostic_count": 115,
+        "own_count": 0,
+        "external_count": 115,
+        "external_diagnostics_identical_to_R2": true
+      },
+      "guards": {
+        "status": "failure",
+        "rules": 78,
+        "changed_paths": 1462,
+        "gate_count": 43,
+        "warn_count": 15,
+        "errors": 0,
+        "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+        "disposition": "Preserve archived input logs; no ignore or approval added. Path-rule review must remain with S0/Maestro; no global clean claim.",
+        "identical_findings_to_R2": true
+      }
+    },
+    "CHECK_R4": {
+      "run_id": 43619734769,
+      "conclusion_reported_by_root": "failure",
+      "diagnostic_analysis": "PENDING_ROOT_LOG_REVIEW; R3 counts must not be attributed to R4"
+    },
+    "cold_review": [
+      {
+        "reviewer": "Astra WP13 subagent",
+        "scope": "first five paths before addition of the complete-result test",
+        "finding": "No blocking finding identified in source; strengthen nested-write counterexample with attempted=true inside the actual callback. Applied without removing assertions."
+      },
+      {
+        "reviewer": "root",
+        "scope": "three product files",
+        "observation": "Completeness guard agrees with canonical comparison.ts requirements; no review observation is an Actions PASS."
+      },
+      {
+        "reviewer": "/root/cold_review",
+        "scope": "six R4 paths, especially fixture and complete positive",
+        "status": "IN_PROGRESS_NO_CONCLUSION_IN_THIS_RECEIPT"
+      }
+    ]
+  },
+  "consumer_deltas": [
+    {
+      "id": "COMPOSE-SCENARIO-BI09-BI10",
+      "owner": "WP10/composição",
+      "source_PR": 32,
+      "source_commit": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "blob": "b6a84dd807207e9b6791dc10f1419ec756ea1167",
+      "pointers": [
+        "decisionPresentation at lines76–78",
+        "scenario route at lines115–122",
+        "portfolio route at lines123–130"
+      ],
+      "available_now": "decisionPresentation returns series:[] with an explicit missing producer limitation for BI09/10.",
+      "required_delta": "Bind the existing scenario selection host, then pass it plus the authoritative DomainPortHost, current C08 result store and PlannerScenarioHost to createPlannerScenarioBiHost. Register projectedScenario views BI09/10, and keep existing scenario views BI11. Do not register duplicate scenario view routes or bypass existing selection/authority callbacks.",
+      "installed_consumption": "NOT_PROVED"
+    },
+    {
+      "id": "COMPOSE-CALL-SCOPE",
+      "owner": "WP10/composição",
+      "source_PR": 32,
+      "source_commit": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "path": "apps/cli/src/sucafina-product/bi-call-scope.ts",
+      "blob": "c3fd5dc0eabcdbb24d20023b63ddeedff526e9ca",
+      "required_delta": "Retain the consumed-call authority and exact Request identity. The existing scope caches only eligible ordinary pairs; inverse or additional scenario provenance must retain its bypass. The new read adapter must receive the current real paired-reader dependencies, not a constant result callback."
+    },
+    {
+      "id": "PORTFOLIO-EXPLICIT-COMBINATION",
+      "owner": "WP13 producer adapter and WP10/composição selection",
+      "available_now": "PortfolioCombination.analysis.comparison includes baselineResultRef; its alternativeResultRef must match analysis.scenarioResultRef. Baseline identity is present and must not be inferred from sourceScenarioRef.",
+      "remaining": "The new API is scenario-only. A portfolio adapter must read and revalidate the explicitly selected combinationId, canonical pair/comparison and original portfolio contribution. Selecting a combination is not recording a human choice. No automatic winner or portfolio waterfall consumption is claimed."
+    },
+    {
+      "id": "BI10-CONTRACT-EVENTS",
+      "owner": "Canonical source owner and WP10/composição",
+      "available_now": "The own producer can show explicit component periods and their actual canonical financial effect.",
+      "remaining": "Actual contract due dates, payments, termination obligations and interest require authoritative events and financial rules. The period timeline does not supply those absent inputs."
+    },
+    {
+      "id": "BI08-UNDATED-OWNER-FIX",
+      "owner": "WP02/Interface and WP10/composição",
+      "source_PR": 31,
+      "source_commit": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "source_blobs": {
+        "product/dashboard/scope.ts": "f53d0509b6f727947ec9b00888bce9dae1420094",
+        "product/dashboard/port.ts": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811"
+      },
+      "available_now": "The owner source retains an undated milestone as date:null and emits null/absent plus missing. Root read it via GitHub MCP and the bytes were hash-verified.",
+      "remaining": "Reconcile and consume the existing owner delta. It is absent from the Finance product snapshot. Do not reimplement it or read raw Dashboard data in Analytics."
+    }
+  ],
+  "acceptance_limits": [
+    "No global acceptance, complete catalogue, installed native/Session/skill journey, mounted navigation or applied decision is declared.",
+    "R2 maps and all earlier failed/timeout observations remain unchanged. Current results attach additively with their own W/S SHAs.",
+    "The readPortfolioSnapshot root readonly capability and shared host contract remain an explicit composition responsibility; this bundle changes neither the shared contract nor runtime/local-store.ts.",
+    "Every future owner-source change requires reconciliation at an explicit pin; no branch is automatically replaced."
+  ],
+  "global_acceptance": false
+}

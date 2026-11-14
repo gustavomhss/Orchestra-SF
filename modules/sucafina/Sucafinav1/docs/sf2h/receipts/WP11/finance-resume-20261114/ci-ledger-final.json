@@ -1,0 +1,2166 @@
+{
+  "schema": "sf-finance-resume-ci-ledger-final-v1",
+  "policy": {
+    "product_tests": "GitHub Actions only",
+    "remote_operations": "GitHub MCP only",
+    "one_product_run_in_flight_per_wp": true,
+    "no_epic": true,
+    "no_timeout_increase": true,
+    "no_assertion_removal": true,
+    "no_global_acceptance": true,
+    "historical_runs_retain_original_product_sha": true
+  },
+  "runs": [
+    {
+      "label": "S1",
+      "wp": "wp03",
+      "product": {
+        "sha": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+        "tree": "de5d3f65d6d262c05a6447aa21f26c63dfbbf1c1",
+        "label": "R1",
+        "parents": [
+          "ec052c2c3bef96f492512f3d5f663919580f25c8",
+          "7defe5c9930774c6aa5a15a5f677b4406d08683c"
+        ]
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+          "./Sucafinav1/test/product/wp03/port-hr.test.ts",
+          "./Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "7a2509891b75e7450bea50fda72d27f0aede5f2ef236460287b3b90b72dfce0b",
+      "snapshot": "1ee667356ad01f211e7473d2ad5e2fae4b670a9d",
+      "snapshotTree": "403de749d387114621a6c9b3f29ec649da6a67e4",
+      "requestBlob": "483532bef14f89f5af4e649567a70990478dc98d",
+      "branch": "ci-run-linux-finance-resume-wp03-3c20b46b-7a250989-1",
+      "run_id": 43615424219,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615424219",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_started_at": "2026-11-14T16:24:20Z",
+      "snapshot_envelope": {
+        "only_path": ".ci-run.json",
+        "product_tests_config_fixtures_unchanged": true,
+        "compare": {
+          "repository_full_name": "gustavomhss/Orchestra-SF",
+          "base": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+          "head": "1ee667356ad01f211e7473d2ad5e2fae4b670a9d",
+          "status": "ahead",
+          "ahead_by": 1,
+          "behind_by": 0,
+          "total_commits": 1,
+          "too_large": null,
+          "base_commit": {
+            "sha": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5"
+          },
+          "merge_base_commit": {
+            "sha": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5"
+          },
+          "files": [
+            {
+              "filename": ".ci-run.json",
+              "status": "added",
+              "additions": 1,
+              "deletions": 0,
+              "changes": 1,
+              "previous_filename": null
+            }
+          ]
+        }
+      },
+      "request_validation": "actual validateRequest/locateTestPackage/testPathsAt at published candidate; hosted validator ran independently",
+      "required_artifacts": [],
+      "local_product_execution": false,
+      "test_job_id": 132509297971,
+      "test_job_conclusion": "failure",
+      "job_log": {
+        "sha256": "ae121d26bfec4c147ee92348a3a72f8aa6d5bc4d27e5814ce7f52e8616129990",
+        "bytes": 75952,
+        "encoding": "exact UTF-8 decoded text returned by GitHub MCP, with original trailing newlines",
+        "source": "fetch_workflow_job_logs",
+        "durable_source_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615424219/job/132509297971"
+      },
+      "test_observations": [
+        {
+          "at": "2026-11-14T16:26:03.5043506Z",
+          "verdict": "fail",
+          "name": "C02 preserves explicit numeric HR identity, known zero and independent actual/forecast for finance and viewer",
+          "duration_ms": 143.9
+        },
+        {
+          "at": "2026-11-14T16:26:03.5458720Z",
+          "verdict": "pass",
+          "name": "qualified HR self-comparison still refuses revocation during the final coverage observation",
+          "duration_ms": 43.23
+        },
+        {
+          "at": "2026-11-14T16:26:03.6241663Z",
+          "verdict": "pass",
+          "name": "C02 qualifies each HR domain and month while preserving authorized aggregates and independent actual/forecast",
+          "duration_ms": 76.84
+        },
+        {
+          "at": "2026-11-14T16:26:04.0119737Z",
+          "verdict": "pass",
+          "name": "replace and include qualify an absent forecast from the real post-command copy, including explicit zero",
+          "duration_ms": 385.37
+        },
+        {
+          "at": "2026-11-14T16:26:04.3810121Z",
+          "verdict": "pass",
+          "name": "a row save preserves an untouched missing December while an explicit December zero is hypothetical",
+          "duration_ms": 369.04
+        },
+        {
+          "at": "2026-11-14T16:26:04.4619569Z",
+          "verdict": "pass",
+          "name": "deferral quantifies its origin and destination while preserving a third missing month on the same row",
+          "duration_ms": 80.94
+        },
+        {
+          "at": "2026-11-14T16:26:04.5496123Z",
+          "verdict": "pass",
+          "name": "an explicit foreign forecast without FX stays absent instead of publishing the engine's legacy zero",
+          "duration_ms": 87.61
+        },
+        {
+          "at": "2026-11-14T16:26:04.7083749Z",
+          "verdict": "pass",
+          "name": "a hypothetical HR forecast remains quantifiable when its independent budget rate is absent",
+          "duration_ms": 158.76
+        },
+        {
+          "at": "2026-11-14T16:26:04.7460234Z",
+          "verdict": "pass",
+          "name": "a self-comparison reads once per source observation and still rejects revocation at final revalidation",
+          "duration_ms": 37.64
+        }
+      ],
+      "repeated_summary_observations": [],
+      "pass": 8,
+      "fail": 1,
+      "assertions": 254,
+      "tests": 9,
+      "files": 3,
+      "duration_reported": "1.62s",
+      "omni": [
+        {
+          "nonce": "86393a16dcc60c29a53b06eb07ebda1f",
+          "verdict": "not applicable",
+          "detail": "(focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        }
+      ],
+      "qualified_scoped_pass": false,
+      "failure_disposition": "Financial/privacy checks and revocation passed; whole-snapshot equality failed because legitimate source-scope registration occurred after baseline capture. R2 preserves every assertion and admits both sources before capture. S3 reruns only the modified file. S1 remains failure.",
+      "scope": "R1 Planner rate/source identity",
+      "latest_disposition": "Failure preserved. R2 moved baseline capture after legitimate source registration; all assertions retained. S3 verifies the changed file."
+    },
+    {
+      "label": "S2",
+      "wp": "wp13",
+      "product": {
+        "sha": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+        "tree": "de5d3f65d6d262c05a6447aa21f26c63dfbbf1c1",
+        "label": "R1",
+        "parents": [
+          "ec052c2c3bef96f492512f3d5f663919580f25c8",
+          "7defe5c9930774c6aa5a15a5f677b4406d08683c"
+        ]
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+          "./Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "ed1acd6190ce5e7c9a2bf6aeb7d099b0f0e2c6e9e513bf1a3e734ca3c36d1e05",
+      "snapshot": "4c84847a885f09bdb1fee936244b73d7129f764a",
+      "snapshotTree": "3c32c530d5bbb385d70f9389f7d8eaf7a57125fe",
+      "requestBlob": "6b144df0ee5b38481996e89c899a910ffa8ada6b",
+      "branch": "ci-run-linux-finance-resume-wp13-3c20b46b-ed1acd61-1",
+      "run_id": 43615428441,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615428441",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_started_at": "2026-11-14T16:24:23Z",
+      "snapshot_envelope": {
+        "only_path": ".ci-run.json",
+        "product_tests_config_fixtures_unchanged": true,
+        "compare": {
+          "repository_full_name": "gustavomhss/Orchestra-SF",
+          "base": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+          "head": "4c84847a885f09bdb1fee936244b73d7129f764a",
+          "status": "ahead",
+          "ahead_by": 1,
+          "behind_by": 0,
+          "total_commits": 1,
+          "too_large": null,
+          "base_commit": {
+            "sha": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5"
+          },
+          "merge_base_commit": {
+            "sha": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5"
+          },
+          "files": [
+            {
+              "filename": ".ci-run.json",
+              "status": "added",
+              "additions": 1,
+              "deletions": 0,
+              "changes": 1,
+              "previous_filename": null
+            }
+          ]
+        }
+      },
+      "request_validation": "actual validateRequest/locateTestPackage/testPathsAt at published candidate; hosted validator ran independently",
+      "required_artifacts": [],
+      "local_product_execution": false,
+      "test_job_id": 132509311266,
+      "test_job_conclusion": "failure",
+      "job_log": {
+        "sha256": "96e654338ca7139aee1a9ffb084fd9c0b1ed4031ceddc1f620b212241ee6ae71",
+        "bytes": 77327,
+        "encoding": "exact UTF-8 decoded text returned by GitHub MCP, with original trailing newlines",
+        "source": "fetch_workflow_job_logs",
+        "durable_source_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615428441/job/132509311266"
+      },
+      "test_observations": [
+        {
+          "at": "2026-11-14T16:27:23.4966334Z",
+          "verdict": "pass",
+          "name": "sensitivity read scope refuses a swallowed canonical nested write and publishes no provisional fence",
+          "duration_ms": 79958.87
+        },
+        {
+          "at": "2026-11-14T16:28:44.0385289Z",
+          "verdict": "pass",
+          "name": "each sensitivity verification reads a fresh committed Planner source instead of retaining its previous scope",
+          "duration_ms": 80541.92
+        },
+        {
+          "at": "2026-11-14T16:30:03.8317660Z",
+          "verdict": "pass",
+          "name": "final UI authority revocation inside a sensitivity scope suppresses the staged proof",
+          "duration_ms": 79793.2
+        },
+        {
+          "at": "2026-11-14T16:31:47.0848459Z",
+          "verdict": "pass",
+          "name": "a failed sensitivity scope cannot retain its old grant or publish a callback-mutated replay input",
+          "duration_ms": 103253.12
+        },
+        {
+          "at": "2026-11-14T16:37:09.2568510Z",
+          "verdict": "fail",
+          "name": "WP13 persists and cold-reloads omitted training with its real 55000 sensitivity bound",
+          "duration_ms": 322163.15
+        },
+        {
+          "at": "2026-11-14T16:45:59.5430737Z",
+          "verdict": "fail",
+          "name": "WP13 persists and cold-reloads bundled training with its real 55000 sensitivity bound",
+          "duration_ms": 530286.17
+        },
+        {
+          "at": "2026-11-14T17:04:37.5931435Z",
+          "verdict": "fail",
+          "name": "WP13 persists and cold-reloads confirmed training with its real 15000 sensitivity bound",
+          "duration_ms": 1118050.04
+        },
+        {
+          "at": "2026-11-14T17:05:26.4655114Z",
+          "verdict": "pass",
+          "name": "WP13 withholds an exact bound for a real null price or missing FX before consulting an exact callback",
+          "duration_ms": 48872.33
+        },
+        {
+          "at": "2026-11-14T17:06:04.0578206Z",
+          "verdict": "pass",
+          "name": "WP13 rejects a false scalar boundary even when it carries the real canonical source evidence",
+          "duration_ms": 37592.32
+        },
+        {
+          "at": "2026-11-14T17:09:04.0895257Z",
+          "verdict": "fail",
+          "name": "WP13 keeps the human choice in one case while confirmed training changes the source-only analysis to the real 15000 boundary",
+          "duration_ms": 180030.75
+        }
+      ],
+      "repeated_summary_observations": [],
+      "pass": 6,
+      "fail": 4,
+      "assertions": 147,
+      "tests": 10,
+      "files": 2,
+      "duration_reported": "2580.75s",
+      "omni": [
+        {
+          "nonce": "eaca03056ae89e7bf063e6b212c01e03",
+          "verdict": "not applicable",
+          "detail": "(focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        }
+      ],
+      "qualified_scoped_pass": false,
+      "scope": "WP13 sensitivity, read-scope counterproofs and persist/replay",
+      "latest_disposition": "Failure preserved: three full persistence/replay cases exceeded the 300000ms budget; human-choice case exceeded 180000ms. Six passes are scoped. No full-persistence success or conservative-refusal substitution."
+    },
+    {
+      "label": "S3",
+      "wp": "wp03",
+      "product": {
+        "sha": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+        "label": "R2",
+        "parents": [
+          "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+          "e8949be0e31952d5be4987c099003cd0b46e2add"
+        ]
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "80c85512e070e82cf2d87d44f3969464bf67b9f048744a5ef8dd4fecfae8f791",
+      "snapshot": "4d9eded5fd40d496861d65b7eab093fd5de88d9d",
+      "snapshotTree": "644036816fd4b8db3cd7187cabad2e9abedc88f2",
+      "requestBlob": "6468fdfd472653a7c9d4ffeba1cd7852d583bf04",
+      "branch": "ci-run-linux-finance-resume-wp03-88b9b6bf-80c85512-1",
+      "run_id": 43616600555,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43616600555",
+      "status": "completed",
+      "conclusion": "success",
+      "run_started_at": "2026-11-14T16:37:14Z",
+      "snapshot_envelope": {
+        "only_path": ".ci-run.json",
+        "product_tests_config_fixtures_unchanged": true,
+        "compare": {
+          "repository_full_name": "gustavomhss/Orchestra-SF",
+          "base": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+          "head": "4d9eded5fd40d496861d65b7eab093fd5de88d9d",
+          "status": "ahead",
+          "ahead_by": 1,
+          "behind_by": 0,
+          "total_commits": 1,
+          "too_large": null,
+          "base_commit": {
+            "sha": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/88b9b6bff53a4f64d37d04ddc868f1443cecf5b3"
+          },
+          "merge_base_commit": {
+            "sha": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/88b9b6bff53a4f64d37d04ddc868f1443cecf5b3"
+          },
+          "files": [
+            {
+              "filename": ".ci-run.json",
+              "status": "added",
+              "additions": 1,
+              "deletions": 0,
+              "changes": 1,
+              "previous_filename": null
+            }
+          ]
+        }
+      },
+      "request_validation": "actual validateRequest/locateTestPackage/testPathsAt at published candidate; hosted validator ran independently",
+      "required_artifacts": [],
+      "local_product_execution": false,
+      "test_job_id": 132512903901,
+      "test_job_conclusion": "success",
+      "job_log": {
+        "sha256": "14b59a5c019da203d8caaa35c81e54976a1aef49c7d72ac34197584bbe6e4d8b",
+        "bytes": 69091,
+        "encoding": "exact UTF-8 decoded text returned by GitHub MCP, with original trailing newlines",
+        "source": "fetch_workflow_job_logs",
+        "durable_source_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43616600555/job/132512903901"
+      },
+      "test_observations": [
+        {
+          "at": "2026-11-14T16:39:08.4609942Z",
+          "verdict": "pass",
+          "name": "C02 preserves explicit numeric HR identity, known zero and independent actual/forecast for finance and viewer",
+          "duration_ms": 95.08
+        },
+        {
+          "at": "2026-11-14T16:39:08.4908806Z",
+          "verdict": "pass",
+          "name": "qualified HR self-comparison still refuses revocation during the final coverage observation",
+          "duration_ms": 29.89
+        }
+      ],
+      "repeated_summary_observations": [],
+      "pass": 2,
+      "fail": 0,
+      "assertions": 64,
+      "tests": 2,
+      "files": 1,
+      "duration_reported": "285.00ms",
+      "omni": [
+        {
+          "nonce": "dc60bb893edb7f9756ccdb29f3301ac8",
+          "verdict": "not applicable",
+          "detail": "(focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        }
+      ],
+      "qualified_scoped_pass": true,
+      "scope": "Planner rate identity after fixture baseline correction",
+      "latest_disposition": "2/0/64; only the materially changed file rerun. Not the entire Planner acceptance surface."
+    },
+    {
+      "label": "S4",
+      "wp": "wp11",
+      "product": {
+        "sha": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+        "label": "R2",
+        "parents": [
+          "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+          "e8949be0e31952d5be4987c099003cd0b46e2add"
+        ]
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+          "./Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+          "./Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+          "./Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+          "./Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+          "./Sucafinav1/test/product/wp11/case-port.test.ts",
+          "./Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+          "./Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "545915f60eddd7e4859c90cea100de9a9e5e597af79c09b65e7dd5bf644e80cc",
+      "snapshot": "e3c1070024883ce6ea63a71e2401f1e49914de9d",
+      "snapshotTree": "0df2aa9f841272596ca40c5aa0f0d49d958b4bec",
+      "requestBlob": "1b6b340ebe61c8a3ed00d6470c1bab4ed21e3a20",
+      "branch": "ci-run-linux-finance-resume-wp11-88b9b6bf-545915f6-1",
+      "run_id": 43616603779,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43616603779",
+      "status": "completed",
+      "conclusion": "success",
+      "run_started_at": "2026-11-14T16:37:16Z",
+      "snapshot_envelope": {
+        "only_path": ".ci-run.json",
+        "product_tests_config_fixtures_unchanged": true,
+        "compare": {
+          "repository_full_name": "gustavomhss/Orchestra-SF",
+          "base": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+          "head": "e3c1070024883ce6ea63a71e2401f1e49914de9d",
+          "status": "ahead",
+          "ahead_by": 1,
+          "behind_by": 0,
+          "total_commits": 1,
+          "too_large": null,
+          "base_commit": {
+            "sha": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/88b9b6bff53a4f64d37d04ddc868f1443cecf5b3"
+          },
+          "merge_base_commit": {
+            "sha": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/88b9b6bff53a4f64d37d04ddc868f1443cecf5b3"
+          },
+          "files": [
+            {
+              "filename": ".ci-run.json",
+              "status": "added",
+              "additions": 1,
+              "deletions": 0,
+              "changes": 1,
+              "previous_filename": null
+            }
+          ]
+        }
+      },
+      "request_validation": "actual validateRequest/locateTestPackage/testPathsAt at published candidate; hosted validator ran independently",
+      "required_artifacts": [],
+      "local_product_execution": false,
+      "test_job_id": 132512914754,
+      "test_job_conclusion": "success",
+      "job_log": {
+        "sha256": "b0cd0d6f1b3199218bdebacf177e131e541bdaf09ea4ad3c0593d35fdec1c5b9",
+        "bytes": 77992,
+        "encoding": "exact UTF-8 decoded text returned by GitHub MCP, with original trailing newlines",
+        "source": "fetch_workflow_job_logs",
+        "durable_source_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43616603779/job/132512914754"
+      },
+      "test_observations": [
+        {
+          "at": "2026-11-14T16:38:46.1827326Z",
+          "verdict": "pass",
+          "name": "current-choice read suppresses its binding when membership changes during the final case authorization",
+          "duration_ms": 252.52
+        },
+        {
+          "at": "2026-11-14T16:38:46.3437590Z",
+          "verdict": "pass",
+          "name": "current-choice read suppresses its binding when preferences read changes during the final case authorization",
+          "duration_ms": 160.93
+        },
+        {
+          "at": "2026-11-14T16:38:46.3921337Z",
+          "verdict": "pass",
+          "name": "current-choice read suppresses its binding when finished lease changes during the final C08 namespace authorization",
+          "duration_ms": 48.29
+        },
+        {
+          "at": "2026-11-14T16:38:46.4434570Z",
+          "verdict": "pass",
+          "name": "current-choice read suppresses its binding when replacement lease changes during the final C08 namespace authorization",
+          "duration_ms": 51.17
+        },
+        {
+          "at": "2026-11-14T16:38:46.4569469Z",
+          "verdict": "pass",
+          "name": "case read refuses a finished lease after the final C08 namespace authorization",
+          "duration_ms": 12.17
+        },
+        {
+          "at": "2026-11-14T16:38:46.4659855Z",
+          "verdict": "pass",
+          "name": "case read refuses a expired lease after the final C08 namespace authorization",
+          "duration_ms": 8.92
+        },
+        {
+          "at": "2026-11-14T16:38:46.4765236Z",
+          "verdict": "pass",
+          "name": "case draft refuses a finished lease after the final C08 namespace authorization",
+          "duration_ms": 10.67
+        },
+        {
+          "at": "2026-11-14T16:38:46.4868458Z",
+          "verdict": "pass",
+          "name": "case draft refuses a expired lease after the final C08 namespace authorization",
+          "duration_ms": 10.21
+        },
+        {
+          "at": "2026-11-14T16:38:46.5114978Z",
+          "verdict": "pass",
+          "name": "case prepare-intent refuses a finished lease after the final C08 namespace authorization",
+          "duration_ms": 24.7
+        },
+        {
+          "at": "2026-11-14T16:38:46.5556956Z",
+          "verdict": "pass",
+          "name": "case prepare-intent refuses a expired lease after the final C08 namespace authorization",
+          "duration_ms": 44.12
+        },
+        {
+          "at": "2026-11-14T16:38:46.5679355Z",
+          "verdict": "pass",
+          "name": "case read suppresses its projection when membership changes during the final host revalidation",
+          "duration_ms": 11.16
+        },
+        {
+          "at": "2026-11-14T16:38:46.5779676Z",
+          "verdict": "pass",
+          "name": "case read suppresses its projection when same-version content changes during the final host revalidation",
+          "duration_ms": 10.06
+        },
+        {
+          "at": "2026-11-14T16:38:46.5899080Z",
+          "verdict": "pass",
+          "name": "draft suppresses membership changed by host check 3 before its response",
+          "duration_ms": 10.77
+        },
+        {
+          "at": "2026-11-14T16:38:46.5984597Z",
+          "verdict": "pass",
+          "name": "draft suppresses incarnation changed by host check 3 before its response",
+          "duration_ms": 8.49
+        },
+        {
+          "at": "2026-11-14T16:38:46.6076102Z",
+          "verdict": "pass",
+          "name": "draft suppresses same-version content changed by host check 3 before its response",
+          "duration_ms": 9.21
+        },
+        {
+          "at": "2026-11-14T16:38:46.6196142Z",
+          "verdict": "pass",
+          "name": "prepare-intent suppresses membership changed by host check 5 before its response",
+          "duration_ms": 11.97
+        },
+        {
+          "at": "2026-11-14T16:38:46.6324331Z",
+          "verdict": "pass",
+          "name": "prepare-intent suppresses incarnation changed by host check 5 before its response",
+          "duration_ms": 12.78
+        },
+        {
+          "at": "2026-11-14T16:38:46.6771895Z",
+          "verdict": "pass",
+          "name": "prepare-intent suppresses same-version content changed by host check 5 before its response",
+          "duration_ms": 44.66
+        },
+        {
+          "at": "2026-11-14T16:38:46.6889608Z",
+          "verdict": "pass",
+          "name": "prepare-intent suppresses same-version content changed by host check 3 before its response",
+          "duration_ms": 11.79
+        },
+        {
+          "at": "2026-11-14T16:38:46.6967986Z",
+          "verdict": "pass",
+          "name": "case projection denies an inaccessible operation even with no result components",
+          "duration_ms": 6.52
+        },
+        {
+          "at": "2026-11-14T16:38:46.7325498Z",
+          "verdict": "pass",
+          "name": "case draft survives a real store reopen, exact retry is idempotent and revoked access is denied",
+          "duration_ms": 31.36
+        },
+        {
+          "at": "2026-11-14T16:38:46.7329075Z",
+          "verdict": "pass",
+          "name": "an entirely omitted renewal category remains pending",
+          "duration_ms": 0.45
+        },
+        {
+          "at": "2026-11-14T16:38:46.7339245Z",
+          "verdict": "pass",
+          "name": "coverage distinguishes a sourced zero from an omitted category",
+          "duration_ms": 0.95
+        },
+        {
+          "at": "2026-11-14T16:38:46.7340144Z",
+          "verdict": "pass",
+          "name": "case references encode both identities without accepting ambiguous aliases",
+          "duration_ms": 0.1
+        },
+        {
+          "at": "2026-11-14T16:38:46.7346958Z",
+          "verdict": "pass",
+          "name": "receipt reconciliation preserves partial application and rejects changed identity",
+          "duration_ms": 0.69
+        },
+        {
+          "at": "2026-11-14T16:38:46.7358015Z",
+          "verdict": "pass",
+          "name": "a conditional human choice freezes the comparison and cost gap",
+          "duration_ms": 1.1
+        },
+        {
+          "at": "2026-11-14T16:38:46.7364248Z",
+          "verdict": "pass",
+          "name": "preparing a change preserves the domain command and never applies it",
+          "duration_ms": 0.63
+        },
+        {
+          "at": "2026-11-14T16:38:46.7993713Z",
+          "verdict": "pass",
+          "name": "revoked source suppresses an otherwise authorized case",
+          "duration_ms": 62.83
+        },
+        {
+          "at": "2026-11-14T16:38:46.8173554Z",
+          "verdict": "pass",
+          "name": "partial domain execution reconciles a durable receipt and never repeats it on retry",
+          "duration_ms": 17.98
+        },
+        {
+          "at": "2026-11-14T16:38:47.0455762Z",
+          "verdict": "pass",
+          "name": "human choice persists a versioned snapshot and ledger using the planner comparison",
+          "duration_ms": 228.16
+        },
+        {
+          "at": "2026-11-14T16:38:47.1668496Z",
+          "verdict": "pass",
+          "name": "explicit criterion rule is versioned, authorized and evaluated using the domain metric",
+          "duration_ms": 118.71
+        },
+        {
+          "at": "2026-11-14T16:40:39.3507645Z",
+          "verdict": "pass",
+          "name": "new human operations replace a choice after the quote revision and retain that choice with a new reason without rewriting any history",
+          "duration_ms": 112170.15
+        }
+      ],
+      "repeated_summary_observations": [],
+      "pass": 32,
+      "fail": 0,
+      "assertions": 393,
+      "tests": 32,
+      "files": 8,
+      "duration_reported": "113.59s",
+      "omni": [
+        {
+          "nonce": "c7187bf0df3bab32e79a87e3e3d12f74",
+          "verdict": "not applicable",
+          "detail": "(focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        }
+      ],
+      "qualified_scoped_pass": true,
+      "scope": "WP11 intake and decision continuity",
+      "latest_disposition": "32/0/393 at R2. Later lease changes are qualified by S7; original W/S retained."
+    },
+    {
+      "label": "S5",
+      "wp": "wp13",
+      "product": {
+        "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+        "tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+        "label": "R4",
+        "parents": [
+          "9de58454924b072b6e571b5b4ebcd70f95e596df"
+        ]
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp13/history-provenance.test.ts",
+          "./Sucafinav1/test/product/wp13/reconciliation.test.ts",
+          "./Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+          "./Sucafinav1/test/product/wp13/source-scenario.test.ts",
+          "./Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+          "./Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+          "./Sucafinav1/test/product/wp13/campaign-request.test.ts",
+          "./Sucafinav1/test/product/wp13/campaign.test.ts",
+          "./Sucafinav1/test/product/wp13/persistent-store.test.ts",
+          "./Sucafinav1/test/product/wp13/stored-store.test.ts",
+          "./Sucafinav1/test/product/wp13/candidates-store.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "8006a8b7dd76303ef629715806c92b750621e015e3e6cad29feb1bf9ac10e9e8",
+      "snapshot": "07f905d3a309b9752525ef34aeafbc5d870bd54a",
+      "snapshotTree": "723fadf3a3b616b269b9fa8052d760cd643e80c2",
+      "requestBlob": "5987882a9c6eaf94f102bde2a2635a106aa9feff",
+      "branch": "ci-run-linux-finance-resume-wp13-229d66fa-8006a8b7-1",
+      "run_id": 43619812123,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619812123",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_started_at": "2026-11-14T17:12:10Z",
+      "snapshot_envelope": {
+        "only_path": ".ci-run.json",
+        "product_tests_config_fixtures_unchanged": true,
+        "compare": {
+          "repository_full_name": "gustavomhss/Orchestra-SF",
+          "base": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+          "head": "07f905d3a309b9752525ef34aeafbc5d870bd54a",
+          "status": "ahead",
+          "ahead_by": 1,
+          "behind_by": 0,
+          "total_commits": 1,
+          "too_large": null,
+          "base_commit": {
+            "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/229d66fa59ceebbc4b3683565670698f2cf3aa65"
+          },
+          "merge_base_commit": {
+            "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/229d66fa59ceebbc4b3683565670698f2cf3aa65"
+          },
+          "files": [
+            {
+              "filename": ".ci-run.json",
+              "status": "added",
+              "additions": 1,
+              "deletions": 0,
+              "changes": 1,
+              "previous_filename": null
+            }
+          ]
+        }
+      },
+      "request_validation": "actual validateRequest/locateTestPackage/testPathsAt at published candidate; hosted validator ran independently",
+      "required_artifacts": [],
+      "local_product_execution": false,
+      "test_job_id": 132522704978,
+      "test_job_conclusion": "failure",
+      "job_log": {
+        "sha256": "05abcead114c190cb6380d73478af1ead5522135f3faffdc5d6e2615698056d1",
+        "bytes": 94593,
+        "encoding": "exact UTF-8 decoded text returned by GitHub MCP, with original trailing newlines",
+        "source": "fetch_workflow_job_logs",
+        "durable_source_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619812123/job/132522704978"
+      },
+      "test_observations": [
+        {
+          "at": "2026-11-14T17:13:30.1728021Z",
+          "verdict": "pass",
+          "name": "portfolio historical provenance > accepts an original binding and selection when current case and evidence remain authorized",
+          "duration_ms": 4.0
+        },
+        {
+          "at": "2026-11-14T17:13:30.1739101Z",
+          "verdict": "pass",
+          "name": "portfolio historical provenance > accepts authenticated source history at the same case version and still rejects revocation",
+          "duration_ms": 1.26
+        },
+        {
+          "at": "2026-11-14T17:13:30.1741633Z",
+          "verdict": "pass",
+          "name": "portfolio historical provenance > rejects a candidate whose case incarnation was replaced",
+          "duration_ms": 0.25
+        },
+        {
+          "at": "2026-11-14T17:13:30.1745768Z",
+          "verdict": "pass",
+          "name": "portfolio historical provenance > rejects revoked historical sources",
+          "duration_ms": 0.4
+        },
+        {
+          "at": "2026-11-14T17:13:30.1748866Z",
+          "verdict": "pass",
+          "name": "portfolio historical provenance > rejects a historical candidate missing from the authorized case",
+          "duration_ms": 0.31
+        },
+        {
+          "at": "2026-11-14T17:13:30.1751595Z",
+          "verdict": "pass",
+          "name": "portfolio historical provenance > rejects a same-version alternative whose original payload changed",
+          "duration_ms": 0.27
+        },
+        {
+          "at": "2026-11-14T17:13:30.1755540Z",
+          "verdict": "pass",
+          "name": "portfolio historical provenance > rejects ambiguous duplicate alternatives and a case older than the candidate",
+          "duration_ms": 0.38
+        },
+        {
+          "at": "2026-11-14T17:13:30.1756340Z",
+          "verdict": "pass",
+          "name": "portfolio historical provenance > rejects a binding supplied for a different current owner case",
+          "duration_ms": 0.09
+        },
+        {
+          "at": "2026-11-14T17:13:30.1763552Z",
+          "verdict": "pass",
+          "name": "portfolio historical provenance > keeps the first candidate observation when the provider reuses mutable objects",
+          "duration_ms": 0.69
+        },
+        {
+          "at": "2026-11-14T17:13:30.1770493Z",
+          "verdict": "pass",
+          "name": "portfolio historical provenance > rejects caller mutation during historical provenance verification",
+          "duration_ms": 0.67
+        },
+        {
+          "at": "2026-11-14T17:13:30.1777837Z",
+          "verdict": "pass",
+          "name": "portfolio historical provenance > rejects an owner observation changed during the first binding read",
+          "duration_ms": 0.73
+        },
+        {
+          "at": "2026-11-14T17:13:30.1779711Z",
+          "verdict": "pass",
+          "name": "portfolio historical provenance > rejects a binding whose digest does not cover its contents",
+          "duration_ms": 0.21
+        },
+        {
+          "at": "2026-11-14T17:13:30.1781664Z",
+          "verdict": "pass",
+          "name": "portfolio historical provenance > rejects a selection that differs from the binding proof",
+          "duration_ms": 0.19
+        },
+        {
+          "at": "2026-11-14T17:13:30.1788256Z",
+          "verdict": "pass",
+          "name": "portfolio historical provenance > rejects a binding that changes between provenance passes",
+          "duration_ms": 0.64
+        },
+        {
+          "at": "2026-11-14T17:13:36.3488438Z",
+          "verdict": "pass",
+          "name": "historical portfolio reads the original C08 candidate after WP11 replaces alternative v1 with v2",
+          "duration_ms": 6169.9
+        },
+        {
+          "at": "2026-11-14T17:13:42.2068274Z",
+          "verdict": "pass",
+          "name": "historical candidate rejects a naked digest when the original C08 case snapshot and choice are absent",
+          "duration_ms": 5857.94
+        },
+        {
+          "at": "2026-11-14T17:13:49.9064755Z",
+          "verdict": "pass",
+          "name": "historical candidate rejects changed C08 request ancestry and revoked evidence",
+          "duration_ms": 7699.66
+        },
+        {
+          "at": "2026-11-14T17:13:56.6801146Z",
+          "verdict": "pass",
+          "name": "historical chosen candidate selects its witnessed C08 among equivalent writes and requires the exact WP11 ledger",
+          "duration_ms": 6773.58
+        },
+        {
+          "at": "2026-11-14T17:14:02.1273413Z",
+          "verdict": "pass",
+          "name": "historical candidate refuses a real case CAS in its last callback while the authority remains live",
+          "duration_ms": 5447.2
+        },
+        {
+          "at": "2026-11-14T17:14:02.1565989Z",
+          "verdict": "pass",
+          "name": "reconciliation preserves the chosen composition and WP11 partial/retry receipts without writing",
+          "duration_ms": 19.96
+        },
+        {
+          "at": "2026-11-14T17:14:02.1777548Z",
+          "verdict": "pass",
+          "name": "reconciliation retains independent evidence and command revisions while binding effects and receipts",
+          "duration_ms": 21.18
+        },
+        {
+          "at": "2026-11-14T17:14:02.1860973Z",
+          "verdict": "pass",
+          "name": "reconciliation sends a source-bound price observation to the WP14 classifier while retaining original null and currency",
+          "duration_ms": 8.36
+        },
+        {
+          "at": "2026-11-14T17:14:02.1923650Z",
+          "verdict": "pass",
+          "name": "a global criterion change cannot attribute a different component's price to an unchanged component",
+          "duration_ms": 6.25
+        },
+        {
+          "at": "2026-11-14T17:14:02.1935897Z",
+          "verdict": "pass",
+          "name": "reconciliation refuses a substituted historical selection even when its numbers match the choice",
+          "duration_ms": 1.27
+        },
+        {
+          "at": "2026-11-14T17:14:02.1958464Z",
+          "verdict": "pass",
+          "name": "reconciliation refuses receipt substitution, revoked sources and a different current principal",
+          "duration_ms": 2.24
+        },
+        {
+          "at": "2026-11-14T17:14:02.2025730Z",
+          "verdict": "pass",
+          "name": "reconciliation rejects a changed ledger, borrowed callback mutation and a changed read during egress",
+          "duration_ms": 6.69
+        },
+        {
+          "at": "2026-11-14T17:14:02.2108377Z",
+          "verdict": "pass",
+          "name": "reconciliation does not reinterpret another source or missing data as a material price signal",
+          "duration_ms": 8.25
+        },
+        {
+          "at": "2026-11-14T17:14:02.2326129Z",
+          "verdict": "pass",
+          "name": "reconciliation refuses authority mutation after the final successful revalidation",
+          "duration_ms": 21.68
+        },
+        {
+          "at": "2026-11-14T17:14:02.2690450Z",
+          "verdict": "pass",
+          "name": "HTTP reconciliation preserves the admitted selection when authorization mutates the caller request",
+          "duration_ms": 36.4
+        },
+        {
+          "at": "2026-11-14T17:14:02.2828692Z",
+          "verdict": "pass",
+          "name": "HTTP reconciliation fences authority from ingress before the core captures it",
+          "duration_ms": 13.84
+        },
+        {
+          "at": "2026-11-14T17:15:08.1663206Z",
+          "verdict": "pass",
+          "name": "a real 45000 to 70000 quote on the same source changes its portfolio condition while preserving the human choice and C08 composition",
+          "duration_ms": 65876.99
+        },
+        {
+          "at": "2026-11-14T17:18:08.2025181Z",
+          "verdict": "fail",
+          "name": "portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed",
+          "duration_ms": 180030.89
+        },
+        {
+          "at": "2026-11-14T17:18:09.6217992Z",
+          "verdict": "pass",
+          "name": "portfolio C08 choice applies two confirmed domain changes with durable receipts and preserves the conditioned choice",
+          "duration_ms": 1402.93
+        },
+        {
+          "at": "2026-11-14T17:18:10.8423637Z",
+          "verdict": "fail",
+          "name": "portfolio C08 choice preserves a receipt-required reservation after a real Procurement precommit failure without redispatch",
+          "duration_ms": 1219.26
+        },
+        {
+          "at": "2026-11-14T17:18:11.4425695Z",
+          "verdict": "pass",
+          "name": "portfolio handoff retains C08 choice and resumes after pre-dispatch producer unavailability without repeating a receipt",
+          "duration_ms": 598.86
+        },
+        {
+          "at": "2026-11-14T17:18:11.4883391Z",
+          "verdict": "pass",
+          "name": "campaign read retains its original UI request after the last callback (finished)",
+          "duration_ms": 42.9
+        },
+        {
+          "at": "2026-11-14T17:18:11.5246191Z",
+          "verdict": "pass",
+          "name": "campaign read retains its original UI request after the last callback (replacement)",
+          "duration_ms": 36.28
+        },
+        {
+          "at": "2026-11-14T17:18:11.5609059Z",
+          "verdict": "pass",
+          "name": "campaign readOriginal retains its original UI request after the last callback (finished)",
+          "duration_ms": 36.28
+        },
+        {
+          "at": "2026-11-14T17:18:11.5952457Z",
+          "verdict": "pass",
+          "name": "campaign readOriginal retains its original UI request after the last callback (replacement)",
+          "duration_ms": 34.34
+        },
+        {
+          "at": "2026-11-14T17:18:11.6278585Z",
+          "verdict": "pass",
+          "name": "campaign readHistorical retains its original UI request after the last callback (finished)",
+          "duration_ms": 32.54
+        },
+        {
+          "at": "2026-11-14T17:18:11.6597861Z",
+          "verdict": "pass",
+          "name": "campaign readHistorical retains its original UI request after the last callback (replacement)",
+          "duration_ms": 31.92
+        },
+        {
+          "at": "2026-11-14T17:18:11.6998111Z",
+          "verdict": "pass",
+          "name": "campaign list retains its original UI request after the last callback (finished)",
+          "duration_ms": 40.05
+        },
+        {
+          "at": "2026-11-14T17:18:11.7382990Z",
+          "verdict": "pass",
+          "name": "campaign list retains its original UI request after the last callback (replacement)",
+          "duration_ms": 38.47
+        },
+        {
+          "at": "2026-11-14T17:18:11.7763964Z",
+          "verdict": "pass",
+          "name": "campaign listHistorical retains its original UI request after the last callback (finished)",
+          "duration_ms": 38.1
+        },
+        {
+          "at": "2026-11-14T17:18:11.8196268Z",
+          "verdict": "pass",
+          "name": "campaign listHistorical retains its original UI request after the last callback (replacement)",
+          "duration_ms": 43.17
+        },
+        {
+          "at": "2026-11-14T17:18:11.8288578Z",
+          "verdict": "pass",
+          "name": "absent campaign retains the UI request after its final namespace authorization (finished)",
+          "duration_ms": 9.27
+        },
+        {
+          "at": "2026-11-14T17:18:11.8376729Z",
+          "verdict": "pass",
+          "name": "absent campaign retains the UI request after its final namespace authorization (replacement)",
+          "duration_ms": 8.79
+        },
+        {
+          "at": "2026-11-14T17:18:11.8825835Z",
+          "verdict": "pass",
+          "name": "multi-case campaign keeps owner separate, provisional AI, order and exact retry",
+          "duration_ms": 43.17
+        },
+        {
+          "at": "2026-11-14T17:18:11.8996120Z",
+          "verdict": "pass",
+          "name": "revoked and stale sources and a moved proposal do not replace the campaign",
+          "duration_ms": 17.02
+        },
+        {
+          "at": "2026-11-14T17:18:11.9076185Z",
+          "verdict": "pass",
+          "name": "a locked fence that differs from the pre-lock fingerprint does not commit",
+          "duration_ms": 8.03
+        },
+        {
+          "at": "2026-11-14T17:18:11.9224320Z",
+          "verdict": "fail",
+          "name": "campaign metadata needs the host's private writer grant",
+          "duration_ms": 12.92
+        },
+        {
+          "at": "2026-11-14T17:18:11.9286466Z",
+          "verdict": "pass",
+          "name": "campaign rejects a candidate in another currency or horizon before any write",
+          "duration_ms": 8.12
+        },
+        {
+          "at": "2026-11-14T17:18:11.9444838Z",
+          "verdict": "pass",
+          "name": "a saved campaign remains authenticated historical data at the same owner case version",
+          "duration_ms": 15.77
+        },
+        {
+          "at": "2026-11-14T17:18:11.9678198Z",
+          "verdict": "pass",
+          "name": "a prior campaign is separately marked historical after the owner case advances",
+          "duration_ms": 23.29
+        },
+        {
+          "at": "2026-11-14T17:18:11.9868162Z",
+          "verdict": "pass",
+          "name": "campaign history binds a replaced candidate to the trusted historical port and original digest",
+          "duration_ms": 18.98
+        },
+        {
+          "at": "2026-11-14T17:18:12.0165089Z",
+          "verdict": "pass",
+          "name": "portfolio uses the C08 decision store for durable refs and revalidates access",
+          "duration_ms": 28.35
+        },
+        {
+          "at": "2026-11-14T17:18:12.0168821Z",
+          "verdict": "pass",
+          "name": "refuses to persist analysis whose referenced scenario differs",
+          "duration_ms": 0.48
+        },
+        {
+          "at": "2026-11-14T17:18:12.0276188Z",
+          "verdict": "pass",
+          "name": "stored contribution survives reopen and remains case-authorized",
+          "duration_ms": 9.08
+        },
+        {
+          "at": "2026-11-14T17:18:12.0368874Z",
+          "verdict": "pass",
+          "name": "portfolio resolves a persisted decision alternative and respects revocation",
+          "duration_ms": 8.8
+        }
+      ],
+      "repeated_summary_observations": [
+        {
+          "at": "2026-11-14T17:18:12.1249362Z",
+          "verdict": "fail",
+          "name": "portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed",
+          "duration_ms": 180030.89,
+          "repeat_of_observation": 31,
+          "classification": "repeated_case_in_terminal_summary"
+        },
+        {
+          "at": "2026-11-14T17:18:12.1250085Z",
+          "verdict": "fail",
+          "name": "portfolio C08 choice preserves a receipt-required reservation after a real Procurement precommit failure without redispatch",
+          "duration_ms": 1219.26,
+          "repeat_of_observation": 33,
+          "classification": "repeated_case_in_terminal_summary"
+        },
+        {
+          "at": "2026-11-14T17:18:12.1250503Z",
+          "verdict": "fail",
+          "name": "campaign metadata needs the host's private writer grant",
+          "duration_ms": 12.92,
+          "repeat_of_observation": 50,
+          "classification": "repeated_case_in_terminal_summary"
+        }
+      ],
+      "pass": 56,
+      "fail": 3,
+      "assertions": 582,
+      "tests": 59,
+      "files": 11,
+      "duration_reported": "281.99s",
+      "omni": [
+        {
+          "nonce": "046afed4534bc31b130349d25f268509",
+          "verdict": "not applicable",
+          "detail": "(focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        }
+      ],
+      "qualified_scoped_pass": false,
+      "scope": "WP13 history, reconciliation, campaigns, storage and handoff",
+      "latest_disposition": "56/3/582. Source-scenario timeout remains open. The reservation envelope assertion is corrected and verified by S13. Missing private writer grant returned ok instead of unavailable: observed unsafe shared-provider oracle, not a fail-closed pass. Four actual dispose/reopen storage cases and history/reconciliation positives are individually scoped."
+    },
+    {
+      "label": "S7",
+      "wp": "wp11",
+      "product": {
+        "sha": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+        "tree": "6f2cb4d131ba5437f70d7700e3274cc26a22630c",
+        "label": "R3",
+        "parents": [
+          "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3"
+        ]
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "./Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+          "./Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+          "./Sucafinav1/test/product/wp11/portfolio-replay-lease-egress.test.ts",
+          "./Sucafinav1/test/product/wp11/result-store.test.ts",
+          "./Sucafinav1/test/product/wp11/coverage-access.test.ts",
+          "./Sucafinav1/test/product/wp11/case-port.test.ts",
+          "./Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "fbb4eec9acd2e15264529866e8cb19c708b80962763a5e7577587d725a8f1175",
+      "snapshot": "f74733ed5c2ef77b53c3a40948a1b9c509bf7ac9",
+      "snapshotTree": "7b0270dd270aa81e8c1ecc92a77ee123f1f5124f",
+      "requestBlob": "0eae310489ec68387e232f05c0f31bc2a84036f3",
+      "branch": "ci-run-linux-finance-resume-wp11-9de58454-fbb4eec9-1",
+      "run_id": 43618462688,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618462688",
+      "status": "completed",
+      "conclusion": "success",
+      "run_started_at": "2026-11-14T16:57:54Z",
+      "snapshot_envelope": {
+        "only_path": ".ci-run.json",
+        "product_tests_config_fixtures_unchanged": true,
+        "compare": {
+          "repository_full_name": "gustavomhss/Orchestra-SF",
+          "base": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+          "head": "f74733ed5c2ef77b53c3a40948a1b9c509bf7ac9",
+          "status": "ahead",
+          "ahead_by": 1,
+          "behind_by": 0,
+          "total_commits": 1,
+          "too_large": null,
+          "base_commit": {
+            "sha": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/9de58454924b072b6e571b5b4ebcd70f95e596df",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/9de58454924b072b6e571b5b4ebcd70f95e596df"
+          },
+          "merge_base_commit": {
+            "sha": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/9de58454924b072b6e571b5b4ebcd70f95e596df",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/9de58454924b072b6e571b5b4ebcd70f95e596df"
+          },
+          "files": [
+            {
+              "filename": ".ci-run.json",
+              "status": "added",
+              "additions": 1,
+              "deletions": 0,
+              "changes": 1,
+              "previous_filename": null
+            }
+          ]
+        }
+      },
+      "request_validation": "actual validateRequest/locateTestPackage/testPathsAt at published candidate; hosted validator ran independently",
+      "required_artifacts": [],
+      "local_product_execution": false,
+      "test_job_id": 132518604113,
+      "test_job_conclusion": "success",
+      "job_log": {
+        "sha256": "153550c8704d89f18f7ccaa239de6415197bde960da58b3862be5d8eebe99f11",
+        "bytes": 72091,
+        "encoding": "exact UTF-8 decoded text returned by GitHub MCP, with original trailing newlines",
+        "source": "fetch_workflow_job_logs",
+        "durable_source_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618462688/job/132518604113"
+      },
+      "test_observations": [
+        {
+          "at": "2026-11-14T16:59:31.5827479Z",
+          "verdict": "pass",
+          "name": "an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result",
+          "duration_ms": 3810.2
+        },
+        {
+          "at": "2026-11-14T16:59:31.9186523Z",
+          "verdict": "pass",
+          "name": "a dispatched change without its authoritative receipt stays indeterminate across concurrent actors and restart",
+          "duration_ms": 327.7
+        },
+        {
+          "at": "2026-11-14T16:59:32.0958251Z",
+          "verdict": "pass",
+          "name": "Hot Topic drafts verify the Dashboard snapshot, persist once without domain application and reject a source race",
+          "duration_ms": 173.86
+        },
+        {
+          "at": "2026-11-14T16:59:32.1098704Z",
+          "verdict": "pass",
+          "name": "portfolio replay lookup refuses a finished lease at the final C08 authorization",
+          "duration_ms": 9.44
+        },
+        {
+          "at": "2026-11-14T16:59:32.1181957Z",
+          "verdict": "pass",
+          "name": "portfolio replay lookup refuses a expired lease at the final C08 authorization",
+          "duration_ms": 8.34
+        },
+        {
+          "at": "2026-11-14T16:59:32.1733685Z",
+          "verdict": "pass",
+          "name": "decision result persistence binds retries, current case and source authority",
+          "duration_ms": 53.54
+        },
+        {
+          "at": "2026-11-14T16:59:32.1768714Z",
+          "verdict": "pass",
+          "name": "C10 derives omitted renewal costs, distinguishes supported zero, and fails closed on bad evidence",
+          "duration_ms": 1.75
+        },
+        {
+          "at": "2026-11-14T16:59:32.1962051Z",
+          "verdict": "pass",
+          "name": "persisted comparison results are scoped to current case, principal, and source access",
+          "duration_ms": 19.3
+        },
+        {
+          "at": "2026-11-14T16:59:32.2230898Z",
+          "verdict": "pass",
+          "name": "case draft survives a real store reopen, exact retry is idempotent and revoked access is denied",
+          "duration_ms": 21.9
+        },
+        {
+          "at": "2026-11-14T16:59:32.2234075Z",
+          "verdict": "pass",
+          "name": "an entirely omitted renewal category remains pending",
+          "duration_ms": 0.37
+        },
+        {
+          "at": "2026-11-14T16:59:32.2243269Z",
+          "verdict": "pass",
+          "name": "coverage distinguishes a sourced zero from an omitted category",
+          "duration_ms": 0.88
+        },
+        {
+          "at": "2026-11-14T16:59:32.2244150Z",
+          "verdict": "pass",
+          "name": "case references encode both identities without accepting ambiguous aliases",
+          "duration_ms": 0.11
+        },
+        {
+          "at": "2026-11-14T16:59:32.2247256Z",
+          "verdict": "pass",
+          "name": "receipt reconciliation preserves partial application and rejects changed identity",
+          "duration_ms": 0.29
+        },
+        {
+          "at": "2026-11-14T16:59:32.2256512Z",
+          "verdict": "pass",
+          "name": "a conditional human choice freezes the comparison and cost gap",
+          "duration_ms": 0.89
+        },
+        {
+          "at": "2026-11-14T16:59:32.2260179Z",
+          "verdict": "pass",
+          "name": "preparing a change preserves the domain command and never applies it",
+          "duration_ms": 0.39
+        },
+        {
+          "at": "2026-11-14T16:59:32.2408631Z",
+          "verdict": "pass",
+          "name": "revoked source suppresses an otherwise authorized case",
+          "duration_ms": 14.75
+        },
+        {
+          "at": "2026-11-14T16:59:32.2577504Z",
+          "verdict": "pass",
+          "name": "partial domain execution reconciles a durable receipt and never repeats it on retry",
+          "duration_ms": 16.81
+        },
+        {
+          "at": "2026-11-14T16:59:32.4183823Z",
+          "verdict": "pass",
+          "name": "human choice persists a versioned snapshot and ledger using the planner comparison",
+          "duration_ms": 160.6
+        },
+        {
+          "at": "2026-11-14T16:59:39.2860010Z",
+          "verdict": "pass",
+          "name": "a canonical human choice creates a reviewed Planner proposal and only a separate application grant commits it",
+          "duration_ms": 6864.0
+        }
+      ],
+      "repeated_summary_observations": [],
+      "pass": 19,
+      "fail": 0,
+      "assertions": 487,
+      "tests": 19,
+      "files": 8,
+      "duration_reported": "11.73s",
+      "omni": [
+        {
+          "nonce": "a5f429a2e888b8bc5ac7d8449547aa4f",
+          "verdict": "not applicable",
+          "detail": "(focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        }
+      ],
+      "qualified_scoped_pass": true,
+      "scope": "WP11 final retained-Request fences and prepared receipt recovery",
+      "latest_disposition": "19/0/487, including 16 late real-lease variants and positive controls. Does not establish installed UI or shared host composition."
+    },
+    {
+      "label": "S8",
+      "wp": "wp03-wp05",
+      "product": {
+        "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+        "tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+        "label": "R4",
+        "parents": [
+          "9de58454924b072b6e571b5b4ebcd70f95e596df"
+        ]
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+          "./Sucafinav1/test/product/wp03/scenario-bi-complete.test.ts",
+          "./Sucafinav1/test/product/wp05/factory-selection.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "e19fb141c60344c87289741c772705ceb4542986db85f8185807b5f0a10fab32",
+      "snapshot": "f004a08d124a43f67bfc2bd41debe06ecad7b13e",
+      "snapshotTree": "d8ba00d43dfe45954fdb0253714b71a0a6adb0cb",
+      "requestBlob": "e5eb0df4a9a1f9f6fb0dc3c95b5d8db3bda6ce7f",
+      "branch": "ci-run-linux-finance-resume-wp03-wp05-229d66fa-e19fb141-1",
+      "run_id": 43619817826,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619817826",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_started_at": "2026-11-14T17:12:13Z",
+      "snapshot_envelope": {
+        "only_path": ".ci-run.json",
+        "product_tests_config_fixtures_unchanged": true,
+        "compare": {
+          "repository_full_name": "gustavomhss/Orchestra-SF",
+          "base": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+          "head": "f004a08d124a43f67bfc2bd41debe06ecad7b13e",
+          "status": "ahead",
+          "ahead_by": 1,
+          "behind_by": 0,
+          "total_commits": 1,
+          "too_large": null,
+          "base_commit": {
+            "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/229d66fa59ceebbc4b3683565670698f2cf3aa65"
+          },
+          "merge_base_commit": {
+            "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/229d66fa59ceebbc4b3683565670698f2cf3aa65"
+          },
+          "files": [
+            {
+              "filename": ".ci-run.json",
+              "status": "added",
+              "additions": 1,
+              "deletions": 0,
+              "changes": 1,
+              "previous_filename": null
+            }
+          ]
+        }
+      },
+      "request_validation": "actual validateRequest/locateTestPackage/testPathsAt at published candidate; hosted validator ran independently",
+      "required_artifacts": [],
+      "local_product_execution": false,
+      "test_job_id": 132522722250,
+      "test_job_conclusion": "failure",
+      "job_log": {
+        "sha256": "7fad3bc98d92ff4204b61bc4b2df6a092568a9099b340e8405848a62fee5d0cd",
+        "bytes": 82985,
+        "encoding": "exact UTF-8 decoded text returned by GitHub MCP, with original trailing newlines",
+        "source": "fetch_workflow_job_logs",
+        "durable_source_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619817826/job/132522722250"
+      },
+      "test_observations": [
+        {
+          "at": "2026-11-14T17:14:17.9276591Z",
+          "verdict": "fail",
+          "name": "BI09 routes a real C08 pair through the Planner waterfall without promoting conditioned totals or reversing evidence",
+          "duration_ms": 152.42
+        },
+        {
+          "at": "2026-11-14T17:14:18.0305849Z",
+          "verdict": "fail",
+          "name": "BI09 preserves explicit zero, missing amount and missing FX through actual Planner scenarios",
+          "duration_ms": 101.96
+        },
+        {
+          "at": "2026-11-14T17:14:18.1145555Z",
+          "verdict": "fail",
+          "name": "BI10 shows the real deferred periods and no invented annual saving or completed payment",
+          "duration_ms": 83.95
+        },
+        {
+          "at": "2026-11-14T17:14:18.2029947Z",
+          "verdict": "fail",
+          "name": "scenario plans reject callback mutation, changed paired projection, swallowed nested writes and final lease revocation",
+          "duration_ms": 88.42
+        },
+        {
+          "at": "2026-11-14T17:15:09.3421163Z",
+          "verdict": "pass",
+          "name": "BI09 accepts the complete source-only 235000 result with real N-A/shared coverage and -5000 complete difference",
+          "duration_ms": 51131.64
+        },
+        {
+          "at": "2026-11-14T17:15:09.3458927Z",
+          "verdict": "pass",
+          "name": "producer selection cannot switch between read and revalidation in one bound call",
+          "duration_ms": 1.55
+        }
+      ],
+      "repeated_summary_observations": [],
+      "pass": 2,
+      "fail": 4,
+      "assertions": 23,
+      "tests": 6,
+      "files": 3,
+      "duration_reported": "51.73s",
+      "omni": [
+        {
+          "nonce": "5e4c661fabca93d6ba994a95a1837237",
+          "verdict": "not applicable",
+          "detail": "(focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        }
+      ],
+      "qualified_scoped_pass": false,
+      "scope": "Paired Planner BI producer and complete N-A/shared calculation",
+      "latest_disposition": "Overall failure preserved. Complete source-only 235000 result, real N-A/shared coverage and -5000 complete delta passed, as did producer selection. Four missing source-identity fixture failures corrected in R5 and verified by S12."
+    },
+    {
+      "label": "S9",
+      "wp": "wp11",
+      "product": {
+        "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+        "tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+        "label": "R4",
+        "parents": [
+          "9de58454924b072b6e571b5b4ebcd70f95e596df"
+        ]
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "97a1c7fb21ef31ffaf9f7f5a375e63525a270056d92b4ec9fd81c039dd74527b",
+      "snapshot": "711f156d6995fa02f5e15043638bef9847a7f845",
+      "snapshotTree": "627c45c326b26c8a017c3181e05a316e0cc05120",
+      "requestBlob": "bd2d5c2910844ff52507263284c630a83403d6b3",
+      "branch": "ci-run-linux-finance-resume-wp11-229d66fa-97a1c7fb-1",
+      "run_id": 43619824316,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619824316",
+      "status": "completed",
+      "conclusion": "success",
+      "run_started_at": "2026-11-14T17:12:17Z",
+      "snapshot_envelope": {
+        "only_path": ".ci-run.json",
+        "product_tests_config_fixtures_unchanged": true,
+        "compare": {
+          "repository_full_name": "gustavomhss/Orchestra-SF",
+          "base": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+          "head": "711f156d6995fa02f5e15043638bef9847a7f845",
+          "status": "ahead",
+          "ahead_by": 1,
+          "behind_by": 0,
+          "total_commits": 1,
+          "too_large": null,
+          "base_commit": {
+            "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/229d66fa59ceebbc4b3683565670698f2cf3aa65"
+          },
+          "merge_base_commit": {
+            "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/229d66fa59ceebbc4b3683565670698f2cf3aa65"
+          },
+          "files": [
+            {
+              "filename": ".ci-run.json",
+              "status": "added",
+              "additions": 1,
+              "deletions": 0,
+              "changes": 1,
+              "previous_filename": null
+            }
+          ]
+        }
+      },
+      "request_validation": "actual validateRequest/locateTestPackage/testPathsAt at published candidate; hosted validator ran independently",
+      "required_artifacts": [],
+      "local_product_execution": false,
+      "test_job_id": 132522741789,
+      "test_job_conclusion": "success",
+      "job_log": {
+        "sha256": "9fbbda3b4878fc05a963e975bf9f2e54b8bd5bfff00506d06588c1eb16fbe231",
+        "bytes": 68953,
+        "encoding": "exact UTF-8 decoded text returned by GitHub MCP, with original trailing newlines",
+        "source": "fetch_workflow_job_logs",
+        "durable_source_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619824316/job/132522741789"
+      },
+      "test_observations": [
+        {
+          "at": "2026-11-14T17:13:46.3172451Z",
+          "verdict": "pass",
+          "name": "a canonical human choice creates a reviewed Planner proposal and only a separate application grant commits it",
+          "duration_ms": 5366.57
+        }
+      ],
+      "repeated_summary_observations": [],
+      "pass": 1,
+      "fail": 0,
+      "assertions": 71,
+      "tests": 1,
+      "files": 1,
+      "duration_reported": "5.51s",
+      "omni": [
+        {
+          "nonce": "e33119ae44405db2dffdda1c8c5a640e",
+          "verdict": "not applicable",
+          "detail": "(focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        }
+      ],
+      "qualified_scoped_pass": true,
+      "scope": "WP11 human choice, C10 provenance, prepared application and history",
+      "latest_disposition": "1/0/71 at R4. Existing 35 assertion lines preserved; exact alternatives, premises, question, choice, proposal, receipt and ledger periods/versions checked. Post-apply history uses explicit archived-evidence adapter, not installed historical authorization or C17 process restart."
+    },
+    {
+      "label": "S10",
+      "wp": "wp11",
+      "product": {
+        "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+        "tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+        "label": "R4",
+        "parents": [
+          "9de58454924b072b6e571b5b4ebcd70f95e596df"
+        ]
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "01fbcbd0ef04b208ed383559a99fc5298e760530059eeec1265aaf382439a66a",
+      "snapshot": "47f13c881ae8ad52ba0703efe60e2b011a3292c8",
+      "snapshotTree": "1b3abb7fada35831646cf4cf0ba74cb5ea647d56",
+      "requestBlob": "4169d4ec79e098b602a6e9905b1faec3a0275882",
+      "branch": "ci-run-linux-finance-resume-wp11-229d66fa-01fbcbd0-1",
+      "run_id": 43620049903,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620049903",
+      "status": "completed",
+      "conclusion": "success",
+      "run_started_at": "2026-11-14T17:14:54Z",
+      "snapshot_envelope": {
+        "only_path": ".ci-run.json",
+        "product_tests_config_fixtures_unchanged": true,
+        "compare": {
+          "repository_full_name": "gustavomhss/Orchestra-SF",
+          "base": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+          "head": "47f13c881ae8ad52ba0703efe60e2b011a3292c8",
+          "status": "ahead",
+          "ahead_by": 1,
+          "behind_by": 0,
+          "total_commits": 1,
+          "too_large": null,
+          "base_commit": {
+            "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/229d66fa59ceebbc4b3683565670698f2cf3aa65"
+          },
+          "merge_base_commit": {
+            "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/229d66fa59ceebbc4b3683565670698f2cf3aa65"
+          },
+          "files": [
+            {
+              "filename": ".ci-run.json",
+              "status": "added",
+              "additions": 1,
+              "deletions": 0,
+              "changes": 1,
+              "previous_filename": null
+            }
+          ]
+        }
+      },
+      "request_validation": "actual validateRequest/locateTestPackage/testPathsAt at published candidate; hosted validator ran independently",
+      "required_artifacts": [],
+      "local_product_execution": false,
+      "test_job_id": 132523487634,
+      "test_job_conclusion": "success",
+      "job_log": {
+        "sha256": "49f78b7345e90a19610e120bc24131e3475f6baa1e6471518d51d66e168cf6ec",
+        "bytes": 82076,
+        "encoding": "exact UTF-8 decoded text returned by GitHub MCP, with original trailing newlines",
+        "source": "fetch_workflow_job_logs",
+        "durable_source_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620049903/job/132523487634"
+      },
+      "test_observations": [
+        {
+          "at": "2026-11-14T17:18:48.5580425Z",
+          "verdict": "pass",
+          "name": "nested C17 calculations reopen through persisted canonical requests and replay every ancestor",
+          "duration_ms": 127862.07
+        }
+      ],
+      "repeated_summary_observations": [],
+      "pass": 1,
+      "fail": 0,
+      "assertions": 20,
+      "tests": 1,
+      "files": 1,
+      "duration_reported": "128.02s",
+      "omni": [
+        {
+          "nonce": "6963fc95d6f2862ab2efcec0a50f4ee8",
+          "verdict": "not applicable",
+          "detail": "(focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        }
+      ],
+      "qualified_scoped_pass": true,
+      "scope": "Nested C17 canonical request persistence and ancestor replay",
+      "latest_disposition": "1/0/20 in 128.02s; second SQLite handle plus recreated services reads persisted parent/child requests, replays every ancestor and rejects source CAS drift. The first producer handle remains open. Not a full process/runtime restart."
+    },
+    {
+      "label": "S11",
+      "wp": "wp13",
+      "product": {
+        "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+        "tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+        "label": "R4",
+        "parents": [
+          "9de58454924b072b6e571b5b4ebcd70f95e596df"
+        ]
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+          "--test-name-pattern",
+          "^WP13 keeps the human choice in one case while confirmed training changes the source-only analysis to the real 15000 boundary$",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "fbb6c0a5d8105ce095d26e3fdbdd86a20e3ed08b3cfbf963be5ac9df111229bd",
+      "snapshot": "c7a0956f850525a03ccd28b26cb8d90808f4d83f",
+      "snapshotTree": "413f807a60933f928e5526fb2dba768e41ba00d6",
+      "requestBlob": "e3ff03c5fec4f5303529147d7e49ec4c96e1052a",
+      "branch": "ci-run-linux-finance-resume-wp13-229d66fa-fbb6c0a5-1",
+      "run_id": 43620619049,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620619049",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_started_at": "2026-11-14T17:20:59Z",
+      "snapshot_envelope": {
+        "only_path": ".ci-run.json",
+        "product_tests_config_fixtures_unchanged": true,
+        "compare": {
+          "repository_full_name": "gustavomhss/Orchestra-SF",
+          "base": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+          "head": "c7a0956f850525a03ccd28b26cb8d90808f4d83f",
+          "status": "ahead",
+          "ahead_by": 1,
+          "behind_by": 0,
+          "total_commits": 1,
+          "too_large": null,
+          "base_commit": {
+            "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/229d66fa59ceebbc4b3683565670698f2cf3aa65"
+          },
+          "merge_base_commit": {
+            "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/229d66fa59ceebbc4b3683565670698f2cf3aa65",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/229d66fa59ceebbc4b3683565670698f2cf3aa65"
+          },
+          "files": [
+            {
+              "filename": ".ci-run.json",
+              "status": "added",
+              "additions": 1,
+              "deletions": 0,
+              "changes": 1,
+              "previous_filename": null
+            }
+          ]
+        }
+      },
+      "request_validation": "actual validateRequest/locateTestPackage/testPathsAt at published candidate; hosted validator ran independently",
+      "required_artifacts": [],
+      "local_product_execution": false,
+      "test_job_id": 132525249982,
+      "test_job_conclusion": "failure",
+      "job_log": {
+        "sha256": "0ecbb8bdf9cb605ad3b60f18686b695f5c019ebbdf89579ddd88995c82b0a4b8",
+        "bytes": 76214,
+        "encoding": "exact UTF-8 decoded text returned by GitHub MCP, with original trailing newlines",
+        "source": "fetch_workflow_job_logs",
+        "durable_source_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620619049/job/132525249982"
+      },
+      "test_observations": [
+        {
+          "at": "2026-11-14T17:25:26.5482345Z",
+          "verdict": "fail",
+          "name": "WP13 keeps the human choice in one case while confirmed training changes the source-only analysis to the real 15000 boundary",
+          "duration_ms": 180013.46
+        }
+      ],
+      "repeated_summary_observations": [],
+      "pass": 0,
+      "fail": 1,
+      "assertions": 10,
+      "tests": 1,
+      "files": 1,
+      "duration_reported": "180.18s",
+      "omni": [
+        {
+          "nonce": "c132b65b53aded85b03765ea844e248f",
+          "verdict": "not applicable",
+          "detail": "(focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        }
+      ],
+      "qualified_scoped_pass": false,
+      "scope": "Isolated WP13 human-choice source change after the R2 fixture delta",
+      "latest_disposition": "0/1/10, 180013.46ms case duration. Same 180000ms oracle retained. The material fixture change justified this selection; the unresolved deadline does not justify another identical run."
+    },
+    {
+      "label": "S12",
+      "wp": "wp03",
+      "product": {
+        "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+        "tree": "67af8927297fa12ca7d84077e0450833a9738c52",
+        "label": "R5",
+        "parents": [
+          "229d66fa59ceebbc4b3683565670698f2cf3aa65"
+        ]
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "13fc50023b637bad6993c4f2debca14feed6080995a3a48484059c7129880d39",
+      "snapshot": "a646c3009b0a348517ee2d2b551fbe0c8e0bc63e",
+      "snapshotTree": "10e43b4e657216f3fe18a47aaf0f0c532401920f",
+      "requestBlob": "f37d5323ae7920a942ff6582f51da2933c98ef7f",
+      "branch": "ci-run-linux-finance-resume-wp03-4f82cf10-13fc5002-1",
+      "run_id": 43620858830,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620858830",
+      "status": "completed",
+      "conclusion": "success",
+      "run_started_at": "2026-11-14T17:23:36Z",
+      "snapshot_envelope": {
+        "only_path": ".ci-run.json",
+        "product_tests_config_fixtures_unchanged": true,
+        "compare": {
+          "repository_full_name": "gustavomhss/Orchestra-SF",
+          "base": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "head": "a646c3009b0a348517ee2d2b551fbe0c8e0bc63e",
+          "status": "ahead",
+          "ahead_by": 1,
+          "behind_by": 0,
+          "total_commits": 1,
+          "too_large": null,
+          "base_commit": {
+            "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c"
+          },
+          "merge_base_commit": {
+            "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c"
+          },
+          "files": [
+            {
+              "filename": ".ci-run.json",
+              "status": "added",
+              "additions": 1,
+              "deletions": 0,
+              "changes": 1,
+              "previous_filename": null
+            }
+          ]
+        }
+      },
+      "request_validation": "actual validateRequest/locateTestPackage/testPathsAt at published candidate; hosted validator ran independently",
+      "required_artifacts": [],
+      "local_product_execution": false,
+      "test_job_id": 132525991986,
+      "test_job_conclusion": "success",
+      "job_log": {
+        "sha256": "d7bf2f3c03513e28e990175a3c9d8f1f87e8dec0530a5433500db455f22ac9e0",
+        "bytes": 69394,
+        "encoding": "exact UTF-8 decoded text returned by GitHub MCP, with original trailing newlines",
+        "source": "fetch_workflow_job_logs",
+        "durable_source_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620858830/job/132525991986"
+      },
+      "test_observations": [
+        {
+          "at": "2026-11-14T17:25:32.8311936Z",
+          "verdict": "pass",
+          "name": "BI09 routes a real C08 pair through the Planner waterfall without promoting conditioned totals or reversing evidence",
+          "duration_ms": 12371.68
+        },
+        {
+          "at": "2026-11-14T17:25:55.2616003Z",
+          "verdict": "pass",
+          "name": "BI09 preserves explicit zero, missing amount and missing FX through actual Planner scenarios",
+          "duration_ms": 22431.1
+        },
+        {
+          "at": "2026-11-14T17:26:06.9234699Z",
+          "verdict": "pass",
+          "name": "BI10 shows the real deferred periods and no invented annual saving or completed payment",
+          "duration_ms": 11661.83
+        },
+        {
+          "at": "2026-11-14T17:26:19.4656211Z",
+          "verdict": "pass",
+          "name": "scenario plans reject callback mutation, changed paired projection, swallowed nested writes and final lease revocation",
+          "duration_ms": 12542.16
+        }
+      ],
+      "repeated_summary_observations": [],
+      "pass": 4,
+      "fail": 0,
+      "assertions": 77,
+      "tests": 4,
+      "files": 1,
+      "duration_reported": "59.16s",
+      "omni": [
+        {
+          "nonce": "694c1153b00cfeb6916f5f44f4f8c8fe",
+          "verdict": "not applicable",
+          "detail": "(focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        }
+      ],
+      "qualified_scoped_pass": true,
+      "scope": "R5 paired C08 BI09/BI10 fixture with canonical source initialization",
+      "latest_disposition": "4/0/77. Real paired comparison, zero versus missing amount/FX, deferred periods with zero invented annual saving, callback/pair drift/nested write/final lease counterproofs."
+    },
+    {
+      "label": "S13",
+      "wp": "wp13",
+      "product": {
+        "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+        "tree": "67af8927297fa12ca7d84077e0450833a9738c52",
+        "label": "R5",
+        "parents": [
+          "229d66fa59ceebbc4b3683565670698f2cf3aa65"
+        ]
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "fb63f03ad0e8fb568fe653f419ac6a96abd6730c455bfd2b1eb4ab5dceaea1d1",
+      "snapshot": "4d998e9e8cd22af9e8c475ee5dcb4081336f3d82",
+      "snapshotTree": "0d00c0d98ef2f6349377fb8e27643acdeedcb2c5",
+      "requestBlob": "8822d5944ef5d3cc7bb2c52ad41022454f0b7e49",
+      "branch": "ci-run-linux-finance-resume-wp13-4f82cf10-fb63f03a-1",
+      "run_id": 43621178540,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43621178540",
+      "status": "completed",
+      "conclusion": "success",
+      "run_started_at": "2026-11-14T17:27:11Z",
+      "snapshot_envelope": {
+        "only_path": ".ci-run.json",
+        "product_tests_config_fixtures_unchanged": true,
+        "compare": {
+          "repository_full_name": "gustavomhss/Orchestra-SF",
+          "base": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+          "head": "4d998e9e8cd22af9e8c475ee5dcb4081336f3d82",
+          "status": "ahead",
+          "ahead_by": 1,
+          "behind_by": 0,
+          "total_commits": 1,
+          "too_large": null,
+          "base_commit": {
+            "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c"
+          },
+          "merge_base_commit": {
+            "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+            "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/4f82cf10ae6766c56e9bf1862fc5198a5246cb5c"
+          },
+          "files": [
+            {
+              "filename": ".ci-run.json",
+              "status": "added",
+              "additions": 1,
+              "deletions": 0,
+              "changes": 1,
+              "previous_filename": null
+            }
+          ]
+        }
+      },
+      "request_validation": "actual validateRequest/locateTestPackage/testPathsAt at published candidate; hosted validator ran independently",
+      "required_artifacts": [],
+      "local_product_execution": false,
+      "test_job_id": 132526990338,
+      "test_job_conclusion": "success",
+      "job_log": {
+        "sha256": "3c5f22995e8cffab7cf7467fadf209e2e27045a54cf8c836d90e2fd83562d3a0",
+        "bytes": 69134,
+        "encoding": "exact UTF-8 decoded text returned by GitHub MCP, with original trailing newlines",
+        "source": "fetch_workflow_job_logs",
+        "durable_source_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43621178540/job/132526990338"
+      },
+      "test_observations": [
+        {
+          "at": "2026-11-14T17:29:00.7967585Z",
+          "verdict": "pass",
+          "name": "portfolio C08 choice applies two confirmed domain changes with durable receipts and preserves the conditioned choice",
+          "duration_ms": 1519.14
+        },
+        {
+          "at": "2026-11-14T17:29:02.2043348Z",
+          "verdict": "pass",
+          "name": "portfolio C08 choice preserves a receipt-required reservation after a real Procurement precommit failure without redispatch",
+          "duration_ms": 1407.37
+        }
+      ],
+      "repeated_summary_observations": [],
+      "pass": 2,
+      "fail": 0,
+      "assertions": 133,
+      "tests": 2,
+      "files": 1,
+      "duration_reported": "3.08s",
+      "omni": [
+        {
+          "nonce": "1b65a393e63140084df0d05139e22529",
+          "verdict": "not applicable",
+          "detail": "(focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        }
+      ],
+      "qualified_scoped_pass": true,
+      "scope": "R5 durable reservation and two-domain applied handoff",
+      "latest_disposition": "2/0/133. Real two-domain confirmed application and post-dispatch precommit failure reservation both passed. Full original receipt envelope and proof assertions retained; only the one legitimate global aggregate revision is recognized. No second dispatch after retries or executor reconstruction."
+    }
+  ],
+  "latest_product": {
+    "label": "R5",
+    "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+    "tree": "67af8927297fa12ca7d84077e0450833a9738c52"
+  },
+  "publication_boundary": "The containing final evidence commit adds receipts only. W and S below remain exact; no test result is relabelled as having executed on a later commit.",
+  "observation_policy": {
+    "test_observations": "First timed emission of each unique case/verdict/duration. Bun terminal-summary duplicates are retained in repeated_summary_observations and are not additional test cases.",
+    "counts": "Bun terminal counts cross-checked against unique timed observations for every run. Counts across runs are not summed as coverage.",
+    "logs": "SHA-256 over exact UTF-8 decoded MCP job-log bytes; local scratch location is not durable evidence. Run/job URLs identify the retained remote source.",
+    "reuse": "Reuse only at original W/S or with separately demonstrated unchanged dependency closure; a successful selected case never closes every criterion or installed consumer.",
+    "omni": "All product requests record not applicable. No resident/Omni or installed acceptance is claimed."
+  },
+  "withheld_requests": [
+    {
+      "label": "S6",
+      "dispatched": false,
+      "reason": "Full S2 repetition withheld: grouping the renewal fixture did not remove the required full replay/serialization cost. No empty rerun."
+    }
+  ],
+  "source_of_truth_order": [
+    "This final terminal ledger and final handoff for latest observations.",
+    "Intermediate receipts remain append-only and describe their creation-time state.",
+    "Historical runs retain their own product W and snapshot S.",
+    "The immutable campaign retains its original statuses; acceptance is a separate S0 decision."
+  ]
+}
