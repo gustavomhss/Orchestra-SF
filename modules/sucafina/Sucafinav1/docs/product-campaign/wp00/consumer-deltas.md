@@ -1,5 +1,13 @@
 # WP00 — integração pendente dos consumidores
 
+## Execução posterior com verificações independentes
+
+[Run 43538370444](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43538370444), produto `d456bdd9cb4c8d921648b8c885d49cf71e592402`, snapshot `8e85876ff0243dbfd83782e7014b16672f9426ca`: **44 PASS / 16 FAIL em 60 testes**, quatro arquivos e 125 assertions. O [recibo individual](../../sf2h/receipts/WP00/consumer-coverage-observations.json) conserva todos os nomes e resultados. A presença de cada um dos 39 exports agora é verificada separadamente: 33 presentes, seis funções C07 ausentes. Isso não significa que 33 operações foram invocadas.
+
+Os seis fences aditivos também executaram independentemente. `decisionResults` e `nativeRuns` passaram; `claimBindings`, `commandProposals`, `compositeScenarios` e `biArtifacts` falharam. Migração/retry, stale-read, autorização de leitura e leitura negada capturam callbacks, versões e estado antes da assertion agregada. A contagem maior de falhas discrimina lacunas antes encobertas pelo primeiro erro; não demonstra 16 regressões novas. C15, namespace BI e demais invariantes continuam gates positivos, sem skip ou expected failure. As fontes e o patch abaixo permanecem propostas de integração para os owners.
+
+## Inventário de fontes e deltas
+
 Estado: `BLOCKED` no candidato derivado do seed `7631b186e4249abd0fc24c7d10beb62355db3f3b`. A revisão 7 dos contratos não declara aceite do produto. As observações abaixo são leitura de fontes públicas pelo GitHub MCP; resultados de execução pertencem aos recibos de CI da entrega, não a este inventário estático.
 
 O contrato congelado pode ser consumido pelas frentes. Para afirmar que os consumidores do candidato o satisfazem, o integrador precisa reconciliar os deltas dos owners e executar as assertions positivas de `test/product/wp00/contract-consumers.test.ts` sobre a árvore composta. Este WP não edita `product/host-binding`, `product/ai` ou `product/routines`.

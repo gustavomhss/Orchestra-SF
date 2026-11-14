@@ -1,0 +1,326 @@
+{
+  "schema": "sf-wp00-consumer-coverage-observations-v1",
+  "product_sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+  "snapshot_sha": "8e85876ff0243dbfd83782e7014b16672f9426ca",
+  "run_id": 43538370444,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43538370444",
+  "job_id": 132272811767,
+  "run_conclusion": "failure",
+  "summary": {
+    "pass": 44,
+    "fail": 16,
+    "tests": 60,
+    "files": 4,
+    "assertions": 125
+  },
+  "log_sha256": "e7e3065f7909430033e33cb863b27666b5cd371ce155e63f1277f8cef3a629fc",
+  "omni_control": "not applicable (focused: no declaring test ran); no spawn/delegation proof",
+  "observations": [
+    {
+      "name": "producer sf_dashboard_read: modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts#readDashboard is exported",
+      "outcome": "pass",
+      "duration_ms": 2.53
+    },
+    {
+      "name": "producer sf_kpi_explain: modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts#explainKpi is exported",
+      "outcome": "pass",
+      "duration_ms": 0.43
+    },
+    {
+      "name": "producer sf_bi_view: modules/sucafina/Sucafinav1/product/analytics/capabilities.ts#readBiView is exported",
+      "outcome": "pass",
+      "duration_ms": 0.09
+    },
+    {
+      "name": "producer sf_source_get: modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts#resolveSfSource is exported",
+      "outcome": "pass",
+      "duration_ms": 0.26
+    },
+    {
+      "name": "producer sf_forecast_compare: modules/sucafina/Sucafinav1/product/planner/capabilities.ts#compareForecast is exported",
+      "outcome": "pass",
+      "duration_ms": 0.11
+    },
+    {
+      "name": "producer sf_scenario_simulate: modules/sucafina/Sucafinav1/product/planner/capabilities.ts#simulateScenario is exported",
+      "outcome": "pass",
+      "duration_ms": 0.09
+    },
+    {
+      "name": "producer sf_scenario_compare: modules/sucafina/Sucafinav1/product/planner/capabilities.ts#compareScenarios is exported",
+      "outcome": "pass",
+      "duration_ms": 0.09
+    },
+    {
+      "name": "producer sf_sensitivity_evaluate: modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts#evaluateSensitivity is exported",
+      "outcome": "pass",
+      "duration_ms": 0.09
+    },
+    {
+      "name": "producer sf_portfolio_evaluate: modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts#evaluatePortfolio is exported",
+      "outcome": "pass",
+      "duration_ms": 0.08
+    },
+    {
+      "name": "producer sf_request_read: modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#readRequest is exported",
+      "outcome": "pass",
+      "duration_ms": 0.09
+    },
+    {
+      "name": "producer sf_supplier_read: modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#readSupplier is exported",
+      "outcome": "pass",
+      "duration_ms": 0.08
+    },
+    {
+      "name": "producer sf_contract_read: modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#readContract is exported",
+      "outcome": "pass",
+      "duration_ms": 0.08
+    },
+    {
+      "name": "producer sf_sourcing_compare: modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#compareSourcing is exported",
+      "outcome": "pass",
+      "duration_ms": 0.08
+    },
+    {
+      "name": "producer sf_case_read: modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#readCase is exported",
+      "outcome": "pass",
+      "duration_ms": 0.08
+    },
+    {
+      "name": "producer sf_case_draft: modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#draftCase is exported",
+      "outcome": "pass",
+      "duration_ms": 0.07
+    },
+    {
+      "name": "producer sf_alternative_draft: modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#draftAlternative is exported",
+      "outcome": "pass",
+      "duration_ms": 0.09
+    },
+    {
+      "name": "producer sf_change_prepare: modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#prepareChange is exported",
+      "outcome": "pass",
+      "duration_ms": 0.14
+    },
+    {
+      "name": "producer sf_receipt_get: modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#readReceipt is exported",
+      "outcome": "pass",
+      "duration_ms": 0.09
+    },
+    {
+      "name": "producer sf_work_list: modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#listWork is exported",
+      "outcome": "pass",
+      "duration_ms": 0.08
+    },
+    {
+      "name": "producer sf_question_prepare: modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#prepareQuestion is exported",
+      "outcome": "pass",
+      "duration_ms": 0.06
+    },
+    {
+      "name": "producer sf_answer_read: modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#readAnswer is exported",
+      "outcome": "pass",
+      "duration_ms": 0.06
+    },
+    {
+      "name": "producer sf_relation_read: modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#readRelations is exported",
+      "outcome": "pass",
+      "duration_ms": 0.07
+    },
+    {
+      "name": "producer sf_handoff_prepare: modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#prepareHandoff is exported",
+      "outcome": "pass",
+      "duration_ms": 0.07
+    },
+    {
+      "name": "producer sf_document_extract: modules/sucafina/Sucafinav1/product/documents/capabilities.ts#extractDocumentEvidence is exported",
+      "outcome": "pass",
+      "duration_ms": 0.07
+    },
+    {
+      "name": "producer sf_import_preview: modules/sucafina/Sucafinav1/product/imports/capabilities.ts#previewImport is exported",
+      "outcome": "pass",
+      "duration_ms": 0.07
+    },
+    {
+      "name": "producer sf_review_prepare: modules/sucafina/Sucafinav1/product/reviews/capabilities.ts#prepareReview is exported",
+      "outcome": "pass",
+      "duration_ms": 0.24
+    },
+    {
+      "name": "producer sf_report_prepare: modules/sucafina/Sucafinav1/product/reviews/capabilities.ts#prepareReport is exported",
+      "outcome": "pass",
+      "duration_ms": 0.1
+    },
+    {
+      "name": "producer sf_artifact_get: modules/sucafina/Sucafinav1/product/reviews/capabilities.ts#readArtifact is exported",
+      "outcome": "pass",
+      "duration_ms": 0.08
+    },
+    {
+      "name": "producer sf_context_get: modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts#readSfBusinessContext is exported",
+      "outcome": "pass",
+      "duration_ms": 0.28
+    },
+    {
+      "name": "producer sf_knowledge_search: modules/sucafina/Sucafinav1/product/documents/capabilities.ts#searchDocumentEvidence is exported",
+      "outcome": "pass",
+      "duration_ms": 0.1
+    },
+    {
+      "name": "producer sf_evidence_get: modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts#resolveSfBusinessEvidence is exported",
+      "outcome": "pass",
+      "duration_ms": 3.57
+    },
+    {
+      "name": "producer sf_decision_recall: modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts#recallSfDecisions is exported",
+      "outcome": "pass",
+      "duration_ms": 1.0
+    },
+    {
+      "name": "producer sf_freshness_check: modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts#checkSfFreshness is exported",
+      "outcome": "pass",
+      "duration_ms": 1.69
+    },
+    {
+      "name": "producer sf_routine_catalog: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#readRoutineCatalog is exported",
+      "outcome": "fail",
+      "duration_ms": 0.33
+    },
+    {
+      "name": "producer sf_routine_prepare: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#prepareRoutine is exported",
+      "outcome": "fail",
+      "duration_ms": 0.98
+    },
+    {
+      "name": "producer sf_routine_run: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#runAdmittedRoutine is exported",
+      "outcome": "fail",
+      "duration_ms": 0.19
+    },
+    {
+      "name": "producer sf_routine_status: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#readRoutineStatus is exported",
+      "outcome": "fail",
+      "duration_ms": 0.11
+    },
+    {
+      "name": "producer sf_routine_result: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#readRoutineResult is exported",
+      "outcome": "fail",
+      "duration_ms": 0.1
+    },
+    {
+      "name": "producer sf_watch_prepare: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#prepareWatch is exported",
+      "outcome": "fail",
+      "duration_ms": 0.07
+    },
+    {
+      "name": "the distributed five-profile/eighteen-skill bundle consumes the frozen C15 contract",
+      "outcome": "fail",
+      "duration_ms": 3.7
+    },
+    {
+      "name": "the existing C08 provider creates all contracted namespace versions",
+      "outcome": "fail",
+      "duration_ms": 2.43
+    },
+    {
+      "name": "C08 adds the v1 fields on an authorized write and an exact retry does not migrate twice",
+      "outcome": "fail",
+      "duration_ms": 1.81
+    },
+    {
+      "name": "C08 checkNamespaces rejects a stale read dependency before invoking the write callback",
+      "outcome": "fail",
+      "duration_ms": 1.11
+    },
+    {
+      "name": "C08 checkNamespaces requires current read authority and does not increment the read version",
+      "outcome": "fail",
+      "duration_ms": 1.02
+    },
+    {
+      "name": "C08 refuses an unreadable check namespace before invoking any write callback",
+      "outcome": "fail",
+      "duration_ms": 11.79
+    },
+    {
+      "name": "C08 namespace fence refuses claimBindings outside preferences before a durable commit",
+      "outcome": "fail",
+      "duration_ms": 0.72
+    },
+    {
+      "name": "C08 namespace fence refuses commandProposals outside preferences before a durable commit",
+      "outcome": "fail",
+      "duration_ms": 0.28
+    },
+    {
+      "name": "C08 namespace fence refuses compositeScenarios outside preferences before a durable commit",
+      "outcome": "fail",
+      "duration_ms": 0.26
+    },
+    {
+      "name": "C08 namespace fence refuses decisionResults outside preferences before a durable commit",
+      "outcome": "pass",
+      "duration_ms": 0.19
+    },
+    {
+      "name": "C08 namespace fence refuses nativeRuns outside preferences before a durable commit",
+      "outcome": "pass",
+      "duration_ms": 0.18
+    },
+    {
+      "name": "C08 namespace fence refuses biArtifacts outside preferences before a durable commit",
+      "outcome": "fail",
+      "duration_ms": 0.24
+    },
+    {
+      "name": "C08 retains existing preference CAS and idempotency semantics",
+      "outcome": "pass",
+      "duration_ms": 0.52
+    },
+    {
+      "name": "Atlas translation > maps a ledger event deterministically and preserves its dependencies",
+      "outcome": "pass",
+      "duration_ms": 0.92
+    },
+    {
+      "name": "Atlas translation > refuses a ledger event whose dependencies include another case event",
+      "outcome": "pass",
+      "duration_ms": 0.08
+    },
+    {
+      "name": "Atlas translation > requires a reviewed policy bound to a native profile and its rule digest",
+      "outcome": "pass",
+      "duration_ms": 0.2
+    },
+    {
+      "name": "SF native execution registry > pins one real request to a session and rejects replay, forged bindings and revocation",
+      "outcome": "pass",
+      "duration_ms": 2.32
+    },
+    {
+      "name": "concurrent sessions with the same profile retain distinct request authorities",
+      "outcome": "pass",
+      "duration_ms": 1.06
+    },
+    {
+      "name": "the selected manifest limits operations even when the profile and skill allow more",
+      "outcome": "pass",
+      "duration_ms": 0.47
+    },
+    {
+      "name": "authentication and binding retain the same admission when the caller mutates its inputs",
+      "outcome": "pass",
+      "duration_ms": 0.59
+    },
+    {
+      "name": "private MCP traverses native lease and refuses a normalized configured namesake",
+      "outcome": "pass",
+      "duration_ms": 24.04
+    }
+  ],
+  "limits": [
+    "Export presence is source inspection, not invocation of all 39 operations.",
+    "All six additive field fences executed independently: decisionResults/nativeRuns passed; claimBindings/commandProposals/compositeScenarios/biArtifacts failed.",
+    "Migration and read-CAS/authority observe all relevant callbacks and state before aggregate assertions.",
+    "The 16 failures are positive acceptance gates, not marked expected or skipped."
+  ]
+}

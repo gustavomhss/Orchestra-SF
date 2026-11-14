@@ -22,14 +22,14 @@
   "counts": {
     "BLOCKED": 19,
     "NOT_PROVEN": 1,
-    "PARTIAL": 33,
-    "PASS": 32
+    "PARTIAL": 26,
+    "PASS": 39
   },
   "counts_by_scope": {
     "WP00": {
       "BLOCKED": 3,
-      "PARTIAL": 9,
-      "PASS": 8
+      "PARTIAL": 8,
+      "PASS": 9
     },
     "WP00.T01": {
       "PASS": 7
@@ -40,14 +40,13 @@
       "PASS": 8
     },
     "WP00.T03": {
-      "PARTIAL": 4,
-      "PASS": 5
+      "PASS": 9
     },
     "WP00.T04": {
       "BLOCKED": 8,
       "NOT_PROVEN": 1,
-      "PARTIAL": 13,
-      "PASS": 4
+      "PARTIAL": 11,
+      "PASS": 6
     }
   },
   "task_states": {
@@ -237,7 +236,7 @@
     "corpus_definition": {
       "status": "REVIEWED",
       "assertions": "Fixtures sintéticas, vetores mensais explícitos, oráculos numéricos independentes, volumes 1000/200/100 e roteiros J01–J08.",
-      "limit": "Roteiro planejado não equivale a execução; export de 20 registros não fecha a jornada J05 de 25.",
+      "limit": "Roteiros planejados não equivalem a execução. O caso canônico de 20 permanece; a prova posterior corpus_reconciliation adiciona 25 registros/notas longas, sem fechar J05.",
       "source_refs": [
         "S009",
         "S010",
@@ -276,10 +275,12 @@
     "ui_measurements": {
       "status": "NOT_PROVEN_BOOTSTRAP_BLOCKED",
       "assertions": "Protocolo separa resposta visual e conclusão, define 30 repetições e volumes sintéticos.",
-      "limit": "UI5 falhou em C15 antes autenticação: authenticated=false, cacheState=null, 0 observações. Não há série de 30 medições, J01–J08, viewport ou zoom comprovados.",
+      "limit": "W8: zero observações de negócio, 1260 cancelamentos em 42 grupos, browser/cache null e authenticated=false. W10 comprova separadamente zoom 100/200/100 contra o app server; não fornece mediana/p95, primeira resposta, viewport/layout do produto ou baseline temporal.",
       "source_refs": [
         "S031"
-      ]
+      ],
+      "run_ref": "43537760359",
+      "zoom_run_ref": "43539552540"
     },
     "scanner_preflight": {
       "status": "RUNNER_ABSENCE_FAIL_CLOSED_PASS",
@@ -407,6 +408,311 @@
         "S041",
         "S042"
       ]
+    },
+    "corpus_reconciliation": {
+      "status": "PASS",
+      "run_ref": "43537536421",
+      "historical_run_refs": [
+        "43536802706"
+      ],
+      "assertions": "XLSX real percorre parser, construção de comando, preview/apply e projeção no SQLite real. Reimportação exata e alterada preserva identidades; valores 12000/8000 passam a 16000/8000 apenas quando alterados. Prévia antiga e digest divergente são recusados sem efeito. Reabertura conserva o snapshot. Dashboard e comandos mensais reais distinguem branco/zero/herdado e períodos. Renderizadores reais DOCX/PPTX conservam 25 projetos, notas longas e comentário autorizado; o caso canônico de 20 permanece.",
+      "limit": "updated=N conta linhas correspondentes, não mudanças materiais nem receipt de idempotência C04. Atores do corpus são sintéticos. Conteúdo ZIP/XML não certifica aparência visual, download/revisão integral, J03/J05, provider ou identidade nativa.",
+      "source_refs": [
+        "S047",
+        "S048",
+        "S049",
+        "S050"
+      ]
+    },
+    "baseline_real_consumers_current": {
+      "status": "PASS",
+      "run_ref": "43537536421",
+      "historical_run_refs": [
+        "43536802706"
+      ],
+      "assertions": "O mesmo CI executa os consumidores reais de Planner, Procurement, Dashboard e DOCX/PPTX. Mantém alternativas 590000/602000/596000, ranking e FX submetido, viewer/stale write recusados, retorno/resubmissão com histórico separado e volume sintético 1000/200/100. O fixture de dois projetos usa IDs distintos e verifica CAPEX preservado.",
+      "limit": "Prova de funções e fronteiras de domínio com corpus; não representa identidade empresarial, UI observada, GNATIVE nem jornadas completas.",
+      "source_refs": [
+        "S050",
+        "S049",
+        "S047"
+      ]
+    },
+    "scanner_failure_current": {
+      "status": "NEGATIVE_BRANCHES_PASS",
+      "run_ref": "43537536421",
+      "historical_run_refs": [
+        "43536802706",
+        "43522589708"
+      ],
+      "assertions": "Ausência real no runner e invocação real incapaz de executar resultam em recusa. O subprocesso Bun com script inexistente sai 1, fora dos códigos clean/hit, e o classificador canônico retorna could-not-run; o adapter real lança scanner unavailable e a porta Atlas recusa scanner-unavailable, sem registros/eventos. O recibo mantém C17 HOLD e GNATIVE NOT_PROVEN.",
+      "limit": "Bun é o executável real da falha controlada, não um scanner instalado. Não prova gitleaks/trufflehog funcional, timeout, clean/canary reais com binário instalado, durabilidade da instalação ou GNATIVE. A observação de ausência W7 durou 7 ms; não atribuir esse tempo a outro run.",
+      "source_refs": [
+        "S051",
+        "S052"
+      ]
+    },
+    "state_consumer_matrix": {
+      "status": "INVENTORY_COMPLETE_ACCEPTANCE_PARTIAL",
+      "assertions": "Auditoria pinada em W6: 255 arquivos TS de implementação de produto e 26 da composição CLI, árvore completa. Enumera 17 campos C08, 12 namespaces, 46 famílias de estado e 14 famílias de formatos com produtor/consumidor concreto. 38 famílias de estado têm ambos; quatro têm writer e nenhum leitor de negócio; quatro são apenas declaradas. Cinco metadados de provider e quatro obrigações C07 não implementadas estão separados.",
+      "limit": "As oito lacunas são ausência concreta de produtor/consumidor no source inspecionado, não responsabilidade genérica de integração. Mapeamento estático não aceita C08, C07 ou GNATIVE. A matriz publicada em W7/W8 conserva o pin de inspeção W6.",
+      "source_refs": [
+        "S053",
+        "S054"
+      ]
+    },
+    "measurement_aggregator_current": {
+      "status": "PASS_SYNTHETIC_AGGREGATION",
+      "run_ref": "43537536421",
+      "assertions": "Testes do agregador recusam matriz vazia, chaves duplicadas, contagens/distribuições incoerentes e valores não finitos; só 30/30 é elegível. Preservam falhas/cancelamentos e ausência de baseline, distinguem ambiente, calculam deltas p95/percentuais, investigam regressão de conclusão superior a 20% e tratam baseline zero. O limiar de 200 ms usa visualReadyMs apenas como limite superior observado: >200 não demonstra ausência de feedback anterior.",
+      "limit": "Testes sintéticos do agregador não produzem observações de UI. O raw W8 registrou 42 grupos e 1260 cancelamentos por C15, sem latências. A capacidade de zoom passou separadamente no W10; comparação histórica permanece unavailable.",
+      "source_refs": [
+        "S059",
+        "S060"
+      ]
+    },
+    "ui_harness_current": {
+      "status": "BUSINESS_BOOTSTRAP_BLOCKED_ZOOM_CAPABILITY_PASSED_SEPARATELY",
+      "assertions": "Sete flows e 42 configurações estão implementados, com 30 repetições previstas por configuração. W8 preservou as 1260 tentativas não alcançadas como canceladas. O zoom real independente foi corrigido e aprovado no W10; a execução de negócio continua bloqueada por C15.",
+      "limit": "Último run dos flows de negócio: W8 com zero observações, 1260 cancelamentos e medianas/p95 null. W10 aprova somente a capacidade de zoom contra o app server; não fornece autenticação Sucafina, latências, comparação histórica nem aceite de jornadas.",
+      "source_refs": [
+        "S061",
+        "S062",
+        "S063",
+        "S064",
+        "S065",
+        "S066",
+        "S071",
+        "S072",
+        "S069",
+        "S077",
+        "S078"
+      ],
+      "run_ref": "43537760359",
+      "zoom_run_ref": "43539552540"
+    },
+    "typecheck_current": {
+      "status": "FAIL_INHERITED_DIAGNOSTICS",
+      "run_ref": "43539548039",
+      "assertions": "O check W10 permanece FAILURE com 144 diagnósticos herdados e zero próprios. Typecheck oficial das seis fontes UI PASS; guards com 78 regras/606 paths, zero gates, 11 warnings e zero errors.",
+      "limit": "Typecheck/guards e o zoom positivo são provas distintas. Os 144 diagnósticos herdados continuam impedindo compilação integral; consumidores W8 44 PASS/16 FAIL mantêm C07/C08/C15 bloqueados.",
+      "source_refs": [
+        "S056",
+        "S047",
+        "S060",
+        "S079",
+        "S080"
+      ],
+      "historical_run_refs": [
+        "43536792411",
+        "43537543232",
+        "43538629884"
+      ]
+    },
+    "consumer_tests_current": {
+      "status": "EXECUTED_44_PASS_16_FAIL",
+      "run_ref": "43538370444",
+      "assertions": "60 testes em quatro arquivos, 44 PASS, 16 FAIL e 125 assertions. Os 39 exports e seis fences aditivos foram executados independentemente; a suíte não encerra o laço na primeira divergência.",
+      "limit": "Os 16 FAIL mantêm bloqueios concretos C07/C08/C15; nenhum é aceito como falha esperada ou skip. Esta prova substitui a pendência de execução, sem substituir os resultados antigos no histórico.",
+      "source_refs": [
+        "S055"
+      ],
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/consumer-coverage-observations.json"
+    },
+    "evidence_source_maps_current": {
+      "status": "PASS",
+      "run_ref": "43537536421",
+      "assertions": "O helper de contrato vincula versão/incarnation ao digest da referência original, conserva escopos diferentes com mesmo recordId e recusa digest alterado; o teste próprio executou no CI.",
+      "limit": "Mapeamento de identidade de evidência não concede autoridade nem comprova memória nativa ou leitura empresarial integrada.",
+      "source_refs": [
+        "S058",
+        "S057"
+      ]
+    },
+    "consumer_exports_current": {
+      "observed_status": "FAIL",
+      "run_ref": "43538370444",
+      "assertions": "Os 39 exports foram verificados independentemente: 33 PASS e seis FAIL. Ausentes os handlers readRoutineCatalog, prepareRoutine, runAdmittedRoutine, readRoutineStatus, readRoutineResult e prepareWatch em product/routines/capabilities.ts.",
+      "missing_operations": [
+        "sf_routine_catalog",
+        "sf_routine_prepare",
+        "sf_routine_run",
+        "sf_routine_status",
+        "sf_routine_result",
+        "sf_watch_prepare"
+      ],
+      "limit": "Presença nominal em source não é invocação de 39 operações. Os seis FAIL são gates de aceite positivos, não expected failures.",
+      "source_refs": [
+        "S055"
+      ]
+    },
+    "consumer_c08_current": {
+      "observed_status": "BLOCKED",
+      "run_ref": "43538370444",
+      "assertions": "Executados todos os seis fences aditivos individualmente: decisionResults/nativeRuns PASS; claimBindings/commandProposals/compositeScenarios/biArtifacts FAIL. Também falharam namespaces, migração aditiva, CAS da dependência de leitura, autorização atual de leitura e recusa antes do callback. Preferência CAS/idempotência preservada passou.",
+      "additive_fences": {
+        "claimBindings": "FAIL",
+        "commandProposals": "FAIL",
+        "compositeScenarios": "FAIL",
+        "decisionResults": "PASS",
+        "nativeRuns": "PASS",
+        "biArtifacts": "FAIL"
+      },
+      "limit": "Resultado, chamadas de autorização, callback e estado são observados por asserções agregadas. Fixture testPersistence não prova instalação nativa, disco/restart, autenticação empresarial ou revogação de arquivos/links.",
+      "source_refs": [
+        "S055"
+      ]
+    },
+    "consumer_c15_current": {
+      "observed_status": "FAIL",
+      "run_ref": "43538370444",
+      "assertions": "Loader real do bundle distribuído falhou novamente por Profile policy mismatch: sf_portfolio. A discrepância entre contrato e assets não foi resolvida pelo avanço dos testes de WP00.",
+      "limit": "O resultado não é prova de carga nativa, SessionV2.skill, inferência ou consumo de output. Bootstrap UI W8 confirma separadamente o mesmo impedimento.",
+      "source_refs": [
+        "S055",
+        "S038"
+      ]
+    },
+    "consumer_support_current": {
+      "status": "PASS_SCOPED_COMPONENTS",
+      "run_ref": "43538370444",
+      "assertions": "Passaram quatro testes de registry, um de private MCP, três de tradução Atlas, dois fences de campos aditivos e preferência CAS/idempotência. Somados aos 33 exports presentes, correspondem aos 44 PASS observados.",
+      "limit": "Registry/SDK usam identidades/receipts sintéticos e não provam GNATIVE. Tradutores Atlas usam validators reais, mas não demonstram ATLAS-PACKAGE completo, scanner instalado, append durável ou recall nativo.",
+      "source_refs": [
+        "S055",
+        "S025",
+        "S026",
+        "S027"
+      ]
+    },
+    "ui_bootstrap_current": {
+      "status": "BLOCKED_C15_BOOTSTRAP",
+      "run_ref": "43537760359",
+      "assertions": "W8 preparou corpus 1000/200/100 pelo SQLite real; CLI saiu 1 em start-existing-cli antes de readiness, browser e autenticação por Profile policy mismatch: sf_portfolio. O raw contém 42 grupos, zero tentativas executadas e 1260 canceladas, sem números de latência.",
+      "observed": {
+        "stage": "start-existing-cli",
+        "exit_code": 1,
+        "corpus_counts": {
+          "financialLines": 1000,
+          "purchaseOrders": 200,
+          "projects": 100
+        },
+        "dataset_digest": "786ffcdaf98ce795cfc22f5eec3989bf7386db0a8d0143118cf9d5fa941db3ac",
+        "runtime_version": "1.3.14",
+        "operating_system": "linux 7.0.0-1017-azure",
+        "authenticated": false,
+        "browser_version": null,
+        "cache_state": null,
+        "observations": 0,
+        "configuration_groups": 42,
+        "cancelled_measurements": 1260,
+        "comparison": {
+          "state": "unavailable",
+          "reason": "Authenticated candidate measurement was not reached and baseline was not measured",
+          "comparisons": []
+        },
+        "zoom_observations": 0
+      },
+      "limit": "Cancelamentos não são falhas de 1260 ações efetivamente tentadas nem medições bem-sucedidas. A falha própria de zoom daquele run foi resolvida e comprovada separadamente no W10, sem alterar o impedimento C15 observado antes do browser do fluxo de negócio.",
+      "source_refs": [
+        "S061",
+        "S062",
+        "S063",
+        "S038",
+        "S039",
+        "S040"
+      ]
+    },
+    "zoom_harness_current": {
+      "status": "PASS_BROWSER_CAPABILITY_ONLY",
+      "run_ref": "43539552540",
+      "historical_run_refs": [
+        "43537760359"
+      ],
+      "assertions": "W10 executou zoom real 100→200→100 contra o servidor de produção existente: DPR 1→2→1, viewport CSS 1440×900→720×450→1440×900 e visualViewportScale constante em 1. Chromium 147.0.7727.15; runtime ID/manifest da extensão e permissão tabs conferidos; AppProcess observou um spawn e zero delegações. Um teste passou sem retry.",
+      "observed": {
+        "browser_version": "147.0.7727.15",
+        "operating_system": "linux 7.0.0-1017-azure",
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "normal": {
+          "devicePixelRatio": 1,
+          "cssViewportWidth": 1440,
+          "cssViewportHeight": 900,
+          "visualViewportScale": 1,
+          "zoomPercent": 100,
+          "mechanism": "chrome.tabs.setZoom/getZoom",
+          "url": "http://127.0.0.1:3000/"
+        },
+        "enlarged": {
+          "devicePixelRatio": 2,
+          "cssViewportWidth": 720,
+          "cssViewportHeight": 450,
+          "visualViewportScale": 1,
+          "zoomPercent": 200,
+          "mechanism": "chrome.tabs.setZoom/getZoom",
+          "url": "http://127.0.0.1:3000/"
+        },
+        "restored": {
+          "devicePixelRatio": 1,
+          "cssViewportWidth": 1440,
+          "cssViewportHeight": 900,
+          "visualViewportScale": 1,
+          "zoomPercent": 100,
+          "mechanism": "chrome.tabs.setZoom/getZoom",
+          "url": "http://127.0.0.1:3000/"
+        },
+        "extension": {
+          "id": "kjjfamnfjoddanaeijmdgfnjfnccnelm",
+          "manifest": {
+            "background": {
+              "service_worker": "worker.js"
+            },
+            "manifest_version": 3,
+            "name": "WP00 isolated browser zoom evidence",
+            "permissions": [
+              "tabs"
+            ],
+            "version": "1.0.0"
+          },
+          "tabsPermission": true,
+          "workerUrl": "chrome-extension://kjjfamnfjoddanaeijmdgfnjfnccnelm/worker.js"
+        },
+        "app_process": {
+          "spawns": 1,
+          "delegations": 0
+        }
+      },
+      "raw_sha256": "38b9e0cc3a753d30fa95cbd9621356133dd529cc1896c74beafdd84b7f4fb770",
+      "limit": "Prova da capacidade de zoom/instrumentação no app server. Não autentica Sucafina, não executa fluxo de negócio, não qualifica UX/layout de produto em 200%, GNATIVE ou medições temporais; os 1260 cancelamentos W8 por C15 permanecem separados.",
+      "next_action": {
+        "owners": [],
+        "action": "Preservar a instrumentação aprovada e usá-la nos flows de negócio quando C15 permitir bootstrap/autenticação. Não exige nova correção própria de zoom."
+      },
+      "source_refs": [
+        "S077",
+        "S078",
+        "S081",
+        "S082"
+      ]
+    },
+    "zoom_harness_w8_failure": {
+      "status": "FAIL_OWN_HARNESS_DEFECT",
+      "run_ref": "43537760359",
+      "assertions": "O teste de zoom independente do bootstrap Sucafina falhou em setBrowserZoom: worker.evaluate informou The active browser tab does not match the measured page.",
+      "limit": "Histórico W8: nenhum PASS pode ser atribuído a esse run. A correção posterior e sua prova positiva têm produto e snapshot próprios em zoom_harness_current.",
+      "next_action": {
+        "owner": "WP00",
+        "action": "Resolvido no escopo de instrumentação pelo run W10 43539552540; preservar a falha histórica e não reinterpretá-la como aprovação."
+      },
+      "source_refs": [
+        "S064",
+        "S065",
+        "S073",
+        "S074"
+      ]
     }
   },
   "criteria": [
@@ -430,7 +736,11 @@
         "consumer_c08",
         "consumer_c15",
         "consumer_exports",
-        "typecheck"
+        "typecheck",
+        "consumer_exports_current",
+        "consumer_c08_current",
+        "consumer_c15_current",
+        "typecheck_current"
       ],
       "remaining_gaps": [
         "Baseline, freeze, fixtures and ownership are versioned; composed consumer acceptance is blocked by C08/C15/C07 and package typecheck. No approval is manufactured."
@@ -448,7 +758,10 @@
       "proof_run_refs": [
         "43514166596",
         "43522589708",
-        "43522928224"
+        "43522928224",
+        "43538370444",
+        "43538629884",
+        "43539548039"
       ],
       "implementation_refs": [
         "S001",
@@ -613,7 +926,8 @@
       "status_reason": "Ownership tests reject collisions and constrain the explicit WP00 handoff transfer. Three inherited interface files still have no explicit writer grant in the supplied manifest, and require S0 allocation.",
       "evidence_refs": [
         "ownership",
-        "typecheck"
+        "typecheck",
+        "typecheck_current"
       ],
       "remaining_gaps": [
         "Ownership tests reject collisions and constrain the explicit WP00 handoff transfer. Three inherited interface files still have no explicit writer grant in the supplied manifest, and require S0 allocation."
@@ -626,7 +940,9 @@
       },
       "proof_run_refs": [
         "43522589708",
-        "43522928224"
+        "43522928224",
+        "43538629884",
+        "43539548039"
       ],
       "implementation_refs": [
         "S001",
@@ -711,16 +1027,22 @@
         "E01"
       ],
       "status": "PARTIAL",
-      "status_reason": "Metric and fixture definitions preserve period, currency, source, missing values and independent expected values. Full comparable visual and completion measurements remain a distinct obligation.",
+      "status_reason": "Definições e agregador preservam ausência e oráculos independentes. W8 parou em C15 antes autenticação/browser, com zero observações e 1260 cancelamentos. W10 comprovou separadamente a capacidade real de zoom; ainda não há medidas visuais comparáveis dos flows de negócio.",
       "evidence_refs": [
         "contract_docs",
         "corpus_definition",
         "ui_measurements",
-        "ui_bootstrap"
+        "ui_bootstrap",
+        "measurement_aggregator_current",
+        "ui_harness_current",
+        "typecheck_current",
+        "ui_bootstrap_current",
+        "zoom_harness_current"
       ],
       "remaining_gaps": [
-        "Metric and fixture definitions preserve period, currency, source, missing values and independent expected values. Full comparable visual and completion measurements remain a distinct obligation.",
-        "Bootstrap real da UI bloqueado por C15 (sf_portfolio); 0 observações, autenticação não alcançada."
+        "WP12/WP10/S0: liberar bootstrap C15; executar 30 repetições por fluxo/configuração após readiness/autenticação reais, usando a instrumentação de zoom já aprovada.",
+        "Baseline histórico não foi medido no mesmo ambiente/corpus; comparação temporal permanece unavailable.",
+        "visualReadyMs é limite superior para resposta perceptível; >200 ms não demonstra ausência de indicador anterior."
       ],
       "next_action": {
         "owners": [
@@ -729,16 +1051,29 @@
           "S0",
           "WP00"
         ],
-        "action": "Compor assets C15 compatíveis para liberar o bootstrap; repetir o harness sem alterar expectativas e executar os cenários/30 medições/viewports/zoom ainda não cobertos. Registrar observações brutas."
+        "action": "Compor assets C15 compatíveis e executar os sete flows com o zoom já aprovado. Registrar dados brutos/latências apenas quando observados; medir baseline comparável e avaliar 200 ms/p95 no escopo comprovado."
       },
       "proof_run_refs": [
-        "43522985791"
+        "43522985791",
+        "43537536421",
+        "43537543232",
+        "43537760359",
+        "43538629884",
+        "43539552540",
+        "43539548039"
       ],
       "implementation_refs": [
         "S001",
         "S002",
         "S003",
-        "S004"
+        "S004",
+        "S059",
+        "S061",
+        "S062",
+        "S073",
+        "S074",
+        "S077",
+        "S078"
       ]
     },
     {
@@ -892,37 +1227,37 @@
       "proof_packages": [
         "E01"
       ],
-      "status": "PARTIAL",
-      "status_reason": "Synthetic fixtures and executed cases cover absence/FX, zero/inherited definitions, restricted roles, stale writes and resubmission. Complete import/reload/native restricted journeys are not yet qualified.",
+      "status": "PASS",
+      "status_reason": "As fixtures pertinentes representam casos normais, vazios/ausentes, bloqueados, concorrentes e restritos. Os consumidores reais executados cobrem falta de FX, valores branco/zero/herdado, viewer e campo restrito, versões/prévias antigas, digest divergente e ressubmissão; a reimportação inclui reabertura SQLite.",
       "evidence_refs": [
         "corpus_definition",
-        "baseline_real_consumers",
-        "consumer_c08",
-        "contract_boundaries"
+        "baseline_real_consumers_current",
+        "corpus_reconciliation",
+        "contract_boundaries",
+        "scanner_failure_current"
       ],
-      "remaining_gaps": [
-        "Synthetic fixtures and executed cases cover absence/FX, zero/inherited definitions, restricted roles, stale writes and resubmission. Complete import/reload/native restricted journeys are not yet qualified."
-      ],
+      "remaining_gaps": [],
       "next_action": {
-        "owners": [
-          "WP00",
-          "WP09",
-          "WP10",
-          "WP12",
-          "S0"
-        ],
-        "action": "Integrar os deltas concretos C07/C08/C15 pelos owners e repetir os gates de consumidores no candidato composto; manter provas nativas/visuais separadas."
+        "owners": [],
+        "action": "Preservar a evidência e reavaliar somente se mudar o contrato, consumidor ou a premissa coberta."
       },
       "proof_run_refs": [
         "43514166596",
-        "43522589708"
+        "43522589708",
+        "43536802706",
+        "43537536421"
       ],
       "implementation_refs": [
         "S001",
         "S002",
         "S003",
-        "S004"
-      ]
+        "S004",
+        "S047",
+        "S048",
+        "S049",
+        "S050"
+      ],
+      "acceptance_limit": "O critério trata de representação nas fixtures. A cobertura não declara jornadas UI/nativas completas ou consumidores integrados aceitos."
     },
     {
       "criterion_id": "WP00.CMP.10",
@@ -941,7 +1276,8 @@
         "freeze_matrix",
         "contract_docs",
         "execution_registry",
-        "native_qualification"
+        "native_qualification",
+        "consumer_support_current"
       ],
       "remaining_gaps": [
         "All5 profiles/18 skills/8 packs/39 operations/6 proof definitions have traceable owners and consumers. Real native negatives and every integrated consumer remain open."
@@ -958,7 +1294,8 @@
       },
       "proof_run_refs": [
         "43514166596",
-        "43522589708"
+        "43522589708",
+        "43538370444"
       ],
       "implementation_refs": [
         "S001",
@@ -1024,7 +1361,8 @@
       "evidence_refs": [
         "ownership",
         "contract_docs",
-        "typecheck"
+        "typecheck",
+        "typecheck_current"
       ],
       "remaining_gaps": [
         "The frozen inventory and collision checker resolve granted paths. S0 must allocate the three inherited interface files lacking an explicit writer and compose the blocked producers."
@@ -1037,7 +1375,9 @@
       },
       "proof_run_refs": [
         "43522589708",
-        "43522928224"
+        "43522928224",
+        "43538629884",
+        "43539548039"
       ],
       "implementation_refs": [
         "S001",
@@ -1095,7 +1435,10 @@
         "consumer_exports",
         "consumer_c15",
         "consumer_c08",
-        "native_qualification"
+        "native_qualification",
+        "consumer_exports_current",
+        "consumer_c08_current",
+        "consumer_c15_current"
       ],
       "remaining_gaps": [
         "Actual consumer acceptance and the resident native output chain are incomplete; neither static catalog checks nor synthetic SDK identities substitute for those proofs."
@@ -1111,7 +1454,8 @@
         "action": "Integrar os deltas concretos C07/C08/C15 pelos owners e repetir os gates de consumidores no candidato composto; manter provas nativas/visuais separadas."
       },
       "proof_run_refs": [
-        "43514166596"
+        "43514166596",
+        "43538370444"
       ],
       "implementation_refs": [
         "S001",
@@ -1473,7 +1817,10 @@
         "consumer_c08",
         "consumer_c15",
         "atlas_mapping",
-        "contract_docs"
+        "contract_docs",
+        "consumer_c08_current",
+        "consumer_c15_current",
+        "consumer_support_current"
       ],
       "remaining_gaps": [
         "WP10 C08 incompatível, WP12 assets divergentes; nenhum recibo composto completo de WP06/WP14."
@@ -1492,7 +1839,8 @@
         "action": "Integrar os deltas concretos C07/C08/C15 pelos owners e repetir os gates de consumidores no candidato composto; manter provas nativas/visuais separadas."
       },
       "proof_run_refs": [
-        "43514166596"
+        "43514166596",
+        "43538370444"
       ],
       "implementation_refs": [
         "S007",
@@ -1521,7 +1869,8 @@
         "freeze_matrix",
         "execution_registry",
         "private_mcp",
-        "native_qualification"
+        "native_qualification",
+        "consumer_support_current"
       ],
       "remaining_gaps": [
         "Integração real de producers/consumers bloqueada.",
@@ -1542,7 +1891,8 @@
       },
       "proof_run_refs": [
         "43514166596",
-        "43522589708"
+        "43522589708",
+        "43538370444"
       ],
       "implementation_refs": [
         "S007",
@@ -1645,18 +1995,22 @@
       ],
       "status": "PARTIAL",
       "definition_scope_status": "PASS",
-      "status_reason": "O requisito de interseção C16 e as recusas existem; registry real tem positivos/negativos. A ausência de receipt, ACL real revogada e rotina admitida não estão integralmente cobertas.",
+      "status_reason": "Interseção C16 e recusas permanecem obrigatórias. O registry real recusa receipt totalmente ausente antes da autoridade, com controle positivo; o corpus executa preview/apply e stale preview reais. Revogação empresarial em instalação real, paridade do consumidor de preview nativo e rotina governada continuam sem prova.",
       "evidence_refs": [
         "freeze_matrix",
         "execution_registry",
         "private_mcp",
         "consumer_c08",
-        "contract_boundaries"
+        "contract_boundaries",
+        "corpus_reconciliation",
+        "consumer_tests_current",
+        "consumer_c08_current",
+        "consumer_support_current"
       ],
       "remaining_gaps": [
-        "Registry usa recibos/auth sintéticos.",
-        "Novo negativo de read fence confirmou escrita/callback quando cases/read está negado; provider não conforme.",
-        "Import e rotina não passaram pelos consumidores reais no W."
+        "Registry usa recibos/auth sintéticos; não demonstra skill carregada numa Session real.",
+        "W8 confirmou violações C08 de namespaces/migração/read fences e quatro dos seis fences aditivos; os resultados agora são individuais.",
+        "A reimportação de corpus não qualifica a operação nativa preview-only nem admissão Relay."
       ],
       "promotion_requires": [
         "Executar caminho autorizado e recusas com receipt observado/autoridade atual; provar preview/admissão em AM02/AM06."
@@ -1673,12 +2027,16 @@
       },
       "proof_run_refs": [
         "43514166596",
-        "43522589708"
+        "43522589708",
+        "43537536421",
+        "43538370444"
       ],
       "implementation_refs": [
         "S007",
         "S008",
-        "S001"
+        "S001",
+        "S047",
+        "S055"
       ]
     },
     {
@@ -1697,10 +2055,11 @@
       ],
       "status": "PASS",
       "definition_scope_status": "PASS",
-      "status_reason": "A única estrutura nova de produção é um mapa declarativo pequeno dos campos existentes; não cria framework, store ou runtime paralelo.",
+      "status_reason": "Contratos pequenos cobrem necessidades presentes: o layout declara campos existentes e o helper de evidência vincula versões/incarnations a digests originais com validação. Não introduzem framework empresarial, store ou runtime paralelo.",
       "evidence_refs": [
         "contract_docs",
-        "freeze_state"
+        "freeze_state",
+        "evidence_source_maps_current"
       ],
       "remaining_gaps": [],
       "promotion_requires": [],
@@ -1709,12 +2068,15 @@
         "action": "Preservar a evidência e reavaliar somente se mudar o contrato, consumidor ou a premissa coberta."
       },
       "proof_run_refs": [
-        "43522589708"
+        "43522589708",
+        "43537536421"
       ],
       "implementation_refs": [
         "S007",
         "S008",
-        "S001"
+        "S001",
+        "S058",
+        "S057"
       ]
     },
     {
@@ -1778,7 +2140,11 @@
         "consumer_c15",
         "consumer_c08",
         "consumer_exports",
-        "ui_bootstrap"
+        "ui_bootstrap",
+        "consumer_exports_current",
+        "consumer_c08_current",
+        "consumer_c15_current",
+        "ui_bootstrap_current"
       ],
       "remaining_gaps": [
         "Manifesto/profile/skill distribuídos não concordam.",
@@ -1801,7 +2167,9 @@
       "proof_run_refs": [
         "43514166596",
         "43522589708",
-        "43522985791"
+        "43522985791",
+        "43538370444",
+        "43537760359"
       ],
       "implementation_refs": [
         "S007",
@@ -1825,17 +2193,20 @@
       ],
       "status": "PARTIAL",
       "definition_scope_status": "PASS",
-      "status_reason": "O catálogo inclui todos os temas e há testes reais de leitura, escrita, CAS, previews e relatório. Composição real incluindo rotinas permanece indisponível.",
+      "status_reason": "Leitura, escrita, CAS, preview/apply de XLSX e renderizadores reais estão exercitados; a reimportação conserva identidades/valores/estado após reabrir SQLite. A composição integral de revisão/relações/rotina, incluindo admissão real, continua indisponível.",
       "evidence_refs": [
         "contract_docs",
         "freeze_matrix",
         "contract_decoders",
         "baseline_real_consumers",
-        "consumer_c08"
+        "consumer_c08",
+        "corpus_reconciliation",
+        "consumer_c08_current",
+        "consumer_exports_current"
       ],
       "remaining_gaps": [
-        "Rotinas ausentes no seed.",
-        "Nenhuma cadeia completa de import/review/relações/rotina foi executada como composição de produto."
+        "Os seis exports C07 de rotina falharam individualmente no run W8; host/admissão governada continuam indisponíveis.",
+        "Importação e export de corpus executados não demonstram a cadeia composta de review/relações/rotina do produto."
       ],
       "promotion_requires": [
         "Executar consumidores relevantes em composição, preservando CAS, preview e confirmação."
@@ -1852,12 +2223,15 @@
       },
       "proof_run_refs": [
         "43514166596",
-        "43522589708"
+        "43522589708",
+        "43537536421",
+        "43538370444"
       ],
       "implementation_refs": [
         "S007",
         "S008",
-        "S001"
+        "S001",
+        "S047"
       ]
     },
     {
@@ -1921,7 +2295,8 @@
         "freeze_matrix",
         "ownership",
         "atlas_mapping",
-        "native_qualification"
+        "native_qualification",
+        "consumer_support_current"
       ],
       "remaining_gaps": [
         "ATLAS-PACKAGE não executado; AM01–AM06 são assignments, não recibos.",
@@ -1942,7 +2317,8 @@
       },
       "proof_run_refs": [
         "43514166596",
-        "43522589708"
+        "43522589708",
+        "43538370444"
       ],
       "implementation_refs": [
         "S007",
@@ -1966,18 +2342,21 @@
       ],
       "status": "PARTIAL",
       "definition_scope_status": "PASS",
-      "status_reason": "Receipt totalmente ausente agora é recusado no registry real com controle positivo. A revogação empresarial real, preview e admissão nativa pertinentes permanecem sem prova.",
+      "status_reason": "Receipt totalmente ausente é recusado no registry real com controle positivo; preview/apply reais e prévia antiga recusada foram executados no corpus. Faltam revogação empresarial real, concordância da operação nativa preview-only e admissão governada pertinentes.",
       "evidence_refs": [
         "execution_registry",
         "private_mcp",
         "consumer_c08",
         "contract_decoders",
         "freeze_matrix",
-        "contract_boundaries"
+        "contract_boundaries",
+        "corpus_reconciliation",
+        "consumer_c08_current",
+        "consumer_support_current"
       ],
       "remaining_gaps": [
-        "Revogação de generation/cancelamento sintéticos não equivale a revogação real de permissão empresarial.",
-        "Preview de produto e admissão Relay não foram provados nativamente."
+        "Revogação de generation/cancelamento sintéticos não equivale a revogação empresarial real.",
+        "O consumidor nativo preview-only e a admissão Relay não foram qualificados; não confundir o import de corpus executado com essa cadeia."
       ],
       "promotion_requires": [
         "Provar a cadeia nativa pertinente com receipt observado, permissão atual revogada, import preview-only e rotina com/sem admissão; o negativo de registry vazio já está executado."
@@ -1993,12 +2372,15 @@
       },
       "proof_run_refs": [
         "43514166596",
-        "43522589708"
+        "43522589708",
+        "43537536421",
+        "43538370444"
       ],
       "implementation_refs": [
         "S007",
         "S008",
-        "S001"
+        "S001",
+        "S047"
       ]
     },
     {
@@ -2022,7 +2404,8 @@
         "ownership",
         "contract_docs",
         "consumer_c15",
-        "baseline_real_consumers"
+        "baseline_real_consumers",
+        "consumer_c15_current"
       ],
       "remaining_gaps": [
         "Teste de WP00 consumindo source do domínio não é automaticamente um segundo fluxo real de produto.",
@@ -2043,7 +2426,8 @@
       },
       "proof_run_refs": [
         "43514166596",
-        "43522589708"
+        "43522589708",
+        "43538370444"
       ],
       "implementation_refs": [
         "S007",
@@ -2072,7 +2456,10 @@
         "contract_decoders",
         "consumer_c15",
         "consumer_exports",
-        "typecheck"
+        "typecheck",
+        "consumer_exports_current",
+        "consumer_c15_current",
+        "typecheck_current"
       ],
       "remaining_gaps": [
         "Rejeitar o candidato incompatível não basta para demonstrar um produtor compatível em uso real."
@@ -2093,7 +2480,10 @@
       "proof_run_refs": [
         "43514166596",
         "43522589708",
-        "43522928224"
+        "43522928224",
+        "43538370444",
+        "43538629884",
+        "43539548039"
       ],
       "implementation_refs": [
         "S007",
@@ -2122,7 +2512,10 @@
         "consumer_c15",
         "consumer_exports",
         "native_qualification",
-        "ui_bootstrap"
+        "ui_bootstrap",
+        "consumer_exports_current",
+        "consumer_c15_current",
+        "ui_bootstrap_current"
       ],
       "remaining_gaps": [
         "Sem UI real, host/modelo real, AM02/AM06 ou resultado aberto.",
@@ -2143,7 +2536,9 @@
       },
       "proof_run_refs": [
         "43514166596",
-        "43522985791"
+        "43522985791",
+        "43538370444",
+        "43537760359"
       ],
       "implementation_refs": [
         "S007",
@@ -2167,15 +2562,18 @@
       ],
       "status": "BLOCKED",
       "definition_scope_status": "PARTIAL",
-      "status_reason": "O contrato é importável como source, mas a compilação de consumidores não passou. Ausência de erro nos arquivos próprios não satisfaz typecheck global.",
+      "status_reason": "O check W10 terminou com 144 diagnósticos herdados e zero próprios; typecheck oficial UI de seis fontes passou. A compilação integral de consumidores continua bloqueada, e o run W8 de consumidores executou 44 PASS/16 FAIL, incluindo seis exports de rotinas ausentes.",
       "evidence_refs": [
         "typecheck",
         "contract_decoders",
-        "consumer_exports"
+        "consumer_exports",
+        "typecheck_current",
+        "consumer_exports_current",
+        "consumer_tests_current"
       ],
       "remaining_gaps": [
-        "O pacote tem144 diagnósticos reais; host-context referencia routines/factory ausente.",
-        "Os testes selecionados importam implementações privadas para exercitá-las; isso não prova que produtores de outro WP dependem apenas dos contratos públicos."
+        "Persistem 144 diagnósticos herdados, incluindo a dependência do contrato host-context em routines/factory ausente.",
+        "Revisar consumo dos contratos públicos pelos produtores; testes que importam implementações para exercitá-las não comprovam essa fronteira."
       ],
       "promotion_requires": [
         "Typecheck verde no mesmo candidato e revisão das dependências/imports dos consumidores."
@@ -2191,12 +2589,18 @@
       "proof_run_refs": [
         "43514166596",
         "43522589708",
-        "43522928224"
+        "43522928224",
+        "43537543232",
+        "43538370444",
+        "43538629884",
+        "43539548039"
       ],
       "implementation_refs": [
         "S007",
         "S008",
-        "S001"
+        "S001",
+        "S055",
+        "S056"
       ]
     },
     {
@@ -2253,25 +2657,31 @@
       ],
       "status": "PARTIAL",
       "definition_scope_status": "PASS",
-      "status_reason": "A tabela de formatos fixa parser WP06, comando original e Persistence WP10; o layout atribui todos os campos. O provider real não aceita integralmente o layout e falta recibo de consumo de todos os estados novos.",
+      "status_reason": "O inventário está completo: 14 famílias de formatos têm produtor/consumidor concreto; 46 famílias de estado foram auditadas, com 38 pares encontrados. Quatro famílias persistidas não têm leitor de negócio e quatro campos declarados não têm produtor nem consumidor no source pinado. Por essas oito lacunas concretas, o critério continua PARTIAL.",
       "evidence_refs": [
         "contract_docs",
         "freeze_state",
-        "consumer_c08"
+        "state_consumer_matrix"
       ],
       "remaining_gaps": [
-        "Provider do seed não satisfaz os 12 namespaces, migração, read fences e todos os campos aditivos.",
-        "Documento C08 atribui o provider a WP10; a declaração por namespace não é uma prova de consumo de cada estado novo."
+        "WP11: preferences.baseline-coverage-history, preferences.coverage-classification-history e preferences.criterion-rule-history têm writer, mas nenhum leitor de negócio encontrado.",
+        "WP10: preferences.native-token-receipts tem inicialização/validação/append, mas nenhum consumidor autorizado dos recibos salvos encontrado.",
+        "WP11: claimBindings, commandProposals e compositeScenarios permanecem apenas no contrato, sem produtor/consumidor nas 281 fontes inspecionadas.",
+        "WP05, com namespace/migração WP10: biArtifacts permanece apenas no contrato, sem produtor/consumidor encontrado.",
+        "A matriz separa ainda quatro obrigações C07 sem implementação: admissão, recibo de run, correlação e binding Schedule; owners WP09 e composição WP10/S0."
       ],
       "promotion_requires": [
-        "Aceite do provider C08 e consumidores de cada namespace; matriz explícita de writer de negócio/consumer real por estado se o aceite exigir rastreio individual."
+        "Preencher os produtores/consumidores reais ausentes com exports, paths, pins e consumo verificável, mantendo a cobertura completa da matriz. Não exigir uma prova nativa alheia ao texto para aceitar uma linha de formato/estado."
       ],
       "next_action": {
         "owners": [
+          "WP11",
           "WP10",
-          "WP00"
+          "WP05",
+          "WP09",
+          "S0"
         ],
-        "action": "Integrar provider C08 conforme deltas pinados e provar read fences, migração e consumidores dos estados; qualificar revogação nativa/link alternativo quando exigida."
+        "action": "Implementar leitores de histórico/recibos e produtores/consumidores dos campos ausentes nos respectivos prefixes; compor os estados C07 exigidos e atualizar a matriz com endpoints reais. WP00 já concluiu o inventário; provider C08 e qualificação nativa têm seus próprios gates."
       },
       "proof_run_refs": [
         "43514166596",
@@ -2280,8 +2690,11 @@
       "implementation_refs": [
         "S007",
         "S008",
-        "S001"
-      ]
+        "S001",
+        "S053",
+        "S054"
+      ],
+      "mapping_inventory_status": "COMPLETE_WITH_EIGHT_CONCRETE_GAPS"
     },
     {
       "criterion_id": "WP00.T02.CHK.10",
@@ -2344,7 +2757,9 @@
       "evidence_refs": [
         "consumer_c15",
         "contract_docs",
-        "execution_registry"
+        "execution_registry",
+        "consumer_c15_current",
+        "consumer_support_current"
       ],
       "remaining_gaps": [
         "AlternativeDraft diverge entre normativa e assets distribuídos.",
@@ -2361,7 +2776,8 @@
         "action": "Integrar assets C15 compatíveis e obter loader positivo; registrar carga nativa e digests observados para a qualificação correspondente."
       },
       "proof_run_refs": [
-        "43514166596"
+        "43514166596",
+        "43538370444"
       ],
       "implementation_refs": [
         "S007",
@@ -2385,11 +2801,12 @@
       ],
       "status": "PARTIAL",
       "definition_scope_status": "PASS",
-      "status_reason": "Os três testes Atlas passaram no W, comprovando mappings task/project com validators reais e derivação de owners de negócio. O build/empacotamento completo não foi qualificado.",
+      "status_reason": "Os três testes de tradução Atlas passaram novamente no run W8 de consumidores com validators reais e owners de negócio. O build/empacotamento ATLAS-PACKAGE completo não foi qualificado.",
       "evidence_refs": [
         "atlas_mapping",
         "contract_docs",
-        "native_qualification"
+        "native_qualification",
+        "consumer_support_current"
       ],
       "remaining_gaps": [
         "ATLAS-PACKAGE não executado; typecheck do candidato permanece vermelho.",
@@ -2406,7 +2823,8 @@
         "action": "Acrescentar prova ATLAS-PACKAGE/build com validators reais, preservando os três testes de tradução já aprovados."
       },
       "proof_run_refs": [
-        "43514166596"
+        "43514166596",
+        "43538370444"
       ],
       "implementation_refs": [
         "S007",
@@ -2430,12 +2848,16 @@
       ],
       "status": "PARTIAL",
       "definition_scope_status": "PASS",
-      "status_reason": "Rotas 39/39, receipt em chamada direta, preview-only, HostBoundEntryMode e efeito/consumer estão congelados no mesmo source. A concordância efetiva entre rotas e consumidores do candidato ainda falha.",
+      "status_reason": "Rotas 39/39, receipt em chamada direta, preview-only e HostBoundEntryMode continuam congelados. O novo gate verificou todos os 39 exports individualmente: 33 presentes e seis handlers de rotina ausentes. C15 e C08 continuam incompatíveis, sem cadeia nativa de import/admissão/consumidor no mesmo candidato.",
       "evidence_refs": [
         "freeze_matrix",
         "consumer_exports",
         "consumer_c15",
-        "execution_registry"
+        "execution_registry",
+        "consumer_exports_current",
+        "consumer_c15_current",
+        "consumer_support_current",
+        "consumer_c08_current"
       ],
       "remaining_gaps": [
         "Seis operações de rotina não têm handler no seed; C15 do candidato não carrega.",
@@ -2456,7 +2878,8 @@
       },
       "proof_run_refs": [
         "43514166596",
-        "43522589708"
+        "43522589708",
+        "43538370444"
       ],
       "implementation_refs": [
         "S007",
@@ -2479,30 +2902,23 @@
       "proof_packages": [
         "E01"
       ],
-      "status": "PARTIAL",
-      "status_reason": "Independent numeric constants and complete monthly fixtures are consumed by real domain/report implementations. Full journey qualification and comparable visual measurement remain separate.",
+      "status": "PASS",
+      "status_reason": "Corpus, resultados esperados e roteiros foram conferidos. Constantes independentes e vetores mensais explícitos são consumidos pelos produtores/consumidores reais de domínio, importação e relatório; a execução W8 reproduziu os resultados sem derivar o oráculo da função sob teste.",
       "evidence_refs": [
         "corpus_definition",
-        "baseline_real_consumers",
-        "ui_measurements",
-        "ui_bootstrap"
+        "baseline_real_consumers_current",
+        "corpus_reconciliation"
       ],
-      "remaining_gaps": [
-        "Independent numeric constants and complete monthly fixtures are consumed by real domain/report implementations. Full journey qualification and comparable visual measurement remain separate.",
-        "Bootstrap real da UI bloqueado por C15 (sf_portfolio); 0 observações, autenticação não alcançada."
-      ],
+      "remaining_gaps": [],
       "next_action": {
-        "owners": [
-          "WP12",
-          "WP10",
-          "S0",
-          "WP00"
-        ],
-        "action": "Compor assets C15 compatíveis para liberar o bootstrap; repetir o harness sem alterar expectativas e executar os cenários/30 medições/viewports/zoom ainda não cobertos. Registrar observações brutas."
+        "owners": [],
+        "action": "Preservar a evidência e reavaliar somente se mudar o contrato, consumidor ou a premissa coberta."
       },
       "proof_run_refs": [
         "43522589708",
-        "43522985791"
+        "43522985791",
+        "43536802706",
+        "43537536421"
       ],
       "implementation_refs": [
         "S009",
@@ -2510,8 +2926,13 @@
         "S011",
         "S012",
         "S013",
-        "S014"
-      ]
+        "S014",
+        "S047",
+        "S048",
+        "S049",
+        "S050"
+      ],
+      "acceptance_limit": "PASS do corpus/oráculos/roteiros. Não exige nem declara conclusão integral de J03/J05, medições visuais ou GNATIVE; o trabalho de 30 repetições mantém T03 aberta."
     },
     {
       "criterion_id": "WP00.T03.INV.01",
@@ -2566,32 +2987,27 @@
       "proof_packages": [
         "E01"
       ],
-      "status": "PARTIAL",
-      "status_reason": "Small diagnostic cases and deterministic1000/200/100 volume fixtures are exercised by real functions. This does not by itself prove loaded table behavior or visual latency.",
+      "status": "PASS",
+      "status_reason": "Fixtures pequenas isolam diagnósticos e o volume sintético 1000/200/100 é consumido por funções reais e pela preparação SQLite. Os relatórios de 25 projetos usam notas longas para detectar perda de conteúdo e preservam o caso canônico de 20 registros.",
       "evidence_refs": [
         "corpus_definition",
-        "baseline_real_consumers",
-        "ui_measurements",
-        "ui_typecheck",
-        "ui_bootstrap"
+        "baseline_real_consumers_current",
+        "corpus_reconciliation",
+        "ui_bootstrap",
+        "ui_bootstrap_current"
       ],
-      "remaining_gaps": [
-        "Small diagnostic cases and deterministic1000/200/100 volume fixtures are exercised by real functions. This does not by itself prove loaded table behavior or visual latency.",
-        "Bootstrap real da UI bloqueado por C15 (sf_portfolio); 0 observações, autenticação não alcançada."
-      ],
+      "remaining_gaps": [],
       "next_action": {
-        "owners": [
-          "WP12",
-          "WP10",
-          "S0",
-          "WP00"
-        ],
-        "action": "Compor assets C15 compatíveis para liberar o bootstrap; repetir o harness sem alterar expectativas e executar os cenários/30 medições/viewports/zoom ainda não cobertos. Registrar observações brutas."
+        "owners": [],
+        "action": "Preservar a evidência e reavaliar somente se mudar o contrato, consumidor ou a premissa coberta."
       },
       "proof_run_refs": [
         "43522589708",
         "43522928224",
-        "43522985791"
+        "43522985791",
+        "43536802706",
+        "43537536421",
+        "43537760359"
       ],
       "implementation_refs": [
         "S009",
@@ -2599,8 +3015,13 @@
         "S011",
         "S012",
         "S013",
-        "S014"
-      ]
+        "S014",
+        "S047",
+        "S048",
+        "S049",
+        "S050"
+      ],
+      "acceptance_limit": "Representatividade das fixtures não é latência medida ou comportamento visual aprovado. Os volumes são propostos para teste, não observação de dados Sucafina."
     },
     {
       "criterion_id": "WP00.T03.QLT.02",
@@ -2655,30 +3076,23 @@
       "proof_packages": [
         "E01"
       ],
-      "status": "PARTIAL",
-      "status_reason": "Alternatives, role restriction, stale writes, absent FX, legacy inherited budget and distinct approval/resubmission are covered. Complete import replay and all period/reload journeys remain unqualified.",
+      "status": "PASS",
+      "status_reason": "Todos os componentes estão cobertos: alternativas Planner; branco/zero/herdado e períodos mensais/anuais distintos; informações restritas; importação exata/alterada reexecutada com parser, preview/apply e SQLite reais; retorno/resubmissão Procurement com histórico separado e stale retry recusado.",
       "evidence_refs": [
-        "corpus_definition",
-        "baseline_real_consumers",
-        "ui_measurements",
-        "ui_bootstrap"
+        "baseline_real_consumers_current",
+        "corpus_reconciliation",
+        "contract_boundaries"
       ],
-      "remaining_gaps": [
-        "Alternatives, role restriction, stale writes, absent FX, legacy inherited budget and distinct approval/resubmission are covered. Complete import replay and all period/reload journeys remain unqualified.",
-        "Bootstrap real da UI bloqueado por C15 (sf_portfolio); 0 observações, autenticação não alcançada."
-      ],
+      "remaining_gaps": [],
       "next_action": {
-        "owners": [
-          "WP12",
-          "WP10",
-          "S0",
-          "WP00"
-        ],
-        "action": "Compor assets C15 compatíveis para liberar o bootstrap; repetir o harness sem alterar expectativas e executar os cenários/30 medições/viewports/zoom ainda não cobertos. Registrar observações brutas."
+        "owners": [],
+        "action": "Preservar a evidência e reavaliar somente se mudar o contrato, consumidor ou a premissa coberta."
       },
       "proof_run_refs": [
         "43522589708",
-        "43522985791"
+        "43522985791",
+        "43536802706",
+        "43537536421"
       ],
       "implementation_refs": [
         "S009",
@@ -2686,8 +3100,13 @@
         "S011",
         "S012",
         "S013",
-        "S014"
-      ]
+        "S014",
+        "S047",
+        "S048",
+        "S049",
+        "S050"
+      ],
+      "acceptance_limit": "updated=N conta linhas correspondentes, não alterações materiais ou admissão idempotente C04. Export 25 e reimportação de corpus não fecham J03/J05 nem identidade/provider nativos."
     },
     {
       "criterion_id": "WP00.T03.SUC.01",
@@ -2704,32 +3123,25 @@
       "proof_packages": [
         "E01"
       ],
-      "status": "PARTIAL",
-      "status_reason": "CI reproduces the stated numeric deltas and selected role/transition cases from versioned fixtures. It does not establish every host/UI/native permission or journey.",
+      "status": "PASS",
+      "status_reason": "Fixtures e testes versionados permitem reproduzir os mesmos deltas, permissões de domínio e transições. W8 reproduziu alternativas/ranking, recusas de viewer/stale write, ressubmissão e reimportação comparando identidades, valores, estado e persistência após reabertura.",
       "evidence_refs": [
         "corpus_definition",
-        "baseline_real_consumers",
-        "ui_measurements",
-        "ui_typecheck",
-        "ui_bootstrap"
+        "baseline_real_consumers_current",
+        "corpus_reconciliation",
+        "contract_boundaries"
       ],
-      "remaining_gaps": [
-        "CI reproduces the stated numeric deltas and selected role/transition cases from versioned fixtures. It does not establish every host/UI/native permission or journey.",
-        "Bootstrap real da UI bloqueado por C15 (sf_portfolio); 0 observações, autenticação não alcançada."
-      ],
+      "remaining_gaps": [],
       "next_action": {
-        "owners": [
-          "WP12",
-          "WP10",
-          "S0",
-          "WP00"
-        ],
-        "action": "Compor assets C15 compatíveis para liberar o bootstrap; repetir o harness sem alterar expectativas e executar os cenários/30 medições/viewports/zoom ainda não cobertos. Registrar observações brutas."
+        "owners": [],
+        "action": "Preservar a evidência e reavaliar somente se mudar o contrato, consumidor ou a premissa coberta."
       },
       "proof_run_refs": [
         "43522589708",
         "43522928224",
-        "43522985791"
+        "43522985791",
+        "43536802706",
+        "43537536421"
       ],
       "implementation_refs": [
         "S009",
@@ -2737,8 +3149,13 @@
         "S011",
         "S012",
         "S013",
-        "S014"
-      ]
+        "S014",
+        "S047",
+        "S048",
+        "S049",
+        "S050"
+      ],
+      "acceptance_limit": "Permissões aqui são as do corpus nos consumidores reais de domínio. Não se atribui identidade empresarial, provider nativo ou jornadas UI completas às fixtures."
     },
     {
       "criterion_id": "WP00.T03.CHK.01",
@@ -2908,36 +3325,35 @@
       "proof_packages": [
         "E01"
       ],
-      "status": "PARTIAL",
-      "status_reason": "Os serviços e impedimentos concretos estão documentados. O exercício instalado não foi realizado; registrar o bloqueio não encerra a task.",
+      "status": "PASS",
+      "status_reason": "Os serviços reais e seus pontos de composição estão identificados, e os impedimentos específicos estão registrados: autoridade nativa não disponível nesta superfície, C07 sem composição funcional, scanner ausente e bootstrap real bloqueado por C15. O ramo explícito de registro de impedimento satisfaz este critério, mantendo T04 aberta e G0 independente.",
       "evidence_refs": [
         "native_preflight",
-        "ui_bootstrap"
+        "ui_bootstrap",
+        "scanner_failure_current",
+        "ui_bootstrap_current"
       ],
-      "remaining_gaps": [
-        "Os serviços e impedimentos concretos estão documentados. O exercício instalado não foi realizado; registrar o bloqueio não encerra a task.",
-        "Bootstrap real da UI bloqueado por C15 (sf_portfolio); 0 observações, autenticação não alcançada."
-      ],
-      "independent_preflight_status": "PARTIAL_STATIC",
+      "remaining_gaps": [],
       "next_action": {
-        "owners": [
-          "WP00 qualifier independente",
-          "WP10 host",
-          "WP09 admissão",
-          "WP12 bundle",
-          "S0 integração"
-        ],
-        "action": "Fornecer a composição instalada autorizada e executar a cadeia GNATIVE/C07 com caso e consumidor reais; registrar fatos atuais e não reconstruir checkpoints históricos como observados."
+        "owners": [],
+        "action": "Preservar a evidência e reavaliar somente se mudar o contrato, consumidor ou a premissa coberta."
       },
       "proof_run_refs": [
-        "43522985791"
+        "43522985791",
+        "43536802706",
+        "43537536421",
+        "43537760359"
       ],
       "implementation_refs": [
         "S004",
         "S015",
         "S016",
-        "S017"
-      ]
+        "S017",
+        "S051",
+        "S052"
+      ],
+      "acceptance_limit": "PASS pelo ramo de impedimento registrado. Não é qualificação de execução nativa; T04 permanece BLOCKED e GNATIVE NOT_PROVEN.",
+      "historical_independent_preflight_status": "PARTIAL_STATIC"
     },
     {
       "criterion_id": "WP00.T04.DOD.10",
@@ -3196,7 +3612,12 @@
         "consumer_c15",
         "typecheck",
         "scanner_preflight",
-        "ui_bootstrap"
+        "ui_bootstrap",
+        "scanner_failure_current",
+        "consumer_exports_current",
+        "consumer_c15_current",
+        "ui_bootstrap_current",
+        "typecheck_current"
       ],
       "remaining_gaps": [
         "Preflight distingue SDK, binding, composição, modelo, driver e scanner; a disponibilidade no host instalado continua não observada.",
@@ -3217,13 +3638,20 @@
         "43514166596",
         "43522589708",
         "43522928224",
-        "43522985791"
+        "43522985791",
+        "43537536421",
+        "43538370444",
+        "43537760359",
+        "43538629884",
+        "43539548039"
       ],
       "implementation_refs": [
         "S004",
         "S015",
         "S016",
-        "S017"
+        "S017",
+        "S051",
+        "S052"
       ]
     },
     {
@@ -3244,7 +3672,8 @@
       "evidence_refs": [
         "native_preflight",
         "hosted_ci",
-        "scanner_preflight"
+        "scanner_preflight",
+        "scanner_failure_current"
       ],
       "remaining_gaps": [
         "Pins e valores observados em CI têm proveniência; faltam valores e recibo da execução nativa exigida."
@@ -3261,13 +3690,16 @@
         "action": "Fornecer a composição instalada autorizada e executar a cadeia GNATIVE/C07 com caso e consumidor reais; registrar fatos atuais e não reconstruir checkpoints históricos como observados."
       },
       "proof_run_refs": [
-        "43522589708"
+        "43522589708",
+        "43537536421"
       ],
       "implementation_refs": [
         "S004",
         "S015",
         "S016",
-        "S017"
+        "S017",
+        "S051",
+        "S052"
       ]
     },
     {
@@ -3335,7 +3767,8 @@
         "execution_registry",
         "private_mcp",
         "native_qualification",
-        "contract_boundaries"
+        "contract_boundaries",
+        "consumer_support_current"
       ],
       "remaining_gaps": [
         "Gates existem e seams têm testes com fixtures; falta o caso real com skill carregada, MCP autorizado, domínio, consumidor e negativos nativos."
@@ -3353,7 +3786,8 @@
       },
       "proof_run_refs": [
         "43514166596",
-        "43522589708"
+        "43522589708",
+        "43538370444"
       ],
       "implementation_refs": [
         "S004",
@@ -3382,7 +3816,10 @@
         "execution_registry",
         "private_mcp",
         "native_qualification",
-        "ui_bootstrap"
+        "ui_bootstrap",
+        "consumer_c15_current",
+        "ui_bootstrap_current",
+        "consumer_support_current"
       ],
       "remaining_gaps": [
         "Há recusas discriminantes em registry/SDK e falha real de carga C15. A cadeia com caso real e provider instalado não foi exercitada.",
@@ -3401,7 +3838,9 @@
       },
       "proof_run_refs": [
         "43514166596",
-        "43522985791"
+        "43522985791",
+        "43538370444",
+        "43537760359"
       ],
       "implementation_refs": [
         "S004",
@@ -3513,7 +3952,10 @@
         "consumer_exports",
         "consumer_c08",
         "consumer_c15",
-        "hosted_ci"
+        "hosted_ci",
+        "consumer_exports_current",
+        "consumer_c08_current",
+        "consumer_c15_current"
       ],
       "remaining_gaps": [
         "Os gates identificaram falhas concretas enquanto contratos/corpus avançaram. Isso não certifica o checkpoint temporal histórico nem encerra a integração."
@@ -3530,7 +3972,8 @@
         "action": "Fornecer a composição instalada autorizada e executar a cadeia GNATIVE/C07 com caso e consumidor reais; registrar fatos atuais e não reconstruir checkpoints históricos como observados."
       },
       "proof_run_refs": [
-        "43514166596"
+        "43514166596",
+        "43538370444"
       ],
       "implementation_refs": [
         "S004",
@@ -3587,11 +4030,12 @@
         "E01"
       ],
       "status": "BLOCKED",
-      "status_reason": "Produtor de rotinas ausente no candidato e ports do host indisponíveis; nenhuma receita linear percorreu admissão governada e produziu saída nativa.",
+      "status_reason": "Os seis exports de rotinas estão ausentes no candidato conforme seis FAIL independentes W8, e os ports do host permanecem indisponíveis. Nenhuma receita linear percorreu admissão governada e produziu saída nativa.",
       "evidence_refs": [
         "consumer_exports",
         "native_preflight",
-        "native_qualification"
+        "native_qualification",
+        "consumer_exports_current"
       ],
       "remaining_gaps": [
         "Produtor de rotinas ausente no candidato e ports do host indisponíveis; nenhuma receita linear percorreu admissão governada e produziu saída nativa."
@@ -3608,7 +4052,8 @@
         "action": "Fornecer a composição instalada autorizada e executar a cadeia GNATIVE/C07 com caso e consumidor reais; registrar fatos atuais e não reconstruir checkpoints históricos como observados."
       },
       "proof_run_refs": [
-        "43514166596"
+        "43514166596",
+        "43538370444"
       ],
       "implementation_refs": [
         "S004",
@@ -3638,7 +4083,11 @@
         "consumer_c08",
         "consumer_c15",
         "scanner_preflight",
-        "ui_bootstrap"
+        "ui_bootstrap",
+        "consumer_exports_current",
+        "consumer_c08_current",
+        "consumer_c15_current",
+        "ui_bootstrap_current"
       ],
       "remaining_gaps": [],
       "independent_preflight_status": "STATIC_EVIDENCE",
@@ -3649,7 +4098,9 @@
       "proof_run_refs": [
         "43514166596",
         "43522589708",
-        "43522985791"
+        "43522985791",
+        "43538370444",
+        "43537760359"
       ],
       "implementation_refs": [
         "S004",
@@ -3672,11 +4123,12 @@
         "E01"
       ],
       "status": "BLOCKED",
-      "status_reason": "Revogação de acesso a run/arquivo nativo e recusa de link alternativo não foram exercitadas; o provider C08 também falha nos fences de leitura.",
+      "status_reason": "O provider C08 W8 falhou nos fences de leitura e em quatro fences aditivos; dois fences aditivos passaram. Revogação de acesso a run/arquivo nativo e recusa de link alternativo continuam sem exercício qualificante.",
       "evidence_refs": [
         "consumer_c08",
         "native_preflight",
-        "native_qualification"
+        "native_qualification",
+        "consumer_c08_current"
       ],
       "remaining_gaps": [
         "Revogação de acesso a run/arquivo nativo e recusa de link alternativo não foram exercitadas; o provider C08 também falha nos fences de leitura."
@@ -3690,7 +4142,8 @@
         "action": "Integrar provider C08 conforme deltas pinados e provar read fences, migração e consumidores dos estados; qualificar revogação nativa/link alternativo quando exigida."
       },
       "proof_run_refs": [
-        "43514166596"
+        "43514166596",
+        "43538370444"
       ],
       "implementation_refs": [
         "S004",
@@ -3759,7 +4212,8 @@
         "execution_registry",
         "private_mcp",
         "native_preflight",
-        "contract_boundaries"
+        "contract_boundaries",
+        "consumer_support_current"
       ],
       "remaining_gaps": [
         "Registry/SDK executaram recusas de contexto/operação/provider com fixtures. Os negativos em uma Session instalada continuam sem prova."
@@ -3777,7 +4231,8 @@
       },
       "proof_run_refs": [
         "43514166596",
-        "43522589708"
+        "43522589708",
+        "43538370444"
       ],
       "implementation_refs": [
         "S004",
@@ -3799,32 +4254,32 @@
       "proof_packages": [
         "E01"
       ],
-      "status": "PARTIAL",
-      "status_reason": "Ausência real de scanner no runner foi observada: duas escritas recusadas, zero eventos e C17 HOLD. O ramo unable-to-run e a instalação nativa não foram exercitados.",
+      "status": "PASS",
+      "status_reason": "Ausência real de scanner e falha real de invocação foram exercitadas. O classificador retorna could-not-run, o adapter/porta Atlas recusam scanner-unavailable sem registros/eventos e o recibo mantém C17 HOLD, nunca clean.",
       "evidence_refs": [
-        "native_preflight",
-        "scanner_preflight"
+        "scanner_preflight",
+        "scanner_failure_current"
       ],
-      "remaining_gaps": [
-        "Qualificar o ramo unable-to-run e a porta da instalação nativa; o resultado atual é de runner CI."
-      ],
-      "independent_preflight_status": "NOT_RUN",
+      "remaining_gaps": [],
       "next_action": {
-        "owners": [
-          "WP00",
-          "WP10.T07"
-        ],
-        "action": "Preservar prova de ausência/fail-closed do runner; qualificar unable-to-run e scanner do host instalado pelos mecanismos permitidos, mantendo C17 HOLD."
+        "owners": [],
+        "action": "Preservar a evidência e reavaliar somente se mudar o contrato, consumidor ou a premissa coberta."
       },
       "proof_run_refs": [
-        "43522589708"
+        "43522589708",
+        "43536802706",
+        "43537536421"
       ],
       "implementation_refs": [
         "S004",
         "S015",
         "S016",
-        "S017"
-      ]
+        "S017",
+        "S051",
+        "S052"
+      ],
+      "acceptance_limit": "A falha controlada executa Bun com script inexistente, não um scanner instalado. C17 integral, scanner real/clean/canary e T04.CHK.42 continuam abertos; GNATIVE NOT_PROVEN.",
+      "historical_independent_preflight_status": "NOT_RUN"
     },
     {
       "criterion_id": "WP00.T04.CHK.40",
@@ -3925,7 +4380,8 @@
       "status_reason": "Scanner ausente no runner foi observado; path/version/hash e clean probe são null. C17 HOLD e owner WP10.T07 estão explícitos, mas não há scanner instalado qualificado nem checkpoint histórico antes T20.",
       "evidence_refs": [
         "native_preflight",
-        "scanner_preflight"
+        "scanner_preflight",
+        "scanner_failure_current"
       ],
       "remaining_gaps": [
         "Binário disponível/pinado, identidade/version/path, clean probe e confirmação da instalação; condição temporal histórica não observada."
@@ -3939,13 +4395,16 @@
         "action": "Preservar a ausência observada no runner; disponibilizar/pinar scanner pelos mecanismos permitidos e registrar binary/version/path/hash e clean probe no host instalado. Não certificar retroativamente o checkpoint T20."
       },
       "proof_run_refs": [
-        "43522589708"
+        "43522589708",
+        "43537536421"
       ],
       "implementation_refs": [
         "S004",
         "S015",
         "S016",
-        "S017"
+        "S017",
+        "S051",
+        "S052"
       ]
     }
   ],
@@ -3956,21 +4415,48 @@
     "T04.CHK.01 passa com o CI real de ownership; o preflight anterior apenas não havia executado esse teste por seu próprio revisor.",
     "T04.INV.01, INV.10 e CHK.03 têm PASS restrito a invariantes/documentação demonstrados; ausência de GNATIVE não pode ser escondida por esses PASS.",
     "144 diagnósticos herdados não equivalem a 144 fora de ownership: host-context.ts é contrato WP00 e depende do produtor routines/factory.ts ausente.",
-    "A falha do teste de campos aditivos ocorreu na primeira iteração, claimBindings; não demonstra execução negativa individual dos seis campos.",
+    "W2 abortou na primeira divergência de campo aditivo. W8 executou os seis fences independentemente: quatro FAIL e dois PASS, além de 39 exports individuais com 33 PASS/seis FAIL de rotina.",
     "Os negativos com registry/SDK e os novos fixtures não são identidade, Session, SkillLoadReceipt nem inferência nativos observados.",
     "A condição histórica T+20 é NOT_PROVEN; adaptação operacional de um chat externo não autoriza certificar retrospectivamente roster/leases/timestamps.",
     "W4 scanner: absent/no-scanner-on-path observado, ambas escritas recusadas, zero eventos, 17ms; apenas o ramo fail-closed do runner passa, C17 continua HOLD.",
     "W4 boundary: os três testes passaram; T02.CHK.02 passa, e receipt vazio deixa de ser lacuna de teste em T02.CMP.60. Auth/receipts continuam fixtures, sem GNATIVE.",
-    "UI5 terminou com 1 falha, nenhuma aprovação ou repetição, authenticated=false/cacheState=null e zero observações; confirmou o bloqueio C15 do bootstrap após corrigir os metadados e o typecheck próprios do harness."
+    "UI5 terminou com 1 falha, nenhuma aprovação ou repetição, authenticated=false/cacheState=null e zero observações; confirmou o bloqueio C15 do bootstrap após corrigir os metadados e o typecheck próprios do harness.",
+    "W7: 84 PASS/0 FAIL, 2237 assertions, 12 arquivos; reimportação real, branco/zero/períodos e render 25 com notas longas passaram. Scanner ausente em 7 ms; falha controlada real chegou a could-not-run e zero append/eventos.",
+    "W8: 85 PASS/0 FAIL, 2239 assertions, 12 arquivos; controle Omni PASS com um spawn e zero delegações. Agregador inclui avaliação conservadora de 200 ms. Typecheck próprio voltou a zero; 144 herdados permanecem.",
+    "Sete promoções respeitam o texto canônico: WP00.CMP.02; T03.DOD.01/QLT.01/CMP.01/SUC.01; T04.DOD.02/CHK.12. Não exigem UI/nativo quando o critério é de corpus ou permite impedimento; não encerram as tasks.",
+    "T02.CHK.03: inventário completo, mas oito lacunas concretas de produtor/consumidor mantêm PARTIAL. Não chamar persistência/guard de leitor de negócio nem atribuir ausência a integração genérica.",
+    "O harness atual tem sete flows/42 configurações. W8 registrou zero observações e 1260 cancelamentos por C15; a falha própria de zoom foi corrigida e o W10 comprovou a capacidade 100/200/100 independentemente. Baseline de tempo permanece ausente.",
+    "Consumer W8: 60 testes, 44 PASS/16 FAIL, quatro arquivos, 125 assertions. Seis exports de rotina ausentes; C15 mismatch; cinco falhas C08 de namespaces/migração/read fences; quatro fences aditivos falhos. Não marcar expected/skip.",
+    "UI W8: duas falhas distintas. Produto bloqueado em C15 antes browser/auth com 1260 cancelamentos e latências null; zoom independente falhou no helper próprio por identificação da aba. Nenhum zoom PASS.",
+    "Check W9: 144 diagnósticos herdados/zero próprios, UI oficial seis fontes PASS, guards 78 regras/606 paths/zero gates/11 warnings/zero errors. Artefato baixado e bytes verificados.",
+    "Correção de metadado histórico: o segundo valor de revisions.txt é a árvore do produto W7; o snapshot correto do check 43536792411, observado no checkout do log, é 20c38eaabbbc8bbb20ba7ca1560d084762c267a3.",
+    "Zoom W10: um teste PASS/zero retries contra o app server real, 100→200→100, DPR 1→2→1, CSS 1440×900→720×450→1440×900, visualViewportScale 1, extensão/manifest/tabs conferidos, AppProcess um spawn/zero delegações. Não é prova Sucafina autenticada, fluxo de negócio ou GNATIVE.",
+    "Checks W10: 144 herdados/zero próprios, UI oficial seis fontes PASS, guards 78 regras/606 paths/zero gates/11 warnings/zero errors. Artefatos de zoom e checks baixados e verificados; os resultados W8 permanecem vinculados aos respectivos snapshots."
   ],
   "assessment_candidate": {
-    "sha": "70476b99e0a34c4432d48f5d2f3710c26562aa1b",
-    "tree": "56f717d5713bb48710f82ed66f9ef3d01292d90c",
-    "latest_measured_product_sha": "70476b99e0a34c4432d48f5d2f3710c26562aa1b",
-    "candidate_boundary_test_status": "PASS_AT_W4_BLOBS_UNCHANGED_IN_W5",
-    "ui5_status": "FAILURE_C15_BOOTSTRAP_ZERO_OBSERVATIONS"
+    "sha": "181953e9cee36166558c5f429cbe11e0dd5105d1",
+    "tree": "43527d9e4444d57dc77696a15f2cd425ceb7ca2b",
+    "latest_contracts_product_sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+    "contracts_run_ref": "43537536421",
+    "contracts_status": "PASS_85_TESTS_2239_ASSERTIONS",
+    "checks_run_ref": "43539548039",
+    "own_typecheck_diagnostics": 0,
+    "inherited_typecheck_diagnostics": 144,
+    "latest_measured_product_sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+    "ui5_status": "FAILURE_C15_BOOTSTRAP_ZERO_OBSERVATIONS",
+    "current_consumer_run_status": "FAILURE_44_PASS_16_FAIL",
+    "current_ui_run_status": "BUSINESS_FAILURE_C15_ZERO_OBSERVATIONS_ZOOM_RESOLVED_SEPARATELY_W10",
+    "latest_checks_product_sha": "181953e9cee36166558c5f429cbe11e0dd5105d1",
+    "consumer_run_ref": "43538370444",
+    "latest_consumers_product_sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+    "ui_run_ref": "43537760359",
+    "current_ui_observations": 0,
+    "current_ui_cancelled_measurements": 1260,
+    "current_zoom_status": "PASS_BROWSER_CAPABILITY_ONLY",
+    "zoom_run_ref": "43539552540",
+    "latest_zoom_product_sha": "181953e9cee36166558c5f429cbe11e0dd5105d1"
   },
-  "proof_reuse_limit": "Runs remain bound to their own exact product SHA. W5 changes only workflow/UI tsconfig/UI failure metadata; all Sucafina product/test blobs from the 40-test W4 run are unchanged. W2 consumer runtime/contracts are also unchanged through W5. Final root receipt retains the actual remote comparison proof; no run SHA is relabeled.",
+  "proof_reuse_limit": "Cada run permanece vinculado ao produto/snapshot que executou: contratos W8 85 PASS; consumidores W8 44 PASS/16 FAIL; flows UI W8 com zero observações e 1260 cancelamentos por C15; zoom W10 um PASS real independente; checks W10 144 herdados/zero próprios. Zoom aprovado não é autenticação Sucafina, latência de negócio ou GNATIVE. Não relabelar resultados históricos com o SHA atual.",
   "acceptance_limit": "PASS aplica-se à exigência e ao escopo explicitamente demonstrados de cada critério; não libera automaticamente a task, WP00, consumidores, GNATIVE ou GLOBAL_RELEASE.",
   "source_catalog": {
     "S001": {
@@ -4182,6 +4668,206 @@
       "path": "packages/app-shell/e2e/sucafina/wp00/prepare-installation.ts",
       "sha": "0d85bfd9eeac76d24a9cffc9577c646eef7cc95a",
       "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0d85bfd9eeac76d24a9cffc9577c646eef7cc95a/packages/app-shell/e2e/sucafina/wp00/prepare-installation.ts"
+    },
+    "S043": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/corpus-reconciliation.test.ts",
+      "sha": "7c9bcdd891e5b56a09b438dc055fe05b4af5646c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7c9bcdd891e5b56a09b438dc055fe05b4af5646c/modules/sucafina/Sucafinav1/test/product/wp00/corpus-reconciliation.test.ts"
+    },
+    "S044": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/fixtures/reconciliation.json",
+      "sha": "7c9bcdd891e5b56a09b438dc055fe05b4af5646c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7c9bcdd891e5b56a09b438dc055fe05b4af5646c/modules/sucafina/Sucafinav1/test/product/wp00/fixtures/reconciliation.json"
+    },
+    "S045": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/scanner-failure.test.ts",
+      "sha": "7c9bcdd891e5b56a09b438dc055fe05b4af5646c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7c9bcdd891e5b56a09b438dc055fe05b4af5646c/modules/sucafina/Sucafinav1/test/product/wp00/scanner-failure.test.ts"
+    },
+    "S046": {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/state-consumer-matrix.json",
+      "sha": "7c9bcdd891e5b56a09b438dc055fe05b4af5646c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7c9bcdd891e5b56a09b438dc055fe05b4af5646c/modules/sucafina/Sucafinav1/docs/product-campaign/wp00/state-consumer-matrix.json"
+    },
+    "S047": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/corpus-reconciliation.test.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/modules/sucafina/Sucafinav1/test/product/wp00/corpus-reconciliation.test.ts"
+    },
+    "S048": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/fixtures/reconciliation.json",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/modules/sucafina/Sucafinav1/test/product/wp00/fixtures/reconciliation.json"
+    },
+    "S049": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+    },
+    "S050": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts"
+    },
+    "S051": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/scanner-failure.test.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/modules/sucafina/Sucafinav1/test/product/wp00/scanner-failure.test.ts"
+    },
+    "S052": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/scanner-host-preflight.test.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/modules/sucafina/Sucafinav1/test/product/wp00/scanner-host-preflight.test.ts"
+    },
+    "S053": {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/state-consumer-matrix.json",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/modules/sucafina/Sucafinav1/docs/product-campaign/wp00/state-consumer-matrix.json"
+    },
+    "S054": {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/state-consumer-matrix.md",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/modules/sucafina/Sucafinav1/docs/product-campaign/wp00/state-consumer-matrix.md"
+    },
+    "S055": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/modules/sucafina/Sucafinav1/test/product/wp00/contract-consumers.test.ts"
+    },
+    "S056": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/modules/sucafina/Sucafinav1/test/product/wp00/contract-freeze.test.ts"
+    },
+    "S057": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/evidence-source-maps.test.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/modules/sucafina/Sucafinav1/test/product/wp00/evidence-source-maps.test.ts"
+    },
+    "S058": {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+    },
+    "S059": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/measurements.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/packages/app-shell/e2e/sucafina/wp00/measurements.ts"
+    },
+    "S060": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/measurement-receipts.test.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/modules/sucafina/Sucafinav1/test/product/wp00/measurement-receipts.test.ts"
+    },
+    "S061": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/baseline-ui.spec.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/packages/app-shell/e2e/sucafina/wp00/baseline-ui.spec.ts"
+    },
+    "S062": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/flows.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/packages/app-shell/e2e/sucafina/wp00/flows.ts"
+    },
+    "S063": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/prepare-installation.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/packages/app-shell/e2e/sucafina/wp00/prepare-installation.ts"
+    },
+    "S064": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/browser.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/packages/app-shell/e2e/sucafina/wp00/browser.ts"
+    },
+    "S065": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/zoom-capability.spec.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/packages/app-shell/e2e/sucafina/wp00/zoom-capability.spec.ts"
+    },
+    "S066": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/fixtures/verify-ui-artifact.ts",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/modules/sucafina/Sucafinav1/test/product/wp00/fixtures/verify-ui-artifact.ts"
+    },
+    "S067": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/tsconfig.json",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/packages/app-shell/e2e/sucafina/wp00/tsconfig.json"
+    },
+    "S068": {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/ci-selection.json",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/modules/sucafina/Sucafinav1/docs/product-campaign/wp00/ci-selection.json"
+    },
+    "S069": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/README.md",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/packages/app-shell/e2e/sucafina/wp00/README.md"
+    },
+    "S070": {
+      "path": ".github/workflows/astra-wp00-check.yml",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/.github/workflows/astra-wp00-check.yml"
+    },
+    "S071": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/zoom-extension/manifest.json",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/packages/app-shell/e2e/sucafina/wp00/zoom-extension/manifest.json"
+    },
+    "S072": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/zoom-extension/worker.js",
+      "sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d456bdd9cb4c8d921648b8c885d49cf71e592402/packages/app-shell/e2e/sucafina/wp00/zoom-extension/worker.js"
+    },
+    "S073": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/browser.ts",
+      "sha": "1e09268b53e08fa4190c3969424973def7e1327e",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1e09268b53e08fa4190c3969424973def7e1327e/packages/app-shell/e2e/sucafina/wp00/browser.ts"
+    },
+    "S074": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/zoom-capability.spec.ts",
+      "sha": "1e09268b53e08fa4190c3969424973def7e1327e",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1e09268b53e08fa4190c3969424973def7e1327e/packages/app-shell/e2e/sucafina/wp00/zoom-capability.spec.ts"
+    },
+    "S075": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/tsconfig.json",
+      "sha": "1e09268b53e08fa4190c3969424973def7e1327e",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1e09268b53e08fa4190c3969424973def7e1327e/packages/app-shell/e2e/sucafina/wp00/tsconfig.json"
+    },
+    "S076": {
+      "path": ".github/workflows/astra-wp00-check.yml",
+      "sha": "1e09268b53e08fa4190c3969424973def7e1327e",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1e09268b53e08fa4190c3969424973def7e1327e/.github/workflows/astra-wp00-check.yml"
+    },
+    "S077": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/browser.ts",
+      "sha": "181953e9cee36166558c5f429cbe11e0dd5105d1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/181953e9cee36166558c5f429cbe11e0dd5105d1/packages/app-shell/e2e/sucafina/wp00/browser.ts"
+    },
+    "S078": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/zoom-capability.spec.ts",
+      "sha": "181953e9cee36166558c5f429cbe11e0dd5105d1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/181953e9cee36166558c5f429cbe11e0dd5105d1/packages/app-shell/e2e/sucafina/wp00/zoom-capability.spec.ts"
+    },
+    "S079": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/tsconfig.json",
+      "sha": "181953e9cee36166558c5f429cbe11e0dd5105d1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/181953e9cee36166558c5f429cbe11e0dd5105d1/packages/app-shell/e2e/sucafina/wp00/tsconfig.json"
+    },
+    "S080": {
+      "path": ".github/workflows/astra-wp00-check.yml",
+      "sha": "181953e9cee36166558c5f429cbe11e0dd5105d1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/181953e9cee36166558c5f429cbe11e0dd5105d1/.github/workflows/astra-wp00-check.yml"
+    },
+    "S081": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/zoom-extension/manifest.json",
+      "sha": "181953e9cee36166558c5f429cbe11e0dd5105d1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/181953e9cee36166558c5f429cbe11e0dd5105d1/packages/app-shell/e2e/sucafina/wp00/zoom-extension/manifest.json"
+    },
+    "S082": {
+      "path": "packages/app-shell/e2e/sucafina/wp00/zoom-extension/worker.js",
+      "sha": "181953e9cee36166558c5f429cbe11e0dd5105d1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/181953e9cee36166558c5f429cbe11e0dd5105d1/packages/app-shell/e2e/sucafina/wp00/zoom-extension/worker.js"
     }
   },
   "run_catalog": {
@@ -4483,6 +5169,313 @@
       "product_diff_files": [
         ".ci-run.json"
       ]
+    },
+    "43536802706": {
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43536802706",
+      "product_sha": "7c9bcdd891e5b56a09b438dc055fe05b4af5646c",
+      "snapshot_sha": "72fa3ea9ba156c8ff656772b0f25a08c1c26e780",
+      "status": "completed",
+      "conclusion": "success",
+      "observed_result": {
+        "pass": 84,
+        "fail": 0,
+        "tests": 84,
+        "files": 12,
+        "assertions": 2237,
+        "omni_canonical_control": {
+          "status": "PASS",
+          "spawns": 1,
+          "delegations": 0,
+          "nonce": "24191a75159e28a190f3c1cac0a6f86e"
+        }
+      },
+      "request_blob": "d0b6aaf38cf3e82ed24ed49d3e42b335015a4d87",
+      "product_diff_files": [
+        ".ci-run.json"
+      ]
+    },
+    "43537536421": {
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537536421",
+      "product_sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "snapshot_sha": "e01e84a6f213b981de60489811383112736ba3f6",
+      "status": "completed",
+      "conclusion": "success",
+      "observed_result": {
+        "pass": 85,
+        "fail": 0,
+        "tests": 85,
+        "files": 12,
+        "assertions": 2239,
+        "omni_canonical_control": {
+          "status": "PASS",
+          "spawns": 1,
+          "delegations": 0
+        }
+      },
+      "product_diff_files": [
+        ".ci-run.json"
+      ]
+    },
+    "43536792411": {
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43536792411",
+      "product_sha": "7c9bcdd891e5b56a09b438dc055fe05b4af5646c",
+      "snapshot_sha": "20c38eaabbbc8bbb20ba7ca1560d084762c267a3",
+      "status": "completed",
+      "conclusion": "failure",
+      "observed_result": {
+        "typecheck": {
+          "status": "FAIL",
+          "diagnostics": 149,
+          "inherited_diagnostics": 144,
+          "own_diagnostics": 5
+        }
+      },
+      "product_tree": "ea9dde4ab51d913ecdc76890b8e51b90f94642ca"
+    },
+    "43537543232": {
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537543232",
+      "product_sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "status": "completed",
+      "conclusion": "failure",
+      "observed_result": {
+        "typecheck": {
+          "status": "FAIL",
+          "diagnostics": 144,
+          "inherited_diagnostics": 144,
+          "own_diagnostics": 0
+        },
+        "ui_typecheck": {
+          "status": "PASS",
+          "verified_source_count": 6,
+          "command": "bun run typecheck:e2e --project e2e/sucafina/wp00/tsconfig.json"
+        },
+        "guards": {
+          "status": "PASS",
+          "gates": 0,
+          "warnings": 11,
+          "errors": 0
+        }
+      },
+      "limit": "Typecheck UI/guards passaram; Sucafina permaneceu com 144 diagnósticos herdados. Nenhum resultado desse job comprova execução UI.",
+      "snapshot_sha": "fafd7a5e1be32bdf5158fa9c66b3fbde94d9dda7",
+      "artifact": {
+        "id": 14091015302,
+        "digest": "sha256:a1c7eb420870fedd751a339f72109643b159153e51a35e63ddfb94683a1e9f07"
+      }
+    },
+    "43538370444": {
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43538370444",
+      "product_sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "snapshot_sha": "8e85876ff0243dbfd83782e7014b16672f9426ca",
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": {
+        "test": 132272811767
+      },
+      "observed_result": {
+        "pass": 44,
+        "fail": 16,
+        "tests": 60,
+        "files": 4,
+        "assertions": 125,
+        "operation_exports": {
+          "tested": 39,
+          "pass": 33,
+          "fail": 6,
+          "missing_operations": [
+            "sf_routine_catalog",
+            "sf_routine_prepare",
+            "sf_routine_run",
+            "sf_routine_status",
+            "sf_routine_result",
+            "sf_watch_prepare"
+          ]
+        },
+        "additive_fences": {
+          "claimBindings": "FAIL",
+          "commandProposals": "FAIL",
+          "compositeScenarios": "FAIL",
+          "decisionResults": "PASS",
+          "nativeRuns": "PASS",
+          "biArtifacts": "FAIL"
+        },
+        "other_failures": {
+          "c15_bundle": 1,
+          "c08_namespaces_migration_and_read_fences": 5
+        },
+        "omni_canonical_control": {
+          "status": "NOT_APPLICABLE",
+          "reason": "focused selection; no declaring test ran; no spawn/delegation proof"
+        }
+      },
+      "log_sha256": "e7e3065f7909430033e33cb863b27666b5cd371ce155e63f1277f8cef3a629fc",
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/consumer-coverage-observations.json",
+      "product_diff_files": [
+        ".ci-run.json"
+      ]
+    },
+    "43537760359": {
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537760359",
+      "product_sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "snapshot_sha": "f07b9684dfc410d3a822586c7f2f39d0c43c227d",
+      "status": "completed",
+      "conclusion": "failure",
+      "observed_result": {
+        "tests": 2,
+        "pass": 0,
+        "fail": 2,
+        "retries": 0,
+        "business_ui_observations": 0,
+        "planned_configurations": 42,
+        "cancelled_measurements": 1260,
+        "attempted_measurements": 0,
+        "authenticated": false,
+        "browser_version": null,
+        "cache_state": null,
+        "comparison": "unavailable",
+        "zoom_status": "FAIL_OWN_HARNESS_DEFECT",
+        "zoom_failure": "worker.evaluate: The active browser tab does not match the measured page",
+        "cli_exit_code": 1,
+        "cli_failure": "Profile policy mismatch: sf_portfolio"
+      },
+      "artifact": {
+        "id": 14089977719,
+        "size_bytes": 713288,
+        "digest": "sha256:efb6b2ec3dd465d1317da9ab7044e01bd87627459c92391dd41506673a8a13e9"
+      },
+      "raw_sha256": "5cf4134e026e6370c40793d56f7beb19e60f2b86c152441affe006ead08a5762",
+      "product_diff_files": [
+        ".ci-run.json"
+      ]
+    },
+    "43538629884": {
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43538629884",
+      "product_sha": "1e09268b53e08fa4190c3969424973def7e1327e",
+      "snapshot_sha": "2673e9e64f1440c93d470bdfd67cc97257234ee3",
+      "status": "completed",
+      "conclusion": "failure",
+      "observed_result": {
+        "typecheck": {
+          "status": "FAIL",
+          "diagnostics": 144,
+          "inherited_diagnostics": 144,
+          "own_diagnostics": 0
+        },
+        "ui_typecheck": {
+          "status": "PASS",
+          "verified_source_count": 6,
+          "command": "bun run typecheck:e2e --project e2e/sucafina/wp00/tsconfig.json"
+        },
+        "guards": {
+          "status": "PASS",
+          "rules": 78,
+          "paths": 606,
+          "gates": 0,
+          "warnings": 11,
+          "errors": 0
+        }
+      },
+      "artifact": {
+        "id": 14090094509,
+        "digest": "sha256:f1295176ed566f68e453904e576f8cafcb0a64e404567d8df2a3dd8c1e4c72dd",
+        "downloaded_bytes_verified": true
+      },
+      "product_diff_files": [
+        ".astra-wp00-check.json"
+      ]
+    },
+    "43539552540": {
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43539552540",
+      "product_sha": "181953e9cee36166558c5f429cbe11e0dd5105d1",
+      "snapshot_sha": "d6a434da6cf93de2a8eef071b3e6b52def8a3b14",
+      "status": "completed",
+      "conclusion": "success",
+      "observed_result": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "retries": 0,
+        "scope": "Browser instrumentation against the existing production app server; no Sucafina authentication/business/native qualification",
+        "zoom_percent": [
+          100,
+          200,
+          100
+        ],
+        "device_pixel_ratio": [
+          1,
+          2,
+          1
+        ],
+        "css_viewport_width": [
+          1440,
+          720,
+          1440
+        ],
+        "css_viewport_height": [
+          900,
+          450,
+          900
+        ],
+        "visual_viewport_scale": [
+          1,
+          1,
+          1
+        ],
+        "browser_version": "147.0.7727.15",
+        "extension_id": "kjjfamnfjoddanaeijmdgfnjfnccnelm",
+        "tabs_permission": true,
+        "app_process": {
+          "spawns": 1,
+          "delegations": 0,
+          "scope": "Playwright AppProcess counters; not the Bun canonical control"
+        }
+      },
+      "artifact": {
+        "id": 14090464342,
+        "size_bytes": 204159,
+        "digest": "sha256:d4076d0e80fc09068d3bcaff5f73ed7e4e338969d3ac0438ff77706403a17497",
+        "downloaded_bytes_verified": true
+      },
+      "raw_sha256": "38b9e0cc3a753d30fa95cbd9621356133dd529cc1896c74beafdd84b7f4fb770",
+      "product_diff_files": [
+        ".ci-run.json"
+      ]
+    },
+    "43539548039": {
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43539548039",
+      "product_sha": "181953e9cee36166558c5f429cbe11e0dd5105d1",
+      "snapshot_sha": "899be75b46bd6ba4c292bf836e630bdf1a6a0aee",
+      "status": "completed",
+      "conclusion": "failure",
+      "observed_result": {
+        "typecheck": {
+          "status": "FAIL",
+          "diagnostics": 144,
+          "inherited_diagnostics": 144,
+          "own_diagnostics": 0
+        },
+        "ui_typecheck": {
+          "status": "PASS",
+          "verified_source_count": 6,
+          "command": "bun run typecheck:e2e --project e2e/sucafina/wp00/tsconfig.json"
+        },
+        "guards": {
+          "status": "PASS",
+          "rules": 78,
+          "paths": 606,
+          "gates": 0,
+          "warnings": 11,
+          "errors": 0
+        }
+      },
+      "artifact": {
+        "id": 14091490266,
+        "digest": "sha256:be429640206ef87b614f946a37502690a706d65ff61c15db41e93b504074c6aa",
+        "downloaded_bytes_verified": true
+      },
+      "product_diff_files": [
+        ".astra-wp00-check.json"
+      ]
     }
   },
   "followup_evidence_progress": [
@@ -4517,9 +5510,85 @@
         "WP00.T03.SUC.01",
         "WP00.QLT.01"
       ],
-      "scope": "Bootstrap e dois fluxos comparáveis; não cobre automaticamente J01–J08, zoom 200% ou baseline histórico.",
+      "scope": "Histórico W5: bootstrap de harness então limitado a dois flows, bloqueado antes autenticação. A implementação atual de sete flows/zoom é registrada separadamente; nenhum tempo deste run é inventado.",
       "run_ref": "43522985791"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/corpus-reconciliation.test.ts",
+      "status": "PASS",
+      "criteria": [
+        "WP00.CMP.02",
+        "WP00.T03.DOD.01",
+        "WP00.T03.QLT.01",
+        "WP00.T03.CMP.01",
+        "WP00.T03.SUC.01"
+      ],
+      "scope": "updated=N conta linhas correspondentes, não mudanças materiais nem receipt de idempotência C04. Atores do corpus são sintéticos. Conteúdo ZIP/XML não certifica aparência visual, download/revisão integral, J03/J05, provider ou identidade nativa.",
+      "run_ref": "43537536421"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/scanner-failure.test.ts",
+      "status": "NEGATIVE_BRANCH_PASS",
+      "criteria": [
+        "WP00.T04.CHK.12"
+      ],
+      "scope": "Bun é o executável real da falha controlada, não um scanner instalado. Não prova gitleaks/trufflehog funcional, timeout, clean/canary reais com binário instalado, durabilidade da instalação ou GNATIVE. A observação de ausência W7 durou 7 ms; não atribuir esse tempo a outro run.",
+      "run_ref": "43537536421"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/state-consumer-matrix.json",
+      "status": "INVENTORY_COMPLETE_ACCEPTANCE_PARTIAL",
+      "criteria": [
+        "WP00.T02.CHK.03"
+      ],
+      "scope": "46 famílias, 14 formatos, oito lacunas concretas; inspeção W6 publicada W7/W8."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp00/measurements.ts",
+      "status": "AGGREGATOR_PASS_UI_NOT_OBSERVED",
+      "criteria": [
+        "WP00.QLT.01"
+      ],
+      "scope": "Testes sintéticos do agregador não produzem observações de UI. O raw W8 registrou 42 grupos e 1260 cancelamentos por C15, sem latências. A capacidade de zoom passou separadamente no W10; comparação histórica permanece unavailable.",
+      "run_ref": "43537536421"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp00/baseline-ui.spec.ts",
+      "status": "BUSINESS_BLOCKED_ZOOM_CAPABILITY_PASSED_SEPARATELY",
+      "criteria": [
+        "WP00.QLT.01"
+      ],
+      "scope": "Último run dos flows de negócio: W8 com zero observações, 1260 cancelamentos e medianas/p95 null. W10 aprova somente a capacidade de zoom contra o app server; não fornece autenticação Sucafina, latências, comparação histórica nem aceite de jornadas.",
+      "check_run_ref": "43539548039",
+      "run_ref": "43537760359",
+      "zoom_run_ref": "43539552540"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "EXECUTED_44_PASS_16_FAIL",
+      "criteria": [
+        "WP00.T02.DOD.10",
+        "WP00.T02.CHK.60",
+        "WP00.T04.CHK.02",
+        "WP00.T04.CHK.04"
+      ],
+      "scope": "Os 16 FAIL mantêm bloqueios concretos C07/C08/C15; nenhum é aceito como falha esperada ou skip. Esta prova substitui a pendência de execução, sem substituir os resultados antigos no histórico.",
+      "run_ref": "43538370444"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp00/zoom-capability.spec.ts",
+      "status": "PASS_BROWSER_CAPABILITY_ONLY",
+      "criteria": [
+        "WP00.QLT.01"
+      ],
+      "scope": "Prova da capacidade de zoom/instrumentação no app server. Não autentica Sucafina, não executa fluxo de negócio, não qualifica UX/layout de produto em 200%, GNATIVE ou medições temporais; os 1260 cancelamentos W8 por C15 permanecem separados.",
+      "run_ref": "43539552540"
     }
   ],
-  "publication_note": "Avaliação final publicada com os recibos WP00. O commit de evidência preserva os blobs executáveis do candidato W5; a PR permanece DRAFT/BLOCKED."
+  "publication_note": "Consolidação dos contratos/consumidores/flows W8 e da prova positiva de zoom e checks W10. A lacuna própria de instrumentação de zoom está resolvida; C07/C08/C15, typecheck herdado e medições de negócio continuam abertos. WP00 e PR permanecem DRAFT/BLOCKED.",
+  "task_limits": {
+    "WP00.T03": "Os nove critérios locais têm PASS de corpus/oráculos. T03 continua PARTIAL: W8 registrou zero observações e 1260 cancelamentos em 42 grupos por C15. W10 comprova a capacidade independente de zoom, mas faltam 30 repetições observadas dos flows, baseline comparável e requisitos herdados/jornadas pertinentes.",
+    "WP00.T04": "DOD.02 passa pelo ramo explícito de impedimento registrado e CHK.12 pelos negativos de scanner. Os critérios de cadeia instalada, qualificação temporal e serviços nativos continuam abertos; T04 permanece BLOCKED.",
+    "WP00": "DRAFT/BLOCKED: consumidores W8 com 16 FAIL C07/C08/C15, typecheck W10 com 144 herdados, medições de negócio não observadas e GNATIVE aberto. A capacidade de zoom foi comprovada separadamente no W10."
+  }
 }

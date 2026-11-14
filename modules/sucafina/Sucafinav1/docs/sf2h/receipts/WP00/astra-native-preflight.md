@@ -1,5 +1,15 @@
 # WP00.T04 — independent source preflight
 
+## Subsequent hosted observations
+
+This source preflight retains its original pins and limitations below. Later [contracts run 43537536421](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537536421) passed 85 tests, including a real absent-scanner observation and a controlled real Bun invocation failure through the canonical scanner classifier, product adapter and Atlas write door. Both failure paths refused writes. Bun is not an installed scanner; C17 remains HOLD and GNATIVE remains NOT_PROVEN. Exact observations are in [scanner-host-observation.json](scanner-host-observation.json).
+
+[Consumer run 43538370444](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43538370444) executed the selected execution-context/private-MCP/Atlas tests and every independent WP00 consumer assertion: 44 PASS / 16 FAIL. Synthetic SDK/authority tests do not constitute the configured native chain described below. The real Sucafina CLI again failed at C15 before authentication in [UI run 43537760359](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537760359). The independent browser zoom capability passed in [run 43539552540](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43539552540), with no inference, Session, business identity or native qualification claim.
+
+The current authoritative criterion dispositions are in [criterion-map.json](../../../product-campaign/wp00/criterion-map.json): T04 has 6 PASS / 11 PARTIAL / 8 BLOCKED / 1 NOT_PROVEN. The source review's earlier statuses are historical. Passing the explicit impediment-recording or scanner-refusal requirement does not qualify T04 as a task.
+
+## Original source review
+
 > Historical independent source preflight at the seed. The current 85-criterion status is in [criterion-map.json](../../../product-campaign/wp00/criterion-map.json); later hosted observations are in [ci-execution-evidence.json](ci-execution-evidence.json), [scanner-host-observation.json](scanner-host-observation.json) and [ui-bootstrap-observations.json](ui-bootstrap-observations.json). Those runs establish scanner absence/fail-closed and the C15 bootstrap failure; they do not qualify GNATIVE. The original independent assessment below is preserved.
 
 ## Disposition

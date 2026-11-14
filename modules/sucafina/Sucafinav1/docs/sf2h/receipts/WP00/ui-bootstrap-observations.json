@@ -1,7 +1,7 @@
 {
   "schema": "sf-wp00-published-ui-bootstrap-v1",
   "status": "BLOCKED_C15",
-  "latest_execution_ref": "ui5",
+  "latest_execution_ref": "ui8",
   "attempts": [
     {
       "execution_ref": "ui3",
@@ -164,6 +164,1955 @@
       "p95_ms": null,
       "unavailable_reason": "The real CLI failed before authentication/readiness; no business UI observation occurred.",
       "historical_metadata_correction": null
+    },
+    {
+      "execution_ref": "ui8",
+      "product_sha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+      "snapshot_sha": "f07b9684dfc410d3a822586c7f2f39d0c43c227d",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537760359",
+      "run_conclusion": "failure",
+      "artifact": {
+        "id": 14089977719,
+        "name": "playwright-ubuntu-24.04-1",
+        "size_in_bytes": 713288,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14089977719",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14089977719/zip",
+        "expired": false,
+        "created_at": "2026-11-14T01:02:35Z",
+        "expires_at": "2026-11-21T01:02:34Z",
+        "updated_at": "2026-11-14T01:02:35Z",
+        "digest": "sha256:efb6b2ec3dd465d1317da9ab7044e01bd87627459c92391dd41506673a8a13e9",
+        "workflow_run": {
+          "id": 43537760359,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "ci-run-linux-astra-wp00-d456bdd9-0c32bdb7-1",
+          "head_sha": "f07b9684dfc410d3a822586c7f2f39d0c43c227d"
+        },
+        "download_sha256_verified": true,
+        "download_sha256": "efb6b2ec3dd465d1317da9ab7044e01bd87627459c92391dd41506673a8a13e9",
+        "artifact_page_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537760359/artifacts/14089977719"
+      },
+      "raw_receipt_sha256": "5cf4134e026e6370c40793d56f7beb19e60f2b86c152441affe006ead08a5762",
+      "raw_receipt": {
+        "schema": "wp00-real-ui-measurements-v2",
+        "executedSnapshotCommit": "f07b9684dfc410d3a822586c7f2f39d0c43c227d",
+        "productCommit": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+        "baselineReferenceCommit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+        "startedAt": "2026-11-14T01:02:26.329Z",
+        "environment": {
+          "datasetDigest": "786ffcdaf98ce795cfc22f5eec3989bf7386db0a8d0143118cf9d5fa941db3ac",
+          "runtimeVersion": "1.3.14",
+          "operatingSystem": "linux 7.0.0-1017-azure",
+          "device": "GitHub Actions runner",
+          "browserVersion": null,
+          "cacheState": null,
+          "method": "Automation-observed elapsed time from user action to usable business result, then complete asserted outcome; no compositor-paint claim"
+        },
+        "unavailableEnvironmentReasons": {
+          "browserVersion": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+          "cacheState": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m"
+        },
+        "authenticated": false,
+        "state": {
+          "stage": "start-existing-cli",
+          "exitCode": 1,
+          "failure": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+          "corpus": {
+            "schema": "wp00-ui-corpus-v2",
+            "synthetic": true,
+            "datasetDigest": "786ffcdaf98ce795cfc22f5eec3989bf7386db0a8d0143118cf9d5fa941db3ac",
+            "counts": {
+              "financialLines": 1000,
+              "purchaseOrders": 200,
+              "projects": 100
+            },
+            "expected": {
+              "actual2027": "$1000",
+              "forecast2027": "$2000",
+              "openRequests": 200,
+              "firstRequest": "synthetic-po-1",
+              "firstAmount": "32000 USD",
+              "lastRequest": "synthetic-po-200",
+              "lastAmount": "200 USD"
+            },
+            "planner": {
+              "baseId": "synthetic-corpus-2027",
+              "baseName": "WP00 base 2027",
+              "alternative84Id": "synthetic-corpus-84000",
+              "alternative78Id": "synthetic-corpus-78000",
+              "alternative78Name": "WP00 alternative 78000",
+              "baseOutlook": "$590,000.00",
+              "outlook84": "$602,000.00",
+              "outlook78": "$596,000.00",
+              "budget": "$600,000.00",
+              "actual": "$400,000.00"
+            },
+            "sourcing": {
+              "requestId": "synthetic-po-1",
+              "title": "WP00 sourcing comparison"
+            },
+            "report": {
+              "names": [
+                "WP00 project 001 END",
+                "WP00 project 002 END",
+                "WP00 project 003 END",
+                "WP00 project 004 END",
+                "WP00 project 005 END",
+                "WP00 project 006 END",
+                "WP00 project 007 END",
+                "WP00 project 008 END",
+                "WP00 project 009 END",
+                "WP00 project 010 END",
+                "WP00 project 011 END",
+                "WP00 project 012 END",
+                "WP00 project 013 END",
+                "WP00 project 014 END",
+                "WP00 project 015 END",
+                "WP00 project 016 END",
+                "WP00 project 017 END",
+                "WP00 project 018 END",
+                "WP00 project 019 END",
+                "WP00 project 020 END",
+                "WP00 project 021 END",
+                "WP00 project 022 END",
+                "WP00 project 023 END",
+                "WP00 project 024 END",
+                "WP00 project 025 END",
+                "WP00 project 026 END",
+                "WP00 project 027 END",
+                "WP00 project 028 END",
+                "WP00 project 029 END",
+                "WP00 project 030 END",
+                "WP00 project 031 END",
+                "WP00 project 032 END",
+                "WP00 project 033 END",
+                "WP00 project 034 END",
+                "WP00 project 035 END",
+                "WP00 project 036 END",
+                "WP00 project 037 END",
+                "WP00 project 038 END",
+                "WP00 project 039 END",
+                "WP00 project 040 END",
+                "WP00 project 041 END",
+                "WP00 project 042 END",
+                "WP00 project 043 END",
+                "WP00 project 044 END",
+                "WP00 project 045 END",
+                "WP00 project 046 END",
+                "WP00 project 047 END",
+                "WP00 project 048 END",
+                "WP00 project 049 END",
+                "WP00 project 050 END",
+                "WP00 project 051 END",
+                "WP00 project 052 END",
+                "WP00 project 053 END",
+                "WP00 project 054 END",
+                "WP00 project 055 END",
+                "WP00 project 056 END",
+                "WP00 project 057 END",
+                "WP00 project 058 END",
+                "WP00 project 059 END",
+                "WP00 project 060 END",
+                "WP00 project 061 END",
+                "WP00 project 062 END",
+                "WP00 project 063 END",
+                "WP00 project 064 END",
+                "WP00 project 065 END",
+                "WP00 project 066 END",
+                "WP00 project 067 END",
+                "WP00 project 068 END",
+                "WP00 project 069 END",
+                "WP00 project 070 END",
+                "WP00 project 071 END",
+                "WP00 project 072 END",
+                "WP00 project 073 END",
+                "WP00 project 074 END",
+                "WP00 project 075 END",
+                "WP00 project 076 END",
+                "WP00 project 077 END",
+                "WP00 project 078 END",
+                "WP00 project 079 END",
+                "WP00 project 080 END",
+                "WP00 project 081 END",
+                "WP00 project 082 END",
+                "WP00 project 083 END",
+                "WP00 project 084 END",
+                "WP00 project 085 END",
+                "WP00 project 086 END",
+                "WP00 project 087 END",
+                "WP00 project 088 END",
+                "WP00 project 089 END",
+                "WP00 project 090 END",
+                "WP00 project 091 END",
+                "WP00 project 092 END",
+                "WP00 project 093 END",
+                "WP00 project 094 END",
+                "WP00 project 095 END",
+                "WP00 project 096 END",
+                "WP00 project 097 END",
+                "WP00 project 098 END",
+                "WP00 project 099 END",
+                "WP00 project 100 END"
+              ],
+              "search": "WP00 project 001 END"
+            },
+            "runtimeVersion": "1.3.14",
+            "authentication": "local-operator",
+            "provider": "runtime/local-store.ts#openLocalStore"
+          },
+          "productSha": "d456bdd9cb4c8d921648b8c885d49cf71e592402",
+          "authenticated": false,
+          "browserVersion": null
+        },
+        "plan": [
+          {
+            "flow": "dashboard-budget-filter",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "dashboard-budget-filter",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "dashboard-budget-filter",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "dashboard-budget-filter",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "dashboard-budget-filter",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "dashboard-budget-filter",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "procurement-volume-open",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "procurement-volume-open",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "procurement-volume-open",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "procurement-volume-open",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "procurement-volume-open",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "procurement-volume-open",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "planner-scenario-compare",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "planner-scenario-compare",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "planner-scenario-compare",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "planner-scenario-compare",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "planner-scenario-compare",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "planner-scenario-compare",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "procurement-sourcing-rank",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "procurement-sourcing-rank",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "procurement-sourcing-rank",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "procurement-sourcing-rank",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "procurement-sourcing-rank",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "procurement-sourcing-rank",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "report-search-docx",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "report-search-docx",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "report-search-docx",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "report-search-docx",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "report-search-docx",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "report-search-docx",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "report-search-pptx",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "report-search-pptx",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "report-search-pptx",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "report-search-pptx",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "report-search-pptx",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "report-search-pptx",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "import-preview-exact-reimport",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "import-preview-exact-reimport",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "import-preview-exact-reimport",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "import-preview-exact-reimport",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          },
+          {
+            "flow": "import-preview-exact-reimport",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30
+          },
+          {
+            "flow": "import-preview-exact-reimport",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30
+          }
+        ],
+        "observations": [],
+        "summaries": [
+          {
+            "flow": "dashboard-budget-filter",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "dashboard-budget-filter",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "dashboard-budget-filter",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "dashboard-budget-filter",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "dashboard-budget-filter",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "dashboard-budget-filter",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "procurement-volume-open",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "procurement-volume-open",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "procurement-volume-open",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "procurement-volume-open",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "procurement-volume-open",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "procurement-volume-open",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "planner-scenario-compare",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "planner-scenario-compare",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "planner-scenario-compare",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "planner-scenario-compare",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "planner-scenario-compare",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "planner-scenario-compare",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "procurement-sourcing-rank",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "procurement-sourcing-rank",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "procurement-sourcing-rank",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "procurement-sourcing-rank",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "procurement-sourcing-rank",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "procurement-sourcing-rank",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "report-search-docx",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "report-search-docx",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "report-search-docx",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "report-search-docx",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "report-search-docx",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "report-search-docx",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "report-search-pptx",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "report-search-pptx",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "report-search-pptx",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "report-search-pptx",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "report-search-pptx",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "report-search-pptx",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "import-preview-exact-reimport",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "import-preview-exact-reimport",
+            "viewportWidth": 320,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "import-preview-exact-reimport",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "import-preview-exact-reimport",
+            "viewportWidth": 768,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "import-preview-exact-reimport",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 100,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          },
+          {
+            "flow": "import-preview-exact-reimport",
+            "viewportWidth": 1440,
+            "viewportHeight": 900,
+            "zoomPercent": 200,
+            "repetitions": 30,
+            "attempted": 0,
+            "passed": 0,
+            "failed": 0,
+            "cancelled": 30,
+            "cancellationReason": "Existing CLI exited before readiness; see wp00-server.log\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"exited:1\"\u001b[39m",
+            "visualReady": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "completion": {
+              "samples": 0,
+              "medianMs": null,
+              "p95Ms": null
+            },
+            "perceptibleResponseBudget": {
+              "criterion": "CAMP.QLT.05",
+              "limitMs": 200,
+              "evidenceBasis": "usable-result-upper-bound",
+              "observedWithinLimit": 0,
+              "observedAboveLimit": 0,
+              "unobserved": 30,
+              "state": "NOT_PROVEN",
+              "limit": "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation."
+            },
+            "statisticsPopulation": "successful outcomes only; failed and unexecuted attempts remain explicit",
+            "quantileMethod": "median of middle values; p95 nearest rank ceil(0.95 * n)"
+          }
+        ],
+        "zoomObservations": [],
+        "comparison": {
+          "state": "unavailable",
+          "reason": "Authenticated candidate measurement was not reached and baseline was not measured",
+          "comparisons": []
+        },
+        "processObservation": {
+          "spawns": 3,
+          "delegations": 0,
+          "canonicalControlVerdict": "Playwright scoped counters; not the Bun canonical control"
+        },
+        "limits": [
+          "Local operator only; no Microsoft identity or native AI qualification",
+          "Seeded Planner alternatives do not prove a native AI scenario or composite J05",
+          "The original baseline commit has not been timed",
+          "Cancelled attempts have no invented latency or successful outcome"
+        ]
+      },
+      "server_log_sha256": "1ec0b4aa3bf99bb67a346c42135ec3886e22af91bd46667307ae7bc048a3b7c3",
+      "server_error": "Profile policy mismatch: sf_portfolio",
+      "limit": "The raw receipt belongs to W8. Later zoom instrumentation tests do not turn this bootstrap attempt into an authenticated business measurement."
     }
   ],
   "next_owners": [
@@ -172,5 +2121,98 @@
     "S0",
     "WP00 qualifier"
   ],
-  "next_action": "Integrate the pinned C15 profile/skill/manifest together through their owner, then rerun the unchanged real installation spec on the composed SHA. Complete the remaining required flows, historical baseline timing, restricted actors and real 200% zoom before claiming T03 or journey acceptance."
+  "next_action": "WP12/S0 compose a compatible C15 resident bundle, then rerun the unchanged business gates against the real host. WP00 must retain raw 30-repetition observations, compare an actually comparable baseline and separately qualify restricted identities; no bootstrap bypass.",
+  "browser_zoom_capability": {
+    "execution_ref": "zoom10",
+    "status": "PASS",
+    "product_sha": "181953e9cee36166558c5f429cbe11e0dd5105d1",
+    "snapshot_sha": "d6a434da6cf93de2a8eef071b3e6b52def8a3b14",
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43539552540",
+    "run_conclusion": "success",
+    "artifact": {
+      "id": 14090464342,
+      "name": "playwright-ubuntu-24.04-1",
+      "size_in_bytes": 204159,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14090464342",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14090464342/zip",
+      "expired": false,
+      "created_at": "2026-11-14T01:18:42Z",
+      "expires_at": "2026-11-21T01:18:41Z",
+      "updated_at": "2026-11-14T01:18:42Z",
+      "digest": "sha256:d4076d0e80fc09068d3bcaff5f73ed7e4e338969d3ac0438ff77706403a17497",
+      "workflow_run": {
+        "id": 43539552540,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "ci-run-linux-astra-wp00-181953e9-d1f26656-1",
+        "head_sha": "d6a434da6cf93de2a8eef071b3e6b52def8a3b14"
+      },
+      "download_sha256_verified": true,
+      "download_sha256": "d4076d0e80fc09068d3bcaff5f73ed7e4e338969d3ac0438ff77706403a17497",
+      "artifact_page_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43539552540/artifacts/14090464342"
+    },
+    "raw_receipt_sha256": "38b9e0cc3a753d30fa95cbd9621356133dd529cc1896c74beafdd84b7f4fb770",
+    "observation": {
+      "schema": "wp00-browser-zoom-observation-v1",
+      "executedSnapshotCommit": "d6a434da6cf93de2a8eef071b3e6b52def8a3b14",
+      "operatingSystem": "linux 7.0.0-1017-azure",
+      "browserVersion": "147.0.7727.15",
+      "scope": "Browser instrumentation against the existing production server; not Sucafina authentication, business flow or GNATIVE proof",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "normal": {
+        "devicePixelRatio": 1,
+        "cssViewportWidth": 1440,
+        "cssViewportHeight": 900,
+        "visualViewportScale": 1,
+        "zoomPercent": 100,
+        "mechanism": "chrome.tabs.setZoom/getZoom",
+        "url": "http://127.0.0.1:3000/"
+      },
+      "enlarged": {
+        "devicePixelRatio": 2,
+        "cssViewportWidth": 720,
+        "cssViewportHeight": 450,
+        "visualViewportScale": 1,
+        "zoomPercent": 200,
+        "mechanism": "chrome.tabs.setZoom/getZoom",
+        "url": "http://127.0.0.1:3000/"
+      },
+      "restored": {
+        "devicePixelRatio": 1,
+        "cssViewportWidth": 1440,
+        "cssViewportHeight": 900,
+        "visualViewportScale": 1,
+        "zoomPercent": 100,
+        "mechanism": "chrome.tabs.setZoom/getZoom",
+        "url": "http://127.0.0.1:3000/"
+      },
+      "extensionObservation": {
+        "id": "kjjfamnfjoddanaeijmdgfnjfnccnelm",
+        "manifest": {
+          "background": {
+            "service_worker": "worker.js"
+          },
+          "manifest_version": 3,
+          "name": "WP00 isolated browser zoom evidence",
+          "permissions": [
+            "tabs"
+          ],
+          "version": "1.0.0"
+        },
+        "tabsPermission": true,
+        "workerUrl": "chrome-extension://kjjfamnfjoddanaeijmdgfnjfnccnelm/worker.js"
+      },
+      "processObservation": {
+        "spawns": 1,
+        "delegations": 0
+      }
+    },
+    "limits": [
+      "Browser instrumentation only, on the existing production server. No Sucafina authentication, business flow, native provider or GNATIVE proof.",
+      "This single capability test does not supply 30 business-flow repetitions or historical performance comparison."
+    ]
+  }
 }

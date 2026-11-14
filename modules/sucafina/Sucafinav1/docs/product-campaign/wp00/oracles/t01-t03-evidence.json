@@ -159,10 +159,14 @@
       ],
       "tests": [
         "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
-        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-reconciliation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/measurement-receipts.test.ts"
       ],
       "proofStatus": "PASS",
-      "limitations": [],
+      "limitations": [
+        "Corpus/domain proof only; native identity, complete J03/J05, authenticated UI repetitions and historical timing comparison are separate obligations."
+      ],
       "run_refs": [
         "43522589708"
       ],
@@ -181,10 +185,14 @@
       ],
       "tests": [
         "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
-        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-reconciliation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/measurement-receipts.test.ts"
       ],
       "proofStatus": "PASS",
-      "limitations": [],
+      "limitations": [
+        "Corpus/domain proof only; native identity, complete J03/J05, authenticated UI repetitions and historical timing comparison are separate obligations."
+      ],
       "run_refs": [
         "43522589708"
       ],
@@ -203,10 +211,14 @@
       ],
       "tests": [
         "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
-        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-reconciliation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/measurement-receipts.test.ts"
       ],
       "proofStatus": "PASS",
-      "limitations": [],
+      "limitations": [
+        "Corpus/domain proof only; native identity, complete J03/J05, authenticated UI repetitions and historical timing comparison are separate obligations."
+      ],
       "run_refs": [
         "43522589708"
       ],
@@ -225,17 +237,21 @@
       ],
       "tests": [
         "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
-        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-reconciliation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/measurement-receipts.test.ts"
       ],
-      "proofStatus": "PARTIAL",
+      "proofStatus": "PASS",
       "limitations": [
-        "No30 measured UI repetitions; J01-J08 and generic import/revocation transitions remain unqualified."
+        "Corpus/domain proof only; native identity, complete J03/J05, authenticated UI repetitions and historical timing comparison are separate obligations."
       ],
       "run_refs": [
         "43522589708",
-        "43522985791"
+        "43522985791",
+        "43536802706",
+        "43537536421"
       ],
-      "current_evidence": "Independent numeric constants and complete monthly fixtures are consumed by real domain/report implementations. Full journey qualification and comparable visual measurement remain separate."
+      "current_evidence": "Corpus, resultados esperados e roteiros foram conferidos. Constantes independentes e vetores mensais explícitos são consumidos pelos produtores/consumidores reais de domínio, importação e relatório; a execução W8 reproduziu os resultados sem derivar o oráculo da função sob teste."
     },
     {
       "criterionId": "WP00.T03.INV.01",
@@ -250,10 +266,14 @@
       ],
       "tests": [
         "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
-        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-reconciliation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/measurement-receipts.test.ts"
       ],
       "proofStatus": "PASS",
-      "limitations": [],
+      "limitations": [
+        "Corpus/domain proof only; native identity, complete J03/J05, authenticated UI repetitions and historical timing comparison are separate obligations."
+      ],
       "run_refs": [
         "43522589708"
       ],
@@ -272,18 +292,23 @@
       ],
       "tests": [
         "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
-        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-reconciliation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/measurement-receipts.test.ts"
       ],
-      "proofStatus": "PARTIAL",
+      "proofStatus": "PASS",
       "limitations": [
-        "No30 measured UI repetitions; J01-J08 and generic import/revocation transitions remain unqualified."
+        "Corpus/domain proof only; native identity, complete J03/J05, authenticated UI repetitions and historical timing comparison are separate obligations."
       ],
       "run_refs": [
         "43522589708",
         "43522928224",
-        "43522985791"
+        "43522985791",
+        "43536802706",
+        "43537536421",
+        "43537760359"
       ],
-      "current_evidence": "Small diagnostic cases and deterministic1000/200/100 volume fixtures are exercised by real functions. This does not by itself prove loaded table behavior or visual latency."
+      "current_evidence": "Fixtures pequenas isolam diagnósticos e o volume sintético 1000/200/100 é consumido por funções reais e pela preparação SQLite. Os relatórios de 25 projetos usam notas longas para detectar perda de conteúdo e preservam o caso canônico de 20 registros."
     },
     {
       "criterionId": "WP00.T03.QLT.02",
@@ -298,11 +323,13 @@
       ],
       "tests": [
         "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
-        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-reconciliation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/measurement-receipts.test.ts"
       ],
       "proofStatus": "PASS",
       "limitations": [
-        "No30 measured UI repetitions; J01-J08 and generic import/revocation transitions remain unqualified."
+        "Corpus/domain proof only; native identity, complete J03/J05, authenticated UI repetitions and historical timing comparison are separate obligations."
       ],
       "run_refs": [
         "43522589708"
@@ -322,17 +349,21 @@
       ],
       "tests": [
         "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
-        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-reconciliation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/measurement-receipts.test.ts"
       ],
-      "proofStatus": "PARTIAL",
+      "proofStatus": "PASS",
       "limitations": [
-        "No30 measured UI repetitions; J01-J08 and generic import/revocation transitions remain unqualified."
+        "Corpus/domain proof only; native identity, complete J03/J05, authenticated UI repetitions and historical timing comparison are separate obligations."
       ],
       "run_refs": [
         "43522589708",
-        "43522985791"
+        "43522985791",
+        "43536802706",
+        "43537536421"
       ],
-      "current_evidence": "Alternatives, role restriction, stale writes, absent FX, legacy inherited budget and distinct approval/resubmission are covered. Complete import replay and all period/reload journeys remain unqualified."
+      "current_evidence": "Todos os componentes estão cobertos: alternativas Planner; branco/zero/herdado e períodos mensais/anuais distintos; informações restritas; importação exata/alterada reexecutada com parser, preview/apply e SQLite reais; retorno/resubmissão Procurement com histórico separado e stale retry recusado."
     },
     {
       "criterionId": "WP00.T03.SUC.01",
@@ -347,20 +378,28 @@
       ],
       "tests": [
         "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
-        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts"
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/corpus-reconciliation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp00/measurement-receipts.test.ts"
       ],
-      "proofStatus": "PARTIAL",
+      "proofStatus": "PASS",
       "limitations": [
-        "No30 measured UI repetitions; J01-J08 and generic import/revocation transitions remain unqualified."
+        "Corpus/domain proof only; native identity, complete J03/J05, authenticated UI repetitions and historical timing comparison are separate obligations."
       ],
       "run_refs": [
         "43522589708",
         "43522928224",
-        "43522985791"
+        "43522985791",
+        "43536802706",
+        "43537536421"
       ],
-      "current_evidence": "CI reproduces the stated numeric deltas and selected role/transition cases from versioned fixtures. It does not establish every host/UI/native permission or journey."
+      "current_evidence": "Fixtures e testes versionados permitem reproduzir os mesmos deltas, permissões de domínio e transições. W8 reproduziu alternativas/ranking, recusas de viewer/stale write, ressubmissão e reimportação comparando identidades, valores, estado e persistência após reabertura."
     }
   ],
-  "assessment_candidate": "70476b99e0a34c4432d48f5d2f3710c26562aa1b",
-  "current_criterion_map": "../criterion-map.json"
+  "assessment_candidate": {
+    "sha": "181953e9cee36166558c5f429cbe11e0dd5105d1",
+    "tree": "43527d9e4444d57dc77696a15f2cd425ceb7ca2b"
+  },
+  "current_criterion_map": "../criterion-map.json",
+  "reopening_limit": "All local T03 criterion texts can be satisfied by the corpus; task T03 remains PARTIAL because the task also requires real comparable UI repetitions."
 }
