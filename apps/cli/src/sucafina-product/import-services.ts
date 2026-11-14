@@ -71,7 +71,7 @@ export function createSfImportServices(input: { runtime: Parameters<CreateSfHost
       if (target.surface === "planner") return target.selectionRef === `planner-version:${encodeURIComponent(scope.recordId)}:${encodeURIComponent(target.incarnation)}:${target.version}` && digestSfValue(scope.selector) === digestSfValue(sfPlannerProjectionSelector(snapshot, actor))
       return target.selectionRef === `sf-source:${encodeURIComponent(target.incarnation)}:${target.version}` && selector.page === scope.recordId && selector.roleMapDigest === digestSfValue(roleMap(snapshot, "dashboard")) && digestSfValue(selector.actor) === digestSfValue(actor)
     })
-    return !!source && source.incarnation === target.incarnation && await host.revalidate(context)
+    return !!source && source.incarnation === target.incarnation && (mode === "receipt" || source.version === target.version) && await host.revalidate(context)
   }
   const imports = createSfImportHost({ host, assets: assets.persistence, services: assets.services, state: authority.state, operationIdentity: (context, operation) => {
     if (context.kind === "ui") return authority.ui.operationIdentity(context)

@@ -1,4 +1,9 @@
 import { expect, test } from "bun:test"
+import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+import { openLocalStore } from "../../../runtime/local-store.ts"
+import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { createReviewPort } from "../../../product/reviews/port.ts"
 import type { ReviewSection } from "../../../product/reviews/port.ts"
@@ -163,6 +168,128 @@ test("preserved review survives changed projections and is denied after access r
   expect(await port.preserve(input, binding)).toEqual({ status: "conflict", reason: "preserved-review-changed" })
   stored.reviews["review-1"]!.sourceRefs = []
   expect(await port.read("review-1", binding)).toEqual({ status: "unavailable", reason: "invalid-review-sources" })
+})
+
+test("compact review receipts survive SQLite restart, legacy replay and concurrent preservation", async () => {
+  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-wp07-review-receipt-"))
+  await chmod(directory, 0o700)
+  const resources = { store: await openLocalStore(directory) }
+  const binding = { kind: "ui", binding: { principalRef: "principal", installationId: "i", projectId: "p", accessRevision: "access", policyVersion: "policy" } } as unknown as TrustedDomainContext
+  const period = { start: "2026-01-01", end: "2026-12-31" }
+  const source = { surface: "planner", type: "forecast", id: "forecast", incarnation: "original", version: 1, fields: ["value"], period, observedAt: "2026-11-13T00:00:00Z" } as const
+  const evidence = { schema: "sf-evidence-v1", kind: "record", refId: "fixture-source", installationId: "i", projectId: "p", refDigest: "a".repeat(64), evidenceLevel: "observed", target: { surface: "planner", recordType: "forecast", recordId: "forecast", incarnation: "original", version: 1, fields: ["value"], projectionDigest: "b".repeat(64) } } as const
+  const control = { allowed: true, sourceAvailable: true, selections: 0, amount: 1320 }
+  // Authentication and the domain projection are controlled; the state port,
+  // idempotency protocol, SQLite codec and actual store restart are exercised.
+  const compose = (beforeSelection?: () => Promise<void>) => createReviewPort({
+    state: createSfProductState({ persistence: resources.store, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: "review-incarnation" }), authorize: async () => ({ principalRef: "principal", accessRevision: "access", policyVersion: "policy" }) }),
+    creationTarget: { ref: "review-creation", incarnation: "review-incarnation" }, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"),
+    authorizeOutcomeComparison: async () => control.allowed, authorizeOutcome: async () => control.allowed, authorizeDecision: async () => control.allowed,
+    authorizeSections: async () => control.allowed, authorizeComments: async () => control.allowed, authorizeSensitivity: async () => control.allowed,
+    revalidate: async () => control.allowed, revalidateEvidence: async () => control.allowed,
+    select: async () => {
+      control.selections++
+      if (beforeSelection) await beforeSelection()
+      if (!control.sourceAvailable) return { status: "unavailable", reason: "fixture-source-unavailable" }
+      const section: ReviewSection = { id: "forecast", title: "Preserved forecast", period, recordCount: 1, agendaNote: "Keep the original agenda note", comments: [], projection: {
+        version: 1, engineVersion: "fixture-engine", context: { installationId: "i", projectId: "p", principalRef: "principal", accessRevision: "access", policyVersion: "policy", surface: "planner", period, currency: "USD", sourceRefs: [source], capabilities: [] },
+        components: [], missing: [], values: [{ id: "forecast", value: control.amount, currency: "USD", period, granularity: "year", sourceRefs: [evidence], drilldown: evidence, evidenceState: "confirmed" }],
+      } }
+      return { status: "ok", value: [section] }
+    },
+  })
+  const request = { id: "review", selectionRef: "selection", sectionRefs: ["forecast"], expectedStorageVersion: 0, idempotencyKey: "save", targetIncarnation: "review-incarnation" }
+  const key = JSON.stringify(["principal", "reviews", "review-creation", "save"])
+  const storedState = () => resources.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot.data.__sfProductV1 as SfProductState) }))
+  const replaceReceipt = (value: unknown) => resources.store.transaction("dashboard", async (snapshot) => {
+    const state = snapshot.data.__sfProductV1 as SfProductState
+    state.transactions[key]!.value = structuredClone(value)
+    return { commit: true, value: undefined }
+  })
+  const gates: (() => void)[] = []
+  try {
+    const saved = await compose().preserve(request, binding)
+    if (saved.status !== "ok") throw new Error(saved.reason)
+    const original = structuredClone(saved.value)
+    const compact = { schema: "sf-review-receipt-v1", reviewRef: "review", reviewDigest: digestSfValue(original) }
+    const initial = await storedState()
+    expect(initial.reviews.review).toEqual(original)
+    expect(initial.transactions[key]!.value).toEqual(compact)
+    expect(JSON.stringify(initial.transactions[key]!.value)).not.toContain("sections")
+    expect(JSON.stringify(initial.transactions[key]!.value)).not.toContain("Keep the original agenda note")
+    expect(control.selections).toBe(1)
+
+    await resources.store.dispose()
+    resources.store = await openLocalStore(directory)
+    const reopened = compose()
+    control.sourceAvailable = false
+    expect(await reopened.preserve(request, binding)).toEqual({ status: "ok", value: original })
+    expect(control.selections).toBe(1)
+    expect((await storedState()).transactions[key]!.value).toEqual(compact)
+
+    // Old receipts retain their whole body and remain readable without migration.
+    await replaceReceipt(original)
+    expect(await reopened.preserve(request, binding)).toEqual({ status: "ok", value: original })
+    expect((await storedState()).transactions[key]!.value).toEqual(original)
+    expect(control.selections).toBe(1)
+    for (const [receipt, status] of [
+      [{ ...compact, schema: "sf-review-receipt-v2" }, "unavailable"],
+      [{ schema: compact.schema, reviewRef: compact.reviewRef }, "unavailable"],
+      [{ ...compact, reviewDigest: "invalid" }, "unavailable"],
+      [{ ...compact, reviewRef: "different-review" }, "conflict"],
+      [{ ...compact, reviewDigest: "0".repeat(64) }, "conflict"],
+      [{ ...original, id: "different-legacy-review" }, "conflict"],
+    ] as const) {
+      await replaceReceipt(receipt)
+      const refused = await reopened.preserve(request, binding)
+      expect(refused.status).toBe(status)
+      expect("value" in refused).toBe(false)
+    }
+    await replaceReceipt(compact)
+    await resources.store.transaction("dashboard", async (snapshot) => {
+      const state = snapshot.data.__sfProductV1 as SfProductState
+      state.reviews.review!.sections[0]!.title = "Changed persisted title"
+      return { commit: true, value: undefined }
+    })
+    expect(await reopened.preserve(request, binding)).toEqual({ status: "conflict", reason: "preserved-review-changed" })
+    await resources.store.transaction("dashboard", async (snapshot) => {
+      const state = snapshot.data.__sfProductV1 as SfProductState
+      state.reviews.review = structuredClone(original)
+      return { commit: true, value: undefined }
+    })
+    control.allowed = false
+    expect(await reopened.preserve(request, binding)).toEqual({ status: "denied", reason: "access-unavailable" })
+    expect((await storedState()).reviews.review).toEqual(original)
+    control.allowed = true
+    control.sourceAvailable = true
+
+    // Pause one caller after its empty receipt probe. The other commits the same
+    // intention first; the resumed caller must use that returned receipt even
+    // though its newly selected projection now has a different value.
+    const boundary: { enter?: () => void; release?: () => void } = {}
+    const entered = new Promise<void>((resolve) => { boundary.enter = resolve })
+    const released = new Promise<void>((resolve) => { boundary.release = resolve })
+    gates.push(() => { boundary.release!() })
+    const slow = compose(async () => { boundary.enter!(); await released })
+    const concurrent = { ...request, id: "concurrent-review", idempotencyKey: "concurrent-save", expectedStorageVersion: 1 }
+    const pending = slow.preserve(concurrent, binding)
+    await entered
+    const winning = await reopened.preserve(concurrent, binding)
+    control.amount = 1400
+    boundary.release!()
+    const replayed = await pending
+    if (winning.status !== "ok" || replayed.status !== "ok") throw new Error("Concurrent preserved receipt unavailable")
+    expect(replayed.value).toEqual(winning.value)
+    expect((replayed.value.sections[0]!.content as DomainProjection).values[0]!.value).toBe(1320)
+    const final = await storedState()
+    expect(Object.keys(final.reviews).sort()).toEqual(["concurrent-review", "review"])
+    expect(final.versions.reviews).toBe(2)
+    expect(final.transactions[JSON.stringify(["principal", "reviews", "review-creation", "concurrent-save"])]!.value).toEqual({ schema: "sf-review-receipt-v1", reviewRef: "concurrent-review", reviewDigest: digestSfValue(winning.value) })
+  } finally {
+    gates.forEach((release) => release())
+    await resources.store.dispose()
+    await rm(directory, { recursive: true, force: true })
+  }
 })
 
 test("review egress revalidates decision and section sources after the other authorization readers", async () => {

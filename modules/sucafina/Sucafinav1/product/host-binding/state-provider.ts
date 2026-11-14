@@ -14,6 +14,7 @@ export function createSfProductState(input: {
   /** Root-private callback identities; never exposed through a product capability or serialized input. */
   nativeEvidenceWrites?: WeakSet<object>
   proposalCoverageWrites?: WeakSet<object>
+  nativePublicationGuards?: WeakMap<object, () => boolean>
   signalRegistryWrites?: WeakSet<object>
   caseSelectionWrites?: WeakSet<object>
   analysisSelectionWrites?: WeakSet<object>
@@ -130,6 +131,8 @@ export function createSfProductState(input: {
           (!scope.some((entry) => entry.namespace === "bi-artifacts") && digestSfValue(staged.biArtifacts) !== digestSfValue(state.biArtifacts)) ||
           (!scope.some((entry) => entry.namespace === "cases") && (digestSfValue(staged.decisionResults) !== digestSfValue(state.decisionResults) || digestSfValue(staged.claimBindings) !== digestSfValue(state.claimBindings) || digestSfValue(staged.commandProposals) !== digestSfValue(state.commandProposals) || digestSfValue(staged.compositeScenarios) !== digestSfValue(state.compositeScenarios))))
           return { commit: false, value: { status: "denied", reason: "namespace-write-outside-authority" } }
+        const nativePublicationGuard = input.nativePublicationGuards?.get(work)
+        if (nativePublicationGuard && !nativePublicationGuard()) return { commit: false, value: { status: "denied", reason: "native-publication-authority-changed" } }
         staged.revision += 1
         scope.forEach((entry) => staged.versions[entry.namespace] += 1)
         staged.transactions[key] = { namespace: command.namespace, scopeDigest, principalRef: authority.principalRef, targetRef: command.targetRef, targetIncarnation: command.targetIncarnation, commandDigest: command.commandDigest, storageVersion: staged.versions[command.namespace], aggregateRevision: staged.revision, incarnation: staged.incarnation, value: structuredClone(result.value) }

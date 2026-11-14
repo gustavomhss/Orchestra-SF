@@ -1,4 +1,5 @@
 import { test } from "bun:test"
+import { AsyncLocalStorage } from "node:async_hooks"
 import { chmod, mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
 import { randomBytes, randomUUID } from "node:crypto"
 import { tmpdir } from "node:os"
@@ -11,6 +12,8 @@ import type { BusinessEvidenceRef } from "../../../product/contracts/business-co
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { DomainProjection, PreservedReview } from "../../../product/contracts/context.ts"
 import type { PortResult } from "../../../product/contracts/ports.ts"
+import type { DomainPortHost } from "../../../product/contracts/ports.ts"
+import type { SfProductStatePort } from "../../../product/contracts/state.ts"
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
 import { createReviewApplication } from "../../../product/reviews/application.ts"
@@ -24,6 +27,17 @@ import { captureChromiumCleanup } from "./chromium-cleanup.ts"
 test("Chromium preserves the annual agenda, recovers a lost response and removes revoked content", async () => {
   const started = Date.now()
   const checkpoint = (phase: string) => console.info(`WP07 browser: ${phase} +${Date.now() - started}ms`)
+  const traces = new AsyncLocalStorage<Map<string, { calls: number; milliseconds: number }>>()
+  const record = (name: string, milliseconds: number) => {
+    const trace = traces.getStore()
+    if (!trace) return
+    const previous = trace.get(name) ?? { calls: 0, milliseconds: 0 }
+    trace.set(name, { calls: previous.calls + 1, milliseconds: previous.milliseconds + milliseconds })
+  }
+  const measure = async <T>(name: string, work: () => Promise<T>): Promise<T> => {
+    const before = performance.now()
+    try { return await work() } finally { record(name, performance.now() - before) }
+  }
   const timed = async <T>(phase: string, work: () => Promise<T>, milliseconds = 5000): Promise<T> => {
     checkpoint(`${phase}:start`)
     const deadline = { timer: undefined as ReturnType<typeof setTimeout> | undefined }
@@ -43,6 +57,14 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-wp07-browser-"))
   await chmod(directory, 0o700)
   const store = await timed("sqlite-open", () => openLocalStore(directory))
+  const snapshotRead = store.currentSnapshots
+  if (!snapshotRead) throw new Error("WP07_BROWSER_SNAPSHOT_READER_UNAVAILABLE")
+  // Observe the real persistence method without adding a read or changing its
+  // result. All durations are inclusive; nested measurements are not additive.
+  const observedStore = { ...store, currentSnapshots: () => {
+    const before = performance.now()
+    try { return snapshotRead.call(store) } finally { record("store.currentSnapshots", performance.now() - before) }
+  } }
   const serverState: { handle?: (request: Request) => Promise<Response> } = {}
   const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await serverState.handle?.(request) ?? new Response(null, { status: 503 }) })
   checkpoint("server-created")
@@ -66,7 +88,7 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     checkpoint("authority-create")
     const authority = createSfProductAuthority({
       identity: () => ({ installationId: operator.installationId, projectId: "wp07-browser", hostId: "isolated-browser-test", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }),
-      installationId: operator.installationId, origin, policyVersion: "test-policy", persistence: store,
+      installationId: operator.installationId, origin, policyVersion: "test-policy", persistence: observedStore,
       authenticate: (request, context) => control.allowed ? identity.authenticate(request, context) : Promise.resolve(null),
       environment: async (request) => ({ at, id: randomUUID, directory: await identity.directory(request) }),
       grants: [{ principalRef, namespaces: ["reviews"], operations: ["sf_review_prepare", "sf_report_prepare", "sf_artifact_get"], humanActions: ["reviews.preserve"] }],
@@ -74,14 +96,25 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
       commandIdentity: async (request, operation) => request.method === "GET" ? randomUUID() : /^[a-f0-9-]{36}$/.test(request.headers.get("idempotency-key") ?? "") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined,
       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined,
     })
+    const host: DomainPortHost = {
+      ...authority.host,
+      revalidate: (context) => measure("host.revalidate", () => authority.host.revalidate(context)),
+      authenticate: (request, options) => measure("host.authenticate", () => authority.host.authenticate(request, options)),
+      environment: (request) => measure("host.environment", () => authority.host.environment(request)),
+    }
+    const state: SfProductStatePort = {
+      ...authority.state,
+      read: (request, namespace, read) => measure("state.read", () => authority.state.read(request, namespace, read)),
+      transaction: (request, command, work) => measure("state.transaction", () => authority.state.transaction(request, command, work)),
+    }
     await timed("planner-seed", () => store.transaction("planner", async (snapshot) => {
       snapshot.data.versions = [100, 110].map((amount, index) => ({ id: `v${index}`, year: 2027, closed: 0, lines: [{ id: "license", name: "Review license", sec: "opex", el: "licenses", cur: "USD", b: Array(12).fill(100), a: Array(12).fill(null), f: Array(12).fill(amount) }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }))
       return { commit: true, value: undefined }
     }))
     const catalog = new Map<string, Extract<BusinessEvidenceRef, { kind: "record" }>>()
-    const planner = createPlannerPort({ host: authority.host, sources: {
+    const planner = createPlannerPort({ host, sources: {
       resolveForecastSource: async (versionId, context) => {
-        if (!control.available || !["v0", "v1"].includes(versionId) || !await authority.host.revalidate(context)) return { status: "unavailable", reason: "source-unavailable" }
+        if (!control.available || !["v0", "v1"].includes(versionId) || !await host.revalidate(context)) return { status: "unavailable", reason: "source-unavailable" }
         const ref = await store.transaction<Extract<BusinessEvidenceRef, { kind: "record" }> | undefined>("planner", async (snapshot) => {
           const projection = projectPlannerSource(snapshot, { id: principalRef, roles: ["admin"], canWrite: true, assigned: [], domains: [] }, versionId)
           if (!projection) return { commit: false, value: undefined }
@@ -95,26 +128,26 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
       resolveForecastCoverage: async () => ({ status: "unavailable", reason: "synthetic-coverage-not-supplied" }),
     } })
     // Synthetic authorized reference history only; this is not C17 tombstone or native execution evidence.
-    const revalidateSources: ReviewCompositionInput["access"]["revalidate"] = async (context, sources) => await authority.host.revalidate(context) && sources.every((source) => [...catalog.values()].some((ref) => source.surface === ref.target.surface && source.type === ref.target.recordType && source.id === ref.target.recordId && source.incarnation === ref.target.incarnation && source.version === ref.target.version && digestSfValue(source.period) === digestSfValue(ref.target.period) && digestSfValue([...source.fields].sort()) === digestSfValue([...ref.target.fields].sort())))
+    const revalidateSources: ReviewCompositionInput["access"]["revalidate"] = (context, sources) => measure("access.sourceRefs", async () => await host.revalidate(context) && sources.every((source) => [...catalog.values()].some((ref) => source.surface === ref.target.surface && source.type === ref.target.recordType && source.id === ref.target.recordId && source.incarnation === ref.target.incarnation && source.version === ref.target.version && digestSfValue(source.period) === digestSfValue(ref.target.period) && digestSfValue([...source.fields].sort()) === digestSfValue([...ref.target.fields].sort()))))
     const unavailable = async () => ({ status: "unavailable", reason: "producer-not-selected" } as const)
     checkpoint("review-application-create")
     const app = createReviewApplication({
-      state: authority.state, host: authority.host, authority: authority.authority, ui: authority.ui, humanAuthority: authority.human,
+      state, host, authority: authority.authority, ui: authority.ui, humanAuthority: authority.human,
       origin, maxBodyBytes: 100_000, creationTarget: authority.creationTarget,
       operationIdentity: (context) => context.kind === "ui" ? authority.ui.operationIdentity(context) : undefined,
       requiredAuthority: [], maxBytes: 5_000_000, now: () => at,
-      evidence: { resolve: async (ref, context) => ({ state: await authority.host.revalidate(context) && catalog.has(ref.refDigest) && digestSfValue(catalog.get(ref.refDigest)) === digestSfValue(ref) ? "historical" : "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: at }) },
-      access: { revalidate: revalidateSources, authorizeSections: (context, sections) => revalidateSources(context, sections.flatMap((section) => section.sourceRefs)), authorizeOutcomeComparison: async (_context, values) => values.length === 0, authorizeOutcome: async (_context, values) => values.length === 0, authorizeDecision: async (_context, values) => values.length === 0, authorizeSensitivity: async (_context, values) => values.length === 0 },
+      evidence: { resolve: (ref, context) => measure("evidence.resolve", async () => ({ state: await host.revalidate(context) && catalog.has(ref.refDigest) && digestSfValue(catalog.get(ref.refDigest)) === digestSfValue(ref) ? "historical" as const : "unavailable" as const, ref, accessRevision: context.binding.accessRevision, checkedAt: at })) },
+      access: { revalidate: revalidateSources, authorizeSections: (context, sections) => measure("access.sections", () => revalidateSources(context, sections.flatMap((section) => section.sourceRefs))), authorizeOutcomeComparison: async (_context, values) => values.length === 0, authorizeOutcome: async (_context, values) => values.length === 0, authorizeDecision: async (_context, values) => values.length === 0, authorizeSensitivity: async (_context, values) => values.length === 0 },
       collaboration: {
         // Controlled thread producer: captures a real consumer comment without claiming WP08 history.
-        threads: { read: async (threadId, context) => threadId === "browser-comment" && await authority.host.revalidate(context)
-          ? { status: "ok", value: { id: threadId, kind: "comment", sourceRef: "fixture-planner-v1", sourceIncarnation: "inc-v1", observedVersion: 1, period, evidenceRefs: [], messages: [{ id: "owner-note", incarnation: "owner-note-inc", version: 1, authorRef: principalRef, body: commentText, createdAt: at }] } }
-          : { status: "denied", reason: "fixture-thread-unavailable" } },
+        threads: { read: (threadId, context) => measure("comments.threadRead", async () => threadId === "browser-comment" && await host.revalidate(context)
+          ? { status: "ok", value: { id: threadId, kind: "comment", sourceRef: "fixture-planner-v1", sourceIncarnation: "inc-v1", observedVersion: 1, period, evidenceRefs: [], messages: [{ id: "owner-note", incarnation: "owner-note-inc", version: 1, authorRef: principalRef, body: commentText, createdAt: at }] } } as const
+          : { status: "denied", reason: "fixture-thread-unavailable" } as const) },
         history: { readVersion: unavailable },
-        authorizeSourceMapping: async (thread, sources, context) => thread.id === "browser-comment" && sources.length === 1 && sources[0]?.id === "v1" && sources[0]?.incarnation === "inc-v1" && await revalidateSources(context, sources),
+        authorizeSourceMapping: (thread, sources, context) => measure("comments.sourceMapping", async () => thread.id === "browser-comment" && sources.length === 1 && sources[0]?.id === "v1" && sources[0]?.incarnation === "inc-v1" && await revalidateSources(context, sources)),
         maxMessages: 100,
       },
-      ports: { planner, selectDashboardAgenda: unavailable, procurement: { read: unavailable, readSupplier: unavailable, readContract: unavailable } },
+      ports: { planner: { compareForecast: (request, context) => measure("planner.compareForecast", () => planner.compareForecast(request, context)) }, selectDashboardAgenda: unavailable, procurement: { read: unavailable, readSupplier: unavailable, readContract: unavailable } },
     })
     const items: ReviewAgendaItem[] = [
       { id: "first", kind: "forecast-comparison", title: "First forecast", baseRef: "v0", candidateRef: "v1", sides: ["baseline", "candidate"], currency: "USD", period, agendaNote: "Retain this agenda note" },
@@ -168,7 +201,10 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
       if (url.pathname !== "/sucafina/dashboard") return new Response(null, { status: 404 })
       const mode = url.searchParams.get("sf")
       if (mode) checkpoint(`http:${mode}:start`)
-      const response = await app.http(request, "dashboard")
+      const measurements = new Map<string, { calls: number; milliseconds: number }>()
+      const before = performance.now()
+      const response = await traces.run(measurements, () => app.http(request, "dashboard"))
+      if (mode) console.info("WP07 browser profile:", JSON.stringify({ mode, milliseconds: Math.round(performance.now() - before), inclusiveDurations: true, measurements: Object.fromEntries([...measurements].map(([name, value]) => [name, { calls: value.calls, milliseconds: Math.round(value.milliseconds) }])) }))
       if (mode) checkpoint(`http:${mode}:${response?.status ?? "not-handled"}`)
       if (response) {
         if (url.searchParams.get("sf") !== "review-preserve") return response

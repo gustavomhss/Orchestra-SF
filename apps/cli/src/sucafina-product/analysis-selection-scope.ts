@@ -57,19 +57,19 @@ export function createSfAnalysisSelectionScope(input: {
       value.value.case.participants.includes(call.binding.principalRef) && await host.revalidate(call) ? value.value.case : undefined
   }
   const keyFor = (request: SfAnalysisRequest, valueDigest: string, call: TrustedDomainContext) => `${prefix}${digestSfValue({ subject: subject(call), request, inputDigest: valueDigest })}`
-  const validRecord = (raw: unknown, request: SfAnalysisRequest, inputDigest: string, call: TrustedDomainContext): raw is SelectionRecord => {
+  const validRecord = (raw: unknown, request: SfAnalysisRequest, inputDigest: string, call: TrustedDomainContext, requireCurrent = true): raw is SelectionRecord => {
     if (!raw || typeof raw !== "object" || Array.isArray(raw)) return false
     const value = raw as Partial<SelectionRecord>
     return value.schema === "sf-analysis-selection-v1" && same(value.subject, subject(call)) && same(value.request, request) &&
       value.inputDigest === inputDigest && typeof value.createdAt === "number" && Number.isSafeInteger(value.createdAt) && value.createdAt <= now() &&
-      typeof value.expiresAt === "number" && Number.isSafeInteger(value.expiresAt) && value.expiresAt > now() && value.expiresAt - value.createdAt <= ttl &&
+      typeof value.expiresAt === "number" && Number.isSafeInteger(value.expiresAt) && value.expiresAt > value.createdAt && (!requireCurrent || value.expiresAt > now()) && value.expiresAt - value.createdAt <= ttl &&
       !!value.material && typeof value.material === "object" && !Array.isArray(value.material) && typeof value.recordDigest === "string" &&
       value.recordDigest === digestSfValue(Object.fromEntries(Object.entries(value).filter(([key]) => key !== "recordDigest")))
   }
-  const nativeMatches = (state: Readonly<SfProductState>, request: SfAnalysisRequest, inputDigest: string, call: TrustedDomainContext) => {
+  const nativeMatches = (state: Readonly<SfProductState>, request: SfAnalysisRequest, inputDigest: string, call: TrustedDomainContext, preparedAt: number) => {
     if (call.kind !== "native") return true
     const run = state.nativeRuns?.[call.binding.runId]
-    return !!run && ["queued", "running", "ready"].includes(run.state) && !!run.native && run.native.sessionID === call.binding.nativeSessionId &&
+    return !!run && Number.isFinite(Date.parse(run.createdAt)) && Date.parse(run.createdAt) >= preparedAt && ["queued", "running", "ready"].includes(run.state) && !!run.native && run.native.sessionID === call.binding.nativeSessionId &&
       run.skillId === request.skillId && run.skillInputDigest === inputDigest && same(run.caseRef, request.caseRef) &&
       run.principalRef === call.binding.principalRef && run.accessRevision === call.binding.accessRevision && run.policyVersion === call.binding.policyVersion &&
       call.binding.caseId === request.caseRef.id && call.binding.caseIncarnation === request.caseRef.incarnation && call.binding.caseVersion === request.caseRef.version &&
@@ -83,7 +83,7 @@ export function createSfAnalysisSelectionScope(input: {
     const record = await input.authority.state.read(source, "preferences", (state, actor) => {
       const value = state.preferences[key]
       return actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion &&
-        validRecord(value, request, valueDigest, call) && nativeMatches(state, request, valueDigest, call) ? value : undefined
+        validRecord(value, request, valueDigest, call) && nativeMatches(state, request, valueDigest, call, value.createdAt) ? value : undefined
     })
     return record.status === "ok" && record.value && await currentCase(request, call) && !source.signal.aborted ? record.value : undefined
   }
@@ -123,13 +123,19 @@ export function createSfAnalysisSelectionScope(input: {
         const current = await input.authority.state.read(source, "cases", (state, actor) => actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion ? state.cases[captured.request.caseRef.id] : undefined)
         const before = await input.authority.state.read(source, "preferences", (state, actor) => actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion ? { existing: state.preferences[key], count: Object.keys(state.preferences).filter((entry) => entry.startsWith(prefix)).length } : undefined)
         if (current.status !== "ok" || !current.value || before.status !== "ok" || !before.value) return unavailable()
+        const existingBefore = before.value.existing
+        let priorDigest: string | undefined
         if (before.value.existing !== undefined) {
           const existing = before.value.existing
-          if (!validRecord(existing, captured.request, inputDigest, call) || !same(existing.selection, captured.selection) || !same(existing.material, value.material)) return { status: "conflict", reason: "analysis-selection-conflict-or-expired" }
-          return await input.authority.human.authorize(call, "analysis.prepare", captured) && await load(captured.request, inputDigest, call) ? result : unavailable()
+          if (!validRecord(existing, captured.request, inputDigest, call, false) || !same(existing.selection, captured.selection) || !same(existing.material, value.material)) return { status: "conflict", reason: "analysis-selection-conflict" }
+          if (existing.expiresAt > now()) return await input.authority.human.authorize(call, "analysis.prepare", captured) && await load(captured.request, inputDigest, call) ? result : unavailable()
+          // Only a fresh, fully reverified human preparation can replace an expired generation.
+          // Native runs admitted before the new createdAt cannot borrow the renewal.
+          priorDigest = existing.recordDigest
         }
-        if (before.value.count >= 4096) return { status: "unavailable", reason: "analysis-selection-capacity" }
+        if (!priorDigest && before.value.count >= 4096) return { status: "unavailable", reason: "analysis-selection-capacity" }
         const createdAt = now()
+        if (!Number.isSafeInteger(createdAt) || createdAt < 0 || !Number.isSafeInteger(createdAt + ttl)) return unavailable()
         const material = { schema: "sf-analysis-selection-v1" as const, subject: value.subject, request: captured.request, selection: captured.selection,
           material: value.material, inputDigest, createdAt, expiresAt: createdAt + ttl }
         if (JSON.stringify(material).length > 131072) return unavailable()
@@ -140,14 +146,14 @@ export function createSfAnalysisSelectionScope(input: {
           const selected = state.cases[captured.request.caseRef.id]
           if (!selected || !same(selected, current.value) || !same({ id: selected.id, incarnation: selected.incarnation, version: selected.version }, captured.request.caseRef) ||
             !selected.participants.includes(actor.principalRef) || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion ||
-            state.preferences[key] !== undefined || !await input.authority.human.authorize(call, "analysis.prepare", captured) || binding !== digestSfValue([call.kind, call.binding])) return { commit: false, value: false }
+            !same(state.preferences[key], existingBefore) || !await input.authority.human.authorize(call, "analysis.prepare", captured) || binding !== digestSfValue([call.kind, call.binding])) return { commit: false, value: false }
           state.preferences[key] = record
           return { commit: true, value: true }
         }
         input.selectionWrites.add(commitSelection)
         const saved = await input.authority.state.transaction(source, { namespace: "preferences", expectedStorageVersion: before.storageVersion,
           checkNamespaces: [{ namespace: "cases", expectedStorageVersion: current.storageVersion }], targetRef: encodeCaseRef(captured.request.caseRef), targetIncarnation: captured.request.caseRef.incarnation,
-          idempotencyKey: `analysis-selection:${operation}`, commandDigest: digestSfValue({ key, selection: captured.selection, inputDigest, material: value.material }) }, commitSelection).finally(() => input.selectionWrites.delete(commitSelection))
+          idempotencyKey: `analysis-selection:${operation}:${priorDigest ?? "new"}`, commandDigest: digestSfValue({ key, selection: captured.selection, inputDigest, material: value.material, ...(priorDigest ? { priorDigest } : {}) }) }, commitSelection).finally(() => input.selectionWrites.delete(commitSelection))
         if (saved.status !== "ok" || !saved.value || !await input.authority.human.authorize(call, "analysis.prepare", captured) || binding !== digestSfValue([call.kind, call.binding]) || !same(await load(captured.request, inputDigest, call), record)) return unavailable()
         return result
       } finally { active.delete(call) }

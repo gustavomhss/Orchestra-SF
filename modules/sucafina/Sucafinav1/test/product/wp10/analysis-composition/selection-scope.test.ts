@@ -179,3 +179,29 @@ test("verification rechecks authority after the reader awaits", async () => {
     state.authority.human.finish(call)
   } finally { await state.close() }
 })
+
+test("fresh human preparation renews an expired generation with CAS and remains idempotent", async () => {
+  const state = await fixture()
+  try {
+    const first = await state.admit()
+    expect((await state.prepare(state.create(), state.incoming, first)).status).toBe("ok")
+    state.authority.human.finish(first)
+    const before = await state.records()
+    if (before.status !== "ok" || before.value.length !== 1) throw new Error("Selection not persisted")
+    state.actor.now += 1001
+    const fresh = await state.admit()
+    expect((await state.create().selectionScope.verify(state.prepared(state.incoming), state.incoming.request, fresh, async () => ({ status: "ok", value: true }))).status).toBe("unavailable")
+    expect((await state.prepare(state.create(), state.incoming, fresh)).status).toBe("ok")
+    const after = await state.records()
+    if (after.status !== "ok" || after.value.length !== 1) throw new Error("Renewed selection unavailable")
+    expect(after.storageVersion).toBe(before.storageVersion + 1)
+    expect(after.value[0]![0]).toBe(before.value[0]![0])
+    expect(after.value[0]![1]).not.toEqual(before.value[0]![1])
+    expect((await state.create().selectionScope.verify(state.prepared(state.incoming), state.incoming.request, fresh, async () => ({ status: "ok", value: true }))).status).toBe("ok")
+    expect((await state.prepare(state.create(), state.incoming, fresh)).status).toBe("ok")
+    const repeated = await state.records()
+    expect(repeated.status === "ok" && repeated.storageVersion).toBe(after.storageVersion)
+    expect(repeated.status === "ok" && repeated.value).toEqual(after.value)
+    state.authority.human.finish(fresh)
+  } finally { await state.close() }
+})

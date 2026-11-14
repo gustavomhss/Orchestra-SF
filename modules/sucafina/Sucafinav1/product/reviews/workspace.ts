@@ -194,7 +194,10 @@ export function createReviewContributionView(input: {
     element.textContent = value
     return element
   }
-  const unavailable = (reason: string) => root.replaceChildren(text("p", `Contribution unavailable: ${reason}`))
+  const unavailable = (reason: string) => {
+    const rejectedAt = generation
+    root.replaceChildren(text("p", `Contribution unavailable: ${reason}`), open("Retry access", () => { if (rejectedAt === generation) return refresh() }))
+  }
   const open = (label: string, run: () => void | Promise<void>) => {
     const button = document.createElement("button")
     button.type = "button"
@@ -229,6 +232,32 @@ export function createReviewContributionView(input: {
   const render = (value: ReviewContribution) => {
     const shownAt = generation
     root.replaceChildren(text("h2", value.kind === "DecisionBrief" ? "Decision brief" : "Meeting material"), text("p", `Reference: ${value.output.id}`))
+    const provenance = document.createElement("details")
+    provenance.setAttribute("aria-label", "Contribution provenance")
+    const summary = document.createElement("summary")
+    summary.textContent = "Contribution provenance"
+    provenance.append(summary)
+    const run = value.output.runProvenance
+    ;[
+      `Profile: ${run.profileId} · version ${run.profileVersion}`,
+      `Skill: ${run.skillId} · version ${run.skillVersion}`,
+      `Run: ${run.runId}`,
+      `Session: ${run.nativeSessionId}`,
+      `Model: ${run.actualModel}`,
+      `State: ${value.output.state}`,
+      `Created: ${value.output.createdAt}`,
+      `Access revision: ${value.output.accessRevision}`,
+      `Profile digest: ${run.profileDigest}`,
+      `Skill source digest: ${run.sourceDigest}`,
+      `Instructions digest: ${run.instructionsDigest}`,
+      `Manifest digest: ${run.manifestDigest}`,
+      `Output digest: ${value.output.outputDigest}`,
+    ].forEach((line) => provenance.append(text("p", line)))
+    provenance.append(text("h3", "Source evidence"))
+    const sources = document.createElement("ul")
+    value.output.evidenceRefs.forEach((ref) => sources.append(text("li", `${ref.kind} · ${ref.refId} · ${ref.evidenceLevel} · ${ref.refDigest}`)))
+    provenance.append(value.output.evidenceRefs.length ? sources : text("p", "No source references supplied."))
+    root.append(provenance)
     if (value.kind === "DecisionBrief") {
       root.append(text("h3", value.output.payload.objective))
       value.output.payload.conditions.forEach((condition) => root.append(text("p", `Condition: ${condition.reason}`)))

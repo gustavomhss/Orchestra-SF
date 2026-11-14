@@ -53,12 +53,13 @@ export function createSfAnalysisBiBindings(input: {
     if (presentation.status !== "ok") return presentation
     const refs = projection.value.values.flatMap((value) => [...value.sourceRefs, ...(value.drilldown ? [value.drilldown] : [])])
       .filter((ref, index, all) => all.findIndex((candidate) => same(candidate, ref)) === index)
-    if (!refs.length || !projection.value.context.sourceRefs.length || refs.some((ref) => !current.value.evidenceRefs.some((allowed) => same(allowed, ref)))) return { status: "unavailable", reason: "bi-analysis-case-evidence-unavailable" }
-    const resolutions = await input.business.context.context({ refs }, call)
+    const sourceRefs = [source.value.evidence, ...refs].filter((ref, index, all) => all.findIndex((candidate) => same(candidate, ref)) === index)
+    if (!refs.length || !projection.value.context.sourceRefs.length || sourceRefs.some((ref) => !current.value.evidenceRefs.some((allowed) => same(allowed, ref)))) return { status: "unavailable", reason: "bi-analysis-case-evidence-unavailable" }
+    const resolutions = await input.business.context.context({ refs: sourceRefs }, call)
     const again = await input.business.cases.read({ caseRef: encodeCaseRef(selection.caseRef) }, call)
-    if (resolutions.length !== refs.length || resolutions.some((value, index) => value.state !== "fresh" || !value.authorizedProjection || !value.currentRef || !same(value.ref, refs[index]) || !same(value.currentRef, value.ref)) ||
+    if (resolutions.length !== sourceRefs.length || resolutions.some((value, index) => value.state !== "fresh" || !value.authorizedProjection || !value.currentRef || !same(value.ref, sourceRefs[index]) || !same(value.currentRef, value.ref)) ||
       again.status !== "ok" || !same(again.value.case, current.value.case) || before !== await fence(call) || !await input.workspace.bi.source.revalidate(request, call, projection.value) || !await host.revalidate(call)) return { status: "unavailable", reason: "bi-analysis-source-changed" }
-    return { status: "ok", value: { projection: projection.value, presentation: presentation.value, projectionRefs: refs, sourceRefs: projection.value.context.sourceRefs, sourceFenceDigest: before } }
+    return { status: "ok", value: { projection: projection.value, presentation: presentation.value, projectionRefs: refs, sourceRefs, sourceFenceDigest: before } }
   }
   const verifyCurrent = async (artifact: SfBiArtifact, call: TrustedDomainContext) => {
     if (!same(artifact.binding, { installationId: call.binding.installationId, projectId: call.binding.projectId, principalRef: call.binding.principalRef, accessRevision: call.binding.accessRevision, policyVersion: call.binding.policyVersion })) return false
@@ -118,7 +119,7 @@ export function createSfAnalysisBiBindings(input: {
     } }
 }
 
-function parseSelection(raw: unknown) {
+function parseSelection(raw: unknown): Pick<SfBiArtifact, "selection" | "dashboardSelection"> | undefined {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined
   const value = raw as Record<string, unknown>
   if (Object.keys(value).length !== 4 || Object.keys(value).some((key) => !["viewId", "version", "filters", "dashboardSelection"].includes(key))) return undefined

@@ -48,6 +48,54 @@ test("shared event dependencies resolve independently in sibling branches", asyn
   authority.finish(admitted.value)
 })
 
+test("duplicate evidence shares one pass without retaining authority for the next read", async () => {
+  let active = true
+  let reads = 0
+  const authority = createSfUiAuthority({ authorize: async () => active ? { installationId: "i", projectId: "p", principalRef: "actor", policyVersion: "v1", accessRevision: "a1" } : undefined,
+    commandIdentity: async () => "command", createId: () => "request", now: () => 0 })
+  const admitted = await authority.admit(new Request("http://localhost"), "sf_evidence_get", "a".repeat(64))
+  if (admitted.status !== "ok") throw new Error("UI admission failed")
+  const value: Extract<BusinessEvidenceRef, { kind: "case-event" }> = { schema: "sf-evidence-v1", kind: "case-event", refId: "event", installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "decision",
+    target: { caseId: "case", caseIncarnation: "inc", caseVersion: 1, eventId: "event", outputDigest: "d", evidenceRefs: [] } }
+  const ref = { ...value, refDigest: digestSfEvidenceRef(value) }
+  const context = createSfBusinessContext({
+    revalidate: (call) => call.kind === "ui" ? authority.revalidate(call) : Promise.resolve(false),
+    resolveSource: async (reference) => { reads++; return { state: "fresh", ref: reference, accessRevision: "a1", checkedAt: "2026-01-01" } },
+    proveContinuity: async () => false, recall: async () => [],
+    emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "event", scanner: { name: "", version: "", status: "unavailable" } }),
+  })
+  const found = await context.context({ refs: [ref, structuredClone(ref)] }, admitted.value)
+  expect(found.map((result) => result.state)).toEqual(["fresh", "fresh"])
+  expect(found[0]).not.toBe(found[1])
+  expect(reads).toBe(1)
+  expect((await context.context({ refs: [ref] }, admitted.value))[0]!.state).toBe("fresh")
+  expect(reads).toBe(2)
+  active = false
+  expect((await context.context({ refs: [ref, ref] }, admitted.value)).every((result) => result.state === "unavailable")).toBe(true)
+  expect(reads).toBe(2)
+  authority.finish(admitted.value)
+})
+
+test("aggregate evidence budget is checked before deduplication or source IO", async () => {
+  let reads = 0
+  const authority = createSfUiAuthority({ authorize: async () => ({ installationId: "i", projectId: "p", principalRef: "actor", policyVersion: "v1", accessRevision: "a1" }),
+    commandIdentity: async () => "command", createId: () => "request", now: () => 0 })
+  const admitted = await authority.admit(new Request("http://localhost"), "sf_evidence_get", "a".repeat(64))
+  if (admitted.status !== "ok") throw new Error("UI admission failed")
+  const value: Extract<BusinessEvidenceRef, { kind: "case-event" }> = { schema: "sf-evidence-v1", kind: "case-event", refId: "event", installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "decision",
+    target: { caseId: "case", caseIncarnation: "inc", caseVersion: 1, eventId: "event", outputDigest: "d", evidenceRefs: [] } }
+  const ref = { ...value, refDigest: digestSfEvidenceRef(value) }
+  const context = createSfBusinessContext({ revalidate: (call) => call.kind === "ui" ? authority.revalidate(call) : Promise.resolve(false),
+    resolveSource: async (reference) => { reads++; return { state: "fresh", ref: reference, accessRevision: "a1", checkedAt: "2026-01-01" } },
+    proveContinuity: async () => false, recall: async () => [],
+    emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "event", scanner: { name: "", version: "", status: "unavailable" } }) })
+  const result = await context.context({ refs: Array.from({ length: 513 }, () => ref) }, admitted.value)
+  expect(result).toHaveLength(513)
+  expect(result.every((entry) => entry.state === "unavailable")).toBe(true)
+  expect(reads).toBe(0)
+  authority.finish(admitted.value)
+})
+
 test("historical evidence keeps its original identity and requires authorized historical content", async () => {
   const authority = createSfUiAuthority({
     authorize: async () => ({ installationId: "i", projectId: "p", principalRef: "actor", policyVersion: "v1", accessRevision: "a1" }),

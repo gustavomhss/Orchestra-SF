@@ -56,6 +56,7 @@ export function createSfProductAuthority(input: {
   providerGeneration: () => Promise<number | undefined>
   /** Composition-owned capability; never returned in browser or model services. */
   proposalCoverageWrites?: WeakSet<object>
+  nativePublicationGuards?: WeakMap<object, () => boolean>
   signalRegistryWrites?: WeakSet<object>
   caseSelectionWrites?: WeakSet<object>
   analysisSelectionWrites?: WeakSet<object>
@@ -122,7 +123,7 @@ export function createSfProductAuthority(input: {
     return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), { signal: request.signal })
   }
   const state = createSfProductState({
-    persistence: input.persistence, createId: input.createId, nativeEvidenceWrites, proposalCoverageWrites: input.proposalCoverageWrites, signalRegistryWrites: input.signalRegistryWrites, caseSelectionWrites: input.caseSelectionWrites, analysisSelectionWrites: input.analysisSelectionWrites, threadHistoryWrites: input.threadHistoryWrites, dashboardHostWrites: input.dashboardHostWrites, procurementEvidenceWrites: input.procurementEvidenceWrites,
+    persistence: input.persistence, createId: input.createId, nativeEvidenceWrites, proposalCoverageWrites: input.proposalCoverageWrites, nativePublicationGuards: input.nativePublicationGuards, signalRegistryWrites: input.signalRegistryWrites, caseSelectionWrites: input.caseSelectionWrites, analysisSelectionWrites: input.analysisSelectionWrites, threadHistoryWrites: input.threadHistoryWrites, dashboardHostWrites: input.dashboardHostWrites, procurementEvidenceWrites: input.procurementEvidenceWrites,
     authorize: async (request, snapshot, namespace, mode) => {
       const actor = await principal(request, snapshot)
       if (!actor || !actor.grant.namespaces.includes(namespace) || (mode === "write" && !actor.canWrite)) return undefined

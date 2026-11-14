@@ -46,7 +46,7 @@ Os perfis `sf_maestro`, `sf_finance`, `sf_procurement`, `sf_portfolio` e `sf_rev
 5. Aplique pelo fluxo autorizado e consulte o recibo. Em conflito, preserve sua intenção, reabra o estado atual e prepare novamente. Não repita uma escrita cegamente.
 6. Acompanhe perguntas, condições, confirmações e resultados no mesmo caso. Resposta posterior pode exigir reavaliação; não modifica silenciosamente a escolha anterior.
 
-Este é o roteiro de homologação a executar após resolver os deltas de consumidores. A UI publicada pelo WP01 ainda admite a ação humana errada na preparação de análises; alguns bindings de decisão, portfólio e rotina também faltam. Botões ou descriptors não comprovam esse percurso completo.
+Este é o roteiro de homologação a executar após resolver os deltas de consumidores. A UI publicada pelo WP01 ainda admite a ação humana errada na preparação de análises; os fluxos de promoção/execução e de rotina ainda têm pendências. Botões ou descriptors não comprovam esse percurso completo.
 
 ### Revisões, relatórios e BI
 
@@ -74,7 +74,7 @@ Revise a prévia antes de confirmar importação. O parser não executa macros o
 
 A memória usa `createMemoryEmit` e `createMemoryRead` reais do Atlas protegidos pelo C08; ledger Sucafina é oficial. Gitleaks é resolvido pelo toolkit canônico com caminho absoluto e versão observada. Novos appends exigem fontes frescas e fence das três superfícies. Recuperação do recibo revalida caso/evento sem nova varredura.
 
-O host limita custo de ancestralidade antes de IO e não reutiliza autorização entre releituras. Grafo acima do orçamento técnico retorna indisponibilidade. Política/project, histórico com diferenças de domínio e variantes C17 ainda pendentes não são cobertos por uma prova de caso com fonte inalterada.
+O host limita custo de ancestralidade antes de IO e não reutiliza autorização entre releituras. Referências exatamente iguais são resolvidas uma vez dentro de cada chamada de contexto; o orçamento é aplicado antes da deduplicação e a próxima chamada volta a ler as fontes. Grafo acima do orçamento técnico retorna indisponibilidade. Política/project, histórico com diferenças de domínio e variantes C17 ainda pendentes não são cobertos por uma prova de caso com fonte inalterada.
 
 ## Roteiro sintético reproduzível
 
@@ -95,9 +95,13 @@ Dados de fixture, markup, catálogo e autoridade fabricada não contam como jorn
 
 O host compõe autenticação, ambiente, fontes, casos, domínios, documentos/imports, colaboração, revisões, BI e runtime residente. UI, ponte MCP privada e consumers usam contratos compartilhados e revalidam identidade, política e revisão de acesso.
 
-A composição de análise registra até 15 dos 18 pares de produtor/verificador, condicionada aos serviços documentais. Inclui enquadramento sem import, BI contextual, memória atual, dossiê de compra e contestação atual. Sensibilidade, portfólio e reavaliação dependem dos produtores de proof, critérios e materialidade ainda em composição. Discovery relata bindings disponíveis; não relata execuções nativas. PreparedChangeSet, histórico de memória/contestação e resultados C07 mantêm suas recusas explícitas quando falta a porta real.
+A composição de análise registra até 18 pares de produtor/verificador, condicionada aos serviços documentais. Inclui enquadramento sem import, BI contextual, memória atual, dossiê de compra, contestação atual, sensibilidade, portfólio e reavaliação. Os últimos três usam produtores publicados de prova, critérios e materialidade, conectados ao C08 da instalação. A montagem permite 33 dos 39 handlers; os seis de C07 continuam sem a ligação de admissão/execução/resultados exigida pelo produtor. Discovery relata bindings disponíveis; não relata execuções nativas ou cobertura integral de cada variante.
 
-Seleções humanas de BI, memória e contestação são persistidas por request e digest exatos, com principal, projeto, política, revisão de acesso e versão do caso. Não existe escolha mais recente implícita. O prefixo privado só aceita o writer de preparação; leitores revalidam fontes e autoridade. A validade padrão é de uma hora, com até 4096 seleções e 1024 artefatos BI; expiração, capacidade ou mudança material retornam indisponibilidade/conflito. A renovação de uma seleção expirada ainda requer implementação própria.
+Quatro rotas humanas em Planner registram cobertura de baseline, regra de critério, seleção de portfólio e condição: `decision-coverage`, `decision-criteria`, `decision-select-portfolio` e `decision-condition`. Exigem POST da mesma origem, payload completo, ação humana específica e caso atual. Classificação de custo usa projeção real do Planner; prova de categoria não aplicável continua indisponível. A métrica `planner:known-subtotal-difference` permanece condicionada. Seleção e unidade não são deduzidas do texto do critério.
+
+Alternative nativo usa exatamente um candidato do caso e operações humanas admitidas; múltiplos candidatos são recusados. A captura do bridge acompanha run e saída atomicamente em C08. O writer privado confere o delta de preferences e a identidade do comando; o último guard síncrono verifica binding original, revogação, geração, expiração e Request antes do commit. O replay durante publicação usa um contexto privado do run; a UI comum não recebe essa autoridade. Após a limpeza do run, replay depende de seleção durável equivalente. PreparedChangeSet suporta substituição explícita de valor de requisição Procurement contida na escolha e nos alvos humanos permitidos; prepara e revalida o comando sem executá-lo. Promoção de portfólio, outras operações de alteração, histórico de memória/contestação e resultados C07 mantêm pendências explícitas.
+
+Seleções humanas de BI, memória, contestação, sensibilidade e reavaliação são persistidas por request e digest exatos, com principal, projeto, política, revisão de acesso e versão do caso. Não existe escolha mais recente implícita. O prefixo privado só aceita o writer de preparação; leitores revalidam fontes e autoridade. A validade padrão é de uma hora, com até 4096 seleções e 1024 artefatos BI; expiração, capacidade ou mudança material retornam indisponibilidade/conflito. Nova preparação humana, com os mesmos fatos revalidados, pode renovar uma seleção expirada por CAS. Runs admitidos antes dessa renovação não podem usar a nova validade.
 
 Procurement compartilha a mesma instância de colaboração, observador C06, fila, preparação de dossiê e leitores de evidência/recibo C12. O CI do incremento W4 comprovou C06/dossiê e recusas de HTTP; a aplicação C12 permanece bloqueada pela incompatibilidade de callbacks WP04/WP11 e por timeouts observados. Montagem do handler não equivale a uma aplicação concluída.
 

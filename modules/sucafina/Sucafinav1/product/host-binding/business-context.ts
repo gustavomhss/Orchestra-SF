@@ -81,8 +81,25 @@ function assembleSfBusinessContext(host: {
   const resolve = (ref: BusinessEvidenceRef, call: TrustedDomainContext) => resolveAncestry(ref, call, new Set())
   const service: BusinessContextService = {
     resolve,
-    context: async (request, call) => evidenceWithinBudget(request.refs) ? Promise.all(request.refs.map((ref) => resolve(ref, call))) :
-      request.refs.map((ref) => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })),
+    context: async (request, call) => {
+      const unavailable = (): BusinessEvidenceResolution[] => request.refs.map((ref) => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }))
+      if (!evidenceWithinBudget(request.refs)) return unavailable()
+      const refs = structuredClone(request.refs)
+      const requestDigest = digestSfValue(refs)
+      const binding = digestSfValue([call.kind, call.binding])
+      // Share identical reads only within this one authorization pass. No cross-call cache.
+      const reads = new Map<string, Promise<BusinessEvidenceResolution>>()
+      const values = await Promise.all(refs.map((ref) => {
+        const key = digestSfValue(ref)
+        const existing = reads.get(key)
+        if (existing) return existing
+        const pending = resolve(ref, call)
+        reads.set(key, pending)
+        return pending
+      }))
+      if (requestDigest !== digestSfValue(request.refs) || binding !== digestSfValue([call.kind, call.binding]) || !await host.revalidate(call)) return unavailable()
+      return values.map((value) => structuredClone(value))
+    },
     async recall(request, call) {
       if (!(await host.revalidate(call))) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
       const records = await host.recall(request, call)
@@ -97,7 +114,7 @@ function assembleSfBusinessContext(host: {
         } catch {
           return false
         }
-        const resolved = await Promise.all(refs.map((ref) => resolve(ref, call)))
+        const resolved = await service.context({ refs }, call)
         return refs.length > 0 && resolved.every((item) => item.state === "fresh" || (item.state === "historical" && item.differences !== undefined))
       }))
       if (!(await host.revalidate(call))) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")

@@ -1,6 +1,6 @@
 {
   "schema": "sf2.wp10.composition.v1",
-  "status": "IN_PROGRESS_NOT_ACCEPTED",
+  "status": "COMPOSED_W6_PENDING_HOSTED_VERIFICATION",
   "seed": "d41ea01b8d9aa068301c1643c1ec3dc088900533",
   "target": "sf2-stack",
   "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
@@ -14,9 +14,15 @@
     },
     {
       "path": "apps/cli/src/sucafina-product/import-services.ts",
-      "sourceCommit": "2f33fd0eac79606cd0ba9c0724f8035a7c9bffbb",
-      "blobSha": "b126f3b1ac5363003fc44df56e9e200e1fa32352",
-      "owner": "WP06"
+      "sourceCommit": "97dd72932b10b97660b8a88787bc21eccb02d566",
+      "blobSha": "53a1f34779598545cde83295c8ff98b861fabb72",
+      "owner": "WP06",
+      "publisher": "WP06",
+      "supersedes": {
+        "sourceCommit": "2f33fd0eac79606cd0ba9c0724f8035a7c9bffbb",
+        "blobSha": "b126f3b1ac5363003fc44df56e9e200e1fa32352"
+      },
+      "qualification": "Current C04 destination authority hardening: source.version must still equal target.version for preview/analysis; receipt mode remains reread-only compatible. Exact one-line owner delta, no contract import."
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
@@ -1370,9 +1376,15 @@
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/reviews/browser.ts",
-      "sourceCommit": "46781943bf93bad698233b995354d15c90c4821c",
-      "blobSha": "e636f945d92aa14eb951d71d91754d49027ce8d4",
-      "owner": "WP07"
+      "sourceCommit": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+      "blobSha": "75f08bb70281f3b99aac89ed7146845063f344d6",
+      "owner": "WP07",
+      "publisher": "WP07",
+      "supersedes": {
+        "sourceCommit": "46781943bf93bad698233b995354d15c90c4821c",
+        "blobSha": "e636f945d92aa14eb951d71d91754d49027ce8d4"
+      },
+      "qualification": "Current review contribution consumer validates the full envelope and expected output digest before display. Uses already-present decoder and C16 types."
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
@@ -1484,9 +1496,15 @@
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
-      "sourceCommit": "46781943bf93bad698233b995354d15c90c4821c",
-      "blobSha": "694a58801fc478e625590e081414e9abcd0941aa",
-      "owner": "WP07"
+      "sourceCommit": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+      "blobSha": "1b93fd89a1f544808455c15d12f9c06cc18e21f3",
+      "owner": "WP07",
+      "publisher": "WP07",
+      "supersedes": {
+        "sourceCommit": "46781943bf93bad698233b995354d15c90c4821c",
+        "blobSha": "694a58801fc478e625590e081414e9abcd0941aa"
+      },
+      "qualification": "Current C08 review producer stores a compact identity+digest receipt and reopens both compact and legacy receipts through the existing authorized reader. Preserves section/comment/source/outcome/sensitivity checks and avoids copying the full body into idempotency."
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/reviews/README.md",
@@ -1532,9 +1550,15 @@
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/reviews/workspace.ts",
-      "sourceCommit": "46781943bf93bad698233b995354d15c90c4821c",
-      "blobSha": "e448d7529fc792ff57c3eadb3585b9076ec655e3",
-      "owner": "WP07"
+      "sourceCommit": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+      "blobSha": "74ea2daa2cc37fab3edb7c0d4ab2e31f7bceb1e6",
+      "owner": "WP07",
+      "publisher": "WP07",
+      "supersedes": {
+        "sourceCommit": "46781943bf93bad698233b995354d15c90c4821c",
+        "blobSha": "e448d7529fc792ff57c3eadb3585b9076ec655e3"
+      },
+      "qualification": "Current review UI consumer exposes immutable provenance and evidence references, plus retry access. No new route or host contract dependency."
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/routines/actions.ts",
@@ -2822,9 +2846,15 @@
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-contribution.test.ts",
-      "sourceCommit": "46781943bf93bad698233b995354d15c90c4821c",
-      "blobSha": "35ffddcebef00b78bc9ff358e88f9f0826bc6a6e",
-      "owner": "WP07"
+      "sourceCommit": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+      "blobSha": "cad8d9d294639b53b934ddaa766e08cf4d84e3e5",
+      "owner": "WP07",
+      "publisher": "WP07",
+      "supersedes": {
+        "sourceCommit": "46781943bf93bad698233b995354d15c90c4821c",
+        "blobSha": "35ffddcebef00b78bc9ff358e88f9f0826bc6a6e"
+      },
+      "qualification": "Updated producer test corresponding to the three recommended WP07 consumers/receipt changes; preserved for hosted verification only."
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui-entry.ts",
@@ -2834,9 +2864,15 @@
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
-      "sourceCommit": "46781943bf93bad698233b995354d15c90c4821c",
-      "blobSha": "bb054b2cce8630bac8d5b989c593c83c97f00d9f",
-      "owner": "WP07"
+      "sourceCommit": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+      "blobSha": "202153714575667402a9a413c51edcc1bfd82289",
+      "owner": "WP07",
+      "publisher": "WP07",
+      "supersedes": {
+        "sourceCommit": "46781943bf93bad698233b995354d15c90c4821c",
+        "blobSha": "bb054b2cce8630bac8d5b989c593c83c97f00d9f"
+      },
+      "qualification": "Updated producer test corresponding to the three recommended WP07 consumers/receipt changes; preserved for hosted verification only."
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp07/chromium-cleanup.ts",
@@ -2924,9 +2960,15 @@
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
-      "sourceCommit": "46781943bf93bad698233b995354d15c90c4821c",
-      "blobSha": "e6f646394e6d179840e35c1da3cf3846066185ea",
-      "owner": "WP07"
+      "sourceCommit": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+      "blobSha": "77ef3a9e1a289953999abc976557257849bb9237",
+      "owner": "WP07",
+      "publisher": "WP07",
+      "supersedes": {
+        "sourceCommit": "46781943bf93bad698233b995354d15c90c4821c",
+        "blobSha": "e6f646394e6d179840e35c1da3cf3846066185ea"
+      },
+      "qualification": "Updated producer test corresponding to the three recommended WP07 consumers/receipt changes; preserved for hosted verification only."
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/wp07/selection.test.ts",
@@ -3603,24 +3645,32 @@
     }
   ],
   "wp10Deltas": {
-    "parent": "1bd2f0ae879ad9e635051c61bfcc241349388b5d",
-    "status": "CANDIDATE_AWAITING_HOSTED_CI_AND_INDEPENDENT_REVIEWS",
+    "parent": "4041575a60e57ff6180f86215da4bcd87f449a00",
+    "status": "OWN_COMPOSITION_W6_NO_NATIVE_OR_GLOBAL_ACCEPTANCE",
     "ownFiles": [
+      {
+        "path": ".github/workflows/astra-wp10-check.yml",
+        "blobSha": "7ea58f00fc904ad76b6b9b90eddf80d0b4a78038"
+      },
       {
         "path": "apps/cli/src/sucafina-product/analysis-author.ts",
         "blobSha": "282800422110175de982b61995286153f1cbdda3"
       },
       {
         "path": "apps/cli/src/sucafina-product/analysis-bi-bindings.ts",
-        "blobSha": "c644d3863dd57be580880ca1dc4ba5106b59dbe0"
+        "blobSha": "4519bbec0a6f4c892441bd9b55356a89a312d6a4"
       },
       {
         "path": "apps/cli/src/sucafina-product/analysis-domain-bindings.ts",
         "blobSha": "093b879d2e0b167fbcb8c8ba9a32a28b04608bb1"
       },
       {
+        "path": "apps/cli/src/sucafina-product/analysis-native-inputs.ts",
+        "blobSha": "50e7ff0822812d4b2beaf624325f553635a48d7a"
+      },
+      {
         "path": "apps/cli/src/sucafina-product/analysis-selection-scope.ts",
-        "blobSha": "9b2b6082f867a1ca4469ecebb47e50ee8e717bce"
+        "blobSha": "36c1ffd9ddc4ee58c14a2f9264b0ca0afa6b284a"
       },
       {
         "path": "apps/cli/src/sucafina-product/analysis-services.ts",
@@ -3628,7 +3678,7 @@
       },
       {
         "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
-        "blobSha": "b318318f0ebffd00390526e0a39817990056275d"
+        "blobSha": "29284027ee7d89ed6c0b0e0130d0146ee18bd41c"
       },
       {
         "path": "apps/cli/src/sucafina-product/analysis-verifier-intent.ts",
@@ -3648,7 +3698,7 @@
       },
       {
         "path": "apps/cli/src/sucafina-product/business-services.ts",
-        "blobSha": "8e741f7eb850921e67b223e0987234c017bcea83"
+        "blobSha": "0ce1c76b0cb14cad904301a139b8b935ae521da1"
       },
       {
         "path": "apps/cli/src/sucafina-product/contribution.ts",
@@ -3659,8 +3709,36 @@
         "blobSha": "0891d178833165fff098e3c05f3a64c5f5b35043"
       },
       {
+        "path": "apps/cli/src/sucafina-product/decision-alternative-services.ts",
+        "blobSha": "94d0c936a65f876895d35be96402a0af649aaaba"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-baseline-services.ts",
+        "blobSha": "1c5cc2cc2f3c0f5aff1ce730972a2eda80292dab"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-change-services.ts",
+        "blobSha": "ffe982457859fa4216b8a71840e3c6e76bc96f68"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+        "blobSha": "1d43b18fb3a201362fee4686f00bfaaf40f97404"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+        "blobSha": "ee90087b91e22ceb23290ff48d49b14feec79a05"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-materiality-services.ts",
+        "blobSha": "2deb115ed924b39319eecada7701b8c63da79064"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-proposal-services.ts",
+        "blobSha": "0a3e0280c0ff6175936b53a056aecc176b129390"
+      },
+      {
         "path": "apps/cli/src/sucafina-product/host-context.ts",
-        "blobSha": "17a053dcab73a57c611fa2e511c0b58fed57cb3a"
+        "blobSha": "fa51e33b587a00ab4fa65d0ea0c9f2c8d53cf322"
       },
       {
         "path": "apps/cli/src/sucafina-product/input-producer-bi.ts",
@@ -3691,12 +3769,20 @@
         "blobSha": "5e3dadd39c4f7b4bcc5d4fa9f91bec1e25c64351"
       },
       {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "blobSha": "9bcdd36d1e38514d8d7cd7f52defbb6c841d9086"
+      },
+      {
         "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
         "blobSha": "a29d4d90d7bff63a79319aba8c8588af7373e0bf"
       },
       {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+        "blobSha": "11922bec60a7b9223f6f11043b02a63885b55b31"
+      },
+      {
         "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
-        "blobSha": "18eb9d1cfb4f98bbbcdf3e499368f1e6b2d0c8ed"
+        "blobSha": "d5b28120c983251476891e4049b24426173c636d"
       },
       {
         "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
@@ -3704,7 +3790,7 @@
       },
       {
         "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
-        "blobSha": "df4ee73745769ea8c202a1bf86f567e5f303eb0a"
+        "blobSha": "a00643547284a9ca5d0723d8e0f365248fa5f144"
       },
       {
         "path": "modules/sucafina/Sucafinav1/product/integration/bi-http.ts",
@@ -3720,7 +3806,7 @@
       },
       {
         "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
-        "blobSha": "a59d81888d828250dc1e2244137458f79579b37a"
+        "blobSha": "3df97be6b5649ce6348dff8ed90437df6083482d"
       },
       {
         "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
@@ -3732,7 +3818,7 @@
       },
       {
         "path": "modules/sucafina/Sucafinav1/README.md",
-        "blobSha": "d2d5425529772e5134bc62ef95b30a16e3f6ad15"
+        "blobSha": "647e2691a152bac2e6c0e13f443091647e6d54b5"
       },
       {
         "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
@@ -3743,8 +3829,16 @@
         "blobSha": "f8e2886ac152eccaf4cf101475fbe49619c668eb"
       },
       {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-domain.test.ts",
+        "blobSha": "234b0d11da743ca0eaf4daeafb948af63c77aa7b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+        "blobSha": "734f31eb2e8d85712d44ea36f516fe36c63af250"
+      },
+      {
         "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/selection-scope.test.ts",
-        "blobSha": "5f6a0a4dca2cb4a9d5f5c983d94fcdfcf2d1a78b"
+        "blobSha": "fc313197db337e497be37eb7996886a2a6eaf397"
       },
       {
         "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
@@ -3752,7 +3846,11 @@
       },
       {
         "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
-        "blobSha": "6d961b84ffbc105b0797524f1a899d831a13195f"
+        "blobSha": "6de0459d3897490b89b85d7f375a4234f554025f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/scanner-probe.test.ts",
+        "blobSha": "03b4d7673aa3c40761b0568f6704d78b588a28bc"
       },
       {
         "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
@@ -3857,6 +3955,44 @@
           "modules/sucafina/Sucafinav1/README.md"
         ],
         "mode": "Human-selection C08 persistence, actual BI artifacts/current recall/intent/dossier/critique bindings; strict independent author/reviewer identities; no native/global acceptance"
+      },
+      {
+        "owner": "WP10",
+        "basis": "Published WP11/WP13/WP14/WP03/WP04 inputs already pinned above",
+        "paths": [
+          "apps/cli/src/sucafina-product/analysis-bi-bindings.ts",
+          "apps/cli/src/sucafina-product/analysis-selection-scope.ts",
+          "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+          "apps/cli/src/sucafina-product/analysis-native-inputs.ts",
+          "apps/cli/src/sucafina-product/business-services.ts",
+          "apps/cli/src/sucafina-product/host-context.ts",
+          "apps/cli/src/sucafina-product/decision-baseline-services.ts",
+          "apps/cli/src/sucafina-product/decision-domain-services.ts",
+          "apps/cli/src/sucafina-product/decision-materiality-services.ts",
+          "apps/cli/src/sucafina-product/decision-alternative-services.ts",
+          "apps/cli/src/sucafina-product/decision-change-services.ts",
+          "apps/cli/src/sucafina-product/decision-proposal-services.ts",
+          "apps/cli/src/sucafina-product/decision-domain-http.ts",
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/selection-scope.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-domain.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+          "modules/sucafina/Sucafinav1/README.md"
+        ],
+        "mode": "Decision domain factories, finite human routes, private admitted-input replay and atomic native alternative provenance; final C08 revocation guard; selection renewal and C17 per-request dedup. Requires hosted evidence; no native/global acceptance."
+      },
+      {
+        "owner": "WP10",
+        "publishedBy": "WP06",
+        "sourceCommit": "97dd72932b10b97660b8a88787bc21eccb02d566",
+        "sourceBlob": "cf1da650e3bed7cedcfe96c1dfee9e404f0a0d0b",
+        "paths": [
+          "apps/cli/src/sucafina-product/analysis-verifier-documents.ts"
+        ],
+        "mode": "Adapt only extraction schema selector and extracted-document reader; preserve current purchase/change verifier."
       }
     ]
   },
@@ -3918,6 +4054,36 @@
       "pass": 23,
       "fail": 6,
       "note": "All five own selected files pass; six failures in WP04 consumers preserved. Not cumulative candidate acceptance."
+    },
+    {
+      "product": "4041575a60e57ff6180f86215da4bcd87f449a00",
+      "run": 43541299062,
+      "conclusion": "success",
+      "pass": 64,
+      "fail": 0,
+      "assertions": 332,
+      "files": 8,
+      "omni": "not-applicable: no declaring test; zero spawns/delegations"
+    },
+    {
+      "product": "4041575a60e57ff6180f86215da4bcd87f449a00",
+      "run": 43541302941,
+      "conclusion": "failure",
+      "ownDiagnostics": 2,
+      "foreignDiagnostics": 47,
+      "note": "The two own BI diagnostics corrected in W6, requiring hosted recheck; foreign deltas unchanged."
     }
+  ],
+  "archivedForeignInputs": {
+    "sourceCommit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP10.previous.json",
+    "blobSha": "22281097328a26be9d0dc17b98d4b19e08cd8eaf",
+    "sha256": "ad0653ac2d18b76659d8e3ccc95fd75cce5ae3492a101411544cf800c499b1c7",
+    "foreignCopies": 128,
+    "policy": "Immutable archive preserved; current admitted producer paths are separately pinned and may supersede historical inputs. No producer branch or sf2-stack mutation."
+  },
+  "selfReferentialReceipts": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/composition-pins.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/criterion-map.json"
   ]
 }
