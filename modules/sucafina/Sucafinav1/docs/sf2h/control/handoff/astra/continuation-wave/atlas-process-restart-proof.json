@@ -1,0 +1,41 @@
+{
+  "number": 35,
+  "id": "atlas-process-restart-proof",
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "actor": "S0-C scoped WP14 test correction after prior WP14 terminal delivery; no runtime authorship",
+  "actor_pack": "execution/actors/S0-C.json",
+  "branch": "astra-wp14",
+  "pr": 38,
+  "expected_head": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+  "lease_epoch": "atlas-restart-browser35",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+    "modules/sucafina/Sucafinav1/test/product/atlas-process-restart/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-process-restart/"
+  ],
+  "authority": "Explicit bounded correction of WP14 test paths after terminal originaldelivery; reconcile currenthead andno newsourceauthority beforewrite. ExistingMemory13runtimeclosed;34persistenceruntime andotherlanesremainuntouched. Session33soleintegrator.",
+  "inputs": {
+    "original_wp14": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+    "composed_observed": "133312e39a9aa6d1cb51bed20625108c6cc79359",
+    "review": "28e50f2c306f4088b5e396941e54f7ccc10ce62a",
+    "finding": "M29-ATLAS-003",
+    "review_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/contracts/composed-wave-29/FINDINGS.json",
+    "prior_candidate": "253baad3f2ff4af5beac695feae4c2f6372dc2e7"
+  },
+  "mission": "Reconcile and restore explicit separate-process Atlas persistence/restart proof to composedWP14tests without losing newerC08/C17 coverage. OriginalPR38test launchedatlas-restart-reader.ts withdistinctPID/receipt; C2/C4testonlyreopenslocalstorewithinprocess. Helperstillpresentbutnotinvoked. Deliver complete mergedtest/helperpatch and surgicalhostedproof on exactcomposeddependencyclosure.",
+  "acceptance": [
+    "Read original andcurrenttest/helper, allsurroundingfixtures andAGENTS beforeedit; preserve newercase/source/authority/incarnation/C17 assertions. Do not simplyreplacewholecurrenttestwitholdsource.",
+    "Actual parentcreatesdurableprotectedstate, commits/releasesasrequired; actualchildprocess independentlyopenssameSQLite and canonicalAtlasreader, withfreshlegitimatebinding whereexistinghostfixturepermits. Prove PIDdifferent, persistedidentity/digest/projection andauthorizedconsumerresult, notstdoutselfreportalone.",
+    "Retain tests forrevoked/outsider/sourcechanged/replacedrecord and no unauthorizedegress. ScannerrealpinnedGitleaks/version/digest accordingexistingtest; do notfake scan/provider/model/SkillLoadReceipt. If helperusesdeclaredfixturepermissions,nativeSessionWitness:false remainsfalse.",
+    "Spawnonlyviaexisting approvedProcess/AppProcess/ChildProcessSpawner path; actualOmni positivecontrol andexpectSpawn whenrequired. No directchild_process/spawn bypass, noallowlistaddition, noOrchestradesktop/serverrestart. Isolatedtestchildonly.",
+    "Run exactfocusedActionsselection andrecordrealW/S/request/config/processidentity/artifacts; compiler/guards asrequired. AM05nativefullacceptance stillneedsactualnativeSession/newbinding/consumerproof; distinguish componentprocessrestart fromfullAM05."
+  ],
+  "exclusions": "No edits runtime/local-store/contract (34), Memorybusiness-context, Atlasengine/boundary, nativehost/sharedCLI, globalconfigs/workflows, C12, Decision/Reports/Ops sources. Outsidegap=completepatchtoowner underownreceipts. Noeditingpermissivefixture tosimulateauthorization/scanner or changingtestbudgets.",
+  "handoff": "Existingbranch/PR38 GitHubMCP CAS only. ReadpinnedSTART/WORKFLOW/COMMON,fullS0Cpack andWP14appendices; explicitwriteauthoritythisnarrowmission. No gh/push/force/devmerge/deploy/Azure/credentials/messages/engines/restart/newGoal/controller. ProducttestsActionsonly, dedupthroughauthorizeddispatcher, no localtests or fullsuite/epic. Consumer33 receives pre/postblobs, mergedpatch, fullinputclosure, exactprooftestresults andremainingnativegaps interminalhandoff. FinalS0acceptanceunchanged."
+}
