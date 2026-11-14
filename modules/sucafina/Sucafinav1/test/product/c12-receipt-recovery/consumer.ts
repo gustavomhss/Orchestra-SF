@@ -64,6 +64,7 @@ export function interruptC12AfterCommit(fixture: Awaited<ReturnType<typeof creat
     await editC12Case(fixture, "Concurrent authorized case edit")
     throw new Error("C12 fixture interrupted the response after the durable domain commit")
   })
+}
 
 export async function editC12Case(fixture: Awaited<ReturnType<typeof createC12Fixture>>, objective: string) {
   const current = await fixture.storedCase()
