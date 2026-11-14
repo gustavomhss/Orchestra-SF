@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test"
-import type { Page } from "@playwright/test"
 import { object, rows } from "../../../../runtime/contract.ts"
 import { closeWp01Browser, launchWp01Browser } from "../../wp01/browser-fixture.ts"
 import { createMeetingFixture, meetingTotal } from "./meeting-fixture.ts"
+import { loadOptions, openReview } from "./browser-steps.ts"
 
 test("WholeReview UI reopens 1300 after reload and explicitly preserves a distinct 2400 observation", async () => {
   const fixture = await createMeetingFixture()
@@ -74,63 +74,3 @@ test("WholeReview UI reopens 1300 after reload and explicitly preserves a distin
     if (errors.length) throw new AggregateError(errors, "WholeReview browser cleanup failed")
   }
 }, 60_000)
-
-test("WholeReview UI removes preserved material when the real history route revokes access", async () => {
-  const fixture = await createMeetingFixture()
-  const browser = await launchWp01Browser().catch(async (error) => { await fixture.close(); throw error })
-  try {
-    const context = await browser.newContext()
-    const page = await context.newPage()
-    page.setDefaultTimeout(10_000)
-    expect((await page.goto(`${fixture.origin}/sucafina/auth/local?code=${await fixture.identity.enroll()}`))?.status()).toBe(200)
-    await page.goto(`${fixture.origin}/sucafina/dashboard?page=Budget+Overview&year=2026`)
-    await page.locator("[data-dashboard-workbench-panel] > summary").click()
-    const options = await loadOptions(page)
-    expect(await openReview(page, options, fixture.original.id)).toEqual({ status: "ok", value: fixture.original })
-    const panel = page.locator("[data-dashboard-workbench]")
-    const oldPanel = await panel.elementHandle()
-    expect(oldPanel).not.toBeNull()
-    expect(await panel.locator("[data-dashboard-history-view]").textContent()).toContain("1300")
-    fixture.policy.readable = false
-    const denied = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "dashboard-review")
-    await panel.getByRole("button", { name: "Abrir histórico", exact: true }).click()
-    const response = await denied
-    expect(response.status()).toBe(403)
-    expect(await response.text()).not.toContain(fixture.original.id)
-    await page.waitForFunction(() => !document.querySelector("[data-dashboard-history-view]"))
-    expect(await oldPanel!.textContent()).not.toContain("1300")
-    expect(await oldPanel!.textContent()).not.toContain("Preserved Operations")
-    expect(await page.locator("[data-dashboard-history-view]").count()).toBe(0)
-    expect(await page.locator("body").textContent()).not.toContain(fixture.original.id)
-  } finally {
-    const results = await Promise.allSettled([closeWp01Browser(browser), fixture.close()])
-    const errors = results.flatMap((result) => result.status === "rejected" ? [result.reason] : [])
-    if (errors.length) throw new AggregateError(errors, "WholeReview revocation cleanup failed")
-  }
-}, 60_000)
-
-async function loadOptions(page: Page) {
-  const loaded = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "dashboard-workbench")
-  await page.locator("[data-dashboard-workbench]").getByRole("button", { name: "Carregar opções", exact: true }).click()
-  const response = await loaded
-  expect(response.status()).toBe(200)
-  const result = object(await response.json())
-  expect(result.status).toBe("ok")
-  await page.getByText("Opções carregadas.", { exact: false }).waitFor()
-  return object(result.value)
-}
-
-async function openReview(page: Page, options: Record<string, unknown>, id: string) {
-  const index = rows(options.history).findIndex((entry) => entry.kind === "review" && entry.ref === id)
-  expect(index).toBeGreaterThanOrEqual(0)
-  const panel = page.locator("[data-dashboard-workbench]")
-  await panel.getByLabel("Reunião ou retrato preservado").selectOption({ index: index + 1 })
-  const opened = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "dashboard-review")
-  await panel.getByRole("button", { name: "Abrir histórico", exact: true }).click()
-  const response = await opened
-  expect(response.status()).toBe(200)
-  expect(new URL(response.url()).searchParams.get("id")).toBe(id)
-  const result: unknown = await response.json()
-  await panel.getByText("Histórico aberto com seu acesso atual.", { exact: true }).waitFor()
-  return result
-}
