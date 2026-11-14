@@ -1,0 +1,57 @@
+{
+  "schema": "wp11-reviewed-runtime-application-v1",
+  "status": "APPLIED_NOT_YET_QUALIFIED",
+  "baseProductSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "blob": "206271d33bcfb7786ee80ef0dfad50eb80e4fee2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "blob": "0d344369ce375c0cb35633c7eac2f6b8dd11b153"
+    }
+  ],
+  "sourceProposal": "case-egress-manifest.json",
+  "review": "independent-review-case-egress.json",
+  "changes": [
+    "Move the existing draft read after all external callbacks and compare the complete saved/current case before releasing it.",
+    "Move outer intent authorization before the second read; compare both case observations and unchanged parsed intent.",
+    "Add seven real C08 CAS negatives with commit assertions outside catch paths."
+  ],
+  "preservedSymbols": [
+    {
+      "symbol": "read",
+      "bytes": 4156,
+      "sha256": "1715c615c2c112d7ed28715016ee673b55c355ec1475409613a6325598c78e2c",
+      "byteIdenticalToW17": true
+    },
+    {
+      "symbol": "nativePrepareIntentWrapper",
+      "bytes": 324,
+      "sha256": "f3b9499c108330735558e4bcfa95dba634cd7b016d6fe5897075e1d978a7f9e1",
+      "byteIdenticalToW17": true
+    },
+    {
+      "symbol": "parseCaseRefAndSharedHelpers",
+      "bytes": 5007,
+      "sha256": "3910ab717833c84bbc6d81c352072662217fbcd27e1da0af3a932c60e5f94b30",
+      "byteIdenticalToW17": true
+    },
+    {
+      "symbol": "encodeCaseRefAndImports",
+      "bytes": 838,
+      "sha256": "1414066e5aaaeb113ce3bc851c93fb60ecdedc8522ed91a7df1b8ab085889e3c",
+      "byteIdenticalToW17": true
+    }
+  ],
+  "priorQualification": {
+    "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+    "runId": 43597644083,
+    "scope": "H7 case read and real consumers. Draft/intent new negatives still require their own hosted run."
+  },
+  "limits": [
+    "No third C08 observation, financial formula, changed grant, timeout increase or foreign runtime edit.",
+    "This record reports application and review, not test execution or native installation."
+  ]
+}

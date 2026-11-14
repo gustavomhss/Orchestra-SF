@@ -1,0 +1,890 @@
+﻿2026-11-14T09:40:53.7305879Z Current runner version: '2.338.2'
+2026-11-14T09:40:53.7343139Z ##[group]Runner Image Provisioner
+2026-11-14T09:40:53.7344923Z Hosted Compute Agent
+2026-11-14T09:40:53.7346026Z Version: 20261103.629
+2026-11-14T09:40:53.7347779Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-14T09:40:53.7349177Z Build Date: 2026-11-03T17:26:59Z
+2026-11-14T09:40:53.7350485Z Worker ID: {2bf62d0c-c999-4079-9e71-b93516a81a76}
+2026-11-14T09:40:53.7351893Z Region: eastus2
+2026-11-14T09:40:53.7353046Z Cloud: Azure
+2026-11-14T09:40:53.7354199Z ##[endgroup]
+2026-11-14T09:40:53.7356748Z ##[group]Operating System
+2026-11-14T09:40:53.7357900Z Ubuntu
+2026-11-14T09:40:53.7359078Z 24.04.5
+2026-11-14T09:40:53.7360024Z LTS
+2026-11-14T09:40:53.7361550Z ##[endgroup]
+2026-11-14T09:40:53.7362654Z ##[group]Runner Image
+2026-11-14T09:40:53.7363729Z Image: ubuntu-24.04
+2026-11-14T09:40:53.7365016Z Version: 20261111.370.1
+2026-11-14T09:40:53.7367573Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-14T09:40:53.7370639Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+2026-11-14T09:40:53.7372456Z ##[endgroup]
+2026-11-14T09:40:53.7374505Z ##[group]GITHUB_TOKEN Permissions
+2026-11-14T09:40:53.7377661Z Contents: read
+2026-11-14T09:40:53.7378738Z Metadata: read
+2026-11-14T09:40:53.7379712Z ##[endgroup]
+2026-11-14T09:40:53.7382637Z Secret source: Actions
+2026-11-14T09:40:53.7384675Z Cache mode: write
+2026-11-14T09:40:53.7386905Z Prepare workflow directory
+2026-11-14T09:40:53.7782400Z Prepare all required actions
+2026-11-14T09:40:53.7830223Z Getting action download info
+2026-11-14T09:40:53.9593717Z Download action repository 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-11-14T09:40:54.1122113Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-14T09:40:54.3249242Z Complete job name: wp11-checks
+2026-11-14T09:40:54.4125023Z ##[group]Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+2026-11-14T09:40:54.4126100Z with:
+2026-11-14T09:40:54.4126808Z   ref: 768a189c92bae0353e546c29a71fda95fac1c4bf
+2026-11-14T09:40:54.4127417Z   fetch-depth: 0
+2026-11-14T09:40:54.4127877Z   persist-credentials: false
+2026-11-14T09:40:54.4128420Z   repository: gustavomhss/Orchestra-SF
+2026-11-14T09:40:54.4132038Z   token: ***
+2026-11-14T09:40:54.4132479Z   ssh-strict: true
+2026-11-14T09:40:54.4132912Z   ssh-user: git
+2026-11-14T09:40:54.4133325Z   clean: true
+2026-11-14T09:40:54.4133772Z   sparse-checkout-cone-mode: true
+2026-11-14T09:40:54.4134303Z   fetch-tags: false
+2026-11-14T09:40:54.4134748Z   show-progress: true
+2026-11-14T09:40:54.4135190Z   lfs: false
+2026-11-14T09:40:54.4135595Z   submodules: false
+2026-11-14T09:40:54.4136038Z   set-safe-directory: true
+2026-11-14T09:40:54.4136956Z ##[endgroup]
+2026-11-14T09:40:54.6831430Z Syncing repository: gustavomhss/Orchestra-SF
+2026-11-14T09:40:54.6833608Z ##[group]Getting Git version info
+2026-11-14T09:40:54.6834495Z Working directory is '/home/runner/work/Orchestra-SF/Orchestra-SF'
+2026-11-14T09:40:54.6835735Z [command]/usr/bin/git version
+2026-11-14T09:40:54.6920844Z git version 2.56.1
+2026-11-14T09:40:54.6969248Z ##[endgroup]
+2026-11-14T09:40:54.6977696Z Temporarily overriding HOME='/home/runner/work/_temp/72b75723-957c-40f1-ad00-99f94a3169c6' before making global git config changes
+2026-11-14T09:40:54.6980574Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-14T09:40:54.6988648Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-14T09:40:54.7034036Z Deleting the contents of '/home/runner/work/Orchestra-SF/Orchestra-SF'
+2026-11-14T09:40:54.7044851Z ##[group]Initializing the repository
+2026-11-14T09:40:54.7048288Z [command]/usr/bin/git init /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-14T09:40:54.7157958Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-14T09:40:54.7188540Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-14T09:40:54.7197985Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-14T09:40:54.7199878Z hint: call:
+2026-11-14T09:40:54.7201043Z hint:
+2026-11-14T09:40:54.7202524Z hint: 	git config --global init.defaultBranch <name>
+2026-11-14T09:40:54.7203527Z hint:
+2026-11-14T09:40:54.7204201Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-14T09:40:54.7205214Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-14T09:40:54.7207158Z hint:
+2026-11-14T09:40:54.7207776Z hint: 	git branch -m <name>
+2026-11-14T09:40:54.7208331Z hint:
+2026-11-14T09:40:54.7209021Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-14T09:40:54.7210520Z Initialized empty Git repository in /home/runner/work/Orchestra-SF/Orchestra-SF/.git/
+2026-11-14T09:40:54.7212957Z [command]/usr/bin/git remote add origin https://github.com/gustavomhss/Orchestra-SF
+2026-11-14T09:40:54.7238496Z ##[endgroup]
+2026-11-14T09:40:54.7240327Z ##[group]Disabling automatic garbage collection
+2026-11-14T09:40:54.7243238Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-14T09:40:54.7287429Z ##[endgroup]
+2026-11-14T09:40:54.7289178Z ##[group]Setting up auth
+2026-11-14T09:40:54.7296177Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T09:40:54.7346776Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T09:40:54.7850858Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T09:40:54.7908624Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T09:40:54.8183009Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T09:40:54.8230229Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T09:40:54.8498053Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-14T09:40:54.8552204Z ##[endgroup]
+2026-11-14T09:40:54.8553547Z ##[group]Fetching the repository
+2026-11-14T09:40:54.8571726Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-11-14T09:41:10.2033704Z From https://github.com/gustavomhss/Orchestra-SF
+2026-11-14T09:41:10.2034620Z  * [new branch]            astra-check-collaboration -> origin/astra-check-collaboration
+2026-11-14T09:41:10.2035430Z  * [new branch]            astra-check-compose     -> origin/astra-check-compose
+2026-11-14T09:41:10.2036118Z  * [new branch]            astra-check-finance     -> origin/astra-check-finance
+2026-11-14T09:41:10.2037318Z  * [new branch]            astra-check-intelligence -> origin/astra-check-intelligence
+2026-11-14T09:41:10.2038484Z  * [new branch]            astra-check-interface   -> origin/astra-check-interface
+2026-11-14T09:41:10.2039815Z  * [new branch]            astra-check-operations-5e0c79ee-1 -> origin/astra-check-operations-5e0c79ee-1
+2026-11-14T09:41:10.2041207Z  * [new branch]            astra-check-operations-d7d343ec-1 -> origin/astra-check-operations-d7d343ec-1
+2026-11-14T09:41:10.2042477Z  * [new branch]            astra-check-operations-de6959db-1 -> origin/astra-check-operations-de6959db-1
+2026-11-14T09:41:10.2043725Z  * [new branch]            astra-check-wp00        -> origin/astra-check-wp00
+2026-11-14T09:41:10.2044787Z  * [new branch]            astra-check-wp01        -> origin/astra-check-wp01
+2026-11-14T09:41:10.2046647Z  * [new branch]            astra-check-wp02        -> origin/astra-check-wp02
+2026-11-14T09:41:10.2047698Z  * [new branch]            astra-check-wp03        -> origin/astra-check-wp03
+2026-11-14T09:41:10.2048765Z  * [new branch]            astra-check-wp04        -> origin/astra-check-wp04
+2026-11-14T09:41:10.2049821Z  * [new branch]            astra-check-wp05        -> origin/astra-check-wp05
+2026-11-14T09:41:10.2050839Z  * [new branch]            astra-check-wp06        -> origin/astra-check-wp06
+2026-11-14T09:41:10.2051863Z  * [new branch]            astra-check-wp07        -> origin/astra-check-wp07
+2026-11-14T09:41:10.2052912Z  * [new branch]            astra-check-wp08        -> origin/astra-check-wp08
+2026-11-14T09:41:10.2053957Z  * [new branch]            astra-check-wp09        -> origin/astra-check-wp09
+2026-11-14T09:41:10.2055034Z  * [new branch]            astra-check-wp10        -> origin/astra-check-wp10
+2026-11-14T09:41:10.2056123Z  * [new branch]            astra-check-wp11        -> origin/astra-check-wp11
+2026-11-14T09:41:10.2058016Z  * [new branch]            astra-check-wp12        -> origin/astra-check-wp12
+2026-11-14T09:41:10.2058889Z  * [new branch]            astra-check-wp13        -> origin/astra-check-wp13
+2026-11-14T09:41:10.2059733Z  * [new branch]            astra-check-wp14        -> origin/astra-check-wp14
+2026-11-14T09:41:10.2060830Z  * [new branch]            astra-collaboration     -> origin/astra-collaboration
+2026-11-14T09:41:10.2062084Z  * [new branch]            astra-compose           -> origin/astra-compose
+2026-11-14T09:41:10.2063288Z  * [new branch]            astra-finance           -> origin/astra-finance
+2026-11-14T09:41:10.2064420Z  * [new branch]            astra-intelligence      -> origin/astra-intelligence
+2026-11-14T09:41:10.2065324Z  * [new branch]            astra-interface         -> origin/astra-interface
+2026-11-14T09:41:10.2066330Z  * [new branch]            astra-operations        -> origin/astra-operations
+2026-11-14T09:41:10.2067737Z  * [new branch]            astra-wp00              -> origin/astra-wp00
+2026-11-14T09:41:10.2068588Z  * [new branch]            astra-wp01              -> origin/astra-wp01
+2026-11-14T09:41:10.2069375Z  * [new branch]            astra-wp02              -> origin/astra-wp02
+2026-11-14T09:41:10.2070144Z  * [new branch]            astra-wp03              -> origin/astra-wp03
+2026-11-14T09:41:10.2071159Z  * [new branch]            astra-wp04              -> origin/astra-wp04
+2026-11-14T09:41:10.2071933Z  * [new branch]            astra-wp05              -> origin/astra-wp05
+2026-11-14T09:41:10.2072449Z  * [new branch]            astra-wp06              -> origin/astra-wp06
+2026-11-14T09:41:10.2072932Z  * [new branch]            astra-wp07              -> origin/astra-wp07
+2026-11-14T09:41:10.2073401Z  * [new branch]            astra-wp08              -> origin/astra-wp08
+2026-11-14T09:41:10.2073865Z  * [new branch]            astra-wp09              -> origin/astra-wp09
+2026-11-14T09:41:10.2074343Z  * [new branch]            astra-wp10              -> origin/astra-wp10
+2026-11-14T09:41:10.2074836Z  * [new branch]            astra-wp11              -> origin/astra-wp11
+2026-11-14T09:41:10.2075324Z  * [new branch]            astra-wp12              -> origin/astra-wp12
+2026-11-14T09:41:10.2075791Z  * [new branch]            astra-wp13              -> origin/astra-wp13
+2026-11-14T09:41:10.2076251Z  * [new branch]            astra-wp14              -> origin/astra-wp14
+2026-11-14T09:41:10.2077068Z  * [new branch]            azure-bootstrap         -> origin/azure-bootstrap
+2026-11-14T09:41:10.2077632Z  * [new branch]            azure-bootstrap-tests   -> origin/azure-bootstrap-tests
+2026-11-14T09:41:10.2078174Z  * [new branch]            azure-delivery          -> origin/azure-delivery
+2026-11-14T09:41:10.2078693Z  * [new branch]            azure-foundation        -> origin/azure-foundation
+2026-11-14T09:41:10.2079249Z  * [new branch]            azure-hardening         -> origin/azure-hardening
+2026-11-14T09:41:10.2079773Z  * [new branch]            azure-mvp               -> origin/azure-mvp
+2026-11-14T09:41:10.2080569Z  * [new branch]            azure-safety            -> origin/azure-safety
+2026-11-14T09:41:10.2081077Z  * [new branch]            azure-validation        -> origin/azure-validation
+2026-11-14T09:41:10.2081617Z  * [new branch]            bank-field-projection   -> origin/bank-field-projection
+2026-11-14T09:41:10.2082465Z  * [new branch]            ci-run-linux-astra-compose-4306b310-a4c26b53-a1 -> origin/ci-run-linux-astra-compose-4306b310-a4c26b53-a1
+2026-11-14T09:41:10.2084180Z  * [new branch]            ci-run-linux-astra-wp10-f075e982-bc01cc97-01 -> origin/ci-run-linux-astra-wp10-f075e982-bc01cc97-01
+2026-11-14T09:41:10.2085661Z  * [new branch]            ci-run-linux-astra-wp11-efa0e57-49bdad2f-a1 -> origin/ci-run-linux-astra-wp11-efa0e57-49bdad2f-a1
+2026-11-14T09:41:10.2086986Z  * [new branch]            ci-run-linux-astra-wp13-46c904e-d6856aa3-1 -> origin/ci-run-linux-astra-wp13-46c904e-d6856aa3-1
+2026-11-14T09:41:10.2087969Z  * [new branch]            ci-run-linux-astra-wp13-84fa950e-5fd67d9b-1 -> origin/ci-run-linux-astra-wp13-84fa950e-5fd67d9b-1
+2026-11-14T09:41:10.2088707Z  * [new branch]            cloud-web-payload       -> origin/cloud-web-payload
+2026-11-14T09:41:10.2089352Z  * [new branch]            dependabot/bun/npm-9e993f0168 -> origin/dependabot/bun/npm-9e993f0168
+2026-11-14T09:41:10.2090161Z  * [new branch]            dependabot/github_actions/actions-001d3a24bd -> origin/dependabot/github_actions/actions-001d3a24bd
+2026-11-14T09:41:10.2090839Z  * [new branch]            dev                     -> origin/dev
+2026-11-14T09:41:10.2091354Z  * [new branch]            fix-dashboard-cells     -> origin/fix-dashboard-cells
+2026-11-14T09:41:10.2091929Z  * [new branch]            fix-planner-import      -> origin/fix-planner-import
+2026-11-14T09:41:10.2092582Z  * [new branch]            fix-procurement-visibility -> origin/fix-procurement-visibility
+2026-11-14T09:41:10.2093467Z  * [new branch]            headcount-date-parity   -> origin/headcount-date-parity
+2026-11-14T09:41:10.2094086Z  * [new branch]            manual-app-build        -> origin/manual-app-build
+2026-11-14T09:41:10.2094647Z  * [new branch]            native-access-gate      -> origin/native-access-gate
+2026-11-14T09:41:10.2095668Z  * [new branch]            native-access-view      -> origin/native-access-view
+2026-11-14T09:41:10.2096840Z  * [new branch]            native-admission        -> origin/native-admission
+2026-11-14T09:41:10.2097431Z  * [new branch]            native-browser-env      -> origin/native-browser-env
+2026-11-14T09:41:10.2098525Z  * [new branch]            native-budget-summary   -> origin/native-budget-summary
+2026-11-14T09:41:10.2099693Z  * [new branch]            native-budget-ui        -> origin/native-budget-ui
+2026-11-14T09:41:10.2100802Z  * [new branch]            native-calendar         -> origin/native-calendar
+2026-11-14T09:41:10.2102256Z  * [new branch]            native-chapter-bind     -> origin/native-chapter-bind
+2026-11-14T09:41:10.2103519Z  * [new branch]            native-client-transport -> origin/native-client-transport
+2026-11-14T09:41:10.2104670Z  * [new branch]            native-compiled         -> origin/native-compiled
+2026-11-14T09:41:10.2105817Z  * [new branch]            native-conflict         -> origin/native-conflict
+2026-11-14T09:41:10.2107198Z  * [new branch]            native-context-pin      -> origin/native-context-pin
+2026-11-14T09:41:10.2108273Z  * [new branch]            native-controller       -> origin/native-controller
+2026-11-14T09:41:10.2109313Z  * [new branch]            native-editor-base      -> origin/native-editor-base
+2026-11-14T09:41:10.2110331Z  * [new branch]            native-entry            -> origin/native-entry
+2026-11-14T09:41:10.2111505Z  * [new branch]            native-graph-hoist      -> origin/native-graph-hoist
+2026-11-14T09:41:10.2112592Z  * [new branch]            native-guide            -> origin/native-guide
+2026-11-14T09:41:10.2113758Z  * [new branch]            native-headcount        -> origin/native-headcount
+2026-11-14T09:41:10.2115229Z  * [new branch]            native-installation     -> origin/native-installation
+2026-11-14T09:41:10.2116225Z  * [new branch]            native-origin           -> origin/native-origin
+2026-11-14T09:41:10.2117451Z  * [new branch]            native-page-views       -> origin/native-page-views
+2026-11-14T09:41:10.2118443Z  * [new branch]            native-people-summary   -> origin/native-people-summary
+2026-11-14T09:41:10.2119407Z  * [new branch]            native-people-view      -> origin/native-people-view
+2026-11-14T09:41:10.2120370Z  * [new branch]            native-router-bind      -> origin/native-router-bind
+2026-11-14T09:41:10.2121296Z  * [new branch]            native-security         -> origin/native-security
+2026-11-14T09:41:10.2122252Z  * [new branch]            native-security-map     -> origin/native-security-map
+2026-11-14T09:41:10.2123195Z  * [new branch]            native-security-ui      -> origin/native-security-ui
+2026-11-14T09:41:10.2124130Z  * [new branch]            native-serve            -> origin/native-serve
+2026-11-14T09:41:10.2125052Z  * [new branch]            native-server-adapter   -> origin/native-server-adapter
+2026-11-14T09:41:10.2126057Z  * [new branch]            native-server-pin       -> origin/native-server-pin
+2026-11-14T09:41:10.2127145Z  * [new branch]            native-startup          -> origin/native-startup
+2026-11-14T09:41:10.2128080Z  * [new branch]            native-startup-base     -> origin/native-startup-base
+2026-11-14T09:41:10.2129361Z  * [new branch]            native-sucafina         -> origin/native-sucafina
+2026-11-14T09:41:10.2130109Z  * [new branch]            native-view-locales     -> origin/native-view-locales
+2026-11-14T09:41:10.2130886Z  * [new branch]            native-web-entry        -> origin/native-web-entry
+2026-11-14T09:41:10.2131506Z  * [new branch]            native-web-marker       -> origin/native-web-marker
+2026-11-14T09:41:10.2132279Z  * [new branch]            native-web-proof        -> origin/native-web-proof
+2026-11-14T09:41:10.2132873Z  * [new branch]            native-write-flows      -> origin/native-write-flows
+2026-11-14T09:41:10.2133439Z  * [new branch]            project-import-fix      -> origin/project-import-fix
+2026-11-14T09:41:10.2133987Z  * [new branch]            sf-product-plan         -> origin/sf-product-plan
+2026-11-14T09:41:10.2134509Z  * [new branch]            sf2-ai-ready            -> origin/sf2-ai-ready
+2026-11-14T09:41:10.2135018Z  * [new branch]            sf2-atomic-ready        -> origin/sf2-atomic-ready
+2026-11-14T09:41:10.2135547Z  * [new branch]            sf2-authority-fix       -> origin/sf2-authority-fix
+2026-11-14T09:41:10.2136045Z  * [new branch]            sf2-base                -> origin/sf2-base
+2026-11-14T09:41:10.2136821Z  * [new branch]            sf2-bi-ready            -> origin/sf2-bi-ready
+2026-11-14T09:41:10.2137350Z  * [new branch]            sf2-collab-ready        -> origin/sf2-collab-ready
+2026-11-14T09:41:10.2137882Z  * [new branch]            sf2-compose             -> origin/sf2-compose
+2026-11-14T09:41:10.2138369Z  * [new branch]            sf2-control             -> origin/sf2-control
+2026-11-14T09:41:10.2138890Z  * [new branch]            sf2-dashboard-ready     -> origin/sf2-dashboard-ready
+2026-11-14T09:41:10.2139436Z  * [new branch]            sf2-decisions-ready     -> origin/sf2-decisions-ready
+2026-11-14T09:41:10.2139963Z  * [new branch]            sf2-host-ready          -> origin/sf2-host-ready
+2026-11-14T09:41:10.2140485Z  * [new branch]            sf2-import-ready        -> origin/sf2-import-ready
+2026-11-14T09:41:10.2141073Z  * [new branch]            sf2-integrate           -> origin/sf2-integrate
+2026-11-14T09:41:10.2142021Z  * [new branch]            sf2-memory-ready        -> origin/sf2-memory-ready
+2026-11-14T09:41:10.2143074Z  * [new branch]            sf2-planner-ready       -> origin/sf2-planner-ready
+2026-11-14T09:41:10.2143854Z  * [new branch]            sf2-portfolio-ready     -> origin/sf2-portfolio-ready
+2026-11-14T09:41:10.2144675Z  * [new branch]            sf2-procurement-ready   -> origin/sf2-procurement-ready
+2026-11-14T09:41:10.2145238Z  * [new branch]            sf2-relay-ready         -> origin/sf2-relay-ready
+2026-11-14T09:41:10.2145766Z  * [new branch]            sf2-reports-ready       -> origin/sf2-reports-ready
+2026-11-14T09:41:10.2146291Z  * [new branch]            sf2-runtime-fix         -> origin/sf2-runtime-fix
+2026-11-14T09:41:10.2147397Z  * [new branch]            sf2-stack               -> origin/sf2-stack
+2026-11-14T09:41:10.2148089Z  * [new branch]            sf2-ui-ready            -> origin/sf2-ui-ready
+2026-11-14T09:41:10.2148657Z  * [new branch]            workbook-number-parser  -> origin/workbook-number-parser
+2026-11-14T09:41:10.2150067Z [command]/usr/bin/git rev-parse --verify --quiet 768a189c92bae0353e546c29a71fda95fac1c4bf^{object}
+2026-11-14T09:41:10.2150687Z 768a189c92bae0353e546c29a71fda95fac1c4bf
+2026-11-14T09:41:10.2151847Z ##[endgroup]
+2026-11-14T09:41:10.2152546Z ##[group]Determining the checkout info
+2026-11-14T09:41:10.2153066Z ##[endgroup]
+2026-11-14T09:41:10.2153375Z [command]/usr/bin/git sparse-checkout disable
+2026-11-14T09:41:10.2200332Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-14T09:41:10.2241716Z ##[group]Checking out the ref
+2026-11-14T09:41:10.2246317Z [command]/usr/bin/git checkout --progress --force 768a189c92bae0353e546c29a71fda95fac1c4bf
+2026-11-14T09:41:11.2500857Z Updating files:  77% (12023/15494)
+2026-11-14T09:41:11.2624987Z Updating files:  78% (12086/15494)
+2026-11-14T09:41:11.2749125Z Updating files:  79% (12241/15494)
+2026-11-14T09:41:11.2861751Z Updating files:  80% (12396/15494)
+2026-11-14T09:41:11.2941707Z Updating files:  81% (12551/15494)
+2026-11-14T09:41:11.3029128Z Updating files:  82% (12706/15494)
+2026-11-14T09:41:11.3120133Z Updating files:  83% (12861/15494)
+2026-11-14T09:41:11.3214457Z Updating files:  84% (13015/15494)
+2026-11-14T09:41:11.3313353Z Updating files:  85% (13170/15494)
+2026-11-14T09:41:11.3399188Z Updating files:  86% (13325/15494)
+2026-11-14T09:41:11.3526187Z Updating files:  87% (13480/15494)
+2026-11-14T09:41:11.3597743Z Updating files:  88% (13635/15494)
+2026-11-14T09:41:11.3670749Z Updating files:  89% (13790/15494)
+2026-11-14T09:41:11.3738674Z Updating files:  90% (13945/15494)
+2026-11-14T09:41:11.3814417Z Updating files:  91% (14100/15494)
+2026-11-14T09:41:11.3928463Z Updating files:  92% (14255/15494)
+2026-11-14T09:41:11.4002566Z Updating files:  93% (14410/15494)
+2026-11-14T09:41:11.4077895Z Updating files:  94% (14565/15494)
+2026-11-14T09:41:11.4195595Z Updating files:  95% (14720/15494)
+2026-11-14T09:41:11.4299924Z Updating files:  96% (14875/15494)
+2026-11-14T09:41:11.4410630Z Updating files:  97% (15030/15494)
+2026-11-14T09:41:11.4539471Z Updating files:  98% (15185/15494)
+2026-11-14T09:41:11.4769917Z Updating files:  99% (15340/15494)
+2026-11-14T09:41:11.4770444Z Updating files: 100% (15494/15494)
+2026-11-14T09:41:11.4770930Z Updating files: 100% (15494/15494), done.
+2026-11-14T09:41:11.4971897Z Note: switching to '768a189c92bae0353e546c29a71fda95fac1c4bf'.
+2026-11-14T09:41:11.4972382Z 
+2026-11-14T09:41:11.4972680Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-14T09:41:11.4973213Z changes and commit them, and you can discard any commits you make in this
+2026-11-14T09:41:11.4973762Z state without impacting any branches by switching back to a branch.
+2026-11-14T09:41:11.4974074Z 
+2026-11-14T09:41:11.4974274Z If you want to create a new branch to retain commits you create, you may
+2026-11-14T09:41:11.4974738Z do so (now or later) by using -c with the switch command. Example:
+2026-11-14T09:41:11.4974994Z 
+2026-11-14T09:41:11.4975109Z   git switch -c <new-branch-name>
+2026-11-14T09:41:11.4975282Z 
+2026-11-14T09:41:11.4975389Z Or undo this operation with:
+2026-11-14T09:41:11.4975553Z 
+2026-11-14T09:41:11.4975637Z   git switch -
+2026-11-14T09:41:11.4975762Z 
+2026-11-14T09:41:11.4975982Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-14T09:41:11.4976915Z 
+2026-11-14T09:41:11.4977173Z HEAD is now at 768a189c92 fix(sucafina): align WP11 coverage authority and owner intake
+2026-11-14T09:41:11.5048904Z ##[endgroup]
+2026-11-14T09:41:11.5185165Z [command]/usr/bin/git log -1 --format=%H
+2026-11-14T09:41:11.5185780Z 768a189c92bae0353e546c29a71fda95fac1c4bf
+2026-11-14T09:41:11.5191275Z ##[group]Removing auth
+2026-11-14T09:41:11.5192209Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T09:41:11.5208963Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T09:41:11.5475841Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T09:41:11.5510953Z http.https://github.com/.extraheader
+2026-11-14T09:41:11.5518668Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-14T09:41:11.5561428Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T09:41:11.5821987Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T09:41:11.5861529Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T09:41:11.6121759Z ##[endgroup]
+2026-11-14T09:41:11.6337660Z ##[group]Run set -euo pipefail
+2026-11-14T09:41:11.6338068Z [36;1mset -euo pipefail[0m
+2026-11-14T09:41:11.6338387Z [36;1mtest "$(git rev-parse HEAD)" = "$GITHUB_SHA"[0m
+2026-11-14T09:41:11.6338864Z [36;1mgit merge-base --is-ancestor ff99e4b4de56bbf6e7ef36daf5d3eb749779017a HEAD[0m
+2026-11-14T09:41:11.6339336Z [36;1mgit cat-file -e origin/dev^{commit}[0m
+2026-11-14T09:41:11.6339744Z [36;1mexport SF_WP11_CHECK_EVIDENCE="$RUNNER_TEMP/astra-wp11-evidence"[0m
+2026-11-14T09:41:11.6340256Z [36;1mecho "SF_WP11_CHECK_EVIDENCE=$SF_WP11_CHECK_EVIDENCE" >> "$GITHUB_ENV"[0m
+2026-11-14T09:41:11.6340664Z [36;1mmkdir -p "$SF_WP11_CHECK_EVIDENCE"[0m
+2026-11-14T09:41:11.6340970Z [36;1mnode --input-type=module <<'NODE'[0m
+2026-11-14T09:41:11.6341311Z [36;1mimport { execFileSync } from 'node:child_process'[0m
+2026-11-14T09:41:11.6341684Z [36;1mimport { writeFileSync } from 'node:fs'[0m
+2026-11-14T09:41:11.6342147Z [36;1mconst git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim()[0m
+2026-11-14T09:41:11.6343229Z [36;1mconst source = { productSha: process.env.GITHUB_SHA, productTree: git('rev-parse', 'HEAD^{tree}'), guardBase: git('rev-parse', 'origin/dev'), mergeBase: git('merge-base', 'HEAD', 'origin/dev'), seed: 'ff99e4b4de56bbf6e7ef36daf5d3eb749779017a' }[0m
+2026-11-14T09:41:11.6344439Z [36;1mwriteFileSync(process.env.SF_WP11_CHECK_EVIDENCE + '/source.json', JSON.stringify(source, null, 2) + '\n')[0m
+2026-11-14T09:41:11.6345041Z [36;1mprocess.stdout.write(JSON.stringify(source) + '\n')[0m
+2026-11-14T09:41:11.6345377Z [36;1mNODE[0m
+2026-11-14T09:41:11.6370363Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T09:41:11.6370747Z ##[endgroup]
+2026-11-14T09:41:11.8307189Z {"productSha":"768a189c92bae0353e546c29a71fda95fac1c4bf","productTree":"28396b1bf895985c39a0a2ddbf8e983fe726f49a","guardBase":"a1d37698a7bb097c1578f827eba6a19b9917ef07","mergeBase":"9e4f3d35833f9b2cea6abdf58f42331f3973d9bf","seed":"ff99e4b4de56bbf6e7ef36daf5d3eb749779017a"}
+2026-11-14T09:41:11.8599017Z Prepare all required actions
+2026-11-14T09:41:11.8599629Z Getting action download info
+2026-11-14T09:41:11.9425054Z Download action repository 'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-11-14T09:41:12.0345602Z Download action repository 'oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6' (SHA:0c5077e51419868618aeaa5fe8019c62421857d6)
+2026-11-14T09:41:12.1862942Z Download action repository 'actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830' (SHA:0057852bfaa89a56745cba8c7296529d2fc39830)
+2026-11-14T09:41:12.3150083Z ##[group]Run ./.github/actions/setup-bun
+2026-11-14T09:41:12.3150381Z with:
+2026-11-14T09:41:12.3150570Z env:
+2026-11-14T09:41:12.3150862Z   SF_WP11_CHECK_EVIDENCE: /home/runner/work/_temp/astra-wp11-evidence
+2026-11-14T09:41:12.3151235Z ##[endgroup]
+2026-11-14T09:41:12.3214651Z ##[start-action display=Setup Node;id=setup.__actions_setup-node]
+2026-11-14T09:41:12.3320265Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-11-14T09:41:12.3320658Z with:
+2026-11-14T09:41:12.3320855Z   node-version: 24
+2026-11-14T09:41:12.3321068Z   always-auth: false
+2026-11-14T09:41:12.3321283Z   check-latest: false
+2026-11-14T09:41:12.3323616Z   token: ***
+2026-11-14T09:41:12.3323820Z env:
+2026-11-14T09:41:12.3324111Z   SF_WP11_CHECK_EVIDENCE: /home/runner/work/_temp/astra-wp11-evidence
+2026-11-14T09:41:12.3324482Z ##[endgroup]
+2026-11-14T09:41:12.4850168Z Found in cache @ /opt/hostedtoolcache/node/24.22.2/x64
+2026-11-14T09:41:12.4853898Z (node:2518) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T09:41:12.4855144Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T09:41:12.4857850Z ##[group]Environment details
+2026-11-14T09:41:16.1011035Z node: v24.22.2
+2026-11-14T09:41:16.1011426Z npm: 11.19.1
+2026-11-14T09:41:16.1011751Z yarn: 1.22.22
+2026-11-14T09:41:16.1013084Z ##[endgroup]
+2026-11-14T09:41:16.1132064Z ##[end-action id=setup.__actions_setup-node;outcome=success;conclusion=success;duration_ms=3791]
+2026-11-14T09:41:16.1135336Z ##[start-action display=Get baseline download URL;id=setup.bun-url]
+2026-11-14T09:41:16.1159262Z ##[group]Run if [ "$RUNNER_ARCH" = "X64" ]; then
+2026-11-14T09:41:16.1159631Z [36;1mif [ "$RUNNER_ARCH" = "X64" ]; then[0m
+2026-11-14T09:41:16.1160046Z [36;1m  V=$(node -p "require('./package.json').packageManager.split('@')[1]")[0m
+2026-11-14T09:41:16.1160485Z [36;1m  case "$RUNNER_OS" in[0m
+2026-11-14T09:41:16.1160742Z [36;1m    macOS)   OS=darwin ;;[0m
+2026-11-14T09:41:16.1161004Z [36;1m    Linux)   OS=linux ;;[0m
+2026-11-14T09:41:16.1161265Z [36;1m    Windows) OS=windows ;;[0m
+2026-11-14T09:41:16.1161513Z [36;1m  esac[0m
+2026-11-14T09:41:16.1162038Z [36;1m  echo "url=https://github.com/oven-sh/bun/releases/download/bun-v${V}/bun-${OS}-x64-baseline.zip" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T09:41:16.1162673Z [36;1melif [ "$RUNNER_OS-$RUNNER_ARCH" = "Windows-ARM64" ]; then[0m
+2026-11-14T09:41:16.1163146Z [36;1m  V=$(node -p "require('./package.json').packageManager.split('@')[1]")[0m
+2026-11-14T09:41:16.1163801Z [36;1m  echo "url=https://github.com/oven-sh/bun/releases/download/bun-v${V}/bun-windows-aarch64.zip" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T09:41:16.1164333Z [36;1mfi[0m
+2026-11-14T09:41:16.1243072Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T09:41:16.1243454Z env:
+2026-11-14T09:41:16.1243762Z   SF_WP11_CHECK_EVIDENCE: /home/runner/work/_temp/astra-wp11-evidence
+2026-11-14T09:41:16.1244140Z ##[endgroup]
+2026-11-14T09:41:16.1735687Z ##[end-action id=setup.bun-url;outcome=success;conclusion=success;duration_ms=59]
+2026-11-14T09:41:16.1741393Z ##[start-action display=Setup Bun;id=setup.__oven-sh_setup-bun]
+2026-11-14T09:41:16.1810250Z ##[group]Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+2026-11-14T09:41:16.1810638Z with:
+2026-11-14T09:41:16.1811322Z   bun-download-url: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
+2026-11-14T09:41:16.1811876Z   no-cache: false
+2026-11-14T09:41:16.1814187Z   token: ***
+2026-11-14T09:41:16.1814404Z env:
+2026-11-14T09:41:16.1814696Z   SF_WP11_CHECK_EVIDENCE: /home/runner/work/_temp/astra-wp11-evidence
+2026-11-14T09:41:16.1815077Z ##[endgroup]
+2026-11-14T09:41:16.3567192Z Obtained version 1.3.14 from package.json
+2026-11-14T09:41:16.3570547Z Downloading a new version of Bun: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
+2026-11-14T09:41:16.6917779Z [command]/usr/bin/unzip -o -q /home/runner/work/_temp/4f82d000-032f-46a7-b750-aebc57edab66.zip
+2026-11-14T09:41:17.3649323Z [command]/home/runner/.bun/bin/bun --revision
+2026-11-14T09:41:17.3705736Z 1.3.14+0d9b296af
+2026-11-14T09:41:17.3839840Z ##[end-action id=setup.__oven-sh_setup-bun;outcome=success;conclusion=success;duration_ms=1209]
+2026-11-14T09:41:17.3842569Z ##[start-action display=Get cache directory;id=setup.cache]
+2026-11-14T09:41:17.3861749Z ##[group]Run echo "dir=$(bun pm cache)" >> "$GITHUB_OUTPUT"
+2026-11-14T09:41:17.3862168Z [36;1mecho "dir=$(bun pm cache)" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T09:41:17.3883104Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T09:41:17.3883464Z env:
+2026-11-14T09:41:17.3883783Z   SF_WP11_CHECK_EVIDENCE: /home/runner/work/_temp/astra-wp11-evidence
+2026-11-14T09:41:17.3884173Z ##[endgroup]
+2026-11-14T09:41:17.3973040Z ##[end-action id=setup.cache;outcome=success;conclusion=success;duration_ms=12]
+2026-11-14T09:41:17.3975126Z ##[start-action display=Compute dependency cache keys;id=setup.keys]
+2026-11-14T09:41:17.5385567Z ##[group]Run echo "bun=Linux-X64-bun-v3-b95f064819a4746beb85ac13b0a955381dcb43d5ecab6d195f1e7a61eccb7cd1" >> "$GITHUB_OUTPUT"
+2026-11-14T09:41:17.5386873Z [36;1mecho "bun=Linux-X64-bun-v3-b95f064819a4746beb85ac13b0a955381dcb43d5ecab6d195f1e7a61eccb7cd1" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T09:41:17.5387833Z [36;1mecho "modules=Linux-X64-modules-v4-549faabf78e0573369d7becff14298875e2519690915e03af5fc246ec9d68344" >> "$GITHUB_OUTPUT"[0m
+2026-11-14T09:41:17.5408977Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T09:41:17.5409334Z env:
+2026-11-14T09:41:17.5409637Z   SF_WP11_CHECK_EVIDENCE: /home/runner/work/_temp/astra-wp11-evidence
+2026-11-14T09:41:17.5410011Z ##[endgroup]
+2026-11-14T09:41:17.5461687Z ##[end-action id=setup.keys;outcome=success;conclusion=success;duration_ms=148]
+2026-11-14T09:41:17.5463885Z ##[start-action display=Restore node_modules;id=setup.modules-cache]
+2026-11-14T09:41:17.5502425Z ##[group]Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+2026-11-14T09:41:17.5502805Z with:
+2026-11-14T09:41:17.5503539Z   path: node_modules
+packages/*/node_modules
+packages/*/*/node_modules
+apps/*/node_modules
+modules/*/node_modules
+modules/*/*/node_modules
+tooling/*/node_modules
+native/*/*/node_modules
+native/*/*/*/node_modules
+
+2026-11-14T09:41:17.5504561Z   key: Linux-X64-modules-v4-549faabf78e0573369d7becff14298875e2519690915e03af5fc246ec9d68344
+2026-11-14T09:41:17.5505059Z   enableCrossOsArchive: false
+2026-11-14T09:41:17.5505314Z   fail-on-cache-miss: false
+2026-11-14T09:41:17.5505547Z   lookup-only: false
+2026-11-14T09:41:17.5505748Z env:
+2026-11-14T09:41:17.5506024Z   SF_WP11_CHECK_EVIDENCE: /home/runner/work/_temp/astra-wp11-evidence
+2026-11-14T09:41:17.5506622Z ##[endgroup]
+2026-11-14T09:41:17.6556073Z (node:2599) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T09:41:17.6557325Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T09:41:17.7311327Z Cache not found for input keys: Linux-X64-modules-v4-549faabf78e0573369d7becff14298875e2519690915e03af5fc246ec9d68344
+2026-11-14T09:41:17.7407077Z ##[end-action id=setup.modules-cache;outcome=success;conclusion=success;duration_ms=194]
+2026-11-14T09:41:17.7410308Z ##[start-action display=Restore Bun dependencies;id=setup.bun-cache]
+2026-11-14T09:41:17.7464280Z ##[group]Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+2026-11-14T09:41:17.7464670Z with:
+2026-11-14T09:41:17.7464882Z   path: /home/runner/.bun/install/cache
+2026-11-14T09:41:17.7465331Z   key: Linux-X64-bun-v3-b95f064819a4746beb85ac13b0a955381dcb43d5ecab6d195f1e7a61eccb7cd1
+2026-11-14T09:41:17.7465806Z   restore-keys: Linux-X64-bun-v3-
+
+2026-11-14T09:41:17.7466084Z   enableCrossOsArchive: false
+2026-11-14T09:41:17.7466835Z   fail-on-cache-miss: false
+2026-11-14T09:41:17.7467094Z   lookup-only: false
+2026-11-14T09:41:17.7467307Z env:
+2026-11-14T09:41:17.7467596Z   SF_WP11_CHECK_EVIDENCE: /home/runner/work/_temp/astra-wp11-evidence
+2026-11-14T09:41:17.7467962Z ##[endgroup]
+2026-11-14T09:41:17.8585083Z (node:2612) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T09:41:17.8586216Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T09:41:17.9252190Z Cache not found for input keys: Linux-X64-bun-v3-b95f064819a4746beb85ac13b0a955381dcb43d5ecab6d195f1e7a61eccb7cd1, Linux-X64-bun-v3-
+2026-11-14T09:41:17.9332007Z ##[end-action id=setup.bun-cache;outcome=success;conclusion=success;duration_ms=192]
+2026-11-14T09:41:17.9334440Z ##[start-action display=Install setuptools for distutils compatibility;id=setup.__run]
+2026-11-14T09:41:17.9353415Z ##[group]Run python3 -m pip install setuptools || pip install setuptools || true
+2026-11-14T09:41:17.9354011Z [36;1mpython3 -m pip install setuptools || pip install setuptools || true[0m
+2026-11-14T09:41:17.9374563Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T09:41:17.9374916Z env:
+2026-11-14T09:41:17.9375211Z   SF_WP11_CHECK_EVIDENCE: /home/runner/work/_temp/astra-wp11-evidence
+2026-11-14T09:41:17.9375573Z ##[endgroup]
+2026-11-14T09:41:19.4763367Z Defaulting to user installation because normal site-packages is not writeable
+2026-11-14T09:41:20.2843731Z Requirement already satisfied: setuptools in /usr/lib/python3/dist-packages (68.1.2)
+2026-11-14T09:41:20.6137602Z ##[end-action id=setup.__run;outcome=success;conclusion=success;duration_ms=2680]
+2026-11-14T09:41:20.6140826Z ##[start-action display=Install dependencies;id=setup.__run_2]
+2026-11-14T09:41:20.6163158Z ##[group]Run # Workaround for patched peer variants
+2026-11-14T09:41:20.6163581Z [36;1m# Workaround for patched peer variants[0m
+2026-11-14T09:41:20.6163927Z [36;1m# e.g. ./patches/ for standard-openapi[0m
+2026-11-14T09:41:20.6164311Z [36;1m# https://github.com/oven-sh/bun/issues/28147[0m
+2026-11-14T09:41:20.6164668Z [36;1mif [ "$RUNNER_OS" = "Windows" ]; then[0m
+2026-11-14T09:41:20.6165076Z [36;1m  # Bun can leave a patched package directory half-renamed on Windows.[0m
+2026-11-14T09:41:20.6165687Z [36;1m  # The hoisted layout nests several copies of a patched package (e.g. @ai-sdk/openai-compatible),[0m
+2026-11-14T09:41:20.6166360Z [36;1m  # and Bun applies the patch once per copy; concurrent renames into the same cache entry race[0m
+2026-11-14T09:41:20.6167457Z [36;1m  # with ENOTEMPTY. Every attempt starts from an empty cache because the loser may leave it partial.[0m
+2026-11-14T09:41:20.6167981Z [36;1m  cache_dir="$PWD/.bun-install-cache"[0m
+2026-11-14T09:41:20.6168305Z [36;1m  trap 'rm -rf "$cache_dir"' EXIT[0m
+2026-11-14T09:41:20.6168594Z [36;1m  for attempt in 1 2 3 4 5; do[0m
+2026-11-14T09:41:20.6168864Z [36;1m    rm -rf "$cache_dir"[0m
+2026-11-14T09:41:20.6169121Z [36;1m    rm -rf node_modules[0m
+2026-11-14T09:41:20.6169512Z [36;1m    if bun install --no-cache --cache-dir "$cache_dir" --linker hoisted ; then[0m
+2026-11-14T09:41:20.6169945Z [36;1m      exit 0[0m
+2026-11-14T09:41:20.6170161Z [36;1m    fi[0m
+2026-11-14T09:41:20.6170567Z [36;1m    echo "::warning::bun install attempt $attempt failed on Windows; retrying from an empty cache"[0m
+2026-11-14T09:41:20.6171039Z [36;1m  done[0m
+2026-11-14T09:41:20.6171237Z [36;1m  exit 1[0m
+2026-11-14T09:41:20.6171433Z [36;1melse[0m
+2026-11-14T09:41:20.6171634Z [36;1m  bun install [0m
+2026-11-14T09:41:20.6172035Z [36;1mfi[0m
+2026-11-14T09:41:20.6192821Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T09:41:20.6193183Z env:
+2026-11-14T09:41:20.6193498Z   SF_WP11_CHECK_EVIDENCE: /home/runner/work/_temp/astra-wp11-evidence
+2026-11-14T09:41:20.6193886Z ##[endgroup]
+2026-11-14T09:41:20.6266092Z bun install v1.3.14 (0d9b296a)
+2026-11-14T09:41:20.6481009Z Resolving dependencies
+2026-11-14T09:41:24.9598271Z Resolved, downloaded and extracted [466]
+2026-11-14T09:41:24.9600131Z warn: GET https://registry.npmjs.org/hugr-omni-darwin-x64 - 404
+2026-11-14T09:41:24.9600858Z 
+2026-11-14T09:41:24.9601721Z warn: GET https://registry.npmjs.org/hugr-omni-darwin-arm64 - 404
+2026-11-14T09:41:24.9602326Z 
+2026-11-14T09:41:24.9602923Z warn: GET https://registry.npmjs.org/hugr-omni-linux-arm64-gnu - 404
+2026-11-14T09:41:24.9603456Z 
+2026-11-14T09:41:24.9604348Z warn: GET https://registry.npmjs.org/hugr-omni-linux-arm64-musl - 404
+2026-11-14T09:41:24.9604913Z 
+2026-11-14T09:41:24.9605423Z warn: GET https://registry.npmjs.org/hugr-omni-win32-arm64-msvc - 404
+2026-11-14T09:41:24.9605926Z 
+2026-11-14T09:41:24.9606385Z warn: GET https://registry.npmjs.org/hugr-omni-win32-x64-msvc - 404
+2026-11-14T09:41:24.9607089Z 
+2026-11-14T09:41:24.9607552Z warn: GET https://registry.npmjs.org/hugr-omni-linux-x64-musl - 404
+2026-11-14T09:41:24.9608030Z 
+2026-11-14T09:41:24.9608326Z warn: GET https://registry.npmjs.org/hugr-omni-linux-x64-gnu - 404
+2026-11-14T09:42:00.7625185Z Saved lockfile
+2026-11-14T09:42:00.7625398Z 
+2026-11-14T09:42:00.7625622Z $ bun run --cwd packages/core fix-node-pty
+2026-11-14T09:42:00.7717818Z $ bun run script/fix-node-pty.ts
+2026-11-14T09:42:00.7897864Z $ husky
+2026-11-14T09:42:00.8309222Z 
+2026-11-14T09:42:00.8309855Z + @actions/artifact@5.0.1 (v6.3.1 available)
+2026-11-14T09:42:00.8310522Z + @tsconfig/bun@1.0.9 (v1.0.11 available)
+2026-11-14T09:42:00.8310908Z + @types/mime-types@3.0.1
+2026-11-14T09:42:00.8313665Z + @typescript/native-preview@7.0.0-dev.20251207.1
+2026-11-14T09:42:00.8314586Z + glob@13.0.5 (v14.0.4 available)
+2026-11-14T09:42:00.8315224Z + husky@9.1.7
+2026-11-14T09:42:00.8315585Z + oxlint@1.60.0
+2026-11-14T09:42:00.8315989Z + oxlint-tsgolint@0.21.0
+2026-11-14T09:42:00.8317259Z + prettier@3.6.2 (v3.9.10 available)
+2026-11-14T09:42:00.8317814Z + semver@7.8.1 (v7.8.6 available)
+2026-11-14T09:42:00.8318246Z + turbo@2.10.2
+2026-11-14T09:42:00.8318789Z + @ai-sdk/openai-compatible@2.0.41 (v3.0.90 available)
+2026-11-14T09:42:00.8319312Z + heap-snapshot-toolkit@1.1.3
+2026-11-14T09:42:00.8319638Z + typescript@5.8.2 (v7.0.2 available)
+2026-11-14T09:42:00.8319827Z 
+2026-11-14T09:42:00.8319985Z 2953 packages installed [40.21s]
+2026-11-14T09:42:00.8892398Z ##[end-action id=setup.__run_2;outcome=success;conclusion=success;duration_ms=40275]
+2026-11-14T09:42:00.8896137Z ##[start-action display=Save Bun dependencies;id=setup.__actions_cache]
+2026-11-14T09:42:00.8913917Z ##[end-action id=setup.__actions_cache;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-14T09:42:00.8917340Z ##[start-action display=Save node_modules;id=setup.__actions_cache_2]
+2026-11-14T09:42:00.8931877Z ##[end-action id=setup.__actions_cache_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-14T09:42:00.8974223Z ##[group]Run set -o pipefail
+2026-11-14T09:42:00.8974550Z [36;1mset -o pipefail[0m
+2026-11-14T09:42:00.8974900Z [36;1mbun typecheck 2>&1 | tee "$SF_WP11_CHECK_EVIDENCE/typecheck.log"[0m
+2026-11-14T09:42:00.8995257Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T09:42:00.8995622Z env:
+2026-11-14T09:42:00.8995925Z   SF_WP11_CHECK_EVIDENCE: /home/runner/work/_temp/astra-wp11-evidence
+2026-11-14T09:42:00.8996290Z ##[endgroup]
+2026-11-14T09:42:00.9066030Z $ bun --cwd Sucafinav1 typecheck
+2026-11-14T09:42:00.9101203Z $ tsgo --noEmit
+2026-11-14T09:42:20.8650351Z ##[error]../../../apps/cli/src/sucafina-product/business-services.ts(85,30): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.
+2026-11-14T09:42:20.8662157Z ##[error]../../../apps/cli/src/sucafina-product/business-services.ts(85,40): error TS7006: Parameter 'evidence' implicitly has an 'any' type.
+2026-11-14T09:42:20.8668400Z ##[error]../../../apps/cli/src/sucafina-product/business-services.ts(102,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: Readonly<{ ref: `sf-workspace:${string}`; incarnation: string; }>; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextServi...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, "requestFor" | "revalidate">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.
+2026-11-14T09:42:20.8675574Z ##[error]../../../apps/cli/src/sucafina-product/business-services.ts(188,20): error TS2322: Type '(ref: string, call: TrustedDomainContext) => Promise<{ status: "ok"; value: { evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }; } | { ...; } | { ...; }>' is not assignable to type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }'.
+2026-11-14T09:42:20.8683812Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(158,128): error TS2345: Argument of type '{ cases: { draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>; prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<...>; read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<...>; prepareIntentForCase: (request...' is not assignable to parameter of type 'SfAnalysisDependencies & { replayIntent: (request: CaseDraftRequest, ref: { id: string; incarnation: string; version: number; }, context: TrustedDomainContext) => Promise<...>; imports: Pick<...>; selectedPreviewRef: (caseRef: { ...; }, call: TrustedDomainContext) => Promise<...>; }'.
+2026-11-14T09:42:20.8689635Z   Type '{ cases: { draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>; prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<...>; read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<...>; prepareIntentForCase: (request...' is missing the following properties from type '{ replayIntent: (request: CaseDraftRequest, ref: { id: string; incarnation: string; version: number; }, context: TrustedDomainContext) => Promise<...>; imports: Pick<...>; selectedPreviewRef: (caseRef: { ...; }, call: TrustedDomainContext) => Promise<...>; }': imports, selectedPreviewRef
+2026-11-14T09:42:20.8692984Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(185,136): error TS2322: Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.
+2026-11-14T09:42:20.8695013Z   Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: string | undefined; }' is not assignable to type 'PortResult<{ runRef: string; }>'.
+2026-11-14T09:42:20.8696760Z     Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: string | undefined; }' is not assignable to type '{ status: "ok"; value: { runRef: string; }; }'.
+2026-11-14T09:42:20.8697759Z       Types of property 'status' are incompatible.
+2026-11-14T09:42:20.8698189Z         Type '"ok" | "preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8698614Z           Type '"preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8701969Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(217,138): error TS2322: Type 'SfStateResult<({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.
+2026-11-14T09:42:20.8705215Z   Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.
+2026-11-14T09:42:20.8708122Z     Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type '{ status: "ok"; value: { runRef: string; }; }'.
+2026-11-14T09:42:20.8709437Z       Types of property 'status' are incompatible.
+2026-11-14T09:42:20.8709845Z         Type '"ok" | "preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8710286Z           Type '"preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8713599Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(273,138): error TS2322: Type 'SfStateResult<({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.
+2026-11-14T09:42:20.8717008Z   Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type 'PortResult<SfNativeRunRecord>'.
+2026-11-14T09:42:20.8719376Z     Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type '{ status: "ok"; value: SfNativeRunRecord; }'.
+2026-11-14T09:42:20.8720690Z       Types of property 'status' are incompatible.
+2026-11-14T09:42:20.8721096Z         Type '"ok" | "preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8721515Z           Type '"preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8726236Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(396,5): error TS2322: Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: "cancelled" | "failed" | "needs-input" | ... 6 more ... | "unavailable"; version: number; outputRef?: string | undefined; }[]>>'.
+2026-11-14T09:42:20.8730904Z   Type 'Promise<{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: "cancelled" | "failed" | "needs-input" | "preparing" | ... 5 more ... | "unavailable"; version: number; outputRef?: string | undefined; }[]; } | { ...; } | { ...; }>' is not assignable to type 'Promise<PortResult<readonly { runRef: string; state: "cancelled" | "failed" | "needs-input" | "preparing" | "queued" | "ready" | "running" | "stale" | "unavailable"; version: number; outputRef?: string | undefined; }[]>>'.
+2026-11-14T09:42:20.8734446Z     Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: "cancelled" | "failed" | "needs-input" | "preparing" | ... 5 more ... | "unavailable"; version: number; outputRef?: string | undefined; }[]; } | { ...; } | { ...; }' is not assignable to type 'PortResult<readonly { runRef: string; state: "cancelled" | "failed" | "needs-input" | "preparing" | "queued" | "ready" | "running" | "stale" | "unavailable"; version: number; outputRef?: string | undefined; }[]>'.
+2026-11-14T09:42:20.8738377Z       Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: "cancelled" | "failed" | "needs-input" | "preparing" | ... 5 more ... | "unavailable"; version: number; outputRef?: string | undefined; }[]; }' is not assignable to type 'PortResult<readonly { runRef: string; state: "cancelled" | "failed" | "needs-input" | "preparing" | "queued" | "ready" | "running" | "stale" | "unavailable"; version: number; outputRef?: string | undefined; }[]>'.
+2026-11-14T09:42:20.8741836Z         Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: "cancelled" | "failed" | "needs-input" | "preparing" | ... 5 more ... | "unavailable"; version: number; outputRef?: string | undefined; }[]; }' is not assignable to type '{ status: "ok"; value: readonly { runRef: string; state: "cancelled" | "failed" | "needs-input" | "preparing" | "queued" | "ready" | "running" | "stale" | "unavailable"; version: number; outputRef?: string | undefined; }[]; }'.
+2026-11-14T09:42:20.8743692Z           Types of property 'status' are incompatible.
+2026-11-14T09:42:20.8744114Z             Type '"ok" | "preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8744544Z               Type '"preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8747872Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(412,5): error TS2322: Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.
+2026-11-14T09:42:20.8751068Z   Type 'Promise<{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...;...' is not assignable to type 'Promise<PortResult<SfNativeRunRecord>>'.
+2026-11-14T09:42:20.8753641Z     Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ....' is not assignable to type 'PortResult<SfNativeRunRecord>'.
+2026-11-14T09:42:20.8756000Z       Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type 'PortResult<SfNativeRunRecord>'.
+2026-11-14T09:42:20.8758637Z         Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: "sf-native-run-v1"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type '{ status: "ok"; value: SfNativeRunRecord; }'.
+2026-11-14T09:42:20.8759958Z           Types of property 'status' are incompatible.
+2026-11-14T09:42:20.8760367Z             Type '"ok" | "preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8760787Z               Type '"preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8762546Z ##[error]../../../apps/cli/src/sucafina-product/host-context.ts(551,5): error TS2322: Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.
+2026-11-14T09:42:20.8764026Z   Types of parameters 'context' and 'context' are incompatible.
+2026-11-14T09:42:20.8764545Z     Type 'TrustedDomainContext' is not assignable to type 'TrustedUiContext'.
+2026-11-14T09:42:20.8765103Z       Type 'TrustedCallContext' is not assignable to type 'TrustedUiContext'.
+2026-11-14T09:42:20.8765568Z         Types of property 'kind' are incompatible.
+2026-11-14T09:42:20.8765948Z           Type '"native"' is not assignable to type '"ui"'.
+2026-11-14T09:42:20.8767036Z ##[error]../../../apps/cli/src/sucafina-product/import-services.ts(85,101): error TS2304: Cannot find name 'Period'.
+2026-11-14T09:42:20.8768571Z ##[error]../../../apps/cli/src/sucafina-product/import-services.ts(115,21): error TS2304: Cannot find name 'isSfPeriod'.
+2026-11-14T09:42:20.8770846Z ##[error]product/collaboration/confirmation.ts(79,34): error TS2322: Type 'SfStateResult<(ConfirmationRecord & ConfirmationBaseline) | null>' is not assignable to type 'PortResult<ConfirmationRecord>'.
+2026-11-14T09:42:20.8772818Z   Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: (ConfirmationRecord & ConfirmationBaseline) | null; }' is not assignable to type 'PortResult<ConfirmationRecord>'.
+2026-11-14T09:42:20.8774523Z     Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: (ConfirmationRecord & ConfirmationBaseline) | null; }' is not assignable to type '{ status: "ok"; value: ConfirmationRecord; }'.
+2026-11-14T09:42:20.8775516Z       Types of property 'status' are incompatible.
+2026-11-14T09:42:20.8775926Z         Type '"ok" | "preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8776350Z           Type '"preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8778227Z ##[error]product/collaboration/confirmation.ts(91,34): error TS2322: Type 'SfStateResult<ConfirmationRecord | undefined>' is not assignable to type 'PortResult<ConfirmationValidityProjection>'.
+2026-11-14T09:42:20.8780173Z   Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ConfirmationRecord | undefined; }' is not assignable to type 'PortResult<ConfirmationValidityProjection>'.
+2026-11-14T09:42:20.8781776Z     Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ConfirmationRecord | undefined; }' is not assignable to type '{ status: "ok"; value: ConfirmationValidityProjection; }'.
+2026-11-14T09:42:20.8782901Z       Types of property 'status' are incompatible.
+2026-11-14T09:42:20.8783331Z         Type '"ok" | "preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8783752Z           Type '"preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8787746Z ##[error]product/collaboration/hot-topic-host.ts(16,9): error TS2322: Type '<T>(context: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>' is not assignable to type '<T>(binding: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>'.
+2026-11-14T09:42:20.8790906Z   Type 'Promise<{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; } | { status: "ok"; value: T; } | { status: "conflict" | ... 5 more ... | "unavailable"; reason: string; }>' is not assignable to type 'Promise<PortResult<T>>'.
+2026-11-14T09:42:20.8792776Z     Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; } | { status: "ok"; value: T; } | { status: "conflict" | ... 6 more ... | "unavailable"; reason: string; }' is not assignable to type 'PortResult<T>'.
+2026-11-14T09:42:20.8794437Z       Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; }' is not assignable to type 'PortResult<T>'.
+2026-11-14T09:42:20.8795712Z         Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; }' is not assignable to type '{ status: "ok"; value: T; }'.
+2026-11-14T09:42:20.8796791Z           Types of property 'status' are incompatible.
+2026-11-14T09:42:20.8797212Z             Type '"ok" | "preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8797653Z               Type '"preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8798866Z ##[error]product/collaboration/recipient-actions.ts(50,32): error TS2322: Type 'SfStateResult<boolean>' is not assignable to type 'PortResult<RecipientThread>'.
+2026-11-14T09:42:20.8800537Z   Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: boolean; }' is not assignable to type 'PortResult<RecipientThread>'.
+2026-11-14T09:42:20.8801862Z     Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: boolean; }' is not assignable to type '{ status: "ok"; value: RecipientThread; }'.
+2026-11-14T09:42:20.8802692Z       Types of property 'status' are incompatible.
+2026-11-14T09:42:20.8803096Z         Type '"ok" | "preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8803509Z           Type '"preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8807017Z ##[error]product/collaboration/relations.ts(70,66): error TS2322: Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.
+2026-11-14T09:42:20.8810656Z   Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.
+2026-11-14T09:42:20.8814020Z     Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type '{ status: "ok"; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }; }'.
+2026-11-14T09:42:20.8815753Z       Types of property 'status' are incompatible.
+2026-11-14T09:42:20.8816176Z         Type '"ok" | "preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8816921Z           Type '"preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8820188Z ##[error]product/collaboration/relations.ts(116,35): error TS2322: Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.
+2026-11-14T09:42:20.8823863Z   Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.
+2026-11-14T09:42:20.8827522Z     Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type '{ status: "ok"; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }; }'.
+2026-11-14T09:42:20.8829231Z       Types of property 'status' are incompatible.
+2026-11-14T09:42:20.8829642Z         Type '"ok" | "preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8830061Z           Type '"preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8833617Z ##[error]product/collaboration/relations.ts(127,35): error TS2322: Type 'SfStateResult<({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined>' is not assignable to type 'PortResult<{ relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }>'.
+2026-11-14T09:42:20.8837833Z   Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined; }' is not assignable to type 'PortResult<{ relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }>'.
+2026-11-14T09:42:20.8841390Z     Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined; }' is not assignable to type '{ status: "ok"; value: { relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }; }'.
+2026-11-14T09:42:20.8843381Z       Types of property 'status' are incompatible.
+2026-11-14T09:42:20.8843810Z         Type '"ok" | "preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8844230Z           Type '"preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8845561Z ##[error]product/collaboration/threads.ts(57,34): error TS2322: Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'.
+2026-11-14T09:42:20.8847663Z   Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type 'PortResult<CollaborationThread>'.
+2026-11-14T09:42:20.8849153Z     Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type '{ status: "ok"; value: CollaborationThread; }'.
+2026-11-14T09:42:20.8850060Z       Types of property 'status' are incompatible.
+2026-11-14T09:42:20.8850472Z         Type '"ok" | "preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8850893Z           Type '"preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8852043Z ##[error]product/collaboration/threads.ts(68,33): error TS2322: Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'.
+2026-11-14T09:42:20.8853847Z   Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type 'PortResult<CollaborationThread>'.
+2026-11-14T09:42:20.8855200Z     Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type '{ status: "ok"; value: CollaborationThread; }'.
+2026-11-14T09:42:20.8856049Z       Types of property 'status' are incompatible.
+2026-11-14T09:42:20.8856692Z         Type '"ok" | "preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8857189Z           Type '"preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8858359Z ##[error]product/collaboration/threads.ts(86,31): error TS2322: Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'.
+2026-11-14T09:42:20.8860127Z   Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type 'PortResult<CollaborationThread>'.
+2026-11-14T09:42:20.8861482Z     Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type '{ status: "ok"; value: CollaborationThread; }'.
+2026-11-14T09:42:20.8862323Z       Types of property 'status' are incompatible.
+2026-11-14T09:42:20.8862722Z         Type '"ok" | "preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8863134Z           Type '"preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8864444Z ##[error]product/collaboration/threads.ts(101,32): error TS2322: Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'.
+2026-11-14T09:42:20.8866279Z   Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type 'PortResult<CollaborationThread>'.
+2026-11-14T09:42:20.8868025Z     Type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type '{ status: "ok"; value: CollaborationThread; }'.
+2026-11-14T09:42:20.8868944Z       Types of property 'status' are incompatible.
+2026-11-14T09:42:20.8869341Z         Type '"ok" | "preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8869754Z           Type '"preview"' is not assignable to type '"ok"'.
+2026-11-14T09:42:20.8870864Z ##[error]product/contracts/host-context.ts(14,45): error TS2307: Cannot find module '../routines/factory.ts' or its corresponding type declarations.
+2026-11-14T09:42:20.8872611Z ##[error]product/dashboard/confirmation.ts(66,474): error TS7006: Parameter 'field' implicitly has an 'any' type.
+2026-11-14T09:42:20.8877237Z ##[error]product/dashboard/confirmation.ts(104,41): error TS2345: Argument of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: false; value: { state: "replaced" | "unavailable"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: { state: "replaced" | "unavailable"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }>'.
+2026-11-14T09:42:20.8880994Z   Type 'Promise<{ commit: false; value: { state: "replaced" | "unavailable"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { commit: false; value: { state: "same"; index: number; fingerprints: string[]; physicalIncarnations: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { state: "replaced" | "unavailable"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }>'.
+2026-11-14T09:42:20.8883956Z     Type '{ commit: false; value: { state: "replaced" | "unavailable"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { commit: false; value: { state: "same"; index: number; fingerprints: string[]; physicalIncarnations: string[]; }; }' is not assignable to type '{ commit: boolean; value: { state: "replaced" | "unavailable"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }'.
+2026-11-14T09:42:20.8886862Z       Type '{ commit: false; value: { state: "same"; index: number; fingerprints: string[]; physicalIncarnations: string[]; }; }' is not assignable to type '{ commit: boolean; value: { state: "replaced" | "unavailable"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }'.
+2026-11-14T09:42:20.8888083Z         The types of 'value.state' are incompatible between these types.
+2026-11-14T09:42:20.8888595Z           Type '"same"' is not assignable to type '"replaced" | "unavailable"'.
+2026-11-14T09:42:20.8889523Z ##[error]product/dashboard/confirmation.ts(118,16): error TS2339: Property 'state' does not exist on type '{}'.
+2026-11-14T09:42:20.8890985Z ##[error]product/dashboard/confirmation.ts(118,52): error TS2339: Property 'index' does not exist on type '{}'.
+2026-11-14T09:42:20.8892363Z ##[error]product/dashboard/confirmation.ts(119,16): error TS2339: Property 'state' does not exist on type '{}'.
+2026-11-14T09:42:20.8893802Z ##[error]product/dashboard/confirmation.ts(120,77): error TS2339: Property 'fingerprints' does not exist on type '{}'.
+2026-11-14T09:42:20.8895405Z ##[error]product/dashboard/confirmation.ts(121,163): error TS2339: Property 'fingerprints' does not exist on type '{}'.
+2026-11-14T09:42:20.8897413Z ##[error]product/dashboard/confirmation.ts(123,61): error TS2339: Property 'fingerprints' does not exist on type '{}'.
+2026-11-14T09:42:20.8899024Z ##[error]product/dashboard/confirmation.ts(128,126): error TS2339: Property 'physicalIncarnations' does not exist on type '{}'.
+2026-11-14T09:42:20.8900434Z ##[error]product/decision-memory/source-access.ts(216,35): error TS2349: This expression is not callable.
+2026-11-14T09:42:20.8902202Z   Type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' has no call signatures.
+2026-11-14T09:42:20.8903650Z ##[error]product/decision-memory/source-access.ts(222,33): error TS2349: This expression is not callable.
+2026-11-14T09:42:20.8905398Z   Type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' has no call signatures.
+2026-11-14T09:42:20.8907615Z ##[error]product/documents/capabilities.ts(71,172): error TS2339: Property 'reason' does not exist on type 'SfStateResult<SfDocumentAssetCatalogEntry | undefined>'.
+2026-11-14T09:42:20.8909383Z   Property 'reason' does not exist on type '{ status: "ok" | "preview"; storageVersion: number; aggregateRevision: number; incarnation: string; value: SfDocumentAssetCatalogEntry | undefined; }'.
+2026-11-14T09:42:20.8911374Z ##[error]product/host-binding/business-context.ts(170,71): error TS2353: Object literal may only specify known properties, and 'state' does not exist in type '{ host: DomainPortHost; cases: DecisionCasePort; }'.
+2026-11-14T09:42:20.8913137Z ##[error]product/host-binding/business-context.ts(170,153): error TS7006: Parameter 'refs' implicitly has an 'any' type.
+2026-11-14T09:42:20.8914580Z ##[error]product/host-binding/business-context.ts(170,159): error TS7006: Parameter 'call' implicitly has an 'any' type.
+2026-11-14T09:42:20.8920010Z ##[error]product/host-binding/business-context.ts(212,5): error TS2322: Type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, call: TrustedDomainContext) => Promise<{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]>' is not assignable to type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, trustedCall: TrustedDomainContext) => Promise<readonly { envelope: BusinessMemoryEnvelope; entry: { ...; } | { ...; }; }[]>'.
+2026-11-14T09:42:20.8924524Z   Type 'Promise<{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]>' is not assignable to type 'Promise<readonly { envelope: BusinessMemoryEnvelope; entry: { taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }; }[]>'.
+2026-11-14T09:42:20.8928172Z     Type '{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]' is not assignable to type 'readonly { envelope: BusinessMemoryEnvelope; entry: { taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }; }[]'.
+2026-11-14T09:42:20.8931396Z       Type '{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }' is not assignable to type '{ envelope: BusinessMemoryEnvelope; entry: { taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }; }'.
+2026-11-14T09:42:20.8933087Z         Types of property 'entry' are incompatible.
+2026-11-14T09:42:20.8934237Z           Type 'MemoryEntry' is not assignable to type '{ taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }'.
+2026-11-14T09:42:20.8936049Z             Type 'LogbookEntry' is not assignable to type '{ taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }'.
+2026-11-14T09:42:20.8939143Z ##[error]product/host-binding/state-provider.ts(37,128): error TS2345: Argument of type 'SfStateNamespace' is not assignable to parameter of type '"atlas" | "cases" | "confirmations" | "contributions" | "documents" | "outbox" | "preferences" | "receipts" | "relations" | "reviews" | "threads"'.
+2026-11-14T09:42:20.8941407Z   Type '"bi-artifacts"' is not assignable to type '"atlas" | "cases" | "confirmations" | "contributions" | "documents" | "outbox" | "preferences" | "receipts" | "relations" | "reviews" | "threads"'.
+2026-11-14T09:42:20.8944607Z ##[error]product/host-binding/state-provider.ts(113,43): error TS2741: Property '"bi-artifacts"' is missing in type '{ preferences: number; reviews: number; relations: number; threads: number; confirmations: number; cases: number; contributions: number; documents: number; receipts: number; atlas: number; outbox: number; }' but required in type 'Record<SfStateNamespace, number>'.
+2026-11-14T09:42:20.8950946Z ##[error]product/imports/dashboard-preview.ts(38,75): error TS2345: Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }>'.
+2026-11-14T09:42:20.8955709Z   Type 'Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to type 'Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; status: "conflict" | "denied" | "invalid"; ... 6 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }>'.
+2026-11-14T09:42:20.8959703Z     Type '{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; }; } | { ...; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; status: "conflict" | "denied" | "invalid"; ... 6 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }'.
+2026-11-14T09:42:20.8963593Z       Type '{ commit: false; value: { format: "backup" | DashboardImportFormat; result: { status: "preview"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; ... 8 more ...; requiresHumanConfirmation: true; } | { ...; }; impactDigest: string; before: any; after: any; }; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: "backup" | DashboardImportFormat; result: { warnings?: undefined; status: "conflict" | "denied" | "invalid"; ... 6 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }'.
+2026-11-14T09:42:20.8965713Z         The types of 'value.result' are incompatible between these types.
+2026-11-14T09:42:20.8967974Z           Type '{ status: "preview"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 6 more ...; requiresHumanConfirmation: true; } | { ...; }' is not assignable to type '{ warnings?: undefined; status: "conflict" | "denied" | "invalid"; reason: string; before?: undefined; after?: undefined; baseDigest?: undefined; changes?: undefined; summary?: undefined; commandDigest?: undefined; }'.
+2026-11-14T09:42:20.8971352Z             Type '{ status: "preview"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 6 more ...; requiresHumanConfirmation: true; }' is not assignable to type '{ warnings?: undefined; status: "conflict" | "denied" | "invalid"; reason: string; before?: undefined; after?: undefined; baseDigest?: undefined; changes?: undefined; summary?: undefined; commandDigest?: undefined; }'.
+2026-11-14T09:42:20.8973103Z               Types of property 'warnings' are incompatible.
+2026-11-14T09:42:20.8973542Z                 Type 'string[]' is not assignable to type 'undefined'.
+2026-11-14T09:42:20.8974460Z ##[error]product/imports/dashboard-preview.ts(60,17): error TS2339: Property 'result' does not exist on type '{}'.
+2026-11-14T09:42:20.8975936Z ##[error]product/imports/dashboard-preview.ts(60,71): error TS2339: Property 'result' does not exist on type '{}'.
+2026-11-14T09:42:20.8977709Z ##[error]product/imports/dashboard-preview.ts(60,119): error TS2339: Property 'result' does not exist on type '{}'.
+2026-11-14T09:42:20.8979583Z ##[error]product/imports/dashboard-preview.ts(62,29): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.
+2026-11-14T09:42:20.8981797Z ##[error]product/imports/dashboard-preview.ts(74,251): error TS2339: Property 'result' does not exist on type 'Record<"impactDigest", unknown> & Record<"before", unknown> & Record<"after", unknown>'.
+2026-11-14T09:42:20.8984060Z ##[error]product/imports/dashboard-preview.ts(74,306): error TS2339: Property 'result' does not exist on type 'Record<"impactDigest", unknown> & Record<"before", unknown> & Record<"after", unknown>'.
+2026-11-14T09:42:20.8987119Z ##[error]product/imports/dashboard-preview.ts(74,353): error TS2339: Property 'result' does not exist on type 'Record<"impactDigest", unknown> & Record<"before", unknown> & Record<"after", unknown>'.
+2026-11-14T09:42:20.9008467Z ##[error]product/imports/dashboard-preview.ts(74,457): error TS2339: Property 'result' does not exist on type 'Record<"impactDigest", unknown> & Record<"before", unknown> & Record<"after", unknown>'.
+2026-11-14T09:42:20.9010619Z ##[error]product/imports/dashboard-preview.ts(75,297): error TS2322: Type 'unknown' is not assignable to type 'Record<string, unknown>'.
+2026-11-14T09:42:20.9012300Z ##[error]product/imports/dashboard-preview.ts(75,445): error TS2322: Type 'unknown' is not assignable to type 'Record<string, unknown>'.
+2026-11-14T09:42:20.9013919Z ##[error]product/imports/dashboard-preview.ts(75,469): error TS2322: Type 'unknown' is not assignable to type 'Record<string, unknown>'.
+2026-11-14T09:42:20.9016052Z ##[error]product/imports/dashboard-preview.ts(75,545): error TS2339: Property 'format' does not exist on type 'Record<"impactDigest", unknown> & Record<"before", unknown> & Record<"after", unknown>'.
+2026-11-14T09:42:20.9018741Z ##[error]product/imports/dashboard-preview.ts(75,573): error TS2339: Property 'result' does not exist on type 'Record<"impactDigest", unknown> & Record<"before", unknown> & Record<"after", unknown>'.
+2026-11-14T09:42:20.9020455Z ##[error]product/imports/dashboard-preview.ts(75,592): error TS2322: Type '{}' is not assignable to type 'string'.
+2026-11-14T09:42:20.9022464Z ##[error]product/imports/dashboard-preview.ts(75,674): error TS2339: Property 'result' does not exist on type 'Record<"impactDigest", unknown> & Record<"before", unknown> & Record<"after", unknown>'.
+2026-11-14T09:42:20.9024767Z ##[error]product/imports/dashboard-preview.ts(75,848): error TS2339: Property 'result' does not exist on type 'Record<"impactDigest", unknown> & Record<"before", unknown> & Record<"after", unknown>'.
+2026-11-14T09:42:20.9026892Z ##[error]product/interface/analysis-http.ts(30,114): error TS2339: Property 'runRef' does not exist on type 'ContributionEnvelope'.
+2026-11-14T09:42:20.9029039Z   Property 'runRef' does not exist on type 'ContributionBase & { kind: "AlternativeDraft"; state: "ready"; payload: { caseRef: string; proposal: { id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }; costCoverageBasis: CostCoverageBasis; coverageRef: string; domainApplied: false; }; }'.
+2026-11-14T09:42:20.9031134Z ##[error]product/interface/analysis-http.ts(30,171): error TS2339: Property 'version' does not exist on type 'ContributionEnvelope'.
+2026-11-14T09:42:20.9033279Z   Property 'version' does not exist on type 'ContributionBase & { kind: "AlternativeDraft"; state: "ready"; payload: { caseRef: string; proposal: { id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }; costCoverageBasis: CostCoverageBasis; coverageRef: string; domainApplied: false; }; }'.
+2026-11-14T09:42:20.9035175Z ##[error]product/interface/analysis-http.ts(30,197): error TS2339: Property 'outputRef' does not exist on type 'ContributionEnvelope'.
+2026-11-14T09:42:20.9037551Z   Property 'outputRef' does not exist on type 'ContributionBase & { kind: "AlternativeDraft"; state: "ready"; payload: { caseRef: string; proposal: { id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }; costCoverageBasis: CostCoverageBasis; coverageRef: string; domainApplied: false; }; }'.
+2026-11-14T09:42:20.9039479Z ##[error]product/interface/analysis-http.ts(30,235): error TS2339: Property 'outputRef' does not exist on type 'ContributionEnvelope'.
+2026-11-14T09:42:20.9041606Z   Property 'outputRef' does not exist on type 'ContributionBase & { kind: "AlternativeDraft"; state: "ready"; payload: { caseRef: string; proposal: { id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }; costCoverageBasis: CostCoverageBasis; coverageRef: string; domainApplied: false; }; }'.
+2026-11-14T09:42:20.9043445Z ##[error]product/interface/http.ts(148,82): error TS7006: Parameter 'run' implicitly has an 'any' type.
+2026-11-14T09:42:20.9044777Z ##[error]product/interface/http.ts(148,87): error TS7006: Parameter 'index' implicitly has an 'any' type.
+2026-11-14T09:42:20.9049608Z ##[error]product/interface/import-http.ts(54,249): error TS2345: Argument of type '{ surface: string; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }' is not assignable to parameter of type '{ surface: "dashboard" | "planner"; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }'.
+2026-11-14T09:42:20.9052008Z   Types of property 'surface' are incompatible.
+2026-11-14T09:42:20.9052452Z     Type 'string' is not assignable to type '"dashboard" | "planner"'.
+2026-11-14T09:42:20.9054296Z ##[error]product/portfolio/catalog.ts(13,20): error TS2367: This comparison appears to be unintentional because the types '"conflict" | "denied" | "failed" | "needs-input" | "provider-conflict" | "stale" | "unavailable"' and '"ok"' have no overlap.
+2026-11-14T09:42:20.9057326Z ##[error]product/portfolio/handoff.ts(41,18): error TS2367: This comparison appears to be unintentional because the types '"conflict" | "denied" | "failed" | "needs-input" | "provider-conflict" | "stale" | "unavailable"' and '"ok"' have no overlap.
+2026-11-14T09:42:20.9060176Z ##[error]product/portfolio/handoff.ts(78,18): error TS2367: This comparison appears to be unintentional because the types '"conflict" | "denied" | "failed" | "needs-input" | "provider-conflict" | "stale" | "unavailable"' and '"ok"' have no overlap.
+2026-11-14T09:42:20.9062602Z ##[error]product/portfolio/planner-sensitivity.ts(80,106): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.
+2026-11-14T09:42:20.9063975Z   Property 'costCoverage' does not exist on type 'PortfolioResult'.
+2026-11-14T09:42:20.9065462Z ##[error]product/portfolio/planner-sensitivity.ts(80,171): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.
+2026-11-14T09:42:20.9067103Z   Property 'costCoverage' does not exist on type 'PortfolioResult'.
+2026-11-14T09:42:20.9069103Z ##[error]product/portfolio/port.ts(36,20): error TS2367: This comparison appears to be unintentional because the types '"conflict" | "denied" | "failed" | "needs-input" | "provider-conflict" | "stale" | "unavailable"' and '"ok"' have no overlap.
+2026-11-14T09:42:20.9071956Z ##[error]product/portfolio/sensitivity-store.ts(25,19): error TS2367: This comparison appears to be unintentional because the types '"conflict" | "denied" | "failed" | "needs-input" | "provider-conflict" | "stale" | "unavailable"' and '"ok"' have no overlap.
+2026-11-14T09:42:20.9074389Z ##[error]product/portfolio/verification.ts(119,106): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.
+2026-11-14T09:42:20.9075679Z   Property 'costCoverage' does not exist on type 'PortfolioResult'.
+2026-11-14T09:42:20.9077400Z ##[error]product/portfolio/verification.ts(119,171): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.
+2026-11-14T09:42:20.9078729Z   Property 'costCoverage' does not exist on type 'PortfolioResult'.
+2026-11-14T09:42:20.9083319Z ##[error]product/ui/components.ts(49,9): error TS2741: Property 'AlternativeDraft' is missing in type '{ IntentFrame: string; AnalysisPlan: string; DecisionBrief: string; QuestionProposal: string; FinancialAnalysis: string; ScenarioComparison: string; SensitivityResult: string; CommercialComparison: string; ... 15 more ...; MatchExplanation: string; }' but required in type 'Record<"AlternativeDraft" | "AnalysisPlan" | "CaseRecall" | "ClaimIssue" | "CommercialComparison" | "CommercialGap" | "ContextualBIProposal" | "CritiqueReport" | "DecisionBrief" | ... 16 more ... | "UnresolvedCondition", string>'.
+2026-11-14T09:42:20.9087079Z ##[error]product/ui/contribution-body.ts(7,65): error TS2366: Function lacks ending return statement and return type does not include 'undefined'.
+2026-11-14T09:42:20.9092731Z ##[error]test/product/wp01/http.test.ts(36,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: Readonly<{ ref: `sf-workspace:${string}`; incarnation: string; }>; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContex...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, "requestFor" | "revalidate">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.
+2026-11-14T09:42:20.9096818Z ##[error]test/product/wp01/personal-views.test.ts(35,137): error TS2322: Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.
+2026-11-14T09:42:20.9098219Z   Types of parameters 'context' and 'context' are incompatible.
+2026-11-14T09:42:20.9098746Z     Type 'TrustedDomainContext' is not assignable to type 'TrustedUiContext'.
+2026-11-14T09:42:20.9099318Z       Type 'TrustedCallContext' is not assignable to type 'TrustedUiContext'.
+2026-11-14T09:42:20.9099775Z         Types of property 'kind' are incompatible.
+2026-11-14T09:42:20.9100170Z           Type '"native"' is not assignable to type '"ui"'.
+2026-11-14T09:42:20.9101432Z ##[error]test/product/wp01/workbench-analysis.test.ts(6,38): error TS2307: Cannot find module '@orchestra/server/routes' or its corresponding type declarations.
+2026-11-14T09:42:20.9102996Z ##[error]test/product/wp04/prepared-production.test.ts(208,41): error TS2554: Expected 0 arguments, but got 1.
+2026-11-14T09:42:20.9104364Z ##[error]test/product/wp04/prepared-production.test.ts(220,107): error TS2554: Expected 0 arguments, but got 1.
+2026-11-14T09:42:20.9109534Z ##[error]test/product/wp04/prepared-production.test.ts(274,39): error TS2741: Property 'reviewDigestFor' is missing in type '{ state: SfProductStatePort; host: { requestFor: (binding: TrustedDomainContext) => Request | undefined; revalidate: (binding: TrustedDomainContext) => Promise<...>; }; ... 10 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, "requestFor" | "revalidate">; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; ... 10 more ...; reviewDigestFor: ReviewDigestFor; }'.
+2026-11-14T09:42:20.9112950Z ##[error]test/product/wp06/documents/runtime-e2e.test.ts(25,40): error TS2307: Cannot find module '../../../../product/routines/dossier.ts' or its corresponding type declarations.
+2026-11-14T09:42:20.9114614Z ##[error]test/product/wp06/documents/runtime-e2e.test.ts(101,227): error TS7006: Parameter '_' implicitly has an 'any' type.
+2026-11-14T09:42:20.9116103Z ##[error]test/product/wp06/documents/runtime-e2e.test.ts(101,230): error TS7006: Parameter 'call' implicitly has an 'any' type.
+2026-11-14T09:42:20.9117784Z ##[error]test/product/wp06/documents/runtime-e2e.test.ts(114,229): error TS7006: Parameter '_' implicitly has an 'any' type.
+2026-11-14T09:42:20.9119268Z ##[error]test/product/wp06/documents/runtime-e2e.test.ts(114,232): error TS7006: Parameter 'call' implicitly has an 'any' type.
+2026-11-14T09:42:20.9120711Z ##[error]test/product/wp06/documents/runtime-e2e.test.ts(253,225): error TS7006: Parameter '_' implicitly has an 'any' type.
+2026-11-14T09:42:20.9122351Z ##[error]test/product/wp06/documents/runtime-e2e.test.ts(253,228): error TS7006: Parameter 'call' implicitly has an 'any' type.
+2026-11-14T09:42:20.9123872Z ##[error]test/product/wp06/documents/runtime-e2e.test.ts(263,227): error TS7006: Parameter '_' implicitly has an 'any' type.
+2026-11-14T09:42:20.9125358Z ##[error]test/product/wp06/documents/runtime-e2e.test.ts(263,230): error TS7006: Parameter 'call' implicitly has an 'any' type.
+2026-11-14T09:42:20.9129818Z ##[error]test/product/wp06/imports/end-to-end.test.ts(56,72): error TS2345: Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { readonly value?: undefined; status: "unavailable"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: "ok"; value: { ...; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { readonly value?: undefined; status: "unavailable"; reason: string; }; }>'.
+2026-11-14T09:42:20.9133189Z   Type 'Promise<{ commit: false; value: { readonly value?: undefined; status: "unavailable"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: "ok"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { readonly value?: undefined; status: "unavailable"; reason: string; }; }>'.
+2026-11-14T09:42:20.9135656Z     Type '{ commit: false; value: { readonly value?: undefined; status: "unavailable"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: "ok"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }' is not assignable to type '{ commit: boolean; value: { readonly value?: undefined; status: "unavailable"; reason: string; }; }'.
+2026-11-14T09:42:20.9138383Z       Type '{ commit: false; value: { reason?: undefined; status: "ok"; value: { versionId: string; evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; recordType: string; ... 5 more ...; projectionDigest: string; }; }; }; }; }' is not assignable to type '{ commit: boolean; value: { readonly value?: undefined; status: "unavailable"; reason: string; }; }'.
+2026-11-14T09:42:20.9139799Z         The types of 'value.value' are incompatible between these types.
+2026-11-14T09:42:20.9141188Z           Type '{ versionId: string; evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }' is not assignable to type 'undefined'.
+2026-11-14T09:42:20.9144388Z ##[error]test/product/wp06/imports/end-to-end.test.ts(65,590): error TS2322: Type '() => Promise<unknown>' is not assignable to type '(target: ImportTarget, context: TrustedDomainContext) => Promise<PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: "record"; target: { ...; }; }; }>>'.
+2026-11-14T09:42:20.9147529Z   Type 'Promise<unknown>' is not assignable to type 'Promise<PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }>>'.
+2026-11-14T09:42:20.9149803Z     Type 'unknown' is not assignable to type 'PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }>'.
+2026-11-14T09:42:20.9154114Z ##[error]test/product/wp06/imports/sqlite-planner.test.ts(41,76): error TS2322: Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: "applied" | "unchanged"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'.
+2026-11-14T09:42:20.9157858Z   Type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: "applied" | "unchanged"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.
+2026-11-14T09:42:20.9160083Z     Type '{ commit: boolean; value: { reason?: undefined; status: "applied" | "unchanged"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.
+2026-11-14T09:42:20.9161251Z       The types of 'value.changedFields' are incompatible between these types.
+2026-11-14T09:42:20.9161762Z         Type 'number' is not assignable to type 'undefined'.
+2026-11-14T09:42:20.9162601Z ##[error]test/product/wp06/imports/sqlite-planner.test.ts(42,12): error TS18046: 'applied' is of type 'unknown'.
+2026-11-14T09:42:20.9166893Z ##[error]test/product/wp06/imports/sqlite-planner.test.ts(46,74): error TS2322: Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: "applied" | "unchanged"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'.
+2026-11-14T09:42:20.9170271Z   Type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: "applied" | "unchanged"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.
+2026-11-14T09:42:20.9172493Z     Type '{ commit: boolean; value: { reason?: undefined; status: "applied" | "unchanged"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.
+2026-11-14T09:42:20.9173650Z       The types of 'value.changedFields' are incompatible between these types.
+2026-11-14T09:42:20.9174145Z         Type 'number' is not assignable to type 'undefined'.
+2026-11-14T09:42:20.9175133Z ##[error]test/product/wp06/imports/sqlite-planner.test.ts(47,12): error TS18046: 'stale' is of type 'unknown'.
+2026-11-14T09:42:20.9176678Z ##[error]test/product/wp07/review-port.test.ts(106,64): error TS2769: No overload matches this call.
+2026-11-14T09:42:20.9177635Z   The last overload gave the following error.
+2026-11-14T09:42:20.9178251Z     Argument of type 'Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'Uint8Array<ArrayBuffer>'.
+2026-11-14T09:42:20.9178910Z       Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+2026-11-14T09:42:20.9179728Z         Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+2026-11-14T09:42:20.9180808Z ##[error]test/product/wp07/review-port.test.ts(113,122): error TS2769: No overload matches this call.
+2026-11-14T09:42:20.9181720Z   The last overload gave the following error.
+2026-11-14T09:42:20.9182324Z     Argument of type 'Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'Uint8Array<ArrayBuffer>'.
+2026-11-14T09:42:20.9182974Z       Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+2026-11-14T09:42:20.9183779Z         Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+2026-11-14T09:42:20.9184978Z ##[error]test/product/wp07/review-port.test.ts(124,64): error TS2769: No overload matches this call.
+2026-11-14T09:42:20.9185913Z   The last overload gave the following error.
+2026-11-14T09:42:20.9186772Z     Argument of type 'Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'Uint8Array<ArrayBuffer>'.
+2026-11-14T09:42:20.9187431Z       Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+2026-11-14T09:42:20.9188233Z         Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLength
+2026-11-14T09:42:20.9193001Z ##[error]test/product/wp08/confirmation-integration.test.ts(63,289): error TS2739: Type '{ state: "available"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; }' is missing the following properties from type '{ state: "available"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: EvidenceIdentity & { ...; }; projection: DomainProjection; }': evidence, projection
+2026-11-14T09:42:20.9196179Z ##[error]test/product/wp10/integration/blob-generations.test.ts(13,112): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.
+2026-11-14T09:42:20.9197930Z ##[error]test/product/wp10/integration/blob-generations.test.ts(13,122): error TS7006: Parameter 'blobs' implicitly has an 'any' type.
+2026-11-14T09:42:20.9199499Z ##[error]test/product/wp10/integration/blob-generations.test.ts(31,58): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.
+2026-11-14T09:42:20.9201043Z ##[error]test/product/wp10/integration/blob-generations.test.ts(31,68): error TS7006: Parameter 'blobs' implicitly has an 'any' type.
+2026-11-14T09:42:20.9202585Z ##[error]test/product/wp10/integration/blob-generations.test.ts(40,63): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.
+2026-11-14T09:42:20.9204123Z ##[error]test/product/wp10/integration/blob-generations.test.ts(40,73): error TS7006: Parameter 'blobs' implicitly has an 'any' type.
+2026-11-14T09:42:20.9205675Z ##[error]test/product/wp10/integration/blob-generations.test.ts(51,49): error TS7006: Parameter '_snapshot' implicitly has an 'any' type.
+2026-11-14T09:42:20.9207497Z ##[error]test/product/wp10/integration/blob-generations.test.ts(51,60): error TS7006: Parameter 'blobs' implicitly has an 'any' type.
+2026-11-14T09:42:20.9209086Z ##[error]test/product/wp10/integration/blob-generations.test.ts(68,69): error TS7006: Parameter '_snapshot' implicitly has an 'any' type.
+2026-11-14T09:42:20.9210808Z ##[error]test/product/wp10/integration/blob-generations.test.ts(68,80): error TS7006: Parameter 'blobs' implicitly has an 'any' type.
+2026-11-14T09:42:20.9212428Z ##[error]test/product/wp10/integration/product-authority.test.ts(24,47): error TS7006: Parameter 'snapshot' implicitly has an 'any' type.
+2026-11-14T09:42:20.9213980Z ##[error]test/product/wp10/integration/product-authority.test.ts(24,57): error TS7006: Parameter 'blobs' implicitly has an 'any' type.
+2026-11-14T09:42:20.9217321Z ##[error]test/product/wp12/author-reader.test.ts(32,26): error TS2352: Conversion of type '{ id: string; incarnation: string; version: number; participants: string[]; }' to type 'DecisionCase' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+2026-11-14T09:42:20.9219609Z   Type '{ id: string; incarnation: string; version: number; participants: string[]; }' is missing the following properties from type 'DecisionCase': state, objective, horizon, currency, and 10 more.
+2026-11-14T09:42:20.9223856Z ##[error]test/product/wp13/candidates-store.test.ts(27,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<boolean>; }; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, "requestFor" | "revalidate">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.
+2026-11-14T09:42:20.9229898Z ##[error]test/product/wp13/production.test.ts(41,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<boolean>; }; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, "requestFor" | "revalidate">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.
+2026-11-14T09:42:20.9236053Z ##[error]test/product/wp13/sensitivity-units-boundary.test.ts(117,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: () => string; authorizeCase: () => Promise<...>; evidence: BusinessContextService; createId: () => string; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, "requestFor" | "revalidate">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.
+2026-11-14T09:42:20.9239324Z ##[error]test/product/wp13/sensitivity-units-boundary.test.ts(218,211): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+2026-11-14T09:42:20.9240971Z ##[error]test/product/wp13/sensitivity-units-boundary.test.ts(230,25): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+2026-11-14T09:42:20.9242548Z ##[error]test/product/wp13/sensitivity-units-boundary.test.ts(230,25): error TS18048: 'store.transactionAll' is possibly 'undefined'.
+2026-11-14T09:42:20.9247191Z ##[error]test/product/wp13/stored-store.test.ts(32,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<boolean>; }; creationTarget: { ref: string; incarnation: string; }; ... 4 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, "requestFor" | "revalidate">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.
+2026-11-14T09:42:20.9254137Z ##[error]test/product/wp14/source-access-atlas.test.ts(55,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: () => string; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: RandomUUIDOptions | undefined) => `${stri...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, "requestFor" | "revalidate">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.
+2026-11-14T09:42:20.9258017Z ##[error]test/product/wp14/source-access-procurement.test.ts(10,43): error TS2305: Module '"../../../product/procurement/sources.ts"' has no exported member 'procurementSourceSelector'.
+2026-11-14T09:42:20.9260451Z ##[error]test/product/wp14/source-access-procurement.test.ts(11,33): error TS2724: '"../../../product/procurement/port.ts"' has no exported member named 'isCurrentProcurementSource'. Did you mean 'projectProcurementSource'?
+2026-11-14T09:42:20.9265244Z ##[error]test/product/wp14/source-access-procurement.test.ts(31,54): error TS2741: Property 'scopedSources' is missing in type '{ host: DomainPortHost; contextFor: () => Promise<{ status: "ok"; value: { installationId: string; projectId: string; principalRef: string; accessRevision: string; policyVersion: string; ... 4 more ...; capabilities: never[]; }; }>; }' but required in type '{ host: DomainPortHost; scopedSources: SfScopedSourcePort; contextFor: (binding: TrustedDomainContext) => Promise<PortResult<ProductContext>>; }'.
+2026-11-14T09:42:20.9271844Z ##[error]test/product/wp14/source-access-procurement.test.ts(32,51): error TS2322: Type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.
+2026-11-14T09:42:20.9275962Z   Type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' provides no match for the signature '(reference: string, binding: TrustedDomainContext): Promise<PortResult<{ evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.
+2026-11-14T09:42:20.9281708Z ##[error]test/product/wp14/source-access-procurement.test.ts(32,83): error TS2322: Type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.
+2026-11-14T09:42:20.9285891Z   Type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' provides no match for the signature '(reference: string, binding: TrustedDomainContext): Promise<PortResult<{ evidence: EvidenceIdentity & { kind: "record"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.
+2026-11-14T09:42:20.9288412Z ##[error]test/product/wp14/source-access-procurement.test.ts(33,25): error TS2349: This expression is not callable.
+2026-11-14T09:42:20.9290398Z   Type '{ issue: (kind: "procurement-request" | "procurement-supplier", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' has no call signatures.
+2026-11-14T09:42:21.3211473Z ##[error]Process completed with exit code 2.
+2026-11-14T09:42:21.3262557Z ##[group]Run set -o pipefail
+2026-11-14T09:42:21.3262909Z [36;1mset -o pipefail[0m
+2026-11-14T09:42:21.3263348Z [36;1mbun run check:guards --base origin/dev 2>&1 | tee "$SF_WP11_CHECK_EVIDENCE/guards.log"[0m
+2026-11-14T09:42:21.3284308Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T09:42:21.3284664Z env:
+2026-11-14T09:42:21.3284979Z   SF_WP11_CHECK_EVIDENCE: /home/runner/work/_temp/astra-wp11-evidence
+2026-11-14T09:42:21.3285353Z ##[endgroup]
+2026-11-14T09:42:21.3348999Z $ bun run script/guards/run.ts --base origin/dev
+2026-11-14T09:42:22.9904213Z WARN apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9906815Z WARN modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9908618Z WARN modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9910372Z WARN modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9911786Z WARN modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9913181Z WARN modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9914565Z WARN modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9915921Z WARN modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9917557Z WARN modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9918940Z WARN modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9920294Z WARN modules/sucafina/Sucafinav1/test/product/wp05/browser.ts:38 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T09:42:22.9921660Z WARN packages/app-shell/e2e/sucafina/wp03/planner-mounted.spec.ts:12 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T09:42:22.9922603Z guards: 78 rules, 692 changed paths, 0 gate and 12 warn findings, 0 errors.
+2026-11-14T09:42:22.9940487Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9944281Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9947577Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9950699Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9954237Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9957959Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9961170Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9964308Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9967671Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9970831Z ##[warning]New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.
+2026-11-14T09:42:22.9973500Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T09:42:22.9975966Z ##[warning]Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.
+2026-11-14T09:42:23.0147022Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-14T09:42:23.0147490Z with:
+2026-11-14T09:42:23.0147807Z   name: astra-wp11-checks-768a189c92bae0353e546c29a71fda95fac1c4bf-1
+2026-11-14T09:42:23.0148247Z   path: /home/runner/work/_temp/astra-wp11-evidence
+2026-11-14T09:42:23.0148571Z   if-no-files-found: error
+2026-11-14T09:42:23.0148818Z   retention-days: 14
+2026-11-14T09:42:23.0149052Z   compression-level: 6
+2026-11-14T09:42:23.0149274Z   overwrite: false
+2026-11-14T09:42:23.0149497Z   include-hidden-files: false
+2026-11-14T09:42:23.0149736Z env:
+2026-11-14T09:42:23.0150021Z   SF_WP11_CHECK_EVIDENCE: /home/runner/work/_temp/astra-wp11-evidence
+2026-11-14T09:42:23.0150423Z ##[endgroup]
+2026-11-14T09:42:23.1916365Z (node:3103) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T09:42:23.1917495Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T09:42:23.2029226Z With the provided path, there will be 3 files uploaded
+2026-11-14T09:42:23.2030411Z Artifact name is valid!
+2026-11-14T09:42:23.2031306Z Root directory input is valid!
+2026-11-14T09:42:23.4366292Z Beginning upload of artifact content to blob storage
+2026-11-14T09:42:23.4637963Z (node:3103) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-14T09:42:23.5090981Z Uploaded bytes 7835
+2026-11-14T09:42:23.5282296Z Finished uploading artifact content to blob storage!
+2026-11-14T09:42:23.5283396Z SHA256 digest of uploaded artifact zip is 4385596f4dee039fbc9d242c931c497535b3c19f400e190f5a70bb0cc7ec6bcb
+2026-11-14T09:42:23.5284550Z Finalizing artifact upload
+2026-11-14T09:42:23.8628281Z Artifact astra-wp11-checks-768a189c92bae0353e546c29a71fda95fac1c4bf-1.zip successfully finalized. Artifact ID 14107994487
+2026-11-14T09:42:23.8630679Z Artifact astra-wp11-checks-768a189c92bae0353e546c29a71fda95fac1c4bf-1 has been successfully uploaded! Final size is 7835 bytes. Artifact ID is 14107994487
+2026-11-14T09:42:23.8632717Z Artifact download URL: https://github.com/gustavomhss/Orchestra-SF/actions/runs/43581691678/artifacts/14107994487
+2026-11-14T09:42:23.8878797Z Post job cleanup.
+2026-11-14T09:42:23.8882657Z ##[start-action display=Setup Bun;id=__3b74e231-c36a-48c8-9371-c4c8c0e47bf4.__oven-sh_setup-bun]
+2026-11-14T09:42:23.8885192Z ##[end-action id=__3b74e231-c36a-48c8-9371-c4c8c0e47bf4.__oven-sh_setup-bun;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-14T09:42:23.8887404Z ##[start-action display=Setup Node;id=__3b74e231-c36a-48c8-9371-c4c8c0e47bf4.__actions_setup-node]
+2026-11-14T09:42:23.8889624Z ##[end-action id=__3b74e231-c36a-48c8-9371-c4c8c0e47bf4.__actions_setup-node;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-14T09:42:23.8949370Z Post job cleanup.
+2026-11-14T09:42:23.9813870Z [command]/usr/bin/git version
+2026-11-14T09:42:23.9861919Z git version 2.56.1
+2026-11-14T09:42:23.9936098Z Temporarily overriding HOME='/home/runner/work/_temp/43d75672-3af1-4215-b4fe-1bd1b830bc06' before making global git config changes
+2026-11-14T09:42:23.9937893Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-14T09:42:23.9942401Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-14T09:42:24.0002382Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T09:42:24.0045850Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T09:42:24.0357595Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T09:42:24.0422037Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T09:42:24.0827634Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T09:42:24.0890859Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T09:42:24.1393370Z Cleaning up orphan processes
+2026-11-14T09:42:24.1745534Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830, actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5, actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

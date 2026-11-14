@@ -1,0 +1,200 @@
+{
+  "schema": "wp13-independent-static-review-v1",
+  "id": "WP13-S14-FOREIGN-PORT-ORACLE-PIN-MISMATCH",
+  "reviewedAt": "2026-11-14T14:10:17.689331+00:00",
+  "status": "PUBLISHED_COMPARATOR_AND_BASELINE_TEST_ORACLE_MISMATCH_NO_COMPATIBLE_WHOLE_OWNER_TEST_PIN_ESTABLISHED_IN_LOCAL_INPUTS",
+  "ready": false,
+  "reviewer": "/root/wp13_review_acceptance/w6_handoff_static",
+  "scope": "Static investigation of the foreign WP03 port.test.ts failure in S14. The separate own source-scenario timeout and W20 read-scope implementation are not changed or qualified here.",
+  "operations": {
+    "productEdits": false,
+    "foreignEdits": false,
+    "testsExecuted": false,
+    "typecheckExecuted": false,
+    "ciDispatched": false,
+    "remoteOperations": false,
+    "onlyWrittenPath": "reference/wp13-S14-port-oracle-review.json"
+  },
+  "s14": {
+    "productLabel": "W19",
+    "productHead": "02e77add3701570c228b11d971b51c4dd70af552",
+    "productTree": "c3ee3042a28b83e182e88ae4941684802c81bebb",
+    "snapshotHead": "3584c5aa16f65d2662ee2d011f7a1106f04a446b",
+    "snapshotTree": "308c22b20edd77ac08d300c5203e4f8680a2f846",
+    "runId": 43602408137,
+    "jobId": 132469800764,
+    "requestSha256": "9b4ffb1f31ac881757e0d8e25f2cdad84c6b5ef00fe0cb03d73dd33fc85db055",
+    "terminalResultSource": "Root report in collaboration message; terminal raw job log was not available in the local S14 files read by this reviewer. Earlier metadata.json still records the initial in_progress observation and is not relabeled here.",
+    "rootReportedTerminal": {
+      "passCases": 23,
+      "failCases": 2,
+      "expectCalls": 299,
+      "seconds": 342.03,
+      "completeFiles": 5,
+      "casesInCompleteFiles": 22
+    },
+    "foreignFailure": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+      "blob": "03a51004ce15979fe5d5a47b2f95f58edbef0ba5",
+      "line": 85,
+      "case": "forecast port compares the real engine, and detects source changes",
+      "assertion": "expect(changes.rows.every((row) => row.difference === null)).toBe(true)",
+      "reportedActual": "false"
+    },
+    "separateOwnFailure": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "reportedElapsedMs": 180007.28,
+      "budgetMs": 180000,
+      "rootReportedTrace": "7159 C08 reads, state approximately 540k, only initial phase preparation",
+      "scope": "Not diagnosed or altered by this review; do not attribute this timeout to the row-difference oracle."
+    },
+    "proofLimit": "The port file is not a complete accepted file. Any passing case before its failure does not prove the assertions after line85. The root/ledger must retain the original run and aggregate, not borrow later owner PASS."
+  },
+  "inputs": {
+    "baselineTest": {
+      "path": "reference/finance-closure-W17/WP13-W17-port-test.reference.ts",
+      "bytes": 31207,
+      "sha256": "ef315ebcd25ecdcf0809ab37c214eff91fb9d2b91b668c8f8d768a768bd1d305",
+      "blob": "03a51004ce15979fe5d5a47b2f95f58edbef0ba5"
+    },
+    "ownerTest": {
+      "path": "reference/finance-closure-W17/test/product/wp03/port.test.ts",
+      "bytes": 45655,
+      "sha256": "02bf9e6deb0b2f47fafda9e43bb5dc4269f0195b96c2ad296c29233c3434edf9",
+      "blob": "2c6a3519024d2cca0fcf5256dcf9055fa1d7ae26",
+      "sourceCommit": "79531aefa2bf72a9d13deba5164f725ec7da0e0f"
+    },
+    "comparatorLocalHydration": {
+      "path": "repo/modules/sucafina/Sucafinav1/product/planner/version-comparison.ts",
+      "bytes": 3017,
+      "sha256": "f612285528dd4ee00c14bc60e2ae5efcc77a7067dacc389aeaaaefb9dc6643ea",
+      "blob": "27ba5630510738b0838b8285a75531b4d2ba8106"
+    },
+    "comparatorPublished": {
+      "path": "modules/sucafina/Sucafinav1/product/planner/version-comparison.ts",
+      "blob": "067cecc3bd2c03ba00ff5ca5e269d911bf3c3869",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "proof": "reference/wp13-W19-pin-audit.json /foreignFiles/51; reference/wp13-W2-remote-map.json already includes this blob",
+      "localDifference": "One additional final LF only; removing that byte in memory yields exact published blob, without editing the file."
+    },
+    "currentRuntime": {
+      "path": "reference/finance-closure-W17/WP13-W16-runtime-planner.reference.ts",
+      "bytes": 102784,
+      "sha256": "8a1bf8c5a1ed5becf1b18af489eec49379f78629c4a20100dc0de6ba80faeea0",
+      "blob": "c487332777d4053be7a2b177ea598efb77ca0d66"
+    },
+    "excludedOwnerRuntime": {
+      "path": "reference/finance-closure-W17/Finance7953-runtime-planner.reference.ts",
+      "bytes": 106544,
+      "sha256": "46129c8de9cc6531f3009e228039fb80b5ef8e7f03b834fe7ab0d604c04025c0",
+      "blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad"
+    },
+    "publishedInventorySources": [
+      "reference/wp13-virtual-base.json",
+      "reference/wp13-W19-pin-audit.json",
+      "reference/wp13-baseline-selector-W19-verified.json",
+      "reference/finance-closure-W17/exact-directory-comparisons.json"
+    ]
+  },
+  "causalAnalysis": [
+    {
+      "step": 1,
+      "evidence": "Baseline port.test.ts lines26-28,83-85",
+      "finding": "The fixture has confirmed January and February actual amounts of40000 USD. Both months are closed. The test then keeps only component line:1 from baseline and line:2 from candidate, creating one structural removal and one structural addition in otherwise compatible contexts."
+    },
+    {
+      "step": 2,
+      "evidence": "Published product/planner/version-comparison.ts lines10-18",
+      "finding": "For each component identity the implementation examines the side(s) that actually exist. A compatible, finite present amount whose evidenceState is not absent is known. Structural absence uses the canonical variance function against zero only for the difference contribution. The returned missing side remains null and its row remains added/removed."
+    },
+    {
+      "step": 3,
+      "evidence": "src/planner-accounts.ts lines73-76; owner port.test.ts lines153-155",
+      "finding": "Static evaluation of the recorded source inputs and the published formula gives removed line:1 difference -40000 and added line:2 difference40000. The owner test explicitly expects this pair. These values are static deductions corroborated by an owner oracle, not values printed in the S14 failure log."
+    },
+    {
+      "step": 4,
+      "evidence": "Published comparator lines14-18 and25; planner/bi-difference.ts lines16-18,29-43",
+      "finding": "A present component with amount:null, nonfinite amount, evidenceState:absent, or incompatible period/currency retains difference:null. An explicit numeric zero stays a known value. Structural row contributions do not establish cost coverage or a complete decision total."
+    },
+    {
+      "step": 5,
+      "evidence": "reference/wp13-W2-remote-map.json; W19 pin audit; baseline selector W19",
+      "finding": "The same comparator067 was already consumed in W2 from owner981. The old test03a remains the sf2-stack base test. Thus S14 exposes an existing composition/oracle mismatch; it does not establish a new regression introduced by W18 actual-presence or post-command qualification."
+    }
+  ],
+  "compatibilityDecision": {
+    "productCorrectionIndicatedByThisFailure": false,
+    "reason": "No evidence from this failure requires changing financial formulas, zero semantics, source qualification or the canonical comparator. Reverting all structural differences to null would contradict the consumed comparator and the published owner oracle.",
+    "publishedOwnerFixExistsInBroadFile": {
+      "blob": "2c6a3519024d2cca0fcf5256dcf9055fa1d7ae26",
+      "line": 155,
+      "assertion": "expect(changes.rows.map((row) => row.difference)).toEqual([-40000, 40000])"
+    },
+    "wholeFileIsDropInCompatible": false,
+    "compatibilityBlockers": [
+      {
+        "kind": "Additional production imports absent from the inspected published WP13 inventory",
+        "paths": [
+          "product/planner/catalogs.ts",
+          "product/planner/observed.ts",
+          "product/planner/forecast-insights.ts"
+        ],
+        "note": "These files may be hydrated locally but do not thereby become published dependencies. Existing directory/pin metadata is the authority."
+      },
+      {
+        "kind": "Additional behavior and changed dependencies",
+        "paths": [
+          "product/planner/headcount.ts",
+          "product/planner/monthly-edit.ts",
+          "runtime/planner.ts"
+        ],
+        "publishedWp13": {
+          "headcount": "d981988fa657fe22f1a1e246dd9e32f934200770",
+          "monthlyEdit": "cab581151899429acbf102888e7692c118612ffb",
+          "runtimePlanner": "c487332777d4053be7a2b177ea598efb77ca0d66"
+        },
+        "owner": {
+          "headcount": "7c6b2f0b03c29dddc743537f0e8964799155ae57",
+          "monthlyEdit": "8cbcb05fb09b3a5edff59e6e76a9c8f9beafd3a1",
+          "runtimePlanner": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad"
+        },
+        "note": "The broad owner test changes the viewer HR oracle from null to a visible monthly aggregate, adds restrictedHr/private-field assertions, catalogs/manual-budget/observed/insights/C08 behavior, and increases its dependency surface. This review does not approve or require the broad runtime/visibility/policy closure."
+      }
+    ],
+    "smallerCompatiblePublishedTestPin": "NOT_ESTABLISHED_FROM_CURRENT_LOCAL_INPUTS; no assertion of global nonexistence",
+    "requestedMcpReadByRoot": {
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+      "ref": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "why": "This is the exact owner source of comparator067; inspect its corresponding test blob for an earlier bounded compatible correction without new runtime/HR/catalog dependencies. Reviewer performs no remote call."
+    }
+  },
+  "requiredOraclePreservation": [
+    "Structural removal of a confirmed40000 component: before object retained, after:null, state:removed, difference:-40000.",
+    "Structural addition of a confirmed40000 component: before:null, after object retained, state:added, difference:40000.",
+    "Present but unknown/null/absent or unpriced component: difference:null; no silent conversion of missing financial information to a confirmed zero.",
+    "Explicit observed zero: retain0 and confirmed evidence rather than null.",
+    "Currency and period incompatibility: retain incompatible/null behavior.",
+    "Component rows and a reconciled waterfall remain separate from C10/completeDifference; no inference of complete decision costs or causation.",
+    "Keep all baseline financial absence/zero/FX, real-source changes, source authority and IEEE threshold assertions after the failed line. Their successful execution has not been observed in this S14 file."
+  ],
+  "nextAction": [
+    {
+      "owner": "Root via GitHub MCP",
+      "action": "Read the exact corresponding test at comparator origin981 and compare the whole file/dependency closure against baseline03a. If it is bounded and compatible, consume the exact owner blob with its own pin receipt, then schedule only the materially changed failed selection."
+    },
+    {
+      "owner": "Finance/WP03 if no compatible exact prior pin exists",
+      "action": "Publish a narrow correction of the stale port test oracle on the current dependency contract, preserving absence/zero/FX and all remaining assertions. WP13 should deliver a NOT_APPLIED owner delta rather than authoring a foreign file or importing unrelated runtimec90 for convenience."
+    },
+    {
+      "owner": "WP13/root",
+      "action": "If additional owned consumer proof is useful, compose the real canonical comparator/source with structural absence versus present-unknown/zero counterexamples in an owned test. Such proof supplements the finding; it does not erase the S14 foreign failure or make the old foreign file pass."
+    },
+    {
+      "owner": "S0/ledger",
+      "action": "Retain S14 run/job/product/snapshot and both failures. Any later corrected proof has its own input pin and result. The five complete files/22cases reported by root stay scoped to their actual W19 closure."
+    }
+  ]
+}

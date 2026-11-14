@@ -1,0 +1,107 @@
+{
+  "schema": "astra-finance-s11-choice-bi-fixture-fix-v1",
+  "filesReady": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts",
+      "beforeBlob": "93e9c37cfea05574c3c0b3ae080a03fdd5063056",
+      "beforeSha256": "1b1d5c5d154710410c9a069d6d3fd9bdf24d9a546c85050cfc85a0686d7b771b",
+      "afterBlob": "856381de3f333ca79b302483d3b8893d55f00441",
+      "afterSha256": "6326a5eca7578a08a506e8b5d26f57e02d4f9c710d0521d9d12270d0f6211683",
+      "bytes": 9405,
+      "changeKind": "fixture-input-completeness",
+      "filesReady": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "beforeBlob": "40fbaf6eb4a7b88c3f4feb54773961188cd007da",
+      "beforeSha256": "628575be8788473057666c511a0f6f4955725cc2e6aac9454acdf0e36e2f1563",
+      "afterBlob": "c939c5e39c80f3cdbc08fd700cd017a7b0ed50b4",
+      "afterSha256": "546a5bf18a4bd61bdf9d340cbe5d0bac16b75ff3d52ba2e78a511dda4be0291b",
+      "bytes": 16368,
+      "changeKind": "producer-before-consumer-regression",
+      "filesReady": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "beforeBlob": "fb973752979eb98ba2e1c3c9002ade471443b728",
+      "beforeSha256": "e1245f8cce8f39a460b49ddd43cd266fb851fabff9f348b094ce653202acd5c4",
+      "afterBlob": "79de9744dcf08cfc8a4f17084954a9230bb1793a",
+      "afterSha256": "6688b1095ad923b429300f4fbcdc184d9cf5fef7e1d91eed9cbf5493b1818111",
+      "bytes": 16461,
+      "changeKind": "fixture-input-completeness",
+      "filesReady": true
+    }
+  ],
+  "sourceInspection": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+      "sha256": "46129c8de9cc6531f3009e228039fb80b5ef8e7f03b834fe7ab0d604c04025c0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "e365ac59376482dfcc6f81aed045b0153f911038",
+      "sha256": "724cabc70e417a23f740c5ccd8f15e71c49a2caca17e0c84d0b97faf98905100"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/coverage.ts",
+      "blob": "de86e90c86aca626a575bf5b8dfdf6973fac8b1e",
+      "sha256": "e14759041d8b0c7854d1e5f3317e7780c69a6ae72950c10a2759762467eea674"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "blob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "sha256": "6e0f003055c08005e3a2f339d221c6f608d615a8068e66d30555a981604eb0fd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "sha256": "0cca19827cfe6793207441d493561d76830d6903383701b9d84230380561a701"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blob": "35281782202c59bb61c49e68ff206ee22183464e",
+      "sha256": "d550cf3e4c24b89f8eb224071f72f0f39bc3d7b0446eb790231fcdb3b92d7209"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "blob": "f83ca8b14429905f84d42d27bb57e8b19d7aba42",
+      "sha256": "cafe5d427ece4fef7dabd7c90869afe14e82be58501bd47cd261037a42075a7b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "blob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "sha256": "3c679344d17a97136ac59f22284527d14ee2b9dde0004f63e548dd454a83f449"
+    }
+  ],
+  "patchSha256": "750219a45bc1d0483b87d208c7ed234aa432b47f2d08b333eedc2b38e8c3b2dc",
+  "run": {
+    "id": 43586902727,
+    "jobId": 132423255218,
+    "W": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+    "S": "78f709e52a052768188343f93cd5fa36ba867da2",
+    "case": "same-case BI preserves the human choice while the confirmed training revision changes its current source result and table",
+    "timeoutMs": 180000,
+    "observedMs": 645858.41,
+    "expectedTotal": 250000,
+    "observedTotal": null,
+    "observedKnownSubtotal": 250000,
+    "outcome": "failure + unhandled assertion after timeout"
+  },
+  "diagnosis": "The quoted training source wrote annual budget zero and November forecast 40000 only. Eleven omitted forecasts are null, making their budget fallback estimated. Canonical complete coverage requires confirmed components; total=null is correct for that source. The fixture omitted the declared zero monthly charge schedule required by its expected complete result.",
+  "change": "Declare all twelve training forecast months explicitly through canonical OPEX save: November=40000 and eleven confirmed zero charges. Do not infer zero from null. Add before-BI assertions of source-only scenario, complete canonical result and every training component calendar.",
+  "limits": [
+    "No production code changed.",
+    "No local Bun, product test, typecheck or CI executed by this agent.",
+    "A new Actions run must validate the exact published bytes.",
+    "Old helper wp05/engine-revision-fixture.ts has no remaining imports after PR40 late intake; corrected for consistency, not claimed exercised by the selected BI test.",
+    "The large old wall-clock cost is not attributed to infrastructure: the old fixture bootstrapped persisted sensitivity unnecessarily and re-entered C10 on operation admission. New PR40 helpers remove those paths; performance effect remains unmeasured.",
+    "No human installed/native, browser mounted shell, C/D or global completeness proof claimed."
+  ],
+  "selectedTests": [
+    "test/product/wp05/choice-history-bi.test.ts",
+    "test/product/wp11/renewal-choice-revision.test.ts"
+  ],
+  "otherAffectedTest": "test/product/wp11/renewal-choice-history.test.ts",
+  "expectedTimeoutMs": 180000
+}

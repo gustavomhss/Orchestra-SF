@@ -1,0 +1,337 @@
+{
+  "source": {
+    "productSha": "c41d7277be5941bafb105654360a32adea7f0347",
+    "productTree": "ef9c1884d1de59316421347174ea0ef580bf7e91",
+    "snapshotSha": "d158861a57e934c247d5e8e68cfbf060f9c5da06",
+    "snapshotTree": "a18078ba12ff1cbdf767b83576685f0f9eb54b1b",
+    "branch": "ci-run-linux-astra-wp11-c41d727-6c0a8498-ar3",
+    "requestSha256": "6c0a8498b053a51c0212da18c7fc2c3fb90014cae5e87533f9722c27eb09c056",
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "a19d1c47d389c8df2e1ffb485f70fcf09062d0d7"
+  },
+  "run": {
+    "id": 43591612696,
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-14T11:46:30Z",
+    "updatedAt": "2026-11-14T11:49:57Z",
+    "headSha": "d158861a57e934c247d5e8e68cfbf060f9c5da06",
+    "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43591612696",
+    "runAttempt": 2
+  },
+  "jobs": [
+    {
+      "id": 132437761837,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132438099879,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "tests": {
+    "summary": {
+      "pass": 2,
+      "fail": 0,
+      "tests": 2,
+      "files": 2,
+      "durationSeconds": 5.81
+    },
+    "ownObservedCounts": {
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0
+    },
+    "fileResults": [
+      {
+        "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+        "reportedTests": 1,
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 1526.28,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "line": 810,
+          "timestamp": "2026-11-14T11:49:38.6136662Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "status": "pass",
+          "name": "an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result",
+          "line": 811,
+          "timestamp": "2026-11-14T11:49:40.2717873Z",
+          "durationMs": 1526.28
+        }
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+        "reportedTests": 1,
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 4136.24,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "line": 813,
+          "timestamp": "2026-11-14T11:49:40.2718358Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "status": "pass",
+          "name": "a canonical human choice creates a reviewed Planner proposal and only a separate application grant commits it",
+          "line": 814,
+          "timestamp": "2026-11-14T11:49:44.4140144Z",
+          "durationMs": 4136.24
+        }
+      }
+    ],
+    "hasCompletedBunSummary": true,
+    "requestedButNotObserved": []
+  },
+  "protocol": {
+    "nonces": [
+      "42aeecf47dd099756fc55ff07a003cdb"
+    ],
+    "observedVerdicts": [
+      "omni positive control [42aeecf47dd099756fc55ff07a003cdb]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [42aeecf47dd099756fc55ff07a003cdb]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "retryProvenance": {
+    "priorAttempt": 1,
+    "priorJob": 132437344706,
+    "priorConclusion": "failure",
+    "priorCause": "Setup Bun dependency resolution before tests; no product assertions ran.",
+    "priorPreservation": "wp11-W11-AR3-attempt1-preservation.json",
+    "priorPreservationSha256": "c9ba427250e41437b29291a6dc33964d3396ebdc173a3642a9f8dceb6468262d",
+    "sameSnapshotAndRequest": true,
+    "mutation": "Root invoked GitHub rerun-workflow-job for the prior failed job; no product/package/lock/workflow change."
+  },
+  "claimBoundary": [
+    "Both selected tests passed on literal W11 product c41d7277be5941bafb105654360a32adea7f0347 and snapshot d158861a57e934c247d5e8e68cfbf060f9c5da06.",
+    "The two-test selection does not re-execute C17 nested replay or cross-domain execution; their earlier W9 proof remains separately attributed.",
+    "Human admissions are contract fixtures with real private UI authority machinery, not installed native UI/human evidence.",
+    "Canonical omni verdict is not applicable and proves nothing about omni.",
+    "No local product tests/typecheck executed."
+  ],
+  "files": {
+    "wp11-W11-AR3-attempt2-tests.log": {
+      "sha256": "48f352f66bfb8a4fe38ca7162cb7b61d1418af24f5898c57c16713465bac2d02",
+      "bytes": 69185
+    },
+    "wp11-W11-AR3-attempt2-tests-observed.json": {
+      "sha256": "413cc27f16c2f46aaab0068ace5cc658551694dc4fae53d42dc5081cf641f082",
+      "bytes": 5827
+    },
+    "wp11-W11-AR3-attempt2-remote-final.json": {
+      "sha256": "3df521f0403fc1e8c4a59628630e66c895b7167d1d789d239de8f8cae2d06aeb",
+      "bytes": 5156
+    },
+    "parse-hosted-test-log.py": {
+      "sha256": "c9e5f0ca447115dba3d00ede2350d32c1606185dcb4c763f183daafd7c3cd23a",
+      "bytes": 7538
+    }
+  }
+}

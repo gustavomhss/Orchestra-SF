@@ -1,0 +1,88 @@
+<!-- FINANCE-DELIVERY-CODE-W33 -->
+# Observação de entrega — snapshot Finance W33
+
+Pin publicado: `87e5164a1c87ac9f013d381d5e601ca5b4b6c677`, tree `052583ce35edbadd4b7ec68ffe021bb59e05a20f`. W33 corrige quatro arquivos de fixture/teste e conserva o código de produção de W32. PR40 `dc9d4327d07db58d026e7672cf619717394f5ffd` foi consumida no corte **2026-11-14 12:47:36 UTC**, completando **48 commits de origem**. O [intake por arquivo](../../WP11/finance-20261114/intake-reconciliation-pr40-dc9.json) e a [proveniência individual](../../WP11/finance-20261114/source-provenance.md) explicam as adoções e merges preservados.
+
+A [validação final por W/S](../../WP11/finance-20261114/final-validation.md) e o [ledger integral de Actions](../../WP11/finance-20261114/product-tests.json) registram as conclusões posteriores. O package permanece vermelho enquanto houver diagnósticos externos; nenhuma seleção concede aceite integral dos 303 critérios, prova nativa ou C/D. As dependências Compose/Interface continuam no [corte externo 12:19:40 UTC](../../WP11/finance-20261114/external-reconciliation.md), distinto do intake WP11.
+
+## Observações anteriores preservadas nos respectivos cortes
+
+<!-- FINANCE-FINAL-CODE-OBSERVATION-W31 -->
+# Observação final de código e evidência delimitada
+
+Esta atualização registra Finance W31 `c449efc092e507fca2b4f61d1e7ce057faf05c89`, tree `82ea6bff11f9647d14cac30587ccd2feb80c6950`. O corte remoto de 12:19:40 UTC inclui PR40 `d7775d6`, consumida em W30, Compose `00304ac` e Interface `5fe39f1`. O [handoff consolidado](../../WP11/finance-20261114/group-handoff.md), a [validação final](../../WP11/finance-20261114/final-validation.md) e o [registro de pins de integração](../../WP11/finance-20261114/integration-pins-final.md) prevalecem sobre as observações históricas abaixo.
+
+S19 passou 21 casos/448 assertions em nove arquivos WP11; S20 passou o BI de mesmo caso/86 assertions; S21 passou os três casos/9 assertions da guarda posterior. Check14 tem zero diagnósticos próprios, 131 externos e guards com 78 regras/13 avisos/zero erros. O package continua failure. A origem é preservada em 45 commits, e os mapas conservam 303 critérios e 14 tarefas sem aceite integral.
+
+Compose já implementa seleção inversa e seis destinos BI protegidos; o antigo TS2345 foi corrigido estaticamente no head observado, ainda sem qualificação dos novos consumidores. C17 record-only com captura Atlas prévia existe; a nova concessão privada de leitura de stale-analysis é um delta externo separado. Mensal HTTP/UI, N/A humano, replay WP13, closure Procurement, provas instaladas/nativas e aceite C/D permanecem delimitados. Não reaplicar patches históricos superados nem rebaixar as cercas Finance mais recentes.
+
+## Registro anterior integral preservado
+
+O texto que segue conserva seus pins e resultados de então. Menções anteriores a “atual”, “pendente” ou TS2345 não substituem a observação delimitada acima.
+
+<!-- FINANCE-CURRENT-RECONCILIATION -->
+# Reconciliação atual e escopo do registro histórico
+
+Esta observação usa Finance `0c4a2545a63b4903c7eedb00d3f0989eb74ed398` e as fontes inspecionadas Compose `ed10a3806a4ffdf6ad5891e2065d93a4c91412cf`, Interface `cccd00c568aea65bb0c1b5cb4a82c2a236c7e775` e drift `4bd1f807e449d040e3db61c4d2b1e177b205ac69`. O [registro central de dependências](../../WP11/finance-20261114/external-reconciliation.md) prevalece sobre diagnósticos e campos chamados “atuais” no documento histórico abaixo.
+
+Compose já adotou `advantageComparisonRef` e implementou seis destinos BI protegidos com retorno de foco. A proposta de seleção inversa abaixo é histórica; o host atual avançou além dela. Os novos consumidores ainda precisam de validação e o teste owner tem TS2345. C17 com ledger, fonte record-only e captura Atlas protegida prévia também existe; seus limites permanecem explícitos. Não reaplicar os patches COMPOSE4 superados.
+
+Mensal contrato/HTTP/UI conserva os três blobs base do patch, sem adoção. N/A exige rota/prova humana; Procurement exige a closure canônica publicada de quatro arquivos. Preservar Finance apply/result/request e os incrementos W25 de mutations/Hot Topic. O run BI S16 `43591377679`, W25, passou 1 caso/86 assertions; isso não concede aceitação nativa, C/D ou do bundle.
+
+## Documento histórico integral preservado
+
+Todo o conteúdo abaixo permanece no seu instante e pin originais, inclusive suas antigas palavras “atual”, “pendente” ou “não aplicado”. Não constitui nova instrução de intake nem resultado de execução nos heads acima.
+
+# WP03 — incremento financeiro de 14/11/2026
+
+Estado: implementação incremental publicada/em validação, sem aceite integrado. Nenhum READY/DONE é declarado. A matriz `criteria.json` preserva os 112 IDs e textos literais do pack imutável e os estados históricos do head de PR #22; seus campos de validação desta sessão devem ser reconciliados com os runs exatos antes de atribuir prova nova.
+
+## Proveniência
+
+O plano é `dbf9547211d9b0fade619790de7c19c0869b7c7d`; o SHA256 de `campaign.json` é `703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba`. Handoff e pack são de `a3d29d011ba3607a57914701300f09117a3e2de9`. A recuperação WP03 veio de PR #22, head `90c467cea436daa24987ad68a588a7d80f91064e`, e integra a PR de grupo #35 em `astra-finance`. Os commits de recuperação e o mapa completo de origens são responsabilidade do receipt do grupo; esta nota não atribui fontes alheias a WP03.
+
+O primeiro incremento de produto é W1 `8184761b61f78d6aeac73232fdc879e93f85bc5e`, tree `dca3e3c3aca7dadbd348c71b1c9a3d5934ac4a05`; o snapshot CI informado pelo grupo é S1 `880e0f05557abe8b6c4bb71f5f8cc3ad7272fae4`. CI e publicação foram executados pelo coordenador via GitHub MCP. Este executor não rodou testes de produto locais nem disparou runs adicionais.
+
+W2 é `981ad44102b2e2e67d31bfc8fb7d97208e390e5b`, tree `a67576fae5212720d3e695138b0979931d4f7c79`; seu check hospedado `43579025258` terminou com zero erros de TypeScript nos três WPs, 131 erros externos e guards aprovados (78 regras, 753 arquivos, 14 avisos, zero erros). W3 é `66bbe152c145f04c16223a938589c63cedb3b716`, tree `f727ae5bfcef26383ff47a2b06bb65b161295dd2`; o check `43579943285` reportou 131 diagnósticos externos e um WP11, posteriormente corrigido pelo owner. O run de produto W1 `43577975248` terminou com 32 pass e 8 fail; quatro falhas foram timeouts e quatro foram funcionais WP11. Esse resultado parcial não valida os incrementos posteriores.
+
+As correções de revisão próprias foram publicadas em W6 `df29a62e5ede5b9ff9344b4f5b51eba4102e2093`, tree `3e0a13a9085ca446aec553052a61041281c2e1d9`, e W7 `a274302d15990919007dbe958d95653508c730a7`, tree `df0c8c14ad72fb8447b24d7e4a4ab9c9d871a727`. O coordenador iniciou a seleção de sete arquivos no snapshot S4 `91cd4ee008b764d1e06d42a3a7fa2dce606ecdc1`; o resultado e run ID ainda serão reconciliados no receipt do grupo. C2/Overview está publicado em `9913b0c622aa09da7914f231bd9f2ff54d872634`, tree `f43b8e39733c6d93048c4d48001af8d0f398ac5d`, com validação própria pendente.
+
+As evidências anteriores permanecem intactas, inclusive o histórico de 170 testes no run `43536154582` e a tentativa do mesmo snapshot em que a integração durável excedeu 5000 ms. Esse histórico não valida o head deste grupo. A matriz herdada contém 79 `PRODUCER_VERIFIED`, 16 `PENDING_UI_PROOF`, 9 `BLOCKED_EXTERNAL` e 8 `NATIVE_UNPROVEN`.
+
+## Mudanças próprias
+
+1. `exact-threshold.ts` e `interval-proof.ts` localizam um único `replace` USD variável dentro da composição completa. Todas as demais operações ficam preservadas. Duplicatas do target, defer para o mesmo target, HR, replacement ref, quantificação ausente e mudanças de componentes fixos impedem a prova. A busca segue as funções canônicas do Planner e a ordenação IEEE já existente. Cada resposta de preview é destacada do callback, incluindo probes; não há fórmula financeira nova.
+2. `persistence.ts` exige replay canônico da simulação antes e depois da escrita, compara o resultado normalizado e revalida a seleção do caso. Divergência, revogação ou seleção trocada após commit não devolvem `resultRef` como sucesso. `capabilities.ts` e `current-choice.ts` encaminham a porta real como quarto argumento. Uma simulação com operações ou assumptions mantém `preview-not-applied`, `total:null` e não cria `ChoiceRecord`, mudança preparada ou recibo de aplicação.
+3. `calculation-evidence.ts` mantém record-only como default e adiciona composição nested explícita. Cálculos ancestrais precisam reproduzir os requests persistidos e a referência integral; uma resposta `fresh` do resolver não autentica o cálculo. Folhas de documento/registro/evento/política/recibo continuam resolvidas pelo produtor canônico. Ciclos por runId, recursão acima de 16 níveis, fechamento incompleto, escopo divergente, digest adulterado e fonte revogada são recusados. Os hooks `verifyCalculationSources` e `verifyCalculationRequestSources` casam com os stores de WP11.
+4. A integração própria de aplicação foi adaptada ao review obrigatório atual de WP11: a revisão vem de `createPlannerPreparedReview`, o preview vem de `buildPlannerFinancialProjection`, o digest vem de `proposalReviewDigest` e o vínculo humano vem de `createDecisionReviewAdmission` sobre um intent UI realmente admitido e consumido. O caso e a escolha são fixtures sem reivindicação do percurso completo de criação da escolha.
+5. `scenario-port.ts` passa a observar a fonte atual quando o request não contém operações nem assumptions. A mesma porta executa a projeção e comparação reais, reutiliza a avaliação C10 canônica e revalida fonte, cobertura e autoridade antes da saída. Somente fonte e cobertura completas permitem `source-scenario:*`, componentes confirmados e total confirmado; cobertura pending ou valor null conservam `total:null`. O resultado financeiro confirmado continua separado de ChoiceRecord e da aplicação de um comando.
+6. `sensitivity-units.ts` autentica um parâmetro de fonte já confirmado e USD, derivando um `replace` privado sem mudar o request original persistido. `exact-threshold.ts` e `interval-proof.ts` usam esse parâmetro para probes hipotéticos; `criterion-metric.ts` usa a comparação canônica da fonte para métricas confirmadas e verifica período, moeda, seleção e regra. O cenário composto anterior continua suportado. Os probes próximos ao seed apenas estreitam o intervalo; a bisseção e as duas testemunhas IEEE adjacentes permanecem obrigatórias. Se houver plateau maior, a busca anterior continua. Os testes de 55000/15000 limitam chamadas sem mudar timeouts nem relaxar assertions.
+
+7. A revisão financeira independente encontrou F1: a simulação conservava o null da fonte anterior mesmo depois de um forecast válido preencher a célula. `scenario.ts` agora permite qualificar a cópia pós-comando; `scenario-port.ts` usa `projectPlannerSource` e `buildPlannerFinancialProjection` dessa cópia. USD ausente com replace/include numérico passa a compor o subtotal hipotético; null intocado e FX ausente continuam ausentes. Forecast HR independente é quantificado mesmo sem rate de budget. As lacunas financeiras são rederivadas da cópia, mantendo condições C10 e de hipótese; o valor não é promovido a aplicação nem a total completo.
+8. A comparação de uma referência consigo mesma reutiliza somente a observação já feita dentro de cada etapa, destacando baseline/candidate em objetos separados. A releitura final continua independente; não há cache de autorização entre etapas ou requests. Os logs W1 mostraram grande número de resoluções repetidas durante o caminho UI/MCP; a deduplicação elimina a repetição intrínseca do self-pair, sem remover source fences, ampliar lease ou alterar timeout. O solver também recebeu prova discriminante do fallback IEEE longo: componentes ordenados `[2**53, x]`, baseline `2**53`, bounds 0–16 e diferença <=0 exigem limite 1 com `nextUp(1)` recusado.
+9. O Overview legado e a projeção C02 agora usam o mesmo qualificador `plannerActualMonth`, preservando o total calculado pelo domínio. Actual ausente/unpriced ganha estado indisponível; zero observado fica visível nos meses abertos e fechados, tanto na tabela quanto no SVG. O teste de render inclui FX ausente e HR actual zero sem rate de budget. O escopo é render/qualificação; nenhuma fórmula, engine ou comando foi alterado.
+
+## Oráculos e limites
+
+| Variante | Componentes conhecidos | Alternativa menos renovação de 240000 | Vantagem da renovação menos alternativa | Teto da implantação |
+| --- | ---: | ---: | ---: | ---: |
+| Base, demais componentes 165000 | 210000 com implantação 45000 | -30000 | 30000 | 55000 |
+| Training confirmado 40000 | 250000 com implantação 45000 | 10000 | -10000 | 15000 |
+| Training confirmado zero | 210000 | -30000 | 30000 | 55000 |
+| Training null | Subtotal parcial | Comparação condicionada | Não confirmado | Não provado |
+
+O critério de vantagem mínima 20000 usa o sinal canônico `alternative-minus-baseline-known-subtotal <= -20000`. O literal de aceite “diferença -10000” é a vantagem inversa, e não autoriza trocar o sinal do produtor. O teste verifica a fronteira IEEE calculada e que o próximo valor representável não satisfaz o critério; tolerância numérica não transforma um ponto amostrado em prova exata.
+
+Categoria training omitida não produz linha zero. N/A e componente compartilhado dependem do inventário e da classificação com evidência atuais de WP11. Cobertura completa não promove componente hypothetical a confirmed. O preview que varia um parâmetro continua conditioned mesmo quando sua soma é correta; o threshold pode ser matematicamente exato e condicionado às lacunas. A observação sem hipóteses de uma fonte confirmada e coberta pode publicar total completo sem executar a decisão humana.
+
+## Consumidores reais e trabalho externo
+
+`test/product/wp03/composed-threshold.test.ts` usa o Planner, issuer de unidades, stored scenarios, registros de critério e store SQLite reais do helper WP05. `scenario-persistence-fences.test.ts` usa a persistência WP03 com replay real e revogação pós-commit. `source-scenario.test.ts` discrimina total confirmado 250000, zero confirmado, null, cobertura omitida e mudança de cobertura; também persiste e reproduz a observação pelo C17 sem aplicar choice. `test/product/wp11/calculation-persistence.test.ts` consome o novo C17 com request store e result store reais e reabre o SQLite. `test/product/wp11/renewal-choice-history.test.ts` usa mutações de caso e ChoiceRecord reais, preserva a escolha anterior, revisa a fonte através de copy/save canônicos, passa a total 250000 e critério failed e solicita o limite 15000 da mesma seleção. Os callbacks de identidade/captura dos fixtures continuam fronteiras sintéticas; isso não prova source fences privados do host instalado. As execuções de cada incremento devem ser reconciliadas com seus SHAs exatos. `scenario-qualification.test.ts` usa runtime/SQLite/source issuer reais e cobre replace/include, zero, null intocado, FX e HR independente; `exact-threshold-fallback.test.ts` usa o engine real para os probes longos, com admissão de unidades/regras explicitamente fixada pelo fixture; `runtime-overview-presence.test.ts` compara C02, tabela e SVG do render efetivo. Os callbacks sintéticos e a diferença entre render observado e rota instalada continuam expressos nos testes.
+
+O host relido de astra-compose, `4306b310e4d6dac77f9beab461adad4e8e924849`, já liga replay nested e os hooks de request/result. Ainda exige prova instalada e conserva dois gaps externos delimitados: o guard de concorrência no wrapper usa Map por binding e os valores confirmados de source-scenario são projetados indiscriminadamente como hypothetical. O consumidor WP13 e seu replay continuam bloqueando threshold condicionado e precisam consumir `parameterOperation`. A proposta foi regenerada contra os três blobs correntes, preservando as novas proteções do owner.
+
+O consumidor mensal foi relido em astra-interface `a29565f763ddd90bc5bc3b8d298afb47ad84008d`. `monthly-consumer-proposal.diff.txt` propõe o contrato/HTTP integral, prévia antes/depois, annual/spread/reset e rebase explícito de conflito, conservando os guards correntes de apply incerto, body/key e revogação. `owner-deltas.md` registra os discriminantes de CI e o limite de prova. Todos os deltas de fontes alheias permanecem não aplicados.
+
+As revisões estáticas cruzadas WP05/WP11 encontraram e fecharam o alias de probes, o snapshot do request da métrica e o período da métrica confirmada. A revisão independente do W3 identificou F1 financeiro, F2 de concorrência C17, C1 de navegação A/B e C2 do Overview; correções posteriores precisam de addendum e CI no head exato. O coordenador corrigiu F2 em `calculation-evidence.ts` no W4; WP05 trata C1. Nenhum desses registros constitui C/D. O teste novo de Overview inspeciona o render real em Chromium, mas não tem resultado PASS reconciliado nesta nota nem representa o HTTP instalado ou residente.
+
+Montagem UI mensal/HR/catálogos/Overview, provas de SessionV2/skill/provider nativos, revisões independentes e C/D continuam obrigatórios. O epic de todo o bundle pertence a S0. Não inferir fechamento a partir do CI cirúrgico desta sessão.

@@ -1,0 +1,62 @@
+{
+  "schema": "sf-finance-independent-bi-source-review-v1",
+  "reviewer": "WP13 resumption subagent",
+  "target": "WP03/WP05 scenario BI producer candidate",
+  "method": "Static source/diff/canonical dependency read only; no local product execution",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+      "manifest_blob": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b",
+      "observed_blob": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b",
+      "matches_manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+      "manifest_blob": "9cc4cc81538a7247cd87893f958acf5665194eb5",
+      "observed_blob": "9cc4cc81538a7247cd87893f958acf5665194eb5",
+      "matches_manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+      "manifest_blob": "fef3b0546384fcb0739fcf11ef531406c60ad760",
+      "observed_blob": "fef3b0546384fcb0739fcf11ef531406c60ad760",
+      "matches_manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-fixture.ts",
+      "manifest_blob": "3524e36303db8ac9d562a16840fa040eb225f54b",
+      "observed_blob": "3524e36303db8ac9d562a16840fa040eb225f54b",
+      "matches_manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+      "manifest_blob": "c7bb1728e808b35e357654be1dfabe7c2c068671",
+      "observed_blob": "f35fbae07684e507421a009244b603530f16b1e9",
+      "matches_manifest": false
+    }
+  ],
+  "conclusion": "No critical product-source finding identified. The one requested test discriminator was addressed and statically reviewed. Runtime/typecheck/performance acceptance pending.",
+  "observations": [
+    "Both scenario refs are read from the canonical C08 result store and resolved as a batch by the actual Planner scenario host. Same case, exact candidate result, caller scope, period and currency are checked.",
+    "Original C10 scenario, comparison and complete/known differences remain distinct. Missing component amount and missing FX stay null; explicit zero remains a component, not absence. Complete comparison cannot be attached to an incomplete scenario pair.",
+    "BI09 reuses plannerDifferencePresentation and BI10 comparePlannerVersions; no new finance formula, invented probability, annual interpolation or presumed cancellation/payment is introduced.",
+    "readPortfolioSnapshot encloses readSource/observe/reobserve/final host authorization, uses the same audited LocalStore through the trusted host and has no cross-call cache. Injected source mutation and changed paired projection are refused.",
+    "Factory adds an explicit projectedScenario route and restricts it to BI09/BI10. Existing duplicate-route rejection remains.",
+    "Derived calculation/document/coverage evidence remains in published values; renderer labels conditioned scenario waterfall totals as known subtotals.",
+    "The fixture uses actual C08, Planner, scenario replay, UI authority and read-only snapshots. Its classifications stay pending; it does not claim an installed BI/native/Atlas consumer."
+  ],
+  "requested_discriminant": {
+    "file": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+    "finding": "The swallowed nested-write negative should assert that the write callback actually entered, not just that transaction rejected.",
+    "action": "Owner notified to add attempted=true inside callback and require it; same existing test/selection, no new scope.",
+    "status": "ADDRESSED_AND_COLD_READ",
+    "final_test_blob": "f35fbae07684e507421a009244b603530f16b1e9",
+    "verification": "attempted=true is set inside the callback before snapshot mutation and commit:true; expected calls2/attemptedtrue/rejectedtrue plus no returned value and exact source snapshot equality."
+  },
+  "limits": [
+    "COMMON INV.11/C08 interpretation of a full read-only root around cross-surface observations remains OPEN_SHARED_CONTRACT_INTERPRETATION owned WP10/S0. Source safety review is not a canonical waiver.",
+    "Portfolio combination selection is not automatically chosen by this scenario producer. Actual result/combination selection and portfolio BI consumption remain explicit.",
+    "No hosted result or performance claim in this review.",
+    "No mutations performed in another owner workspace."
+  ]
+}

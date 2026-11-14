@@ -1,0 +1,171 @@
+--- W32/modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts
++++ candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts
+@@ -0,0 +1,87 @@
++import { expect, test } from "bun:test"
++import type { PlannerSourceHost } from "../../../product/contracts/ports.ts"
++import { domain } from "../../../runtime/planner.ts"
++import { createRenewalCaseOperationVerifier } from "./renewal-operation-verifier.ts"
++import { createRenewalSourceFixture } from "./renewal-source-fixture.ts"
++
++const author = { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }
++
++test("case operation admission observes all alternatives in a read-only scope without changing durable state", async () => {
++  const fixture = await createRenewalSourceFixture("omitted")
++  try {
++    if (!fixture.store.transactionAll) throw new Error("Real cross-surface snapshot transaction unavailable")
++    const before = await fixture.store.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
++    const verify = createRenewalCaseOperationVerifier(fixture.host, fixture.sources)
++    expect(await verify(fixture.decision, fixture.context)).toBe(true)
++    const sourceOnly = { alternatives: fixture.decision.alternatives.map((alternative) => ({ ...alternative, scenario: { ...alternative.scenario, operations: [], assumptions: [] } })) }
++    expect(await verify(sourceOnly, fixture.context)).toBe(true)
++    const after = await fixture.store.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
++    expect(after).toEqual(before)
++  } finally { await fixture.cleanup() }
++})
++
++test("case operation admission refuses a nested source write even when the source callback swallows its rejection", async () => {
++  const fixture = await createRenewalSourceFixture("omitted")
++  try {
++    if (!fixture.store.transactionAll) throw new Error("Real cross-surface snapshot transaction unavailable")
++    const before = await fixture.store.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
++    const controls = { observations: 0, attempted: false, domainAccepted: false, committed: false, caught: false }
++    const sources: PlannerSourceHost = { ...fixture.sources, resolveForecastSource: async (reference, context) => {
++      const observed = await fixture.sources.resolveForecastSource(reference, context)
++      controls.observations++
++      if (controls.observations === 2) {
++        controls.attempted = true
++        await fixture.store.transaction("planner", async (snapshot) => {
++          const changed = domain.execute(snapshot, author, { page: "OPEX", action: "save", id: "renewal", version: snapshot.versions["renewal:lines:renewal"]?.version ?? 0, values: { versionId: "renewal", f10: 240001 } }, { at: "2026-11-14T13:00:00Z", id: () => "grouped-source-edit", directory: [] })
++          controls.domainAccepted = changed.ok
++          return { commit: changed.ok, value: changed.ok }
++        }).then((committed) => { controls.committed = committed }).catch(() => { controls.caught = true })
++      }
++      return observed
++    } }
++    const sourceOnly = { alternatives: fixture.decision.alternatives.map((alternative) => ({ ...alternative, scenario: { ...alternative.scenario, operations: [], assumptions: [] } })) }
++    expect(await createRenewalCaseOperationVerifier(fixture.host, sources)(sourceOnly, fixture.context)).toBe(false)
++    expect(controls.attempted).toBe(true)
++    expect(controls.domainAccepted).toBe(true)
++    expect(controls.committed).toBe(false)
++    expect(controls.caught).toBe(true)
++    const after = await fixture.store.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
++    expect(after).toEqual(before)
++    expect(await fixture.host.revalidate(fixture.context)).toBe(true)
++  } finally { await fixture.cleanup() }
++})
++
++test("a later case operation admission observes a committed source change instead of reusing the prior scope", async () => {
++  const fixture = await createRenewalSourceFixture("omitted")
++  try {
++    const verify = createRenewalCaseOperationVerifier(fixture.host, fixture.sources)
++    const sourceOnly = { alternatives: fixture.decision.alternatives.map((alternative) => ({ ...alternative, scenario: { ...alternative.scenario, operations: [], assumptions: [] } })) }
++    expect(await verify(sourceOnly, fixture.context)).toBe(true)
++    const original = await fixture.sources.resolveForecastSource(fixture.baselineScenario.baseRef, fixture.context)
++    const changed = await fixture.store.transaction("planner", async (snapshot) => {
++      const result = domain.execute(snapshot, author, { page: "OPEX", action: "save", id: "renewal", version: snapshot.versions["renewal:lines:renewal"]?.version ?? 0, values: { versionId: "renewal", f10: 240001 } }, { at: "2026-11-14T13:00:00Z", id: () => "later-grouped-source-edit", directory: [] })
++      return { commit: result.ok, value: result.ok }
++    })
++    expect(changed).toBe(true)
++    expect(await fixture.sources.resolveForecastSource(fixture.baselineScenario.baseRef, fixture.context)).toEqual(original)
++    expect(await fixture.host.revalidate(fixture.context)).toBe(true)
++    expect(await verify(sourceOnly, fixture.context)).toBe(false)
++  } finally { await fixture.cleanup() }
++})
++
++test("case operation admission refuses authority revoked by an awaited source callback", async () => {
++  const fixture = await createRenewalSourceFixture("omitted")
++  try {
++    let observations = 0
++    const sources: PlannerSourceHost = { ...fixture.sources, resolveForecastSource: async (reference, context) => {
++      const observed = await fixture.sources.resolveForecastSource(reference, context)
++      observations++
++      if (observations === 2) fixture.ui.finish(fixture.context)
++      return observed
++    } }
++    expect(await createRenewalCaseOperationVerifier(fixture.host, sources)(fixture.decision, fixture.context)).toBe(false)
++    expect(observations).toBeGreaterThanOrEqual(2)
++    expect(fixture.host.requestFor(fixture.context)).toBeUndefined()
++    expect(await fixture.host.revalidate(fixture.context)).toBe(false)
++  } finally { await fixture.cleanup() }
++})
+--- W32/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts
++++ candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts
+@@ -21,7 +21,7 @@
+ import { renewalCoverage } from "./renewal-coverage-fixture.ts"
+ import { createWp11FixtureTrace } from "./fixture-trace.ts"
+ import { createRenewalQuoteRevision, createRenewalSourceFixture, renewalEvidenceContext } from "./renewal-source-fixture.ts"
+-import { createRenewalOperationVerifier } from "./renewal-operation-verifier.ts"
++import { createRenewalCaseOperationVerifier } from "./renewal-operation-verifier.ts"
+ import { createRenewalRestartReader } from "./renewal-restart-reader.ts"
+ 
+ type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
+@@ -99,8 +99,8 @@
+     // supplies only the canonical source DomainProjection; judgment and preview
+     // keep the classified Planner and revalidate their complete C10 observations.
+     const sourcePlanner = createPlannerPort({ host: fixture.host, sources: operationSources })
+-    const verifyOperations = createRenewalOperationVerifier(fixture.host, operationSources, trace)
+-    const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: () => current.identity, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => `wp11-history-case-${++current.next}`, now })
++    const verifyOperations = createRenewalCaseOperationVerifier(fixture.host, operationSources, trace)
++    const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: () => current.identity, authorizeCase, verifyScenarioOperations: verifyOperations, evidence, createId: () => `wp11-history-case-${++current.next}`, now })
+     const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner: sourcePlanner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
+     const preview: Parameters<typeof createPlannerExactThreshold>[0]["preview"] = (request, context) => comparePlannerPreview({ host: fixture.host, sources, scenarios, planner }, request, context)
+     const metrics: { read?: ReturnType<typeof createPlannerCriterionMetric> } = {}
+--- W32/modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts
++++ candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts
+@@ -19,7 +19,7 @@
+ import type { Snapshot } from "../../../runtime/contract.ts"
+ import { wp05Horizon } from "../wp05/engine-fixture.ts"
+ import type { createRenewalChoiceHistory } from "./renewal-choice-fixture.ts"
+-import { createRenewalOperationVerifier } from "./renewal-operation-verifier.ts"
++import { createRenewalCaseOperationVerifier } from "./renewal-operation-verifier.ts"
+ import { renewalEvidenceContext } from "./renewal-source-fixture.ts"
+ 
+ type History = Awaited<ReturnType<typeof createRenewalChoiceHistory>>
+@@ -106,8 +106,8 @@
+   // supplies only the canonical source DomainProjection; judgment and preview
+   // keep the classified Planner and revalidate their complete C10 observations.
+   const sourcePlanner = createPlannerPort({ host, sources: operationSources })
+-  const verifyOperations = createRenewalOperationVerifier(host, operationSources)
+-  const cases = createDecisionCasePort({ state, host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => `unused-human-case-${++controls.event}`, now: () => at })
++  const verifyOperations = createRenewalCaseOperationVerifier(host, operationSources)
++  const cases = createDecisionCasePort({ state, host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, verifyScenarioOperations: verifyOperations, evidence, createId: () => `unused-human-case-${++controls.event}`, now: () => at })
+   const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner: sourcePlanner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
+   const preview = (request: Parameters<typeof comparePlannerPreview>[1], context: TrustedDomainContext) => comparePlannerPreview({ host, sources, scenarios, planner }, request, context)
+   const metrics: { read?: ReturnType<typeof createPlannerCriterionMetric> } = {}
+--- W32/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts
++++ candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts
+@@ -1,4 +1,5 @@
+ import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { DecisionCase } from "../../../product/contracts/decisions.ts"
+ import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
+ import type { DomainPortHost, PlannerSourceHost } from "../../../product/contracts/ports.ts"
+ import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+@@ -76,3 +77,28 @@
+     })
+   }
+ }
++
++/** A case reader may verify several alternatives in one immutable source snapshot.
++ * This fixture's adapters are read-only: an attempted nested write poisons the
++ * real LocalStore transaction and is refused. Every later invocation opens a new
++ * scope; no source, financial result or authority observation is retained.
++ */
++export function createRenewalCaseOperationVerifier(host: DomainPortHost, sources: PlannerSourceHost, trace?: ReturnType<typeof createWp11FixtureTrace>) {
++  const verify = createRenewalOperationVerifier(host, sources, trace)
++  return async (decision: Pick<DecisionCase, "alternatives">, context: TrustedDomainContext) => {
++    const request = host.requestFor(context)
++    if (!request || request.signal.aborted || !await host.revalidate(context)) return false
++    const bindingDigest = digestSfValue(context.binding)
++    const scenarios = structuredClone(decision.alternatives.map((alternative) => alternative.scenario))
++    const accepted = await host.persistence.transaction("planner", async () => {
++      // Await every sibling even if one refuses/throws, so no nested reader can
++      // outlive this scope. LocalStore still refuses a poisoned root transaction.
++      const verified = await Promise.all(scenarios.map((scenario) => verify(scenario, context).catch(() => false)))
++      // Keep the final asynchronous authority callback inside the protected
++      // snapshot. A callback cannot change a source and then return a stale yes.
++      return { commit: false, value: verified.every(Boolean) && !request.signal.aborted && await host.revalidate(context) &&
++        host.requestFor(context) === request && digestSfValue(context.binding) === bindingDigest }
++    }, { signal: request.signal }).catch(() => false)
++    return accepted && !request.signal.aborted && host.requestFor(context) === request && digestSfValue(context.binding) === bindingDigest
++  }
++}

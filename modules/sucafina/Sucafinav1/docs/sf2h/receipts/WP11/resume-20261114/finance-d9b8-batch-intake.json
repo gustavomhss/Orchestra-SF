@@ -1,0 +1,82 @@
+{
+  "schema": "wp11-published-targeted-intake-v1",
+  "sourceRef": "d9b84003ed6cd6dd77b5738dbfcc6b45d57f72c8",
+  "producerCommit": "61d92392e9bded167eb2794995a623b2719cc4ba",
+  "producerParent": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+  "consumerBaseSha": "a12f29ce64018740a1c1a1135daa3fb0e37770de",
+  "reason": "Observed W6 C1 producer timeouts and W8 H2 timeout include repeated sibling-case observations. Published producer supplies a local per-observation batch with separate fresh observations for later phases.",
+  "entries": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "sourceRef": "d9b84003ed6cd6dd77b5738dbfcc6b45d57f72c8",
+      "sourceBlob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "expectedCurrentBlob": "d3098aa94cdeee71193c94ae906f6fafd14bda9b",
+      "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+      "role": "canonical-producer",
+      "action": "COPY_EXACT_PUBLISHED_BLOB_NO_TRANSFORMATION",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d9b84003ed6cd6dd77b5738dbfcc6b45d57f72c8/modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "lastChangedCommit": "61d92392e9bded167eb2794995a623b2719cc4ba"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "sourceRef": "d9b84003ed6cd6dd77b5738dbfcc6b45d57f72c8",
+      "sourceBlob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "expectedCurrentBlob": "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b",
+      "sha256": "771b060898fce1b1d851461bee7df743014ab55f9c0994a0331f2664a1c8bfd1",
+      "role": "canonical-producer",
+      "action": "COPY_EXACT_PUBLISHED_BLOB_NO_TRANSFORMATION",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d9b84003ed6cd6dd77b5738dbfcc6b45d57f72c8/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "lastChangedCommit": "61d92392e9bded167eb2794995a623b2719cc4ba"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "sourceRef": "d9b84003ed6cd6dd77b5738dbfcc6b45d57f72c8",
+      "sourceBlob": "1673c86995cf71b61e288d91492ae7b691934171",
+      "expectedCurrentBlob": "ed68563245e406aca2dc3ce335943647fd2cb002",
+      "sha256": "d83e19bff860ad2a54fc3f41b3b5790d3d31cd3b2b55ea8785a61ea30aa8827b",
+      "role": "canonical-producer",
+      "action": "COPY_EXACT_PUBLISHED_BLOB_NO_TRANSFORMATION",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d9b84003ed6cd6dd77b5738dbfcc6b45d57f72c8/modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "lastChangedCommit": "61d92392e9bded167eb2794995a623b2719cc4ba"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+      "sourceRef": "d9b84003ed6cd6dd77b5738dbfcc6b45d57f72c8",
+      "sourceBlob": "0bd661681e2dd3c3daafdea82851af88c772f0cf",
+      "expectedCurrentBlob": null,
+      "sha256": "cec7996db6f11c3fc45de8ab768288c548e6cb7184d85da70b05b1d020ea0ac4",
+      "role": "published-own-prefix-batch-regression",
+      "action": "COPY_EXACT_PUBLISHED_BLOB_NO_TRANSFORMATION",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d9b84003ed6cd6dd77b5738dbfcc6b45d57f72c8/modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+      "lastChangedCommit": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "sourceRef": "d9b84003ed6cd6dd77b5738dbfcc6b45d57f72c8",
+      "sourceBlob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "expectedCurrentBlob": null,
+      "sha256": "6a2576aa4495ec03a38c67f9c5453cd0a9cec3455f21306e435bc269cced8bce",
+      "role": "published-own-prefix-batch-regression",
+      "action": "COPY_EXACT_PUBLISHED_BLOB_NO_TRANSFORMATION",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d9b84003ed6cd6dd77b5738dbfcc6b45d57f72c8/modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "lastChangedCommit": "61d92392e9bded167eb2794995a623b2719cc4ba"
+    }
+  ],
+  "status": "EXACT_BLOBS_CONSUMED_HOSTED_VALIDATION_PENDING",
+  "behavioralReview": "Independent review covers the3 canonical producer files and2 published tests in their original WP11 paths. Per-observation batch retains independent result authentication and later case/authority/source observations.",
+  "runtimeClaim": false,
+  "timeoutChanges": false,
+  "excluded": "Other latest Finance changes, foreign runtime edits, and unrelated validation selections are not included.",
+  "preservedFailures": [
+    {
+      "productSha": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "runId": 43586946650,
+      "failure": "2 producer test timeouts; 58 pass / 2 fail"
+    },
+    {
+      "productSha": "a12f29ce64018740a1c1a1135daa3fb0e37770de",
+      "runId": 43588796286,
+      "failure": "Own complete financial history timed out after original choice; training and restart not reached."
+    }
+  ]
+}

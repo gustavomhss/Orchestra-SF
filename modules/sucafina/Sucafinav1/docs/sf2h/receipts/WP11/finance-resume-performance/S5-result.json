@@ -1,0 +1,809 @@
+{
+  "schema": "finance-resume-performance-ci-v1",
+  "selection": "S5",
+  "W": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+  "Wtree": "2da074668b164b1aa5e051f8a70366969425906f",
+  "S": "18e2a5dcf69b039dcd86e91f8fbf85db613acf6c",
+  "Stree": "705ee2f2ec35d43e8b23a2f0790830ed835dab76",
+  "branch": "ci-run-linux-finance-performance-7a9a43b3-7f95a2ce-s5",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/persisted-recertification.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts",
+      "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+      "Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+      "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "--timeout",
+      "120000",
+      "-t",
+      "^(Finance sensitivity|units resolution|persisted Finance candidates|historical scenario batch|historical batch|sensitivity retains the admitted request|sensitivity detects a provider|each sensitivity verification reads a fresh|a failed sensitivity scope cannot retain|real Planner sensitivity keeps EUR|one sibling batch|units emit the identical binding|comparison starts independent batches|different cases and historical|ledger, alternative|authority revoked after result rereads|a real Planner source change|retained store and case|batch refusals|decision result persistence)"
+    ],
+    "env": {}
+  },
+  "requestSha256": "7f95a2ce09f24aaf1797e0d80e618621e8d2071ae44cc11fda89464370d226ea",
+  "requestOnlyComparison": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+    "head": "18e2a5dcf69b039dcd86e91f8fbf85db613acf6c",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1"
+    },
+    "merge_base_commit": {
+      "sha": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1"
+    },
+    "files": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      }
+    ]
+  },
+  "runId": 43630462257,
+  "jobId": 132555694380,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43630462257",
+  "conclusion": "success",
+  "pass": 36,
+  "fail": 0,
+  "assertions": 297,
+  "bunDurationSeconds": 368.57,
+  "phases": [
+    {
+      "phase": "historical-scenario-batch",
+      "duplicate": false,
+      "durationMs": 58.21755099997972,
+      "counters": {
+        "casesNamespaceReads": 10,
+        "otherNamespaceReads": 0,
+        "fullCaseReads": 2,
+        "scalarHooks": 0
+      },
+      "statuses": [
+        "ok",
+        "ok"
+      ]
+    },
+    {
+      "phase": "historical-scenario-batch",
+      "duplicate": true,
+      "durationMs": 69.32445000001462,
+      "counters": {
+        "casesNamespaceReads": 10,
+        "otherNamespaceReads": 0,
+        "fullCaseReads": 2,
+        "scalarHooks": 0
+      },
+      "statuses": [
+        "ok",
+        "ok",
+        "ok"
+      ]
+    },
+    {
+      "phase": "historical-scenario-batch.scalar-facade",
+      "durationMs": 74.96956699999282,
+      "counters": {
+        "casesNamespaceReads": 16,
+        "otherNamespaceReads": 0,
+        "fullCaseReads": 2,
+        "scalarHooks": 4
+      },
+      "statuses": [
+        "ok",
+        "ok"
+      ]
+    },
+    {
+      "phase": "search-work",
+      "elapsedMs": 31223,
+      "counts": {
+        "searches": 1,
+        "searchPreviews": 9,
+        "searchUnitIssues": 2,
+        "resolutions": 3,
+        "revalidations": 4,
+        "consumerPreviews": 8,
+        "sampleWrites": 2
+      },
+      "previews": [
+        {
+          "resolution": 1,
+          "ordinal": 1,
+          "amount": 10000,
+          "metric": -65000,
+          "status": "ok",
+          "durationMs": 1021
+        },
+        {
+          "resolution": 1,
+          "ordinal": 2,
+          "amount": 70000,
+          "metric": -5000,
+          "status": "ok",
+          "durationMs": 1158
+        },
+        {
+          "resolution": 1,
+          "ordinal": 3,
+          "amount": 55000.000000000015,
+          "metric": -20000,
+          "status": "ok",
+          "durationMs": 1242
+        },
+        {
+          "resolution": 1,
+          "ordinal": 4,
+          "amount": 55000.00000000002,
+          "metric": -19999.99999999997,
+          "status": "ok",
+          "durationMs": 1246
+        },
+        {
+          "resolution": 2,
+          "ordinal": 1,
+          "amount": 10000,
+          "metric": -65000,
+          "status": "ok",
+          "durationMs": 2487
+        },
+        {
+          "resolution": 2,
+          "ordinal": 2,
+          "amount": 70000,
+          "metric": -5000,
+          "status": "ok",
+          "durationMs": 2496
+        },
+        {
+          "resolution": 2,
+          "ordinal": 3,
+          "amount": 55000.000000000015,
+          "metric": -20000,
+          "status": "ok",
+          "durationMs": 1227
+        },
+        {
+          "resolution": 2,
+          "ordinal": 4,
+          "amount": 55000.00000000002,
+          "metric": -19999.99999999997,
+          "status": "ok",
+          "durationMs": 1229
+        }
+      ],
+      "result": "ok",
+      "threshold": 55000.000000000015,
+      "comparisonStatus": "conditioned",
+      "nextOperation": "denied",
+      "completed": {
+        "searches": 1,
+        "searchPreviews": 9,
+        "searchUnitIssues": 2,
+        "resolutions": 2,
+        "revalidations": 4,
+        "consumerPreviews": 8,
+        "sampleWrites": 2
+      }
+    },
+    {
+      "phase": "terminal",
+      "elapsedMs": 31223,
+      "counts": {
+        "searches": 1,
+        "searchPreviews": 9,
+        "searchUnitIssues": 2,
+        "resolutions": 3,
+        "revalidations": 4,
+        "consumerPreviews": 8,
+        "sampleWrites": 2
+      },
+      "previews": [
+        {
+          "resolution": 1,
+          "ordinal": 1,
+          "amount": 10000,
+          "metric": -65000,
+          "status": "ok",
+          "durationMs": 1021
+        },
+        {
+          "resolution": 1,
+          "ordinal": 2,
+          "amount": 70000,
+          "metric": -5000,
+          "status": "ok",
+          "durationMs": 1158
+        },
+        {
+          "resolution": 1,
+          "ordinal": 3,
+          "amount": 55000.000000000015,
+          "metric": -20000,
+          "status": "ok",
+          "durationMs": 1242
+        },
+        {
+          "resolution": 1,
+          "ordinal": 4,
+          "amount": 55000.00000000002,
+          "metric": -19999.99999999997,
+          "status": "ok",
+          "durationMs": 1246
+        },
+        {
+          "resolution": 2,
+          "ordinal": 1,
+          "amount": 10000,
+          "metric": -65000,
+          "status": "ok",
+          "durationMs": 2487
+        },
+        {
+          "resolution": 2,
+          "ordinal": 2,
+          "amount": 70000,
+          "metric": -5000,
+          "status": "ok",
+          "durationMs": 2496
+        },
+        {
+          "resolution": 2,
+          "ordinal": 3,
+          "amount": 55000.000000000015,
+          "metric": -20000,
+          "status": "ok",
+          "durationMs": 1227
+        },
+        {
+          "resolution": 2,
+          "ordinal": 4,
+          "amount": 55000.00000000002,
+          "metric": -19999.99999999997,
+          "status": "ok",
+          "durationMs": 1229
+        }
+      ]
+    },
+    {
+      "phase": "final-witness-revocation",
+      "elapsedMs": 31441,
+      "counts": {
+        "searches": 1,
+        "searchPreviews": 9,
+        "searchUnitIssues": 2,
+        "resolutions": 2,
+        "revalidations": 4,
+        "consumerPreviews": 8,
+        "sampleWrites": 2
+      },
+      "previews": [
+        {
+          "resolution": 1,
+          "ordinal": 1,
+          "amount": 10000,
+          "metric": -65000,
+          "status": "ok",
+          "durationMs": 1110
+        },
+        {
+          "resolution": 1,
+          "ordinal": 2,
+          "amount": 70000,
+          "metric": -5000,
+          "status": "ok",
+          "durationMs": 1188
+        },
+        {
+          "resolution": 1,
+          "ordinal": 3,
+          "amount": 55000.000000000015,
+          "metric": -20000,
+          "status": "ok",
+          "durationMs": 1312
+        },
+        {
+          "resolution": 1,
+          "ordinal": 4,
+          "amount": 55000.00000000002,
+          "metric": -19999.99999999997,
+          "status": "ok",
+          "durationMs": 1318
+        },
+        {
+          "resolution": 2,
+          "ordinal": 1,
+          "amount": 10000,
+          "metric": -65000,
+          "status": "ok",
+          "durationMs": 2606
+        },
+        {
+          "resolution": 2,
+          "ordinal": 2,
+          "amount": 70000,
+          "metric": -5000,
+          "status": "ok",
+          "durationMs": 2622
+        },
+        {
+          "resolution": 2,
+          "ordinal": 3,
+          "amount": 55000.000000000015,
+          "metric": -20000,
+          "status": "ok",
+          "durationMs": 1312
+        },
+        {
+          "resolution": 2,
+          "ordinal": 4,
+          "amount": 55000.00000000002,
+          "metric": -19999.99999999997,
+          "status": "ok",
+          "durationMs": 1303
+        }
+      ],
+      "result": "stale",
+      "revokedAfterFinalWitness": true
+    },
+    {
+      "phase": "terminal",
+      "elapsedMs": 31441,
+      "counts": {
+        "searches": 1,
+        "searchPreviews": 9,
+        "searchUnitIssues": 2,
+        "resolutions": 2,
+        "revalidations": 4,
+        "consumerPreviews": 8,
+        "sampleWrites": 2
+      },
+      "previews": [
+        {
+          "resolution": 1,
+          "ordinal": 1,
+          "amount": 10000,
+          "metric": -65000,
+          "status": "ok",
+          "durationMs": 1110
+        },
+        {
+          "resolution": 1,
+          "ordinal": 2,
+          "amount": 70000,
+          "metric": -5000,
+          "status": "ok",
+          "durationMs": 1188
+        },
+        {
+          "resolution": 1,
+          "ordinal": 3,
+          "amount": 55000.000000000015,
+          "metric": -20000,
+          "status": "ok",
+          "durationMs": 1312
+        },
+        {
+          "resolution": 1,
+          "ordinal": 4,
+          "amount": 55000.00000000002,
+          "metric": -19999.99999999997,
+          "status": "ok",
+          "durationMs": 1318
+        },
+        {
+          "resolution": 2,
+          "ordinal": 1,
+          "amount": 10000,
+          "metric": -65000,
+          "status": "ok",
+          "durationMs": 2606
+        },
+        {
+          "resolution": 2,
+          "ordinal": 2,
+          "amount": 70000,
+          "metric": -5000,
+          "status": "ok",
+          "durationMs": 2622
+        },
+        {
+          "resolution": 2,
+          "ordinal": 3,
+          "amount": 55000.000000000015,
+          "metric": -20000,
+          "status": "ok",
+          "durationMs": 1312
+        },
+        {
+          "resolution": 2,
+          "ordinal": 4,
+          "amount": 55000.00000000002,
+          "metric": -19999.99999999997,
+          "status": "ok",
+          "durationMs": 1303
+        }
+      ]
+    },
+    {
+      "phase": "fixture",
+      "elapsedMs": 35760.11995799997
+    },
+    {
+      "phase": "positive",
+      "accepted": true,
+      "elapsedMs": 11710.29386700003,
+      "searches": 0,
+      "units": 4,
+      "previews": 10,
+      "scopeChecks": 2
+    },
+    {
+      "phase": "forged-evidence",
+      "accepted": false,
+      "elapsedMs": 11642.781709000003,
+      "searches": 0,
+      "units": 4,
+      "previews": 10,
+      "scopeChecks": 1
+    },
+    {
+      "phase": "root-poison",
+      "accepted": false,
+      "elapsedMs": 11495.937603999977,
+      "searches": 0,
+      "units": 4,
+      "previews": 10,
+      "scopeChecks": 2
+    },
+    {
+      "phase": "late-lease-revocation",
+      "accepted": false,
+      "elapsedMs": 11644.808603999962,
+      "searches": 0,
+      "units": 4,
+      "previews": 10,
+      "scopeChecks": 2
+    },
+    {
+      "phase": "units.resolve.first",
+      "fixtureMs": 301.8116460000165,
+      "durationMs": 214.49426900001708,
+      "counters": {
+        "selectedReads": 2,
+        "baselineReads": 2,
+        "caseReads": 2,
+        "scenarioBatches": 2,
+        "rules": 2,
+        "evidenceResolves": 4
+      },
+      "result": "ok"
+    },
+    {
+      "phase": "units.resolve.new-operation",
+      "durationMs": 216.01422099996125,
+      "counters": {
+        "selectedReads": 4,
+        "baselineReads": 4,
+        "caseReads": 4,
+        "scenarioBatches": 4,
+        "rules": 4,
+        "evidenceResolves": 8
+      },
+      "result": "ok"
+    },
+    {
+      "phase": "units.resolve.rule-case-version",
+      "durationMs": 243.99936399998842,
+      "counters": {
+        "selectedReads": 2,
+        "baselineReads": 2,
+        "caseReads": 2,
+        "scenarioBatches": 2,
+        "rules": 1,
+        "evidenceResolves": 2
+      },
+      "result": {
+        "status": "stale",
+        "reason": "sensitivity-source-changed"
+      }
+    },
+    {
+      "phase": "units.resolve.rule-planner-source",
+      "durationMs": 71.28257899999153,
+      "counters": {
+        "selectedReads": 1,
+        "baselineReads": 1,
+        "caseReads": 1,
+        "scenarioBatches": 1,
+        "rules": 1,
+        "evidenceResolves": 0
+      },
+      "result": {
+        "status": "stale",
+        "reason": "source-changed"
+      }
+    },
+    {
+      "phase": "units.resolve.rule-revocation",
+      "durationMs": 27.4785120000015,
+      "counters": {
+        "selectedReads": 1,
+        "baselineReads": 0,
+        "caseReads": 1,
+        "scenarioBatches": 0,
+        "rules": 1,
+        "evidenceResolves": 0
+      },
+      "result": {
+        "status": "denied",
+        "reason": "sensitivity-authority-changed"
+      }
+    },
+    {
+      "phase": "units.resolve.rule-request-headers",
+      "durationMs": 29.36077899998054,
+      "counters": {
+        "selectedReads": 1,
+        "baselineReads": 0,
+        "caseReads": 1,
+        "scenarioBatches": 0,
+        "rules": 1,
+        "evidenceResolves": 0
+      },
+      "result": {
+        "status": "denied",
+        "reason": "sensitivity-authority-changed"
+      }
+    },
+    {
+      "phase": "units.resolve.rule-lease",
+      "durationMs": 27.656210000044666,
+      "counters": {
+        "selectedReads": 1,
+        "baselineReads": 0,
+        "caseReads": 1,
+        "scenarioBatches": 0,
+        "rules": 1,
+        "evidenceResolves": 0
+      },
+      "result": {
+        "status": "denied",
+        "reason": "sensitivity-authority-changed"
+      }
+    },
+    {
+      "phase": "units.resolve.rule-incoming-request",
+      "durationMs": 34.24047600000631,
+      "counters": {
+        "selectedReads": 1,
+        "baselineReads": 0,
+        "caseReads": 1,
+        "scenarioBatches": 0,
+        "rules": 1,
+        "evidenceResolves": 0
+      },
+      "result": {
+        "status": "denied",
+        "reason": "sensitivity-authority-changed"
+      }
+    },
+    {
+      "phase": "historical-batch.callback-multiplicity",
+      "durationMs": 265.4160029999912,
+      "counters": {
+        "authorizeCase": 12,
+        "verifySources": 12,
+        "revalidate": 25,
+        "baselineSources": 4,
+        "fullCaseReads": 2,
+        "casesNamespaceReads": 10,
+        "facadeCalls": 0
+      },
+      "statuses": [
+        "ok",
+        "unavailable",
+        "ok",
+        "ok"
+      ]
+    },
+    {
+      "phase": "historical-batch.final-source-planner-source",
+      "durationMs": 165.21918299997924,
+      "counters": {
+        "authorizeCase": 8,
+        "verifySources": 8,
+        "revalidate": 16,
+        "baselineSources": 4,
+        "fullCaseReads": 2,
+        "casesNamespaceReads": 9,
+        "facadeCalls": 0
+      },
+      "statuses": [
+        "unavailable",
+        "unavailable"
+      ]
+    },
+    {
+      "phase": "historical-batch.final-source-case-version",
+      "durationMs": 166.8780029999907,
+      "counters": {
+        "authorizeCase": 8,
+        "verifySources": 8,
+        "revalidate": 16,
+        "baselineSources": 4,
+        "fullCaseReads": 1,
+        "casesNamespaceReads": 9,
+        "facadeCalls": 0
+      },
+      "statuses": [
+        "denied",
+        "denied"
+      ]
+    },
+    {
+      "phase": "historical-batch.final-source-stored-result",
+      "durationMs": 231.11607299995376,
+      "counters": {
+        "authorizeCase": 8,
+        "verifySources": 8,
+        "revalidate": 16,
+        "baselineSources": 4,
+        "fullCaseReads": 2,
+        "casesNamespaceReads": 11,
+        "facadeCalls": 0
+      },
+      "statuses": [
+        "denied",
+        "ok"
+      ]
+    },
+    {
+      "phase": "historical-batch.final-source-request-headers",
+      "durationMs": 154.2074980000034,
+      "counters": {
+        "authorizeCase": 8,
+        "verifySources": 8,
+        "revalidate": 16,
+        "baselineSources": 4,
+        "fullCaseReads": 1,
+        "casesNamespaceReads": 8,
+        "facadeCalls": 0
+      },
+      "statuses": [
+        "denied",
+        "denied"
+      ]
+    },
+    {
+      "phase": "historical-batch.final-source-lease",
+      "durationMs": 146.80777700000908,
+      "counters": {
+        "authorizeCase": 8,
+        "verifySources": 8,
+        "revalidate": 16,
+        "baselineSources": 4,
+        "fullCaseReads": 1,
+        "casesNamespaceReads": 8,
+        "facadeCalls": 0
+      },
+      "statuses": [
+        "denied",
+        "denied"
+      ]
+    },
+    {
+      "phase": "historical-batch.final-source-scalar-facade",
+      "durationMs": 156.9723000000231,
+      "counters": {
+        "authorizeCase": 8,
+        "verifySources": 8,
+        "revalidate": 16,
+        "baselineSources": 4,
+        "fullCaseReads": 1,
+        "casesNamespaceReads": 8,
+        "facadeCalls": 0
+      },
+      "statuses": [
+        "denied",
+        "denied"
+      ]
+    },
+    {
+      "phase": "historical-batch.final-source-store-facade",
+      "durationMs": 156.81107799999882,
+      "counters": {
+        "authorizeCase": 8,
+        "verifySources": 8,
+        "revalidate": 16,
+        "baselineSources": 4,
+        "fullCaseReads": 1,
+        "casesNamespaceReads": 8,
+        "facadeCalls": 0
+      },
+      "statuses": [
+        "denied",
+        "denied"
+      ]
+    }
+  ],
+  "log": {
+    "sha256": "fe9a4b35943c5c1154e6c00f1421d0ac152359ab6f6dd958a82a3314e8ba509b",
+    "bytes": 90113
+  },
+  "omni": {
+    "nonce": "77d9f41f89157832307f92b6538e9759",
+    "result": "not applicable"
+  },
+  "artifacts": [],
+  "excerpts": [
+    "2026-11-14T19:10:16.1884887Z (pass) one sibling batch shares only its two canonical case observations and retains every result reread [3795.47ms]",
+    "2026-11-14T19:10:23.1750406Z (pass) units emit the identical binding with six canonical case reads, while a legacy host still performs ten [6986.64ms]",
+    "2026-11-14T19:10:31.0246665Z (pass) comparison starts independent batches for its initial and final observations [7849.50ms]",
+    "2026-11-14T19:10:35.4603305Z (pass) different cases and historical producer versions form separate groups and retain order, cardinality and refusal [4435.68ms]",
+    "2026-11-14T19:10:39.0484278Z (pass) ledger, alternative and coverage changes between phases invalidate every sibling without a version shortcut [3588.07ms]",
+    "2026-11-14T19:10:39.8570521Z (pass) authority revoked after result rereads is rejected by the fresh final case observation [808.63ms]",
+    "2026-11-14T19:10:41.0601758Z (pass) a real Planner source change during projection invalidates both stored siblings [1203.13ms]",
+    "2026-11-14T19:10:42.6283740Z (pass) retained store and case callback objects cannot rewrite an earlier observation [1568.18ms]",
+    "2026-11-14T19:10:44.3784312Z (pass) batch refusals and malformed cardinality never fall back to individual resolution [1750.00ms]",
+    "2026-11-14T19:10:44.6959079Z (pass) decision result persistence binds retries, current case and source authority [315.96ms]",
+    "2026-11-14T19:10:58.5014124Z (pass) sensitivity retains the admitted request when a provider mutates its borrowed input [13800.07ms]",
+    "2026-11-14T19:11:09.9555236Z (pass) sensitivity detects a provider reusing and changing the original source record [11454.62ms]",
+    "2026-11-14T19:11:57.8258024Z (pass) each sensitivity verification reads a fresh committed Planner source instead of retaining its previous scope [47861.36ms]",
+    "2026-11-14T19:12:56.9837628Z (pass) a failed sensitivity scope cannot retain its old grant or publish a callback-mutated replay input [59160.37ms]",
+    "2026-11-14T19:13:15.5926889Z (pass) real Planner sensitivity keeps EUR input separate from USD output and leaves missing FX conditioned in C08 [18599.04ms]",
+    "2026-11-14T19:13:15.9607564Z (pass) historical scenario batches coalesce only C08 envelopes for real siblings [366.07ms]",
+    "2026-11-14T19:13:16.3959071Z (pass) historical scenario batches coalesce only C08 envelopes for real siblings including duplicate occurrences [435.10ms]",
+    "2026-11-14T19:13:16.7939855Z (pass) historical scenario batch keeps an overriding scalar facade and its per-result hooks [398.12ms]",
+    "2026-11-14T19:13:59.5151314Z (pass) Finance sensitivity searches once and recertifies fresh adjacent witnesses without retaining authority for the next operation [42712.04ms]",
+    "2026-11-14T19:14:42.8969616Z (pass) Finance sensitivity refuses authority revoked after the final awaited adjacent witness [43381.93ms]",
+    "2026-11-14T19:16:13.5718255Z (pass) persisted Finance candidates recertify without another search and retain witness, evidence, root and lease fences [90674.62ms]",
+    "2026-11-14T19:16:14.3082880Z (pass) units resolution reuses only its first observation and rereads both sides in every operation [735.12ms]",
+    "2026-11-14T19:16:14.8463872Z (pass) units resolution rejects case-version during the rule callback after its first observation [538.05ms]",
+    "2026-11-14T19:16:15.2606691Z (pass) units resolution rejects planner-source during the rule callback after its first observation [414.27ms]",
+    "2026-11-14T19:16:15.5649331Z (pass) units resolution rejects revocation during the rule callback after its first observation [304.24ms]",
+    "2026-11-14T19:16:16.0561067Z (pass) units resolution rejects request-headers during the rule callback after its first observation [491.04ms]",
+    "2026-11-14T19:16:16.3619796Z (pass) units resolution rejects lease during the rule callback after its first observation [305.99ms]",
+    "2026-11-14T19:16:16.8040333Z (pass) units resolution rejects incoming-request during the rule callback after its first observation [442.05ms]",
+    "2026-11-14T19:16:17.3768566Z (pass) historical batch keeps each real callback and ordered failures across duplicate occurrences [571.25ms]",
+    "2026-11-14T19:16:17.8359605Z (pass) historical batch refuses planner-source after the later sibling's final source callback [459.07ms]",
+    "2026-11-14T19:16:18.3334340Z (pass) historical batch refuses case-version after the later sibling's final source callback [497.46ms]",
+    "2026-11-14T19:16:18.8448984Z (pass) historical batch refuses stored-result after the later sibling's final source callback [511.44ms]",
+    "2026-11-14T19:16:19.4008189Z (pass) historical batch refuses request-headers after the later sibling's final source callback [555.91ms]",
+    "2026-11-14T19:16:19.8395045Z (pass) historical batch refuses lease after the later sibling's final source callback [438.68ms]",
+    "2026-11-14T19:16:20.2809236Z (pass) historical batch refuses scalar-facade after the later sibling's final source callback [441.39ms]",
+    "2026-11-14T19:16:20.8032357Z (pass) historical batch refuses store-facade after the later sibling's final source callback [522.29ms]",
+    "2026-11-14T19:16:20.8051066Z  36 pass",
+    "2026-11-14T19:16:20.8051711Z  0 fail",
+    "2026-11-14T19:16:20.8051974Z  297 expect() calls",
+    "2026-11-14T19:16:20.8052362Z Ran 36 tests across 10 files. [368.57s]"
+  ],
+  "limitations": [
+    "Surgical affected-producer selection, not global FIN-IND-005 acceptance, installed/native acceptance, or epic/full suite.",
+    "Timing values are individual hosted observations; reductions in operation counts are the causal result. No distribution or systemwide speedup is claimed.",
+    "Two sibling C08 reads measured 16 in S4 and 10 in S5; original full-case observations remain two. The overriding scalar facade still uses 16 reads and four scalar hooks.",
+    "Historical batching is not an atomic snapshot of all domain sources. The production Planner operation verifier on the fresh complete-case observation rejects a real source mutation after an earlier sibling's callback.",
+    "No product tests or typechecks executed locally; no timeout, assertion, required authority callback or existing test changed."
+  ]
+}
+

@@ -1,0 +1,62 @@
+{
+  "schema": "wp11-h6-scratch-proposal-v1",
+  "status": "FROZEN_FOR_INDEPENDENT_STATIC_REVIEW_NOT_APPLIED_NOT_RUN",
+  "preparedAtUtc": "2026-11-14T12:31:51.853519+00:00",
+  "baseObservedProduct": "1fa71a64faf297fdbae07747d260d4ced7ec9532",
+  "latestRootPublishedProduct": "dd9363dab38a769dd0c34fcf2068dfb610693779",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "baseBlob": "f83ca8b14429905f84d42d27bb57e8b19d7aba42",
+      "candidateBlob": "73eee84b724bfdef9dbd4aaa65902e4503a1e8e0",
+      "candidateSha256": "aeb01fde16f61497f952f25c9eaf5c5c4cdbc00967e2f3932806ad0894e72b11",
+      "bytes": 6425
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "baseBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "candidateBlob": "9514f80dc7e8dbb9c8acf1822bbd4f1ea067c0e1",
+      "candidateSha256": "667104e7adbf32bcaca7989c1134bbc23de8d9c040740a2dfd86816577166c79",
+      "bytes": 25596
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "baseBlob": null,
+      "candidateBlob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "candidateSha256": "ed792565e2a75a2b29a65dc81eee892db5bcefd0744c55d110ee9af6401df737",
+      "bytes": 11611
+    }
+  ],
+  "patch": {
+    "path": "requirements/source-observation-proposal-H6/source-observation-H6.patch",
+    "sha256": "d81218bd69ae68b7544c061cf4d43c9e4baa292cb76f5fa334285aa0322c99ef"
+  },
+  "diagnosis": {
+    "path": "requirements/source-observation-proposal-H6/diagnosis.json",
+    "sha256": "8e0b203b514d4f3e245c24a66c72cfc0c4693004a0b3363818bdacf22f8a7fd0"
+  },
+  "testPlan": {
+    "newTestFileCount": 1,
+    "newTests": 7,
+    "historyBudgetMsUnchanged": 180000,
+    "runLocally": false,
+    "hostedRequired": [
+      "Seven focused admission controls/negatives, including final authentication revocation with real UI authorization.",
+      "The same complete renewal-choice-history including interval and collaborator restart.",
+      "Already planned affected B1 consumer tests; do not transfer an earlier PASS through changed shared fixture paths."
+    ]
+  },
+  "scope": {
+    "ownOnly": true,
+    "foreignRuntimeChanges": false,
+    "financialFormulaChanges": false,
+    "classificationOrHumanConfirmationSubstitution": false,
+    "repositoryWrites": false,
+    "remoteWrites": false,
+    "published": false
+  },
+  "impact": "renewal-operation-verifier is shared by renewal-choice-fixture and renewal-human-choice-fixture; the no-op observation semantics change for both. Their nonempty operation/assumption delegation remains byte-identical. Existing financial assert files and the three initial replace operations are unchanged.",
+  "revision": "FINAL_AUTHENTICATION_EGRESS_FENCE",
+  "reviewStatus": "UPDATED_AFTER_STATIC_FINDING_PENDING_FINAL_INDEPENDENT_REVIEW",
+  "supersededProposalIdentities": "requirements/source-observation-proposal-H6/superseded-pre-egress-manifest-identities.json"
+}

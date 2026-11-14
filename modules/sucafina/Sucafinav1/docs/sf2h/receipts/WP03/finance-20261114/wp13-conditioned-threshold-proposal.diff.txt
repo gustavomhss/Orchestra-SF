@@ -1,0 +1,124 @@
+--- a/modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts
+@@ -1,11 +1,12 @@
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+ import type { ScenarioComparison, ScenarioResult } from "../contracts/decisions.ts"
+-import type { ScenarioRequest, SensitivityRequest } from "../contracts/operations.ts"
++import type { ScenarioOperation, ScenarioRequest, SensitivityRequest } from "../contracts/operations.ts"
+ import type { PortResult } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import type { createSfDecisionResultStore, StoredDecisionResult } from "../decisions/result-store.ts"
+ import { plannerPreviewDigest, plannerScenarioDigest } from "../planner/preview-comparison.ts"
++import { plannerDirectUsdParameter } from "../planner/exact-threshold.ts"
+ import { createSensitivityEvaluator } from "./sensitivity.ts"
+ import type { SensitivitySampledResult } from "./sensitivity.ts"
+ import { attachSensitivityV6 } from "./sensitivity-v6.ts"
+@@ -13,6 +14,7 @@
+ export type PlannerSensitivityBinding = {
+   caseRef: { id: string; incarnation: string; version: number }
+   scenario: ScenarioRequest
++  parameterOperation?: ScenarioOperation
+   baselineRef: string
+   baselineCoverageRef: string
+   scenarioCoverageRef: string
+@@ -54,8 +56,11 @@
+     if (baseline.status !== "ok") return baseline
+     if (source.value.kind !== "scenario" || baseline.value.kind !== "scenario" || source.value.resultRef !== request.scenarioRef || baseline.value.resultRef !== binding.baselineRef || source.value.resultDigest !== digestSfValue(source.value.result) || baseline.value.resultDigest !== digestSfValue(baseline.value.result) || source.value.requestDigest !== digestSfValue(binding.scenario) || [source.value.caseRef, baseline.value.caseRef].some((ref) => ref.id !== binding.caseRef.id || ref.incarnation !== binding.caseRef.incarnation || ref.version > binding.caseRef.version)) return { status: "stale", reason: "sensitivity-scenario-changed" } as const
+     const sourceScenario = source.value.result
+-    const baselineScenario = baseline.value.result
+-    const operations = binding.scenario.operations.filter((operation) => operation.targetRef === request.parameterBounds.parameterRef)
++    const sourceOnly = binding.scenario.operations.length === 0 && binding.scenario.assumptions.length === 0
++    const parameter = sourceOnly ? plannerDirectUsdParameter(binding.scenario, request.parameterBounds.parameterRef, binding.parameterOperation) : undefined
++    if (sourceOnly && (!parameter || !sourceScenario.id.startsWith("source-scenario:")) || !sourceOnly && binding.parameterOperation) return { status: "needs-input", reason: "unsupported-sensitivity-parameter" } as const
++    const parameterOperations = sourceOnly && parameter ? [parameter] : binding.scenario.operations
++    const operations = parameterOperations.filter((operation) => operation.targetRef === request.parameterBounds.parameterRef)
+     if (operations.length !== 1 || operations[0].kind !== "replace" || operations[0].replacementRef !== undefined || typeof operations[0].amount !== "number" || !Number.isFinite(operations[0].amount)) return { status: "needs-input", reason: "unsupported-sensitivity-parameter" } as const
+     const key = await input.idempotencyKey(digestSfValue(request), context)
+     if (!key?.trim()) return { status: "denied", reason: "operation-identity-unavailable" } as const
+@@ -63,7 +68,7 @@
+     const exactEvidence: { value?: { value: number | null; evidenceRefs: readonly BusinessEvidenceRef[] } } = {}
+     const evaluate = createSensitivityEvaluator({
+       sample: async (_request, value, trusted) => {
+-        const scenario = structuredClone({ ...binding.scenario, operations: binding.scenario.operations.map((operation) => operation.targetRef === request.parameterBounds.parameterRef ? { ...operation, amount: value } : operation) })
++        const scenario = structuredClone({ ...binding.scenario, operations: parameterOperations.map((operation) => operation.targetRef === request.parameterBounds.parameterRef ? { ...operation, amount: value } : operation) })
+         const preview = structuredClone(await input.preview({ baselineRef: binding.baselineRef, scenario: structuredClone(scenario) }, trusted))
+         if (preview.status !== "ok") return preview
+         if (preview.value.comparison.baselineResultRef !== binding.baselineRef || preview.value.comparison.alternativeResultRef !== preview.value.sample.id || digestSfValue(preview.value.comparison.costCoverageRefs) !== digestSfValue([binding.baselineCoverageRef]) || preview.value.comparison.comparisonStatus === "incompatible" || preview.value.comparison.comparisonStatus === "unavailable") return { status: "unavailable", reason: "sensitivity-comparison-unavailable" }
+@@ -80,7 +85,7 @@
+         return { status: "ok", value: { resultRef: saved.value.resultRef, scenario: saved.value.result, criterionValue: preview.value.comparison.knownDifference, parameterUnit: binding.parameterUnit, resultUnit: binding.resultUnit, unitMetadataRef: binding.unitMetadataRef, unitMetadataVersion: binding.unitMetadataVersion } }
+       },
+       exactThreshold: async (_request, trusted) => {
+-        if (!input.exactThreshold || samples.some((sample) => !sample.complete) || baselineScenario.costCoverage.coverageState !== "complete" || sourceScenario.costCoverage.coverageState !== "complete") return { status: "unavailable", reason: "exact-threshold-not-proven" }
++        if (!input.exactThreshold) return { status: "unavailable", reason: "exact-threshold-not-proven" }
+         const result = structuredClone(await input.exactThreshold(structuredClone(request), structuredClone(binding), trusted))
+         if (result.status === "ok") exactEvidence.value = result.value
+         return result
+@@ -123,7 +128,8 @@
+   const points = input.result.evaluated
+   const transitions = points.flatMap((point, index) => index > 0 && point.value !== null && points[index - 1].value !== null && meets(point.value) !== meets(points[index - 1].value!) ? [index] : [])
+   const transition = transitions.length === 1 && points.every((point) => point.value !== null) ? transitions[0] : undefined
+-  const exact = input.result.comparisonStatus === "complete" && !input.result.unresolvedConditions.length && input.samples.every((sample) => !sample.conditions.length) && input.result.threshold !== null && input.exact?.value === input.result.threshold && input.exact.evidenceRefs.length > 0
++  const exact = input.result.threshold !== null && input.exact?.value === input.result.threshold && input.exact.evidenceRefs.length > 0
++  const complete = exact && input.result.comparisonStatus === "complete" && !input.result.unresolvedConditions.length && input.samples.every((sample) => !sample.conditions.length)
+   const thresholdEvidence = exact && input.exact && input.result.threshold !== null ? { state: "exact" as const, value: input.result.threshold, evidenceRefs: input.exact.evidenceRefs } : transition === undefined ? { state: "unavailable" as const, reason: transitions.length > 1 ? "multiple-sampled-transitions" : points.some((point) => point.value === null) ? "sample-value-unavailable" : "no-sampled-transition" } : { state: "sampled" as const, interval: { minimum: points[transition - 1].parameterValue, maximum: points[transition].parameterValue }, evidenceRefs: [...input.binding.evidenceRefs, ...input.baselineRefs, ...input.result.evidenceRefs] }
+-  return attachSensitivityV6({ result: { ...input.result, threshold: exact ? input.result.threshold : null, comparisonStatus: exact ? "complete" : "conditioned", unresolvedConditions: [...input.result.unresolvedConditions, ...input.samples.flatMap((sample) => sample.conditions.map((reason) => ({ id: `${sample.resultRef}:${reason}`, category: "coverage", reason, evidenceRefs: input.baselineRefs }))), ...(exact ? [] : [{ id: "preview-coverage", category: "coverage", reason: "Threshold evidence concerns known subtotal differences only; unresolved coverage can change the decision.", evidenceRefs: input.baselineRefs }])], evidenceRefs: [...input.result.evidenceRefs, ...input.binding.evidenceRefs, ...input.baselineRefs] }, costCoverageRefs: [...new Set([input.binding.baselineCoverageRef, input.binding.scenarioCoverageRef, ...input.samples.flatMap((sample) => sample.coverageRefs)])], unit: input.binding.unit, engineVersion: input.binding.engineVersion, thresholdEvidence })
++  return attachSensitivityV6({ result: { ...input.result, threshold: exact ? input.result.threshold : null, comparisonStatus: complete ? "complete" : "conditioned", unresolvedConditions: [...input.result.unresolvedConditions, ...input.samples.flatMap((sample) => sample.conditions.map((reason) => ({ id: `${sample.resultRef}:${reason}`, category: "coverage", reason, evidenceRefs: input.baselineRefs }))), ...(complete ? [] : [{ id: "preview-coverage", category: "coverage", reason: "Threshold evidence concerns known subtotal differences only; unresolved coverage can change the decision.", evidenceRefs: input.baselineRefs }])], evidenceRefs: [...input.result.evidenceRefs, ...input.binding.evidenceRefs, ...input.baselineRefs] }, costCoverageRefs: [...new Set([input.binding.baselineCoverageRef, input.binding.scenarioCoverageRef, ...input.samples.flatMap((sample) => sample.coverageRefs)])], unit: input.binding.unit, engineVersion: input.binding.engineVersion, thresholdEvidence })
+ }
+--- a/modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts
+@@ -39,10 +39,12 @@
+     if (proposedThreshold !== null && exact.status === "ok" && !exact.value.evidenceRefs.length) return { status: "unavailable", reason: "threshold-evidence-unavailable" }
+     if (proposedThreshold !== null && (!Number.isFinite(proposedThreshold) || proposedThreshold < bounds.minimum || proposedThreshold > bounds.maximum)) return { status: "unavailable", reason: "invalid-domain-threshold" }
+     if (!await host.revalidate(structuredClone(samples), exact.status === "ok" ? structuredClone(exact.value.evidenceRefs) : [], context)) return { status: "stale", reason: "source-or-authority-changed" }
+-    const incomplete = samples.some((sample) => sample.scenario.comparisonStatus !== "complete" || sample.criterionValue === null || sample.scenario.costCoverage.coverageState !== "complete" || sample.scenario.unresolvedConditions.length > 0 || sample.scenario.costCoverage.issues.length > 0 || sample.scenario.costCoverage.entries.length === 0 || sample.scenario.costCoverage.evaluatedSourceRefs.length === 0 || sample.scenario.costCoverage.entries.some((entry) => entry.evidenceRefs.length === 0) || sample.scenario.components.some((component) => component.amount === null || !Number.isFinite(component.amount) || component.evidenceState !== "confirmed" || component.sourceRefs.length === 0))
++    const incomplete = samples.some((sample) => sample.scenario.comparisonStatus !== "complete" || sample.criterionValue === null || sample.scenario.costCoverage.coverageState !== "complete" || sample.scenario.unresolvedConditions.length > 0 || sample.scenario.costCoverage.issues.length > 0 || sample.scenario.costCoverage.entries.length === 0 || sample.scenario.costCoverage.evaluatedSourceRefs.length === 0 || sample.scenario.costCoverage.entries.some((entry) => entry.status === "pending" || entry.evidenceRefs.length === 0) || sample.scenario.components.some((component) => component.amount === null || !Number.isFinite(component.amount) || component.evidenceState !== "confirmed" || component.sourceRefs.length === 0))
+     const unavailable = samples.some((sample) => sample.scenario.comparisonStatus === "unavailable")
+     const incompatible = samples.some((sample) => sample.scenario.comparisonStatus === "incompatible")
+-    const threshold = incomplete || unavailable || incompatible ? null : proposedThreshold
++    // Missing values prevent an exact result; unresolved C10 coverage keeps it conditioned.
++    const unknown = samples.some((sample) => sample.criterionValue === null || sample.scenario.components.some((component) => component.amount === null || !Number.isFinite(component.amount) || component.evidenceState === "absent" || component.sourceRefs.length === 0))
++    const threshold = unknown || unavailable || incompatible ? null : proposedThreshold
+     const conditions: UnresolvedCondition[] = samples.flatMap((sample) => [...sample.scenario.unresolvedConditions, ...(sample.scenario.costCoverage.coverageState === "complete" ? [] : [`coverage:${sample.scenario.costCoverage.coverageState}`]), ...sample.scenario.costCoverage.issues, ...sample.scenario.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [`${entry.categoryId}:${entry.reason}`] : []), ...sample.scenario.costCoverage.derivedMissingCategoryIds.map((id) => `missing-category:${id}`)].map((reason) => ({ id: `${sample.resultRef}:${reason}`, category: "coverage", reason, evidenceRefs: sample.scenario.sourceRefs })))
+     for (const sample of samples) {
+       if (sample.criterionValue === null) conditions.push({ id: `${sample.resultRef}:criterion-unavailable`, category: "quantification", reason: "Criterion value is unavailable.", evidenceRefs: sample.scenario.sourceRefs })
+--- a/modules/sucafina/Sucafinav1/product/portfolio/verification.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/verification.ts
+@@ -11,6 +11,7 @@
+ import type { CriterionResultBinding } from "../decisions/criterion-rules.ts"
+ import type { createPlannerSensitivityUnits } from "../planner/sensitivity-units.ts"
+ import { plannerScenarioDigest } from "../planner/preview-comparison.ts"
++import { plannerDirectUsdParameter } from "../planner/exact-threshold.ts"
+ import { createSensitivityEvaluator } from "./sensitivity.ts"
+ import { finalizePlannerSensitivity } from "./planner-sensitivity.ts"
+ import type { createPlannerSensitivity } from "./planner-sensitivity.ts"
+@@ -100,13 +101,19 @@
+     const source = await input.results.readHistoricalScenario({ resultRef: binding.request.scenarioRef }, context)
+     const baseline = await input.results.readHistoricalScenario({ resultRef: unitBinding.baselineRef }, context)
+     if (source.status !== "ok" || baseline.status !== "ok" || source.value.kind !== "scenario" || baseline.value.kind !== "scenario" || source.value.requestDigest !== digestSfValue(unitBinding.scenario)) return false
++    const sourceOnly = unitBinding.scenario.operations.length === 0 && unitBinding.scenario.assumptions.length === 0
++    const parameter = sourceOnly ? plannerDirectUsdParameter(unitBinding.scenario, binding.request.parameterBounds.parameterRef, unitBinding.parameterOperation) : undefined
++    if (sourceOnly && (!parameter || !source.value.result.id.startsWith("source-scenario:")) || !sourceOnly && unitBinding.parameterOperation) return false
++    const parameterOperations = sourceOnly && parameter ? [parameter] : unitBinding.scenario.operations
++    const operations = parameterOperations.filter((operation) => operation.targetRef === binding.request.parameterBounds.parameterRef)
++    if (operations.length !== 1 || operations[0].kind !== "replace" || operations[0].replacementRef !== undefined || typeof operations[0].amount !== "number" || !Number.isFinite(operations[0].amount)) return false
+     const samples: { resultRef: string; coverageRefs: readonly string[]; conditions: readonly string[]; complete: boolean }[] = []
+     const exact: { value?: { value: number | null; evidenceRefs: readonly import("../contracts/business-context.ts").BusinessEvidenceRef[] } } = {}
+     const evaluate = createSensitivityEvaluator({
+       sample: async (_request, value, trusted) => {
+         const point = expectedResult.evaluated[samples.length]
+         if (!point || point.parameterValue !== value) return { status: "stale", reason: "sensitivity-sample-changed" }
+-        const scenario = { ...unitBinding.scenario, operations: unitBinding.scenario.operations.map((operation) => operation.targetRef === binding.request.parameterBounds.parameterRef ? { ...operation, amount: value } : operation) }
++        const scenario = { ...unitBinding.scenario, operations: parameterOperations.map((operation) => operation.targetRef === binding.request.parameterBounds.parameterRef ? { ...operation, amount: value } : operation) }
+         const saved = await input.results.read({ kind: "scenario", resultRef: point.resultRef }, trusted)
+         if (saved.status !== "ok") return saved
+         const preview = await input.sensitivityPreview({ baselineRef: unitBinding.baselineRef, scenario }, trusted)
+@@ -116,7 +123,7 @@
+         return { status: "ok", value: { resultRef: point.resultRef, scenario: saved.value.result, criterionValue: point.value, parameterUnit: unitBinding.parameterUnit, resultUnit: unitBinding.resultUnit, unitMetadataRef: unitBinding.unitMetadataRef, unitMetadataVersion: unitBinding.unitMetadataVersion } }
+       },
+       exactThreshold: async (_request, trusted) => {
+-        if (!input.exactThreshold || samples.some((sample) => !sample.complete) || baseline.value.kind !== "scenario" || source.value.kind !== "scenario" || baseline.value.result.costCoverage.coverageState !== "complete" || source.value.result.costCoverage.coverageState !== "complete") return { status: "unavailable", reason: "exact-threshold-not-proven" }
++        if (!input.exactThreshold) return { status: "unavailable", reason: "exact-threshold-not-proven" }
+         const result = await input.exactThreshold(binding.request, unitBinding, trusted)
+         if (result.status === "ok") exact.value = result.value
+         return result

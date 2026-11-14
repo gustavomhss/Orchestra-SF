@@ -51,7 +51,7 @@ export function preparePlannerMutation(input: { snapshot: Snapshot; actor: Actor
   const commandDigest = digestSfValue({ ...prepared, baseDigest, previewDigest })
   const mutation: PreparedDomainMutation = {
     surface: "planner", idempotencyKey: prepared.idempotencyKey, commandDigest, targetIncarnation: prepared.target.incarnation, expectedVersion: prepared.command.version,
-    execute(snapshot, actor, environment) {
+    execute(snapshot, actor, environment): ReturnType<PreparedDomainMutation["execute"]> {
       if (!actorAccess(snapshot, actor) || digestSfValue(actor) !== digestSfValue(prepared.actor)) return { commit: false, value: { status: "denied", reason: "actor-changed" } }
       const identity = scopedIdentity(snapshot, prepared.scope)
       const current = projectPlannerSource(snapshot, actor, prepared.target.id)

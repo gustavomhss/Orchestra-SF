@@ -1,0 +1,417 @@
+{
+  "schema": "sf-finance-pr40-dc9-intake-v1",
+  "observedAt": "2026-11-14T12:47:36Z",
+  "source": {
+    "pr": 40,
+    "branch": "astra-wp11",
+    "previousHead": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+    "head": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+    "tree": "40c122b24b0e46ed627a5cac506f70575aae6cfd",
+    "commits": [
+      {
+        "sha": "dd9363dab38a769dd0c34fcf2068dfb610693779",
+        "tree": "297243de2cffcdbcf4592e1449783ef3ea43c362",
+        "message": "fix(sucafina): fence current choice reads after final authorization",
+        "parents": [
+          "d7775d6f1eb17af1590ccfb98547259eb017cd1b"
+        ]
+      },
+      {
+        "sha": "18d4c4dc502a5cedb5659eb29413ec7390c6e3df",
+        "tree": "07c5ebf7b7a657c6db85543c32462f5378e65559",
+        "message": "test(sucafina): bound source-only admission without bypassing authority",
+        "parents": [
+          "dd9363dab38a769dd0c34fcf2068dfb610693779"
+        ]
+      },
+      {
+        "sha": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+        "tree": "40c122b24b0e46ed627a5cac506f70575aae6cfd",
+        "message": "test(sucafina): isolate coverage assertions from current choice inputs",
+        "parents": [
+          "18d4c4dc502a5cedb5659eb29413ec7390c6e3df"
+        ]
+      }
+    ]
+  },
+  "financeBase": {
+    "head": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+    "tree": "82ea6bff11f9647d14cac30587ccd2feb80c6950"
+  },
+  "sourceCommitsPreservedAfterIntake": 48,
+  "sourceCutoff": "This bounded observation is the final source reconciliation for this delivery. Later source branch changes are separate inputs, not silently consumed.",
+  "status": "PUBLISHED_CANDIDATE_PENDING_AFFECTED_ACTIONS",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W13.json",
+      "sourceBlob": "16765cb0a2fcecfc62fcd8a4a57f69fb7831c4d6",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "16765cb0a2fcecfc62fcd8a4a57f69fb7831c4d6",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W14.json",
+      "sourceBlob": "b87ff52e54ff325bd1012e229231c5d15630b2c9",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "b87ff52e54ff325bd1012e229231c5d15630b2c9",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W15.json",
+      "sourceBlob": "e244d9fb39e3afea50e5ed058f2eb7e13a468ca2",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "e244d9fb39e3afea50e5ed058f2eb7e13a468ca2",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/current-choice-W14-static-impact.json",
+      "sourceBlob": "1ac01288e4e72510ed89ad77c49edee816259559",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "1ac01288e4e72510ed89ad77c49edee816259559",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/current-choice-observation-application.json",
+      "sourceBlob": "facedd71ece8cfdfa429b70c21ef2cd1fd084169",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "facedd71ece8cfdfa429b70c21ef2cd1fd084169",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/current-choice-observation-manifest.json",
+      "sourceBlob": "99786b2fb9a9fbcbd379cd57117434341d744bff",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "99786b2fb9a9fbcbd379cd57117434341d744bff",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/current-choice-observation-review.json",
+      "sourceBlob": "1425e53684fbf7859ce6ae4c6e6e05a75f4d3128",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "1425e53684fbf7859ce6ae4c6e6e05a75f4d3128",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-S17-current-choice-diagnosis.json",
+      "sourceBlob": "1a9e5344042fc9a7dd48fe541a3abd2a3ffe5d93",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "1a9e5344042fc9a7dd48fe541a3abd2a3ffe5d93",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-map-W12-review.json",
+      "sourceBlob": "6913daa4567b96046d5b384614135e74824dfa85",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "6913daa4567b96046d5b384614135e74824dfa85",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W14-current-choice.json",
+      "sourceBlob": "4c2f5d1b5ca935885cc97027c324a4f85ae9bbcb",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "4c2f5d1b5ca935885cc97027c324a4f85ae9bbcb",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/metadata-parser-ms-change.json",
+      "sourceBlob": "fd7c4829466ebed08f75a870801de4de461ed00a",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "fd7c4829466ebed08f75a870801de4de461ed00a",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/owner-integration-delta-W14-r3.json",
+      "sourceBlob": "4a7fd30c8f7f97e3f77b9abfa23dee539caeeeae",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "4a7fd30c8f7f97e3f77b9abfa23dee539caeeeae",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W12-H5.json",
+      "sourceBlob": "0b07f77657fb8d7370b0750b2f1cb6a31e32c931",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "0b07f77657fb8d7370b0750b2f1cb6a31e32c931",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W13-C2.json",
+      "sourceBlob": "3fdec57f75344dc1e9dbe8612a097c40418f9101",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "3fdec57f75344dc1e9dbe8612a097c40418f9101",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W13-F3.json",
+      "sourceBlob": "e80705036ca46d7c96863a9350a25799fa9475e3",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "e80705036ca46d7c96863a9350a25799fa9475e3",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W14-B1A.json",
+      "sourceBlob": "e2222c056f1ab5126d997109fae41f69c7a501cb",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "e2222c056f1ab5126d997109fae41f69c7a501cb",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W14-R1.json",
+      "sourceBlob": "ec95dee137161460e999ea59a07bd9e02c1d0028",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "ec95dee137161460e999ea59a07bd9e02c1d0028",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/source-observation-H6-application.json",
+      "sourceBlob": "ad940610ab780c261c4ce2f6b3882a8dc72aa7b8",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "ad940610ab780c261c4ce2f6b3882a8dc72aa7b8",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/source-observation-H6-diagnosis.json",
+      "sourceBlob": "d4e4f3743593315a418e5e276fae1c06a93845f7",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "d4e4f3743593315a418e5e276fae1c06a93845f7",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/source-observation-H6-manifest.json",
+      "sourceBlob": "876aa2390a09b1e15a04e605c26b6442c535f415",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "876aa2390a09b1e15a04e605c26b6442c535f415",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/source-observation-H6-review.json",
+      "sourceBlob": "6bbbb22ec7504b36edcda72b6e28cd4e34a4acfc",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "6bbbb22ec7504b36edcda72b6e28cd4e34a4acfc",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W12-H5.json",
+      "sourceBlob": "3143d12728698cc815d432cc373b9d9d88d5a358",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "3143d12728698cc815d432cc373b9d9d88d5a358",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W13-C2.json",
+      "sourceBlob": "110dbf9dedb54551d69066714bbb25fe82691641",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "110dbf9dedb54551d69066714bbb25fe82691641",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W13-F3.json",
+      "sourceBlob": "1ac03e16bd19ba109300885ceaf44793f21e8400",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "1ac03e16bd19ba109300885ceaf44793f21e8400",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W14-B1A.json",
+      "sourceBlob": "bc2245b2ac84c25fa96dd51e64fb94e62900d3c8",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "bc2245b2ac84c25fa96dd51e64fb94e62900d3c8",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W14-R1.json",
+      "sourceBlob": "b9e7f1bcdfb5a9d60d2125c053131583d201d829",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "b9e7f1bcdfb5a9d60d2125c053131583d201d829",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W13.json",
+      "sourceBlob": "2abbf695d2edea3e27dcfc82297126638b456cc6",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "2abbf695d2edea3e27dcfc82297126638b456cc6",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W14.json",
+      "sourceBlob": "84d6f581f5e2acc2c1347fa7b10437d2335b4389",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "84d6f581f5e2acc2c1347fa7b10437d2335b4389",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W15.json",
+      "sourceBlob": "84d6f581f5e2acc2c1347fa7b10437d2335b4389",
+      "beforeBlob": null,
+      "action": "carry-historical-source-receipt",
+      "candidateBlob": "84d6f581f5e2acc2c1347fa7b10437d2335b4389",
+      "qualification": "Historical source evidence; no pass transferred to Finance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "sourceBlob": "38f82f4b931682e255a18d52856e192f2ee43390",
+      "beforeBlob": "12f9bda4f964763e8c6d60fb67e5fb68a08cd9ee",
+      "candidateBlob": "38f82f4b931682e255a18d52856e192f2ee43390",
+      "sha256": "74b8964deabc274b59892f48de8bc54c774aab242d911a9b0713f9ad36f76095",
+      "action": "adopt-exact",
+      "reason": "Case, both persisted results and private binding observed together after external case authorization and namespace admission."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "sourceBlob": "45d2821fbd01c13183d450f1347e9017adba9fe2",
+      "beforeBlob": "7a5100d9e60a81f654cc31714efd2b1e7d0b68f5",
+      "candidateBlob": "d220c42a28e87b034ca3513aca088a0dd0db262b",
+      "sha256": "75081a7c5400635047fa3a013fa7cbb9bcbfd587457a5ed095bbd504c9ea1ef1",
+      "action": "bounded-additive-merge",
+      "reason": "Retain all 41 Finance assertions and confirmed matcher diagnostics; add source combined assessment/entries immutability assertion. Original 180000ms unchanged."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "sourceBlob": "46b004a1b374229ad46077930134ba0469213087",
+      "beforeBlob": null,
+      "candidateBlob": "46b004a1b374229ad46077930134ba0469213087",
+      "sha256": "12dbbe50b2044ce12112cc13d1655d5cc138c58cd387b1f9ffcc799ff1e6fb98",
+      "action": "adopt-exact",
+      "reason": "Two real SQLite/UI/result-store authorization races, positive read with write denied, no producer/application calls."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "sourceBlob": "9514f80dc7e8dbb9c8acf1822bbd4f1ea067c0e1",
+      "beforeBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "candidateBlob": "9514f80dc7e8dbb9c8acf1822bbd4f1ea067c0e1",
+      "sha256": "667104e7adbf32bcaca7989c1134bbc23de8d9c040740a2dfd86816577166c79",
+      "action": "adopt-exact",
+      "reason": "Final projection-only phase member uses sourcePlanner; persisted financial results, comparison, criterion and previews retain canonical C10."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "sourceBlob": "73eee84b724bfdef9dbd4aaa65902e4503a1e8e0",
+      "beforeBlob": "2338917427497733e4bd88aec852985206cce066",
+      "candidateBlob": "f85c1c8e7196aff1381513b2d5ed2109641d6a45",
+      "sha256": "9a23b44d9ac78f6597f0942a9a17dd8c94c40d93e80d2de7eb25b42291d8a7bc",
+      "action": "bounded-additive-merge",
+      "reason": "Retain Finance readonly transaction only for nonempty operations/assumptions; use source-only two fresh authenticated projections, with Actor mapper reused from canonical Planner instead of copied authorization. Preserve all seven source tests and exact counts."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "sourceBlob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "beforeBlob": null,
+      "candidateBlob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "sha256": "ed792565e2a75a2b29a65dc81eee892db5bcefd0744c55d110ee9af6401df737",
+      "action": "adopt-exact",
+      "reason": "Seven cases preserve actual canonical CAS oracle, final authentication revocation, nine scope variants and exact callback counts."
+    }
+  ],
+  "canonicalExtraction": {
+    "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+    "beforeBlob": "e365ac59376482dfcc6f81aed045b0153f911038",
+    "candidateBlob": "8389709232225424b5905638d0951d8cdbb71dd7",
+    "sha256": "8c51fdb91dc3c35bd6ff075488f3d393711b2d16e411085960fa3728c1fe5bd1",
+    "bytes": 26150,
+    "reason": "Move private principal/roles/access-to-Actor mapping unchanged into exported plannerSourceActor; compareForecast and fixture consume this single producer implementation."
+  },
+  "validation": {
+    "incomingNonDocumentaryBlobsVerified": 6,
+    "totalChangedNonDocumentaryFiles": 7,
+    "newHistoricalReceipts": 29,
+    "oldPublishedFilesGuardedAgainstOverwrite": true,
+    "assertionsRemoved": 0,
+    "timeoutsChanged": 0,
+    "localProductTestsExecuted": false,
+    "financialPoliciesOrEnginesChanged": false,
+    "sharedHostOrContractsChanged": false
+  },
+  "actionsRequests": [
+    {
+      "selection": 22,
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+          "./Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+          "./Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+          "./Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+          "./Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+          "./Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+          "./Sucafinav1/test/product/wp11/implementation-quote-history.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "76efd1280d0df63faa5de9680e3afad82e70f151db82b780fd2dc921d708c228"
+    },
+    {
+      "selection": 23,
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "fdf4ffe89aa485b6fbe3792a93e88282b62b610ba8748c5b7bcf1830135b4652"
+    },
+    {
+      "selection": 24,
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/port.test.ts",
+          "./Sucafinav1/test/product/wp03/port-hr.test.ts",
+          "./Sucafinav1/test/product/wp03/operation-verifier.test.ts",
+          "./Sucafinav1/test/product/wp03/capability-parity.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "91b8c9a4a394f33b7ba2df8d4080e01b0aa906109eb56b338e7e2281e3614cbb"
+    }
+  ],
+  "boundaries": [
+    "Prior S19/S20/S21 remain exact historical evidence; their greens do not qualify changed W32 bytes.",
+    "ChoiceRecord is preserved through current-source preview; renewed projection, promotion and application remain distinct admissions.",
+    "Source-only helper returns boolean admission, not money, C10, ChoiceRecord or application proof.",
+    "Native installed/UI evidence, C/D and final S0 bundle epic remain open.",
+    "Package typecheck was red with 0 owned and 131 external diagnostics at W31; next check must report its own findings."
+  ]
+}

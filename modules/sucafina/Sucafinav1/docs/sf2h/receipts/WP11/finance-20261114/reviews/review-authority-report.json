@@ -1,0 +1,282 @@
+{
+  "schema": "sf2h-independent-authority-review-v1",
+  "reviewer": "review_authority",
+  "review_role": "independent_read_only",
+  "review_stage": "W3",
+  "product_sha": "66bbe152c145f04c16223a938589c63cedb3b716",
+  "product_tree": "f727ae5bfcef26383ff47a2b06bb65b161295dd2",
+  "approved_source_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "snapshot": "/workspace/scratch/a97ca4c53050/review-66bbe15",
+  "snapshot_manifest": "/workspace/scratch/a97ca4c53050/review-66bbe15-manifest.json",
+  "markdown_report": "/workspace/scratch/a97ca4c53050/review-authority-report.md",
+  "mode": {
+    "product_edits": false,
+    "product_execution": false,
+    "local_tests": false,
+    "local_typecheck": false,
+    "ci_dispatch": false,
+    "remediation_authored": false
+  },
+  "evidence_basis": "Static source inspection and precise execution interleavings; no native runtime proof observed by this reviewer.",
+  "global_verdict": null,
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "P1",
+      "category": "continuity_availability",
+      "confidence": "high_static",
+      "title": "Case version advancement invalidates C17 evidence retained by the accepted ledger",
+      "primary_locations": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+          "lines": [
+            73,
+            128,
+            129
+          ],
+          "local_path": "/workspace/scratch/a97ca4c53050/review-66bbe15/modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+          "lines": [
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44
+          ],
+          "local_path": "/workspace/scratch/a97ca4c53050/review-66bbe15/modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts"
+        }
+      ],
+      "supporting_locations": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts",
+          "lines": [
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71
+          ],
+          "local_path": "/workspace/scratch/a97ca4c53050/review-66bbe15/modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/analysis-promotion.ts",
+          "lines": [
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82
+          ],
+          "local_path": "/workspace/scratch/a97ca4c53050/review-66bbe15/modules/sucafina/Sucafinav1/product/decisions/analysis-promotion.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "lines": [
+            79,
+            85,
+            132,
+            136,
+            142,
+            144
+          ],
+          "local_path": "/workspace/scratch/a97ca4c53050/review-66bbe15/modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/COMPOSE3/apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "lines": [
+            68,
+            70,
+            103,
+            110
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/COMPOSE3/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "lines": [
+            145,
+            150,
+            173,
+            182
+          ]
+        }
+      ],
+      "preconditions": [
+        "A valid record-only calculation R is persisted and issued at case version v.",
+        "An authorized ready contribution cites R in output.evidenceRefs.",
+        "Source records, authorization and case incarnation remain unchanged."
+      ],
+      "execution_trace": [
+        "Analysis acceptance retains output.evidenceRefs in the ledger and increments the case to v+1; AlternativeDraft promotion has equivalent preservation and version advancement.",
+        "Subsequent cases.read includes ledger evidence and requires fresh or historical evidence.",
+        "Real C17 resolver invokes requests.read and results.readForCalculation.",
+        "Both stores require current case.version to equal stored caseRef.version v; current version is v+1.",
+        "Resolver returns unavailable and cases.read returns case-evidence-unavailable."
+      ],
+      "impact": "The successful acceptance can make the same case and its ledger evidence unavailable on reload. This is an availability/continuity failure, not an access escalation.",
+      "limitations": [
+        "A native producer emitting and accepting this contribution was not observed; the precondition and failure were inspected statically.",
+        "Nested C17 replay is not required: R may be record-only.",
+        "Synthetic fixtures keeping all case versions equal do not establish native continuity."
+      ],
+      "bounded_fix": [
+        "Keep ordinary public calculation reads current-only.",
+        "Introduce an explicit authorized historical ledger-consumer path without rewriting original caseRef.",
+        "Require current authorization, canonical origin/request/result, same case and incarnation, an allowed historical horizon, and exact reference membership in the persisted authorized ledger.",
+        "Derive ledger membership from persisted snapshots, not caller assertions.",
+        "Revalidate source continuity; deny revoked, cross-case, different-incarnation, future-horizon and nonmember evidence.",
+        "Coordinate the external withCalculationCase seam; preserve the evidence contract and avoid blanket equality-to-greater-than substitutions."
+      ],
+      "recommended_actions_checks": [
+        "Real C08 stores plus actual C17 composition: issue R, accept authorized contribution citing R, reload case at v+1, resolve ledger evidence.",
+        "Negatives: changed source, revoked access, different incarnation, different case, reference not in persisted ledger, future horizon.",
+        "Ordinary public C17 read still refuses historical R.",
+        "Synthetic callback and native proof receipts reported separately."
+      ]
+    },
+    {
+      "id": "F2",
+      "severity": "P2",
+      "category": "concurrency_availability",
+      "confidence": "high_static",
+      "title": "Binding-global replay guard mistakes concurrent independent work for ancestry",
+      "primary_locations": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+          "lines": [
+            22,
+            35,
+            98,
+            107
+          ],
+          "local_path": "/workspace/scratch/a97ca4c53050/review-66bbe15/modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "lines": [
+            49,
+            50,
+            51,
+            52,
+            103,
+            104
+          ],
+          "local_path": "/workspace/scratch/a97ca4c53050/review-66bbe15/modules/sucafina/Sucafinav1/product/planner/scenario-port.ts"
+        }
+      ],
+      "execution_trace": [
+        "active/checking are maps keyed by digest of the binding, shared across independent calls.",
+        "While issue(R, context) awaits a loader, a second independent issue(R, context) sees R active and returns calculation-replay-cycle.",
+        "With 16 independent shallow calculations active, a 17th in the same binding fails the shared size limit even though every ancestry depth is one.",
+        "The current BCS performs ordered internal traversal, but scenario-port checkEvidence still resolves distinct top-level refs with Promise.all, making an independent 17-calculation batch a reachable caller pattern."
+      ],
+      "impact": "Valid calculations are rejected depending on interleaving. No unauthorized success, ACL bypass or deadlock is established.",
+      "limitations": [
+        "Current external BCS uses explicit ancestors and mapSfEvidenceInOrder; this finding does not blame its superseded Promise.all traversal.",
+        "Nested host opt-in remains absent in the inspected composition; independent record-only calculations still exercise the shared guard.",
+        "No product execution or local race reproduction was performed."
+      ],
+      "bounded_fix": [
+        "Track ancestry privately per replay chain with the depth bound applied per path.",
+        "Separate active-work coalescing/serialization from cycle detection.",
+        "If coalescing identical work, retain the same authorization pass and never cache authority across calls.",
+        "Serializing scenario-port evidence batches is a possible local mitigation but does not alone repair concurrent issue callers.",
+        "Keep actual self-cycle, A-to-B-to-A and excessive-depth rejection."
+      ],
+      "recommended_actions_checks": [
+        "Explicit promise barriers: two independent calls for the same R both succeed.",
+        "Seventeen distinct record-only calculations of depth one succeed.",
+        "Self-cycle, A-to-B-to-A and path depth above limit fail closed.",
+        "Error/cancellation releases guards.",
+        "Actual Planner checkEvidence consumer exercises the batch."
+      ]
+    }
+  ],
+  "positive_observations": [
+    "Result-store protects authorization callback arguments with clones/mutation checks and repeats authorization/read checks.",
+    "Planner persistence replays before and after persistence and checks selected case and canonical results.",
+    "BI snapshot/destination checks retain projection and authority fences; no access widening established.",
+    "ChoiceRecord historical identity does not authorize apply; UI human intent, review digest, current authority and domain receipt remain required.",
+    "Financial source coverage complete is not Choice, preparation, approval or application proof.",
+    "AlternativeDraft authoritative capture and real CLI composition exist. Current bridge compares registry receipts; run-store reopens captured data and verifies/persists under source fences.",
+    "verifyAlternativePublication synthetic integrity callbacks are not native authentication proof.",
+    "No additional concrete nested-domain transaction deadlock established."
+  ],
+  "external_sources": [
+    {
+      "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/COMPOSE3/apps/cli/src/sucafina-product/business-services.ts",
+      "git_blob": "a48424fcea0b39e20dfce2da079decc4afc04a9d",
+      "sha256": "75fe643b890cf5e1357c8deae982fba5c060ae9ea89fd15fb32b2b9a323ae6af",
+      "part_of_w3": false
+    },
+    {
+      "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/COMPOSE3/apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "git_blob": "6898b08eb4b018f5a83167555836ac876d288976",
+      "sha256": "4fbe85a796f92b2fa154b46997d1f6c9ab4af53f6e96e8ff1ebd3c3a438e9510",
+      "part_of_w3": false
+    },
+    {
+      "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/COMPOSE3/modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "git_blob": "a48f853b99a0b640e0c146ae6060b6bbde4a9449",
+      "sha256": "d860ad49e5f38a3152dfaca017bec9bd83a80a420d834162793c3db3eb4b2d86",
+      "part_of_w3": false
+    },
+    {
+      "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/COMPOSE3/modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "git_blob": "bc00a2fe70bb37d6132369c3767388e544e18510",
+      "sha256": "8c028345862f0a351f7624cdf7a805b5ae3a6c8aa97cba9db44221d9e0773ffc",
+      "part_of_w3": false
+    },
+    {
+      "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/COMPOSE3/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "git_blob": "0ac4c11d4eddb6e4a67c2c41efe40a7ff34fa47e",
+      "sha256": "50a87c0cf4fa02146b14bff6262c919df390201550b5a5f5e18e55963804c10e",
+      "part_of_w3": false
+    },
+    {
+      "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/WP10/apps/cli/src/sucafina-product/alternative-services.ts",
+      "git_blob": "7513a155293f6253998033bd1439b636e00a1c96",
+      "sha256": "b504f9e05ac6ee6871e959df76877c9291c5be651defa719abf2461a6d1af6e0",
+      "part_of_w3": false
+    },
+    {
+      "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/WP10/apps/cli/src/sucafina-product/alternative-captures.ts",
+      "git_blob": "9e2bc584c80844b213b026351d766bd6ae5eba09",
+      "sha256": "b44b6fee2112299b4ee4e21cd5784f85fa61f9a26293b846da7ff9b5e6b4a1f4",
+      "part_of_w3": false
+    },
+    {
+      "local_path": "/workspace/scratch/a97ca4c53050/foreign-intake/WP10/apps/cli/src/sucafina-product/bi-services.ts",
+      "git_blob": "7d44c1982c3c62fdaf21f98945ded9e572fd359a",
+      "sha256": "5b89fbb1e7dcd1eaab182171c83bbb562be866a237c1470f4dac772be388d8f2",
+      "part_of_w3": false
+    }
+  ],
+  "external_commit_identity_note": "Coordinator labels were 417038d and 5866; no full commit SHA expansion asserted. Actual bytes are identified by full blobs/SHA256. business-services.ts at close differs from earlier coordinator-mentioned 34a491 prefix and is recorded as a48424fcea0b39e20dfce2da079decc4afc04a9d.",
+  "exclusions": [
+    "No global READY/DONE/C/D or release decision.",
+    "Known cost-coverage.ts type diagnostic and announced Set<string> fix are not a new finding.",
+    "Host, artifact store, contracts and UI are external-owner seams; no changes authored.",
+    "Review ended before separate remediation and subsequent CI; findings do not claim a future W4 fix was validated."
+  ]
+}

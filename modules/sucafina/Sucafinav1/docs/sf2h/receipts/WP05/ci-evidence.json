@@ -1,0 +1,420 @@
+{
+  "schema": "sf2h-wp05-ci-evidence-v1",
+  "state": "DRAFT_BLOCKED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "pullRequest": {
+    "number": 24,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/24",
+    "base": "sf2-stack",
+    "head": "astra-wp05",
+    "draft": true
+  },
+  "pins": {
+    "handoff": "c4bd6592718b3862afbc7bb601c001365e593c20",
+    "packBlob": "e58fa5f9ca42fefa0a9453114c6146d4e8942a5b",
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "seed": "b33541ede0fd715fc0990aebeb3fe484d0991cb7",
+    "sourceReference": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf"
+  },
+  "product": {
+    "testedCommit": "fe75fd8b5daa25647bc4938025c82dbfc287a0a1",
+    "testedTree": "9e8847f921e3fdefdbd7b6cf92bc9536442f322b",
+    "snapshotCommit": "988877105aff091ee9881a812282d677c63be5bb",
+    "snapshotTree": "dd702dc4f1fa58ba0a2ff0ef2500b542571c8566",
+    "envelopeOnlyPath": ".ci-run.json",
+    "requestBlob": "94e8394b0079974e22bb91b5d99b856fe05c4f5a",
+    "equalityProof": "snapshot-equality.json",
+    "checkedReceiptCommit": "a87c526d29106efc295dfeade1b1d754e2617783",
+    "checkedReceiptTree": "116e6b994b9dec9c9280c088a14a6cfd636d8ff6",
+    "receiptDelta": [
+      "removed check1-guards.log",
+      "removed check1-typecheck.log",
+      "removed test1-execution.log",
+      "updated check1-triage.md"
+    ],
+    "receiptComparisonUrl": "https://github.com/gustavomhss/Orchestra-SF/compare/fe75fd8b5daa25647bc4938025c82dbfc287a0a1...a87c526d29106efc295dfeade1b1d754e2617783",
+    "publicationNote": "The final commit adds or updates receipts only. Its actual SHA and comparison to the tested product are recorded in PR #24; no self-referential commit hash is fabricated in this file."
+  },
+  "request": {
+    "file": "ci-request.json",
+    "validationFile": "request-validation.json",
+    "runner": "bun",
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "explicitFiles": 34,
+    "seedFilesPreserved": 27,
+    "addedFiles": 7,
+    "sha256": "8ee2345d98c785d8bdee518c9625e6cf04e4f5926367aae30c5efe6e42748f4c",
+    "workflowCanonicalSha256": "5a3cb5e4ee782bb73db35adb975ea4b2d8f3f3b1b78ce8fe796b5559f6e55f8f",
+    "emptyOrBroadSelection": false,
+    "env": {}
+  },
+  "testRuns": [
+    {
+      "runId": 43518126352,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518126352",
+      "productSha": "19a8d725584b89ad97cd9a9bdbb018b5339b9d16",
+      "snapshotSha": "0b6ffc6b2dfdfc63e73d11684b7173f3b7f52f41",
+      "testJobId": 132205226949,
+      "conclusion": "failure",
+      "executedFiles": 33,
+      "cases": 100,
+      "passed": 98,
+      "failed": 2,
+      "expectCalls": 467,
+      "durationSeconds": 105.18,
+      "exitCode": 1,
+      "observedSelectionMatchesRequest": true,
+      "omni": {
+        "verdict": "not applicable",
+        "literal": "omni positive control [bcee81c7e1a897caab28c8cfaad09b5d]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+        "scope": "declared",
+        "spawn_proof": false
+      },
+      "artifacts": [],
+      "artifactNote": "This bun lane skips Upload Playwright evidence by workflow condition; no artifact was published. Logs, exact request and API metadata are retained.",
+      "summaryFile": "test1-summary.json",
+      "logs": [
+        {
+          "jobId": 132205226949,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518126352/job/132205226949",
+          "sha256": "94beaf80839adc43b272f125d7b1f4a35cb5b6de5ea038d0f667624ac655a9be",
+          "bytes": 110253
+        },
+        {
+          "jobId": 132207006518,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518126352/job/132207006518",
+          "sha256": "a7668b4b5cd6cb1ab680c80d9c05de16816caa73041b91c2a5005ae5fc6904ed",
+          "bytes": 2312
+        }
+      ]
+    },
+    {
+      "runId": 43519544728,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43519544728",
+      "productSha": "fe75fd8b5daa25647bc4938025c82dbfc287a0a1",
+      "snapshotSha": "988877105aff091ee9881a812282d677c63be5bb",
+      "testJobId": 132210062303,
+      "conclusion": "failure",
+      "executedFiles": 34,
+      "cases": 103,
+      "passed": 102,
+      "failed": 1,
+      "expectCalls": 480,
+      "durationSeconds": 157.21,
+      "exitCode": 1,
+      "observedSelectionMatchesRequest": true,
+      "omni": {
+        "verdict": "not applicable",
+        "literal": "omni positive control [2c6f286e47029bccbd872a72beacaf83]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+        "scope": "declared",
+        "spawn_proof": false
+      },
+      "artifacts": [],
+      "artifactNote": "This bun lane skips Upload Playwright evidence by workflow condition; no artifact was published. Logs, exact request and API metadata are retained.",
+      "summaryFile": "test2-summary.json",
+      "logs": [
+        {
+          "jobId": 132210062303,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43519544728/job/132210062303",
+          "sha256": "d3c528bc952649e8743cbfa5d844b72476333b839c0cb245eaeecdc436ded686",
+          "bytes": 110071
+        },
+        {
+          "jobId": 132211992647,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43519544728/job/132211992647",
+          "sha256": "6182559736fa4cfa04d17224c217baea91193c7e1246d3f76a745957343415c5",
+          "bytes": 2309
+        }
+      ]
+    }
+  ],
+  "checkRuns": [
+    {
+      "attemptLabel": "check-1",
+      "run": {
+        "id": 43518137324,
+        "attempt": 1,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518137324",
+        "headBranch": "astra-check-wp05",
+        "status": "completed",
+        "conclusion": "failure",
+        "createdAt": "2026-11-13T22:18:04Z",
+        "updatedAt": "2026-11-13T22:19:22Z"
+      },
+      "identity": {
+        "productSha": "19a8d725584b89ad97cd9a9bdbb018b5339b9d16",
+        "productTree": "010642fac42902b8601af8ebbe07ac81d9262e63",
+        "githubSha": "19a8d725584b89ad97cd9a9bdbb018b5339b9d16",
+        "guardBaseRef": "origin/dev",
+        "guardBaseSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "guardMergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+        "runId": "43518137324",
+        "runAttempt": "1"
+      },
+      "typecheck": {
+        "command": "bun typecheck",
+        "directory": "modules/sucafina",
+        "exitCode": 2,
+        "diagnosticCount": 186,
+        "ownershipCount": 45,
+        "externalCount": 141,
+        "counts": {
+          "external-inherited-source": 141,
+          "wp05-seed-cascade-missing-BiPresentation": 35,
+          "wp05-seed-missing-WP00-contract": 4,
+          "wp05-new-cascade-missing-BiPresentation": 4,
+          "wp05-new-type-error": 2
+        }
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "conclusion": "success",
+        "summary": "guards: 78 rules, 591 changed paths, 0 gate and 11 warn findings, 0 errors.",
+        "warnings": [
+          "WARN apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts:46 [ts-double-cast] Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard."
+        ],
+        "allWarningPathsInherited": true
+      },
+      "artifacts": [
+        {
+          "id": 14082096095,
+          "name": "astra-wp05-check-1",
+          "bytes": 8656,
+          "digest": "sha256:b3a306fce9e37af68157f8d3a6f185cfe6c84e8b857c366b957b6d357e284e97",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518137324/artifacts/14082096095",
+          "inspectedMembers": [
+            "product.json",
+            "typecheck.log",
+            "guards.log"
+          ],
+          "zipDigestVerified": true,
+          "identityAndLogsRead": true
+        }
+      ],
+      "triageFile": "check1-triage.json",
+      "runConclusion": "failure",
+      "failureIsNotPass": true
+    },
+    {
+      "attemptLabel": "check-2",
+      "run": {
+        "id": 43519560894,
+        "attempt": 1,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43519560894",
+        "headBranch": "astra-check-wp05",
+        "status": "completed",
+        "conclusion": "failure",
+        "createdAt": "2026-11-13T22:28:32Z",
+        "updatedAt": "2026-11-13T22:30:16Z"
+      },
+      "identity": {
+        "productSha": "fe75fd8b5daa25647bc4938025c82dbfc287a0a1",
+        "productTree": "9e8847f921e3fdefdbd7b6cf92bc9536442f322b",
+        "githubSha": "fe75fd8b5daa25647bc4938025c82dbfc287a0a1",
+        "guardBaseRef": "origin/dev",
+        "guardBaseSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "guardMergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+        "runId": "43519560894",
+        "runAttempt": "1"
+      },
+      "typecheck": {
+        "command": "bun typecheck",
+        "directory": "modules/sucafina",
+        "exitCode": 2,
+        "diagnosticCount": 184,
+        "ownershipCount": 43,
+        "externalCount": 141,
+        "counts": {
+          "external-inherited-source": 141,
+          "wp05-seed-cascade-missing-BiPresentation": 35,
+          "wp05-seed-missing-WP00-contract": 4,
+          "wp05-new-cascade-missing-BiPresentation": 4
+        }
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "conclusion": "failure",
+        "summary": "guards: 78 rules, 608 changed paths, 3 gate and 11 warn findings, 0 errors.",
+        "gates": [
+          "GATE modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/check1-guards.log [agent-scratch] Scratch or tool-output file added. Delete it; do not commit agent working files.",
+          "GATE modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/check1-typecheck.log [agent-scratch] Scratch or tool-output file added. Delete it; do not commit agent working files.",
+          "GATE modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/test1-execution.log [agent-scratch] Scratch or tool-output file added. Delete it; do not commit agent working files."
+        ],
+        "warnings": [
+          "WARN apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts:46 [ts-double-cast] Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard."
+        ]
+      },
+      "artifacts": [
+        {
+          "id": 14081598534,
+          "name": "astra-wp05-check-1",
+          "bytes": 8477,
+          "digest": "sha256:8259fbe0594c736487241a7cfab98be12c288e57f8185443c5cd82834c7e20ca",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43519560894/artifacts/14081598534",
+          "inspectedMembers": [
+            "product.json",
+            "typecheck.log",
+            "guards.log"
+          ],
+          "zipDigestVerified": true,
+          "identityAndLogsRead": true
+        }
+      ],
+      "triageFile": "check2-triage.json",
+      "runConclusion": "failure",
+      "failureIsNotPass": true
+    },
+    {
+      "attemptLabel": "check-3",
+      "run": {
+        "id": 43520127151,
+        "attempt": 1,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43520127151",
+        "headBranch": "astra-check-wp05",
+        "status": "completed",
+        "conclusion": "failure",
+        "createdAt": "2026-11-13T22:32:38Z",
+        "updatedAt": "2026-11-13T22:34:04Z"
+      },
+      "identity": {
+        "productSha": "a87c526d29106efc295dfeade1b1d754e2617783",
+        "productTree": "116e6b994b9dec9c9280c088a14a6cfd636d8ff6",
+        "githubSha": "a87c526d29106efc295dfeade1b1d754e2617783",
+        "guardBaseRef": "origin/dev",
+        "guardBaseSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "guardMergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+        "runId": "43520127151",
+        "runAttempt": "1"
+      },
+      "typecheck": {
+        "command": "bun typecheck",
+        "directory": "modules/sucafina",
+        "exitCode": 2,
+        "diagnosticCount": 184,
+        "ownershipCount": 43,
+        "externalCount": 141,
+        "counts": {
+          "external-inherited-source": 141,
+          "wp05-seed-cascade-missing-BiPresentation": 35,
+          "wp05-seed-missing-WP00-contract": 4,
+          "wp05-new-cascade-missing-BiPresentation": 4
+        }
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "conclusion": "success",
+        "summary": "guards: 78 rules, 605 changed paths, 0 gate and 11 warn findings, 0 errors.",
+        "gates": [],
+        "warnings": [
+          "WARN apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts:46 [ts-double-cast] Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard."
+        ],
+        "priorThreeAgentScratchGatesResolved": true,
+        "warningsIdenticalToCheck2": true
+      },
+      "artifacts": [
+        {
+          "id": 14081743852,
+          "name": "astra-wp05-check-1",
+          "bytes": 8304,
+          "digest": "sha256:4b89aef56a9df3b21aff85c529d374464eedc0036c88f9530bf3aeee9c9f34f5",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43520127151/artifacts/14081743852",
+          "inspectedMembers": [
+            "product.json",
+            "typecheck.log",
+            "guards.log"
+          ],
+          "zipDigestVerified": true,
+          "identityAndLogsRead": true
+        }
+      ],
+      "triageFile": "check3-triage.json",
+      "runConclusion": "failure",
+      "failureIsNotPass": true
+    }
+  ],
+  "finalGates": {
+    "tests": "FAIL_ONE_PRESERVED_UPSTREAM_ASSERTION",
+    "typecheck": "FAIL_184_CONTRACT_AND_INHERITED_DIAGNOSTICS",
+    "guards": "PASS",
+    "native": "NOT_PROVED",
+    "installedHost": "NOT_PROVED",
+    "criterionAcceptance": "SEE_CRITERIA_MATRIX_NO_GLOBAL_READY"
+  },
+  "preservedFailure": [
+    {
+      "file": "Sucafinav1/test/product/wp05/dashboard-integration.test.ts",
+      "line": 87,
+      "name": "authorized dashboard source reaches BI through the real UI dispatcher",
+      "observed": "The actual Dashboard projection omitted milestone:p:undated:date (null/absent). The C16 dispatch succeeded before the value assertion.",
+      "classification": "BLOCKED_EXTERNAL_WP02",
+      "producer_cause": "Seed product/dashboard/scope.ts:28 retains only valid string dates for milestoneDates. The seed product/dashboard/port.ts:273 reader also skips a milestone whose date is not a string. Thus milestone:p:undated:date is absent from the producer output before WP05 receives it; the C16 output remains structurally valid.",
+      "wp05_action": "Preserve the assertion and consume the owner producer update during integration; no renderer synthesis or expectation weakening. Browser component keeps producer-supplied undated rows and its CI test passed.",
+      "owner_pin": "WP02 38d340a8857b96904f7246320091c14c051f1929; exact owner delta catalogued in criteria-review/dependency-ledger.md"
+    }
+  ],
+  "verifiedNumericalScope": {
+    "canonicalSolverBoundaries": [
+      55000,
+      15000
+    ],
+    "knownSubtotals": [
+      240000,
+      210000,
+      250000
+    ],
+    "trainingInput": 40000,
+    "comparisonAdvantageBeforeAfter": [
+      30000,
+      -10000
+    ],
+    "source": "engine-coverage.test.ts, actual Planner/criterion/solver/store",
+    "limits": [
+      "The exact solver is separate from the conditioned integrated sensitivity output.",
+      "Training variants use independent stores; same-case human confirmation/ChoiceRecord is not proven.",
+      "No BI formula computes the monetary outputs."
+    ]
+  },
+  "limitations": [
+    "Git object equality proves committed product/test/config/fixture inputs in W2 and S2.",
+    "The existing bun lane logs Saved lockfile and has no post-install dependency-tree equality check; the dedicated check lane uses frozen-lockfile and verifies tracked content.",
+    "Bun test lane publishes no Playwright artifact; artifact list was explicitly verified as empty.",
+    "UI/store/browser harnesses do not prove native/MCP execution, real SkillLoadReceipt, resident reload, AM01-AM06, C/G7, D/G8 or eight final selections.",
+    "No failed, cancelled or unexecuted proof is counted as PASS."
+  ],
+  "productTestsExecutedLocally": false,
+  "remotePublicationChannel": "GitHub MCP",
+  "merged": false,
+  "deployed": false
+}

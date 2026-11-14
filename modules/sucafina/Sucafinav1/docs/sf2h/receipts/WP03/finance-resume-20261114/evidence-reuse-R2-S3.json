@@ -1,0 +1,3414 @@
+{
+  "schema": "sf-finance-evidence-reuse-R2-S3-v1",
+  "scope": "WP03/WP05 scoped evidence, no global acceptance",
+  "pins": {
+    "W33": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+    "W33_tree": "052583ce35edbadd4b7ec68ffe021bb59e05a20f",
+    "initial": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "R2": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+    "R2_tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+    "R2_Sucafinav1_tree": "5cb95deb1adec8e3ea6fdf41eed80bf307902936"
+  },
+  "W33_to_initial": {
+    "base": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+    "head": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "status": "ahead",
+    "total_commits": 1,
+    "changedFiles": [
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/README.md",
+        "sha": "4691672ae7a1c3aadc720d90d0818337dc80be08",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/criteria.json",
+        "sha": "b6722708185ffb818d6d98cfce3719087153a4cb",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-20261114/owner-deltas.md",
+        "sha": "49d507d177884ee8458459889a510a65f100bd65",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/advantage-selection-proposal.md",
+        "sha": "775f0e2a70737bfb5b9ae3924f0ecff5a382f259",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/criteria.json",
+        "sha": "7996b5467f8d3078614663b6afa055b086ea57d0",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-20261114/external-handoff.md",
+        "sha": "824a9ae96fce6854ee1050073622aca2e31ccd5c",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/README.md",
+        "sha": "924d38742d9873375455ec8007e00b7ec762f974",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/criteria-verification.json",
+        "sha": "d08ca91d2d21b6728029798058f5c37931e8832f",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/criteria.json",
+        "sha": "32e21aaa78e7f1176286a2c7ea2a82e2ab20adea",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.json",
+        "sha": "47da006d3c259d3a38ece42c7271356fa287f6a1",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-reconciliation.md",
+        "sha": "abd24a266555fc01ecaac8086fc488ac7ba0c16a",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/external-typecheck-findings.json",
+        "sha": "edbb2963769f50f5df75f40adea8af7089db6087",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/final-validation.json",
+        "sha": "62746aa65fa2700913387b20d75238ed96c33f59",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/final-validation.md",
+        "sha": "7f7700b36fe7f09549e2ee94fb167ac3d157917d",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+        "sha": "6d98dc8dac07ae2e6342080cc801840b1e7749b0",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/host-c17-proposal.md",
+        "sha": "b7e6ec88b3f193f5c46f9e036c7e11395a2e4762",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/hosted-checks.json",
+        "sha": "399a9a45ca19d17941090ce98a132cc214c301af",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/integration-pins-final.json",
+        "sha": "e29bba164f1f257ed73f057295811d59ed2fe92a",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/integration-pins-final.md",
+        "sha": "8c57874808765b4eab9bc62c47ae5711dba49f47",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/post-W21-criterion-bindings.json",
+        "sha": "5c11442a825a5407d599c3b787db2f080f2b4179",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/post-W21-criterion-bindings.md",
+        "sha": "c37861159cf354b661021c6118b5138bb15fbe85",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/post-W31-criterion-bindings.json",
+        "sha": "69b7045d6ad52f798e69de80d1908773e897ed66",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/post-W31-criterion-bindings.md",
+        "sha": "fec20637c1213223b2ca33b2024e5cc718f2f6bc",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/post-W32-criterion-bindings.json",
+        "sha": "3b39ac4e6108182329929e6f65d4e2621db8e956",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/post-W32-criterion-bindings.md",
+        "sha": "5b3ee08558e23a371348c2c3b10dfd3a16a860a5",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/product-tests.json",
+        "sha": "4f25c580d24057765d70ccd88f560ad454dd4e7d",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/published-increments.json",
+        "sha": "55e6d2c4d8b0e4fffc92027a3972eb0414b78084",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/remote-reconciliation.json",
+        "sha": "53ad0aeae6c0f77a0f16201ee972a34ba92466e5",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/current-choice-matcher-runtime-confirmation.json",
+        "sha": "e2759f1f0ea981ebba4a9b7e4a05e0a245078779",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/current-choice-matcher-runtime-confirmation.md",
+        "sha": "8def2d1698291399e847398bda1888a6a4f831a7",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/final-documentary-audit-W31-freeze.json",
+        "sha": "819cd8b37a38a4ada40889da4591f1fc7828b599",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/final-documentary-audit-W31.json",
+        "sha": "fdb676815477d3fee446e007fc46993a539d2c59",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/final-documentary-audit-W31.md",
+        "sha": "b7a209aa634d79b563152a3ca48447718d4fe296",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/final-documentary-audit-W33.json",
+        "sha": "dab64aa6a45170fe9e70c975f232669c55d19b94",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/final-documentary-audit-W33.md",
+        "sha": "871d1776b0488cf02faef0689f66e2810f2b9291",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/manifest.json",
+        "sha": "50b8e7a2819a6c52ecd8e8998d1a8bd5781a1638",
+        "status": "modified"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.json",
+        "sha": "3a015a50cc0f760dae79a607299e713e22e3d317",
+        "status": "added"
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/source-provenance.md",
+        "sha": "aab0f09eae1e110d165f96bd601c2ef7de79e849",
+        "status": "added"
+      }
+    ],
+    "allDocsOnly": true
+  },
+  "inventory": [
+    {
+      "path": "product/analytics/README.md",
+      "W33_blob": "3dd449621f8001669f7455aa0a70f283d2734fe1",
+      "R2_blob": "3dd449621f8001669f7455aa0a70f283d2734fe1",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/advantage-view.ts",
+      "W33_blob": "47b271f492292956a8d8696cc32cd999e9878661",
+      "R2_blob": "47b271f492292956a8d8696cc32cd999e9878661",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/approved-catalog.ts",
+      "W33_blob": "503db7beb1d3f5d933d9543b7e2df3f7c83e9d9c",
+      "R2_blob": "503db7beb1d3f5d933d9543b7e2df3f7c83e9d9c",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/capabilities.ts",
+      "W33_blob": "87e36883d92f6982cc8765337f8802ffacd6e52c",
+      "R2_blob": "87e36883d92f6982cc8765337f8802ffacd6e52c",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/catalog.ts",
+      "W33_blob": "2b92394e3f1ce66e715e83a79b249b7972305ff6",
+      "R2_blob": "2b92394e3f1ce66e715e83a79b249b7972305ff6",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/consumer.ts",
+      "W33_blob": "117c0fc6191b9d7797a4e08db19e90c3079fe129",
+      "R2_blob": "117c0fc6191b9d7797a4e08db19e90c3079fe129",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/contextual.ts",
+      "W33_blob": "96b09239804424a21561a10b67a870517c6a62ad",
+      "R2_blob": "96b09239804424a21561a10b67a870517c6a62ad",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/dashboard.ts",
+      "W33_blob": "65698f8df2a89e291476e68a0279a090b68f0ff0",
+      "R2_blob": "65698f8df2a89e291476e68a0279a090b68f0ff0",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/decision-view.ts",
+      "W33_blob": "bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8",
+      "R2_blob": "bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/factory.ts",
+      "W33_blob": "93bc4fb74dee9c55fa3e396bd7108ebc9d3da895",
+      "R2_blob": "93bc4fb74dee9c55fa3e396bd7108ebc9d3da895",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/filter-controls.ts",
+      "W33_blob": "a14260ed5b85d1a24f12bcc30270260ed8b95499",
+      "R2_blob": "a14260ed5b85d1a24f12bcc30270260ed8b95499",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/geometry.ts",
+      "W33_blob": "cd80e819efc282d58aceb957c6f914187dc07752",
+      "R2_blob": "cd80e819efc282d58aceb957c6f914187dc07752",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/milestones.ts",
+      "W33_blob": "f8311d1e9774c6320739e9a672c5822e08109f54",
+      "R2_blob": "f8311d1e9774c6320739e9a672c5822e08109f54",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/planner-projected.ts",
+      "W33_blob": "6e61322d2518a5dedcc0dc78c39ee53fbc8c7fac",
+      "R2_blob": "6e61322d2518a5dedcc0dc78c39ee53fbc8c7fac",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/planner.ts",
+      "W33_blob": "bf2aa6ba82de636800e0c82c0a30fd5b43383b06",
+      "R2_blob": "bf2aa6ba82de636800e0c82c0a30fd5b43383b06",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/portfolio-view.ts",
+      "W33_blob": "35c94e7274127926cef17aa40664db075074d4d4",
+      "R2_blob": "35c94e7274127926cef17aa40664db075074d4d4",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/portfolio.ts",
+      "W33_blob": "4fd2a1ec2fc8cc78b21699e5a008362fec588444",
+      "R2_blob": "4fd2a1ec2fc8cc78b21699e5a008362fec588444",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/procurement.ts",
+      "W33_blob": "46f677152e5655617977ed2b8e49471c8a09e3be",
+      "R2_blob": "46f677152e5655617977ed2b8e49471c8a09e3be",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/projection.ts",
+      "W33_blob": "29f32617de3ce33bbf414a7439f97d64806bbaa9",
+      "R2_blob": "29f32617de3ce33bbf414a7439f97d64806bbaa9",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/review-chart.ts",
+      "W33_blob": "1529821105d45aeed82d553a76337f07cbb60eec",
+      "R2_blob": "1529821105d45aeed82d553a76337f07cbb60eec",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/scenario.ts",
+      "W33_blob": "b7174b16b485323f767d63e6842f3d61284245eb",
+      "R2_blob": "b7174b16b485323f767d63e6842f3d61284245eb",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/semantics.ts",
+      "W33_blob": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4",
+      "R2_blob": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/source-navigation.ts",
+      "W33_blob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357",
+      "R2_blob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/stored-scenario.ts",
+      "W33_blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c",
+      "R2_blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/tickets.ts",
+      "W33_blob": "90d7ed8303915c86770036e1af01c694e042b658",
+      "R2_blob": "90d7ed8303915c86770036e1af01c694e042b658",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/view.ts",
+      "W33_blob": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e",
+      "R2_blob": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e",
+      "preserved": true
+    },
+    {
+      "path": "product/analytics/waterfall.ts",
+      "W33_blob": "98d2510a3a44e45ab341aed6a1f2560339ec8578",
+      "R2_blob": "98d2510a3a44e45ab341aed6a1f2560339ec8578",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/README.md",
+      "W33_blob": "0d6843b7fc95ab008d65d8dc694175c14f6c91cf",
+      "R2_blob": "0d6843b7fc95ab008d65d8dc694175c14f6c91cf",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/actual-presence.ts",
+      "W33_blob": "c7497d7a71e90dd51ad362921e36d0de12fe431f",
+      "R2_blob": "c7497d7a71e90dd51ad362921e36d0de12fe431f",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/adapter.ts",
+      "W33_blob": "d6886477c1069a85221da673149ec8f67dd7666c",
+      "R2_blob": "d6886477c1069a85221da673149ec8f67dd7666c",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/bi-difference.ts",
+      "W33_blob": "86ef1b9781ee46bc8cb30eeabc66870332094e7d",
+      "R2_blob": "86ef1b9781ee46bc8cb30eeabc66870332094e7d",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/bi.ts",
+      "W33_blob": "4e2aa318ec7ee98fb0cb43c4c3d604f0e746c0f6",
+      "R2_blob": "4e2aa318ec7ee98fb0cb43c4c3d604f0e746c0f6",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/calculation-evidence.ts",
+      "W33_blob": "aaacc8bf7df9fa67870c4067154fe67a58c34a22",
+      "R2_blob": "aaacc8bf7df9fa67870c4067154fe67a58c34a22",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/capabilities.ts",
+      "W33_blob": "511508ad5c225e48d21cdffacd9f0e1b3139b402",
+      "R2_blob": "511508ad5c225e48d21cdffacd9f0e1b3139b402",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/catalog-host.ts",
+      "W33_blob": "aef0f257af92652be57cec868b9869ff2b9078ce",
+      "R2_blob": "aef0f257af92652be57cec868b9869ff2b9078ce",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/catalogs.ts",
+      "W33_blob": "d119281a3a9b6c61adac92740880e03bb836b0d5",
+      "R2_blob": "d119281a3a9b6c61adac92740880e03bb836b0d5",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/comparison.ts",
+      "W33_blob": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84",
+      "R2_blob": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/confirmation.ts",
+      "W33_blob": "0d217f65b2a86aa9b5f5c78b70150128d17cc72b",
+      "R2_blob": "0d217f65b2a86aa9b5f5c78b70150128d17cc72b",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/coverage.ts",
+      "W33_blob": "de86e90c86aca626a575bf5b8dfdf6973fac8b1e",
+      "R2_blob": "de86e90c86aca626a575bf5b8dfdf6973fac8b1e",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/criterion-metric.ts",
+      "W33_blob": "2340a9566e1471f47d9c5c7f884bfc31be13cef3",
+      "R2_blob": "2340a9566e1471f47d9c5c7f884bfc31be13cef3",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/current-choice.ts",
+      "W33_blob": "c9d83f1dcc7865e9c724f9246a65102efa7824ca",
+      "R2_blob": "c9d83f1dcc7865e9c724f9246a65102efa7824ca",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/exact-threshold.ts",
+      "W33_blob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+      "R2_blob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/forecast-insights.ts",
+      "W33_blob": "a22b35a65f84e3d31eaf723cc1e7321a7bcd3c0b",
+      "R2_blob": "a22b35a65f84e3d31eaf723cc1e7321a7bcd3c0b",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/headcount-host.ts",
+      "W33_blob": "ae8a6e2bf6ad83248e57d6f3f008c463abdec5a7",
+      "R2_blob": "ae8a6e2bf6ad83248e57d6f3f008c463abdec5a7",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/headcount-months.ts",
+      "W33_blob": "789615d49e519c742cef9c55d36362ec413a9fbe",
+      "R2_blob": "789615d49e519c742cef9c55d36362ec413a9fbe",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/headcount.ts",
+      "W33_blob": "7c6b2f0b03c29dddc743537f0e8964799155ae57",
+      "R2_blob": "7c6b2f0b03c29dddc743537f0e8964799155ae57",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/import-analysis.ts",
+      "W33_blob": "1a55aaf8fc960535c7d08f83ece5eebe71a6f425",
+      "R2_blob": "1a55aaf8fc960535c7d08f83ece5eebe71a6f425",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/interval-proof.ts",
+      "W33_blob": "55a701b7be49fb3f550a0b52b580e6f7dc819b31",
+      "R2_blob": "55a701b7be49fb3f550a0b52b580e6f7dc819b31",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/materiality.ts",
+      "W33_blob": "cbaa9e6f900eb539d393e75891a66318e50be22c",
+      "R2_blob": "cbaa9e6f900eb539d393e75891a66318e50be22c",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/monthly-edit.ts",
+      "W33_blob": "8cbcb05fb09b3a5edff59e6e76a9c8f9beafd3a1",
+      "R2_blob": "8cbcb05fb09b3a5edff59e6e76a9c8f9beafd3a1",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/monthly-grid.ts",
+      "W33_blob": "9e90db55e0b9354b49df68edd372fe9a551e2380",
+      "R2_blob": "9e90db55e0b9354b49df68edd372fe9a551e2380",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/monthly-host.ts",
+      "W33_blob": "b8bdf6ef06a9883952faa010efdec80f8d3b69d5",
+      "R2_blob": "b8bdf6ef06a9883952faa010efdec80f8d3b69d5",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/observed.ts",
+      "W33_blob": "5031f6103e348334a21efa3594b8e9b54ac28158",
+      "R2_blob": "5031f6103e348334a21efa3594b8e9b54ac28158",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/operation-verifier.ts",
+      "W33_blob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+      "R2_blob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/overview-drilldown.ts",
+      "W33_blob": "e2ff6ab3ba419d63df76c94e3b4c2284fc34b99f",
+      "R2_blob": "e2ff6ab3ba419d63df76c94e3b4c2284fc34b99f",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/overview-host.ts",
+      "W33_blob": "39f65d53403c09950a3dd246a0a8ad9df56436c9",
+      "R2_blob": "39f65d53403c09950a3dd246a0a8ad9df56436c9",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/overview.ts",
+      "W33_blob": "9514987d19768f7bd9144f74a608a7470e6b0c18",
+      "R2_blob": "9514987d19768f7bd9144f74a608a7470e6b0c18",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/persistence.ts",
+      "W33_blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+      "R2_blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/port.ts",
+      "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+      "preserved": false
+    },
+    {
+      "path": "product/planner/prepared-review.ts",
+      "W33_blob": "3b330244088844c47029b26ae2cfdb583f21bd58",
+      "R2_blob": "3b330244088844c47029b26ae2cfdb583f21bd58",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/prepared.ts",
+      "W33_blob": "da7ed326826e1b63b5853248d3ba4a18ccce9736",
+      "R2_blob": "da7ed326826e1b63b5853248d3ba4a18ccce9736",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/preview-comparison.ts",
+      "W33_blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "R2_blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/preview-environment.ts",
+      "W33_blob": "18461e05c34ac78b080e19881ee7de8c153742d7",
+      "R2_blob": "18461e05c34ac78b080e19881ee7de8c153742d7",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/product.ts",
+      "W33_blob": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+      "R2_blob": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/scenario-comparison-port.ts",
+      "W33_blob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "R2_blob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/scenario-inputs.ts",
+      "W33_blob": "f2a49fc79880ccb204184c6c83e957bab97b483f",
+      "R2_blob": "f2a49fc79880ccb204184c6c83e957bab97b483f",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/scenario-port.ts",
+      "W33_blob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "R2_blob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/scenario.ts",
+      "W33_blob": "dd92a35b3025a69c198a2d99c4ef38a472dd3bc7",
+      "R2_blob": "dd92a35b3025a69c198a2d99c4ef38a472dd3bc7",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/sensitivity-units.ts",
+      "W33_blob": "1673c86995cf71b61e288d91492ae7b691934171",
+      "R2_blob": "1673c86995cf71b61e288d91492ae7b691934171",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/source-issuer.ts",
+      "W33_blob": "ba5023491e7aa7e2591e25e4f17f06f4292c77d4",
+      "R2_blob": "ba5023491e7aa7e2591e25e4f17f06f4292c77d4",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/stored-scenarios.ts",
+      "W33_blob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "R2_blob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/version-comparison.ts",
+      "W33_blob": "067cecc3bd2c03ba00ff5ca5e269d911bf3c3869",
+      "R2_blob": "067cecc3bd2c03ba00ff5ca5e269d911bf3c3869",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/versions-host.ts",
+      "W33_blob": "7d805cb61351f7b43cd6d4d3c47c48a21bac3dc4",
+      "R2_blob": "7d805cb61351f7b43cd6d4d3c47c48a21bac3dc4",
+      "preserved": true
+    },
+    {
+      "path": "product/planner/versions.ts",
+      "W33_blob": "243b89b585c0698f1edbc4ba01bd4841f3950f70",
+      "R2_blob": "243b89b585c0698f1edbc4ba01bd4841f3950f70",
+      "preserved": true
+    },
+    {
+      "path": "runtime/planner.ts",
+      "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+      "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+      "preserved": false
+    },
+    {
+      "path": "test/product/wp03/adapter.test.ts",
+      "W33_blob": "5c0e883d316217107a6ac52974bbcd1fbe3f6b1e",
+      "R2_blob": "5c0e883d316217107a6ac52974bbcd1fbe3f6b1e",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/calculation-evidence.test.ts",
+      "W33_blob": "a0a67918c69a636120daa66877669020803c108e",
+      "R2_blob": "a0a67918c69a636120daa66877669020803c108e",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/capability-parity.test.ts",
+      "W33_blob": "b0fe198ea168702d390168000d27ce6bb3219833",
+      "R2_blob": "b0fe198ea168702d390168000d27ce6bb3219833",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/catalog-boundaries.test.ts",
+      "W33_blob": "775a383f6553e3b7b634bfb4137926e7a0ffb32e",
+      "R2_blob": "775a383f6553e3b7b634bfb4137926e7a0ffb32e",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/catalog-host.test.ts",
+      "W33_blob": "d6548946971a002260114f8e07b60ee69eb193b4",
+      "R2_blob": "d6548946971a002260114f8e07b60ee69eb193b4",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/catalog-lifecycle.test.ts",
+      "W33_blob": "c71ba66a5033c31e08baa82a401deaecf0f128ba",
+      "R2_blob": "c71ba66a5033c31e08baa82a401deaecf0f128ba",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/composed-threshold.test.ts",
+      "W33_blob": "6d1c715d5f20c478e51370c39c4ef145b93930ae",
+      "R2_blob": "6d1c715d5f20c478e51370c39c4ef145b93930ae",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/coverage.test.ts",
+      "W33_blob": "b6136ca7c23d633adca15f991f817075b3747845",
+      "R2_blob": "b6136ca7c23d633adca15f991f817075b3747845",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/exact-threshold-fallback.test.ts",
+      "W33_blob": "45da583a0bc4a5a61db4cbafcb3156455455f1f9",
+      "R2_blob": "45da583a0bc4a5a61db4cbafcb3156455455f1f9",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/headcount-host.test.ts",
+      "W33_blob": "697c03930cb1619c69b24483f1e3870f01e7c6ba",
+      "R2_blob": "697c03930cb1619c69b24483f1e3870f01e7c6ba",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/headcount-projection.test.ts",
+      "W33_blob": "a7e36f9a641274d4d914a8df1d26e2593bd63023",
+      "R2_blob": "a7e36f9a641274d4d914a8df1d26e2593bd63023",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/import-analysis.test.ts",
+      "W33_blob": "1b010f9dabe5f71233a19e1d3c04d00da1494f99",
+      "R2_blob": "1b010f9dabe5f71233a19e1d3c04d00da1494f99",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/monthly-grid.test.ts",
+      "W33_blob": "9eb2e2c43a4c5c575a3350976ae7b43b56a8f747",
+      "R2_blob": "9eb2e2c43a4c5c575a3350976ae7b43b56a8f747",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/monthly-host.test.ts",
+      "W33_blob": "11735326f621576904444b3cad356c3cb182fa51",
+      "R2_blob": "11735326f621576904444b3cad356c3cb182fa51",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/monthly-operations.test.ts",
+      "W33_blob": "60f751d4ee674bea63814f45b62e86db217f7a07",
+      "R2_blob": "60f751d4ee674bea63814f45b62e86db217f7a07",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/operation-verifier.test.ts",
+      "W33_blob": "9865e999969880625f2f0eee8e5e117d6ff7f095",
+      "R2_blob": "9865e999969880625f2f0eee8e5e117d6ff7f095",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/overview-drilldown.test.ts",
+      "W33_blob": "afca8b3e2b55ec7de5eab58e7a7879f98efb041e",
+      "R2_blob": "afca8b3e2b55ec7de5eab58e7a7879f98efb041e",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/overview.test.ts",
+      "W33_blob": "780f91f8702bb58a048e7b955d31cc8948deaa54",
+      "R2_blob": "780f91f8702bb58a048e7b955d31cc8948deaa54",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/parity-matrix.test.ts",
+      "W33_blob": "49aa288b0ef6fcd90debecc0bfea0bfc4749eb15",
+      "R2_blob": "49aa288b0ef6fcd90debecc0bfea0bfc4749eb15",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/persistence-comparison.test.ts",
+      "W33_blob": "5c0a15b19d6cff2f47e7ec292babf9cf98d2288f",
+      "R2_blob": "5c0a15b19d6cff2f47e7ec292babf9cf98d2288f",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/persistence.test.ts",
+      "W33_blob": "f841235bd6b4683a858ddd60c3a275bffaa0200c",
+      "R2_blob": "f841235bd6b4683a858ddd60c3a275bffaa0200c",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/planner-fixture.ts",
+      "W33_blob": "19cb4262ca02a680b06cdd4db54d5bb9d33a1219",
+      "R2_blob": "19cb4262ca02a680b06cdd4db54d5bb9d33a1219",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/port-hr.test.ts",
+      "W33_blob": "68d049f957257e089810ae0f9be230a157dba70c",
+      "R2_blob": "68d049f957257e089810ae0f9be230a157dba70c",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/port.test.ts",
+      "W33_blob": "2c6a3519024d2cca0fcf5256dcf9055fa1d7ae26",
+      "R2_blob": "2c6a3519024d2cca0fcf5256dcf9055fa1d7ae26",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/prepared-apply-integration.test.ts",
+      "W33_blob": "5961c1eebeec21b75228bccb7caf1ca283fa6c9a",
+      "R2_blob": "5961c1eebeec21b75228bccb7caf1ca283fa6c9a",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/rate-identity-qualification.test.ts",
+      "W33_blob": null,
+      "R2_blob": "130c4940746088518376aa4c325bd68ade46aa87",
+      "preserved": false
+    },
+    {
+      "path": "test/product/wp03/resume-engine-freshness.test.ts",
+      "W33_blob": "a36804ccf32440e4aabcb6f5e1c9a73b5d48bd65",
+      "R2_blob": "a36804ccf32440e4aabcb6f5e1c9a73b5d48bd65",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/resume-ui-host-boundaries.test.ts",
+      "W33_blob": "b112602cb6e3a12ca208780092b2a65ab6a24c91",
+      "R2_blob": "b112602cb6e3a12ca208780092b2a65ab6a24c91",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/runtime-overview-presence.test.ts",
+      "W33_blob": "f140786151f8c3fb77bb7743cc004ee0e51427f1",
+      "R2_blob": "f140786151f8c3fb77bb7743cc004ee0e51427f1",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/scenario-capability-parity.test.ts",
+      "W33_blob": "379c46b2c1f25d0bf8b1200bba6a9d9f276d075b",
+      "R2_blob": "379c46b2c1f25d0bf8b1200bba6a9d9f276d075b",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/scenario-costs.test.ts",
+      "W33_blob": "32528471bcaa141b580631aa4fc021327b8b20e7",
+      "R2_blob": "32528471bcaa141b580631aa4fc021327b8b20e7",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/scenario-engine-fixture.ts",
+      "W33_blob": "fd6a6b8b75152e858961360d16f7432233700b2f",
+      "R2_blob": "fd6a6b8b75152e858961360d16f7432233700b2f",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/scenario-persistence-fences.test.ts",
+      "W33_blob": "73802762a47ce5570db3a1e5030592efd4a26ab0",
+      "R2_blob": "73802762a47ce5570db3a1e5030592efd4a26ab0",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/scenario-qualification.test.ts",
+      "W33_blob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+      "R2_blob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/source-issuer.test.ts",
+      "W33_blob": "23be7c97020a1479539fb3c59b4b044b11ccb576",
+      "R2_blob": "23be7c97020a1479539fb3c59b4b044b11ccb576",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/source-scenario.test.ts",
+      "W33_blob": "46b31d8a8d9038f74c0d0b825078ecc8229fe6d4",
+      "R2_blob": "46b31d8a8d9038f74c0d0b825078ecc8229fe6d4",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp03/versions-host.test.ts",
+      "W33_blob": "a4f0183be62e60cf478d3dc7868bb4d988e19695",
+      "R2_blob": "a4f0183be62e60cf478d3dc7868bb4d988e19695",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/aging-browser.test.ts",
+      "W33_blob": "84803f1f17b12a3192d88a9554fb11ae76848d7e",
+      "R2_blob": "84803f1f17b12a3192d88a9554fb11ae76848d7e",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/approved-catalog.test.ts",
+      "W33_blob": "0aec88987cc94426ac1f731201ab2914825040d9",
+      "R2_blob": "0aec88987cc94426ac1f731201ab2914825040d9",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/browser.ts",
+      "W33_blob": "4f5a9f1068ca99b2c81dfe428bce4e89ec954bae",
+      "R2_blob": "4f5a9f1068ca99b2c81dfe428bce4e89ec954bae",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/capability.test.ts",
+      "W33_blob": "9f561757da81eb9f5305979817f693c841b372ec",
+      "R2_blob": "9f561757da81eb9f5305979817f693c841b372ec",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/capacity-numeric.test.ts",
+      "W33_blob": "fb064484e366b081f84591203704f9f0559c8cad",
+      "R2_blob": "fb064484e366b081f84591203704f9f0559c8cad",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/choice-history-bi.test.ts",
+      "W33_blob": "cf93dff4919989322c28a3a04fd6380629f3caa1",
+      "R2_blob": "cf93dff4919989322c28a3a04fd6380629f3caa1",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/consumer-dashboard.test.ts",
+      "W33_blob": "5561f0b5648a4f25deb1ebcaaa62f83d5736c02b",
+      "R2_blob": "5561f0b5648a4f25deb1ebcaaa62f83d5736c02b",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/consumer.test.ts",
+      "W33_blob": "d4b730aacf05f0d3c193d78276b41ed3779aecfc",
+      "R2_blob": "d4b730aacf05f0d3c193d78276b41ed3779aecfc",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/contextual.test.ts",
+      "W33_blob": "e64bfd21530dd565f32effd0888488e09260408f",
+      "R2_blob": "e64bfd21530dd565f32effd0888488e09260408f",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/contributions-browser.test.ts",
+      "W33_blob": "024ad2cd1748337711611362be73ee4f0ba9917e",
+      "R2_blob": "024ad2cd1748337711611362be73ee4f0ba9917e",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/dashboard-integration.test.ts",
+      "W33_blob": "af0b141f25283121674c31669bd59fef5831a346",
+      "R2_blob": "af0b141f25283121674c31669bd59fef5831a346",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/dashboard.test.ts",
+      "W33_blob": "2b24875b22480bf4e505813559c17b175723f6ac",
+      "R2_blob": "2b24875b22480bf4e505813559c17b175723f6ac",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/engine-coverage.test.ts",
+      "W33_blob": "1ab7dd28bfbb9fef868f0992cb1653e00a151114",
+      "R2_blob": "1ab7dd28bfbb9fef868f0992cb1653e00a151114",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/engine-fixture.ts",
+      "W33_blob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "R2_blob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/engine-revision-fixture.ts",
+      "W33_blob": "856381de3f333ca79b302483d3b8893d55f00441",
+      "R2_blob": "856381de3f333ca79b302483d3b8893d55f00441",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/factory-selection.test.ts",
+      "W33_blob": "600ba05222e5b43c34ddd8457fa5480f874a595f",
+      "R2_blob": "600ba05222e5b43c34ddd8457fa5480f874a595f",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/factory.test.ts",
+      "W33_blob": "b58cb332283bce402111133617de70a86bf50e58",
+      "R2_blob": "b58cb332283bce402111133617de70a86bf50e58",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/geometry.test.ts",
+      "W33_blob": "db7da447a9181f6853376aedc7c0b57a68f979bc",
+      "R2_blob": "db7da447a9181f6853376aedc7c0b57a68f979bc",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/milestones.test.ts",
+      "W33_blob": "79575c5554e0e042f7a1388e56e8285c0fe116ec",
+      "R2_blob": "79575c5554e0e042f7a1388e56e8285c0fe116ec",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/planner-integration.test.ts",
+      "W33_blob": "219f08eacd4df0de26c8219708ac8364d1c10082",
+      "R2_blob": "219f08eacd4df0de26c8219708ac8364d1c10082",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/planner-origins.test.ts",
+      "W33_blob": "bf92905dccfd01eaedc624841d808d5ce21b6f21",
+      "R2_blob": "bf92905dccfd01eaedc624841d808d5ce21b6f21",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/planner-projected.test.ts",
+      "W33_blob": "58de0985fd9e7655c13b49e77cb4a35e485eb991",
+      "R2_blob": "58de0985fd9e7655c13b49e77cb4a35e485eb991",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/planner.test.ts",
+      "W33_blob": "19b371a64a37d8ff2c2afdafe635ca81eedf4a86",
+      "R2_blob": "19b371a64a37d8ff2c2afdafe635ca81eedf4a86",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/portfolio.test.ts",
+      "W33_blob": "a76709769bb0a71308fb1883509a901418f615b2",
+      "R2_blob": "a76709769bb0a71308fb1883509a901418f615b2",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/procurement-integration.test.ts",
+      "W33_blob": "a7f4db379faeefca50794683fba0f3cb32d3ea97",
+      "R2_blob": "a7f4db379faeefca50794683fba0f3cb32d3ea97",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/procurement-stages.test.ts",
+      "W33_blob": "2eac642deb1e422017b28d41cc0eceba237568f4",
+      "R2_blob": "2eac642deb1e422017b28d41cc0eceba237568f4",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/procurement.test.ts",
+      "W33_blob": "fecc0880466c715187d12802ca691cf5e3dcfaa1",
+      "R2_blob": "fecc0880466c715187d12802ca691cf5e3dcfaa1",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/projection-validation.test.ts",
+      "W33_blob": "4200b2a887c1d7a6f597c2ccc957a2e2184fc69e",
+      "R2_blob": "4200b2a887c1d7a6f597c2ccc957a2e2184fc69e",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/projection.test.ts",
+      "W33_blob": "52e71583353ca80cfbba6746c5bb0dadac48d042",
+      "R2_blob": "52e71583353ca80cfbba6746c5bb0dadac48d042",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/render-completion-browser.test.ts",
+      "W33_blob": "55b35279ff0bf929bc6064eeecb09870702f0a47",
+      "R2_blob": "55b35279ff0bf929bc6064eeecb09870702f0a47",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/review-chart.test.ts",
+      "W33_blob": "c8d66dfda776d5c61c112b7a0cf51b043cb47163",
+      "R2_blob": "c8d66dfda776d5c61c112b7a0cf51b043cb47163",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/scenario.test.ts",
+      "W33_blob": "9f043b3dd5455a8d8390d7baeae8d431ef956aa8",
+      "R2_blob": "9f043b3dd5455a8d8390d7baeae8d431ef956aa8",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/selection.test.ts",
+      "W33_blob": "51b92aa05e90d730a9a544ce760be864ea1c4cbd",
+      "R2_blob": "51b92aa05e90d730a9a544ce760be864ea1c4cbd",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/semantic-discriminants.test.ts",
+      "W33_blob": "0930332c1a46b8ee81e40402870f9d9f6081fa86",
+      "R2_blob": "0930332c1a46b8ee81e40402870f9d9f6081fa86",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/semantics.test.ts",
+      "W33_blob": "aecf989c694556460662d2239170d0f5f00cb3a5",
+      "R2_blob": "aecf989c694556460662d2239170d0f5f00cb3a5",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/sensitivity-integration.test.ts",
+      "W33_blob": "bb16b52a21af55198e5b1890a823869123d46d84",
+      "R2_blob": "bb16b52a21af55198e5b1890a823869123d46d84",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/stored-bi-fences.test.ts",
+      "W33_blob": "2e18729fa382d1c8c1cc68d98703644e5c018be7",
+      "R2_blob": "2e18729fa382d1c8c1cc68d98703644e5c018be7",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/stored-scenario.test.ts",
+      "W33_blob": "0976e2d7d14c83c4fdff5d9232b780f54387a7bb",
+      "R2_blob": "0976e2d7d14c83c4fdff5d9232b780f54387a7bb",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/tickets-integration.test.ts",
+      "W33_blob": "fe8185eaa7ee7d2d3d99e5a62415e2f28cf84abd",
+      "R2_blob": "fe8185eaa7ee7d2d3d99e5a62415e2f28cf84abd",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/tickets.test.ts",
+      "W33_blob": "fbe91a3b0ebb04e01e34af1e15e8feb415114420",
+      "R2_blob": "fbe91a3b0ebb04e01e34af1e15e8feb415114420",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/view-browser.test.ts",
+      "W33_blob": "ebf20e603df087708969e2e95a051cd468711cc6",
+      "R2_blob": "ebf20e603df087708969e2e95a051cd468711cc6",
+      "preserved": true
+    },
+    {
+      "path": "test/product/wp05/waterfall.test.ts",
+      "W33_blob": "265331f341e534e084773eeabd90fe4e328c1e9d",
+      "R2_blob": "265331f341e534e084773eeabd90fe4e328c1e9d",
+      "preserved": true
+    }
+  ],
+  "summary": {
+    "inventoried_files": 154,
+    "preserved": 151,
+    "changed_or_added": [
+      "product/planner/port.ts",
+      "runtime/planner.ts",
+      "test/product/wp03/rate-identity-qualification.test.ts"
+    ],
+    "WP05_product_and_tests_preserved_at_R2": true
+  },
+  "W33_selected_observations": [
+    {
+      "selection": 24,
+      "runId": 43597456215,
+      "jobId": 132454926656,
+      "productSha": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+      "productTree": "485a3ac2ac1322d03d7421a17eb1791153f11c1b",
+      "snapshotSha": "b791d889a6f14ea0b9f9ff2b950bf10da4fe5090",
+      "snapshotTree": "c3f69411caf975ba3f0c4ae6e583a02b24bcf779",
+      "conclusion": "success",
+      "logSha256": "8a6c9064562ee8cb26c9d6ee444dfb249720e30c77355a56662a0711f9292e0b"
+    },
+    {
+      "selection": 25,
+      "runId": 43599384924,
+      "jobId": 132460663327,
+      "productSha": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "productTree": "052583ce35edbadd4b7ec68ffe021bb59e05a20f",
+      "snapshotSha": "34c2647395a03749e5bbc795bcf1656be5d10a03",
+      "snapshotTree": "0374fb7e0a970102a65c485738de1d6723138078",
+      "conclusion": "success",
+      "logSha256": "0156582ffc4f96ba4890ce27c752af2dc5f24edc079f3a92f6317499ca74f9d4"
+    },
+    {
+      "selection": 26,
+      "runId": 43599387716,
+      "jobId": 132460671887,
+      "productSha": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "productTree": "052583ce35edbadd4b7ec68ffe021bb59e05a20f",
+      "snapshotSha": "62223d922ddeb4db39c28213ab8190b01bd0617e",
+      "snapshotTree": "e059274fb5129269ac8adf5ac0712d2ec523b82b",
+      "conclusion": "success",
+      "logSha256": "69a8d1a1b6a97081d5873428460d07308f15774a75d7ce19d75186891de98d8f"
+    }
+  ],
+  "changed_WP03_proof": {
+    "production_blobs": {
+      "runtime/planner.ts": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+      "product/planner/port.ts": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+    },
+    "S1": {
+      "product_sha": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+      "product_tree": "de5d3f65d6d262c05a6447aa21f26c63dfbbf1c1",
+      "snapshot_sha": "1ee667356ad01f211e7473d2ad5e2fae4b670a9d",
+      "snapshot_tree": "403de749d387114621a6c9b3f29ec649da6a67e4",
+      "run_id": 43615424219,
+      "job_id": 132509297971,
+      "conclusion": "failure",
+      "pass": 8,
+      "fail": 1,
+      "expects": 254,
+      "passed_unchanged_files": [
+        "test/product/wp03/port-hr.test.ts",
+        "test/product/wp03/scenario-qualification.test.ts"
+      ],
+      "failure_retained": "Whole-snapshot equality included source-scope registration because baseline preceded issuance. All assertions retained; fixture baseline moved after issuance. Production files did not change.",
+      "original_receipt_log_representation_sha256": "324b70b713707b3fd3d211ef5ee27fc0e66f54f872c3315cbec3695492d14fe4",
+      "literal_MCP_log_sha256": "ae121d26bfec4c147ee92348a3a72f8aa6d5bc4d27e5814ce7f52e8616129990",
+      "literal_MCP_log_bytes": 75952
+    },
+    "S3": {
+      "product_sha": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "product_tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+      "snapshot_sha": "4d9eded5fd40d496861d65b7eab093fd5de88d9d",
+      "snapshot_tree": "644036816fd4b8db3cd7187cabad2e9abedc88f2",
+      "run_id": 43616600555,
+      "job_id": 132512903901,
+      "conclusion": "success",
+      "pass": 2,
+      "fail": 0,
+      "expects": 64,
+      "duration_ms": 285,
+      "test": "test/product/wp03/rate-identity-qualification.test.ts",
+      "test_blob": "130c4940746088518376aa4c325bd68ade46aa87",
+      "literal_MCP_log_sha256": "14b59a5c019da203d8caaa35c81e54976a1aef49c7d72ac34197584bbe6e4d8b",
+      "literal_MCP_log_bytes": 69091,
+      "omni": "not applicable",
+      "nonce": "dc60bb893edb7f9756ccdb29f3301ac8"
+    },
+    "serialization_note": "R2 receipt retained the former log-file representation hash. The MCP literal UTF-8 text has no added final LF; this supplement records both identities. Run IDs, assertions and conclusions are unchanged."
+  },
+  "tests": [
+    {
+      "file": "test/parity-planner.test.ts",
+      "W33_blob": "186addd4833a99ebed70d8f73bb4214a0d5d4750",
+      "R2_blob": "186addd4833a99ebed70d8f73bb4214a0d5d4750",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 14,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/planner-runtime.test.ts",
+      "W33_blob": "56f9274f5d570be609dfa89d7bca7817728a76d4",
+      "R2_blob": "56f9274f5d570be609dfa89d7bca7817728a76d4",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 12,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/adapter.test.ts",
+      "W33_blob": "5c0e883d316217107a6ac52974bbcd1fbe3f6b1e",
+      "R2_blob": "5c0e883d316217107a6ac52974bbcd1fbe3f6b1e",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 68,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/calculation-evidence.test.ts",
+      "W33_blob": "a0a67918c69a636120daa66877669020803c108e",
+      "R2_blob": "a0a67918c69a636120daa66877669020803c108e",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 54,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/capability-parity.test.ts",
+      "W33_blob": "b0fe198ea168702d390168000d27ce6bb3219833",
+      "R2_blob": "b0fe198ea168702d390168000d27ce6bb3219833",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 94,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/catalog-boundaries.test.ts",
+      "W33_blob": "775a383f6553e3b7b634bfb4137926e7a0ffb32e",
+      "R2_blob": "775a383f6553e3b7b634bfb4137926e7a0ffb32e",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 14,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/catalog-host.test.ts",
+      "W33_blob": "d6548946971a002260114f8e07b60ee69eb193b4",
+      "R2_blob": "d6548946971a002260114f8e07b60ee69eb193b4",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 54,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/catalog-lifecycle.test.ts",
+      "W33_blob": "c71ba66a5033c31e08baa82a401deaecf0f128ba",
+      "R2_blob": "c71ba66a5033c31e08baa82a401deaecf0f128ba",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 89,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/composed-threshold.test.ts",
+      "W33_blob": "6d1c715d5f20c478e51370c39c4ef145b93930ae",
+      "R2_blob": "6d1c715d5f20c478e51370c39c4ef145b93930ae",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 86,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+            "W33_blob": "31f327a784316f4f099f83e901d443531340bb63",
+            "R2_blob": "3dec070ca5f56f7bd03a09b4b19468c950d82214"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+            "W33_blob": "9c678d6b8db1d00242ae0ae5c02cdff9219009c7",
+            "R2_blob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+            "W33_blob": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+            "R2_blob": "33a8d973c045769b456342499e1c247d524f6c53"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+            "W33_blob": "28b9bcdb5df9786dd5de140255e382d1f89f7522",
+            "R2_blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+            "W33_blob": "247f82eb6e3ca4b097327aeacd33f268099b1770",
+            "R2_blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/coverage.test.ts",
+      "W33_blob": "b6136ca7c23d633adca15f991f817075b3747845",
+      "R2_blob": "b6136ca7c23d633adca15f991f817075b3747845",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 51,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/headcount-host.test.ts",
+      "W33_blob": "697c03930cb1619c69b24483f1e3870f01e7c6ba",
+      "R2_blob": "697c03930cb1619c69b24483f1e3870f01e7c6ba",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 68,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/headcount-projection.test.ts",
+      "W33_blob": "a7e36f9a641274d4d914a8df1d26e2593bd63023",
+      "R2_blob": "a7e36f9a641274d4d914a8df1d26e2593bd63023",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 61,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/import-analysis.test.ts",
+      "W33_blob": "1b010f9dabe5f71233a19e1d3c04d00da1494f99",
+      "R2_blob": "1b010f9dabe5f71233a19e1d3c04d00da1494f99",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 107,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/monthly-grid.test.ts",
+      "W33_blob": "9eb2e2c43a4c5c575a3350976ae7b43b56a8f747",
+      "R2_blob": "9eb2e2c43a4c5c575a3350976ae7b43b56a8f747",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 14,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/monthly-host.test.ts",
+      "W33_blob": "11735326f621576904444b3cad356c3cb182fa51",
+      "R2_blob": "11735326f621576904444b3cad356c3cb182fa51",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 55,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/monthly-operations.test.ts",
+      "W33_blob": "60f751d4ee674bea63814f45b62e86db217f7a07",
+      "R2_blob": "60f751d4ee674bea63814f45b62e86db217f7a07",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 55,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/operation-verifier.test.ts",
+      "W33_blob": "9865e999969880625f2f0eee8e5e117d6ff7f095",
+      "R2_blob": "9865e999969880625f2f0eee8e5e117d6ff7f095",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 88,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/overview.test.ts",
+      "W33_blob": "780f91f8702bb58a048e7b955d31cc8948deaa54",
+      "R2_blob": "780f91f8702bb58a048e7b955d31cc8948deaa54",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 90,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/parity-matrix.test.ts",
+      "W33_blob": "49aa288b0ef6fcd90debecc0bfea0bfc4749eb15",
+      "R2_blob": "49aa288b0ef6fcd90debecc0bfea0bfc4749eb15",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 75,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/persistence-comparison.test.ts",
+      "W33_blob": "5c0a15b19d6cff2f47e7ec292babf9cf98d2288f",
+      "R2_blob": "5c0a15b19d6cff2f47e7ec292babf9cf98d2288f",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 61,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/persistence.test.ts",
+      "W33_blob": "f841235bd6b4683a858ddd60c3a275bffaa0200c",
+      "R2_blob": "f841235bd6b4683a858ddd60c3a275bffaa0200c",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 61,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/port-hr.test.ts",
+      "W33_blob": "68d049f957257e089810ae0f9be230a157dba70c",
+      "R2_blob": "68d049f957257e089810ae0f9be230a157dba70c",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 84,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/port.test.ts",
+      "W33_blob": "2c6a3519024d2cca0fcf5256dcf9055fa1d7ae26",
+      "R2_blob": "2c6a3519024d2cca0fcf5256dcf9055fa1d7ae26",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 86,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/prepared-apply-integration.test.ts",
+      "W33_blob": "5961c1eebeec21b75228bccb7caf1ca283fa6c9a",
+      "R2_blob": "5961c1eebeec21b75228bccb7caf1ca283fa6c9a",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 97,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/resume-engine-freshness.test.ts",
+      "W33_blob": "a36804ccf32440e4aabcb6f5e1c9a73b5d48bd65",
+      "R2_blob": "a36804ccf32440e4aabcb6f5e1c9a73b5d48bd65",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 85,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/resume-ui-host-boundaries.test.ts",
+      "W33_blob": "b112602cb6e3a12ca208780092b2a65ab6a24c91",
+      "R2_blob": "b112602cb6e3a12ca208780092b2a65ab6a24c91",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 72,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/runtime-overview-presence.test.ts",
+      "W33_blob": "f140786151f8c3fb77bb7743cc004ee0e51427f1",
+      "R2_blob": "f140786151f8c3fb77bb7743cc004ee0e51427f1",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 161,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts",
+          "product/routines/factory.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/scenario-capability-parity.test.ts",
+      "W33_blob": "379c46b2c1f25d0bf8b1200bba6a9d9f276d075b",
+      "R2_blob": "379c46b2c1f25d0bf8b1200bba6a9d9f276d075b",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 109,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/scenario-costs.test.ts",
+      "W33_blob": "32528471bcaa141b580631aa4fc021327b8b20e7",
+      "R2_blob": "32528471bcaa141b580631aa4fc021327b8b20e7",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 84,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/scenario-persistence-fences.test.ts",
+      "W33_blob": "73802762a47ce5570db3a1e5030592efd4a26ab0",
+      "R2_blob": "73802762a47ce5570db3a1e5030592efd4a26ab0",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 86,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+            "W33_blob": "31f327a784316f4f099f83e901d443531340bb63",
+            "R2_blob": "3dec070ca5f56f7bd03a09b4b19468c950d82214"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+            "W33_blob": "9c678d6b8db1d00242ae0ae5c02cdff9219009c7",
+            "R2_blob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+            "W33_blob": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+            "R2_blob": "33a8d973c045769b456342499e1c247d524f6c53"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+            "W33_blob": "28b9bcdb5df9786dd5de140255e382d1f89f7522",
+            "R2_blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+            "W33_blob": "247f82eb6e3ca4b097327aeacd33f268099b1770",
+            "R2_blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/source-issuer.test.ts",
+      "W33_blob": "23be7c97020a1479539fb3c59b4b044b11ccb576",
+      "R2_blob": "23be7c97020a1479539fb3c59b4b044b11ccb576",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 90,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/source-scenario.test.ts",
+      "W33_blob": "46b31d8a8d9038f74c0d0b825078ecc8229fe6d4",
+      "R2_blob": "46b31d8a8d9038f74c0d0b825078ecc8229fe6d4",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 91,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+            "W33_blob": "31f327a784316f4f099f83e901d443531340bb63",
+            "R2_blob": "3dec070ca5f56f7bd03a09b4b19468c950d82214"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+            "W33_blob": "9c678d6b8db1d00242ae0ae5c02cdff9219009c7",
+            "R2_blob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+            "W33_blob": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+            "R2_blob": "33a8d973c045769b456342499e1c247d524f6c53"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+            "W33_blob": "28b9bcdb5df9786dd5de140255e382d1f89f7522",
+            "R2_blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+            "W33_blob": "247f82eb6e3ca4b097327aeacd33f268099b1770",
+            "R2_blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp03/versions-host.test.ts",
+      "W33_blob": "a4f0183be62e60cf478d3dc7868bb4d988e19695",
+      "R2_blob": "a4f0183be62e60cf478d3dc7868bb4d988e19695",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 84,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/aging-browser.test.ts",
+      "W33_blob": "84803f1f17b12a3192d88a9554fb11ae76848d7e",
+      "R2_blob": "84803f1f17b12a3192d88a9554fb11ae76848d7e",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 155,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts",
+          "product/routines/factory.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/approved-catalog.test.ts",
+      "W33_blob": "0aec88987cc94426ac1f731201ab2914825040d9",
+      "R2_blob": "0aec88987cc94426ac1f731201ab2914825040d9",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 44,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/capability.test.ts",
+      "W33_blob": "9f561757da81eb9f5305979817f693c841b372ec",
+      "R2_blob": "9f561757da81eb9f5305979817f693c841b372ec",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 51,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/capacity-numeric.test.ts",
+      "W33_blob": "fb064484e366b081f84591203704f9f0559c8cad",
+      "R2_blob": "fb064484e366b081f84591203704f9f0559c8cad",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 172,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts",
+          "product/routines/factory.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/choice-history-bi.test.ts",
+      "W33_blob": "cf93dff4919989322c28a3a04fd6380629f3caa1",
+      "R2_blob": "cf93dff4919989322c28a3a04fd6380629f3caa1",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 191,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+            "W33_blob": "31f327a784316f4f099f83e901d443531340bb63",
+            "R2_blob": "3dec070ca5f56f7bd03a09b4b19468c950d82214"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+            "W33_blob": "9c678d6b8db1d00242ae0ae5c02cdff9219009c7",
+            "R2_blob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+            "W33_blob": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+            "R2_blob": "33a8d973c045769b456342499e1c247d524f6c53"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+            "W33_blob": "28b9bcdb5df9786dd5de140255e382d1f89f7522",
+            "R2_blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+            "W33_blob": "247f82eb6e3ca4b097327aeacd33f268099b1770",
+            "R2_blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+            "W33_blob": "2da82bf379910826f4558b5b330c97cdaf6806df",
+            "R2_blob": "0dc89d86866620a8109051c68bc2d2b4d92c508f"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts",
+          "product/routines/factory.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/consumer-dashboard.test.ts",
+      "W33_blob": "5561f0b5648a4f25deb1ebcaaa62f83d5736c02b",
+      "R2_blob": "5561f0b5648a4f25deb1ebcaaa62f83d5736c02b",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 90,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/consumer.test.ts",
+      "W33_blob": "d4b730aacf05f0d3c193d78276b41ed3779aecfc",
+      "R2_blob": "d4b730aacf05f0d3c193d78276b41ed3779aecfc",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 55,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/contextual.test.ts",
+      "W33_blob": "e64bfd21530dd565f32effd0888488e09260408f",
+      "R2_blob": "e64bfd21530dd565f32effd0888488e09260408f",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 52,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/contributions-browser.test.ts",
+      "W33_blob": "024ad2cd1748337711611362be73ee4f0ba9917e",
+      "R2_blob": "024ad2cd1748337711611362be73ee4f0ba9917e",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 155,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts",
+          "product/routines/factory.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/dashboard-integration.test.ts",
+      "W33_blob": "af0b141f25283121674c31669bd59fef5831a346",
+      "R2_blob": "af0b141f25283121674c31669bd59fef5831a346",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 85,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/dashboard.test.ts",
+      "W33_blob": "2b24875b22480bf4e505813559c17b175723f6ac",
+      "R2_blob": "2b24875b22480bf4e505813559c17b175723f6ac",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 52,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/engine-coverage.test.ts",
+      "W33_blob": "1ab7dd28bfbb9fef868f0992cb1653e00a151114",
+      "R2_blob": "1ab7dd28bfbb9fef868f0992cb1653e00a151114",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 89,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+            "W33_blob": "31f327a784316f4f099f83e901d443531340bb63",
+            "R2_blob": "3dec070ca5f56f7bd03a09b4b19468c950d82214"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+            "W33_blob": "9c678d6b8db1d00242ae0ae5c02cdff9219009c7",
+            "R2_blob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+            "W33_blob": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+            "R2_blob": "33a8d973c045769b456342499e1c247d524f6c53"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+            "W33_blob": "28b9bcdb5df9786dd5de140255e382d1f89f7522",
+            "R2_blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+            "W33_blob": "247f82eb6e3ca4b097327aeacd33f268099b1770",
+            "R2_blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/factory-selection.test.ts",
+      "W33_blob": "600ba05222e5b43c34ddd8457fa5480f874a595f",
+      "R2_blob": "600ba05222e5b43c34ddd8457fa5480f874a595f",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 65,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/factory.test.ts",
+      "W33_blob": "b58cb332283bce402111133617de70a86bf50e58",
+      "R2_blob": "b58cb332283bce402111133617de70a86bf50e58",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 65,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/geometry.test.ts",
+      "W33_blob": "db7da447a9181f6853376aedc7c0b57a68f979bc",
+      "R2_blob": "db7da447a9181f6853376aedc7c0b57a68f979bc",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 44,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/milestones.test.ts",
+      "W33_blob": "79575c5554e0e042f7a1388e56e8285c0fe116ec",
+      "R2_blob": "79575c5554e0e042f7a1388e56e8285c0fe116ec",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 46,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/planner-integration.test.ts",
+      "W33_blob": "219f08eacd4df0de26c8219708ac8364d1c10082",
+      "R2_blob": "219f08eacd4df0de26c8219708ac8364d1c10082",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 164,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts",
+          "product/routines/factory.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/planner-origins.test.ts",
+      "W33_blob": "bf92905dccfd01eaedc624841d808d5ce21b6f21",
+      "R2_blob": "bf92905dccfd01eaedc624841d808d5ce21b6f21",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 165,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts",
+          "product/routines/factory.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/planner-projected.test.ts",
+      "W33_blob": "58de0985fd9e7655c13b49e77cb4a35e485eb991",
+      "R2_blob": "58de0985fd9e7655c13b49e77cb4a35e485eb991",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 52,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/procurement-integration.test.ts",
+      "W33_blob": "a7f4db379faeefca50794683fba0f3cb32d3ea97",
+      "R2_blob": "a7f4db379faeefca50794683fba0f3cb32d3ea97",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 167,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts",
+          "product/routines/factory.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/procurement-stages.test.ts",
+      "W33_blob": "2eac642deb1e422017b28d41cc0eceba237568f4",
+      "R2_blob": "2eac642deb1e422017b28d41cc0eceba237568f4",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 167,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts",
+          "product/routines/factory.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/procurement.test.ts",
+      "W33_blob": "fecc0880466c715187d12802ca691cf5e3dcfaa1",
+      "R2_blob": "fecc0880466c715187d12802ca691cf5e3dcfaa1",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 52,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/projection-validation.test.ts",
+      "W33_blob": "4200b2a887c1d7a6f597c2ccc957a2e2184fc69e",
+      "R2_blob": "4200b2a887c1d7a6f597c2ccc957a2e2184fc69e",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 49,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/projection.test.ts",
+      "W33_blob": "52e71583353ca80cfbba6746c5bb0dadac48d042",
+      "R2_blob": "52e71583353ca80cfbba6746c5bb0dadac48d042",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 43,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/render-completion-browser.test.ts",
+      "W33_blob": "55b35279ff0bf929bc6064eeecb09870702f0a47",
+      "R2_blob": "55b35279ff0bf929bc6064eeecb09870702f0a47",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 47,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/review-chart.test.ts",
+      "W33_blob": "c8d66dfda776d5c61c112b7a0cf51b043cb47163",
+      "R2_blob": "c8d66dfda776d5c61c112b7a0cf51b043cb47163",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 53,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/scenario.test.ts",
+      "W33_blob": "9f043b3dd5455a8d8390d7baeae8d431ef956aa8",
+      "R2_blob": "9f043b3dd5455a8d8390d7baeae8d431ef956aa8",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 43,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/selection.test.ts",
+      "W33_blob": "51b92aa05e90d730a9a544ce760be864ea1c4cbd",
+      "R2_blob": "51b92aa05e90d730a9a544ce760be864ea1c4cbd",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 43,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/semantic-discriminants.test.ts",
+      "W33_blob": "0930332c1a46b8ee81e40402870f9d9f6081fa86",
+      "R2_blob": "0930332c1a46b8ee81e40402870f9d9f6081fa86",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 44,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/semantics.test.ts",
+      "W33_blob": "aecf989c694556460662d2239170d0f5f00cb3a5",
+      "R2_blob": "aecf989c694556460662d2239170d0f5f00cb3a5",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 44,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/sensitivity-integration.test.ts",
+      "W33_blob": "bb16b52a21af55198e5b1890a823869123d46d84",
+      "R2_blob": "bb16b52a21af55198e5b1890a823869123d46d84",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 175,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+            "W33_blob": "31f327a784316f4f099f83e901d443531340bb63",
+            "R2_blob": "3dec070ca5f56f7bd03a09b4b19468c950d82214"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+            "W33_blob": "9c678d6b8db1d00242ae0ae5c02cdff9219009c7",
+            "R2_blob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+            "W33_blob": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+            "R2_blob": "33a8d973c045769b456342499e1c247d524f6c53"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+            "W33_blob": "28b9bcdb5df9786dd5de140255e382d1f89f7522",
+            "R2_blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+            "W33_blob": "247f82eb6e3ca4b097327aeacd33f268099b1770",
+            "R2_blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts",
+          "product/routines/factory.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/stored-bi-fences.test.ts",
+      "W33_blob": "2e18729fa382d1c8c1cc68d98703644e5c018be7",
+      "R2_blob": "2e18729fa382d1c8c1cc68d98703644e5c018be7",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 61,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/stored-scenario.test.ts",
+      "W33_blob": "0976e2d7d14c83c4fdff5d9232b780f54387a7bb",
+      "R2_blob": "0976e2d7d14c83c4fdff5d9232b780f54387a7bb",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 68,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/tickets-integration.test.ts",
+      "W33_blob": "fe8185eaa7ee7d2d3d99e5a62415e2f28cf84abd",
+      "R2_blob": "fe8185eaa7ee7d2d3d99e5a62415e2f28cf84abd",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 86,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/tickets.test.ts",
+      "W33_blob": "fbe91a3b0ebb04e01e34af1e15e8feb415114420",
+      "R2_blob": "fbe91a3b0ebb04e01e34af1e15e8feb415114420",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 45,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/view-browser.test.ts",
+      "W33_blob": "ebf20e603df087708969e2e95a051cd468711cc6",
+      "R2_blob": "ebf20e603df087708969e2e95a051cd468711cc6",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 155,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts",
+          "product/routines/factory.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp05/waterfall.test.ts",
+      "W33_blob": "265331f341e534e084773eeabd90fe4e328c1e9d",
+      "R2_blob": "265331f341e534e084773eeabd90fe4e328c1e9d",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 47,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp10/resident-runtime/execution-context.test.ts",
+      "W33_blob": "97dc67147f47049053fb5ccb4df376e2ebe8ec8d",
+      "R2_blob": "97dc67147f47049053fb5ccb4df376e2ebe8ec8d",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 48,
+        "changed_imports_at_R2": [],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp11/calculation-persistence.test.ts",
+      "W33_blob": "f0d1d60a0426cd10a5f559b4bcf0fc2858bae60c",
+      "R2_blob": "f0d1d60a0426cd10a5f559b4bcf0fc2858bae60c",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 91,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [
+          "../porta/act.ts"
+        ],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp11/composite-coverage.test.ts",
+      "W33_blob": "27e0580d6c9ba7b4c549bc33e5d252a7ce74ae66",
+      "R2_blob": "27e0580d6c9ba7b4c549bc33e5d252a7ce74ae66",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 94,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+            "W33_blob": "31f327a784316f4f099f83e901d443531340bb63",
+            "R2_blob": "3dec070ca5f56f7bd03a09b4b19468c950d82214"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+            "W33_blob": "9c678d6b8db1d00242ae0ae5c02cdff9219009c7",
+            "R2_blob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+            "W33_blob": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+            "R2_blob": "33a8d973c045769b456342499e1c247d524f6c53"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+            "W33_blob": "28b9bcdb5df9786dd5de140255e382d1f89f7522",
+            "R2_blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+            "W33_blob": "247f82eb6e3ca4b097327aeacd33f268099b1770",
+            "R2_blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp11/renewal-case-read-scope.test.ts",
+      "W33_blob": "75a2cbcd0c3907fc2d14f18f2b35f131331ecfb2",
+      "R2_blob": "75a2cbcd0c3907fc2d14f18f2b35f131331ecfb2",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 88,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+            "W33_blob": "31f327a784316f4f099f83e901d443531340bb63",
+            "R2_blob": "3dec070ca5f56f7bd03a09b4b19468c950d82214"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+            "W33_blob": "9c678d6b8db1d00242ae0ae5c02cdff9219009c7",
+            "R2_blob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+            "W33_blob": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+            "R2_blob": "33a8d973c045769b456342499e1c247d524f6c53"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+            "W33_blob": "28b9bcdb5df9786dd5de140255e382d1f89f7522",
+            "R2_blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+            "W33_blob": "247f82eb6e3ca4b097327aeacd33f268099b1770",
+            "R2_blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp11/renewal-choice-history.test.ts",
+      "W33_blob": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+      "R2_blob": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 106,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+            "W33_blob": "31f327a784316f4f099f83e901d443531340bb63",
+            "R2_blob": "3dec070ca5f56f7bd03a09b4b19468c950d82214"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+            "W33_blob": "9c678d6b8db1d00242ae0ae5c02cdff9219009c7",
+            "R2_blob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+            "W33_blob": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+            "R2_blob": "33a8d973c045769b456342499e1c247d524f6c53"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+            "W33_blob": "28b9bcdb5df9786dd5de140255e382d1f89f7522",
+            "R2_blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+            "W33_blob": "247f82eb6e3ca4b097327aeacd33f268099b1770",
+            "R2_blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+            "W33_blob": "2da82bf379910826f4558b5b330c97cdaf6806df",
+            "R2_blob": "0dc89d86866620a8109051c68bc2d2b4d92c508f"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    },
+    {
+      "file": "test/product/wp11/renewal-source-admission.test.ts",
+      "W33_blob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "R2_blob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "test_source_preserved_W33_to_R2": true,
+      "static_import_review": {
+        "method": "Static relative imports, including type imports; all parsed bytes match the W33/initial tree. No product execution.",
+        "files_seen": 88,
+        "changed_imports_at_R2": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "W33_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+            "R2_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+            "W33_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+            "R2_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+            "W33_blob": "31f327a784316f4f099f83e901d443531340bb63",
+            "R2_blob": "3dec070ca5f56f7bd03a09b4b19468c950d82214"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+            "W33_blob": "9c678d6b8db1d00242ae0ae5c02cdff9219009c7",
+            "R2_blob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+            "W33_blob": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+            "R2_blob": "33a8d973c045769b456342499e1c247d524f6c53"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+            "W33_blob": "28b9bcdb5df9786dd5de140255e382d1f89f7522",
+            "R2_blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+            "W33_blob": "247f82eb6e3ca4b097327aeacd33f268099b1770",
+            "R2_blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+            "W33_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+            "R2_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+          }
+        ],
+        "unavailable_W33_content": [],
+        "external_or_unresolved_imports": [],
+        "whole_repository_or_environment_equality_claimed": false
+      },
+      "reuse": "Unchanged named assertions/own component bytes remain usable in their historical scope. Changed imports require their own scoped evidence; this entry does not claim same full dependency closure at every older run."
+    }
+  ],
+  "current_check_R3": {
+    "run_id": 43618360251,
+    "job_id": 132518291837,
+    "product_sha": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+    "product_tree": "6f2cb4d131ba5437f70d7700e3274cc26a22630c",
+    "conclusion": "failure",
+    "job_log_sha256": "17742cc8a3b3da52eb8172c3a4a40390bbaaaff168f45538aa28cd34e275ba7f",
+    "job_log_bytes": 139432,
+    "typecheck": {
+      "status": "failure",
+      "diagnostic_count": 115,
+      "own_count": 0,
+      "external_count": 115,
+      "external_diagnostics_identical_to_R2": true
+    },
+    "guards": {
+      "status": "failure",
+      "rules": 78,
+      "changed_paths": 1462,
+      "gate_count": 43,
+      "warn_count": 15,
+      "errors": 0,
+      "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "disposition": "Preserve archived input logs; no ignore or approval added. Path-rule review must remain with S0/Maestro; no global clean claim.",
+      "identical_findings_to_R2": true
+    }
+  },
+  "new_BI_publication": {
+    "product_sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+    "product_tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+        "baseBlob": null,
+        "blob": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+        "baseBlob": "93bc4fb74dee9c55fa3e396bd7108ebc9d3da895",
+        "blob": "9cc4cc81538a7247cd87893f958acf5665194eb5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+        "baseBlob": "98d2510a3a44e45ab341aed6a1f2560339ec8578",
+        "blob": "fef3b0546384fcb0739fcf11ef531406c60ad760"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-fixture.ts",
+        "baseBlob": null,
+        "blob": "14445a3e32ab1c906a993fd628d011b8d22659c9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+        "baseBlob": null,
+        "blob": "f35fbae07684e507421a009244b603530f16b1e9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-complete.test.ts",
+        "baseBlob": null,
+        "blob": "edad0b7bf1c54b3654b5a0595bcfb6e34d38102b"
+      }
+    ],
+    "S8": {
+      "status": "DISPATCHED_NO_CONCLUSION_OBSERVED",
+      "snapshot_sha": "f004a08d124a43f67bfc2bd41debe06ecad7b13e",
+      "request_sha256": "e19fb141c60344c87289741c772705ceb4542986db85f8185807b5f0a10fab32",
+      "selectors": [
+        "./Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+        "./Sucafinav1/test/product/wp03/scenario-bi-complete.test.ts",
+        "./Sucafinav1/test/product/wp05/factory-selection.test.ts"
+      ]
+    },
+    "CHECK_R4": {
+      "run_id": 43619734769,
+      "conclusion_reported_by_root": "failure",
+      "diagnostic_analysis": "PENDING_ROOT_LOG_REVIEW"
+    }
+  },
+  "reuse_rules": [
+    "A historical failed selection remains failed even when named files passed.",
+    "The S1 fixture failure is not a product pass; S3 closes only the corrected two-case identity selection.",
+    "Equal file blobs preserve implementation/oracles; they do not by themselves prove installed routing, full dependency/environment equivalence, resident execution or applied decisions.",
+    "Future scenario-BI bundle changes factory/waterfall and adds a producer; R2 byte-equality observations remain pinned to R2. Its own surgical Actions evidence is required."
+  ],
+  "product_tests_run_locally": false,
+  "global_acceptance": false
+}

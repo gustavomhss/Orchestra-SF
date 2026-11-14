@@ -1,0 +1,111 @@
+{
+  "schema": "wp13-hosted-product-receipt-v1",
+  "label": "S11-Afx1",
+  "productSha": "eb5d411292b8892673cff751b3492a14146b7785",
+  "productTree": "2fd4176a9779c23394b6d4c62f55cb3956295904",
+  "snapshotSha": "024ad7d3bac9e53ea5730ac3ef22ae6edecf0b3a",
+  "snapshotTree": "d6e43b1c764333e06526cb38c2d2baf80aef9b28",
+  "branch": "ci-run-linux-astra-wp13-eb5d4112-d8680784-1",
+  "snapshotOnlyAdded": {
+    "path": ".ci-run.json",
+    "sha": "4e210e3c9817434e7304763e93017017450c2487"
+  },
+  "runId": 43598246788,
+  "jobId": 132457259569,
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 132457259569,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-14T13:08:26Z",
+      "completed_at": "2026-11-14T13:12:28Z"
+    },
+    {
+      "id": 132458290360,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-14T13:12:30Z",
+      "completed_at": "2026-11-14T13:12:32Z"
+    }
+  ],
+  "artifacts": [],
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "Sucafinav1/test/product/wp13/term-defer-boundary.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestSha256": "d8680784c8f9fa027cedf3ddcffc752d2181685602ac531d7ff59d153e475d9b",
+  "selectedPublishedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "sha": "bf07b1c804138f04e01f9cf5a518b6d89ab24b9a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/term-defer-boundary.test.ts",
+      "sha": "edb551580d49c817141d3a850be4af36b0a7d647"
+    }
+  ],
+  "log": {
+    "sha256": "0098e562344be5be7f88b3d5b41400ed74e4a059a1162fafd1623769869def3a",
+    "bytes": 69475
+  },
+  "control": {
+    "accepted": true,
+    "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "error": null,
+    "omniSpawnProven": false
+  },
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "summary": "Ran 4 tests across 2 files. [136.98s]",
+    "expectCalls": 127
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp13/term-defer-boundary.test.ts": [
+      {
+        "status": "pass",
+        "name": "portfolio keeps a canonical monthly defer cost-neutral without inventing cancellation savings",
+        "milliseconds": 345.48
+      }
+    ],
+    "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts": [
+      {
+        "status": "pass",
+        "name": "real Planner sensitivity keeps EUR input separate from USD output and leaves missing FX conditioned in C08",
+        "milliseconds": 17372.32
+      },
+      {
+        "status": "pass",
+        "name": "real Planner portfolio and comparison stay conditioned with missing FX across persisted HTTP consumers and replay fences",
+        "milliseconds": 75495.57
+      },
+      {
+        "status": "pass",
+        "name": "real Planner cross-case portfolio retains duplicate targets and becomes stale when the other case advances",
+        "milliseconds": 43585.52
+      }
+    ]
+  },
+  "selectionMatches": true,
+  "acceptance": {
+    "aggregatePass": true,
+    "completedPassedFiles": [
+      "Sucafinav1/test/product/wp13/term-defer-boundary.test.ts",
+      "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts"
+    ],
+    "nativeOrInstalledConsumerProof": false
+  },
+  "ready": false
+}

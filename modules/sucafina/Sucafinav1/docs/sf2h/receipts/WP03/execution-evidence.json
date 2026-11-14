@@ -1,0 +1,2935 @@
+{
+  "schema": "wp03-execution-receipt-v1",
+  "status": "PRODUCER_QUALIFIED_INTEGRATED_ACCEPTANCE_BLOCKED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp03",
+  "pullRequest": {
+    "number": 22,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/22",
+    "base": "sf2-stack",
+    "draftRequired": true
+  },
+  "handoff": {
+    "commit": "4e4d873e7e93bba3dc82df45e243999e7c8e76b6",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP03.md"
+  },
+  "seed": {
+    "wp": "WP03",
+    "branch": "astra-wp03",
+    "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "head": "73ee7fd812d233f898ef79a9378014d4339d9875",
+    "tree": "a5b8e8ef67cec87599ba62329eb1bd2c3e8f96e8",
+    "seed_files": 22,
+    "verified": true
+  },
+  "numericBaseline": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "qualifiedProduct": {
+    "commit": "6f004731e7848bf540434a3ee050cd0f28f342cb",
+    "tree": "12403d54bf5713096a30647d45791d4a4431c857",
+    "snapshotCommit": "9a62d6c0ed2638960319f8ff3d68eba58d2e92e5",
+    "snapshotTree": "934b5bed1e4978d407bf8810f2ab0b368b3f92a7",
+    "requestSha256": "5bd08501e76cb4d08d9506d967086dca1b4ecd227f68a718b5a64c2cf78a6e01",
+    "snapshotIsolation": {
+      "base": "6f004731e7848bf540434a3ee050cd0f28f342cb",
+      "status": "ahead",
+      "aheadBy": 1,
+      "behindBy": 0,
+      "files": [
+        {
+          "path": ".ci-run.json",
+          "blob": "1506c1f200ca4ac73ecd50e57372feed1243acc1",
+          "status": "added"
+        }
+      ]
+    }
+  },
+  "finalTests": {
+    "schema": "wp03-ci-observation-v1",
+    "productSha": "6f004731e7848bf540434a3ee050cd0f28f342cb",
+    "productTree": "12403d54bf5713096a30647d45791d4a4431c857",
+    "snapshotSha": "9a62d6c0ed2638960319f8ff3d68eba58d2e92e5",
+    "snapshotTree": "934b5bed1e4978d407bf8810f2ab0b368b3f92a7",
+    "runId": 43523654974,
+    "jobId": 132223957537,
+    "cleanupJobId": 132224938090,
+    "conclusion": "success",
+    "tests": {
+      "pass": 142,
+      "fail": 0,
+      "total": 142,
+      "files": 28,
+      "expects": 1521,
+      "duration": "42.26s"
+    },
+    "passingLabels": [
+      "planner workbook import form accepts both XLSX and legacy XLS files",
+      "Dashboard members export parses and imports its roster while ignoring its paired leader summary",
+      "the Dashboard auxiliary tab is accepted only with All Members and unknown sheets still fail atomically",
+      "a stale position revision rejects the workbook import without applying roster or position changes",
+      "members roster imports persist while a locked plan keeps all positions unchanged",
+      "OPEX and CAPEX compare grids show all seven original fiscal measures with closed actuals and forecast overrides",
+      "planner required pages contain functional controls or nonempty read views",
+      "planner direct write without canWrite fails atomically",
+      "planner creates first version only once and rejects stale record writes",
+      "line numerical operations preserve manual months and null versus zero",
+      "independent line revisions allow two editors while stale same-line fails atomically",
+      "lock reread rejects budget and HR but permits finance actual forecast and closing",
+      "official per year has shared CAS and official cannot unlock or delete",
+      "HR calculations and recursive privacy preserve domain aggregates",
+      "FX preserves cur shape, parses comma and warns without rejecting missing rate totals",
+      "owner scope, directory identity and unknown actions fail closed",
+      "CPX sequence spans versions, survives deletion and copies preserve codes",
+      "shared lists reject normalized duplicates and references across versions",
+      "roster sync retains manual domain and does not ingest future or terminated people",
+      "viewer with write identity never writes and salary cannot leak through stale conflicts",
+      "HR actuals are independent of calculated budget and reject the wrong page",
+      "total-only mode refuses multiple rows and HR split is immutable",
+      "legacy numeric identifiers stay addressable and directory selects show names",
+      "CAPEX GET owner, classification and search filters affect rendered rows",
+      "workbook apply matches numeric IDs and names, preserves migrated fields, null and typed zero",
+      "workbook preview command never writes and a late invalid position rolls every sheet back",
+      "workbook preflights each changed CAS and rolls back earlier records when a later token is stale",
+      "locked workbook ignores budget structure FX salary and removal while finance edits actual and forecast",
+      "newVersion imports into an unlocked atomic copy without moving official or touching source",
+      "workbook resolves directory names and list names or codes; unknown values warn without inventing records",
+      "workbook CAPEX matches normalized project code then name, class prefixes and preserves unknown classification",
+      "workbook FX precedes costs, rounds six decimals, and invalid positive-rate validation is atomic",
+      "headcount workbook matches numeric IDs, clamps FTE and orders months while ignoring calculated and unrelated columns",
+      "salary imports obey HR edit rules and synthetic HR ignores workbook budget",
+      "removeMissing prunes only supplied sheets and never removes orphan projects",
+      "dashboard headcount file normalizes Start Date and End Date, stores only roster columns even locked",
+      "budget owner workbook applies only owned forecasts and rejects a mixed unauthorized forecast atomically",
+      "workbook permits ordinary CAPEX HR cost element and locked line IDs retain original project",
+      "workbook CPX sequence is global, CAS protected and rolls back on later validation failure",
+      "workbook rejects malformed shapes, duplicate measures, invalid revision tokens and stale source lock",
+      "roster singleton has CAS and ignores all salary, classification, outlook and notes input",
+      "known IDs allow sparse workbook updates without guessing names or elements",
+      "workbook leaves unrelated legacy versions and absent sequence untouched",
+      "Info Field and Value rows only warn on version mismatch and cannot change year or authority",
+      "workbook upload belongs to an operating import form with source CAS, preview fields and explicit apply",
+      "original dictionary migration preserves every version ID, monthly amounts and source totals without mutating reads",
+      "render accepts the original dictionary directly and never offers an empty-store first version",
+      "legacy dictionary cannot be overwritten by first-version creation or an official unlock/delete/budget write",
+      "successful legacy write persists canonical versions and official-by-year without respreading another version",
+      "canonical official takes precedence over the retained global pointer, including after deleting the previous official",
+      "legacy lockBudget survives normalization and a canonical unlock remains unlocked on later reads",
+      "workbook apply accepts a dictionary source with an ID recovered from its dictionary key",
+      "invalid dictionary records cannot authorize creating a replacement first version",
+      "global official numeric ID is never interpreted as an array offset during migration",
+      "record-only replay binds C10 coverage, complete source closure and both fresh observations",
+      "recursive read callbacks are bounded before a second stored read, and release their guard",
+      "evidence outside the persisted closure and another project never reaches replay",
+      "cyclic calculation references and malformed request fields are unavailable without replay",
+      "callback request mutation is detached and private failures never escape the resolver",
+      "cancellation and revocation after replay never issue calculation evidence",
+      "monthly grid distinguishes absent actual, explicit zero, inherited forecast and manual closed month",
+      "monthly presentation matches field permissions for owner, finance and synthetic HR budget",
+      "real OPEX and CAPEX rendering mounts saved monthly states for the selected measure",
+      "annual previews retain the all-manual legacy reset and disclose the affected months",
+      "batch preview exposes changed cells while retaining invalid text and stale row edits",
+      "planner issuer resolves authenticated current identities and rejects stale and revoked sources",
+      "Planner finance projection matches the legacy engine across provenance, period, currency, absence, and coverage states",
+      "scenario and comparison results use the real case-scoped result store",
+      "C10 keeps the 30000 apparent savings conditional until training changes 210000 to 250000",
+      "operation proof uses the same domain admission for closed, include, duplicate and defer cases",
+      "Planner preparation and the real WP11 apply consumer preserve grants, atomic receipts, retry, reopen and stale rejection",
+      "monthly annual, spread and reset previews preserve manual months and domain rounding",
+      "monthly entity operations use closed actions and per-record CAS",
+      "monthly viewer response retains permitted HR aggregates and excludes private rates, individual costs and migrated Talent fields",
+      "monthly budget owner response retains permitted HR aggregates and excludes private rates, individual costs and migrated Talent fields",
+      "monthly settings preserve finance closed-through on locked plans and reject structural changes",
+      "parallel independent rows survive and one stale row does not discard valid or invalid local drafts",
+      "comparison persistence refuses tampered totals, coverage references and criterion outcomes before any write",
+      "criteria require both replay and durable criterion binding with zero writes when either is missing",
+      "comparison without criteria persists through real scenarios and SQLite, retries idempotently and survives reopen",
+      "real WP11 rules bind a comparison, survive reopen and refuse a second binding or a stale rule",
+      "a postwrite binding failure reports persisted-but-unbound and a retry repairs the same result",
+      "current scenario content and case identity are rechecked before comparison storage",
+      "monthly UI authority previews and commits only valid current domain rows",
+      "C02 qualifies each HR domain and month while preserving authorized aggregates and independent actual/forecast",
+      "headcount projection follows domain visibility and increase preview is disposable",
+      "catalog preview uses the domain without writing or inventing a missing exchange rate",
+      "annual budget preview retains manual months and does not write the Planner",
+      "forecast port compares the real engine, and detects source changes",
+      "C04 real staged workbook preview feeds Planner analysis without applying and rejects digest, scope and source changes",
+      "CAPEX refuses deleting a referenced project atomically and permits deletion after its last line is removed",
+      "common allocations preserve existing identities, repeat without duplicates and never redistribute financial values",
+      "unused FX, entities and allocations complete create, edit and delete with record revisions and their original scopes",
+      "catalog scope, original currency, missing rates and normalized identities remain explicit",
+      "USD and in-use FX are protected, comma rates retain six decimal places",
+      "subquantum FX preserves the pinned manual and workbook boundaries while marking the converted amount unavailable",
+      "catalog preview allocates unused identities without replacing a saved catalog row",
+      "runtime controls mirror admin catalogs and version authority, and explain FX scope and FTE denominator",
+      "monthly and headcount controls use the same field authority as saved commands",
+      "the mounted budget comparison states its measure and rejects a different fiscal year",
+      "Versions preserves preview and conflict drafts and applies the real copy, lock and official lifecycle",
+      "Versions grants follow current role, exact human intent, private lease and closed input",
+      "the first version uses the injected environment and creation is one-time",
+      "an editable version can change fiscal year without moving the year's official or redistributing its months",
+      "a legacy official without its lock flag rejects year changes in preview and apply while retaining rename and copy",
+      "coverage requires every category and a quantified current component",
+      "comparison does not promote a conditioned or incompatible result",
+      "unknown non-financial criteria do not erase financially complete differences",
+      "scenario identity ignores observation clocks but binds financial values",
+      "C16 scenario simulation and comparison share UI/MCP handlers and persist their real results in C08",
+      "Overview resolves baseline, candidate and official through the shared port and keeps their differences distinct",
+      "record additions and removals reconcile without matching labels or disguising unknown observations as zero",
+      "isolated FX and HR capacity changes reconcile to the exposed inputs and monthly components",
+      "headcount publishes planned monthly FTE and independent budget, actual, forecast and outlook",
+      "automatic employee and contractor rates follow normalized location and type while explicit rates and overrides retain precedence",
+      "missing rate and missing FX are scoped to the active domain and inherited budget month",
+      "excluding an unpriced position removes capacity and cost contribution without deleting it",
+      "headcount projections retain permitted domain aggregates and remove private position costs for owner and viewer",
+      "roster sync preserves a manual domain and HR actual/forecast and rejects a locked plan",
+      "preview reuses Planner rules without mutating the source",
+      "projection and simulation accept a deeply frozen snapshot and preserve audit, sequences and every source version",
+      "projection preserves missing FX warnings and redacts individual salary",
+      "source projection uses the same redaction as the Planner view",
+      "legacy dictionary source preserves identity and capacity input presence",
+      "preview rejects a forbidden write without changing the original or projected value",
+      "batch preview retains successful records when another revision conflicts",
+      "planner capability publishes the canonical forecast schema and profile",
+      "scenario capabilities reject invalid payloads and require bound receipts before domain work",
+      "monthly range keeps invalid text and preserves explicit zero and blank forecast",
+      "monthly preview preserves invalid and conflicting drafts while applying valid rows only to a copy",
+      "scenario replacement uses domain command on a copy and rejects duplicate targets",
+      "source projection changes when relevant Planner inputs change",
+      "scenario exclusion and deferral preserve the source and move only the selected contribution",
+      "scenario inclusion cannot silently replace an existing contribution",
+      "headcount preview and apply require exact human intent and preserve row revisions",
+      "headcount domain cost follows rate, months and uplift while AF stays independent",
+      "catalog UI preview and apply use exact human intent and the real currency rules",
+      "C16 forecast UI and private MCP reach the same real Planner and return bound, schema-valid output",
+      "SF native execution registry > pins one real request to a session and rejects replay, forged bindings and revocation",
+      "concurrent sessions with the same profile retain distinct request authorities",
+      "the selected manifest limits operations even when the profile and skill allow more",
+      "authentication and binding retain the same admission when the caller mutates its inputs"
+    ],
+    "failingLabels": [],
+    "selectedFiles": [
+      "Sucafinav1/test/parity-planner.test.ts",
+      "Sucafinav1/test/planner-runtime.test.ts",
+      "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "Sucafinav1/test/product/wp03/monthly-grid.test.ts",
+      "Sucafinav1/test/product/wp03/source-issuer.test.ts",
+      "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "Sucafinav1/test/product/wp03/persistence.test.ts",
+      "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+      "Sucafinav1/test/product/wp03/operation-verifier.test.ts",
+      "Sucafinav1/test/product/wp03/prepared-apply-integration.test.ts",
+      "Sucafinav1/test/product/wp03/monthly-operations.test.ts",
+      "Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+      "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+      "Sucafinav1/test/product/wp03/port-hr.test.ts",
+      "Sucafinav1/test/product/wp03/port.test.ts",
+      "Sucafinav1/test/product/wp03/import-analysis.test.ts",
+      "Sucafinav1/test/product/wp03/catalog-lifecycle.test.ts",
+      "Sucafinav1/test/product/wp03/catalog-boundaries.test.ts",
+      "Sucafinav1/test/product/wp03/versions-host.test.ts",
+      "Sucafinav1/test/product/wp03/coverage.test.ts",
+      "Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+      "Sucafinav1/test/product/wp03/overview.test.ts",
+      "Sucafinav1/test/product/wp03/headcount-projection.test.ts",
+      "Sucafinav1/test/product/wp03/adapter.test.ts",
+      "Sucafinav1/test/product/wp03/headcount-host.test.ts",
+      "Sucafinav1/test/product/wp03/catalog-host.test.ts",
+      "Sucafinav1/test/product/wp03/capability-parity.test.ts",
+      "Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts"
+    ],
+    "timingStages": [
+      {
+        "stage": "fixture:start",
+        "elapsedMs": 0,
+        "evidenceStarted": 0,
+        "evidenceCompleted": 0
+      },
+      {
+        "stage": "fixture:done",
+        "elapsedMs": 14,
+        "evidenceStarted": 0,
+        "evidenceCompleted": 0
+      },
+      {
+        "stage": "seed-scenarios:start",
+        "elapsedMs": 29,
+        "evidenceStarted": 0,
+        "evidenceCompleted": 0
+      },
+      {
+        "stage": "seed-scenarios:done",
+        "elapsedMs": 181,
+        "evidenceStarted": 0,
+        "evidenceCompleted": 0
+      },
+      {
+        "stage": "case-evidence:start",
+        "elapsedMs": 188,
+        "evidenceStarted": 0,
+        "evidenceCompleted": 0
+      },
+      {
+        "stage": "case-evidence:done",
+        "elapsedMs": 255,
+        "evidenceStarted": 2,
+        "evidenceCompleted": 2
+      },
+      {
+        "stage": "case-read:start",
+        "elapsedMs": 255,
+        "evidenceStarted": 2,
+        "evidenceCompleted": 2
+      },
+      {
+        "stage": "case-read:done",
+        "elapsedMs": 385,
+        "evidenceStarted": 6,
+        "evidenceCompleted": 6
+      },
+      {
+        "stage": "ui-simulate-base:start",
+        "elapsedMs": 385,
+        "evidenceStarted": 6,
+        "evidenceCompleted": 6
+      },
+      {
+        "stage": "ui-simulate-base:done",
+        "elapsedMs": 682,
+        "evidenceStarted": 10,
+        "evidenceCompleted": 10
+      },
+      {
+        "stage": "ui-simulate-alternative:start",
+        "elapsedMs": 682,
+        "evidenceStarted": 10,
+        "evidenceCompleted": 10
+      },
+      {
+        "stage": "ui-simulate-alternative:done",
+        "elapsedMs": 1059,
+        "evidenceStarted": 14,
+        "evidenceCompleted": 14
+      },
+      {
+        "stage": "mcp-simulate-base:start",
+        "elapsedMs": 1089,
+        "evidenceStarted": 14,
+        "evidenceCompleted": 14
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 1412,
+        "evidenceStarted": 16,
+        "evidenceCompleted": 16
+      },
+      {
+        "stage": "mcp-simulate-base:done",
+        "elapsedMs": 1576,
+        "evidenceStarted": 18,
+        "evidenceCompleted": 18
+      },
+      {
+        "stage": "ui-compare:start",
+        "elapsedMs": 1609,
+        "evidenceStarted": 18,
+        "evidenceCompleted": 18
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 2966,
+        "evidenceStarted": 34,
+        "evidenceCompleted": 32
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 4497,
+        "evidenceStarted": 50,
+        "evidenceCompleted": 48
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 6115,
+        "evidenceStarted": 66,
+        "evidenceCompleted": 64
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 7456,
+        "evidenceStarted": 82,
+        "evidenceCompleted": 80
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 8988,
+        "evidenceStarted": 98,
+        "evidenceCompleted": 96
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 10426,
+        "evidenceStarted": 114,
+        "evidenceCompleted": 112
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 11835,
+        "evidenceStarted": 130,
+        "evidenceCompleted": 128
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 13397,
+        "evidenceStarted": 146,
+        "evidenceCompleted": 144
+      },
+      {
+        "stage": "ui-compare:done",
+        "elapsedMs": 14660,
+        "evidenceStarted": 158,
+        "evidenceCompleted": 158
+      },
+      {
+        "stage": "mcp-compare:start",
+        "elapsedMs": 14660,
+        "evidenceStarted": 158,
+        "evidenceCompleted": 158
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 14993,
+        "evidenceStarted": 162,
+        "evidenceCompleted": 160
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 16596,
+        "evidenceStarted": 178,
+        "evidenceCompleted": 176
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 17982,
+        "evidenceStarted": 192,
+        "evidenceCompleted": 192
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 19508,
+        "evidenceStarted": 210,
+        "evidenceCompleted": 208
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 20897,
+        "evidenceStarted": 226,
+        "evidenceCompleted": 224
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 22489,
+        "evidenceStarted": 242,
+        "evidenceCompleted": 240
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 24258,
+        "evidenceStarted": 258,
+        "evidenceCompleted": 256
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 25686,
+        "evidenceStarted": 274,
+        "evidenceCompleted": 272
+      },
+      {
+        "stage": "evidence:progress",
+        "elapsedMs": 27313,
+        "evidenceStarted": 290,
+        "evidenceCompleted": 288
+      },
+      {
+        "stage": "mcp-compare:done",
+        "elapsedMs": 28130,
+        "evidenceStarted": 298,
+        "evidenceCompleted": 298
+      },
+      {
+        "stage": "assertions:done",
+        "elapsedMs": 28240,
+        "evidenceStarted": 298,
+        "evidenceCompleted": 298
+      },
+      {
+        "stage": "close:start",
+        "elapsedMs": 28240,
+        "evidenceStarted": 298,
+        "evidenceCompleted": 298
+      },
+      {
+        "stage": "close:done",
+        "elapsedMs": 28243,
+        "evidenceStarted": 298,
+        "evidenceCompleted": 298
+      }
+    ],
+    "omni": {
+      "nonce": "b99d1fcdc98d2460c512464dcd6e0de3",
+      "verdict": "not applicable (focused: no declaring test ran)"
+    },
+    "snapshotIsolation": {
+      "verified": true,
+      "base": "6f004731e7848bf540434a3ee050cd0f28f342cb",
+      "status": "ahead",
+      "aheadBy": 1,
+      "behindBy": 0,
+      "files": [
+        {
+          "path": ".ci-run.json",
+          "blob": "1506c1f200ca4ac73ecd50e57372feed1243acc1",
+          "status": "added"
+        }
+      ]
+    },
+    "artifacts": [],
+    "artifactScope": "Existing Bun runner does not upload a product test artifact for this selection; job log is the executed evidence."
+  },
+  "finalChecksOnMaterialCommit": {
+    "product": "6f004731e7848bf540434a3ee050cd0f28f342cb",
+    "run_id": 43523298505,
+    "jobs": [
+      {
+        "id": 132222684910,
+        "name": "planner-checks",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_id": 43523298505,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout exact product commit",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Record product and guard base",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Typecheck Sucafina package",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 5
+          },
+          {
+            "name": "Guardrails against origin/dev",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Attribute type diagnostics to saved seed",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Upload exact check evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Post Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Post Checkout exact product commit",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          }
+        ]
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 14084411733,
+        "name": "astra-wp03-checks-6f004731e7848bf540434a3ee050cd0f28f342cb-1",
+        "size_in_bytes": 15992,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14084411733",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14084411733/zip",
+        "expired": false,
+        "created_at": "2026-11-13T22:58:08Z",
+        "expires_at": "2026-11-27T22:58:07Z",
+        "updated_at": "2026-11-13T22:58:08Z",
+        "digest": "sha256:98612bdfdda3763c5f27a0ca863fafb7be1ca0c148ac5c09d9f3ee1b964b5d94",
+        "workflow_run": {
+          "id": 43523298505,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp03",
+          "head_sha": "6f004731e7848bf540434a3ee050cd0f28f342cb"
+        }
+      }
+    ],
+    "schema": "wp03-check-observation-v1",
+    "productSha": "6f004731e7848bf540434a3ee050cd0f28f342cb",
+    "productTree": "12403d54bf5713096a30647d45791d4a4431c857",
+    "runId": 43523298505,
+    "jobId": 132222684910,
+    "conclusion": "failure",
+    "typecheck": {
+      "seed": "73ee7fd812d233f898ef79a9378014d4339d9875",
+      "candidate": "6f004731e7848bf540434a3ee050cd0f28f342cb",
+      "seedCount": 141,
+      "candidateCount": 132,
+      "introduced": [
+        "product/imports/dashboard-preview.ts: error TS2345: Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'.",
+        "test/product/wp06/imports/end-to-end.test.ts: error TS2345: Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { ...; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+        "test/product/wp06/imports/sqlite-planner.test.ts: error TS2322: Type 'Promise<{ commit: boolean; value: { status: string; reason: string; changedFields?: undefined; warnings?: undefined; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { status: string; reason: string; changedFields?: undefined; warnings?: undefined; }; }>'.",
+        "test/product/wp06/imports/sqlite-planner.test.ts: error TS2322: Type 'Promise<{ commit: boolean; value: { status: string; reason: string; changedFields?: undefined; warnings?: undefined; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { status: string; reason: string; changedFields?: undefined; warnings?: undefined; }; }>'."
+      ],
+      "resolved": [
+        "product/imports/dashboard-preview.ts: error TS2345: Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }>'.",
+        "product/planner/monthly-host.ts: error TS7006: Parameter 'cell' implicitly has an 'any' type.",
+        "product/planner/operation-verifier.ts: error TS2345: Argument of type 'PortResult<{ amount: number; currency: string; period: { start: string; end: string; }; source: SourceRef; evidence: BusinessEvidenceRef; }> | undefined' is not assignable to parameter of type '{ status: \"ok\"; value: { amount: number; currency: string; period: { start: string; end: string; }; source: SourceRef; evidence: BusinessEvidenceRef; }; } | undefined'.",
+        "product/planner/persistence.ts: error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+        "product/planner/persistence.ts: error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+        "product/planner/prepared.ts: error TS2322: Type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: boolean; value: JsonValue; }'.",
+        "product/planner/scenario-comparison-port.ts: error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+        "test/product/wp03/monthly-operations.test.ts: error TS7006: Parameter 'entry' implicitly has an 'any' type.",
+        "test/product/wp03/monthly-operations.test.ts: error TS7053: Element implicitly has an 'any' type because expression of type '0' can't be used to index type '{ summary: { lines: { id: string; name: string; }[]; }[]; }'.",
+        "test/product/wp03/parity-matrix.test.ts: error TS2339: Property 'recordId' does not exist on type '{ surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; } | ... 5 more ... | { ...; }'.",
+        "test/product/wp06/imports/end-to-end.test.ts: error TS2345: Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+        "test/product/wp06/imports/sqlite-planner.test.ts: error TS2322: Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'.",
+        "test/product/wp06/imports/sqlite-planner.test.ts: error TS2322: Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'."
+      ],
+      "remainingOwned": [],
+      "candidateGate": "failure"
+    },
+    "guards": {
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 606,
+      "gate": 0,
+      "warn": 12,
+      "errors": 0,
+      "baseSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "mergeBaseSha": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf"
+    },
+    "artifactVerification": {
+      "verified": true,
+      "artifactId": 14084411733,
+      "expectedDigest": "sha256:98612bdfdda3763c5f27a0ca863fafb7be1ca0c148ac5c09d9f3ee1b964b5d94",
+      "actualDigest": "sha256:98612bdfdda3763c5f27a0ca863fafb7be1ca0c148ac5c09d9f3ee1b964b5d94",
+      "sha256": "98612bdfdda3763c5f27a0ca863fafb7be1ca0c148ac5c09d9f3ee1b964b5d94",
+      "zipBytes": 15992,
+      "files": [
+        "guards.log",
+        "seed-typecheck.log",
+        "source.json",
+        "typecheck-differential.json",
+        "typecheck.log"
+      ],
+      "sourceProductMatches": true,
+      "retrieval": "GitHub MCP download_workflow_artifact; returned asset materialized; SHA-256 checked before extraction."
+    },
+    "structuralDifferential": {
+      "key": [
+        "path",
+        "line",
+        "column",
+        "code"
+      ],
+      "introducedCount": 0,
+      "resolvedCount": 9,
+      "introduced": [],
+      "resolved": [
+        [
+          "product/planner/monthly-host.ts",
+          118,
+          371,
+          "TS7006"
+        ],
+        [
+          "product/planner/operation-verifier.ts",
+          24,
+          113,
+          "TS2345"
+        ],
+        [
+          "product/planner/persistence.ts",
+          33,
+          19,
+          "TS2367"
+        ],
+        [
+          "product/planner/persistence.ts",
+          38,
+          22,
+          "TS2367"
+        ],
+        [
+          "product/planner/prepared.ts",
+          54,
+          5,
+          "TS2322"
+        ],
+        [
+          "product/planner/scenario-comparison-port.ts",
+          40,
+          18,
+          "TS2367"
+        ],
+        [
+          "test/product/wp03/monthly-operations.test.ts",
+          45,
+          54,
+          "TS7053"
+        ],
+        [
+          "test/product/wp03/monthly-operations.test.ts",
+          45,
+          173,
+          "TS7006"
+        ],
+        [
+          "test/product/wp03/parity-matrix.test.ts",
+          106,
+          68,
+          "TS2339"
+        ]
+      ],
+      "wordingChangesCount": 4,
+      "sameBlobSourceProof": "W6-typecheck-source-equality.json",
+      "candidateMessagesMatchJobLog": true
+    },
+    "rawMetadata": {
+      "product": "6f004731e7848bf540434a3ee050cd0f28f342cb",
+      "run_id": 43523298505,
+      "jobs": [
+        {
+          "id": 132222684910,
+          "name": "planner-checks",
+          "status": "completed",
+          "conclusion": "failure",
+          "run_id": 43523298505,
+          "logs_url": null,
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1
+            },
+            {
+              "name": "Checkout exact product commit",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2
+            },
+            {
+              "name": "Record product and guard base",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3
+            },
+            {
+              "name": "Setup Bun",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4
+            },
+            {
+              "name": "Typecheck Sucafina package",
+              "status": "completed",
+              "conclusion": "failure",
+              "number": 5
+            },
+            {
+              "name": "Guardrails against origin/dev",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6
+            },
+            {
+              "name": "Attribute type diagnostics to saved seed",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7
+            },
+            {
+              "name": "Upload exact check evidence",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8
+            },
+            {
+              "name": "Post Setup Bun",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 15
+            },
+            {
+              "name": "Post Checkout exact product commit",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17
+            }
+          ]
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14084411733,
+          "name": "astra-wp03-checks-6f004731e7848bf540434a3ee050cd0f28f342cb-1",
+          "size_in_bytes": 15992,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14084411733",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14084411733/zip",
+          "expired": false,
+          "created_at": "2026-11-13T22:58:08Z",
+          "expires_at": "2026-11-27T22:58:07Z",
+          "updated_at": "2026-11-13T22:58:08Z",
+          "digest": "sha256:98612bdfdda3763c5f27a0ca863fafb7be1ca0c148ac5c09d9f3ee1b964b5d94",
+          "workflow_run": {
+            "id": 43523298505,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp03",
+            "head_sha": "6f004731e7848bf540434a3ee050cd0f28f342cb"
+          }
+        }
+      ]
+    }
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/parity-planner.test.ts",
+      "Sucafinav1/test/planner-runtime.test.ts",
+      "Sucafinav1/test/product/wp03/adapter.test.ts",
+      "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "Sucafinav1/test/product/wp03/capability-parity.test.ts",
+      "Sucafinav1/test/product/wp03/catalog-boundaries.test.ts",
+      "Sucafinav1/test/product/wp03/catalog-host.test.ts",
+      "Sucafinav1/test/product/wp03/catalog-lifecycle.test.ts",
+      "Sucafinav1/test/product/wp03/coverage.test.ts",
+      "Sucafinav1/test/product/wp03/headcount-host.test.ts",
+      "Sucafinav1/test/product/wp03/headcount-projection.test.ts",
+      "Sucafinav1/test/product/wp03/import-analysis.test.ts",
+      "Sucafinav1/test/product/wp03/monthly-grid.test.ts",
+      "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+      "Sucafinav1/test/product/wp03/monthly-operations.test.ts",
+      "Sucafinav1/test/product/wp03/operation-verifier.test.ts",
+      "Sucafinav1/test/product/wp03/overview.test.ts",
+      "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+      "Sucafinav1/test/product/wp03/persistence.test.ts",
+      "Sucafinav1/test/product/wp03/port-hr.test.ts",
+      "Sucafinav1/test/product/wp03/port.test.ts",
+      "Sucafinav1/test/product/wp03/prepared-apply-integration.test.ts",
+      "Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+      "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+      "Sucafinav1/test/product/wp03/source-issuer.test.ts",
+      "Sucafinav1/test/product/wp03/versions-host.test.ts",
+      "Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts"
+    ],
+    "env": {}
+  },
+  "history": [
+    {
+      "id": "W1",
+      "productSha": "9fc1a2aeae4f69ae832f52c8205497c39ab135d6",
+      "productTree": "0a042db16bd96ec1cc126a29019d7bf37602e8f2",
+      "snapshotSha": "859cc090d8c09ee698266897ad8c141481421605",
+      "snapshotTree": "03390ad125cabca51a585082b3a25057c2246474",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/parity-planner.test.ts",
+          "Sucafinav1/test/planner-runtime.test.ts",
+          "Sucafinav1/test/product/wp03/adapter.test.ts",
+          "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-boundaries.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-host.test.ts",
+          "Sucafinav1/test/product/wp03/coverage.test.ts",
+          "Sucafinav1/test/product/wp03/headcount-host.test.ts",
+          "Sucafinav1/test/product/wp03/headcount-projection.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-grid.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-operations.test.ts",
+          "Sucafinav1/test/product/wp03/operation-verifier.test.ts",
+          "Sucafinav1/test/product/wp03/overview.test.ts",
+          "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+          "Sucafinav1/test/product/wp03/persistence.test.ts",
+          "Sucafinav1/test/product/wp03/port.test.ts",
+          "Sucafinav1/test/product/wp03/source-issuer.test.ts",
+          "Sucafinav1/test/product/wp03/versions-host.test.ts",
+          "Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts",
+          "Sucafinav1/test/product/wp11/planner-apply.test.ts"
+        ],
+        "env": {}
+      },
+      "requestSha256": "6a455d7ae48b93c3b6d89fa3a9bee5359947ec5e7b0355dbb87f265443f52bfe",
+      "runId": 43516266328,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43516266328",
+      "jobId": 132198887014,
+      "conclusion": "failure",
+      "observation": "114 pass / 6 fail; five owned failures corrected in W2; external WP11 initialization failure reproduced separately on the seed.",
+      "result": {
+        "productSha": "9fc1a2aeae4f69ae832f52c8205497c39ab135d6",
+        "productTree": "0a042db16bd96ec1cc126a29019d7bf37602e8f2",
+        "snapshotSha": "859cc090d8c09ee698266897ad8c141481421605",
+        "snapshotTree": "03390ad125cabca51a585082b3a25057c2246474",
+        "envelopeBlob": "d077beacd684e80e02b59e861a521d8ab263caea",
+        "ciBranch": "ci-run-linux-astra-wp03-9fc1a2ae-6a455d7a-1",
+        "requestSha256": "6a455d7ae48b93c3b6d89fa3a9bee5359947ec5e7b0355dbb87f265443f52bfe",
+        "testRun": 43516266328,
+        "testJob": 132198887014,
+        "checkRun": 43516282292,
+        "checkJob": 132198938742,
+        "artifact": 14081305496,
+        "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "guardMergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+        "productEquality": {
+          "baseCommit": "9fc1a2aeae4f69ae832f52c8205497c39ab135d6",
+          "aheadBy": 1,
+          "changedPaths": [
+            ".ci-run.json"
+          ]
+        },
+        "conclusions": {
+          "tests": "failure",
+          "typecheck": "failure",
+          "guards": "failure"
+        },
+        "counts": {
+          "pass": 114,
+          "fail": 6,
+          "testFiles": 21,
+          "expectCalls": 1006,
+          "typeErrors": 142
+        },
+        "omniControl": "not applicable (focused: no declaring test ran)",
+        "summary": [
+          "\u001b[36;1mecho \"omni control nonce: $nonce\"\u001b[0m",
+          "omni control nonce: d9c60b2dfe83d4b996bb2ffa07056650",
+          "(fail) CAPEX GET owner, classification and search filters affect rendered rows [2.06ms]",
+          "(fail) runtime controls mirror admin catalogs and version authority, and explain FX scope and FTE denominator [14.77ms]",
+          "(fail) Versions preserves preview and conflict drafts and applies the real copy, lock and official lifecycle [71.50ms]",
+          "(fail) Versions grants follow current role, exact human intent, private lease and closed input [25.28ms]",
+          "(fail) headcount domain cost follows rate, months and uplift while AF stays independent [8.71ms]",
+          "(fail) real Planner mutation and case receipt commit atomically across surfaces [16.81ms]",
+          "omni positive control [d9c60b2dfe83d4b996bb2ffa07056650]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+          "(fail) CAPEX GET owner, classification and search filters affect rendered rows [2.06ms]",
+          "(fail) runtime controls mirror admin catalogs and version authority, and explain FX scope and FTE denominator [14.77ms]",
+          "(fail) Versions preserves preview and conflict drafts and applies the real copy, lock and official lifecycle [71.50ms]",
+          "(fail) Versions grants follow current role, exact human intent, private lease and closed input [25.28ms]",
+          "(fail) headcount domain cost follows rate, months and uplift while AF stays independent [8.71ms]",
+          "(fail) real Planner mutation and case receipt commit atomically across surfaces [16.81ms]",
+          " 114 pass",
+          " 6 fail",
+          " 1006 expect() calls",
+          "Ran 120 tests across 21 files. [3.40s]"
+        ]
+      }
+    },
+    {
+      "id": "B0",
+      "productSha": "73ee7fd812d233f898ef79a9378014d4339d9875",
+      "productTree": "a5b8e8ef67cec87599ba62329eb1bd2c3e8f96e8",
+      "snapshotSha": "f44f42fa8e7ea685191e863e7416fd21ce1ef455",
+      "snapshotTree": "d949379e46b5268080032fc3f28acf7410a25f4d",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp11/planner-apply.test.ts"
+        ],
+        "env": {}
+      },
+      "requestSha256": "708f8cc81e4c90fde5169b4e007a4cd6fb1f81ce70b45afc45ab39c2e3e7b3a7",
+      "runId": 43517559589,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43517559589",
+      "jobId": 132203295399,
+      "conclusion": "failure",
+      "observation": "Attribution only: unchanged external WP11 test fails on the exact seed with SF_SOURCE_IDENTITIES_UNAVAILABLE. Not a candidate qualification.",
+      "result": {
+        "runId": 43517559589,
+        "jobId": 132203295399,
+        "sha": "f44f42fa8e7ea685191e863e7416fd21ce1ef455",
+        "product": "73ee7fd812d233f898ef79a9378014d4339d9875",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43517559589",
+        "conclusion": "failure",
+        "pass": 0,
+        "fail": 1,
+        "files": 1,
+        "diagnostic": [
+          "omni control nonce: 9621b64be0095860e30acee2b55fa24a",
+          "error: SF_SOURCE_IDENTITIES_UNAVAILABLE",
+          "(fail) real Planner mutation and case receipt commit atomically across surfaces [41.36ms]",
+          "omni positive control [9621b64be0095860e30acee2b55fa24a]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+          " 0 pass",
+          " 1 fail",
+          "Ran 1 test across 1 file. [254.00ms]"
+        ],
+        "productEquality": {
+          "baseCommit": "73ee7fd812d233f898ef79a9378014d4339d9875",
+          "status": "ahead",
+          "aheadBy": 1,
+          "files": [
+            {
+              "path": ".ci-run.json",
+              "sha": "5f0da820458bc966ec7f0799ec6b3b0c7070a41f"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "W2",
+      "productSha": "f7cedab24918084319abaf90df6a8b3a716e4016",
+      "productTree": "9a256e3b9219f46a6a7f30099bd1633172968c2e",
+      "snapshotSha": "220df89c4d2fcd4d49862e2fe4c001260e07e44e",
+      "snapshotTree": "5d856de1c44a441c965dcc15864819715d8b1826",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/parity-planner.test.ts",
+          "Sucafinav1/test/planner-runtime.test.ts",
+          "Sucafinav1/test/product/wp03/adapter.test.ts",
+          "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "Sucafinav1/test/product/wp03/capability-parity.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-boundaries.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-host.test.ts",
+          "Sucafinav1/test/product/wp03/coverage.test.ts",
+          "Sucafinav1/test/product/wp03/headcount-host.test.ts",
+          "Sucafinav1/test/product/wp03/headcount-projection.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-grid.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-operations.test.ts",
+          "Sucafinav1/test/product/wp03/operation-verifier.test.ts",
+          "Sucafinav1/test/product/wp03/overview.test.ts",
+          "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+          "Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "Sucafinav1/test/product/wp03/persistence.test.ts",
+          "Sucafinav1/test/product/wp03/port-hr.test.ts",
+          "Sucafinav1/test/product/wp03/port.test.ts",
+          "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+          "Sucafinav1/test/product/wp03/source-issuer.test.ts",
+          "Sucafinav1/test/product/wp03/versions-host.test.ts",
+          "Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts"
+        ],
+        "env": {}
+      },
+      "requestSha256": "6e3303b58e7973f21c59211db4232b6f0d66ce19361adf00d8087ace974a4bae",
+      "runId": 43518488586,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518488586",
+      "jobId": 132206459468,
+      "conclusion": "success",
+      "observation": "129 pass / 0 fail across 24 files. The separate invalid check-workflow run had zero jobs and is not check evidence.",
+      "result": {
+        "runId": 43518488586,
+        "jobId": 132206459468,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43518488586",
+        "headSha": "220df89c4d2fcd4d49862e2fe4c001260e07e44e",
+        "productSha": "f7cedab24918084319abaf90df6a8b3a716e4016",
+        "conclusion": "success",
+        "summary": [
+          "omni control nonce: 4ec0dbb328affd7beb87b94f770e7b68",
+          "omni positive control [4ec0dbb328affd7beb87b94f770e7b68]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+          " 129 pass",
+          " 0 fail",
+          " 1233 expect() calls",
+          "Ran 129 tests across 24 files. [12.35s]"
+        ],
+        "selected": [
+          "Sucafinav1/test/parity-planner.test.ts:",
+          "Sucafinav1/test/planner-runtime.test.ts:",
+          "Sucafinav1/test/product/wp03/calculation-evidence.test.ts:",
+          "Sucafinav1/test/product/wp03/monthly-grid.test.ts:",
+          "Sucafinav1/test/product/wp03/source-issuer.test.ts:",
+          "Sucafinav1/test/product/wp03/parity-matrix.test.ts:",
+          "Sucafinav1/test/product/wp03/persistence.test.ts:",
+          "Sucafinav1/test/product/wp03/scenario-costs.test.ts:",
+          "Sucafinav1/test/product/wp03/operation-verifier.test.ts:",
+          "Sucafinav1/test/product/wp03/monthly-operations.test.ts:",
+          "Sucafinav1/test/product/wp03/persistence-comparison.test.ts:",
+          "Sucafinav1/test/product/wp03/monthly-host.test.ts:",
+          "Sucafinav1/test/product/wp03/port-hr.test.ts:",
+          "Sucafinav1/test/product/wp03/port.test.ts:",
+          "Sucafinav1/test/product/wp03/catalog-boundaries.test.ts:",
+          "Sucafinav1/test/product/wp03/versions-host.test.ts:",
+          "Sucafinav1/test/product/wp03/coverage.test.ts:",
+          "Sucafinav1/test/product/wp03/overview.test.ts:",
+          "Sucafinav1/test/product/wp03/headcount-projection.test.ts:",
+          "Sucafinav1/test/product/wp03/adapter.test.ts:",
+          "Sucafinav1/test/product/wp03/headcount-host.test.ts:",
+          "Sucafinav1/test/product/wp03/catalog-host.test.ts:",
+          "Sucafinav1/test/product/wp03/capability-parity.test.ts:",
+          "Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts:"
+        ],
+        "passed": [
+          "(pass) planner workbook import form accepts both XLSX and legacy XLS files [20.29ms]",
+          "(pass) Dashboard members export parses and imports its roster while ignoring its paired leader summary [317.84ms]",
+          "(pass) the Dashboard auxiliary tab is accepted only with All Members and unknown sheets still fail atomically [0.45ms]",
+          "(pass) a stale position revision rejects the workbook import without applying roster or position changes [0.42ms]",
+          "(pass) members roster imports persist while a locked plan keeps all positions unchanged [0.38ms]",
+          "(pass) OPEX and CAPEX compare grids show all seven original fiscal measures with closed actuals and forecast overrides [5.00ms]",
+          "(pass) planner required pages contain functional controls or nonempty read views [0.56ms]",
+          "(pass) planner direct write without canWrite fails atomically [0.13ms]",
+          "(pass) planner creates first version only once and rejects stale record writes [0.56ms]",
+          "(pass) line numerical operations preserve manual months and null versus zero [2.07ms]",
+          "(pass) independent line revisions allow two editors while stale same-line fails atomically [0.88ms]",
+          "(pass) lock reread rejects budget and HR but permits finance actual forecast and closing [0.90ms]",
+          "(pass) official per year has shared CAS and official cannot unlock or delete [0.74ms]",
+          "(pass) HR calculations and recursive privacy preserve domain aggregates [3.37ms]",
+          "(pass) FX preserves cur shape, parses comma and warns without rejecting missing rate totals [0.92ms]",
+          "(pass) owner scope, directory identity and unknown actions fail closed [1.14ms]",
+          "(pass) CPX sequence spans versions, survives deletion and copies preserve codes [0.60ms]",
+          "(pass) shared lists reject normalized duplicates and references across versions [0.89ms]",
+          "(pass) roster sync retains manual domain and does not ingest future or terminated people [0.47ms]",
+          "(pass) viewer with write identity never writes and salary cannot leak through stale conflicts [0.38ms]",
+          "(pass) HR actuals are independent of calculated budget and reject the wrong page [0.60ms]",
+          "(pass) total-only mode refuses multiple rows and HR split is immutable [0.56ms]",
+          "(pass) legacy numeric identifiers stay addressable and directory selects show names [1.60ms]",
+          "(pass) CAPEX GET owner, classification and search filters affect rendered rows [1.59ms]",
+          "(pass) workbook apply matches numeric IDs and names, preserves migrated fields, null and typed zero [0.96ms]",
+          "(pass) workbook preview command never writes and a late invalid position rolls every sheet back [0.55ms]",
+          "(pass) workbook preflights each changed CAS and rolls back earlier records when a later token is stale [1.17ms]",
+          "(pass) locked workbook ignores budget structure FX salary and removal while finance edits actual and forecast [1.00ms]",
+          "(pass) newVersion imports into an unlocked atomic copy without moving official or touching source [1.11ms]",
+          "(pass) workbook resolves directory names and list names or codes; unknown values warn without inventing records [0.90ms]",
+          "(pass) workbook CAPEX matches normalized project code then name, class prefixes and preserves unknown classification [1.01ms]",
+          "(pass) workbook FX precedes costs, rounds six decimals, and invalid positive-rate validation is atomic [0.98ms]",
+          "(pass) headcount workbook matches numeric IDs, clamps FTE and orders months while ignoring calculated and unrelated columns [0.59ms]",
+          "(pass) salary imports obey HR edit rules and synthetic HR ignores workbook budget [1.34ms]",
+          "(pass) removeMissing prunes only supplied sheets and never removes orphan projects [1.49ms]",
+          "(pass) dashboard headcount file normalizes Start Date and End Date, stores only roster columns even locked [0.34ms]",
+          "(pass) budget owner workbook applies only owned forecasts and rejects a mixed unauthorized forecast atomically [0.90ms]",
+          "(pass) workbook permits ordinary CAPEX HR cost element and locked line IDs retain original project [1.02ms]",
+          "(pass) workbook CPX sequence is global, CAS protected and rolls back on later validation failure [1.13ms]",
+          "(pass) workbook rejects malformed shapes, duplicate measures, invalid revision tokens and stale source lock [1.25ms]",
+          "(pass) roster singleton has CAS and ignores all salary, classification, outlook and notes input [0.51ms]",
+          "(pass) known IDs allow sparse workbook updates without guessing names or elements [0.89ms]",
+          "(pass) workbook leaves unrelated legacy versions and absent sequence untouched [0.37ms]",
+          "(pass) Info Field and Value rows only warn on version mismatch and cannot change year or authority [0.45ms]",
+          "(pass) workbook upload belongs to an operating import form with source CAS, preview fields and explicit apply [0.92ms]",
+          "(pass) original dictionary migration preserves every version ID, monthly amounts and source totals without mutating reads [1.11ms]",
+          "(pass) render accepts the original dictionary directly and never offers an empty-store first version [1.14ms]",
+          "(pass) legacy dictionary cannot be overwritten by first-version creation or an official unlock/delete/budget write [0.72ms]",
+          "(pass) successful legacy write persists canonical versions and official-by-year without respreading another version [0.84ms]",
+          "(pass) canonical official takes precedence over the retained global pointer, including after deleting the previous official [1.01ms]",
+          "(pass) legacy lockBudget survives normalization and a canonical unlock remains unlocked on later reads [0.98ms]",
+          "(pass) workbook apply accepts a dictionary source with an ID recovered from its dictionary key [0.66ms]",
+          "(pass) invalid dictionary records cannot authorize creating a replacement first version [0.15ms]",
+          "(pass) global official numeric ID is never interpreted as an array offset during migration [0.24ms]",
+          "(pass) record-only replay binds C10 coverage, complete source closure and both fresh observations [9.66ms]",
+          "(pass) recursive read callbacks are bounded before a second stored read, and release their guard [2.49ms]",
+          "(pass) evidence outside the persisted closure and another project never reaches replay [1.83ms]",
+          "(pass) cyclic calculation references and malformed request fields are unavailable without replay [2.09ms]",
+          "(pass) callback request mutation is detached and private failures never escape the resolver [4.56ms]",
+          "(pass) cancellation and revocation after replay never issue calculation evidence [4.18ms]",
+          "(pass) monthly grid distinguishes absent actual, explicit zero, inherited forecast and manual closed month [0.73ms]",
+          "(pass) monthly presentation matches field permissions for owner, finance and synthetic HR budget [1.61ms]",
+          "(pass) real OPEX and CAPEX rendering mounts saved monthly states for the selected measure [2.43ms]",
+          "(pass) annual previews retain the all-manual legacy reset and disclose the affected months [1.33ms]",
+          "(pass) batch preview exposes changed cells while retaining invalid text and stale row edits [1.12ms]",
+          "(pass) planner issuer resolves authenticated current identities and rejects stale and revoked sources [187.68ms]",
+          "(pass) Planner finance projection matches the legacy engine across provenance, period, currency, absence, and coverage states [133.21ms]",
+          "(pass) scenario and comparison results use the real case-scoped result store [25.97ms]",
+          "(pass) C10 keeps the 30000 apparent savings conditional until training changes 210000 to 250000 [98.54ms]",
+          "(pass) operation proof uses the same domain admission for closed, include, duplicate and defer cases [288.09ms]",
+          "(pass) monthly annual, spread and reset previews preserve manual months and domain rounding [18.19ms]",
+          "(pass) monthly entity operations use closed actions and per-record CAS [11.95ms]",
+          "(pass) monthly viewer response retains permitted HR aggregates and excludes private rates and individual costs [9.95ms]",
+          "(pass) monthly settings preserve finance closed-through on locked plans and reject structural changes [18.98ms]",
+          "(pass) parallel independent rows survive and one stale row does not discard valid or invalid local drafts [17.83ms]",
+          "(pass) comparison persistence refuses tampered totals, coverage references and criterion outcomes before any write [461.46ms]",
+          "(pass) criteria require both replay and durable criterion binding with zero writes when either is missing [265.86ms]",
+          "(pass) comparison without criteria persists through real scenarios and SQLite, retries idempotently and survives reopen [303.61ms]",
+          "(pass) real WP11 rules bind a comparison, survive reopen and refuse a second binding or a stale rule [4732.09ms]",
+          "(pass) a postwrite binding failure reports persisted-but-unbound and a retry repairs the same result [2493.60ms]",
+          "(pass) current scenario content and case identity are rechecked before comparison storage [274.45ms]",
+          "(pass) monthly UI authority previews and commits only valid current domain rows [18.19ms]",
+          "(pass) C02 qualifies each HR domain and month while preserving authorized aggregates and independent actual/forecast [97.96ms]",
+          "(pass) headcount projection follows domain visibility and increase preview is disposable [3.55ms]",
+          "(pass) catalog preview uses the domain without writing or inventing a missing exchange rate [1.24ms]",
+          "(pass) annual budget preview retains manual months and does not write the Planner [0.75ms]",
+          "(pass) forecast port compares the real engine, and detects source changes [1434.03ms]",
+          "(pass) catalog scope, original currency, missing rates and normalized identities remain explicit [2.69ms]",
+          "(pass) USD and in-use FX are protected, comma rates retain six decimal places [0.56ms]",
+          "(pass) catalog preview allocates unused identities without replacing a saved catalog row [0.85ms]",
+          "(pass) runtime controls mirror admin catalogs and version authority, and explain FX scope and FTE denominator [6.56ms]",
+          "(pass) monthly and headcount controls use the same field authority as saved commands [7.41ms]",
+          "(pass) the mounted budget comparison states its measure and rejects a different fiscal year [3.29ms]",
+          "(pass) Versions preserves preview and conflict drafts and applies the real copy, lock and official lifecycle [54.67ms]",
+          "(pass) Versions grants follow current role, exact human intent, private lease and closed input [17.64ms]",
+          "(pass) the first version uses the injected environment and creation is one-time [10.34ms]",
+          "(pass) coverage requires every category and a quantified current component [0.27ms]",
+          "(pass) comparison does not promote a conditioned or incompatible result [0.21ms]",
+          "(pass) unknown non-financial criteria do not erase financially complete differences [6.31ms]",
+          "(pass) scenario identity ignores observation clocks but binds financial values [0.76ms]",
+          "(pass) Overview resolves baseline, candidate and official through the shared port and keeps their differences distinct [199.40ms]",
+          "(pass) record additions and removals reconcile without matching labels or disguising unknown observations as zero [37.90ms]",
+          "(pass) headcount publishes planned monthly FTE and independent budget, actual, forecast and outlook [0.86ms]",
+          "(pass) missing rate and missing FX are scoped to the active domain and inherited budget month [1.04ms]",
+          "(pass) excluding an unpriced position removes capacity and cost contribution without deleting it [1.01ms]",
+          "(pass) headcount projections retain permitted domain aggregates and remove private position costs for owner and viewer [1.07ms]",
+          "(pass) roster sync preserves a manual domain and HR actual/forecast and rejects a locked plan [0.86ms]",
+          "(pass) preview reuses Planner rules without mutating the source [0.42ms]",
+          "(pass) projection preserves missing FX warnings and redacts individual salary [0.42ms]",
+          "(pass) source projection uses the same redaction as the Planner view [0.25ms]",
+          "(pass) legacy dictionary source preserves identity and capacity input presence [0.32ms]",
+          "(pass) preview rejects a forbidden write without changing the original or projected value [0.21ms]",
+          "(pass) batch preview retains successful records when another revision conflicts [0.35ms]",
+          "(pass) planner capability publishes the canonical forecast schema and profile [0.19ms]",
+          "(pass) scenario capabilities reject invalid payloads and require bound receipts before domain work [0.78ms]",
+          "(pass) monthly range keeps invalid text and preserves explicit zero and blank forecast [0.16ms]",
+          "(pass) monthly preview preserves invalid and conflicting drafts while applying valid rows only to a copy [0.49ms]",
+          "(pass) scenario replacement uses domain command on a copy and rejects duplicate targets [0.61ms]",
+          "(pass) source projection changes when relevant Planner inputs change [0.45ms]",
+          "(pass) scenario exclusion and deferral preserve the source and move only the selected contribution [0.56ms]",
+          "(pass) scenario inclusion cannot silently replace an existing contribution [0.35ms]",
+          "(pass) headcount preview and apply require exact human intent and preserve row revisions [13.08ms]",
+          "(pass) headcount domain cost follows rate, months and uplift while AF stays independent [9.28ms]",
+          "(pass) catalog UI preview and apply use exact human intent and the real currency rules [10.84ms]",
+          "(pass) C16 forecast UI and private MCP reach the same real Planner and return bound, schema-valid output [232.33ms]",
+          "(pass) SF native execution registry > pins one real request to a session and rejects replay, forged bindings and revocation [2.28ms]",
+          "(pass) concurrent sessions with the same profile retain distinct request authorities [1.38ms]",
+          "(pass) the selected manifest limits operations even when the profile and skill allow more [0.69ms]",
+          "(pass) authentication and binding retain the same admission when the caller mutates its inputs [1.07ms]"
+        ],
+        "sourceEquality": {
+          "baseCommit": "f7cedab24918084319abaf90df6a8b3a716e4016",
+          "aheadBy": 1,
+          "changedPaths": [
+            ".ci-run.json"
+          ],
+          "envelopeBlob": "2749351fbae52d058a8f34bdc9416fae48d2672c"
+        },
+        "invalidCheckWorkflowRun": {
+          "id": 43518486105,
+          "headSha": "220df89c4d2fcd4d49862e2fe4c001260e07e44e",
+          "name": ".github/workflows/astra-wp03-check.yml",
+          "jobs": 0,
+          "conclusion": "failure",
+          "qualifiedChecks": false,
+          "remediation": "Move runner.temp initialization from job-level env to the runner step; repeat checks on next product commit."
+        }
+      }
+    },
+    {
+      "id": "W3",
+      "productSha": "8f91131ad3357c94fa135392b6829908356d82e5",
+      "productTree": "649607fce4719bd169ccc77a5e45dfc68a5c9c08",
+      "snapshotSha": "1b6fc9aafaf5d1c65f2920fe7e4d2da9335b7207",
+      "snapshotTree": "3863e561f5c58642edc60bfad1c10866c130d8c1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/parity-planner.test.ts",
+          "Sucafinav1/test/planner-runtime.test.ts",
+          "Sucafinav1/test/product/wp03/adapter.test.ts",
+          "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "Sucafinav1/test/product/wp03/capability-parity.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-boundaries.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-host.test.ts",
+          "Sucafinav1/test/product/wp03/coverage.test.ts",
+          "Sucafinav1/test/product/wp03/headcount-host.test.ts",
+          "Sucafinav1/test/product/wp03/headcount-projection.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-grid.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-operations.test.ts",
+          "Sucafinav1/test/product/wp03/operation-verifier.test.ts",
+          "Sucafinav1/test/product/wp03/overview.test.ts",
+          "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+          "Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "Sucafinav1/test/product/wp03/persistence.test.ts",
+          "Sucafinav1/test/product/wp03/port-hr.test.ts",
+          "Sucafinav1/test/product/wp03/port.test.ts",
+          "Sucafinav1/test/product/wp03/prepared-apply-integration.test.ts",
+          "Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+          "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+          "Sucafinav1/test/product/wp03/source-issuer.test.ts",
+          "Sucafinav1/test/product/wp03/versions-host.test.ts",
+          "Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts"
+        ],
+        "env": {}
+      },
+      "requestSha256": "60ecdd936d759856af654a1b4112123429c8f72165b36d435dfad4f935ffc6f8",
+      "runId": 43519036975,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43519036975",
+      "jobId": 132208316314,
+      "conclusion": "failure",
+      "observation": "130 pass / 1 fail across 26 files. Scenario fixture lacked the authenticated evidence reader; corrected in W4.",
+      "result": {
+        "schema": "wp03-ci-observation-v1",
+        "productSha": "8f91131ad3357c94fa135392b6829908356d82e5",
+        "productTree": "649607fce4719bd169ccc77a5e45dfc68a5c9c08",
+        "snapshotSha": "1b6fc9aafaf5d1c65f2920fe7e4d2da9335b7207",
+        "snapshotTree": "3863e561f5c58642edc60bfad1c10866c130d8c1",
+        "runId": 43519036975,
+        "jobId": 132208316314,
+        "conclusion": "failure",
+        "tests": {
+          "pass": 130,
+          "fail": 1,
+          "total": 131,
+          "files": 26,
+          "expects": 1258
+        },
+        "passingLabels": [
+          "planner workbook import form accepts both XLSX and legacy XLS files",
+          "Dashboard members export parses and imports its roster while ignoring its paired leader summary",
+          "the Dashboard auxiliary tab is accepted only with All Members and unknown sheets still fail atomically",
+          "a stale position revision rejects the workbook import without applying roster or position changes",
+          "members roster imports persist while a locked plan keeps all positions unchanged",
+          "OPEX and CAPEX compare grids show all seven original fiscal measures with closed actuals and forecast overrides",
+          "planner required pages contain functional controls or nonempty read views",
+          "planner direct write without canWrite fails atomically",
+          "planner creates first version only once and rejects stale record writes",
+          "line numerical operations preserve manual months and null versus zero",
+          "independent line revisions allow two editors while stale same-line fails atomically",
+          "lock reread rejects budget and HR but permits finance actual forecast and closing",
+          "official per year has shared CAS and official cannot unlock or delete",
+          "HR calculations and recursive privacy preserve domain aggregates",
+          "FX preserves cur shape, parses comma and warns without rejecting missing rate totals",
+          "owner scope, directory identity and unknown actions fail closed",
+          "CPX sequence spans versions, survives deletion and copies preserve codes",
+          "shared lists reject normalized duplicates and references across versions",
+          "roster sync retains manual domain and does not ingest future or terminated people",
+          "viewer with write identity never writes and salary cannot leak through stale conflicts",
+          "HR actuals are independent of calculated budget and reject the wrong page",
+          "total-only mode refuses multiple rows and HR split is immutable",
+          "legacy numeric identifiers stay addressable and directory selects show names",
+          "CAPEX GET owner, classification and search filters affect rendered rows",
+          "workbook apply matches numeric IDs and names, preserves migrated fields, null and typed zero",
+          "workbook preview command never writes and a late invalid position rolls every sheet back",
+          "workbook preflights each changed CAS and rolls back earlier records when a later token is stale",
+          "locked workbook ignores budget structure FX salary and removal while finance edits actual and forecast",
+          "newVersion imports into an unlocked atomic copy without moving official or touching source",
+          "workbook resolves directory names and list names or codes; unknown values warn without inventing records",
+          "workbook CAPEX matches normalized project code then name, class prefixes and preserves unknown classification",
+          "workbook FX precedes costs, rounds six decimals, and invalid positive-rate validation is atomic",
+          "headcount workbook matches numeric IDs, clamps FTE and orders months while ignoring calculated and unrelated columns",
+          "salary imports obey HR edit rules and synthetic HR ignores workbook budget",
+          "removeMissing prunes only supplied sheets and never removes orphan projects",
+          "dashboard headcount file normalizes Start Date and End Date, stores only roster columns even locked",
+          "budget owner workbook applies only owned forecasts and rejects a mixed unauthorized forecast atomically",
+          "workbook permits ordinary CAPEX HR cost element and locked line IDs retain original project",
+          "workbook CPX sequence is global, CAS protected and rolls back on later validation failure",
+          "workbook rejects malformed shapes, duplicate measures, invalid revision tokens and stale source lock",
+          "roster singleton has CAS and ignores all salary, classification, outlook and notes input",
+          "known IDs allow sparse workbook updates without guessing names or elements",
+          "workbook leaves unrelated legacy versions and absent sequence untouched",
+          "Info Field and Value rows only warn on version mismatch and cannot change year or authority",
+          "workbook upload belongs to an operating import form with source CAS, preview fields and explicit apply",
+          "original dictionary migration preserves every version ID, monthly amounts and source totals without mutating reads",
+          "render accepts the original dictionary directly and never offers an empty-store first version",
+          "legacy dictionary cannot be overwritten by first-version creation or an official unlock/delete/budget write",
+          "successful legacy write persists canonical versions and official-by-year without respreading another version",
+          "canonical official takes precedence over the retained global pointer, including after deleting the previous official",
+          "legacy lockBudget survives normalization and a canonical unlock remains unlocked on later reads",
+          "workbook apply accepts a dictionary source with an ID recovered from its dictionary key",
+          "invalid dictionary records cannot authorize creating a replacement first version",
+          "global official numeric ID is never interpreted as an array offset during migration",
+          "record-only replay binds C10 coverage, complete source closure and both fresh observations",
+          "recursive read callbacks are bounded before a second stored read, and release their guard",
+          "evidence outside the persisted closure and another project never reaches replay",
+          "cyclic calculation references and malformed request fields are unavailable without replay",
+          "callback request mutation is detached and private failures never escape the resolver",
+          "cancellation and revocation after replay never issue calculation evidence",
+          "monthly grid distinguishes absent actual, explicit zero, inherited forecast and manual closed month",
+          "monthly presentation matches field permissions for owner, finance and synthetic HR budget",
+          "real OPEX and CAPEX rendering mounts saved monthly states for the selected measure",
+          "annual previews retain the all-manual legacy reset and disclose the affected months",
+          "batch preview exposes changed cells while retaining invalid text and stale row edits",
+          "planner issuer resolves authenticated current identities and rejects stale and revoked sources",
+          "Planner finance projection matches the legacy engine across provenance, period, currency, absence, and coverage states",
+          "scenario and comparison results use the real case-scoped result store",
+          "C10 keeps the 30000 apparent savings conditional until training changes 210000 to 250000",
+          "operation proof uses the same domain admission for closed, include, duplicate and defer cases",
+          "Planner preparation and the real WP11 apply consumer preserve grants, atomic receipts, retry, reopen and stale rejection",
+          "monthly annual, spread and reset previews preserve manual months and domain rounding",
+          "monthly entity operations use closed actions and per-record CAS",
+          "monthly viewer response retains permitted HR aggregates and excludes private rates and individual costs",
+          "monthly settings preserve finance closed-through on locked plans and reject structural changes",
+          "parallel independent rows survive and one stale row does not discard valid or invalid local drafts",
+          "comparison persistence refuses tampered totals, coverage references and criterion outcomes before any write",
+          "criteria require both replay and durable criterion binding with zero writes when either is missing",
+          "comparison without criteria persists through real scenarios and SQLite, retries idempotently and survives reopen",
+          "real WP11 rules bind a comparison, survive reopen and refuse a second binding or a stale rule",
+          "a postwrite binding failure reports persisted-but-unbound and a retry repairs the same result",
+          "current scenario content and case identity are rechecked before comparison storage",
+          "monthly UI authority previews and commits only valid current domain rows",
+          "C02 qualifies each HR domain and month while preserving authorized aggregates and independent actual/forecast",
+          "headcount projection follows domain visibility and increase preview is disposable",
+          "catalog preview uses the domain without writing or inventing a missing exchange rate",
+          "annual budget preview retains manual months and does not write the Planner",
+          "forecast port compares the real engine, and detects source changes",
+          "catalog scope, original currency, missing rates and normalized identities remain explicit",
+          "USD and in-use FX are protected, comma rates retain six decimal places",
+          "catalog preview allocates unused identities without replacing a saved catalog row",
+          "runtime controls mirror admin catalogs and version authority, and explain FX scope and FTE denominator",
+          "monthly and headcount controls use the same field authority as saved commands",
+          "the mounted budget comparison states its measure and rejects a different fiscal year",
+          "Versions preserves preview and conflict drafts and applies the real copy, lock and official lifecycle",
+          "Versions grants follow current role, exact human intent, private lease and closed input",
+          "the first version uses the injected environment and creation is one-time",
+          "coverage requires every category and a quantified current component",
+          "comparison does not promote a conditioned or incompatible result",
+          "unknown non-financial criteria do not erase financially complete differences",
+          "scenario identity ignores observation clocks but binds financial values",
+          "Overview resolves baseline, candidate and official through the shared port and keeps their differences distinct",
+          "record additions and removals reconcile without matching labels or disguising unknown observations as zero",
+          "headcount publishes planned monthly FTE and independent budget, actual, forecast and outlook",
+          "missing rate and missing FX are scoped to the active domain and inherited budget month",
+          "excluding an unpriced position removes capacity and cost contribution without deleting it",
+          "headcount projections retain permitted domain aggregates and remove private position costs for owner and viewer",
+          "roster sync preserves a manual domain and HR actual/forecast and rejects a locked plan",
+          "preview reuses Planner rules without mutating the source",
+          "projection preserves missing FX warnings and redacts individual salary",
+          "source projection uses the same redaction as the Planner view",
+          "legacy dictionary source preserves identity and capacity input presence",
+          "preview rejects a forbidden write without changing the original or projected value",
+          "batch preview retains successful records when another revision conflicts",
+          "planner capability publishes the canonical forecast schema and profile",
+          "scenario capabilities reject invalid payloads and require bound receipts before domain work",
+          "monthly range keeps invalid text and preserves explicit zero and blank forecast",
+          "monthly preview preserves invalid and conflicting drafts while applying valid rows only to a copy",
+          "scenario replacement uses domain command on a copy and rejects duplicate targets",
+          "source projection changes when relevant Planner inputs change",
+          "scenario exclusion and deferral preserve the source and move only the selected contribution",
+          "scenario inclusion cannot silently replace an existing contribution",
+          "headcount preview and apply require exact human intent and preserve row revisions",
+          "headcount domain cost follows rate, months and uplift while AF stays independent",
+          "catalog UI preview and apply use exact human intent and the real currency rules",
+          "C16 forecast UI and private MCP reach the same real Planner and return bound, schema-valid output",
+          "SF native execution registry > pins one real request to a session and rejects replay, forged bindings and revocation",
+          "concurrent sessions with the same profile retain distinct request authorities",
+          "the selected manifest limits operations even when the profile and skill allow more",
+          "authentication and binding retain the same admission when the caller mutates its inputs"
+        ],
+        "failingLabels": [
+          "C16 scenario simulation and comparison share UI/MCP handlers and persist their real results in C08"
+        ],
+        "failure": "scenario-capability-parity fixture dispatch returns case-evidence-unavailable before capability handler; awaiting fixture correction",
+        "omni": {
+          "nonce": "1180cdc912fff9a5cfb0edfa975d8e6c",
+          "verdict": "not applicable (focused: no declaring test ran)"
+        },
+        "snapshotIsolation": {
+          "verified": true,
+          "aheadBy": 1,
+          "files": [
+            ".ci-run.json"
+          ],
+          "blobSha": "385c0237c6d5f5bc8f135ec0a74dccdcff41f8c9"
+        }
+      }
+    },
+    {
+      "id": "W4",
+      "productSha": "84b5a08aedce2cfc5fae048d96b39863692a469e",
+      "productTree": "cdf02e342c123cf70645d4f061fa7f4c3305a72a",
+      "snapshotSha": "4a7377e6dfac5cb98eaf92f417072a13480d8c5a",
+      "snapshotTree": "ca2ad9647ab207e366a7977e93e1e79efb93e620",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/parity-planner.test.ts",
+          "Sucafinav1/test/planner-runtime.test.ts",
+          "Sucafinav1/test/product/wp03/adapter.test.ts",
+          "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "Sucafinav1/test/product/wp03/capability-parity.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-boundaries.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-host.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-lifecycle.test.ts",
+          "Sucafinav1/test/product/wp03/coverage.test.ts",
+          "Sucafinav1/test/product/wp03/headcount-host.test.ts",
+          "Sucafinav1/test/product/wp03/headcount-projection.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-grid.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-operations.test.ts",
+          "Sucafinav1/test/product/wp03/operation-verifier.test.ts",
+          "Sucafinav1/test/product/wp03/overview.test.ts",
+          "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+          "Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "Sucafinav1/test/product/wp03/persistence.test.ts",
+          "Sucafinav1/test/product/wp03/port-hr.test.ts",
+          "Sucafinav1/test/product/wp03/port.test.ts",
+          "Sucafinav1/test/product/wp03/prepared-apply-integration.test.ts",
+          "Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+          "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+          "Sucafinav1/test/product/wp03/source-issuer.test.ts",
+          "Sucafinav1/test/product/wp03/versions-host.test.ts",
+          "Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts"
+        ],
+        "env": {}
+      },
+      "requestSha256": "d1c8fe6a394003eb5a6abda2d244058a520bf613a25cf3f10bab7ddfbd3a36c6",
+      "runId": 43520443453,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43520443453",
+      "jobId": 132213050774,
+      "conclusion": "failure",
+      "observation": "133 pass / 2 fail across 27 files. Corrected privacy role fixture and asymmetric matcher contamination before W5.",
+      "result": {
+        "schema": "wp03-ci-observation-v1",
+        "productSha": "84b5a08aedce2cfc5fae048d96b39863692a469e",
+        "productTree": "cdf02e342c123cf70645d4f061fa7f4c3305a72a",
+        "snapshotSha": "4a7377e6dfac5cb98eaf92f417072a13480d8c5a",
+        "snapshotTree": "ca2ad9647ab207e366a7977e93e1e79efb93e620",
+        "runId": 43520443453,
+        "jobId": 132213050774,
+        "conclusion": "failure",
+        "tests": {
+          "pass": 133,
+          "fail": 2,
+          "total": 135,
+          "files": 27,
+          "expects": 1313
+        },
+        "passingLabels": [
+          "planner workbook import form accepts both XLSX and legacy XLS files",
+          "Dashboard members export parses and imports its roster while ignoring its paired leader summary",
+          "the Dashboard auxiliary tab is accepted only with All Members and unknown sheets still fail atomically",
+          "a stale position revision rejects the workbook import without applying roster or position changes",
+          "members roster imports persist while a locked plan keeps all positions unchanged",
+          "OPEX and CAPEX compare grids show all seven original fiscal measures with closed actuals and forecast overrides",
+          "planner required pages contain functional controls or nonempty read views",
+          "planner direct write without canWrite fails atomically",
+          "planner creates first version only once and rejects stale record writes",
+          "line numerical operations preserve manual months and null versus zero",
+          "independent line revisions allow two editors while stale same-line fails atomically",
+          "lock reread rejects budget and HR but permits finance actual forecast and closing",
+          "official per year has shared CAS and official cannot unlock or delete",
+          "HR calculations and recursive privacy preserve domain aggregates",
+          "FX preserves cur shape, parses comma and warns without rejecting missing rate totals",
+          "owner scope, directory identity and unknown actions fail closed",
+          "CPX sequence spans versions, survives deletion and copies preserve codes",
+          "shared lists reject normalized duplicates and references across versions",
+          "roster sync retains manual domain and does not ingest future or terminated people",
+          "viewer with write identity never writes and salary cannot leak through stale conflicts",
+          "HR actuals are independent of calculated budget and reject the wrong page",
+          "total-only mode refuses multiple rows and HR split is immutable",
+          "legacy numeric identifiers stay addressable and directory selects show names",
+          "CAPEX GET owner, classification and search filters affect rendered rows",
+          "workbook apply matches numeric IDs and names, preserves migrated fields, null and typed zero",
+          "workbook preview command never writes and a late invalid position rolls every sheet back",
+          "workbook preflights each changed CAS and rolls back earlier records when a later token is stale",
+          "locked workbook ignores budget structure FX salary and removal while finance edits actual and forecast",
+          "newVersion imports into an unlocked atomic copy without moving official or touching source",
+          "workbook resolves directory names and list names or codes; unknown values warn without inventing records",
+          "workbook CAPEX matches normalized project code then name, class prefixes and preserves unknown classification",
+          "workbook FX precedes costs, rounds six decimals, and invalid positive-rate validation is atomic",
+          "headcount workbook matches numeric IDs, clamps FTE and orders months while ignoring calculated and unrelated columns",
+          "salary imports obey HR edit rules and synthetic HR ignores workbook budget",
+          "removeMissing prunes only supplied sheets and never removes orphan projects",
+          "dashboard headcount file normalizes Start Date and End Date, stores only roster columns even locked",
+          "budget owner workbook applies only owned forecasts and rejects a mixed unauthorized forecast atomically",
+          "workbook permits ordinary CAPEX HR cost element and locked line IDs retain original project",
+          "workbook CPX sequence is global, CAS protected and rolls back on later validation failure",
+          "workbook rejects malformed shapes, duplicate measures, invalid revision tokens and stale source lock",
+          "roster singleton has CAS and ignores all salary, classification, outlook and notes input",
+          "known IDs allow sparse workbook updates without guessing names or elements",
+          "workbook leaves unrelated legacy versions and absent sequence untouched",
+          "Info Field and Value rows only warn on version mismatch and cannot change year or authority",
+          "workbook upload belongs to an operating import form with source CAS, preview fields and explicit apply",
+          "original dictionary migration preserves every version ID, monthly amounts and source totals without mutating reads",
+          "render accepts the original dictionary directly and never offers an empty-store first version",
+          "legacy dictionary cannot be overwritten by first-version creation or an official unlock/delete/budget write",
+          "successful legacy write persists canonical versions and official-by-year without respreading another version",
+          "canonical official takes precedence over the retained global pointer, including after deleting the previous official",
+          "legacy lockBudget survives normalization and a canonical unlock remains unlocked on later reads",
+          "workbook apply accepts a dictionary source with an ID recovered from its dictionary key",
+          "invalid dictionary records cannot authorize creating a replacement first version",
+          "global official numeric ID is never interpreted as an array offset during migration",
+          "record-only replay binds C10 coverage, complete source closure and both fresh observations",
+          "recursive read callbacks are bounded before a second stored read, and release their guard",
+          "evidence outside the persisted closure and another project never reaches replay",
+          "cyclic calculation references and malformed request fields are unavailable without replay",
+          "callback request mutation is detached and private failures never escape the resolver",
+          "cancellation and revocation after replay never issue calculation evidence",
+          "monthly grid distinguishes absent actual, explicit zero, inherited forecast and manual closed month",
+          "monthly presentation matches field permissions for owner, finance and synthetic HR budget",
+          "real OPEX and CAPEX rendering mounts saved monthly states for the selected measure",
+          "annual previews retain the all-manual legacy reset and disclose the affected months",
+          "batch preview exposes changed cells while retaining invalid text and stale row edits",
+          "planner issuer resolves authenticated current identities and rejects stale and revoked sources",
+          "Planner finance projection matches the legacy engine across provenance, period, currency, absence, and coverage states",
+          "scenario and comparison results use the real case-scoped result store",
+          "C10 keeps the 30000 apparent savings conditional until training changes 210000 to 250000",
+          "operation proof uses the same domain admission for closed, include, duplicate and defer cases",
+          "Planner preparation and the real WP11 apply consumer preserve grants, atomic receipts, retry, reopen and stale rejection",
+          "monthly annual, spread and reset previews preserve manual months and domain rounding",
+          "monthly entity operations use closed actions and per-record CAS",
+          "monthly viewer response retains permitted HR aggregates and excludes private rates, individual costs and migrated Talent fields",
+          "monthly settings preserve finance closed-through on locked plans and reject structural changes",
+          "parallel independent rows survive and one stale row does not discard valid or invalid local drafts",
+          "comparison persistence refuses tampered totals, coverage references and criterion outcomes before any write",
+          "criteria require both replay and durable criterion binding with zero writes when either is missing",
+          "comparison without criteria persists through real scenarios and SQLite, retries idempotently and survives reopen",
+          "real WP11 rules bind a comparison, survive reopen and refuse a second binding or a stale rule",
+          "a postwrite binding failure reports persisted-but-unbound and a retry repairs the same result",
+          "current scenario content and case identity are rechecked before comparison storage",
+          "monthly UI authority previews and commits only valid current domain rows",
+          "C02 qualifies each HR domain and month while preserving authorized aggregates and independent actual/forecast",
+          "headcount projection follows domain visibility and increase preview is disposable",
+          "catalog preview uses the domain without writing or inventing a missing exchange rate",
+          "annual budget preview retains manual months and does not write the Planner",
+          "forecast port compares the real engine, and detects source changes",
+          "CAPEX refuses deleting a referenced project atomically and permits deletion after its last line is removed",
+          "common allocations preserve existing identities, repeat without duplicates and never redistribute financial values",
+          "catalog scope, original currency, missing rates and normalized identities remain explicit",
+          "USD and in-use FX are protected, comma rates retain six decimal places",
+          "catalog preview allocates unused identities without replacing a saved catalog row",
+          "runtime controls mirror admin catalogs and version authority, and explain FX scope and FTE denominator",
+          "monthly and headcount controls use the same field authority as saved commands",
+          "the mounted budget comparison states its measure and rejects a different fiscal year",
+          "Versions preserves preview and conflict drafts and applies the real copy, lock and official lifecycle",
+          "Versions grants follow current role, exact human intent, private lease and closed input",
+          "the first version uses the injected environment and creation is one-time",
+          "an editable version can change fiscal year without moving the year's official or redistributing its months",
+          "coverage requires every category and a quantified current component",
+          "comparison does not promote a conditioned or incompatible result",
+          "unknown non-financial criteria do not erase financially complete differences",
+          "scenario identity ignores observation clocks but binds financial values",
+          "Overview resolves baseline, candidate and official through the shared port and keeps their differences distinct",
+          "record additions and removals reconcile without matching labels or disguising unknown observations as zero",
+          "headcount publishes planned monthly FTE and independent budget, actual, forecast and outlook",
+          "missing rate and missing FX are scoped to the active domain and inherited budget month",
+          "excluding an unpriced position removes capacity and cost contribution without deleting it",
+          "headcount projections retain permitted domain aggregates and remove private position costs for owner and viewer",
+          "roster sync preserves a manual domain and HR actual/forecast and rejects a locked plan",
+          "preview reuses Planner rules without mutating the source",
+          "projection preserves missing FX warnings and redacts individual salary",
+          "source projection uses the same redaction as the Planner view",
+          "legacy dictionary source preserves identity and capacity input presence",
+          "preview rejects a forbidden write without changing the original or projected value",
+          "batch preview retains successful records when another revision conflicts",
+          "planner capability publishes the canonical forecast schema and profile",
+          "scenario capabilities reject invalid payloads and require bound receipts before domain work",
+          "monthly range keeps invalid text and preserves explicit zero and blank forecast",
+          "monthly preview preserves invalid and conflicting drafts while applying valid rows only to a copy",
+          "scenario replacement uses domain command on a copy and rejects duplicate targets",
+          "source projection changes when relevant Planner inputs change",
+          "scenario exclusion and deferral preserve the source and move only the selected contribution",
+          "scenario inclusion cannot silently replace an existing contribution",
+          "headcount preview and apply require exact human intent and preserve row revisions",
+          "headcount domain cost follows rate, months and uplift while AF stays independent",
+          "catalog UI preview and apply use exact human intent and the real currency rules",
+          "C16 forecast UI and private MCP reach the same real Planner and return bound, schema-valid output",
+          "SF native execution registry > pins one real request to a session and rejects replay, forged bindings and revocation",
+          "concurrent sessions with the same profile retain distinct request authorities",
+          "the selected manifest limits operations even when the profile and skill allow more",
+          "authentication and binding retain the same admission when the caller mutates its inputs"
+        ],
+        "failingLabels": [
+          "monthly owner response retains permitted HR aggregates and excludes private rates, individual costs and migrated Talent fields",
+          "C16 scenario simulation and comparison share UI/MCP handlers and persist their real results in C08"
+        ],
+        "omni": {
+          "nonce": "4f7dc37d0d9844af8f18814003ab2388",
+          "verdict": "not applicable (focused: no declaring test ran)"
+        },
+        "snapshotIsolation": {
+          "verified": true,
+          "base": "84b5a08aedce2cfc5fae048d96b39863692a469e",
+          "aheadBy": 1,
+          "files": [
+            ".ci-run.json"
+          ],
+          "blobSha": "d96aa9663889276ddf51b339c90bfbdbe2833df7"
+        }
+      }
+    },
+    {
+      "id": "W5",
+      "productSha": "815921f41636c449aa5966f43935771bb4d39e39",
+      "productTree": "9a8604e6fe66fac78a134ff2e5984f4cbe4182e6",
+      "snapshotSha": "7b407186f5b7c25840e6eaa94342a0095b40b1ae",
+      "snapshotTree": "0f2b1ca49ebf7001d7ea4bff3ce42a3efac1de7e",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/parity-planner.test.ts",
+          "Sucafinav1/test/planner-runtime.test.ts",
+          "Sucafinav1/test/product/wp03/adapter.test.ts",
+          "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "Sucafinav1/test/product/wp03/capability-parity.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-boundaries.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-host.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-lifecycle.test.ts",
+          "Sucafinav1/test/product/wp03/coverage.test.ts",
+          "Sucafinav1/test/product/wp03/headcount-host.test.ts",
+          "Sucafinav1/test/product/wp03/headcount-projection.test.ts",
+          "Sucafinav1/test/product/wp03/import-analysis.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-grid.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-operations.test.ts",
+          "Sucafinav1/test/product/wp03/operation-verifier.test.ts",
+          "Sucafinav1/test/product/wp03/overview.test.ts",
+          "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+          "Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "Sucafinav1/test/product/wp03/persistence.test.ts",
+          "Sucafinav1/test/product/wp03/port-hr.test.ts",
+          "Sucafinav1/test/product/wp03/port.test.ts",
+          "Sucafinav1/test/product/wp03/prepared-apply-integration.test.ts",
+          "Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+          "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+          "Sucafinav1/test/product/wp03/source-issuer.test.ts",
+          "Sucafinav1/test/product/wp03/versions-host.test.ts",
+          "Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts"
+        ],
+        "env": {}
+      },
+      "requestSha256": "5bd08501e76cb4d08d9506d967086dca1b4ecd227f68a718b5a64c2cf78a6e01",
+      "runId": 43522317597,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43522317597",
+      "jobId": 132219407382,
+      "conclusion": "failure",
+      "observation": "141 pass / 1 timeout across 28 files. Full durable scenario parity exceeded 20 seconds; measured to completion in W6 without removing authority/replay assertions.",
+      "result": {
+        "schema": "wp03-ci-observation-v1",
+        "productSha": "815921f41636c449aa5966f43935771bb4d39e39",
+        "productTree": "9a8604e6fe66fac78a134ff2e5984f4cbe4182e6",
+        "snapshotSha": "7b407186f5b7c25840e6eaa94342a0095b40b1ae",
+        "snapshotTree": "0f2b1ca49ebf7001d7ea4bff3ce42a3efac1de7e",
+        "runId": 43522317597,
+        "jobId": 132219407382,
+        "conclusion": "failure",
+        "tests": {
+          "pass": 141,
+          "fail": 1,
+          "total": 142,
+          "files": 28,
+          "expects": 1521
+        },
+        "passingLabels": [
+          "planner required pages contain functional controls or nonempty read views",
+          "planner direct write without canWrite fails atomically",
+          "planner creates first version only once and rejects stale record writes",
+          "line numerical operations preserve manual months and null versus zero",
+          "independent line revisions allow two editors while stale same-line fails atomically",
+          "lock reread rejects budget and HR but permits finance actual forecast and closing",
+          "official per year has shared CAS and official cannot unlock or delete",
+          "HR calculations and recursive privacy preserve domain aggregates",
+          "FX preserves cur shape, parses comma and warns without rejecting missing rate totals",
+          "owner scope, directory identity and unknown actions fail closed",
+          "CPX sequence spans versions, survives deletion and copies preserve codes",
+          "shared lists reject normalized duplicates and references across versions",
+          "roster sync retains manual domain and does not ingest future or terminated people",
+          "viewer with write identity never writes and salary cannot leak through stale conflicts",
+          "HR actuals are independent of calculated budget and reject the wrong page",
+          "total-only mode refuses multiple rows and HR split is immutable",
+          "legacy numeric identifiers stay addressable and directory selects show names",
+          "CAPEX GET owner, classification and search filters affect rendered rows",
+          "workbook apply matches numeric IDs and names, preserves migrated fields, null and typed zero",
+          "workbook preview command never writes and a late invalid position rolls every sheet back",
+          "workbook preflights each changed CAS and rolls back earlier records when a later token is stale",
+          "locked workbook ignores budget structure FX salary and removal while finance edits actual and forecast",
+          "newVersion imports into an unlocked atomic copy without moving official or touching source",
+          "workbook resolves directory names and list names or codes; unknown values warn without inventing records",
+          "workbook CAPEX matches normalized project code then name, class prefixes and preserves unknown classification",
+          "workbook FX precedes costs, rounds six decimals, and invalid positive-rate validation is atomic",
+          "headcount workbook matches numeric IDs, clamps FTE and orders months while ignoring calculated and unrelated columns",
+          "salary imports obey HR edit rules and synthetic HR ignores workbook budget",
+          "removeMissing prunes only supplied sheets and never removes orphan projects",
+          "dashboard headcount file normalizes Start Date and End Date, stores only roster columns even locked",
+          "budget owner workbook applies only owned forecasts and rejects a mixed unauthorized forecast atomically",
+          "workbook permits ordinary CAPEX HR cost element and locked line IDs retain original project",
+          "workbook CPX sequence is global, CAS protected and rolls back on later validation failure",
+          "workbook rejects malformed shapes, duplicate measures, invalid revision tokens and stale source lock",
+          "roster singleton has CAS and ignores all salary, classification, outlook and notes input",
+          "known IDs allow sparse workbook updates without guessing names or elements",
+          "workbook leaves unrelated legacy versions and absent sequence untouched",
+          "Info Field and Value rows only warn on version mismatch and cannot change year or authority",
+          "workbook upload belongs to an operating import form with source CAS, preview fields and explicit apply",
+          "original dictionary migration preserves every version ID, monthly amounts and source totals without mutating reads",
+          "render accepts the original dictionary directly and never offers an empty-store first version",
+          "legacy dictionary cannot be overwritten by first-version creation or an official unlock/delete/budget write",
+          "successful legacy write persists canonical versions and official-by-year without respreading another version",
+          "canonical official takes precedence over the retained global pointer, including after deleting the previous official",
+          "legacy lockBudget survives normalization and a canonical unlock remains unlocked on later reads",
+          "workbook apply accepts a dictionary source with an ID recovered from its dictionary key",
+          "invalid dictionary records cannot authorize creating a replacement first version",
+          "global official numeric ID is never interpreted as an array offset during migration",
+          "planner workbook import form accepts both XLSX and legacy XLS files",
+          "Dashboard members export parses and imports its roster while ignoring its paired leader summary",
+          "the Dashboard auxiliary tab is accepted only with All Members and unknown sheets still fail atomically",
+          "a stale position revision rejects the workbook import without applying roster or position changes",
+          "members roster imports persist while a locked plan keeps all positions unchanged",
+          "OPEX and CAPEX compare grids show all seven original fiscal measures with closed actuals and forecast overrides",
+          "catalog UI preview and apply use exact human intent and the real currency rules",
+          "preview reuses Planner rules without mutating the source",
+          "projection and simulation accept a deeply frozen snapshot and preserve audit, sequences and every source version",
+          "projection preserves missing FX warnings and redacts individual salary",
+          "source projection uses the same redaction as the Planner view",
+          "legacy dictionary source preserves identity and capacity input presence",
+          "preview rejects a forbidden write without changing the original or projected value",
+          "batch preview retains successful records when another revision conflicts",
+          "planner capability publishes the canonical forecast schema and profile",
+          "scenario capabilities reject invalid payloads and require bound receipts before domain work",
+          "monthly range keeps invalid text and preserves explicit zero and blank forecast",
+          "monthly preview preserves invalid and conflicting drafts while applying valid rows only to a copy",
+          "scenario replacement uses domain command on a copy and rejects duplicate targets",
+          "source projection changes when relevant Planner inputs change",
+          "scenario exclusion and deferral preserve the source and move only the selected contribution",
+          "scenario inclusion cannot silently replace an existing contribution",
+          "comparison persistence refuses tampered totals, coverage references and criterion outcomes before any write",
+          "criteria require both replay and durable criterion binding with zero writes when either is missing",
+          "comparison without criteria persists through real scenarios and SQLite, retries idempotently and survives reopen",
+          "real WP11 rules bind a comparison, survive reopen and refuse a second binding or a stale rule",
+          "a postwrite binding failure reports persisted-but-unbound and a retry repairs the same result",
+          "current scenario content and case identity are rechecked before comparison storage",
+          "Planner preparation and the real WP11 apply consumer preserve grants, atomic receipts, retry, reopen and stale rejection",
+          "C02 qualifies each HR domain and month while preserving authorized aggregates and independent actual/forecast",
+          "headcount publishes planned monthly FTE and independent budget, actual, forecast and outlook",
+          "automatic employee and contractor rates follow normalized location and type while explicit rates and overrides retain precedence",
+          "missing rate and missing FX are scoped to the active domain and inherited budget month",
+          "excluding an unpriced position removes capacity and cost contribution without deleting it",
+          "headcount projections retain permitted domain aggregates and remove private position costs for owner and viewer",
+          "roster sync preserves a manual domain and HR actual/forecast and rejects a locked plan",
+          "headcount preview and apply require exact human intent and preserve row revisions",
+          "headcount domain cost follows rate, months and uplift while AF stays independent",
+          "Overview resolves baseline, candidate and official through the shared port and keeps their differences distinct",
+          "record additions and removals reconcile without matching labels or disguising unknown observations as zero",
+          "isolated FX and HR capacity changes reconcile to the exposed inputs and monthly components",
+          "planner issuer resolves authenticated current identities and rejects stale and revoked sources",
+          "Versions preserves preview and conflict drafts and applies the real copy, lock and official lifecycle",
+          "Versions grants follow current role, exact human intent, private lease and closed input",
+          "the first version uses the injected environment and creation is one-time",
+          "an editable version can change fiscal year without moving the year's official or redistributing its months",
+          "a legacy official without its lock flag rejects year changes in preview and apply while retaining rename and copy",
+          "headcount projection follows domain visibility and increase preview is disposable",
+          "catalog preview uses the domain without writing or inventing a missing exchange rate",
+          "annual budget preview retains manual months and does not write the Planner",
+          "forecast port compares the real engine, and detects source changes",
+          "catalog scope, original currency, missing rates and normalized identities remain explicit",
+          "USD and in-use FX are protected, comma rates retain six decimal places",
+          "subquantum FX preserves the pinned manual and workbook boundaries while marking the converted amount unavailable",
+          "catalog preview allocates unused identities without replacing a saved catalog row",
+          "runtime controls mirror admin catalogs and version authority, and explain FX scope and FTE denominator",
+          "monthly and headcount controls use the same field authority as saved commands",
+          "the mounted budget comparison states its measure and rejects a different fiscal year",
+          "C16 forecast UI and private MCP reach the same real Planner and return bound, schema-valid output",
+          "record-only replay binds C10 coverage, complete source closure and both fresh observations",
+          "recursive read callbacks are bounded before a second stored read, and release their guard",
+          "evidence outside the persisted closure and another project never reaches replay",
+          "cyclic calculation references and malformed request fields are unavailable without replay",
+          "callback request mutation is detached and private failures never escape the resolver",
+          "cancellation and revocation after replay never issue calculation evidence",
+          "scenario and comparison results use the real case-scoped result store",
+          "monthly grid distinguishes absent actual, explicit zero, inherited forecast and manual closed month",
+          "monthly presentation matches field permissions for owner, finance and synthetic HR budget",
+          "real OPEX and CAPEX rendering mounts saved monthly states for the selected measure",
+          "annual previews retain the all-manual legacy reset and disclose the affected months",
+          "batch preview exposes changed cells while retaining invalid text and stale row edits",
+          "coverage requires every category and a quantified current component",
+          "comparison does not promote a conditioned or incompatible result",
+          "unknown non-financial criteria do not erase financially complete differences",
+          "scenario identity ignores observation clocks but binds financial values",
+          "C10 keeps the 30000 apparent savings conditional until training changes 210000 to 250000",
+          "C04 real staged workbook preview feeds Planner analysis without applying and rejects digest, scope and source changes",
+          "monthly annual, spread and reset previews preserve manual months and domain rounding",
+          "monthly entity operations use closed actions and per-record CAS",
+          "monthly viewer response retains permitted HR aggregates and excludes private rates, individual costs and migrated Talent fields",
+          "monthly budget owner response retains permitted HR aggregates and excludes private rates, individual costs and migrated Talent fields",
+          "monthly settings preserve finance closed-through on locked plans and reject structural changes",
+          "parallel independent rows survive and one stale row does not discard valid or invalid local drafts",
+          "monthly UI authority previews and commits only valid current domain rows",
+          "CAPEX refuses deleting a referenced project atomically and permits deletion after its last line is removed",
+          "common allocations preserve existing identities, repeat without duplicates and never redistribute financial values",
+          "unused FX, entities and allocations complete create, edit and delete with record revisions and their original scopes",
+          "operation proof uses the same domain admission for closed, include, duplicate and defer cases",
+          "Planner finance projection matches the legacy engine across provenance, period, currency, absence, and coverage states",
+          "SF native execution registry > pins one real request to a session and rejects replay, forged bindings and revocation",
+          "concurrent sessions with the same profile retain distinct request authorities",
+          "the selected manifest limits operations even when the profile and skill allow more",
+          "authentication and binding retain the same admission when the caller mutates its inputs"
+        ],
+        "failingLabels": [
+          "C16 scenario simulation and comparison share UI/MCP handlers and persist their real results in C08"
+        ],
+        "failure": "The full durable UI/MCP scenario/compare test exceeded its 20000ms timeout; no earlier assertion failure printed. Diagnosis in progress, no native-runtime acceptance.",
+        "omni": {
+          "nonce": "7e69767e4f9638dbeb405fcd16a93414",
+          "verdict": "not applicable (focused: no declaring test ran)"
+        },
+        "snapshotIsolation": {
+          "verified": true,
+          "aheadBy": 1,
+          "files": [
+            ".ci-run.json"
+          ],
+          "blobSha": "1506c1f200ca4ac73ecd50e57372feed1243acc1"
+        }
+      }
+    },
+    {
+      "id": "W6",
+      "productSha": "6f004731e7848bf540434a3ee050cd0f28f342cb",
+      "productTree": "12403d54bf5713096a30647d45791d4a4431c857",
+      "snapshotSha": "9a62d6c0ed2638960319f8ff3d68eba58d2e92e5",
+      "snapshotTree": "934b5bed1e4978d407bf8810f2ab0b368b3f92a7",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/parity-planner.test.ts",
+          "Sucafinav1/test/planner-runtime.test.ts",
+          "Sucafinav1/test/product/wp03/adapter.test.ts",
+          "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "Sucafinav1/test/product/wp03/capability-parity.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-boundaries.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-host.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-lifecycle.test.ts",
+          "Sucafinav1/test/product/wp03/coverage.test.ts",
+          "Sucafinav1/test/product/wp03/headcount-host.test.ts",
+          "Sucafinav1/test/product/wp03/headcount-projection.test.ts",
+          "Sucafinav1/test/product/wp03/import-analysis.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-grid.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-operations.test.ts",
+          "Sucafinav1/test/product/wp03/operation-verifier.test.ts",
+          "Sucafinav1/test/product/wp03/overview.test.ts",
+          "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+          "Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "Sucafinav1/test/product/wp03/persistence.test.ts",
+          "Sucafinav1/test/product/wp03/port-hr.test.ts",
+          "Sucafinav1/test/product/wp03/port.test.ts",
+          "Sucafinav1/test/product/wp03/prepared-apply-integration.test.ts",
+          "Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+          "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+          "Sucafinav1/test/product/wp03/source-issuer.test.ts",
+          "Sucafinav1/test/product/wp03/versions-host.test.ts",
+          "Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts"
+        ],
+        "env": {}
+      },
+      "requestSha256": "5bd08501e76cb4d08d9506d967086dca1b4ecd227f68a718b5a64c2cf78a6e01",
+      "runId": 43523654974,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523654974",
+      "jobId": 132223957537,
+      "conclusion": "success",
+      "observation": "Final material qualification. The only W5-to-W6 change is scenario test timing instrumentation and a 60-second diagnostic test bound; admission lifetime remains 60 seconds.",
+      "result": {
+        "schema": "wp03-ci-observation-v1",
+        "productSha": "6f004731e7848bf540434a3ee050cd0f28f342cb",
+        "productTree": "12403d54bf5713096a30647d45791d4a4431c857",
+        "snapshotSha": "9a62d6c0ed2638960319f8ff3d68eba58d2e92e5",
+        "snapshotTree": "934b5bed1e4978d407bf8810f2ab0b368b3f92a7",
+        "runId": 43523654974,
+        "jobId": 132223957537,
+        "cleanupJobId": 132224938090,
+        "conclusion": "success",
+        "tests": {
+          "pass": 142,
+          "fail": 0,
+          "total": 142,
+          "files": 28,
+          "expects": 1521,
+          "duration": "42.26s"
+        },
+        "passingLabels": [
+          "planner workbook import form accepts both XLSX and legacy XLS files",
+          "Dashboard members export parses and imports its roster while ignoring its paired leader summary",
+          "the Dashboard auxiliary tab is accepted only with All Members and unknown sheets still fail atomically",
+          "a stale position revision rejects the workbook import without applying roster or position changes",
+          "members roster imports persist while a locked plan keeps all positions unchanged",
+          "OPEX and CAPEX compare grids show all seven original fiscal measures with closed actuals and forecast overrides",
+          "planner required pages contain functional controls or nonempty read views",
+          "planner direct write without canWrite fails atomically",
+          "planner creates first version only once and rejects stale record writes",
+          "line numerical operations preserve manual months and null versus zero",
+          "independent line revisions allow two editors while stale same-line fails atomically",
+          "lock reread rejects budget and HR but permits finance actual forecast and closing",
+          "official per year has shared CAS and official cannot unlock or delete",
+          "HR calculations and recursive privacy preserve domain aggregates",
+          "FX preserves cur shape, parses comma and warns without rejecting missing rate totals",
+          "owner scope, directory identity and unknown actions fail closed",
+          "CPX sequence spans versions, survives deletion and copies preserve codes",
+          "shared lists reject normalized duplicates and references across versions",
+          "roster sync retains manual domain and does not ingest future or terminated people",
+          "viewer with write identity never writes and salary cannot leak through stale conflicts",
+          "HR actuals are independent of calculated budget and reject the wrong page",
+          "total-only mode refuses multiple rows and HR split is immutable",
+          "legacy numeric identifiers stay addressable and directory selects show names",
+          "CAPEX GET owner, classification and search filters affect rendered rows",
+          "workbook apply matches numeric IDs and names, preserves migrated fields, null and typed zero",
+          "workbook preview command never writes and a late invalid position rolls every sheet back",
+          "workbook preflights each changed CAS and rolls back earlier records when a later token is stale",
+          "locked workbook ignores budget structure FX salary and removal while finance edits actual and forecast",
+          "newVersion imports into an unlocked atomic copy without moving official or touching source",
+          "workbook resolves directory names and list names or codes; unknown values warn without inventing records",
+          "workbook CAPEX matches normalized project code then name, class prefixes and preserves unknown classification",
+          "workbook FX precedes costs, rounds six decimals, and invalid positive-rate validation is atomic",
+          "headcount workbook matches numeric IDs, clamps FTE and orders months while ignoring calculated and unrelated columns",
+          "salary imports obey HR edit rules and synthetic HR ignores workbook budget",
+          "removeMissing prunes only supplied sheets and never removes orphan projects",
+          "dashboard headcount file normalizes Start Date and End Date, stores only roster columns even locked",
+          "budget owner workbook applies only owned forecasts and rejects a mixed unauthorized forecast atomically",
+          "workbook permits ordinary CAPEX HR cost element and locked line IDs retain original project",
+          "workbook CPX sequence is global, CAS protected and rolls back on later validation failure",
+          "workbook rejects malformed shapes, duplicate measures, invalid revision tokens and stale source lock",
+          "roster singleton has CAS and ignores all salary, classification, outlook and notes input",
+          "known IDs allow sparse workbook updates without guessing names or elements",
+          "workbook leaves unrelated legacy versions and absent sequence untouched",
+          "Info Field and Value rows only warn on version mismatch and cannot change year or authority",
+          "workbook upload belongs to an operating import form with source CAS, preview fields and explicit apply",
+          "original dictionary migration preserves every version ID, monthly amounts and source totals without mutating reads",
+          "render accepts the original dictionary directly and never offers an empty-store first version",
+          "legacy dictionary cannot be overwritten by first-version creation or an official unlock/delete/budget write",
+          "successful legacy write persists canonical versions and official-by-year without respreading another version",
+          "canonical official takes precedence over the retained global pointer, including after deleting the previous official",
+          "legacy lockBudget survives normalization and a canonical unlock remains unlocked on later reads",
+          "workbook apply accepts a dictionary source with an ID recovered from its dictionary key",
+          "invalid dictionary records cannot authorize creating a replacement first version",
+          "global official numeric ID is never interpreted as an array offset during migration",
+          "record-only replay binds C10 coverage, complete source closure and both fresh observations",
+          "recursive read callbacks are bounded before a second stored read, and release their guard",
+          "evidence outside the persisted closure and another project never reaches replay",
+          "cyclic calculation references and malformed request fields are unavailable without replay",
+          "callback request mutation is detached and private failures never escape the resolver",
+          "cancellation and revocation after replay never issue calculation evidence",
+          "monthly grid distinguishes absent actual, explicit zero, inherited forecast and manual closed month",
+          "monthly presentation matches field permissions for owner, finance and synthetic HR budget",
+          "real OPEX and CAPEX rendering mounts saved monthly states for the selected measure",
+          "annual previews retain the all-manual legacy reset and disclose the affected months",
+          "batch preview exposes changed cells while retaining invalid text and stale row edits",
+          "planner issuer resolves authenticated current identities and rejects stale and revoked sources",
+          "Planner finance projection matches the legacy engine across provenance, period, currency, absence, and coverage states",
+          "scenario and comparison results use the real case-scoped result store",
+          "C10 keeps the 30000 apparent savings conditional until training changes 210000 to 250000",
+          "operation proof uses the same domain admission for closed, include, duplicate and defer cases",
+          "Planner preparation and the real WP11 apply consumer preserve grants, atomic receipts, retry, reopen and stale rejection",
+          "monthly annual, spread and reset previews preserve manual months and domain rounding",
+          "monthly entity operations use closed actions and per-record CAS",
+          "monthly viewer response retains permitted HR aggregates and excludes private rates, individual costs and migrated Talent fields",
+          "monthly budget owner response retains permitted HR aggregates and excludes private rates, individual costs and migrated Talent fields",
+          "monthly settings preserve finance closed-through on locked plans and reject structural changes",
+          "parallel independent rows survive and one stale row does not discard valid or invalid local drafts",
+          "comparison persistence refuses tampered totals, coverage references and criterion outcomes before any write",
+          "criteria require both replay and durable criterion binding with zero writes when either is missing",
+          "comparison without criteria persists through real scenarios and SQLite, retries idempotently and survives reopen",
+          "real WP11 rules bind a comparison, survive reopen and refuse a second binding or a stale rule",
+          "a postwrite binding failure reports persisted-but-unbound and a retry repairs the same result",
+          "current scenario content and case identity are rechecked before comparison storage",
+          "monthly UI authority previews and commits only valid current domain rows",
+          "C02 qualifies each HR domain and month while preserving authorized aggregates and independent actual/forecast",
+          "headcount projection follows domain visibility and increase preview is disposable",
+          "catalog preview uses the domain without writing or inventing a missing exchange rate",
+          "annual budget preview retains manual months and does not write the Planner",
+          "forecast port compares the real engine, and detects source changes",
+          "C04 real staged workbook preview feeds Planner analysis without applying and rejects digest, scope and source changes",
+          "CAPEX refuses deleting a referenced project atomically and permits deletion after its last line is removed",
+          "common allocations preserve existing identities, repeat without duplicates and never redistribute financial values",
+          "unused FX, entities and allocations complete create, edit and delete with record revisions and their original scopes",
+          "catalog scope, original currency, missing rates and normalized identities remain explicit",
+          "USD and in-use FX are protected, comma rates retain six decimal places",
+          "subquantum FX preserves the pinned manual and workbook boundaries while marking the converted amount unavailable",
+          "catalog preview allocates unused identities without replacing a saved catalog row",
+          "runtime controls mirror admin catalogs and version authority, and explain FX scope and FTE denominator",
+          "monthly and headcount controls use the same field authority as saved commands",
+          "the mounted budget comparison states its measure and rejects a different fiscal year",
+          "Versions preserves preview and conflict drafts and applies the real copy, lock and official lifecycle",
+          "Versions grants follow current role, exact human intent, private lease and closed input",
+          "the first version uses the injected environment and creation is one-time",
+          "an editable version can change fiscal year without moving the year's official or redistributing its months",
+          "a legacy official without its lock flag rejects year changes in preview and apply while retaining rename and copy",
+          "coverage requires every category and a quantified current component",
+          "comparison does not promote a conditioned or incompatible result",
+          "unknown non-financial criteria do not erase financially complete differences",
+          "scenario identity ignores observation clocks but binds financial values",
+          "C16 scenario simulation and comparison share UI/MCP handlers and persist their real results in C08",
+          "Overview resolves baseline, candidate and official through the shared port and keeps their differences distinct",
+          "record additions and removals reconcile without matching labels or disguising unknown observations as zero",
+          "isolated FX and HR capacity changes reconcile to the exposed inputs and monthly components",
+          "headcount publishes planned monthly FTE and independent budget, actual, forecast and outlook",
+          "automatic employee and contractor rates follow normalized location and type while explicit rates and overrides retain precedence",
+          "missing rate and missing FX are scoped to the active domain and inherited budget month",
+          "excluding an unpriced position removes capacity and cost contribution without deleting it",
+          "headcount projections retain permitted domain aggregates and remove private position costs for owner and viewer",
+          "roster sync preserves a manual domain and HR actual/forecast and rejects a locked plan",
+          "preview reuses Planner rules without mutating the source",
+          "projection and simulation accept a deeply frozen snapshot and preserve audit, sequences and every source version",
+          "projection preserves missing FX warnings and redacts individual salary",
+          "source projection uses the same redaction as the Planner view",
+          "legacy dictionary source preserves identity and capacity input presence",
+          "preview rejects a forbidden write without changing the original or projected value",
+          "batch preview retains successful records when another revision conflicts",
+          "planner capability publishes the canonical forecast schema and profile",
+          "scenario capabilities reject invalid payloads and require bound receipts before domain work",
+          "monthly range keeps invalid text and preserves explicit zero and blank forecast",
+          "monthly preview preserves invalid and conflicting drafts while applying valid rows only to a copy",
+          "scenario replacement uses domain command on a copy and rejects duplicate targets",
+          "source projection changes when relevant Planner inputs change",
+          "scenario exclusion and deferral preserve the source and move only the selected contribution",
+          "scenario inclusion cannot silently replace an existing contribution",
+          "headcount preview and apply require exact human intent and preserve row revisions",
+          "headcount domain cost follows rate, months and uplift while AF stays independent",
+          "catalog UI preview and apply use exact human intent and the real currency rules",
+          "C16 forecast UI and private MCP reach the same real Planner and return bound, schema-valid output",
+          "SF native execution registry > pins one real request to a session and rejects replay, forged bindings and revocation",
+          "concurrent sessions with the same profile retain distinct request authorities",
+          "the selected manifest limits operations even when the profile and skill allow more",
+          "authentication and binding retain the same admission when the caller mutates its inputs"
+        ],
+        "failingLabels": [],
+        "selectedFiles": [
+          "Sucafinav1/test/parity-planner.test.ts",
+          "Sucafinav1/test/planner-runtime.test.ts",
+          "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-grid.test.ts",
+          "Sucafinav1/test/product/wp03/source-issuer.test.ts",
+          "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+          "Sucafinav1/test/product/wp03/persistence.test.ts",
+          "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+          "Sucafinav1/test/product/wp03/operation-verifier.test.ts",
+          "Sucafinav1/test/product/wp03/prepared-apply-integration.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-operations.test.ts",
+          "Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+          "Sucafinav1/test/product/wp03/port-hr.test.ts",
+          "Sucafinav1/test/product/wp03/port.test.ts",
+          "Sucafinav1/test/product/wp03/import-analysis.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-lifecycle.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-boundaries.test.ts",
+          "Sucafinav1/test/product/wp03/versions-host.test.ts",
+          "Sucafinav1/test/product/wp03/coverage.test.ts",
+          "Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+          "Sucafinav1/test/product/wp03/overview.test.ts",
+          "Sucafinav1/test/product/wp03/headcount-projection.test.ts",
+          "Sucafinav1/test/product/wp03/adapter.test.ts",
+          "Sucafinav1/test/product/wp03/headcount-host.test.ts",
+          "Sucafinav1/test/product/wp03/catalog-host.test.ts",
+          "Sucafinav1/test/product/wp03/capability-parity.test.ts",
+          "Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts"
+        ],
+        "timingStages": [
+          {
+            "stage": "fixture:start",
+            "elapsedMs": 0,
+            "evidenceStarted": 0,
+            "evidenceCompleted": 0
+          },
+          {
+            "stage": "fixture:done",
+            "elapsedMs": 14,
+            "evidenceStarted": 0,
+            "evidenceCompleted": 0
+          },
+          {
+            "stage": "seed-scenarios:start",
+            "elapsedMs": 29,
+            "evidenceStarted": 0,
+            "evidenceCompleted": 0
+          },
+          {
+            "stage": "seed-scenarios:done",
+            "elapsedMs": 181,
+            "evidenceStarted": 0,
+            "evidenceCompleted": 0
+          },
+          {
+            "stage": "case-evidence:start",
+            "elapsedMs": 188,
+            "evidenceStarted": 0,
+            "evidenceCompleted": 0
+          },
+          {
+            "stage": "case-evidence:done",
+            "elapsedMs": 255,
+            "evidenceStarted": 2,
+            "evidenceCompleted": 2
+          },
+          {
+            "stage": "case-read:start",
+            "elapsedMs": 255,
+            "evidenceStarted": 2,
+            "evidenceCompleted": 2
+          },
+          {
+            "stage": "case-read:done",
+            "elapsedMs": 385,
+            "evidenceStarted": 6,
+            "evidenceCompleted": 6
+          },
+          {
+            "stage": "ui-simulate-base:start",
+            "elapsedMs": 385,
+            "evidenceStarted": 6,
+            "evidenceCompleted": 6
+          },
+          {
+            "stage": "ui-simulate-base:done",
+            "elapsedMs": 682,
+            "evidenceStarted": 10,
+            "evidenceCompleted": 10
+          },
+          {
+            "stage": "ui-simulate-alternative:start",
+            "elapsedMs": 682,
+            "evidenceStarted": 10,
+            "evidenceCompleted": 10
+          },
+          {
+            "stage": "ui-simulate-alternative:done",
+            "elapsedMs": 1059,
+            "evidenceStarted": 14,
+            "evidenceCompleted": 14
+          },
+          {
+            "stage": "mcp-simulate-base:start",
+            "elapsedMs": 1089,
+            "evidenceStarted": 14,
+            "evidenceCompleted": 14
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 1412,
+            "evidenceStarted": 16,
+            "evidenceCompleted": 16
+          },
+          {
+            "stage": "mcp-simulate-base:done",
+            "elapsedMs": 1576,
+            "evidenceStarted": 18,
+            "evidenceCompleted": 18
+          },
+          {
+            "stage": "ui-compare:start",
+            "elapsedMs": 1609,
+            "evidenceStarted": 18,
+            "evidenceCompleted": 18
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 2966,
+            "evidenceStarted": 34,
+            "evidenceCompleted": 32
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 4497,
+            "evidenceStarted": 50,
+            "evidenceCompleted": 48
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 6115,
+            "evidenceStarted": 66,
+            "evidenceCompleted": 64
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 7456,
+            "evidenceStarted": 82,
+            "evidenceCompleted": 80
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 8988,
+            "evidenceStarted": 98,
+            "evidenceCompleted": 96
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 10426,
+            "evidenceStarted": 114,
+            "evidenceCompleted": 112
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 11835,
+            "evidenceStarted": 130,
+            "evidenceCompleted": 128
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 13397,
+            "evidenceStarted": 146,
+            "evidenceCompleted": 144
+          },
+          {
+            "stage": "ui-compare:done",
+            "elapsedMs": 14660,
+            "evidenceStarted": 158,
+            "evidenceCompleted": 158
+          },
+          {
+            "stage": "mcp-compare:start",
+            "elapsedMs": 14660,
+            "evidenceStarted": 158,
+            "evidenceCompleted": 158
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 14993,
+            "evidenceStarted": 162,
+            "evidenceCompleted": 160
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 16596,
+            "evidenceStarted": 178,
+            "evidenceCompleted": 176
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 17982,
+            "evidenceStarted": 192,
+            "evidenceCompleted": 192
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 19508,
+            "evidenceStarted": 210,
+            "evidenceCompleted": 208
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 20897,
+            "evidenceStarted": 226,
+            "evidenceCompleted": 224
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 22489,
+            "evidenceStarted": 242,
+            "evidenceCompleted": 240
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 24258,
+            "evidenceStarted": 258,
+            "evidenceCompleted": 256
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 25686,
+            "evidenceStarted": 274,
+            "evidenceCompleted": 272
+          },
+          {
+            "stage": "evidence:progress",
+            "elapsedMs": 27313,
+            "evidenceStarted": 290,
+            "evidenceCompleted": 288
+          },
+          {
+            "stage": "mcp-compare:done",
+            "elapsedMs": 28130,
+            "evidenceStarted": 298,
+            "evidenceCompleted": 298
+          },
+          {
+            "stage": "assertions:done",
+            "elapsedMs": 28240,
+            "evidenceStarted": 298,
+            "evidenceCompleted": 298
+          },
+          {
+            "stage": "close:start",
+            "elapsedMs": 28240,
+            "evidenceStarted": 298,
+            "evidenceCompleted": 298
+          },
+          {
+            "stage": "close:done",
+            "elapsedMs": 28243,
+            "evidenceStarted": 298,
+            "evidenceCompleted": 298
+          }
+        ],
+        "omni": {
+          "nonce": "b99d1fcdc98d2460c512464dcd6e0de3",
+          "verdict": "not applicable (focused: no declaring test ran)"
+        },
+        "snapshotIsolation": {
+          "verified": true,
+          "base": "6f004731e7848bf540434a3ee050cd0f28f342cb",
+          "status": "ahead",
+          "aheadBy": 1,
+          "behindBy": 0,
+          "files": [
+            {
+              "path": ".ci-run.json",
+              "blob": "1506c1f200ca4ac73ecd50e57372feed1243acc1",
+              "status": "added"
+            }
+          ]
+        },
+        "artifacts": [],
+        "artifactScope": "Existing Bun runner does not upload a product test artifact for this selection; job log is the executed evidence."
+      }
+    }
+  ],
+  "realBrowser": {
+    "schema": "wp03-browser-observation-v1",
+    "productSha": "84b5a08aedce2cfc5fae048d96b39863692a469e",
+    "productTree": "cdf02e342c123cf70645d4f061fa7f4c3305a72a",
+    "snapshotSha": "41fe8c068285e8712d43d4af5a784e05f1b11b80",
+    "snapshotTree": "d7ca7776420b4ec8b99846ef78c18c852d81cf21",
+    "runId": 43520849840,
+    "jobId": 132214420325,
+    "conclusion": "failure",
+    "runner": "playwright",
+    "project": "chromium",
+    "selectedFiles": [
+      "e2e/sucafina/wp03/planner-mounted.spec.ts"
+    ],
+    "tests": {
+      "expected": 0,
+      "unexpected": 1,
+      "skipped": 0,
+      "flaky": 0
+    },
+    "runtimeMilliseconds": 104370.88,
+    "failure": {
+      "phase": "real CLI initialization before browser navigation",
+      "message": "Method 'ACL' already declared for route '/sucafina'",
+      "owner": "WP10 / CLI installation composition",
+      "classification": "BLOCKED_EXTERNAL",
+      "uiJourneyExecuted": false
+    },
+    "artifacts": [
+      {
+        "id": 14082119400,
+        "name": "playwright-ubuntu-24.04-1",
+        "size_in_bytes": 218258,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14082119400",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14082119400/zip",
+        "expired": false,
+        "created_at": "2026-11-13T22:41:11Z",
+        "expires_at": "2026-11-20T22:41:10Z",
+        "updated_at": "2026-11-13T22:41:11Z",
+        "digest": "sha256:0aee7806ff77e30f6587b5476711474acdbaff28baa6fe296c7997a9306eef87",
+        "workflow_run": {
+          "id": 43520849840,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "ci-run-linux-astra-wp03-84b5a08a-b711c5f5-1",
+          "head_sha": "41fe8c068285e8712d43d4af5a784e05f1b11b80"
+        }
+      }
+    ],
+    "artifactVerification": {
+      "downloadedThrough": "GitHub MCP github_download_workflow_artifact",
+      "sha256": "0aee7806ff77e30f6587b5476711474acdbaff28baa6fe296c7997a9306eef87",
+      "matchedPublishedDigest": true,
+      "inspected": [
+        "test-ci-evidence/request.json",
+        "test-ci-evidence/playwright-selection.json",
+        "test-ci-evidence/playwright-runtime.json",
+        "wp03-real-cli.log (inline attachment extracted from runtime report)"
+      ],
+      "traceZipPresent": false
+    },
+    "snapshotIsolation": {
+      "verified": true,
+      "base": "84b5a08aedce2cfc5fae048d96b39863692a469e",
+      "aheadBy": 1,
+      "files": [
+        ".ci-run.json"
+      ],
+      "blobSha": "acddcef901468dcfc4395004fe41a5611617fbfa"
+    },
+    "omni": {
+      "nonce": "3402273b369449e59399579ba35b6b32",
+      "verdict": "No Bun omni positive-control verdict is emitted by the existing Playwright runner; this result does not prove an omni spawn"
+    },
+    "request": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/wp03/planner-mounted.spec.ts"
+      ],
+      "env": {},
+      "config": "e2e/playwright.production.config.ts"
+    },
+    "requestSha256": "b711c5f53b94e0dddf2bf2c5244ca488a7d8d39e16eddc89aa8de562f53a351b",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43520849840",
+    "attributionLimit": "The installation source blob and Effect dependency are unchanged from the seed; exact-seed browser execution was not performed. No mounted UI step ran."
+  },
+  "criterionStatuses": {
+    "PRODUCER_VERIFIED": 79,
+    "NATIVE_UNPROVEN": 8,
+    "PENDING_UI_PROOF": 16,
+    "BLOCKED_EXTERNAL": 9
+  },
+  "literalCriterionCount": 112,
+  "integratedAcceptance": false,
+  "externalPatches": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/wp00-monthly-contract.patch",
+      "sha256": "8a92420dce4cecd76b2180ade6815b27c6fe3615c681b0e7ab7c31965ed4c064",
+      "bytes": 1161,
+      "status": "NOT_APPLIED_OUTSIDE_WP03_OWNERSHIP"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/wp00-overview-versions-contract.patch",
+      "sha256": "c849220a0266406fb7595a7b5be384a6b0648ad7eff2137e470fefc2627db33e",
+      "bytes": 2206,
+      "status": "NOT_APPLIED_OUTSIDE_WP03_OWNERSHIP"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/wp01-monthly-retry.patch",
+      "sha256": "6896ec8e29cf038d68dc635d4cb45222a453227baa5874a4e329ace7908b18ce",
+      "bytes": 6257,
+      "status": "NOT_APPLIED_OUTSIDE_WP03_OWNERSHIP"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/wp01-monthly-route.patch",
+      "sha256": "e094f7bf9bf9b7761d1a42fcb26b8088964766b063eff8da6c8c23438f4f4d97",
+      "bytes": 1632,
+      "status": "NOT_APPLIED_OUTSIDE_WP03_OWNERSHIP"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/wp01-overview-versions-interface.patch",
+      "sha256": "c58d06652cda7d2ed0c2f25f1fe00c9b17f15fe4682f096c2306d82355344193",
+      "bytes": 29334,
+      "status": "NOT_APPLIED_OUTSIDE_WP03_OWNERSHIP"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/wp10-installation-router.patch",
+      "sha256": "7f1e40312329ffa70a05a997e8da27dffc58bba74301750aae400408d6a717e5",
+      "bytes": 1106,
+      "status": "NOT_APPLIED_OUTSIDE_WP03_OWNERSHIP"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/wp10-overview-versions-composition.patch",
+      "sha256": "6749adfa8baecd493e27359eab7e449cd121886049eb5207209156403a601c83",
+      "bytes": 11699,
+      "status": "NOT_APPLIED_OUTSIDE_WP03_OWNERSHIP"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/wp11-planner-apply-source-initialization.patch",
+      "sha256": "ecba0198212a35a5934017a8a0e306e607b8621b059147fbe67002144f4d4d00",
+      "bytes": 1029,
+      "status": "NOT_APPLIED_OUTSIDE_WP03_OWNERSHIP"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/wp13-comparison-persistence.patch",
+      "sha256": "cb4cfc6cae4917a7608df60aa819dc9a8f3a57911074a299c48a0e660f5e83a1",
+      "bytes": 2189,
+      "status": "NOT_APPLIED_OUTSIDE_WP03_OWNERSHIP"
+    }
+  ],
+  "changedMaterialFilesVsSeed": [
+    {
+      "path": ".github/workflows/astra-wp03-check.yml",
+      "blob": "ec20973e55311f2dd5d78d65fea9645e4c47c6df",
+      "status": "added",
+      "additions": 87,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/README.md",
+      "blob": "99fab63631aad6814443bea65c77418c7a6c4889",
+      "status": "modified",
+      "additions": 9,
+      "deletions": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/bi-difference.ts",
+      "blob": "86ef1b9781ee46bc8cb30eeabc66870332094e7d",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "blob": "a1d2b84c59732b05c5944cd81be82f247c2c9c91",
+      "status": "modified",
+      "additions": 38,
+      "deletions": 12
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "blob": "21a42acdf214494fcb0112cd772aa7afdc665180",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/catalogs.ts",
+      "blob": "1edd6bf1d0b2e14d5a764565ce6cd93d7f3e7c69",
+      "status": "modified",
+      "additions": 15,
+      "deletions": 5
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/comparison.ts",
+      "blob": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84",
+      "status": "modified",
+      "additions": 12,
+      "deletions": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/coverage.ts",
+      "blob": "de86e90c86aca626a575bf5b8dfdf6973fac8b1e",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/headcount-host.ts",
+      "blob": "d9c2f70b6de36665672fc6cf61031a0e3495de35",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/headcount-months.ts",
+      "blob": "789615d49e519c742cef9c55d36362ec413a9fbe",
+      "status": "added",
+      "additions": 55,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/headcount.ts",
+      "blob": "7c6b2f0b03c29dddc743537f0e8964799155ae57",
+      "status": "modified",
+      "additions": 33,
+      "deletions": 11
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/monthly-edit.ts",
+      "blob": "8cbcb05fb09b3a5edff59e6e76a9c8f9beafd3a1",
+      "status": "modified",
+      "additions": 10,
+      "deletions": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/monthly-grid.ts",
+      "blob": "9e90db55e0b9354b49df68edd372fe9a551e2380",
+      "status": "added",
+      "additions": 68,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/monthly-host.ts",
+      "blob": "29b0c199194781f6ea7c7c37c7ca691685705cc7",
+      "status": "modified",
+      "additions": 36,
+      "deletions": 13
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts",
+      "blob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+      "status": "modified",
+      "additions": 31,
+      "deletions": 6
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/overview-host.ts",
+      "blob": "39f65d53403c09950a3dd246a0a8ad9df56436c9",
+      "status": "added",
+      "additions": 44,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/overview.ts",
+      "blob": "680df9c309f1dd01c2cccdb6ba6ca076193a7034",
+      "status": "added",
+      "additions": 69,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "blob": "1948e16d80a6301facc506523c1e3a942602d9d5",
+      "status": "modified",
+      "additions": 56,
+      "deletions": 9
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "dba62042653bd061fa099e2956cae4d11a0475ce",
+      "status": "modified",
+      "additions": 36,
+      "deletions": 21
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/prepared.ts",
+      "blob": "da7ed326826e1b63b5853248d3ba4a18ccce9736",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "blob": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+      "status": "modified",
+      "additions": 8,
+      "deletions": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "blob": "58f319e6952e28064a4be23287f7623df74a87b0",
+      "status": "modified",
+      "additions": 6,
+      "deletions": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "blob": "f474ed278b7f41e1a754d6ba7a59d2108b6785d3",
+      "status": "modified",
+      "additions": 6,
+      "deletions": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/version-comparison.ts",
+      "blob": "067cecc3bd2c03ba00ff5ca5e269d911bf3c3869",
+      "status": "modified",
+      "additions": 7,
+      "deletions": 5
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/versions-host.ts",
+      "blob": "7d805cb61351f7b43cd6d4d3c47c48a21bac3dc4",
+      "status": "added",
+      "additions": 74,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/versions.ts",
+      "blob": "243b89b585c0698f1edbc4ba01bd4841f3950f70",
+      "status": "added",
+      "additions": 56,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "blob": "28252982d0d16eb558af355937c910a8dd3272fb",
+      "status": "modified",
+      "additions": 54,
+      "deletions": 24
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/adapter.test.ts",
+      "blob": "5c0e883d316217107a6ac52974bbcd1fbe3f6b1e",
+      "status": "modified",
+      "additions": 37,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "blob": "9d0fd989e33c1705e247232211df1ecba2a718b5",
+      "status": "added",
+      "additions": 114,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/capability-parity.test.ts",
+      "blob": "b0fe198ea168702d390168000d27ce6bb3219833",
+      "status": "added",
+      "additions": 84,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/catalog-boundaries.test.ts",
+      "blob": "775a383f6553e3b7b634bfb4137926e7a0ffb32e",
+      "status": "added",
+      "additions": 120,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/catalog-lifecycle.test.ts",
+      "blob": "c71ba66a5033c31e08baa82a401deaecf0f128ba",
+      "status": "added",
+      "additions": 122,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/headcount-host.test.ts",
+      "blob": "697c03930cb1619c69b24483f1e3870f01e7c6ba",
+      "status": "modified",
+      "additions": 6,
+      "deletions": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/headcount-projection.test.ts",
+      "blob": "a7e36f9a641274d4d914a8df1d26e2593bd63023",
+      "status": "added",
+      "additions": 142,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/import-analysis.test.ts",
+      "blob": "1b010f9dabe5f71233a19e1d3c04d00da1494f99",
+      "status": "added",
+      "additions": 175,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/monthly-grid.test.ts",
+      "blob": "9eb2e2c43a4c5c575a3350976ae7b43b56a8f747",
+      "status": "added",
+      "additions": 96,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/monthly-operations.test.ts",
+      "blob": "60f751d4ee674bea63814f45b62e86db217f7a07",
+      "status": "modified",
+      "additions": 70,
+      "deletions": 7
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/operation-verifier.test.ts",
+      "blob": "9865e999969880625f2f0eee8e5e117d6ff7f095",
+      "status": "added",
+      "additions": 60,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/overview.test.ts",
+      "blob": "780f91f8702bb58a048e7b955d31cc8948deaa54",
+      "status": "added",
+      "additions": 119,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "blob": "49aa288b0ef6fcd90debecc0bfea0bfc4749eb15",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+      "blob": "c5c29d7ac94354318bdb32a3328ed6b93dc887e9",
+      "status": "added",
+      "additions": 258,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+      "blob": "19cb4262ca02a680b06cdd4db54d5bb9d33a1219",
+      "status": "added",
+      "additions": 78,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/port-hr.test.ts",
+      "blob": "68d049f957257e089810ae0f9be230a157dba70c",
+      "status": "added",
+      "additions": 55,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+      "blob": "52d95dce1aad6d67344ef1f99635d1ca1999178d",
+      "status": "modified",
+      "additions": 32,
+      "deletions": 7
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/prepared-apply-integration.test.ts",
+      "blob": "9f45358312014bb7b96ddf61e7141e8f2b5343c8",
+      "status": "added",
+      "additions": 118,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+      "blob": "aa60133da6545a39eaae792d4656a08ffadfd3ad",
+      "status": "added",
+      "additions": 189,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+      "blob": "32528471bcaa141b580631aa4fc021327b8b20e7",
+      "status": "added",
+      "additions": 63,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/versions-host.test.ts",
+      "blob": "a4f0183be62e60cf478d3dc7868bb4d988e19695",
+      "status": "added",
+      "additions": 141,
+      "deletions": 0
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+      "blob": "7ac66af2c21e1e46c4bf12365c7f64a255446337",
+      "status": "added",
+      "additions": 136,
+      "deletions": 0
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/installation-setup.ts",
+      "blob": "58f40c0f9908ad5cc8c1eebb74f4fd7a1e05283e",
+      "status": "added",
+      "additions": 11,
+      "deletions": 0
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/planner-mounted.spec.ts",
+      "blob": "95fea121022aca4a357d79fe0b4620b564d7ab44",
+      "status": "added",
+      "additions": 203,
+      "deletions": 0
+    }
+  ],
+  "deliveryCommitRule": "A later documentation-only commit may publish these receipts. Its delta from the qualified product must contain only docs/sf2h/receipts/WP03 paths. Product, tests, config and fixtures remain byte-identical; final SHA and hosted guard/typecheck results are recorded in PR22. No Bun run on that later commit is implied.",
+  "executionBoundaries": {
+    "remoteRepositoryOperations": "GitHub MCP only",
+    "productTests": "GitHub Actions only; no local product test/typecheck execution",
+    "selection": "28 explicit Bun files; separate one-spec real Playwright attempt",
+    "native": "NATIVE_UNPROVEN: no actual SessionV2.prompt or loaded SkillLoadReceipt",
+    "omni": {
+      "nonce": "b99d1fcdc98d2460c512464dcd6e0de3",
+      "verdict": "not applicable (focused: no declaring test ran)"
+    },
+    "globalGates": "C/G7, D/G8, AM01-AM06 and the final integrated selections remain unqualified"
+  }
+}

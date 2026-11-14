@@ -1,0 +1,11 @@
+--- a/modules/sucafina/Sucafinav1/product/portfolio/product.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/product.ts
+@@ -41,7 +41,7 @@
+   const units = createPlannerSensitivityUnits({ host: input.host, cases: input.cases, scenarios: input.planner.scenarios, store: input.results, evidence: input.evidence, rules: input.rules })
+   const preview = (request: Parameters<typeof comparePlannerPreview>[1], context: TrustedDomainContext) => comparePlannerPreview({ host: input.host, sources: input.planner.sources, scenarios: input.planner.scenarios, planner: input.planner.planner }, request, context)
+   const sensitivity = createPlannerSensitivity({ results: input.results, resolve: units.resolve, revalidate: units.revalidate, preview, exactThreshold: input.exactThreshold, idempotencyKey: input.idempotencyKey })
+-  const analysis = createPortfolioAnalysis({ planner: input.planner.planner, results: input.results, bindings: input.comparisonBindings, persist: createPlannerResultPersistence({ store: input.results, scenarios: input.planner.scenarios, resolveCase: input.caseFor }), select: createPortfolioSelectionResolver({ selection: input.selection, results: input.results, caseFor: input.caseFor }), idempotencyKey: input.idempotencyKey })
++  const analysis = createPortfolioAnalysis({ planner: input.planner.planner, results: input.results, bindings: input.comparisonBindings, persist: createPlannerResultPersistence({ store: input.results, scenarios: input.planner.scenarios, comparisonBindings: input.comparisonBindings, replay: input.planner.planner, resolveCase: input.caseFor }), select: createPortfolioSelectionResolver({ selection: input.selection, results: input.results, caseFor: input.caseFor }), idempotencyKey: input.idempotencyKey })
+   const contribution = createProductionPortfolio({ cases: input.cases, planner: input.planner.planner, sources: input.planner.sources, evidence: input.evidence, revalidate: input.host.revalidate, analysis, sensitivity, candidateCoverageRefFor: async (candidate) => {
+     const ref = parseCaseRef(candidate.caseRef)
+     if (!ref || !candidate.result) return { status: "unavailable", reason: "candidate-coverage-unavailable" }

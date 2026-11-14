@@ -1,0 +1,1007 @@
+{
+  "source": {
+    "productSha": "65509f0b8c435b88fb0ec9949299571f011d2347",
+    "productTree": "47d4e0833764aebe49a5a6b7ee8a6d937a4193c3",
+    "snapshotSha": "6b769a59b579a93136206fc23f033c24bfbf9e0f",
+    "snapshotTree": "43c0eb88d0c2931b6bbad9778f3dfca56eb1b1d5",
+    "branch": "ci-run-linux-astra-wp11-65509f0-99466e96-ar2",
+    "requestSha256": "99466e965c6e47b8e6ccff21e38c16b05a1f7799146ad081f4e54a0cd0c86513",
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "06958fb36fa954dd806df964d4669388d08b881e"
+  },
+  "run": {
+    "id": 43590675088,
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-11-14T11:34:30Z",
+    "updatedAt": "2026-11-14T11:38:03Z",
+    "headSha": "6b769a59b579a93136206fc23f033c24bfbf9e0f",
+    "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43590675088",
+    "runAttempt": 1
+  },
+  "jobs": [
+    {
+      "id": 132434507501,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132435337000,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "tests": {
+    "summary": {
+      "pass": 4,
+      "fail": 2,
+      "tests": 6,
+      "files": 4,
+      "durationSeconds": 120.12
+    },
+    "ownObservedCounts": {
+      "pass": 4,
+      "fail": 2,
+      "skip": 0,
+      "todo": 0
+    },
+    "failures": [
+      {
+        "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+        "status": "fail",
+        "name": "an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result",
+        "line": 821,
+        "timestamp": "2026-11-14T11:35:58.4931264Z",
+        "durationMs": 1541.55
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+        "status": "fail",
+        "name": "a canonical human choice creates a reviewed Planner proposal and only a separate application grant commits it",
+        "line": 839,
+        "timestamp": "2026-11-14T11:35:58.5817710Z",
+        "durationMs": 79.97
+      }
+    ],
+    "hasCompletedBunSummary": true,
+    "requestedButNotObserved": [],
+    "fileResults": [
+      {
+        "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+        "reportedTests": 1,
+        "counts": {
+          "pass": 0,
+          "fail": 1,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 1541.55,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "line": 810,
+          "timestamp": "2026-11-14T11:35:56.8191841Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "status": "fail",
+          "name": "an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result",
+          "line": 821,
+          "timestamp": "2026-11-14T11:35:58.4931264Z",
+          "durationMs": 1541.55
+        }
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+        "reportedTests": 1,
+        "counts": {
+          "pass": 0,
+          "fail": 1,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 79.97,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "line": 823,
+          "timestamp": "2026-11-14T11:35:58.4938552Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "status": "fail",
+          "name": "a canonical human choice creates a reviewed Planner proposal and only a separate application grant commits it",
+          "line": 839,
+          "timestamp": "2026-11-14T11:35:58.5817710Z",
+          "durationMs": 79.97
+        }
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+        "reportedTests": 1,
+        "counts": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 117123.41,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+          "line": 841,
+          "timestamp": "2026-11-14T11:35:58.5818117Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+          "status": "pass",
+          "name": "nested C17 calculations reopen through persisted canonical requests and replay every ancestor",
+          "line": 850,
+          "timestamp": "2026-11-14T11:37:55.7063873Z",
+          "durationMs": 117123.41
+        }
+      },
+      {
+        "file": "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+        "reportedTests": 3,
+        "counts": {
+          "pass": 3,
+          "fail": 0,
+          "skip": 0,
+          "todo": 0
+        },
+        "sumReportedTestDurationMs": 1216.22,
+        "header": {
+          "file": "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+          "line": 852,
+          "timestamp": "2026-11-14T11:37:55.7065892Z"
+        },
+        "lastReportedTest": {
+          "file": "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+          "status": "pass",
+          "name": "domain permission and receipt revocation preserve case access while denying pending application and restricted aggregate results",
+          "line": 855,
+          "timestamp": "2026-11-14T11:37:56.9273373Z",
+          "durationMs": 485.01
+        }
+      }
+    ]
+  },
+  "protocol": {
+    "nonces": [
+      "52013ba81429684df5dad7aca6a8f293"
+    ],
+    "observedVerdicts": [
+      "omni positive control [52013ba81429684df5dad7aca6a8f293]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [52013ba81429684df5dad7aca6a8f293]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "fixtureTrace": {
+    "observations": [
+      {
+        "line": 842,
+        "label": "calculation-persistence",
+        "phase": "bootstrap-start",
+        "elapsedMs": 0,
+        "budgetMs": 180000,
+        "counts": {}
+      },
+      {
+        "line": 843,
+        "label": "calculation-persistence",
+        "phase": "bootstrap-complete",
+        "elapsedMs": 14,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.transaction.cases": {
+            "calls": 1,
+            "elapsedMs": 2,
+            "maximumMs": 2
+          },
+          "host.revalidate": {
+            "calls": 4,
+            "elapsedMs": 0,
+            "maximumMs": 0
+          },
+          "c08.read.cases": {
+            "calls": 1,
+            "elapsedMs": 0,
+            "maximumMs": 0
+          }
+        },
+        "stateBytes": 3020,
+        "transactionsBytes": 450,
+        "casesBytes": 2165,
+        "resultBytes": 2,
+        "transactions": 1,
+        "cases": 1,
+        "results": 0
+      },
+      {
+        "line": 844,
+        "label": "calculation-persistence",
+        "phase": "persist:inner:complete",
+        "elapsedMs": 289,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.transaction.cases": {
+            "calls": 2,
+            "elapsedMs": 16,
+            "maximumMs": 14
+          },
+          "host.revalidate": {
+            "calls": 153,
+            "elapsedMs": 0,
+            "maximumMs": 0
+          },
+          "c08.read.cases": {
+            "calls": 19,
+            "elapsedMs": 24,
+            "maximumMs": 3
+          },
+          "source.resolve": {
+            "calls": 33,
+            "elapsedMs": 149,
+            "maximumMs": 8
+          },
+          "source.coverage": {
+            "calls": 19,
+            "elapsedMs": 0,
+            "maximumMs": 0
+          },
+          "c08.read.preferences": {
+            "calls": 4,
+            "elapsedMs": 5,
+            "maximumMs": 2
+          },
+          "c08.transaction.preferences": {
+            "calls": 1,
+            "elapsedMs": 7,
+            "maximumMs": 7
+          },
+          "evidence.recordProjection": {
+            "calls": 6,
+            "elapsedMs": 83,
+            "maximumMs": 16
+          }
+        },
+        "stateBytes": 53811,
+        "transactionsBytes": 26225,
+        "casesBytes": 2165,
+        "resultBytes": 24321,
+        "transactions": 3,
+        "cases": 1,
+        "results": 1
+      },
+      {
+        "line": 845,
+        "label": "calculation-persistence",
+        "phase": "inner-evidence:complete",
+        "elapsedMs": 926,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.transaction.cases": {
+            "calls": 2,
+            "elapsedMs": 16,
+            "maximumMs": 14
+          },
+          "host.revalidate": {
+            "calls": 443,
+            "elapsedMs": 1,
+            "maximumMs": 1
+          },
+          "c08.read.cases": {
+            "calls": 44,
+            "elapsedMs": 58,
+            "maximumMs": 3
+          },
+          "source.resolve": {
+            "calls": 111,
+            "elapsedMs": 539,
+            "maximumMs": 8
+          },
+          "source.coverage": {
+            "calls": 69,
+            "elapsedMs": 1,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 10,
+            "elapsedMs": 20,
+            "maximumMs": 3
+          },
+          "c08.transaction.preferences": {
+            "calls": 1,
+            "elapsedMs": 7,
+            "maximumMs": 7
+          },
+          "evidence.recordProjection": {
+            "calls": 24,
+            "elapsedMs": 340,
+            "maximumMs": 19
+          },
+          "c17.request:decision-result:wp11-calculation-1": {
+            "calls": 2,
+            "elapsedMs": 378,
+            "maximumMs": 190
+          },
+          "c17.result:decision-result:wp11-calculation-1": {
+            "calls": 2,
+            "elapsedMs": 128,
+            "maximumMs": 66
+          },
+          "planner.replay.nested": {
+            "calls": 2,
+            "elapsedMs": 78,
+            "maximumMs": 40
+          }
+        },
+        "stateBytes": 53811,
+        "transactionsBytes": 26225,
+        "casesBytes": 2165,
+        "resultBytes": 24321,
+        "transactions": 3,
+        "cases": 1,
+        "results": 1
+      },
+      {
+        "line": 846,
+        "label": "calculation-persistence",
+        "phase": "persist:outer:complete",
+        "elapsedMs": 15834,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.transaction.cases": {
+            "calls": 3,
+            "elapsedMs": 24,
+            "maximumMs": 14
+          },
+          "host.revalidate": {
+            "calls": 5486,
+            "elapsedMs": 36,
+            "maximumMs": 3
+          },
+          "c08.read.cases": {
+            "calls": 470,
+            "elapsedMs": 1062,
+            "maximumMs": 6
+          },
+          "source.resolve": {
+            "calls": 1469,
+            "elapsedMs": 10621,
+            "maximumMs": 21
+          },
+          "source.coverage": {
+            "calls": 937,
+            "elapsedMs": 8,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 116,
+            "elapsedMs": 275,
+            "maximumMs": 5
+          },
+          "c08.transaction.preferences": {
+            "calls": 2,
+            "elapsedMs": 15,
+            "maximumMs": 8
+          },
+          "evidence.recordProjection": {
+            "calls": 336,
+            "elapsedMs": 6386,
+            "maximumMs": 35
+          },
+          "c17.request:decision-result:wp11-calculation-1": {
+            "calls": 36,
+            "elapsedMs": 8873,
+            "maximumMs": 300
+          },
+          "c17.result:decision-result:wp11-calculation-1": {
+            "calls": 36,
+            "elapsedMs": 3090,
+            "maximumMs": 114
+          },
+          "planner.replay.nested": {
+            "calls": 36,
+            "elapsedMs": 2054,
+            "maximumMs": 67
+          },
+          "evidence.calculation": {
+            "calls": 11,
+            "elapsedMs": 9083,
+            "maximumMs": 949
+          }
+        },
+        "stateBytes": 112529,
+        "transactionsBytes": 55973,
+        "casesBytes": 2165,
+        "resultBytes": 50965,
+        "transactions": 5,
+        "cases": 1,
+        "results": 2
+      },
+      {
+        "line": 847,
+        "label": "calculation-persistence",
+        "phase": "outer-evidence:complete",
+        "elapsedMs": 77459,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.transaction.cases": {
+            "calls": 3,
+            "elapsedMs": 24,
+            "maximumMs": 14
+          },
+          "host.revalidate": {
+            "calls": 25646,
+            "elapsedMs": 124,
+            "maximumMs": 3
+          },
+          "c08.read.cases": {
+            "calls": 2152,
+            "elapsedMs": 5192,
+            "maximumMs": 8
+          },
+          "source.resolve": {
+            "calls": 6925,
+            "elapsedMs": 52783,
+            "maximumMs": 21
+          },
+          "source.coverage": {
+            "calls": 4433,
+            "elapsedMs": 29,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 537,
+            "elapsedMs": 1330,
+            "maximumMs": 7
+          },
+          "c08.transaction.preferences": {
+            "calls": 2,
+            "elapsedMs": 15,
+            "maximumMs": 8
+          },
+          "evidence.recordProjection": {
+            "calls": 1596,
+            "elapsedMs": 31863,
+            "maximumMs": 37
+          },
+          "c17.request:decision-result:wp11-calculation-1": {
+            "calls": 172,
+            "elapsedMs": 43972,
+            "maximumMs": 306
+          },
+          "c17.result:decision-result:wp11-calculation-1": {
+            "calls": 172,
+            "elapsedMs": 15218,
+            "maximumMs": 114
+          },
+          "planner.replay.nested": {
+            "calls": 176,
+            "elapsedMs": 17479,
+            "maximumMs": 1870
+          },
+          "evidence.calculation": {
+            "calls": 43,
+            "elapsedMs": 37489,
+            "maximumMs": 949
+          },
+          "c17.request:decision-result:wp11-calculation-2": {
+            "calls": 4,
+            "elapsedMs": 36409,
+            "maximumMs": 9331
+          },
+          "c17.result:decision-result:wp11-calculation-2": {
+            "calls": 4,
+            "elapsedMs": 14296,
+            "maximumMs": 3664
+          }
+        },
+        "stateBytes": 112529,
+        "transactionsBytes": 55973,
+        "casesBytes": 2165,
+        "resultBytes": 50965,
+        "transactions": 5,
+        "cases": 1,
+        "results": 2
+      },
+      {
+        "line": 848,
+        "label": "calculation-persistence",
+        "phase": "reopened-ancestry:complete",
+        "elapsedMs": 117049,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.transaction.cases": {
+            "calls": 3,
+            "elapsedMs": 24,
+            "maximumMs": 14
+          },
+          "host.revalidate": {
+            "calls": 38691,
+            "elapsedMs": 164,
+            "maximumMs": 3
+          },
+          "c08.read.cases": {
+            "calls": 3242,
+            "elapsedMs": 7803,
+            "maximumMs": 8
+          },
+          "source.resolve": {
+            "calls": 10455,
+            "elapsedMs": 79681,
+            "maximumMs": 36
+          },
+          "source.coverage": {
+            "calls": 6693,
+            "elapsedMs": 34,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 810,
+            "elapsedMs": 2180,
+            "maximumMs": 17
+          },
+          "c08.transaction.preferences": {
+            "calls": 2,
+            "elapsedMs": 15,
+            "maximumMs": 8
+          },
+          "evidence.recordProjection": {
+            "calls": 2412,
+            "elapsedMs": 48194,
+            "maximumMs": 39
+          },
+          "c17.request:decision-result:wp11-calculation-1": {
+            "calls": 260,
+            "elapsedMs": 66592,
+            "maximumMs": 314
+          },
+          "c17.result:decision-result:wp11-calculation-1": {
+            "calls": 260,
+            "elapsedMs": 22950,
+            "maximumMs": 114
+          },
+          "planner.replay.nested": {
+            "calls": 266,
+            "elapsedMs": 26268,
+            "maximumMs": 1870
+          },
+          "evidence.calculation": {
+            "calls": 63,
+            "elapsedMs": 54997,
+            "maximumMs": 950
+          },
+          "c17.request:decision-result:wp11-calculation-2": {
+            "calls": 6,
+            "elapsedMs": 54350,
+            "maximumMs": 9331
+          },
+          "c17.result:decision-result:wp11-calculation-2": {
+            "calls": 6,
+            "elapsedMs": 21468,
+            "maximumMs": 3699
+          }
+        },
+        "stateBytes": 112529,
+        "transactionsBytes": 55973,
+        "casesBytes": 2165,
+        "resultBytes": 50965,
+        "transactions": 5,
+        "cases": 1,
+        "results": 2
+      },
+      {
+        "line": 849,
+        "label": "calculation-persistence",
+        "phase": "source-revision:complete",
+        "elapsedMs": 117121,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.transaction.cases": {
+            "calls": 3,
+            "elapsedMs": 24,
+            "maximumMs": 14
+          },
+          "host.revalidate": {
+            "calls": 38722,
+            "elapsedMs": 164,
+            "maximumMs": 3
+          },
+          "c08.read.cases": {
+            "calls": 3247,
+            "elapsedMs": 7814,
+            "maximumMs": 8
+          },
+          "source.resolve": {
+            "calls": 10460,
+            "elapsedMs": 79702,
+            "maximumMs": 36
+          },
+          "source.coverage": {
+            "calls": 6693,
+            "elapsedMs": 34,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 813,
+            "elapsedMs": 2209,
+            "maximumMs": 17
+          },
+          "c08.transaction.preferences": {
+            "calls": 2,
+            "elapsedMs": 15,
+            "maximumMs": 8
+          },
+          "evidence.recordProjection": {
+            "calls": 2412,
+            "elapsedMs": 48194,
+            "maximumMs": 39
+          },
+          "c17.request:decision-result:wp11-calculation-1": {
+            "calls": 262,
+            "elapsedMs": 66634,
+            "maximumMs": 314
+          },
+          "c17.result:decision-result:wp11-calculation-1": {
+            "calls": 260,
+            "elapsedMs": 22950,
+            "maximumMs": 114
+          },
+          "planner.replay.nested": {
+            "calls": 266,
+            "elapsedMs": 26268,
+            "maximumMs": 1870
+          },
+          "evidence.calculation": {
+            "calls": 65,
+            "elapsedMs": 55044,
+            "maximumMs": 950
+          },
+          "c17.request:decision-result:wp11-calculation-2": {
+            "calls": 7,
+            "elapsedMs": 54380,
+            "maximumMs": 9331
+          },
+          "c17.result:decision-result:wp11-calculation-2": {
+            "calls": 6,
+            "elapsedMs": 21468,
+            "maximumMs": 3699
+          }
+        },
+        "stateBytes": 112529,
+        "transactionsBytes": 55973,
+        "casesBytes": 2165,
+        "resultBytes": 50965,
+        "transactions": 5,
+        "cases": 1,
+        "results": 2
+      }
+    ],
+    "parseErrors": [],
+    "lastByLabel": {
+      "calculation-persistence": {
+        "line": 849,
+        "label": "calculation-persistence",
+        "phase": "source-revision:complete",
+        "elapsedMs": 117121,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.transaction.cases": {
+            "calls": 3,
+            "elapsedMs": 24,
+            "maximumMs": 14
+          },
+          "host.revalidate": {
+            "calls": 38722,
+            "elapsedMs": 164,
+            "maximumMs": 3
+          },
+          "c08.read.cases": {
+            "calls": 3247,
+            "elapsedMs": 7814,
+            "maximumMs": 8
+          },
+          "source.resolve": {
+            "calls": 10460,
+            "elapsedMs": 79702,
+            "maximumMs": 36
+          },
+          "source.coverage": {
+            "calls": 6693,
+            "elapsedMs": 34,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 813,
+            "elapsedMs": 2209,
+            "maximumMs": 17
+          },
+          "c08.transaction.preferences": {
+            "calls": 2,
+            "elapsedMs": 15,
+            "maximumMs": 8
+          },
+          "evidence.recordProjection": {
+            "calls": 2412,
+            "elapsedMs": 48194,
+            "maximumMs": 39
+          },
+          "c17.request:decision-result:wp11-calculation-1": {
+            "calls": 262,
+            "elapsedMs": 66634,
+            "maximumMs": 314
+          },
+          "c17.result:decision-result:wp11-calculation-1": {
+            "calls": 260,
+            "elapsedMs": 22950,
+            "maximumMs": 114
+          },
+          "planner.replay.nested": {
+            "calls": 266,
+            "elapsedMs": 26268,
+            "maximumMs": 1870
+          },
+          "evidence.calculation": {
+            "calls": 65,
+            "elapsedMs": 55044,
+            "maximumMs": 950
+          },
+          "c17.request:decision-result:wp11-calculation-2": {
+            "calls": 7,
+            "elapsedMs": 54380,
+            "maximumMs": 9331
+          },
+          "c17.result:decision-result:wp11-calculation-2": {
+            "calls": 6,
+            "elapsedMs": 21468,
+            "maximumMs": 3699
+          }
+        },
+        "stateBytes": 112529,
+        "transactionsBytes": 55973,
+        "casesBytes": 2165,
+        "resultBytes": 50965,
+        "transactions": 5,
+        "cases": 1,
+        "results": 2
+      }
+    },
+    "maximumObservedSerializedStateBytes": 112529,
+    "boundary": "Counts and inclusive overlapping wall durations are fixture instrumentation; serialized state bytes are not sampled process memory or exclusive CPU time."
+  },
+  "failureClassification": [
+    {
+      "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "type": "own-fixture-authority-lifecycle",
+      "observed": "Case unavailable in changeCase helper at line160, called at line208 after ACL revocation and source negatives.",
+      "staticDiagnosis": "Revocation deleted the private UI lease. Setting access.allowed=true did not issue or consume a new lease; later source negatives were evaluated without valid authority. Fix requires a new consumed admission and assertion of exact historical readability before source revision."
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+      "type": "own-fixture-source-lifecycle-initialization",
+      "observed": "SF_SOURCE_IDENTITIES_UNAVAILABLE from source-lifecycle transactionAll while seeding C08 at line117.",
+      "staticDiagnosis": "plannerFixture initializes only Planner; initialize Dashboard/Procurement through the real lifecycle before cross-surface C08 seed. Preserve the product fail-closed guard."
+    }
+  ],
+  "claimBoundary": [
+    "Four passing tests remain evidence on W9 product SHA 65509f0b8c435b88fb0ec9949299571f011d2347; run conclusion is failure because two tests failed.",
+    "C17 replay test opens a second real SQLite connection and checks ancestral replay/current source rejection. It does not claim writer disposal or process restart.",
+    "Three cross-domain tests cover partial conflict, both domains applied with retry/restart, and application/receipt access revocation. The real prepared Procurement adapter rejects submit_pr; this is negative evidence, not awaiting-approval success.",
+    "Canonical omni verdict is not applicable and proves nothing about omni.",
+    "Durations are hosted wall-clock/inclusive callback measurements. Serialized stateBytes do not measure process memory.",
+    "No local product execution was performed."
+  ],
+  "files": {
+    "wp11-W9-AR2-tests.log": {
+      "sha256": "ee6d7a7f2218411cf12fbf852c056f09913e1a906a7dc1b4d633dd37f3fa34e9",
+      "bytes": 80471
+    },
+    "wp11-W9-AR2-tests-observed.json": {
+      "sha256": "40ae96bdd121d2eeb6d437688e5930fe37aadb6303c7ef1fc9a8982d21bce270",
+      "bytes": 25779
+    },
+    "wp11-W9-AR2-remote-final.json": {
+      "sha256": "8d27185192abc1d3b7586e69d4e4f39fe453a6d601f0f770f328d3eaea579cd8",
+      "bytes": 5156
+    },
+    "parse-hosted-test-log.py": {
+      "sha256": "c9e5f0ca447115dba3d00ede2350d32c1606185dcb4c763f183daafd7c3cd23a",
+      "bytes": 7538
+    },
+    "wp11-W9-AR2-W10-static-reachability.json": {
+      "sha256": "337743fa6594ed2d6c8a76b576c5d6a2a698d9e619b515023f417abfa49a965f",
+      "bytes": 22645
+    }
+  }
+}

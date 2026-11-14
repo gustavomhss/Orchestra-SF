@@ -1,0 +1,43 @@
+{
+  "schema": "wp11-independent-R2Q-narrow-criterion-review-v1",
+  "reviewer": "ci_reconciliation",
+  "status": "NARROW_LITERAL_CONCLUSION_SUPPORTED_ON_RECORDED_SOURCES_NO_FINAL_ACCEPTANCE",
+  "sourceArtifact": {
+    "path": "/workspace/scratch/c3f9350f32d4/requirements/W16-R2Q-criterion-evidence.json",
+    "sha256": "d2f7fab54a20c984b3798378026a552612caebbdfe5df786e4f6baeaaf33053e"
+  },
+  "reviewedMetadata": {
+    "path": "ci-analysis/wp11-W16-R2Q-evidence-meta.json",
+    "sha256": "bbf38418723d82e160743d53a41631942f190849bdb778c71963c109f09445f6"
+  },
+  "verifiedAll7NamesLogLinesDurationsAndLiteralSourceBlobs": true,
+  "criterion": {
+    "id": "WP11.T02.CHK.03",
+    "text": "Moeda sem FX, custo de saída pending e desconto hipotético mantêm comparação conditioned. Valor 0 confirmado difere de null, categoria omitted e declaração not-applicable sem evidência; nenhum estado desconhecido é promovido a zero.",
+    "assessment": "Supported narrowly by actual R2Q FX absence on canonical simulation, B1A real discount/exit comparison and separate omitted/null/zero/confirmed/N-A cases, plus F1 C10 negative evidence. Each remains tied to its original product SHA and run; no final-candidate or overall task acceptance.",
+    "facts": [
+      "W16_R2Q_ASSERT_04",
+      "W14_B1A_ASSERT_02",
+      "W14_B1A_ASSERT_03",
+      "W11_F1_ASSERT_21"
+    ]
+  },
+  "lifecycle07": {
+    "reviewedFact": "W16_R2Q_ASSERT_07",
+    "assessment": "Assertions and boundaries match the executed test. Current quote yields knownSubtotal250000 with complete cost coverage but total:null and comparisonStatus:conditioned because the three operations remain hypothetical. The prior choice and one choice-recorded ledger entry remain unchanged.",
+    "boundaries": [
+      "Choice, preview and promotion confirmations are explicit fixture switches; separate gating is demonstrated but is not a real installed human grant/session.",
+      "The source quote is explicit setup in a real Planner transaction with synthetic source refs; no installed source issuer proof is added.",
+      "The original driver is disposed and reopened, but UI context/host/principal are reused. No new collaborator or full session recreation is proven.",
+      "Promotion changes the alternative, not ChoiceRecord count; this does not complete replace/retain choice with a new rationale or threshold/interval/collaborator history.",
+      "The assertion observes a detached training entry and checks live coverage digest invariance; this pass does not identify a sole cause of the earlier failure."
+    ]
+  },
+  "priorFailuresPreserved": [
+    "W14 B1A current-choice failure",
+    "W15 H6 long-history timeout and all previous history failures"
+  ],
+  "candidateQualificationBoundary": "Subsequent W17 case-port/H7 changes require the focused changed-function and fixture qualifications. No whole-graph byte-equivalence or PASS transfer is inferred from this review.",
+  "repositoryWrites": false,
+  "noLocalProductExecution": true
+}

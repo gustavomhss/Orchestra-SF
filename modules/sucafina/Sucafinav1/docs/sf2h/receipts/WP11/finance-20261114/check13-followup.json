@@ -1,0 +1,66 @@
+{
+  "schema": "sf-finance-check13-followup-v1",
+  "runId": 43594795813,
+  "jobId": 132446899658,
+  "productSha": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+  "productTree": "7adcfb7d4687aa192b68eeddd3cce4fd0bf92d18",
+  "conclusion": "failure",
+  "ownDiagnostics": [
+    {
+      "path": "test/product/wp11/renewal-read-scope.test.ts",
+      "line": 10,
+      "column": 26,
+      "code": "TS2722",
+      "message": "Cannot invoke an object which is possibly 'undefined'.",
+      "owner": "WP11"
+    },
+    {
+      "path": "test/product/wp11/renewal-read-scope.test.ts",
+      "line": 10,
+      "column": 26,
+      "code": "TS18048",
+      "message": "'fixture.store.transactionAll' is possibly 'undefined'.",
+      "owner": "WP11"
+    },
+    {
+      "path": "test/product/wp11/renewal-read-scope.test.ts",
+      "line": 14,
+      "column": 25,
+      "code": "TS2722",
+      "message": "Cannot invoke an object which is possibly 'undefined'.",
+      "owner": "WP11"
+    },
+    {
+      "path": "test/product/wp11/renewal-read-scope.test.ts",
+      "line": 14,
+      "column": 25,
+      "code": "TS18048",
+      "message": "'fixture.store.transactionAll' is possibly 'undefined'.",
+      "owner": "WP11"
+    }
+  ],
+  "externalDiagnostics": 131,
+  "externalSitesAndMessagesIdenticalCheck12": true,
+  "guards": {
+    "rules": 78,
+    "changedPaths": 1029,
+    "warnings": 13,
+    "errors": 0,
+    "conclusion": "success"
+  },
+  "artifact": {
+    "id": 14113892940,
+    "sha256": "b58064e79d12a6e3f398082ae0e1bdb69a3ab91f29cd1d47f75d8986aa0b4707",
+    "downloadedAndVerified": true
+  },
+  "candidate": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+    "beforeBlob": "d91a07ddb9dc9cc5d093121112b7603533d4e1fb",
+    "candidateBlob": "803a9a3154a2dcf99a8118253216bf97efb2e8f5",
+    "sha256": "bbd5494b1b38c4342819bf14e2dd033fe58648d5f5fda38840b8ccab3b5da653",
+    "bytes": 3329,
+    "reason": "Check13 TS2722/TS18048 at both real transactionAll calls: enforce required fixture capability before use."
+  },
+  "futureValidation": "Exact candidate requires new hosted typecheck and its three direct product cases after the current WP11 selection completes. No duplicate inflight WP11 run.",
+  "acceptance": "NOT_ACCEPTED"
+}

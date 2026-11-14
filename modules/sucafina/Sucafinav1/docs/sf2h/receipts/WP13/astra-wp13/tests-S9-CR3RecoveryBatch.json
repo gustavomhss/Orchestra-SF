@@ -1,0 +1,280 @@
+{
+  "schema": "wp13-hosted-product-receipt-v1",
+  "label": "S9-CR3RecoveryBatch",
+  "productSha": "cb111a14ee527d66748c4e19040c26b828f2bfe4",
+  "productTree": "022548856d95a1df933e6f34e70250e86ccd95ec",
+  "snapshotSha": "bad34ce37f140599463298abb62ae5d1170e2a44",
+  "snapshotTree": "0616c2bdf3827da49978bc7f2dd9b1d2182bee98",
+  "branch": "ci-run-linux-astra-wp13-cb111a14-4d355558-1",
+  "snapshotOnlyAdded": {
+    "path": ".ci-run.json",
+    "sha": "f35b4f626b89b5afec9718aa8cc4c5db2373b7eb"
+  },
+  "runId": 43596134201,
+  "jobId": 132450903382,
+  "status": "completed",
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "id": 132450903382,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-14T12:42:32Z",
+      "completed_at": "2026-11-14T12:51:46Z"
+    },
+    {
+      "id": 132453158039,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-14T12:51:48Z",
+      "completed_at": "2026-11-14T12:51:51Z"
+    }
+  ],
+  "artifacts": [],
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "Sucafinav1/test/product/wp13/renewal-read-scope.test.ts",
+      "Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+      "Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestSha256": "4d35555825d501982e11b3d84f0a9f1ead9f4730c96c9042a7e3f692d400d894",
+  "selectedPublishedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "sha": "553e171d14ea8e7318ad245375cd6d2597b66d4a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/renewal-read-scope.test.ts",
+      "sha": "bcd5ed7f2cc26b2d9e271dae421b4d86e2f05591"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "sha": "5f12e1d8a9c12d3947eda77ab93970771e3146e9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "sha": "cbce0fa5bc9cff4131ce540e98e05db70574015b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+      "sha": "ce02051d09115665056d36382bde5f1dbd0d9238"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "sha": "4efa414f8ecadde5799e7246337863b145373210"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "sha": "044de4c276dde8850abdacd9c2328c7f2836fdd0"
+    }
+  ],
+  "log": {
+    "sha256": "64a6a0518d3e7e9465e26a7422918a9c371247073323986d369d84e29badc4a7",
+    "bytes": 94464
+  },
+  "control": {
+    "accepted": true,
+    "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "error": null,
+    "omniSpawnProven": false
+  },
+  "summary": {
+    "passed": 29,
+    "failed": 1,
+    "summary": "Ran 30 tests across 7 files. [474.86s]",
+    "expectCalls": 279
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts": [
+      {
+        "status": "pass",
+        "name": "the same durable choice preserves omitted training while a confirmed source revision reverses cost and criterion",
+        "milliseconds": 153007.92
+      }
+    ],
+    "Sucafinav1/test/product/wp11/scenario-batch.test.ts": [
+      {
+        "status": "pass",
+        "name": "one sibling batch shares only its two canonical case observations and retains every result reread",
+        "milliseconds": 3705.21
+      },
+      {
+        "status": "pass",
+        "name": "units emit the identical binding with six canonical case reads, while a legacy host still performs ten",
+        "milliseconds": 8611.34
+      },
+      {
+        "status": "pass",
+        "name": "comparison starts independent batches for its initial and final observations",
+        "milliseconds": 4543.66
+      },
+      {
+        "status": "pass",
+        "name": "different cases and historical producer versions form separate groups and retain order, cardinality and refusal",
+        "milliseconds": 4659.9
+      },
+      {
+        "status": "pass",
+        "name": "ledger, alternative and coverage changes between phases invalidate every sibling without a version shortcut",
+        "milliseconds": 3598.3
+      },
+      {
+        "status": "pass",
+        "name": "authority revoked after result rereads is rejected by the fresh final case observation",
+        "milliseconds": 949.82
+      },
+      {
+        "status": "pass",
+        "name": "a real Planner source change during projection invalidates both stored siblings",
+        "milliseconds": 886
+      },
+      {
+        "status": "pass",
+        "name": "retained store and case callback objects cannot rewrite an earlier observation",
+        "milliseconds": 1390.9
+      },
+      {
+        "status": "pass",
+        "name": "batch refusals and malformed cardinality never fall back to individual resolution",
+        "milliseconds": 2313.57
+      }
+    ],
+    "Sucafinav1/test/product/wp13/reconciliation.test.ts": [
+      {
+        "status": "pass",
+        "name": "reconciliation preserves the chosen composition and WP11 partial/retry receipts without writing",
+        "milliseconds": 24.38
+      },
+      {
+        "status": "pass",
+        "name": "reconciliation retains independent evidence and command revisions while binding effects and receipts",
+        "milliseconds": 26.03
+      },
+      {
+        "status": "pass",
+        "name": "reconciliation sends a source-bound price observation to the WP14 classifier while retaining original null and currency",
+        "milliseconds": 9.57
+      },
+      {
+        "status": "pass",
+        "name": "a global criterion change cannot attribute a different component's price to an unchanged component",
+        "milliseconds": 8.87
+      },
+      {
+        "status": "pass",
+        "name": "reconciliation refuses a substituted historical selection even when its numbers match the choice",
+        "milliseconds": 1.52
+      },
+      {
+        "status": "pass",
+        "name": "reconciliation refuses receipt substitution, revoked sources and a different current principal",
+        "milliseconds": 2.54
+      },
+      {
+        "status": "pass",
+        "name": "reconciliation rejects a changed ledger, borrowed callback mutation and a changed read during egress",
+        "milliseconds": 7.28
+      },
+      {
+        "status": "pass",
+        "name": "reconciliation does not reinterpret another source or missing data as a material price signal",
+        "milliseconds": 9.36
+      },
+      {
+        "status": "pass",
+        "name": "reconciliation refuses authority mutation after the final successful revalidation",
+        "milliseconds": 26.17
+      },
+      {
+        "status": "pass",
+        "name": "HTTP reconciliation preserves the admitted selection when authorization mutates the caller request",
+        "milliseconds": 23.76
+      },
+      {
+        "status": "pass",
+        "name": "HTTP reconciliation fences authority from ingress before the core captures it",
+        "milliseconds": 8.32
+      }
+    ],
+    "Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts": [
+      {
+        "status": "pass",
+        "name": "a real 45000 to 70000 quote on the same source changes its portfolio condition while preserving the human choice and C08 composition",
+        "milliseconds": 89652.9
+      }
+    ],
+    "Sucafinav1/test/product/wp13/persistence-recovery.test.ts": [
+      {
+        "status": "pass",
+        "name": "portfolio retry binds the persisted orphan without allocating another C08 result",
+        "milliseconds": 54385.77
+      },
+      {
+        "status": "pass",
+        "name": "portfolio retry recovers a lost binding reply without allocating or binding twice",
+        "milliseconds": 60528.17
+      },
+      {
+        "status": "pass",
+        "name": "sensitivity retry binds the persisted orphan without allocating another C08 result",
+        "milliseconds": 37260.57
+      },
+      {
+        "status": "pass",
+        "name": "sensitivity retry recovers a lost binding reply without allocating or binding twice",
+        "milliseconds": 36784.38
+      }
+    ],
+    "Sucafinav1/test/product/wp13/source-scenario.test.ts": [
+      {
+        "status": "fail",
+        "name": "portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed",
+        "milliseconds": 12158.31
+      }
+    ],
+    "Sucafinav1/test/product/wp13/renewal-read-scope.test.ts": [
+      {
+        "status": "pass",
+        "name": "renewal admission verifies operations and source-only alternatives without changing any durable snapshot",
+        "milliseconds": 43.57
+      },
+      {
+        "status": "pass",
+        "name": "a later renewal admission observes a canonical source edit instead of reusing the earlier read scope",
+        "milliseconds": 26.72
+      },
+      {
+        "status": "pass",
+        "name": "renewal admission refuses a UI lease revoked during an awaited source callback inside the read scope",
+        "milliseconds": 21.06
+      }
+    ]
+  },
+  "selectionMatches": true,
+  "acceptance": {
+    "aggregatePass": false,
+    "completedPassedFiles": [
+      "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+      "Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "Sucafinav1/test/product/wp13/renewal-read-scope.test.ts"
+    ],
+    "nativeOrInstalledConsumerProof": false
+  },
+  "ready": false
+}

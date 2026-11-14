@@ -1,0 +1,123 @@
+--- PR40-latest/modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts
++++ finance-candidate/modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts
+@@ -16,9 +16,10 @@
+ import { createWp11FixtureTrace } from "./fixture-trace.ts"
+ 
+ test("nested C17 calculations reopen through persisted canonical requests and replay every ancestor", async () => {
++  // Keep the W17 phase/callback diagnostics on the smaller canonical fixture.
+   const trace = createWp11FixtureTrace("calculation-persistence")
+   await trace.checkpoint("bootstrap-start")
+-  const fixture = await calculationFixture(trace)
++  const fixture = await trace.measure("bootstrap", () => calculationFixture(trace))
+   const compose = (persistence: Awaited<ReturnType<typeof openLocalStore>>) => {
+     const writes = new WeakSet<object>()
+     const ports: { producer?: ReturnType<typeof createPlannerCalculationEvidence>; next: number } = { next: 0 }
+@@ -28,24 +29,24 @@
+         const replayed = await trace.measure("evidence.calculation", async () => ports.producer?.issue(ref.target.runId, context))
+         return { state: replayed?.status === "ok" && digestSfValue(replayed.value) === digestSfValue(ref) ? "fresh" : "unavailable", ref, ...(replayed?.status === "ok" ? { currentRef: replayed.value } : {}), accessRevision: context.binding.accessRevision, checkedAt: "2026-11-13T00:00:00Z" }
+       }
+-      const resolved = await fixture.evidence.resolve(ref, context)
++      const resolved = await trace.measure("evidence.record", () => fixture.evidence.resolve(ref, context))
+       if (resolved.state !== "fresh" || ref.kind !== "record" || ref.target.surface !== "planner") return resolved
+       const projection = await trace.measure("evidence.recordProjection", () => fixture.planner.compareForecast({ baseRef: ref.refId, candidateRef: ref.refId, period: plannerPeriod, currency: "USD" }, context))
+       return projection.status === "ok" ? { ...resolved, currentRef: ref, authorizedProjection: projection.value.baseline } : { ...resolved, state: "unavailable" }
+     }
+     const evidence: BusinessContextService = { ...fixture.evidence, resolve, context: async ({ refs }, context) => Promise.all(refs.map((ref) => resolve(ref, context))) }
+     const planner = createPlannerPort({ host: fixture.host, sources: fixture.sources, evidence })
+-    const settings = { state, host: fixture.host, authorizeCase: async (value: DecisionCase) => value.id === fixture.caseRef.id && value.incarnation === fixture.caseRef.incarnation && value.participants.includes(fixture.context.binding.principalRef) && await fixture.host.revalidate(fixture.context), verifySources: async (_value: unknown, refs: readonly BusinessEvidenceRef[], context: Parameters<typeof resolve>[1]) => {
++    const settings = { state, host: fixture.host, authorizeCase: async (value: DecisionCase) => value.id === fixture.caseRef.id && value.incarnation === fixture.caseRef.incarnation && value.participants.includes(fixture.context.binding.principalRef) && await fixture.host.revalidate(fixture.context), verifySources: (_value: unknown, refs: readonly BusinessEvidenceRef[], context: Parameters<typeof resolve>[1]) => trace.measure("result.verifySources", async () => {
+       // Generic result access needs current scoped-source authorization. The separate
+       // canonical verifyCalculationSources callback still obtains an authorized financial
+       // projection and replays every ancestor. Do not run an extra forecast self-comparison
+       // merely to check a record's freshness; the actual source issuer checks its digest.
+       const observed = await Promise.all(refs.map((ref) => ref.kind === "record" ? fixture.evidence.resolve(ref, context) : resolve(ref, context)))
+       return observed.every((value) => value.state === "fresh")
+-    }, createId: () => `wp11-calculation-${++ports.next}`, now: () => "2026-11-13T00:00:00Z" }
+-    const results = createSfDecisionResultStore({ ...settings, verifyCalculationSources: (value, refs, context) => ports.producer ? ports.producer.verifyCalculationSources(value, refs, context) : Promise.resolve(false) })
++    }), createId: () => `wp11-calculation-${++ports.next}`, now: () => "2026-11-13T00:00:00Z" }
++    const results = createSfDecisionResultStore({ ...settings, verifyCalculationSources: (value, refs, context) => trace.measure("result.verifyCalculationSources", () => ports.producer ? ports.producer.verifyCalculationSources(value, refs, context) : Promise.resolve(false)) })
+     const requestSettings = { state, results, host: fixture.host, authorizeCase: async () => true, authorizeProducer: async () => true, verifySnapshot: () => true, operationIdentity: () => `wp11-request-${ports.next}`, writes }
+-    const requests = createScenarioRequestStore({ ...requestSettings, verifyRequestSources: (request, result, context) => ports.producer ? ports.producer.verifyCalculationRequestSources(request, result, context) : Promise.resolve(false) })
++    const requests = createScenarioRequestStore({ ...requestSettings, verifyRequestSources: (request, result, context) => trace.measure("request.verifySources", () => ports.producer ? ports.producer.verifyCalculationRequestSources(request, result, context) : Promise.resolve(false)) })
+     const producer = createPlannerCalculationEvidence({ host: fixture.host, readForCalculation: (request, context) => trace.measure(`c17.result:${request.resultRef}`, () => results.readForCalculation(request, context)), loadRecordOnlyRequest: (runId, context) => trace.measure(`c17.request:${runId}`, () => requests.read(runId, context)), replayRecordOnly: (request, context) => trace.measure("planner.replay.record", () => fixture.planner.simulateScenario(request, context)), nested: { replayScenario: (request, context) => trace.measure("planner.replay.nested", () => planner.simulateScenario(request, context)), evidence } })
+     ports.producer = producer
+     return { state, results, requests, producer, planner, conservativeResults: createSfDecisionResultStore(settings), conservativeRequests: createScenarioRequestStore(requestSettings) }
+@@ -56,20 +57,20 @@
+     expect(seed.status).toBe("ok")
+     await trace.checkpoint("bootstrap-complete", first.state, fixture.request)
+     const persist = async (request: ScenarioRequest, idempotencyKey: string) => {
+-      const simulated = await first.planner.simulateScenario(request, fixture.context)
++      const simulated = await trace.measure(`${idempotencyKey}:simulate`, () => first.planner.simulateScenario(request, fixture.context))
+       if (simulated.status !== "ok") throw new Error(simulated.reason)
+       const refs = [...simulated.value.sourceRefs, ...simulated.value.costCoverage.evaluatedSourceRefs].filter((ref, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(ref)) === index)
+-      const stored = await first.results.write({ kind: "scenario", result: simulated.value, caseRef: fixture.caseRef, requestDigest: digestSfValue(request), sourceRefs: refs, idempotencyKey }, fixture.context)
++      const stored = await trace.measure(`${idempotencyKey}:store`, () => first.results.write({ kind: "scenario", result: simulated.value, caseRef: fixture.caseRef, requestDigest: digestSfValue(request), sourceRefs: refs, idempotencyKey }, fixture.context))
+       if (stored.status !== "ok") throw new Error(stored.reason)
+       if (stored.value.kind !== "scenario") throw new Error("Unexpected result kind")
+-      const binding = await first.requests.register({ resultRef: stored.value.resultRef, request, engineVersion: "planner-runtime-v1" }, fixture.context)
++      const binding = await trace.measure(`${idempotencyKey}:request`, () => first.requests.register({ resultRef: stored.value.resultRef, request, engineVersion: "planner-runtime-v1" }, fixture.context))
+       expect(binding.status).toBe("ok")
+       if (binding.status !== "ok") throw new Error(binding.reason)
+       await trace.checkpoint(`persist:${idempotencyKey}:complete`, first.state, fixture.request)
+       return stored.value
+     }
+     const inner = await persist(fixture.scenario, "inner")
+-    const innerEvidence = await first.producer.issue(inner.resultRef, fixture.context)
++    const innerEvidence = await trace.measure("inner:issue", () => first.producer.issue(inner.resultRef, fixture.context))
+     expect(innerEvidence.status).toBe("ok")
+     if (innerEvidence.status !== "ok") throw new Error(innerEvidence.reason)
+     await trace.checkpoint("inner-evidence:complete", first.state, fixture.request)
+@@ -80,24 +81,24 @@
+     expect(outer.result.comparisonStatus).toBe("conditioned")
+     expect(outer.result.currency).toBe("USD")
+     expect(outer.result.horizon).toEqual(plannerPeriod)
+-    expect(await first.conservativeResults.readForCalculation({ resultRef: outer.resultRef }, fixture.context)).toMatchObject({ status: "unavailable", reason: "calculation-source-unsupported" })
+-    expect(await first.conservativeRequests.read(outer.resultRef, fixture.context)).toMatchObject({ status: "unavailable", reason: "calculation-source-unsupported" })
+-    const issued = await first.producer.issue(outer.resultRef, fixture.context)
++    expect(await trace.measure("conservative:result", () => first.conservativeResults.readForCalculation({ resultRef: outer.resultRef }, fixture.context))).toMatchObject({ status: "unavailable", reason: "calculation-source-unsupported" })
++    expect(await trace.measure("conservative:request", () => first.conservativeRequests.read(outer.resultRef, fixture.context))).toMatchObject({ status: "unavailable", reason: "calculation-source-unsupported" })
++    const issued = await trace.measure("outer:issue", () => first.producer.issue(outer.resultRef, fixture.context))
+     expect(issued.status).toBe("ok")
+     if (issued.status !== "ok") throw new Error(issued.reason)
+     expect(issued.value.target.sourceRefs).toContainEqual(innerEvidence.value)
+-    expect(await first.producer.resolve(issued.value.refId, fixture.context)).toEqual(issued)
++    expect(await trace.measure("outer:resolve", () => first.producer.resolve(issued.value.refId, fixture.context))).toEqual(issued)
+     await trace.checkpoint("outer-evidence:complete", first.state, fixture.request)
+-    const reopened = await openLocalStore(fixture.directory)
++    const reopened = await trace.measure("reopen:store", () => openLocalStore(fixture.directory))
+     try {
+       const second = compose(reopened)
+-      expect((await second.requests.read(outer.resultRef, fixture.context)).status).toBe("ok")
+-      expect(await second.producer.issue(outer.resultRef, fixture.context)).toEqual(issued)
++      expect((await trace.measure("reopen:request", () => second.requests.read(outer.resultRef, fixture.context))).status).toBe("ok")
++      expect(await trace.measure("reopen:issue", () => second.producer.issue(outer.resultRef, fixture.context))).toEqual(issued)
+       await trace.checkpoint("reopened-ancestry:complete", second.state, fixture.request)
+-      await fixture.reviseSource(fixture.scenario.baseRef)
++      await trace.measure("source:revision", () => fixture.reviseSource(fixture.scenario.baseRef))
+       expect(await fixture.host.revalidate(fixture.context)).toBe(true)
+-      expect((await second.results.readForCalculation({ resultRef: outer.resultRef }, fixture.context)).status).not.toBe("ok")
+-      expect((await second.producer.issue(outer.resultRef, fixture.context)).status).not.toBe("ok")
++      expect((await trace.measure("revoked:result", () => second.results.readForCalculation({ resultRef: outer.resultRef }, fixture.context))).status).not.toBe("ok")
++      expect((await trace.measure("revoked:issue", () => second.producer.issue(outer.resultRef, fixture.context))).status).not.toBe("ok")
+       await trace.checkpoint("source-revision:complete", second.state, fixture.request)
+     } finally {
+       await reopened.dispose()
+--- PR40-latest/modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts
++++ finance-candidate/modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts
+@@ -31,7 +31,6 @@
+ import { createProcurementC12Bridge } from "../../../product/procurement/c12.ts"
+ import { createProcurementPort } from "../../../product/procurement/port.ts"
+ import { prepareProcurementMutation } from "../../../product/procurement/prepared.ts"
+-import { projectProcurementScope } from "../../../product/procurement/source-projection.ts"
+ import { createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
+ 
+ const at = "2026-11-13T00:00:00Z"
+@@ -355,7 +354,7 @@
+ 
+ async function createSession(store: Awaited<ReturnType<typeof openLocalStore>>, reviewed: ReadonlyMap<string, ReviewedIntent>) {
+   const projector = createSfSourceScopeProjector(() => at)
+-  const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: (surface, snapshot, scope) => surface === "procurement" ? projectProcurementScope(surface, snapshot, scope) : projector(surface, snapshot, scope) })
++  const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: projector })
+   const controls = {
+     confirmed: false, racePending: false, races: 0, producerReviews: 0, executions: [] as string[], receiptChecks: [] as string[],
+     domainAccess: {

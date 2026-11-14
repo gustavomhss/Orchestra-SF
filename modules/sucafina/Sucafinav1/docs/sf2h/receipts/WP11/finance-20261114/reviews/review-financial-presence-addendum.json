@@ -1,0 +1,202 @@
+{
+  "schema": "sf-financial-independent-presence-addendum-v1",
+  "date": "2026-11-14",
+  "reviewer": "/root/review_financial",
+  "role": "independent-read-only-not-author",
+  "product": {
+    "label": "W13",
+    "commit": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe",
+    "tree": "fdc061f1ab7bbb0b28f591550af391e500dc7c8b",
+    "pinProvenance": "root supplied; no remote/full-tree validation in this bounded review"
+  },
+  "capture": {
+    "path": "/workspace/scratch/a97ca4c53050/finance-W13-changes.json",
+    "sha256": "ab4e62997816a7833360c70f0146b6f9ff643b69fbf883360048418ebba07771",
+    "blobsVerified": 3,
+    "mismatches": 0,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+        "gitBlob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+        "sha256": "6e0f003055c08005e3a2f339d221c6f608d615a8068e66d30555a981604eb0fd",
+        "bytes": 17443
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-engine-fixture.ts",
+        "gitBlob": "fd6a6b8b75152e858961360d16f7432233700b2f",
+        "sha256": "3972443bbfe4eec57e4f3ba0b6dfe08c55ebed1dad19fd7bdb650659b3b69796",
+        "bytes": 2744
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+        "gitBlob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+        "sha256": "7b5b59fb90149d739858ffb5ded2ebe473ad105e5ffda892cc1393d621e6c9f6",
+        "bytes": 17737
+      }
+    ]
+  },
+  "priorW10": {
+    "commit": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+    "reportsPreserved": {
+      "review-financial-addendum.md": "aa766b3372d3d1852de5c2d68dc6f8ef48f37fab75c2f5b9021c2ba39a12ab66",
+      "review-financial-addendum.json": "2e044959c0525ab35d71824dbe6f5a79b8a3ff59defcbb73eccda70571675ddf"
+    },
+    "findingAtThatPin": "R1-open"
+  },
+  "conclusion": {
+    "R1": "statically-addressed-at-W13-execution-pending",
+    "newBlockingFindings": [],
+    "runtimePassClaim": false,
+    "globalReleaseClaim": false
+  },
+  "staticEvidence": [
+    {
+      "path": "product/planner/scenario-port.ts",
+      "lines": [
+        88,
+        95
+      ],
+      "observation": "Preserves null/absent outside validated changed IDs while keeping post-command qualification for addressed targets and every post-command null."
+    },
+    {
+      "path": "product/planner/scenario-port.ts",
+      "lines": [
+        123,
+        128
+      ],
+      "observation": "Re-derives only missing for addressed cells; last-colon removal preserves compound IDs such as HR:Finance:11; all new post-command missing remain included."
+    },
+    {
+      "path": "product/planner/scenario-port.ts",
+      "lines": [
+        106,
+        129
+      ],
+      "observation": "Canonical known subtotal remains authoritative; operations retain total:null, conditioned and preview-not-applied; no parallel financial formula."
+    }
+  ],
+  "counterexampleResolution": [
+    {
+      "case": "replace/include November=1000 only",
+      "November": {
+        "amount": 1000,
+        "evidenceState": "hypothetical"
+      },
+      "December": {
+        "amount": null,
+        "evidenceState": "absent"
+      },
+      "DecemberMissingRetained": true
+    },
+    {
+      "case": "explicit additional December zero",
+      "December": {
+        "amount": 0,
+        "evidenceState": "hypothetical"
+      },
+      "DecemberMissingRetained": false
+    },
+    {
+      "case": "defer October to November",
+      "October": {
+        "amount": 0,
+        "evidenceState": "hypothetical"
+      },
+      "November": {
+        "amount": 1000,
+        "evidenceState": "hypothetical"
+      },
+      "December": {
+        "amount": null,
+        "evidenceState": "absent"
+      },
+      "DecemberMissingRetained": true
+    },
+    {
+      "case": "addressed component still missing FX",
+      "qualification": "post-command null stays absent"
+    },
+    {
+      "case": "HR forecast known with missing budget rate",
+      "qualification": "forecast may be hypothetical; canonical post-command missing budget rate retained"
+    }
+  ],
+  "testEvidence": {
+    "state": "present-not-executed",
+    "fixture": {
+      "path": "test/product/wp03/scenario-engine-fixture.ts",
+      "lines": [
+        11,
+        20
+      ],
+      "change": "optional horizon with same November default and cloned assessment horizon"
+    },
+    "newTests": [
+      {
+        "path": "test/product/wp03/scenario-qualification.test.ts",
+        "lines": [
+          60,
+          102
+        ],
+        "cases": [
+          "replace November only",
+          "include November only",
+          "replace with explicit December zero",
+          "include with explicit December zero"
+        ],
+        "oracle": [
+          "canonical command demonstrates incidental zero",
+          "qualified untouched December remains null",
+          "explicit December zero hypothetical",
+          "subtotal 3000; total null",
+          "other untouched row and condition retained",
+          "replay/request/snapshot immutable"
+        ]
+      },
+      {
+        "path": "test/product/wp03/scenario-qualification.test.ts",
+        "lines": [
+          104,
+          132
+        ],
+        "cases": [
+          "defer October to November; December absent"
+        ],
+        "oracle": [
+          "origin and destination hypothetical",
+          "third month absent with condition",
+          "subtotal 1000; total null",
+          "replay/request/snapshot immutable"
+        ]
+      }
+    ],
+    "previousFxHrRevocationTestsUnchanged": true
+  },
+  "execution": {
+    "reviewerProductExecution": false,
+    "reviewerProductTests": false,
+    "reviewerBuildOrTypecheck": false,
+    "reviewerCIDispatch": false,
+    "w13RegressionResult": "pending",
+    "priorRun": "43581792536",
+    "priorRunLabel": "W7 Test4",
+    "priorRunState": "failure:15 pass/4 timeouts",
+    "priorRunDoesNotCoverR1": true,
+    "timeoutIncreaseProposed": false
+  },
+  "scope": {
+    "onlyCapturedFilesRead": true,
+    "otherWorkingDirtyRead": false,
+    "productEdits": false,
+    "reportsWrittenOnly": [
+      "review-financial-presence-addendum.md",
+      "review-financial-presence-addendum.json"
+    ],
+    "notReclassified": [
+      "G1",
+      "G2",
+      "WP13",
+      "global acceptance"
+    ]
+  }
+}

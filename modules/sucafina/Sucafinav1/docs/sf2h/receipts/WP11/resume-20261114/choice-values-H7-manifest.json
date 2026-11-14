@@ -1,0 +1,49 @@
+{
+  "schema": "wp11-h7-scratch-proposal-v1",
+  "status": "FROZEN_FOR_INDEPENDENT_STATIC_REVIEW_NOT_APPLIED_NOT_RUN",
+  "preparedAtUtc": "2026-11-14T12:51:27.540478+00:00",
+  "baseSourceSha": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "baseBlob": "9514f80dc7e8dbb9c8acf1822bbd4f1ea067c0e1",
+      "baseSha256": "667104e7adbf32bcaca7989c1134bbc23de8d9c040740a2dfd86816577166c79",
+      "candidateBlob": "917abcb6e3a23b9ca9a237297361c401b497527b",
+      "candidateSha256": "4ecbb8dcfd92697d50e298410ca0901fc26cebadddf828a9c23836cd2a3b8625",
+      "bytes": 25888
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "baseBlob": "18d95b84d01b26048af9a442c44cb32e8f14e9f5",
+      "baseSha256": "bad22af33418063fdfcb23499416f20b1adf6edb7f511be892635bd37139d129",
+      "candidateBlob": "dab1ed08e07b26acbf493686f624633fbfaa7dc2",
+      "candidateSha256": "89ae51002d81ba3cb600714e9c42bde7730209238185f1312ff238f3a0209139",
+      "bytes": 14738
+    }
+  ],
+  "patch": {
+    "path": "requirements/choice-values-proposal-H7/choice-values-H7.patch",
+    "sha256": "39f29b2b01e02536e6f2d2668c1b3026651f22b8898e17d3c9557880e5d13338"
+  },
+  "diagnosis": {
+    "path": "requirements/choice-values-proposal-H7/diagnosis.json",
+    "sha256": "166fbaad3bacaefc08d1fea69ae9f4e89e7ef846bc5b0f2444f9d298fc28a289"
+  },
+  "scope": {
+    "ownFixtureFiles": 2,
+    "foreignRuntimeChanges": false,
+    "sourceAuthorityChanges": false,
+    "criterionEvaluationInMutationChanged": false,
+    "monetaryFormulaChanges": false,
+    "localTests": false,
+    "repositoryWrites": false,
+    "published": false
+  },
+  "affectedTests": [
+    "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/implementation-quote-history.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts"
+  ],
+  "historyBudgetMs": 180000
+}

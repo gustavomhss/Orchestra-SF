@@ -1,0 +1,199 @@
+{
+  "schema": "sf-wp13-hosted-product-check-v1",
+  "label": "S3-A",
+  "productSha": "00f1582e7a26f37b2f4ea4a18f7883f1837e48db",
+  "productTree": "2b2be45c52656aa352da065567dd601b1c81f3c4",
+  "snapshotSha": "f54db2faaf1b285fb6ebf8ccf922f9cde5e60459",
+  "snapshotTree": "4443d3820221ad2201e0c77692575e3a248a0ddc",
+  "snapshotBranch": "ci-run-linux-astra-wp13-00f1582e-60f59082-1",
+  "executedCheckoutSha": "f54db2faaf1b285fb6ebf8ccf922f9cde5e60459",
+  "requestSha256": "60f59082da6484d2e55b46efca0879c5967478fb87cc524cb69aa9533b0fc743",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/sensitivity.test.ts",
+      "Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+      "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+      "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "Sucafinav1/test/product/wp13/portfolio.test.ts",
+      "Sucafinav1/test/product/wp13/production.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "runId": 43586147077,
+  "jobId": 132420925482,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43586147077",
+  "status": "completed",
+  "conclusion": "cancelled",
+  "productJobCompletedAt": "2026-11-14T11:22:31Z",
+  "completionSource": "Root-observed final GitHub Actions job status through GitHub MCP",
+  "cleanup": {
+    "jobId": 132431669521,
+    "conclusion": "success",
+    "completedAt": "2026-11-14T11:22:37Z",
+    "claim": "Cleanup completion is not a successful product result."
+  },
+  "observedAssertions": {
+    "status": "INCOMPLETE_CANCELLED_WITH_TEST_TIMEOUTS",
+    "summaryComplete": false,
+    "selectedTestFileCount": 7,
+    "observedPassMarkers": 2,
+    "observedFailMarkers": 2,
+    "observedTimeoutMarkers": 2,
+    "observedAssertions": [
+      {
+        "file": "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+        "marker": "pass",
+        "testName": "sensitivity retains the admitted request when a provider mutates its borrowed input",
+        "durationMs": 14362.02,
+        "timestamp": "2026-11-14T10:38:59.4755551Z",
+        "acceptedProductPass": false
+      },
+      {
+        "file": "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+        "marker": "pass",
+        "testName": "sensitivity detects a provider reusing and changing the original source record",
+        "durationMs": 11641.54,
+        "timestamp": "2026-11-14T10:39:11.1173328Z",
+        "acceptedProductPass": false
+      },
+      {
+        "file": "Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "marker": "fail",
+        "testName": "WP13 persists and cold-reloads omitted training with its real 55000 sensitivity bound",
+        "durationMs": 944759.46,
+        "timestamp": "2026-11-14T10:54:55.8900282Z",
+        "acceptedProductPass": false,
+        "declaredTimeoutMs": 300000,
+        "classification": "TEST_TIMEOUT"
+      },
+      {
+        "file": "Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "marker": "fail",
+        "testName": "WP13 persists and cold-reloads bundled training with its real 55000 sensitivity bound",
+        "durationMs": 1592075.58,
+        "timestamp": "2026-11-14T11:21:27.9652813Z",
+        "acceptedProductPass": false,
+        "declaredTimeoutMs": 300000,
+        "classification": "TEST_TIMEOUT"
+      }
+    ],
+    "acceptedProductPasses": 0,
+    "limit": "Per-test markers and durations are retained for diagnosis only; the run has no complete Bun summary or nonce-bound omni verdict."
+  },
+  "files": [
+    {
+      "path": "Sucafinav1/test/product/wp13/sensitivity.test.ts",
+      "observedPassMarkers": 0,
+      "observedFailMarkers": 0,
+      "status": "NO_TEST_RESULT_OBSERVED_IN_FINAL_LOG",
+      "acceptedProductPass": false
+    },
+    {
+      "path": "Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+      "observedPassMarkers": 0,
+      "observedFailMarkers": 0,
+      "status": "NO_TEST_RESULT_OBSERVED_IN_FINAL_LOG",
+      "acceptedProductPass": false
+    },
+    {
+      "path": "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+      "observedPassMarkers": 2,
+      "observedFailMarkers": 0,
+      "status": "PARTIAL_MARKERS_ONLY_NO_ACCEPTED_CONTROL",
+      "acceptedProductPass": false
+    },
+    {
+      "path": "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "observedPassMarkers": 0,
+      "observedFailMarkers": 0,
+      "status": "NO_TEST_RESULT_OBSERVED_IN_FINAL_LOG",
+      "acceptedProductPass": false
+    },
+    {
+      "path": "Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "observedPassMarkers": 0,
+      "observedFailMarkers": 2,
+      "status": "PARTIAL_MARKERS_ONLY_NO_ACCEPTED_CONTROL",
+      "acceptedProductPass": false
+    },
+    {
+      "path": "Sucafinav1/test/product/wp13/portfolio.test.ts",
+      "observedPassMarkers": 0,
+      "observedFailMarkers": 0,
+      "status": "NO_TEST_RESULT_OBSERVED_IN_FINAL_LOG",
+      "acceptedProductPass": false
+    },
+    {
+      "path": "Sucafinav1/test/product/wp13/production.test.ts",
+      "observedPassMarkers": 0,
+      "observedFailMarkers": 0,
+      "status": "NO_TEST_RESULT_OBSERVED_IN_FINAL_LOG",
+      "acceptedProductPass": false
+    }
+  ],
+  "omniPositiveControl": {
+    "scope": "declared",
+    "status": "MISSING_NONCE_BOUND_VERDICT",
+    "nonce": "bfabaad1aea1d5753282b005f30b7bb8",
+    "nonceCount": 1,
+    "matchingVerdictCount": 0,
+    "canonicalValidation": {
+      "function": "controlVerdict",
+      "source": "repo/script/test-ci-request.ts",
+      "sourceSha256": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc",
+      "runtime": "Node with native TypeScript type stripping; pure metadata module only",
+      "executed": true,
+      "accepted": false,
+      "error": "S3-A product job 132420925482: expected one omni positive control verdict for this run's nonce, found 0"
+    },
+    "acceptedControlGate": false,
+    "positiveOmniProof": false,
+    "meaning": "The completed/cancelled job has no accepted control gate. A valid declared not-applicable verdict would be permitted, but none was emitted. No partial pass marker establishes product acceptance."
+  },
+  "artifacts": [],
+  "artifactInventory": {
+    "status": "OBSERVED_EMPTY",
+    "source": "Root confirmed the GitHub MCP run artifact listing returned artifacts[]",
+    "acceptedEvidenceArtifacts": 0
+  },
+  "log": {
+    "path": "reference/wp13-S3-A-tests.log.txt",
+    "bytes": 69742,
+    "characters": 69740,
+    "sha256": "0373bdf6c393688686aa4e6a2e66e5e67dafc619e301f9f00de7773bb87b7978"
+  },
+  "logSha256": "0373bdf6c393688686aa4e6a2e66e5e67dafc619e301f9f00de7773bb87b7978",
+  "productAcceptance": "NOT_ACCEPTED",
+  "acceptedProductPasses": 0,
+  "ready": false,
+  "envelopeProof": {
+    "status": "PASS_METADATA_SOURCE_SNAPSHOT_BINDING",
+    "source": "Root-observed GitHub MCP compare of W5 product to the S3-A execution snapshot",
+    "baseProductSha": "00f1582e7a26f37b2f4ea4a18f7883f1837e48db",
+    "headSnapshotSha": "f54db2faaf1b285fb6ebf8ccf922f9cde5e60459",
+    "commitCount": 1,
+    "files": [
+      {
+        "path": ".ci-run.json",
+        "status": "added",
+        "blob": "a84402d29c7e5254d3c00d9de64e49d4f74c803f"
+      }
+    ],
+    "productTestFixtureConfigBlobsUnchangedByEnvelope": true,
+    "limit": "This proves the request-only envelope identity; it does not establish product or control success."
+  },
+  "evidenceLimit": [
+    "The two planner-sensitivity pass markers have no accepted control gate; they cannot be counted as product PASS.",
+    "Omitted cold reload timed out at944759.46ms and bundled cold reload at1592075.58ms against declared300000ms budgets. These observations do not identify the exact internal blocked await.",
+    "The run executed the original W5 snapshot. W7 fixture intake and W8 handoff changes are not in that checkout.",
+    "No unchanged-file carryover is accepted because the overall required control record is missing. Other selected tests with no result are not inferred to have passed or failed.",
+    "No artifact was produced for this run. Successful cleanup does not change the cancelled product conclusion."
+  ],
+  "nextAction": "Retain this terminal diagnostic attempt, then obtain complete current-candidate product/control evidence through justified disjoint selections. C-core6 run43589779412 is already active on its separate W8 snapshot; do not duplicate it or reuse S3-A markers as accepted proof."
+}

@@ -1,0 +1,75 @@
+{
+  "source": {
+    "productSha": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+    "productTree": "e63f555351ec6a21402319797e044fd51e8eb4fb",
+    "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "seed": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a"
+  },
+  "checks": {
+    "runId": 43585781314,
+    "jobId": 132419828330,
+    "artifactId": 14110246698,
+    "status": "completed",
+    "conclusion": "failure",
+    "typecheck": {
+      "conclusion": "failure",
+      "ownDiagnostics": 0,
+      "foreignDiagnostics": 130,
+      "removedSinceW5": [
+        {
+          "path": "test/product/wp05/planner-origins.test.ts",
+          "line": 124,
+          "column": 49,
+          "code": "TS2769",
+          "message": "No overload matches this call."
+        },
+        {
+          "path": "test/product/wp05/planner-origins.test.ts",
+          "line": 125,
+          "column": 56,
+          "code": "TS2769",
+          "message": "No overload matches this call."
+        },
+        {
+          "path": "test/product/wp05/planner-origins.test.ts",
+          "line": 128,
+          "column": 55,
+          "code": "TS2769",
+          "message": "No overload matches this call."
+        }
+      ],
+      "addedSinceW5": []
+    },
+    "guards": {
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 733,
+      "warnings": 12,
+      "gates": 0,
+      "errors": 0
+    },
+    "artifact": {
+      "id": 14110246698,
+      "name": "astra-wp11-checks-11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de-1",
+      "zipSha256": "763d572cd1762c0b070613d06691b86d199470ac30b0f9bc74df0124987c00fb",
+      "remoteDigestMatched": true,
+      "sourceMatched": true,
+      "files": {
+        "guards.log": {
+          "sha256": "8843312961e26f4f150a5363b3263790ea12aeb4114a439359ca0672db5236da",
+          "bytes": 4861
+        },
+        "source.json": {
+          "sha256": "f250aece49cbeeb5e90f2470842b0fe628ff1812ee8b93d8d6271908314474c5",
+          "bytes": 296
+        },
+        "typecheck.log": {
+          "sha256": "aed6682db7d06c5bf4b6d798d919fe330222a07866e0e458f219b9b8748edc66",
+          "bytes": 63571
+        }
+      }
+    }
+  },
+  "claimBoundary": "The full package typecheck remains failure with 130 foreign diagnostics. Zero own diagnostics is not a green package check. W6 hosted tests are separately selected and evidenced."
+}

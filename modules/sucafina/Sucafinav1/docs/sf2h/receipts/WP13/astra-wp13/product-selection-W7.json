@@ -1,0 +1,79 @@
+{
+  "status": "OLD_A_RUNNING_B_C_PENDING_ON_W7",
+  "product": "W7 parent 9f30a9362abe41399f2e2026119abd7b000a77b7; final SHA recorded after publication",
+  "files": 31,
+  "selections": [
+    {
+      "selection": "A",
+      "files": [
+        "Sucafinav1/test/product/wp13/sensitivity.test.ts",
+        "Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+        "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+        "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+        "Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "Sucafinav1/test/product/wp13/portfolio.test.ts",
+        "Sucafinav1/test/product/wp13/production.test.ts"
+      ],
+      "requestSha256": "60f59082da6484d2e55b46efca0879c5967478fb87cc524cb69aa9533b0fc743",
+      "omniScope": "declared",
+      "runId": 43586147077,
+      "productSha": "00f1582e7a26f37b2f4ea4a18f7883f1837e48db",
+      "snapshotSha": "f54db2faaf1b285fb6ebf8ccf922f9cde5e60459",
+      "status": "IN_PROGRESS"
+    },
+    {
+      "selection": "B",
+      "files": [
+        "Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+        "Sucafinav1/test/product/wp13/coverage.test.ts",
+        "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+        "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+        "Sucafinav1/test/product/wp13/campaign.test.ts",
+        "Sucafinav1/test/product/wp13/candidates-store.test.ts",
+        "Sucafinav1/test/product/wp13/contribution.test.ts",
+        "Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+        "Sucafinav1/test/product/wp13/candidates.test.ts",
+        "Sucafinav1/test/product/wp13/persistent-store.test.ts",
+        "Sucafinav1/test/product/wp13/projection.test.ts",
+        "Sucafinav1/test/product/wp13/stored-store.test.ts",
+        "Sucafinav1/test/product/wp13/stored.test.ts"
+      ],
+      "requestSha256": "60aa6bedf8d6c8db42b6ef2fe1d3813853bb94699f8aa4bf8b61b48a4151cfb8",
+      "omniScope": "declared",
+      "status": "NOT_DISPATCHED"
+    },
+    {
+      "selection": "C",
+      "files": [
+        "Sucafinav1/test/product/wp13/source-scenario.test.ts",
+        "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+        "Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+        "Sucafinav1/test/product/wp13/handoff.test.ts",
+        "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+        "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+        "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+        "Sucafinav1/test/product/wp13/reconciliation.test.ts",
+        "Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+        "Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts"
+      ],
+      "requestSha256": "7fb5cc242da1e78a02aa306cbf63d837ecdcbbe6805d88ce7a123f283dc38a42",
+      "omniScope": "declared",
+      "status": "NOT_DISPATCHED",
+      "supersedesUndispatchedRequest": "b4fce8cc25ecc78218abb0cf3432525289367041db5c1191d0833696ba104e3a"
+    }
+  ],
+  "carryoverBoundary": "W7 changes the WP11 renewal fixture, affecting coverage-sensitivity-integration in A and three C consumers. No equivalence is claimed for changed test inputs. B and the other six A test closures are unchanged; any accepted reuse requires a complete prior job and valid omni verdict.",
+  "fixtureImpact": {
+    "A": [
+      "Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts"
+    ],
+    "B": [],
+    "C": [
+      "Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts"
+    ]
+  },
+  "afterA": "Wait for observed full A result. If incomplete/no control, rerun required A evidence on changed candidate with a justified explicit selection; if complete, rerun only the changed coverage integration. Never two product runs for WP13 concurrently."
+}

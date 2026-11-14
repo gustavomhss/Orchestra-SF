@@ -1,0 +1,400 @@
+{
+  "schema": "sf-fixture-profile-comparison-v1",
+  "scope": "Metadata analysis of completed S19/S22 logs; no product execution",
+  "runs": {
+    "S19": {
+      "run": 43594791351,
+      "job": 132446885026,
+      "W": "bd168e193e7bb4a43893c24c5370c9c3fa205fc1",
+      "logSha256": "ccf1eccb4f0a88c94996930d7f8420ba28d309147e8e654d62fcff62fd1e9e5c",
+      "bunVersions": [
+        "bun test v1.3.14 (0d9b296a)"
+      ]
+    },
+    "S22": {
+      "run": 43597449806,
+      "job": 132454907023,
+      "W": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+      "logSha256": "c7fd561530a6fb0965e6b117d32e9de67067fde1b9e6a707bd2b48b8e3ef588d",
+      "bunVersions": [
+        "bun test v1.3.14 (0d9b296a)"
+      ]
+    }
+  },
+  "firstHistoryComparableCheckpoints": [
+    {
+      "phase": "prepare:transition-omitted:complete",
+      "S19": {
+        "elapsedMs": 11784,
+        "stateBytes": 540335,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 552,
+            "elapsedMs": 5855,
+            "maximumMs": 31
+          },
+          "planner.verifyOperation": {
+            "calls": 96,
+            "elapsedMs": 1195,
+            "maximumMs": 19
+          },
+          "planner.verifySourceOnly": {
+            "calls": 96,
+            "elapsedMs": 147,
+            "maximumMs": 4
+          },
+          "planner.verifySourceProjection": null,
+          "operation-source": {
+            "calls": 1036,
+            "elapsedMs": 32,
+            "maximumMs": 2
+          }
+        }
+      },
+      "S22": {
+        "elapsedMs": 16231,
+        "stateBytes": 540335,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 546,
+            "elapsedMs": 7491,
+            "maximumMs": 36
+          },
+          "planner.verifyOperation": {
+            "calls": 96,
+            "elapsedMs": 1714,
+            "maximumMs": 22
+          },
+          "planner.verifySourceOnly": {
+            "calls": 96,
+            "elapsedMs": 4631,
+            "maximumMs": 53
+          },
+          "planner.verifySourceProjection": {
+            "calls": 192,
+            "elapsedMs": 3657,
+            "maximumMs": 34
+          },
+          "operation-source": {
+            "calls": 846,
+            "elapsedMs": 953,
+            "maximumMs": 15
+          }
+        }
+      }
+    },
+    {
+      "phase": "threshold-before:complete",
+      "S19": {
+        "elapsedMs": 22770,
+        "stateBytes": 540335,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 1028,
+            "elapsedMs": 11059,
+            "maximumMs": 31
+          },
+          "planner.verifyOperation": {
+            "calls": 192,
+            "elapsedMs": 2317,
+            "maximumMs": 19
+          },
+          "planner.verifySourceOnly": {
+            "calls": 192,
+            "elapsedMs": 291,
+            "maximumMs": 5
+          },
+          "planner.verifySourceProjection": null,
+          "operation-source": {
+            "calls": 2048,
+            "elapsedMs": 54,
+            "maximumMs": 2
+          }
+        }
+      },
+      "S22": {
+        "elapsedMs": 32069,
+        "stateBytes": 540335,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 1022,
+            "elapsedMs": 14576,
+            "maximumMs": 41
+          },
+          "planner.verifyOperation": {
+            "calls": 192,
+            "elapsedMs": 3395,
+            "maximumMs": 22
+          },
+          "planner.verifySourceOnly": {
+            "calls": 192,
+            "elapsedMs": 9356,
+            "maximumMs": 58
+          },
+          "planner.verifySourceProjection": {
+            "calls": 384,
+            "elapsedMs": 7350,
+            "maximumMs": 36
+          },
+          "operation-source": {
+            "calls": 1666,
+            "elapsedMs": 1946,
+            "maximumMs": 16
+          }
+        }
+      }
+    },
+    {
+      "phase": "choice-recorded",
+      "S19": {
+        "elapsedMs": 38926,
+        "stateBytes": 694502,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 1746,
+            "elapsedMs": 19269,
+            "maximumMs": 32
+          },
+          "planner.verifyOperation": {
+            "calls": 344,
+            "elapsedMs": 4130,
+            "maximumMs": 19
+          },
+          "planner.verifySourceOnly": {
+            "calls": 344,
+            "elapsedMs": 502,
+            "maximumMs": 5
+          },
+          "planner.verifySourceProjection": null,
+          "operation-source": {
+            "calls": 3672,
+            "elapsedMs": 92,
+            "maximumMs": 2
+          }
+        }
+      },
+      "S22": {
+        "elapsedMs": 55761,
+        "stateBytes": 694502,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 1740,
+            "elapsedMs": 25722,
+            "maximumMs": 41
+          },
+          "planner.verifyOperation": {
+            "calls": 344,
+            "elapsedMs": 6171,
+            "maximumMs": 23
+          },
+          "planner.verifySourceOnly": {
+            "calls": 344,
+            "elapsedMs": 16833,
+            "maximumMs": 61
+          },
+          "planner.verifySourceProjection": {
+            "calls": 688,
+            "elapsedMs": 13295,
+            "maximumMs": 36
+          },
+          "operation-source": {
+            "calls": 2986,
+            "elapsedMs": 3430,
+            "maximumMs": 17
+          }
+        }
+      }
+    },
+    {
+      "phase": "prepare:transition-confirmed:complete",
+      "S19": {
+        "elapsedMs": 83570,
+        "stateBytes": 1367034,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2418,
+            "elapsedMs": 38712,
+            "maximumMs": 75
+          },
+          "planner.verifyOperation": {
+            "calls": 344,
+            "elapsedMs": 4130,
+            "maximumMs": 19
+          },
+          "planner.verifySourceOnly": {
+            "calls": 600,
+            "elapsedMs": 1344,
+            "maximumMs": 10
+          },
+          "planner.verifySourceProjection": null,
+          "operation-source": {
+            "calls": 4796,
+            "elapsedMs": 1353,
+            "maximumMs": 36
+          }
+        }
+      },
+      "S22": {
+        "elapsedMs": 126429,
+        "stateBytes": 1367034,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2406,
+            "elapsedMs": 51328,
+            "maximumMs": 89
+          },
+          "planner.verifyOperation": {
+            "calls": 344,
+            "elapsedMs": 6171,
+            "maximumMs": 23
+          },
+          "planner.verifySourceOnly": {
+            "calls": 600,
+            "elapsedMs": 51034,
+            "maximumMs": 191
+          },
+          "planner.verifySourceProjection": {
+            "calls": 1200,
+            "elapsedMs": 27085,
+            "maximumMs": 36
+          },
+          "operation-source": {
+            "calls": 3600,
+            "elapsedMs": 18478,
+            "maximumMs": 60
+          }
+        }
+      }
+    },
+    {
+      "phase": "threshold-after:start",
+      "S19": {
+        "elapsedMs": 83639,
+        "stateBytes": 1367034,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2420,
+            "elapsedMs": 38780,
+            "maximumMs": 75
+          },
+          "planner.verifyOperation": {
+            "calls": 344,
+            "elapsedMs": 4130,
+            "maximumMs": 19
+          },
+          "planner.verifySourceOnly": {
+            "calls": 600,
+            "elapsedMs": 1344,
+            "maximumMs": 10
+          },
+          "planner.verifySourceProjection": null,
+          "operation-source": {
+            "calls": 4796,
+            "elapsedMs": 1353,
+            "maximumMs": 36
+          }
+        }
+      },
+      "S22": {
+        "elapsedMs": 126519,
+        "stateBytes": 1367034,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2408,
+            "elapsedMs": 51418,
+            "maximumMs": 89
+          },
+          "planner.verifyOperation": {
+            "calls": 344,
+            "elapsedMs": 6171,
+            "maximumMs": 23
+          },
+          "planner.verifySourceOnly": {
+            "calls": 600,
+            "elapsedMs": 51034,
+            "maximumMs": 191
+          },
+          "planner.verifySourceProjection": {
+            "calls": 1200,
+            "elapsedMs": 27085,
+            "maximumMs": 36
+          },
+          "operation-source": {
+            "calls": 3600,
+            "elapsedMs": 18478,
+            "maximumMs": 60
+          }
+        }
+      }
+    },
+    {
+      "phase": "threshold-after:complete",
+      "S19": {
+        "elapsedMs": 131353,
+        "stateBytes": 1367034,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 3063,
+            "elapsedMs": 58276,
+            "maximumMs": 75
+          },
+          "planner.verifyOperation": {
+            "calls": 344,
+            "elapsedMs": 4130,
+            "maximumMs": 19
+          },
+          "planner.verifySourceOnly": {
+            "calls": 856,
+            "elapsedMs": 2245,
+            "maximumMs": 11
+          },
+          "planner.verifySourceProjection": null,
+          "operation-source": {
+            "calls": 5888,
+            "elapsedMs": 1817,
+            "maximumMs": 36
+          }
+        }
+      },
+      "S22": null
+    },
+    {
+      "phase": "history-restarted-collaborator:complete",
+      "S19": {
+        "elapsedMs": 146840,
+        "stateBytes": 1367034,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 3285,
+            "elapsedMs": 64927,
+            "maximumMs": 75
+          },
+          "planner.verifyOperation": {
+            "calls": 344,
+            "elapsedMs": 4130,
+            "maximumMs": 19
+          },
+          "planner.verifySourceOnly": {
+            "calls": 940,
+            "elapsedMs": 2510,
+            "maximumMs": 11
+          },
+          "planner.verifySourceProjection": null,
+          "operation-source": {
+            "calls": 6232,
+            "elapsedMs": 2035,
+            "maximumMs": 36
+          }
+        }
+      },
+      "S22": null
+    }
+  ],
+  "measurementCaveats": [
+    "S19 measure(planner.verifySourceOnly) was inside the enclosing transaction: root snapshot decoding is not inside this metric. S22 measure encloses the two root observations and source callbacks. Their elapsedMs difference is not a controlled causal estimate.",
+    "Counters nest and overlap in wall time; adding all metric elapsed times double counts work.",
+    "Unchanged nonempty verifyOperation also increased from4130ms to6171ms for344calls at the confirmed-phase checkpoint, so a single factor cannot be attributed from run totals alone.",
+    "S22 did prove the new standalone source/authority races; its two complete history consumers still failed their unchanged180000ms budget.",
+    "An optimization must preserve full canonical checks and current observations, use no cross-invocation cache, and be validated in a new exact W/S."
+  ]
+}

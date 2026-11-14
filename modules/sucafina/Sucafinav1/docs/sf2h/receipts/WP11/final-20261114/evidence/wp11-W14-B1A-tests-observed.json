@@ -1,0 +1,280 @@
+{
+  "log": "ci-analysis/wp11-W14-B1A-tests.log",
+  "logSha256": "ac177bc7c1a4a693f0f1e75bfac4ac35dd1093ccb98feda7673a02084346c9c8",
+  "metadata": {
+    "productSha": "dd9363dab38a769dd0c34fcf2068dfb610693779",
+    "productTree": "297243de2cffcdbcf4592e1449783ef3ea43c362",
+    "snapshotSha": "a84344f010c8b62af7a0d67a87aae88f0fc734a1",
+    "snapshotTree": "7f4048b9b0e64632cf2d019c47eeda3f9322a282",
+    "branch": "ci-run-linux-astra-wp11-dd9363d-985cd741-b1a",
+    "requestSha256": "985cd741e578a92adca0bdc0e7690de5ffb59cd02bbccad8f1f426e885b6a115",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+        "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+        "Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+        "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+        "--timeout",
+        "180000"
+      ],
+      "env": {}
+    },
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "40b56249ec7ce7ac4f092eedfefa124c87983dd6",
+    "runIds": [
+      43594957479
+    ]
+  },
+  "summary": {
+    "pass": 5,
+    "fail": 1,
+    "tests": 6,
+    "files": 5,
+    "durationSeconds": 274.36
+  },
+  "omniPositiveControl": {
+    "nonces": [
+      "06ae6a7ec7900f132d79286022e565aa"
+    ],
+    "observedVerdicts": [
+      "omni positive control [06ae6a7ec7900f132d79286022e565aa]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [06ae6a7ec7900f132d79286022e565aa]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "requestedFiles": [
+    "Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+    "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+    "Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+    "Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+    "Sucafinav1/test/product/wp11/composite-coverage.test.ts"
+  ],
+  "observedFiles": [
+    "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+    "Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+    "Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+    "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+    "Sucafinav1/test/product/wp11/case-import-incarnation.test.ts"
+  ],
+  "fileSummaries": [
+    {
+      "file": "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+      "reportedTests": 2,
+      "counts": {
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 95401.52,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+        "line": 810,
+        "timestamp": "2026-11-14T12:29:43.3887083Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+        "status": "pass",
+        "name": "coverage distinguishes omitted and null training from explicit zero and a later 40000 quote",
+        "line": 812,
+        "timestamp": "2026-11-14T12:31:18.8257051Z",
+        "durationMs": 73665.5
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 27164.02,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+        "line": 814,
+        "timestamp": "2026-11-14T12:31:18.8257718Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+        "status": "pass",
+        "name": "AI-RENEWAL observes a confirmed 70000 implementation quote as 235000 total and 5000 savings with complete shared coverage",
+        "line": 815,
+        "timestamp": "2026-11-14T12:31:45.9913657Z",
+        "durationMs": 27164.02
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 50835.54,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+        "line": 817,
+        "timestamp": "2026-11-14T12:31:45.9914788Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+        "status": "pass",
+        "name": "explicit human choice persists the producer result, survives reopen, and never applies the simulated Planner operations",
+        "line": 818,
+        "timestamp": "2026-11-14T12:32:36.8314536Z",
+        "durationMs": 50835.54
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 49664.04,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "line": 820,
+        "timestamp": "2026-11-14T12:32:36.8316001Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "status": "fail",
+        "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+        "line": 830,
+        "timestamp": "2026-11-14T12:33:26.5014868Z",
+        "durationMs": 49664.04
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 51104.65,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+        "line": 832,
+        "timestamp": "2026-11-14T12:33:26.5015778Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+        "status": "pass",
+        "name": "real JSON import preserves the private C08 choice and cannot revive a deleted source under a reused record ID",
+        "line": 833,
+        "timestamp": "2026-11-14T12:34:17.6246124Z",
+        "durationMs": 51104.65
+      }
+    }
+  ],
+  "lastObservedFile": "Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+  "lastReportedTest": {
+    "file": "Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+    "status": "pass",
+    "name": "real JSON import preserves the private C08 choice and cannot revive a deleted source under a reused record ID",
+    "line": 833,
+    "timestamp": "2026-11-14T12:34:17.6246124Z",
+    "durationMs": 51104.65
+  },
+  "hasCompletedBunSummary": true,
+  "requestedButNotObserved": [],
+  "observedButNotRequested": [],
+  "ownObservedCounts": {
+    "pass": 5,
+    "fail": 1,
+    "skip": 0,
+    "todo": 0
+  },
+  "observedTests": [
+    {
+      "file": "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+      "status": "pass",
+      "name": "shared categories and supported N/A consume one real Planner contribution and retain the complete composed interval",
+      "line": 811,
+      "timestamp": "2026-11-14T12:30:05.1602158Z",
+      "durationMs": 21736.02
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+      "status": "pass",
+      "name": "coverage distinguishes omitted and null training from explicit zero and a later 40000 quote",
+      "line": 812,
+      "timestamp": "2026-11-14T12:31:18.8257051Z",
+      "durationMs": 73665.5
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+      "status": "pass",
+      "name": "AI-RENEWAL observes a confirmed 70000 implementation quote as 235000 total and 5000 savings with complete shared coverage",
+      "line": 815,
+      "timestamp": "2026-11-14T12:31:45.9913657Z",
+      "durationMs": 27164.02
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+      "status": "pass",
+      "name": "explicit human choice persists the producer result, survives reopen, and never applies the simulated Planner operations",
+      "line": 818,
+      "timestamp": "2026-11-14T12:32:36.8314536Z",
+      "durationMs": 50835.54
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "status": "fail",
+      "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+      "line": 830,
+      "timestamp": "2026-11-14T12:33:26.5014868Z",
+      "durationMs": 49664.04
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+      "status": "pass",
+      "name": "real JSON import preserves the private C08 choice and cannot revive a deleted source under a reused record ID",
+      "line": 833,
+      "timestamp": "2026-11-14T12:34:17.6246124Z",
+      "durationMs": 51104.65
+    }
+  ],
+  "failures": [
+    {
+      "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "status": "fail",
+      "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+      "line": 830,
+      "timestamp": "2026-11-14T12:33:26.5014868Z",
+      "durationMs": 49664.04
+    }
+  ],
+  "fixtureTrace": {
+    "observations": [],
+    "parseErrors": [],
+    "lastByLabel": {},
+    "maximumObservedSerializedStateBytes": null,
+    "boundary": "Counts and inclusive overlapping wall durations are fixture instrumentation; serialized state bytes are not sampled process memory or exclusive CPU time."
+  }
+}

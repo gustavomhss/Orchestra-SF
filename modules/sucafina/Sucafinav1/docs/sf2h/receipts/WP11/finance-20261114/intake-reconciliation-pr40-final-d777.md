@@ -1,0 +1,11 @@
+# PR40 d777 — fourth bounded intake
+
+The head observation at **2026-11-14 12:19:40 UTC** found PR40 at `d7775d6f1eb17af1590ccfb98547259eb017cd1b`, tree `e6831add3e891e020d34540234bd685a7dd05e01`, four commits after the consumed `65509f0b8c435b88fb0ec9949299571f011d2347`. PR22, PR24 and sf2-stack remain at their previously consumed heads. The companion JSON records all four commits and all44paths with a disposition.
+
+Five test/helper files are adopted by exact source blob. Two tests receive additive merges: calculation-history keeps Finance's existing denied historical read with the revoked context as well as the owner's new admission identity assertions; Hot Topic keeps Finance's canonical-command error details and adds the source transaction's committed witness. Four other blobs are already identical. The33new historical receipt files are preserved exactly without replacing any existing receipt or transferring their verdicts.
+
+The material adapter delta uses the canonical source Planner for three auxiliary DomainProjection reads. That auxiliary port reports coverage unavailable; actual classification, judgment and promotion retain their evidence-backed C10 producers and authorization. It does not replace W29's separate per-invocation read-only transaction, and it supplies no financial result. The scalar f0...f11 quote payload keeps all12explicit months,11confirmed zeros and November40000; history now asserts these details directly. Existing thresholds55000/15000, implementation70000, totals and historical ChoiceRecord remain.
+
+No product implementation file changes in this intake. The newer Finance apply, result/request persistence, mutations and final Hot Topic callback fences are preserved. The original branches are not modified. The new PR40 head is included as an additional commit parent, preserving the four source commits and bringing total source-origin commits to45.
+
+Validation is scoped to the nine affected WP11 files (S19), the same-case BI consumer (S20), and package typecheck/root guards (check13) at the eventual exact product commit. The executed values and timing must come from Actions; this report does not claim a run before dispatch. Independent source review and the separate final-heads observation accompany the intake. Native/installed proof, C/D and the S0 bundle remain unaccepted.

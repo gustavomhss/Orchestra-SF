@@ -1,0 +1,950 @@
+{
+  "schema": "wp13-finance-closure-review-v1",
+  "preparedAt": "2026-11-14T13:38:16.386462+00:00",
+  "reviewer": "/root/wp13_review_acceptance",
+  "purpose": "Read-only dependency, authority, absence/zero/FX and hosted-evidence review of the exact Finance 79531 source-admission repair for an optional next WP13 intake; this report does not mutate or promote W17.",
+  "status": "STATICALLY_CONSISTENT_NINE_FILE_OPTION_NOT_APPLIED",
+  "ready": false,
+  "productAcceptance": "NOT_INFERRED_FROM_STATIC_REVIEW_OR_OWNER_HISTORICAL_LOGS",
+  "baseline": {
+    "head": "058391623bd254a7e989d14183e38bada6808052",
+    "tree": "43c98b7200487a0a0fd3e5ad0280e91eac6063f1",
+    "label": "W17",
+    "plannerBaselineDirectoryObservedAt": "eb5d411292b8892673cff751b3492a14146b7785",
+    "plannerUntouchedByW17": true,
+    "packageCheck": {
+      "runId": 43599610275,
+      "jobId": 132461339715,
+      "typecheck": "FAIL",
+      "ownedDiagnostics": 0,
+      "outsideDiagnostics": 130,
+      "guards": "PASS",
+      "guardRules": 78,
+      "scannedPaths": 711,
+      "gateFindings": 0,
+      "warnings": 10,
+      "errors": 0,
+      "provenance": "Parent terminal receipt; this is baseline W17 evidence only."
+    }
+  },
+  "candidate": {
+    "ownerHead": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+    "status": "NOT_APPLIED_TO_W17",
+    "runtimeOrEngineFilesProposed": 0,
+    "exactFiles": [
+      {
+        "publishedPath": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "owner": "Finance/WP03/WP05 with WP11 test fixtures",
+        "ownerHead": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+        "candidateBlob": "f85c1c8e7196aff1381513b2d5ed2109641d6a45",
+        "baselinePublishedBlob": "2338917427497733e4bd88aec852985206cce066",
+        "newPath": false,
+        "kind": "fixture",
+        "reason": "Real source/projection fence after the last external source/authority callback; nonempty scenarios retain the canonical verifier.",
+        "artifact": {
+          "path": "reference/owner-1314/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+          "bytes": 6337,
+          "gitBlob": "f85c1c8e7196aff1381513b2d5ed2109641d6a45",
+          "sha256": "9a23b44d9ac78f6597f0942a9a17dd8c94c40d93e80d2de7eb25b42291d8a7bc"
+        },
+        "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/79531aefa2bf72a9d13deba5164f725ec7da0e0f/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts"
+      },
+      {
+        "publishedPath": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "owner": "Finance/WP03/WP05 with WP11 test fixtures",
+        "ownerHead": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+        "candidateBlob": "8389709232225424b5905638d0951d8cdbb71dd7",
+        "baselinePublishedBlob": "dba62042653bd061fa099e2956cae4d11a0475ce",
+        "newPath": false,
+        "kind": "producer",
+        "reason": "Exports plannerSourceActor with the existing mapping; exact blob also includes same-source per-phase batching, actual-presence and post-command qualifier wiring.",
+        "artifact": {
+          "path": "reference/owner-1314/modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "bytes": 26150,
+          "gitBlob": "8389709232225424b5905638d0951d8cdbb71dd7",
+          "sha256": "8c51fdb91dc3c35bd6ff075488f3d393711b2d16e411085960fa3728c1fe5bd1"
+        },
+        "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/79531aefa2bf72a9d13deba5164f725ec7da0e0f/modules/sucafina/Sucafinav1/product/planner/port.ts"
+      },
+      {
+        "publishedPath": "modules/sucafina/Sucafinav1/product/planner/actual-presence.ts",
+        "owner": "Finance/WP03/WP05 with WP11 test fixtures",
+        "ownerHead": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+        "candidateBlob": "c7497d7a71e90dd51ad362921e36d0de12fe431f",
+        "baselinePublishedBlob": null,
+        "newPath": true,
+        "kind": "producer",
+        "reason": "Required new import of exact port; qualifies existing actual totals and preserves absent versus zero.",
+        "artifact": {
+          "path": "reference/finance-closure-W17/product/planner/actual-presence.ts",
+          "bytes": 978,
+          "gitBlob": "c7497d7a71e90dd51ad362921e36d0de12fe431f",
+          "sha256": "1d9eb4259a257a7dddf064f08cb7cbd6c39d87533c747004c1587eba5fd93d2d"
+        },
+        "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/79531aefa2bf72a9d13deba5164f725ec7da0e0f/modules/sucafina/Sucafinav1/product/planner/actual-presence.ts"
+      },
+      {
+        "publishedPath": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+        "owner": "Finance/WP03/WP05 with WP11 test fixtures",
+        "ownerHead": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+        "candidateBlob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+        "baselinePublishedBlob": "40c4c72cf9b6863cf5eb791e78e4a87de751192d",
+        "newPath": false,
+        "kind": "producer",
+        "reason": "Required qualify input and post-command projection; keeps unresolved FX/HR/pending coverage visible.",
+        "artifact": {
+          "path": "reference/finance-closure-W17/product/planner/scenario-port.ts",
+          "bytes": 17443,
+          "gitBlob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+          "sha256": "6e0f003055c08005e3a2f339d221c6f608d615a8068e66d30555a981604eb0fd"
+        },
+        "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/79531aefa2bf72a9d13deba5164f725ec7da0e0f/modules/sucafina/Sucafinav1/product/planner/scenario-port.ts"
+      },
+      {
+        "publishedPath": "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+        "owner": "Finance/WP03/WP05 with WP11 test fixtures",
+        "ownerHead": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+        "candidateBlob": "dd92a35b3025a69c198a2d99c4ef38a472dd3bc7",
+        "baselinePublishedBlob": "52b09da8ee31f6681bdc2c29a69bc76755f9d232",
+        "newPath": false,
+        "kind": "producer",
+        "reason": "Optional projector on the isolated canonical command result; existing five-argument callers remain valid.",
+        "artifact": {
+          "path": "reference/finance-closure-W17/product/planner/scenario.ts",
+          "bytes": 5187,
+          "gitBlob": "dd92a35b3025a69c198a2d99c4ef38a472dd3bc7",
+          "sha256": "a04c007eeb6505ed778b6f319cf131552b8a87d66dad370ae46430bccd9b646c"
+        },
+        "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/79531aefa2bf72a9d13deba5164f725ec7da0e0f/modules/sucafina/Sucafinav1/product/planner/scenario.ts"
+      },
+      {
+        "publishedPath": "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+        "owner": "Finance/WP03/WP05 with WP11 test fixtures",
+        "ownerHead": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+        "candidateBlob": "46b31d8a8d9038f74c0d0b825078ecc8229fe6d4",
+        "baselinePublishedBlob": "1e28aa16eb1d93ddff44dc8596b07c17abfa9775",
+        "newPath": false,
+        "kind": "test",
+        "reason": "Direct simulateScenario call must supply qualify after signature change; three existing scenario/coverage oracles.",
+        "artifact": {
+          "path": "reference/finance-closure-W17/test/product/wp03/source-scenario.test.ts",
+          "bytes": 8384,
+          "gitBlob": "46b31d8a8d9038f74c0d0b825078ecc8229fe6d4",
+          "sha256": "751a7069d98a576a18987eb38bdec434aaabadaa675d48d82bf413f150e5bb67"
+        },
+        "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/79531aefa2bf72a9d13deba5164f725ec7da0e0f/modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts"
+      },
+      {
+        "publishedPath": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+        "owner": "Finance/WP03/WP05 with WP11 test fixtures",
+        "ownerHead": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+        "candidateBlob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+        "baselinePublishedBlob": null,
+        "newPath": true,
+        "kind": "test",
+        "reason": "Seven discriminating admission cases, including three parameterized callback races; not four cases.",
+        "artifact": {
+          "path": "reference/owner-1314/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+          "bytes": 11611,
+          "gitBlob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+          "sha256": "ed792565e2a75a2b29a65dc81eee892db5bcefd0744c55d110ee9af6401df737"
+        },
+        "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/79531aefa2bf72a9d13deba5164f725ec7da0e0f/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts"
+      },
+      {
+        "publishedPath": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+        "owner": "Finance/WP03/WP05 with WP11 test fixtures",
+        "ownerHead": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+        "candidateBlob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+        "baselinePublishedBlob": null,
+        "newPath": true,
+        "kind": "test",
+        "reason": "Six financial qualification oracles for the inseparable exact port/scenario changes.",
+        "artifact": {
+          "path": "reference/finance-closure-W17/test/product/wp03/scenario-qualification.test.ts",
+          "bytes": 17737,
+          "gitBlob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+          "sha256": "7b5b59fb90149d739858ffb5ded2ebe473ad105e5ffda892cc1393d621e6c9f6"
+        },
+        "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/79531aefa2bf72a9d13deba5164f725ec7da0e0f/modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts"
+      },
+      {
+        "publishedPath": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-engine-fixture.ts",
+        "owner": "Finance/WP03/WP05 with WP11 test fixtures",
+        "ownerHead": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+        "candidateBlob": "fd6a6b8b75152e858961360d16f7432233700b2f",
+        "baselinePublishedBlob": null,
+        "newPath": true,
+        "kind": "fixture",
+        "reason": "Required by scenario-qualification; real Planner/SQLite/private admission, explicit pending C10 classification.",
+        "artifact": {
+          "path": "reference/finance-closure-W17/test/product/wp03/scenario-engine-fixture.ts",
+          "bytes": 2744,
+          "gitBlob": "fd6a6b8b75152e858961360d16f7432233700b2f",
+          "sha256": "3972443bbfe4eec57e4f3ba0b6dfe08c55ebed1dad19fd7bdb650659b3b69796"
+        },
+        "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/79531aefa2bf72a9d13deba5164f725ec7da0e0f/modules/sucafina/Sucafinav1/test/product/wp03/scenario-engine-fixture.ts"
+      }
+    ]
+  },
+  "scopeOptions": [
+    {
+      "id": "O0_OWNER_ISOLATED_COMPATIBLE_REPAIR",
+      "availableNow": false,
+      "reason": "For a source-only fence without financial qualifier intake, ask the owner to publish a separate compatible plannerSourceActor export plus verifier fix against our dba620 port. WP13 must not extract hunks or edit a foreign file. No hypothetical SHA is asserted.",
+      "nextAction": "Owner publishes exact compatible blobs and discriminating admission proof; root then audits that actual closure."
+    },
+    {
+      "id": "O1_COMPILE_CLOSURE",
+      "fileCount": 6,
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "modules/sucafina/Sucafinav1/product/planner/actual-presence.ts",
+        "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+        "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts"
+      ],
+      "limit": "Five changed code/fixture modules plus the existing direct-call test compatibility fix. This is a compile closure, not sufficient product validation."
+    },
+    {
+      "id": "O2_ADMISSION_CLOSURE",
+      "fileCount": 7,
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "modules/sucafina/Sucafinav1/product/planner/actual-presence.ts",
+        "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+        "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts"
+      ],
+      "limit": "Adds all seven source-admission cases. Inseparable financial qualification changes still need their six direct oracles."
+    },
+    {
+      "id": "O3_NINE_FILE_INTAKE_WITH_QUALIFICATION",
+      "recommendedIfRootChoosesAvailableExactPin": true,
+      "fileCount": 9,
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "modules/sucafina/Sucafinav1/product/planner/actual-presence.ts",
+        "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+        "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp03/scenario-engine-fixture.ts"
+      ],
+      "reason": "Keeps all foreign changes exact and includes the six qualification oracles with their required fixture. No static engine or policy blocker found. Hosted checks and assembled-branch product proof remain required."
+    },
+    {
+      "id": "O4_OPTIONAL_HR_FILE",
+      "additionalFile": {
+        "path": "reference/finance-closure-W17/test/product/wp03/port-hr.test.ts",
+        "bytes": 5129,
+        "gitBlob": "68d049f957257e089810ae0f9be230a157dba70c",
+        "sha256": "8346e63ae0c41634c87224ec3c4206ac3d77411973bfa870fbd9a779577fc328"
+      },
+      "caseCount": 1,
+      "requiredForImportClosure": false,
+      "limit": "Direct HR/domain/month/FX regression is compatible with existing imports, but is not a replacement for the six qualifier cases or aggregate actual absent/zero check. Adding it to O3 would be ten files, not nine."
+    }
+  ],
+  "dependencyEdges": [
+    {
+      "from": "renewal-operation-verifier.ts",
+      "to": "product/planner/port.ts",
+      "why": "New value import plannerSourceActor is absent from dba620."
+    },
+    {
+      "from": "product/planner/port.ts",
+      "to": "product/planner/actual-presence.ts",
+      "why": "New runtime import required by exact blob."
+    },
+    {
+      "from": "product/planner/port.ts",
+      "to": "product/planner/scenario-port.ts",
+      "why": "New qualify option is part of the exact port signature and behavior."
+    },
+    {
+      "from": "product/planner/scenario-port.ts",
+      "to": "product/planner/scenario.ts",
+      "why": "Calls optional sixth projector and consumes preview.projection."
+    },
+    {
+      "from": "test/product/wp03/source-scenario.test.ts",
+      "to": "product/planner/scenario-port.ts",
+      "why": "Direct call must provide required qualify. Exact new test only adapts this import/call."
+    },
+    {
+      "from": "scenario-qualification.test.ts",
+      "to": "scenario-engine-fixture.ts",
+      "why": "New test import; both absent from baseline published directory."
+    },
+    {
+      "from": "scenario-engine-fixture.ts",
+      "to": "test/product/wp03/planner-fixture.ts",
+      "existingBlob": "19cb4262ca02a680b06cdd4db54d5bb9d33a1219",
+      "why": "Existing real LocalStore/domain/source issuer/private admission composition."
+    },
+    {
+      "from": "renewal-source-admission.test.ts",
+      "to": "test/product/wp11/renewal-source-fixture.ts",
+      "existingBlob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "why": "Uses initial omitted scenario and direct OPEX source edit; no reviseQuote dependency and no need to intake owner 79de source fixture."
+    },
+    {
+      "from": "product/planner/scenario-port.ts",
+      "to": "product/planner/port.ts",
+      "kind": "TYPE_ONLY",
+      "why": "typeof buildPlannerFinancialProjection; no new runtime cycle."
+    }
+  ],
+  "behaviorReview": {
+    "sourceAdmission": [
+      "Decode the request first. Only zero operations and zero assumptions use the source-only path; nonempty input retains createPlannerOperationVerifier.",
+      "Capture request identity and binding digest; read and clone the source; verify reference digest, installation/project, planner/version scope, version id, fields and whole-month same-year period.",
+      "Observe the real actor-filtered Planner projection twice in real read-only transactions. Static fixture reference arrays cannot conceal a real OPEX edit.",
+      "Second source callback and its revalidation precede the final authenticated snapshot. The final authentication callback is fenced by revalidate before projecting that snapshot.",
+      "After final projection only synchronous abort/request identity/binding digest checks remain in this verifier. There is no cross-invocation authority or numerical cache.",
+      "The fixture returns admission only; it does not manufacture C10, choice records, financial observations, successful application or installed host authorization."
+    ],
+    "financialQualification": [
+      "plannerSourceActor extracts the prior canonical principal-to-actor mapping, including local principal rejection, Planner role filtering, canWrite, assigned and domains.",
+      "Same-source compare reads each source/coverage once per observation phase, makes independent clones, and still obtains fresh later observations/revalidation. It does not cache across requests.",
+      "actual-presence qualifies the engine existing summary.actual by finite raw actual, converted actual, warnings and restricted-HR status. Explicit finite zero remains confirmed; missing input or FX remains null.",
+      "simulatePlannerOperations still executes existing canonical commands on a structured clone. New optional projector observes that resulting copy; engines, commands and formulas are unchanged.",
+      "scenario-port builds financial components from the real post-command projection. Addressed include/replace/defer cells can become quantified and remain hypothetical.",
+      "An untouched previously absent component stays null despite whole-row legacy normalization. Deferral addresses origin and destination, preserving a third untouched missing month.",
+      "Missing FX and independent HR budget rates remain explicit. Disclosures are recomputed only for addressed cells. Preview totals remain null, coverage pending, and preview-not-applied."
+    ],
+    "localStoreBoundary": {
+      "source": "repo/modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "observed": "Nested read transactions use isolated snapshots bound to the active async scope. Nested writes poison/reject the transaction; commit:false never publishes staged writes. The outer transaction still acquires BEGIN IMMEDIATE under the current implementation.",
+      "limit": "Source-only projection transactions are short. The existing nonempty wrapper can still hold a transaction during full canonical verification; no new lock-free guarantee or speedup is claimed."
+    },
+    "securityAndPolicyConclusion": "No static blocker found within the nine-file exact closure. It changes product qualification and reference contents, so it is not a verifier-only no-op. Engine/runtime and financial policy changes are deliberately excluded.",
+    "preexistingOwnerFreshnessLimit": {
+      "status": "NOT_NEW_REGRESSION_AND_NOT_RESOLVED_BY_SOURCE_ONLY_FIX",
+      "paths": [
+        "product/planner/port.ts",
+        "product/planner/scenario-port.ts",
+        "test/product/wp11/renewal-operation-verifier.ts"
+      ],
+      "observation": "Generic compareForecast still obtains its final canonical projection before final source/coverage provider callbacks; the nonempty verifier retains revalidate after its transaction. This code shape existed in consumed pins. The source-only fix does not prove a universal fence for arbitrary providers that mutate source state while returning a prior observation.",
+      "nextAction": "Keep the wider producer/host boundary separately assigned to Finance/WP10; do not claim it fixed by f85c. No broader runtime intake or foreign patch is recommended."
+    }
+  },
+  "exclusions": [
+    {
+      "path": "runtime/planner.ts",
+      "baselineBlob": "c487332777d4053be7a2b177ea598efb77ca0d66",
+      "ownerBlob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+      "status": "EXCLUDED",
+      "reason": "Owner runtime has monthly/UI/rendering/HR redaction and official budget fiscal-year policy edits. None is necessary to export actor or qualify the existing numerical engine output; no runtime/engine intake is authorized."
+    },
+    {
+      "path": "test/product/wp03/port.test.ts",
+      "ownerBlob": "2c6a3519024d2cca0fcf5256dcf9055fa1d7ae26",
+      "status": "EXCLUDED_OWNER_VERSION",
+      "reason": "Broad owner version imports catalogs/observed/forecast-insights outside this closure. The exact existing W17 03a510 test already contains the relevant actual absent/zero check."
+    },
+    {
+      "path": "test/product/wp11/renewal-source-fixture.ts",
+      "keptBlob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "status": "PRESERVE_EXISTING_EXACT_PIN",
+      "reason": "No requirement to replace the published explicit f0..f11 training correction with Finance values.f variant."
+    },
+    {
+      "path": "product/planner/current-choice.ts and analytics/hot-topic/host UI producers",
+      "status": "EXCLUDED",
+      "reason": "Not imports required by the candidate seven/nine-file closure; do not intake by branch or snapshot convenience."
+    }
+  ],
+  "oracles": {
+    "admission": {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "expectedCaseCount": 7,
+      "countMethod": "Four direct test declarations plus three parameterized race cases; the nine malformed evidence variants are assertions inside one case, not nine tests.",
+      "names": [
+        "empty-source admission observes two authenticated projections and refuses a static reference after a real Planner edit",
+        "empty-source admission refuses second-source-resolve before its final projection",
+        "empty-source admission refuses last-revalidate-source-change before its final projection",
+        "empty-source admission refuses last-revalidate-revocation before its final projection",
+        "empty-source admission refuses authority revoked by its final authentication callback",
+        "empty-source admission refuses mismatched scope, projection fields, digest and source period",
+        "nonempty operations retain the canonical target verifier and never write the real source"
+      ],
+      "status": "WRITTEN_NOT_OBSERVED_PASS_AT_CANDIDATE_PIN"
+    },
+    "qualification": {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "expectedCaseCount": 6,
+      "names": [
+        "replace and include qualify an absent forecast from the real post-command copy, including explicit zero",
+        "a row save preserves an untouched missing December while an explicit December zero is hypothetical",
+        "deferral quantifies its origin and destination while preserving a third missing month on the same row",
+        "an explicit foreign forecast without FX stays absent instead of publishing the engine's legacy zero",
+        "a hypothetical HR forecast remains quantifiable when its independent budget rate is absent",
+        "a self-comparison reads once per source observation and still rejects revocation at final revalidation"
+      ],
+      "status": "SAME_TEST_AND_THREE_PRODUCER_BLOBS_PASSED_HISTORICALLY_NOT_CURRENT_COMPOSITION"
+    },
+    "sourceScenario": {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "expectedCaseCount": 3,
+      "names": [
+        "source-only scenario publishes the covered confirmed total and replays through persistence and C17 without applying a choice",
+        "source-only zero stays confirmed while omitted coverage and null never become a complete total",
+        "a source-only observation refuses a coverage change after the real comparison recheck"
+      ],
+      "explicitPerTestTimeoutMs": 180000,
+      "status": "SAME_TEST_BLOB_PASSED_HISTORICALLY_NOT_CURRENT_COMPOSITION"
+    },
+    "existingActualBoundary": {
+      "publishedHead": "058391623bd254a7e989d14183e38bada6808052",
+      "publishedBlob": "03a51004ce15979fe5d5a47b2f95f58edbef0ba5",
+      "artifact": {
+        "path": "reference/finance-closure-W17/WP13-W17-port-test.reference.ts",
+        "bytes": 31207,
+        "gitBlob": "03a51004ce15979fe5d5a47b2f95f58edbef0ba5",
+        "sha256": "ef315ebcd25ecdcf0809ab37c214eff91fb9d2b91b668c8f8d768a768bd1d305"
+      },
+      "file": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+      "testName": "forecast port compares the real engine, and detects source changes",
+      "checks": "Candidate raw actual[0]=null produces month:1:actual null/absent; raw actual[1]=0 produces month:2:actual 0/confirmed. The case also checks FX and real source changes.",
+      "dependency": {
+        "path": "modules/sucafina/Sucafinav1/test/fixture/persistence.ts",
+        "artifact": {
+          "path": "reference/finance-closure-W17/WP13-W17-test-persistence.reference.ts",
+          "bytes": 1240,
+          "gitBlob": "b33c8f41fb719266e6100e8dc307c53ec66cdcff",
+          "sha256": "d8a3e502f5b64cb660b64f8ba4b083a32bda8dda17e4db316cb98acb8d803fa1"
+        },
+        "provenance": "Exact W17 read through GitHub MCP; missing local hydration is not a missing published dependency."
+      },
+      "nextAction": "Run the existing W17 file on the assembled candidate, or its named test as a separate surgical selector. Do not import the owner broad version. The file has two direct tests.",
+      "expectedFileCaseCount": 2,
+      "fileTestNames": [
+        "headcount projection follows domain visibility and increase preview is disposable",
+        "forecast port compares the real engine, and detects source changes"
+      ],
+      "unchangedSourceOfPublishedW17": true,
+      "intakeRequired": false,
+      "notAChangedFileManifestEntry": true
+    }
+  },
+  "hostedEvidence": {
+    "verificationMethod": "GitHub MCP exact file/directory reads, job logs and compare-commits envelope inspection. Log SHA256 checked against archived data/published receipts. No local product execution and no borrowed installed acceptance.",
+    "historicalS4": {
+      "runId": 43581792536,
+      "jobId": 132407886238,
+      "productHead": "a274302d15990919007dbe958d95653508c730a7",
+      "snapshotHead": "91cd4ee008b764d1e06d42a3a7fa2dce606ecdc1",
+      "envelopeVerified": "ONE_CHILD_COMMIT_ONE_ADDED_CI_RUN_JSON",
+      "aggregate": "FAIL",
+      "passed": 15,
+      "failed": 4,
+      "files": 7,
+      "seconds": 1513.76,
+      "focusedControl": "VALID_UNIQUE_NA",
+      "nonce": "e9c0e97ea5f81098ed103c255faba35f",
+      "log": {
+        "path": "reference/finance-closure-W17/owner-S4-job132407886238.log.txt",
+        "bytes": 79096,
+        "gitBlob": "8d5cb9f61c290cb24f0d4a81ee9cf90dc01a5919",
+        "sha256": "8d931c7742a974c2d80d096eff8159e3c5650a5c6972e9b662d428f71082a8d9"
+      },
+      "relevantSourceScenarioFileBlob": "46b31d8a8d9038f74c0d0b825078ecc8229fe6d4",
+      "relevantPassedCases": [
+        {
+          "name": "source-only scenario publishes the covered confirmed total and replays through persistence and C17 without applying a choice",
+          "milliseconds": 47960.33
+        },
+        {
+          "name": "source-only zero stays confirmed while omitted coverage and null never become a complete total",
+          "milliseconds": 93392.6
+        },
+        {
+          "name": "a source-only observation refuses a coverage change after the real comparison recheck",
+          "milliseconds": 46322.07
+        }
+      ],
+      "portBlob": "8c922385eaeba66ba5b302a8387b627ca607f495",
+      "scenarioPortBlob": "9ef6d197759bbfb9513cce5118c93c08ac797303",
+      "limit": "Historical source-only tests passed inside a failed aggregate; not a PASS for the candidate verifier, financial closure or WP13."
+    },
+    "historicalS5": {
+      "runId": 43584535059,
+      "jobId": 132416096450,
+      "productHead": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "snapshotHead": "40b2f66fdf887ddf7c9bc0abef07e20eb47ac030",
+      "envelopeVerified": "ONE_CHILD_COMMIT_ONE_ADDED_CI_RUN_JSON",
+      "aggregate": "FAIL",
+      "passed": 12,
+      "failed": 2,
+      "files": 8,
+      "seconds": 358.21,
+      "focusedControl": "VALID_UNIQUE_NA",
+      "nonce": "01796a1b38e179bf9727a792f040e2e1",
+      "log": {
+        "path": "reference/finance-closure-W17/owner-S5-job132416096450.log.txt",
+        "bytes": 74663,
+        "gitBlob": "74e66f3209a7c8f08c543343d2772bc0155cbbfc",
+        "sha256": "9dfd85ecf0936a502481ccd01bbf128af781f6c16fe28fcc895f70ed2a002c23"
+      },
+      "qualificationFileBlob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+      "fixtureBlob": "fd6a6b8b75152e858961360d16f7432233700b2f",
+      "exactCurrentProducerBlobs": [
+        "c7497d7a71e90dd51ad362921e36d0de12fe431f",
+        "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+        "dd92a35b3025a69c198a2d99c4ef38a472dd3bc7"
+      ],
+      "differentPortBlob": "e365ac59376482dfcc6f81aed045b0153f911038",
+      "relevantPassedCases": [
+        {
+          "name": "replace and include qualify an absent forecast from the real post-command copy, including explicit zero",
+          "milliseconds": 374.44
+        },
+        {
+          "name": "a row save preserves an untouched missing December while an explicit December zero is hypothetical",
+          "milliseconds": 299.63
+        },
+        {
+          "name": "deferral quantifies its origin and destination while preserving a third missing month on the same row",
+          "milliseconds": 94.33
+        },
+        {
+          "name": "an explicit foreign forecast without FX stays absent instead of publishing the engine's legacy zero",
+          "milliseconds": 112.71
+        },
+        {
+          "name": "a hypothetical HR forecast remains quantifiable when its independent budget rate is absent",
+          "milliseconds": 139.7
+        },
+        {
+          "name": "a self-comparison reads once per source observation and still rejects revocation at final revalidation",
+          "milliseconds": 216.58
+        }
+      ],
+      "overviewRenderCaseMs": 12771.19,
+      "limit": "Six direct qualification cases are verified historical evidence with three exact producer blobs, but the port/other closure differs. Overview runtime proof is excluded from WP13 transfer."
+    },
+    "candidateCheck": {
+      "head": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+      "runId": 43597458293,
+      "jobId": 132454932935,
+      "workflow": ".github/workflows/astra-finance-check.yml",
+      "conclusion": "FAIL",
+      "typecheckDiagnostics": 131,
+      "diagnosticsInSevenMinimalPaths": 0,
+      "guards": "PASS",
+      "guardRules": 78,
+      "scannedPaths": 1073,
+      "gateFindings": 0,
+      "warnings": 13,
+      "errors": 0,
+      "log": {
+        "path": "reference/finance-closure-W17/owner-check-job132454932935.log.txt",
+        "bytes": 127838,
+        "gitBlob": "884ff63e26c7878a98da49445f4cb4af7e232f0d",
+        "sha256": "7af3a3f4dff6da29e75715144c3852caaa4f0f4b679fe8a0b697deb9cd5a8ff5"
+      },
+      "limit": "No assertion that all 131 diagnostics were independently classified by owner; direct scan establishes zero rows in the seven candidate paths. Not a product run or an assembled WP13 check."
+    },
+    "candidateProductProof": {
+      "status": "NO_QUALIFIED_CURRENT_CANDIDATE_PRODUCT_PASS_VERIFIED",
+      "publishedReceiptStatus": "PUBLISHED_CANDIDATE_PENDING_AFFECTED_ACTIONS",
+      "publishedPreparedSelections": [
+        {
+          "name": "S22",
+          "fileCount": 7,
+          "requestHash": "76efd1280d0df63faa5de9680e3afad82e70f151db82b780fd2dc921d708c228"
+        },
+        {
+          "name": "S23",
+          "fileCount": 1,
+          "requestHash": "fdf4ffe89aa485b6fbe3792a93e88282b62b610ba8748c5b7bcf1830135b4652"
+        },
+        {
+          "name": "S24",
+          "fileCount": 4,
+          "requestHash": "91b8c9a4a394f33b7ba2df8d4080e01b0aa906109eb56b338e7e2281e3614cbb"
+        }
+      ],
+      "limit": "Prepared metadata and owner descriptions are not executed proof. An empty branch-prefix search is not evidence that no external workflow exists."
+    }
+  },
+  "regressionImpact": {
+    "method": "Conservative literal relative-import traversal of currently hydrated accepted-file sources (including type imports); no modules executed. Full published check remains the complete dependency gate.",
+    "acceptedFilesWithChangedClosure": 15,
+    "historicalPassedCasesInThoseFiles": 62,
+    "affectedFiles": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+        "sourceProduct": "44ecc88ad6c8c56bf08693e386e9e5dd9e46cfbc",
+        "snapshotSha": "9cc8c488c86f3b4724ee250f0bbf0bbdbfef8a2e",
+        "runId": 43589779412,
+        "jobId": 132431838705,
+        "testCount": 3,
+        "changedImports": [
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario.ts"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+        "sourceProduct": "44ecc88ad6c8c56bf08693e386e9e5dd9e46cfbc",
+        "snapshotSha": "9cc8c488c86f3b4724ee250f0bbf0bbdbfef8a2e",
+        "runId": 43589779412,
+        "jobId": 132431838705,
+        "testCount": 1,
+        "changedImports": [
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario.ts"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+        "sourceProduct": "44ecc88ad6c8c56bf08693e386e9e5dd9e46cfbc",
+        "snapshotSha": "9cc8c488c86f3b4724ee250f0bbf0bbdbfef8a2e",
+        "runId": 43589779412,
+        "jobId": 132431838705,
+        "testCount": 1,
+        "changedImports": [
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario.ts"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+        "sourceProduct": "ebc7000258b7fe10ad206bdb013415298a27b341",
+        "snapshotSha": "5bd20f3aa55f3e6e0b6140f81ec5d45629a57127",
+        "runId": 43590329132,
+        "jobId": 132433501053,
+        "testCount": 3,
+        "changedImports": [
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+        "sourceProduct": "ebc7000258b7fe10ad206bdb013415298a27b341",
+        "snapshotSha": "5bd20f3aa55f3e6e0b6140f81ec5d45629a57127",
+        "runId": 43590329132,
+        "jobId": 132433501053,
+        "testCount": 1,
+        "changedImports": [
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario.ts"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "sourceProduct": "a3df1c494495f5fcc5a644caf2d88bc0e9e39fa4",
+        "snapshotSha": "4b50417d9ddb49e308aaa72799b215e8c4cbf878",
+        "runId": 43591217664,
+        "jobId": 132436140835,
+        "testCount": 18,
+        "changedImports": [
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario.ts"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+        "sourceProduct": "a3df1c494495f5fcc5a644caf2d88bc0e9e39fa4",
+        "snapshotSha": "8fa2061ddafac44b53e35ac13a5afbffe3ad60a4",
+        "runId": 43592070317,
+        "jobId": 132438714786,
+        "testCount": 2,
+        "changedImports": [
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario.ts"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+        "sourceProduct": "cb111a14ee527d66748c4e19040c26b828f2bfe4",
+        "snapshotSha": "bad34ce37f140599463298abb62ae5d1170e2a44",
+        "runId": 43596134201,
+        "jobId": 132450903382,
+        "testCount": 1,
+        "changedImports": [
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+        "sourceProduct": "cb111a14ee527d66748c4e19040c26b828f2bfe4",
+        "snapshotSha": "bad34ce37f140599463298abb62ae5d1170e2a44",
+        "runId": 43596134201,
+        "jobId": 132450903382,
+        "testCount": 9,
+        "changedImports": [
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario.ts"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+        "sourceProduct": "cb111a14ee527d66748c4e19040c26b828f2bfe4",
+        "snapshotSha": "bad34ce37f140599463298abb62ae5d1170e2a44",
+        "runId": 43596134201,
+        "jobId": 132450903382,
+        "testCount": 1,
+        "changedImports": [
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+        "sourceProduct": "cb111a14ee527d66748c4e19040c26b828f2bfe4",
+        "snapshotSha": "bad34ce37f140599463298abb62ae5d1170e2a44",
+        "runId": 43596134201,
+        "jobId": 132450903382,
+        "testCount": 4,
+        "changedImports": [
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario.ts"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/renewal-read-scope.test.ts",
+        "sourceProduct": "cb111a14ee527d66748c4e19040c26b828f2bfe4",
+        "snapshotSha": "bad34ce37f140599463298abb62ae5d1170e2a44",
+        "runId": 43596134201,
+        "jobId": 132450903382,
+        "testCount": 3,
+        "changedImports": [
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+        "sourceProduct": "cb111a14ee527d66748c4e19040c26b828f2bfe4",
+        "snapshotSha": "aaf218c111c45b7ec65bd2e812e05417b5b3abeb",
+        "runId": 43597153713,
+        "jobId": 132453995151,
+        "testCount": 11,
+        "changedImports": [
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario.ts"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/term-defer-boundary.test.ts",
+        "sourceProduct": "eb5d411292b8892673cff751b3492a14146b7785",
+        "snapshotSha": "024ad7d3bac9e53ea5730ac3ef22ae6edecf0b3a",
+        "runId": 43598246788,
+        "jobId": 132457259569,
+        "testCount": 1,
+        "changedImports": [
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario.ts"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+        "sourceProduct": "eb5d411292b8892673cff751b3492a14146b7785",
+        "snapshotSha": "024ad7d3bac9e53ea5730ac3ef22ae6edecf0b3a",
+        "runId": 43598246788,
+        "jobId": 132457259569,
+        "testCount": 3,
+        "changedImports": [
+          "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+          "modules/sucafina/Sucafinav1/product/planner/scenario.ts"
+        ]
+      }
+    ],
+    "rule": "Keep all original product/snapshot/run/job pins. This list identifies changed closure, not invalid historical proof or a blanket order to rerun all 62 cases. No re-label of these passes as the candidate.",
+    "alsoAffectedPendingSelections": [
+      "WP13 source-scenario at original W17/S14",
+      "WP13 coverage-sensitivity-integration at original W16/S12"
+    ]
+  },
+  "surgicalCiProposal": {
+    "dispatchStatus": "NOT_DISPATCHED_BY_REVIEWER",
+    "check": "Run package Bun typecheck and required guards on the exact assembled candidate; do not inherit owner candidate check.",
+    "fiveFileProposal": {
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+          "Sucafinav1/test/product/wp13/source-scenario.test.ts",
+          "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+          "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+          "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "expectedFiles": 5,
+      "expectedCases": 19,
+      "basis": "2 case-fence + 1 owned source-scenario + 7 admission + 3 source scenarios + 6 qualification. These are static expected counts, not passes."
+    },
+    "recommendedActualBoundaryAddition": {
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+          "Sucafinav1/test/product/wp13/source-scenario.test.ts",
+          "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+          "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+          "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+          "Sucafinav1/test/product/wp03/port.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "expectedFiles": 6,
+      "expectedCases": 21,
+      "reason": "Existing exact baseline file supplies direct aggregate actual absence/zero oracle for the newly imported helper, without another intake file or owner broad dependencies."
+    },
+    "optionalIsolatedActualSelector": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp03/port.test.ts",
+        "--test-name-pattern",
+        "forecast port compares the real engine, and detects source changes",
+        "--timeout",
+        "120000"
+      ],
+      "env": {},
+      "useOnlyIf": "Root chooses to separate this concrete risk from the five-file run; do not then rerun an equivalent accepted file/selector."
+    },
+    "budgets": "Keep existing global 120000 ms default and explicit 180000 ms source case budgets. No increased workflow or test budgets; no epic/global suite.",
+    "remainingOwnEvidence": "Wait for original S12 terminal outcome. If a new run is necessary after a concrete source/qualifier repair, pin it to the new assembled product and retain S12 original W16 identity; do not infer performance improvement from static batching.",
+    "followupOnlyOnConcreteRisk": "Persisted-result digests and replay can change under corrected qualification. If affected tests or coverage outputs expose a change, isolate current history/persistence/price boundary selectors. Do not automatically repeat all historical accepted files.",
+    "rootSelectedOption": "SIX_FILES_WITH_EXISTING_PUBLISHED_PORT_TEST_PENDING_ACTUAL_NEXT_HEAD_PUBLICATION",
+    "nextPreparation": "After root publishes the next product, repin the six-file request, deduplicate paths, retain the prepared W17 request as archived metadata, and validate this baselineSelectorPins map separately from the actual changed-file manifest. No dispatch occurred in this review."
+  },
+  "openLimits": [
+    "The seven admission cases are present but no qualified product PASS for f85c was verified at this candidate pin.",
+    "The full available exact port changes qualification and monthly actual metadata, not only source-only admission. Old stored result/input digests may legitimately become stale; preserve C08 history and use canonical replay instead of silently rebinding it.",
+    "Current WP13 source fixture remains synthetic for source declaration/admission; the discriminator is a real Planner OPEX edit in a real LocalStore. This does not become installed/native host proof.",
+    "Canonical policy, engines, Azure/deployment/identity, UI and global consumers remain outside this intake. Source-only admission does not equal a confirmed human choice or application.",
+    "Historical elapsed times are whole test durations, not measured cold-read or phase spans; no speedup amount is established for S12.",
+    "Root decides whether to intake and publish. This reviewer made no repo/branch change, no test execution and no remote mutation.",
+    "Preexisting generic comparison/nonempty final-callback boundaries remain outside the source-only repair; see behaviorReview.preexistingOwnerFreshnessLimit and the independent second review."
+  ],
+  "nextAction": "Root may select the exact nine-file option after the independent child closure review, then publish pins and run the pending surgical selection with the existing actual-boundary file included or isolated. Preserve original S12 and all historical proof identities; report current product proof only when exact run/control/log criteria finish.",
+  "writeScope": {
+    "reviewArtifactsOnly": true,
+    "productEdits": false,
+    "localProductTests": false,
+    "localTypecheckOrGuards": false,
+    "remoteMutations": false,
+    "mapsOrLedgerEdited": false
+  },
+  "sourceArtifacts": [
+    {
+      "path": "reference/finance-closure-W17/exact-directory-comparisons.json",
+      "bytes": 33671,
+      "gitBlob": "ec0b143baa5c2ffda946b027d7d34736e9b5ebe8",
+      "sha256": "5fd5df9f73b12abd300c8699a3d82855afc104cb90af0d741339d26c8414f99c"
+    },
+    {
+      "path": "reference/finance-closure-W17/planner-directory-index.json",
+      "bytes": 7376,
+      "gitBlob": "eb7cd45c72ab0b0d7bdc3de43f5df2fa628332b9",
+      "sha256": "938ea42c43306cf830c0cb51f4c4b6fb16246135e09df29796d3d7f70a0a79b7"
+    },
+    {
+      "path": "reference/finance-closure-W17/static-affected-accepted-files.json",
+      "bytes": 8228,
+      "gitBlob": "e55a7b2d93eac6d055172aad804296079ef26363",
+      "sha256": "f9b24fdb82af50592ff03f597a081b0a7595ddc60cb74202d1281d345af82890"
+    },
+    {
+      "path": "reference/finance-closure-W17/docs/sf2h/receipts/WP11/finance-20261114/intake-reconciliation-pr40-final-d777.json",
+      "bytes": 15983,
+      "gitBlob": "cf532e375b47f885c0e69dd969915d31914eb399",
+      "sha256": "a842938f170e7c9fce39487c270635c59fd4ed613f10dc7b320729d0ce03f6aa"
+    },
+    {
+      "path": "reference/finance-closure-W17/docs/sf2h/receipts/WP11/finance-20261114/product-tests.json",
+      "bytes": 91960,
+      "gitBlob": "9efe9c72124aef80585c129b6e64c139c687153c",
+      "sha256": "2fcdcfc4141b74f214fc4507033c9905a717ac90ad7c7e0c67428b00cf0071d4"
+    },
+    {
+      "path": "reference/finance-closure-W17/docs/sf2h/receipts/WP11/finance-20261114/hosted-checks.json",
+      "bytes": 22786,
+      "gitBlob": "3fd49da89c11f7f758acd3b12c9c0b46bd63c44b",
+      "sha256": "57cc0f4475131efebe7ddc34328b21305d31e80045ee57d82c8068b7a3fd0757"
+    },
+    {
+      "path": "reference/finance-closure-W17/docs/sf2h/receipts/WP11/finance-20261114/intake-reconciliation-pr40-dc9.json",
+      "bytes": 20828,
+      "gitBlob": "2f015ef1c27965481946ec33c365e58fabf98877",
+      "sha256": "32238a603e7dbb408ddb3bfcd5b1fcbcd0b2ca6445556d2804fb2746a47ff9f8"
+    }
+  ],
+  "independentSecondReview": {
+    "path": "reference/wp13-finance-full-closure-independent-review.json",
+    "sha256": "90a5833c320e8f8e753536d572459d03a8a759264450c463dc8716407c11700d",
+    "gitBlob": "7357d92ef4b007a33d10cee673b992393991fdd8",
+    "status": "NO_NEW_STATIC_BLOCKER_FOR_BOUNDED_EXACT_INTAKE_HOSTED_VALIDATION_REQUIRED"
+  },
+  "baselineSelectorPins": {
+    "Sucafinav1/test/product/wp03/port.test.ts": {
+      "publishedPath": "modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+      "sourceHead": "058391623bd254a7e989d14183e38bada6808052",
+      "sourceTree": "43c98b7200487a0a0fd3e5ad0280e91eac6063f1",
+      "gitBlob": "03a51004ce15979fe5d5a47b2f95f58edbef0ba5",
+      "sha256": "ef315ebcd25ecdcf0809ab37c214eff91fb9d2b91b668c8f8d768a768bd1d305",
+      "localPath": "reference/finance-closure-W17/WP13-W17-port-test.reference.ts",
+      "expectedCases": 2,
+      "testNames": [
+        "headcount projection follows domain visibility and increase preview is disposable",
+        "forecast port compares the real engine, and detects source changes"
+      ],
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/058391623bd254a7e989d14183e38bada6808052/modules/sucafina/Sucafinav1/test/product/wp03/port.test.ts",
+      "candidateIntakeOperation": null,
+      "reason": "Existing published source; separate selector-pin metadata, not a fabricated changed-file manifest entry. The nine-file proposal does not modify this path. Assembled-head blob equality must be checked after actual publication.",
+      "existingDependency": {
+        "path": "modules/sucafina/Sucafinav1/test/fixture/persistence.ts",
+        "artifact": {
+          "path": "reference/finance-closure-W17/WP13-W17-test-persistence.reference.ts",
+          "bytes": 1240,
+          "gitBlob": "b33c8f41fb719266e6100e8dc307c53ec66cdcff",
+          "sha256": "d8a3e502f5b64cb660b64f8ba4b083a32bda8dda17e4db316cb98acb8d803fa1"
+        },
+        "provenance": "Exact W17 read through GitHub MCP; missing local hydration is not a missing published dependency."
+      }
+    }
+  }
+}

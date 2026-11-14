@@ -1,0 +1,172 @@
+{
+  "log": "ci-analysis/wp11-W19-E2-tests.log",
+  "logSha256": "4a2be6e02241e7d0bda07a7e32712ac56f906ef1ef70131d0710c565034ccf14",
+  "metadata": {
+    "productSha": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1",
+    "productTree": "47e634b81b9a64fef462cb670373aa832b88b76b",
+    "snapshotSha": "00c5f5845c80863d0bab37def7a71c006b430a15",
+    "snapshotTree": "cfde0de52d4d3a04921dadd98819907e6abad18c",
+    "branch": "ci-run-linux-astra-wp11-a3b57d4-ce58be6a-e2",
+    "requestSha256": "ce58be6accda23d28592f00639e78ff9fe79cd03d731026f13124c1c789cc533",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "--timeout",
+        "180000"
+      ],
+      "env": {}
+    },
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "a0b08a035c38d62d2e11a594a91f67b6a53587b1",
+    "runIds": [
+      43599613374
+    ],
+    "selectionReason": "Revalidate only the seven-case file after an explicit presence guard resolves the hosted TypeScript optional-string diagnostic. Runtime unchanged from W18. Other fourteen E1 tests keep their actual W18 execution SHA and identical source/config graphs. E1 was terminal success before this dispatch."
+  },
+  "summary": {
+    "pass": 7,
+    "fail": 0,
+    "tests": 7,
+    "files": 1,
+    "durationSeconds": 0.324
+  },
+  "omniPositiveControl": {
+    "nonces": [
+      "6c4b6f67f00809e8064c57b33cbb7dc2"
+    ],
+    "observedVerdicts": [
+      "omni positive control [6c4b6f67f00809e8064c57b33cbb7dc2]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [6c4b6f67f00809e8064c57b33cbb7dc2]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "requestedFiles": [
+    "Sucafinav1/test/product/wp11/case-egress-fence.test.ts"
+  ],
+  "observedFiles": [
+    "Sucafinav1/test/product/wp11/case-egress-fence.test.ts"
+  ],
+  "fileSummaries": [
+    {
+      "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "reportedTests": 7,
+      "counts": {
+        "pass": 7,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 120.23,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "line": 830,
+        "timestamp": "2026-11-14T13:26:18.3473844Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+        "status": "pass",
+        "name": "prepare-intent suppresses same-version content changed by host check 3 before its response",
+        "line": 837,
+        "timestamp": "2026-11-14T13:26:18.5050931Z",
+        "durationMs": 18.22
+      }
+    }
+  ],
+  "lastObservedFile": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+  "lastReportedTest": {
+    "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+    "status": "pass",
+    "name": "prepare-intent suppresses same-version content changed by host check 3 before its response",
+    "line": 837,
+    "timestamp": "2026-11-14T13:26:18.5050931Z",
+    "durationMs": 18.22
+  },
+  "hasCompletedBunSummary": true,
+  "requestedButNotObserved": [],
+  "observedButNotRequested": [],
+  "ownObservedCounts": {
+    "pass": 7,
+    "fail": 0,
+    "skip": 0,
+    "todo": 0
+  },
+  "observedTests": [
+    {
+      "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "status": "pass",
+      "name": "draft suppresses membership changed by host check 3 before its response",
+      "line": 831,
+      "timestamp": "2026-11-14T13:26:18.4133234Z",
+      "durationMs": 28.54
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "status": "pass",
+      "name": "draft suppresses incarnation changed by host check 3 before its response",
+      "line": 832,
+      "timestamp": "2026-11-14T13:26:18.4262333Z",
+      "durationMs": 12.92
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "status": "pass",
+      "name": "draft suppresses same-version content changed by host check 3 before its response",
+      "line": 833,
+      "timestamp": "2026-11-14T13:26:18.4377766Z",
+      "durationMs": 11.55
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "status": "pass",
+      "name": "prepare-intent suppresses membership changed by host check 5 before its response",
+      "line": 834,
+      "timestamp": "2026-11-14T13:26:18.4564019Z",
+      "durationMs": 18.6
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "status": "pass",
+      "name": "prepare-intent suppresses incarnation changed by host check 5 before its response",
+      "line": 835,
+      "timestamp": "2026-11-14T13:26:18.4723437Z",
+      "durationMs": 15.94
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "status": "pass",
+      "name": "prepare-intent suppresses same-version content changed by host check 5 before its response",
+      "line": 836,
+      "timestamp": "2026-11-14T13:26:18.4868343Z",
+      "durationMs": 14.46
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "status": "pass",
+      "name": "prepare-intent suppresses same-version content changed by host check 3 before its response",
+      "line": 837,
+      "timestamp": "2026-11-14T13:26:18.5050931Z",
+      "durationMs": 18.22
+    }
+  ],
+  "failures": [],
+  "fixtureTrace": {
+    "observations": [],
+    "parseErrors": [],
+    "lastByLabel": {},
+    "maximumObservedSerializedStateBytes": null,
+    "boundary": "Counts and inclusive overlapping wall durations are fixture instrumentation; serialized state bytes are not sampled process memory or exclusive CPU time."
+  }
+}

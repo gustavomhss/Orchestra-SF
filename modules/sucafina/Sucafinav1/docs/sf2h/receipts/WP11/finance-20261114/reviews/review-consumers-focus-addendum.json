@@ -1,0 +1,61 @@
+{
+  "schema": "sf2h-independent-consumer-focus-addendum-v1",
+  "product_sha": "217c9bcc75d499eff3884fb4afe662d5c0029935",
+  "product_tree": "eeae1c748b3e1e73be8686c3f1df325e2fac3824",
+  "parent_scope": "W11 fixture typing over W10; this addendum examines only the three supplied published W12 blobs.",
+  "capture": "/workspace/scratch/a97ca4c53050/finance-W12-changes.json",
+  "capture_sha256": "747873aaca9e77a4098b0975c333c67600df4fdee6d283bed25f859beb83661e",
+  "independence": "Read-only reviewer; did not author the fix. No dirty working-tree source used.",
+  "method": "Read the frozen capture, independently recomputed all three Git blob identities, and compared their contents with the reviewed W10 immutable snapshot. No product, test, browser, build, typecheck or CI execution.",
+  "blobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/source-navigation.ts",
+      "expected_blob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357",
+      "observed_blob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "expected_blob": "9b279523da60f18eebdc270707d1b42c865e3dca",
+      "observed_blob": "9b279523da60f18eebdc270707d1b42c865e3dca",
+      "verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/planner-origins.test.ts",
+      "expected_blob": "bf92905dccfd01eaedc624841d808d5ce21b6f21",
+      "observed_blob": "bf92905dccfd01eaedc624841d808d5ce21b6f21",
+      "verified": true
+    }
+  ],
+  "finding": {
+    "id": "C1R",
+    "prior_severity": "medium",
+    "prior_status": "OPEN_AT_W10",
+    "status": "CORRECTED_BY_STATIC_REVIEW_AT_W12_EXECUTION_PENDING",
+    "cause_removed": "Closing the chooser now both hides it and removes its child buttons, including after A/B selection and cancellation. Stale hidden buttons no longer precede and intercept the matching visible mark in the DOM.",
+    "defensive_behavior": "restoreBiFocus scans matching targets followed by fallbacks; skips disconnected targets, hidden/inert ancestry, zero layout rectangles and visibility:hidden; reports success only if the target is actually ownerDocument.activeElement.",
+    "locations": [
+      "product/analytics/source-navigation.ts:50-55",
+      "product/analytics/view.ts:421-433"
+    ],
+    "authored_discriminant": "planner-origins.test.ts:87-98 is inside both view loops (BI02/BI03), both selected rows (zero/nonzero) and both source options (A/B). It moves focus to the filter control after choosing an origin, calls the real exported restoreBiFocus on the original mount, asserts successful visible mark focus and zero retained focus targets inside hidden choosers.",
+    "test_locations": [
+      "test/product/wp05/planner-origins.test.ts:40-50,74-98,130-146"
+    ],
+    "typing_note": "The later fixture changes narrow record reference and guard originSource before reading id. The inspected delta strengthens guards without changing the target financial assertion.",
+    "new_concrete_regression_found": false,
+    "limits": [
+      "Authored test has not been executed by this reviewer; S6 remains pending per coordinator.",
+      "The test uses the real renderer and retained mount with a captured navigation callback. It is not an installed HTTP/C17 detail-return/host lifecycle witness.",
+      "This correction does not close the overall C1 installed-navigation requirements, external asset/composition proof or literal G2 advantage requirement."
+    ]
+  },
+  "new_findings": [],
+  "excluded": [
+    "G2 canonical advantage work in other files",
+    "Full W12 tree verification beyond the three captured blobs",
+    "303 live receipt literal revalidation",
+    "External COMPOSE/INTERFACE modifications and installed integration"
+  ],
+  "acceptance": "Limited static closure of C1R at the exact reviewed W12 blobs. No test PASS, full criterion acceptance, READY/DONE or global C/D verdict."
+}

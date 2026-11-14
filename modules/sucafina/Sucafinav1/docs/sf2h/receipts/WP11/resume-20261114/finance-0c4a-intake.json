@@ -1,0 +1,82 @@
+{
+  "schema": "wp11-published-targeted-intake-v1",
+  "sourceRef": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+  "sourcePR": 35,
+  "consumerBaseSha": "c41d7277be5941bafb105654360a32adea7f0347",
+  "reason": "Producer published delimited fixture corrections and real BI pointer targets; consume exact reviewed blobs before remaining affected consumer validation. No monetary producer formulas or authority contract changed.",
+  "entries": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "sourceRef": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "sourceBlob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "expectedCurrentBlob": "0ccf287ecd225ddcae99a1490f255b4c2b4358ed",
+      "sha256": "afb559f4b2403025b977a33a5a118be567a5936de5ca46e3308687186b250ad8",
+      "role": "canonical-comparison-fixture-extraction",
+      "action": "COPY_EXACT_PUBLISHED_BLOB_NO_TRANSFORMATION",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/0c4a2545a63b4903c7eedb00d3f0989eb74ed398/modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+      "sourceRef": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "sourceBlob": "27e0580d6c9ba7b4c549bc33e5d252a7ce74ae66",
+      "expectedCurrentBlob": "02a78aa9ce4d87d2636db30c60128e2825d8af4b",
+      "sha256": "94a2083facbde659e3cee6db56597016517e7c45ac1d85b12e1be91f7606adf0",
+      "role": "own-consumer-comparison-bootstrap",
+      "action": "COPY_EXACT_PUBLISHED_BLOB_NO_TRANSFORMATION",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/0c4a2545a63b4903c7eedb00d3f0989eb74ed398/modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+      "sourceRef": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "sourceBlob": "90333c12d277942667810d6ed802e019e799f837",
+      "expectedCurrentBlob": "fe8e2173a1291efd8bed0305c8ef6b5c3e725a94",
+      "sha256": "64c9cc28a80437fa9d6ee37b5efc67f266506b4edfdc6c4bc877168e1346ef23",
+      "role": "own-consumer-current-dataset-CAS",
+      "action": "COPY_EXACT_PUBLISHED_BLOB_NO_TRANSFORMATION",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/0c4a2545a63b4903c7eedb00d3f0989eb74ed398/modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/decision-view.ts",
+      "sourceRef": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "sourceBlob": "bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8",
+      "expectedCurrentBlob": "4a4edc6549684202b3d5ddab4933d6ff56e0aa59",
+      "sha256": "73aa057a8ed81927d9bfe59e883edfcb0e544e3a8c4548e58f60773f6873f748",
+      "role": "canonical-BI-timeline-pointer-target",
+      "action": "COPY_EXACT_PUBLISHED_BLOB_NO_TRANSFORMATION",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/0c4a2545a63b4903c7eedb00d3f0989eb74ed398/modules/sucafina/Sucafinav1/product/analytics/decision-view.ts"
+    }
+  ],
+  "status": "EXACT_BLOBS_CONSUMED_HOSTED_VALIDATION_PENDING",
+  "runtimeClaim": false,
+  "timeoutChanges": false,
+  "excluded": [
+    {
+      "path": "test/product/wp05/choice-history-bi.test.ts@0c4a",
+      "reason": "New advantage-view contract requires additional analytics closure; retained earlier exact consumer remains selected."
+    },
+    {
+      "path": "test/product/wp11/current-choice-lifecycle.test.ts@0c4a",
+      "reason": "Diagnostic-only replay wrappers not imported into own candidate."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts",
+      "sourceRef": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "sourceBlob": "856381de3f333ca79b302483d3b8893d55f00441",
+      "reason": "Reviewed but no current caller in consumed tree; own annual quote already fixed in W10. Not copied or claimed executed."
+    }
+  ],
+  "requiredHostedValidation": [
+    "B1 affected history/import/composite/BI files",
+    "C2 exact previously timed-out producer assertions"
+  ],
+  "preservedBoundaries": [
+    "Only explicit synthetic quote supplies twelve monthly forecast values, including confirmed zero.",
+    "Comparison factory still uses canonical Planner/case/source/evidence providers; sensitivity wrapper still persists and returns required saved result.",
+    "No claim of mounted WP10 native/UI journey from isolated fixture or browser projection."
+  ],
+  "independentReview": {
+    "path": "finance-0c4a-review.json",
+    "sha256": "3d76b1d88525972e22f7e412c8ee1fd8d32dabaa31424e43f46db9f46d786594",
+    "result": "no-static-blocker-found-for-five-reviewed-four-selected"
+  }
+}

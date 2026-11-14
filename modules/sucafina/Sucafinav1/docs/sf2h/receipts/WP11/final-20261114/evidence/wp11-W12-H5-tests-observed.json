@@ -1,0 +1,922 @@
+{
+  "log": "ci-analysis/wp11-W12-H5-tests.log",
+  "logSha256": "9c5693b75cfaae74f93e8d1a61dcec483614c346820ee69215a5f46989e0b79f",
+  "metadata": {
+    "productSha": "1fa71a64faf297fdbae07747d260d4ced7ec9532",
+    "productTree": "88a9ea457363fc14d4c9a3735d70f06f10655493",
+    "snapshotSha": "a015f3067ab10b6b1bc686cab8933ac811d9874a",
+    "snapshotTree": "1f2a5d35de97dc9b1a7dcd135a3eabe25efd0b80",
+    "branch": "ci-run-linux-astra-wp11-1fa71a6-2dee7e84-h5",
+    "requestSha256": "2dee7e8488572d3dce352d08d8fc1a2dfe51b3fd9218a98add1a2fa60097677e",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+        "--timeout",
+        "180000"
+      ],
+      "env": {}
+    },
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "bf44df084818f23a9119290fc8c78720ddd8f36b",
+    "runIds": [
+      43593078090
+    ]
+  },
+  "summary": {
+    "pass": 0,
+    "fail": 1,
+    "error": 1,
+    "tests": 1,
+    "files": 1,
+    "durationSeconds": 180.3
+  },
+  "omniPositiveControl": {
+    "nonces": [
+      "9c76156bb7c64ad05b8c69b757887fb5"
+    ],
+    "observedVerdicts": [
+      "omni positive control [9c76156bb7c64ad05b8c69b757887fb5]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [9c76156bb7c64ad05b8c69b757887fb5]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "requestedFiles": [
+    "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts"
+  ],
+  "observedFiles": [
+    "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts"
+  ],
+  "fileSummaries": [
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 180059.57,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+        "line": 831,
+        "timestamp": "2026-11-14T12:07:07.9456572Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+        "status": "fail",
+        "name": "the same durable choice preserves omitted training while a confirmed source revision reverses cost and criterion",
+        "line": 844,
+        "timestamp": "2026-11-14T12:10:08.0626795Z",
+        "durationMs": 180059.57,
+        "timeoutMs": 180000
+      }
+    }
+  ],
+  "lastObservedFile": "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+  "lastReportedTest": {
+    "file": "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+    "status": "fail",
+    "name": "the same durable choice preserves omitted training while a confirmed source revision reverses cost and criterion",
+    "line": 844,
+    "timestamp": "2026-11-14T12:10:08.0626795Z",
+    "durationMs": 180059.57,
+    "timeoutMs": 180000
+  },
+  "hasCompletedBunSummary": true,
+  "requestedButNotObserved": [],
+  "observedButNotRequested": [],
+  "ownObservedCounts": {
+    "pass": 0,
+    "fail": 1,
+    "skip": 0,
+    "todo": 0
+  },
+  "observedTests": [
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "status": "fail",
+      "name": "the same durable choice preserves omitted training while a confirmed source revision reverses cost and criterion",
+      "line": 844,
+      "timestamp": "2026-11-14T12:10:08.0626795Z",
+      "durationMs": 180059.57,
+      "timeoutMs": 180000
+    }
+  ],
+  "failures": [
+    {
+      "file": "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "status": "fail",
+      "name": "the same durable choice preserves omitted training while a confirmed source revision reverses cost and criterion",
+      "line": 844,
+      "timestamp": "2026-11-14T12:10:08.0626795Z",
+      "durationMs": 180059.57,
+      "timeoutMs": 180000
+    }
+  ],
+  "fixtureTrace": {
+    "observations": [
+      {
+        "line": 832,
+        "label": "renewal-choice-history",
+        "phase": "bootstrap-start",
+        "elapsedMs": 0,
+        "budgetMs": 180000,
+        "counts": {}
+      },
+      {
+        "line": 833,
+        "label": "renewal-choice-history",
+        "phase": "bootstrap-complete",
+        "elapsedMs": 93,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 1,
+            "elapsedMs": 4,
+            "maximumMs": 4
+          }
+        },
+        "stateBytes": 38210,
+        "transactionsBytes": 415,
+        "casesBytes": 37395,
+        "resultBytes": 2,
+        "transactions": 1,
+        "cases": 1,
+        "results": 0
+      },
+      {
+        "line": 834,
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-omitted:start",
+        "elapsedMs": 98,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2,
+            "elapsedMs": 7,
+            "maximumMs": 4
+          }
+        },
+        "stateBytes": 38210,
+        "transactionsBytes": 415,
+        "casesBytes": 37395,
+        "resultBytes": 2,
+        "transactions": 1,
+        "cases": 1,
+        "results": 0
+      },
+      {
+        "line": 835,
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-omitted:complete",
+        "elapsedMs": 23286,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 552,
+            "elapsedMs": 8805,
+            "maximumMs": 41
+          },
+          "host.revalidate": {
+            "calls": 2874,
+            "elapsedMs": 163,
+            "maximumMs": 5
+          },
+          "operation-source": {
+            "calls": 1036,
+            "elapsedMs": 67,
+            "maximumMs": 2
+          },
+          "operation-coverage": {
+            "calls": 652,
+            "elapsedMs": 42,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 100,
+            "elapsedMs": 1356,
+            "maximumMs": 23
+          },
+          "c08.transaction.preferences": {
+            "calls": 3,
+            "elapsedMs": 94,
+            "maximumMs": 47
+          },
+          "classified-source": {
+            "calls": 41,
+            "elapsedMs": 4,
+            "maximumMs": 1
+          },
+          "classified-coverage": {
+            "calls": 43,
+            "elapsedMs": 2542,
+            "maximumMs": 93
+          },
+          "c08.transaction.cases": {
+            "calls": 5,
+            "elapsedMs": 271,
+            "maximumMs": 63
+          },
+          "planner.verifyOperation": {
+            "calls": 96,
+            "elapsedMs": 9846,
+            "maximumMs": 113
+          },
+          "planner.verifySourceOnly": {
+            "calls": 96,
+            "elapsedMs": 6178,
+            "maximumMs": 74
+          }
+        },
+        "stateBytes": 540335,
+        "transactionsBytes": 159999,
+        "casesBytes": 53809,
+        "resultBytes": 111960,
+        "transactions": 9,
+        "cases": 1,
+        "results": 5
+      },
+      {
+        "line": 836,
+        "label": "renewal-choice-history",
+        "phase": "threshold-before:start",
+        "elapsedMs": 23309,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 553,
+            "elapsedMs": 8827,
+            "maximumMs": 41
+          },
+          "host.revalidate": {
+            "calls": 2874,
+            "elapsedMs": 163,
+            "maximumMs": 5
+          },
+          "operation-source": {
+            "calls": 1036,
+            "elapsedMs": 67,
+            "maximumMs": 2
+          },
+          "operation-coverage": {
+            "calls": 652,
+            "elapsedMs": 42,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 100,
+            "elapsedMs": 1356,
+            "maximumMs": 23
+          },
+          "c08.transaction.preferences": {
+            "calls": 3,
+            "elapsedMs": 94,
+            "maximumMs": 47
+          },
+          "classified-source": {
+            "calls": 41,
+            "elapsedMs": 4,
+            "maximumMs": 1
+          },
+          "classified-coverage": {
+            "calls": 43,
+            "elapsedMs": 2542,
+            "maximumMs": 93
+          },
+          "c08.transaction.cases": {
+            "calls": 5,
+            "elapsedMs": 271,
+            "maximumMs": 63
+          },
+          "planner.verifyOperation": {
+            "calls": 96,
+            "elapsedMs": 9846,
+            "maximumMs": 113
+          },
+          "planner.verifySourceOnly": {
+            "calls": 96,
+            "elapsedMs": 6178,
+            "maximumMs": 74
+          }
+        },
+        "stateBytes": 540335,
+        "transactionsBytes": 159999,
+        "casesBytes": 53809,
+        "resultBytes": 111960,
+        "transactions": 9,
+        "cases": 1,
+        "results": 5
+      },
+      {
+        "line": 837,
+        "label": "renewal-choice-history",
+        "phase": "threshold-before:complete",
+        "elapsedMs": 44847,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 1028,
+            "elapsedMs": 16527,
+            "maximumMs": 41
+          },
+          "host.revalidate": {
+            "calls": 5588,
+            "elapsedMs": 269,
+            "maximumMs": 5
+          },
+          "operation-source": {
+            "calls": 2048,
+            "elapsedMs": 150,
+            "maximumMs": 3
+          },
+          "operation-coverage": {
+            "calls": 1280,
+            "elapsedMs": 82,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 208,
+            "elapsedMs": 3147,
+            "maximumMs": 23
+          },
+          "c08.transaction.preferences": {
+            "calls": 3,
+            "elapsedMs": 94,
+            "maximumMs": 47
+          },
+          "classified-source": {
+            "calls": 122,
+            "elapsedMs": 9,
+            "maximumMs": 1
+          },
+          "classified-coverage": {
+            "calls": 115,
+            "elapsedMs": 7718,
+            "maximumMs": 96
+          },
+          "c08.transaction.cases": {
+            "calls": 5,
+            "elapsedMs": 271,
+            "maximumMs": 63
+          },
+          "planner.verifyOperation": {
+            "calls": 192,
+            "elapsedMs": 19458,
+            "maximumMs": 113
+          },
+          "planner.verifySourceOnly": {
+            "calls": 192,
+            "elapsedMs": 12220,
+            "maximumMs": 74
+          }
+        },
+        "stateBytes": 540335,
+        "transactionsBytes": 159999,
+        "casesBytes": 53809,
+        "resultBytes": 111960,
+        "transactions": 9,
+        "cases": 1,
+        "results": 5
+      },
+      {
+        "line": 838,
+        "label": "renewal-choice-history",
+        "phase": "choice-recorded",
+        "elapsedMs": 78240,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 1746,
+            "elapsedMs": 29106,
+            "maximumMs": 44
+          },
+          "host.revalidate": {
+            "calls": 9850,
+            "elapsedMs": 507,
+            "maximumMs": 5
+          },
+          "operation-source": {
+            "calls": 3672,
+            "elapsedMs": 265,
+            "maximumMs": 4
+          },
+          "operation-coverage": {
+            "calls": 2296,
+            "elapsedMs": 156,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 288,
+            "elapsedMs": 4435,
+            "maximumMs": 23
+          },
+          "c08.transaction.preferences": {
+            "calls": 3,
+            "elapsedMs": 94,
+            "maximumMs": 47
+          },
+          "classified-source": {
+            "calls": 170,
+            "elapsedMs": 12,
+            "maximumMs": 1
+          },
+          "classified-coverage": {
+            "calls": 159,
+            "elapsedMs": 10536,
+            "maximumMs": 103
+          },
+          "c08.transaction.cases": {
+            "calls": 6,
+            "elapsedMs": 342,
+            "maximumMs": 71
+          },
+          "planner.verifyOperation": {
+            "calls": 344,
+            "elapsedMs": 35117,
+            "maximumMs": 122
+          },
+          "planner.verifySourceOnly": {
+            "calls": 344,
+            "elapsedMs": 22056,
+            "maximumMs": 79
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 15,
+            "maximumMs": 15
+          }
+        },
+        "stateBytes": 694502,
+        "transactionsBytes": 262591,
+        "casesBytes": 102163,
+        "resultBytes": 111960,
+        "transactions": 10,
+        "cases": 1,
+        "results": 5
+      },
+      {
+        "line": 839,
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-confirmed:start",
+        "elapsedMs": 78320,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 1749,
+            "elapsedMs": 29163,
+            "maximumMs": 44
+          },
+          "host.revalidate": {
+            "calls": 9850,
+            "elapsedMs": 507,
+            "maximumMs": 5
+          },
+          "operation-source": {
+            "calls": 3672,
+            "elapsedMs": 265,
+            "maximumMs": 4
+          },
+          "operation-coverage": {
+            "calls": 2296,
+            "elapsedMs": 156,
+            "maximumMs": 1
+          },
+          "c08.read.preferences": {
+            "calls": 288,
+            "elapsedMs": 4435,
+            "maximumMs": 23
+          },
+          "c08.transaction.preferences": {
+            "calls": 3,
+            "elapsedMs": 94,
+            "maximumMs": 47
+          },
+          "classified-source": {
+            "calls": 170,
+            "elapsedMs": 12,
+            "maximumMs": 1
+          },
+          "classified-coverage": {
+            "calls": 159,
+            "elapsedMs": 10536,
+            "maximumMs": 103
+          },
+          "c08.transaction.cases": {
+            "calls": 6,
+            "elapsedMs": 342,
+            "maximumMs": 71
+          },
+          "planner.verifyOperation": {
+            "calls": 344,
+            "elapsedMs": 35117,
+            "maximumMs": 122
+          },
+          "planner.verifySourceOnly": {
+            "calls": 344,
+            "elapsedMs": 22056,
+            "maximumMs": 79
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 15,
+            "maximumMs": 15
+          }
+        },
+        "stateBytes": 694502,
+        "transactionsBytes": 262591,
+        "casesBytes": 102163,
+        "resultBytes": 111960,
+        "transactions": 10,
+        "cases": 1,
+        "results": 5
+      },
+      {
+        "line": 840,
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-confirmed:complete",
+        "elapsedMs": 167332,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2418,
+            "elapsedMs": 57442,
+            "maximumMs": 99
+          },
+          "host.revalidate": {
+            "calls": 15459,
+            "elapsedMs": 1825,
+            "maximumMs": 33
+          },
+          "operation-source": {
+            "calls": 4796,
+            "elapsedMs": 22237,
+            "maximumMs": 72
+          },
+          "operation-coverage": {
+            "calls": 2908,
+            "elapsedMs": 4075,
+            "maximumMs": 37
+          },
+          "c08.read.preferences": {
+            "calls": 374,
+            "elapsedMs": 7593,
+            "maximumMs": 47
+          },
+          "c08.transaction.preferences": {
+            "calls": 6,
+            "elapsedMs": 389,
+            "maximumMs": 129
+          },
+          "classified-source": {
+            "calls": 194,
+            "elapsedMs": 354,
+            "maximumMs": 32
+          },
+          "classified-coverage": {
+            "calls": 187,
+            "elapsedMs": 16018,
+            "maximumMs": 287
+          },
+          "c08.transaction.cases": {
+            "calls": 11,
+            "elapsedMs": 1026,
+            "maximumMs": 151
+          },
+          "planner.verifyOperation": {
+            "calls": 344,
+            "elapsedMs": 35117,
+            "maximumMs": 122
+          },
+          "planner.verifySourceOnly": {
+            "calls": 600,
+            "elapsedMs": 83437,
+            "maximumMs": 279
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 15,
+            "maximumMs": 15
+          }
+        },
+        "stateBytes": 1367034,
+        "transactionsBytes": 567628,
+        "casesBytes": 115934,
+        "resultBytes": 250925,
+        "transactions": 18,
+        "cases": 1,
+        "results": 10
+      },
+      {
+        "line": 841,
+        "label": "renewal-choice-history",
+        "phase": "training-revised",
+        "elapsedMs": 167378,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2419,
+            "elapsedMs": 57488,
+            "maximumMs": 99
+          },
+          "host.revalidate": {
+            "calls": 15459,
+            "elapsedMs": 1825,
+            "maximumMs": 33
+          },
+          "operation-source": {
+            "calls": 4796,
+            "elapsedMs": 22237,
+            "maximumMs": 72
+          },
+          "operation-coverage": {
+            "calls": 2908,
+            "elapsedMs": 4075,
+            "maximumMs": 37
+          },
+          "c08.read.preferences": {
+            "calls": 374,
+            "elapsedMs": 7593,
+            "maximumMs": 47
+          },
+          "c08.transaction.preferences": {
+            "calls": 6,
+            "elapsedMs": 389,
+            "maximumMs": 129
+          },
+          "classified-source": {
+            "calls": 194,
+            "elapsedMs": 354,
+            "maximumMs": 32
+          },
+          "classified-coverage": {
+            "calls": 187,
+            "elapsedMs": 16018,
+            "maximumMs": 287
+          },
+          "c08.transaction.cases": {
+            "calls": 11,
+            "elapsedMs": 1026,
+            "maximumMs": 151
+          },
+          "planner.verifyOperation": {
+            "calls": 344,
+            "elapsedMs": 35117,
+            "maximumMs": 122
+          },
+          "planner.verifySourceOnly": {
+            "calls": 600,
+            "elapsedMs": 83437,
+            "maximumMs": 279
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 15,
+            "maximumMs": 15
+          }
+        },
+        "stateBytes": 1367034,
+        "transactionsBytes": 567628,
+        "casesBytes": 115934,
+        "resultBytes": 250925,
+        "transactions": 18,
+        "cases": 1,
+        "results": 10
+      },
+      {
+        "line": 842,
+        "label": "renewal-choice-history",
+        "phase": "threshold-after:start",
+        "elapsedMs": 167428,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2420,
+            "elapsedMs": 57537,
+            "maximumMs": 99
+          },
+          "host.revalidate": {
+            "calls": 15459,
+            "elapsedMs": 1825,
+            "maximumMs": 33
+          },
+          "operation-source": {
+            "calls": 4796,
+            "elapsedMs": 22237,
+            "maximumMs": 72
+          },
+          "operation-coverage": {
+            "calls": 2908,
+            "elapsedMs": 4075,
+            "maximumMs": 37
+          },
+          "c08.read.preferences": {
+            "calls": 374,
+            "elapsedMs": 7593,
+            "maximumMs": 47
+          },
+          "c08.transaction.preferences": {
+            "calls": 6,
+            "elapsedMs": 389,
+            "maximumMs": 129
+          },
+          "classified-source": {
+            "calls": 194,
+            "elapsedMs": 354,
+            "maximumMs": 32
+          },
+          "classified-coverage": {
+            "calls": 187,
+            "elapsedMs": 16018,
+            "maximumMs": 287
+          },
+          "c08.transaction.cases": {
+            "calls": 11,
+            "elapsedMs": 1026,
+            "maximumMs": 151
+          },
+          "planner.verifyOperation": {
+            "calls": 344,
+            "elapsedMs": 35117,
+            "maximumMs": 122
+          },
+          "planner.verifySourceOnly": {
+            "calls": 600,
+            "elapsedMs": 83437,
+            "maximumMs": 279
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 15,
+            "maximumMs": 15
+          }
+        },
+        "stateBytes": 1367034,
+        "transactionsBytes": 567628,
+        "casesBytes": 115934,
+        "resultBytes": 250925,
+        "transactions": 18,
+        "cases": 1,
+        "results": 10
+      },
+      {
+        "line": 843,
+        "label": "renewal-choice-history",
+        "phase": "threshold-after:start",
+        "elapsedMs": 180020,
+        "budgetMs": 180000,
+        "status": "deadline-exceeded",
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2508,
+            "elapsedMs": 61372,
+            "maximumMs": 99
+          },
+          "host.revalidate": {
+            "calls": 16250,
+            "elapsedMs": 1991,
+            "maximumMs": 33
+          },
+          "operation-source": {
+            "calls": 4964,
+            "elapsedMs": 25477,
+            "maximumMs": 72
+          },
+          "operation-coverage": {
+            "calls": 2998,
+            "elapsedMs": 4649,
+            "maximumMs": 37
+          },
+          "c08.read.preferences": {
+            "calls": 386,
+            "elapsedMs": 8098,
+            "maximumMs": 47
+          },
+          "c08.transaction.preferences": {
+            "calls": 6,
+            "elapsedMs": 389,
+            "maximumMs": 129
+          },
+          "classified-source": {
+            "calls": 201,
+            "elapsedMs": 540,
+            "maximumMs": 33
+          },
+          "classified-coverage": {
+            "calls": 194,
+            "elapsedMs": 17814,
+            "maximumMs": 287
+          },
+          "c08.transaction.cases": {
+            "calls": 11,
+            "elapsedMs": 1026,
+            "maximumMs": 151
+          },
+          "planner.verifyOperation": {
+            "calls": 344,
+            "elapsedMs": 35117,
+            "maximumMs": 122
+          },
+          "planner.verifySourceOnly": {
+            "calls": 640,
+            "elapsedMs": 92510,
+            "maximumMs": 279
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 15,
+            "maximumMs": 15
+          }
+        }
+      }
+    ],
+    "parseErrors": [],
+    "lastByLabel": {
+      "renewal-choice-history": {
+        "line": 843,
+        "label": "renewal-choice-history",
+        "phase": "threshold-after:start",
+        "elapsedMs": 180020,
+        "budgetMs": 180000,
+        "status": "deadline-exceeded",
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2508,
+            "elapsedMs": 61372,
+            "maximumMs": 99
+          },
+          "host.revalidate": {
+            "calls": 16250,
+            "elapsedMs": 1991,
+            "maximumMs": 33
+          },
+          "operation-source": {
+            "calls": 4964,
+            "elapsedMs": 25477,
+            "maximumMs": 72
+          },
+          "operation-coverage": {
+            "calls": 2998,
+            "elapsedMs": 4649,
+            "maximumMs": 37
+          },
+          "c08.read.preferences": {
+            "calls": 386,
+            "elapsedMs": 8098,
+            "maximumMs": 47
+          },
+          "c08.transaction.preferences": {
+            "calls": 6,
+            "elapsedMs": 389,
+            "maximumMs": 129
+          },
+          "classified-source": {
+            "calls": 201,
+            "elapsedMs": 540,
+            "maximumMs": 33
+          },
+          "classified-coverage": {
+            "calls": 194,
+            "elapsedMs": 17814,
+            "maximumMs": 287
+          },
+          "c08.transaction.cases": {
+            "calls": 11,
+            "elapsedMs": 1026,
+            "maximumMs": 151
+          },
+          "planner.verifyOperation": {
+            "calls": 344,
+            "elapsedMs": 35117,
+            "maximumMs": 122
+          },
+          "planner.verifySourceOnly": {
+            "calls": 640,
+            "elapsedMs": 92510,
+            "maximumMs": 279
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 15,
+            "maximumMs": 15
+          }
+        }
+      }
+    },
+    "maximumObservedSerializedStateBytes": 1367034,
+    "boundary": "Counts and inclusive overlapping wall durations are fixture instrumentation; serialized state bytes are not sampled process memory or exclusive CPU time."
+  }
+}

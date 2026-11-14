@@ -1,0 +1,204 @@
+{
+  "schema": "sf-finance-independent-scenario-bi-r4-review-v1",
+  "reviewer": "Astra /root/cold_review",
+  "date_utc": "2026-11-14T17:12:25.274002+00:00",
+  "independence": {
+    "product_authorship": false,
+    "test_or_fixture_authorship": false,
+    "prior_R2_review_preserved": true,
+    "product_edits": 0,
+    "local_product_execution": false,
+    "remote_operations": false
+  },
+  "candidate": {
+    "manifest": "work-planner-bi/scenario-bi-candidate-manifest.json",
+    "base_declared": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+    "publication_parent_reported": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+    "commit_at_review": null,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+        "baseBlob": null,
+        "blob": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b",
+        "sha256": "fb69c81e2ca30af08d67c6a185cd33da64d272759a8e2f2bcb5d64a893928918",
+        "bytes": 16784,
+        "source": "/workspace/scratch/3b9737c0177a/work-planner-bi/repo/modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+        "hash_verified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+        "baseBlob": "93bc4fb74dee9c55fa3e396bd7108ebc9d3da895",
+        "blob": "9cc4cc81538a7247cd87893f958acf5665194eb5",
+        "sha256": "8ad91d7b1adc0d7b44027ceadf729b6c3e8ceea9e3f2bfbacaf21dfbd5325673",
+        "bytes": 6961,
+        "source": "/workspace/scratch/3b9737c0177a/work-planner-bi/repo/modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+        "hash_verified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+        "baseBlob": "98d2510a3a44e45ab341aed6a1f2560339ec8578",
+        "blob": "fef3b0546384fcb0739fcf11ef531406c60ad760",
+        "sha256": "76e837580584d7ae787fd7461655579b7f4ef1677e07bb081145a20606b38bd0",
+        "bytes": 9063,
+        "source": "/workspace/scratch/3b9737c0177a/work-planner-bi/repo/modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+        "hash_verified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-fixture.ts",
+        "baseBlob": null,
+        "blob": "14445a3e32ab1c906a993fd628d011b8d22659c9",
+        "sha256": "0d840930ad5c848147295a44a6509dc5971548f17f65b278ac28713e1d8f4f84",
+        "bytes": 14475,
+        "source": "/workspace/scratch/3b9737c0177a/work-planner-bi/repo/modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-fixture.ts",
+        "hash_verified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+        "baseBlob": null,
+        "blob": "f35fbae07684e507421a009244b603530f16b1e9",
+        "sha256": "6eb27361398464017f5cd34a2a59da471c5068f759a96aa1ca6e40ee2e2e4330",
+        "bytes": 11594,
+        "source": "/workspace/scratch/3b9737c0177a/work-planner-bi/repo/modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+        "hash_verified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-complete.test.ts",
+        "baseBlob": null,
+        "blob": "edad0b7bf1c54b3654b5a0595bcfb6e34d38102b",
+        "sha256": "54789bd3ad9780826b8d09cdc10b8703352c99cfddab563391bf77e53cf298f2",
+        "bytes": 6320,
+        "source": "/workspace/scratch/3b9737c0177a/work-planner-bi/repo/modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-complete.test.ts",
+        "hash_verified": true
+      }
+    ]
+  },
+  "scope": {
+    "new_full_review": [
+      "test/product/wp03/scenario-bi-complete.test.ts",
+      "test/product/wp03/scenario-bi-fixture.ts delta since prior WP13 review"
+    ],
+    "context_read": [
+      "test/product/wp03/scenario-bi.test.ts complete",
+      "product/planner/scenario-bi.ts complete",
+      "canonical WP11 renewal producer/classification/publication chain",
+      "stored-scenario BI selection and Planner paired source readers",
+      "waterfall resolver"
+    ],
+    "prior_review": "WP13 independent-bi-source-review.json covers original five paths; not relabeled as review of later fixture/new sixth path."
+  },
+  "verdict": "NO_CONCRETE_FINDING_IN_FOCAL_STATIC_REVIEW",
+  "global_acceptance": false,
+  "findings": [],
+  "fixture_reconciliation": {
+    "old_blob": "3524e36303db8ac9d562a16840fa040eb225f54b",
+    "new_blob": "14445a3e32ab1c906a993fd628d011b8d22659c9",
+    "independently_verified": true,
+    "method": "Reverted the single viewId expression in memory and recomputed Git blob SHA, matching the exact earlier WP13-reviewed blob. No product/test execution.",
+    "before": "viewId: selected.viewId",
+    "after": "viewId: selected.viewId === \"BI10\" ? \"BI10\" : \"BI09\"",
+    "semantics": "The BI09/BI10 presentation type is narrowed. createPlannerScenarioBiHost refuses unsupported view IDs before source evaluation; no financial value, coverage, assertion, authorization or timeout changed."
+  },
+  "observations": [
+    {
+      "topic": "canonical-complete-oracle",
+      "evidence": "createRenewalChoiceHistory({training:\"bundled\"}) -> reviseImplementation -> createRenewalQuoteRevision -> Planner Versions.copy and OPEX.save with expected revisions and f10=70000 -> original source digest unchanged -> preparePhase",
+      "conclusion": "The quoted source is a copied real Planner version. The engine computes 60000 + 70000 + 105000 = 235000, while the source-only renewal remains 240000. The comparison uses renewed as baseline and selected as alternative, so candidate-minus-baseline is -5000. These numbers occur as input quotes/assertions, not forged result fields."
+    },
+    {
+      "topic": "coverage-complete-N-A-shared",
+      "evidence": "renewalCoverage reads canonical components; classifyCoverage/supportsCoverageClassification plus baseline.register and mutation.addAlternative classify and revalidate the versioned basis and evidence before C08 publication. assessCostCoverage and validateScenarioCoverage do not sum categories.",
+      "conclusion": "Complete status is not set by the new test. It asserts real complete scenario/comparison outputs, the exact N-A categories contract_exit/internal_costs/other_relevant_costs, and training/migration componentRefs equal to implementation. Its one implementation:11 segment of70000 plus total235000 catches duplication of shared category costs."
+    },
+    {
+      "topic": "C08-and-BI-consumption",
+      "evidence": "results.write publishes scenario and comparison from the actual alternatives; createStoredScenarioBiProjection reads both records and revalidates the selected case/source; createStoredPlannerScenarioHost resolves current case alternatives; createPlannerScenarioBiHost reobserves the paired results and projection.",
+      "conclusion": "The complete test asserts projection.decision equals the exact persisted scenario/comparison, complete total and difference values are confirmed, and resolveWaterfall reconciles 240000 ->235000. It has no substitute solver or display-only success."
+    },
+    {
+      "topic": "readonly-no-application",
+      "evidence": "The test captures a digest of all three LocalStore snapshots immediately before readView and compares it afterward; the case still has empty choices/preparedChanges/receipts.",
+      "conclusion": "Read-only BI consumption is asserted. Source authoring and C08 setup occur before the baseline capture; the test makes no claim that BI applies a financial decision."
+    },
+    {
+      "topic": "absence-zero-FX-authority",
+      "evidence": "scenario-bi.test.ts blob f35fbae07684e507421a009244b603530f16b1e9 remains included; fully read in this review. Its fixture preserves pending human classification.",
+      "conclusion": "Existing negatives keep explicit zero as a confirmed component; null amount and absent FX remain null/unavailable and never become complete totals. They also preserve source/access revision refusal, changed paired projection, Request mutation, final live-lease refusal and swallowed nested-write poison with attempted=true inside the real callback."
+    },
+    {
+      "topic": "oracle-limits",
+      "evidence": "New full-coverage test directly calls plan.readView under the existing WP11 sf_bi_view admission; readCurrent captures that fixture context.",
+      "conclusion": "This is an authenticated controlled producer/BI proof, not an installed UI/transport binding or alternate-caller proof. Its selected financial scenario is source-only; nonempty scenario operations/deferred-period behavior remain covered by scenario-bi.test.ts and the existing producer tests."
+    }
+  ],
+  "limitations": [
+    "Static review only; no local tests/typecheck/guards and no remote operations by reviewer.",
+    "Hosted execution of the exact R4 snapshot is pending. The new test keeps180000ms; runtime success or performance is not asserted. Timeout must remain failure.",
+    "The fixture sources, N-A declarations, role authority and human classification grants are explicitly synthetic; actual domain/state/classification implementations consume them. No claim of real commercial source verification.",
+    "Full case proves direct Planner/BI producer consumption, not installed interface/engine/MCP/Atlas or the final consumer composition.",
+    "FIN-R2-REV-01 OPEN_SHARED_CONTRACT_INTERPRETATION for INV.11/C08/C17 persists because the producer uses the unchanged readPortfolioSnapshot helper. This receipt does not close or reinterpret it.",
+    "Prior WP13 five-file review and R2 cold review retain their exact scopes/pins. A later candidate/dependency change requires reconciliation before reusing this receipt.",
+    "No global acceptance, merge or closing earlier PRs authorized by this review."
+  ],
+  "dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blob": "0dc89d86866620a8109051c68bc2d2b4d92c508f",
+      "sha256": "a880132a04a087050b16445c3595cf845d061187d566a37d98bf2bf31b400b2b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "blob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "sha256": "0485d078d1920a333287f4621882c8370cb6cc42b7901a49013c396120735321"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "blob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+      "sha256": "f2149ed78166add2869fd2612d1936007c3a94862ebacdb277e0dba7c6f56ddf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "blob": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "sha256": "9fb65068cc969ebb04f2e14f9082147d058287f09fa40702d56c4c4838a6d9a1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "sha256": "0cca19827cfe6793207441d493561d76830d6903383701b9d84230380561a701"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "blob": "3f31dd52babca16249fb04fec29abbf74e7a5da4",
+      "sha256": "5972faaf731ab14a3dba0becaa1de22d052adab12140bb2994adf0c2f6ab5dbc"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "d6b1d58e658a784aafe0ea978c46692cd8c5f59a",
+      "sha256": "f5fdbdd750385748c8619ceb03cf2953f9ea0639dbd8ded519be256e806c2df6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "blob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "sha256": "771b060898fce1b1d851461bee7df743014ab55f9c0994a0331f2664a1c8bfd1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "blob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+      "blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c",
+      "sha256": "04e6549d37d335f131cdb79089a4afbbff14bf2003f4615369efd9ad24faae0d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "blob": "b7174b16b485323f767d63e6842f3d61284245eb",
+      "sha256": "2d18f01e27bbaf0ce47002191d89ae0747e33aead4034b5772ab07abf9388826"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+      "sha256": "9982156692099d6f9663794186c8398632a5c33abd3615809cfe8ec6e8e409a1"
+    }
+  ]
+}

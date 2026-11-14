@@ -1,0 +1,22 @@
+Second full selection failed on the existing 5000ms timeout. This is not GREEN evidence. Run43535785426 / job132264320136.
+2026-11-14T00:42:11.3431812Z 
+2026-11-14T00:42:11.3432267Z Sucafinav1/test/product/wp03/persistence-comparison.test.ts:
+2026-11-14T00:42:11.8030635Z (pass) comparison persistence refuses tampered totals, coverage references and criterion outcomes before any write [455.14ms]
+2026-11-14T00:42:12.0431587Z (pass) criteria require both replay and durable criterion binding with zero writes when either is missing [240.09ms]
+2026-11-14T00:42:12.3338216Z (pass) comparison without criteria persists through real scenarios and SQLite, retries idempotently and survives reopen [290.62ms]
+2026-11-14T00:42:17.5321750Z (fail) real WP11 rules bind a comparison, survive reopen and refuse a second binding or a stale rule [5198.39ms]
+2026-11-14T00:42:17.5322493Z   ^ this test timed out after 5000ms.
+
+2026-11-14T00:42:51.0356601Z (pass) Overview resolves baseline, candidate and official through the shared port and keeps their differences distinct [209.01ms]
+2026-11-14T00:42:52.4799250Z (pass) Overview opens each canonical total into the correct record, monthly measure and version [204.36ms]
+2026-11-14T00:42:52.5740117Z (pass) Overview drills into the separately selected official budget and only the requested months [95.77ms]
+2026-11-14T00:42:52.6419345Z (pass) Overview leaves an unselected official unavailable instead of reusing candidate records [67.52ms]
+2026-11-14T00:42:52.8079356Z (pass) Overview keeps known budget, missing outlook, numeric zero and structural additions or removals distinct [165.69ms]
+2026-11-14T00:42:53.0059631Z (pass) Overview distinguishes original EUR inputs from converted USD measures and missing conversion [198.08ms]
+2026-11-14T00:42:53.2109539Z (pass) Overview preserves opaque record identities and escapes HTML without cross-selecting records [205.29ms]
+2026-11-14T00:42:53.3789271Z (pass) Overview retains published totals but exposes incomplete or divergent detail composition [167.58ms]
+2026-11-14T00:42:53.3978265Z omni positive control [979f3ccced08160434558b2e643d1688]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-14T00:42:53.3981105Z  169 pass
+2026-11-14T00:42:53.3981433Z  1 fail
+2026-11-14T00:42:53.3981751Z  2644 expect() calls
+2026-11-14T00:42:53.3982432Z Ran 170 tests across 31 files. [44.41s]

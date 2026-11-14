@@ -1,0 +1,37 @@
+{
+  "schema": "sf-finance-review-bindings-v1",
+  "reviews": [
+    {
+      "scope": "R2 product candidate",
+      "product": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+      "receipt": "review-R2.json",
+      "binding": "Original review inspected the exact candidate blobs before commit publication. Publication matched the manifest; no claim that this review inspected later R3/R4 changes.",
+      "remaining_finding": "FIN-R2-REV-01"
+    },
+    {
+      "scope": "R4 paired BI producer",
+      "product": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-resume-20261114/independent-scenario-bi-r4-review.json",
+      "result": "No concrete producer or complete-fixture defect found; installed binding and INV.11 remain open."
+    },
+    {
+      "scope": "R5 WP13 reservation assertion delta",
+      "product": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "receipt": "independent-reservation-R5-review.json",
+      "result": "Independent WP11 reviewer confirmed unchanged full envelope/proof/counter assertions apart from one expected global aggregate increment. S13 subsequently passed2/0/133."
+    },
+    {
+      "scope": "Nine consumers at pinned owner heads",
+      "receipt": "consumer-reconciliation.json",
+      "result": "Source-level consumption confirmed where stated; seven deltas retained. No installed global acceptance."
+    },
+    {
+      "scope": "Late PR39 advance",
+      "receipt": "consumer-reconciliation-wp12-refresh-20261114.json",
+      "result": "Five commits,39docs+4tests,zero production/config; no automatic source substitution."
+    }
+  ],
+  "local_product_execution": false,
+  "final_terminal_ledger_audit": "Independent reviewer cross-checked all12 W/S/request/log hashes and found the S5 Bun summary repetition. The final ledger preserves repeated emission separately and verifies unique pass/fail counts. Final full criteria inventory was independently re-extracted from canonical campaign."
+}

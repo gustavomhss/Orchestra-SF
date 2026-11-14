@@ -1,0 +1,18 @@
+{
+  "schema": "wp13-own-oracle-correction-v1",
+  "parent": "44ecc88ad6c8c56bf08693e386e9e5dd9e46cfbc",
+  "sourceRun": 43589779412,
+  "failure": "reconciliation.test.ts:62 expected irrelevant; canonical WP14 returned unknown",
+  "reason": "The unchanged component scope is authenticated but the original choice criterion remains unknown because training is missing. Unchanged observations do not resolve that unknown criterion.",
+  "change": "Assert component-scope-bound and equal component digests, unknown/evidence-unavailable impact, unknown signal bound to original choice, unchanged comparison and retained original null/currency.",
+  "runtimeChanges": false,
+  "foreignChanges": false,
+  "canonicalClassifier": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+  "classifierBlob": "6e847ce8338e6a5145349249d7eb7559576b7415",
+  "changedTest": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+  "previousBlob": "b4e720037aec7c4c0119b4de900bcbd05957810b",
+  "newBlob": "5e5461c2020288610b7ee8928747378d9977acd5",
+  "sha256": "a93408209e61fea1e3d7b9c5958877caf82c00244267e7f5eb70e438a4bfe147",
+  "testExecution": "PENDING_HOSTED",
+  "ready": false
+}

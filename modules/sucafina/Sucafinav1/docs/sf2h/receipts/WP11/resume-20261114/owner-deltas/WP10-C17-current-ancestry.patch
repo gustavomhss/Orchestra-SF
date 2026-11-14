@@ -1,0 +1,168 @@
+diff --git a/apps/cli/src/sucafina-product/business-services.ts b/apps/cli/src/sucafina-product/business-services.ts
+index 34a491f859f7b57b0883a122f816803df43c74c8..e66eca63dea05e397c640951869b88b1b4801e32 100644
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -277,7 +277,9 @@
+         ? result : { status: "denied", reason: "calculation-case-authority-changed" }
+     } finally { if (scope) releaseCaseScope(call, scope) }
+   }
++  const calculationVerifier: { current?: ReturnType<typeof createSfPlannerCalculationServices>["verifyCalculationSources"] } = {}
+   const results = createSfDecisionResultStore({ state: input.authority.state, host, authorizeCase, createId: randomUUID, now: () => new Date().toISOString(),
++    verifyCalculationSources: (value, refs, call) => calculationVerifier.current?.(value, refs, call) ?? Promise.resolve(false),
+     verifySources: async (_value, refs, call) => {
+       const found = await context.context({ refs }, call)
+       return found.length === refs.length && found.every((item, index) => item.state === "fresh" && !!item.authorizedProjection && !!item.currentRef &&
+@@ -329,7 +331,8 @@
+     readSourceFences, resolveProcurementEvidence: context.resolve, externalOperation: dashboardDecisions.resolveOperation })
+   const basePersist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, resolveCase })
+   const calculations = createSfPlannerCalculationServices({ host, state: input.authority.state, results, authorizeCase, operationIdentity,
+-    writes: input.proposalCoverageWrites, sources: plannerSources, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase })
++    writes: input.proposalCoverageWrites, sources: plannerSources, planner, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase })
++  calculationVerifier.current = calculations.verifyCalculationSources
+   const persist = calculations.persist
+   const receipt = input.authority.authority.receiptFor
+   const descriptors = [
+@@ -542,5 +545,5 @@
+     },
+     atlasRecall: () => atlasState.current,
+     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
+-    dispose: () => { plannerConfirmation.current = undefined; dashboardServices.dispose(); procurementDecisions?.dispose(); periods.clear(); evidence.current = undefined; recall.current = undefined; decisionEvidence.current = undefined; atlasState.current = undefined; forecastCoverage.current = undefined; decisionDomain.current = undefined; plannerHolder.current = undefined; clearAtlasDescriptors() } }
++    dispose: () => { calculationVerifier.current = undefined; plannerConfirmation.current = undefined; dashboardServices.dispose(); procurementDecisions?.dispose(); periods.clear(); evidence.current = undefined; recall.current = undefined; decisionEvidence.current = undefined; atlasState.current = undefined; forecastCoverage.current = undefined; decisionDomain.current = undefined; plannerHolder.current = undefined; clearAtlasDescriptors() } }
+ }
+diff --git a/apps/cli/src/sucafina-product/planner-calculation-services.ts b/apps/cli/src/sucafina-product/planner-calculation-services.ts
+index 6898b08eb4b018f5a83167555836ac876d288976..6992fa3b004c1e3cbd5556e204d5df43c176f698 100644
+--- a/apps/cli/src/sucafina-product/planner-calculation-services.ts
++++ b/apps/cli/src/sucafina-product/planner-calculation-services.ts
+@@ -1,7 +1,7 @@
+ import { digestSfValue, sfEvidenceSourceMaps } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+ import type { DomainProjection, ProjectionValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+-import type { DomainPortHost, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
++import type { DomainPortHost, PlannerPort, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+ import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+ import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
+ import { createScenarioRequestStore } from "../../../../modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts"
+@@ -14,7 +14,7 @@
+ type ProducerInput = Parameters<typeof createScenarioRequestStore>[0]
+ type Persist = ReturnType<typeof createPlannerResultPersistence>
+ 
+-/** Bind actual persisted Planner outputs to their original request and the published record-only replay. */
++/** Bind actual persisted Planner outputs to their original request and canonical ancestry replay. */
+ export function createSfPlannerCalculationServices(input: {
+   host: DomainPortHost
+   state: ProducerInput["state"]
+@@ -23,15 +23,18 @@
+   operationIdentity: ProducerInput["operationIdentity"]
+   writes: WeakSet<object>
+   sources: PlannerSourceHost
++  planner: Pick<PlannerPort, "simulateScenario">
+   evidence: BusinessContextService
+   persist: Persist
+   readSourceFences: (call: TrustedDomainContext) => Promise<SourceFences | undefined>
+   lockedSourceFences: () => SourceFences | undefined
+   withCalculationCase: <T>(call: TrustedDomainContext, caseRef: { id: string; incarnation: string; version: number }, work: () => Promise<PortResult<T>>) => Promise<PortResult<T>>
+ }) {
++  const producer: { current?: ReturnType<typeof createPlannerCalculationEvidence> } = {}
+   const captures = new WeakMap<TrustedDomainContext, { requestDigest: string; resultDigest: string; resultRef?: string; sources: SourceFences }>()
+   const requests = createScenarioRequestStore({ state: input.state, results: input.results, host: input.host,
+     authorizeCase: input.authorizeCase, operationIdentity: input.operationIdentity, writes: input.writes,
++    verifyRequestSources: (request, stored, call) => producer.current?.verifyCalculationRequestSources(request, stored, call) ?? Promise.resolve(false),
+     authorizeProducer: async (request, resultRef, engineVersion, call) => {
+       const captured = captures.get(call)
+       return !!captured && captured.resultRef === resultRef && captured.requestDigest === digestSfValue(request) && engineVersion === "planner-runtime-v1" && await input.host.revalidate(call)
+@@ -64,28 +67,55 @@
+       ? input.results.readForCalculation({ resultRef: request.resultRef }, call)
+       : Promise.resolve({ status: "unavailable", reason: "calculation-result-kind-unsupported" }),
+     replayRecordOnly: recordOnly.simulateScenario,
++    nested: { replayScenario: input.planner.simulateScenario, evidence: input.evidence },
+   })
++  producer.current = calculation
++  // Select the exact current C08 scope before request/result readers replay ancestors.
++  // This metadata read grants no calculation evidence; the canonical producer still
++  // validates the persisted request, source graph and two independent replays.
++  const withRunCase = async <T>(runId: string, call: TrustedDomainContext, work: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
++    const source = input.host.requestFor(call)
++    if (!source || !runId.trim() || source.signal.aborted || !await input.host.revalidate(call)) return { status: "denied", reason: "calculation-case-authority-unavailable" }
++    const selected = await input.state.read(source, "cases", (state, authority) => {
++      if (authority.principalRef !== call.binding.principalRef || authority.accessRevision !== call.binding.accessRevision || authority.policyVersion !== call.binding.policyVersion) return undefined
++      const stored = state.decisionResults?.[runId]
++      const current = stored ? state.cases[stored.caseRef.id] : undefined
++      return stored?.kind === "scenario" && stored.resultRef === runId && current && current.incarnation === stored.caseRef.incarnation && current.version === stored.caseRef.version && current.participants.includes(authority.principalRef)
++        ? { caseRef: structuredClone(stored.caseRef), current: structuredClone(current) } : undefined
++    })
++    if (selected.status !== "ok" || !selected.value || !await input.authorizeCase(selected.value.current, call) || source.signal.aborted || !await input.host.revalidate(call)) return { status: "denied", reason: "calculation-case-authority-unavailable" }
++    return input.withCalculationCase(call, selected.value.caseRef, work)
++  }
+   const issue: typeof calculation.issue = async (runId, call) => {
+-    const binding = await requests.read(runId, call)
+-    return binding.status === "ok" ? input.withCalculationCase(call, binding.value.caseRef, () => calculation.issue(runId, call)) : binding
++    try { return await withRunCase(runId, call, () => calculation.issue(runId, call)) }
++    catch { return { status: "unavailable", reason: "calculation-case-scope-unavailable" } }
++  }
++  const readRequest: typeof requests.read = async (runId, call) => {
++    try { return await withRunCase(runId, call, () => requests.read(runId, call)) }
++    catch { return { status: "unavailable", reason: "calculation-case-scope-unavailable" } }
++  }
++  const verifyCalculationSources: typeof calculation.verifyCalculationSources = async (value, refs, call) => {
++    try {
++      const verified = await input.withCalculationCase(call, value.caseRef, async () => ({ status: "ok", value: await calculation.verifyCalculationSources(value, refs, call) }))
++      return verified.status === "ok" && verified.value
++    } catch { return false }
+   }
+   const persist: Persist = async (incoming, callId, call, comparisonReplay) => {
+-    if (incoming.kind !== "scenario" || incoming.request.assumptions.length || incoming.request.operations.some((operation) => operation.replacementRef))
+-      return input.persist(incoming, callId, call, comparisonReplay)
++    if (incoming.kind !== "scenario") return input.persist(incoming, callId, call, comparisonReplay)
+     const closure = [...incoming.result.sourceRefs, ...incoming.result.costCoverage.evaluatedSourceRefs,
+       ...incoming.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
+-    if (closure.some((ref) => ref.kind !== "record")) return input.persist(incoming, callId, call, comparisonReplay)
++    try { sfEvidenceSourceMaps(closure) } catch { return { status: "unavailable", reason: "calculation-source-closure-invalid" } }
+     if (captures.has(call)) return { status: "unavailable", reason: "calculation-publication-already-active" }
+     const value = structuredClone(incoming)
+     const fences = await input.readSourceFences(call)
+     if (!fences) return { status: "unavailable", reason: "calculation-source-fence-unavailable" }
+-    const replay = await recordOnly.simulateScenario(value.request, call)
++    const replay = await input.planner.simulateScenario(value.request, call)
+     if (replay.status !== "ok") return replay
+     if (plannerScenarioDigest(replay.value) !== plannerScenarioDigest(value.result)) return { status: "stale", reason: "calculation-result-replay-changed" }
+     const captured = { requestDigest: digestSfValue(value.request), resultDigest: digestSfValue(value.result), resultRef: undefined as string | undefined, sources: fences }
+     captures.set(call, captured)
+     try {
+-      const saved = await input.persist(value, callId, call, comparisonReplay)
++      const saved = await input.persist(value, callId, call, input.planner)
+       if (saved.status !== "ok") return saved
+       captured.resultRef = saved.value.resultRef
+       const registered = await requests.register({ resultRef: saved.value.resultRef, request: value.request, engineVersion: "planner-runtime-v1" }, call)
+@@ -95,7 +125,7 @@
+     } catch { return { status: "unavailable", reason: "calculation-publication-unavailable" } }
+     finally { captures.delete(call) }
+   }
+-  const resolveEvidence = async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
++  const resolveCalculationEvidence = async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
+     const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })
+     try {
+       if (ref.kind !== "calculation" || ref.target.calculationId !== "planner:scenario" || !await input.host.revalidate(call)) return unavailable()
+@@ -111,7 +141,7 @@
+         return unavailable()
+       const sources = await input.evidence.context({ refs: ref.target.sourceRefs }, call)
+       if (sources.length !== ref.target.sourceRefs.length || sources.some((source, index) => source.state !== "fresh" || !source.currentRef || !source.authorizedProjection ||
+-        !("context" in source.authorizedProjection) || !("sourceRefs" in source.authorizedProjection.context) || digestSfValue(source.ref) !== digestSfValue(ref.target.sourceRefs[index]) || digestSfValue(source.currentRef) !== digestSfValue(source.ref))) return unavailable()
++        source.accessRevision !== call.binding.accessRevision || digestSfValue(source.ref) !== digestSfValue(ref.target.sourceRefs[index]) || digestSfValue(source.currentRef) !== digestSfValue(source.ref))) return unavailable()
+       const result = stored.value.result
+       const metadata = sources.flatMap((source) => source.authorizedProjection && "context" in source.authorizedProjection && "sourceRefs" in source.authorizedProjection.context ? source.authorizedProjection.context.sourceRefs : [])
+       const sourceRefs = [...metadata, ...result.components.flatMap((component) => component.sourceRefs)]
+@@ -139,5 +169,13 @@
+       return { state: "fresh", ref, currentRef: issued.value, authorizedProjection: projection, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }
+     } catch { return unavailable() }
+   }
+-  return { persist, issue, resolveEvidence, requests: { read: requests.read } }
++  const resolveEvidence = async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
++    const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })
++    if (ref.kind !== "calculation") return unavailable()
++    try {
++      const scoped = await withRunCase(ref.target.runId, call, async () => ({ status: "ok", value: await resolveCalculationEvidence(ref, call) }))
++      return scoped.status === "ok" ? scoped.value : unavailable()
++    } catch { return unavailable() }
++  }
++  return { persist, issue, resolveEvidence, verifyCalculationSources, requests: { read: readRequest } }
+ }

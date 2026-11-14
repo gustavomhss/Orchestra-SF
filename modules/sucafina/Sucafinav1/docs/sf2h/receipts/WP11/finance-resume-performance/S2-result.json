@@ -1,0 +1,616 @@
+{
+  "schema": "finance-resume-performance-ci-v1",
+  "selection": "S2",
+  "W": "95f474484fb49cedb563ed3d02a61e9638d6784d",
+  "Wtree": "5173889bce7f5a6a6785e1adcdbc5b348483c190",
+  "S": "4fce91718b8ea90f6d05ba0c30729f030b58451b",
+  "Stree": "7801a4103038cb23cf87b129260cdd95947a4549",
+  "branch": "ci-run-linux-finance-performance-95f47448-47ff997d-s2",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/persisted-recertification.test.ts",
+      "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+      "Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+      "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "--timeout",
+      "120000",
+      "-t",
+      "^(Finance sensitivity|units resolution|persisted Finance candidates|sensitivity retains the admitted request|sensitivity detects a provider|each sensitivity verification reads a fresh|a failed sensitivity scope cannot retain|real Planner sensitivity keeps EUR)"
+    ],
+    "env": {}
+  },
+  "requestSha256": "47ff997dcd9049ee2224249db297ad82c06b5d8def846e0a4d3f2d8d6039daa0",
+  "requestOnlyComparison": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "95f474484fb49cedb563ed3d02a61e9638d6784d",
+    "head": "4fce91718b8ea90f6d05ba0c30729f030b58451b",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "95f474484fb49cedb563ed3d02a61e9638d6784d",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/95f474484fb49cedb563ed3d02a61e9638d6784d",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/95f474484fb49cedb563ed3d02a61e9638d6784d"
+    },
+    "merge_base_commit": {
+      "sha": "95f474484fb49cedb563ed3d02a61e9638d6784d",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/95f474484fb49cedb563ed3d02a61e9638d6784d",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/95f474484fb49cedb563ed3d02a61e9638d6784d"
+    },
+    "files": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      }
+    ]
+  },
+  "runId": 43628402812,
+  "jobId": 132549346211,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628402812",
+  "conclusion": "success",
+  "pass": 15,
+  "fail": 0,
+  "assertions": 159,
+  "bunDurationSeconds": 408.14,
+  "phases": [
+    {
+      "phase": "search-work",
+      "elapsedMs": 38863,
+      "counts": {
+        "searches": 1,
+        "searchPreviews": 9,
+        "searchUnitIssues": 2,
+        "resolutions": 3,
+        "revalidations": 4,
+        "consumerPreviews": 8,
+        "sampleWrites": 2
+      },
+      "previews": [
+        {
+          "resolution": 1,
+          "ordinal": 1,
+          "amount": 10000,
+          "metric": -65000,
+          "status": "ok",
+          "durationMs": 1292
+        },
+        {
+          "resolution": 1,
+          "ordinal": 2,
+          "amount": 70000,
+          "metric": -5000,
+          "status": "ok",
+          "durationMs": 1398
+        },
+        {
+          "resolution": 1,
+          "ordinal": 3,
+          "amount": 55000.000000000015,
+          "metric": -20000,
+          "status": "ok",
+          "durationMs": 1504
+        },
+        {
+          "resolution": 1,
+          "ordinal": 4,
+          "amount": 55000.00000000002,
+          "metric": -19999.99999999997,
+          "status": "ok",
+          "durationMs": 1472
+        },
+        {
+          "resolution": 2,
+          "ordinal": 1,
+          "amount": 10000,
+          "metric": -65000,
+          "status": "ok",
+          "durationMs": 2977
+        },
+        {
+          "resolution": 2,
+          "ordinal": 2,
+          "amount": 70000,
+          "metric": -5000,
+          "status": "ok",
+          "durationMs": 2994
+        },
+        {
+          "resolution": 2,
+          "ordinal": 3,
+          "amount": 55000.000000000015,
+          "metric": -20000,
+          "status": "ok",
+          "durationMs": 1480
+        },
+        {
+          "resolution": 2,
+          "ordinal": 4,
+          "amount": 55000.00000000002,
+          "metric": -19999.99999999997,
+          "status": "ok",
+          "durationMs": 1487
+        }
+      ],
+      "result": "ok",
+      "threshold": 55000.000000000015,
+      "comparisonStatus": "conditioned",
+      "nextOperation": "denied",
+      "completed": {
+        "searches": 1,
+        "searchPreviews": 9,
+        "searchUnitIssues": 2,
+        "resolutions": 2,
+        "revalidations": 4,
+        "consumerPreviews": 8,
+        "sampleWrites": 2
+      }
+    },
+    {
+      "phase": "terminal",
+      "elapsedMs": 38863,
+      "counts": {
+        "searches": 1,
+        "searchPreviews": 9,
+        "searchUnitIssues": 2,
+        "resolutions": 3,
+        "revalidations": 4,
+        "consumerPreviews": 8,
+        "sampleWrites": 2
+      },
+      "previews": [
+        {
+          "resolution": 1,
+          "ordinal": 1,
+          "amount": 10000,
+          "metric": -65000,
+          "status": "ok",
+          "durationMs": 1292
+        },
+        {
+          "resolution": 1,
+          "ordinal": 2,
+          "amount": 70000,
+          "metric": -5000,
+          "status": "ok",
+          "durationMs": 1398
+        },
+        {
+          "resolution": 1,
+          "ordinal": 3,
+          "amount": 55000.000000000015,
+          "metric": -20000,
+          "status": "ok",
+          "durationMs": 1504
+        },
+        {
+          "resolution": 1,
+          "ordinal": 4,
+          "amount": 55000.00000000002,
+          "metric": -19999.99999999997,
+          "status": "ok",
+          "durationMs": 1472
+        },
+        {
+          "resolution": 2,
+          "ordinal": 1,
+          "amount": 10000,
+          "metric": -65000,
+          "status": "ok",
+          "durationMs": 2977
+        },
+        {
+          "resolution": 2,
+          "ordinal": 2,
+          "amount": 70000,
+          "metric": -5000,
+          "status": "ok",
+          "durationMs": 2994
+        },
+        {
+          "resolution": 2,
+          "ordinal": 3,
+          "amount": 55000.000000000015,
+          "metric": -20000,
+          "status": "ok",
+          "durationMs": 1480
+        },
+        {
+          "resolution": 2,
+          "ordinal": 4,
+          "amount": 55000.00000000002,
+          "metric": -19999.99999999997,
+          "status": "ok",
+          "durationMs": 1487
+        }
+      ]
+    },
+    {
+      "phase": "final-witness-revocation",
+      "elapsedMs": 37517,
+      "counts": {
+        "searches": 1,
+        "searchPreviews": 9,
+        "searchUnitIssues": 2,
+        "resolutions": 2,
+        "revalidations": 4,
+        "consumerPreviews": 8,
+        "sampleWrites": 2
+      },
+      "previews": [
+        {
+          "resolution": 1,
+          "ordinal": 1,
+          "amount": 10000,
+          "metric": -65000,
+          "status": "ok",
+          "durationMs": 1244
+        },
+        {
+          "resolution": 1,
+          "ordinal": 2,
+          "amount": 70000,
+          "metric": -5000,
+          "status": "ok",
+          "durationMs": 1369
+        },
+        {
+          "resolution": 1,
+          "ordinal": 3,
+          "amount": 55000.000000000015,
+          "metric": -20000,
+          "status": "ok",
+          "durationMs": 1501
+        },
+        {
+          "resolution": 1,
+          "ordinal": 4,
+          "amount": 55000.00000000002,
+          "metric": -19999.99999999997,
+          "status": "ok",
+          "durationMs": 1518
+        },
+        {
+          "resolution": 2,
+          "ordinal": 1,
+          "amount": 10000,
+          "metric": -65000,
+          "status": "ok",
+          "durationMs": 3048
+        },
+        {
+          "resolution": 2,
+          "ordinal": 2,
+          "amount": 70000,
+          "metric": -5000,
+          "status": "ok",
+          "durationMs": 3060
+        },
+        {
+          "resolution": 2,
+          "ordinal": 3,
+          "amount": 55000.000000000015,
+          "metric": -20000,
+          "status": "ok",
+          "durationMs": 1489
+        },
+        {
+          "resolution": 2,
+          "ordinal": 4,
+          "amount": 55000.00000000002,
+          "metric": -19999.99999999997,
+          "status": "ok",
+          "durationMs": 1479
+        }
+      ],
+      "result": "stale",
+      "revokedAfterFinalWitness": true
+    },
+    {
+      "phase": "terminal",
+      "elapsedMs": 37517,
+      "counts": {
+        "searches": 1,
+        "searchPreviews": 9,
+        "searchUnitIssues": 2,
+        "resolutions": 2,
+        "revalidations": 4,
+        "consumerPreviews": 8,
+        "sampleWrites": 2
+      },
+      "previews": [
+        {
+          "resolution": 1,
+          "ordinal": 1,
+          "amount": 10000,
+          "metric": -65000,
+          "status": "ok",
+          "durationMs": 1244
+        },
+        {
+          "resolution": 1,
+          "ordinal": 2,
+          "amount": 70000,
+          "metric": -5000,
+          "status": "ok",
+          "durationMs": 1369
+        },
+        {
+          "resolution": 1,
+          "ordinal": 3,
+          "amount": 55000.000000000015,
+          "metric": -20000,
+          "status": "ok",
+          "durationMs": 1501
+        },
+        {
+          "resolution": 1,
+          "ordinal": 4,
+          "amount": 55000.00000000002,
+          "metric": -19999.99999999997,
+          "status": "ok",
+          "durationMs": 1518
+        },
+        {
+          "resolution": 2,
+          "ordinal": 1,
+          "amount": 10000,
+          "metric": -65000,
+          "status": "ok",
+          "durationMs": 3048
+        },
+        {
+          "resolution": 2,
+          "ordinal": 2,
+          "amount": 70000,
+          "metric": -5000,
+          "status": "ok",
+          "durationMs": 3060
+        },
+        {
+          "resolution": 2,
+          "ordinal": 3,
+          "amount": 55000.000000000015,
+          "metric": -20000,
+          "status": "ok",
+          "durationMs": 1489
+        },
+        {
+          "resolution": 2,
+          "ordinal": 4,
+          "amount": 55000.00000000002,
+          "metric": -19999.99999999997,
+          "status": "ok",
+          "durationMs": 1479
+        }
+      ]
+    },
+    {
+      "phase": "fixture",
+      "elapsedMs": 42799.68910900003
+    },
+    {
+      "phase": "positive",
+      "accepted": true,
+      "elapsedMs": 16351.153980000003,
+      "searches": 0,
+      "units": 4,
+      "previews": 10,
+      "scopeChecks": 2
+    },
+    {
+      "phase": "forged-evidence",
+      "accepted": false,
+      "elapsedMs": 15654.559469000029,
+      "searches": 0,
+      "units": 4,
+      "previews": 10,
+      "scopeChecks": 1
+    },
+    {
+      "phase": "root-poison",
+      "accepted": false,
+      "elapsedMs": 16222.584864999983,
+      "searches": 0,
+      "units": 4,
+      "previews": 10,
+      "scopeChecks": 2
+    },
+    {
+      "phase": "late-lease-revocation",
+      "accepted": false,
+      "elapsedMs": 16032.338433000026,
+      "searches": 0,
+      "units": 4,
+      "previews": 10,
+      "scopeChecks": 2
+    },
+    {
+      "phase": "units.resolve.first",
+      "fixtureMs": 405.871678000025,
+      "durationMs": 326.12619700003415,
+      "counters": {
+        "selectedReads": 2,
+        "baselineReads": 2,
+        "caseReads": 2,
+        "scenarioBatches": 2,
+        "rules": 2,
+        "evidenceResolves": 4
+      },
+      "result": "ok"
+    },
+    {
+      "phase": "units.resolve.new-operation",
+      "durationMs": 326.02198199997656,
+      "counters": {
+        "selectedReads": 4,
+        "baselineReads": 4,
+        "caseReads": 4,
+        "scenarioBatches": 4,
+        "rules": 4,
+        "evidenceResolves": 8
+      },
+      "result": "ok"
+    },
+    {
+      "phase": "units.resolve.rule-case-version",
+      "durationMs": 307.4164420000161,
+      "counters": {
+        "selectedReads": 2,
+        "baselineReads": 2,
+        "caseReads": 2,
+        "scenarioBatches": 2,
+        "rules": 1,
+        "evidenceResolves": 2
+      },
+      "result": {
+        "status": "stale",
+        "reason": "sensitivity-source-changed"
+      }
+    },
+    {
+      "phase": "units.resolve.rule-planner-source",
+      "durationMs": 113.56124400004046,
+      "counters": {
+        "selectedReads": 1,
+        "baselineReads": 1,
+        "caseReads": 1,
+        "scenarioBatches": 1,
+        "rules": 1,
+        "evidenceResolves": 0
+      },
+      "result": {
+        "status": "stale",
+        "reason": "source-changed"
+      }
+    },
+    {
+      "phase": "units.resolve.rule-revocation",
+      "durationMs": 37.447561000008136,
+      "counters": {
+        "selectedReads": 1,
+        "baselineReads": 0,
+        "caseReads": 1,
+        "scenarioBatches": 0,
+        "rules": 1,
+        "evidenceResolves": 0
+      },
+      "result": {
+        "status": "denied",
+        "reason": "sensitivity-authority-changed"
+      }
+    },
+    {
+      "phase": "units.resolve.rule-request-headers",
+      "durationMs": 39.8491459999932,
+      "counters": {
+        "selectedReads": 1,
+        "baselineReads": 0,
+        "caseReads": 1,
+        "scenarioBatches": 0,
+        "rules": 1,
+        "evidenceResolves": 0
+      },
+      "result": {
+        "status": "denied",
+        "reason": "sensitivity-authority-changed"
+      }
+    },
+    {
+      "phase": "units.resolve.rule-lease",
+      "durationMs": 38.4751169999945,
+      "counters": {
+        "selectedReads": 1,
+        "baselineReads": 0,
+        "caseReads": 1,
+        "scenarioBatches": 0,
+        "rules": 1,
+        "evidenceResolves": 0
+      },
+      "result": {
+        "status": "denied",
+        "reason": "sensitivity-authority-changed"
+      }
+    },
+    {
+      "phase": "units.resolve.rule-incoming-request",
+      "durationMs": 36.93441500002518,
+      "counters": {
+        "selectedReads": 1,
+        "baselineReads": 0,
+        "caseReads": 1,
+        "scenarioBatches": 0,
+        "rules": 1,
+        "evidenceResolves": 0
+      },
+      "result": {
+        "status": "denied",
+        "reason": "sensitivity-authority-changed"
+      }
+    }
+  ],
+  "log": {
+    "sha256": "67c07c7e128fc0774b7add2d5e0e679b30a5ce6e7a4ae135f46455ce7f4793b7",
+    "bytes": 84906
+  },
+  "omni": {
+    "nonce": "316ad3968e1856b8e86880ee2c10db3e",
+    "result": "not applicable"
+  },
+  "excerpts": [
+    "2026-11-14T18:47:46.5753247Z (pass) sensitivity retains the admitted request when a provider mutates its borrowed input [15994.93ms]",
+    "2026-11-14T18:47:59.3167930Z (pass) sensitivity detects a provider reusing and changing the original source record [12741.47ms]",
+    "2026-11-14T18:48:55.8473390Z (pass) each sensitivity verification reads a fresh committed Planner source instead of retaining its previous scope [56520.77ms]",
+    "2026-11-14T18:50:07.0089461Z (pass) a failed sensitivity scope cannot retain its old grant or publish a callback-mutated replay input [71161.62ms]",
+    "2026-11-14T18:50:31.3405808Z (pass) real Planner sensitivity keeps EUR input separate from USD output and leaves missing FX conditioned in C08 [24325.04ms]",
+    "2026-11-14T18:51:24.9866491Z [finance-resume-performance] {\"phase\":\"search-work\",\"elapsedMs\":38863,\"counts\":{\"searches\":1,\"searchPreviews\":9,\"searchUnitIssues\":2,\"resolutions\":3,\"revalidations\":4,\"consumerPreviews\":8,\"sampleWrites\":2},\"previews\":[{\"resolution\":1,\"ordinal\":1,\"amount\":10000,\"metric\":-65000,\"status\":\"ok\",\"durationMs\":1292},{\"resolution\":1,\"ordinal\":2,\"amount\":70000,\"metric\":-5000,\"status\":\"ok\",\"durationMs\":1398},{\"resolution\":1,\"ordinal\":3,\"amount\":55000.000000000015,\"metric\":-20000,\"status\":\"ok\",\"durationMs\":1504},{\"resolution\":1,\"ordinal\":4,\"amount\":55000.00000000002,\"metric\":-19999.99999999997,\"status\":\"ok\",\"durationMs\":1472},{\"resolution\":2,\"ordinal\":1,\"amount\":10000,\"metric\":-65000,\"status\":\"ok\",\"durationMs\":2977},{\"resolution\":2,\"ordinal\":2,\"amount\":70000,\"metric\":-5000,\"status\":\"ok\",\"durationMs\":2994},{\"resolution\":2,\"ordinal\":3,\"amount\":55000.000000000015,\"metric\":-20000,\"status\":\"ok\",\"durationMs\":1480},{\"resolution\":2,\"ordinal\":4,\"amount\":55000.00000000002,\"metric\":-19999.99999999997,\"status\":\"ok\",\"durationMs\":1487}],\"result\":\"ok\",\"threshold\":55000.000000000015,\"comparisonStatus\":\"conditioned\",\"nextOperation\":\"denied\",\"completed\":{\"searches\":1,\"searchPreviews\":9,\"searchUnitIssues\":2,\"resolutions\":2,\"revalidations\":4,\"consumerPreviews\":8,\"sampleWrites\":2}}",
+    "2026-11-14T18:51:24.9881886Z (pass) Finance sensitivity searches once and recertifies fresh adjacent witnesses without retaining authority for the next operation [53638.96ms]",
+    "2026-11-14T18:51:24.9889590Z [finance-resume-performance] {\"phase\":\"terminal\",\"elapsedMs\":38863,\"counts\":{\"searches\":1,\"searchPreviews\":9,\"searchUnitIssues\":2,\"resolutions\":3,\"revalidations\":4,\"consumerPreviews\":8,\"sampleWrites\":2},\"previews\":[{\"resolution\":1,\"ordinal\":1,\"amount\":10000,\"metric\":-65000,\"status\":\"ok\",\"durationMs\":1292},{\"resolution\":1,\"ordinal\":2,\"amount\":70000,\"metric\":-5000,\"status\":\"ok\",\"durationMs\":1398},{\"resolution\":1,\"ordinal\":3,\"amount\":55000.000000000015,\"metric\":-20000,\"status\":\"ok\",\"durationMs\":1504},{\"resolution\":1,\"ordinal\":4,\"amount\":55000.00000000002,\"metric\":-19999.99999999997,\"status\":\"ok\",\"durationMs\":1472},{\"resolution\":2,\"ordinal\":1,\"amount\":10000,\"metric\":-65000,\"status\":\"ok\",\"durationMs\":2977},{\"resolution\":2,\"ordinal\":2,\"amount\":70000,\"metric\":-5000,\"status\":\"ok\",\"durationMs\":2994},{\"resolution\":2,\"ordinal\":3,\"amount\":55000.000000000015,\"metric\":-20000,\"status\":\"ok\",\"durationMs\":1480},{\"resolution\":2,\"ordinal\":4,\"amount\":55000.00000000002,\"metric\":-19999.99999999997,\"status\":\"ok\",\"durationMs\":1487}]}",
+    "2026-11-14T18:52:16.8105953Z [finance-resume-performance] {\"phase\":\"final-witness-revocation\",\"elapsedMs\":37517,\"counts\":{\"searches\":1,\"searchPreviews\":9,\"searchUnitIssues\":2,\"resolutions\":2,\"revalidations\":4,\"consumerPreviews\":8,\"sampleWrites\":2},\"previews\":[{\"resolution\":1,\"ordinal\":1,\"amount\":10000,\"metric\":-65000,\"status\":\"ok\",\"durationMs\":1244},{\"resolution\":1,\"ordinal\":2,\"amount\":70000,\"metric\":-5000,\"status\":\"ok\",\"durationMs\":1369},{\"resolution\":1,\"ordinal\":3,\"amount\":55000.000000000015,\"metric\":-20000,\"status\":\"ok\",\"durationMs\":1501},{\"resolution\":1,\"ordinal\":4,\"amount\":55000.00000000002,\"metric\":-19999.99999999997,\"status\":\"ok\",\"durationMs\":1518},{\"resolution\":2,\"ordinal\":1,\"amount\":10000,\"metric\":-65000,\"status\":\"ok\",\"durationMs\":3048},{\"resolution\":2,\"ordinal\":2,\"amount\":70000,\"metric\":-5000,\"status\":\"ok\",\"durationMs\":3060},{\"resolution\":2,\"ordinal\":3,\"amount\":55000.000000000015,\"metric\":-20000,\"status\":\"ok\",\"durationMs\":1489},{\"resolution\":2,\"ordinal\":4,\"amount\":55000.00000000002,\"metric\":-19999.99999999997,\"status\":\"ok\",\"durationMs\":1479}],\"result\":\"stale\",\"revokedAfterFinalWitness\":true}",
+    "2026-11-14T18:52:16.8116887Z [finance-resume-performance] {\"phase\":\"terminal\",\"elapsedMs\":37517,\"counts\":{\"searches\":1,\"searchPreviews\":9,\"searchUnitIssues\":2,\"resolutions\":2,\"revalidations\":4,\"consumerPreviews\":8,\"sampleWrites\":2},\"previews\":[{\"resolution\":1,\"ordinal\":1,\"amount\":10000,\"metric\":-65000,\"status\":\"ok\",\"durationMs\":1244},{\"resolution\":1,\"ordinal\":2,\"amount\":70000,\"metric\":-5000,\"status\":\"ok\",\"durationMs\":1369},{\"resolution\":1,\"ordinal\":3,\"amount\":55000.000000000015,\"metric\":-20000,\"status\":\"ok\",\"durationMs\":1501},{\"resolution\":1,\"ordinal\":4,\"amount\":55000.00000000002,\"metric\":-19999.99999999997,\"status\":\"ok\",\"durationMs\":1518},{\"resolution\":2,\"ordinal\":1,\"amount\":10000,\"metric\":-65000,\"status\":\"ok\",\"durationMs\":3048},{\"resolution\":2,\"ordinal\":2,\"amount\":70000,\"metric\":-5000,\"status\":\"ok\",\"durationMs\":3060},{\"resolution\":2,\"ordinal\":3,\"amount\":55000.000000000015,\"metric\":-20000,\"status\":\"ok\",\"durationMs\":1489},{\"resolution\":2,\"ordinal\":4,\"amount\":55000.00000000002,\"metric\":-19999.99999999997,\"status\":\"ok\",\"durationMs\":1479}]}",
+    "2026-11-14T18:52:16.8123828Z (pass) Finance sensitivity refuses authority revoked after the final awaited adjacent witness [51824.46ms]",
+    "2026-11-14T18:52:59.6143468Z SF_FINANCE_RECERTIFICATION {\"phase\":\"fixture\",\"elapsedMs\":42799.68910900003}",
+    "2026-11-14T18:53:15.9758381Z SF_FINANCE_RECERTIFICATION {\"phase\":\"positive\",\"accepted\":true,\"elapsedMs\":16351.153980000003,\"searches\":0,\"units\":4,\"previews\":10,\"scopeChecks\":2}",
+    "2026-11-14T18:53:42.1411788Z SF_FINANCE_RECERTIFICATION {\"phase\":\"forged-evidence\",\"accepted\":false,\"elapsedMs\":15654.559469000029,\"searches\":0,\"units\":4,\"previews\":10,\"scopeChecks\":1}",
+    "2026-11-14T18:53:58.3930754Z SF_FINANCE_RECERTIFICATION {\"phase\":\"root-poison\",\"accepted\":false,\"elapsedMs\":16222.584864999983,\"searches\":0,\"units\":4,\"previews\":10,\"scopeChecks\":2}",
+    "2026-11-14T18:54:14.4590582Z SF_FINANCE_RECERTIFICATION {\"phase\":\"late-lease-revocation\",\"accepted\":false,\"elapsedMs\":16032.338433000026,\"searches\":0,\"units\":4,\"previews\":10,\"scopeChecks\":2}",
+    "2026-11-14T18:54:14.4947062Z (pass) persisted Finance candidates recertify without another search and retain witness, evidence, root and lease fences [117680.75ms]",
+    "2026-11-14T18:54:15.2287120Z {\"phase\":\"units.resolve.first\",\"fixtureMs\":405.871678000025,\"durationMs\":326.12619700003415,\"counters\":{\"selectedReads\":2,\"baselineReads\":2,\"caseReads\":2,\"scenarioBatches\":2,\"rules\":2,\"evidenceResolves\":4},\"result\":\"ok\"}",
+    "2026-11-14T18:54:15.5547626Z {\"phase\":\"units.resolve.new-operation\",\"durationMs\":326.02198199997656,\"counters\":{\"selectedReads\":4,\"baselineReads\":4,\"caseReads\":4,\"scenarioBatches\":4,\"rules\":4,\"evidenceResolves\":8},\"result\":\"ok\"}",
+    "2026-11-14T18:54:15.5568964Z (pass) units resolution reuses only its first observation and rereads both sides in every operation [1060.86ms]",
+    "2026-11-14T18:54:16.2526488Z {\"phase\":\"units.resolve.rule-case-version\",\"durationMs\":307.4164420000161,\"counters\":{\"selectedReads\":2,\"baselineReads\":2,\"caseReads\":2,\"scenarioBatches\":2,\"rules\":1,\"evidenceResolves\":2},\"result\":{\"status\":\"stale\",\"reason\":\"sensitivity-source-changed\"}}",
+    "2026-11-14T18:54:16.2546263Z (pass) units resolution rejects case-version during the rule callback after its first observation [697.72ms]",
+    "2026-11-14T18:54:16.7772108Z {\"phase\":\"units.resolve.rule-planner-source\",\"durationMs\":113.56124400004046,\"counters\":{\"selectedReads\":1,\"baselineReads\":1,\"caseReads\":1,\"scenarioBatches\":1,\"rules\":1,\"evidenceResolves\":0},\"result\":{\"status\":\"stale\",\"reason\":\"source-changed\"}}",
+    "2026-11-14T18:54:16.7795205Z (pass) units resolution rejects planner-source during the rule callback after its first observation [524.84ms]",
+    "2026-11-14T18:54:17.2215443Z {\"phase\":\"units.resolve.rule-revocation\",\"durationMs\":37.447561000008136,\"counters\":{\"selectedReads\":1,\"baselineReads\":0,\"caseReads\":1,\"scenarioBatches\":0,\"rules\":1,\"evidenceResolves\":0},\"result\":{\"status\":\"denied\",\"reason\":\"sensitivity-authority-changed\"}}",
+    "2026-11-14T18:54:17.2227331Z (pass) units resolution rejects revocation during the rule callback after its first observation [443.24ms]",
+    "2026-11-14T18:54:17.6501104Z {\"phase\":\"units.resolve.rule-request-headers\",\"durationMs\":39.8491459999932,\"counters\":{\"selectedReads\":1,\"baselineReads\":0,\"caseReads\":1,\"scenarioBatches\":0,\"rules\":1,\"evidenceResolves\":0},\"result\":{\"status\":\"denied\",\"reason\":\"sensitivity-authority-changed\"}}",
+    "2026-11-14T18:54:17.6510590Z (pass) units resolution rejects request-headers during the rule callback after its first observation [428.33ms]",
+    "2026-11-14T18:54:18.0800865Z {\"phase\":\"units.resolve.rule-lease\",\"durationMs\":38.4751169999945,\"counters\":{\"selectedReads\":1,\"baselineReads\":0,\"caseReads\":1,\"scenarioBatches\":0,\"rules\":1,\"evidenceResolves\":0},\"result\":{\"status\":\"denied\",\"reason\":\"sensitivity-authority-changed\"}}",
+    "2026-11-14T18:54:18.0820634Z (pass) units resolution rejects lease during the rule callback after its first observation [430.81ms]",
+    "2026-11-14T18:54:18.5041274Z {\"phase\":\"units.resolve.rule-incoming-request\",\"durationMs\":36.93441500002518,\"counters\":{\"selectedReads\":1,\"baselineReads\":0,\"caseReads\":1,\"scenarioBatches\":0,\"rules\":1,\"evidenceResolves\":0},\"result\":{\"status\":\"denied\",\"reason\":\"sensitivity-authority-changed\"}}",
+    "2026-11-14T18:54:18.5056977Z (pass) units resolution rejects incoming-request during the rule callback after its first observation [423.74ms]",
+    "2026-11-14T18:54:18.6607270Z omni positive control [316ad3968e1856b8e86880ee2c10db3e]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "2026-11-14T18:54:18.6639573Z  15 pass",
+    "2026-11-14T18:54:18.6640491Z  0 fail",
+    "2026-11-14T18:54:18.6640893Z  159 expect() calls",
+    "2026-11-14T18:54:18.6641941Z Ran 15 tests across 6 files. [408.14s]"
+  ],
+  "limitations": [
+    "One hosted run per before/after state is not a CPU benchmark.",
+    "Work counts halved for repeated search; measured evaluation42534→38863ms but whole test including fixture53317.80→53638.96ms.",
+    "Private binding envelope replay is not complete binding publication or restarted sensitivity replay.",
+    "No FIN-IND-005 end-to-end or global acceptance from this selection."
+  ]
+}

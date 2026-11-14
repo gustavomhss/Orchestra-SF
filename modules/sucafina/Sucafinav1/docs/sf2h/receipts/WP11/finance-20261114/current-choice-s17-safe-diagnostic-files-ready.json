@@ -1,0 +1,25 @@
+{
+  "kind": "diagnostic-isolation-fix-original-product-finding-unresolved",
+  "selection": 17,
+  "runId": 43591635600,
+  "jobId": 132437416020,
+  "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+  "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "beforeBlob": "2ad002beca9b3c6dab4e1d8841345c9250a6826d",
+      "candidateBlob": "35d562e6686b27f5fdad5c88584391d7649571df",
+      "sha256": "7c1092220b7ab13958a1896d989f54c18a34d729753763c90a359774251e1c90",
+      "bytes": 26856
+    }
+  ],
+  "assertions": {
+    "before": 40,
+    "after": 40,
+    "removed": 0
+  },
+  "timeout": 180000,
+  "reason": "S17 reached entries:start but diagnostic failed before its observation. Retain both original structuredClone calls inside a diagnostic-only catch; on clone failure log the original exception/stack and fall back to readonly observation of the same arguments. Metadata and reassessment diagnostics cannot alter real callback outputs. All 40 expectations and 180000ms remain unchanged. Original S12 coverage finding remains open pending Actions.",
+  "runtimeTestsExecuted": false
+}

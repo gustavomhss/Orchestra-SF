@@ -1,0 +1,109 @@
+{
+  "schema": "sf-independent-authority-review-addendum-v1",
+  "reviewer": "review_authority",
+  "createdAt": "2026-11-14T10:36:52.409402+00:00",
+  "candidate": {
+    "commit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+    "sourceRoot": "/workspace/scratch/a97ca4c53050/foreign-intake/COMPOSE5",
+    "manifest": "/workspace/scratch/a97ca4c53050/compose5-manifest.json",
+    "reviewedAuthoritySources": [
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "sha": "4b96a408bd43e73a6e614977f959b6f58f9559e0",
+        "sha256": "f9eeb1d30879d062a81f34a11aa731a49e3350d4dc88ae0959b6fb997e71e50f"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+        "sha": "6678372b0c955d551e9910060e405a6765c79ccd",
+        "sha256": "2184af3958d0c4834bd5f7c9748a337b79c862f9afea2edb02ef542886096a1e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "sha": "5f9a4761693beaf2fc0830d03ea8a2421de7f794",
+        "sha256": "35b4a1d516c076848139db127e77103df230609b5bace26758f2dd8e8b6a0bbd"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+        "sha": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+        "sha256": "ac95c12bb81b42f0186c1bafcd801b71e50aebe576791e844f4d7c849e25bb47"
+      }
+    ]
+  },
+  "scope": "Current C17 ancestry, Atlas recall scope and historical calculation authority integration. Reconciles the earlier COMPOSE4 external findings; not a review of every COMPOSE5 domain or BI lifecycle source.",
+  "ownBaseline": {
+    "commit": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+    "tree": "bbc79890ba339e0fca0fb34f55bd4d1c69a7953e",
+    "snapshot": "/workspace/scratch/a97ca4c53050/review-660db9a",
+    "apis": [
+      "result-store.readHistoricalCalculation",
+      "scenario-request-store.readHistorical"
+    ],
+    "ordinaryReads": "Current-only behavior must remain unchanged."
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "P1",
+      "status": "open_external_integration_at_current_pin",
+      "title": "Historical C17 continuation is not wired through the current host and BCS gates",
+      "locations": [
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "lines": "78-104,116-128,155-168,194-201"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+          "lines": "113-128,153-163"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "lines": "80-84,150-156,333-355"
+        }
+      ],
+      "trace": [
+        "A persisted canonical scenario request/result belongs to case incarnation I at producer version v. Its exact C17 reference is accepted into a persisted event and the same case advances to v+1.",
+        "COMPOSE5 issue and resolveEvidence invoke only ordinary requests.read/readForCalculation; those current-only reads reject the producer version once the case advances.",
+        "Atlas recordOnlyRequest requires both persisted request.caseRef and result.caseRef to equal the selected current caseRef. The v/v+1 reference is therefore ineligible for proof reuse; recall preserves the original path rather than invoking the explicit historical APIs.",
+        "Even if the host were later to return a historical calculation, BCS requires sameHistoricalSource and continuity. sameHistoricalSource has record/document/receipt/case-event branches but no calculation branch, so a historical C17 result is unavailable."
+      ],
+      "impact": "Authorized historical calculation evidence can become unavailable after accepting the analysis or another legitimate case version increment. This is a continuity/availability failure, not evidence of unauthorized access.",
+      "fixBoundary": "An explicit historical host lane must select a real persisted ledger member under current authorization, retain exact original request/result/reference, same case incarnation and allowed horizon, replay sources, and use readHistoricalCalculation/readHistorical. The BCS calculation continuity branch must be separately defined and proven. Do not relax ordinary reads or return fabricated fresh evidence. Host/BCS edits remain external-owner proposals.",
+      "validationNeeded": "Exact composed Actions test: persist real calculation, accept it into a real ledger event, advance the case and successfully resolve/recall through the historical lane. Negative cases for nonmembership, altered reference/result/request, different incarnation/horizon, revoked access, changed source and absent/revoked continuity. Public ordinary reads must still reject stale producer versions.",
+      "proof": "Static call trace over exact pinned sources; no composed execution by reviewer."
+    },
+    {
+      "id": "F2",
+      "severity": "P2",
+      "status": "superseded_at_current_pin_by_static_inspection",
+      "title": "The prior binding-global replay Map claim no longer applies",
+      "locations": [
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "lines": "116-131"
+        }
+      ],
+      "observation": "The wrapper uses AsyncLocalStorage. It inherits ancestors only for an open scope with the same context object, Request identity and binding digest; every nested call creates a new set. Repeated ancestors and path depth >=16 still fail closed. Finally closes the scope. Independent roots do not share a binding-global active map.",
+      "limits": "This is source verification of the external wrapper fix, not an executed concurrency receipt for COMPOSE5. The Atlas helper has separate scoped proof-reuse guards; their presence must not be mislabeled as the old replay Map defect."
+    }
+  ],
+  "reconciledFacts": [
+    "Nested C17 producer composition exists; the older record-only-only claim is not current.",
+    "Planner record historical continuity is present and distinct from historical calculation continuation.",
+    "Atlas proof reuse is limited to one authenticated recall, record-only calculations eligible at the exact selected version, complete state/source/day fences and final egress checks. It does not itself introduce the historical calculation APIs.",
+    "The approved own historical APIs remain an explicit separate lane, and their existence alone is not a complete host/BCS integration."
+  ],
+  "proof": {
+    "method": "Static source inspection and exact Git blob/SHA256 verification",
+    "executedProductTests": false,
+    "executedTypecheck": false,
+    "dispatchedCI": false,
+    "productEdits": false,
+    "nativeProofClaim": false,
+    "globalReadinessClaim": false
+  },
+  "limitations": [
+    "Only the four listed authority sources and related intake descriptions were reviewed for this reconciliation; other COMPOSE5 BI/portfolio changes are outside scope.",
+    "No current COMPOSE5 executed CI receipt is claimed here.",
+    "Financial result completeness, accepted ChoiceRecord, applied effect and authoritative receipt remain separate proof boundaries."
+  ]
+}

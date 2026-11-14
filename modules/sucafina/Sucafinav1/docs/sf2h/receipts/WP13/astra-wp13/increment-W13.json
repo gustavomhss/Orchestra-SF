@@ -1,0 +1,51 @@
+{
+  "schema": "wp13-increment-v1",
+  "increment": "W13",
+  "preparedAt": "2026-11-14T12:16:33.217503+00:00",
+  "parent": {
+    "sha": "102f24f6f84e0cc66cb93124f65272777c094f9e",
+    "tree": "37251bec94ba769dc904ed9a307604715addafaa"
+  },
+  "ready": false,
+  "status": "FIX_REQUIRING_HOSTED_CHECK",
+  "change": "Remove only the undeclared unused readHistoricalCalculation property from the HTTP reconciliation mock to match the published C08 result-store contract. Every remaining unrelated mock method still throws on use. No runtime change, assertion removal, budget change or domain approximation.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "sha": "553e171d14ea8e7318ad245375cd6d2597b66d4a",
+      "sha256": "57cc25a25fa6b86712df86c5856d27510d92a0f4302e6c102ba2678738d9a864",
+      "bytes": 33363,
+      "owner": "WP13"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/check-W12.json",
+      "sha": "a1d079b53c7c137d19b520cd7676f64406d7b5e5",
+      "sha256": "ce47b6d3b9367624538062961fdc4f5c7103704e2baeeba7e691140a1d1b9df2",
+      "bytes": 43650,
+      "owner": "WP13"
+    }
+  ],
+  "trigger": {
+    "runId": 43593821971,
+    "jobId": 132443997204,
+    "product": "102f24f6f84e0cc66cb93124f65272777c094f9e",
+    "typecheck": {
+      "own": 1,
+      "foreign": 130,
+      "status": "FAIL"
+    },
+    "diagnostic": "reconciliation.test.ts(346,73) TS2561: readHistoricalCalculation does not exist in the current result-store type.",
+    "guards": {
+      "status": "PASS",
+      "rules": 78,
+      "paths": 676,
+      "warnings": 10,
+      "errors": 0
+    }
+  },
+  "localValidation": "Text-only comparison and contract inspection; no product tests or typecheck run locally.",
+  "nextAction": [
+    "Run C13 exact published package and guards.",
+    "Repin still-undispatched S9; execute after external43592160043 completes."
+  ]
+}

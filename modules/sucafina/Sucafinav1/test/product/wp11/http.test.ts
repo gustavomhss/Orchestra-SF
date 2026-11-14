@@ -11,6 +11,7 @@ import { createSfProductState } from "../../../product/host-binding/state-provid
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import type { DecisionCase } from "../../../product/contracts/decisions.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+import type { CurrentChoicePromotion } from "../../../product/decisions/current-choice-promotion.ts"
 
 test("decision HTTP uses the real human admission and case CAS", async () => {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-decision-http-"))
@@ -38,4 +39,41 @@ test("decision HTTP uses the real human admission and case CAS", async () => {
     const listed = await handle(new Request(`${origin}/app?sf=decision-list`, { headers: { "x-principal": "principal" } }))
     expect(await listed?.json()).toMatchObject({ status: "ok", value: [{ objective: "Revised", caseRef: { version: 2 } }] })
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
+})
+
+test("current-choice HTTP binds both human steps and only promotion permits a historical retry", async () => {
+  const origin = "https://example.test"
+  const ui = createSfUiAuthority({ authorize: async () => ({ installationId: "install", projectId: "project", principalRef: "principal", policyVersion: "policy", accessRevision: "access" }), commandIdentity: async () => "choice-intent", createId: () => "choice-request", now: () => Date.parse("2026-11-14T00:00:00Z"), privateCommands: ["sf-human:decisions.promote-alternative"] })
+  const human = createSfHumanAuthority({ origin, ui })
+  const preview = { caseRef: { id: "case", incarnation: "inc", version: 2 }, choiceId: "choice", alternativeRef: { id: "alternative", version: 1 }, coverageRef: "inventory" }
+  const promotion: CurrentChoicePromotion = { ...preview, choiceDigest: "a".repeat(64), resultRef: "result", resultDigest: "b".repeat(64), scenario: { baseRef: "base", operations: [], assumptions: [] } }
+  const scopes: boolean[] = []
+  const calls: string[] = []
+  const empty = {} as unknown as Parameters<typeof createDecisionHttp>[0]
+  const handle = createDecisionHttp({ ...empty, origin, mount: "/app", human,
+    withCase: async (_context, _caseRef, options, action) => { scopes.push(options.allowHistoricalRetry); return action() },
+    currentChoicePreview: {
+      prepare: async (payload, context) => {
+        expect(await human.authorize(context, "decisions.promote-alternative", payload)).toBe(true)
+        expect(await human.authorize(context, "decisions.promote-alternative", { ...payload, choiceId: "other" })).toBe(false)
+        calls.push("preview")
+        return { status: "ok", value: { promotion, bindingDigest: "c".repeat(64) } }
+      },
+      read: async () => ({ status: "unavailable", reason: "not-exposed-by-http" }),
+    },
+    promoteCurrentChoice: async (payload, context) => {
+      expect(await human.authorize(context, "decisions.promote-alternative", payload)).toBe(true)
+      expect(await human.authorize(context, "decisions.promote-alternative", preview)).toBe(false)
+      calls.push("promote")
+      return { status: "ok", value: { caseRef: { ...payload.caseRef, version: 3 }, resultRef: "promoted-result" } }
+    },
+  })
+  const post = (action: string, payload: unknown, requestOrigin = origin) => new Request(`${origin}/app?sf=${action}`, { method: "POST", headers: { "content-type": "application/json", origin: requestOrigin }, body: JSON.stringify(payload) })
+  expect((await handle(post("decision-choice-preview", { ...preview, privileged: true })))?.status).toBe(400)
+  expect((await handle(post("decision-choice-preview", preview, "https://untrusted.example")))?.status).toBe(403)
+  expect((await handle(post("decision-choice-preview", preview)))?.status).toBe(200)
+  expect((await handle(post("decision-choice-promote", { ...promotion, resultDigest: "forged" })))?.status).toBe(400)
+  expect((await handle(post("decision-choice-promote", promotion)))?.status).toBe(200)
+  expect(calls).toEqual(["preview", "promote"])
+  expect(scopes).toEqual([false, true])
 })

@@ -1,0 +1,37 @@
+{
+  "schema": "sf-finance-resume-wp11-ci-proposal-v1",
+  "status": "NOT_DISPATCHED_BY_SUBAGENT",
+  "owner": "root Finance",
+  "protocol": "CI.md at a3d29d011ba3607a57914701300f09117a3e2de9; published W then S differs only .ci-run.json, one WP run at a time, no epic per group",
+  "focusedSelection": [
+    "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/criterion-rules.test.ts"
+  ],
+  "reasons": {
+    "current-choice-read-fence.test.ts": "New finish/replacement after last C08 authorize with independent namespace authority plus existing readOnly/membership/grants positives.",
+    "case-lease-egress.test.ts": "Six new real-provider lease finish/expiry races; successful seed read/draft controls.",
+    "case-read-fence.test.ts": "Imported source same-version/membership egress regressions on merged case-port.",
+    "case-egress-fence.test.ts": "Imported source seven final draft/intent races with actual CAS commit evidence.",
+    "case-operation-access.test.ts": "Stable retained Request correction preserves scenario-operation scope negative/positive.",
+    "case-port.test.ts": "Retained Request fixtures and case draft/read/prepare intent consumers after final fence.",
+    "criterion-rules.test.ts": "Imported rule revision/CAS/replay own delta; controlled metric, not monetary proof."
+  },
+  "financialFollowUp": "Use current-choice-lifecycle, renewal-history, renewal-choice-revision or exact existing qualified roots according root closure audit. Both renewal fixtures are three-way merges; historical W17/W33 financial observations remain original and are not automatic candidate PASS.",
+  "checks": [
+    "bun typecheck in package per AGENTS on GitHub Actions",
+    "bun run check:guards --base origin/dev per AGENTS on GitHub Actions"
+  ],
+  "preserve": [
+    "No raised timeout",
+    "No removed assertion",
+    "No local product execution",
+    "No retries without material delta",
+    "No source receipt relabeling",
+    "No global pass declaration"
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "schema": "wp11-finance-S17-current-choice-static-diagnosis-v1",
+  "status": "STATIC_EXTERNAL_DIAGNOSIS_NO_S17_PRODUCT_FIX_JUSTIFIED",
+  "source": {
+    "runId": 43591635600,
+    "jobId": 132437416020,
+    "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+    "snapshotSha": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+    "conclusion": "failure",
+    "pass": 4,
+    "fail": 15,
+    "tests": 19,
+    "files": 8,
+    "logSha256": "bee8143075a7ec7ecfc512df315fa23f42ec3dbf7b438a0e597ab9cd90c8cb16",
+    "scope": "External Finance observation; no result transferred to WP11 candidate.",
+    "sourceCharacters": 123640,
+    "storedCharacters": 123640,
+    "logBytes": 123642
+  },
+  "sourceMetadataSha256": "d572c383fd907bc996fff4af190acea7d1ba471b05d6599b1fbe810303bfbccc",
+  "sourceLog": "/workspace/scratch/c3f9350f32d4/seams/finance-0c4a-review/evidence/S17-tests.log",
+  "observedFailure": {
+    "test": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+    "durationMs": 59508.27,
+    "trace": {
+      "phase": "coverage-entries:start",
+      "status": "ok"
+    },
+    "coverage": {
+      "coverageError": "coverage-callback-not-reached"
+    },
+    "result": {
+      "status": "unavailable",
+      "reason": "choice-preview-unavailable"
+    },
+    "logLines": [
+      832,
+      843
+    ]
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "candidate": "1fa71a64faf297fdbae07747d260d4ced7ec9532",
+      "candidateBlob": "12f9bda4f964763e8c6d60fb67e5fb68a08cd9ee",
+      "candidateSha256": "bce2dd271fd369363d5b1ef2eb18b3712e7944e7ea5815d51ca8b4cae6660586",
+      "financePin": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "financeBlob": "12f9bda4f964763e8c6d60fb67e5fb68a08cd9ee",
+      "financeSha256": "bce2dd271fd369363d5b1ef2eb18b3712e7944e7ea5815d51ca8b4cae6660586",
+      "sourceCache": "/workspace/scratch/c3f9350f32d4/seams/finance-0c4a-diagnosis/modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "verification": "GitHub MCP sha matches recomputed Git blob from exact cached bytes"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "candidate": "1fa71a64faf297fdbae07747d260d4ced7ec9532",
+      "candidateBlob": "8fb15ebf1823314e565bef83509f3defa3905bcc",
+      "candidateSha256": "604c2756064295dd6661d175219406ada038ad52de637fac640479bd0206ecdd",
+      "financePin": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "financeBlob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "financeSha256": "0cca19827cfe6793207441d493561d76830d6903383701b9d84230380561a701",
+      "sourceCache": "/workspace/scratch/c3f9350f32d4/seams/finance-0c4a-diagnosis/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "verification": "GitHub MCP sha matches recomputed Git blob from exact cached bytes"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "candidate": "1fa71a64faf297fdbae07747d260d4ced7ec9532",
+      "candidateBlob": "5b754d16c5d61764bffc8268075fbd4551dd2072",
+      "candidateSha256": "7c703e0b3ee86cbc2b6d440f491f9974b36d9edd4b7c81ef094a5ceb1e2d2a88",
+      "financePin": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "financeBlob": "2ad002beca9b3c6dab4e1d8841345c9250a6826d",
+      "financeSha256": "5c1ed70d2057ab37ce9ffec0de949e8a5024a244014b7fee772a2921f8bd16de",
+      "sourceCache": "/workspace/scratch/c3f9350f32d4/seams/finance-0c4a-review/head/modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts"
+    }
+  ],
+  "additionalExactSourceReads": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/current-choice.ts",
+      "pin": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "blob": "c9d83f1dcc7865e9c724f9246a65102efa7824ca",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/finance-0c4a-diagnosis/modules/sucafina/Sucafinav1/product/planner/current-choice.ts",
+      "sha256": "d3e72e9d89991bae7d71e106b41595d55708b78e44d173c231c83e78b62088e1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "pin": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "blob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/finance-0c4a-diagnosis/modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "sha256": "6e0f003055c08005e3a2f339d221c6f608d615a8068e66d30555a981604eb0fd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "pin": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "blob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/finance-0c4a-diagnosis/modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "sha256": "f2149ed78166add2869fd2612d1936007c3a94862ebacdb277e0dba7c6f56ddf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "pin": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "blob": "18d95b84d01b26048af9a442c44cb32e8f14e9f5",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/finance-0c4a-diagnosis/modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "sha256": "bad22af33418063fdfcb23499416f20b1adf6edb7f511be892635bd37139d129"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "pin": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "blob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/finance-0c4a-diagnosis/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "sha256": "36e11f7e1148d0b30fff90473f971a9183aef6b9ffeb5064f63a3034c96ee7e3"
+    }
+  ],
+  "conclusions": [
+    {
+      "id": "DIAGNOSTIC_BOUNDARY_IDENTIFIED",
+      "established": true,
+      "finding": "Finance trace phase is set at the first line of the new entries callback. coverageDiagnostic remains undefined, so execution did not complete its following assignment. The intervening operations are structuredClone(scenario), structuredClone(baseline), and reading basisVersion/costCoverage fields for the diagnostic object. No exception name/stack is logged there.",
+      "notEstablished": "The log does not identify which clone/dereference threw or its concrete exception. DataCloneError, heap failure, or a product-shape bug must not be declared observed."
+    },
+    {
+      "id": "CALLBACK_SIGNATURE_VALID",
+      "established": true,
+      "finding": "Current preview passes attributed ScenarioResult and baseline.value.assessment, exactly matching the coverageEvidence.entries signature. createCurrentPlannerChoice puts fenceSnapshot in the outer replay envelope; result is only the canonical simulated ScenarioResult. Scenario producer and renewal coverage fixture return plain data records; no closure/context/host object is deliberately passed as scenario/baseline.",
+      "limit": "Static shape review cannot establish the actual throwing object in that external run."
+    },
+    {
+      "id": "COST_COVERAGE_DELTA_NOT_CAUSE",
+      "established": true,
+      "finding": "Finance changes only missingCategories readonly string[].includes(categoryId) to new Set(derivedMissingCategoryIds).has(categoryId). For validated string arrays these membership predicates have the same semantics. reassessScenarioCoverage runs after entries returns, later than the observed diagnostic boundary; neither version is the direct cause established by the trace."
+    },
+    {
+      "id": "CURRENT_PREVIEW_COVERAGE_SEMANTICS",
+      "established": true,
+      "finding": "The producer bootstrap scenario may carry basis1 while the current registry is basis2; reassessment intentionally checks baseline against the selected basis, then computes the new assessment from the current scenario components and actual evidence. Complete scope does not erase hypothetical operations: three replaces retain conditioned/totalnull, while knownSubtotal can become250000. No static reason was found to weaken C10 checks or manufacture a complete total in this path."
+    },
+    {
+      "id": "NO_AUTOMATIC_FAILURE_TRANSFER",
+      "established": true,
+      "finding": "Own lifecycle does not contain the extra diagnostic clones. Original entries returns actual coverage.entries directly. No static product/formula fix is justified from S17 alone; run the already planned own B1 on its exact candidate and preserve any new result separately."
+    },
+    {
+      "id": "UPSTREAM_PERFORMANCE_GRAPH_DIFFERS",
+      "established": true,
+      "finding": "Finance renewal-human-choice fixture18d95b84 equals ownW9/W12; Finance renewal-choice-fixturea7fbf1ab equals ownW9. OwnW12 changes the latter to d5395570 via H5 source projection lanes. Therefore the upstream210367ms renewal-choice-revision timeout applies to the older classified-projection graph, not to the current ownW12 graph; H5/B1 runtime outcomes remain required."
+    }
+  ],
+  "separateOwnSecurityFinding": {
+    "id": "CURRENT_CHOICE_READ_FINAL_AUTH_CALLBACK_RACE",
+    "status": "OWN_FIX_WRITTEN_PENDING_INDEPENDENT_REVIEW_AND_HOSTED_CI",
+    "notCauseOfS17": true,
+    "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+    "mechanism": "read() reads casesAgain and bindingAgain, then awaits authorizeCase(casesAgain.value.decision) and host.revalidate before returning the prior binding. A real C08 CAS removing participant/choice during that last authorizeCase can keep the supplied old snapshot authorized and global lease unchanged, so no subsequent case observation detects it.",
+    "smallestOwnCorrection": "Finish external authorizeCase/revalidate callbacks; explicitly reauthorize preferences read under sameAuthority and compare its binding; then observe decision/result/producer/private binding together from C08 under sameAuthority, compare all full digests/identities, and return without another product callback. No write permission is required for reads.",
+    "discriminatingRegression": "Two isolated reader regressions change membership via real C08 CAS or revoke only preferences read during the second preview-specific authorizeCase, while retaining a valid global UI lease. Both require stale/no value. The positive read first disables preferences write. C08 choice/binding are seeded, monetary values unknown, while UI admission, SQLite and result-store operations are real.",
+    "reviewers": [
+      "producer_seams",
+      "ci_reconciliation"
+    ],
+    "rootNotified": true,
+    "localFixFiles": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "blob": "38f82f4b931682e255a18d52856e192f2ee43390",
+        "sha256": "74b8964deabc274b59892f48de8bc54c774aab242d911a9b0713f9ad36f76095"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "blob": "46b004a1b374229ad46077930134ba0469213087",
+        "sha256": "12dbbe50b2044ce12112cc13d1655d5cc138c58cd387b1f9ffcc799ff1e6fb98"
+      }
+    ]
+  },
+  "externalDiagnosticRecommendation": {
+    "scope": "Owner Finance diagnostic callback only, if that owner investigates this run",
+    "change": "Wrap the exact entries diagnostic in try/catch that records stage plus error.name/message/stack and rethrows; set a marker before each clone and before field dereferences. Do not add financial replay, source reads, mutation or permissive fallback.",
+    "reason": "The current broad product catch correctly hides an internal exception; its diagnostic wrapper must capture the exception locally instead of guessing the missing reason."
+  },
+  "limits": [
+    "No local product/test/typecheck execution and no foreign intake. A separately identified own read authorization race has a local unpublished fix and new regression, pending independent review and hosted CI; it is not asserted to cause the S17 entries failure.",
+    "No upstream pass/failure is relabeled as execution on own candidate.",
+    "The separate final authorization race is a production correctness issue within own scope and requires a new regression/hosted proof when fixed."
+  ],
+  "cachePrecisionNote": {
+    "supersededCostCoverageCache": "seams/finance-0c4a-review/head/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+    "issue": "That earlier scratch cache includes an extra trailing newline and cannot be cited as the exact Git blob. The analysis now cites a fresh exact MCP cache whose Git blob matches 09097eaba2e0eae71d33d88077a2f86e83e1dde9. No repository file or original cache was changed."
+  }
+}

@@ -1,0 +1,273 @@
+{
+  "schema": "wp03-overview-drilldown-evidence-v1",
+  "scope": {
+    "campaign": "Sucafina",
+    "work_package": "WP03",
+    "excluded": [
+      "Genesis",
+      "WP05 implementation"
+    ],
+    "tasks": 5,
+    "criteria": 112
+  },
+  "resumption": {
+    "original_head": "f1eca7591b14e6cf8fda7cfb7b7a7a77959314be",
+    "previous_delivery": "bc8342d0955de936873e7e1250f5bb8d3e091b79",
+    "original_campaign_t0": "2026-11-13T04:01:10Z",
+    "clock_reset": false,
+    "within_two_hours_claim": false
+  },
+  "immutable_handoff": "4e4d873e7e93bba3dc82df45e243999e7c8e76b6",
+  "planning_pin": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "product": {
+    "sha": "d7be4567ea0eb47fe0022fcaf87ae497e33afcea",
+    "tree": "76bbcb8759bccb65067c8e72a0d8fb5ef32f4125",
+    "branch": "astra-wp03",
+    "pr": 22,
+    "pr_url": "https://github.com/gustavomhss/Orchestra-SF/pull/22",
+    "base": "sf2-stack",
+    "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "scope_of_change": [
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/planner/README.md",
+        "status": "modified",
+        "additions": 5,
+        "deletions": 0,
+        "changes": 5,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/planner/overview-drilldown.ts",
+        "status": "added",
+        "additions": 131,
+        "deletions": 0,
+        "changes": 131,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/planner/overview.ts",
+        "status": "modified",
+        "additions": 5,
+        "deletions": 8,
+        "changes": 13,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp03/overview-drilldown.test.ts",
+        "status": "added",
+        "additions": 338,
+        "deletions": 0,
+        "changes": 338,
+        "previous_filename": null
+      }
+    ],
+    "implementation": "Seven published totals are native disclosure controls. Each opens authorized record subtotals and per-month before/after/difference detail, preserving source, version, period and currency. Budget values are selected by exact measure and source compatibility; the existing engine totals and comparePlannerVersions remain authoritative. Missing, absent, numeric zero and incomplete/unreconciled composition are distinct.",
+    "changed_criteria_implementation": [
+      "WP03.QLT.01",
+      "WP03.T05.QLT.01",
+      "WP03.T05.SUC.01"
+    ],
+    "criterion_acceptance_promoted": false,
+    "test_source_sha256": "039ae36c13927c4a0f9d30b3a398cf9a7af55d36d6a21de5152b9e7f6191af3c",
+    "test_source_unchanged_from_red": true
+  },
+  "red": {
+    "evidence": "red-evidence.json",
+    "run_id": 43534889692,
+    "job_id": 132261371579,
+    "conclusion": "failure",
+    "tests": {
+      "total": 7,
+      "pass": 0,
+      "fail": 7,
+      "files": 1,
+      "assertions": 34
+    },
+    "production_code_equals_previous_delivery": true
+  },
+  "intermediate_attempts": [
+    {
+      "evidence": "green-attempt1.json",
+      "run_id": 43535212218,
+      "conclusion": "failure",
+      "tests": {
+        "pass": 169,
+        "fail": 1
+      },
+      "reason": "The new renderer threw on an undefined source identity in an existing test; product presentation was corrected and no test was weakened."
+    },
+    {
+      "evidence": "green-attempt2.json",
+      "run_id": 43535785426,
+      "conclusion": "failure",
+      "tests": {
+        "pass": 169,
+        "fail": 1
+      },
+      "reason": "The unchanged persistence/criterion-binding test exceeded its existing 5000ms limit at 5198.39ms; the next run reused exactly the same W, S, selection and timeout."
+    }
+  ],
+  "green": {
+    "snapshot_sha": "40792323ea4921f2c34b87720f407878290396ef",
+    "snapshot_tree": "5514a81e585067bc2d3ba316e9502afcf9f7843c",
+    "snapshot_diff": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      }
+    ],
+    "branch": "ci-run-linux-astra-wp03-d7be4567-79addc39-2",
+    "request_file": "green-ci-request.json",
+    "request_sha256": "79addc3906450c91cad259c50397715bc68a7267b0cb86e1274f0070122ce69b",
+    "request_validator": "Canonical script/test-ci-request.ts validateRequest plus script/test-ci-location.ts locateTestPackage and actual module manifests; metadata validation only. All 31 paths verified in the final product tree.",
+    "run_id": 43536154582,
+    "job_id": 132265530563,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43536154582",
+    "run_attempt": 1,
+    "conclusion": "success",
+    "started_at": "2026-11-14T00:44:03Z",
+    "completed_at": "2026-11-14T00:46:27Z",
+    "selection_files": 31,
+    "previous_files_retained": 30,
+    "added_files": 1,
+    "tests": {
+      "total": 170,
+      "pass": 170,
+      "fail": 0,
+      "assertions": 2644,
+      "duration_seconds": 45.98
+    },
+    "prior_named_tests_reobserved": 163,
+    "new_tests": 7,
+    "omni": {
+      "nonce": "a41faa1ba785d657f080e7868d201755",
+      "verdict": "not applicable (focused: no declaring test ran)",
+      "spawn": false,
+      "delegated": false,
+      "native_proof": false
+    },
+    "exact_snapshot_retry": true
+  },
+  "checks": {
+    "product_sha": "d7be4567ea0eb47fe0022fcaf87ae497e33afcea",
+    "run_id": 43535787078,
+    "job_id": 132264325511,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43535787078",
+    "conclusion": "failure",
+    "guards": {
+      "conclusion": "success",
+      "rules": 78,
+      "changed_paths": 639,
+      "gates": 0,
+      "warnings": 12,
+      "errors": 0,
+      "base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf"
+    },
+    "typecheck": {
+      "conclusion": "failure",
+      "diagnostics": 132,
+      "owned_diagnostics": 0,
+      "external_diagnostics": 132,
+      "new_diagnostic_sites_vs_previous_delivery": 0,
+      "log_byte_identical_to_first_overview_candidate": true,
+      "detail": "typecheck-attribution.json",
+      "limit": "The package remains failing. Against the prior delivery only two preexisting WP06 diagnostic blocks differ textually; their source blob is unchanged.",
+      "complete_log": "typecheck-results.txt"
+    },
+    "artifact": {
+      "id": 14088959401,
+      "sha256": "8c3e1f426bbad40ff09c376843dac52c9324fffa078ecb7ac06fb6c1ae0e67db",
+      "members": [
+        "source.json",
+        "guards.log",
+        "typecheck.log",
+        "seed-typecheck.log",
+        "typecheck-differential.json"
+      ]
+    }
+  },
+  "acceptance": {
+    "integrated": false,
+    "status": "PRODUCER_REVALIDATED_INSTALLED_UI_PENDING",
+    "criterion_status_counts": {
+      "PRODUCER_VERIFIED": 79,
+      "PENDING_UI_PROOF": 16,
+      "BLOCKED_EXTERNAL": 9,
+      "NATIVE_UNPROVEN": 8
+    },
+    "matrix": "criteria-matrix.json",
+    "test_catalog": "test-proof-catalog.json",
+    "historical_receipts_preserved": true
+  },
+  "observed_limits": [
+    {
+      "kind": "contribution-not-installed",
+      "observation": "HTMLRewriter inspects the actual rendered contribution and real Planner/SQLite fixtures. It does not run browser interaction, keyboard focus, screen-reader behavior, the WP01 mounted consumer, or a native resident session."
+    },
+    {
+      "kind": "timing-instability",
+      "test": "real WP11 rules bind a comparison, survive reopen and refuse a second binding or a stale rule",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+      "blob": "c5c29d7ac94354318bdb32a3328ed6b93dc887e9",
+      "same_product_timeout_ms": 5198.39,
+      "same_product_success_ms": 4929.99,
+      "existing_limit_ms": 5000,
+      "remaining_margin_ms": 70.01,
+      "timeout_or_code_changed": false,
+      "root_cause_proven": false,
+      "static_analysis": "This test has no Overview import or call. It combines durable rule registration, comparison, save, idempotent retry, reopen, conflicting binding and stale-rule rejection with repeated replay/validation in one timeout window.",
+      "followup_owners": [
+        "WP03 persistence",
+        "WP11 criterion bindings",
+        "storage runtime"
+      ],
+      "claim_limit": "An exact retry passed; this does not prove the timing risk resolved."
+    }
+  ],
+  "boundaries": {
+    "source_observations": "dependency-recheck.json",
+    "mounted_ui": "Pending WP00 shared host contract and WP01 real consumers; the observed WP10 duplicate route registration prevents installed browser boot.",
+    "native": "No callable real Orchestra SessionV2/SkillLoadReceipt/provider/grant APIs were exposed; no native/resident acceptance is claimed.",
+    "package_typecheck": "Existing external diagnostics remain; zero owned diagnostics is not a green package."
+  },
+  "independent_review": {
+    "reviewer": "audit_wp06_wp08",
+    "product_authorship": false,
+    "scope": "Static contribution and tests, RED discrimination, source-metadata correction, named GREEN test reconciliation and provenance. Final checks were separately attributed by audit_wp03_wp05.",
+    "global_campaign_three_reviews_claim": false
+  },
+  "delivery_envelope": {
+    "policy": "COMMON.candidate_delivery",
+    "expected_parent_sha": "d7be4567ea0eb47fe0022fcaf87ae497e33afcea",
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/resume-20261114-overview/",
+    "prefix_absent_in_product": true,
+    "allowed_extensions": [
+      ".json",
+      ".md",
+      ".txt"
+    ],
+    "mode": "100644",
+    "product_test_inputs_changed": false,
+    "input_evidence": {
+      "explicit_test_selection_files": 31,
+      "tsconfig_blob": "51895f3c254e6020d116ca73d4a1c690f7562169",
+      "package_blob": "18911fee9313f8fb57c1a972bc70eec2f7864c55",
+      "statement": "New receipt data are outside the explicit test selection and the package TypeScript include paths. No configuration, manifest, code or asset is added by D."
+    },
+    "final_delivery_sha_rule": "The containing commit identifies delivery D. Its SHA and post-publication guard result are reported externally and are not backfilled into these receipts."
+  },
+  "execution": {
+    "remote_operations": "GitHub MCP",
+    "local_activity": "Source/text/metadata/hash preparation and artifact analysis only",
+    "local_product_tests": false,
+    "local_product_typecheck": false,
+    "merge": false,
+    "deploy": false
+  }
+}

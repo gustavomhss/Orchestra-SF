@@ -1,0 +1,124 @@
+{
+  "schema": "sf-finance-independent-fixture-review-v1",
+  "reviewer": "fixture_boundary_review",
+  "reviewedAt": "2026-11-14T11:46:51Z",
+  "status": "NO_STATIC_BLOCKER_FOUND_HOSTED_VALIDATION_PENDING",
+  "findings": [],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "beforeBlob": "0ccf287ecd225ddcae99a1490f255b4c2b4358ed",
+      "candidateBlob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "sha256": "afb559f4b2403025b977a33a5a118be567a5936de5ca46e3308687186b250ad8",
+      "bytes": 22570,
+      "assertionLinesBefore": 0,
+      "assertionLinesAfter": 0,
+      "assertionLinesEqual": true,
+      "timeoutsBefore": [],
+      "timeoutsAfter": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+      "beforeBlob": "3196d7885a6cecbc4afff9b3044857400753280a",
+      "candidateBlob": "27e0580d6c9ba7b4c549bc33e5d252a7ce74ae66",
+      "sha256": "94a2083facbde659e3cee6db56597016517e7c45ac1d85b12e1be91f7606adf0",
+      "bytes": 7661,
+      "assertionLinesBefore": 29,
+      "assertionLinesAfter": 29,
+      "assertionLinesEqual": true,
+      "timeoutsBefore": [
+        "180000",
+        "180000"
+      ],
+      "timeoutsAfter": [
+        "180000",
+        "180000"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "beforeBlob": "a8b72e8c30d6e365c77169e53d499dc163530318",
+      "candidateBlob": "2ad002beca9b3c6dab4e1d8841345c9250a6826d",
+      "sha256": "5c1ed70d2057ab37ce9ffec0de949e8a5024a244014b7fee772a2921f8bd16de",
+      "bytes": 25755,
+      "assertionLinesBefore": 40,
+      "assertionLinesAfter": 40,
+      "assertionLinesEqual": true,
+      "timeoutsBefore": [
+        "180000"
+      ],
+      "timeoutsAfter": [
+        "180000"
+      ]
+    }
+  ],
+  "verified": {
+    "compositeBytesEqualExceptFactoryIdentifier": true,
+    "compositeTests": 2,
+    "compositeAssertionLines": 29,
+    "compositeTimeoutsMs": [
+      180000,
+      180000
+    ],
+    "fourVariants": [
+      "omitted",
+      "null",
+      "zero",
+      "confirmed"
+    ],
+    "sameThresholdOracles": [
+      55000,
+      15000
+    ],
+    "sameScopeBounds": [
+      10000,
+      70000
+    ],
+    "sameCoverageAndFinancialOracles": true,
+    "sameClassificationNegatives": true,
+    "comparisonFactoryOriginalBodyReconstructedExactlyExceptRemovedUnconsumedSensitivityAndSavedField": true,
+    "sameAuthorizationAndFinancialProducerCalls": true,
+    "sameDefaultOptions": true,
+    "fullSensitivityConsumerRequiredSaved": true,
+    "fullSensitivityEvaluateAndStoreAfterComparison": true,
+    "cleanupOnBaseFailureRetained": true,
+    "cleanupOnSensitivityFailureRetained": true,
+    "noDoubleCleanupIntroducedOnBaseFailure": true,
+    "currentChoiceAssertionLines": 40,
+    "currentChoiceTimeoutMs": 180000,
+    "currentChoiceFixtureUnchanged": "createWp05SensitivityFixture",
+    "diagnosticOriginalDelegateCalledOnce": true,
+    "diagnosticOriginalResultReturnedAndExceptionRethrown": true,
+    "diagnosticNoExtraSourceAuthorizationOrPlannerCall": true
+  },
+  "reasoning": {
+    "cost": "Five composite fixture instances previously performed complete sensitivity evaluation and persistence that the composite test never consumed. The comparison factory removes those five evaluations from this file; elapsed-time reduction and resolution of the observed 204791.75 ms failure are not measured by this static review.",
+    "fullFactory": "The compatibility wrapper calls the same comparison preparation, then the same persistent.evaluateAndStore with the same request, caseRef and context. It returns saved as a required property and preserves the original failure message and cleanup. No authorization, coverage, currency, absence, arithmetic or cache implementation changed.",
+    "coverage": "The composite tests still invoke the canonical exact threshold, interval proof, registered rule, comparison and coverage classification. They still require conditioned/null hypothetical results and reject revoked evidence, removed N/A classification, duplicated components and incomplete training coverage.",
+    "diagnostic": "The added current-choice trace records phase, returned status or original exception at the actual resimulation and baseline coverage calls. It preserves arguments, delegates once, returns the original value and rethrows the original error. The initial entries phase helps locate a throw before the existing clones. This is instrumentation only, not a functional current-choice repair."
+  },
+  "sensitivityFactoryConsumers": [
+    "modules/sucafina/Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp03/scenario-persistence-fences.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp05/sensitivity-integration.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts"
+  ],
+  "requiredHostedScope": [
+    "test/product/wp11/composite-coverage.test.ts",
+    "A selected consumer of createWp05SensitivityFixture (current-choice-lifecycle already uses the full wrapper)",
+    "test/product/wp11/current-choice-lifecycle.test.ts for diagnostic evidence"
+  ],
+  "limitations": [
+    "No product import, execution, local test, Bun, typecheck, guard run, CI dispatch or remote write was performed.",
+    "No run result, runtime performance improvement, native proof or criterion acceptance is claimed.",
+    "The current-choice root cause remains unestablished; instrumentation is not a fix.",
+    "Metadata checks establish exact candidate bytes and preservation of assertions, not dynamic compatibility."
+  ]
+}

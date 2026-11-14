@@ -1,0 +1,45 @@
+{
+  "schema": "sf-finance-scenario-bi-bootstrap-fix-v1",
+  "base": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+  "base_tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+  "status": "READY_FOR_ROOT_REVIEW_AND_ACTIONS",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-fixture.ts",
+      "baseBlob": "14445a3e32ab1c906a993fd628d011b8d22659c9",
+      "blob": "17f0d6de84fed684b73fca1550cc719a292e7893",
+      "sha256": "775fc6fccbc44205df84338167d6f41bbaeec746d27e1633a57440c0a55003a6",
+      "bytes": 14749,
+      "source": "/workspace/scratch/3b9737c0177a/work-planner-bi/repo/modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-fixture.ts"
+    }
+  ],
+  "cause": "plannerFixture initializes only planner; createSfProductState stores C08 in dashboard through the real source-lifecycle wrapper, which requires initialized source identities. Complete all three surfaces with the existing initializeSources API before admission/issuance/state seeding. No identities assigned manually.",
+  "production_files_changed": false,
+  "assertions_removed_or_changed": false,
+  "timeouts_changed": false,
+  "product_tests_run_locally": false,
+  "failed_observation": {
+    "run_id": 43619817826,
+    "job_id": 132522722250,
+    "product_sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+    "snapshot_sha": "f004a08d124a43f67bfc2bd41debe06ecad7b13e",
+    "pass": 2,
+    "fail": 4,
+    "expects": 23,
+    "failure": "SF_SOURCE_IDENTITIES_UNAVAILABLE during four scenario-bi.test fixture setups"
+  },
+  "reuse_passed_unchanged": [
+    "test/product/wp03/scenario-bi-complete.test.ts",
+    "test/product/wp05/factory-selection.test.ts"
+  ],
+  "surgicalSelectors": [
+    "./Sucafinav1/test/product/wp03/scenario-bi.test.ts"
+  ],
+  "static_review": [
+    "Read source-lifecycle initialization, guard and transactionAll; plannerFixture, state-provider and current readPortfolioSnapshot use all three surfaces.",
+    "Same initialization pattern already exists in scenario-batch-fixture, import-analysis and other real cross-surface fixtures.",
+    "Bootstrap precedes all source issuance/C08 persistence and every whole-snapshot baseline.",
+    "No change to actor identity, canonical calculations, C08 result shape, callbacks, test assertions or180000ms budgets."
+  ],
+  "acceptsGlobal": false
+}

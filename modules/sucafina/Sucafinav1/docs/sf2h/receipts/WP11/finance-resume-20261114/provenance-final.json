@@ -1,0 +1,150 @@
+{
+  "schema": "sf-finance-resume-provenance-final-v1",
+  "branch": "finance-resume",
+  "pull_request": 42,
+  "base_branch": "sf2-stack",
+  "base_observed": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+  "initial": {
+    "pr": 35,
+    "branch": "astra-finance",
+    "head": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "tree": "ec517fa26571228bc1ce5e3698fcfc9c5d137ae3",
+    "disposition": "Full handoff consumed first; original branch and PR preserved."
+  },
+  "normative_inputs": {
+    "restart": "c208200cb39529ba09c1f3bbc5594a1ff579d385",
+    "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_blob": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "handoffs_packs_CI": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "read_scope": "AGENTS, COMMON, all canonical WP03/WP05/WP11/WP13; WP03/WP05/WP11 packs; WP13 campaign and complete S4-C actor plus required attachments."
+  },
+  "source_reconciliation": [
+    {
+      "pr": 22,
+      "head": "90c467cea436daa24987ad68a588a7d80f91064e",
+      "tree": "62545e5c8a90e03d6ca92298dc5547853e8ea88a",
+      "disposition": "Already consumed in initial Finance; no duplicate application."
+    },
+    {
+      "pr": 24,
+      "head": "0881fee21f07bf8a9a1153d7d55727837cdf497a",
+      "tree": "220df3c21c228afee30bc7d06e998eaa4fca2f36",
+      "disposition": "Already consumed in initial Finance; no duplicate application."
+    },
+    {
+      "pr": 40,
+      "head": "e8949be0e31952d5be4987c099003cd0b46e2add",
+      "tree": "694ab744ce9e1361ec65704c5854c0bd30bf833a",
+      "source_commits_after_previous_consumption": [
+        "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+        "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+        "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1",
+        "e8949be0e31952d5be4987c099003cd0b46e2add"
+      ],
+      "disposition": "R2 selectively reconciles own product/tests and 178 archived receipt blobs; 124 identical blobs and one archived conflict preserved; Finance existing fixes not overwritten. Source is an additional R2 parent."
+    },
+    {
+      "pr": 37,
+      "head": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "tree": "f9e4e23db0b3bc941599efba5341a653bb4ca3d9",
+      "disposition": "Actual W20 head used instead of stale W19 body. R1 selects 175 own changed paths (53 product/tests and 122 receipts); nine identical paths skipped. Source is an additional R1 parent."
+    },
+    {
+      "pr": 39,
+      "previous_head": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+      "observed_head": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+      "disposition": "Late five-commit refresh reconciled separately:39 documents/four tests, no product or config delta. No import. Earlier consumer pin retained plus append-only refresh receipt. PR29 later adapters are reported third-party candidates, not consumed fixes."
+    },
+    {
+      "pr": 39,
+      "previous_head": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+      "observed_head": "ba27411a7cda9301aa162680a94153a5e643be4d",
+      "disposition": "Second late advance:one commit,three new WP12 documents,zero production/tests/config. Terminal run43619631569 belongs to W28f2cbdb30c1673bc89426db6618d19cb65601c8ef/S28b5eb330f9b914953bf19fa7e265e9db11762cfd2:3pass0fail,1filtered,367assertions,501.28s. ForecastKPI,publicBI01,QuestionWork scoped UI/domain;GNATIVE=false. No FinanceR5 or new BI09/BI10 credit.",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/consumer-reconciliation-wp12-refresh-2-20261114.json"
+    }
+  ],
+  "authorship": {
+    "observed_original_commit_author": "gustavomhss",
+    "method": "Original source commits and metadata preserved; merge ancestry added only for reconciled WP13/WP11 inputs. New reconciliation commits carry explicit source pins, rather than relabelling original work as new."
+  },
+  "published_product_commits": [
+    {
+      "sha": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+      "tree": "de5d3f65d6d262c05a6447aa21f26c63dfbbf1c1",
+      "label": "R1",
+      "parents": [
+        "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "7defe5c9930774c6aa5a15a5f677b4406d08683c"
+      ]
+    },
+    {
+      "sha": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+      "label": "R2",
+      "parents": [
+        "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+        "e8949be0e31952d5be4987c099003cd0b46e2add"
+      ]
+    },
+    {
+      "sha": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+      "tree": "6f2cb4d131ba5437f70d7700e3274cc26a22630c",
+      "label": "R3",
+      "parents": [
+        "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3"
+      ]
+    },
+    {
+      "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+      "label": "R4",
+      "parents": [
+        "9de58454924b072b6e571b5b4ebcd70f95e596df"
+      ]
+    },
+    {
+      "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "tree": "67af8927297fa12ca7d84077e0450833a9738c52",
+      "label": "R5",
+      "parents": [
+        "229d66fa59ceebbc4b3683565670698f2cf3aa65"
+      ]
+    }
+  ],
+  "latest_product": {
+    "label": "R5",
+    "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+    "tree": "67af8927297fa12ca7d84077e0450833a9738c52"
+  },
+  "r4_to_r5": {
+    "production_delta": false,
+    "changes": "Two test fixture/assertion expectation fixes and two manifests only; full original oracles preserved."
+  },
+  "final_evidence_commit": {
+    "parent": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+    "tree_base": "67af8927297fa12ca7d84077e0450833a9738c52",
+    "scope": "New receipts only under WP03/WP05/WP11/WP13. Commit SHA/tree are published in PR42 after creation to avoid self-reference.",
+    "product_tests_config_delta": false
+  },
+  "preservation": {
+    "prior_branches_modified": false,
+    "previous_prs_closed": false,
+    "force_push": false,
+    "merged": false,
+    "archived_inputs_preserved": true,
+    "original_dirty_workspace_preserved": true,
+    "local_product_tests": false,
+    "remote_access": "GitHub MCP only",
+    "runtime_restart": false,
+    "engines_Azure_deploy_identity_financial_policy_changes": false,
+    "sf2_control_in_product": false
+  },
+  "supporting_ci_exception": {
+    "path": ".github/workflows/astra-finance-resume-check.yml",
+    "introduced": "R2",
+    "basis": "Pinned CI.md supporting workflow route; isolated astra-check-fresume push branch, existing Bun setup, exact SHA, package typecheck plus guards against origin/dev and evidence upload. Product code remains within own WPs."
+  },
+  "final_check_policy": "One hosted check on the receipts commit may verify final guard scope. Its terminal run and exact final head/tree are recorded externally in PR42; no product rerun is justified by documentation-only changes.",
+  "latest_source_observation": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/source-publication-observation.json"
+}

@@ -1,0 +1,11 @@
+# S18 — source initialization validated; two fixture defects isolated
+
+Run [43593276333](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43593276333), job `132442336638`, product W28 `29172d2e4db859eedac31e84778c447bb97f6c08`, snapshot `5178f3ff43a3387b3e25e4769a8b391a4ea9e423`: **11 pass, 2 fail, 193 assertions, 54.20s**. The JSON records all exact cases, pins, hashes and Omni.
+
+All six coverage-promotion proofs pass after canonical Dashboard initialization, including both source orders and four negative races. Five of six Hot Topic cases pass. The remaining source race expected one Dashboard snapshot and observed none. Static inspection traces this to the invalid fixture status `Open`: the notes-only canonical save retains it and rejects422 before the snapshot callback. The log did not directly print422. The bounded correction seeds `open`; the same six cases and all persistence assertions remain.
+
+Current-choice reaches the original `choice-preview-coverage-unavailable` after three fresh resolutions. The observer also records `DataCloneError` on the baseline assessment. Baseline basis2 equals selected basis2, so no basis guard is relaxed. Its prior asymmetric matcher observes an entry shared with the producer assessment. The new candidate supplies an exact clone to that same matcher and verifies that the entire original assessment digest is unchanged. Whether the matcher corrupts its observation and whether isolation closes the lifecycle must be established in Actions.
+
+S17 had separately passed the human Choice→prepare→review→separate application grant journey, both composed coverage cases and the confirmed implementation70000 case. Two renewal deadlines remain open. The reviewed read-only verifier transaction is limited to test adapters reading existing references; it retains canonical checks, authorization fences and no cache between invocations. Its three boundary cases and affected historical consumers require new execution.
+
+These findings do not transfer an isolated result to installed/native composition or C/D acceptance. No READY/DONE declaration is made. S19 and S20 are the proposed affected selections on the next exact product commit; no run is claimed before dispatch.

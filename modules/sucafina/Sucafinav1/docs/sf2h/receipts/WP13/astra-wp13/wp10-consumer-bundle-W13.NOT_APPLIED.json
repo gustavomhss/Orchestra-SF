@@ -1,0 +1,126 @@
+{
+  "schema": "wp13-cross-owner-delta-bundle-v1",
+  "id": "WP13-WP10-CONSUMER-BUNDLE-W13",
+  "status": "NOT_APPLIED",
+  "preparedAt": "2026-11-14T12:18:11.217468+00:00",
+  "producer": {
+    "branch": "astra-wp13",
+    "head": "0e73d1dfb179517a4e4341ad554966e6941b2a64",
+    "tree": "0bee314a9513c5b2242d389d37cf7aab2aaa5ae2"
+  },
+  "target": {
+    "branch": "astra-wp10",
+    "head": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+    "source": "GitHub MCP exact file reads",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+        "before": {
+          "blob": "18caa4381d7d02f1193bdac4c2e9c2134c64daf1",
+          "sha256": "1bfdcc3ad250ae5f5d0ed69cab162c7516cea7d0bedb61a417304d6993ce0d1d",
+          "bytes": 9450
+        },
+        "proposed": {
+          "blob": "7089fbacd129eb7fb92a72840b580e993de56ad9",
+          "sha256": "260548176616936ae9abf41fef630d0d6a8a5f9f54b87a1a921df8a9051babdd",
+          "bytes": 10881
+        }
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+        "before": {
+          "blob": "ec824f54d67630edce6ef218e2e1301193362f3c",
+          "sha256": "ddbb411b43e82ebed61316c4be7ac52f836835b8a3470cae1c3f45775856dd79",
+          "bytes": 14944
+        },
+        "proposed": {
+          "blob": "52df5b6f82457a0062b5e4542ca3edff6a2b55ad",
+          "sha256": "7ab7e287b4ccd5c701083d0edbf242dfe41ee3295064f4e0bef13be7a01e8c7d",
+          "bytes": 14873
+        }
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-portfolio-history.ts",
+        "before": {
+          "blob": "4d11a5c8c81d99f117709fc65327373055ee2cc1",
+          "sha256": "f7dfeb4ac76bcd016c183359169551ee6ede29fe295e6cf80c379c6b95566279",
+          "bytes": 7222
+        },
+        "proposed": {
+          "blob": "ab0f908d9340306f6a10e35a721ffd72a554be8d",
+          "sha256": "457ccf80a45677cf7ad8d015bf4324ea6dbe890936a6c7ff958165bb5dc0e561",
+          "bytes": 7552
+        }
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-sensitivity-authority.ts",
+        "before": null,
+        "proposed": {
+          "blob": "ca914bc14510371b5fa9a1a6ae85d0fb520454ae",
+          "sha256": "df7ec3ed4cd3a67ad128933b62925df515b949de634760a51bb67d5b0f388ef3",
+          "bytes": 8388
+        }
+      }
+    ]
+  },
+  "patch": "wp10-consumer-bundle-W13.NOT_APPLIED.patch.txt",
+  "patchHashes": {
+    "blob": "0dc8b2ffbfe5a7b7fff6acde2bc5f1e261d154e5",
+    "sha256": "d6990abb5f6107afa0f5a9e3fdb7e7900a22bc082cb2b35d727bf39c63b5332b",
+    "bytes": 17680
+  },
+  "changes": [
+    {
+      "id": "WP13-HOST-THRESHOLD-02",
+      "change": "Compose exact threshold and authenticated coverage authority into both the portfolio producer and its proof verifier; preserve the original authority proposal bytes."
+    },
+    {
+      "id": "WP13-HOST-NA-01",
+      "change": "Remove the unconditional N/A rejection; preserve canonical reassessment, evidence support, classification WeakMap, source/state fences and final commit verification."
+    },
+    {
+      "id": "WP13-WP10-HISTORY-CANDIDATE-READER",
+      "change": "Wire the published historical candidate reader into the actual Review historical provenance consumer. A campaign callsite remains owner work if/when composed."
+    },
+    {
+      "id": "WP13-WP10-WP14-RECONCILIATION",
+      "change": "Add the private reconciliation factory injection. Host must construct authenticated readPortfolio and canonical per-component readMaterialChange before enabling a route."
+    }
+  ],
+  "supersededOwnerWork": [
+    {
+      "id": "WP13-HOST-SOURCE-ONLY-PROOF",
+      "state": "PRESENT_IN_OWNER_NOT_CONSUMED",
+      "note": "Current prepareNoop/runPromotion/mutationPlanner already supply proof for operations[]; this patch preserves them."
+    },
+    {
+      "id": "WP13-C17-HOST-04",
+      "state": "SUPERSEDED_IN_OWNER_NOT_CONSUMED",
+      "note": "Do not repeat the old record-only host replay implementation claim."
+    }
+  ],
+  "supersedesPatchTargets": [
+    "wp10-sensitivity.NOT_APPLIED.patch.txt",
+    "wp10-supported-na.NOT_APPLIED.patch.txt",
+    "reconciliation-factory.NOT_APPLIED.patch.txt"
+  ],
+  "retainedRequirements": [
+    "Do not trust a client-supplied stored portfolio or numeric materiality result.",
+    "Same-case version/source ancestry, current principal/access revision, independent source/CAS clocks, original choice and per-component digests remain mandatory.",
+    "Missing authenticated injection returns unavailable; no parallel application or memory write.",
+    "No observed host campaign callsite is invented by this proposal.",
+    "WP10 must review/adapt against its then-current head and run hosted consumer checks.",
+    "The new helper is a proposal only; text/hash validation is not compilation, runtime proof or installed acceptance."
+  ],
+  "validation": {
+    "textAnchorsUnique": true,
+    "patchGeneratedFromExactObservedBase": true,
+    "helperMatchesEarlierProposal": true,
+    "productTestsRun": false,
+    "typecheckRun": false,
+    "foreignRepoFilesEdited": false,
+    "branchMutated": false,
+    "runtimeAccepted": false
+  },
+  "nextAction": "WP10 consumes the WP13 producer pins and reviews/applies this combined proposal under its ownership; compose the authenticated reconciliation readers, then provide head/tree and hosted consumer proofs."
+}

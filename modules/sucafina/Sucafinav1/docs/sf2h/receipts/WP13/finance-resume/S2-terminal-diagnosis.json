@@ -1,0 +1,905 @@
+{
+  "schema": "sf-finance-wp13-terminal-run-diagnosis-v1",
+  "observed_at_utc": "2026-11-14T17:17:49Z",
+  "purpose": "Preserve the terminal S2 failure and distinguish observed timings from a static call-graph explanation; do not overwrite the previously pinned 68-criterion map or its earlier observation.",
+  "current_product": {
+    "head": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+    "tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+    "label": "R4",
+    "branch": "finance-resume",
+    "pr": 42,
+    "evidence": "Root publication pin supplied in the collaboration thread; audited closure blobs below were read from the shared checkout without editing it."
+  },
+  "canonical_plan": {
+    "head": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_blob": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+    "criteria_map_previous": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-map.json",
+    "triage_previous": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json",
+    "criteria_count_preserved": 68,
+    "criteria_affected_by_sensitivity_proof": [
+      {
+        "criterion_id": "WP13.DOD.20",
+        "canonical_pointer": "campaign.json#/work_packages/13/axioms/dod/1",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/1",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.INV.02",
+        "canonical_pointer": "campaign.json#/work_packages/13/axioms/invariants/1",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/4",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.INV.20",
+        "canonical_pointer": "campaign.json#/work_packages/13/axioms/invariants/2",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/5",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.QLT.02",
+        "canonical_pointer": "campaign.json#/work_packages/13/axioms/quality_standards/1",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/8",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.QLT.20",
+        "canonical_pointer": "campaign.json#/work_packages/13/axioms/quality_standards/2",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/9",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.CMP.01",
+        "canonical_pointer": "campaign.json#/work_packages/13/axioms/completeness_criteria/0",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/11",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.CMP.20",
+        "canonical_pointer": "campaign.json#/work_packages/13/axioms/completeness_criteria/1",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/12",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.SUC.20",
+        "canonical_pointer": "campaign.json#/work_packages/13/axioms/success_criteria/1",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/15",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.T02.DOD.20",
+        "canonical_pointer": "campaign.json#/work_packages/13/tasks/1/axioms/dod/1",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/26",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.T02.INV.20",
+        "canonical_pointer": "campaign.json#/work_packages/13/tasks/1/axioms/invariants/1",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/29",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.T02.CMP.20",
+        "canonical_pointer": "campaign.json#/work_packages/13/tasks/1/axioms/completeness_criteria/1",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/35",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.T02.SUC.20",
+        "canonical_pointer": "campaign.json#/work_packages/13/tasks/1/axioms/success_criteria/1",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/38",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.T02.CHK.20",
+        "canonical_pointer": "campaign.json#/work_packages/13/tasks/1/checks/3",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/43",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.T03.DOD.01",
+        "canonical_pointer": "campaign.json#/work_packages/13/tasks/2/axioms/dod/0",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/45",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.T03.DOD.18",
+        "canonical_pointer": "campaign.json#/work_packages/13/tasks/2/axioms/dod/1",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/46",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.T03.INV.01",
+        "canonical_pointer": "campaign.json#/work_packages/13/tasks/2/axioms/invariants/0",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/47",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.T03.QLT.01",
+        "canonical_pointer": "campaign.json#/work_packages/13/tasks/2/axioms/quality_standards/0",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/49",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.T03.CMP.01",
+        "canonical_pointer": "campaign.json#/work_packages/13/tasks/2/axioms/completeness_criteria/0",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/51",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.T03.SUC.01",
+        "canonical_pointer": "campaign.json#/work_packages/13/tasks/2/axioms/success_criteria/0",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/53",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.T03.CHK.01",
+        "canonical_pointer": "campaign.json#/work_packages/13/tasks/2/checks/0",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/55",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.T03.CHK.03",
+        "canonical_pointer": "campaign.json#/work_packages/13/tasks/2/checks/2",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/57",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      },
+      {
+        "criterion_id": "WP13.T03.CHK.20",
+        "canonical_pointer": "campaign.json#/work_packages/13/tasks/2/checks/3",
+        "previous_triage_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json#/criteria/58",
+        "status": "NO_ACCEPTANCE_FROM_THE_FAILED_FULL_PERSISTENCE_FILE"
+      }
+    ],
+    "acceptance": "NOT_DECLARED"
+  },
+  "S2": {
+    "run_id": 43615428441,
+    "job_id": 132509311266,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615428441",
+    "status": "completed",
+    "conclusion": "failure",
+    "product": {
+      "sha": "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+      "tree": "de5d3f65d6d262c05a6447aa21f26c63dfbbf1c1",
+      "label": "R1",
+      "parents": [
+        "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "7defe5c9930774c6aa5a15a5f677b4406d08683c"
+      ]
+    },
+    "snapshot": "4c84847a885f09bdb1fee936244b73d7129f764a",
+    "snapshot_tree": "3c32c530d5bbb385d70f9389f7d8eaf7a57125fe",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+        "./Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "request_sha256": "ed1acd6190ce5e7c9a2bf6aeb7d099b0f0e2c6e9e513bf1a3e734ca3c36d1e05",
+    "log": {
+      "local_path": "requests/S2-job.log",
+      "blob": "1abdf6cc0f88bd64abafd262db685b0f0f394886",
+      "sha256": "96e654338ca7139aee1a9ffb084fd9c0b1ed4031ceddc1f620b212241ee6ae71",
+      "bytes": 77327
+    },
+    "summary_observed": {
+      "pass": 6,
+      "fail": 4,
+      "assertions": 147,
+      "duration_seconds": 2580.75
+    },
+    "tests_observed": [
+      {
+        "outcome": "pass",
+        "name_literal": "sensitivity read scope refuses a swallowed canonical nested write and publishes no provisional fence",
+        "duration_ms": 79958.87
+      },
+      {
+        "outcome": "pass",
+        "name_literal": "each sensitivity verification reads a fresh committed Planner source instead of retaining its previous scope",
+        "duration_ms": 80541.92
+      },
+      {
+        "outcome": "pass",
+        "name_literal": "final UI authority revocation inside a sensitivity scope suppresses the staged proof",
+        "duration_ms": 79793.2
+      },
+      {
+        "outcome": "pass",
+        "name_literal": "a failed sensitivity scope cannot retain its old grant or publish a callback-mutated replay input",
+        "duration_ms": 103253.12
+      },
+      {
+        "outcome": "fail",
+        "name_literal": "WP13 persists and cold-reloads omitted training with its real 55000 sensitivity bound",
+        "duration_ms": 322163.15
+      },
+      {
+        "outcome": "fail",
+        "name_literal": "WP13 persists and cold-reloads bundled training with its real 55000 sensitivity bound",
+        "duration_ms": 530286.17
+      },
+      {
+        "outcome": "fail",
+        "name_literal": "WP13 persists and cold-reloads confirmed training with its real 15000 sensitivity bound",
+        "duration_ms": 1118050.04
+      },
+      {
+        "outcome": "pass",
+        "name_literal": "WP13 withholds an exact bound for a real null price or missing FX before consulting an exact callback",
+        "duration_ms": 48872.33
+      },
+      {
+        "outcome": "pass",
+        "name_literal": "WP13 rejects a false scalar boundary even when it carries the real canonical source evidence",
+        "duration_ms": 37592.32
+      },
+      {
+        "outcome": "fail",
+        "name_literal": "WP13 keeps the human choice in one case while confirmed training changes the source-only analysis to the real 15000 boundary",
+        "duration_ms": 180030.75
+      }
+    ],
+    "wp11_fixture_trace_observed": [
+      {
+        "label": "renewal-choice-history",
+        "phase": "bootstrap-start",
+        "elapsedMs": 0,
+        "budgetMs": 180000,
+        "counts": {}
+      },
+      {
+        "label": "renewal-choice-history",
+        "phase": "bootstrap-complete",
+        "elapsedMs": 43,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 1,
+            "elapsedMs": 3,
+            "maximumMs": 3
+          }
+        },
+        "stateBytes": 38210,
+        "transactionsBytes": 415,
+        "casesBytes": 37395,
+        "resultBytes": 2,
+        "transactions": 1,
+        "cases": 1,
+        "results": 0
+      },
+      {
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-omitted:start",
+        "elapsedMs": 47,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2,
+            "elapsedMs": 6,
+            "maximumMs": 3
+          }
+        },
+        "stateBytes": 38210,
+        "transactionsBytes": 415,
+        "casesBytes": 37395,
+        "resultBytes": 2,
+        "transactions": 1,
+        "cases": 1,
+        "results": 0
+      },
+      {
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-omitted:complete",
+        "elapsedMs": 15092,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 546,
+            "elapsedMs": 7972,
+            "maximumMs": 38
+          },
+          "host.revalidate": {
+            "calls": 2962,
+            "elapsedMs": 119,
+            "maximumMs": 7
+          },
+          "operation-source": {
+            "calls": 846,
+            "elapsedMs": 57,
+            "maximumMs": 3
+          },
+          "operation-coverage": {
+            "calls": 462,
+            "elapsedMs": 18,
+            "maximumMs": 4
+          },
+          "c08.read.preferences": {
+            "calls": 96,
+            "elapsedMs": 1151,
+            "maximumMs": 22
+          },
+          "c08.transaction.preferences": {
+            "calls": 3,
+            "elapsedMs": 81,
+            "maximumMs": 45
+          },
+          "classified-source": {
+            "calls": 39,
+            "elapsedMs": 0,
+            "maximumMs": 0
+          },
+          "classified-coverage": {
+            "calls": 41,
+            "elapsedMs": 2172,
+            "maximumMs": 88
+          },
+          "c08.transaction.cases": {
+            "calls": 5,
+            "elapsedMs": 229,
+            "maximumMs": 58
+          },
+          "planner.verifySourceOnly": {
+            "calls": 96,
+            "elapsedMs": 309,
+            "maximumMs": 8
+          },
+          "planner.verifyOperation": {
+            "calls": 96,
+            "elapsedMs": 1854,
+            "maximumMs": 25
+          },
+          "planner.verifySourceProjection": {
+            "calls": 192,
+            "elapsedMs": 233,
+            "maximumMs": 6
+          }
+        },
+        "stateBytes": 540335,
+        "transactionsBytes": 159999,
+        "casesBytes": 53809,
+        "resultBytes": 111960,
+        "transactions": 9,
+        "cases": 1,
+        "results": 5
+      },
+      {
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-confirmed:start",
+        "elapsedMs": 98915,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2920,
+            "elapsedMs": 54796,
+            "maximumMs": 58
+          },
+          "host.revalidate": {
+            "calls": 17304,
+            "elapsedMs": 1639,
+            "maximumMs": 25
+          },
+          "operation-source": {
+            "calls": 5070,
+            "elapsedMs": 364,
+            "maximumMs": 11
+          },
+          "operation-coverage": {
+            "calls": 2718,
+            "elapsedMs": 83,
+            "maximumMs": 4
+          },
+          "c08.read.preferences": {
+            "calls": 512,
+            "elapsedMs": 9758,
+            "maximumMs": 44
+          },
+          "c08.transaction.preferences": {
+            "calls": 3,
+            "elapsedMs": 81,
+            "maximumMs": 45
+          },
+          "classified-source": {
+            "calls": 321,
+            "elapsedMs": 86,
+            "maximumMs": 17
+          },
+          "classified-coverage": {
+            "calls": 293,
+            "elapsedMs": 24622,
+            "maximumMs": 201
+          },
+          "c08.transaction.cases": {
+            "calls": 8,
+            "elapsedMs": 423,
+            "maximumMs": 75
+          },
+          "planner.verifySourceOnly": {
+            "calls": 588,
+            "elapsedMs": 2005,
+            "maximumMs": 9
+          },
+          "planner.verifyOperation": {
+            "calls": 588,
+            "elapsedMs": 11271,
+            "maximumMs": 27
+          },
+          "planner.verifySourceProjection": {
+            "calls": 1176,
+            "elapsedMs": 1511,
+            "maximumMs": 8
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 19,
+            "maximumMs": 19
+          }
+        },
+        "stateBytes": 831840,
+        "transactionsBytes": 331727,
+        "casesBytes": 102163,
+        "resultBytes": 180162,
+        "transactions": 12,
+        "cases": 1,
+        "results": 7
+      },
+      {
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-confirmed:complete",
+        "elapsedMs": 158656,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 3583,
+            "elapsedMs": 83264,
+            "maximumMs": 98
+          },
+          "host.revalidate": {
+            "calls": 22125,
+            "elapsedMs": 2389,
+            "maximumMs": 31
+          },
+          "operation-source": {
+            "calls": 5684,
+            "elapsedMs": 2337,
+            "maximumMs": 35
+          },
+          "operation-coverage": {
+            "calls": 2820,
+            "elapsedMs": 83,
+            "maximumMs": 4
+          },
+          "c08.read.preferences": {
+            "calls": 594,
+            "elapsedMs": 12835,
+            "maximumMs": 52
+          },
+          "c08.transaction.preferences": {
+            "calls": 6,
+            "elapsedMs": 391,
+            "maximumMs": 140
+          },
+          "classified-source": {
+            "calls": 343,
+            "elapsedMs": 356,
+            "maximumMs": 32
+          },
+          "classified-coverage": {
+            "calls": 319,
+            "elapsedMs": 29617,
+            "maximumMs": 241
+          },
+          "c08.transaction.cases": {
+            "calls": 13,
+            "elapsedMs": 1134,
+            "maximumMs": 154
+          },
+          "planner.verifySourceOnly": {
+            "calls": 844,
+            "elapsedMs": 3289,
+            "maximumMs": 10
+          },
+          "planner.verifyOperation": {
+            "calls": 588,
+            "elapsedMs": 11271,
+            "maximumMs": 27
+          },
+          "planner.verifySourceProjection": {
+            "calls": 1688,
+            "elapsedMs": 2004,
+            "maximumMs": 8
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 19,
+            "maximumMs": 19
+          }
+        },
+        "stateBytes": 1504375,
+        "transactionsBytes": 636765,
+        "casesBytes": 115934,
+        "resultBytes": 319129,
+        "transactions": 20,
+        "cases": 1,
+        "results": 12
+      },
+      {
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-confirmed:complete",
+        "elapsedMs": 180019,
+        "budgetMs": 180000,
+        "status": "deadline-exceeded",
+        "counts": {
+          "c08.read.cases": {
+            "calls": 3819,
+            "elapsedMs": 93805,
+            "maximumMs": 98
+          },
+          "host.revalidate": {
+            "calls": 24022,
+            "elapsedMs": 2711,
+            "maximumMs": 32
+          },
+          "operation-source": {
+            "calls": 5940,
+            "elapsedMs": 3002,
+            "maximumMs": 35
+          },
+          "operation-coverage": {
+            "calls": 2852,
+            "elapsedMs": 83,
+            "maximumMs": 4
+          },
+          "c08.read.preferences": {
+            "calls": 612,
+            "elapsedMs": 13608,
+            "maximumMs": 52
+          },
+          "c08.transaction.preferences": {
+            "calls": 6,
+            "elapsedMs": 391,
+            "maximumMs": 140
+          },
+          "classified-source": {
+            "calls": 343,
+            "elapsedMs": 356,
+            "maximumMs": 32
+          },
+          "classified-coverage": {
+            "calls": 319,
+            "elapsedMs": 29617,
+            "maximumMs": 241
+          },
+          "c08.transaction.cases": {
+            "calls": 13,
+            "elapsedMs": 1134,
+            "maximumMs": 154
+          },
+          "planner.verifySourceOnly": {
+            "calls": 956,
+            "elapsedMs": 3827,
+            "maximumMs": 10
+          },
+          "planner.verifyOperation": {
+            "calls": 588,
+            "elapsedMs": 11271,
+            "maximumMs": 27
+          },
+          "planner.verifySourceProjection": {
+            "calls": 1912,
+            "elapsedMs": 2223,
+            "maximumMs": 8
+          },
+          "c08.read.outbox": {
+            "calls": 1,
+            "elapsedMs": 19,
+            "maximumMs": 19
+          }
+        }
+      }
+    ],
+    "timeout_semantics": "The three complete persistence/service-reconstruction cases exceeded their unchanged 300000 ms case budgets. Their reported wall times are observations, not success or permission to extend a deadline. The human-choice test encountered the separate 180000 ms fixture guard. No completed PASS is inferred from assertions that may have executed before a timeout.",
+    "historical_name_limit": "The terminal log preserves the then-current cold-reloads wording. R3 changed the description to recreates services, because the test keeps the same LocalStore open. Neither wording establishes a SQLite/process/provider restart or full C17.",
+    "reusable_scope": "The entire four-case sensitivity-read-scope file completed on this R1 snapshot. The null/missing-FX and false-boundary cases also completed individually. The whole coverage-sensitivity-integration file and the run remain failure. No automatic attribution to R4 is made."
+  },
+  "audited_closure_blobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "blob": "33a8d973c045769b456342499e1c247d524f6c53",
+      "sha256": "180d8117de887296d11e73bf49e1cda9afb53c5144ee6f4ca50dd8b4ef72c3a2",
+      "bytes": 8025
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "blob": "912df8ecd8552b245e124b93c46644c92a32f3ac",
+      "sha256": "1c8cebd12d0970ad9364c9854553dd9f9d2961f4fefb13849d9e8180fd47e9fe",
+      "bytes": 22535
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "blob": "3dec070ca5f56f7bd03a09b4b19468c950d82214",
+      "sha256": "ccfd69570f4cc7dbe180f4e60cbf9891522e3f10674a6c8d84c78b61af8b491d",
+      "bytes": 19201
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+      "blob": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+      "sha256": "dedee7a05f2fb00a7267b93fc7ba23052c5bd625cfd161ab6bce71f4f07d635e",
+      "bytes": 20097
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+      "blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5",
+      "sha256": "1c6a655eedd44c6f09411e8e3a9b5f7cfaa82f6cedcaeb006dd00b293cf5e63c",
+      "bytes": 12310
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "blob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+      "sha256": "96ed59925c95abe55fe15185f30f2026f0713f5f916238d4529c29d812aa86bf",
+      "bytes": 6719
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+      "blob": "c357c6c66aac544394ab355306e1f6f7195395f7",
+      "sha256": "88d63af3bb3b3f115e59bcde29de014dd5337ba71ce68910089d97bd89299217",
+      "bytes": 31605
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "blob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "sha256": "771b060898fce1b1d851461bee7df743014ab55f9c0994a0331f2664a1c8bfd1",
+      "bytes": 6407
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "sha256": "51c9b83256825e90e3a8a8b49c11d73339527edcb1a67da4d98ce6e8bf17e143",
+      "bytes": 6770
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "b7988a2963a2797a96ea19ab2b3a481564548213",
+      "sha256": "f988cc1c91c340628c80523d587bfeec27e92971d6ff467233f9bbb4fff0dfbe",
+      "bytes": 12807
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "sha256": "c8ce4f6d20eb89d2adebc6577692c310b65310be251784b109431bc18a7c26e5",
+      "bytes": 24537
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope-fixture.ts",
+      "blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+      "sha256": "4e75e71ebf5d350a419902be587de516b63a8b6f5807e296d37af2c40d7779c1",
+      "bytes": 6465
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview-fixture.ts",
+      "blob": "6e56a64ee1b76422706d685e2f646a156a8ade39",
+      "sha256": "c1bd849c0d0c716caf2ca55fb1b8cb0ef58af8297e3e1daa6a5b3f88951f0aec",
+      "bytes": 9717
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "blob": "192653d276d45efc073df2aea5f8c2170564bd7c",
+      "sha256": "8b9dbf330e8937dd3259d4d610d6124efd0e0057229c9eef50026b6d416e6658",
+      "bytes": 17856
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "blob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "sha256": "afb559f4b2403025b977a33a5a118be567a5936de5ca46e3308687186b250ad8",
+      "bytes": 22570
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blob": "0dc89d86866620a8109051c68bc2d2b4d92c508f",
+      "sha256": "a880132a04a087050b16445c3595cf845d061187d566a37d98bf2bf31b400b2b",
+      "bytes": 25756
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "blob": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "sha256": "9fb65068cc969ebb04f2e14f9082147d058287f09fa40702d56c4c4838a6d9a1",
+      "bytes": 8303
+    }
+  ],
+  "static_positive_path_count": {
+    "method": "Manual source call-graph inspection; no local product execution, instrumentation run or numerical profiling. Counts describe the successful path with readByRequest implemented and matching persisted data; they do not assert that each timed-out test completed every phase.",
+    "atomic_unit": "One complete createPortfolioProofVerifier.verifySensitivity invocation. It reproduces canonical samples, exact threshold and adjacent IEEE witnesses, coverage qualification and current source/authority checks.",
+    "phases": [
+      {
+        "phase": "fresh evaluateAndStore / producer",
+        "sensitivity_evaluations": 1,
+        "verifier_replays": 0,
+        "calls": [
+          "resolveBinding",
+          "portfolio.sensitivity",
+          "validateSamples",
+          "results.readByRequest",
+          "results.write"
+        ]
+      },
+      {
+        "phase": "fresh evaluateAndStore / bindings.bind",
+        "sensitivity_evaluations": 0,
+        "verifier_replays": 3,
+        "calls": [
+          "bind verifies once before its CAS",
+          "bind returns its canonical bindings.read, which verifies twice"
+        ]
+      },
+      {
+        "phase": "fresh evaluateAndStore / final persistent.read",
+        "sensitivity_evaluations": 0,
+        "verifier_replays": 4,
+        "calls": [
+          "first bindings.read verifies twice",
+          "validateSamples and final sensitivity result read",
+          "second bindings.read verifies twice"
+        ]
+      },
+      {
+        "phase": "first persistent.read after recreating services",
+        "sensitivity_evaluations": 0,
+        "verifier_replays": 4,
+        "calls": [
+          "first bindings.read verifies twice",
+          "validateSamples and final sensitivity result read",
+          "second bindings.read verifies twice"
+        ]
+      },
+      {
+        "phase": "confirmed-only idempotent evaluateAndStore",
+        "sensitivity_evaluations": 1,
+        "verifier_replays": 6,
+        "calls": [
+          "full portfolio.sensitivity again before existing-result lookup",
+          "previousBinding read verifies twice",
+          "final persistent.read verifies four times"
+        ]
+      }
+    ],
+    "totals_before_final_revocation_negative": {
+      "omitted": {
+        "sensitivity_evaluations": 1,
+        "verifier_replays": 11
+      },
+      "bundled": {
+        "sensitivity_evaluations": 1,
+        "verifier_replays": 11
+      },
+      "confirmed": {
+        "sensitivity_evaluations": 2,
+        "verifier_replays": 17
+      }
+    },
+    "additional_work": "Each evaluation/replay includes multiple canonical previews and unit/rule/source validations. Complete coverage also issues and revalidates structural interval certificates, and checks each sample qualification. The final revoked-source negative and explicit test witnesses add reads outside these totals.",
+    "why_not_remove_calls": "The repetitions currently belong to distinct binding, sample, result and authority observations. Removing a first or final read, caching proof/grants between invocations, replacing an exact boundary by refusal, or skipping interval/IEEE checks would change the validation contract. This diagnosis makes none of those changes."
+  },
+  "cost_mechanism": {
+    "observed_human_choice_trace": "At the fixture deadline, c08.read.cases recorded 3819 calls/93805 ms and c08.read.preferences 612 calls/13608 ms. These nested totals are not additive or a CPU profile. The last completed phase reported 1504375 state bytes, 20 transactions, 1 case and 12 results.",
+    "static_chain": [
+      "persistent.read",
+      "CriterionResultBindings.read (twice)",
+      "verifySensitivity (twice per binding read)",
+      "canonical preview/unit/coverage validation",
+      "StoredPlannerScenarioHost.resolve",
+      "DecisionCasePort.read",
+      "case verifyScenarioOperations for every alternative",
+      "Planner operation/source reads plus C08 state reads"
+    ],
+    "provider_behavior": [
+      "StateProvider.read calls persistence.transaction(dashboard), obtains the full SF state and passes structuredClone(state) to the authorized read callback before the second namespace authorization.",
+      "LocalStore nested transaction obtains a detached snapshot through decodeSnapshot(encodeSnapshot(staged)); currentSnapshots also detaches all three surfaces.",
+      "W20 sensitivityReadScope already opens one readonly root per complete verifier invocation. It avoids an additional root connection/BEGIN for nested operations but does not eliminate detached nested snapshot copies or the full SF state clone.",
+      "As scenarios, sensitivity results and idempotency receipts are retained, subsequent reads copy the larger aggregate. The ledger and existing inputs must remain preserved."
+    ],
+    "inference": "Multiplicative full replays, complete-coverage work and aggregate copies are a concrete source-level explanation consistent with the observed 322/530/1118 second progression. The S2 full cases have no per-phase timing trace; this is not a measured allocation profile and cannot quantify how much time each clone consumed.",
+    "not_observed": [
+      "No infinite loop or numerical regression established by this inspection",
+      "No completed current-head persistence/replay PASS",
+      "No guarantee that grouping one more callback can meet the existing budget"
+    ]
+  },
+  "R2_R4_delta_assessment": {
+    "human_choice": {
+      "material_changes": "R2 removed the duplicated criterion evaluation from the fixture choice-value projection while preserving the canonical comparison, and grouped the complete case operation verifier under the real readonly LocalStore root. R3 retained the source-only final Request/lease fence.",
+      "supporting_actions": {
+        "run_id": 43616603779,
+        "job_id": 132512914754,
+        "product": {
+          "sha": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+          "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+          "label": "R2",
+          "parents": [
+            "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+            "e8949be0e31952d5be4987c099003cd0b46e2add"
+          ]
+        },
+        "snapshot": "e3c1070024883ce6ea63a71e2401f1e49914de9d",
+        "result": "success",
+        "case": "new human operations replace a choice after the quote revision and retain that choice with a new reason without rewriting any history",
+        "duration_ms": 112170.15,
+        "whole_selection": {
+          "pass": 32,
+          "fail": 0,
+          "assertions": 393
+        }
+      },
+      "limit": "That S4 result supports the changed fixture closure; it is not a PASS of the WP13 source-only 55000/15000 human-choice test. A single targeted requalification on the current head is justified."
+    },
+    "full_persist_and_recreate": "R2/R3 source-scenario grouping and final-egress guards do not replace the sensitivity-store/bindings/replay composition. The audited core WP13 blobs remain the W20 implementation. R4 BI and projection work does not materially reduce the 11/17 replays. Re-running these three cases on R4 solely because the head advanced would be an empty repeat.",
+    "WP05_fixture_seam": "The WP05 owner independently confirmed that the engine-fixture verifies all alternatives through Promise.all without an outer case scope. A narrow readonly wrapper around the existing complete verifier could avoid root setup for calls made outside W20 scopes. It must wait for all siblings, preserve the full verifier and poison behavior, and fence the final Request/binding/lease. This offers no guaranteed benefit inside an already-scoped verifySensitivity and no guarantee of meeting the full-case budget; no such change was made merely to obtain a rerun."
+  },
+  "external_deltas": [
+    {
+      "id": "WP10_C08_DETACHED_READ_COST",
+      "owner": "WP10/composition",
+      "status": "OPEN_SHARED_PERFORMANCE_DEPENDENCY",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/state.ts"
+      ],
+      "request": "Review a canonical authorized batched-read or immutable-view contract for repeated projections inside one accepted readonly scope, so C08 need not materialize the entire growing aggregate for every nested projection. Preserve the same admission and namespace checks, detached mutation protection, full source identity/fences, poison propagation, root completion, cancellation and final Request lease. Any provider change remains with its owner and requires reconciliation against the pinned Finance/source versions; no wholesale source-provider adoption.",
+      "acceptance_needed": "A concrete provider/composition delta and targeted hosted proof of the unchanged full persistence/replay oracles before re-running the expensive cases. Do not infer a performance improvement from this proposal alone."
+    },
+    {
+      "id": "WP10_COMPOSE_READ_SOURCE_FENCES_NESTED_ROOT",
+      "owner": "WP10/composition",
+      "status": "OPEN_INSTALLED_CONSUMER_SEAM_FAIL_CLOSED",
+      "source_pr": 32,
+      "source_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "source_blobs": [
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "blob": "b3595989d0c08159c96484d96bd40a149a9721e6"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+          "blob": "aa1be4cfb8f501b3fccddb269efce5567bcdd447"
+        }
+      ],
+      "evidence_kind": "Independent source-level cold review; installed execution not observed.",
+      "chain": "Finance readPortfolioSnapshot -> cases.read -> composed scenario-operation-access for nonempty operations -> readSourceFences -> persistence.transactionAll while the LocalStore root is active. Compose readSourceFences does not use its existing currentSnapshots branch; the nested root may poison/refuse the read.",
+      "request": "Provide a root-private snapshot-aware source-fence reader. Within an accepted readonly scope, read all three canonical source fences from that same detached snapshot without opening nested transactionAll; outside a scope, retain the real readonly transactionAll path. Preserve current authority, Request/lease, cancellation and poison checks. The owning root must finish successfully before values or proof grants become observable; do not publish a provisional capture from a foreign/incomplete root.",
+      "separation": "This is not the cause of S2: persistedServices already chooses currentSnapshots when present and opens transactionAll only outside. It is also distinct from the unresolved INV.11 normative interpretation."
+    },
+    {
+      "id": "OPEN_SHARED_CONTRACT_INTERPRETATION",
+      "owner": "WP10/S0",
+      "status": "OPEN_NO_AXIOM_PASS",
+      "request": "Reconcile COMMON INV.11/C08 wording requiring cross-surface observations outside the central transaction with the existing W33/W20 readonly-root composition. The static safety review and these scoped counterexamples do not waive or accept that canonical requirement."
+    }
+  ],
+  "next_hosted_selection": {
+    "owner": "root only",
+    "after": "S5 reaches a terminal result",
+    "file": "./Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+    "test_name_literal": "WP13 keeps the human choice in one case while confirmed training changes the source-only analysis to the real 15000 boundary",
+    "scope": "Exactly one human-choice case, requiring validation against the CI.md file+name selection contract before dispatch. No timeout or assertion changes; the existing test still checks both 55000/15000 boundaries, conditional disclosure, canonical source-only parameter, adjacent monetary witnesses and unchanged human choice/history.",
+    "full_cases": "Deferred until a concrete reconciled closure change addresses their cost. Do not re-run solely to seek a faster runner or convert the failed S2 into a success."
+  },
+  "work_performed": {
+    "own_product_files_changed_for_this_diagnosis": [],
+    "reason": "No safe own-only correction was established that preserves all distinct replay/fence contracts and demonstrably addresses the dominating repeated reads. The shared provider and composed callbacks are outside WP13 ownership.",
+    "local_product_execution": false,
+    "local_profiling": false,
+    "tests_launched": false,
+    "timeouts_changed": false,
+    "assertions_removed": false,
+    "provider_or_contract_modified": false,
+    "historical_receipts_overwritten": false,
+    "acceptance": "NOT_DECLARED"
+  }
+}

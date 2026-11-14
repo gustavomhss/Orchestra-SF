@@ -1,0 +1,183 @@
+{
+  "schema": "sf-finance-resume-gaps-final-v1",
+  "product": {
+    "label": "R5",
+    "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+    "tree": "67af8927297fa12ca7d84077e0450833a9738c52"
+  },
+  "global_acceptance": false,
+  "items": [
+    {
+      "id": "FIN-PERF-01",
+      "status": "OPEN_PERFORMANCE",
+      "owner": "WP13 with WP10/provider profiling",
+      "evidence": [
+        "S2",
+        "S11"
+      ],
+      "detail": "Three full sensitivity persistence/replay cases exceed 300000ms. Human-choice source change exceeds 180000ms again in S11 after a material R2 fixture change. Required canonical replay/authorization observations retained; no larger budgets, removed assertions, service-only substitution or timeout-as-success.",
+      "next_step": "Profile and reconcile actual producer/provider copy/replay cost with owners; preserve distinct durable reads, ancestor replay and source/auth revalidation before selecting a materially changed case."
+    },
+    {
+      "id": "FIN-PERF-02",
+      "status": "OPEN_PERFORMANCE",
+      "owner": "WP13 with WP10/provider profiling",
+      "evidence": [
+        "S5"
+      ],
+      "detail": "Source-scenario same chosen case with USD240000 ceiling/USD20000 advantage reaches180030.89ms;72 assertions and180000ms oracle retained. Initial prepare completed; later trace label is stale and does not identify exact final phase.",
+      "next_step": "Resolve measured canonical read/replay cost without fabricating coverage, caching across authorization boundaries or substituting solver-only evidence."
+    },
+    {
+      "id": "FIN-SEC-01",
+      "status": "OPEN_SHARED_SECURITY_ORACLE_OBSERVED_UNSAFE",
+      "owner": "WP10/provider and composition",
+      "evidence": [
+        "S5",
+        "consumer-reconciliation.json#DELTA-04"
+      ],
+      "detail": "Campaign metadata without host private writer grant returned ok where unavailable was required. A provider fix already exists at PR32 head9048e0e, blob2fd55c7304add0829d7434917c80664fe86356b9. Finance retains old provider because it is outside ownership.",
+      "next_step": "Reconcile the existing shared provider into composition and run the original surgical missing-grant oracle; no Finance edit of shared artifact store."
+    },
+    {
+      "id": "FIN-R2-REV-01",
+      "status": "OPEN_SHARED_CONTRACT_INTERPRETATION",
+      "owner": "WP10/S0",
+      "evidence": [
+        "review-R2.json",
+        "consumer-reconciliation.json#normativeOpen"
+      ],
+      "detail": "COMMON INV.11 cross-surface operations inside an open transaction and C08/C17 external-port ordering need an explicit owner interpretation. Own readPortfolioSnapshot creates a fresh readonly root, joins only compatible own scope, rejects foreign roots and retains Request/poison checks. Technical support and W20/W33 precedent do not waive the normative question.",
+      "next_step": "WP10/S0 settle the read-snapshot/external-observation contract; preserve private authorization and poison semantics."
+    },
+    {
+      "id": "FIN-COMP-01",
+      "status": "OPEN_SHARED_CONSUMER_RECONCILIATION",
+      "owner": "WP10/composition, Interface and IA",
+      "evidence": [
+        "consumer-reconciliation.json",
+        "consumer-reconciliation-wp12-refresh-20261114.json"
+      ],
+      "detail": "Seven precisely pinned consumer deltas remain, with implemented owner fixes distinguished from missing wiring. PR39 late docs describe later PR29 source-fence/threshold adapters; they are candidates for owner reconciliation, not proof at PR32pin9048 or FinanceR5.",
+      "next_step": "Consume the deltas below at verified owner heads, then qualify actual installed routes."
+    },
+    {
+      "id": "FIN-CHECK-01",
+      "status": "OPEN_EXTERNAL_TYPECHECK",
+      "owner": "Corresponding source owners; WP10 coordinates",
+      "evidence": [
+        "CHECK-R5-result-final.json",
+        "external-typecheck-R2.json"
+      ],
+      "detail": "Full package Bun typecheck fails with115 external diagnostics, zero own diagnostics. The external list is unchanged fromR3. Routing:WP10/Compose32,WP08 12,WP02Interface9,WP14Intelligence9,WP06 33,WP01Interface12,WP04 4,WP07 3,WP12 1.",
+      "next_step": "Owners reconcile their typed contracts; do not weaken compiler checks or edit foreign files from Finance."
+    },
+    {
+      "id": "FIN-GUARD-01",
+      "status": "OPEN_S0_MAESTRO_DISPOSITION",
+      "owner": "S0/Maestro",
+      "evidence": [
+        "CHECK-R5-result-final.json"
+      ],
+      "detail": "43 agent-scratch gates are original WP11 archived evidence logs intentionally preserved from PR40.15 warnings remain for inherited dependencies, old large criteria receipts, original timeout declarations and archived binary audit.78 rules,1471 paths,zero guard engine errors atR5.",
+      "next_step": "S0/Maestro disposes the archive/path-rule conflict. No deletion, renaming, ignore, automatic approval or fabricated waiver has been used."
+    },
+    {
+      "id": "FIN-INSTALLED-01",
+      "status": "NOT_ESTABLISHED",
+      "owner": "Interface/IA/WP10/S0 and criterion final owners",
+      "evidence": [
+        "criteria-index-final.json",
+        "consumer-reconciliation.json"
+      ],
+      "detail": "Installed UI monthly rebase/spread/reset and annual before/after; mounted/focus/eight charts; NativeMCP positive journeys; Atlas C17 installed memory; AM01–06/C-G7/D-G8 and epic/S0 acceptance bundle are not globally established.",
+      "next_step": "Owners consume the pinned producers and supply exact installed evidence. No group epic is run by Finance and no global acceptance is declared."
+    },
+    {
+      "id": "CONSUMER-DELTA-01",
+      "status": "OPEN_INSTALLED_CONSUMER_SEAM_FAIL_CLOSED",
+      "owner": "WP10/composição",
+      "title": "readSourceFences abre transactionAll dentro da raiz readonly da Finance",
+      "canonical_detail": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/consumer-reconciliation.json",
+      "detail_pointer": "/deltas/0",
+      "evidence_pin": "9048e0e65351a5bd80768458a79fed94a4993db7 unless the sourceFiles in the detailed receipt specify another owner head",
+      "next_step": "Owner deve reconciliar o callback privado de fences com o snapshot destacado da raiz readonly própria, conservando as três sfRunSourceFence, identidade/binding/Request/lease e poison/acceptance checks. transactionAll só pode ser usado fora desse scope; nenhum grant provisório pode sobreviver à rejeição da raiz. Requer revisão WP10/S0 e evidência hospedada cirúrgica."
+    },
+    {
+      "id": "CONSUMER-DELTA-02",
+      "status": "COMPOSITION_BINDING_NOT_IMPLEMENTED_AT_PIN",
+      "owner": "WP10/composição",
+      "title": "BI09/BI10 canônicos existem na Finance, mas o consumidor continua no plano vazio",
+      "canonical_detail": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/consumer-reconciliation.json",
+      "detail_pointer": "/deltas/1",
+      "evidence_pin": "9048e0e65351a5bd80768458a79fed94a4993db7 unless the sourceFiles in the detailed receipt specify another owner head",
+      "next_step": "Use the exact source files, proposed wiring and preserved semantics in the linked delta; re-read source head if it changes."
+    },
+    {
+      "id": "CONSUMER-DELTA-03",
+      "status": "OWNER_IMPLEMENTED_PENDING_COMPOSITION",
+      "owner": "Interface/WP10",
+      "title": "Datas ausentes de BI08 já corrigidas no owner Interface, ainda antigas na Finance",
+      "canonical_detail": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/consumer-reconciliation.json",
+      "detail_pointer": "/deltas/2",
+      "evidence_pin": "9048e0e65351a5bd80768458a79fed94a4993db7 unless the sourceFiles in the detailed receipt specify another owner head",
+      "next_step": "Use the exact source files, proposed wiring and preserved semantics in the linked delta; re-read source head if it changes."
+    },
+    {
+      "id": "CONSUMER-DELTA-04",
+      "status": "OWNER_IMPLEMENTED_PENDING_COMPOSITION",
+      "owner": "WP10/provider compartilhado",
+      "title": "Provider de campanhas e CAS multins já existem na origem compartilhada",
+      "canonical_detail": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/consumer-reconciliation.json",
+      "detail_pointer": "/deltas/3",
+      "evidence_pin": "9048e0e65351a5bd80768458a79fed94a4993db7 unless the sourceFiles in the detailed receipt specify another owner head",
+      "next_step": "Use the exact source files, proposed wiring and preserved semantics in the linked delta; re-read source head if it changes."
+    },
+    {
+      "id": "CONSUMER-DELTA-05",
+      "status": "COMPOSITION_BINDING_NOT_IMPLEMENTED_AT_PIN",
+      "owner": "WP10/composição + IA",
+      "title": "Campanhas e proposta histórica precisam de ligação aos produtores existentes",
+      "canonical_detail": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/consumer-reconciliation.json",
+      "detail_pointer": "/deltas/4",
+      "evidence_pin": "9048e0e65351a5bd80768458a79fed94a4993db7 unless the sourceFiles in the detailed receipt specify another owner head",
+      "next_step": "Use the exact source files, proposed wiring and preserved semantics in the linked delta; re-read source head if it changes."
+    },
+    {
+      "id": "CONSUMER-DELTA-06",
+      "status": "OWNER_IMPLEMENTED_PENDING_COMPOSITION",
+      "owner": "WP10/composição",
+      "title": "Review não fornece leitor histórico de candidato quando a alternativa já mudou",
+      "canonical_detail": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/consumer-reconciliation.json",
+      "detail_pointer": "/deltas/5",
+      "evidence_pin": "9048e0e65351a5bd80768458a79fed94a4993db7 unless the sourceFiles in the detailed receipt specify another owner head",
+      "next_step": "Use the exact source files, proposed wiring and preserved semantics in the linked delta; re-read source head if it changes."
+    },
+    {
+      "id": "CONSUMER-DELTA-07",
+      "status": "COMPOSITION_BINDING_NOT_IMPLEMENTED_AT_PIN",
+      "owner": "WP10/composição + owner de materialidade",
+      "title": "Reconciliação de aplicação WP13 existe, mas não recebe host na composição examinada",
+      "canonical_detail": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/consumer-reconciliation.json",
+      "detail_pointer": "/deltas/6",
+      "evidence_pin": "9048e0e65351a5bd80768458a79fed94a4993db7 unless the sourceFiles in the detailed receipt specify another owner head",
+      "next_step": "Use the exact source files, proposed wiring and preserved semantics in the linked delta; re-read source head if it changes."
+    }
+  ],
+  "open_unique_performance_journeys": 5,
+  "resolved_failures": [
+    {
+      "failure": "S1 snapshot baseline",
+      "resolution": "R2 + S3"
+    },
+    {
+      "failure": "S8 source initialization",
+      "resolution": "R5 + S12"
+    },
+    {
+      "failure": "S5 reservation aggregate envelope",
+      "resolution": "R5 + S13"
+    }
+  ],
+  "shared_fixes_are_not_missing_implementations": "PR32 private writer/provider and PR31 undated BI08 are implemented at their owners and await composition; IA historical reader/source generation fencing also exists at PR36."
+}

@@ -1,0 +1,86 @@
+{
+  "schema": "wp13-hosted-product-receipt-v1",
+  "label": "S13-SourceSelectionFix1",
+  "productSha": "eb5d411292b8892673cff751b3492a14146b7785",
+  "productTree": "2fd4176a9779c23394b6d4c62f55cb3956295904",
+  "snapshotSha": "17927d81ded3bd6304744d5103a791ba59071fbe",
+  "snapshotTree": "d5126c211f5d41f4579128883f1ff8703d51c42a",
+  "branch": "ci-run-linux-astra-wp13-eb5d4112-944944e3-1",
+  "snapshotOnlyAdded": {
+    "path": ".ci-run.json",
+    "sha": "50b56db76c7e3ea7132b05cbb87ed8ef45951ced"
+  },
+  "runId": 43597811942,
+  "jobId": 132455959494,
+  "status": "completed",
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "id": 132455959494,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-14T13:03:20Z",
+      "completed_at": "2026-11-14T13:06:03Z"
+    },
+    {
+      "id": 132456650967,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-14T13:06:05Z",
+      "completed_at": "2026-11-14T13:06:10Z"
+    }
+  ],
+  "artifacts": [],
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestSha256": "944944e3a746b2d20f730899bc783ef2326cadf4ffa59d112fd795ca5f23f5ca",
+  "selectedPublishedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "sha": "122db9855836ab4f713696c34549ab56c8c98f80"
+    }
+  ],
+  "log": {
+    "sha256": "dde03ade487658ef0f80d56e9eed02c040544158c807d48650784f5cb95af3bf",
+    "bytes": 71629
+  },
+  "control": {
+    "accepted": true,
+    "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "error": null,
+    "omniSpawnProven": false
+  },
+  "summary": {
+    "passed": 0,
+    "failed": 1,
+    "summary": "Ran 1 test across 1 file. [34.04s]",
+    "expectCalls": 14
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp13/source-scenario.test.ts": [
+      {
+        "status": "fail",
+        "name": "portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed",
+        "milliseconds": 33897.88
+      }
+    ]
+  },
+  "selectionMatches": true,
+  "acceptance": {
+    "aggregatePass": false,
+    "completedPassedFiles": [],
+    "nativeOrInstalledConsumerProof": false
+  },
+  "ready": false
+}

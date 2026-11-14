@@ -1,24 +1,8 @@
-import type { DomainProjection } from "../contracts/context.ts"
+import type { BiPresentation, DomainProjection } from "../contracts/context.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
-import type { BiViewId } from "./catalog.ts"
-import type { WaterfallPlan } from "./waterfall.ts"
-import type { TimelinePlan } from "./milestones.ts"
 
 /** Producer-supplied labels and roles; no semantic meaning is inferred from a value ID. */
-export type BiPresentation = {
-  viewId: BiViewId
-  series: readonly {
-    id: string
-    label: string
-    unit: string
-    role: "budget" | "actual" | "outlook" | "baseline" | "contribution" | "result" | "fte" | "cost" | "stock" | "aging" | "opened" | "closed" | "planned" | "completed" | "sensitivity" | "other"
-    valueIds: readonly string[]
-    alignmentKeys?: readonly string[]
-  }[]
-  limitations: readonly string[]
-  waterfall?: WaterfallPlan
-  timeline?: TimelinePlan
-}
+export type { BiPresentation } from "../contracts/context.ts"
 
 export function resolveBiPresentation(projection: DomainProjection, presentation: BiPresentation) {
   const values = new Map(projection.values.map((value) => [value.id, value]))
@@ -39,6 +23,7 @@ export function resolveBiPresentation(projection: DomainProjection, presentation
   if (series.some((entry) => entry.values.some((value) => !!value.currency) && entry.values.some((value) => typeof value.value === "number" && !value.currency))) return { status: "unavailable", reason: "currency-missing" } as const
   if (series.some((entry) => new Set(entry.values.flatMap((value) => value.currency ? [value.currency] : [])).size > 1)) return { status: "unavailable", reason: "incompatible-currency" } as const
   if ((presentation.viewId === "BI01" || presentation.viewId === "BI07") && series.some((entry) => new Set(entry.values.map((value) => `${value.period.start}/${value.period.end}`)).size !== entry.values.length)) return { status: "unavailable", reason: "duplicate-series-period" } as const
+  if ((presentation.viewId === "BI01" || presentation.viewId === "BI07") && series.some((entry) => entry.values.some((value, index) => index > 0 && value.period.start <= entry.values[index - 1]!.period.end))) return { status: "unavailable", reason: "overlapping-or-unordered-periods" } as const
   if (presentation.viewId === "BI07" && series.some((entry) => entry.values.length > 1 && entry.values.some((value) => value.granularity === "record" || value.granularity === "aggregate"))) return { status: "unavailable", reason: "ticket-history-not-projected" } as const
   return { status: "ok", viewId: presentation.viewId, series, limitations: presentation.limitations, unassigned: projection.values.filter((value) => !selectedIds.has(value.id)) } as const
 }

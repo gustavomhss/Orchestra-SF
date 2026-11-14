@@ -1,0 +1,624 @@
+{
+  "schema": "sf-wp11-pr40-latest-intake-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": {
+    "pr": 40,
+    "previouslyConsumedHead": "be50d42d6a2c030d57d17038dec267ebd33ea78c",
+    "head": "2bf0197c5d607b43063c36e1c8fef9e769c716ca",
+    "newCommits": [
+      "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "2bf0197c5d607b43063c36e1c8fef9e769c716ca"
+    ]
+  },
+  "financeBase": {
+    "productSha": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+    "treeSha": "a843c5d5767c4a055fcacb77668c3798fd8a564c",
+    "baseline": "remote-state.json"
+  },
+  "status": "FILES_READY_NOT_RUNTIME_VALIDATED",
+  "counts": {
+    "historical-receipt-remote-carrythrough": 17,
+    "already-identical": 6,
+    "preserve-newer-finance": 1,
+    "merge-own-diagnostics": 1,
+    "adopt-exact": 10,
+    "merge-current-source-projector": 1
+  },
+  "validation": {
+    "guardedWrites": true,
+    "sourceBlobAndSha256Verified": 29,
+    "pathsCompared": 36,
+    "changedOwnFiles": 12,
+    "relativeImportTargetsMissing": [],
+    "productTestsExecuted": false,
+    "bunExecuted": false,
+    "ciDispatched": false,
+    "remoteWrites": false,
+    "protected": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "blob": "964a53310c340f4496d7410d66f8b852270b75f1",
+        "matchesPublishedW18": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+        "blob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+        "matchesPublishedW18": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/source-navigation.ts",
+        "blob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357",
+        "matchesPublishedW18": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+        "blob": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e",
+        "matchesPublishedW18": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-engine-fixture.ts",
+        "blob": "fd6a6b8b75152e858961360d16f7432233700b2f",
+        "matchesPublishedW18": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+        "blob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+        "matchesPublishedW18": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp05/planner-origins.test.ts",
+        "blob": "bf92905dccfd01eaedc624841d808d5ce21b6f21",
+        "matchesPublishedW18": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+        "blob": "ae99e63e1e9987be91c46d231bba05ec24748ca1",
+        "matchesPublishedW18": true
+      }
+    ]
+  },
+  "preservedOracles": [
+    "211000 knownSubtotal, total=null, conditioned, USD/2027 for nested C17",
+    "55000 omitted-training threshold and15000 confirmed-training threshold",
+    "renewal240000; transition210000 conditioned; confirmed training40000 gives250000 complete and criterionfailed",
+    "baseline1200; selected1142; knownDifference=-58; total=null; separate official January edit42 only after application grant",
+    "original180000ms timeout remains on C17 persistence and renewal choice history; new trace deadline fails incomplete work",
+    "calculation-source-unsupported conservative result/request reads; nested ancestry/reopen equality; canonical source CAS invalidates source while UI lease remains current",
+    "N/A/shared/omitted/confirmed/zero/null classifications unchanged; no financial formulas copied into test producers"
+  ],
+  "proofBoundaries": [
+    "Renewal history source references and membership declarations remain explicit synthetic fixture inputs; actual money, coverage assessment, criterion, thresholds and quotes use canonical production implementations.",
+    "Source-only operation fixture branch performs strict decode, actual canonical Planner comparison and current host/source ingress/egress fences; no cache survives one evidence.context call. Nonempty operations or assumptions retain complete canonical operation verifier.",
+    "C17 persistence and new choice-prepared execution use actual scoped source issuer. Human/UI admissions are in-process fixtures, not mounted/native person or identity-provider evidence.",
+    "Cross-domain execution fixture seeds a prior choice and uses explicit host reviewed-intent admissions; the new separate choice-prepared-execution test supplies the actual ChoiceRecord→prepared→reviewed→apply chain.",
+    "Restart proofs dispose/reopen SQLite and rebuild readers/sessions within hosted process; no native process/browser restart is claimed.",
+    "Previous upstream failures and parent S10/S11/S12 results are not attributed to these candidate bytes.",
+    "C17 depth/replay cost and renewal-history180s budget remain runtime risks until a new exact snapshot completes; no timeout/assertion was relaxed."
+  ],
+  "candidateCiLeaves": [
+    {
+      "files": [
+        "test/product/wp11/choice-prepared-execution.test.ts",
+        "test/product/wp11/case-port.test.ts",
+        "test/product/wp11/cross-domain-execution.test.ts"
+      ],
+      "purpose": "new human choice→prepared application, chosen-operation binding and added domain/replay/receipt ACL assertions"
+    },
+    {
+      "files": [
+        "test/product/wp11/calculation-persistence.test.ts"
+      ],
+      "purpose": "minimal canonical source/C17 fixture and retained nested replay assertions under original budget"
+    },
+    {
+      "files": [
+        "test/product/wp11/renewal-choice-history.test.ts",
+        "test/product/wp11/renewal-choice-revision.test.ts",
+        "test/product/wp05/choice-history-bi.test.ts"
+      ],
+      "purpose": "new shared renewal fixtures and real consumers; only dispatch after parent checks current inflight runs and exact W/S pin"
+    }
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/artifact-download-verification.json",
+      "upstreamStatus": "modified",
+      "sourceBlob": "88c19d5114d48f3f3366b8e732fdbd089ffc50b6",
+      "sourceMaterialized": false,
+      "sourceBytesVerified": false,
+      "previousPublishedBlob": "7aac4aab439ecdc5e5590e4ffc6c9d3ab7d8da26",
+      "localCandidateBlob": null,
+      "action": "preserve-prior-receipt-and-record-new-source-version",
+      "desiredTreeBlob": "88c19d5114d48f3f3366b8e732fdbd089ffc50b6",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated.",
+      "publishedDestination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/pr40-2bf019-history/artifact-download-verification.json",
+      "preservedExistingBlob": "7aac4aab439ecdc5e5590e4ffc6c9d3ab7d8da26"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W5.json",
+      "upstreamStatus": "added",
+      "sourceBlob": "0b95c7c2c15de84dc6df56147b36596d7344f9f6",
+      "sourceMaterialized": false,
+      "sourceBytesVerified": false,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": null,
+      "action": "historical-receipt-remote-carrythrough",
+      "desiredTreeBlob": "0b95c7c2c15de84dc6df56147b36596d7344f9f6",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/check-W6.json",
+      "upstreamStatus": "added",
+      "sourceBlob": "0a34731e9a998ea52a5401c87896adda6b614978",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": null,
+      "action": "historical-receipt-remote-carrythrough",
+      "desiredTreeBlob": "0a34731e9a998ea52a5401c87896adda6b614978",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/ci-selection-W6-H1.json",
+      "upstreamStatus": "added",
+      "sourceBlob": "f38e2d5322c5bda39cc2a2f64ee24eb4371317b4",
+      "sourceMaterialized": false,
+      "sourceBytesVerified": false,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": null,
+      "action": "historical-receipt-remote-carrythrough",
+      "desiredTreeBlob": "f38e2d5322c5bda39cc2a2f64ee24eb4371317b4",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-fe13-targeted-intake.json",
+      "upstreamStatus": "added",
+      "sourceBlob": "9012914dc8d5890ca88a150f99cdf02f211ef45e",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": null,
+      "action": "historical-receipt-remote-carrythrough",
+      "desiredTreeBlob": "9012914dc8d5890ca88a150f99cdf02f211ef45e",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-fixture-performance-W7.json",
+      "upstreamStatus": "added",
+      "sourceBlob": "01a66c9e73556f5dc617e639615f68f4a4c88a85",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": null,
+      "action": "historical-receipt-remote-carrythrough",
+      "desiredTreeBlob": "01a66c9e73556f5dc617e639615f68f4a4c88a85",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/finance-fixture-performance-reconciliation.json",
+      "upstreamStatus": "added",
+      "sourceBlob": "f61f77a507605af61f6cadadf79fa80b96e2dc5d",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": null,
+      "action": "historical-receipt-remote-carrythrough",
+      "desiredTreeBlob": "f61f77a507605af61f6cadadf79fa80b96e2dc5d",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W6.json",
+      "upstreamStatus": "added",
+      "sourceBlob": "47acd82ac5dd88f51fb006483d0798ba52d172e6",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": null,
+      "action": "historical-receipt-remote-carrythrough",
+      "desiredTreeBlob": "47acd82ac5dd88f51fb006483d0798ba52d172e6",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/independent-review-W7.json",
+      "upstreamStatus": "added",
+      "sourceBlob": "44583f486552a2c9913786f764a4acdb98be99c8",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": null,
+      "action": "historical-receipt-remote-carrythrough",
+      "desiredTreeBlob": "44583f486552a2c9913786f764a4acdb98be99c8",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/protocol-W5-A1.json",
+      "upstreamStatus": "added",
+      "sourceBlob": "1c6c83dbf5882deb9af3dff1707ec72c58bbc645",
+      "sourceMaterialized": false,
+      "sourceBytesVerified": false,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": null,
+      "action": "historical-receipt-remote-carrythrough",
+      "desiredTreeBlob": "1c6c83dbf5882deb9af3dff1707ec72c58bbc645",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W5-A1.json",
+      "upstreamStatus": "added",
+      "sourceBlob": "2ebe1bf8d34bbbc10097bea8426f1394a8cd8b68",
+      "sourceMaterialized": false,
+      "sourceBytesVerified": false,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": null,
+      "action": "historical-receipt-remote-carrythrough",
+      "desiredTreeBlob": "2ebe1bf8d34bbbc10097bea8426f1394a8cd8b68",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W6-AR1.json",
+      "upstreamStatus": "added",
+      "sourceBlob": "ba05e0bbf39556fa3fbbf2d3819ac618d89697c0",
+      "sourceMaterialized": false,
+      "sourceBytesVerified": false,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": null,
+      "action": "historical-receipt-remote-carrythrough",
+      "desiredTreeBlob": "ba05e0bbf39556fa3fbbf2d3819ac618d89697c0",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/run-W6-H1.json",
+      "upstreamStatus": "added",
+      "sourceBlob": "080d92e3ff6507a4abe9f40e6c5d71f98adf0f51",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": null,
+      "action": "historical-receipt-remote-carrythrough",
+      "desiredTreeBlob": "080d92e3ff6507a4abe9f40e6c5d71f98adf0f51",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W5-A1.json",
+      "upstreamStatus": "added",
+      "sourceBlob": "993aae62320bcd92dea011339850986dae4957dd",
+      "sourceMaterialized": false,
+      "sourceBytesVerified": false,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": null,
+      "action": "historical-receipt-remote-carrythrough",
+      "desiredTreeBlob": "993aae62320bcd92dea011339850986dae4957dd",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W6-AR1.json",
+      "upstreamStatus": "added",
+      "sourceBlob": "ac435dd330724bb6cb1d93dd8790de716b5a0216",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": null,
+      "action": "historical-receipt-remote-carrythrough",
+      "desiredTreeBlob": "ac435dd330724bb6cb1d93dd8790de716b5a0216",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/tests-W6-H1.json",
+      "upstreamStatus": "added",
+      "sourceBlob": "9ae005d8cbfe032e43aeb7ba9c50cfbd9cbb45ce",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": null,
+      "action": "historical-receipt-remote-carrythrough",
+      "desiredTreeBlob": "9ae005d8cbfe032e43aeb7ba9c50cfbd9cbb45ce",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/typecheck-W6.json",
+      "upstreamStatus": "added",
+      "sourceBlob": "c20033354b1c6fba667fc080e0421206a749298d",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": null,
+      "action": "historical-receipt-remote-carrythrough",
+      "desiredTreeBlob": "c20033354b1c6fba667fc080e0421206a749298d",
+      "appliedLocally": false,
+      "reason": "Historical PR40 receipt only. Parent can carry source blob directly into remote tree; no CI outcome is transferred to finance candidate.7of17 receipt sources were not locally hydrated."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/source-navigation.ts",
+      "upstreamStatus": "modified",
+      "sourceBlob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357",
+      "localCandidateBlob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357",
+      "action": "already-identical",
+      "desiredTreeBlob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357",
+      "appliedLocally": false,
+      "reason": "Current finance W18 already contains exact incoming blob; preserve without rewrite."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "upstreamStatus": "modified",
+      "sourceBlob": "9b279523da60f18eebdc270707d1b42c865e3dca",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e",
+      "localCandidateBlob": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e",
+      "action": "preserve-newer-finance",
+      "desiredTreeBlob": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e",
+      "appliedLocally": false,
+      "reason": "Incoming would remove renderScenarioAdvantage import/use. Preserve newer W17 source-driven monetary advantage rendering."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "upstreamStatus": "modified",
+      "sourceBlob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "localCandidateBlob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "action": "already-identical",
+      "desiredTreeBlob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "appliedLocally": false,
+      "reason": "Current finance W18 already contains exact incoming blob; preserve without rewrite."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-engine-fixture.ts",
+      "upstreamStatus": "modified",
+      "sourceBlob": "fd6a6b8b75152e858961360d16f7432233700b2f",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": "fd6a6b8b75152e858961360d16f7432233700b2f",
+      "localCandidateBlob": "fd6a6b8b75152e858961360d16f7432233700b2f",
+      "action": "already-identical",
+      "desiredTreeBlob": "fd6a6b8b75152e858961360d16f7432233700b2f",
+      "appliedLocally": false,
+      "reason": "Current finance W18 already contains exact incoming blob; preserve without rewrite."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "upstreamStatus": "modified",
+      "sourceBlob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+      "localCandidateBlob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+      "action": "already-identical",
+      "desiredTreeBlob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+      "appliedLocally": false,
+      "reason": "Current finance W18 already contains exact incoming blob; preserve without rewrite."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/planner-origins.test.ts",
+      "upstreamStatus": "modified",
+      "sourceBlob": "bf92905dccfd01eaedc624841d808d5ce21b6f21",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": "bf92905dccfd01eaedc624841d808d5ce21b6f21",
+      "localCandidateBlob": "bf92905dccfd01eaedc624841d808d5ce21b6f21",
+      "action": "already-identical",
+      "desiredTreeBlob": "bf92905dccfd01eaedc624841d808d5ce21b6f21",
+      "appliedLocally": false,
+      "reason": "Current finance W18 already contains exact incoming blob; preserve without rewrite."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "upstreamStatus": "modified",
+      "sourceBlob": "ae99e63e1e9987be91c46d231bba05ec24748ca1",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": "ae99e63e1e9987be91c46d231bba05ec24748ca1",
+      "localCandidateBlob": "ae99e63e1e9987be91c46d231bba05ec24748ca1",
+      "action": "already-identical",
+      "desiredTreeBlob": "ae99e63e1e9987be91c46d231bba05ec24748ca1",
+      "appliedLocally": false,
+      "reason": "Current finance W18 already contains exact incoming blob; preserve without rewrite."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "upstreamStatus": "modified",
+      "sourceBlob": "a120cda86e58c479d8d2cab34f85a908c8a4e578",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": "b7eea123bb9da1463b043311bb33c023b62d08bd",
+      "localCandidateBlob": "f0d1d60a0426cd10a5f559b4bcf0fc2858bae60c",
+      "beforeBlob": "b7eea123bb9da1463b043311bb33c023b62d08bd",
+      "desiredTreeBlob": "f0d1d60a0426cd10a5f559b4bcf0fc2858bae60c",
+      "candidateSha256": "725a8590c1803d4e1cbea70315a8bb47eaee330533abe881f2a784c95ea6a61f",
+      "appliedLocally": true,
+      "action": "merge-own-diagnostics",
+      "reason": "Use minimal real scoped Planner/SQLite fixture, real source CAS invalidation, all nested/conservative-reader assertions; retain W17 callback and phase metrics through new trace helper.180000ms unchanged."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "upstreamStatus": "modified",
+      "sourceBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": "a74b7eb8e4510f20f61a4cdc5ee61fcac2e01c97",
+      "localCandidateBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "beforeBlob": "a74b7eb8e4510f20f61a4cdc5ee61fcac2e01c97",
+      "desiredTreeBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "candidateSha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28",
+      "appliedLocally": true,
+      "action": "adopt-exact",
+      "reason": "Exact latest WP11 fixture/test delta; canonical monetary outputs, strict requests and existing assertion budgets retained."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+      "upstreamStatus": "added",
+      "sourceBlob": "08e0b05c8f35225b80d580d61ef5983fd6fc3032",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": "08e0b05c8f35225b80d580d61ef5983fd6fc3032",
+      "beforeBlob": null,
+      "desiredTreeBlob": "08e0b05c8f35225b80d580d61ef5983fd6fc3032",
+      "candidateSha256": "3b7ddfabe06bf88d9758969c9fbf1f96bcbd5e6e2f4fcc397fedaed9be9b403e",
+      "appliedLocally": true,
+      "action": "adopt-exact",
+      "reason": "Real scoped issuer, Planner output/preparation/review/apply, UI/human grants and persisted ChoiceRecord. Choice and preparation do not mutate official values; separate application commits42 once; exact retries preserve choice."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "upstreamStatus": "modified",
+      "sourceBlob": "296a878ea43768d2df3b2d75396ae07e411f2168",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": "3cf9948e4fefbeceb4c2e99b04dc47b4e29ad816",
+      "localCandidateBlob": "2be9d8b282315bf6c030eea4b92e1fd39ed20d55",
+      "beforeBlob": "3cf9948e4fefbeceb4c2e99b04dc47b4e29ad816",
+      "desiredTreeBlob": "2be9d8b282315bf6c030eea4b92e1fd39ed20d55",
+      "candidateSha256": "c8e74b16d9c2295eb66ab5872d976a9ade0ca4861919c8123e3d6b36174eaee3",
+      "appliedLocally": true,
+      "action": "merge-current-source-projector",
+      "reason": "Adopt success/restart/ACL and receipt-revocation tests; retain integrated createSfSourceScopeProjector and omit unavailable foreign procurement/source-projection.ts."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "upstreamStatus": "added",
+      "sourceBlob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "beforeBlob": null,
+      "desiredTreeBlob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "candidateSha256": "3c679344d17a97136ac59f22284527d14ee2b9dde0004f63e548dd454a83f449",
+      "appliedLocally": true,
+      "action": "adopt-exact",
+      "reason": "Exact latest WP11 fixture/test delta; canonical monetary outputs, strict requests and existing assertion budgets retained."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "upstreamStatus": "modified",
+      "sourceBlob": "35281782202c59bb61c49e68ff206ee22183464e",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": "52dc09126bc81da39aa4b5beb0a28d0218d7560d",
+      "localCandidateBlob": "35281782202c59bb61c49e68ff206ee22183464e",
+      "beforeBlob": "52dc09126bc81da39aa4b5beb0a28d0218d7560d",
+      "desiredTreeBlob": "35281782202c59bb61c49e68ff206ee22183464e",
+      "candidateSha256": "d550cf3e4c24b89f8eb224071f72f0f39bc3d7b0446eb790231fcdb3b92d7209",
+      "appliedLocally": true,
+      "action": "adopt-exact",
+      "reason": "Exact latest WP11 fixture/test delta; canonical monetary outputs, strict requests and existing assertion budgets retained."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "upstreamStatus": "modified",
+      "sourceBlob": "6dcb733518a225039da3e7d7f39ff1c63a35fb09",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": "a9bd9674d033d5a990dda651e01371cc024d4a52",
+      "localCandidateBlob": "6dcb733518a225039da3e7d7f39ff1c63a35fb09",
+      "beforeBlob": "a9bd9674d033d5a990dda651e01371cc024d4a52",
+      "desiredTreeBlob": "6dcb733518a225039da3e7d7f39ff1c63a35fb09",
+      "candidateSha256": "3235d1d73b2ff62c4f6d0120b8f043babd3539b5b4f2921b7685a0b997456f7c",
+      "appliedLocally": true,
+      "action": "adopt-exact",
+      "reason": "Exact latest WP11 fixture/test delta; canonical monetary outputs, strict requests and existing assertion budgets retained."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "upstreamStatus": "modified",
+      "sourceBlob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": "dd85ea61929f7a7180ed81b60ab4f866b6423f0c",
+      "localCandidateBlob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+      "beforeBlob": "dd85ea61929f7a7180ed81b60ab4f866b6423f0c",
+      "desiredTreeBlob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+      "candidateSha256": "f2149ed78166add2869fd2612d1936007c3a94862ebacdb277e0dba7c6f56ddf",
+      "appliedLocally": true,
+      "action": "adopt-exact",
+      "reason": "Exact latest WP11 fixture/test delta; canonical monetary outputs, strict requests and existing assertion budgets retained."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "upstreamStatus": "modified",
+      "sourceBlob": "55c04318f2196d24f9d3e94eb99dffb0915c593f",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": "7e748ba9d2acacdc81b83ff50463c6d1dc4dd281",
+      "localCandidateBlob": "55c04318f2196d24f9d3e94eb99dffb0915c593f",
+      "beforeBlob": "7e748ba9d2acacdc81b83ff50463c6d1dc4dd281",
+      "desiredTreeBlob": "55c04318f2196d24f9d3e94eb99dffb0915c593f",
+      "candidateSha256": "92117e4ca3c542ed2308d42100a35f31e1cf163e5e90c08065d155a1ed737600",
+      "appliedLocally": true,
+      "action": "adopt-exact",
+      "reason": "Exact latest WP11 fixture/test delta; canonical monetary outputs, strict requests and existing assertion budgets retained."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "upstreamStatus": "added",
+      "sourceBlob": "f83ca8b14429905f84d42d27bb57e8b19d7aba42",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": "f83ca8b14429905f84d42d27bb57e8b19d7aba42",
+      "beforeBlob": null,
+      "desiredTreeBlob": "f83ca8b14429905f84d42d27bb57e8b19d7aba42",
+      "candidateSha256": "cafe5d427ece4fef7dabd7c90869afe14e82be58501bd47cd261037a42075a7b",
+      "appliedLocally": true,
+      "action": "adopt-exact",
+      "reason": "Exact latest WP11 fixture/test delta; canonical monetary outputs, strict requests and existing assertion budgets retained."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+      "upstreamStatus": "added",
+      "sourceBlob": "3086ebdaf8049ab38cc0855934389bdec3f251c8",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": "3086ebdaf8049ab38cc0855934389bdec3f251c8",
+      "beforeBlob": null,
+      "desiredTreeBlob": "3086ebdaf8049ab38cc0855934389bdec3f251c8",
+      "candidateSha256": "d84af8ce76b4392699a595c05d24984f2de3e8f8555bd1c9a9df959fa6ec7def",
+      "appliedLocally": true,
+      "action": "adopt-exact",
+      "reason": "Exact latest WP11 fixture/test delta; canonical monetary outputs, strict requests and existing assertion budgets retained."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "upstreamStatus": "added",
+      "sourceBlob": "fb973752979eb98ba2e1c3c9002ade471443b728",
+      "sourceMaterialized": true,
+      "sourceBytesVerified": true,
+      "previousPublishedBlob": null,
+      "localCandidateBlob": "fb973752979eb98ba2e1c3c9002ade471443b728",
+      "beforeBlob": null,
+      "desiredTreeBlob": "fb973752979eb98ba2e1c3c9002ade471443b728",
+      "candidateSha256": "e1245f8cce8f39a460b49ddd43cd266fb851fabff9f348b094ce653202acd5c4",
+      "appliedLocally": true,
+      "action": "adopt-exact",
+      "reason": "Exact latest WP11 fixture/test delta; canonical monetary outputs, strict requests and existing assertion budgets retained."
+    }
+  ],
+  "rootPublicationDecision": {
+    "preserveExistingArchivedReceipts": true,
+    "modifiedReceiptStoredSeparately": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/pr40-2bf019-history/artifact-download-verification.json",
+    "incomingChecksNotTransferred": true,
+    "sourceHeadConsumedAsAdditionalParent": "2bf0197c5d607b43063c36e1c8fef9e769c716ca"
+  }
+}

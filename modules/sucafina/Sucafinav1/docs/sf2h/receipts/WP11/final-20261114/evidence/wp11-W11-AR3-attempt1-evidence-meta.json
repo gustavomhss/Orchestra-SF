@@ -1,0 +1,280 @@
+{
+  "source": {
+    "productSha": "c41d7277be5941bafb105654360a32adea7f0347",
+    "productTree": "ef9c1884d1de59316421347174ea0ef580bf7e91",
+    "snapshotSha": "d158861a57e934c247d5e8e68cfbf060f9c5da06",
+    "snapshotTree": "a18078ba12ff1cbdf767b83576685f0f9eb54b1b",
+    "branch": "ci-run-linux-astra-wp11-c41d727-6c0a8498-ar3",
+    "requestSha256": "6c0a8498b053a51c0212da18c7fc2c3fb90014cae5e87533f9722c27eb09c056",
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "a19d1c47d389c8df2e1ffb485f70fcf09062d0d7"
+  },
+  "run": {
+    "id": 43591612696,
+    "status": "completed",
+    "conclusion": "failure",
+    "createdAt": "2026-11-14T11:46:30Z",
+    "updatedAt": "2026-11-14T11:47:15Z",
+    "headSha": "d158861a57e934c247d5e8e68cfbf060f9c5da06",
+    "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43591612696",
+    "runAttempt": 1
+  },
+  "jobs": [
+    {
+      "id": 132437344706,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132437497949,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "tests": {
+    "summary": {},
+    "ownObservedCounts": {
+      "pass": 0,
+      "fail": 0,
+      "skip": 0,
+      "todo": 0
+    },
+    "requestedFiles": [
+      "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts"
+    ],
+    "observedFiles": [],
+    "fileSummaries": [],
+    "hasCompletedBunSummary": false,
+    "requestedButNotObserved": [
+      "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts"
+    ]
+  },
+  "protocol": {
+    "nonces": [],
+    "observedVerdicts": [],
+    "matchingVerdicts": [],
+    "validPassingVerdict": false,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [],
+    "protocolErrors": [
+      "expected one omni control nonce, found 0"
+    ],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "failureClassification": {
+    "type": "infrastructure-dependency-resolution",
+    "step": "Setup Bun",
+    "message": "No version matching 1.0.0-rc.2 found for specifier drizzle-orm; drizzle-orm@catalog: failed to resolve.",
+    "productExecution": "Run tests skipped; no file header or test result observed.",
+    "nonceAndControl": "Omni control nonce and test steps skipped. No protocol verdict exists because setup did not reach either step."
+  },
+  "claimBoundary": [
+    "No product test was executed. This infrastructure failure does not validate or reject the two own fixture fixes.",
+    "The hosted test run remains failure. A later successful run is required to claim the fixes are exercised.",
+    "No dependency, lockfile, workflow, or product workaround was applied here.",
+    "No local product tests/typecheck executed."
+  ],
+  "files": {
+    "wp11-W11-AR3-tests.log": {
+      "sha256": "ece9cc410b0d0d2696dfb00dd8fb832c9da4da25269d923164ef72f09e632889",
+      "bytes": 29756
+    },
+    "wp11-W11-AR3-tests-observed.json": {
+      "sha256": "0c0b1e00428faacf16ed7388f5e579c189d4c5a8813d252a78a3ace3bc556e53",
+      "bytes": 2445
+    },
+    "wp11-W11-AR3-remote-final.json": {
+      "sha256": "97796984552a83d85f8dfd09828c0f454b62d5fe55d0628365f2ab1ee6d66735",
+      "bytes": 5156
+    },
+    "parse-hosted-test-log.py": {
+      "sha256": "c9e5f0ca447115dba3d00ede2350d32c1606185dcb4c763f183daafd7c3cd23a",
+      "bytes": 7538
+    }
+  }
+}

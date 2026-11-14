@@ -1,0 +1,195 @@
+--- FinanceW29/modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts
++++ FinanceW30-candidate/modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts
+@@ -25,9 +25,9 @@
+   try {
+     for (const surface of ["dashboard", "procurement"] as const) await fixture.persistence.initializeSources(surface)
+     let context = await fixture.admit("sf-human:planner.read", {}, "finance", true)
+-    const initialHttp = fixture.host.requestFor(context)
+-    if (!initialHttp) throw new Error("Real UI authority unavailable")
+-    let http: Request = initialHttp
++    const initialRequest = fixture.host.requestFor(context)
++    if (!initialRequest) throw new Error("Real UI authority unavailable")
++    let http = initialRequest
+     const issuedSource = await fixture.issueSource("v0", context)
+     if (issuedSource.status !== "ok") throw new Error(issuedSource.reason)
+     const sourceRef = issuedSource.value.evidence
+@@ -195,17 +195,21 @@
+       expect(await second.results.readHistoricalCalculation(await second.selectionFor(calculation.value), context)).toEqual({ status: "denied", reason: "historical-calculation-unavailable" })
+       await changeCase((value) => ({ ...value, version: value.version + 1, horizon: plannerPeriod }))
+       const currentSelection = await second.selectionFor(calculation.value)
++      const revokedContext = context
+       fixture.access.allowed = false
+       expect((await second.results.readHistoricalCalculation(currentSelection, context)).status).toBe("denied")
+       fixture.access.allowed = true
+-      // Revocation permanently retires that admission; renewed access needs a new
+-      // real UI admission before testing unrelated source and incarnation changes.
+-      const revokedContext = context
++      // Revocation deletes the private lease. Restoring the ACL requires a new
++      // consumed admission; otherwise later source negatives test only authority.
+       expect(await fixture.host.revalidate(revokedContext)).toBe(false)
+-      context = await fixture.admit("sf-human:planner.read", {}, "finance", true)
+-      const renewedHttp = fixture.host.requestFor(context)
+-      if (!renewedHttp) throw new Error("Renewed UI authority unavailable")
+-      http = renewedHttp
++      expect(fixture.host.requestFor(revokedContext)).toBeUndefined()
++      const renewedContext = await fixture.admit("sf-human:planner.read", {}, "finance", true)
++      const renewedRequest = fixture.host.requestFor(renewedContext)
++      if (!renewedRequest) throw new Error("Renewed UI authority unavailable")
++      context = renewedContext
++      http = renewedRequest
++      expect(context.binding.requestId).not.toBe(revokedContext.binding.requestId)
++      expect(context.binding.principalRef).toBe(revokedContext.binding.principalRef)
+       expect(await fixture.host.revalidate(context)).toBe(true)
+       expect(await second.results.readHistoricalCalculation(currentSelection, context)).toEqual(stored)
+       expect((await second.results.readHistoricalCalculation(currentSelection, revokedContext)).status).toBe("denied")
+@@ -217,6 +221,7 @@
+       expect((await second.results.readHistoricalCalculation(currentSelection, context)).status).not.toBe("ok")
+       expect((await second.historicalProducer(currentSelection).issue(stored.value.resultRef, context)).status).not.toBe("ok")
+       expect((await second.cases.read({ caseRef: encodeCaseRef(originalCaseRef) }, context)).status).not.toBe("ok")
++      expect(await fixture.host.revalidate(context)).toBe(true)
+       await changeCase((value) => ({ ...value, version: value.version + 1, incarnation: "replaced-case" }))
+       expect(await second.results.readHistoricalCalculation(await second.selectionFor(calculation.value), context)).toEqual({ status: "denied", reason: "historical-calculation-unavailable" })
+     } finally { await reopened.dispose() }
+
+--- FinanceW29/modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts
++++ FinanceW30-candidate/modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts
+@@ -49,10 +49,9 @@
+   const contexts: TrustedUiContext[] = []
+   let finish: ((context: TrustedUiContext) => void) | undefined
+   try {
+-    // C08 is stored on Dashboard, and reviewed apply spans the product and Planner snapshots.
+-    // Initialize each source registry through the same canonical lifecycle used by the host.
+-    await fixture.persistence.initializeSources("dashboard")
+-    await fixture.persistence.initializeSources("procurement")
++    // C08 uses Dashboard and prepared dispatch spans all three surfaces. Planner is
++    // already initialized by plannerFixture; admit the others through the lifecycle.
++    for (const surface of ["dashboard", "procurement"] as const) await fixture.persistence.initializeSources(surface)
+     const intents = new WeakMap<Request, { action: SfHumanAction; digest: string; operationId: string }>()
+     const payloads = new WeakMap<TrustedUiContext, { action: SfHumanAction; payload: unknown }>()
+     const authorize = async (request: Request) => fixture.access.allowed && intents.has(request) && request.headers.get("authorization") === "finance"
+
+--- FinanceW29/modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts
++++ FinanceW30-candidate/modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts
+@@ -61,15 +61,17 @@
+   try {
+     const original = await fixture.readState()
+     const official = await fixture.official()
++    const sourceRace = { committed: false }
+     const context = await fixture.admit("decisions.draft-hot-topic", fixture.request, `draft-race-${race}`)
+     fixture.controls.hook = { remaining: 1, run: async () => {
+       if (race === "authority") { fixture.access.allowed = false; return }
+       if (race === "source") {
+-        await fixture.persistence.transaction("dashboard", async (snapshot) => {
++        const applied = await fixture.persistence.transaction("dashboard", async (snapshot) => {
+           const edited = DashboardPeople.domain.execute(snapshot, actor, { page: "Hot Topics & Actions", action: "save", id: "topic", version: 0, values: { notes: "Concurrent official source edit" } }, { at: plannerAt, id: randomUUID, directory: [] })
+           if (!edited.ok) throw new Error(`Concurrent Dashboard edit unavailable: ${JSON.stringify(edited)}`)
+           return { commit: true, value: edited }
+         })
++        sourceRace.committed = applied.ok
+         return
+       }
+       await fixture.editCase()
+@@ -87,6 +89,7 @@
+     if (race === "case") expect(after.cases[caseRef.id]).toEqual({ ...original.cases[caseRef.id]!, version: 2, objective: "Concurrent case edit" })
+     else expect(after).toEqual(original)
+     if (race === "source") {
++      expect(sourceRace.committed).toBe(true)
+       expect(fixture.controls.snapshots).toEqual(["dashboard"])
+       const changed = await fixture.official()
+       expect(rows(changed.dashboard.data.hotTopics)[0]?.notes).toBe("Concurrent official source edit")
+@@ -167,8 +170,8 @@
+ 
+ async function hotTopicFixture() {
+   const fixture = await plannerFixture()
+-  // The scoped driver requires initialization before its first Dashboard transaction.
+-  await fixture.persistence.initializeSources("dashboard")
++  // The first Dashboard transaction and later C08 transactionAll require initialized registries.
++  for (const surface of ["dashboard", "procurement"] as const) await fixture.persistence.initializeSources(surface)
+   await fixture.persistence.transaction("dashboard", async (snapshot) => {
+     snapshot.data.roleMap = [{ surface: "dashboard", role: "admin", entra: "admin-group", version: 1, by: actor.id }]
+     snapshot.data.hotTopics = [{ id: "topic", action: "Review renewal", owner: actor.id, due: "2026-12-01", status: "open", priority: "normal", notes: "Original official topic" }]
+
+--- FinanceW29/modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts
++++ FinanceW30-candidate/modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts
+@@ -128,8 +128,8 @@
+     lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", b: Array(12).fill(amount), a: Array(12).fill(null), f: Array(12).fill(amount) }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {},
+   }))
+   const fixture = await plannerFixture(initial)
+-  // C08 uses Dashboard through the canonical scoped persistence driver.
+-  await fixture.persistence.initializeSources("dashboard")
++  // C08 spans all domain snapshots; initialize their registries through the real lifecycle.
++  for (const surface of ["dashboard", "procurement"] as const) await fixture.persistence.initializeSources(surface)
+   const intents = new WeakMap<Request, { action: SfHumanAction; digest: string; operation: string }>()
+   const contexts: TrustedUiContext[] = []
+   const actions: SfHumanAction[] = ["decisions.portfolio.read", "decisions.coverage", "decisions.promote-alternative"]
+
+--- FinanceW29/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts
++++ FinanceW30-candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts
+@@ -79,7 +79,7 @@
+     }
+     const planner = createPlannerPort({ host: fixture.host, sources, evidence })
+     const baseline = createDecisionBaselineCoverage({ state, host: fixture.host, resolveCase: async () => ({ status: "ok", value: refFor(await readCase()) }), authorizeCase, authorizeCoverage: async () => true,
+-      projectForecast: async (sourceRef, _caseRef, context) => { const value = await planner.compareForecast({ baseRef: sourceRef, candidateRef: sourceRef, period: wp05Horizon, currency: "USD" }, context); return value.status === "ok" ? { status: "ok", value: value.value.candidate } : value },
++      projectForecast: async (sourceRef, _caseRef, context) => { const value = await sourcePlanner.compareForecast({ baseRef: sourceRef, candidateRef: sourceRef, period: wp05Horizon, currency: "USD" }, context); return value.status === "ok" ? { status: "ok", value: value.value.candidate } : value },
+       resolveEvidence: (refs, context) => evidence.context({ refs }, context),
+       supports: (entry, resolved) => entry.status === "not-applicable" && entry.evidenceRefs.some((ref) => declarations.get(ref.refDigest)?.entries.some((candidate) => digestSfValue(candidate) === digestSfValue(entry))) && entry.evidenceRefs.every((ref) => resolved.some((value) => value.state === "fresh" && digestSfValue(value.ref) === digestSfValue(ref))),
+       verifySnapshot: (snapshot, request, record) => snapshotMatches(snapshot, [request.source, ...record.basis.sourceRefs, ...record.assessment.evaluatedSourceRefs]), operationIdentity: () => current.identity, proposalCoverageWrites: writes, now })
+@@ -91,7 +91,9 @@
+     // calculation/comparison Planner below without re-entering it for every target.
+     const operationSources: PlannerSourceHost = {
+       resolveForecastSource: (reference, context) => trace.measure("operation-source", () => current.sources.resolveForecastSource(reference, context)),
+-      resolveForecastCoverage: (reference, context) => trace.measure("operation-coverage", () => current.sources.resolveForecastCoverage(reference, context)),
++      // This auxiliary port supplies source projections and target admission only.
++      // C10 is observed by the classified Planner at judgment and promotion.
++      resolveForecastCoverage: () => trace.measure("operation-coverage", async () => ({ status: "unavailable" as const, reason: "coverage-not-needed-for-operation-admission" })),
+     }
+     // Stored scenarios retain their persisted C10 result and basis. This port
+     // supplies only the canonical source DomainProjection; judgment and preview
+@@ -133,12 +135,12 @@
+     const preparePhase = async (source: RecordEvidence, basis: CostCoverageBasis, scenario: ScenarioRequest, training: "omitted" | "confirmed" | "bundled") => {
+       await checkpoint(`prepare:${source.refId}:start`)
+       const phaseRefs = [...basis.sourceRefs].filter((ref): ref is RecordEvidence => ref.kind === "record")
+-      const coverage = await renewalCoverage({ ...fixture, planner, sources, evidence, scenario, basis, sourceRefs: phaseRefs, caseRef: refFor(await readCase()) }, training)
++      const coverage = await renewalCoverage({ ...fixture, planner: sourcePlanner, sources, evidence, scenario, basis, sourceRefs: phaseRefs, caseRef: refFor(await readCase()) }, training)
+       declarations.set(coverage.statement.refDigest, { ref: coverage.statement, entries: coverage.entries })
+       const selectedCoverageRef = await register(source, basis, coverage.entries)
+       const renewalSource = phaseRefs.find((ref) => ref.refId === fixture.baselineScenario.baseRef)
+       if (!renewalSource) throw new Error("Renewal source unavailable")
+-      const renewalProjection = await planner.compareForecast({ baseRef: renewalSource.refId, candidateRef: renewalSource.refId, period: wp05Horizon, currency: "USD" }, fixture.context)
++      const renewalProjection = await sourcePlanner.compareForecast({ baseRef: renewalSource.refId, candidateRef: renewalSource.refId, period: wp05Horizon, currency: "USD" }, fixture.context)
+       if (renewalProjection.status !== "ok") throw new Error(renewalProjection.reason)
+       const description = "The synthetic renewal quote has one final service price; this transition category does not apply to retaining that service."
+       const unsigned: RecordEvidence = { schema: "sf-evidence-v1", kind: "record", refId: `renewal-scope-${basis.version}`, installationId: "install", projectId: "project", refDigest: "", evidenceLevel: "observed", target: { surface: "planner", recordType: "synthetic-scope", recordId: `renewal-scope-${basis.version}`, incarnation: "renewal-scope", version: basis.version, fields: [...basis.categoryIds], period: wp05Horizon, projectionDigest: digestSfValue({ description, source: renewalSource }) } }
+
+--- FinanceW29/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts
++++ FinanceW30-candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts
+@@ -33,6 +33,10 @@
+     expect(after.caseRef.version).toBeGreaterThan(chosen.caseRef.version)
+     expect(after.scenario.operations).toEqual([])
+     expect(after.selectedResult.id.startsWith("source-scenario:")).toBe(true)
++    const training = after.selectedResult.components.filter((component) => component.id.startsWith("training:"))
++    expect(training).toHaveLength(12)
++    expect(training.filter((component) => component.amount === 0 && component.evidenceState === "confirmed")).toHaveLength(11)
++    expect(training.find((component) => component.id === "training:11")).toMatchObject({ amount: 40000, currency: "USD", evidenceState: "confirmed" })
+     expect(after.selectedResult).toMatchObject({ knownSubtotal: 250000, total: 250000, comparisonStatus: "complete", costCoverage: { coverageState: "complete", derivedMissingCategoryIds: [] } })
+     expect(after.selectedResult.components.every((component) => component.evidenceState === "confirmed")).toBe(true)
+     expect(after.comparison).toMatchObject({ knownDifference: 10000, completeDifference: 10000, comparisonStatus: "complete", criterionResults: [{ criterionId: "renewal-difference", state: "failed" }] })
+
+--- FinanceW29/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts
++++ FinanceW30-candidate/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts
+@@ -104,9 +104,12 @@
+     const originalDigest = digestSfValue(previous)
+     const copied = domain.execute(snapshot, author, { page: "Versions", action: "copy", id: fixture.scenario.baseRef, version: snapshot.versions[`versions:${fixture.scenario.baseRef}`]?.version ?? 0, values: { name: `Confirmed ${kind} quote` } }, environment)
+     if (!copied.ok || copied.value !== versionId) throw new Error("Canonical source copy rejected")
+-    // The supplied training quote confirms one November charge and explicitly
+-    // no charges in the other months; omitted forecasts are not confirmed zeros.
+-    const saved = domain.execute(snapshot, author, { page: "OPEX", action: "save", id: kind, version: snapshot.versions[`${versionId}:lines:${kind}`]?.version ?? 0, values: kind === "training" ? { versionId, el: "licenses", cur: "USD", annual: 0, f: Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0) } : { versionId, f10: amount } }, environment)
++    // This synthetic annual quote explicitly charges November and confirms zero
++    // forecast in every other month; annual is the budget, not forecast evidence.
++    const values = kind === "training"
++      ? { versionId, el: "licenses", cur: "USD", annual: 0, f0: 0, f1: 0, f2: 0, f3: 0, f4: 0, f5: 0, f6: 0, f7: 0, f8: 0, f9: 0, f10: amount, f11: 0 }
++      : { versionId, f10: amount }
++    const saved = domain.execute(snapshot, author, { page: "OPEX", action: "save", id: kind, version: snapshot.versions[`${versionId}:lines:${kind}`]?.version ?? 0, values }, environment)
+     if (!saved.ok || digestSfValue(projectPlannerSource(snapshot, reader, fixture.scenario.baseRef)) !== originalDigest) throw new Error("Canonical quote revision changed its original source")
+     const projection = projectPlannerSource(snapshot, reader, versionId)
+     if (!projection) throw new Error("Revised source unavailable")

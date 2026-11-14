@@ -1,0 +1,93 @@
+{
+  "reviewer": "ci_reconciliation",
+  "kind": "independent-static-review",
+  "status": "NO_STATIC_BLOCKER_FOUND_RUNTIME_UNVERIFIED",
+  "localProductExecution": false,
+  "localTypecheck": false,
+  "hostedRunForTheseChanges": null,
+  "ownFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "gitBlob": "bd97cc914ace5cf1965d441ef9fa8e1f553b7d05",
+      "sha256": "e698e797ddd5b9ea129048fe219e2f7ea9d71ce4d8caa13408f704e869722444"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "gitBlob": "b913d9c0ab46a3f624b6c0aee28f5adf6654940a",
+      "sha256": "31756549e2bc37f2810c25ddc8c5a9c43e462513576a66330d21790433d8b2b4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "gitBlob": "02af3b8a606b91949f9009d239e4f2289dd41e7d",
+      "sha256": "b2ed5b6c44fbf56a3d9ca04e3a1519f72a5258f595c67da10f2d584da81287f1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "gitBlob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "sha256": "3c679344d17a97136ac59f22284527d14ee2b9dde0004f63e548dd454a83f449"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "gitBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+      "sha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28"
+    }
+  ],
+  "ownFindings": [
+    "Nested C17 uses the actual Planner/SQLite/scoped-source authority fixture; all calculation/request/source verifiers and recursive replay are retained. Source coverage remains explicitly pending, outer known subtotal is asserted with total:null and conditioned status.",
+    "Nested source negative uses an actual domain CAS revision while caller authority remains active. It proves source invalidation, not principal ACL revocation. Reopen opens a second SQLite connection while the original fixture remains alive.",
+    "Renewal operation admission uses actual raw current-source resolution and the operation verifier, preventing unrelated C10 classification recursion. Calculation/comparison/criterion paths still use classified coverage.",
+    "Fixture tracing forwards the original C08 transaction callback identity. It enforces the original 180000ms wall-clock budget and records inclusive overlapping durations and serialized sizes, not CPU/memory samples.",
+    "Case-port chooses the exact operation before recording the choice, rejects a distinct unselected operation with unchanged case, then prepares the chosen operation."
+  ],
+  "publishedIntake": {
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+        "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+        "sourceBlob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+        "exactLocalBlobVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-engine-fixture.ts",
+        "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+        "sourceBlob": "fd6a6b8b75152e858961360d16f7432233700b2f",
+        "exactLocalBlobVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+        "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+        "sourceBlob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+        "exactLocalBlobVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/source-navigation.ts",
+        "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+        "sourceBlob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357",
+        "exactLocalBlobVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp05/planner-origins.test.ts",
+        "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+        "sourceBlob": "bf92905dccfd01eaedc624841d808d5ce21b6f21",
+        "exactLocalBlobVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+        "sourceCommit": "217c9bcc75d499eff3884fb4afe662d5c0029935",
+        "sourceBlob": "9b279523da60f18eebdc270707d1b42c865e3dca",
+        "exactLocalBlobVerified": true
+      }
+    ],
+    "findings": [
+      "All six resulting Git blob and SHA256 hashes independently matched the manifest.",
+      "The focus fix is complete across source-navigation, view at 217c9 and planner-origins. The fe13 advantage-rendering view is excluded.",
+      "Scenario qualification preserves untouched absent cells and their disclosures while computing values through the canonical post-command projection and plannerKnownSubtotal. Deferral marks both origin and destination as addressed.",
+      "Published regressions and explicit record narrowing remain intact. No new imports or missing relative dependency identified."
+    ]
+  },
+  "requiredHostedEvidence": [
+    "W6 own fixture results, including actual phase/call/duration diagnostics",
+    "WP03 scenario-qualification and WP05 planner-origins on the consumer candidate",
+    "Final own typecheck delta and full package check status must be reported separately"
+  ]
+}

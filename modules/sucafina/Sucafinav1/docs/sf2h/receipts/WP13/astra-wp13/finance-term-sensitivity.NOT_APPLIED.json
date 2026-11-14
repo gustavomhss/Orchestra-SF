@@ -1,0 +1,84 @@
+{
+  "schema": "wp13-cross-owner-contract-delta-v1",
+  "id": "WP13-TERM-CANCELLATION-ADAPTER",
+  "status": "NOT_APPLIED_REQUIRES_CANONICAL_DOMAIN_ADAPTER",
+  "owner": [
+    "WP03",
+    "WP04",
+    "WP13"
+  ],
+  "preparedAt": "2026-11-14T12:26:14.446642+00:00",
+  "criterion": {
+    "id": "WP13.T03.CHK.02",
+    "text": "Alterar prazo em compromisso sem regra de cancelamento não cria economia artificial; regra existente determina o efeito."
+  },
+  "producer": {
+    "head": "0e73d1dfb179517a4e4341ad554966e6941b2a64",
+    "tree": "0bee314a9513c5b2242d389d37cf7aab2aaa5ae2"
+  },
+  "ownerHeadsObserved": {
+    "astra-finance": "96fc3162ae309f8b91b2c55524335026f8704714",
+    "astra-wp11": "d7775d6f1eb17af1590ccfb98547259eb017cd1b"
+  },
+  "inspection": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "blobOfReadBytes": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "sha256": "4b4dea78486ca436a03725e44d98951333ca15f353bdf02e204e8a0914f58527",
+      "publishedBlob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "readBytesMatchPublishedBlob": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "blobOfReadBytes": "1673c86995cf71b61e288d91492ae7b691934171",
+      "sha256": "d83e19bff860ad2a54fc3f41b3b5790d3d31cd3b2b55ea8785a61ea30aa8827b",
+      "publishedBlob": "1673c86995cf71b61e288d91492ae7b691934171",
+      "readBytesMatchPublishedBlob": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+      "blobOfReadBytes": "52b09da8ee31f6681bdc2c29a69bc76755f9d232",
+      "sha256": "b987d62bb811ece3534d44b8c2bbf5a528842ab63db10a22df90cb5e5011aeed",
+      "publishedBlob": "52b09da8ee31f6681bdc2c29a69bc76755f9d232",
+      "readBytesMatchPublishedBlob": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/contracts.ts",
+      "blobOfReadBytes": "8bfd7345072e40512fd9e8805cdd93b22db25ccb",
+      "sha256": "6c753646c451fb094dc452669830059537ef5f9b1a490173fb8bbeaa72f3abae",
+      "publishedBlob": "8bfd7345072e40512fd9e8805cdd93b22db25ccb",
+      "readBytesMatchPublishedBlob": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "blobOfReadBytes": "c17f594d74569bf7fa7fc87b81f0646aeddce7ff",
+      "sha256": "b7d4339d405263774475e6337b44f2d22e37bc7a64c4a35f35369129a9886406",
+      "publishedBlob": "c17f594d74569bf7fa7fc87b81f0646aeddce7ff",
+      "readBytesMatchPublishedBlob": true
+    }
+  ],
+  "observedContractLimits": [
+    "PlannerSensitivityUnits issues only a finite replace amount in its declared currency, or a confirmed existing source-only USD forecast. A changed period or defer selector is not a supported amount parameter.",
+    "Planner defer moves an existing monthly forecast to a valid destination through the canonical Planner command. That operation alone does not establish a contractual cancellation or termination saving.",
+    "The inspected Procurement scenario adapter prepares only an evidenced requisition amount replacement with the same currency and period.",
+    "The inspected Vendor Contract reader exposes existing authorized contract fields, including end/renewType/notice, but does not return a sensitivity cost-effect/cancellation-rule proof. This is an observation of these ports, not a claim that no rule exists anywhere in the repository."
+  ],
+  "requiredOwnerContract": {
+    "authority": "An existing authorized commitment source and exact rule/source evidence, retaining incarnation, source version, command CAS, horizon, declared currency and current principal/grant.",
+    "effect": "Use only a cost effect computed by the existing canonical cancellation/commitment producer. With no supported rule or evidence, refuse the effect or keep it unavailable; do not infer savings from a shorter displayed date.",
+    "parameter": "Expose a private typed parameter binding with its real unit and supported values. Never relabel an amount selector as duration.",
+    "result": "Return canonical scenario/comparison refs, missing states, coverage and provenance that WP13 can persist and revalidate. Exact thresholds require the domain proof; nonlinear/unsupported intervals remain sampled or unavailable.",
+    "boundary": "Any needed domain adapter is an owner delta. No engine, policy, financial formula, transport contract or foreign runtime source is altered in this delivery."
+  },
+  "requiredHostedOracles": [
+    "Real commitment with no cancellation rule: vary requested term; no fabricated saving and no zero substitution.",
+    "Same commitment with an already existing authorized cancellation rule: the canonical cost effect determines every sample; retain rule/source version and absence/FX states.",
+    "Rule revoked or changed, wrong currency/unit/period, missing source and changed incarnation must refuse the old persisted proof.",
+    "Original human choice remains historical; an updated sample does not apply cancellation or record a new decision."
+  ],
+  "currentAcceptance": "NOT_ESTABLISHED. Price sensitivity, generic unit tests, ordinary monthly defer and source-only renewal are not claimed to satisfy the cancellation-rule criterion.",
+  "nextAction": "WP03/WP04 expose or identify the canonical existing commitment/cancellation producer and publish a pinned adapter; WP13 consumes that pin, composes its sampler and adds both exact hosted counterexamples. S0 retains this as a mandatory behavior/proof gate.",
+  "localProductExecution": false,
+  "financialPolicyChanged": false,
+  "foreignSourceEdited": false
+}

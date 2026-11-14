@@ -1,0 +1,55 @@
+{
+  "schema": "sf-wp13-increment-v1",
+  "label": "W5",
+  "parentProduct": "d6c6bf36e89725568f10dda08ae24ce918d074cb",
+  "status": "IMPLEMENTED_PENDING_HOSTED_PROOF",
+  "ready": false,
+  "sourceAndFixturesUnchanged": true,
+  "newTest": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+    "blob": "4b2a87906c901fe09678fef87662be9bf3603f9e",
+    "sha256": "2bc8081f51151ab8f479f57347199ea53e9875bcbce311ce00f8dff7a4e655a4",
+    "flow": [
+      "Actual WP13 portfolio and C08 write",
+      "Actual WP11 recordChoice and ledger",
+      "Actual Planner OPEX.save45000->70000 in the same record/incarnation",
+      "Canonical C10, C08 scenarios/comparison, unchanged20000 advantage criterion, PlannerMateriality",
+      "Read-only portfolio reconciliation with original ChoiceRecord/case/portfolio digests preserved"
+    ],
+    "oracles": {
+      "originalKnownSubtotal": 210000,
+      "originalTotal": null,
+      "currentTotal": 235000,
+      "currentDifference": -5000,
+      "currentCriterion": "failed",
+      "changedComponent": "implementation:11 material",
+      "unchangedComponent": "bridge:10 explicit0confirmed unknown, never falsely material"
+    },
+    "controlledSeams": [
+      "Admission",
+      "Historical portfolio/selection/candidate reader",
+      "Source issuer bound to actual changed projection"
+    ],
+    "notEstablished": [
+      "Hosted product success",
+      "Installed factory/UI/BI/WP14 consumption",
+      "Human application of the chosen financial scenario",
+      "GNATIVE"
+    ]
+  },
+  "validation": {
+    "C4": {
+      "runId": 43585491598,
+      "jobId": 132418984963,
+      "product": "d6c6bf36e89725568f10dda08ae24ce918d074cb",
+      "envelope": "53c2a6a73c7ce9dd2dbc3232867944575b317a48",
+      "typecheck": "FAIL",
+      "ownErrors": 0,
+      "foreignErrors": 130,
+      "guards": "PASS"
+    },
+    "independentPriceReview": "In progress at publication; do not infer acceptance",
+    "productTests": "Three disjoint explicit selections,30files,not yet run"
+  },
+  "next": "Check newly added test with package bun typecheck; run selected product files in Actions one request at a time and attach observed logs/omni/SHAs."
+}

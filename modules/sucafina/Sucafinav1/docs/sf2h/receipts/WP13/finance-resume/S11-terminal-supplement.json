@@ -1,0 +1,129 @@
+{
+  "schema": "wp13-terminal-supplement-v1",
+  "run": {
+    "label": "S11",
+    "wp": "wp13",
+    "product": {
+      "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+      "label": "R4",
+      "parents": [
+        "9de58454924b072b6e571b5b4ebcd70f95e596df"
+      ]
+    },
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "--test-name-pattern",
+        "^WP13 keeps the human choice in one case while confirmed training changes the source-only analysis to the real 15000 boundary$",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "requestSha256": "fbb6c0a5d8105ce095d26e3fdbdd86a20e3ed08b3cfbf963be5ac9df111229bd",
+    "snapshot": "c7a0956f850525a03ccd28b26cb8d90808f4d83f",
+    "snapshotTree": "413f807a60933f928e5526fb2dba768e41ba00d6",
+    "requestBlob": "e3ff03c5fec4f5303529147d7e49ec4c96e1052a",
+    "branch": "ci-run-linux-finance-resume-wp13-229d66fa-fbb6c0a5-1",
+    "run_id": 43620619049,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620619049",
+    "status": "completed",
+    "conclusion": "failure",
+    "run_started_at": "2026-11-14T17:20:59Z",
+    "snapshot_envelope": {
+      "only_path": ".ci-run.json",
+      "product_tests_config_fixtures_unchanged": true,
+      "compare": {
+        "repository_full_name": "gustavomhss/Orchestra-SF",
+        "base": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+        "head": "c7a0956f850525a03ccd28b26cb8d90808f4d83f",
+        "status": "ahead",
+        "ahead_by": 1,
+        "behind_by": 0,
+        "total_commits": 1,
+        "too_large": null,
+        "base_commit": {
+          "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/229d66fa59ceebbc4b3683565670698f2cf3aa65",
+          "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/229d66fa59ceebbc4b3683565670698f2cf3aa65"
+        },
+        "merge_base_commit": {
+          "sha": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/229d66fa59ceebbc4b3683565670698f2cf3aa65",
+          "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/229d66fa59ceebbc4b3683565670698f2cf3aa65"
+        },
+        "files": [
+          {
+            "filename": ".ci-run.json",
+            "status": "added",
+            "additions": 1,
+            "deletions": 0,
+            "changes": 1,
+            "previous_filename": null
+          }
+        ]
+      }
+    },
+    "request_validation": "actual validateRequest/locateTestPackage/testPathsAt at published candidate; hosted validator ran independently",
+    "required_artifacts": [],
+    "local_product_execution": false,
+    "test_job_id": 132525249982,
+    "test_job_conclusion": "failure",
+    "job_log": {
+      "sha256": "0ecbb8bdf9cb605ad3b60f18686b695f5c019ebbdf89579ddd88995c82b0a4b8",
+      "bytes": 76214,
+      "encoding": "exact UTF-8 decoded text returned by GitHub MCP, with original trailing newlines",
+      "source": "fetch_workflow_job_logs",
+      "durable_source_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620619049/job/132525249982"
+    },
+    "test_observations": [
+      {
+        "at": "2026-11-14T17:25:26.5482345Z",
+        "verdict": "fail",
+        "name": "WP13 keeps the human choice in one case while confirmed training changes the source-only analysis to the real 15000 boundary",
+        "duration_ms": 180013.46
+      }
+    ],
+    "repeated_summary_observations": [],
+    "pass": 0,
+    "fail": 1,
+    "assertions": 10,
+    "tests": 1,
+    "files": 1,
+    "duration_reported": "180.18s",
+    "omni": [
+      {
+        "nonce": "c132b65b53aded85b03765ea844e248f",
+        "verdict": "not applicable",
+        "detail": "(focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      }
+    ],
+    "qualified_scoped_pass": false,
+    "scope": "Isolated WP13 human-choice source change after the R2 fixture delta",
+    "latest_disposition": "0/1/10, 180013.46ms case duration. Same 180000ms oracle retained. The material fixture change justified this selection; the unresolved deadline does not justify another identical run."
+  },
+  "status": "OPEN_PERFORMANCE",
+  "unchanged_oracle_ms": 180000,
+  "reason_this_run_was_justified": "R2 materially grouped the canonical renewal fixture verification while retaining the criterion equality; this isolated file was selected once after that change.",
+  "observations": {
+    "case_duration_ms": 180013.46,
+    "pass": 0,
+    "fail": 1,
+    "assertions": 10,
+    "filtered_cases": 5,
+    "C08_reads": 4101,
+    "C08_observed_ms": 88994,
+    "preference_reads": 648,
+    "preference_observed_ms": 12609,
+    "coverage_callbacks": 333,
+    "coverage_observed_ms": 27923,
+    "last_stack": "Planner.compareForecast -> stored-scenarios -> sensitivity-units; test line161"
+  },
+  "attribution_limit": "Counter/timing observations do not alone prove a single cost root cause. Static nested state clone/replay analysis is an inference, separate from measured timings. The Compose transactionAll seam did not execute in the S2/S11 fixture currentSnapshots callback.",
+  "next_dispatch": "None justified without a material safe fix; preserve complete calculation, source-only reconfirmation, human choice and persisted replay."
+}

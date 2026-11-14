@@ -1,0 +1,97 @@
+{
+  "schema": "sf-finance-independent-source-intake-review-v1",
+  "reviewer": "dc9_choice_fence_review",
+  "observedAt": "2026-11-14T12:53:43.136950+00:00",
+  "sourceFrom": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+  "sourceHead": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+  "financeHead": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+  "scope": "Only current-choice-preview.ts, current-choice-read-fence.test.ts and additive lifecycle matcher observation. No new head lookup, product execution or owned-file mutation.",
+  "decision": "PASS_STATIC_INTAKE_WITH_AFFECTED_CI_REQUIRED",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "sourceBlob": "38f82f4b931682e255a18d52856e192f2ee43390",
+      "action": "exact-source"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "sourceBlob": "46b004a1b374229ad46077930134ba0469213087",
+      "action": "exact-source"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "sourceBlob": "45d2821fbd01c13183d450f1347e9017adba9fe2",
+      "action": "additive-preserve-finance"
+    }
+  ],
+  "financePreviewBlob": "12f9bda4f964763e8c6d60fb67e5fb68a08cd9ee",
+  "lifecycleProposal": {
+    "before": {
+      "bytes": 27779,
+      "gitBlob": "7a5100d9e60a81f654cc31714efd2b1e7d0b68f5",
+      "sha256": "d8aa020d994c2ed6aa489a9b4968c44cfd3c0be4f3d76caaefc8b0b7470b6f4d"
+    },
+    "candidate": {
+      "bytes": 28017,
+      "gitBlob": "d220c42a28e87b034ca3513aca088a0dd0db262b",
+      "sha256": "75081a7c5400635047fa3a013fa7cbb9bcbfd587457a5ed095bbd504c9ea1ef1"
+    },
+    "beforeExpectCalls": 41,
+    "candidateExpectCalls": 42,
+    "beforeTimeout": "}, 180000)",
+    "candidateTimeout": "}, 180000)"
+  },
+  "findings": [
+    {
+      "id": "DCF-01",
+      "severity": "resolved-by-intake",
+      "finding": "Finance W31 read observed the case/result before its final external authorizeCase callback. That callback could revoke membership or private preferences read while still returning true for the supplied snapshot and while the UI lease remained valid.",
+      "disposition": "Adopt source current-choice-preview.ts exactly. Reauthorize the private preferences namespace after external callbacks, then jointly compare case, reviewed result, producer result, and binding through the canonical C08 read fence; return a detached copy of the final observed binding."
+    },
+    {
+      "id": "DCF-02",
+      "severity": "preserve-finance-evidence",
+      "finding": "Source current-choice-lifecycle.test.ts removes Finance runtime/coverage diagnostics already used by S19. Its new assertion additionally protects coverage.entries as well as coverage.assessment.",
+      "disposition": "Retain Finance lifecycle code and diagnostics. Add the source combined assessment/entries digest before and after the detached asymmetric matcher. Preserve the existing assessment assertion and every other assertion/timeout. Proposed candidate is d220c42a28e87b034ca3513aca088a0dd0db262b, 42 expect call sites versus 41."
+    },
+    {
+      "id": "DCF-03",
+      "severity": "qualification-boundary",
+      "finding": "The new read-fence test seeds a conditioned, financially unknown historical choice and private binding. It exercises actual UI admission, SQLite persistence, canonical C08 state provider and result-store reads, but does not calculate or prove a canonical human choice journey.",
+      "disposition": "Adopt exact source test 46b004a1b374229ad46077930134ba0469213087 and run it together with the real current-choice lifecycle consumer in Actions. Keep native, installed, C/D and overall acceptance open."
+    }
+  ],
+  "minimalAffectedTests": [
+    "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+    "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts"
+  ],
+  "realConsumers": [
+    "product/decisions/product.ts:currentChoicePreview",
+    "product/decisions/product.ts:promoteCurrentChoice.verifyProvenance",
+    "product/decisions/current-choice-preview.ts:prepare final read",
+    "test/product/wp11/current-choice-lifecycle.test.ts:preview and promotion/reopen/source revocation/case race"
+  ],
+  "unchangedBoundary": [
+    "No financial formulas or policy changes.",
+    "No host/state/contracts edits.",
+    "No Planner operations applied by the new fence test.",
+    "Lifecycle historical ChoiceRecord remains unchanged; preview and human promotion remain separate.",
+    "C08 canonical authorization and persistence still own their existing guarantees."
+  ],
+  "verification": {
+    "metadataOnly": true,
+    "productTestsRun": false,
+    "typecheckRun": false,
+    "remoteMutations": false,
+    "ownedSourceFilesChanged": false,
+    "newReadFenceCases": 2,
+    "newReadFenceStaticExpectCallSites": 9,
+    "lifecycleBeforeExpectCallSites": 41,
+    "lifecycleAfterExpectCallSites": 42,
+    "lifecycleTimeoutMilliseconds": 180000
+  },
+  "limitations": [
+    "Static review is not runtime qualification. Source exact-code intake and the proposed additive lifecycle candidate require affected Actions validation on the published Finance W/S pair.",
+    "The seeded read-only race fixture is not native-session or installed UI evidence, nor independent proof of original choice creation or application."
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "schema": "wp13-exact-owner-intake-v1",
+  "increment": "W14",
+  "preparedAt": "2026-11-14T12:29:12.895432+00:00",
+  "parent": {
+    "head": "0e73d1dfb179517a4e4341ad554966e6941b2a64",
+    "tree": "0bee314a9513c5b2242d389d37cf7aab2aaa5ae2"
+  },
+  "ready": false,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "sha": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "sha256": "31559515ade97893610d6ccfef80bba7b4eb5c1cc096e6840013fb1309cdbc48",
+      "bytes": 25425,
+      "sourceCommit": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+      "previousBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+      "owner": "WP11",
+      "action": "EXACT_PUBLISHED_OWNER_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "sha": "2338917427497733e4bd88aec852985206cce066",
+      "sha256": "ddaa4cc2a68b466179408513c3f96614265251916e5a31f1638e1c6ebf828eca",
+      "bytes": 3665,
+      "sourceCommit": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "previousBlob": "f83ca8b14429905f84d42d27bb57e8b19d7aba42",
+      "owner": "WP11/Finance",
+      "action": "EXACT_PUBLISHED_OWNER_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+      "sha": "d91a07ddb9dc9cc5d093121112b7603533d4e1fb",
+      "sha256": "8a111fa08b5d4a6c1a569ad12d105e0d80a89f866fc04ff2509eb008c0b002e1",
+      "bytes": 3219,
+      "sourceCommit": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "previousBlob": null,
+      "owner": "WP11/Finance",
+      "action": "EXACT_PUBLISHED_OWNER_BLOB"
+    }
+  ],
+  "scope": "Only three exact published WP11 fixtures/tests plus own receipts/deltas. No owner runtime, engine, policy or branch mutation.",
+  "rationale": "Prior renewal and sensitivity paths exceeded their existing budgets. The published owner changes remove classified coverage work from projection-only admission, and isolate each read-only verifier invocation in one real LocalStore transaction. Both preserve canonical producers and current authority; no cross-call cache.",
+  "preservedSourceFixture": {
+    "blob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+    "sourceCommit": "c41d7277be5941bafb105654360a32adea7f0347",
+    "reason": "Keep explicit f0...f11 confirmed training values. Finance79de9744 alternative not consumed. New read-scope tests use initial omitted source, not revised training."
+  },
+  "runtimeDependencyBoundary": {
+    "plannerPortAtPublishedProduct": "dba62042653bd061fa099e2956cae4d11a0475ce",
+    "ownerReviewPort": "e365ac59376482dfcc6f81aed045b0153f911038",
+    "uiAuthority": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+    "localStore": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+    "note": "No extra Planner port/qualify/actual-presence/runtime intake. Static review is against this composed published product; timing from owner code is not transferred."
+  },
+  "newBoundaryOracles": [
+    "Both real operation and source-only verification leave all durable surface snapshots byte-equivalent.",
+    "A canonical OPEX source edit between calls invalidates the old evidence.",
+    "UI lease revoked in an awaited source callback is refused despite the read scope."
+  ],
+  "nextHostedSelection": "Add the exact renewal-read-scope test to still-undispatched S9; preserve original budgets and assertions. C14 checks this published composition.",
+  "lastCompletedCheck": {
+    "label": "C13",
+    "runId": 43594042447,
+    "jobId": 132444652508,
+    "productSha": "0e73d1dfb179517a4e4341ad554966e6941b2a64",
+    "own": 0,
+    "foreign": 130,
+    "package": "FAIL",
+    "guards": "PASS"
+  },
+  "includedOwnDeltas": [
+    "wp10-consumer-bundle-W13.NOT_APPLIED.json",
+    "wp10-consumer-bundle-W13.NOT_APPLIED.patch.txt",
+    "finance-term-sensitivity.NOT_APPLIED.json"
+  ],
+  "limits": [
+    "Performance benefit and all new test results remain unmeasured on this product.",
+    "The verifier read scope is fixture-only, not a host cache or later write authorization.",
+    "Installed consumers/native/SkillLoadReceipt/cancellation-rule behavior remain mandatory open gates.",
+    "No product tests or package typecheck executed locally."
+  ],
+  "independentReview": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/renewal-intake-review-W14.json",
+    "sha256": "cc290f08658266959cb35add8d3b34b7908bf50b5ec05905dba35067ffa7ad35",
+    "verdict": "NO_STATIC_BLOCKER_NOT_RUNTIME_PASS"
+  }
+}

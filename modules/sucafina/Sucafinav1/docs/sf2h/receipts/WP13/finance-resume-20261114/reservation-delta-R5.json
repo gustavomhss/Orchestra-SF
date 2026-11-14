@@ -1,0 +1,43 @@
+{
+  "schema": "wp13-r5-reservation-envelope-fix-v1",
+  "base_head": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+  "base_tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "local_path": "/workspace/scratch/3b9737c0177a/work-wp13/r5-overlay/modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "before": {
+        "blob": "e3a0395a9ad33d6fb0ed161f69a246fa14664bd2",
+        "sha256": "8ed4d3ab856ad3ea18499f50b65f73e524c49c81304353a36727f9af622d3283",
+        "bytes": 50342
+      },
+      "after": {
+        "blob": "56befede439f9d08233a75fc7b9c25c013e73b4c",
+        "sha256": "d0a8c1973164a395402583f2e750e8354b54ddf893dd27ed9b17abd63f0c01dd",
+        "bytes": 50729
+      },
+      "expected_lines_before": 93,
+      "expected_lines_after": 93
+    }
+  ],
+  "change": "Keep both whole-envelope deep equality assertions, with aggregateRevision exactly before+1 after the canonical cases-namespace reservation. Keep status, incarnation, receipt storageVersion, every receipt, every proof, and absence of the failed Procurement proof unchanged. Require the same envelope after retry and reconstructed-executor retry. No source or behavior change.",
+  "evidence": {
+    "run_id": 43619812123,
+    "job_id": 132522704978,
+    "observed_difference": {
+      "aggregateRevision_before": 10,
+      "aggregateRevision_after": 11,
+      "receipt_namespace_storageVersion": 1
+    },
+    "source_log": "requests/S5-job.log",
+    "whole_run_conclusion": "failure"
+  },
+  "assertions_removed": false,
+  "timeouts_changed": false,
+  "local_product_execution": false,
+  "recommended_selection": [
+    "./Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts"
+  ],
+  "runtime_status": "NOT_RUN_AFTER_FIX",
+  "acceptance": "NOT_DECLARED"
+}

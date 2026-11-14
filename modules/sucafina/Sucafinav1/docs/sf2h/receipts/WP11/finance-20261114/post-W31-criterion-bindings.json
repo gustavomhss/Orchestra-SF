@@ -1,0 +1,392 @@
+{
+  "schema": "sf-finance-post-w31-criterion-bindings-v1",
+  "scope": "ADDITIVE_EXACT_PROPERTY_BINDINGS_NOT_FULL_ACCEPTANCE",
+  "author": "/root/dc9_criterion_addendum",
+  "createdAt": "2026-11-14T13:00:13.348845+00:00",
+  "sourceObservation": {
+    "financeBaseHead": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+    "financeBaseTree": "82ea6bff11f9647d14cac30587ccd2feb80c6950",
+    "upstreamHead": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+    "upstreamCut": "2026-11-14T12:47:36Z",
+    "candidateIncrement": "W32",
+    "candidateHead": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+    "candidateTree": "485a3ac2ac1322d03d7421a17eb1791153f11c1b",
+    "pinPolicy": "Parent confirmed publication W32 at these head/tree pins. Exact candidate blobs below define this static review; execution outcomes remain in product-tests.json.",
+    "taskMapAuditedSnapshot": "W21",
+    "taskMapEdited": false
+  },
+  "criteriaSource": {
+    "WP03": {
+      "path": "../../WP03/finance-20261114/criteria.json",
+      "literalCriterionCount": 112,
+      "packPath": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP03.pack.json",
+      "packSha256": "60f25f8ed6575e6b040a54a28de44581147593585fd3b8df54cfc43952ed94a9",
+      "literalIdTextPairsSha256": "35584bc4df479c6255a9d4680e7ddc4ba72bbca589adce0b7fc084e69f627540",
+      "mapSha256AtRead": "9531e2d1f86d50d6f8269161a41e65ad7928d5649241e7278ede427b8c929cb3"
+    },
+    "WP11": {
+      "path": "criteria.json",
+      "literalCriterionCount": 83,
+      "packPath": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP11.pack.json",
+      "packSha256": "ede1e8d53af235a96c50a772dc705fbdc4ce5461382e950ec04f8d9f7f46654c",
+      "literalIdTextPairsSha256": "47c43180b4dd3d7fd75266b4a9dd5f240e2063a2fd08e81d28ac25e00cd5bdf6",
+      "mapSha256AtRead": "bfa7c7683bae03e757814b5696df8090d561b24f36f623bf328783fdada851fb"
+    }
+  },
+  "counts": {
+    "bindings": 6,
+    "uniqueCriteria": 5,
+    "newTestFiles": 2,
+    "byWP": {
+      "WP03": 2,
+      "WP11": 4
+    }
+  },
+  "files": [
+    {
+      "id": "current-choice-read-fence",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "test_path": "test/product/wp11/current-choice-read-fence.test.ts",
+      "blob": "46b004a1b374229ad46077930134ba0469213087",
+      "sha256": "12dbbe50b2044ce12112cc13d1655d5cc138c58cd387b1f9ffcc799ff1e6fb98",
+      "bytes": 13761,
+      "literal_expect_calls": 9,
+      "explicit_timeout_ms": null,
+      "dispatched_selection": 22
+    },
+    {
+      "id": "renewal-source-admission",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "test_path": "test/product/wp11/renewal-source-admission.test.ts",
+      "blob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "sha256": "ed792565e2a75a2b29a65dc81eee892db5bcefd0744c55d110ee9af6401df737",
+      "bytes": 11611,
+      "literal_expect_calls": 35,
+      "explicit_timeout_ms": null,
+      "dispatched_selection": 22
+    }
+  ],
+  "consumerPins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "sha256": "8c51fdb91dc3c35bd6ff075488f3d393711b2d16e411085960fa3728c1fe5bd1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "blob": "38f82f4b931682e255a18d52856e192f2ee43390",
+      "sha256": "74b8964deabc274b59892f48de8bc54c774aab242d911a9b0713f9ad36f76095"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "blob": "f85c1c8e7196aff1381513b2d5ed2109641d6a45",
+      "sha256": "9a23b44d9ac78f6597f0942a9a17dd8c94c40d93e80d2de7eb25b42291d8a7bc"
+    }
+  ],
+  "reusedProducerRegressionTargets": [
+    {
+      "test_path": "test/product/wp03/port.test.ts",
+      "blob": "2c6a3519024d2cca0fcf5256dcf9055fa1d7ae26",
+      "sha256": "02bf9e6deb0b2f47fafda9e43bb5dc4269f0195b96c2ad296c29233c3434edf9",
+      "scope": "Existing affected producer regression; this note adds no new criterion acceptance.",
+      "dispatched_selection": 24
+    },
+    {
+      "test_path": "test/product/wp03/port-hr.test.ts",
+      "blob": "68d049f957257e089810ae0f9be230a157dba70c",
+      "sha256": "8346e63ae0c41634c87224ec3c4206ac3d77411973bfa870fbd9a779577fc328",
+      "scope": "Existing affected producer regression; this note adds no new criterion acceptance.",
+      "dispatched_selection": 24
+    },
+    {
+      "test_path": "test/product/wp03/operation-verifier.test.ts",
+      "blob": "9865e999969880625f2f0eee8e5e117d6ff7f095",
+      "sha256": "589411603d80fb9fc4179a2a494972ec23b8d141ceeeffab601654065b4ab03e",
+      "scope": "Existing affected producer regression; this note adds no new criterion acceptance.",
+      "dispatched_selection": 24
+    },
+    {
+      "test_path": "test/product/wp03/capability-parity.test.ts",
+      "blob": "b0fe198ea168702d390168000d27ce6bb3219833",
+      "sha256": "8acd7165ee9b511983615303332b6eac779445ecbf358c6c0dac4c530493732b",
+      "scope": "Existing affected producer regression; this note adds no new criterion acceptance.",
+      "dispatched_selection": 24
+    }
+  ],
+  "bindings": [
+    {
+      "binding_id": "WP11.POSTW31.01",
+      "criterion_wp": "WP11",
+      "criterion_id": "WP11.DOD.01",
+      "criterion_text": "Caso e escolhas sobrevivem a reinício e são compartilhados conforme autorização.",
+      "test_path": "test/product/wp11/current-choice-read-fence.test.ts",
+      "test_blob": "46b004a1b374229ad46077930134ba0469213087",
+      "property_under_test": "A leitura do binding persistido exige participação e acesso atual de leitura ao namespace privado, mesmo com lease geral de UI válido.",
+      "authored_oracles": [
+        "A leitura positiva devolve o binding sem exigir permissão de escrita de preferências.",
+        "Retirar a participação durante authorizeCase persiste a nova versão do caso e faz a leitura retornar stale, sem value.",
+        "Revogar preferences read durante o mesmo callback faz a leitura retornar stale, sem value; a leitura direta do namespace também é denied.",
+        "Em ambos os ramos o ChoiceRecord semeado permanece igual e preparedChanges/receipts continuam vazios."
+      ],
+      "real_consumer_paths": [
+        "product/decisions/current-choice-preview.ts#createCurrentChoicePreview",
+        "product/decisions/result-store.ts#createSfDecisionResultStore",
+        "product/host-binding/state-provider.ts#createSfProductState",
+        "product/integration/ui-authority.ts#createSfUiAuthority"
+      ],
+      "remaining_full_criterion_gap": "Exercita somente o ramo de compartilhamento autorizado do leitor. Caso, escolha e binding são semeados; não cria escolha canônica, não reabre provider e não demonstra sessão instalada ou compartilhamento entre duas identidades reais.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true,
+        "dispatched_selection": 22
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW31.02",
+      "criterion_wp": "WP11",
+      "criterion_id": "WP11.T01.INV.01",
+      "criterion_text": "Ator e autorização vêm do host; versão e histórico não são escolhidos pelo modelo nem importados como confiança.",
+      "test_path": "test/product/wp11/current-choice-read-fence.test.ts",
+      "test_blob": "46b004a1b374229ad46077930134ba0469213087",
+      "property_under_test": "A autorização atual do host e do namespace prevalece sobre o snapshot previamente autorizado e sobre o lease geral ainda válido.",
+      "authored_oracles": [
+        "A corrida executa exatamente duas autorizações do caso e exige race.applied=true.",
+        "A autorização do snapshot recebido pode continuar true, mas a observação final conjunta de caso/resultados/binding suprime a leitura após a alteração.",
+        "O teste verifica ui.revalidate(context)=true após a corrida, discriminando a mudança de participação/namespace de uma revogação global incidental."
+      ],
+      "real_consumer_paths": [
+        "product/decisions/current-choice-preview.ts#createCurrentChoicePreview",
+        "product/decisions/result-store.ts#createSfDecisionResultStore",
+        "product/host-binding/state-provider.ts#createSfProductState",
+        "product/integration/ui-authority.ts#createSfUiAuthority"
+      ],
+      "remaining_full_criterion_gap": "Não demonstra importação não confiável de versão/histórico nem todas as chamadas C16/UI/native/MCP. As admissões são privadas da fixture; o vínculo não transfere qualificação de identidade instalada.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true,
+        "dispatched_selection": 22
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW31.03",
+      "criterion_wp": "WP11",
+      "criterion_id": "WP11.CMP.01",
+      "criterion_text": "Cobrir intenção/alternativas/premissas/escolha/propostas/recibos, concorrência, import e revogação.",
+      "test_path": "test/product/wp11/current-choice-read-fence.test.ts",
+      "test_blob": "46b004a1b374229ad46077930134ba0469213087",
+      "property_under_test": "Concorrência e revogação entre a observação inicial e a última autorização do leitor são negativas discriminantes, com um controle positivo.",
+      "authored_oracles": [
+        "A alteração de participação usa uma transação real de C08, com versão, digest e resultado de commit exigidos.",
+        "A revogação de leitura privada é observada novamente depois do callback externo.",
+        "A leitura não chama cálculo, preparo, promoção ou dispatch: unexpectedProducerCalls permanece zero."
+      ],
+      "real_consumer_paths": [
+        "product/decisions/current-choice-preview.ts#createCurrentChoicePreview",
+        "product/decisions/result-store.ts#createSfDecisionResultStore",
+        "product/host-binding/state-provider.ts#createSfProductState",
+        "product/integration/ui-authority.ts#createSfUiAuthority"
+      ],
+      "remaining_full_criterion_gap": "Cobre somente concorrência/revogação no leitor da escolha atual. Não cobre intenção, criação de alternativas, importação, escolha humana, propostas ou aplicação; esses ramos permanecem nas outras jornadas e nos gates de integração.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true,
+        "dispatched_selection": 22
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP11.POSTW31.04",
+      "criterion_wp": "WP11",
+      "criterion_id": "WP11.T01.INV.01",
+      "criterion_text": "Ator e autorização vêm do host; versão e histórico não são escolhidos pelo modelo nem importados como confiança.",
+      "test_path": "test/product/wp11/renewal-source-admission.test.ts",
+      "test_blob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "property_under_test": "O helper de admissão usado pelas jornadas de renovação recusa autoridade revogada e referências fora do escopo, sem tratar a declaração sintética de fonte como autorização.",
+      "authored_oracles": [
+        "O caso positivo exige duas resoluções, duas autenticações e três revalidações, sem ler cobertura nem environment no ramo vazio.",
+        "Revogar o lease no último revalidate ou revogar o header no último authenticate retorna false e deixa requestFor indisponível.",
+        "Nove variantes recusam installation, project, surface, record, fields, projection digest, período não mensal, ano divergente e refDigest inválido."
+      ],
+      "real_consumer_paths": [
+        "test/product/wp11/renewal-operation-verifier.ts#createRenewalOperationVerifier",
+        "product/planner/port.ts#plannerSourceActor",
+        "product/planner/port.ts#projectPlannerSource",
+        "product/planner/operation-verifier.ts#createPlannerOperationVerifier",
+        "product/integration/ui-authority.ts#createSfUiAuthority"
+      ],
+      "remaining_full_criterion_gap": "É um helper de fixture que retorna apenas admissão booleana. Não produz avaliação C10, valor financeiro, ChoiceRecord ou aplicação; não substitui a autoridade do caso nem a prova da cadeia residente instalada.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true,
+        "dispatched_selection": 22
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP03.POSTW31.01",
+      "criterion_wp": "WP03",
+      "criterion_id": "WP03.INV.10",
+      "criterion_text": "WP03 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+      "test_path": "test/product/wp11/renewal-source-admission.test.ts",
+      "test_blob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "property_under_test": "Admissão de fonte observa novamente a projeção autorizada do Planner e conserva dados oficiais, recusando drift de fonte e escopo.",
+      "authored_oracles": [
+        "Uma edição OPEX canônica muda a projeção enquanto a referência sintética permanece igual; a próxima verificação retorna false.",
+        "As corridas do segundo resolve e do último revalidate exigem sourceCommitted=true fora do callback, impedindo falso positivo por comando engolido.",
+        "O ramo de operações não vazias compara o digest do snapshot Planner antes/depois e exige ausência de gravação.",
+        "As variantes de scope e a revogação final são recusadas, sem ampliar o acesso empresarial."
+      ],
+      "real_consumer_paths": [
+        "test/product/wp11/renewal-operation-verifier.ts#createRenewalOperationVerifier",
+        "product/planner/port.ts#plannerSourceActor",
+        "product/planner/port.ts#projectPlannerSource",
+        "product/planner/operation-verifier.ts#createPlannerOperationVerifier",
+        "product/integration/ui-authority.ts#createSfUiAuthority"
+      ],
+      "remaining_full_criterion_gap": "A prova permanece no produtor e em fixtures autorizadas. Não cobre todos os comandos oficiais, UI mensal instalada, ownership de outras superfícies ou acesso empresarial real.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true,
+        "dispatched_selection": 22
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    },
+    {
+      "binding_id": "WP03.POSTW31.02",
+      "criterion_wp": "WP03",
+      "criterion_id": "WP03.T01.INV.01",
+      "criterion_text": "Toda projeção e simulação reutiliza o cálculo e a autorização do domínio; não existe fórmula financeira paralela.",
+      "test_path": "test/product/wp11/renewal-source-admission.test.ts",
+      "test_blob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "property_under_test": "Os ramos vazio e não vazio reutilizam o produtor Planner e sua transformação canônica de principal para Actor; admissão vazia não inventa cálculo financeiro.",
+      "authored_oracles": [
+        "No ramo vazio, mapper plannerSourceActor e projectPlannerSource fornecem a mesma projeção autorizada usada pelo produtor; nenhuma cobertura ou environment é calculada.",
+        "No ramo não vazio, as três operações passam pelo createPlannerOperationVerifier real e consomem coverage/environment.",
+        "Um target inexistente implementation:13 é recusado, e o snapshot oficial permanece idêntico.",
+        "A extração plannerSourceActor conserva os campos e recusas do mapper anteriormente privado de compareForecast; o teste não contém um segundo mapper de autorização."
+      ],
+      "real_consumer_paths": [
+        "test/product/wp11/renewal-operation-verifier.ts#createRenewalOperationVerifier",
+        "product/planner/port.ts#plannerSourceActor",
+        "product/planner/port.ts#projectPlannerSource",
+        "product/planner/operation-verifier.ts#createPlannerOperationVerifier",
+        "product/integration/ui-authority.ts#createSfUiAuthority"
+      ],
+      "remaining_full_criterion_gap": "O vínculo sustenta o caminho de admissão e o verificador de operações, sem provar todos os cálculos, comandos ou exports do WP. A equivalência da extração é revisão estática pinada; regressões de forecast/HR/capability precisam do resultado Actions específico.",
+      "execution_receipt": "product-tests.json",
+      "execution_lookup": {
+        "selected_file": "./Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+        "require_recorded_product_and_snapshot_sha": true,
+        "require_completed_run_and_case_result": true,
+        "no_result_transfer_from_other_blob_or_scope": true,
+        "dispatched_selection": 22
+      },
+      "criterion_fully_accepted": false,
+      "proof_kind": "AUTHORED_DISCRIMINATING_PRODUCT_TEST_WITH_PRIVATE_TEST_ADMISSIONS"
+    }
+  ],
+  "acceptance": {
+    "criterionFullyAccepted": false,
+    "nativeProof": null,
+    "C": null,
+    "D": null,
+    "installedProviderProof": false
+  },
+  "executionPolicy": [
+    "All observations in this addendum describe authored assertions and static source bindings; no test pass is asserted.",
+    "Use exact selected file, product W, snapshot S and completed case result in product-tests.json; S19/S20/S21 do not qualify W32 changed bytes.",
+    "S22 (affected WP11), S23 (shared BI consumer) and S24 (reused WP03 regressions) were dispatched on W32. Parent observed them in progress at 13:00 UTC; this addendum records no completed pass/fail result.",
+    "Seeded C08 reader records do not prove canonical choice creation; boolean source admission does not prove C10 financial completeness or applied ChoiceRecord.",
+    "Installed/native evidence, C/D and final S0 bundle epic remain open."
+  ],
+  "untouchedSources": {
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/task-delivery-map.md": {
+      "blob": "4521101073c32af59414a12b7eb684781ade3034",
+      "sha256": "926c478416db1d5b74df3dd5c030ff389ba3607fcf5ceec523ebd5d30d838070"
+    },
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/task-delivery-map.json": {
+      "blob": "e25f3226da894867d968e5fa79709667eb0070ae",
+      "sha256": "b2b51c07b11ddc7061a65ceef4ec6256c5342b41981a1649770fccec8badbfd9"
+    },
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/task-obligations.json": {
+      "blob": "66eae5c7ca963be7b86812ed4561843ba268d953",
+      "sha256": "e470eed573d3e252132fd6d86be1ef29b84e3032b4b2599b686a201b981bc714"
+    },
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/post-W21-criterion-bindings.md": {
+      "blob": "c37861159cf354b661021c6118b5138bb15fbe85",
+      "sha256": "c254fc05ba7a393761ff44d94e139a3b415d7ffee50356502247efd6a00fdba9"
+    },
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/post-W21-criterion-bindings.json": {
+      "blob": "5c11442a825a5407d599c3b787db2f080f2b4179",
+      "sha256": "7ca02c8ae85a51b1b300a2248220f2ed6a7addd51354f0f05ae289ac3e3be272"
+    }
+  },
+  "verification": {
+    "allCriterionIdsExist": true,
+    "allLiteralCriterionTextsEqualImmutablePack": true,
+    "allNewTestBlobsMatchSourcePins": true,
+    "allConsumerPathsExist": true,
+    "allConsumerCandidateBlobsVerified": true,
+    "productExecution": false,
+    "remoteMutation": false,
+    "originalCriteriaEdited": false,
+    "auditedTaskMapEdited": false,
+    "priorOverlayEdited": false
+  },
+  "immutableSources": {
+    "canonicalPlanCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "handoffPackCommit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "executionDispatchObservation": {
+    "observedAt": "2026-11-14T13:00:00Z",
+    "status": "IN_PROGRESS_NO_COMPLETED_RESULT_CLAIMED",
+    "productHead": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+    "productTree": "485a3ac2ac1322d03d7421a17eb1791153f11c1b",
+    "runs": [
+      {
+        "selection": 22,
+        "runId": 43597449806,
+        "snapshotSha": "ef218e5c436f8518ee582232a820cd41048f8d3b"
+      },
+      {
+        "selection": 23,
+        "runId": 43597452709,
+        "snapshotSha": "bdc5494e612353cc5d80bd32353dc9df6e20f450"
+      },
+      {
+        "selection": 24,
+        "runId": 43597456215,
+        "snapshotSha": "b791d889a6f14ea0b9f9ff2b950bf10da4fe5090"
+      }
+    ],
+    "hostedCheck": {
+      "number": 15,
+      "runId": 43597458293,
+      "conclusion": null
+    },
+    "authority": "Parent publication/dispatch observation; no completed jobs or logs evaluated by this addendum author."
+  }
+}

@@ -1,0 +1,36 @@
+--- a/modules/sucafina/Sucafinav1/product/analytics/decision-view.ts
++++ b/modules/sucafina/Sucafinav1/product/analytics/decision-view.ts
+@@ -40,6 +40,17 @@
+         group.setAttribute("role", "button")
+         group.setAttribute("data-bi-focus", source.id)
+         group.setAttribute("aria-label", `${component.id}: ${component.period.start} – ${component.period.end}; abrir origem ${source.id}`)
++        // A horizontal SVG line has zero geometric height even when its stroke is
++        // painted. Keep a positive hit area so the whole group is pointer-accessible.
++        const hit = document.createElementNS(chart.namespaceURI, "rect")
++        const hitWidth = Math.max(20, mark.x2 - mark.x1)
++        hit.setAttribute("x", String(Math.max(0, Math.min(mark.x1, 600 - hitWidth))))
++        hit.setAttribute("y", String(index * 24))
++        hit.setAttribute("width", String(hitWidth))
++        hit.setAttribute("height", "20")
++        hit.setAttribute("fill", "transparent")
++        hit.setAttribute("pointer-events", "all")
++        group.append(hit)
+         group.addEventListener("click", () => openSource(source))
+         group.addEventListener("keydown", (event) => {
+           if (event instanceof KeyboardEvent && (event.key === "Enter" || event.key === " ")) {
+--- a/modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts
+@@ -131,6 +131,13 @@
+     expect(rows).toEqual(decision.scenario.components.map((component) => [component.id, component.amount === null || component.evidenceState === "absent" ? "Indisponível" : String(component.amount), component.currency, `${component.period.start} – ${component.period.end}`, component.evidenceState]))
+     const timeline = page.locator('svg[aria-label="Períodos no horizonte selecionado; os detalhes estão na lista seguinte"] [role="button"]')
+     expect(await timeline.count()).toBe(decision.scenario.components.filter((component) => component.sourceRefs.length).length)
++    // Every period, including the last rows, must expose real pointer geometry;
++    // stroke on a zero-height SVG group is not a usable interaction target.
++    const timelineTargets = await timeline.evaluateAll((marks) => marks.map((mark) => {
++      const bounds = mark.getBoundingClientRect()
++      return { width: bounds.width, height: bounds.height }
++    }))
++    expect(timelineTargets.every((bounds) => bounds.width > 0 && bounds.height > 0)).toBe(true)
+     const text = await page.locator("body").innerText()
+     expect(text).toContain(`Comparação de custos: alternativa ${decision.comparison.alternativeResultRef} menos referência ${decision.comparison.baselineResultRef}.`)
+     expect(text).toContain("Diferença negativa indica custo conhecido menor da alternativa; positiva indica custo conhecido maior.")

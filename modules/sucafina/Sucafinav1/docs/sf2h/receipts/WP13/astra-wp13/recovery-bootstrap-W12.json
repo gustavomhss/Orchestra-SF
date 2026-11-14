@@ -1,0 +1,111 @@
+{
+  "schema": "wp13-recovery-bootstrap-review-v1",
+  "status": "IMPLEMENTED_PENDING_HOSTED_CHECKS_AND_PRODUCT_RUN",
+  "author": "/root/wp13_review_acceptance/w6_handoff_static",
+  "preparedAt": "2026-11-14T12:07:52.587138+00:00",
+  "authorization": "Root authorized only own sensitivity-fixture.ts and persistence-recovery.test.ts plus this reference review; no remote publication delegated.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+      "before": {
+        "gitBlob": "315005ddb17e04aa0a7a6c324a47448624d94f25",
+        "sha256": "7549c977514ab944424ce3f06883a9aa6473f33f2062298ee400ec5c49718604",
+        "bytes": 18991
+      },
+      "after": {
+        "gitBlob": "ecc4678cf757e68c5763f8bc99d5f3573df86bc5",
+        "sha256": "d74be0a92e6c34207be052ce409207f4862e4d2e1b52b8ee5774de125265ef9e",
+        "bytes": 20565
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "before": {
+        "gitBlob": "33e3051ccfe3aa69350628eb0adff169a30dcbb1",
+        "sha256": "9fd9befe69e90f562bf71986a9a646d0877b5f87963e207b6735e2ef2691bca2",
+        "bytes": 11182
+      },
+      "after": {
+        "gitBlob": "4efa414f8ecadde5799e7246337863b145373210",
+        "sha256": "6bc51ba2946cceef497d1d6535f5d6b12e575763c735694a7a2d6a6472aabb87",
+        "bytes": 11206
+      }
+    }
+  ],
+  "scope": {
+    "newExport": "createWp13AnalysisFixture",
+    "existingExport": "createWp13SensitivityFixture() retains complete default behavior and returned fields",
+    "changedConsumers": [
+      "persistence-recovery.test.ts: portfolioRecovery(before)",
+      "persistence-recovery.test.ts: portfolioRecovery(after)"
+    ],
+    "unchangedConsumers": [
+      "persistence-recovery.test.ts: sensitivityRecovery(before/after)",
+      "analysis-recovery.test.ts",
+      "history-provenance.test.ts",
+      "planner-sensitivity-boundary.test.ts"
+    ]
+  },
+  "retainedAnalysisSetup": [
+    "Real LocalStore, Planner inputs, canonical forecast and both scenario previews",
+    "Same EUR currency and explicitly missing FX",
+    "Original main case plus state.cases.other",
+    "Both persisted C08 scenarios, same source refs, access seams and case identity",
+    "Registered rule and unit issuer; real comparison, selection and result-binding services",
+    "Post-bootstrap comparison operation identity portfolio-comparison-binding-analysis"
+  ],
+  "omittedOnlyInAnalysisMode": [
+    "Precomputed comparison proofs, comparison calculation, C08 comparison write and comparison binding",
+    "Sensitivity service construction, sample calculation/persistence, saved sensitivity and unrelated exact-threshold producer"
+  ],
+  "originalModePreserved": {
+    "fullReturnedObjectExpressionExact": true,
+    "sensitivityRecoveryFunctionTextExact": true,
+    "portfolioRecoveryOnlyConstructorChanged": true,
+    "fieldsExplicitlyRetained": [
+      "saved",
+      "persistent",
+      "comparisonRef",
+      "boundComparison",
+      "bindings",
+      "sensitivityRequest",
+      "exact",
+      "exactCalls getter",
+      "issuedUnits",
+      "reviseRule",
+      "portfolioBindingOperation",
+      "analysisRequest",
+      "ids",
+      "access.historical"
+    ],
+    "inputConfiguration": "Default domain data, currencies, missing values, refs, epochs, limits and idempotency keys unchanged. Three side-effect-free construction declarations move earlier so both modes can return them."
+  },
+  "oraclesPreserved": [
+    "First call fails at before-binding or lost-binding-reply seam with the same exact reason",
+    "Portfolio C08 exists before the injected binding fault",
+    "Retry uses the same portfolioResultRef and same comparisonRef",
+    "No allocation after the first persisted result; binding attempts remain two for before and one for after",
+    "Read and repeated evaluateAndStore equal the recovered result",
+    "All canonical selection/comparison/persistence replays and fresh access checks remain in the test subject"
+  ],
+  "referenceNotIntaken": "reference/latest-intake/WP10/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts served as decomposition reference only; its renewal options, field removals and changed exact callback were not copied.",
+  "latencyEvidence": {
+    "log": "reference/wp13-S7-CS2Coverage-tests.log.txt",
+    "perTestBudgetMs": 120000,
+    "portfolioBeforeElapsedMs": 173038.49,
+    "portfolioAfterElapsedMs": 188178.61,
+    "observation": "Both timed out. Durations encompass setup and tested persistence/replay paths; no isolated setup time was measured."
+  },
+  "performanceClaim": "No claim that the split or consumed runtime batching meets 120000 ms. Repeated canonical selection/comparison and binding verification in the exercised recovery paths remain.",
+  "testsRun": false,
+  "typecheckRun": false,
+  "guardsRun": false,
+  "ciDispatched": false,
+  "remoteOperations": false,
+  "validationPerformed": "Source-only text/hash/diff inspection; no product module imported or executed.",
+  "diff": {
+    "path": "reference/wp13-recovery-bootstrap.diff",
+    "sha256": "f7f4dfacca9bfee83b456a5094c7431c15609cae3b3e2dbf2dffa6ddff9ee11d"
+  },
+  "nextAction": "Independent source review, then root publication and hosted package check/guards. Run the changed recovery file surgically only when the active WP13 product lane permits; retain all four assertions paths and the existing timeout."
+}

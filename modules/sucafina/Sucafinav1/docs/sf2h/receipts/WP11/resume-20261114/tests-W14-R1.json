@@ -1,0 +1,279 @@
+{
+  "log": "ci-analysis/wp11-W14-R1-tests.log",
+  "logSha256": "d1f07f1a6cc6034f36314d5950f05732821190a89497bef50e512676927d5930",
+  "metadata": {
+    "productSha": "dd9363dab38a769dd0c34fcf2068dfb610693779",
+    "productTree": "297243de2cffcdbcf4592e1449783ef3ea43c362",
+    "snapshotSha": "7e0a3b450d825f4a7f2cc5265e559e99934be326",
+    "snapshotTree": "2545d9826d617558516e594c4e7e41d9733b4548",
+    "branch": "ci-run-linux-astra-wp11-dd9363d-46e8d36f-r1",
+    "requestSha256": "46e8d36fec0c12665da85d0195c9b46fff9420f760c131e7ca0cc7964e002bfc",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+        "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+        "Sucafinav1/test/product/wp11/http.test.ts",
+        "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+        "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "--timeout",
+        "180000"
+      ],
+      "env": {}
+    },
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "3fc1815ca75d62e8cdd4b5e10998cc547fb4e3fc",
+    "runIds": [
+      43594721768
+    ]
+  },
+  "summary": {
+    "pass": 7,
+    "fail": 0,
+    "tests": 7,
+    "files": 5,
+    "durationSeconds": 1.121
+  },
+  "omniPositiveControl": {
+    "nonces": [
+      "ac43e4951baf50419269085f4cfcdc83"
+    ],
+    "observedVerdicts": [
+      "omni positive control [ac43e4951baf50419269085f4cfcdc83]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [ac43e4951baf50419269085f4cfcdc83]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "requestedFiles": [
+    "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+    "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+    "Sucafinav1/test/product/wp11/http.test.ts",
+    "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+    "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts"
+  ],
+  "observedFiles": [
+    "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+    "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+    "Sucafinav1/test/product/wp11/http.test.ts",
+    "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+    "Sucafinav1/test/product/wp11/assumption-divergence.test.ts"
+  ],
+  "fileSummaries": [
+    {
+      "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 306.0,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+        "line": 810,
+        "timestamp": "2026-11-14T12:26:37.4293261Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+        "status": "pass",
+        "name": "a dispatched change without its authoritative receipt stays indeterminate across concurrent actors and restart",
+        "line": 811,
+        "timestamp": "2026-11-14T12:26:37.7781305Z",
+        "durationMs": 306.0
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "reportedTests": 2,
+      "counts": {
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 103.61,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "line": 813,
+        "timestamp": "2026-11-14T12:26:37.7782334Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "status": "pass",
+        "name": "current-choice read suppresses its binding when preferences read changes during the final case authorization",
+        "line": 815,
+        "timestamp": "2026-11-14T12:26:37.8843073Z",
+        "durationMs": 47.15
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/http.test.ts",
+      "reportedTests": 2,
+      "counts": {
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 11.27,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/http.test.ts",
+        "line": 817,
+        "timestamp": "2026-11-14T12:26:37.8843667Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/http.test.ts",
+        "status": "pass",
+        "name": "current-choice HTTP binds both human steps and only promotion permits a historical retry",
+        "line": 819,
+        "timestamp": "2026-11-14T12:26:37.8971488Z",
+        "durationMs": 1.06
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 24.56,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+        "line": 821,
+        "timestamp": "2026-11-14T12:26:37.8972481Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+        "status": "pass",
+        "name": "a separate human rejection cancels only an undispatched proposal, retains the choice and reconciles retries",
+        "line": 822,
+        "timestamp": "2026-11-14T12:26:37.9254238Z",
+        "durationMs": 24.56
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 495.09,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+        "line": 824,
+        "timestamp": "2026-11-14T12:26:37.9254860Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+        "status": "pass",
+        "name": "a human-confirmed March assumption keeps the official May project and exposes the divergence until a separate domain command",
+        "line": 825,
+        "timestamp": "2026-11-14T12:26:38.4228736Z",
+        "durationMs": 495.09
+      }
+    }
+  ],
+  "lastObservedFile": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+  "lastReportedTest": {
+    "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+    "status": "pass",
+    "name": "a human-confirmed March assumption keeps the official May project and exposes the divergence until a separate domain command",
+    "line": 825,
+    "timestamp": "2026-11-14T12:26:38.4228736Z",
+    "durationMs": 495.09
+  },
+  "hasCompletedBunSummary": true,
+  "requestedButNotObserved": [],
+  "observedButNotRequested": [],
+  "ownObservedCounts": {
+    "pass": 7,
+    "fail": 0,
+    "skip": 0,
+    "todo": 0
+  },
+  "observedTests": [
+    {
+      "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "status": "pass",
+      "name": "a dispatched change without its authoritative receipt stays indeterminate across concurrent actors and restart",
+      "line": 811,
+      "timestamp": "2026-11-14T12:26:37.7781305Z",
+      "durationMs": 306.0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "status": "pass",
+      "name": "current-choice read suppresses its binding when membership changes during the final case authorization",
+      "line": 814,
+      "timestamp": "2026-11-14T12:26:37.8371637Z",
+      "durationMs": 56.46
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "status": "pass",
+      "name": "current-choice read suppresses its binding when preferences read changes during the final case authorization",
+      "line": 815,
+      "timestamp": "2026-11-14T12:26:37.8843073Z",
+      "durationMs": 47.15
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/http.test.ts",
+      "status": "pass",
+      "name": "decision HTTP uses the real human admission and case CAS",
+      "line": 818,
+      "timestamp": "2026-11-14T12:26:37.8960867Z",
+      "durationMs": 10.21
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/http.test.ts",
+      "status": "pass",
+      "name": "current-choice HTTP binds both human steps and only promotion permits a historical retry",
+      "line": 819,
+      "timestamp": "2026-11-14T12:26:37.8971488Z",
+      "durationMs": 1.06
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+      "status": "pass",
+      "name": "a separate human rejection cancels only an undispatched proposal, retains the choice and reconciles retries",
+      "line": 822,
+      "timestamp": "2026-11-14T12:26:37.9254238Z",
+      "durationMs": 24.56
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+      "status": "pass",
+      "name": "a human-confirmed March assumption keeps the official May project and exposes the divergence until a separate domain command",
+      "line": 825,
+      "timestamp": "2026-11-14T12:26:38.4228736Z",
+      "durationMs": 495.09
+    }
+  ],
+  "failures": [],
+  "fixtureTrace": {
+    "observations": [],
+    "parseErrors": [],
+    "lastByLabel": {},
+    "maximumObservedSerializedStateBytes": null,
+    "boundary": "Counts and inclusive overlapping wall durations are fixture instrumentation; serialized state bytes are not sampled process memory or exclusive CPU time."
+  }
+}

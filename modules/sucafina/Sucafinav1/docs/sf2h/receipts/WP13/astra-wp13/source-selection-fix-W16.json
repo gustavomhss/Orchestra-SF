@@ -1,0 +1,95 @@
+{
+  "schema": "wp13-source-scenario-failure-fix-review-v1",
+  "status": "OWN_FIX_FROZEN_FOR_HOSTED_VALIDATION",
+  "scope": {
+    "owner": "WP13",
+    "changedSourceFile": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+    "foreignFilesChanged": 0,
+    "runtimeProductFilesChanged": 0,
+    "localProductExecutions": 0,
+    "remoteOperations": 0
+  },
+  "observedFailure": {
+    "selection": "S9-CR3RecoveryBatch",
+    "sourceHead": "cb111a14ee527d66748c4e19040c26b828f2bfe4",
+    "sourceTree": "022548856d95a1df933e6f34e70250e86ccd95ec",
+    "snapshotHead": "bad34ce37f140599463298abb62ae5d1170e2a44",
+    "snapshotTree": "0616c2bdf3827da49978bc7f2dd9b1d2182bee98",
+    "runId": 43596134201,
+    "testJobId": 132450903382,
+    "conclusion": "failure",
+    "passedCases": 29,
+    "failedCases": 1,
+    "selectedFiles": 7,
+    "log": "reference/wp13-S9-CR3RecoveryBatch-tests.log.txt",
+    "logSha256": "64a6a0518d3e7e9465e26a7422918a9c371247073323986d369d84e29badc4a7",
+    "failure": "Human portfolio selection: unavailable/scenario-results-unavailable",
+    "location": "composePortfolio:207:43, before human choice",
+    "durationMs": 12158.31,
+    "classification": "OWN_FIXTURE_COMPOSITION_CONTRACT_MISMATCH"
+  },
+  "diagnosis": {
+    "ownerFixture": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "sourceCommit": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+      "sourceBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "proof": "reference/wp13-W15-pin-audit.json"
+    },
+    "chain": [
+      "WP11 preparePhase promotes selected then baseline through real mutations.addAlternative. The last promotion persists a baseline C08 at the final phase case version.",
+      "The fixture publishes both alternatives through the real result store at that same case version and exposes exact selectedRef/baselineRef. Baseline now has two valid envelopes with the same caseRef/requestDigest/resultDigest.",
+      "product/decisions/scenario-lookup.ts correctly requires one matching envelope at the newest case version. product/decisions/comparison.ts maps that ambiguity to scenario-results-unavailable before Planner.compareScenarios.",
+      "The own test incorrectly asked alternative-only discovery to rediscover already selected phase refs. No history should be removed and no arbitrary newest envelope should be selected."
+    ]
+  },
+  "frozenFile": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+    "before": {
+      "blob": "5f12e1d8a9c12d3947eda77ab93970771e3146e9",
+      "sha256": "dd162fc80479a965cbd0e15bebbbb8bc06d215bb64c3a1d97c33a18513ddb303",
+      "bytes": 27521
+    },
+    "after": {
+      "bytes": 34092,
+      "blob": "122db9855836ab4f713696c34549ab56c8c98f80",
+      "sha256": "2189b4016b628d86c43c673815ca1f74c70c4943e91e6d344d4af126122304e3"
+    }
+  },
+  "fix": [
+    "Fixture-private comparison adapter accepts only the exact phase case identity/version, alternative IDs and ordered criteria. It projects comparison contract fields, while retaining the full incoming digest so selection.register expectedVersion is legitimate and mutation remains detectable.",
+    "Real case reads and readHistoricalScenario authenticate the explicit baselineRef/selectedRef; kind, refs, exact caseRef, request/result digests must match the authorized case alternatives. Real Planner.compareScenarios supplies every numeric output.",
+    "Detached case/C08 reads bracket the canonical comparison. After producer callbacks and host revalidation, one fresh state.read snapshots the case and both exact C08 digests together under matching authority. Synchronous request, kind/binding, signal and exact output-ref checks follow the final await.",
+    "Real createDecisionPortfolioSelection, criterion bindings, source/evidence authorization, persistence, portfolio analysis and human record-choice remain intact. No grants are widened and no financial PortResult is fabricated."
+  ],
+  "newCounterproofs": [
+    "At least two exact baseline C08 envelopes exist and include phase.baselineRef.",
+    "The unchanged standard comparator still returns unavailable/scenario-results-unavailable for that ambiguity.",
+    "The explicit adapter rejects swapped IDs, a changed case version and missing required criterion.",
+    "All original baseline C08 refs and complete record digests remain identical after real selection."
+  ],
+  "staticPreservation": {
+    "originalTopLevelTestBodyByteIdentical": true,
+    "originalExpectSourceLines": 57,
+    "currentExpectSourceLines": 64,
+    "originalExpectLinesRemoved": 0,
+    "testCasesBefore": 1,
+    "testCasesAfter": 1,
+    "budgetMsBefore": 180000,
+    "budgetMsAfter": 180000,
+    "oraclesRetained": [
+      "USD 240000 complete baseline, canonical ceiling and USD 20000 advantage rules.",
+      "Omitted training known USD 210000/total null/pending; both policies unknown.",
+      "Same-case human choice without application, followed by real training confirmation to USD 250000/complete, USD 10000 difference and both policies failed/ineligible.",
+      "N/A categories, shared implementation/migration components, training:11 USD 40000 and unique component IDs.",
+      "Persisted comparisons and criterion bindings, canonical replay, retry/idempotency, original portfolio and choice bytes unchanged.",
+      "Substituted baseline remains unknown; fresh source/evidence revocation rejects rule and persisted read, with callback counters."
+    ]
+  },
+  "limits": [
+    "This explicit-ref seam is fixture composition, not proof of installed alternative-only discovery or a new public selection contract.",
+    "No local tests, typecheck or product execution were performed. Candidate bytes have no hosted result yet.",
+    "No performance gain, source-scenario PASS, package PASS or READY is claimed.",
+    "No newer owner fixture/verifier was consumed; unchanged passing S9 files are not rerun by this fix."
+  ],
+  "nextAction": "Root publishes this exact own test blob in W16, performs hosted package check and reruns only source-scenario.test.ts with the unchanged 180000 ms budget; accept only the terminal hosted file/control evidence."
+}

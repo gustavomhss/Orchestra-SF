@@ -1,0 +1,135 @@
+{
+  "schema": "sf-finance-s18-followup-v1",
+  "selection": 18,
+  "runId": 43593276333,
+  "jobId": 132442336638,
+  "productSha": "29172d2e4db859eedac31e84778c447bb97f6c08",
+  "productTree": "8d7a7657597d024c5a55a9f5a4fdccf604c40d25",
+  "snapshotSha": "5178f3ff43a3387b3e25e4769a8b391a4ea9e423",
+  "snapshotTree": "bf731f5ff259ddc29a19bb75d47303c8ba054721",
+  "requestSha256": "f9d96a2fe1a076b65c5b20b9cc5fa14b9373297db6c0797b26be4b1dd07d6518",
+  "logSha256": "f2ddd43802e937d99fac54620e3e628db91f95d9216c7029a1180db091c0dfa1",
+  "counts": {
+    "pass": 11,
+    "fail": 2,
+    "error": 0
+  },
+  "expectCalls": 193,
+  "reported": {
+    "tests": 13,
+    "files": 3,
+    "duration": 54.2,
+    "unit": "s"
+  },
+  "omni": {
+    "nonce": "abebf8fda39ac32b566b033ecbb2ea26",
+    "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+  },
+  "cases": [
+    {
+      "file": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "status": "fail",
+      "name": "a current quote replays the same historical choice, requires a separate human promotion, and survives reopen without applying Planner operations",
+      "milliseconds": 44110.91
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "pass",
+      "name": "hot-topic draft commits against its actual Dashboard snapshot and preserves official records",
+      "milliseconds": 91.59
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "fail",
+      "name": "hot-topic draft refuses source change after source observation and before C08 commit",
+      "milliseconds": 25.98
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "pass",
+      "name": "hot-topic draft refuses case change after source observation and before C08 commit",
+      "milliseconds": 41.37
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "pass",
+      "name": "hot-topic draft refuses authority change after source observation and before C08 commit",
+      "milliseconds": 27.35
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "pass",
+      "name": "hot-topic read refuses an old draft replaced during its last source callback",
+      "milliseconds": 86.47
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "pass",
+      "name": "hot-topic list refuses a draft replaced during its last case authorization callback",
+      "milliseconds": 104.2
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "pass",
+      "name": "source-only promotions establish current coverage proofs in source order 0-1",
+      "milliseconds": 3208.34
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "pass",
+      "name": "source-only promotions establish current coverage proofs in source order 1-0",
+      "milliseconds": 3178.9
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "pass",
+      "name": "source-only promotion refuses missing-proof between coverage observation and commit",
+      "milliseconds": 867.14
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "pass",
+      "name": "source-only promotion refuses revoke between coverage observation and commit",
+      "milliseconds": 749.97
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "pass",
+      "name": "source-only promotion refuses source-change between coverage observation and commit",
+      "milliseconds": 760.91
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "pass",
+      "name": "source-only promotion refuses case-change between coverage observation and commit",
+      "milliseconds": 774.67
+    }
+  ],
+  "findings": [
+    {
+      "scope": "promotion-coverage-proof",
+      "status": "6_PASS_AT_W28",
+      "detail": "Canonical Dashboard initialization before first protected transaction enables both source orders and four negative proof races. All six cases pass."
+    },
+    {
+      "scope": "hot-topic-snapshot",
+      "status": "5_PASS_1_FAIL_AT_W28",
+      "cause": "Static command-path analysis: fixture status Open is not canonical open/progress/blocked/done. The notes-only concurrent command retains invalid Open and returns422, the thrown fixture error is swallowed by register before verifySnapshot. S18 did not log422 directly.",
+      "candidate": "Seed canonical open and preserve all assertions/race timing. Execution pending."
+    },
+    {
+      "scope": "current-choice-lifecycle",
+      "status": "FAIL_AT_W28",
+      "observed": "The baseline clone raised DataCloneError, and real reassessment returned undefined after three fresh resolutions. Baseline and selected basisVersion both2; scenario basisVersion1 is reattributed by canonical producer and is not itself a demonstrated cause.",
+      "candidate": "Isolate original asymmetric matcher on exact cloned observation; add complete assessment digest invariant. Matcher mutation remains a hypothesis until Actions observes it. No producer or guard change."
+    }
+  ],
+  "nextSelections": {
+    "WP11": 19,
+    "WP05": 20
+  },
+  "acceptance": "NOT_ACCEPTED",
+  "nativeProof": null,
+  "C": null,
+  "D": null
+}

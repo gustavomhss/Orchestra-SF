@@ -1,0 +1,2188 @@
+{
+  "schema": "sf-wp11-criterion-evidence-map-v1",
+  "status": "DRAFT_NOT_ACCEPTANCE",
+  "preparedAt": "2026-11-14",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": {
+    "handoffCommit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "planCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "packPath": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP11.pack.json",
+    "seedCommit": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a"
+  },
+  "counts": {
+    "ownCriteria": 83,
+    "wpLevel": 18,
+    "tasks": {
+      "T01": 14,
+      "T02": 21,
+      "T03": 15,
+      "T04": 15
+    }
+  },
+  "rules": [
+    "Exact criterion text is preserved from the pinned pack.",
+    "No test PASS or criterion completion is claimed without a hosted observation for the corresponding candidate.",
+    "Published producer code/test inspection is not proof of import or execution on WP11.",
+    "Separate fixture stores never compose into a same-case human confirmation journey.",
+    "A real database or a real financial engine does not turn fake native/skill/model callbacks into native execution evidence."
+  ],
+  "productCandidate": null,
+  "hostedObservations": [],
+  "evidenceIndex": {
+    "case_lifecycle_concurrency": {
+      "kind": "candidate-test",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts"
+      ],
+      "tests": [
+        "a reopened case admits a second principal and concurrent human edits preserve one commit and its receipt"
+      ],
+      "asserts": [
+        "Real local store is disposed and reopened with a new product-state provider.",
+        "A second real UI-admitted principal reads the same case content/version; the durable creation receipt retains André as principal.",
+        "An admitted third principal outside participants is denied.",
+        "Two distinct consumed human edit grants reach the real provider with identical expected case/storage versions: one ok and one conflict.",
+        "Exactly one edit receipt, exact retry equality, different digest under the same command identity conflicts, losing draft remains immutable and rebases only with a new human grant."
+      ],
+      "limits": [
+        "Participant membership is a clearly identified host fixture transaction, not an end-user sharing UI.",
+        "No browser, native session, model or MCP parity assertion."
+      ]
+    },
+    "case_port": {
+      "kind": "candidate-test",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/case-operation-access.test.ts"
+      ],
+      "asserts": [
+        "Real store reopen preserves draft/version; exact draft retry; replaced incarnation and malformed references are denied.",
+        "Native draft without a valid binding and a capability whose receipt authority is unavailable are denied.",
+        "An inaccessible operation suppresses the case even when its result components are empty."
+      ],
+      "limits": [
+        "The original case-port fixture keeps one principal and uses constructed native-shaped objects; it is not native execution evidence."
+      ]
+    },
+    "case_edit": {
+      "kind": "candidate-test",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/case-management.test.ts"
+      ],
+      "asserts": [
+        "Edit commit needs the snapshot intent fence; exact retry returns the receipt; changed content on the same command identity conflicts.",
+        "Listing suppresses denied membership or source authority."
+      ],
+      "limits": [
+        "Concurrency is covered separately by case_lifecycle_concurrency."
+      ]
+    },
+    "http_edit": {
+      "kind": "candidate-test",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/http.test.ts"
+      ],
+      "asserts": [
+        "The actual Decisions HTTP parser and human/UI authority reject an extra field and a foreign origin.",
+        "A real human-admitted edit commits case v2 and the list returns the revised objective."
+      ],
+      "limits": [
+        "The withCase wrapper is a fixture; no rendered browser or native/MCP route is exercised."
+      ]
+    },
+    "coverage_validation": {
+      "kind": "candidate-test",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/coverage-seal.test.ts"
+      ],
+      "asserts": [
+        "Missing inventory/category, unsupported applicability, unavailable evidence, duplicate/unassigned components and incomplete seals fail closed.",
+        "Confirmed zero remains distinguishable from omitted/pending; hypothetical scenario totals remain conditioned."
+      ],
+      "limits": [
+        "These are coverage/classification validators, not proofs of a full consumer journey or a financial formula."
+      ]
+    },
+    "coverage_composed": {
+      "kind": "candidate-test",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts"
+      ],
+      "tests": [
+        "shared categories and supported N/A consume one real Planner contribution and retain the complete composed interval",
+        "coverage distinguishes omitted and null training from explicit zero and a later 40000 quote"
+      ],
+      "asserts": [
+        "Real WP03/WP05 fixture produces knownSubtotal 210000; shared classification is not counted twice; unsupported N/A and revoked evidence invalidate the certificate.",
+        "Derived missing-category versus component-unresolved distinguish omitted and null training.",
+        "Separate confirmed-training fixture produces 250000 and exact threshold 15000; zero-training fixture retains 55000.",
+        "No duplicate component/certificate is admitted."
+      ],
+      "limits": [
+        "Four separate fixtures/stores do not demonstrate later confirmation in the same case.",
+        "The operations remain hypothetical: coverageState complete does not imply comparisonStatus complete or total available.",
+        "comparison.knownDifference uses the producer's scenario order/sign; the user savings convention must be checked by the actual criterion consumer."
+      ]
+    },
+    "choice_real": {
+      "kind": "candidate-test",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/choice-persistence.test.ts"
+      ],
+      "tests": [
+        "explicit human choice persists the producer result, survives reopen, and never applies the simulated Planner operations"
+      ],
+      "asserts": [
+        "Without confirmation recordChoice is denied; confirmation persists the actual composed producer result with 210000 subtotal, null total and missing training.",
+        "Reopen preserves ChoiceRecord, case version and one choice-recorded event.",
+        "Prepared changes/receipts remain empty and the official Planner snapshot does not change.",
+        "Retry is exact and changed rationale under the same operation identity conflicts."
+      ],
+      "limits": [
+        "confirmChoice is a fixture callback, not the complete human/browser authority path.",
+        "The later mutation only edits the objective directly; it does not confirm training40000 or promote250000 in that case."
+      ]
+    },
+    "choice_human": {
+      "kind": "candidate-test",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts"
+      ],
+      "tests": [
+        "human-confirmed conditional choice persists its C10 caveat and provenance"
+      ],
+      "asserts": [
+        "Real UI/human authority rejects forged context, foreign origin, revoked admission, changed alternative and reuse as an apply grant.",
+        "C08 persists principal, basisVersion, conditioned comparison, pending training and choice ledger event."
+      ],
+      "limits": [
+        "Scenario/comparison amounts are fixture outputs; this file does not validate WP03 calculation or native output."
+      ]
+    },
+    "criterion_rule": {
+      "kind": "candidate-test",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/criterion-rules.test.ts"
+      ],
+      "asserts": [
+        "Versioned rule registration is fenced and idempotent; changed digest conflicts.",
+        "Conditioned metric remains unknown; compatible confirmed metric is evaluated; mismatched unit and revoked authority fail closed."
+      ],
+      "limits": [
+        "Metric callback supplies a fixture value; the independent real-engine proof is coverage_composed."
+      ]
+    },
+    "analysis_promotion": {
+      "kind": "candidate-test",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/analysis-promotion.test.ts"
+      ],
+      "asserts": [
+        "Promotion requires proposal proof and snapshot fence; failure preserves the old case.",
+        "Success atomically writes alternative, scenario result, analysis-accepted ledger and outbox; retry preserves one result and rejects changed rationale."
+      ],
+      "limits": [
+        "Native run, SkillLoadReceipt and contribution are seeded fixture records; not proof that a skill actually loaded."
+      ]
+    },
+    "analysis_acceptance": {
+      "kind": "candidate-test",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance.test.ts"
+      ],
+      "asserts": [
+        "Human acceptance writes the existing contribution's ledger event and outbox atomically."
+      ],
+      "limits": [
+        "Acceptance is distinct from promotion, choice, procurement approval and application."
+      ]
+    },
+    "result_store": {
+      "kind": "candidate-test",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/result-store.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts"
+      ],
+      "asserts": [
+        "Persisted result/coverage is bound to exact case, principal, access, source and request; stale/changed/revoked bindings are rejected."
+      ],
+      "limits": [
+        "No standalone result-store assertion proves semantic replay of nested calculations or an actual native call."
+      ]
+    },
+    "prepared_local": {
+      "kind": "candidate-test",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts"
+      ],
+      "asserts": [
+        "A human-approved prepared Dashboard domain command and its receipt commit together."
+      ],
+      "limits": [
+        "This is not the required Planner-success/Procurement-refusal cross-domain case."
+      ]
+    },
+    "planner_apply": {
+      "kind": "candidate-test",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts"
+      ],
+      "asserts": [
+        "The actual Planner domain mutation and its case receipt commit atomically across surfaces."
+      ],
+      "limits": [
+        "A single local atomic transaction does not establish a global cross-domain transaction."
+      ]
+    },
+    "recovery_planner": {
+      "kind": "candidate-test",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts"
+      ],
+      "tests": [
+        "real prepared execution reconciles normal without repeating Planner effects",
+        "real prepared execution reconciles lost-response without repeating Planner effects",
+        "real prepared execution reconciles revoked without repeating Planner effects"
+      ],
+      "asserts": [
+        "Actual Planner f0 is42 after one execution; a lost transport response leaves domain effect committed and case receipt unresolved.",
+        "Current receipt is consulted on retry; effect count stays one, including after an unrelated case edit.",
+        "Revocation denies receipt access/retry while active; restoration allows authoritative reconciliation.",
+        "A second stale Planner command produces its conflict receipt without changing the successful effect."
+      ],
+      "limits": [
+        "Both commands target Planner; this file does not establish Procurement refusal or pending procurement approval.",
+        "Producer/human review callbacks are fixture authorities, not an independent reviewer/native judgment."
+      ]
+    },
+    "c17_replay": {
+      "kind": "candidate-test",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts"
+      ],
+      "tests": [
+        "nested C17 calculations reopen through persisted canonical requests and replay every ancestor"
+      ],
+      "asserts": [
+        "Persisted canonical calculation requests and their parent sources are reopened and replayed by the actual producer path."
+      ],
+      "limits": [
+        "Run outcome is pending; this mapping does not infer C17 from record freshness alone."
+      ]
+    },
+    "c11_published": {
+      "kind": "published-code-reviewed",
+      "files": [
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "apps/cli/src/sucafina-product/analysis-native-inputs.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+        "modules/sucafina/Sucafinav1/product/ai/run-store.ts"
+      ],
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "asserts": [
+        "Verified bridge callback obtains operationIdentity from consumed host-native lease and stores an exact private capture.",
+        "Commit fence checks live binding, provider generation, revocation, run request, record identity and output digest; C08 atomically publishes provenance/run/output."
+      ],
+      "limits": [
+        "Static inspection only. No native execution, loaded SkillLoadReceipt or acceptance observation is claimed here.",
+        "Source references are a consumption proposal, not a statement that these apps/CLI blobs were imported into WP11."
+      ]
+    },
+    "portfolio_published": {
+      "kind": "published-test-reviewed",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-preparation-composition.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts"
+      ],
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "asserts": [
+        "Published handoff reopens the parent-bound C08 receipt before re-evaluating candidates; HTTP allows historical retry.",
+        "Published tests assert repeated response equality, changed request conflict, current authority, source fences and stored choice history."
+      ],
+      "limits": [
+        "No WP11 hosted run for these files is attached.",
+        "The dedicated parent replay test seeds its original C08 receipt directly; it does not independently prove a lost response after a real parent effect."
+      ]
+    },
+    "native_exports": {
+      "kind": "required-integrated-proof",
+      "files": [],
+      "operations": [
+        "sf_case_read",
+        "sf_case_draft",
+        "sf_alternative_draft",
+        "sf_change_prepare",
+        "sf_receipt_get"
+      ],
+      "asserts": [],
+      "limits": [
+        "Needs T06 real consumer, identical authority/base/input and route/handler/result/version comparison over UI/native/MCP.",
+        "Needs destination refusal without a consumed grant and after revocation.",
+        "Needs actual native session/model/SkillLoadReceipt/binding/output witness and post-reload output consumption."
+      ]
+    }
+  },
+  "criteria": [
+    {
+      "id": "WP11.DOD.01",
+      "text": "Caso e escolhas sobrevivem a reinício e são compartilhados conforme autorização.",
+      "scope": "WP11",
+      "family": "dod",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "case_lifecycle_concurrency",
+        "choice_real"
+      ],
+      "requiredRemaining": "Bind the hosted candidate/run; confirm the composed UI resumes both case and choice for the second authorized participant.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.DOD.02",
+      "text": "Mudanças propostas chegam aos domínios reais e execução parcial é retomável no candidato integrado.",
+      "scope": "WP11",
+      "family": "dod",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "planner_apply",
+        "prepared_local",
+        "recovery_planner"
+      ],
+      "requiredRemaining": "Demonstrate the real Planner-success/Procurement-refusal sequence, consumer display and partial recovery in one composed candidate.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.DOD.20",
+      "text": "Alternativas persistem inventário, avaliação de categorias e comparação C10 consumidos por UI, BI, crítica e portfólio.",
+      "scope": "WP11",
+      "family": "dod",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_composed",
+        "result_store",
+        "choice_real"
+      ],
+      "requiredRemaining": "Prove consumption of the persisted C10 result by actual UI, BI, critic and portfolio on the same candidate.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.DOD.10",
+      "text": "As entregas residentes atribuídas a WP11 têm produção, consumo e provas reais completos.",
+      "scope": "WP11",
+      "family": "dod",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "INTEGRATED_PROOF_REQUIRED",
+      "evidenceRefs": [
+        "c11_published",
+        "native_exports"
+      ],
+      "requiredRemaining": "Real resident production, loaded skill receipt and post-reload consumption remain unobserved.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.INV.01",
+      "text": "Escolha não é aprovação e simulação não grava em fonte oficial.",
+      "scope": "WP11",
+      "family": "invariants",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "choice_real",
+        "choice_human",
+        "coverage_composed"
+      ],
+      "requiredRemaining": "Bind hosted assertions and actual domain consumer refusal/application boundaries.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.INV.02",
+      "text": "Não há transação global presumida nem efeito repetido em retry.",
+      "scope": "WP11",
+      "family": "invariants",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "planner_apply",
+        "recovery_planner",
+        "portfolio_published"
+      ],
+      "requiredRemaining": "Bind hosted recovery assertions and the full cross-domain partial sequence.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.INV.20",
+      "text": "Soma reconciliada não prova cobertura. Categoria ausente/pending não vira zero; escolha preserva a condição conhecida na época.",
+      "scope": "WP11",
+      "family": "invariants",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_validation",
+        "coverage_composed",
+        "choice_real"
+      ],
+      "requiredRemaining": "Demonstrate same-case later confirmation preserving the original historical choice.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.INV.10",
+      "text": "WP11 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+      "scope": "WP11",
+      "family": "invariants",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "choice_human",
+        "http_edit",
+        "case_lifecycle_concurrency",
+        "native_exports"
+      ],
+      "requiredRemaining": "Composition/native negative authority proof remains required.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.QLT.01",
+      "text": "Fontes, versões, hipóteses e efeitos são inspecionáveis.",
+      "scope": "WP11",
+      "family": "quality_standards",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "choice_real",
+        "analysis_promotion",
+        "result_store",
+        "c17_replay"
+      ],
+      "requiredRemaining": "Actual consumer inspection of versions, assumptions and effects remains required.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.QLT.02",
+      "text": "Falha conserva trabalho e estado de cada mudança.",
+      "scope": "WP11",
+      "family": "quality_standards",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "case_lifecycle_concurrency",
+        "recovery_planner"
+      ],
+      "requiredRemaining": "Show partial state/recovery in the actual UI with both Planner and Procurement.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.QLT.20",
+      "text": "Subtotal, total coberto, diferença condicionada e benefício calculado confirmado têm rótulos e fontes distinguíveis.",
+      "scope": "WP11",
+      "family": "quality_standards",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_validation",
+        "coverage_composed",
+        "choice_real"
+      ],
+      "requiredRemaining": "Assert rendered labels and sources in the named consumers; no threshold alone proves operational feasibility.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.QLT.10",
+      "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+      "scope": "WP11",
+      "family": "quality_standards",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "http_edit",
+        "result_store",
+        "analysis_promotion",
+        "recovery_planner"
+      ],
+      "requiredRemaining": "Bind exact hosted candidate and consumer-visible cause/state observations.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.CMP.01",
+      "text": "Cobrir intenção/alternativas/premissas/escolha/propostas/recibos, concorrência, import e revogação.",
+      "scope": "WP11",
+      "family": "completeness_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "case_lifecycle_concurrency",
+        "case_port",
+        "choice_human",
+        "recovery_planner"
+      ],
+      "requiredRemaining": "Add/consume malicious import and reused-record-incarnation negatives; complete rejected-proposal and cross-domain coverage.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.CMP.20",
+      "text": "Cobrir categoria incluída, inaplicável suportada, pendente, inteiramente omitida, zero confirmado e custo posterior que inverte a comparação.",
+      "scope": "WP11",
+      "family": "completeness_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_composed",
+        "coverage_validation"
+      ],
+      "requiredRemaining": "The later inversor quote must be confirmed in the same case with its historical choice preserved.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.CMP.10",
+      "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+      "scope": "WP11",
+      "family": "completeness_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "c11_published",
+        "c17_replay",
+        "native_exports"
+      ],
+      "requiredRemaining": "Complete each 5/18/8/C17 obligation with owner, consumer and discriminating native negatives; a catalog entry is not execution.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.SUC.01",
+      "text": "Uma decisão passa de pergunta a trabalho executável e pode ser retomada sem reconstruir sua razão.",
+      "scope": "WP11",
+      "family": "success_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "case_lifecycle_concurrency",
+        "choice_real",
+        "analysis_promotion",
+        "recovery_planner"
+      ],
+      "requiredRemaining": "End-to-end actual consumer journey from question to reviewed executable work remains required.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.SUC.20",
+      "text": "Usuário vê o que falta, confirma uma categoria e obtém reavaliação reproduzível sem perder a base da escolha original.",
+      "scope": "WP11",
+      "family": "success_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_composed",
+        "choice_real"
+      ],
+      "requiredRemaining": "Current-choice preview/promotion and a same-case confirmed-training journey are under implementation, not yet evidenced.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.SUC.10",
+      "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+      "scope": "WP11",
+      "family": "success_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_composed",
+        "c17_replay",
+        "native_exports"
+      ],
+      "requiredRemaining": "Bind exact hosted result and actual integrated consumer/native witness.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T01.CHK.01",
+      "text": "Criar caso em uma sessão, reiniciar provider real e ler em outra identidade autorizada conserva conteúdo/versão/autoria; ator sem acesso recebe projeção reduzida ou recusa.",
+      "scope": "WP11.T01",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "case_lifecycle_concurrency"
+      ],
+      "requiredRemaining": "Execute the new test hosted; membership is a host fixture, and actual browser sharing is not claimed.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T01.CHK.02",
+      "text": "Duas atualizações com expected version idêntica produzem um commit e um conflito com rascunho recuperável, sem perda de dado.",
+      "scope": "WP11.T01",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "case_lifecycle_concurrency"
+      ],
+      "requiredRemaining": "Execute the new barrier-driven concurrency test hosted; rendered UI draft retention is a separate consumer proof.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T01.CHK.03",
+      "text": "Import JSON malicioso ou troca de registro com ID reutilizado não fabrica confirmação, não apaga histórico confiável nem mantém vínculo à encarnação antiga como válido.",
+      "scope": "WP11.T01",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "case_port"
+      ],
+      "requiredRemaining": "Malicious import/trusted-namespace cleanup and same-record-ID reincarnation need the actual import producer path.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T01.CHK.18",
+      "text": "Executar sf_case_read, sf_case_draft pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "scope": "WP11.T01",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "case_port",
+        "http_edit"
+      ],
+      "requiredRemaining": "Integrated observation for sf_case_read, sf_case_draft is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T01.DOD.01",
+      "text": "Caso é criado, retomado e atualizado no provider real da composição; adapter em memória isolado não fecha DoD.",
+      "scope": "WP11.T01",
+      "family": "dod",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "case_lifecycle_concurrency",
+        "case_port",
+        "http_edit"
+      ],
+      "requiredRemaining": "Bind hosted execution and the composed provider mount; do not infer composition from the isolated adapter.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T01.DOD.18",
+      "text": "Descritores C16 de sf_case_read, sf_case_draft são implementados e consumidos por T06 com referências reais.",
+      "scope": "WP11.T01",
+      "family": "dod",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "case_port",
+        "http_edit"
+      ],
+      "requiredRemaining": "Integrated observation for sf_case_read, sf_case_draft is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T01.INV.01",
+      "text": "Ator e autorização vêm do host; versão e histórico não são escolhidos pelo modelo nem importados como confiança.",
+      "scope": "WP11.T01",
+      "family": "invariants",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "case_lifecycle_concurrency",
+        "choice_human"
+      ],
+      "requiredRemaining": "Import-origin trust negative remains required.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T01.INV.18",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "scope": "WP11.T01",
+      "family": "invariants",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "case_port",
+        "http_edit"
+      ],
+      "requiredRemaining": "Integrated observation for sf_case_read, sf_case_draft is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T01.QLT.01",
+      "text": "Falhas distinguem acesso, referência inválida e versão antiga; cada seção mantém origem/período/versão próprios.",
+      "scope": "WP11.T01",
+      "family": "quality_standards",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "case_port",
+        "case_edit",
+        "case_lifecycle_concurrency"
+      ],
+      "requiredRemaining": "Verify each rendered section's own source/period/version, including stale-reference behavior.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T01.QLT.18",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "scope": "WP11.T01",
+      "family": "quality_standards",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "case_port",
+        "http_edit"
+      ],
+      "requiredRemaining": "Integrated observation for sf_case_read, sf_case_draft is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T01.CMP.01",
+      "text": "Cobrir rascunho, objetivo corrigido, referência revogada/substituída, concorrência e reinício.",
+      "scope": "WP11.T01",
+      "family": "completeness_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "case_lifecycle_concurrency",
+        "case_port",
+        "case_edit"
+      ],
+      "requiredRemaining": "Imported/replaced evidence path and actual consumer recovery remain required.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T01.CMP.18",
+      "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+      "scope": "WP11.T01",
+      "family": "completeness_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "case_port",
+        "http_edit"
+      ],
+      "requiredRemaining": "Integrated observation for sf_case_read, sf_case_draft is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T01.SUC.01",
+      "text": "André e um colaborador autorizado retomam a mesma pergunta e seus dados sem reconstruir contexto.",
+      "scope": "WP11.T01",
+      "family": "success_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "case_lifecycle_concurrency"
+      ],
+      "requiredRemaining": "Host fixture proves authorized second principal at the service boundary; actual shared UI journey remains unobserved.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T01.SUC.18",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "scope": "WP11.T01",
+      "family": "success_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "case_port",
+        "http_edit"
+      ],
+      "requiredRemaining": "Integrated observation for sf_case_read, sf_case_draft is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.CHK.01",
+      "text": "AI-RENEWAL com inventário completo e fontes sintéticas confirmadas: 240000 vs 60000+45000+105000 = 210000; diferença 30000; implantação 70000 produz 235000 e diferença 5000. Taxas/migração/treinamento explicitamente cobertos ou inaplicáveis não são somados duas vezes.",
+      "scope": "WP11.T02",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_composed"
+      ],
+      "requiredRemaining": "Bind 240000/210000 and70000→235000 assertions to actual WP03-produced candidates and confirmed coverage; the existing test asserts210000/55000 but keeps hypothetical operations conditioned.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.CHK.02",
+      "text": "Operação que substituiria contribuição já vinculada troca o componente uma vez; o teste com inclusão duplicada é recusado ou reconciliado pelo domínio.",
+      "scope": "WP11.T02",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_composed",
+        "coverage_validation"
+      ],
+      "requiredRemaining": "Bind replacement-operation producer assertions proving one replacement; coverage duplicate rejection alone is insufficient.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.CHK.03",
+      "text": "Moeda sem FX, custo de saída pending e desconto hipotético mantêm comparação conditioned. Valor 0 confirmado difere de null, categoria omitted e declaração not-applicable sem evidência; nenhum estado desconhecido é promovido a zero.",
+      "scope": "WP11.T02",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_composed",
+        "coverage_validation"
+      ],
+      "requiredRemaining": "Bind actual producer missing-FX, exit-pending and hypothetical-discount negatives alongside zero/null/omission/N/A distinctions.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.CHK.20",
+      "text": "AI-RENEWAL-OMITTED-CATEGORY remove training da entrada, sem linha, sem pending pré-cadastrado e com implementação explicitamente sem treinamento: validador deriva missing-category e knownSubtotal 210000; completeDifference/total coberto ficam indisponíveis e a comparação é conditioned em todos os consumidores.",
+      "scope": "WP11.T02",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_composed",
+        "choice_real"
+      ],
+      "requiredRemaining": "Prove omitted training with an implementation quote explicitly excluding training across every named consumer; completeDifference and covered total remain unavailable.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.CHK.21",
+      "text": "Na mesma variante, confirmar novo componente training=40000 com fonte torna cobertura completa, total 250000, diferença -10000 e teto de implantação15000. A comparação de custo se inverte, condição mínima 20000 falha e a escolha original mantém subtotal 210000/ressalva pending/versões.",
+      "scope": "WP11.T02",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_composed",
+        "choice_real"
+      ],
+      "requiredRemaining": "Required single-case sequence is not proven by separate fixtures: confirm40000, compare250000/−10000, threshold15000, minimum20000 failure, old ChoiceRecord immutable.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.CHK.18",
+      "text": "Executar sf_alternative_draft pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "scope": "WP11.T02",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "c11_published",
+        "analysis_promotion"
+      ],
+      "requiredRemaining": "Integrated observation for sf_alternative_draft is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.DOD.01",
+      "text": "Alternativas persistidas consomem cálculo real WP03 e são editáveis no consumidor WP01.",
+      "scope": "WP11.T02",
+      "family": "dod",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_composed",
+        "choice_real",
+        "analysis_promotion"
+      ],
+      "requiredRemaining": "Actual WP01 editing/consumption of the persisted producer alternative remains required.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.DOD.20",
+      "text": "Alternativa persistida entrega cálculo WP03 e cobertura C10 reais a todos os consumidores nomeados.",
+      "scope": "WP11.T02",
+      "family": "dod",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_composed",
+        "result_store",
+        "c17_replay"
+      ],
+      "requiredRemaining": "Actual UI/BI/critic/portfolio consumption of the same stored WP03+C10 output remains required.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.DOD.18",
+      "text": "Descritores C16 de sf_alternative_draft são implementados e consumidos por T06 com referências reais.",
+      "scope": "WP11.T02",
+      "family": "dod",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "c11_published",
+        "analysis_promotion"
+      ],
+      "requiredRemaining": "Integrated observation for sf_alternative_draft is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.INV.01",
+      "text": "Simulação não altera oficial/actual/compra; ausência não vira zero e hipótese não vira compromisso.",
+      "scope": "WP11.T02",
+      "family": "invariants",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "choice_real",
+        "coverage_composed",
+        "coverage_validation"
+      ],
+      "requiredRemaining": "Bind hosted official-state immutability assertions and downstream consumer behavior.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.INV.20",
+      "text": "Nenhuma categoria some por não ter linha; cobertura não soma parcelas nem inventa valor, imposto ou fato confirmado.",
+      "scope": "WP11.T02",
+      "family": "invariants",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_validation",
+        "coverage_composed"
+      ],
+      "requiredRemaining": "Bind hosted missing-category/shared-component assertions; coverage is not a second financial engine.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.INV.18",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "scope": "WP11.T02",
+      "family": "invariants",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "c11_published",
+        "analysis_promotion"
+      ],
+      "requiredRemaining": "Integrated observation for sf_alternative_draft is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.QLT.01",
+      "text": "Todo total pode ser reconciliado aos componentes com moeda, período e origem; campos inválidos têm erro específico.",
+      "scope": "WP11.T02",
+      "family": "quality_standards",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_composed",
+        "coverage_validation",
+        "c17_replay"
+      ],
+      "requiredRemaining": "Bind producer reconciliation/error tests and inspect exact source/currency/period in consumer output.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.QLT.20",
+      "text": "Cada categoria mostra referência de parcela, motivo suportado de inaplicabilidade ou pergunta pendente; subtotal e total ficam distintos.",
+      "scope": "WP11.T02",
+      "family": "quality_standards",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_validation",
+        "coverage_composed"
+      ],
+      "requiredRemaining": "Rendered category explanations, questions and distinct subtotal/total labels remain required.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.QLT.18",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "scope": "WP11.T02",
+      "family": "quality_standards",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "c11_published",
+        "analysis_promotion"
+      ],
+      "requiredRemaining": "Integrated observation for sf_alternative_draft is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.CMP.01",
+      "text": "Cobrir mesma base, base incompatível, operação inválida, alternativa incompleta e mudança de critério.",
+      "scope": "WP11.T02",
+      "family": "completeness_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_validation",
+        "criterion_rule",
+        "result_store"
+      ],
+      "requiredRemaining": "Actual engine tests for incompatible base and invalid composed operation still need exact run/candidate binding.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.CMP.20",
+      "text": "Cobrir inventário ausente, categoria omitida, not-applicable sem suporte, zero confirmado, fonte revogada, inclusão compartilhada e custo posterior inversor.",
+      "scope": "WP11.T02",
+      "family": "completeness_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_validation",
+        "coverage_composed",
+        "choice_real"
+      ],
+      "requiredRemaining": "Same-case later inversor confirmation remains open; separate fixture results are explicitly partial.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.CMP.18",
+      "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "scope": "WP11.T02",
+      "family": "completeness_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "c11_published",
+        "analysis_promotion"
+      ],
+      "requiredRemaining": "Integrated observation for sf_alternative_draft is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.SUC.01",
+      "text": "O usuário altera uma premissa e obtém uma comparação que pode explicar e reproduzir.",
+      "scope": "WP11.T02",
+      "family": "success_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_composed",
+        "criterion_rule",
+        "c17_replay"
+      ],
+      "requiredRemaining": "Actual UI premise edit and reproducible comparison need consumer observation.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.SUC.20",
+      "text": "O usuário compreende a ressalva e resolve a informação que altera a comparação, sem refazer manualmente os números.",
+      "scope": "WP11.T02",
+      "family": "success_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "coverage_composed",
+        "choice_real"
+      ],
+      "requiredRemaining": "User resolves missing training in the same case using prepared current-choice flow, without hand-entered formula results.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T02.SUC.18",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "scope": "WP11.T02",
+      "family": "success_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "c11_published",
+        "analysis_promotion"
+      ],
+      "requiredRemaining": "Integrated observation for sf_alternative_draft is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T03.CHK.01",
+      "text": "Registrar escolha preserva a base financeira; alteração posterior de cotação e nova escolha não modificam o registro original.",
+      "scope": "WP11.T03",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "choice_real",
+        "choice_human"
+      ],
+      "requiredRemaining": "Later quotation and a genuinely new choice in the same case must leave the original byte-identical; objective-only fixture edit is insufficient.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T03.CHK.02",
+      "text": "Escolher alternativa não aprova PR/PO, não aplica cenário oficial nem cria ação automaticamente; propostas mostram destino e confirmação cabível.",
+      "scope": "WP11.T03",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "choice_real",
+        "choice_human",
+        "prepared_local"
+      ],
+      "requiredRemaining": "Show real PR/PO approval remains separate and actual proposal UI names destination and required confirmation.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T03.CHK.03",
+      "text": "Responsável confirma março enquanto projeto oficial segue maio: cenário usa premissa declarada, divergência permanece visível e atualização oficial exige comando próprio.",
+      "scope": "WP11.T03",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "INTEGRATED_PROOF_REQUIRED",
+      "evidenceRefs": [],
+      "requiredRemaining": "March assumption versus official May requires a real scenario, visible divergence and separate official command; no inspected test establishes it.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T03.CHK.20",
+      "text": "Registrar escolha condicionada na variante de treinamento omitido; confirmar treinamento 40000 depois conserva a escolha/subtotal/ressalva originais e apresenta nova alternativa250000/diferença -10000 sem reescrever a razão histórica ou autoalterar a escolha.",
+      "scope": "WP11.T03",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "choice_real",
+        "coverage_composed"
+      ],
+      "requiredRemaining": "Same-case omitted training choice→confirmed40000→new250000/−10000 result must be tested through current-choice flow.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T03.CHK.18",
+      "text": "Executar sf_change_prepare pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "scope": "WP11.T03",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "choice_human",
+        "prepared_local"
+      ],
+      "requiredRemaining": "Integrated observation for sf_change_prepare is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T03.DOD.01",
+      "text": "Escolha humana gera propostas revisáveis que chegam aos consumidores reais de cada domínio.",
+      "scope": "WP11.T03",
+      "family": "dod",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "choice_real",
+        "analysis_promotion",
+        "prepared_local"
+      ],
+      "requiredRemaining": "Actual reviewed proposals must reach each named domain consumer, with human authority intact.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T03.DOD.18",
+      "text": "Descritores C16 de sf_change_prepare são implementados e consumidos por T06 com referências reais.",
+      "scope": "WP11.T03",
+      "family": "dod",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "choice_human",
+        "prepared_local"
+      ],
+      "requiredRemaining": "Integrated observation for sf_change_prepare is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T03.INV.01",
+      "text": "Escolha gerencial não equivale a aprovação formal; UI ou IA não delegam autoridade inexistente.",
+      "scope": "WP11.T03",
+      "family": "invariants",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "choice_human",
+        "choice_real",
+        "prepared_local"
+      ],
+      "requiredRemaining": "Bind hosted human-intent refusal and formal procurement approval boundary.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T03.INV.18",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "scope": "WP11.T03",
+      "family": "invariants",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "choice_human",
+        "prepared_local"
+      ],
+      "requiredRemaining": "Integrated observation for sf_change_prepare is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T03.QLT.01",
+      "text": "Cada proposta mostra alteração, motivo, destino e estado; a justificativa continua vinculada aos números debatidos.",
+      "scope": "WP11.T03",
+      "family": "quality_standards",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "analysis_promotion",
+        "choice_real",
+        "prepared_local"
+      ],
+      "requiredRemaining": "Actual proposal display of change/reason/destination/state and debated values remains unobserved.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T03.QLT.18",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "scope": "WP11.T03",
+      "family": "quality_standards",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "choice_human",
+        "prepared_local"
+      ],
+      "requiredRemaining": "Integrated observation for sf_change_prepare is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T03.CMP.01",
+      "text": "Cobrir escolher, manter escolha sob nova justificativa, substituir escolha, rejeitar proposta e conflito da fonte.",
+      "scope": "WP11.T03",
+      "family": "completeness_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "choice_human",
+        "analysis_promotion",
+        "result_store"
+      ],
+      "requiredRemaining": "Same-choice new rationale, replacement choice, reject-proposal and source conflict need explicit assertions in the actual journey.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T03.CMP.18",
+      "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "scope": "WP11.T03",
+      "family": "completeness_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "choice_human",
+        "prepared_local"
+      ],
+      "requiredRemaining": "Integrated observation for sf_change_prepare is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T03.SUC.01",
+      "text": "A equipe consegue continuar o trabalho a partir da escolha sem transcrever sua justificativa e seus valores.",
+      "scope": "WP11.T03",
+      "family": "success_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "choice_real",
+        "analysis_promotion",
+        "prepared_local"
+      ],
+      "requiredRemaining": "Actual consumer continues from saved choice and proposed domain values without manual transcription.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T03.SUC.18",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "scope": "WP11.T03",
+      "family": "success_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "choice_human",
+        "prepared_local"
+      ],
+      "requiredRemaining": "Integrated observation for sf_change_prepare is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T04.CHK.01",
+      "text": "Aplicar Planner com sucesso e recusar Procurement mantém o primeiro resultado e exibe parcial; retomada não reaplica o Planner.",
+      "scope": "WP11.T04",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "recovery_planner",
+        "planner_apply"
+      ],
+      "requiredRemaining": "Required Procurement refusal is not covered by the second stale Planner command; add/consume a real cross-domain case.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T04.CHK.02",
+      "text": "Perder resposta depois do commit e reenviar a mesma correlação resulta em um efeito; caso sem receipt autoritativo fica indeterminado e exige reconciliação, nunca retry cego.",
+      "scope": "WP11.T04",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "recovery_planner"
+      ],
+      "requiredRemaining": "Execute the new real Planner lost-response test hosted; separately assert missing authoritative receipt remains indeterminate and never blind-retries.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T04.CHK.03",
+      "text": "Revogar permissão entre preparação e aplicação recusa a mudança pendente e não expõe resultado restrito em recibo agregado.",
+      "scope": "WP11.T04",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "recovery_planner",
+        "case_port"
+      ],
+      "requiredRemaining": "Bind actual post-preparation revocation and confirm aggregate receipt projection suppresses restricted details.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T04.CHK.18",
+      "text": "Executar sf_receipt_get pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "scope": "WP11.T04",
+      "family": "checks",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "recovery_planner",
+        "case_port"
+      ],
+      "requiredRemaining": "Integrated observation for sf_receipt_get is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T04.DOD.01",
+      "text": "O módulo integrado recupera falha parcial e resposta perdida usando recibos reais de domínio.",
+      "scope": "WP11.T04",
+      "family": "dod",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "recovery_planner",
+        "planner_apply"
+      ],
+      "requiredRemaining": "Bind real cross-domain partial recovery and actual composed consumer.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T04.DOD.02",
+      "text": "Recuperação consulta recibos de domínio gravados atomicamente com a mutação e reconcilia o caso; a prova inclui resposta perdida após commit e ausência de efeito duplicado.",
+      "scope": "WP11.T04",
+      "family": "dod",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "recovery_planner",
+        "planner_apply",
+        "prepared_local"
+      ],
+      "requiredRemaining": "Bind hosted atomic domain receipt/lost-response assertion to the exact candidate; no global transaction claim.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T04.DOD.18",
+      "text": "Descritores C16 de sf_receipt_get são implementados e consumidos por T06 com referências reais.",
+      "scope": "WP11.T04",
+      "family": "dod",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "recovery_planner",
+        "case_port"
+      ],
+      "requiredRemaining": "Integrated observation for sf_receipt_get is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T04.INV.01",
+      "text": "Não existe promessa de transação global; um erro posterior não desfaz ou oculta commits anteriores.",
+      "scope": "WP11.T04",
+      "family": "invariants",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "recovery_planner"
+      ],
+      "requiredRemaining": "Actual Planner commit followed by Procurement refusal still needs demonstration.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T04.INV.18",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "scope": "WP11.T04",
+      "family": "invariants",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "recovery_planner",
+        "case_port"
+      ],
+      "requiredRemaining": "Integrated observation for sf_receipt_get is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T04.QLT.01",
+      "text": "Estado informa efeito comprovado e ação de recuperação; correlação estável independe de narrativa IA.",
+      "scope": "WP11.T04",
+      "family": "quality_standards",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "recovery_planner",
+        "case_port"
+      ],
+      "requiredRemaining": "Actual UI recovery state and stable correlation need observation.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T04.QLT.18",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "scope": "WP11.T04",
+      "family": "quality_standards",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "recovery_planner",
+        "case_port"
+      ],
+      "requiredRemaining": "Integrated observation for sf_receipt_get is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T04.CMP.01",
+      "text": "Cobrir sucesso total, sucesso parcial, conflito, pendência de aprovação, permissão revogada e resultado desconhecido.",
+      "scope": "WP11.T04",
+      "family": "completeness_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "recovery_planner",
+        "planner_apply"
+      ],
+      "requiredRemaining": "Cross-domain total/partial success, procurement approval pending and absent receipt unknown state need full discriminating coverage.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T04.CMP.18",
+      "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "scope": "WP11.T04",
+      "family": "completeness_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "recovery_planner",
+        "case_port"
+      ],
+      "requiredRemaining": "Integrated observation for sf_receipt_get is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T04.SUC.01",
+      "text": "O usuário sabe o que já foi feito e retoma só o restante, com ausência verificável de efeitos duplicados.",
+      "scope": "WP11.T04",
+      "family": "success_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "recovery_planner"
+      ],
+      "requiredRemaining": "Actual UI presents proven effects and retries only the remainder of the cross-domain sequence.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    },
+    {
+      "id": "WP11.T04.SUC.18",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "scope": "WP11.T04",
+      "family": "success_criteria",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "assertionCoverage": "PARTIAL_OR_PENDING_HOSTED",
+      "evidenceRefs": [
+        "native_exports",
+        "recovery_planner",
+        "case_port"
+      ],
+      "requiredRemaining": "Integrated observation for sf_receipt_get is missing: same authority/base and exact handler/result/version through UI/native/MCP, destination denial without grant and after revocation, actual T06/native/loaded-skill output consumption. Fixture contexts and catalogs do not satisfy this criterion.",
+      "hostedObservationRefs": [],
+      "proofPackages": [
+        "E10",
+        "E12"
+      ]
+    }
+  ],
+  "fileCriterionIndex": {
+    "modules/sucafina/Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts": [
+      "WP11.DOD.01",
+      "WP11.INV.10",
+      "WP11.QLT.02",
+      "WP11.CMP.01",
+      "WP11.SUC.01",
+      "WP11.T01.CHK.01",
+      "WP11.T01.CHK.02",
+      "WP11.T01.DOD.01",
+      "WP11.T01.INV.01",
+      "WP11.T01.QLT.01",
+      "WP11.T01.CMP.01",
+      "WP11.T01.SUC.01"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/choice-persistence.test.ts": [
+      "WP11.DOD.01",
+      "WP11.DOD.20",
+      "WP11.INV.01",
+      "WP11.INV.20",
+      "WP11.QLT.01",
+      "WP11.QLT.20",
+      "WP11.SUC.01",
+      "WP11.SUC.20",
+      "WP11.T02.CHK.20",
+      "WP11.T02.CHK.21",
+      "WP11.T02.DOD.01",
+      "WP11.T02.INV.01",
+      "WP11.T02.CMP.20",
+      "WP11.T02.SUC.20",
+      "WP11.T03.CHK.01",
+      "WP11.T03.CHK.02",
+      "WP11.T03.CHK.20",
+      "WP11.T03.DOD.01",
+      "WP11.T03.INV.01",
+      "WP11.T03.QLT.01",
+      "WP11.T03.SUC.01"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts": [
+      "WP11.DOD.02",
+      "WP11.INV.02",
+      "WP11.T04.CHK.01",
+      "WP11.T04.DOD.01",
+      "WP11.T04.DOD.02",
+      "WP11.T04.CMP.01"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts": [
+      "WP11.DOD.02",
+      "WP11.T03.CHK.02",
+      "WP11.T03.CHK.18",
+      "WP11.T03.DOD.01",
+      "WP11.T03.DOD.18",
+      "WP11.T03.INV.01",
+      "WP11.T03.INV.18",
+      "WP11.T03.QLT.01",
+      "WP11.T03.QLT.18",
+      "WP11.T03.CMP.18",
+      "WP11.T03.SUC.01",
+      "WP11.T03.SUC.18",
+      "WP11.T04.DOD.02"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts": [
+      "WP11.DOD.02",
+      "WP11.INV.02",
+      "WP11.QLT.02",
+      "WP11.QLT.10",
+      "WP11.CMP.01",
+      "WP11.SUC.01",
+      "WP11.T04.CHK.01",
+      "WP11.T04.CHK.02",
+      "WP11.T04.CHK.03",
+      "WP11.T04.CHK.18",
+      "WP11.T04.DOD.01",
+      "WP11.T04.DOD.02",
+      "WP11.T04.DOD.18",
+      "WP11.T04.INV.01",
+      "WP11.T04.INV.18",
+      "WP11.T04.QLT.01",
+      "WP11.T04.QLT.18",
+      "WP11.T04.CMP.01",
+      "WP11.T04.CMP.18",
+      "WP11.T04.SUC.01",
+      "WP11.T04.SUC.18"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts": [
+      "WP11.DOD.20",
+      "WP11.INV.01",
+      "WP11.INV.20",
+      "WP11.QLT.20",
+      "WP11.CMP.20",
+      "WP11.SUC.20",
+      "WP11.SUC.10",
+      "WP11.T02.CHK.01",
+      "WP11.T02.CHK.02",
+      "WP11.T02.CHK.03",
+      "WP11.T02.CHK.20",
+      "WP11.T02.CHK.21",
+      "WP11.T02.DOD.01",
+      "WP11.T02.DOD.20",
+      "WP11.T02.INV.01",
+      "WP11.T02.INV.20",
+      "WP11.T02.QLT.01",
+      "WP11.T02.QLT.20",
+      "WP11.T02.CMP.20",
+      "WP11.T02.SUC.01",
+      "WP11.T02.SUC.20",
+      "WP11.T03.CHK.20"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/result-store.test.ts": [
+      "WP11.DOD.20",
+      "WP11.QLT.01",
+      "WP11.QLT.10",
+      "WP11.T02.DOD.20",
+      "WP11.T02.CMP.01",
+      "WP11.T03.CMP.01"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/proposal-coverage.test.ts": [
+      "WP11.DOD.20",
+      "WP11.QLT.01",
+      "WP11.QLT.10",
+      "WP11.T02.DOD.20",
+      "WP11.T02.CMP.01",
+      "WP11.T03.CMP.01"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts": [
+      "WP11.DOD.20",
+      "WP11.INV.20",
+      "WP11.QLT.01",
+      "WP11.QLT.20",
+      "WP11.QLT.10",
+      "WP11.CMP.20",
+      "WP11.T02.CHK.02",
+      "WP11.T02.CHK.03",
+      "WP11.T02.DOD.20",
+      "WP11.T02.INV.01",
+      "WP11.T02.INV.20",
+      "WP11.T02.QLT.01",
+      "WP11.T02.QLT.20",
+      "WP11.T02.CMP.01",
+      "WP11.T02.CMP.20",
+      "WP11.T03.CMP.01"
+    ],
+    "apps/cli/src/sucafina-product/host-context.ts": [
+      "WP11.DOD.10",
+      "WP11.CMP.10",
+      "WP11.T02.CHK.18",
+      "WP11.T02.DOD.18",
+      "WP11.T02.INV.18",
+      "WP11.T02.QLT.18",
+      "WP11.T02.CMP.18",
+      "WP11.T02.SUC.18"
+    ],
+    "apps/cli/src/sucafina-product/analysis-native-inputs.ts": [
+      "WP11.DOD.10",
+      "WP11.CMP.10",
+      "WP11.T02.CHK.18",
+      "WP11.T02.DOD.18",
+      "WP11.T02.INV.18",
+      "WP11.T02.QLT.18",
+      "WP11.T02.CMP.18",
+      "WP11.T02.SUC.18"
+    ],
+    "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts": [
+      "WP11.DOD.10",
+      "WP11.CMP.10",
+      "WP11.T02.CHK.18",
+      "WP11.T02.DOD.18",
+      "WP11.T02.INV.18",
+      "WP11.T02.QLT.18",
+      "WP11.T02.CMP.18",
+      "WP11.T02.SUC.18"
+    ],
+    "modules/sucafina/Sucafinav1/product/ai/run-store.ts": [
+      "WP11.DOD.10",
+      "WP11.CMP.10",
+      "WP11.T02.CHK.18",
+      "WP11.T02.DOD.18",
+      "WP11.T02.INV.18",
+      "WP11.T02.QLT.18",
+      "WP11.T02.CMP.18",
+      "WP11.T02.SUC.18"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts": [
+      "WP11.INV.01",
+      "WP11.INV.10",
+      "WP11.CMP.01",
+      "WP11.T01.INV.01",
+      "WP11.T03.CHK.01",
+      "WP11.T03.CHK.02",
+      "WP11.T03.CHK.18",
+      "WP11.T03.DOD.18",
+      "WP11.T03.INV.01",
+      "WP11.T03.INV.18",
+      "WP11.T03.QLT.18",
+      "WP11.T03.CMP.01",
+      "WP11.T03.CMP.18",
+      "WP11.T03.SUC.18"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-preparation-composition.test.ts": [
+      "WP11.INV.02"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts": [
+      "WP11.INV.02"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/coverage-classification.test.ts": [
+      "WP11.INV.20",
+      "WP11.QLT.20",
+      "WP11.CMP.20",
+      "WP11.T02.CHK.02",
+      "WP11.T02.CHK.03",
+      "WP11.T02.INV.01",
+      "WP11.T02.INV.20",
+      "WP11.T02.QLT.01",
+      "WP11.T02.QLT.20",
+      "WP11.T02.CMP.01",
+      "WP11.T02.CMP.20"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/coverage-seal.test.ts": [
+      "WP11.INV.20",
+      "WP11.QLT.20",
+      "WP11.CMP.20",
+      "WP11.T02.CHK.02",
+      "WP11.T02.CHK.03",
+      "WP11.T02.INV.01",
+      "WP11.T02.INV.20",
+      "WP11.T02.QLT.01",
+      "WP11.T02.QLT.20",
+      "WP11.T02.CMP.01",
+      "WP11.T02.CMP.20"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/http.test.ts": [
+      "WP11.INV.10",
+      "WP11.QLT.10",
+      "WP11.T01.CHK.18",
+      "WP11.T01.DOD.01",
+      "WP11.T01.DOD.18",
+      "WP11.T01.INV.18",
+      "WP11.T01.QLT.18",
+      "WP11.T01.CMP.18",
+      "WP11.T01.SUC.18"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/analysis-promotion.test.ts": [
+      "WP11.QLT.01",
+      "WP11.QLT.10",
+      "WP11.SUC.01",
+      "WP11.T02.CHK.18",
+      "WP11.T02.DOD.01",
+      "WP11.T02.DOD.18",
+      "WP11.T02.INV.18",
+      "WP11.T02.QLT.18",
+      "WP11.T02.CMP.18",
+      "WP11.T02.SUC.18",
+      "WP11.T03.DOD.01",
+      "WP11.T03.QLT.01",
+      "WP11.T03.CMP.01",
+      "WP11.T03.SUC.01"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts": [
+      "WP11.QLT.01",
+      "WP11.CMP.10",
+      "WP11.SUC.10",
+      "WP11.T02.DOD.20",
+      "WP11.T02.QLT.01",
+      "WP11.T02.SUC.01"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts": [
+      "WP11.CMP.01",
+      "WP11.T01.CHK.03",
+      "WP11.T01.CHK.18",
+      "WP11.T01.DOD.01",
+      "WP11.T01.DOD.18",
+      "WP11.T01.INV.18",
+      "WP11.T01.QLT.01",
+      "WP11.T01.QLT.18",
+      "WP11.T01.CMP.01",
+      "WP11.T01.CMP.18",
+      "WP11.T01.SUC.18",
+      "WP11.T04.CHK.03",
+      "WP11.T04.CHK.18",
+      "WP11.T04.DOD.18",
+      "WP11.T04.INV.18",
+      "WP11.T04.QLT.01",
+      "WP11.T04.QLT.18",
+      "WP11.T04.CMP.18",
+      "WP11.T04.SUC.18"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/case-operation-access.test.ts": [
+      "WP11.CMP.01",
+      "WP11.T01.CHK.03",
+      "WP11.T01.CHK.18",
+      "WP11.T01.DOD.01",
+      "WP11.T01.DOD.18",
+      "WP11.T01.INV.18",
+      "WP11.T01.QLT.01",
+      "WP11.T01.QLT.18",
+      "WP11.T01.CMP.01",
+      "WP11.T01.CMP.18",
+      "WP11.T01.SUC.18",
+      "WP11.T04.CHK.03",
+      "WP11.T04.CHK.18",
+      "WP11.T04.DOD.18",
+      "WP11.T04.INV.18",
+      "WP11.T04.QLT.01",
+      "WP11.T04.QLT.18",
+      "WP11.T04.CMP.18",
+      "WP11.T04.SUC.18"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/case-management.test.ts": [
+      "WP11.T01.QLT.01",
+      "WP11.T01.CMP.01"
+    ],
+    "modules/sucafina/Sucafinav1/test/product/wp11/criterion-rules.test.ts": [
+      "WP11.T02.CMP.01",
+      "WP11.T02.SUC.01"
+    ]
+  }
+}

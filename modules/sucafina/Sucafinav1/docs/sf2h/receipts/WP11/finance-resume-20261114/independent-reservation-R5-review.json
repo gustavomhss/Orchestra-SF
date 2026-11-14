@@ -1,0 +1,76 @@
+{
+  "schema": "sf2-wp11-peer-review-wp13-r5-v1",
+  "reviewer": "Astra Finance WP11",
+  "scope": "Independent static review of WP13 G-RETRY aggregate envelope correction; no edits to WP13 and no product test execution",
+  "candidateBase": {
+    "head": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+    "tree": "1fd989023150ac85fd9bd48e7196eddce2c49607"
+  },
+  "sourcePins": [
+    {
+      "path": "product/decisions/apply.ts",
+      "blob": "f8404c18abc040c49cf111eb4561ce4c2873a4c6"
+    },
+    {
+      "path": "product/decisions/application-status.ts",
+      "blob": "77d29655b4e162a4d191de3bb1f7bd581cb3def4"
+    },
+    {
+      "path": "product/decisions/application-attempt.ts",
+      "blob": "d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e"
+    },
+    {
+      "path": "product/host-binding/state-provider.ts",
+      "blob": "b7988a2963a2797a96ea19ab2b3a481564548213"
+    },
+    {
+      "path": "test/product/wp13/handoff-domain-integration.test.ts",
+      "blob": "e3a0395a9ad33d6fb0ed161f69a246fa14664bd2"
+    }
+  ],
+  "proposed": {
+    "path": "test/product/wp13/handoff-domain-integration.test.ts",
+    "blob": "56befede439f9d08233a75fc7b9c25c013e73b4c",
+    "mode": "100644"
+  },
+  "evidence": {
+    "runId": 43619812123,
+    "jobId": 132522704978,
+    "snapshot": "07f905d3a309b9752525ef34aeafbc5d870bd54a",
+    "snapshotTree": "723fadf3a3b616b269b9fa8052d760cd643e80c2",
+    "conclusion": "failure",
+    "logSha256": "05abcead114c190cb6380d73478af1ead5522135f3faffdc5d6e2615698056d1",
+    "logBytes": 94593,
+    "observedMismatch": "Outer aggregateRevision10→11; receipt namespace storageVersion1 and all value/receipt/proof fields unchanged. Other run failures remain failures and outside this review."
+  },
+  "verdict": "NO_CRITICAL_STATIC_FINDING; NARROW_ORACLE_UPDATE_MATCHES_CURRENT_CONTRACT",
+  "reasons": [
+    "apply.ts commits one applicationAttempt transaction in namespace cases before dispatch. Only the invocation that creates that reservation may perform the initial dispatch.",
+    "state-provider increments aggregate revision and the admitted cases namespace version once, storing the reservation in transactions; the DecisionCase object itself is unchanged.",
+    "The subsequent domain/receipt transaction rolls back on the injected precommit storage failure; it cannot undo the earlier independent reservation commit.",
+    "Retry with an existing reservation and absent authoritative receipt returns application-indeterminate-reconciliation-required before any new reservation/dispatch.",
+    "application-status projects receipt-required from the durable attempt without fabricating a receipt or inferring a domain effect."
+  ],
+  "preservedOracles": [
+    "Full receipt envelope equality with only the exact expected aggregate increment; receipt namespace version, incarnation, receipt values, transaction proofs and their internal revisions remain exact.",
+    "Same full envelope after original executor retry and reconstructed executor retry; no additional aggregate changes are allowed.",
+    "Durable receipt-required attempt with exact change/choice/principal/review binding; attempt envelope remains identical after retries.",
+    "Real domain snapshots and amounts remain at partial success; calls remain planner then procurement once, fault count1.",
+    "Case object, case version, partially-applied state, prepared-change states, original choice and conditional comparison remain unchanged.",
+    "Independent successful branch still performs both real canonical domain applications and records both actual receipts."
+  ],
+  "limitation": "No runtime qualification of the R5 correction, no acceptance of other S5 failures, no global acceptance.",
+  "manifestBinding": {
+    "path": "/workspace/scratch/3b9737c0177a/work-wp13/delta-wp13-R5-reservation-manifest.json",
+    "sha256": "8b4ade1602772e1e61a04f737fc98a2e6ca30f2ff259212aa155f077e7a25115",
+    "baseHead": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+    "baseTree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+    "beforeBlob": "e3a0395a9ad33d6fb0ed161f69a246fa14664bd2",
+    "afterBlob": "56befede439f9d08233a75fc7b9c25c013e73b4c",
+    "afterSha256": "d0a8c1973164a395402583f2e750e8354b54ddf893dd27ed9b17abd63f0c01dd",
+    "afterBytes": 50729,
+    "expectedLinesBefore": 93,
+    "expectedLinesAfter": 93,
+    "verified": true
+  }
+}

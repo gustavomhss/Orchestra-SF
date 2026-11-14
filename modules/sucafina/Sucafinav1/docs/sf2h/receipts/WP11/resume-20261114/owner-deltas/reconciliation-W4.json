@@ -1,0 +1,69 @@
+{
+  "schema": "wp11-owner-seam-reconciliation-v1",
+  "inspectedAt": "2026-11-14T10:02:50Z",
+  "pins": {
+    "wp11": "768a189c92bae0353e546c29a71fda95fac1c4bf",
+    "finance": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+    "compose": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+    "intelligence": "46c904ead4e9b363422f6739258e492913ae6e2e"
+  },
+  "reviewType": "STATIC_PUBLISHED_SOURCE_RECONCILIATION; no installed/native PASS inferred",
+  "seams": [
+    {
+      "id": "WP10-C17-current-ancestry",
+      "status": "PUBLISHED_BY_OWNER_NOT_INTAKEN_AS_RUNTIME",
+      "paths": [
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "sourceBlob": "0e5a508722c9e741a1737beb7d88ccb596a6f495"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "sourceBlob": "48a9cdd2d38fad855d8a338f8dc119c64f81057f"
+        }
+      ],
+      "findings": [
+        "The published owner wires resultStore.verifyCalculationSources and scenarioRequestStore.verifyRequestSources into canonical Planner replay.",
+        "The published owner passes nested replay/evidence, retains private C08 case-scope bootstrap, adds cycle admission bounds, and accepts authenticated ledger projections without deriving money from them.",
+        "Earlier WP10-C17-current-ancestry.patch remains historical evidence of an unexecuted proposal and must not be blindly applied over this newer owner commit."
+      ],
+      "remaining": "WP10/S0 must compose these exact owner files with the WP11 final candidate and run actual-host nested ancestry and authority negatives. Whole owner composition was not imported into this isolated WP11 branch."
+    },
+    {
+      "id": "WP10-C17-historical-review",
+      "status": "OWNER_INTEGRATION_REQUIRED",
+      "path": "apps/cli/src/sucafina-product/review-calculation-history.ts",
+      "sourceBlob": "012c83ed8b6382bebc0046526985f2f900f04035",
+      "findings": [
+        "The current owner reader still requires every stored source and closure member to have kind record.",
+        "It still rejects assumptions and replacementRef, so nested historical calculation/ledger ancestry remains unavailable in this review lane."
+      ],
+      "required": "Authenticate original request/result/ancestor closure through protected historical producers; preserve current authorization and source continuity. Do not relabel historical refs as fresh."
+    },
+    {
+      "id": "WP13-history-same-version",
+      "status": "EXACT_PUBLISHED_BLOBS_CONSUMED_HOSTED_PROOF_PENDING",
+      "manifest": "../wp13-46c9-intake.json",
+      "findings": [
+        "Published history-provenance permits current case version equal to stored case version while retaining candidate, digest, authorization and revocation checks.",
+        "Published source also clones provider observations; imported corresponding producer tests."
+      ],
+      "supersedes": "WP13-history-same-version.patch remains historical; no need to apply it over owner commit46c904."
+    },
+    {
+      "id": "WP10-additional-decision-mounts",
+      "status": "OWNER_INTEGRATION_REQUIRED",
+      "findings": [
+        "The current composition instantiates individual decision services; publishing createDecisionProduct/createDecisionHostProduct does not mount the new endpoints automatically.",
+        "Current-choice preview/promotion, assumption divergence, and explicit prepared-change rejection need the exact mount contracts documented alongside this receipt."
+      ],
+      "contracts": [
+        "current-choice-mount.md",
+        "additional-decision-mounts.md"
+      ],
+      "requiredProof": "Real CLI/HTTP/browser consumer followed by SessionV2/native/private-MCP same-handler parity with authentic SkillLoadReceipt and consumption receipts; none inferred from service fixtures."
+    }
+  ],
+  "localProductTestsRun": false,
+  "localProductTypecheckRun": false
+}

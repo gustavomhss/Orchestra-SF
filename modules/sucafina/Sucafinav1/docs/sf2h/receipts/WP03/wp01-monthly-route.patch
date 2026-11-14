@@ -1,0 +1,20 @@
+--- a/modules/sucafina/Sucafinav1/product/interface/planner-http.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/planner-http.ts
+@@ -1,4 +1,5 @@
+ import type { SfHostServices, SfPlannerMonthlyInput } from "../contracts/host-context.ts"
++import { validMonthlyRequest } from "../planner/monthly-host.ts"
+ 
+ /** The host resolves the current actor and Planner snapshot for each operation. */
+ export async function handleSfPlannerMonthly(request: Request, origin: string, runtime: SfHostServices) {
+@@ -27,10 +28,5 @@
+ }
+ 
+ function monthlyInput(value: unknown): value is SfPlannerMonthlyInput {
+-  return record(value) && Object.keys(value).every((key) => ["page", "versionId", "drafts"].includes(key)) &&
+-    (value.page === "OPEX" || value.page === "CAPEX") && typeof value.versionId === "string" && Array.isArray(value.drafts) && value.drafts.length > 0 && value.drafts.length <= 500 &&
+-    value.drafts.every((draft: unknown) => record(draft) && Object.keys(draft).every((key) => ["rowId", "revision", "cells"].includes(key)) &&
+-      typeof draft.rowId === "string" && typeof draft.revision === "number" && Number.isSafeInteger(draft.revision) && Array.isArray(draft.cells) && draft.cells.length > 0 && draft.cells.length <= 36 &&
+-      draft.cells.every((cell: unknown) => record(cell) && Object.keys(cell).every((key) => ["measure", "month", "text"].includes(key)) &&
+-        (cell.measure === "budget" || cell.measure === "actual" || cell.measure === "forecast") && typeof cell.month === "number" && typeof cell.text === "string"))
++  return record(value) && validMonthlyRequest(value as SfPlannerMonthlyInput)
+ }

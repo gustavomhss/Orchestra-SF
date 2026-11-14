@@ -1,0 +1,93 @@
+{
+  "schema": "wp13-hosted-product-receipt-v1",
+  "label": "S8-Aplanner1",
+  "productSha": "a3df1c494495f5fcc5a644caf2d88bc0e9e39fa4",
+  "productTree": "0f108eeab2750ec969ea1e6c4d7044ea7705ecb6",
+  "snapshotSha": "8fa2061ddafac44b53e35ac13a5afbffe3ad60a4",
+  "snapshotTree": "0c34152ab62bbae9b2f16b06511dd2b8587333ec",
+  "branch": "ci-run-linux-astra-wp13-a3df1c49-cf687b88-1",
+  "snapshotOnlyAdded": {
+    "path": ".ci-run.json",
+    "sha": "7b961f9dd06e1c4fa3452d92bf0d45af6182c7a2"
+  },
+  "runId": 43592070317,
+  "jobId": 132438714786,
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 132438714786,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-14T11:52:29Z",
+      "completed_at": "2026-11-14T11:54:24Z"
+    },
+    {
+      "id": 132439152970,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-14T11:54:26Z",
+      "completed_at": "2026-11-14T11:54:30Z"
+    }
+  ],
+  "artifacts": [],
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestSha256": "cf687b888a65258039aa26256008dba7e1ca5a0b1e440deeaf0bd08f6a1af7e3",
+  "selectedPublishedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+      "sha": "33193aabe586aee6bdedb8a8a06238783ece25a2"
+    }
+  ],
+  "log": {
+    "sha256": "348a368b4986c177922b52ebcbb538dd12fa2ce9789272a2852ac4ca0c59d693",
+    "bytes": 68993
+  },
+  "control": {
+    "accepted": true,
+    "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "error": null,
+    "omniSpawnProven": false
+  },
+  "summary": {
+    "passed": 2,
+    "failed": 0,
+    "summary": "Ran 2 tests across 1 file. [19.27s]",
+    "expectCalls": 7
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts": [
+      {
+        "status": "pass",
+        "name": "sensitivity retains the admitted request when a provider mutates its borrowed input",
+        "milliseconds": 10515.49
+      },
+      {
+        "status": "pass",
+        "name": "sensitivity detects a provider reusing and changing the original source record",
+        "milliseconds": 8613.26
+      }
+    ]
+  },
+  "selectionMatches": true,
+  "acceptance": {
+    "aggregatePass": true,
+    "completedPassedFiles": [
+      "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts"
+    ],
+    "nativeOrInstalledConsumerProof": false
+  },
+  "ready": false
+}

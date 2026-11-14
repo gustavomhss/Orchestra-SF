@@ -1,0 +1,171 @@
+{
+  "schema": "wp13-static-review-v1",
+  "reviewer": "/root/wp13_review_acceptance/w6_handoff_static",
+  "status": "IMPLEMENTATION_STATIC_REVIEW",
+  "reviewedAtDate": "2026-11-14",
+  "subject": "S13 failure and proposed own W17 forecast-coverage routing composition",
+  "scope": {
+    "productHeadAtDiagnosis": "eb5d411292b8892673cff751b3492a14146b7785",
+    "sourceScenarioBlobAtDiagnosis": "122db9855836ab4f713696c34549ab56c8c98f80",
+    "localProductTestsRun": false,
+    "localTypecheckRun": false,
+    "remoteOperations": false,
+    "productEditedByReviewer": false,
+    "hostedProofClaim": false,
+    "implementationReview": "Frozen own draft a2cf45f6c343c384c37a36e0c36437e379178b43 reviewed after the design review; no product execution."
+  },
+  "observedCause": [
+    {
+      "path": "product/decisions/coverage-access.ts",
+      "finding": "The canonical case coverage reader accepts only case-coverage selectors; source-scenario W16 connects it as the entire resolveForecastCoverage function although Planner.simulateScenario also resolves the forecast baseRef. A raw source selector therefore returns needs-input/invalid-coverage-reference."
+    },
+    {
+      "path": "product/decisions/baseline-coverage.ts",
+      "finding": "The existing baseline coverage registration authenticates caseScopeDigest over id, incarnation, horizon, currency and criteria. source-scenario adds the ceiling criterion after renewal fixture registration. The saved baseline scope is then invalid and cannot be repaired by merely attaching its reader."
+    },
+    {
+      "path": "test/product/wp11/renewal-choice-fixture.ts",
+      "finding": "The canonical fixture keeps coverageVersions in a private Map and uses it as expectedVersion for later resolveTraining registrations. A separate registration by the WP13 consumer would advance the durable counter without updating that owner map."
+    }
+  ],
+  "recommendedComposition": [
+    "Keep case-coverage selectors delegated to createDecisionCoverageAccess with current case and evidence authorization.",
+    "For raw source selectors, select an explicit phase C08 producer reference, authenticate it through the real result/case/stored-scenario ports, and use the corresponding canonical case-coverage reference only when the exact persisted current alternative has operations=[] and assumptions=[].",
+    "Match full source evidence identity/digest, stored request/result digests, current alternative, basis and assessment. A source-only label or numerical equality by itself is insufficient. Do not choose a C08 envelope by newest timestamp or delete duplicate history.",
+    "Resolve the C10 assessment through the real coverageAccess reader. Preserve the returned basis, assessment, source references, absence and currencies unchanged; do not construct a replacement complete assessment.",
+    "For the initial selected scenario with three explicit replace operations, delegate to the existing raw source provider and retain its pending coverage. This route must never promote that hypothetical C08 into source-only coverage.",
+    "Compose the own criterion metric preview with real comparePlannerPreview and a real Planner simulation using these routed sources and stored-scenario resolver. Keep the real units issuer and persisted rule registry. Reusing phase.preview would still encounter the stale bootstrap baseline scope and could make unknown pass for metric-unavailable instead of genuine conditioned data.",
+    "Keep source-only routing read-only. Do not re-register, rewrite caseScopeDigest, change grants, change the fixture private counter, or modify foreign runtime/fixture files."
+  ],
+  "phaseMatrix": [
+    {
+      "phase": "initial baseline",
+      "scenario": "operations=[]; assumptions=[]",
+      "source": "renewal",
+      "route": "Exact authenticated phase.baselineRef -> current case coverage",
+      "expectedMeaning": "Real observed USD 240000 complete source baseline; still no human application."
+    },
+    {
+      "phase": "initial selected",
+      "scenario": "Three replace operations equal to existing source values",
+      "source": "transition-omitted",
+      "route": "Original raw source provider pending C10",
+      "expectedMeaning": "Transient hypothetical preview remains pending and total=null; stored selected C08 retains its separately registered inventory with training missing."
+    },
+    {
+      "phase": "confirmed baseline and selected",
+      "scenario": "operations=[]; assumptions=[]",
+      "source": "renewal / transition-confirmed",
+      "route": "Exact authenticated phase baseline/selected C08 refs -> respective current case coverage",
+      "expectedMeaning": "Current real source/C10 values remain USD 240000 and USD 250000, including training40000, canonical N-A/shared declarations."
+    }
+  ],
+  "requiredImplementationGates": [
+    "Capture request/source selector and context authority at ingress; reject a changed request, binding, requestFor identity or aborted signal at egress.",
+    "Require a unique explicit phase/alternative match; propagate failed source/C08/case/coverage authorization. Do not fall back to pending coverage after a source-only authentication or freshness failure.",
+    "Authenticate all relevant source/C10 evidence and require exact source identity, incarnation, version and projection digest, plus full basis/assessment equality with the authenticated C08.",
+    "After all external producer/evidence/host callbacks, retain one final joint case+C08 observation with matching authority and full digests; perform only synchronous identity/signal/digest checks afterward.",
+    "Assert that the initial canonical metric is -30000 and the two rule results are unknown due to criterion-metric-conditioned. Do not accept criterion-metric-unavailable as evidence that missing training itself conditioned the result.",
+    "Retain existing substituted-baseline and source revocation refusals and all historical ChoiceRecord/C08/no-prepared/no-receipt assertions."
+  ],
+  "preservedOracles": [
+    "complete240000 baseline",
+    "known210000 and total=null before training",
+    "canonical -30000 initial difference",
+    "same case/id/incarnation and human ChoiceRecord with both explicit policy criteria",
+    "training40000 -> total250000 and difference+10000",
+    "ceiling <=0 and benefit <=-20000 both failed after confirmation",
+    "N-A declarations and shared implementation/migration contribution without duplicate price",
+    "persisted comparison and portfolio bindings/read/retry",
+    "original choice and C08 unchanged; reconsidering state",
+    "no human application or durable command claimed",
+    "baseline substitution and baseline source revocation refused"
+  ],
+  "performance": {
+    "testBudgetMs": 180000,
+    "budgetChanged": false,
+    "withinBudgetEstablished": false,
+    "note": "Static routing adds genuine reads and preview work. There is no runtime evidence for its cost; no authorization cache or budget increase is recommended."
+  },
+  "criteriaRelevance": [
+    "WP13.T02.CHK.20",
+    "WP13.T02.CMP.20",
+    "WP13.CMP.20",
+    "WP13.INV.02",
+    "WP13.INV.10"
+  ],
+  "pins": [
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts",
+      "bytes": 21199,
+      "gitBlob": "6ce45e74568c0b8ab35fa6b39083bb556bdfe08c",
+      "sha256": "c8c9d623b86b1ef78822d94d575c5446d1c289076850bfae06344023839e393d"
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts",
+      "bytes": 4203,
+      "gitBlob": "25e6056021a20cbdd1a3608fda515d77e052327f",
+      "sha256": "e1c55c96d638de33536791717d1357a92955becbc1b9bad471e6c4cd65a546e3"
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "bytes": 6407,
+      "gitBlob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "sha256": "771b060898fce1b1d851461bee7df743014ab55f9c0994a0331f2664a1c8bfd1"
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/planner/criterion-metric.ts",
+      "bytes": 6260,
+      "gitBlob": "2340a9566e1471f47d9c5c7f884bfc31be13cef3",
+      "sha256": "e28f33526f78532826d4b80b0eb2396e805ea7bbc45c8291f1de7bd79018f127"
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "bytes": 6770,
+      "gitBlob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "sha256": "51c9b83256825e90e3a8a8b49c11d73339527edcb1a67da4d98ce6e8bf17e143"
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "bytes": 16289,
+      "gitBlob": "40c4c72cf9b6863cf5eb791e78e4a87de751192d",
+      "sha256": "b8c2a77024d48699bb8155beb8c97c8cfe0c735e6c5c4835888ba5e8e991dcab"
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "bytes": 25425,
+      "gitBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "sha256": "31559515ade97893610d6ccfef80bba7b4eb5c1cc096e6840013fb1309cdbc48"
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "bytes": 16513,
+      "gitBlob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "sha256": "0485d078d1920a333287f4621882c8370cb6cc42b7901a49013c396120735321"
+    }
+  ],
+  "nextAction": "Root may publish these reviewed bytes with the exact WP11 case reader intake and dispatch only the required hosted checks. Re-review if the own draft changes; no product PASS or READY is inferred.",
+  "implementationReview": {
+    "path": "repo/modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+    "gitBlob": "a2cf45f6c343c384c37a36e0c36437e379178b43",
+    "sha256": "142f0914b7e83eae13810b9281a9338f62523e4fa3dece5234054feec7f1f233",
+    "bytes": 42213,
+    "conclusion": "No concrete static blocker found in the reviewed routing, types, recursion boundary or source/C08/C10 correlation.",
+    "verifiedStructure": [
+      "The independent projectionPlanner uses the real Planner producer with coverage unavailable only for its projection role; it cannot recurse into forecastCoverage.",
+      "Private cloned observations pin the exact phase baseline and selected producer refs. Raw-source selection must match exactly one observation.",
+      "Source-only is determined by zero operations and zero assumptions in that pinned current alternative; case/C08/request/result digests and full source evidence are matched before using real caseCoverage.",
+      "The hypothetical initial branch delegates to the original provider and requires pending inventory with the stored basis id/version. It cannot promote the three replace operations into a source-only source.",
+      "Source/evidence/host checks precede a final joint case+C08 snapshot. The return is then fenced synchronously by full observed digests, requestFor identity, binding digest and abort signal.",
+      "The own canonical comparePlannerPreview composition replaces phase.preview for registry metrics; assertions now require -30000 conditioned and both unknown reasons criterion-metric-conditioned.",
+      "Substituted canonical source version, an unselected source, an unadmitted context and final baseline revocation have negative assertions. Original financial, persistence, choice/history, N-A/shared and no-application assertions remain.",
+      "No synthetic coverage object, coverage re-registration, counter rewrite, new human grant, foreign file edit or test budget change is introduced by this own test delta."
+    ],
+    "limits": [
+      "Assertions and static reading are not product PASS.",
+      "The existing 180000ms budget is retained, but runtime and performance are unproved.",
+      "Explicit phase selection and source-coverage routing are controlled fixture composition; this does not establish installed WP10 host or GNATIVE adoption.",
+      "The separate Finance source-only admission late-callback risk is recorded in wp13-W17-owner-intake-review.json and remains NOT_APPLIED until an isolated owner pin or reviewed dependency closure."
+    ]
+  }
+}

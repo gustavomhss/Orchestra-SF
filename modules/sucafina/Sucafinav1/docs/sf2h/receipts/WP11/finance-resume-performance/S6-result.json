@@ -1,0 +1,2320 @@
+{
+  "schema": "finance-resume-performance-ci-v1",
+  "selection": "S6",
+  "W": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+  "Wtree": "2da074668b164b1aa5e051f8a70366969425906f",
+  "S": "0e68fec2e33e6c4c2103f368fed1d00dc832cb0c",
+  "Stree": "9339889db0210f25ba46ee9a3ab7553e146bef1d",
+  "branch": "ci-run-linux-finance-performance-7a9a43b3-3801b178-s6",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+      "--timeout",
+      "120000",
+      "-t",
+      "^FIN-IND-005 Finance performance"
+    ],
+    "env": {}
+  },
+  "requestSha256": "3801b178a26c1fdfa729f37c4301857fcdc7294180ee0c969fa31e1c8ae04ddb",
+  "requestOnlyComparison": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+    "head": "0e68fec2e33e6c4c2103f368fed1d00dc832cb0c",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1"
+    },
+    "merge_base_commit": {
+      "sha": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1"
+    },
+    "files": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      }
+    ]
+  },
+  "runId": 43631582858,
+  "jobId": 132559159277,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43631582858",
+  "conclusion": "failure",
+  "pass": 0,
+  "fail": 1,
+  "assertions": 18,
+  "testDurationMs": 180025.69,
+  "bunDurationSeconds": 180.22,
+  "fixtureGuardMs": 180000,
+  "perTestBudgetMs": 300000,
+  "activeTerminalPhase": [
+    "confirmed.evaluate",
+    "confirmed.coverage.qualify",
+    "confirmed.authority.is-still-valid",
+    "confirmed.units.revalidate"
+  ],
+  "terminalResult": {
+    "status": "stale",
+    "reason": "coverage-authority-changed"
+  },
+  "guardObservedElapsedMs": 180015,
+  "resultObservedElapsedMs": 180017,
+  "trace": [
+    {
+      "elapsedMs": 1,
+      "event": "start",
+      "id": 1,
+      "label": "fixture.create",
+      "active": []
+    },
+    {
+      "elapsedMs": 12522,
+      "event": "complete",
+      "id": 1,
+      "label": "fixture.create",
+      "durationMs": 12521
+    },
+    {
+      "elapsedMs": 12522,
+      "event": "start",
+      "id": 2,
+      "label": "omitted.evaluate",
+      "active": []
+    },
+    {
+      "elapsedMs": 12523,
+      "event": "start",
+      "id": 3,
+      "label": "omitted.units.resolve",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 13733,
+      "event": "complete",
+      "id": 3,
+      "label": "omitted.units.resolve",
+      "durationMs": 1210,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 13734,
+      "event": "start",
+      "id": 4,
+      "label": "omitted.units.revalidate",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 14965,
+      "event": "complete",
+      "id": 4,
+      "label": "omitted.units.revalidate",
+      "durationMs": 1232,
+      "status": true
+    },
+    {
+      "elapsedMs": 14965,
+      "event": "start",
+      "id": 5,
+      "label": "omitted.results.readHistoricalScenario",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 15019,
+      "event": "complete",
+      "id": 5,
+      "label": "omitted.results.readHistoricalScenario",
+      "durationMs": 54,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 15019,
+      "event": "start",
+      "id": 6,
+      "label": "omitted.results.readHistoricalScenario",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 15067,
+      "event": "complete",
+      "id": 6,
+      "label": "omitted.results.readHistoricalScenario",
+      "durationMs": 48,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 15072,
+      "event": "start",
+      "id": 7,
+      "label": "omitted.preview",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 16265,
+      "event": "complete",
+      "id": 7,
+      "label": "omitted.preview",
+      "durationMs": 1193,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 16265,
+      "event": "start",
+      "id": 8,
+      "label": "omitted.results.readByRequest",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 16298,
+      "event": "complete",
+      "id": 8,
+      "label": "omitted.results.readByRequest",
+      "durationMs": 33,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 16298,
+      "event": "start",
+      "id": 9,
+      "label": "omitted.results.write",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 16432,
+      "event": "complete",
+      "id": 9,
+      "label": "omitted.results.write",
+      "durationMs": 134,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 16434,
+      "event": "start",
+      "id": 10,
+      "label": "omitted.preview",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 17737,
+      "event": "complete",
+      "id": 10,
+      "label": "omitted.preview",
+      "durationMs": 1303,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 17737,
+      "event": "start",
+      "id": 11,
+      "label": "omitted.results.readByRequest",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 17772,
+      "event": "complete",
+      "id": 11,
+      "label": "omitted.results.readByRequest",
+      "durationMs": 35,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 17772,
+      "event": "start",
+      "id": 12,
+      "label": "omitted.results.write",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 17921,
+      "event": "complete",
+      "id": 12,
+      "label": "omitted.results.write",
+      "durationMs": 149,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 17924,
+      "event": "start",
+      "id": 13,
+      "label": "omitted.exact",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 17924,
+      "event": "start",
+      "id": 14,
+      "label": "omitted.units.issue",
+      "active": [
+        2,
+        13
+      ]
+    },
+    {
+      "elapsedMs": 19221,
+      "event": "complete",
+      "id": 14,
+      "label": "omitted.units.issue",
+      "durationMs": 1297,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 19221,
+      "event": "start",
+      "id": 15,
+      "label": "omitted.preview",
+      "active": [
+        2,
+        13
+      ]
+    },
+    {
+      "elapsedMs": 20654,
+      "event": "complete",
+      "id": 15,
+      "label": "omitted.preview",
+      "durationMs": 1433,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 20655,
+      "event": "start",
+      "id": 16,
+      "label": "omitted.preview",
+      "active": [
+        2,
+        13
+      ]
+    },
+    {
+      "elapsedMs": 22080,
+      "event": "complete",
+      "id": 16,
+      "label": "omitted.preview",
+      "durationMs": 1425,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 22081,
+      "event": "start",
+      "id": 17,
+      "label": "omitted.preview",
+      "active": [
+        2,
+        13
+      ]
+    },
+    {
+      "elapsedMs": 23497,
+      "event": "complete",
+      "id": 17,
+      "label": "omitted.preview",
+      "durationMs": 1416,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 23499,
+      "event": "start",
+      "id": 18,
+      "label": "omitted.preview",
+      "active": [
+        2,
+        13
+      ]
+    },
+    {
+      "elapsedMs": 24926,
+      "event": "complete",
+      "id": 18,
+      "label": "omitted.preview",
+      "durationMs": 1427,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 24927,
+      "event": "start",
+      "id": 19,
+      "label": "omitted.preview",
+      "active": [
+        2,
+        13
+      ]
+    },
+    {
+      "elapsedMs": 26365,
+      "event": "complete",
+      "id": 19,
+      "label": "omitted.preview",
+      "durationMs": 1438,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 26366,
+      "event": "start",
+      "id": 20,
+      "label": "omitted.preview",
+      "active": [
+        2,
+        13
+      ]
+    },
+    {
+      "elapsedMs": 27790,
+      "event": "complete",
+      "id": 20,
+      "label": "omitted.preview",
+      "durationMs": 1424,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 27792,
+      "event": "start",
+      "id": 21,
+      "label": "omitted.preview",
+      "active": [
+        2,
+        13
+      ]
+    },
+    {
+      "elapsedMs": 29231,
+      "event": "complete",
+      "id": 21,
+      "label": "omitted.preview",
+      "durationMs": 1439,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 29232,
+      "event": "start",
+      "id": 22,
+      "label": "omitted.preview",
+      "active": [
+        2,
+        13
+      ]
+    },
+    {
+      "elapsedMs": 30664,
+      "event": "complete",
+      "id": 22,
+      "label": "omitted.preview",
+      "durationMs": 1432,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 30665,
+      "event": "start",
+      "id": 23,
+      "label": "omitted.preview",
+      "active": [
+        2,
+        13
+      ]
+    },
+    {
+      "elapsedMs": 32099,
+      "event": "complete",
+      "id": 23,
+      "label": "omitted.preview",
+      "durationMs": 1434,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 32100,
+      "event": "start",
+      "id": 24,
+      "label": "omitted.units.issue",
+      "active": [
+        2,
+        13
+      ]
+    },
+    {
+      "elapsedMs": 33385,
+      "event": "complete",
+      "id": 24,
+      "label": "omitted.units.issue",
+      "durationMs": 1285,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 33385,
+      "event": "complete",
+      "id": 13,
+      "label": "omitted.exact",
+      "durationMs": 15461,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 33387,
+      "event": "start",
+      "id": 25,
+      "label": "omitted.preview",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 34793,
+      "event": "complete",
+      "id": 25,
+      "label": "omitted.preview",
+      "durationMs": 1406,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 34794,
+      "event": "start",
+      "id": 26,
+      "label": "omitted.preview",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 36210,
+      "event": "complete",
+      "id": 26,
+      "label": "omitted.preview",
+      "durationMs": 1416,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 36213,
+      "event": "start",
+      "id": 27,
+      "label": "omitted.units.resolve",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 37679,
+      "event": "complete",
+      "id": 27,
+      "label": "omitted.units.resolve",
+      "durationMs": 1466,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 37680,
+      "event": "start",
+      "id": 28,
+      "label": "omitted.units.revalidate",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 39138,
+      "event": "complete",
+      "id": 28,
+      "label": "omitted.units.revalidate",
+      "durationMs": 1459,
+      "status": true
+    },
+    {
+      "elapsedMs": 39139,
+      "event": "start",
+      "id": 29,
+      "label": "omitted.results.readHistoricalScenario",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 39205,
+      "event": "complete",
+      "id": 29,
+      "label": "omitted.results.readHistoricalScenario",
+      "durationMs": 67,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 39205,
+      "event": "start",
+      "id": 30,
+      "label": "omitted.results.readHistoricalScenario",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 39268,
+      "event": "complete",
+      "id": 30,
+      "label": "omitted.results.readHistoricalScenario",
+      "durationMs": 63,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 39270,
+      "event": "start",
+      "id": 31,
+      "label": "omitted.results.read",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 39270,
+      "event": "start",
+      "id": 32,
+      "label": "omitted.results.read",
+      "active": [
+        2,
+        31
+      ]
+    },
+    {
+      "elapsedMs": 39394,
+      "event": "complete",
+      "id": 31,
+      "label": "omitted.results.read",
+      "durationMs": 124,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 39399,
+      "event": "start",
+      "id": 33,
+      "label": "omitted.preview",
+      "active": [
+        2,
+        32
+      ]
+    },
+    {
+      "elapsedMs": 39418,
+      "event": "complete",
+      "id": 32,
+      "label": "omitted.results.read",
+      "durationMs": 148,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 39423,
+      "event": "start",
+      "id": 34,
+      "label": "omitted.preview",
+      "active": [
+        2,
+        33
+      ]
+    },
+    {
+      "elapsedMs": 42252,
+      "event": "complete",
+      "id": 33,
+      "label": "omitted.preview",
+      "durationMs": 2853,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 42274,
+      "event": "complete",
+      "id": 34,
+      "label": "omitted.preview",
+      "durationMs": 2851,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 42276,
+      "event": "start",
+      "id": 35,
+      "label": "omitted.units.revalidate",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 43709,
+      "event": "complete",
+      "id": 35,
+      "label": "omitted.units.revalidate",
+      "durationMs": 1433,
+      "status": true
+    },
+    {
+      "elapsedMs": 43709,
+      "event": "start",
+      "id": 36,
+      "label": "omitted.preview",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 45145,
+      "event": "complete",
+      "id": 36,
+      "label": "omitted.preview",
+      "durationMs": 1436,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 45146,
+      "event": "start",
+      "id": 37,
+      "label": "omitted.preview",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 46568,
+      "event": "complete",
+      "id": 37,
+      "label": "omitted.preview",
+      "durationMs": 1422,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 46569,
+      "event": "start",
+      "id": 38,
+      "label": "omitted.units.revalidate",
+      "active": [
+        2
+      ]
+    },
+    {
+      "elapsedMs": 48023,
+      "event": "complete",
+      "id": 38,
+      "label": "omitted.units.revalidate",
+      "durationMs": 1454,
+      "status": true
+    },
+    {
+      "elapsedMs": 48027,
+      "event": "complete",
+      "id": 2,
+      "label": "omitted.evaluate",
+      "durationMs": 35505,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 48027,
+      "event": "checkpoint",
+      "label": "omitted.assertions-complete",
+      "caseRef": {
+        "id": "case",
+        "incarnation": "case-incarnation",
+        "version": 3
+      },
+      "knownSubtotal": 210000,
+      "threshold": 55000.000000000015,
+      "comparisonStatus": "conditioned"
+    },
+    {
+      "elapsedMs": 48027,
+      "event": "start",
+      "id": 39,
+      "label": "choice.record",
+      "active": []
+    },
+    {
+      "elapsedMs": 59513,
+      "event": "complete",
+      "id": 39,
+      "label": "choice.record",
+      "durationMs": 11486
+    },
+    {
+      "elapsedMs": 59514,
+      "event": "checkpoint",
+      "label": "choice.persisted",
+      "caseRef": {
+        "id": "case",
+        "incarnation": "case-incarnation",
+        "version": 4
+      },
+      "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+    },
+    {
+      "elapsedMs": 59514,
+      "event": "start",
+      "id": 40,
+      "label": "training.confirm",
+      "active": []
+    },
+    {
+      "elapsedMs": 112263,
+      "event": "complete",
+      "id": 40,
+      "label": "training.confirm",
+      "durationMs": 52749
+    },
+    {
+      "elapsedMs": 112263,
+      "event": "checkpoint",
+      "label": "confirmed.assertions-complete",
+      "caseRef": {
+        "id": "case",
+        "incarnation": "case-incarnation",
+        "version": 6
+      },
+      "total": 250000,
+      "advantage": -10000,
+      "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+    },
+    {
+      "elapsedMs": 112264,
+      "event": "start",
+      "id": 41,
+      "label": "confirmed.evaluate",
+      "active": []
+    },
+    {
+      "elapsedMs": 112264,
+      "event": "start",
+      "id": 42,
+      "label": "confirmed.units.resolve",
+      "active": [
+        41
+      ]
+    },
+    {
+      "elapsedMs": 116509,
+      "event": "complete",
+      "id": 42,
+      "label": "confirmed.units.resolve",
+      "durationMs": 4245,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 116509,
+      "event": "start",
+      "id": 43,
+      "label": "confirmed.units.revalidate",
+      "active": [
+        41
+      ]
+    },
+    {
+      "elapsedMs": 120741,
+      "event": "complete",
+      "id": 43,
+      "label": "confirmed.units.revalidate",
+      "durationMs": 4232,
+      "status": true
+    },
+    {
+      "elapsedMs": 120741,
+      "event": "start",
+      "id": 44,
+      "label": "confirmed.results.readHistoricalScenario",
+      "active": [
+        41
+      ]
+    },
+    {
+      "elapsedMs": 120942,
+      "event": "complete",
+      "id": 44,
+      "label": "confirmed.results.readHistoricalScenario",
+      "durationMs": 201,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 120942,
+      "event": "start",
+      "id": 45,
+      "label": "confirmed.results.readHistoricalScenario",
+      "active": [
+        41
+      ]
+    },
+    {
+      "elapsedMs": 121145,
+      "event": "complete",
+      "id": 45,
+      "label": "confirmed.results.readHistoricalScenario",
+      "durationMs": 203,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 121147,
+      "event": "start",
+      "id": 46,
+      "label": "confirmed.coverage.issue",
+      "active": [
+        41
+      ]
+    },
+    {
+      "elapsedMs": 121147,
+      "event": "start",
+      "id": 47,
+      "label": "confirmed.authority.resolve",
+      "active": [
+        41,
+        46
+      ]
+    },
+    {
+      "elapsedMs": 121148,
+      "event": "start",
+      "id": 48,
+      "label": "confirmed.units.resolve",
+      "active": [
+        41,
+        46,
+        47
+      ]
+    },
+    {
+      "elapsedMs": 125350,
+      "event": "complete",
+      "id": 48,
+      "label": "confirmed.units.resolve",
+      "durationMs": 4202,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 125350,
+      "event": "start",
+      "id": 49,
+      "label": "confirmed.authority.read-case",
+      "active": [
+        41,
+        46,
+        47
+      ]
+    },
+    {
+      "elapsedMs": 125393,
+      "event": "complete",
+      "id": 49,
+      "label": "confirmed.authority.read-case",
+      "durationMs": 43
+    },
+    {
+      "elapsedMs": 125394,
+      "event": "start",
+      "id": 50,
+      "label": "confirmed.authority.read-classifications",
+      "active": [
+        41,
+        46,
+        47
+      ]
+    },
+    {
+      "elapsedMs": 125433,
+      "event": "complete",
+      "id": 50,
+      "label": "confirmed.authority.read-classifications",
+      "durationMs": 39,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 125435,
+      "event": "start",
+      "id": 51,
+      "label": "confirmed.authority.evidence-context",
+      "active": [
+        41,
+        46,
+        47
+      ]
+    },
+    {
+      "elapsedMs": 125463,
+      "event": "complete",
+      "id": 51,
+      "label": "confirmed.authority.evidence-context",
+      "durationMs": 28
+    },
+    {
+      "elapsedMs": 125470,
+      "event": "complete",
+      "id": 47,
+      "label": "confirmed.authority.resolve",
+      "durationMs": 4323,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 125474,
+      "event": "start",
+      "id": 52,
+      "label": "confirmed.authority.is-still-valid",
+      "active": [
+        41,
+        46
+      ]
+    },
+    {
+      "elapsedMs": 125475,
+      "event": "start",
+      "id": 53,
+      "label": "confirmed.authority.read-classifications",
+      "active": [
+        41,
+        46,
+        52
+      ]
+    },
+    {
+      "elapsedMs": 125513,
+      "event": "complete",
+      "id": 53,
+      "label": "confirmed.authority.read-classifications",
+      "durationMs": 38,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 125515,
+      "event": "start",
+      "id": 54,
+      "label": "confirmed.authority.read-case",
+      "active": [
+        41,
+        46,
+        52
+      ]
+    },
+    {
+      "elapsedMs": 125558,
+      "event": "complete",
+      "id": 54,
+      "label": "confirmed.authority.read-case",
+      "durationMs": 43
+    },
+    {
+      "elapsedMs": 125559,
+      "event": "start",
+      "id": 55,
+      "label": "confirmed.units.revalidate",
+      "active": [
+        41,
+        46,
+        52
+      ]
+    },
+    {
+      "elapsedMs": 129762,
+      "event": "complete",
+      "id": 55,
+      "label": "confirmed.units.revalidate",
+      "durationMs": 4203,
+      "status": true
+    },
+    {
+      "elapsedMs": 129762,
+      "event": "complete",
+      "id": 52,
+      "label": "confirmed.authority.is-still-valid",
+      "durationMs": 4288,
+      "status": true
+    },
+    {
+      "elapsedMs": 129786,
+      "event": "start",
+      "id": 56,
+      "label": "confirmed.units.issue",
+      "active": [
+        41,
+        46
+      ]
+    },
+    {
+      "elapsedMs": 133515,
+      "event": "complete",
+      "id": 56,
+      "label": "confirmed.units.issue",
+      "durationMs": 3729,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 133516,
+      "event": "start",
+      "id": 57,
+      "label": "confirmed.preview",
+      "active": [
+        41,
+        46
+      ]
+    },
+    {
+      "elapsedMs": 137641,
+      "event": "complete",
+      "id": 57,
+      "label": "confirmed.preview",
+      "durationMs": 4125,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 137642,
+      "event": "start",
+      "id": 58,
+      "label": "confirmed.preview",
+      "active": [
+        41,
+        46
+      ]
+    },
+    {
+      "elapsedMs": 141734,
+      "event": "complete",
+      "id": 58,
+      "label": "confirmed.preview",
+      "durationMs": 4092,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 141736,
+      "event": "start",
+      "id": 59,
+      "label": "confirmed.units.issue",
+      "active": [
+        41,
+        46
+      ]
+    },
+    {
+      "elapsedMs": 145431,
+      "event": "complete",
+      "id": 59,
+      "label": "confirmed.units.issue",
+      "durationMs": 3695,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 145452,
+      "event": "start",
+      "id": 60,
+      "label": "confirmed.authority.resolve",
+      "active": [
+        41,
+        46
+      ]
+    },
+    {
+      "elapsedMs": 145452,
+      "event": "start",
+      "id": 61,
+      "label": "confirmed.units.resolve",
+      "active": [
+        41,
+        46,
+        60
+      ]
+    },
+    {
+      "elapsedMs": 149732,
+      "event": "complete",
+      "id": 61,
+      "label": "confirmed.units.resolve",
+      "durationMs": 4280,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 149732,
+      "event": "start",
+      "id": 62,
+      "label": "confirmed.authority.read-case",
+      "active": [
+        41,
+        46,
+        60
+      ]
+    },
+    {
+      "elapsedMs": 149776,
+      "event": "complete",
+      "id": 62,
+      "label": "confirmed.authority.read-case",
+      "durationMs": 44
+    },
+    {
+      "elapsedMs": 149777,
+      "event": "start",
+      "id": 63,
+      "label": "confirmed.authority.read-classifications",
+      "active": [
+        41,
+        46,
+        60
+      ]
+    },
+    {
+      "elapsedMs": 149816,
+      "event": "complete",
+      "id": 63,
+      "label": "confirmed.authority.read-classifications",
+      "durationMs": 39,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 149818,
+      "event": "start",
+      "id": 64,
+      "label": "confirmed.authority.evidence-context",
+      "active": [
+        41,
+        46,
+        60
+      ]
+    },
+    {
+      "elapsedMs": 149848,
+      "event": "complete",
+      "id": 64,
+      "label": "confirmed.authority.evidence-context",
+      "durationMs": 30
+    },
+    {
+      "elapsedMs": 149855,
+      "event": "complete",
+      "id": 60,
+      "label": "confirmed.authority.resolve",
+      "durationMs": 4403,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 149860,
+      "event": "start",
+      "id": 65,
+      "label": "confirmed.authority.is-still-valid",
+      "active": [
+        41,
+        46
+      ]
+    },
+    {
+      "elapsedMs": 149860,
+      "event": "start",
+      "id": 66,
+      "label": "confirmed.authority.read-classifications",
+      "active": [
+        41,
+        46,
+        65
+      ]
+    },
+    {
+      "elapsedMs": 149899,
+      "event": "complete",
+      "id": 66,
+      "label": "confirmed.authority.read-classifications",
+      "durationMs": 39,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 149900,
+      "event": "start",
+      "id": 67,
+      "label": "confirmed.authority.read-case",
+      "active": [
+        41,
+        46,
+        65
+      ]
+    },
+    {
+      "elapsedMs": 149945,
+      "event": "complete",
+      "id": 67,
+      "label": "confirmed.authority.read-case",
+      "durationMs": 45
+    },
+    {
+      "elapsedMs": 149946,
+      "event": "start",
+      "id": 68,
+      "label": "confirmed.units.revalidate",
+      "active": [
+        41,
+        46,
+        65
+      ]
+    },
+    {
+      "elapsedMs": 154223,
+      "event": "complete",
+      "id": 68,
+      "label": "confirmed.units.revalidate",
+      "durationMs": 4277,
+      "status": true
+    },
+    {
+      "elapsedMs": 154224,
+      "event": "complete",
+      "id": 65,
+      "label": "confirmed.authority.is-still-valid",
+      "durationMs": 4364,
+      "status": true
+    },
+    {
+      "elapsedMs": 154241,
+      "event": "complete",
+      "id": 46,
+      "label": "confirmed.coverage.issue",
+      "durationMs": 33094,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 154241,
+      "event": "start",
+      "id": 69,
+      "label": "confirmed.preview",
+      "active": [
+        41
+      ]
+    },
+    {
+      "elapsedMs": 158386,
+      "event": "complete",
+      "id": 69,
+      "label": "confirmed.preview",
+      "durationMs": 4145,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 158387,
+      "event": "start",
+      "id": 70,
+      "label": "confirmed.coverage.qualify",
+      "active": [
+        41
+      ]
+    },
+    {
+      "elapsedMs": 158387,
+      "event": "start",
+      "id": 71,
+      "label": "confirmed.authority.resolve",
+      "active": [
+        41,
+        70
+      ]
+    },
+    {
+      "elapsedMs": 158388,
+      "event": "start",
+      "id": 72,
+      "label": "confirmed.units.resolve",
+      "active": [
+        41,
+        70,
+        71
+      ]
+    },
+    {
+      "elapsedMs": 162620,
+      "event": "complete",
+      "id": 72,
+      "label": "confirmed.units.resolve",
+      "durationMs": 4232,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 162620,
+      "event": "start",
+      "id": 73,
+      "label": "confirmed.authority.read-case",
+      "active": [
+        41,
+        70,
+        71
+      ]
+    },
+    {
+      "elapsedMs": 162661,
+      "event": "complete",
+      "id": 73,
+      "label": "confirmed.authority.read-case",
+      "durationMs": 41
+    },
+    {
+      "elapsedMs": 162661,
+      "event": "start",
+      "id": 74,
+      "label": "confirmed.authority.read-classifications",
+      "active": [
+        41,
+        70,
+        71
+      ]
+    },
+    {
+      "elapsedMs": 162703,
+      "event": "complete",
+      "id": 74,
+      "label": "confirmed.authority.read-classifications",
+      "durationMs": 42,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 162705,
+      "event": "start",
+      "id": 75,
+      "label": "confirmed.authority.evidence-context",
+      "active": [
+        41,
+        70,
+        71
+      ]
+    },
+    {
+      "elapsedMs": 162734,
+      "event": "complete",
+      "id": 75,
+      "label": "confirmed.authority.evidence-context",
+      "durationMs": 29
+    },
+    {
+      "elapsedMs": 162736,
+      "event": "complete",
+      "id": 71,
+      "label": "confirmed.authority.resolve",
+      "durationMs": 4349,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 162741,
+      "event": "start",
+      "id": 76,
+      "label": "confirmed.authority.is-still-valid",
+      "active": [
+        41,
+        70
+      ]
+    },
+    {
+      "elapsedMs": 162741,
+      "event": "start",
+      "id": 77,
+      "label": "confirmed.authority.read-classifications",
+      "active": [
+        41,
+        70,
+        76
+      ]
+    },
+    {
+      "elapsedMs": 162784,
+      "event": "complete",
+      "id": 77,
+      "label": "confirmed.authority.read-classifications",
+      "durationMs": 43,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 162786,
+      "event": "start",
+      "id": 78,
+      "label": "confirmed.authority.read-case",
+      "active": [
+        41,
+        70,
+        76
+      ]
+    },
+    {
+      "elapsedMs": 162826,
+      "event": "complete",
+      "id": 78,
+      "label": "confirmed.authority.read-case",
+      "durationMs": 40
+    },
+    {
+      "elapsedMs": 162827,
+      "event": "start",
+      "id": 79,
+      "label": "confirmed.units.revalidate",
+      "active": [
+        41,
+        70,
+        76
+      ]
+    },
+    {
+      "elapsedMs": 167087,
+      "event": "complete",
+      "id": 79,
+      "label": "confirmed.units.revalidate",
+      "durationMs": 4260,
+      "status": true
+    },
+    {
+      "elapsedMs": 167087,
+      "event": "complete",
+      "id": 76,
+      "label": "confirmed.authority.is-still-valid",
+      "durationMs": 4346,
+      "status": true
+    },
+    {
+      "elapsedMs": 167117,
+      "event": "start",
+      "id": 80,
+      "label": "confirmed.preview",
+      "active": [
+        41,
+        70
+      ]
+    },
+    {
+      "elapsedMs": 171309,
+      "event": "complete",
+      "id": 80,
+      "label": "confirmed.preview",
+      "durationMs": 4192,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 171323,
+      "event": "start",
+      "id": 81,
+      "label": "confirmed.authority.resolve",
+      "active": [
+        41,
+        70
+      ]
+    },
+    {
+      "elapsedMs": 171323,
+      "event": "start",
+      "id": 82,
+      "label": "confirmed.units.resolve",
+      "active": [
+        41,
+        70,
+        81
+      ]
+    },
+    {
+      "elapsedMs": 175574,
+      "event": "complete",
+      "id": 82,
+      "label": "confirmed.units.resolve",
+      "durationMs": 4251,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 175574,
+      "event": "start",
+      "id": 83,
+      "label": "confirmed.authority.read-case",
+      "active": [
+        41,
+        70,
+        81
+      ]
+    },
+    {
+      "elapsedMs": 175614,
+      "event": "complete",
+      "id": 83,
+      "label": "confirmed.authority.read-case",
+      "durationMs": 40
+    },
+    {
+      "elapsedMs": 175614,
+      "event": "start",
+      "id": 84,
+      "label": "confirmed.authority.read-classifications",
+      "active": [
+        41,
+        70,
+        81
+      ]
+    },
+    {
+      "elapsedMs": 175652,
+      "event": "complete",
+      "id": 84,
+      "label": "confirmed.authority.read-classifications",
+      "durationMs": 38,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 175654,
+      "event": "start",
+      "id": 85,
+      "label": "confirmed.authority.evidence-context",
+      "active": [
+        41,
+        70,
+        81
+      ]
+    },
+    {
+      "elapsedMs": 175686,
+      "event": "complete",
+      "id": 85,
+      "label": "confirmed.authority.evidence-context",
+      "durationMs": 32
+    },
+    {
+      "elapsedMs": 175688,
+      "event": "complete",
+      "id": 81,
+      "label": "confirmed.authority.resolve",
+      "durationMs": 4365,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 175694,
+      "event": "start",
+      "id": 86,
+      "label": "confirmed.authority.is-still-valid",
+      "active": [
+        41,
+        70
+      ]
+    },
+    {
+      "elapsedMs": 175694,
+      "event": "start",
+      "id": 87,
+      "label": "confirmed.authority.read-classifications",
+      "active": [
+        41,
+        70,
+        86
+      ]
+    },
+    {
+      "elapsedMs": 175737,
+      "event": "complete",
+      "id": 87,
+      "label": "confirmed.authority.read-classifications",
+      "durationMs": 43,
+      "status": "ok"
+    },
+    {
+      "elapsedMs": 175738,
+      "event": "start",
+      "id": 88,
+      "label": "confirmed.authority.read-case",
+      "active": [
+        41,
+        70,
+        86
+      ]
+    },
+    {
+      "elapsedMs": 175782,
+      "event": "complete",
+      "id": 88,
+      "label": "confirmed.authority.read-case",
+      "durationMs": 44
+    },
+    {
+      "elapsedMs": 175784,
+      "event": "start",
+      "id": 89,
+      "label": "confirmed.units.revalidate",
+      "active": [
+        41,
+        70,
+        86
+      ]
+    },
+    {
+      "elapsedMs": 180017,
+      "event": "complete",
+      "id": 89,
+      "label": "confirmed.units.revalidate",
+      "durationMs": 4233,
+      "status": false
+    },
+    {
+      "elapsedMs": 180017,
+      "event": "complete",
+      "id": 86,
+      "label": "confirmed.authority.is-still-valid",
+      "durationMs": 4323,
+      "status": false
+    },
+    {
+      "elapsedMs": 180017,
+      "event": "complete",
+      "id": 70,
+      "label": "confirmed.coverage.qualify",
+      "durationMs": 21630,
+      "status": "stale"
+    },
+    {
+      "elapsedMs": 180017,
+      "event": "complete",
+      "id": 41,
+      "label": "confirmed.evaluate",
+      "durationMs": 67753,
+      "status": "stale"
+    },
+    {
+      "elapsedMs": 180021,
+      "event": "summary",
+      "counts": {
+        "fixture.create": {
+          "calls": 1,
+          "completed": 1,
+          "failed": 0,
+          "inclusiveMs": 12521
+        },
+        "omitted.evaluate": {
+          "calls": 1,
+          "completed": 1,
+          "failed": 0,
+          "inclusiveMs": 35505
+        },
+        "omitted.units.resolve": {
+          "calls": 2,
+          "completed": 2,
+          "failed": 0,
+          "inclusiveMs": 2676
+        },
+        "omitted.units.revalidate": {
+          "calls": 4,
+          "completed": 4,
+          "failed": 0,
+          "inclusiveMs": 5578
+        },
+        "omitted.results.readHistoricalScenario": {
+          "calls": 4,
+          "completed": 4,
+          "failed": 0,
+          "inclusiveMs": 232
+        },
+        "omitted.preview": {
+          "calls": 17,
+          "completed": 17,
+          "failed": 0,
+          "inclusiveMs": 26749
+        },
+        "omitted.results.readByRequest": {
+          "calls": 2,
+          "completed": 2,
+          "failed": 0,
+          "inclusiveMs": 68
+        },
+        "omitted.results.write": {
+          "calls": 2,
+          "completed": 2,
+          "failed": 0,
+          "inclusiveMs": 283
+        },
+        "omitted.exact": {
+          "calls": 1,
+          "completed": 1,
+          "failed": 0,
+          "inclusiveMs": 15461
+        },
+        "omitted.units.issue": {
+          "calls": 2,
+          "completed": 2,
+          "failed": 0,
+          "inclusiveMs": 2582
+        },
+        "omitted.results.read": {
+          "calls": 2,
+          "completed": 2,
+          "failed": 0,
+          "inclusiveMs": 272
+        },
+        "choice.record": {
+          "calls": 1,
+          "completed": 1,
+          "failed": 0,
+          "inclusiveMs": 11486
+        },
+        "training.confirm": {
+          "calls": 1,
+          "completed": 1,
+          "failed": 0,
+          "inclusiveMs": 52749
+        },
+        "confirmed.evaluate": {
+          "calls": 1,
+          "completed": 1,
+          "failed": 0,
+          "inclusiveMs": 67753
+        },
+        "confirmed.units.resolve": {
+          "calls": 5,
+          "completed": 5,
+          "failed": 0,
+          "inclusiveMs": 21210
+        },
+        "confirmed.units.revalidate": {
+          "calls": 5,
+          "completed": 5,
+          "failed": 0,
+          "inclusiveMs": 21205
+        },
+        "confirmed.results.readHistoricalScenario": {
+          "calls": 2,
+          "completed": 2,
+          "failed": 0,
+          "inclusiveMs": 404
+        },
+        "confirmed.coverage.issue": {
+          "calls": 1,
+          "completed": 1,
+          "failed": 0,
+          "inclusiveMs": 33094
+        },
+        "confirmed.authority.resolve": {
+          "calls": 4,
+          "completed": 4,
+          "failed": 0,
+          "inclusiveMs": 17440
+        },
+        "confirmed.authority.read-case": {
+          "calls": 8,
+          "completed": 8,
+          "failed": 0,
+          "inclusiveMs": 341
+        },
+        "confirmed.authority.read-classifications": {
+          "calls": 8,
+          "completed": 8,
+          "failed": 0,
+          "inclusiveMs": 321
+        },
+        "confirmed.authority.evidence-context": {
+          "calls": 4,
+          "completed": 4,
+          "failed": 0,
+          "inclusiveMs": 119
+        },
+        "confirmed.authority.is-still-valid": {
+          "calls": 4,
+          "completed": 4,
+          "failed": 0,
+          "inclusiveMs": 17321
+        },
+        "confirmed.units.issue": {
+          "calls": 2,
+          "completed": 2,
+          "failed": 0,
+          "inclusiveMs": 7424
+        },
+        "confirmed.preview": {
+          "calls": 4,
+          "completed": 4,
+          "failed": 0,
+          "inclusiveMs": 16554
+        },
+        "confirmed.coverage.qualify": {
+          "calls": 1,
+          "completed": 1,
+          "failed": 0,
+          "inclusiveMs": 21630
+        }
+      },
+      "active": []
+    }
+  ],
+  "fixtureTrace": [
+    {
+      "label": "renewal-choice-history",
+      "phase": "bootstrap-start",
+      "elapsedMs": 0,
+      "budgetMs": 180000,
+      "counts": {}
+    },
+    {
+      "label": "renewal-choice-history",
+      "phase": "bootstrap-complete",
+      "elapsedMs": 70,
+      "budgetMs": 180000,
+      "counts": {
+        "c08.read.cases": {
+          "calls": 1,
+          "elapsedMs": 3,
+          "maximumMs": 3
+        }
+      },
+      "stateBytes": 38210,
+      "transactionsBytes": 415,
+      "casesBytes": 37395,
+      "resultBytes": 2,
+      "transactions": 1,
+      "cases": 1,
+      "results": 0
+    },
+    {
+      "label": "renewal-choice-history",
+      "phase": "prepare:transition-omitted:start",
+      "elapsedMs": 74,
+      "budgetMs": 180000,
+      "counts": {
+        "c08.read.cases": {
+          "calls": 2,
+          "elapsedMs": 6,
+          "maximumMs": 3
+        }
+      },
+      "stateBytes": 38210,
+      "transactionsBytes": 415,
+      "casesBytes": 37395,
+      "resultBytes": 2,
+      "transactions": 1,
+      "cases": 1,
+      "results": 0
+    },
+    {
+      "label": "renewal-choice-history",
+      "phase": "prepare:transition-omitted:complete",
+      "elapsedMs": 12520,
+      "budgetMs": 180000,
+      "counts": {
+        "c08.read.cases": {
+          "calls": 456,
+          "elapsedMs": 6043,
+          "maximumMs": 35
+        },
+        "host.revalidate": {
+          "calls": 2962,
+          "elapsedMs": 93,
+          "maximumMs": 4
+        },
+        "operation-source": {
+          "calls": 846,
+          "elapsedMs": 44,
+          "maximumMs": 3
+        },
+        "operation-coverage": {
+          "calls": 462,
+          "elapsedMs": 12,
+          "maximumMs": 1
+        },
+        "c08.read.preferences": {
+          "calls": 96,
+          "elapsedMs": 1084,
+          "maximumMs": 18
+        },
+        "c08.transaction.preferences": {
+          "calls": 3,
+          "elapsedMs": 84,
+          "maximumMs": 40
+        },
+        "classified-source": {
+          "calls": 39,
+          "elapsedMs": 3,
+          "maximumMs": 2
+        },
+        "classified-coverage": {
+          "calls": 41,
+          "elapsedMs": 1994,
+          "maximumMs": 79
+        },
+        "c08.transaction.cases": {
+          "calls": 5,
+          "elapsedMs": 215,
+          "maximumMs": 50
+        },
+        "planner.verifySourceOnly": {
+          "calls": 96,
+          "elapsedMs": 283,
+          "maximumMs": 5
+        },
+        "planner.verifyOperation": {
+          "calls": 96,
+          "elapsedMs": 1549,
+          "maximumMs": 24
+        },
+        "planner.verifySourceProjection": {
+          "calls": 192,
+          "elapsedMs": 213,
+          "maximumMs": 4
+        }
+      },
+      "stateBytes": 540335,
+      "transactionsBytes": 159999,
+      "casesBytes": 53809,
+      "resultBytes": 111960,
+      "transactions": 9,
+      "cases": 1,
+      "results": 5
+    },
+    {
+      "label": "renewal-choice-history",
+      "phase": "prepare:transition-confirmed:start",
+      "elapsedMs": 59559,
+      "budgetMs": 180000,
+      "counts": {
+        "c08.read.cases": {
+          "calls": 1838,
+          "elapsedMs": 30891,
+          "maximumMs": 44
+        },
+        "host.revalidate": {
+          "calls": 12268,
+          "elapsedMs": 1336,
+          "maximumMs": 20
+        },
+        "operation-source": {
+          "calls": 3566,
+          "elapsedMs": 211,
+          "maximumMs": 4
+        },
+        "operation-coverage": {
+          "calls": 1918,
+          "elapsedMs": 63,
+          "maximumMs": 14
+        },
+        "c08.read.preferences": {
+          "calls": 364,
+          "elapsedMs": 6396,
+          "maximumMs": 40
+        },
+        "c08.transaction.preferences": {
+          "calls": 3,
+          "elapsedMs": 84,
+          "maximumMs": 40
+        },
+        "classified-source": {
+          "calls": 220,
+          "elapsedMs": 75,
+          "maximumMs": 15
+        },
+        "classified-coverage": {
+          "calls": 203,
+          "elapsedMs": 15463,
+          "maximumMs": 187
+        },
+        "c08.transaction.cases": {
+          "calls": 8,
+          "elapsedMs": 387,
+          "maximumMs": 65
+        },
+        "planner.verifySourceOnly": {
+          "calls": 412,
+          "elapsedMs": 1181,
+          "maximumMs": 9
+        },
+        "planner.verifyOperation": {
+          "calls": 412,
+          "elapsedMs": 6546,
+          "maximumMs": 24
+        },
+        "planner.verifySourceProjection": {
+          "calls": 824,
+          "elapsedMs": 900,
+          "maximumMs": 7
+        },
+        "c08.read.outbox": {
+          "calls": 1,
+          "elapsedMs": 18,
+          "maximumMs": 18
+        }
+      },
+      "stateBytes": 831840,
+      "transactionsBytes": 331727,
+      "casesBytes": 102163,
+      "resultBytes": 180162,
+      "transactions": 12,
+      "cases": 1,
+      "results": 7
+    },
+    {
+      "label": "renewal-choice-history",
+      "phase": "prepare:transition-confirmed:complete",
+      "elapsedMs": 112261,
+      "budgetMs": 180000,
+      "counts": {
+        "c08.read.cases": {
+          "calls": 2363,
+          "elapsedMs": 52290,
+          "maximumMs": 96
+        },
+        "host.revalidate": {
+          "calls": 17089,
+          "elapsedMs": 2111,
+          "maximumMs": 31
+        },
+        "operation-source": {
+          "calls": 4180,
+          "elapsedMs": 2227,
+          "maximumMs": 35
+        },
+        "operation-coverage": {
+          "calls": 2020,
+          "elapsedMs": 63,
+          "maximumMs": 14
+        },
+        "c08.read.preferences": {
+          "calls": 446,
+          "elapsedMs": 9297,
+          "maximumMs": 45
+        },
+        "c08.transaction.preferences": {
+          "calls": 6,
+          "elapsedMs": 372,
+          "maximumMs": 122
+        },
+        "classified-source": {
+          "calls": 242,
+          "elapsedMs": 365,
+          "maximumMs": 33
+        },
+        "classified-coverage": {
+          "calls": 229,
+          "elapsedMs": 20241,
+          "maximumMs": 228
+        },
+        "c08.transaction.cases": {
+          "calls": 13,
+          "elapsedMs": 1005,
+          "maximumMs": 135
+        },
+        "planner.verifySourceOnly": {
+          "calls": 668,
+          "elapsedMs": 2482,
+          "maximumMs": 10
+        },
+        "planner.verifyOperation": {
+          "calls": 412,
+          "elapsedMs": 6546,
+          "maximumMs": 24
+        },
+        "planner.verifySourceProjection": {
+          "calls": 1336,
+          "elapsedMs": 1417,
+          "maximumMs": 7
+        },
+        "c08.read.outbox": {
+          "calls": 1,
+          "elapsedMs": 18,
+          "maximumMs": 18
+        }
+      },
+      "stateBytes": 1504375,
+      "transactionsBytes": 636765,
+      "casesBytes": 115934,
+      "resultBytes": 319129,
+      "transactions": 20,
+      "cases": 1,
+      "results": 12
+    },
+    {
+      "label": "renewal-choice-history",
+      "phase": "prepare:transition-confirmed:complete",
+      "elapsedMs": 180015,
+      "budgetMs": 180000,
+      "status": "deadline-exceeded",
+      "counts": {
+        "c08.read.cases": {
+          "calls": 3017,
+          "elapsedMs": 79876,
+          "maximumMs": 97
+        },
+        "host.revalidate": {
+          "calls": 23319,
+          "elapsedMs": 2791,
+          "maximumMs": 32
+        },
+        "operation-source": {
+          "calls": 4996,
+          "elapsedMs": 4375,
+          "maximumMs": 35
+        },
+        "operation-coverage": {
+          "calls": 2132,
+          "elapsedMs": 63,
+          "maximumMs": 14
+        },
+        "c08.read.preferences": {
+          "calls": 542,
+          "elapsedMs": 13333,
+          "maximumMs": 53
+        },
+        "c08.transaction.preferences": {
+          "calls": 6,
+          "elapsedMs": 372,
+          "maximumMs": 122
+        },
+        "classified-source": {
+          "calls": 278,
+          "elapsedMs": 1202,
+          "maximumMs": 36
+        },
+        "classified-coverage": {
+          "calls": 261,
+          "elapsedMs": 28009,
+          "maximumMs": 288
+        },
+        "c08.transaction.cases": {
+          "calls": 13,
+          "elapsedMs": 1005,
+          "maximumMs": 135
+        },
+        "planner.verifySourceOnly": {
+          "calls": 1020,
+          "elapsedMs": 4194,
+          "maximumMs": 10
+        },
+        "planner.verifyOperation": {
+          "calls": 412,
+          "elapsedMs": 6546,
+          "maximumMs": 24
+        },
+        "planner.verifySourceProjection": {
+          "calls": 2040,
+          "elapsedMs": 2121,
+          "maximumMs": 7
+        },
+        "c08.read.outbox": {
+          "calls": 1,
+          "elapsedMs": 18,
+          "maximumMs": 18
+        }
+      }
+    }
+  ],
+  "terminalFixtureCount": {
+    "label": "renewal-choice-history",
+    "phase": "prepare:transition-confirmed:complete",
+    "elapsedMs": 180015,
+    "budgetMs": 180000,
+    "status": "deadline-exceeded",
+    "counts": {
+      "c08.read.cases": {
+        "calls": 3017,
+        "elapsedMs": 79876,
+        "maximumMs": 97
+      },
+      "host.revalidate": {
+        "calls": 23319,
+        "elapsedMs": 2791,
+        "maximumMs": 32
+      },
+      "operation-source": {
+        "calls": 4996,
+        "elapsedMs": 4375,
+        "maximumMs": 35
+      },
+      "operation-coverage": {
+        "calls": 2132,
+        "elapsedMs": 63,
+        "maximumMs": 14
+      },
+      "c08.read.preferences": {
+        "calls": 542,
+        "elapsedMs": 13333,
+        "maximumMs": 53
+      },
+      "c08.transaction.preferences": {
+        "calls": 6,
+        "elapsedMs": 372,
+        "maximumMs": 122
+      },
+      "classified-source": {
+        "calls": 278,
+        "elapsedMs": 1202,
+        "maximumMs": 36
+      },
+      "classified-coverage": {
+        "calls": 261,
+        "elapsedMs": 28009,
+        "maximumMs": 288
+      },
+      "c08.transaction.cases": {
+        "calls": 13,
+        "elapsedMs": 1005,
+        "maximumMs": 135
+      },
+      "planner.verifySourceOnly": {
+        "calls": 1020,
+        "elapsedMs": 4194,
+        "maximumMs": 10
+      },
+      "planner.verifyOperation": {
+        "calls": 412,
+        "elapsedMs": 6546,
+        "maximumMs": 24
+      },
+      "planner.verifySourceProjection": {
+        "calls": 2040,
+        "elapsedMs": 2121,
+        "maximumMs": 7
+      },
+      "c08.read.outbox": {
+        "calls": 1,
+        "elapsedMs": 18,
+        "maximumMs": 18
+      }
+    }
+  },
+  "log": {
+    "sha256": "4f1cc81593c46dbcaae3fb03954aa42ce6fafa44ccd4e7b2d483d62bb42dd666",
+    "bytes": 109301
+  },
+  "omni": {
+    "nonce": "2bed61ed883bb1bad0cfab235dce8b1f",
+    "result": "not applicable"
+  },
+  "artifacts": [],
+  "excerpts": [
+    "2026-11-14T19:25:12.9275247Z error: Source-only certified analysis unavailable: {\"status\":\"stale\",\"reason\":\"coverage-authority-changed\"}",
+    "2026-11-14T19:25:12.9277987Z (fail) FIN-IND-005 Finance performance preserves confirmed sensitivity and preserves the 15000/15001 journey through replay and real restart [180025.69ms]",
+    "2026-11-14T19:25:13.0701765Z  0 pass",
+    "2026-11-14T19:25:13.0702077Z  1 fail",
+    "2026-11-14T19:25:13.0702407Z  18 expect() calls"
+  ],
+  "reached": [
+    "omitted training absent, known subtotal210000, pending/conditioned, known-only exact threshold near55000",
+    "conditioned original choice persisted",
+    "same case/incarnation, higher case version",
+    "training40000, total250000, complete coverage, advantage−10000, failed minimum criterion"
+  ],
+  "notReached": [
+    "confirmed sensitivity threshold and exact evidence",
+    "15000/15001 final witness assertions",
+    "post-confirmation historical choice assertions",
+    "authorized choice retry",
+    "real provider close/reopen, collaborator/outsider/revoked reads"
+  ],
+  "limitations": [
+    "Guard expiry was observed during units.revalidate in the first confirmed coverage qualification; false propagated as stale. The old fixture checkpoint label prepare:transition-confirmed:complete is not the active phase.",
+    "The confirmed evaluate trace completed with status stale; completed counters do not mean successful financial evaluation.",
+    "S6 is not a performance success: omitted.evaluate35505ms versus28621ms in S3; the terminal phases differ. Cumulative3017 versus3996 C08 reads at different terminal points is not a like-for-like reduction.",
+    "No confirmed sample result writes or exact search occurred after the failed qualification. Financial setup assertions alone do not establish FIN-IND-005 acceptance.",
+    "The original fixture guard, per-test budget, request selection and assertions were preserved. No retry without a subsequent material change is authorized by this receipt.",
+    "The PR59 WP10 envelope proposal is not applied here and has no demonstrated sufficiency for completing this journey."
+  ]
+}
+

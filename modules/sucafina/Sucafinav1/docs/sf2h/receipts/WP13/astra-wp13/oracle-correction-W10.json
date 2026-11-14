@@ -1,0 +1,16 @@
+{
+  "schema": "wp13-own-oracle-correction-v1",
+  "parent": "ebc7000258b7fe10ad206bdb013415298a27b341",
+  "sourceRun": 43590329132,
+  "failure": "coverage.test.ts:54 expected conditioned eligibility despite a definitive failed canonical criterion",
+  "reason": "Incomplete coverage keeps the comparison conditioned and total null but cannot erase a definitive failed constraint. This behavior is already implemented and passed the separate portfolio tests.",
+  "change": "Assert ineligible, conditioned comparison, null original scenario total and preserved failed criterion together.",
+  "runtimeChanges": false,
+  "foreignChanges": false,
+  "changedTest": "modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+  "previousBlob": "64a05c6d18aa71a85cd8a5a23eb3706f672a8c81",
+  "newBlob": "0a5f3d28435378bae4637d629ff991fb03993f27",
+  "sha256": "aa6caf31d74376546139debcaae8d999ff074a47a434e5805fd27e564e5e339e",
+  "testExecution": "PENDING_HOSTED",
+  "ready": false
+}

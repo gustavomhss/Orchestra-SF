@@ -1,0 +1,85 @@
+name: astra-wp05-check
+
+on:
+  push:
+    branches:
+      - astra-check-wp05
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact WP05 product
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Record product and guard base
+        id: identity
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git fetch --no-tags origin dev:refs/remotes/origin/dev
+          git rev-parse --verify origin/dev^{commit}
+          git merge-base HEAD origin/dev
+          mkdir -p "$RUNNER_TEMP/astra-wp05-evidence"
+          node --input-type=module <<'NODE'
+          import { execFileSync } from 'node:child_process'
+          import { writeFileSync } from 'node:fs'
+          const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim()
+          const record = {
+            productSha: git('rev-parse', 'HEAD'),
+            productTree: git('rev-parse', 'HEAD^{tree}'),
+            githubSha: process.env.GITHUB_SHA,
+            guardBaseRef: 'origin/dev',
+            guardBaseSha: git('rev-parse', 'origin/dev'),
+            guardMergeBase: git('merge-base', 'HEAD', 'origin/dev'),
+            runId: process.env.GITHUB_RUN_ID,
+            runAttempt: process.env.GITHUB_RUN_ATTEMPT,
+          }
+          writeFileSync(`${process.env.RUNNER_TEMP}/astra-wp05-evidence/product.json`, JSON.stringify(record, null, 2) + '\n')
+          console.log(JSON.stringify(record, null, 2))
+          NODE
+
+      - name: Setup Bun
+        id: setup
+        uses: ./.github/actions/setup-bun
+        with:
+          install-flags: --frozen-lockfile
+
+      - name: Typecheck Sucafina package
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        working-directory: modules/sucafina
+        run: |
+          set -euo pipefail
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/astra-wp05-evidence/typecheck.log"
+
+      - name: Check guards against origin/dev
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/astra-wp05-evidence/guards.log"
+
+      - name: Verify checked product remains exact
+        if: ${{ !cancelled() && steps.identity.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git diff --exit-code HEAD
+
+      - name: Upload exact-check evidence
+        if: ${{ always() && steps.identity.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: astra-wp05-check-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/astra-wp05-evidence
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,99 @@
+{
+  "schema": "wp13-exact-owner-intake-v1",
+  "increment": "W17",
+  "preparedAt": "2026-11-14T13:20:52.278925+00:00",
+  "parent": {
+    "head": "eb5d411292b8892673cff751b3492a14146b7785",
+    "tree": "2fd4176a9779c23394b6d4c62f55cb3956295904"
+  },
+  "ready": false,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "sha": "e646386af209978f2a931a10a070061ba0c97cbe",
+      "sha256": "8a16ba240d930c60ec90a25f4189fe053f61df2e2021aada83fb3a1874b256ab",
+      "bytes": 17077,
+      "sourceCommit": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "previousBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "owner": "WP11",
+      "action": "EXACT_PUBLISHED_OWNER_BLOB",
+      "preservedLocalBefore": {
+        "path": "reference/wp13-W17-before/modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "bytes": 16655,
+        "sha256": "22c59638bb611d8b18c9c19d5c16835be3c9b704e1d0d0b123a436ab92ace9b1",
+        "gitBlob": "810539cbd2f0b89006102b334710e9d6695151ca"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "sha": "67b8b179a3fba332933d8ad00820df82b7ab258e",
+      "sha256": "8b03c302aec54800e951e623c1e9b15bc31e3322ad75c964da910350b504d45a",
+      "bytes": 8384,
+      "sourceCommit": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "previousBlob": null,
+      "owner": "WP11",
+      "action": "EXACT_PUBLISHED_OWNER_BLOB",
+      "preservedLocalBefore": null
+    }
+  ],
+  "scope": "Exact WP11 case reader and its two published negative tests, alongside owned WP13 fixture/receipt changes. No whole branch intake, runtime engine change, other-branch mutation or financial-policy change.",
+  "rationale": "The final WP13 candidate resolution uses cases.read and retains the candidate scenario/result rather than the complete case. The prior case reader compared version/incarnation before the last awaited authorization/evidence/operation/host callbacks, so a membership or same-version case edit in the final callback could escape that candidate comparison. The published owner fix retains the two observations and all verification passes while moving the final full-case observation after all callbacks.",
+  "newBoundaryOracles": [
+    "A real cases CAS removing membership during final host revalidation suppresses the case projection even though the UI lease remains valid.",
+    "A real cases CAS changing content at the same business version suppresses the projection; a version-only fence is insufficient."
+  ],
+  "nextHostedSelection": "After S12 is terminal, S14 selects the changed own source-scenario test and the new exact case-read-fence file; original budgets and all assertions retained. C17 checks the exact W17 package and guards.",
+  "evidenceBoundary": "The owner review is static. The two new test cases are not accepted before hosted S14 completes. W16 S12 and earlier accepted files retain their original source/snapshot pins; no automatic current-dependency equivalence.",
+  "lastCompletedCheck": {
+    "label": "C16",
+    "runId": 43597746282,
+    "jobId": 132455766874,
+    "productSha": "eb5d411292b8892673cff751b3492a14146b7785",
+    "ownedDiagnostics": 0,
+    "outsideOwnershipDiagnostics": 130,
+    "package": "FAIL",
+    "guards": "PASS"
+  },
+  "ownerHeadsObserved": {
+    "observedAt": "2026-11-14T13:14:00Z",
+    "heads": [
+      {
+        "branch": "astra-wp10",
+        "sha": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83"
+      },
+      {
+        "branch": "astra-wp11",
+        "sha": "26bb96b22fbfe610eef1714036dbaa068ec7c371"
+      },
+      {
+        "branch": "astra-finance",
+        "sha": "79531aefa2bf72a9d13deba5164f725ec7da0e0f"
+      },
+      {
+        "branch": "sf2-stack",
+        "sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0"
+      },
+      {
+        "branch": "astra-wp13",
+        "sha": "eb5d411292b8892673cff751b3492a14146b7785"
+      }
+    ]
+  },
+  "excludedFinanceIntake": {
+    "status": "NOT_APPLIED_REQUIRES_ISOLATED_OWNER_PIN_OR_REVIEWED_CLOSURE",
+    "sourceCommit": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+    "verifierBlob": "f85c1c8e7196aff1381513b2d5ed2109641d6a45",
+    "requiredPlannerPortBlob": "8389709232225424b5905638d0951d8cdbb71dd7",
+    "delta": "finance-source-admission-W17.NOT_APPLIED.json"
+  },
+  "limits": [
+    "No local product tests, typecheck, build or epic execution.",
+    "This reader fence is not an atomic observation across all foreign domains.",
+    "Installed/native consumers, positive cancellation-rule behavior and remaining required oracles remain open."
+  ],
+  "independentReview": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/case-intake-review-W17.json",
+    "sha256": "78d69719df6a9a52bcb4a585aeb4d55ec0e3d0d17c6c53c21092985a5180c1f1",
+    "verdict": "EXACT_CASE_READER_INTAKE_RECOMMENDED_FINANCE_CLOSURE_DEFERRED"
+  }
+}

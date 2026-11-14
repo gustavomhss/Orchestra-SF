@@ -1,0 +1,75 @@
+{
+  "schema": "astra-finance-s17-followup-v1",
+  "product": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+  "snapshot": "2b2b2eb1872d09a3a2dcee24f3f679ef4f9e7ad4",
+  "runId": 43591635600,
+  "jobId": 132437416020,
+  "outcome": {
+    "pass": 4,
+    "fail": 15,
+    "assertions": 165,
+    "durationSeconds": 713.39
+  },
+  "logSha256": "bee8143075a7ec7ecfc512df315fa23f42ec3dbf7b438a0e597ab9cd90c8cb16",
+  "passed": [
+    {
+      "file": "choice-prepared-execution.test.ts",
+      "milliseconds": 6247.04,
+      "scope": "Real human choice -> prepare -> review -> distinct application grant -> Planner42 and durable receipt/retry;controlled admissions,notinstallednative"
+    },
+    {
+      "file": "composite-coverage.test.ts",
+      "milliseconds": [
+        26616.68,
+        90521.19
+      ],
+      "scope": "Both originaltests and fourvariants with exact55000/15000;no split/timeoutchange"
+    },
+    {
+      "file": "implementation-quote-history.test.ts",
+      "milliseconds": 139652.54,
+      "scope": "Confirmed70000 yields235000 and5000advantage;sharedscope andhistoricalhumanchoicepreserved"
+    }
+  ],
+  "failed": [
+    {
+      "files": [
+        "hot-topic-snapshot.test.ts",
+        "promotion-coverage-proof.test.ts"
+      ],
+      "cases": 12,
+      "cause": "Canonical scoped persistence used Dashboard before initializeSources;exact precondition in12stacks",
+      "correction": "Two fixture initializations only;all testbodies/assertions/timeouts unchanged;independentreviewfrozen"
+    },
+    {
+      "file": "current-choice-lifecycle.test.ts",
+      "milliseconds": 59508.27,
+      "cause": "Trace reaches coverage-entries:start then observer fails before coverageDiagnostic. OriginalS12coverage denial notyetexplained.",
+      "correction": "Retain original clones in non-interfering diagnostictry/catch;logactualobserverstack;returnoriginalentries/resolutions,40assertionsunchanged"
+    },
+    {
+      "file": "renewal-choice-history.test.ts",
+      "milliseconds": 180008.19,
+      "limit": 180000,
+      "phase": "threshold-after:start",
+      "state": "OPEN_UNDER_SEPARATE_INVESTIGATION"
+    },
+    {
+      "file": "renewal-choice-revision.test.ts",
+      "milliseconds": 210367.19,
+      "limit": 180000,
+      "phase": "prepare:transition-confirmed:complete",
+      "state": "OPEN_UNDER_SEPARATE_INVESTIGATION"
+    }
+  ],
+  "nextSelection": [
+    "current-choice-lifecycle.test.ts",
+    "hot-topic-snapshot.test.ts",
+    "promotion-coverage-proof.test.ts"
+  ],
+  "rootDiagnosticReview": "Observer catches apply only to diagnosticclone/metadata/reassessment;real callbacks stillrun once and retainoutputs/errors;noassertionor timeoutrelaxed",
+  "acceptance": false,
+  "native": null,
+  "C": null,
+  "D": null
+}

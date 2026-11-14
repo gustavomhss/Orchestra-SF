@@ -1,0 +1,369 @@
+{
+  "schema": "finance-resume-performance-ci-ledger-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "productBranch": "finance-resume",
+  "pullRequest": 42,
+  "instructionCommit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+  "instructionBlob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb",
+  "testedFinalProductCommit": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+  "testedFinalProductTree": "2da074668b164b1aa5e051f8a70366969425906f",
+  "runs": [
+    {
+      "selection": "S1",
+      "purpose": "Counterproof before product change; fails only at redundant searches=2 versus expected=1",
+      "W": "ab38a14c09d2292553670033b8c1eaea1d26f31f",
+      "Wtree": "c0a952e7aaaa02a66b48ee004ebaa8d38096d985",
+      "S": "4afc641b8f9e71be3e13ea7f3bdcff69ae29bb67",
+      "Stree": "6ca68127f3b9d63f22e9a0db080beef6d25b389f",
+      "branch": "ci-run-linux-finance-performance-ab38a14c-149f8ba9-s1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts",
+          "--timeout",
+          "120000",
+          "-t",
+          "searches once"
+        ],
+        "env": {}
+      },
+      "requestSha256": "149f8ba9ad30415db044c5c556fb1429b709ab96b0731b5fd5e0acc25f0426cc",
+      "requestOnlyChangedFiles": [
+        ".ci-run.json"
+      ],
+      "runId": 43627723188,
+      "jobId": 132547252223,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627723188",
+      "conclusion": "failure",
+      "expectedRed": true,
+      "pass": 0,
+      "fail": 1,
+      "assertions": 27,
+      "testDurationMs": 53317.8,
+      "bunDurationSeconds": 53.47,
+      "activeTerminalPhase": null,
+      "receipt": "S1-result.json",
+      "log": {
+        "sha256": "0eb1f4e4f67cf7d08bd2c233d9094250c82fe54d19b12a11f5c852faf4169134",
+        "bytes": 73932
+      },
+      "omni": {
+        "nonce": "8fd983409eca80ce6404151addb7bf78",
+        "result": "not applicable"
+      },
+      "artifacts": []
+    },
+    {
+      "selection": "S2",
+      "purpose": "Surgical affected-producer and authority regressions",
+      "W": "95f474484fb49cedb563ed3d02a61e9638d6784d",
+      "Wtree": "5173889bce7f5a6a6785e1adcdbc5b348483c190",
+      "S": "4fce91718b8ea90f6d05ba0c30729f030b58451b",
+      "Stree": "7801a4103038cb23cf87b129260cdd95947a4549",
+      "branch": "ci-run-linux-finance-performance-95f47448-47ff997d-s2",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts",
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/persisted-recertification.test.ts",
+          "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+          "Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+          "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+          "--timeout",
+          "120000",
+          "-t",
+          "^(Finance sensitivity|units resolution|persisted Finance candidates|sensitivity retains the admitted request|sensitivity detects a provider|each sensitivity verification reads a fresh|a failed sensitivity scope cannot retain|real Planner sensitivity keeps EUR)"
+        ],
+        "env": {}
+      },
+      "requestSha256": "47ff997dcd9049ee2224249db297ad82c06b5d8def846e0a4d3f2d8d6039daa0",
+      "requestOnlyChangedFiles": [
+        ".ci-run.json"
+      ],
+      "runId": 43628402812,
+      "jobId": 132549346211,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628402812",
+      "conclusion": "success",
+      "expectedRed": false,
+      "pass": 15,
+      "fail": 0,
+      "assertions": 159,
+      "testDurationMs": null,
+      "bunDurationSeconds": 408.14,
+      "activeTerminalPhase": null,
+      "receipt": "S2-result.json",
+      "log": {
+        "sha256": "67c07c7e128fc0774b7add2d5e0e679b30a5ce6e7a4ae135f46455ce7f4793b7",
+        "bytes": 84906
+      },
+      "omni": {
+        "nonce": "316ad3968e1856b8e86880ee2c10db3e",
+        "result": "not applicable"
+      },
+      "artifacts": []
+    },
+    {
+      "selection": "S3",
+      "purpose": "Unchanged complete FIN-IND-005 journey after a material product correction",
+      "W": "95f474484fb49cedb563ed3d02a61e9638d6784d",
+      "Wtree": "5173889bce7f5a6a6785e1adcdbc5b348483c190",
+      "S": "10750da63ec539002a014b598a8e40afb817ec22",
+      "Stree": "fd4457be8b79f4063ae62ee6492c853522477004",
+      "branch": "ci-run-linux-finance-performance-95f47448-3801b178-s3",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+          "--timeout",
+          "120000",
+          "-t",
+          "^FIN-IND-005 Finance performance"
+        ],
+        "env": {}
+      },
+      "requestSha256": "3801b178a26c1fdfa729f37c4301857fcdc7294180ee0c969fa31e1c8ae04ddb",
+      "requestOnlyChangedFiles": [
+        ".ci-run.json"
+      ],
+      "runId": 43629238602,
+      "jobId": 132551927313,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629238602",
+      "conclusion": "failure",
+      "expectedRed": false,
+      "pass": 0,
+      "fail": 1,
+      "assertions": 18,
+      "testDurationMs": 180051,
+      "bunDurationSeconds": 180.2,
+      "activeTerminalPhase": [
+        "confirmed.evaluate",
+        "confirmed.exact",
+        "confirmed.preview"
+      ],
+      "receipt": "S3-result.json",
+      "log": {
+        "sha256": "deb111b933f544ec587a55566b36f011786e53ad1c5e52d8d6ec95f08ea1ea53",
+        "bytes": 118169
+      },
+      "omni": {
+        "nonce": "14fb8c94056ee5466d6d5ffea8efb0b9",
+        "result": "not applicable"
+      },
+      "artifacts": []
+    },
+    {
+      "selection": "S4",
+      "purpose": "Discriminating expected-red C08 baseline before grouping",
+      "W": "189cb74252b3b6aa160038da4410b1c7cdcaa31b",
+      "Wtree": "32e6d1e03ac129505d3c0737d55a953fd50fcf87",
+      "S": "ff04e4ff973f3369fb71b0fe5c058f4b98249996",
+      "Stree": "cfabe4c40529efe4b1c09b6a1d467426fe7cfb4a",
+      "branch": "ci-run-linux-finance-performance-189cb742-67a68f3b-s4",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+          "--timeout",
+          "120000",
+          "-t",
+          "^historical scenario batches coalesce only C08 envelopes for real siblings$"
+        ],
+        "env": {}
+      },
+      "requestSha256": "67a68f3bfd1f4afac520736b1ef3c17733a9c2edd4e7e49edd4abff08bd34b7c",
+      "requestOnlyChangedFiles": [
+        ".ci-run.json"
+      ],
+      "runId": 43629852422,
+      "jobId": 132553814068,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629852422",
+      "conclusion": "failure",
+      "expectedRed": true,
+      "pass": 0,
+      "fail": 1,
+      "assertions": 6,
+      "testDurationMs": 433.55,
+      "bunDurationSeconds": 0.574,
+      "activeTerminalPhase": null,
+      "receipt": "S4-result.json",
+      "log": {
+        "sha256": "a943de92739518d0cec1f4a32c6d4a882f4f350c6463a57509880f4f50e8a976",
+        "bytes": 69829
+      },
+      "omni": {
+        "nonce": "0ece5a02844096483d92ff3a01afd843",
+        "result": "not applicable"
+      },
+      "artifacts": []
+    },
+    {
+      "selection": "S5",
+      "purpose": "Surgical affected-producer and authority regressions",
+      "W": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "Wtree": "2da074668b164b1aa5e051f8a70366969425906f",
+      "S": "18e2a5dcf69b039dcd86e91f8fbf85db613acf6c",
+      "Stree": "705ee2f2ec35d43e8b23a2f0790830ed835dab76",
+      "branch": "ci-run-linux-finance-performance-7a9a43b3-7f95a2ce-s5",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts",
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/persisted-recertification.test.ts",
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts",
+          "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+          "Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+          "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+          "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "Sucafinav1/test/product/wp11/result-store.test.ts",
+          "--timeout",
+          "120000",
+          "-t",
+          "^(Finance sensitivity|units resolution|persisted Finance candidates|historical scenario batch|historical batch|sensitivity retains the admitted request|sensitivity detects a provider|each sensitivity verification reads a fresh|a failed sensitivity scope cannot retain|real Planner sensitivity keeps EUR|one sibling batch|units emit the identical binding|comparison starts independent batches|different cases and historical|ledger, alternative|authority revoked after result rereads|a real Planner source change|retained store and case|batch refusals|decision result persistence)"
+        ],
+        "env": {}
+      },
+      "requestSha256": "7f95a2ce09f24aaf1797e0d80e618621e8d2071ae44cc11fda89464370d226ea",
+      "requestOnlyChangedFiles": [
+        ".ci-run.json"
+      ],
+      "runId": 43630462257,
+      "jobId": 132555694380,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43630462257",
+      "conclusion": "success",
+      "expectedRed": false,
+      "pass": 36,
+      "fail": 0,
+      "assertions": 297,
+      "testDurationMs": null,
+      "bunDurationSeconds": 368.57,
+      "activeTerminalPhase": null,
+      "receipt": "S5-result.json",
+      "log": {
+        "sha256": "fe9a4b35943c5c1154e6c00f1421d0ac152359ab6f6dd958a82a3314e8ba509b",
+        "bytes": 90113
+      },
+      "omni": {
+        "nonce": "77d9f41f89157832307f92b6538e9759",
+        "result": "not applicable"
+      },
+      "artifacts": []
+    },
+    {
+      "selection": "S6",
+      "purpose": "Unchanged complete FIN-IND-005 journey after a material product correction",
+      "W": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "Wtree": "2da074668b164b1aa5e051f8a70366969425906f",
+      "S": "0e68fec2e33e6c4c2103f368fed1d00dc832cb0c",
+      "Stree": "9339889db0210f25ba46ee9a3ab7553e146bef1d",
+      "branch": "ci-run-linux-finance-performance-7a9a43b3-3801b178-s6",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+          "--timeout",
+          "120000",
+          "-t",
+          "^FIN-IND-005 Finance performance"
+        ],
+        "env": {}
+      },
+      "requestSha256": "3801b178a26c1fdfa729f37c4301857fcdc7294180ee0c969fa31e1c8ae04ddb",
+      "requestOnlyChangedFiles": [
+        ".ci-run.json"
+      ],
+      "runId": 43631582858,
+      "jobId": 132559159277,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43631582858",
+      "conclusion": "failure",
+      "expectedRed": false,
+      "pass": 0,
+      "fail": 1,
+      "assertions": 18,
+      "testDurationMs": 180025.69,
+      "bunDurationSeconds": 180.22,
+      "activeTerminalPhase": [
+        "confirmed.evaluate",
+        "confirmed.coverage.qualify",
+        "confirmed.authority.is-still-valid",
+        "confirmed.units.revalidate"
+      ],
+      "receipt": "S6-result.json",
+      "log": {
+        "sha256": "4f1cc81593c46dbcaae3fb03954aa42ce6fafa44ccd4e7b2d483d62bb42dd666",
+        "bytes": 109301
+      },
+      "omni": {
+        "nonce": "2bed61ed883bb1bad0cfab235dce8b1f",
+        "result": "not applicable"
+      },
+      "artifacts": []
+    }
+  ],
+  "separateHostedCheck": {
+    "runId": 43630618176,
+    "jobId": 132556167840,
+    "source": {
+      "productSha": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "productTree": "2da074668b164b1aa5e051f8a70366969425906f",
+      "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+      "recovery": "ec052c2c3bef96f492512f3d5f663919580f25c8"
+    },
+    "conclusion": "failure",
+    "receipt": "CHECK-W4-result.json",
+    "typeDiagnostics": 115,
+    "changedFileTypeDiagnostics": 0,
+    "sameTypeLocationsAndCodesAsPrior": true,
+    "typeMessageTextDifferences": 2,
+    "gates": 43,
+    "warnings": 15,
+    "sameGuardFindingsAsPrior": true,
+    "engineErrors": 0,
+    "artifactId": 14127863004,
+    "artifactDigest": "sha256:1b3f66b8c352749155baeeb2379b8a3fd69ec6d5f3546fb054a219dc59ca3bba"
+  },
+  "protocol": {
+    "transport": "GitHub MCP only",
+    "productTests": "GitHub Actions test-ci only",
+    "localProductExecution": false,
+    "localTypecheck": false,
+    "oneProductSelectionAtATime": true,
+    "duplicateCI": false,
+    "newProductBranch": false,
+    "newProductPR": false,
+    "timeoutRaised": false,
+    "existingAssertionsRemoved": false,
+    "epicOrFullSuite": false,
+    "enginesOrOrchestraRestarted": false,
+    "ciSnapshotBranches": "Ephemeral ci-run-linux-* snapshots prescribed by CI.md; not product branches. W→S adds only .ci-run.json. Cleanup workflow deletes each snapshot branch."
+  },
+  "interpretation": {
+    "FIN_IND_005": "OPEN — S6 retained guard expires before confirmed threshold/history/reopen assertions.",
+    "globalAcceptance": false,
+    "performance": "S1→S2/S5 isolates removal of repeated exact search; S4→S5 isolates16→10C08 envelopes. These counts and individual timings do not establish end-to-end speedup.",
+    "timingComparability": "S3/S6 end at different phases. Inclusive nested durations overlap and must not be summed. S6 omitted evaluation is slower than S3, so cumulative C08 reads cannot be used as a completed-journey speedup.",
+    "sharedCheck": "Same115diagnostic locations/codes with2message differences, same43gates/15warnings; checks remain failed."
+  }
+}
+

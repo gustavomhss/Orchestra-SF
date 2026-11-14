@@ -1,0 +1,84 @@
+{
+  "schema": "sf2h-finance-advantage-selection-proposal-v1",
+  "status": "PROPOSED_NOT_APPLIED_TO_OWNER",
+  "owner": "astra-compose / WP10",
+  "repository": "gustavomhss/Orchestra-SF",
+  "baseHead": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+  "financeProducer": {
+    "head": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+    "tree": "1ce4e9fcb2e9fb81e12dcfd773aa2daae64be39a",
+    "path": "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+    "blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c",
+    "sha256": "04e6549d37d335f131cdb79089a4afbbff14bf2003f4615369efd9ad24faae0d"
+  },
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/bi-selections.ts",
+      "baseBlob": "5bb690b8072d932f1717206b5967c95b45e3b365",
+      "baseSha256": "d2ba76e002a6805e4ad321da0d19ef4f1d557a7530c291b71036502659f4571f",
+      "proposedBlob": "3e1d2ec43831e689c19c5178a0ff370e60001e40",
+      "proposedSha256": "9897d60038a4a488735b805e83862d43d0edf0745ca47d67e6979c60aa275872",
+      "baseBytes": 2865,
+      "proposedBytes": 3084,
+      "replacementSites": 3
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "baseBlob": "7d44c1982c3c62fdaf21f98945ded9e572fd359a",
+      "baseSha256": "5b89fbb1e7dcd1eaab182171c83bbb562be866a237c1470f4dac772be388d8f2",
+      "proposedBlob": "acbb95b4a11d63be8414c4f7b47bfb372c920f00",
+      "proposedSha256": "2bfa43c4a183a62827cd2597d02c37f7a2e8100507f9226fca95a538a66063c0",
+      "baseBytes": 15216,
+      "proposedBytes": 15286,
+      "replacementSites": 1
+    }
+  ],
+  "patch": {
+    "file": "advantage-selection-proposal.patch",
+    "sha256": "8b5b2468feeb88fc81c70c520c5cecc0c139e431823a25f3ed77f9fa1e24c982",
+    "bytes": 3681
+  },
+  "metadataVerification": {
+    "command": [
+      "git",
+      "apply",
+      "--check",
+      "--whitespace=error-all",
+      "advantage-selection-proposal.patch"
+    ],
+    "target": "isolated temporary copy of the two exact canonical base blobs",
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "",
+    "baseBlobsUnchanged": true,
+    "ownerSourcesUnmodified": true,
+    "runtimeExecution": false
+  },
+  "preservedBoundaries": [
+    "Encoded selectors carry identifiers only; the serializer remains JSON.stringify of the typed selection.",
+    "All decoder encoding/length/object/string/nonempty/closed-field checks remain.",
+    "Portfolio selection keeps its exact two-field shape.",
+    "Scenario result, comparison, sensitivity and optional advantage selection are compared exactly in revalidateProjection.",
+    "Case authorization, current source projection, result store reads and host revalidation remain canonical.",
+    "No currency conversion, sign inversion, arithmetic, receipt generation, source authority or shared contract change is added."
+  ],
+  "producerObservedGuards": [
+    "C08 reads authorize the primary scenario and comparison.",
+    "Optional advantage record must be a comparison with the exact selected ref, identical full caseRef, and reversed persisted baseline/alternative endpoints.",
+    "Currency and horizon must match the authorized domain projection. Existing projection.comparison is not overwritten.",
+    "Each advantage record is cloned and reread; both full snapshots and both projection fences must remain equal.",
+    "The projected knownDifference, state and sourceRefs are copied from the persisted inverse result."
+  ],
+  "requiredOwnerValidation": [
+    "Round-trip legacy scenario selectors, selectors with advantage only, and selectors with both optional refs; unchanged portfolio selectors.",
+    "Reject malformed/empty/whitespace optional refs, unknown fields, mixed portfolio/scenario shapes and noncanonical/oversized encoding.",
+    "Mutate advantageComparisonRef between resolution and revalidation; reject absent/substituted fields without fallback.",
+    "Use a real stored inverse comparison: wrong case/incarnation/version, wrong endpoints/ref, changed result or revocation must disclose no values.",
+    "Through the actual mounted CLI BI route, show canonical 30000 conditioned before training and -10000 complete after training40000; source/result links and original context remain exact.",
+    "Run package typecheck/guards and change-scoped product tests in GitHub Actions on the owner composed head; no PASS is inherited from Finance W14 or this git apply check."
+  ],
+  "productTestsRunLocally": false,
+  "actionsRunCreated": false,
+  "nativeRuntimeClaim": false,
+  "acceptance": "NOT_ACCEPTED"
+}

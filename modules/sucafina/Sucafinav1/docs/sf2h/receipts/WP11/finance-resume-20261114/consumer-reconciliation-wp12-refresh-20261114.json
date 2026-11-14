@@ -1,0 +1,681 @@
+{
+  "schema": "sf-finance-late-owner-reconciliation-v1",
+  "reviewDate": "2026-11-14",
+  "reviewer": "cold_review",
+  "independent": true,
+  "productAuthorship": false,
+  "scope": "Revisão focal do avanço documental/de testes PR39; suplemento append-only ao consumer-reconciliation.json. Sem cópia de fontes ou aceite instalado.",
+  "ownerSource": {
+    "pr": 39,
+    "owner": "WP12",
+    "from": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+    "to": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+    "disposition": "RECONCILED_READ_ONLY_NO_AUTO_INTAKE"
+  },
+  "priorReceipt": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/consumer-reconciliation.json",
+    "gitBlob": "c027491c3c6ce6970c7966d779c72ff1dd24e5ec",
+    "sha256": "8672858bd18a906d9e2f2da64a13da046c16cc346c7679ccc97211b83f776745",
+    "modified": false,
+    "productPin": "229d66fa59ceebbc4b3683565670698f2cf3aa65"
+  },
+  "result": "PRODUCT_BOUNDARY_UNCHANGED_NEW_OWNER_EVIDENCE_SCOPED",
+  "changedBoundary": {
+    "commits": 5,
+    "files": 43,
+    "wp12Documents": 39,
+    "wp12Tests": 4,
+    "newTests": 3,
+    "modifiedTests": 1,
+    "productionFiles": 0,
+    "configurationFiles": 0,
+    "contracts": 0,
+    "financeOwnedPaths": 0,
+    "comparisonComplete": true
+  },
+  "directConsumerConfirmation": {
+    "path": "modules/sucafina/Sucafinav1/product/reviews/decision-access.ts",
+    "oldBlob": "1b75f4b1786bb351c15821d76a31030fba677e7e",
+    "newBlob": "1b75f4b1786bb351c15821d76a31030fba677e7e",
+    "verified": "GitHub MCP fetch_file no novo head; byte hash conferido",
+    "meaning": "Mantém os adapters e fallbacks C08/histórico WP12 analisados no receipt anterior. Não altera montagem, authority ou prova instalada."
+  },
+  "findings": [
+    {
+      "id": "LATE-WP12-01",
+      "topic": "Purchase choice",
+      "status": "EXTERNAL_FAILURE_RETAINED_NO_NEW_OWN_RUNTIME_FINDING",
+      "evidence": [
+        "owner-findings/purchase-choose-read-scope/README.md",
+        "owner-findings/purchase-choose-read-scope/owner-delta.json",
+        "owner-findings/purchase-choose-read-scope/audit.json"
+      ],
+      "run": {
+        "id": 43612149925,
+        "jobId": 132499298207,
+        "product": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+        "snapshot": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+        "pass": 1,
+        "fail": 2,
+        "error": 1,
+        "assertions": 239
+      },
+      "observedByOwner": "Documents UI passou; ambos Purchase chegaram às alternativas C10, units e critério, mas decision-choose devolveu decision-authority-changed após 300063/300137 ms. Nenhum ChoiceRecord positivo, execução nativa ou consumidor Purchase após reload demonstrado.",
+      "limitation": "A validação final HTTP mascara eventual resultado interno; o primeiro port recusado e a duração de cada etapa não estão observados. Nenhum partial commit é deduzido da recusa externa.",
+      "scopeMechanisms": "Scopes publicados de C12 exigem preparedChanges, archive ou cohort Procurement/Memory; o caso observado é misto Planner/PR, antes da primeira escolha. Auditoria não estabelece que esses scopes resolvem sua duração.",
+      "staticFanout": "criterion-metric emite units duas vezes por leitura; choice-values relê a métrica. Fanout estático não é execução observada de todas as etapas nem medição de duração.",
+      "action": "Encaminhar diagnóstico de etapas ao owner WP10/WP11 e preservar os oráculos originais. Não aumentar TTL/deadline, renovar dentro de ação, fabricar Choice/archive ou repetir run equivalente sem delta relevante.",
+      "financeR5Credit": false
+    },
+    {
+      "id": "LATE-WP12-02",
+      "topic": "Holds sobre fontes antigas",
+      "status": "RECONCILE_BY_BLOB_DO_NOT_REOPEN_FIXED_FINANCE_BLINDLY",
+      "evidence": [
+        "owner-findings/purchase-choose-read-scope/audit.json",
+        "owner-findings/owner-refresh-w27/snapshot.json"
+      ],
+      "externalCasePort": "206271d33bcfb7786ee80ef0dfad50eb80e4fee2",
+      "externalMutation": "e0840d775274ea73c6b938711764c69593dadca0",
+      "financeCasePortAlreadyReviewed": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6",
+      "interpretation": "O hold WP12 aponta falta de requestFor identity após o último await no blob da origem PR40. Finance R2/R4 já preservou digests e acrescentou a cerca final nesse outro blob. A nota de normalização aponta PR35 inalterado, anterior à correção própria Finance. São pins distintos; o documento não demonstra regressão nos blobs Finance.",
+      "limit": "Não concede novo PASS instalado para a correção Finance; as provas próprias continuam vinculadas aos seus commits/runs."
+    },
+    {
+      "id": "LATE-WP12-03",
+      "topic": "Fonte WP10 PR29 mencionada por WP12",
+      "status": "REPORTED_OWNER_IMPLEMENTATIONS_NOT_AUTOCONSUMED",
+      "evidence": [
+        "owner-findings/owner-refresh-w27/snapshot.json",
+        "owner-findings/purchase-choose-read-scope/audit.json"
+      ],
+      "reportedOwnerHeads": [
+        "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+        "a1434e7ea7340aa1d1c8ce6bb48958b724218170"
+      ],
+      "sourceFenceReported": {
+        "path": "apps/cli/src/sucafina-product/source-fence-read.ts",
+        "blob": "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18",
+        "ownerClaim": "Lê currentSnapshots quando há scope real; mantém transactionAll fora e cercas de snapshot/Request/authority."
+      },
+      "thresholdReported": {
+        "decisionDomain": "e8a931a3d0788d0c6899e9550fbe069a4a5dc7de",
+        "portfolioServices": "881ce4672d9d0e641d1cc849663c0980c118774d",
+        "ownerClaim": "Adapters createPlannerExactThreshold ligados ao produto e proof, mais três blobs WP13."
+      },
+      "interpretation": "É informação nova sobre implementação em outra origem. O pin de consumidor PR32 9048e0e65351a5bd80768458a79fed94a4993db7 não mudou. O delta readonly/nested transactionAll do receipt anterior continua válido nesse pin; a helper posterior é candidata a reconciliação específica, não correção já instalada.",
+      "noClosure": [
+        "Não fecha Purchase timeout misto.",
+        "Não transfere threshold runtime/CI para Finance.",
+        "Não fecha C07/native catalog.",
+        "Não resolve a interpretação normativa INV.11."
+      ],
+      "ownership": "WP10/composição/S0 devem confrontar esses blobs e sua closure; nenhuma cópia de produto ou refresh de pins foi aplicado por esta revisão.",
+      "verificationLimit": "Leitura do relatório WP12 pinado, não auditoria direta completa do PR29 ou de sua closure."
+    },
+    {
+      "id": "LATE-WP12-04",
+      "topic": "BI público",
+      "status": "NEW_WP12_WITNESS_SEPARATE_FROM_FINANCE_BI09_BI10",
+      "evidence": [
+        "bi-public-selection-route/README.md",
+        "bi-public-selection-route/preparation.json"
+      ],
+      "plan": "BI01 Budget 2027 via bi-artifact-save/read e bi-selection-set/read; handles de respostas públicas reais, same-case e C08/consumidores WP05 depois de reload.",
+      "semantics": "Owner budget120000 difere da série 78000; actual zero, actual/forecast ausentes e currency unspecified permanecem distintos. Empty catalog não fabrica output.",
+      "limitations": "Não prova BI09/BI10 projectedScenario R4/R5, nova composição instalada ou AM02/GNATIVE. Teste/preparação estão no W28/S28 de WP12."
+    },
+    {
+      "id": "LATE-WP12-05",
+      "topic": "Forecast KPI auxiliar",
+      "status": "NEW_WP12_WITNESS_PRESERVES_FINANCIAL_BOUNDARIES",
+      "evidence": [
+        "forecast-kpi-route/README.md",
+        "forecast-kpi-route/preparation.json",
+        "resume-20261114/run-23-checks.json"
+      ],
+      "plan": "sf_finance/sf-explicar-forecast usa KPI público humano do mesmo caso/período e dois forecasts reais; FinancialAnalysis fechado continua igual ao replay Planner.",
+      "semantics": "Planner 590000/596000 e knownDifference 6000, diferença completa null/conditioned; KPI unspecified não se converte para USD nem entra em margem/FX sintetizada.",
+      "consumers": "KPI auxiliar pertence ao resultado/recibo da ferramenta e auditoria Session; o documento não afirma consumo do KPI pelo gráfico Forecast.",
+      "supersession": "Preparação inicial refere blob 5ff043a8d9d2cd932020aa6074864b16e36f49b9; check23 refere 749063953007e4e0d216dcaf278337de45ef6e3d, correção as const de tipos. Não misturar freeze inicial com byte de check.",
+      "nativeLimits": "sf_import_preview continua missão distinta; execução nativa exige Session/SkillLoadReceipt e catálogo real. Nenhum terminal positivo de produto consta do dispatch lido."
+    },
+    {
+      "id": "LATE-WP12-06",
+      "topic": "Dashboard answer",
+      "status": "PREPARED_NEW_ROUTE_NOT_IN_RUN23_SELECTION",
+      "evidence": [
+        "dashboard-answer-route/README.md",
+        "dashboard-answer-route/preparation.json",
+        "resume-20261114/run-23-new-routes-dispatch.json"
+      ],
+      "plan": "Conversa CAPEX2027 no mesmo caso, C06 reply unconfirmed, relação com projeto/Planner; não confirma treinamento ou custo.",
+      "semantics": "Mantém96 componentes observados/8 categorias, subtotal 210000, pendência de treinamento e total completo null. A origem da pending entry é classificação humana explícita; não substitui prova de categoria omitida derivada.",
+      "source": "e7bdf4d8e2da41b8f3bdf05aa8f1384873d2d7a0",
+      "limits": "Não corrige por associação a fronteira Planner answer, work-list ou C07. Dashboard-answer não é um dos três arquivos selecionados pelo run23-new-routes-dispatch."
+    }
+  ],
+  "ownerEvidence": [
+    {
+      "kind": "HOSTED_CHECK_RECEIPT",
+      "source": "resume-20261114/run-23-checks.json",
+      "statusInReceipt": "completed/success",
+      "runId": 43619106397,
+      "jobId": 132520532225,
+      "product": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "productTree": "60950d5e873a4f5a05a2284ffbd56d5f041f013b",
+      "snapshot": "6479e6e746388948b48698761899c9f0aa135575",
+      "snapshotTree": "4e6cc81d39521eba22dfc9863f421856c61c9961",
+      "scope": "Bun full-package typecheck com 0 diagnósticos, spawn-imports e guards com 0 gates/15 warnings segundo receipt proprietário pinado.",
+      "qualification": "Prova W28/C28 WP12. Este revisor leu o receipt publicado, não baixou novamente logs nem transfere o resultado para Finance R5.",
+      "financeCredit": false
+    },
+    {
+      "kind": "PRODUCT_DISPATCH_RECEIPT",
+      "source": "resume-20261114/run-23-new-routes-dispatch.json",
+      "runId": 43619631569,
+      "product": "f2cbdb30c1673bc89426db6618d19cb65601c8ef",
+      "snapshot": "b5eb330f9b914953bf19fa7e265e9db11762cfd2",
+      "snapshotTree": "6894c48cb770f558dea28fc534098862f0c92848",
+      "statusAtCapture": "in_progress",
+      "terminalObservedInReceipt": false,
+      "selectedFiles": [
+        "native-execution-forecast-kpi.test.ts",
+        "native-execution-bi-public-selection.test.ts",
+        "native-execution-work-list.test.ts"
+      ],
+      "notSelected": "native-execution-dashboard-answer.test.ts",
+      "qualification": "Dispatch único W28/S28 WP12; nenhuma conclusão de produto transferida. Não repetir W27/W28 request.",
+      "financeCredit": false
+    }
+  ],
+  "preservedOpen": [
+    "Sete deltas do consumer-reconciliation.json permanecem qualificados pelos pins originais; documentos novos não instalaram seus adapters.",
+    "OPEN_SHARED_CONTRACT_INTERPRETATION INV.11 permanece com WP10/S0.",
+    "C17/Atlas instalado, restart/replay e native inference não recebem aceite por esta revisão."
+  ],
+  "actions": {
+    "localProductTests": false,
+    "localTypecheck": false,
+    "githubActionsDispatched": 0,
+    "remoteWrites": 0,
+    "foreignEdits": 0,
+    "productEdits": 0,
+    "sourceIntake": 0,
+    "priorReceiptModified": false
+  },
+  "limitations": [
+    "Comparação completa  de 43 paths foi reutilizada do receipt MCP do parent; não repetida remotamente.",
+    "Doze documentos novos lidos integralmente; consumer decision-access reaberto no novo pin e hash idêntico.",
+    "Novos testes não foram executados nem auditados linha a linha; a leitura avalia o alcance declarado pelas preparações e provas pinadas.",
+    "Nenhum terminal recente foi inferido do estado de dispatch guardado; resultados posteriores exigem seu próprio receipt.",
+    "Novas fontes de terceiros citadas nos documentos permanecem referência indireta, não importação autorizada."
+  ],
+  "globalAcceptance": false,
+  "installedAcceptance": false,
+  "comparisonEvidence": {
+    "path": "intake/late-wp12-compare.json",
+    "sha256": "00540a5f0fa2bca149b988d69a05213fb8c06f77317bbf320386e912e33d5a6f",
+    "bytes": 11855,
+    "base": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+    "head": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+    "status": "ahead",
+    "totalCommits": 5,
+    "files": [
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-public-selection-route/README.md",
+        "status": "added",
+        "additions": 11,
+        "deletions": 0,
+        "changes": 11,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-public-selection-route/author-freeze.json",
+        "status": "added",
+        "additions": 50,
+        "deletions": 0,
+        "changes": 50,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-public-selection-route/independent-root-review.json",
+        "status": "added",
+        "additions": 80,
+        "deletions": 0,
+        "changes": 80,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-public-selection-route/preparation.json",
+        "status": "added",
+        "additions": 107,
+        "deletions": 0,
+        "changes": 107,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-public-selection-route/source-pins.json",
+        "status": "added",
+        "additions": 170,
+        "deletions": 0,
+        "changes": 170,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/dashboard-answer-route/README.md",
+        "status": "added",
+        "additions": 19,
+        "deletions": 0,
+        "changes": 19,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/dashboard-answer-route/author-freeze.json",
+        "status": "added",
+        "additions": 149,
+        "deletions": 0,
+        "changes": 149,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/dashboard-answer-route/independent-semantic-review.json",
+        "status": "added",
+        "additions": 155,
+        "deletions": 0,
+        "changes": 155,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/dashboard-answer-route/independent-types-review.json",
+        "status": "added",
+        "additions": 208,
+        "deletions": 0,
+        "changes": 208,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/dashboard-answer-route/preparation.json",
+        "status": "added",
+        "additions": 154,
+        "deletions": 0,
+        "changes": 154,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/dashboard-answer-route/source-pins.json",
+        "status": "added",
+        "additions": 224,
+        "deletions": 0,
+        "changes": 224,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/README.md",
+        "status": "added",
+        "additions": 15,
+        "deletions": 0,
+        "changes": 15,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/author-freeze.json",
+        "status": "added",
+        "additions": 206,
+        "deletions": 0,
+        "changes": 206,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/independent-review.json",
+        "status": "added",
+        "additions": 211,
+        "deletions": 0,
+        "changes": 211,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/preparation.json",
+        "status": "added",
+        "additions": 139,
+        "deletions": 0,
+        "changes": 139,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/source-pins.json",
+        "status": "added",
+        "additions": 139,
+        "deletions": 0,
+        "changes": 139,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/owner-refresh-w27/independent-root-review.json",
+        "status": "added",
+        "additions": 63,
+        "deletions": 0,
+        "changes": 63,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/owner-refresh-w27/snapshot.json",
+        "status": "added",
+        "additions": 183,
+        "deletions": 0,
+        "changes": 183,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/owner-refresh-w27/source-pins.json",
+        "status": "added",
+        "additions": 139,
+        "deletions": 0,
+        "changes": 139,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/purchase-choose-read-scope/README.md",
+        "status": "added",
+        "additions": 32,
+        "deletions": 0,
+        "changes": 32,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/purchase-choose-read-scope/audit.json",
+        "status": "added",
+        "additions": 297,
+        "deletions": 0,
+        "changes": 297,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/purchase-choose-read-scope/author-freeze.json",
+        "status": "added",
+        "additions": 41,
+        "deletions": 0,
+        "changes": 41,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/purchase-choose-read-scope/independent-root-review.json",
+        "status": "added",
+        "additions": 72,
+        "deletions": 0,
+        "changes": 72,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/purchase-choose-read-scope/owner-delta.json",
+        "status": "added",
+        "additions": 27,
+        "deletions": 0,
+        "changes": 27,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/purchase-choose-read-scope/source-pins.json",
+        "status": "added",
+        "additions": 322,
+        "deletions": 0,
+        "changes": 322,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-22.json",
+        "status": "added",
+        "additions": 228,
+        "deletions": 0,
+        "changes": 228,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-23-typefix-review.json",
+        "status": "added",
+        "additions": 79,
+        "deletions": 0,
+        "changes": 79,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-23.json",
+        "status": "added",
+        "additions": 66,
+        "deletions": 0,
+        "changes": 66,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/preparation-24.json",
+        "status": "added",
+        "additions": 162,
+        "deletions": 0,
+        "changes": 162,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/publication-29-docs.json",
+        "status": "added",
+        "additions": 68,
+        "deletions": 0,
+        "changes": 68,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/publication-30-docs.json",
+        "status": "added",
+        "additions": 63,
+        "deletions": 0,
+        "changes": 63,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-21-review-work-independent-review.json",
+        "status": "added",
+        "additions": 280,
+        "deletions": 0,
+        "changes": 280,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-21-review-work.json",
+        "status": "added",
+        "additions": 1255,
+        "deletions": 0,
+        "changes": 1255,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-22-checks.json",
+        "status": "added",
+        "additions": 90,
+        "deletions": 0,
+        "changes": 90,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-23-check-dispatch-independent-compose.json",
+        "status": "added",
+        "additions": 86,
+        "deletions": 0,
+        "changes": 86,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-23-checks.json",
+        "status": "added",
+        "additions": 149,
+        "deletions": 0,
+        "changes": 149,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-23-new-routes-dispatch.json",
+        "status": "added",
+        "additions": 160,
+        "deletions": 0,
+        "changes": 160,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/work-list-cost/independent-root-review.json",
+        "status": "added",
+        "additions": 55,
+        "deletions": 0,
+        "changes": 55,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/work-list-cost/preparation.json",
+        "status": "added",
+        "additions": 70,
+        "deletions": 0,
+        "changes": 70,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+        "status": "added",
+        "additions": 372,
+        "deletions": 0,
+        "changes": 372,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dashboard-answer.test.ts",
+        "status": "added",
+        "additions": 501,
+        "deletions": 0,
+        "changes": 501,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+        "status": "added",
+        "additions": 372,
+        "deletions": 0,
+        "changes": 372,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+        "status": "modified",
+        "additions": 51,
+        "deletions": 16,
+        "changes": 67,
+        "previous_filename": null
+      }
+    ]
+  },
+  "sourceFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-public-selection-route/README.md",
+      "head": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+      "blob": "f01e0e0d7b843b6a7aa36e77b6b087111d0d6c36",
+      "sha256": "c2235bf0944c7b45308f0db7ae909a2d9442614c50b9d53bf8198bd2ccb9f46f",
+      "bytes": 1824,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d9842da32066f92016b0ef82bf2cf605c71822f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-public-selection-route/README.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-public-selection-route/preparation.json",
+      "head": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+      "blob": "2803701314f1249b2d45c4e001fda9f606bb87fe",
+      "sha256": "6b980bb2512adea4605784c25075723358d45df50fc8b4a510774684f81a76a2",
+      "bytes": 5780,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d9842da32066f92016b0ef82bf2cf605c71822f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/bi-public-selection-route/preparation.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/dashboard-answer-route/README.md",
+      "head": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+      "blob": "adcfbe37c7ab349cefd0def7f82d97d978ae4719",
+      "sha256": "b50215e448bc389ccbce38a21cdc03349c45474e57fd43710f5ed4c8fba84729",
+      "bytes": 3021,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d9842da32066f92016b0ef82bf2cf605c71822f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/dashboard-answer-route/README.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/dashboard-answer-route/preparation.json",
+      "head": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+      "blob": "a2e5f9ca68f0ef490113047c9e0b8cefa737542b",
+      "sha256": "d6e7f61c885b98ff4e5b034872e0b2ba6a3a10a23d29374cfbb69edd06183103",
+      "bytes": 9499,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d9842da32066f92016b0ef82bf2cf605c71822f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/dashboard-answer-route/preparation.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/decision-access.ts",
+      "head": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+      "blob": "1b75f4b1786bb351c15821d76a31030fba677e7e",
+      "sha256": "d7e9cc9215470d724d0d0452f2239d24a7b2fe0fa1ef2688c8adc9481421bdeb",
+      "bytes": 5482,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d9842da32066f92016b0ef82bf2cf605c71822f/modules/sucafina/Sucafinav1/product/reviews/decision-access.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/README.md",
+      "head": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+      "blob": "ba6847274b3d3793fa58d0ce881cf075aa4e2151",
+      "sha256": "8d76031fe04cdf5d35e83b41280eff864b1dab7d465c1ee8cbcfea0844252c28",
+      "bytes": 2718,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d9842da32066f92016b0ef82bf2cf605c71822f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/README.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/preparation.json",
+      "head": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+      "blob": "e60d27ff5131131111a7ef77ee44b32880009b53",
+      "sha256": "f3887d9aa11ef1e09d1c0d7244924fa482566c03c31534a1ee2cf90848daec30",
+      "bytes": 8056,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d9842da32066f92016b0ef82bf2cf605c71822f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/forecast-kpi-route/preparation.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/owner-refresh-w27/snapshot.json",
+      "head": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+      "blob": "057bc92561e3ee9075769a323288b32d1a8bd917",
+      "sha256": "f43000c34770d325c7a896c873e6b25ae20ed452f6919cdcc077959ad04ea44f",
+      "bytes": 11728,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d9842da32066f92016b0ef82bf2cf605c71822f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/owner-refresh-w27/snapshot.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/purchase-choose-read-scope/README.md",
+      "head": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+      "blob": "1e639fb51c4657de4c7172df5309e64cbb4c7295",
+      "sha256": "85edf0f1151c017c6c04c266927c41a65da12b85761e4d750593ae0ab4170850",
+      "bytes": 5031,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d9842da32066f92016b0ef82bf2cf605c71822f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/purchase-choose-read-scope/README.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/purchase-choose-read-scope/audit.json",
+      "head": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+      "blob": "b4d17033ec5d631b6add211e55dce569640b1e73",
+      "sha256": "1df3ed382ac39f456057c141b1e2a312010552182dfe5c879e9aaf8706524195",
+      "bytes": 18614,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d9842da32066f92016b0ef82bf2cf605c71822f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/purchase-choose-read-scope/audit.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/purchase-choose-read-scope/owner-delta.json",
+      "head": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+      "blob": "31edbfc702bb9146ca08a4cea3652c5a085bb276",
+      "sha256": "582dde1ae563164f2c3c4bebdcab7e24301fdccb3f5542153450b0678c34a54d",
+      "bytes": 2566,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d9842da32066f92016b0ef82bf2cf605c71822f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/purchase-choose-read-scope/owner-delta.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-23-checks.json",
+      "head": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+      "blob": "c7409ec9bfd36f568f85210321408e03a07fd0a7",
+      "sha256": "8b983a87c47727044733f84e36687b3a0ebcd5affef137bb537cd6b3b8bf649c",
+      "bytes": 5911,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d9842da32066f92016b0ef82bf2cf605c71822f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-23-checks.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-23-new-routes-dispatch.json",
+      "head": "5d9842da32066f92016b0ef82bf2cf605c71822f",
+      "blob": "f7f150516c3ffcd990b0911c79c73a0947bbab61",
+      "sha256": "9586b1985892722dd86c45980b0541a59f79e1c8cc73032090372906770bb9c0",
+      "bytes": 6676,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5d9842da32066f92016b0ef82bf2cf605c71822f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-23-new-routes-dispatch.json"
+    }
+  ],
+  "hashVerification": {
+    "files": 13,
+    "mismatches": 0
+  }
+}

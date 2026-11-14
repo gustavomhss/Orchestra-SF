@@ -5,6 +5,7 @@ import type { DecisionCasePort, DomainPortHost, PortResult } from "../contracts/
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 import { encodeCaseRef } from "./case-port.ts"
+import { proposalReviewDigest } from "./receipt-review-binding.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type ReviewFields = readonly { field: string; before: string | number | boolean | null; after: string | number | boolean | null; beforeCurrency?: string; afterCurrency?: string }[]
@@ -39,7 +40,10 @@ export function createDecisionPreparedReview(input: {
       const second = await input.reviewDomain(change.operation, context)
       if (again.status !== "ok" || digestSfValue(again.value.case) !== digestSfValue(current.value.case) || changesAgain.status !== "ok" || changesAgain.value?.length !== 1 || digestSfValue(changesAgain.value[0]) !== digestSfValue(change) || second.status !== "ok" || digestSfValue(second.value) !== digestSfValue(first.value) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "review-changed" } as const
       const receipt = view[0]!.receiptRef ? current.value.case.receipts.find((item) => item.id === view[0]!.receiptRef) : undefined
-      return { status: "ok", value: { changeId: change.id, choiceId: change.choiceId, surface: change.target.surface, target: { type: change.target.type, id: change.target.id, ...(first.value.targetLabel?.trim() ? { label: first.value.targetLabel } : {}) }, expectedVersion: change.expectedVersion, state: change.state, fields: first.value.fields, ...(receipt ? { receipt } : {}) } } as const
+      const choices = current.value.case.choices.filter((item) => item.id === request.choiceId)
+      if (choices.length !== 1) return { status: "conflict", reason: "review-choice-ambiguous" } as const
+      const reviewDigest = proposalReviewDigest({ caseId: request.caseRef.id, caseIncarnation: request.caseRef.incarnation, changeCaseVersion: change.caseVersion, choiceDigest: digestSfValue(choices[0]), change, fields: first.value.fields, sourceRefDigest: first.value.source.refDigest })
+      return { status: "ok", value: { reviewDigest, changeId: change.id, choiceId: change.choiceId, surface: change.target.surface, target: { type: change.target.type, id: change.target.id, ...(first.value.targetLabel?.trim() ? { label: first.value.targetLabel } : {}) }, expectedVersion: change.expectedVersion, state: change.state, fields: first.value.fields, ...(receipt ? { receipt } : {}) } } as const
     } catch { return { status: "unavailable", reason: "review-unavailable" } as const }
   }
 }

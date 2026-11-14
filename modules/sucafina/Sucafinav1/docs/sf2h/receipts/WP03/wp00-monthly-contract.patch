@@ -1,0 +1,18 @@
+--- a/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
++++ b/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
+@@ -18,12 +18,11 @@
+ import type { TrustedUiContext } from "./sf-execution.ts"
+ import type { ForecastExplainInput } from "./skill-inputs.ts"
+ import type { ForecastCompareRequest } from "./operations.ts"
+-import type { MonthlyDraft } from "../planner/monthly-edit.ts"
+-import type { View, Result } from "../../runtime/contract.ts"
++import type { MonthlyRequest, MonthlyResult } from "../planner/monthly-host.ts"
+ import type { runSfAnalysis } from "../ai/analysis-port.ts"
+ 
+-export type SfPlannerMonthlyInput = { page: "OPEX" | "CAPEX"; versionId: string; drafts: readonly MonthlyDraft[] }
+-export type SfPlannerMonthlyResult = { view: View; rows: readonly { draft: MonthlyDraft; errors: readonly { cell?: MonthlyDraft["cells"][number]; reason: string }[]; result?: Result }[] }
++export type SfPlannerMonthlyInput = MonthlyRequest
++export type SfPlannerMonthlyResult = MonthlyResult
+ 
+ /** In-process host API. Neither this object nor its bindings are serialized into a model request. */
+ export type SfHostSessionPort = {

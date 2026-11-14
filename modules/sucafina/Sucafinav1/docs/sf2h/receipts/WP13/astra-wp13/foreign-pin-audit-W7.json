@@ -1,0 +1,1971 @@
+{
+  "schema": "wp13.foreign-pin-audit.v1",
+  "createdAt": "2026-11-14T11:04:39.816576+00:00",
+  "repository": "gustavomhss/Orchestra-SF",
+  "pullRequest": 37,
+  "branch": "astra-wp13",
+  "label": "W7",
+  "target": {
+    "baseBranch": "sf2-stack",
+    "baseCommit": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "headCommit": "8145b909310e01c711d43a97e6c1bd35d5dcec3a",
+    "commitCount": 8
+  },
+  "status": "PASS_PUBLISHED_PIN_AND_PATH_SCOPE_AUDIT",
+  "ready": false,
+  "productPassClaimed": false,
+  "sourceDiff": {
+    "path": "reference/wp13-PR37-current-file-diff.json",
+    "sha256": "18f5a5b5492d57904248e69961794a01b43c46cfbed7db20d4a9193c50b19062",
+    "gitBlob": "95bf28513e62d2aea6ef75f3aa8bae22d4e3f60b",
+    "provenance": "GitHub MCP compare/file metadata previously saved by root; no remote fetch during this audit"
+  },
+  "method": {
+    "publishedIdentity": "Exact (path, Git blob SHA) join between every FOREIGN_PIN_REQUIRED row in the published PR diff and the six declared consumption receipts. Receipt bytes also match their published PR blobs. Most recent matching receipt is the primary pin; every exact alias is retained.",
+    "receiptSectionsIndexed": [
+      {
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+        "section": "dependencies"
+      },
+      {
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+        "section": "currentProducerPins"
+      },
+      {
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v3.json",
+        "section": "exactPublishedInputs"
+      },
+      {
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v4.json",
+        "section": "files"
+      },
+      {
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v6.json",
+        "section": "files"
+      },
+      {
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v7.json",
+        "section": "files"
+      }
+    ],
+    "excludedIndexSections": [
+      "consumed-inputs-v6.json.dependencies: records published/local blob equality but does not independently pin every dependency to the v6 global source commit."
+    ],
+    "localHydration": "Git blob hashes computed from raw local bytes; one-final-LF comparison is in memory only. Nothing was normalized or rewritten.",
+    "scope": "All 148 diff paths classified by explicit WP13/check ownership or an exact foreign pin, with separate protected-path checks."
+  },
+  "counts": {
+    "changedPaths": 148,
+    "ownOrAuthorizedCheck": 87,
+    "foreignPaths": 61,
+    "foreignWithExactPublishedPin": 61,
+    "foreignMissingPin": 0,
+    "foreignAuthoredBlobDeltas": 0,
+    "receiptFiles": 6,
+    "receiptFilesMatchingPublishedBlob": 6,
+    "foreignLocalExact": 36,
+    "foreignLocalOneAdditionalFinalLF": 25,
+    "foreignLocalUnclassifiedDifferences": 0,
+    "remoteReads": 0,
+    "remoteWrites": 0,
+    "productTestsRun": 0,
+    "CIRequests": 0
+  },
+  "ownScope": {
+    "buckets": {
+      "authorizedCheckWorkflow": {
+        "count": 1,
+        "paths": [
+          ".github/workflows/astra-wp13-check.yml"
+        ]
+      },
+      "WP13Receipts": {
+        "count": 38,
+        "paths": [
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/check-W2.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/check-W3.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/check-W4.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/check-W5.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/check-W6.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v3.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v4.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v6.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v7.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/domain-handoff-closure-W6.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/fixture-intake-review-W7.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/history-consumer-delta.NOT_APPLIED.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/increment-2.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/increment-3.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/increment-4.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/increment-5.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/increment-6.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/increment-7.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/independent-acceptance.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/independent-history.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/independent-sensitivity.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/owner-head-reconciliation-W4.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/owner-head-reconciliation-W7.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/product-selection-W5.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/product-selection-W6.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/product-selection-W7.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/reconciliation-consumer-delta.NOT_APPLIED.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/reconciliation-factory.NOT_APPLIED.patch.txt",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/reconciliation-producer-W4.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovered-own-v3.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/tests-W2.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/wp10-sensitivity.NOT_APPLIED.json",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/wp10-sensitivity.NOT_APPLIED.patch.txt",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/wp10-supported-na.NOT_APPLIED.patch.txt",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/wp11-receipt-cas.NOT_APPLIED.patch.txt",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/wp11-receipt-cas.json"
+        ]
+      },
+      "WP13Portfolio": {
+        "count": 24,
+        "paths": [
+          "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+          "modules/sucafina/Sucafinav1/product/portfolio/S4-C-CHECKPOINT.md",
+          "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/campaign-proposals.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/contribution.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts.draft",
+          "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+          "modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
+        ]
+      },
+      "WP13Tests": {
+        "count": 24,
+        "paths": [
+          "modules/sucafina/Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/candidates-store.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/candidates.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/contribution.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview-fixture.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/production.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts"
+        ]
+      }
+    },
+    "unexpectedPaths": []
+  },
+  "foreignFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "change": "modified",
+      "publishedBlob": "98ed7307c8970ecb35f2eedb8427b37dd9ceeb5d",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+      "sourceBlob": "98ed7307c8970ecb35f2eedb8427b37dd9ceeb5d",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2fb7e9c792327725384d99d656cc44b232ddc485/modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/3",
+          "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+          "sourceBlob": "98ed7307c8970ecb35f2eedb8427b37dd9ceeb5d"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "61cd1cc78f78b3d02c5dba99c55d0a198f53b2a0",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "98ed7307c8970ecb35f2eedb8427b37dd9ceeb5d",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-provenance.ts",
+      "change": "added",
+      "publishedBlob": "b303ef7a4968ffb2cc2f51e6318e165a07ac3c73",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+      "sourceBlob": "b303ef7a4968ffb2cc2f51e6318e165a07ac3c73",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2fb7e9c792327725384d99d656cc44b232ddc485/modules/sucafina/Sucafinav1/product/ai/run-provenance.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/21",
+          "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+          "sourceBlob": "b303ef7a4968ffb2cc2f51e6318e165a07ac3c73"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "fc12b23f853dc5165418f93fa2103a501eae3ef4",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "b303ef7a4968ffb2cc2f51e6318e165a07ac3c73",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "change": "modified",
+      "publishedBlob": "a547883f113e5879f13fb13ad23f31704209b4dc",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+      "sourceBlob": "a547883f113e5879f13fb13ad23f31704209b4dc",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/2fb7e9c792327725384d99d656cc44b232ddc485/modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/13",
+          "sourceCommit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+          "sourceBlob": "a547883f113e5879f13fb13ad23f31704209b4dc"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "26ee90e86489c55d24222b8f9fb48aed255e24c5",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "a547883f113e5879f13fb13ad23f31704209b4dc",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "change": "modified",
+      "publishedBlob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "sourceBlob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/0a5ce33012d008af1f56d11596a1f1f4eaba5b9d/modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/5",
+          "sourceCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+          "sourceBlob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "change": "modified",
+      "publishedBlob": "ae8b96bc50ddd64404ae16c9e3ee1129cc6e3104",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "sourceBlob": "ae8b96bc50ddd64404ae16c9e3ee1129cc6e3104",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/0a5ce33012d008af1f56d11596a1f1f4eaba5b9d/modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/35",
+          "sourceCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+          "sourceBlob": "ae8b96bc50ddd64404ae16c9e3ee1129cc6e3104"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "ae8b96bc50ddd64404ae16c9e3ee1129cc6e3104",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/normative-contracts.json",
+      "change": "modified",
+      "publishedBlob": "a59ecb7ea7315504cb78ced5c6b6dd828e238730",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "sourceBlob": "a59ecb7ea7315504cb78ced5c6b6dd828e238730",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/0a5ce33012d008af1f56d11596a1f1f4eaba5b9d/modules/sucafina/Sucafinav1/product/contracts/normative-contracts.json",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/36",
+          "sourceCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+          "sourceBlob": "a59ecb7ea7315504cb78ced5c6b6dd828e238730"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "a59ecb7ea7315504cb78ced5c6b6dd828e238730",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+      "change": "modified",
+      "publishedBlob": "0d9fc51d26a0ca726d32e74605b555f871d99af6",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "sourceBlob": "0d9fc51d26a0ca726d32e74605b555f871d99af6",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/0a5ce33012d008af1f56d11596a1f1f4eaba5b9d/modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/7",
+          "sourceCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+          "sourceBlob": "0d9fc51d26a0ca726d32e74605b555f871d99af6"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "71bb3344bd5a935d06d612768d5401a0e3b874c0",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "0d9fc51d26a0ca726d32e74605b555f871d99af6",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+      "change": "modified",
+      "publishedBlob": "4db2e631bd83ccda67442824557881c2ed990c92",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "sourceBlob": "4db2e631bd83ccda67442824557881c2ed990c92",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/0a5ce33012d008af1f56d11596a1f1f4eaba5b9d/modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/10",
+          "sourceCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+          "sourceBlob": "4db2e631bd83ccda67442824557881c2ed990c92"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "93602d07d3a31321837a85f140dd330358703a1e",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "4db2e631bd83ccda67442824557881c2ed990c92",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "change": "modified",
+      "publishedBlob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "sourceBlob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/0a5ce33012d008af1f56d11596a1f1f4eaba5b9d/modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/0",
+          "sourceCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+          "sourceBlob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state-layout.ts",
+      "change": "added",
+      "publishedBlob": "c3a6e039badc5ed49b20caa7153cb01979ebec9a",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "sourceBlob": "c3a6e039badc5ed49b20caa7153cb01979ebec9a",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/0a5ce33012d008af1f56d11596a1f1f4eaba5b9d/modules/sucafina/Sucafinav1/product/contracts/state-layout.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/27",
+          "sourceCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+          "sourceBlob": "c3a6e039badc5ed49b20caa7153cb01979ebec9a"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "8d661a02074560b60ef569cc2e2d3f48ba19bc00",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "c3a6e039badc5ed49b20caa7153cb01979ebec9a",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "change": "modified",
+      "publishedBlob": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "sourceBlob": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/0a5ce33012d008af1f56d11596a1f1f4eaba5b9d/modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/6",
+          "sourceCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+          "sourceBlob": "755639b2a16265fe164ba2e6343738c1362d168c"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "8a5aa84dce9fe12ea7ff3fdea481c3cbf2ef3ddc",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "755639b2a16265fe164ba2e6343738c1362d168c",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts",
+      "change": "added",
+      "publishedBlob": "1d3229d717ac490a2727cc30df65cedd77d52a57",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "1d3229d717ac490a2727cc30df65cedd77d52a57",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/26",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "1d3229d717ac490a2727cc30df65cedd77d52a57"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "1127c5258a41be714b18bb1dfd7d0a9c430ad4bf",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "1d3229d717ac490a2727cc30df65cedd77d52a57",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "change": "added",
+      "publishedBlob": "df778b84a77aeed9ed60ca03e9071a1b92c37a35",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "sourceBlob": "df778b84a77aeed9ed60ca03e9071a1b92c37a35",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/66bbe152c145f04c16223a938589c63cedb3b716/modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+          "receiptBlob": "3cf24b6ca972a976694edf193421d16743ff5e0c",
+          "jsonPointer": "/currentProducerPins/5",
+          "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+          "sourceBlob": "df778b84a77aeed9ed60ca03e9071a1b92c37a35"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "df778b84a77aeed9ed60ca03e9071a1b92c37a35",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts",
+      "change": "modified",
+      "publishedBlob": "c2f91a8cdfc590dc10a1b3a2a9c56be8a424bd5a",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "sourceBlob": "c2f91a8cdfc590dc10a1b3a2a9c56be8a424bd5a",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/66bbe152c145f04c16223a938589c63cedb3b716/modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+          "receiptBlob": "3cf24b6ca972a976694edf193421d16743ff5e0c",
+          "jsonPointer": "/currentProducerPins/6",
+          "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+          "sourceBlob": "c2f91a8cdfc590dc10a1b3a2a9c56be8a424bd5a"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "c2f91a8cdfc590dc10a1b3a2a9c56be8a424bd5a",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "change": "modified",
+      "publishedBlob": "dbcc51d75ccefb23f328f1d4151504be96a35a45",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+      "sourceBlob": "dbcc51d75ccefb23f328f1d4151504be96a35a45",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/efa0e57e54862f99a07b2837af5e729adb881415/modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v3.json",
+          "receiptBlob": "3239fd88fdc669956ec0d2eeee2900904ebd0da3",
+          "jsonPointer": "/exactPublishedInputs/0",
+          "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+          "sourceBlob": "dbcc51d75ccefb23f328f1d4151504be96a35a45"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "dbcc51d75ccefb23f328f1d4151504be96a35a45",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "change": "modified",
+      "publishedBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/4",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "810539cbd2f0b89006102b334710e9d6695151ca",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "change": "modified",
+      "publishedBlob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "ffe77b53f3c074f03fe6dc3ff7caa788778eca99",
+      "sourceBlob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/ffe77b53f3c074f03fe6dc3ff7caa788778eca99/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v3.json",
+          "receiptBlob": "3239fd88fdc669956ec0d2eeee2900904ebd0da3",
+          "jsonPointer": "/exactPublishedInputs/8",
+          "sourceCommit": "ffe77b53f3c074f03fe6dc3ff7caa788778eca99",
+          "sourceBlob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+      "change": "modified",
+      "publishedBlob": "4280c9a249627893eb798eb421711d9e58e50a8f",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "4280c9a249627893eb798eb421711d9e58e50a8f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+          "receiptBlob": "3cf24b6ca972a976694edf193421d16743ff5e0c",
+          "jsonPointer": "/currentProducerPins/2",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "4280c9a249627893eb798eb421711d9e58e50a8f"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "4280c9a249627893eb798eb421711d9e58e50a8f",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-interval.ts",
+      "change": "added",
+      "publishedBlob": "351aa6cf8702c759da3c35cbf531f355d04ba742",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "sourceBlob": "351aa6cf8702c759da3c35cbf531f355d04ba742",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/66bbe152c145f04c16223a938589c63cedb3b716/modules/sucafina/Sucafinav1/product/decisions/coverage-interval.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+          "receiptBlob": "3cf24b6ca972a976694edf193421d16743ff5e0c",
+          "jsonPointer": "/currentProducerPins/1",
+          "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+          "sourceBlob": "351aa6cf8702c759da3c35cbf531f355d04ba742"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "351aa6cf8702c759da3c35cbf531f355d04ba742",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "change": "added",
+      "publishedBlob": "dc480a2e1e343e7f2a8844a3c23ec9f06582d5ad",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "dc480a2e1e343e7f2a8844a3c23ec9f06582d5ad",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/29",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "dc480a2e1e343e7f2a8844a3c23ec9f06582d5ad"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "b85058bb3b648dd9b1ae1498d0253f08eb69e9e1",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "dc480a2e1e343e7f2a8844a3c23ec9f06582d5ad",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "change": "modified",
+      "publishedBlob": "922358d17c470c16b43076510bdf04744e2306e4",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "sourceBlob": "922358d17c470c16b43076510bdf04744e2306e4",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/66bbe152c145f04c16223a938589c63cedb3b716/modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+          "receiptBlob": "3cf24b6ca972a976694edf193421d16743ff5e0c",
+          "jsonPointer": "/currentProducerPins/8",
+          "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+          "sourceBlob": "922358d17c470c16b43076510bdf04744e2306e4"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "922358d17c470c16b43076510bdf04744e2306e4",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts",
+      "change": "modified",
+      "publishedBlob": "8815cc1fc27b570d241e2dd464d925eff05e5455",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+      "sourceBlob": "8815cc1fc27b570d241e2dd464d925eff05e5455",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/efa0e57e54862f99a07b2837af5e729adb881415/modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v3.json",
+          "receiptBlob": "3239fd88fdc669956ec0d2eeee2900904ebd0da3",
+          "jsonPointer": "/exactPublishedInputs/1",
+          "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+          "sourceBlob": "8815cc1fc27b570d241e2dd464d925eff05e5455"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "8815cc1fc27b570d241e2dd464d925eff05e5455",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-history.ts",
+      "change": "modified",
+      "publishedBlob": "b90dcbc9e79e6dc505780da885c1fbd504c1fb4c",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+      "sourceBlob": "b90dcbc9e79e6dc505780da885c1fbd504c1fb4c",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/efa0e57e54862f99a07b2837af5e729adb881415/modules/sucafina/Sucafinav1/product/decisions/portfolio-history.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v3.json",
+          "receiptBlob": "3239fd88fdc669956ec0d2eeee2900904ebd0da3",
+          "jsonPointer": "/exactPublishedInputs/2",
+          "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+          "sourceBlob": "b90dcbc9e79e6dc505780da885c1fbd504c1fb4c"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "b90dcbc9e79e6dc505780da885c1fbd504c1fb4c",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "change": "modified",
+      "publishedBlob": "64deee2c7570d718686eb2181ff197f4347e6764",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "64deee2c7570d718686eb2181ff197f4347e6764",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/11",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "64deee2c7570d718686eb2181ff197f4347e6764"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "e20d2cc43e23464d834a2126c8d4b23fa6c97393",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "64deee2c7570d718686eb2181ff197f4347e6764",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "change": "modified",
+      "publishedBlob": "acb3b7fb3050264758a5470ffe8168fa5f581370",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+      "sourceBlob": "acb3b7fb3050264758a5470ffe8168fa5f581370",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/efa0e57e54862f99a07b2837af5e729adb881415/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v3.json",
+          "receiptBlob": "3239fd88fdc669956ec0d2eeee2900904ebd0da3",
+          "jsonPointer": "/exactPublishedInputs/3",
+          "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+          "sourceBlob": "acb3b7fb3050264758a5470ffe8168fa5f581370"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "acb3b7fb3050264758a5470ffe8168fa5f581370",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+      "change": "added",
+      "publishedBlob": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/28",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "219073fdcc4915577e4aaceb0ef36ec6fb6d06bf",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "change": "modified",
+      "publishedBlob": "338889513cfc681bdda91697a9d5bbc16bde8fd1",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+      "sourceBlob": "338889513cfc681bdda91697a9d5bbc16bde8fd1",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/efa0e57e54862f99a07b2837af5e729adb881415/modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v3.json",
+          "receiptBlob": "3239fd88fdc669956ec0d2eeee2900904ebd0da3",
+          "jsonPointer": "/exactPublishedInputs/4",
+          "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+          "sourceBlob": "338889513cfc681bdda91697a9d5bbc16bde8fd1"
+        },
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/1",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "338889513cfc681bdda91697a9d5bbc16bde8fd1"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "338889513cfc681bdda91697a9d5bbc16bde8fd1",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "change": "added",
+      "publishedBlob": "54c5155aa64b4528a75a601950b56bed8e021471",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+      "sourceBlob": "54c5155aa64b4528a75a601950b56bed8e021471",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/efa0e57e54862f99a07b2837af5e729adb881415/modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v3.json",
+          "receiptBlob": "3239fd88fdc669956ec0d2eeee2900904ebd0da3",
+          "jsonPointer": "/exactPublishedInputs/5",
+          "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+          "sourceBlob": "54c5155aa64b4528a75a601950b56bed8e021471"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "54c5155aa64b4528a75a601950b56bed8e021471",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "change": "modified",
+      "publishedBlob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "sourceBlob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/417038d6b3cfd1817f40ffc60e56f42e505b50a5/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/14",
+          "sourceCommit": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "sourceBlob": "2fd55c7304add0829d7434917c80664fe86356b9"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "78009bbe25a975baa14066376fa0686e821dd5c3",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "2fd55c7304add0829d7434917c80664fe86356b9",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "change": "added",
+      "publishedBlob": "aaacc8bf7df9fa67870c4067154fe67a58c34a22",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "ffe77b53f3c074f03fe6dc3ff7caa788778eca99",
+      "sourceBlob": "aaacc8bf7df9fa67870c4067154fe67a58c34a22",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/ffe77b53f3c074f03fe6dc3ff7caa788778eca99/modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v3.json",
+          "receiptBlob": "3239fd88fdc669956ec0d2eeee2900904ebd0da3",
+          "jsonPointer": "/exactPublishedInputs/9",
+          "sourceCommit": "ffe77b53f3c074f03fe6dc3ff7caa788778eca99",
+          "sourceBlob": "aaacc8bf7df9fa67870c4067154fe67a58c34a22"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "aaacc8bf7df9fa67870c4067154fe67a58c34a22",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/comparison.ts",
+      "change": "modified",
+      "publishedBlob": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/planner/comparison.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/8",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "5cf1266faaf73421d4b112bcb3c117a4a27c27dc",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/coverage.ts",
+      "change": "modified",
+      "publishedBlob": "de86e90c86aca626a575bf5b8dfdf6973fac8b1e",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "de86e90c86aca626a575bf5b8dfdf6973fac8b1e",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/planner/coverage.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/22",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "de86e90c86aca626a575bf5b8dfdf6973fac8b1e"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "405e85a410cffdbdd3f969af590129f8380b2012",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "de86e90c86aca626a575bf5b8dfdf6973fac8b1e",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/criterion-metric.ts",
+      "change": "modified",
+      "publishedBlob": "2340a9566e1471f47d9c5c7f884bfc31be13cef3",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "sourceBlob": "2340a9566e1471f47d9c5c7f884bfc31be13cef3",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/66bbe152c145f04c16223a938589c63cedb3b716/modules/sucafina/Sucafinav1/product/planner/criterion-metric.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+          "receiptBlob": "3cf24b6ca972a976694edf193421d16743ff5e0c",
+          "jsonPointer": "/currentProducerPins/9",
+          "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+          "sourceBlob": "2340a9566e1471f47d9c5c7f884bfc31be13cef3"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "2340a9566e1471f47d9c5c7f884bfc31be13cef3",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts",
+      "change": "modified",
+      "publishedBlob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "sourceBlob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/66bbe152c145f04c16223a938589c63cedb3b716/modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+          "receiptBlob": "3cf24b6ca972a976694edf193421d16743ff5e0c",
+          "jsonPointer": "/currentProducerPins/10",
+          "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+          "sourceBlob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/headcount-months.ts",
+      "change": "added",
+      "publishedBlob": "789615d49e519c742cef9c55d36362ec413a9fbe",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "789615d49e519c742cef9c55d36362ec413a9fbe",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/planner/headcount-months.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/30",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "789615d49e519c742cef9c55d36362ec413a9fbe"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "bee3bfead7c1e6ce321b77e0ad9fd7302accf3c2",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "789615d49e519c742cef9c55d36362ec413a9fbe",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/interval-proof.ts",
+      "change": "added",
+      "publishedBlob": "55a701b7be49fb3f550a0b52b580e6f7dc819b31",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "sourceBlob": "55a701b7be49fb3f550a0b52b580e6f7dc819b31",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/66bbe152c145f04c16223a938589c63cedb3b716/modules/sucafina/Sucafinav1/product/planner/interval-proof.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+          "receiptBlob": "3cf24b6ca972a976694edf193421d16743ff5e0c",
+          "jsonPointer": "/currentProducerPins/0",
+          "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+          "sourceBlob": "55a701b7be49fb3f550a0b52b580e6f7dc819b31"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "55a701b7be49fb3f550a0b52b580e6f7dc819b31",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/materiality.ts",
+      "change": "added",
+      "publishedBlob": "cbaa9e6f900eb539d393e75891a66318e50be22c",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe",
+      "sourceBlob": "cbaa9e6f900eb539d393e75891a66318e50be22c",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/7a67364aeb5c478be54e533910c4b4c91bbd1ebe/modules/sucafina/Sucafinav1/product/planner/materiality.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v6.json",
+          "receiptBlob": "243ee897d7ff60225cab179566d295180598df3c",
+          "jsonPointer": "/files/0",
+          "sourceCommit": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe",
+          "sourceBlob": "cbaa9e6f900eb539d393e75891a66318e50be22c"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "cbaa9e6f900eb539d393e75891a66318e50be22c",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts",
+      "change": "added",
+      "publishedBlob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "sourceBlob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/66bbe152c145f04c16223a938589c63cedb3b716/modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+          "receiptBlob": "3cf24b6ca972a976694edf193421d16743ff5e0c",
+          "jsonPointer": "/currentProducerPins/17",
+          "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+          "sourceBlob": "086c0100a39525f5d78f5864ad589e2d72fc40cd"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/overview-drilldown.ts",
+      "change": "added",
+      "publishedBlob": "e2ff6ab3ba419d63df76c94e3b4c2284fc34b99f",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "e2ff6ab3ba419d63df76c94e3b4c2284fc34b99f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/planner/overview-drilldown.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/33",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "e2ff6ab3ba419d63df76c94e3b4c2284fc34b99f"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "f577ae4504b823667216a8e1e6c727b5a9650452",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "e2ff6ab3ba419d63df76c94e3b4c2284fc34b99f",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/overview-host.ts",
+      "change": "added",
+      "publishedBlob": "39f65d53403c09950a3dd246a0a8ad9df56436c9",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "39f65d53403c09950a3dd246a0a8ad9df56436c9",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/planner/overview-host.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/25",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "39f65d53403c09950a3dd246a0a8ad9df56436c9"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "867378319160cf53b5a145701064ad92a08162fc",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "39f65d53403c09950a3dd246a0a8ad9df56436c9",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/overview.ts",
+      "change": "added",
+      "publishedBlob": "9514987d19768f7bd9144f74a608a7470e6b0c18",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "9514987d19768f7bd9144f74a608a7470e6b0c18",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/planner/overview.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/32",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "9514987d19768f7bd9144f74a608a7470e6b0c18"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "3409b87b84aa1e5646a8b73f29319471a1cbc4c3",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "9514987d19768f7bd9144f74a608a7470e6b0c18",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "change": "modified",
+      "publishedBlob": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/2",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "1d750c4d699eb27acd2b5066d23b66307f5ae931"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "a3e7d9eb3f86370d6bf3adc08cb9589aa37e3bfd",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "change": "modified",
+      "publishedBlob": "dba62042653bd061fa099e2956cae4d11a0475ce",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "dba62042653bd061fa099e2956cae4d11a0475ce",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/18",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "dba62042653bd061fa099e2956cae4d11a0475ce"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "23e9c1b6c39e980c053b5ddf3324c587f4b6dc7f",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "dba62042653bd061fa099e2956cae4d11a0475ce",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "change": "modified",
+      "publishedBlob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/9",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "change": "modified",
+      "publishedBlob": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/12",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "9ad267f607a76913411c519d58d186c5acb12b05",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "4d34958a4acec914ec848df7bbfcfda3f03eeb0e",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "change": "modified",
+      "publishedBlob": "d3098aa94cdeee71193c94ae906f6fafd14bda9b",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "d3098aa94cdeee71193c94ae906f6fafd14bda9b",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/20",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "d3098aa94cdeee71193c94ae906f6fafd14bda9b"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "d3098aa94cdeee71193c94ae906f6fafd14bda9b",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "change": "modified",
+      "publishedBlob": "40c4c72cf9b6863cf5eb791e78e4a87de751192d",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "sourceBlob": "40c4c72cf9b6863cf5eb791e78e4a87de751192d",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/66bbe152c145f04c16223a938589c63cedb3b716/modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+          "receiptBlob": "3cf24b6ca972a976694edf193421d16743ff5e0c",
+          "jsonPointer": "/currentProducerPins/11",
+          "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+          "sourceBlob": "40c4c72cf9b6863cf5eb791e78e4a87de751192d"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "40c4c72cf9b6863cf5eb791e78e4a87de751192d",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "change": "modified",
+      "publishedBlob": "ed68563245e406aca2dc3ce335943647fd2cb002",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "sourceBlob": "ed68563245e406aca2dc3ce335943647fd2cb002",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/66bbe152c145f04c16223a938589c63cedb3b716/modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+          "receiptBlob": "3cf24b6ca972a976694edf193421d16743ff5e0c",
+          "jsonPointer": "/currentProducerPins/12",
+          "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+          "sourceBlob": "ed68563245e406aca2dc3ce335943647fd2cb002"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "ed68563245e406aca2dc3ce335943647fd2cb002",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/version-comparison.ts",
+      "change": "modified",
+      "publishedBlob": "067cecc3bd2c03ba00ff5ca5e269d911bf3c3869",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "067cecc3bd2c03ba00ff5ca5e269d911bf3c3869",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/planner/version-comparison.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/34",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "067cecc3bd2c03ba00ff5ca5e269d911bf3c3869"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "27ba5630510738b0838b8285a75531b4d2ba8106",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "067cecc3bd2c03ba00ff5ca5e269d911bf3c3869",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/versions-host.ts",
+      "change": "added",
+      "publishedBlob": "7d805cb61351f7b43cd6d4d3c47c48a21bac3dc4",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "7d805cb61351f7b43cd6d4d3c47c48a21bac3dc4",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/planner/versions-host.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/24",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "7d805cb61351f7b43cd6d4d3c47c48a21bac3dc4"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "cf59a7d79dc1b4e25fd070d3edc3b93733144ed5",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "7d805cb61351f7b43cd6d4d3c47c48a21bac3dc4",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/versions.ts",
+      "change": "added",
+      "publishedBlob": "243b89b585c0698f1edbc4ba01bd4841f3950f70",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "243b89b585c0698f1edbc4ba01bd4841f3950f70",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/product/planner/versions.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+          "receiptBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+          "jsonPointer": "/dependencies/31",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "243b89b585c0698f1edbc4ba01bd4841f3950f70"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "e9484a661c4645480039fe93949e5f0378c346c3",
+        "matchesPublished": false,
+        "classification": "ONE_ADDITIONAL_FINAL_LF",
+        "publishedBlobAfterInMemoryRemovalOfOneLF": "243b89b585c0698f1edbc4ba01bd4841f3950f70",
+        "fileModifiedByAudit": false
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "change": "added",
+      "publishedBlob": "a0a67918c69a636120daa66877669020803c108e",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "ffe77b53f3c074f03fe6dc3ff7caa788778eca99",
+      "sourceBlob": "a0a67918c69a636120daa66877669020803c108e",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/ffe77b53f3c074f03fe6dc3ff7caa788778eca99/modules/sucafina/Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v3.json",
+          "receiptBlob": "3239fd88fdc669956ec0d2eeee2900904ebd0da3",
+          "jsonPointer": "/exactPublishedInputs/10",
+          "sourceCommit": "ffe77b53f3c074f03fe6dc3ff7caa788778eca99",
+          "sourceBlob": "a0a67918c69a636120daa66877669020803c108e"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "a0a67918c69a636120daa66877669020803c108e",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "change": "added",
+      "publishedBlob": "1e28aa16eb1d93ddff44dc8596b07c17abfa9775",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "sourceBlob": "1e28aa16eb1d93ddff44dc8596b07c17abfa9775",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/66bbe152c145f04c16223a938589c63cedb3b716/modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+          "receiptBlob": "3cf24b6ca972a976694edf193421d16743ff5e0c",
+          "jsonPointer": "/currentProducerPins/13",
+          "sourceCommit": "66bbe152c145f04c16223a938589c63cedb3b716",
+          "sourceBlob": "1e28aa16eb1d93ddff44dc8596b07c17abfa9775"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "1e28aa16eb1d93ddff44dc8596b07c17abfa9775",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "change": "added",
+      "publishedBlob": "0ccf287ecd225ddcae99a1490f255b4c2b4358ed",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "0ccf287ecd225ddcae99a1490f255b4c2b4358ed",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+          "receiptBlob": "3cf24b6ca972a976694edf193421d16743ff5e0c",
+          "jsonPointer": "/currentProducerPins/3",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "0ccf287ecd225ddcae99a1490f255b4c2b4358ed"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "0ccf287ecd225ddcae99a1490f255b4c2b4358ed",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts",
+      "change": "added",
+      "publishedBlob": "93e9c37cfea05574c3c0b3ae080a03fdd5063056",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe",
+      "sourceBlob": "93e9c37cfea05574c3c0b3ae080a03fdd5063056",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/7a67364aeb5c478be54e533910c4b4c91bbd1ebe/modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v4.json",
+          "receiptBlob": "efd4b83994577e8c45b1c247073be7c37d5f929f",
+          "jsonPointer": "/files/0",
+          "sourceCommit": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe",
+          "sourceBlob": "93e9c37cfea05574c3c0b3ae080a03fdd5063056"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "93e9c37cfea05574c3c0b3ae080a03fdd5063056",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "change": "added",
+      "publishedBlob": "62365bd79c1f90b6ee90e64746678bfe779011cf",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+      "sourceBlob": "62365bd79c1f90b6ee90e64746678bfe779011cf",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/efa0e57e54862f99a07b2837af5e729adb881415/modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v3.json",
+          "receiptBlob": "3239fd88fdc669956ec0d2eeee2900904ebd0da3",
+          "jsonPointer": "/exactPublishedInputs/6",
+          "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+          "sourceBlob": "62365bd79c1f90b6ee90e64746678bfe779011cf"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "62365bd79c1f90b6ee90e64746678bfe779011cf",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "change": "added",
+      "publishedBlob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "sourceBlob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de/modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v7.json",
+          "receiptBlob": "cddc0a25816943c5c10e90120111c8c19b657ae0",
+          "jsonPointer": "/files/2",
+          "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+          "sourceBlob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+      "change": "added",
+      "publishedBlob": "5d5491cd95fb989f1233ba49db6185214e980899",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+      "sourceBlob": "5d5491cd95fb989f1233ba49db6185214e980899",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/efa0e57e54862f99a07b2837af5e729adb881415/modules/sucafina/Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v3.json",
+          "receiptBlob": "3239fd88fdc669956ec0d2eeee2900904ebd0da3",
+          "jsonPointer": "/exactPublishedInputs/7",
+          "sourceCommit": "efa0e57e54862f99a07b2837af5e729adb881415",
+          "sourceBlob": "5d5491cd95fb989f1233ba49db6185214e980899"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "5d5491cd95fb989f1233ba49db6185214e980899",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "change": "added",
+      "publishedBlob": "b913d9c0ab46a3f624b6c0aee28f5adf6654940a",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "sourceBlob": "b913d9c0ab46a3f624b6c0aee28f5adf6654940a",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v7.json",
+          "receiptBlob": "cddc0a25816943c5c10e90120111c8c19b657ae0",
+          "jsonPointer": "/files/0",
+          "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+          "sourceBlob": "b913d9c0ab46a3f624b6c0aee28f5adf6654940a"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "b913d9c0ab46a3f624b6c0aee28f5adf6654940a",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "change": "added",
+      "publishedBlob": "02af3b8a606b91949f9009d239e4f2289dd41e7d",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "sourceBlob": "02af3b8a606b91949f9009d239e4f2289dd41e7d",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v7.json",
+          "receiptBlob": "cddc0a25816943c5c10e90120111c8c19b657ae0",
+          "jsonPointer": "/files/1",
+          "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+          "sourceBlob": "02af3b8a606b91949f9009d239e4f2289dd41e7d"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "02af3b8a606b91949f9009d239e4f2289dd41e7d",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "change": "added",
+      "publishedBlob": "dd85ea61929f7a7180ed81b60ab4f866b6423f0c",
+      "status": "EXACT_PUBLISHED_INPUT",
+      "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "sourceBlob": "dd85ea61929f7a7180ed81b60ab4f866b6423f0c",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/981ad44102b2e2e67d31bfc8fb7d97208e390e5b/modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "matchingReceipts": [
+        {
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+          "receiptBlob": "3cf24b6ca972a976694edf193421d16743ff5e0c",
+          "jsonPointer": "/currentProducerPins/4",
+          "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+          "sourceBlob": "dd85ea61929f7a7180ed81b60ab4f866b6423f0c"
+        }
+      ],
+      "localHydration": {
+        "exists": true,
+        "blob": "dd85ea61929f7a7180ed81b60ab4f866b6423f0c",
+        "matchesPublished": true,
+        "classification": "EXACT"
+      }
+    }
+  ],
+  "sourceCommitCounts": [
+    {
+      "commit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "count": 8
+    },
+    {
+      "commit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "count": 3
+    },
+    {
+      "commit": "2fb7e9c792327725384d99d656cc44b232ddc485",
+      "count": 3
+    },
+    {
+      "commit": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "count": 1
+    },
+    {
+      "commit": "66bbe152c145f04c16223a938589c63cedb3b716",
+      "count": 11
+    },
+    {
+      "commit": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe",
+      "count": 2
+    },
+    {
+      "commit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "count": 22
+    },
+    {
+      "commit": "efa0e57e54862f99a07b2837af5e729adb881415",
+      "count": 8
+    },
+    {
+      "commit": "ffe77b53f3c074f03fe6dc3ff7caa788778eca99",
+      "count": 3
+    }
+  ],
+  "primaryReceiptCounts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+      "count": 14
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v3.json",
+      "count": 11
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v4.json",
+      "count": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v6.json",
+      "count": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v7.json",
+      "count": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+      "count": 31
+    }
+  ],
+  "receiptIntegrity": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/recovery-inputs.json",
+      "publishedBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+      "localBlob": "b7b5dfe76d5c4859999b21f7323dc05b1092ffa1",
+      "localMatchesPublished": true,
+      "sha256": "110902b9d419b5ac439b43d919444ddb82c9c3fac5e115e653ba51c97a41a462",
+      "indexedSection": "dependencies",
+      "indexedRows": 37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v2.json",
+      "publishedBlob": "3cf24b6ca972a976694edf193421d16743ff5e0c",
+      "localBlob": "3cf24b6ca972a976694edf193421d16743ff5e0c",
+      "localMatchesPublished": true,
+      "sha256": "69f18d192c592959dc114410734df3e97adca6371c91f92fe01fa041c60d5007",
+      "indexedSection": "currentProducerPins",
+      "indexedRows": 20
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v3.json",
+      "publishedBlob": "3239fd88fdc669956ec0d2eeee2900904ebd0da3",
+      "localBlob": "3239fd88fdc669956ec0d2eeee2900904ebd0da3",
+      "localMatchesPublished": true,
+      "sha256": "1656b7a9d17bfd2a625625931d25a97a27ba2e5c807743e279f53b77de210d36",
+      "indexedSection": "exactPublishedInputs",
+      "indexedRows": 11
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v4.json",
+      "publishedBlob": "efd4b83994577e8c45b1c247073be7c37d5f929f",
+      "localBlob": "efd4b83994577e8c45b1c247073be7c37d5f929f",
+      "localMatchesPublished": true,
+      "sha256": "06d9b9192b13b7d33f8d88db0584f727307572d8c54d55a1b0c72d5572b0dd04",
+      "indexedSection": "files",
+      "indexedRows": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v6.json",
+      "publishedBlob": "243ee897d7ff60225cab179566d295180598df3c",
+      "localBlob": "243ee897d7ff60225cab179566d295180598df3c",
+      "localMatchesPublished": true,
+      "sha256": "c8463fabda6aba61bd7b0eb60f8872dce6f9d5cd80a80dfc3f59542a51d551be",
+      "indexedSection": "files",
+      "indexedRows": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v7.json",
+      "publishedBlob": "cddc0a25816943c5c10e90120111c8c19b657ae0",
+      "localBlob": "cddc0a25816943c5c10e90120111c8c19b657ae0",
+      "localMatchesPublished": true,
+      "sha256": "3cbfb9328f2ce9cd70edb0effd04141f9d71c22f085a2d97269cc24c5dfe9f05",
+      "indexedSection": "files",
+      "indexedRows": 3
+    }
+  ],
+  "protectedPathChecks": [
+    {
+      "id": "approved-plan",
+      "rule": "Paths under docs/sf2h-plan/",
+      "matchingPaths": [],
+      "status": "NO_CHANGED_PATHS"
+    },
+    {
+      "id": "engines-runtime",
+      "rule": "Sucafinav1/src or runtime roots; engines/runtime/engine-adapters directory segments",
+      "matchingPaths": [],
+      "status": "NO_CHANGED_PATHS"
+    },
+    {
+      "id": "azure-deploy-infrastructure",
+      "rule": "azure/deploy/deployment/deployments/terraform/bicep/infrastructure/infra path segments; azure-pipelines/deploy config filenames",
+      "matchingPaths": [],
+      "status": "NO_CHANGED_PATHS"
+    },
+    {
+      "id": "identity",
+      "rule": "identity/entra/iam directory or filename segments",
+      "matchingPaths": [],
+      "status": "NO_CHANGED_PATHS"
+    },
+    {
+      "id": "financial-policy-files",
+      "rule": "financial-policy/finance-policy/financial-policies segments and src/planner-accounts.ts",
+      "matchingPaths": [],
+      "status": "NO_CHANGED_PATHS"
+    },
+    {
+      "id": "host-apps",
+      "rule": "Paths under apps/",
+      "matchingPaths": [],
+      "status": "NO_CHANGED_PATHS"
+    },
+    {
+      "id": "other-workflows",
+      "rule": "Other .github/workflows files than authorized astra-wp13-check.yml",
+      "matchingPaths": [],
+      "status": "NO_CHANGED_PATHS"
+    }
+  ],
+  "authorizedCheckWorkflow": {
+    "path": ".github/workflows/astra-wp13-check.yml",
+    "publishedBlob": "3d7978dcedfdbb5488c4056f6ab3f2b80ecef4ae",
+    "observedPurpose": [
+      "Read-only contents permission; checkout/validate exact product and check envelope",
+      "Bun typecheck in modules/sucafina",
+      "Bun check:guards against a pinned origin/dev reference",
+      "Upload check evidence"
+    ],
+    "deploymentJobPresent": false,
+    "productTestsInvoked": false
+  },
+  "conclusions": [
+    "All 61 published foreign files are byte-identical to an explicitly pinned published input in the requested receipts. No unmatched or newly authored foreign blob occurs in this PR diff.",
+    "No changed path belongs to the approved plan, Sucafina src engine/runtime, Azure/deploy/infrastructure, identity, or financial-policy file groups checked. The 87 own/check paths are limited to 24 portfolio files, 24 WP13 test files, 38 WP13 receipt files and one authorized check workflow.",
+    "Financial producer adapters and contracts are consumed byte-exact; this statement does not reclassify them as WP13 ownership and does not claim that their behavior is unchanged from the base.",
+    "All six receipt files themselves match their published PR blobs. The 25 local hydration differences are exclusively one additional terminal LF and are not present in the published pinned blobs."
+  ],
+  "gaps": [],
+  "localHydrationCaution": {
+    "status": "LOCAL_BYTES_NOT_IDENTICAL_FOR_25_PATHS",
+    "action": "Continue publishing the declared immutable source blob SHAs for foreign files. Do not replace those SHA entries with hydrated local text without rechecking exact equality. Preserve local inputs.",
+    "unclassifiedDifferences": 0,
+    "auditChangedFiles": []
+  },
+  "checkContext": {
+    "source": "Reported by root in the current task; no CI or logs fetched by this audit",
+    "C7": {
+      "runId": 43587782679,
+      "jobId": 132425899745,
+      "envelopeCommit": "cea047c8a048634e83554313839e6d24a7eab033",
+      "conclusion": "FAIL",
+      "typecheck": {
+        "foreignDiagnostics": 130,
+        "ownDiagnostics": 0,
+        "newFixtureDiagnostics": 0
+      },
+      "guards": {
+        "conclusion": "PASS",
+        "rules": 78,
+        "paths": 645,
+        "warnings": 10,
+        "errors": 0
+      }
+    },
+    "S3A": {
+      "runId": 43586147077,
+      "stateAtTaskAssignment": "ACTIVE",
+      "acceptedPass": false
+    }
+  },
+  "limits": [
+    "This is a static provenance and changed-path audit for the supplied PR37 base/head comparison, not product, performance, host, installed-consumer or global-suite acceptance.",
+    "Exact source association relies on the already published immutable pin/blob receipts and root-saved GitHub MCP diff. Those historical remote trees were not fetched again.",
+    "The audit proves that the published foreign delta introduces no blob outside its pinned inputs; it does not identify original commit authors, certify upstream correctness, or certify compatibility of the selected pins.",
+    "Protected-scope conclusions cover changed file paths in the provided complete 148-entry diff, not hypothetical changes in other branches or semantic behavior outside those paths.",
+    "Source producer adapters are deliberately present in the foreign consumption list; no engine or policy source files are changed.",
+    "C7 remains a package typecheck FAIL from 130 foreign diagnostics. Zero own diagnostics and guards PASS do not constitute product PASS. S3-A was active when this audit was assigned.",
+    "No changes to final-findings, original independent reports, approved plan, source product/tests, local hydration, other branches or remote repository were made."
+  ],
+  "immutableInputsPreserved": [
+    {
+      "path": "reference/wp13-final-findings.json",
+      "sha256Before": "0e00aadb46b2da29e6734470483b91aba29ce8a9c6eabc119994479a70ee64b0",
+      "gitBlobBefore": "583b6a64ef4b5307dbb35f2cdb186d136cdb0af4",
+      "sha256After": "0e00aadb46b2da29e6734470483b91aba29ce8a9c6eabc119994479a70ee64b0",
+      "unchanged": true
+    },
+    {
+      "path": "reference/campaign.json",
+      "sha256Before": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "gitBlobBefore": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+      "sha256After": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "unchanged": true
+    },
+    {
+      "path": "reference/wp13-independent-acceptance.json",
+      "sha256Before": "9e8c8be8e4d9063319107ba4d9a471f7e311a691089fe530649cf40137de7edf",
+      "gitBlobBefore": "43faea1819bcdea744229ee3627fc77d35de884e",
+      "sha256After": "9e8c8be8e4d9063319107ba4d9a471f7e311a691089fe530649cf40137de7edf",
+      "unchanged": true
+    },
+    {
+      "path": "reference/wp13-independent-history.json",
+      "sha256Before": "0aa57bf0ad9ac141fe42785d82741b6936947d1dbfc18d0d2779236af0829f53",
+      "gitBlobBefore": "322f1d5e0c1f1771cf0d65843d83412f94f47983",
+      "sha256After": "0aa57bf0ad9ac141fe42785d82741b6936947d1dbfc18d0d2779236af0829f53",
+      "unchanged": true
+    },
+    {
+      "path": "reference/wp13-independent-sensitivity.json",
+      "sha256Before": "f11f1501b7c89d0216f7431c3bd3e97d50f4d33fe26857baa5978d8cbd6a7c01",
+      "gitBlobBefore": "f5467394b2e3f97745f9900e4ed7a3c211a79345",
+      "sha256After": "f11f1501b7c89d0216f7431c3bd3e97d50f4d33fe26857baa5978d8cbd6a7c01",
+      "unchanged": true
+    }
+  ],
+  "outputOnly": "reference/wp13-foreign-pin-audit.json"
+}

@@ -1,0 +1,60 @@
+{
+  "base_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+  "scope": [
+    "WP03",
+    "WP05"
+  ],
+  "product_tests_run_locally": false,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "base_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+      "new_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+      "sha256": "fd1ecc25adbdda1fabe43068ba68fd42b58aa720b70c5fbcae8e3a004ed87b52",
+      "bytes": 106735
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "base_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "new_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+      "sha256": "935554c57a6c85649b3b220a7b21ddecdda46323035b14f69296aedf8f5b7e9f",
+      "bytes": 26118
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+      "base_blob": null,
+      "new_blob": "130c4940746088518376aa4c325bd68ade46aa87",
+      "sha256": "2b682c515a1c6d79175299bfd95497d0c735fc79d785ce1c428d1398d0827d44",
+      "bytes": 7722
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-resume-20261114/criteria.json",
+      "base_blob": null,
+      "new_blob": "bf6eb74d1580400ccdfad81d07a28ed6da0851a9",
+      "sha256": "86b3783b14ef499707e00123bb31b13abb0b3aaa3a04994ff83989260c8c997f",
+      "bytes": 136040
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-resume-20261114/rate-identity-handoff.json",
+      "base_blob": null,
+      "new_blob": "0dd7f279866801549a3119567569a55d39b7ecbd",
+      "sha256": "db722b2ea1b9dedc6ae90cff1ee538b81858cd8d87229c8f68d2ab143b77829c",
+      "bytes": 12836
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-resume-20261114/consumer-reconciliation.json",
+      "base_blob": null,
+      "new_blob": "4fe51925541900e85fad0a7c5e6f7f3154a94604",
+      "sha256": "c910b8615d1b74d8639b3b9f4ffcf4cdbf0fd5eefdfa2e3b3316394f42dd3f27",
+      "bytes": 12307
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-resume-20261114/criteria.json",
+      "base_blob": null,
+      "new_blob": "b07a0f687299d7bc65c4b0115ea6d1016b46901a",
+      "sha256": "75b9eaf897a31b932bae55cf7bdbd2c4d41f412925301cb0a4a74ac809de518f",
+      "bytes": 130174
+    }
+  ],
+  "description": "Three WP03 code/test files plus additive owned receipts; root remains the only remote publisher and CI dispatcher."
+}

@@ -1,0 +1,42 @@
+{
+  "schema": "astra-finance-final-criteria-files-ready-v1",
+  "agent": "/root/final_criteria_audit",
+  "status": "FILES_READY_METADATA_VERIFIED_ONLY",
+  "productSource": {
+    "commit": "8d065831356e8a73cfd0e4fbb072c5041b95d05f",
+    "tree": "77bef954682387ac0fdd3c01e7dd51b9201d2aac"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/task-delivery-map.json",
+      "gitBlob": "e25f3226da894867d968e5fa79709667eb0070ae",
+      "sha256": "b2b51c07b11ddc7061a65ceef4ec6256c5342b41981a1649770fccec8badbfd9",
+      "bytes": 617620
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/task-delivery-map.md",
+      "gitBlob": "4521101073c32af59414a12b7eb684781ade3034",
+      "sha256": "926c478416db1d5b74df3dd5c030ff389ba3607fcf5ceec523ebd5d30d838070",
+      "bytes": 94621
+    }
+  ],
+  "auditJson": "/workspace/scratch/a97ca4c53050/final-criteria-audit/audit.json",
+  "auditMarkdown": "/workspace/scratch/a97ca4c53050/final-criteria-audit/audit.md",
+  "scope": "Only task-delivery-map.json and task-delivery-map.md changed in repository. Scratch reports are separate.",
+  "criteria": {
+    "WP03": 112,
+    "WP05": 108,
+    "WP11": 83,
+    "total": 303
+  },
+  "completeCanonicalTasks": 14,
+  "canonicalProofBindings": 303,
+  "oraclesUnchanged": 16,
+  "ownedSourceFiles": 150,
+  "externalSourceFiles": 29,
+  "changedW18ToW21Pins": 7,
+  "excludedLaterDiagnosticFiles": 1,
+  "acceptance": false,
+  "productExecution": false,
+  "remoteWrites": false
+}

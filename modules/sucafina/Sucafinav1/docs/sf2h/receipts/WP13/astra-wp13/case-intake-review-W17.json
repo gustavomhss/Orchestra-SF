@@ -1,0 +1,69 @@
+{
+  "schema": "wp13-static-owner-intake-review-v1",
+  "reviewer": "/root/wp13_review_acceptance/w6_handoff_static",
+  "reviewedAtDate": "2026-11-14",
+  "status": "EXACT_CASE_READER_INTAKE_RECOMMENDED_FINANCE_CLOSURE_DEFERRED",
+  "execution": {
+    "productTestsRun": false,
+    "typecheckRun": false,
+    "remoteOperations": false,
+    "repoMutationsByReviewer": false,
+    "ownerHostedProofTransferred": false
+  },
+  "casePort": {
+    "owner": "WP11",
+    "head": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+    "oldObservedWorkingTreeBlob": "810539cbd2f0b89006102b334710e9d6695151ca",
+    "productPin": {
+      "path": "reference/owner-1314/modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "bytes": 17077,
+      "gitBlob": "e646386af209978f2a931a10a070061ba0c97cbe",
+      "sha256": "8a16ba240d930c60ec90a25f4189fe053f61df2e2021aada83fb3a1874b256ab"
+    },
+    "testPin": {
+      "path": "reference/owner-1314/modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "bytes": 8384,
+      "gitBlob": "67b8b179a3fba332933d8ad00820df82b7ab258e",
+      "sha256": "8b03c302aec54800e951e623c1e9b15bc31e3322ad75c964da910350b504d45a"
+    },
+    "decision": "Consume exact product file and exact boundary test, with owner pin/receipt. No new runtime dependency or foreign authorship is needed.",
+    "concreteRisk": "The old case reader does its second state read before the final authorizeCase/evidence/verifyScenarioOperations/host callbacks and only compares incarnation/version. A late callback can mutate durable case membership/content and still release the earlier projection.",
+    "wp13Reachability": "portfolio/port.ts performs the final resolveCandidate and returns; candidates.ts projects away participants/criteria/ledger and keeps scenario/result only. A change to those omitted fields during the final case callback can preserve the candidate digest. Stored scenario resolution also relies on the case port for each complete authorized observation. Own comparison/reconciliation fences do not cover every such final read.",
+    "change": "Capture full case and reference digests before callback exposure; keep second complete state observation after all external checks; compare both persisted and borrowed objects plus signal; emit that final same case. Two state reads and the existing authorization/evidence/operation checks are retained.",
+    "tests": [
+      "case read suppresses its projection when membership changes during the final host revalidation",
+      "case read suppresses its projection when same-version content changes during the final host revalidation"
+    ],
+    "limits": "Static review only. The empty seeded case test proves no financial result, decision application, global ancestry closure or native installed flow. Hosted validation of the assembled WP13 cut is still required."
+  },
+  "financeVerifier": {
+    "owner": "Finance",
+    "head": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+    "oldObservedVerifierBlob": "2338917427497733e4bd88aec852985206cce066",
+    "candidatePin": {
+      "path": "reference/owner-1314/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "bytes": 6337,
+      "gitBlob": "f85c1c8e7196aff1381513b2d5ed2109641d6a45",
+      "sha256": "9a23b44d9ac78f6597f0942a9a17dd8c94c40d93e80d2de7eb25b42291d8a7bc"
+    },
+    "candidateTestPin": {
+      "path": "reference/owner-1314/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "bytes": 11611,
+      "gitBlob": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "sha256": "ed792565e2a75a2b29a65dc81eee892db5bcefd0744c55d110ee9af6401df737"
+    },
+    "requiredPlannerPin": {
+      "path": "reference/owner-1314/modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "bytes": 26150,
+      "gitBlob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "sha256": "8c51fdb91dc3c35bd6ff075488f3d393711b2d16e411085960fa3728c1fe5bd1"
+    },
+    "decision": "NOT_APPLIED_REQUIRES_ISOLATED_OWNER_PIN_OR_REVIEWED_CLOSURE",
+    "concreteRisk": "The consumed source-only fixture verifier finishes its real projection transaction and then awaits a final host revalidation. That callback can change a real financial source and retain valid authority, with no subsequent canonical projection. A final candidate read can therefore release the earlier case result. The new case-only digest fence is not a financial source fence.",
+    "candidateImprovement": "The candidate verifier validates exact source scope/digest, observes two actor-filtered real source snapshots with the last source callback before the final authenticated projection, and fences lease/binding/request identity. Nonempty scenarios retain the real readonly canonical verifier. No observation is cached across invocations.",
+    "whyNotIntakeNow": "The candidate imports plannerSourceActor from PlannerPort8389709232225424b5905638d0951d8cdbb71dd7. Its exact delta against consumed local23e9c1b6c39e980c053b5ddf3324c587f4b6dc7f also imports actual-presence.ts, changes actual-month semantics, adds a qualify option to simulateScenario, and changes same-source observation batching. Consuming only the verifier does not close its dependencies; consuming the entire PlannerPort is broader than this fence correction.",
+    "nextAction": "Owner should publish an isolated compatible guard/helper pin over the consumed Planner contract, or provide a complete reviewed dependency closure with canonical absence/actual/source-scenario tests. WP13 must consume exact published blobs and pin them; do not extract/edit a foreign helper or label the whole port delta reviewed from its small owner compare patch.",
+    "limits": "This is an identified fixture admission risk with a concrete owner candidate, not proof of exploit in an installed host or a claim that candidate CI passed."
+  },
+  "relatedCoverageDesignReport": "reference/wp13-S13-coverage-routing-review.json"
+}
