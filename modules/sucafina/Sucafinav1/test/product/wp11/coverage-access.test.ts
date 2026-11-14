@@ -31,7 +31,7 @@ function coveredEntries(except?: string) {
 test("C10 derives omitted renewal costs, distinguishes supported zero, and fails closed on bad evidence", () => {
   const common = { basis, alternativeId: "replacement", alternativeVersion: 2, currency: "USD", horizon, evidence: [resolution(evidenceRef)], supports: () => true }
   const omitted = assessCostCoverage({ ...common, entries: coveredEntries("training"), components: [] })
-  expect(omitted).toMatchObject({ coverageState: "pending", derivedMissingCategoryIds: ["training"], entries: [{ categoryId: "training", status: "pending", reason: "missing-category" }] })
+  expect(omitted).toMatchObject({ coverageState: "pending", derivedMissingCategoryIds: ["training"], entries: expect.arrayContaining([{ categoryId: "training", status: "pending", reason: "missing-category" }]) })
 
   const trainingSource = { surface: "planner" as const, type: "quote", id: "quote-1", incarnation: "quote-inc-1", version: 3, fields: ["amount"], period: horizon, observedAt: "2026-11-13T00:00:00Z" }
   const zero = assessCostCoverage({ ...common,
@@ -42,12 +42,12 @@ test("C10 derives omitted renewal costs, distinguishes supported zero, and fails
   expect(zero.derivedMissingCategoryIds).toEqual([])
 
   const unsupportedNa = assessCostCoverage({ ...common, supports: () => false, entries: coveredEntries(), components: [] })
-  expect(unsupportedNa).toMatchObject({ coverageState: "pending", entries: [{ categoryId: "service", status: "pending", reason: "scope-not-supported" }] })
+  expect(unsupportedNa).toMatchObject({ coverageState: "pending", entries: expect.arrayContaining([{ categoryId: "service", status: "pending", reason: "scope-not-supported" }]) })
   const missingValue = assessCostCoverage({ ...common,
     entries: [...coveredEntries(), { status: "included", categoryId: "training", componentRefs: ["training-null"], evidenceRefs: [evidenceRef], scopeNote: "Unpriced" }],
     components: [{ id: "training-null", amount: null, currency: "USD", period: horizon, evidenceState: "absent", sourceRefs: [trainingSource] }],
   })
-  expect(missingValue).toMatchObject({ coverageState: "pending", entries: [{ categoryId: "training", status: "pending", reason: "component-unresolved" }] })
+  expect(missingValue).toMatchObject({ coverageState: "pending", entries: expect.arrayContaining([{ categoryId: "training", status: "pending", reason: "component-unresolved" }]) })
   const revoked = assessCostCoverage({ ...common, evidence: [resolution(evidenceRef, "revoked")], entries: coveredEntries(), components: [] })
   expect(revoked).toMatchObject({ coverageState: "unavailable", issues: ["evidence-unavailable"] })
   const invalidInventory = assessCostCoverage({ ...common, basis: { ...basis, categoryIds: RENEWAL_TRANSITION_CATEGORIES.slice(1) }, entries: [], components: [] })

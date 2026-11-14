@@ -1,0 +1,98 @@
+{
+  "reviewer": "producer_seams (independent product review; authored only the current-choice lifecycle test)",
+  "reviewedAt": "2026-11-14T09:27:34.286464+00:00",
+  "status": "STATIC_REVIEW_COMPLETED_CI_PENDING",
+  "localProductExecution": false,
+  "reviewedWorkingFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "blob": "12f9bda4f964763e8c6d60fb67e5fb68a08cd9ee"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts",
+      "blob": "2441642f59179516da09c9f9780b1b4764f6fd83"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/host-product.ts",
+      "blob": "fbce0b22f7f6d536f6d21ea135c71552736ed3c7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+      "blob": "393696c629872b0b48a9661d024840f795b24021"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "338889513cfc681bdda91697a9d5bbc16bde8fd1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "blob": "54c5155aa64b4528a75a601950b56bed8e021471"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "blob": "6d09c74ff03eef72aa564355fd7da52ae6fb503d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "blob": "40c4c72cf9b6863cf5eb791e78e4a87de751192d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "blob": "5b754d16c5d61764bffc8268075fbd4551dd2072"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "blob": "89a79c8912650e5d4ce0386fb0a7ac6b5ee06394"
+    }
+  ],
+  "publishedInputs": {
+    "financeC17": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+    "financeSourceObservation": "66bbe152c145f04c16223a938589c63cedb3b716",
+    "compose": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+    "intelligence": "2fb7e9c792327725384d99d656cc44b232ddc485",
+    "procurement": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62"
+  },
+  "findings": [
+    {
+      "id": "CURRENT_CHOICE_READ_EGRESS",
+      "severity": "P2",
+      "state": "CORRECTED_IN_REVIEWED_WORKING_BYTES",
+      "before": "A concurrent case edit during verifySources could return a stale private preview binding as current. Promotion CAS still prevented stale application.",
+      "after": "Incoming request and callback binding are cloned. Final rereads compare the whole case, exact stored result and producer, and private binding; authority/abort are revalidated.",
+      "regression": "current-choice-lifecycle.test.ts advances the same case during verifySources, asserts rejection and stale promotion, then obtains a new preview and promotes normally. Hosted execution pending."
+    },
+    {
+      "id": "SOURCE_ONLY_CONFIRMATION_BOUNDARY",
+      "state": "NO_STATIC_BYPASS_FOUND",
+      "details": "Finance66 branch requires no operations and no assumptions, canonical comparison and complete coverage, fresh source/coverage rereads, and commit:false simulation. Hypothetical operations retain conditioned/null. No human choice/application path is invoked."
+    },
+    {
+      "id": "CROSS_DOMAIN_RECEIPTS",
+      "state": "NO_STATIC_BLOCKER_FOUND",
+      "details": "Real prepared Planner review and Procurement C12 bridge. Official Procurement command races after preflight, producing CAS conflict409/current revision1; ordered receipts replay with no execution after dispose/reopen. Private reviewed-intent map remains a synthetic host boundary."
+    }
+  ],
+  "unresolvedSeams": [
+    {
+      "owner": "WP10",
+      "pin": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "details": "planner-calculation-services remains record-only: it must wire result.verifyCalculationSources, request.verifyRequestSources and calculation.nested to canonical producers; current assumptions/replacement path bypasses request binding. review-calculation-history also rejects nested sources."
+    },
+    {
+      "owner": "WP10",
+      "pin": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "details": "Native C11 capture already uses exact live operationIdentity and receipt registry in host-context/sf-mcp-bridge. This proves published implementation presence, not GNATIVE execution."
+    },
+    {
+      "owner": "WP13/WP11",
+      "pin": "2fb7e9c792327725384d99d656cc44b232ddc485",
+      "details": "Portfolio product factory now consumes comparisonBindings and canonical Planner replay. History same-version source changes require provenance-safe >= eligibility, since published WP11/WP13 history layers originally require strictly newer case version. Parent handling current delta."
+    }
+  ],
+  "proofLimits": [
+    "No local product tests/typecheck executed.",
+    "New current-choice lifecycle closes the original store before reopen; imported Finance renewal-choice-history opens a second store without closing the first and must not be called a closed-store restart.",
+    "Current-choice lifecycle uses synthetic authorization/source issuance boundaries with real Planner, coverage registry, persistence, replay, and C08 state; not installed UI or GNATIVE proof.",
+    "Finance W1 run43577975248 at source8184761b61f78d6aeac73232fdc879e93f85bc5e/snapshot880e0f05557abe8b6c4bb71f5f8cc3ad7272fae4 concluded failure32pass8fail40tests17files; it is not proof of later981/66 bytes."
+  ]
+}

@@ -43,7 +43,11 @@ export function createAnalysisAcceptance(input: {
       const saved = prior.value
       if (!saved || typeof saved !== "object" || !("id" in saved) || !("incarnation" in saved) || !("version" in saved) || saved.id !== decision.id || saved.incarnation !== decision.incarnation || !Number.isSafeInteger(saved.version) || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "invalid-acceptance-receipt" }
       if (!("ledger" in saved) || !Array.isArray(saved.ledger)) return { status: "unavailable", reason: "invalid-acceptance-receipt" }
-      const events = (saved as unknown as DecisionCase).ledger.filter((event) => event.kind === "analysis-accepted" && event.analysisRunId === request.runRef && event.caseRef.id === decision.id && event.caseRef.incarnation === decision.incarnation && event.caseRef.version === saved.version && event.principalRef === context.binding.principalRef)
+      const savedVersion = Number(saved.version)
+      const events = saved.ledger.filter((event: unknown): event is { id: string; outputDigest: string } => {
+        if (!event || typeof event !== "object" || !("id" in event) || typeof event.id !== "string" || !("outputDigest" in event) || typeof event.outputDigest !== "string" || !("kind" in event) || event.kind !== "analysis-accepted" || !("analysisRunId" in event) || event.analysisRunId !== request.runRef || !("principalRef" in event) || event.principalRef !== context.binding.principalRef || !("caseRef" in event) || !event.caseRef || typeof event.caseRef !== "object") return false
+        return "id" in event.caseRef && event.caseRef.id === decision.id && "incarnation" in event.caseRef && event.caseRef.incarnation === decision.incarnation && "version" in event.caseRef && event.caseRef.version === savedVersion
+      })
       if (events.length !== 1 || !/^[a-f0-9]{64}$/.test(events[0]!.outputDigest) || decision.ledger.filter((event) => event.id === events[0]!.id && digestSfValue(event) === digestSfValue(events[0])).length !== 1 || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "acceptance-event-unavailable" }
       return { status: "ok", value: { caseRef: { id: decision.id, incarnation: decision.incarnation, version: Number(saved.version) } } }
     }

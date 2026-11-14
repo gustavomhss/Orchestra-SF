@@ -24,6 +24,7 @@ test("composed Planner operations preserve all fixed costs while proving the rea
     expect(solved.value.value).toBeCloseTo(55000, 8)
     expect(solved.value.evidenceRefs.length).toBeGreaterThan(0)
     expect(observations.length).toBeGreaterThan(4)
+    expect(observations.length).toBeLessThanOrEqual(18)
     for (const observation of observations) {
       expect(observation.operations).toHaveLength(3)
       expect(observation.operations.filter((operation) => operation.targetRef !== "implementation:11")).toEqual(before.operations.filter((operation) => operation.targetRef !== "implementation:11"))
@@ -52,7 +53,9 @@ test("composed Planner threshold includes confirmed training once and distinguis
   for (const training of ["confirmed", "zero", "null"] as const) {
     const fixture = await createWp05SensitivityFixture({ mode: "renewal-usd", training, composed: true })
     try {
-      const solved = await fixture.exact(fixture.sensitivityRequest, fixture.baselineRef, fixture.context)
+      const calls = { count: 0 }
+      const preview: typeof fixture.preview = (request, context) => { calls.count++; return fixture.preview(request, context) }
+      const solved = await createPlannerExactThreshold({ units: fixture.issuer, preview })(fixture.sensitivityRequest, fixture.baselineRef, fixture.context)
       const proof = await createPlannerIntervalProof({ units: fixture.issuer, preview: fixture.preview })(fixture.sensitivityRequest, fixture.baselineRef, fixture.context)
       if (training === "null") {
         expect(solved).toMatchObject({ status: "unavailable", reason: "exact-threshold-domain-unproven" })
@@ -62,6 +65,7 @@ test("composed Planner threshold includes confirmed training once and distinguis
       }
       expect(solved.status).toBe("ok")
       expect(proof.status).toBe("ok")
+      expect(calls.count).toBeLessThanOrEqual(18)
       if (solved.status !== "ok") throw new Error(`Training boundary unavailable: ${JSON.stringify(solved)}`)
       expect(solved.value.value).toBeCloseTo(training === "confirmed" ? 15000 : 55000, 8)
       expect(fixture.selectedResult.knownSubtotal).toBe(training === "confirmed" ? 250000 : 210000)

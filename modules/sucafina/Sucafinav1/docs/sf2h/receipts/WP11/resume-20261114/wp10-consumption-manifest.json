@@ -1,0 +1,253 @@
+{
+  "schema": "sf-wp11-published-consumption-proposal-v1",
+  "status": "REFERENCE_ONLY_NO_PRODUCT_ACCEPTANCE",
+  "preparedAt": "2026-11-14",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "pullRequest": 32,
+    "branch": "astra-compose",
+    "headCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+    "headObservedWith": "GitHub MCP get_pr_info",
+    "headObservation": "Head matched the pinned commit during this review; this document is not a latest-head claim."
+  },
+  "consumer": {
+    "workPackage": "WP11",
+    "seedCommit": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a",
+    "branch": "astra-wp11"
+  },
+  "policy": [
+    "No apps/CLI source is copied or modified by this proposal.",
+    "The four portfolio wrapper files form a minimal logical seam, not a dependency-complete standalone patch.",
+    "S0/WP10 must resolve direct imports against the selected composition before materializing exact blobs.",
+    "Do not replace a modified consumer blob or import the whole owner branch to satisfy this proposal.",
+    "No native/session/skill/consumer proof is declared by source inspection or previous-owner test names."
+  ],
+  "entries": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "owner": "WP10",
+      "seam": "c11",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "edf6b70a249f9a1bc85d46cd06e5a32a85c8e74b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5866bcb2ed610f80138aaabc261acac4acf709cd/apps/cli/src/sucafina-product/host-context.ts",
+      "action": "reference-only",
+      "purpose": "Verified-call callback captures exact authority.native.operationIdentity; captureCurrent and locked run publication preserve private run/session/generation/record binding.",
+      "importedByThisReview": false,
+      "hostedObservationRefs": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "owner": "WP10",
+      "seam": "c11",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "bc00a2fe70bb37d6132369c3767388e544e18510",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5866bcb2ed610f80138aaabc261acac4acf709cd/modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "action": "reference-only",
+      "purpose": "Bridge verifies the bound receipt and host authority, invokes onVerifiedCall before finishing its lease.",
+      "importedByThisReview": false,
+      "hostedObservationRefs": []
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-native-inputs.ts",
+      "owner": "WP10",
+      "seam": "c11",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "f1a39b70748dbe771bccc80ad81f29eea1312027",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5866bcb2ed610f80138aaabc261acac4acf709cd/apps/cli/src/sucafina-product/analysis-native-inputs.ts",
+      "action": "reference-only",
+      "purpose": "Read ready provenance from protected C08; running capture must match current private bridge capture. Prevent arbitrary preference publication.",
+      "importedByThisReview": false,
+      "hostedObservationRefs": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "owner": "WP12",
+      "seam": "c11",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "a48f853b99a0b640e0c146ae6060b6bbde4a9449",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5866bcb2ed610f80138aaabc261acac4acf709cd/modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "action": "reference-only",
+      "purpose": "Publish AlternativeDraft only with a private capture and final locked revalidation; atomically persist run, output and provenance.",
+      "importedByThisReview": false,
+      "hostedObservationRefs": []
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-handoff.ts",
+      "owner": "WP10",
+      "seam": "portfolio-parent",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "b0b585b8e552fb600623880de287647388aa2e76",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5866bcb2ed610f80138aaabc261acac4acf709cd/apps/cli/src/sucafina-product/portfolio-handoff.ts",
+      "action": "proposed-consumption",
+      "purpose": "Read the existing parent receipt before resolving mutable candidates; validate parent+child digests and issue a temporary private exact-child grant.",
+      "importedByThisReview": false,
+      "hostedObservationRefs": []
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-preparation.ts",
+      "owner": "WP10",
+      "seam": "portfolio-parent",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "a661aaa134e046b093b300c260870e38c967aa10",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5866bcb2ed610f80138aaabc261acac4acf709cd/apps/cli/src/sucafina-product/portfolio-preparation.ts",
+      "action": "proposed-consumption",
+      "purpose": "Supply handoff.parent, handoff.authorize and handoff.verify to the WP11 mutation service.",
+      "importedByThisReview": false,
+      "hostedObservationRefs": []
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "owner": "WP10",
+      "seam": "portfolio-parent",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "83c525e733b2cb21637734e3b1e07950e72f4f97",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5866bcb2ed610f80138aaabc261acac4acf709cd/apps/cli/src/sucafina-product/portfolio-services.ts",
+      "action": "proposed-consumption",
+      "purpose": "Wrap http.prepare/promote and contribution.prepareChoice/promoteAlternative in handoff.run with mutations.replayPortfolio.",
+      "importedByThisReview": false,
+      "hostedObservationRefs": []
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "owner": "WP10",
+      "seam": "portfolio-parent",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "c434de513cb7ceae4acad1fc595e776785ec85af",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5866bcb2ed610f80138aaabc261acac4acf709cd/apps/cli/src/sucafina-product/portfolio-http.ts",
+      "action": "proposed-consumption",
+      "purpose": "Admit exact human intent and allow historical retry on portfolio prepare/promote before the wrapper resolves its existing receipt.",
+      "importedByThisReview": false,
+      "hostedObservationRefs": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-preparation-composition.test.ts",
+      "owner": "WP10",
+      "seam": "portfolio-tests",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "892d1e51744dd2fa12ca8bd61e63ba0541b1d8b5",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5866bcb2ed610f80138aaabc261acac4acf709cd/modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-preparation-composition.test.ts",
+      "action": "test-reference-only",
+      "purpose": "Published test of canonical parent receipt replay; original receipt is manually seeded in C08.",
+      "importedByThisReview": false,
+      "hostedObservationRefs": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts",
+      "owner": "WP10",
+      "seam": "portfolio-tests",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "7075e3a3864b3d48b06d59331d7649701b1a6c29",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5866bcb2ed610f80138aaabc261acac4acf709cd/modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts",
+      "action": "test-reference-only",
+      "purpose": "Published actual HTTP promotion, historical choice, source/authority fence and idempotency assertions.",
+      "importedByThisReview": false,
+      "hostedObservationRefs": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "owner": "WP10",
+      "seam": "c11-tests",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "sourceBlob": "34f2ba7495db931b70bf3745e91c65f1ee7da873",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5866bcb2ed610f80138aaabc261acac4acf709cd/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "action": "test-reference-only",
+      "purpose": "Published native authority/private-publication guard tests; no actual model execution inferred.",
+      "importedByThisReview": false,
+      "hostedObservationRefs": []
+    }
+  ],
+  "wp11ConsumerContracts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "exports": [
+        "createDecisionMutations",
+        "replayPortfolio"
+      ],
+      "requirements": [
+        "portfolioParent must return the exact human parent only for its producer-derived child.",
+        "Saved transaction value retains portfolioReplay.parentDigest and child; commandDigest binds the child.",
+        "Replay reads current case authority and verifies saved result/receipt without resolving changed candidates."
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts",
+      "exports": [
+        "captureAlternativeProvenance",
+        "verifyAlternativePublication",
+        "alternativeProvenanceKey"
+      ],
+      "requirements": [
+        "captureAlternativeProvenance is called from the verified native bridge with exact host operationIdentity, not a model-supplied value.",
+        "Read-only validation alone cannot confer private publication authority."
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "exports": [
+        "createAlternativeReadOnlyReplay"
+      ],
+      "requirements": [
+        "Replay the persisted request through the actual producer and current evidence; do not register another coverage record.",
+        "Compare the complete output digest to the captured receipt and preserve case/version/source binding."
+      ]
+    }
+  ],
+  "negativeTestsRequired": [
+    {
+      "seam": "portfolio-parent",
+      "case": "Real parent effect commits and response is lost; same human parent and correlation return the original receipt after case version advances.",
+      "assert": [
+        "no new portfolio evaluation/candidate resolution on receipt replay",
+        "one domain effect, unchanged number of result/receipt records",
+        "same caseRef/resultRef response"
+      ]
+    },
+    {
+      "seam": "portfolio-parent",
+      "case": "Same operation identity with changed parent, child, target incarnation or child digest.",
+      "assert": [
+        "conflict or denied",
+        "no new effect or disclosure"
+      ]
+    },
+    {
+      "seam": "portfolio-parent",
+      "case": "Fresh UI context with direct child, read-only grant, revoked grant or missing private parent capture.",
+      "assert": [
+        "denied",
+        "no writable authority is inherited from a transport"
+      ]
+    },
+    {
+      "seam": "c11",
+      "case": "Exact native call capture versus wrong operationIdentity/callId/session/generation/provider binding.",
+      "assert": [
+        "only exact live private capture can publish",
+        "no contribution or provenance write on mismatched capture"
+      ]
+    },
+    {
+      "seam": "c11",
+      "case": "Reopen saved AlternativeDraft and current-choice review; sources, membership or source incarnation change.",
+      "assert": [
+        "actual read-only replay rejects stale/unavailable evidence",
+        "historic choice remains immutable",
+        "no synthetic human or loaded-skill proof"
+      ]
+    }
+  ],
+  "observedFindings": [
+    {
+      "id": "WP11-REVIEW-PORTFOLIO-01",
+      "state": "RESOLVED_IN_PUBLISHED_OWNER_SEAM_NOT_IMPORTED_BY_THIS_REVIEW",
+      "finding": "Seed WP11 exposes replayPortfolio without an apps caller; the pinned WP10 composition already supplies parent-aware wrappers before mutable candidate evaluation.",
+      "action": "Consume the published wrapper seam; avoid duplicating it inside foreign portfolio domain code."
+    },
+    {
+      "id": "WP11-REVIEW-C11-01",
+      "state": "NO_CONCRETE_BYPASS_FOUND_IN_PUBLISHED_CHAIN",
+      "finding": "WP11 provenance helper only requires nonempty operationIdentity, but the actual producer supplies it from a consumed private lease and the publication fence matches the exact private capture.",
+      "action": "Keep the exact host chain and add hosted discriminating witnesses; do not report helper isolation as a proven production bypass."
+    }
+  ]
+}

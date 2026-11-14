@@ -37,6 +37,7 @@ test("shared categories and supported N/A consume one real Planner contribution 
     expect(createCoverageIntervalCertificate({ ...input, classification: { ...coverage.classification, notApplicableEntries: [] } })).toBeUndefined()
     const duplicated = { ...structural.value, componentIds: [...structural.value.componentIds, structural.value.componentIds[0]!] }
     expect(createCoverageIntervalCertificate({ ...input, structural: duplicated })).toBeUndefined()
+    if (coverage.assessment.coverageState !== "complete") throw new Error("Expected complete coverage before tampering")
     const forged = { ...storedResult, costCoverage: { ...coverage.assessment, entries: coverage.assessment.entries.filter((item) => item.categoryId !== "training") } }
     expect(validateScenarioCoverage(forged, fixture.basis, forged.costCoverage)).toBe("incomplete-cost-coverage")
     const exact = await fixture.exact(fixture.sensitivityRequest, fixture.baselineRef, fixture.context)

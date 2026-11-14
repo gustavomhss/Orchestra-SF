@@ -65,17 +65,31 @@
       "priorBlob": null,
       "action": "copy-published-blob",
       "exactBytesVerified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/form.ts",
+      "sourceBlob": "5c2ceed59b5af1a0e2958e93c2267bee9e72a0dc",
+      "priorBlob": "3b696de1faa2db1c6e5419f17e4d86bd24c5cfcc",
+      "action": "copy-published-blob",
+      "exactBytesVerified": true,
+      "reason": "W1 hosted typecheck exposed missing quoteComparisonPresentation export required by the exact published Procurement port. The producer delta adds presentation types/helper around existing quoteAssessment; no new imports or schema dependency."
     }
   ],
   "consumer": {
     "path": "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
     "reviewDigestFor": "Provided by the WP11 fixture for the current consumer contract; the published WP04 fixture is unchanged."
   },
-  "scope": "Six exact published producer blobs required for canonical Procurement preparation and stale conflict execution. No foreign test, formula, human approval implementation, workflow, or integration wrapper is edited.",
+  "scope": "Seven exact published producer blobs required for canonical Procurement preparation, review and stale conflict execution. No foreign test, formula, human approval implementation, workflow, or integration wrapper is authored.",
   "preservation": "All target paths were clean before intake. Prior bytes are retained in scratch ci-analysis; prior blobs are recorded above. Files absent before intake have priorBlob null.",
   "verification": {
     "localProductTestsRun": false,
     "localTypecheckRun": false,
-    "consumerHostedCi": "pending"
+    "consumerHostedCi": "pending",
+    "dependencyDiscovery": {
+      "runId": 43580108965,
+      "jobId": 132402806297,
+      "diagnostic": "product/procurement/port.ts(12,27) TS2305: quoteComparisonPresentation absent from seed form.ts",
+      "resolution": "Copy the exact src/form.ts producer blob; do not reimplement the helper in WP11."
+    }
   }
 }
