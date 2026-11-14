@@ -7,7 +7,7 @@ export function decisionApplyForms(projection: AuthorizedCaseProjection) {
   if (!item.preparedChanges.length) return ""
   return `<section><h3>Review prepared changes</h3>${item.preparedChanges.map((change, index) => {
     const context = { caseRef: { id: item.id, incarnation: item.incarnation, version: item.version }, choiceId: change.choiceId, changeId: change.id, surface: change.target.surface, expectedVersion: change.expectedVersion }
-    return `<article data-decision-apply data-context="${esc(JSON.stringify(context))}"><h4>Prepared change ${index + 1} · ${esc(change.target.surface)}</h4><p>State: ${esc(change.state)}</p><button type="button" data-review-change>Review current changes</button><div data-change-review role="status" aria-live="polite"></div><label><input type="checkbox" data-change-confirm disabled>I reviewed these changes and want to apply them</label><button type="button" data-apply-change disabled>Apply reviewed change</button><p data-change-status role="status" aria-live="polite"></p><form data-change-guard hidden></form></article>`
+    return `<article data-decision-apply data-context="${esc(JSON.stringify(context))}"><h4>Prepared change ${index + 1} · ${esc(change.target.surface)}</h4><p>State: ${esc(change.state)}</p><button type="button" data-review-change>Review current changes</button><div data-change-review role="status" aria-live="polite"></div><label><input type="checkbox" data-change-confirm disabled>I reviewed these changes and want to apply them</label><button type="button" data-apply-change disabled>Apply reviewed change</button>${change.target.surface === "procurement" ? '<button type="button" data-recover-change>Recover recorded receipt</button>' : ""}<p data-change-status role="status" aria-live="polite"></p><form data-change-guard hidden></form></article>`
   }).join("")}</section>`
 }
 
@@ -16,12 +16,14 @@ document.querySelectorAll('[data-decision-apply]').forEach((entry) => {
   if (entry.dataset.sfApplyReady) return; entry.dataset.sfApplyReady = 'true'
   let context = JSON.parse(entry.dataset.context)
   const review = entry.querySelector('[data-review-change]'); const output = entry.querySelector('[data-change-review]'); const confirm = entry.querySelector('[data-change-confirm]'); const apply = entry.querySelector('[data-apply-change]'); const status = entry.querySelector('[data-change-status]'); const guard = entry.querySelector('[data-change-guard]')
+  const recover = entry.querySelector('[data-recover-change]')
   let reviewed = false; let reviewDigest; let intention; let busy = false; let closed = false; let completed = false
   const active = () => !closed && entry.isConnected
   const revoke = () => {
     closed = true; reviewed = false; reviewDigest = undefined; context = undefined
     if (intention) intention.body = ''; intention = undefined
     output.replaceChildren(); confirm.checked = false; confirm.disabled = true; review.disabled = true; apply.disabled = true
+    if (recover) recover.disabled = true
     delete guard.dataset.dirty; delete entry.dataset.context
     entry.replaceChildren(status); status.textContent = 'Your access changed. Reload before reviewing or applying this change.'
   }
@@ -32,9 +34,11 @@ document.querySelectorAll('[data-decision-apply]').forEach((entry) => {
     confirm.disabled = busy || !!intention || !reviewed || completed
     apply.disabled = busy || completed || (!intention && (!reviewed || !confirm.checked))
     apply.textContent = intention?.uncertain ? 'Retry same application' : 'Apply reviewed change'
+    if (recover) recover.disabled = busy || completed
   }
   const send = async (action, body, key) => {
     const url = new URL(location.href); url.search = '?sf=' + action
+    if (context.surface === 'procurement') url.pathname = url.pathname.slice(0, url.pathname.lastIndexOf('/') + 1) + 'procurement'
     const response = await fetch(url, { method: 'POST', credentials: 'same-origin', signal: AbortSignal.timeout(10000), headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body })
     if (!active()) throw new Error('closed')
     if (response.status === 401 || response.status === 403) { revoke(); throw new Error('closed') }
@@ -77,5 +81,23 @@ document.querySelectorAll('[data-decision-apply]').forEach((entry) => {
       else { attempt.uncertain = true; status.textContent = error?.rejected ? 'The retry was rejected, but the earlier application is still unconfirmed. Keep the same request and check the current receipt before another change.' : error?.conflict ? 'The application returned a conflict and its outcome is still unconfirmed. The reviewed request stays locked; check the current receipt or retry the same request.' : 'Could not confirm application. The reviewed request is locked; retry the same request to reconcile its receipt.' }
     } finally { busy = false; controls() }
   })
+  recover?.addEventListener('click', async () => {
+    if (!active() || busy || completed || recover.disabled) return
+    // The server resolves the original durable intent under this fresh admission.
+    // Browser memory or storage is not an authority or a prerequisite for recovery.
+    const body = intention?.body ?? JSON.stringify({ purpose: 'recover', caseRef: context.caseRef, choiceId: context.choiceId, changeId: context.changeId })
+    const key = intention?.key ?? crypto.randomUUID()
+    busy = true; controls(); status.textContent = 'Recovering the recorded receipt…'
+    try {
+      const receipt = await send('decision-recover', body, key)
+      if (!active()) return
+      if (!receipt || typeof receipt.receiptId !== 'string' || !receipt.receiptId || receipt.surface !== context.surface || !Number.isSafeInteger(receipt.version) || receipt.version < 0) throw new Error('unconfirmed')
+      intention = undefined; completed = true; delete guard.dataset.dirty; status.textContent = 'Original receipt recovered. Reloading the decision to show its outcome…'; location.reload()
+    } catch {
+      if (active()) status.textContent = 'The original receipt could not be recovered. No new application was sent. Check access and the current decision before trying recovery again.'
+    } finally { busy = false; controls() }
+  })
+  controls()
 })
 `
+

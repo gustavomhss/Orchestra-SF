@@ -22,9 +22,13 @@ import { createProcurementC12Bridge } from "./c12.ts"
 import { projectProcurementSource } from "./port.ts"
 
 type ApplyRequest = Parameters<PreparedApplyPort["executePrepared"]>[0]
+type RecoverRequest = ApplyRequest & { purpose: "recover" }
+type ApplicationAdmission = AdmittedApply | RecoverRequest
 type MutationHost = Parameters<typeof createDecisionMutations>[0]
 type BridgeInput = Parameters<typeof createProcurementC12Bridge>[0]
-type ActiveApply = { context: TrustedDomainContext; bindingDigest: string; request: ApplyRequest; admitted: AdmittedApply; decision: DecisionCase; change: PreparedChange; actor: Actor; roleMapDigest: string; physicalIncarnation: string; environment: Environment }
+type ApplicationScope = { context: TrustedDomainContext; bindingDigest: string; request: ApplyRequest; admission: ApplicationAdmission; mode: "apply" | "recover"; decision: DecisionCase; change: PreparedChange; actor: Actor; roleMapDigest: string; physicalIncarnation: string; environment: Environment }
+type ActiveApply = ApplicationScope & { admitted: AdmittedApply }
+type ApplicationIntent = { schema: "sf-c12-application-intent-v1"; installationId: string; projectId: string; principalRef: string; admitted: AdmittedApply; commandId: string; changeDigest: string; choiceDigest: string; physicalIncarnation: string }
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
 type ArchivedSource = { schema: "sf-procurement-evidence-v1"; evidence: RecordEvidence; projection: DomainProjection; scope: SfSourceScope; physicalIncarnation: string; projectionDigest: string; proofDigest: string }
 
@@ -83,14 +87,14 @@ export function createProcurementDecisionHost(input: BridgeInput & {
       return (saved.status === "ok" || saved.status === "preview") && saved.value && await host.revalidate(context)
     } finally { input.procurementEvidenceWrites.delete(write) }
   }
-  const readChange = async (request: ApplyRequest, context: TrustedDomainContext): Promise<PortResult<{ decision: DecisionCase; change: PreparedChange }>> => {
+  const readChange = async (request: ApplyRequest, context: TrustedDomainContext, receiptOnly = false): Promise<PortResult<{ decision: DecisionCase; change: PreparedChange }>> => {
     const source = host.requestFor(context)
     if (!source || !await host.revalidate(context)) return { status: "denied", reason: "prepared-authority-unavailable" }
     const loaded = await state.read(source, "cases", (stored, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? stored.cases[request.caseRef.id] : undefined)
     if (loaded.status !== "ok" || !loaded.value || loaded.value.incarnation !== request.caseRef.incarnation || !await authorizeCase(loaded.value, context)) return { status: "unavailable", reason: "prepared-case-unavailable" }
     const decision = loaded.value
     const change = decision.preparedChanges.find((value) => value.id === request.changeId && value.choiceId === request.choiceId)
-    if (!change || !decision.choices.some((value) => value.id === request.choiceId) || decision.version < request.caseRef.version || decision.version !== request.caseRef.version && !change.receipt || change.target.surface !== "procurement") return { status: "stale", reason: "prepared-case-changed" }
+    if (!change || !decision.choices.some((value) => value.id === request.choiceId) || decision.version < request.caseRef.version || decision.version !== request.caseRef.version && !change.receipt && !receiptOnly || change.target.surface !== "procurement") return { status: "stale", reason: "prepared-case-changed" }
     return { status: "ok", value: { decision, change } }
   }
   const prepareDomainCommands: MutationHost["prepareDomainCommands"] = async (caseRef, choiceId, operations, context) => {
@@ -151,9 +155,9 @@ export function createProcurementDecisionHost(input: BridgeInput & {
   // WP11 changes state/receipt during reconciliation; the reviewed proposal must stay identical.
   const reviewDigestFor: ReviewDigestFor = (context, request, change) => {
     const held = current(context)
-    return held && context.kind === "ui" && isReviewDigest(held.admitted.reviewDigest) && digestSfValue(request) === digestSfValue(held.request) && digestSfValue({ ...change, state: "planned", receipt: null }) === digestSfValue({ ...held.change, state: "planned", receipt: null }) && input.authority.ui.matchesIntent(context, "sf-human:decisions.apply", digestSfValue(held.admitted)) ? held.admitted.reviewDigest : undefined
+    return held && context.kind === "ui" && isReviewDigest(held.admitted.reviewDigest) && digestSfValue(request) === digestSfValue(held.request) && digestSfValue({ ...change, state: "planned", receipt: null }) === digestSfValue({ ...held.change, state: "planned", receipt: null }) && input.authority.ui.matchesIntent(context, "sf-human:decisions.apply", digestSfValue(held.admission)) ? held.admitted.reviewDigest : undefined
   }
-  const validTarget = (snapshot: Snapshot, held: ActiveApply) => {
+  const validTarget = (snapshot: Snapshot, held: ApplicationScope) => {
     const target = held.change.target
     const scopes = Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) => entry.alive && entry.incarnation === target.incarnation && entry.scope.recordType === target.type && entry.scope.recordId === target.id && entry.scope.principalRef === held.context.binding.principalRef && entry.scope.accessRevision === held.context.binding.accessRevision && entry.scope.policyVersion === held.context.binding.policyVersion)
     const physical = snapshot.sfSources?.records[JSON.stringify([target.type, target.id])]
@@ -172,14 +176,14 @@ export function createProcurementDecisionHost(input: BridgeInput & {
   const authorizeReceipt: Parameters<typeof createSfPreparedApply>[0]["authorizeReceipt"] = async (receipt, lookup, context) => receipt.principalRef === context.binding.principalRef && receipt.surface === lookup.surface && receipt.targetIncarnation === lookup.targetIncarnation && receipt.idempotencyKey === lookup.idempotencyKey && receipt.commandDigest === lookup.commandDigest && await authorizeLookup(lookup, context)
   const confirmHuman: Parameters<typeof createSfPreparedApply>[0]["confirmHuman"] = async (request, change, context) => {
     const held = current(context)
-    return !!held && reviewDigestFor(context, request, change) === held.admitted.reviewDigest && await input.authority.human.authorize(context, "decisions.apply", held.admitted)
+    return !!held && reviewDigestFor(context, request, change) === held.admitted.reviewDigest && await input.authority.human.authorize(context, "decisions.apply", held.admission) && await targetIsCurrent(held)
   }
   const prepared = createSfPreparedApply({ state, host, authorizeCase, authorizeLookup, authorizeReceipt, confirmHuman, reviewDigestFor,
     resolveActor: (snapshot, context) => { const held = current(context); return held && validTarget(snapshot, held) ? structuredClone(held.actor) : undefined },
-    resolveMutation: bridge.resolveMutation,
+    resolveMutation: (snapshot, change, actor, context) => current(context)?.mode === "apply" ? bridge.resolveMutation(snapshot, change, actor, context) : undefined,
     verifyGrant: (snapshot, request, change, actor, context) => {
       const held = current(context)
-      return !!held && context.kind === "ui" && digestSfValue(actor) === digestSfValue(held.actor) && reviewDigestFor(context, request, change) === held.admitted.reviewDigest && validTarget(snapshot, held)
+      return !!held && held.mode === "apply" && context.kind === "ui" && digestSfValue(actor) === digestSfValue(held.actor) && reviewDigestFor(context, request, change) === held.admitted.reviewDigest && validTarget(snapshot, held)
     },
     receiptVersion: bridge.receiptVersion,
     environment: (context) => { const held = current(context); if (!held) throw new Error("Prepared execution unavailable"); return held.environment },
@@ -195,10 +199,27 @@ export function createProcurementDecisionHost(input: BridgeInput & {
   }
   const execute = createPreparedExecution({ state, host, apply: prepared, authorizeCase, operationIdentity: input.operationIdentity, reviewDigestFor,
     authorizeApplication: (request, change, context) => confirmHuman(request, change, context),
-    confirmApplication: async (request, context) => { const held = current(context); return !!held && await confirmHuman(request, held.change, context) },
+    confirmApplication: async (request, context) => {
+      const held = current(context)
+      const source = host.requestFor(context)
+      const commandId = input.operationIdentity(context)
+      if (!held || held.mode !== "apply" || !source || !commandId || !await confirmHuman(request, held.change, context)) return false
+      const before = await state.read(source, "cases", (stored, authority) => sameApplicationAuthority(authority, context) && digestSfValue(stored.cases[held.decision.id]) === digestSfValue(held.decision) && !applicationIntentEntries(stored, request).length)
+      if (before.status !== "ok" || !before.value) return false
+      const record = applicationIntent(held, held.admitted, commandId)
+      const reservation = { createdHere: false }
+      // An ambiguous first dispatch stays reserved even if no receipt can yet be read.
+      // Only this callback's successful commit may cross the domain boundary.
+      const saved = await state.transaction<ApplicationIntent | null>(source, { namespace: "cases", expectedStorageVersion: before.storageVersion, targetRef: held.decision.id, targetIncarnation: held.decision.incarnation, idempotencyKey: applicationIntentKey(request), commandDigest: digestSfValue(record) }, async (stored, authority) => {
+        if (!sameApplicationAuthority(authority, context) || digestSfValue(stored.cases[held.decision.id]) !== digestSfValue(held.decision) || applicationIntentEntries(stored, request).length || context.kind !== "ui" || !input.authority.ui.matchesIntent(context, "sf-human:decisions.apply", digestSfValue(held.admission))) return { commit: false, value: null }
+        reservation.createdHere = true
+        return { commit: true, value: record }
+      }).catch(() => undefined)
+      return saved?.status === "ok" && !!saved.value && reservation.createdHere && !source.signal.aborted && await confirmHuman(request, held.change, context)
+    },
     revalidateProducer: async (request, context) => {
       const held = current(context)
-      if (!held || reviewDigestFor(context, request, held.change) !== held.admitted.reviewDigest) return { status: "denied", reason: "human-application-required" }
+      if (!held || held.mode !== "apply" || reviewDigestFor(context, request, held.change) !== held.admitted.reviewDigest) return { status: "denied", reason: "human-application-required" }
       const review = await readReview(request, context)
       if (review.status !== "ok") return review
       const reviewed = reviews.get(reviewKey(request, context))
@@ -208,45 +229,57 @@ export function createProcurementDecisionHost(input: BridgeInput & {
     },
     classifyReceipt,
   })
-  const apply = async (incoming: AdmittedApply, context: TrustedDomainContext): Promise<PortResult<CommandReceipt>> => {
-    const admitted = structuredClone(incoming)
-    if (!isReviewDigest(admitted.reviewDigest)) return { status: "needs-input", reason: "review-proof-required" }
-    const request: ApplyRequest = { caseRef: admitted.caseRef, changeId: admitted.changeId, choiceId: admitted.choiceId }
+  const executeApplication = async (incoming: ApplicationAdmission, context: TrustedDomainContext, mode: "apply" | "recover"): Promise<PortResult<CommandReceipt>> => {
+    const admission = structuredClone(incoming)
+    if ("reviewDigest" in admission ? !isReviewDigest(admission.reviewDigest) : mode !== "recover" || admission.purpose !== "recover") return { status: "needs-input", reason: "review-proof-required" }
+    const selector: ApplyRequest = { caseRef: admission.caseRef, changeId: admission.changeId, choiceId: admission.choiceId }
     const source = host.requestFor(context)
-    if (!source || context.kind !== "ui" || active.has(source) || !await input.authority.human.authorize(context, "decisions.apply", admitted) || !await host.revalidate(context)) return { status: "denied", reason: "human-application-required" }
-    const loaded = await readChange(request, context)
+    if (!source || context.kind !== "ui" || active.has(source) || !await input.authority.human.authorize(context, "decisions.apply", admission) || !await host.revalidate(context)) return { status: "denied", reason: "human-application-required" }
+    const loaded = await readChange(selector, context, mode === "recover")
     if (loaded.status !== "ok") return loaded
-    const reviewed = reviews.get(reviewKey(request, context))
     const checkedAt = Date.parse(input.now())
     if (!Number.isFinite(checkedAt)) return { status: "unavailable", reason: "application-clock-unavailable" }
     const environment = await host.environment(source)
     if (!Number.isFinite(Date.parse(environment.at))) return { status: "unavailable", reason: "application-clock-unavailable" }
-    const held = await host.persistence.transaction<ActiveApply | undefined>("procurement", async (snapshot) => {
+    const scope = await host.persistence.transaction<ApplicationScope | undefined>("procurement", async (snapshot) => {
       const principal = await host.authenticate(source, { surface: "procurement", roleMap: roleMap(snapshot, "procurement") })
       if (!principal || principal.id !== context.binding.principalRef || principal.id.startsWith("local:")) return { commit: false, value: undefined }
       const roles = principal.roles.filter((entry) => entry.surface === "procurement").map((entry) => entry.role)
       const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: [], domains: [] }
       const physical = snapshot.sfSources?.records[JSON.stringify([loaded.value.change.target.type, loaded.value.change.target.id])]
       if (!physical?.alive) return { commit: false, value: undefined }
-      const value: ActiveApply = { context, bindingDigest: digestSfValue(context.binding), request, admitted, ...loaded.value, actor, roleMapDigest: digestSfValue(roleMap(snapshot, "procurement")), physicalIncarnation: physical.incarnation, environment }
+      const value: ApplicationScope = { context, bindingDigest: digestSfValue(context.binding), request: selector, admission, mode, ...loaded.value, actor, roleMapDigest: digestSfValue(roleMap(snapshot, "procurement")), physicalIncarnation: physical.incarnation, environment }
       return { commit: false, value: validTarget(snapshot, value) ? value : undefined }
     }, { signal: source.signal })
-    if (!held || !await host.revalidate(context)) return { status: "denied", reason: "application-source-authority-unavailable" }
+    if (!scope || !await host.revalidate(context)) return { status: "denied", reason: "application-source-authority-unavailable" }
+    const recorded = await state.read(source, "cases", (stored, authority) => sameApplicationAuthority(authority, context) && digestSfValue(stored.cases[scope.decision.id]) === digestSfValue(scope.decision) ? { count: applicationIntentEntries(stored, selector).length, intent: readApplicationIntent(stored, scope) } : undefined).catch(() => undefined)
+    if (!recorded || recorded.status !== "ok" || !recorded.value) return { status: "unavailable", reason: "application-intent-unavailable" }
+    if (recorded.value.count && !recorded.value.intent) return { status: "conflict", reason: "application-intent-mismatch" }
+    if (recorded.value.intent && "reviewDigest" in admission && digestSfValue(recorded.value.intent.admitted) !== digestSfValue(admission)) return { status: "conflict", reason: "application-intent-mismatch" }
+    const admitted = recorded.value.intent?.admitted ?? ("reviewDigest" in admission ? admission : undefined)
+    if (!admitted) return { status: "unavailable", reason: "original-intent-unavailable" }
+    const request: ApplyRequest = { caseRef: admitted.caseRef, changeId: admitted.changeId, choiceId: admitted.choiceId }
+    const held: ActiveApply = { ...scope, request, admitted }
+    const reviewed = reviews.get(reviewKey(request, context))
     active.set(source, held)
     try {
+      const receipt = await prepared.readReceipt({ surface: held.change.target.surface, targetRef: held.change.target.id, targetIncarnation: held.change.target.incarnation, idempotencyKey: held.change.idempotencyKey, commandDigest: held.change.operation.commandDigest }, context)
+      if (receipt.status !== "ok") return receipt
+      if (mode === "recover" && receipt.value.state !== "found") return { status: "unavailable", reason: "original-receipt-unavailable" }
+      if (receipt.value.state === "not-found" && recorded.value.count) return { status: "unavailable", reason: "application-indeterminate-reconciliation-required" }
       if (!loaded.value.change.receipt) {
-        const receipt = await prepared.readReceipt({ surface: held.change.target.surface, targetRef: held.change.target.id, targetIncarnation: held.change.target.incarnation, idempotencyKey: held.change.idempotencyKey, commandDigest: held.change.operation.commandDigest }, context)
-        if (receipt.status !== "ok") return receipt
         if (receipt.value.state === "not-found" && (!reviewed || reviewed.expiresAt <= checkedAt || reviewed.changeDigest !== digestSfValue(loaded.value.change))) return { status: "denied", reason: "prepared-review-required" }
         if (receipt.value.state === "not-found" && reviewed?.reviewDigest !== admitted.reviewDigest) return { status: "conflict", reason: "prepared-review-proof-mismatch" }
       }
-      return await execute(request, context)
+      return await execute(request, context, mode)
     } finally { active.delete(source) }
   }
+  const apply = (incoming: AdmittedApply, context: TrustedDomainContext) => executeApplication(incoming, context, "apply")
+  const recover = (incoming: ApplicationAdmission, context: TrustedDomainContext) => executeApplication(incoming, context, "recover")
   const authorizeReceiptTarget = async (request: Request, snapshot: Snapshot, targetRef: string, authority: SfStateAuthority) => {
     const held = active.get(request)
     const domain = host.persistence.currentSnapshots?.()?.procurement
-    if (!held || current(held.context) !== held || !domain || targetRef !== held.change.target.id || authority.principalRef !== held.context.binding.principalRef || authority.accessRevision !== held.context.binding.accessRevision || authority.policyVersion !== held.context.binding.policyVersion || !validTarget(domain, held) || !await input.authority.human.authorize(held.context, "decisions.apply", held.admitted)) return undefined
+    if (!held || held.mode !== "apply" || current(held.context) !== held || !domain || targetRef !== held.change.target.id || authority.principalRef !== held.context.binding.principalRef || authority.accessRevision !== held.context.binding.accessRevision || authority.policyVersion !== held.context.binding.policyVersion || !validTarget(domain, held) || !await input.authority.human.authorize(held.context, "decisions.apply", held.admission)) return undefined
     const decision = object(object(object(snapshot.data.__sfProductV1).cases)[held.decision.id])
     const change = rows(decision.preparedChanges).filter((value) => value.id === held.change.id && value.choiceId === held.change.choiceId)
     if (decision.id !== held.decision.id || decision.incarnation !== held.decision.incarnation || decision.version !== held.decision.version || !Array.isArray(decision.participants) || !decision.participants.includes(authority.principalRef) || change.length !== 1 || digestSfValue(change[0]) !== digestSfValue(held.change)) return undefined
@@ -359,7 +392,36 @@ export function createProcurementDecisionHost(input: BridgeInput & {
     // which compares the canonical material digest and revision as well as identity.
     return await physicalContinuity(archived, currentRef, context) && await host.revalidate(context)
   }
-  return { prepareChanges: mutations.prepareChanges, prepareDomainCommands, reviewChange, apply, authorizeReceiptTarget, resolveEvidence, proveContinuity, dispose: () => reviews.clear() }
+  return { prepareChanges: mutations.prepareChanges, prepareDomainCommands, reviewChange, apply, recover, authorizeReceiptTarget, resolveEvidence, proveContinuity, dispose: () => reviews.clear() }
+}
+
+function sameApplicationAuthority(authority: SfStateAuthority, context: TrustedDomainContext) {
+  return authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion
+}
+
+function applicationIntentKey(request: ApplyRequest) {
+  return `sf:c12:application:${digestSfValue({ caseId: request.caseRef.id, caseIncarnation: request.caseRef.incarnation, choiceId: request.choiceId, changeId: request.changeId })}`
+}
+
+function applicationIntentEntries(state: Readonly<SfProductState>, request: ApplyRequest) {
+  // A change already attempted by any principal cannot become a fresh dispatch.
+  return Object.entries(state.transactions).filter(([key, transaction]) => key === JSON.stringify([transaction.principalRef, "cases", request.caseRef.id, applicationIntentKey(request)])).map(([, transaction]) => transaction)
+}
+
+function applicationIntent(scope: ApplicationScope, admitted: AdmittedApply, commandId: string): ApplicationIntent {
+  return { schema: "sf-c12-application-intent-v1", installationId: scope.context.binding.installationId, projectId: scope.context.binding.projectId, principalRef: scope.context.binding.principalRef, admitted: structuredClone(admitted), commandId, changeDigest: digestSfValue({ ...scope.change, state: "planned", receipt: null }), choiceDigest: digestSfValue(scope.decision.choices.find((choice) => choice.id === scope.change.choiceId)), physicalIncarnation: scope.physicalIncarnation }
+}
+
+function readApplicationIntent(state: Readonly<SfProductState>, scope: ApplicationScope): ApplicationIntent | undefined {
+  const entries = applicationIntentEntries(state, scope.request)
+  if (entries.length !== 1) return undefined
+  const transaction = entries[0]!
+  const record = object(transaction.value)
+  const admitted = object(record.admitted)
+  const ref = object(admitted.caseRef)
+  if (ref.id !== scope.decision.id || ref.incarnation !== scope.decision.incarnation || !Number.isSafeInteger(ref.version) || Number(ref.version) < 1 || Number(ref.version) > scope.decision.version || admitted.changeId !== scope.change.id || admitted.choiceId !== scope.change.choiceId || typeof admitted.reviewDigest !== "string" || !isReviewDigest(admitted.reviewDigest) || typeof record.commandId !== "string" || !record.commandId.trim()) return undefined
+  const expected = applicationIntent(scope, { caseRef: { id: scope.decision.id, incarnation: scope.decision.incarnation, version: Number(ref.version) }, choiceId: scope.change.choiceId, changeId: scope.change.id, reviewDigest: admitted.reviewDigest }, record.commandId)
+  return transaction.namespace === "cases" && transaction.scopeDigest === digestSfValue(["cases"]) && transaction.incarnation === state.incarnation && transaction.principalRef === scope.context.binding.principalRef && transaction.targetRef === scope.decision.id && transaction.targetIncarnation === scope.decision.incarnation && transaction.commandDigest === digestSfValue(expected) && digestSfValue(record) === digestSfValue(expected) ? expected : undefined
 }
 
 function stableProjection(value: DomainProjection) {
@@ -384,3 +446,4 @@ function readArchive(value: unknown): ArchivedSource | undefined {
   const material = { schema: "sf-procurement-evidence-v1" as const, evidence, projection: projection.value, scope: { principalRef: scope.principalRef, accessRevision: scope.accessRevision, policyVersion: scope.policyVersion, recordType: scope.recordType, recordId: scope.recordId, selector: scope.selector }, physicalIncarnation: stored.physicalIncarnation, projectionDigest: digestSfValue(projection.value) }
   return stored.proofDigest === digestSfValue(material) ? { ...material, proofDigest: stored.proofDigest } : undefined
 }
+
