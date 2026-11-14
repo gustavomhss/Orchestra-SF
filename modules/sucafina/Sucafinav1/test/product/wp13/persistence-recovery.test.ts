@@ -12,7 +12,7 @@ import { createPlannerSensitivity } from "../../../product/portfolio/planner-sen
 import type { PortfolioPort } from "../../../product/portfolio/port.ts"
 import { createProductionPortfolio } from "../../../product/portfolio/production.ts"
 import { createPersistentSensitivityPort } from "../../../product/portfolio/sensitivity-store.ts"
-import { createWp13SensitivityFixture } from "./sensitivity-fixture.ts"
+import { createWp13AnalysisFixture, createWp13SensitivityFixture } from "./sensitivity-fixture.ts"
 
 test("portfolio retry binds the persisted orphan without allocating another C08 result", async () => {
   await portfolioRecovery("before")
@@ -31,7 +31,7 @@ test("sensitivity retry recovers a lost binding reply without allocating or bind
 })
 
 async function portfolioRecovery(failure: "before" | "after") {
-  const world = await createWp13SensitivityFixture()
+  const world = await createWp13AnalysisFixture()
   try {
     const selection = await world.selection.register({ caseRef: world.caseRef, baselineAlternativeId: "baseline", alternativeId: "selected", criteria: ["renewal-difference"], expectedVersion: 0 }, world.context)
     expect(selection.status).toBe("ok")

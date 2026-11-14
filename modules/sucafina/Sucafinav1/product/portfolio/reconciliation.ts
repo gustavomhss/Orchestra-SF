@@ -32,16 +32,18 @@ export function createPortfolioReconciliation(input: PortfolioReconciliationHost
 }) {
   return async (incoming: PortfolioReconciliationRequest, context: TrustedDomainContext) => {
     try {
+      const authorityDigest = digestSfValue({ kind: context.kind, binding: context.binding })
+      const authorityUnchanged = () => digestSfValue({ kind: context.kind, binding: context.binding }) === authorityDigest
       const request = structuredClone(incoming)
       if (!request.caseRef?.id.trim() || !request.caseRef.incarnation.trim() || !Number.isSafeInteger(request.caseRef.version) || request.caseRef.version < 1 || !request.portfolioResultRef.trim() || !request.combinationId.trim() || !request.choiceId.trim()) return { status: "needs-input", reason: "portfolio-reconciliation-reference-invalid" } as const
       const inspect = async () => {
         const current = structuredClone(await input.caseFor(context))
         if (current.status !== "ok") return current
-        if (digestSfValue(current.value) !== digestSfValue(request.caseRef) || !await input.host.revalidate(context)) return { status: "denied", reason: "portfolio-reconciliation-access-unavailable" } as const
+        if (digestSfValue(current.value) !== digestSfValue(request.caseRef) || !await input.host.revalidate(context) || !authorityUnchanged()) return { status: "denied", reason: "portfolio-reconciliation-access-unavailable" } as const
         const authorized = structuredClone(await input.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, context))
         if (authorized.status !== "ok") return authorized
         const decision = authorized.value.case
-        if (decision.id !== request.caseRef.id || decision.incarnation !== request.caseRef.incarnation || decision.version !== request.caseRef.version || !sameAuthority(authorized.value.context, context)) return { status: "stale", reason: "portfolio-reconciliation-case-changed" } as const
+        if (decision.id !== request.caseRef.id || decision.incarnation !== request.caseRef.incarnation || decision.version !== request.caseRef.version || !sameAuthority(authorized.value.context, context) || !authorityUnchanged()) return { status: "stale", reason: "portfolio-reconciliation-case-changed" } as const
         const loaded = structuredClone(await input.readPortfolio({ caseRef: structuredClone(request.caseRef), resultRef: request.portfolioResultRef, combinationId: request.combinationId }, context))
         if (loaded.status !== "ok") return loaded
         const { stored, binding, candidates } = loaded.value
@@ -57,7 +59,8 @@ export function createPortfolioReconciliation(input: PortfolioReconciliationHost
         const events = decision.ledger.filter((event) => event.kind === "choice-recorded" && event.caseRef.id === decision.id && event.caseRef.incarnation === decision.incarnation && event.caseRef.version >= stored.caseRef.version && event.caseRef.version <= decision.version && event.outputDigest === choiceDigest && event.principalRef === choice.principalRef && event.at === choice.at && event.rationale === choice.reason && event.consideredActions.includes(choice.alternativeId))
         if (events.length !== 1 || new Set(combination.components.map((component) => component.id)).size !== combination.components.length || combination.components.length > 4096) return { status: "unavailable", reason: "portfolio-reconciliation-choice-unbound" } as const
         const changes = decision.preparedChanges.filter((change) => change.choiceId === choice.id)
-        if (new Set(changes.map((change) => change.id)).size !== changes.length || new Set(changes.map((change) => change.idempotencyKey)).size !== changes.length || new Set(changes.flatMap((change) => change.receiptRef ? [change.receiptRef] : [])).size !== changes.filter((change) => change.receiptRef).length || changes.some((change) => change.caseId !== decision.id || change.caseVersion < events[0]!.caseRef.version || change.caseVersion > decision.version || !change.operationRef.trim() || !change.idempotencyKey.trim() || !Number.isSafeInteger(change.expectedVersion) || change.expectedVersion !== change.target.version)) return { status: "unavailable", reason: "portfolio-reconciliation-change-invalid" } as const
+        // The domain command's CAS revision and the evidence source revision are independent.
+        if (new Set(changes.map((change) => change.id)).size !== changes.length || new Set(changes.map((change) => change.idempotencyKey)).size !== changes.length || new Set(changes.flatMap((change) => change.receiptRef ? [change.receiptRef] : [])).size !== changes.filter((change) => change.receiptRef).length || changes.some((change) => change.caseId !== decision.id || change.caseVersion < events[0]!.caseRef.version || change.caseVersion > decision.version || !change.operationRef.trim() || !change.idempotencyKey.trim() || !Number.isSafeInteger(change.expectedVersion) || change.expectedVersion < 0 || !Number.isSafeInteger(change.target.version) || change.target.version < 0)) return { status: "unavailable", reason: "portfolio-reconciliation-change-invalid" } as const
         const receipts = changes.map((change) => ({ change, receipt: change.receiptRef ? decision.receipts.filter((receipt) => receipt.id === change.receiptRef) : [] }))
         if (receipts.some(({ change, receipt }) => receipt.length > 1 || (change.receiptRef && receipt.length !== 1) || (change.state === "applied" && !change.receiptRef) || receipt.some((item) => item.surface !== change.target.surface || item.targetIncarnation !== change.target.incarnation || item.idempotencyKey !== change.idempotencyKey || item.status !== change.state || !authorized.value.evidenceRefs.some((ref) => ref.kind === "receipt" && ref.target.receiptId === item.id && ref.target.surface === item.surface && ref.target.version === item.version && ref.target.idempotencyKey === item.idempotencyKey && ref.target.targetIncarnation === item.targetIncarnation && ref.target.commandDigest === item.commandDigest)))) return { status: "unavailable", reason: "portfolio-reconciliation-receipt-unbound" } as const
         const refs = uniqueRefs([...stored.sourceRefs, ...stored.result.evidenceRefs, ...choice.evidenceRefs, ...choice.result.sourceRefs, ...choice.costCoverage.evaluatedSourceRefs, ...choice.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs), ...authorized.value.evidenceRefs])
@@ -65,7 +68,7 @@ export function createPortfolioReconciliation(input: PortfolioReconciliationHost
         const components = []
         for (const component of combination.components) {
           if (!component.sourceRefs.length || new Set(component.sourceRefs.map(digestSfValue)).size !== component.sourceRefs.length) return { status: "unavailable", reason: "portfolio-reconciliation-component-unbound" } as const
-          const effects = receipts.filter(({ change }) => choice.scenario.operations.some((operation) => operation.targetRef === component.id) && component.sourceRefs.some((source) => sameSource(source, change.target) && source.version === change.expectedVersion && overlaps(source.period, change.target.period) && source.fields.some((field) => change.target.fields.includes(field))) && change.preview.components.some((item) => plannerComponentDigest([item]) === plannerComponentDigest([component])))
+          const effects = receipts.filter(({ change }) => choice.scenario.operations.some((operation) => operation.targetRef === component.id) && component.sourceRefs.some((source) => sameSource(source, change.target) && source.version === change.target.version && overlaps(source.period, change.target.period) && source.fields.some((field) => change.target.fields.includes(field))) && change.preview.components.some((item) => plannerComponentDigest([item]) === plannerComponentDigest([component])))
           const conditions = []
           for (const source of component.sourceRefs) {
             const evidenceRefs = refs.filter((ref) => ref.kind === "record" && ref.target.surface === source.surface && ref.target.recordType === source.type && ref.target.recordId === source.id && ref.target.incarnation === source.incarnation && ref.target.version === source.version && !!ref.target.period && ref.target.period.start <= component.period.start && ref.target.period.end >= component.period.end && source.fields.every((field) => ref.target.fields.includes(field)))
@@ -99,15 +102,15 @@ export function createPortfolioReconciliation(input: PortfolioReconciliationHost
         const latestScope = structuredClone(await input.caseFor(context))
         if (latestCase.status !== "ok") return latestCase
         if (latestScope.status !== "ok") return latestScope
-        if (!sameAuthority(latestCase.value.context, context) || digestSfValue(latestCase.value.case) !== digestSfValue(decision) || digestSfValue(latestScope.value) !== digestSfValue(request.caseRef)) return { status: "stale", reason: "portfolio-reconciliation-changed" } as const
-        if (!await input.host.revalidate(context)) return { status: "denied", reason: "portfolio-reconciliation-access-unavailable" } as const
+        if (!sameAuthority(latestCase.value.context, context) || digestSfValue(latestCase.value.case) !== digestSfValue(decision) || digestSfValue(latestScope.value) !== digestSfValue(request.caseRef) || !authorityUnchanged()) return { status: "stale", reason: "portfolio-reconciliation-changed" } as const
+        if (!await input.host.revalidate(context) || !authorityUnchanged()) return { status: "denied", reason: "portfolio-reconciliation-access-unavailable" } as const
         return { status: "ok", value: structuredClone({ ...projection, reconciliationDigest: digestSfValue(projection) }) } as const
       }
       const first = await inspect()
       if (first.status !== "ok") return first
       const second = await inspect()
       if (second.status !== "ok") return second
-      if (digestSfValue(first.value) !== digestSfValue(second.value) || !await input.host.revalidate(context)) return { status: "stale", reason: "portfolio-reconciliation-changed" } as const
+      if (digestSfValue(first.value) !== digestSfValue(second.value) || !await input.host.revalidate(context) || !authorityUnchanged()) return { status: "stale", reason: "portfolio-reconciliation-changed" } as const
       return { status: "ok", value: structuredClone(second.value) } as const
     } catch { return { status: "unavailable", reason: "portfolio-reconciliation-unavailable" } as const }
   }

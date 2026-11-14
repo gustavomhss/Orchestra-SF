@@ -1,6 +1,6 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessContextService } from "../contracts/business-context.ts"
-import type { DecisionCasePort, DomainPortHost, PortResult } from "../contracts/ports.ts"
+import type { DecisionCasePort, DomainPortHost, PlannerPort, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { createSfDecisionResultStore } from "../decisions/result-store.ts"
 import type { createDecisionPortfolioSelection } from "../decisions/portfolio-selection.ts"
@@ -12,7 +12,7 @@ import { decisionCoverageRef } from "../decisions/coverage-access.ts"
 import { createPlannerSensitivityUnits } from "../planner/sensitivity-units.ts"
 import { createPlannerResultPersistence } from "../planner/persistence.ts"
 import { comparePlannerPreview } from "../planner/preview-comparison.ts"
-import type { createPlannerProduct } from "../planner/product.ts"
+import type { PlannerScenarioHost } from "../planner/scenario-comparison-port.ts"
 import { createPortfolioAnalysis } from "./analysis.ts"
 import { createProductionPortfolio } from "./production.ts"
 import { createPlannerSensitivity } from "./planner-sensitivity.ts"
@@ -28,7 +28,8 @@ export function createPortfolioProduct(input: {
   host: DomainPortHost
   cases: DecisionCasePort
   evidence: BusinessContextService
-  planner: Pick<ReturnType<typeof createPlannerProduct>, "planner" | "sources"> & { scenarios: NonNullable<ReturnType<typeof createPlannerProduct>["scenarios"]> }
+  // Portfolio consumes the public ports; optional producer projection capabilities are not used here.
+  planner: { planner: PlannerPort; sources: PlannerSourceHost; scenarios: PlannerScenarioHost }
   results: ReturnType<typeof createSfDecisionResultStore>
   rules: ReturnType<typeof createCriterionRuleRegistry>
   selection: ReturnType<typeof createDecisionPortfolioSelection>
@@ -58,6 +59,18 @@ export function createPortfolioProduct(input: {
     return current.status === "ok" && digestSfValue(current.value) === digestSfValue(caseRef) && await input.host.revalidate(context)
   }
   const reconcile = input.reconciliation ? createPortfolioReconciliation({ ...input.reconciliation, cases: input.cases, evidence: input.evidence, host: input.host, caseFor: input.caseFor }) : undefined
+  const reconcileHttp = async (incoming: PortfolioReconciliationRequest, context: TrustedDomainContext) => {
+    try {
+      const authorityDigest = digestSfValue({ kind: context.kind, binding: context.binding })
+      const authorityUnchanged = () => digestSfValue({ kind: context.kind, binding: context.binding }) === authorityDigest
+      const request = structuredClone(incoming)
+      if (!await authorized(request.caseRef, context) || !authorityUnchanged()) return { status: "denied", reason: "portfolio-case-unavailable" } as const
+      if (!reconcile) return { status: "unavailable", reason: "portfolio-reconciliation-producer-unavailable" } as const
+      const result = await reconcile(request, context)
+      if (!authorityUnchanged()) return { status: "denied", reason: "portfolio-case-unavailable" } as const
+      return result
+    } catch { return { status: "unavailable", reason: "portfolio-reconciliation-unavailable" } as const }
+  }
   const catalog = async (refs: readonly CaseRef[], context: TrustedDomainContext) => {
     if (!refs.length || new Set(refs.map((ref) => encodeCaseRef(ref))).size !== refs.length) return { status: "needs-input", reason: "invalid-portfolio-cases" } as const
     const checked = await Promise.all(refs.map((ref) => input.cases.read({ caseRef: encodeCaseRef(ref) }, context)))
@@ -99,7 +112,7 @@ export function createPortfolioProduct(input: {
       },
       promote: async (request: Parameters<typeof contribution.promoteAlternative>[0], context: TrustedDomainContext) => await authorized(request.caseRef, context) ? contribution.promoteAlternative(request, context) : { status: "denied" as const, reason: "portfolio-case-unavailable" },
       prepare: async (request: Parameters<typeof contribution.prepareChoice>[0], context: TrustedDomainContext) => await authorized(request.caseRef, context) ? contribution.prepareChoice(request, context) : { status: "denied" as const, reason: "portfolio-case-unavailable" },
-      reconcile: async (request: PortfolioReconciliationRequest, context: TrustedDomainContext) => !await authorized(request.caseRef, context) ? { status: "denied" as const, reason: "portfolio-case-unavailable" } : reconcile ? reconcile(request, context) : { status: "unavailable" as const, reason: "portfolio-reconciliation-producer-unavailable" },
+      reconcile: reconcileHttp,
     },
   }
 }

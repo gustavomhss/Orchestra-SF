@@ -45,6 +45,19 @@ const initial = (): Snapshot => ({
 })
 
 export async function createWp13SensitivityFixture() {
+  const fixture = await createWp13Fixture("sensitivity")
+  if (fixture.kind !== "sensitivity") throw new Error("sensitivity fixture mode mismatch")
+  return fixture.value
+}
+
+/** Keep the real case, scenarios, rules and comparison services without unrelated saved analyses. */
+export async function createWp13AnalysisFixture() {
+  const fixture = await createWp13Fixture("analysis")
+  if (fixture.kind !== "analysis") throw new Error("analysis fixture mode mismatch")
+  return fixture.value
+}
+
+async function createWp13Fixture(mode: "analysis" | "sensitivity") {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-sensitivity-boundary-"))
   await chmod(directory, 0o700)
   const request = new Request("https://example.test")
@@ -103,6 +116,13 @@ export async function createWp13SensitivityFixture() {
     const compareCases = createDecisionComparisonService({ cases, state, results, planner: plannerWithCriteria, host })
     const selectionOperation = { id: "portfolio-selection" }
     const selection = createDecisionPortfolioSelection({ state, host, compare: compareCases, authorizeCase: async () => access.allowed, authorizeSelection: async () => access.allowed, verifySnapshot: () => access.allowed, operationIdentity: () => selectionOperation.id, proposalCoverageWrites, now: () => "2026-11-13T00:00:00Z" })
+    const portfolioBindingOperation = { id: "portfolio-binding" }
+    const analysisRequest = { portfolio: { scope: { horizon, currency: "USD" }, candidateRefs: ["selected"], operations: [], constraints: ["renewal-difference"], priorities: [], explorationLimit: 1 }, candidates: [], scenario, result: selectedResult, costCoverageRefs: [] }
+    const selectPortfolio = createPortfolioSelectionResolver({ selection, results, caseFor: async () => ({ status: "ok", value: caseRef }) })
+    if (mode === "analysis") {
+      comparisonOperation.id = "portfolio-comparison-binding-analysis"
+      return { kind: "analysis" as const, value: { cleanup, results, selectedRef, baselineRef, caseRef, context, request, store, ids, access, evidence, evidenceService, host, sources, planner, plannerWithCriteria, scenarios, cases, state, proposalCoverageWrites, issuer, issued, rules, ruleOperation, comparisonBindings, portfolioBindingOperation, analysisRequest, selectPortfolio, selection, forecastMissingFx: forecast.value.baseline.missing.some((item) => item.reason === "missing-fx"), issuedUnits: issued.value.units, reviseRule: async () => { ruleOperation.id = "criterion-revision"; return rules.register({ caseRef, criterionId: "renewal-difference", metricRef: "planner:known-subtotal-difference", operator: "gte", value: 1, unit: "USD", period: horizon, evidenceRefs: [evidence], expectedRuleVersion: 1, sensitivity: issued.value.units }, context) } } }
+    }
     const expectedRules = await comparisonBindings.proofs(caseRef, ["renewal-difference"], context)
     if (expectedRules.status !== "ok") throw new Error("comparison rules unavailable")
     const derived = await compareCases({ caseRef, baselineAlternativeId: "baseline", alternativeId: "selected", criteria: ["renewal-difference"] }, context)
@@ -122,9 +142,6 @@ export async function createWp13SensitivityFixture() {
     const saved = await persistent.evaluateAndStore(sensitivityRequest, caseRef, context)
     if (saved.status !== "ok") throw new Error(`sensitivity was not stored: ${saved.reason}`)
     const exact = createPlannerExactThreshold({ units: issuer, preview: (input, trusted) => comparePlannerPreview({ host, sources, scenarios, planner }, input, trusted) })
-    const portfolioBindingOperation = { id: "portfolio-binding" }
-    const analysisRequest = { portfolio: { scope: { horizon, currency: "USD" }, candidateRefs: ["selected"], operations: [], constraints: ["renewal-difference"], priorities: [], explorationLimit: 1 }, candidates: [], scenario, result: selectedResult, costCoverageRefs: [] }
-    const selectPortfolio = createPortfolioSelectionResolver({ selection, results, caseFor: async () => ({ status: "ok", value: caseRef }) })
-    return { cleanup, results, persistent, saved: saved.value, selectedRef, baselineRef, caseRef, context, request, store, ids, access, evidence, evidenceService, host, sources, planner, plannerWithCriteria, scenarios, cases, state, proposalCoverageWrites, issuer, issued, rules, ruleOperation, comparisonBindings, comparisonRef: storedComparison.value.resultRef, boundComparison: boundComparison.value, bindings, sensitivityRequest, exact, get exactCalls() { return exactCalls }, portfolioBindingOperation, analysisRequest, selectPortfolio, selection, forecastMissingFx: forecast.value.baseline.missing.some((item) => item.reason === "missing-fx"), issuedUnits: issued.value.units, reviseRule: async () => { ruleOperation.id = "criterion-revision"; return rules.register({ caseRef, criterionId: "renewal-difference", metricRef: "planner:known-subtotal-difference", operator: "gte", value: 1, unit: "USD", period: horizon, evidenceRefs: [evidence], expectedRuleVersion: 1, sensitivity: issued.value.units }, context) } }
+    return { kind: "sensitivity" as const, value: { cleanup, results, persistent, saved: saved.value, selectedRef, baselineRef, caseRef, context, request, store, ids, access, evidence, evidenceService, host, sources, planner, plannerWithCriteria, scenarios, cases, state, proposalCoverageWrites, issuer, issued, rules, ruleOperation, comparisonBindings, comparisonRef: storedComparison.value.resultRef, boundComparison: boundComparison.value, bindings, sensitivityRequest, exact, get exactCalls() { return exactCalls }, portfolioBindingOperation, analysisRequest, selectPortfolio, selection, forecastMissingFx: forecast.value.baseline.missing.some((item) => item.reason === "missing-fx"), issuedUnits: issued.value.units, reviseRule: async () => { ruleOperation.id = "criterion-revision"; return rules.register({ caseRef, criterionId: "renewal-difference", metricRef: "planner:known-subtotal-difference", operator: "gte", value: 1, unit: "USD", period: horizon, evidenceRefs: [evidence], expectedRuleVersion: 1, sensitivity: issued.value.units }, context) } } }
   } catch (error) { await cleanup(); throw error }
 }
