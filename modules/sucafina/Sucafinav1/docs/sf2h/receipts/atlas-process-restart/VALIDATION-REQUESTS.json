@@ -1,20 +1,20 @@
 {
   "schema": "sf2h.mission35.validation-requests.v1",
   "mission": 35,
-  "state": "IN_PROGRESS",
+  "state": "TERMINAL_RESULTS_RECORDED",
   "logicalSession": "/root",
   "leaseEpoch": "atlas-restart-browser35",
   "publication": {
-    "P": "0ea218715eda33efc7eaeb1f9139265777920b82",
-    "tree": "703802ccc1ac5df6bfd51729aeaba2b7c67b6ac9"
+    "P": "5fa1ef92608cfbd315f5d753bd27eee5bdec39bf",
+    "tree": "62fb11d740756893873babe4cc4d9a313176b601"
   },
   "test": {
-    "W": "bf0ae438bc19da6ac4ba248f202c2395f0d89544",
-    "tree": "8258adea46b276808c91a4c83f5f300461a87748",
+    "W": "32bcb308059283a0f2d80f70b5b06f75fba1f427",
+    "tree": "4943a243d28c15e41b5b47ce1828e91898e0dc7d",
     "parent": "b19606b73f1ffc5a9e58702e939f1aa788dabfa1",
-    "S": "38bba07aedb1aabbad62e814ba2bd1342864ac63",
-    "snapshotTree": "5a6d6ca2b253844de09c9a5d1812cf9261cd03c8",
-    "branch": "ci-run-linux-astra-wp14-m35-bf0ae438-3f35ec91-01",
+    "S": "fd9cb75b89456798e48c1f8e84ca4f3e4c6e524c",
+    "snapshotTree": "f38ae2f98e4c29434f078c13ce96c98ade0af987",
+    "branch": "ci-run-linux-astra-wp14-m35-32bcb308-3f35ec91-02",
     "request": {
       "package": "sucafina",
       "directory": "modules/sucafina",
@@ -27,9 +27,9 @@
       "env": {}
     },
     "requestSha256": "3f35ec9118fcbebf663c87f9024c8dfcca1bad489eb7c029cb9ca1347a7dbfd9",
-    "runId": 43645127480,
-    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43645127480",
-    "jobId": 132601067130,
+    "runId": 43645747336,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43645747336",
+    "jobId": 132602998463,
     "equalProductTestBlobs": true,
     "composedDiffOnly": [
       "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
@@ -41,23 +41,28 @@
     "dedup": {
       "inFlightWp14Before": 0,
       "equivalentRecentRun": false,
-      "hostedQueueBefore": 0
-    }
+      "hostedQueueBefore": 0,
+      "recentRunWindow": 100,
+      "reason": "Attempt 1 terminal; actual helper and matcher corrections change product/test blobs; no exact snapshot exists in checked runs"
+    },
+    "result": "runs/attempt-2.json"
   },
   "check": {
-    "productSha": "0ea218715eda33efc7eaeb1f9139265777920b82",
-    "snapshotSha": "177c7bb87b5c608ad96e4489cba6f78b809ddf7d",
-    "tree": "616d9b337df072f493c9d302c29e5fcaddfde969",
-    "additionalParent": "760cf0549a5432819f3a3d4a42f87fdbedfb1ece",
+    "productSha": "5fa1ef92608cfbd315f5d753bd27eee5bdec39bf",
+    "snapshotSha": "31b49d7bc9ee59feb4407d4229a155f81fd330d1",
+    "tree": "7673fc8b729f7eb77e84e5947698dab00ce1ebcf",
+    "additionalParent": "177c7bb87b5c608ad96e4489cba6f78b809ddf7d",
     "additionalParentPurpose": "Fast-forward operational check history only; exact product tree plus canonical envelope. Product first parent and validator preserved.",
     "branch": "astra-check-wp14",
     "config": {
-      "productSha": "0ea218715eda33efc7eaeb1f9139265777920b82",
+      "productSha": "5fa1ef92608cfbd315f5d753bd27eee5bdec39bf",
       "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
     },
     "workflowBlob": "2b0b36f3b9277a17cc22c3bab8144303d7c77830",
-    "runId": 43645173216,
-    "composedClosure": "NOT_RUN: pinned composed input does not contain astra-wp14-check workflow; no workflow edits or epic authorized. This check examines P, not W."
+    "runId": 43645751452,
+    "composedClosure": "NOT_RUN: pinned composed input does not contain astra-wp14-check workflow; no workflow edits or epic authorized. This check examines P, not W.",
+    "jobId": 132603011172,
+    "result": "runs/attempt-2.json"
   },
   "staticValidation": {
     "patchAppliesToExactComposedPreimages": true,
@@ -73,5 +78,10 @@
     "sourceRuntimeEdits": 0,
     "sf2StackRefWrites": 0,
     "desktopOrServerRestarts": 0
+  },
+  "previousAttempt": {
+    "receipt": "runs/attempt-1.json",
+    "testRunId": 43645127480,
+    "checkRunId": 43645173216
   }
 }

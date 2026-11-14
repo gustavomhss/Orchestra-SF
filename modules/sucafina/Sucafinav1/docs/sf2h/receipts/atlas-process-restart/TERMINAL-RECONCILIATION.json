@@ -1,0 +1,62 @@
+{
+  "schema": "sf2h.mission35.terminal-reconciliation.v1",
+  "originalSource": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+  "currentSource": "5fa1ef92608cfbd315f5d753bd27eee5bdec39bf",
+  "laterSourceAuthorityFound": false,
+  "prCommentsChecked": [
+    6875369871
+  ],
+  "control": {
+    "initial": "970ae24e36cae47dfa7e0df327e409d9cc3fcea7",
+    "terminal": "acd92cb0cb6a931bfb2a6d33ef13ae572334a209",
+    "missionBlob": "0772578134458d933d66769b307d564eab4aa105",
+    "missionUnchanged": true,
+    "commonUnchanged": true,
+    "laterChanges": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/procurement-decision-producer.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/reports-draft-and-journey.json"
+    ],
+    "effect": "Only missions36/37 added; mission35 write authority and sole integrator33 unchanged."
+  },
+  "composed": {
+    "testedInput": "b19606b73f1ffc5a9e58702e939f1aa788dabfa1",
+    "testedTree": "561700c145767a16d42e8b2103bd0ea81d0b379f",
+    "laterObserved": "2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0",
+    "commitsLater": 6,
+    "testPreimage": "d7d2a69837560f42438d470b83724c1a61939a73",
+    "helperPreimage": "6194f415573636efd47751f977cd157c9396f17d",
+    "preimagesStillExact": true,
+    "materialOtherChanges": [
+      ".github/workflows/sf2-epic.yml",
+      "apps/cli/src/sucafina-product/host-context.ts",
+      "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+      "apps/cli/src/sucafina-product/routine-native-dispatch.ts",
+      "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "apps/cli/src/sucafina-product/routine-native-input.ts",
+      "apps/cli/src/sucafina-product/routine-native-records.ts",
+      "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+      "apps/cli/src/sucafina-product/routine-services.ts",
+      "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/routine-native-admission/adapter-boundaries.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/routine-native-admission/admission-records.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/routine-native-admission/fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/routine-native-admission/governance-lease.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/routine-native-admission/plan-records.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/routine-native-admission/positive-admission.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/routine-native-admission/retained-input.test.ts",
+      "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "packages/app-shell/e2e/tsconfig.json",
+      "packages/app-shell/package.json",
+      "packages/app-shell/tsconfig.sf-e2e.json",
+      "script/sf2h/final-bundle/README.md",
+      "script/sf2h/final-bundle/build-artifact.py",
+      "script/sf2h/final-bundle/verify-e2e-typecheck.mjs"
+    ],
+    "result": "PATCH_PREIMAGES_STILL_MATCH; HOSTED_RESULT_BELONGS_ONLY_TO_W2; later composed tree NOT_RUN"
+  },
+  "session33Acknowledgement": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/authority-reconciliation-02.json",
+    "blob": "3f179b756ba883384f8c67846632e490725ca545",
+    "required": "Terminal qualified merged patch/preimages/postimages/full closure/exact proof before intake; Session33 remains sole integrator."
+  }
+}

@@ -2,7 +2,7 @@
   "schema": "sf2h.mission35.authority.v1",
   "mission": 35,
   "finding": "M29-ATLAS-003",
-  "status": "ACTIVE",
+  "status": "TERMINAL_DELIVERED_WITH_BLOCKERS",
   "actor": "S0-C scoped WP14 test correction",
   "logicalSession": "/root",
   "backendSessionId": null,
@@ -67,5 +67,11 @@
   },
   "nativeSessionWitness": false,
   "consumer": "mission33 sole sf2-stack integrator",
-  "observedAt": "2026-11-14 21:48:01 UTC"
+  "observedAt": "2026-11-14 21:48:01 UTC",
+  "sourceProduct": "5fa1ef92608cfbd315f5d753bd27eee5bdec39bf",
+  "terminalHandoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-process-restart/HANDOFF-TERMINAL.json",
+  "componentProof": "PASS",
+  "fullSelectedGate": "FAIL_C17_OWNER_ACTION_REQUIRED",
+  "terminalControl": "acd92cb0cb6a931bfb2a6d33ef13ae572334a209",
+  "terminalComposedObserved": "2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0"
 }

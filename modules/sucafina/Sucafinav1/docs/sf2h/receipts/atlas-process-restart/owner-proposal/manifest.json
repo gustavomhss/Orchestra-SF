@@ -1,0 +1,34 @@
+{
+  "schema": "sf2h.mission35.owner-proposal.v1",
+  "status": "PROPOSED_NOT_APPLIED_NOT_RUN",
+  "finding": "M35-C17-ORIGINAL-REVALIDATION",
+  "owner": "WP10 / PR29; session33 integration only after owner acceptance",
+  "base": "b19606b73f1ffc5a9e58702e939f1aa788dabfa1",
+  "observedOwnerHead": "539a3c7f95174190f783debc74e3694d84ca8653",
+  "observedRun": 43645127480,
+  "observedJob": 132601067130,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "preimageBlob": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993",
+      "postimageFile": "postimages/business-context.ts.txt",
+      "postimageBlob": "f25faacf0958538858184b4cb926f43061f55375",
+      "postimageSha256": "402ca4ac4b29af2499ce66b098521b737d83b2987193fbc466f90729aeed73d0",
+      "preimageSha256": "d6df55fbe2ebf1868c3279eb2196108228a1dcd695f8af36fe65429419c7ec65",
+      "staticPatchCheck": "reverse-applies to exact remote preimage blob",
+      "preimageFile": "preimages/business-context.ts.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "preimageBlob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "postimageFile": "postimages/atlas-memory.ts.txt",
+      "postimageBlob": "79717acff408628401336fd4a7f1defa4b5be6ad",
+      "postimageSha256": "6265cc534b42568b13f399d2c552fa47faf19fb52e26bd7b3700fab5295b3858",
+      "preimageSha256": "62e0ab3ada8792c84b91c2e2b6ef9181fb9290292277485e7b18176090287a00",
+      "staticPatchCheck": "reverse-applies to exact remote preimage blob",
+      "preimageFile": "preimages/atlas-memory.ts.txt"
+    }
+  ],
+  "patchSha256": "22b2878b3790e69651b567ce4ddbae13fd223bb45dbfa8900530745ef7dd0765",
+  "validation": "Artifact bytes/hunks/preimage/postimage hashes only; no TypeScript/product/tests executed; runtime and test source paths untouched."
+}

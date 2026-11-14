@@ -82,7 +82,7 @@
     }
   },
   "ci": {
-    "state": "CORRECTED_AFTER_ATTEMPT_1_PENDING_HOSTED_REVALIDATION",
+    "state": "COMPONENT_PASS_SELECTION_FAIL",
     "selection": [
       "Sucafinav1/test/product/wp14/source-access-atlas.test.ts"
     ],
@@ -112,7 +112,13 @@
       "childBoundMs": 120000,
       "increased": false
     },
-    "nativeSessionWitness": false
+    "nativeSessionWitness": false,
+    "W": "32bcb308059283a0f2d80f70b5b06f75fba1f427",
+    "S": "fd9cb75b89456798e48c1f8e84ca4f3e4c6e524c",
+    "runId": 43645747336,
+    "checksRunId": 43645751452,
+    "resultPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-process-restart/runs/attempt-2.json",
+    "composedCompilerAndGuards": "NOT_RUN"
   },
   "coverage": {
     "retained": [
@@ -137,8 +143,10 @@
     "originalOnlyGap": "Original f803 includes synthetic native authorizeRecallCase/ancestry mutation assertions whose optional source API is absent from the composed sourceAccess blob. Those source inputs and original test remain archived; this patch makes no runtime edits and does not claim that separate original-only native-selection suite ran."
   },
   "acceptance": {
-    "M29_ATLAS_003": "PENDING_HOSTED_PROOF",
+    "M29_ATLAS_003": "RESTART_COMPONENT_VERIFIED; FINAL_ACCEPTANCE_NOT_GRANTED",
+    "fullSelectedTestGate": "FAIL_C17_OWNER_ACTION_REQUIRED",
     "AM05": "OPEN_NATIVE_SESSION_BINDING_SKILL_AND_CONSUMER_REQUIRED",
+    "nativeSessionWitness": false,
     "globalRelease": false
   }
 }

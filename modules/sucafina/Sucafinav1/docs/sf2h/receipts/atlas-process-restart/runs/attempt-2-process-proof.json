@@ -1,0 +1,4610 @@
+{
+  "kind": "sqlite-atlas-process-restart",
+  "nativeSessionWitness": false,
+  "scanner": {
+    "name": "gitleaks",
+    "version": "gitleaks version 8.30.1",
+    "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+  },
+  "committed": {
+    "status": "committed",
+    "sourceEventId": "event",
+    "eventId": "9ba87da71e9cd482e4d24e4768a793a1c2b72984fce838d5c30e92350e1e4ebe",
+    "recordDigest": "01a282dd6a3f15e82a577566a296d2e859a51273fcedd93a8036f811f6a887c8",
+    "committedRevision": 2,
+    "scanner": {
+      "name": "gitleaks",
+      "version": "gitleaks version 8.30.1",
+      "status": "clean"
+    }
+  },
+  "replayed": {
+    "status": "already-committed",
+    "sourceEventId": "event",
+    "eventId": "9ba87da71e9cd482e4d24e4768a793a1c2b72984fce838d5c30e92350e1e4ebe",
+    "recordDigest": "01a282dd6a3f15e82a577566a296d2e859a51273fcedd93a8036f811f6a887c8",
+    "committedRevision": 2,
+    "scanner": {
+      "name": "gitleaks",
+      "version": "gitleaks version 8.30.1",
+      "status": "clean"
+    }
+  },
+  "parentPid": 4089,
+  "spawnedPid": 4140,
+  "childPid": 4140,
+  "challenge": "f1704d77-7c9e-43a8-868f-84e0f76f016e",
+  "exitCode": 0,
+  "persisted": {
+    "eventId": "9ba87da71e9cd482e4d24e4768a793a1c2b72984fce838d5c30e92350e1e4ebe",
+    "recordDigest": "01a282dd6a3f15e82a577566a296d2e859a51273fcedd93a8036f811f6a887c8",
+    "envelope": {
+      "schemaVersion": 1,
+      "eventId": "9ba87da71e9cd482e4d24e4768a793a1c2b72984fce838d5c30e92350e1e4ebe",
+      "owner": "sf-case-v1:a500ba5e87757241cf9330d457e8571676d81ccf7e236d6577f0bd5c711e0278",
+      "kind": "task",
+      "caseRef": {
+        "id": "case",
+        "incarnation": "case-inc",
+        "version": 1
+      },
+      "sourceEventId": "event",
+      "evidenceRefs": [
+        {
+          "schema": "sf-evidence-v1",
+          "kind": "case-event",
+          "refId": "event-ref",
+          "installationId": "i",
+          "projectId": "p",
+          "refDigest": "1490ff5c5c483a8e9e9db7960c25165f3cfd7f736cc9c6dcc4cfb77edf0ed3d0",
+          "evidenceLevel": "decision",
+          "target": {
+            "caseId": "case",
+            "caseIncarnation": "case-inc",
+            "caseVersion": 1,
+            "eventId": "event",
+            "outputDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "evidenceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "schema": "sf-evidence-v1",
+          "kind": "record",
+          "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+          "installationId": "i",
+          "projectId": "p",
+          "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+          "evidenceLevel": "observed",
+          "target": {
+            "surface": "dashboard",
+            "recordType": "dashboard-page",
+            "recordId": "Budget Overview",
+            "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+            "version": 1,
+            "fields": [
+              "budgetMetrics"
+            ],
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+          }
+        }
+      ],
+      "dependencies": [
+        {
+          "schema": "sf-evidence-v1",
+          "kind": "record",
+          "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+          "installationId": "i",
+          "projectId": "p",
+          "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+          "evidenceLevel": "observed",
+          "target": {
+            "surface": "dashboard",
+            "recordType": "dashboard-page",
+            "recordId": "Budget Overview",
+            "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+            "version": 1,
+            "fields": [
+              "budgetMetrics"
+            ],
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+          }
+        }
+      ],
+      "sourceVersions": {
+        "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e": 1,
+        "1490ff5c5c483a8e9e9db7960c25165f3cfd7f736cc9c6dcc4cfb77edf0ed3d0": 1
+      },
+      "sourceIncarnations": {
+        "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e": "8ccb503e-a861-4304-939d-16b3d87c348d",
+        "1490ff5c5c483a8e9e9db7960c25165f3cfd7f736cc9c6dcc4cfb77edf0ed3d0": "case-inc"
+      },
+      "projectionDigest": "58dea01f487c68baa814b8668d1cdde672e1899d40fe1108cd30ec914d3481a7",
+      "writerPrincipalRef": "alice",
+      "accessRevision": "1",
+      "scannerReceipt": {
+        "name": "gitleaks",
+        "version": "gitleaks version 8.30.1",
+        "status": "clean",
+        "digest": "01a282dd6a3f15e82a577566a296d2e859a51273fcedd93a8036f811f6a887c8"
+      },
+      "createdAt": "2026-11-13T12:00:00Z"
+    },
+    "originalCapture": {
+      "ref": {
+        "schema": "sf-evidence-v1",
+        "kind": "record",
+        "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+        "installationId": "i",
+        "projectId": "p",
+        "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+        "evidenceLevel": "observed",
+        "target": {
+          "surface": "dashboard",
+          "recordType": "dashboard-page",
+          "recordId": "Budget Overview",
+          "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+          "version": 1,
+          "fields": [
+            "budgetMetrics"
+          ],
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+        }
+      },
+      "projection": {
+        "context": {
+          "installationId": "i",
+          "projectId": "p",
+          "principalRef": "alice",
+          "accessRevision": "1",
+          "policyVersion": "1",
+          "surface": "dashboard",
+          "period": {
+            "start": "2026-01-01",
+            "end": "2026-12-31"
+          },
+          "currency": "unspecified",
+          "sourceRefs": [
+            {
+              "surface": "dashboard",
+              "type": "dashboard-page",
+              "id": "Budget Overview",
+              "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+              "version": 1,
+              "fields": [
+                "budgetMetrics"
+              ],
+              "period": {
+                "start": "2026-01-01",
+                "end": "2026-12-31"
+              },
+              "observedAt": "2026-11-13T12:00:00.000Z"
+            }
+          ],
+          "capabilities": [
+            "sf_dashboard_read"
+          ]
+        },
+        "version": 1,
+        "engineVersion": "dashboard-runtime-v1",
+        "components": [
+          {
+            "id": "budget:2026-01:effective",
+            "amount": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-01-31"
+            },
+            "sourceRefs": [
+              {
+                "surface": "dashboard",
+                "type": "dashboard-page",
+                "id": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "observedAt": "2026-11-13T12:00:00.000Z"
+              }
+            ],
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-02:effective",
+            "amount": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-02-01",
+              "end": "2026-02-28"
+            },
+            "sourceRefs": [
+              {
+                "surface": "dashboard",
+                "type": "dashboard-page",
+                "id": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "observedAt": "2026-11-13T12:00:00.000Z"
+              }
+            ],
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-03:effective",
+            "amount": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-03-01",
+              "end": "2026-03-31"
+            },
+            "sourceRefs": [
+              {
+                "surface": "dashboard",
+                "type": "dashboard-page",
+                "id": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "observedAt": "2026-11-13T12:00:00.000Z"
+              }
+            ],
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-04:effective",
+            "amount": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-04-01",
+              "end": "2026-04-30"
+            },
+            "sourceRefs": [
+              {
+                "surface": "dashboard",
+                "type": "dashboard-page",
+                "id": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "observedAt": "2026-11-13T12:00:00.000Z"
+              }
+            ],
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-05:effective",
+            "amount": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-05-01",
+              "end": "2026-05-31"
+            },
+            "sourceRefs": [
+              {
+                "surface": "dashboard",
+                "type": "dashboard-page",
+                "id": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "observedAt": "2026-11-13T12:00:00.000Z"
+              }
+            ],
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-06:effective",
+            "amount": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-06-01",
+              "end": "2026-06-30"
+            },
+            "sourceRefs": [
+              {
+                "surface": "dashboard",
+                "type": "dashboard-page",
+                "id": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "observedAt": "2026-11-13T12:00:00.000Z"
+              }
+            ],
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-07:effective",
+            "amount": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-07-01",
+              "end": "2026-07-31"
+            },
+            "sourceRefs": [
+              {
+                "surface": "dashboard",
+                "type": "dashboard-page",
+                "id": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "observedAt": "2026-11-13T12:00:00.000Z"
+              }
+            ],
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-08:effective",
+            "amount": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-08-01",
+              "end": "2026-08-31"
+            },
+            "sourceRefs": [
+              {
+                "surface": "dashboard",
+                "type": "dashboard-page",
+                "id": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "observedAt": "2026-11-13T12:00:00.000Z"
+              }
+            ],
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-09:effective",
+            "amount": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-09-01",
+              "end": "2026-09-30"
+            },
+            "sourceRefs": [
+              {
+                "surface": "dashboard",
+                "type": "dashboard-page",
+                "id": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "observedAt": "2026-11-13T12:00:00.000Z"
+              }
+            ],
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-10:effective",
+            "amount": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-10-01",
+              "end": "2026-10-31"
+            },
+            "sourceRefs": [
+              {
+                "surface": "dashboard",
+                "type": "dashboard-page",
+                "id": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "observedAt": "2026-11-13T12:00:00.000Z"
+              }
+            ],
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-11:effective",
+            "amount": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-11-01",
+              "end": "2026-11-30"
+            },
+            "sourceRefs": [
+              {
+                "surface": "dashboard",
+                "type": "dashboard-page",
+                "id": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "observedAt": "2026-11-13T12:00:00.000Z"
+              }
+            ],
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-12:effective",
+            "amount": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-12-01",
+              "end": "2026-12-31"
+            },
+            "sourceRefs": [
+              {
+                "surface": "dashboard",
+                "type": "dashboard-page",
+                "id": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "observedAt": "2026-11-13T12:00:00.000Z"
+              }
+            ],
+            "evidenceState": "estimated"
+          }
+        ],
+        "values": [
+          {
+            "id": "budget:2026-01:basis",
+            "value": "annual-fallback",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-01-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "budget:2026-01:effective",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-01-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budgetMetrics.2026.effectiveMonthlyBudget[0]",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-01-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-01:actual",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-01-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-01:forecast",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-01-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-02:basis",
+            "value": "annual-fallback",
+            "period": {
+              "start": "2026-02-01",
+              "end": "2026-02-28"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "budget:2026-02:effective",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-02-01",
+              "end": "2026-02-28"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budgetMetrics.2026.effectiveMonthlyBudget[1]",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-02-01",
+              "end": "2026-02-28"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-02:actual",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-02-01",
+              "end": "2026-02-28"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-02:forecast",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-02-01",
+              "end": "2026-02-28"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-03:basis",
+            "value": "annual-fallback",
+            "period": {
+              "start": "2026-03-01",
+              "end": "2026-03-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "budget:2026-03:effective",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-03-01",
+              "end": "2026-03-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budgetMetrics.2026.effectiveMonthlyBudget[2]",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-03-01",
+              "end": "2026-03-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-03:actual",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-03-01",
+              "end": "2026-03-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-03:forecast",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-03-01",
+              "end": "2026-03-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-04:basis",
+            "value": "annual-fallback",
+            "period": {
+              "start": "2026-04-01",
+              "end": "2026-04-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "budget:2026-04:effective",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-04-01",
+              "end": "2026-04-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budgetMetrics.2026.effectiveMonthlyBudget[3]",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-04-01",
+              "end": "2026-04-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-04:actual",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-04-01",
+              "end": "2026-04-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-04:forecast",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-04-01",
+              "end": "2026-04-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-05:basis",
+            "value": "annual-fallback",
+            "period": {
+              "start": "2026-05-01",
+              "end": "2026-05-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "budget:2026-05:effective",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-05-01",
+              "end": "2026-05-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budgetMetrics.2026.effectiveMonthlyBudget[4]",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-05-01",
+              "end": "2026-05-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-05:actual",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-05-01",
+              "end": "2026-05-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-05:forecast",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-05-01",
+              "end": "2026-05-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-06:basis",
+            "value": "annual-fallback",
+            "period": {
+              "start": "2026-06-01",
+              "end": "2026-06-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "budget:2026-06:effective",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-06-01",
+              "end": "2026-06-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budgetMetrics.2026.effectiveMonthlyBudget[5]",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-06-01",
+              "end": "2026-06-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-06:actual",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-06-01",
+              "end": "2026-06-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-06:forecast",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-06-01",
+              "end": "2026-06-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-07:basis",
+            "value": "annual-fallback",
+            "period": {
+              "start": "2026-07-01",
+              "end": "2026-07-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "budget:2026-07:effective",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-07-01",
+              "end": "2026-07-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budgetMetrics.2026.effectiveMonthlyBudget[6]",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-07-01",
+              "end": "2026-07-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-07:actual",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-07-01",
+              "end": "2026-07-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-07:forecast",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-07-01",
+              "end": "2026-07-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-08:basis",
+            "value": "annual-fallback",
+            "period": {
+              "start": "2026-08-01",
+              "end": "2026-08-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "budget:2026-08:effective",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-08-01",
+              "end": "2026-08-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budgetMetrics.2026.effectiveMonthlyBudget[7]",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-08-01",
+              "end": "2026-08-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-08:actual",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-08-01",
+              "end": "2026-08-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-08:forecast",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-08-01",
+              "end": "2026-08-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-09:basis",
+            "value": "annual-fallback",
+            "period": {
+              "start": "2026-09-01",
+              "end": "2026-09-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "budget:2026-09:effective",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-09-01",
+              "end": "2026-09-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budgetMetrics.2026.effectiveMonthlyBudget[8]",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-09-01",
+              "end": "2026-09-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-09:actual",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-09-01",
+              "end": "2026-09-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-09:forecast",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-09-01",
+              "end": "2026-09-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-10:basis",
+            "value": "annual-fallback",
+            "period": {
+              "start": "2026-10-01",
+              "end": "2026-10-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "budget:2026-10:effective",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-10-01",
+              "end": "2026-10-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budgetMetrics.2026.effectiveMonthlyBudget[9]",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-10-01",
+              "end": "2026-10-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-10:actual",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-10-01",
+              "end": "2026-10-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-10:forecast",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-10-01",
+              "end": "2026-10-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-11:basis",
+            "value": "annual-fallback",
+            "period": {
+              "start": "2026-11-01",
+              "end": "2026-11-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "budget:2026-11:effective",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-11-01",
+              "end": "2026-11-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budgetMetrics.2026.effectiveMonthlyBudget[10]",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-11-01",
+              "end": "2026-11-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-11:actual",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-11-01",
+              "end": "2026-11-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-11:forecast",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-11-01",
+              "end": "2026-11-30"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-12:basis",
+            "value": "annual-fallback",
+            "period": {
+              "start": "2026-12-01",
+              "end": "2026-12-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "confirmed"
+          },
+          {
+            "id": "budget:2026-12:effective",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-12-01",
+              "end": "2026-12-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budgetMetrics.2026.effectiveMonthlyBudget[11]",
+            "value": 100,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-12-01",
+              "end": "2026-12-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budget:2026-12:actual",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-12-01",
+              "end": "2026-12-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budget:2026-12:forecast",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-12-01",
+              "end": "2026-12-31"
+            },
+            "granularity": "month",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budgetMetrics.2026.totalBudget",
+            "value": 1200,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "granularity": "year",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "estimated"
+          },
+          {
+            "id": "budgetMetrics.2026.totalActual",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "granularity": "year",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          },
+          {
+            "id": "budgetMetrics.2026.totalForecast",
+            "value": null,
+            "currency": "unspecified",
+            "period": {
+              "start": "2026-01-01",
+              "end": "2026-12-31"
+            },
+            "granularity": "year",
+            "sourceRefs": [
+              {
+                "schema": "sf-evidence-v1",
+                "kind": "record",
+                "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                "installationId": "i",
+                "projectId": "p",
+                "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                "evidenceLevel": "observed",
+                "target": {
+                  "surface": "dashboard",
+                  "recordType": "dashboard-page",
+                  "recordId": "Budget Overview",
+                  "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                  "version": 1,
+                  "fields": [
+                    "budgetMetrics"
+                  ],
+                  "period": {
+                    "start": "2026-01-01",
+                    "end": "2026-12-31"
+                  },
+                  "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                }
+              }
+            ],
+            "drilldown": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+              "installationId": "i",
+              "projectId": "p",
+              "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "dashboard",
+                "recordType": "dashboard-page",
+                "recordId": "Budget Overview",
+                "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                "version": 1,
+                "fields": [
+                  "budgetMetrics"
+                ],
+                "period": {
+                  "start": "2026-01-01",
+                  "end": "2026-12-31"
+                },
+                "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+              }
+            },
+            "evidenceState": "absent"
+          }
+        ],
+        "missing": [
+          {
+            "field": "actual-and-forecast-coverage",
+            "reason": "unconfirmed"
+          },
+          {
+            "field": "budget:2026-01:actual",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-01:forecast",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-02:actual",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-02:forecast",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-03:actual",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-03:forecast",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-04:actual",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-04:forecast",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-05:actual",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-05:forecast",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-06:actual",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-06:forecast",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-07:actual",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-07:forecast",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-08:actual",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-08:forecast",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-09:actual",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-09:forecast",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-10:actual",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-10:forecast",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-11:actual",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-11:forecast",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-12:actual",
+            "reason": "missing"
+          },
+          {
+            "field": "budget:2026-12:forecast",
+            "reason": "missing"
+          },
+          {
+            "field": "budgetMetrics.2026.totalActual",
+            "reason": "missing"
+          },
+          {
+            "field": "budgetMetrics.2026.totalForecast",
+            "reason": "missing"
+          }
+        ]
+      }
+    },
+    "captureDigest": "8aaf67cb6af2838c560b1a5d181077c7983fa0babaef025ad1561aabdc1cd7a8"
+  },
+  "consumer": {
+    "status": "ok",
+    "matches": [
+      {
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-inc",
+          "version": 1
+        },
+        "memoryRecordRef": "9ba87da71e9cd482e4d24e4768a793a1c2b72984fce838d5c30e92350e1e4ebe",
+        "explanation": {
+          "candidateCaseRef": {
+            "id": "case",
+            "incarnation": "case-inc",
+            "version": 1
+          },
+          "matchedCriteria": [
+            "decision-type",
+            "horizon"
+          ],
+          "currentDifferences": [],
+          "sourceStates": [
+            "fresh",
+            "fresh"
+          ],
+          "limitations": [
+            "Semelhança não confirma validade atual nem recomenda uma escolha."
+          ]
+        },
+        "evidenceRefs": [
+          {
+            "schema": "sf-evidence-v1",
+            "kind": "case-event",
+            "refId": "event-ref",
+            "installationId": "i",
+            "projectId": "p",
+            "refDigest": "1490ff5c5c483a8e9e9db7960c25165f3cfd7f736cc9c6dcc4cfb77edf0ed3d0",
+            "evidenceLevel": "decision",
+            "target": {
+              "caseId": "case",
+              "caseIncarnation": "case-inc",
+              "caseVersion": 1,
+              "eventId": "event",
+              "outputDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "evidenceRefs": [
+                {
+                  "schema": "sf-evidence-v1",
+                  "kind": "record",
+                  "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+                  "installationId": "i",
+                  "projectId": "p",
+                  "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+                  "evidenceLevel": "observed",
+                  "target": {
+                    "surface": "dashboard",
+                    "recordType": "dashboard-page",
+                    "recordId": "Budget Overview",
+                    "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+                    "version": 1,
+                    "fields": [
+                      "budgetMetrics"
+                    ],
+                    "period": {
+                      "start": "2026-01-01",
+                      "end": "2026-12-31"
+                    },
+                    "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "schema": "sf-evidence-v1",
+            "kind": "record",
+            "refId": "sf-source:8ccb503e-a861-4304-939d-16b3d87c348d:1",
+            "installationId": "i",
+            "projectId": "p",
+            "refDigest": "c82e2036725dccefbf95397039e7bdce4f333a6d3a74eb2598d5893876e64e5e",
+            "evidenceLevel": "observed",
+            "target": {
+              "surface": "dashboard",
+              "recordType": "dashboard-page",
+              "recordId": "Budget Overview",
+              "incarnation": "8ccb503e-a861-4304-939d-16b3d87c348d",
+              "version": 1,
+              "fields": [
+                "budgetMetrics"
+              ],
+              "period": {
+                "start": "2026-01-01",
+                "end": "2026-12-31"
+              },
+              "projectionDigest": "6caaea796b196156d9310041be43ca7289c0a7d37115f2ab7583ffae0c36fbee"
+            }
+          }
+        ]
+      }
+    ],
+    "limitations": [
+      "Semelhança não confirma validade atual nem recomenda uma escolha."
+    ],
+    "accessRevision": "1"
+  },
+  "authorized": "ok",
+  "matches": 1,
+  "outsider": "unavailable",
+  "revoked": "unavailable",
+  "replaced": "unavailable",
+  "durableAtlasUnchangedAfterChild": true,
+  "durableAtlasUnchangedAfterDenials": true
+}
