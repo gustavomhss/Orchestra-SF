@@ -1,0 +1,1242 @@
+{
+  "product": "1b9e2ee13b5b297ef48bcde509d615c24c14acee",
+  "snapshot": "d87f2c19f9d97edb90591ac1f5fd58a1fffd1e4b",
+  "run_id": 43525466970,
+  "job_id": 132230001270,
+  "conclusion": "failure",
+  "cases": [
+    {
+      "file": "modules/sucafina/Sucafinav1/test/parity-legacy-workbooks.test.ts",
+      "test": "real BIFF8 XLS preserves workbook names, numbers, booleans and dates in the existing preview contract",
+      "result": "PASS",
+      "milliseconds": 171.81,
+      "log_line": 811
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/parity-legacy-workbooks.test.ts",
+      "test": "legacy XLS uses the same bounded row and sheet inspection as OOXML previews",
+      "result": "PASS",
+      "milliseconds": 6.24,
+      "log_line": 812
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/parity-legacy-workbooks.test.ts",
+      "test": "legacy XLS rejects external hyperlinks without following them and preserves a safe zero cache",
+      "result": "PASS",
+      "milliseconds": 5.88,
+      "log_line": 813
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "installation metadata always comes from current, while business data comes from import",
+      "result": "PASS",
+      "milliseconds": 0.85,
+      "log_line": 816
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "metadata absent from current cannot be injected, including imported asset indexes",
+      "result": "PASS",
+      "milliseconds": 0.05,
+      "log_line": 817
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "result deeply clones current metadata and imported business data",
+      "result": "PASS",
+      "milliseconds": 0.22,
+      "log_line": 818
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "docs: current references survive omitted imported fields and preserve parent business edits",
+      "result": "PASS",
+      "milliseconds": 0.4,
+      "log_line": 819
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "docs: missing parent with files rejects without mutating either input",
+      "result": "PASS",
+      "milliseconds": 0.16,
+      "log_line": 820
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "docs: new references require verified private restore even with forged asset index",
+      "result": "PASS",
+      "milliseconds": 0.12,
+      "log_line": 821
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "documents: current references survive omitted imported fields and preserve parent business edits",
+      "result": "PASS",
+      "milliseconds": 0.12,
+      "log_line": 822
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "documents: missing parent with files rejects without mutating either input",
+      "result": "PASS",
+      "milliseconds": 0.15,
+      "log_line": 823
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "documents: new references require verified private restore even with forged asset index",
+      "result": "PASS",
+      "milliseconds": 0.03,
+      "log_line": 824
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "attachments: current references survive omitted imported fields and preserve parent business edits",
+      "result": "PASS",
+      "milliseconds": 0.07,
+      "log_line": 825
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "attachments: missing parent with files rejects without mutating either input",
+      "result": "PASS",
+      "milliseconds": 0.06,
+      "log_line": 826
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "attachments: new references require verified private restore even with forged asset index",
+      "result": "PASS",
+      "milliseconds": 0.05,
+      "log_line": 827
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "equivalent references retain trusted metadata and cannot change storage locators",
+      "result": "PASS",
+      "milliseconds": 0.32,
+      "log_line": 828
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "references cannot move to another contract or revive a file on a new parent",
+      "result": "PASS",
+      "milliseconds": 0.1,
+      "log_line": 829
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "contracts without files may disappear; unrelated business data is not filtered",
+      "result": "PASS",
+      "milliseconds": 0.11,
+      "log_line": 830
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "ambiguous parent IDs and malformed reference lists fail closed",
+      "result": "PASS",
+      "milliseconds": 0.17,
+      "log_line": 831
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "empty, null and explicitly undefined installation values remain authoritative",
+      "result": "PASS",
+      "milliseconds": 0.1,
+      "log_line": 832
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/dashboard-import.test.ts",
+      "test": "omitting all imported references preserves all three trusted attachment collections",
+      "result": "PASS",
+      "milliseconds": 0.13,
+      "log_line": 833
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "planner required pages contain functional controls or nonempty read views",
+      "result": "PASS",
+      "milliseconds": 1.18,
+      "log_line": 836
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "planner direct write without canWrite fails atomically",
+      "result": "PASS",
+      "milliseconds": 0.18,
+      "log_line": 837
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "planner creates first version only once and rejects stale record writes",
+      "result": "PASS",
+      "milliseconds": 1.48,
+      "log_line": 838
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "line numerical operations preserve manual months and null versus zero",
+      "result": "PASS",
+      "milliseconds": 2.2,
+      "log_line": 839
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "independent line revisions allow two editors while stale same-line fails atomically",
+      "result": "PASS",
+      "milliseconds": 0.58,
+      "log_line": 840
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "lock reread rejects budget and HR but permits finance actual forecast and closing",
+      "result": "PASS",
+      "milliseconds": 0.76,
+      "log_line": 841
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "official per year has shared CAS and official cannot unlock or delete",
+      "result": "PASS",
+      "milliseconds": 0.43,
+      "log_line": 842
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "HR calculations and recursive privacy preserve domain aggregates",
+      "result": "PASS",
+      "milliseconds": 4.46,
+      "log_line": 843
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "FX preserves cur shape, parses comma and warns without rejecting missing rate totals",
+      "result": "PASS",
+      "milliseconds": 0.82,
+      "log_line": 844
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "owner scope, directory identity and unknown actions fail closed",
+      "result": "PASS",
+      "milliseconds": 0.79,
+      "log_line": 845
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "CPX sequence spans versions, survives deletion and copies preserve codes",
+      "result": "PASS",
+      "milliseconds": 0.48,
+      "log_line": 846
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "shared lists reject normalized duplicates and references across versions",
+      "result": "PASS",
+      "milliseconds": 0.65,
+      "log_line": 847
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "roster sync retains manual domain and does not ingest future or terminated people",
+      "result": "PASS",
+      "milliseconds": 0.55,
+      "log_line": 848
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "viewer with write identity never writes and salary cannot leak through stale conflicts",
+      "result": "PASS",
+      "milliseconds": 0.39,
+      "log_line": 849
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "HR actuals are independent of calculated budget and reject the wrong page",
+      "result": "PASS",
+      "milliseconds": 0.44,
+      "log_line": 850
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "total-only mode refuses multiple rows and HR split is immutable",
+      "result": "PASS",
+      "milliseconds": 0.39,
+      "log_line": 851
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "legacy numeric identifiers stay addressable and directory selects show names",
+      "result": "PASS",
+      "milliseconds": 1.79,
+      "log_line": 852
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "CAPEX GET owner, classification and search filters affect rendered rows",
+      "result": "PASS",
+      "milliseconds": 1.69,
+      "log_line": 853
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "workbook apply matches numeric IDs and names, preserves migrated fields, null and typed zero",
+      "result": "PASS",
+      "milliseconds": 2.12,
+      "log_line": 854
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "workbook preview command never writes and a late invalid position rolls every sheet back",
+      "result": "PASS",
+      "milliseconds": 0.5,
+      "log_line": 855
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "workbook preflights each changed CAS and rolls back earlier records when a later token is stale",
+      "result": "PASS",
+      "milliseconds": 0.82,
+      "log_line": 856
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "locked workbook ignores budget structure FX salary and removal while finance edits actual and forecast",
+      "result": "PASS",
+      "milliseconds": 0.62,
+      "log_line": 857
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "newVersion imports into an unlocked atomic copy without moving official or touching source",
+      "result": "PASS",
+      "milliseconds": 0.77,
+      "log_line": 858
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "workbook resolves directory names and list names or codes; unknown values warn without inventing records",
+      "result": "PASS",
+      "milliseconds": 0.86,
+      "log_line": 859
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "workbook CAPEX matches normalized project code then name, class prefixes and preserves unknown classification",
+      "result": "PASS",
+      "milliseconds": 0.86,
+      "log_line": 860
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "workbook FX precedes costs, rounds six decimals, and invalid positive-rate validation is atomic",
+      "result": "PASS",
+      "milliseconds": 0.57,
+      "log_line": 861
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "headcount workbook matches numeric IDs, clamps FTE and orders months while ignoring calculated and unrelated columns",
+      "result": "PASS",
+      "milliseconds": 0.43,
+      "log_line": 862
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "salary imports obey HR edit rules and synthetic HR ignores workbook budget",
+      "result": "PASS",
+      "milliseconds": 1.14,
+      "log_line": 863
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "removeMissing prunes only supplied sheets and never removes orphan projects",
+      "result": "PASS",
+      "milliseconds": 0.94,
+      "log_line": 864
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "dashboard headcount file normalizes Start Date and End Date, stores only roster columns even locked",
+      "result": "PASS",
+      "milliseconds": 0.43,
+      "log_line": 865
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "budget owner workbook applies only owned forecasts and rejects a mixed unauthorized forecast atomically",
+      "result": "PASS",
+      "milliseconds": 0.7,
+      "log_line": 866
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "workbook permits ordinary CAPEX HR cost element and locked line IDs retain original project",
+      "result": "PASS",
+      "milliseconds": 0.76,
+      "log_line": 867
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "workbook CPX sequence is global, CAS protected and rolls back on later validation failure",
+      "result": "PASS",
+      "milliseconds": 0.98,
+      "log_line": 868
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "workbook rejects malformed shapes, duplicate measures, invalid revision tokens and stale source lock",
+      "result": "PASS",
+      "milliseconds": 0.79,
+      "log_line": 869
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "roster singleton has CAS and ignores all salary, classification, outlook and notes input",
+      "result": "PASS",
+      "milliseconds": 0.39,
+      "log_line": 870
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "known IDs allow sparse workbook updates without guessing names or elements",
+      "result": "PASS",
+      "milliseconds": 0.65,
+      "log_line": 871
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "workbook leaves unrelated legacy versions and absent sequence untouched",
+      "result": "PASS",
+      "milliseconds": 0.38,
+      "log_line": 872
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "Info Field and Value rows only warn on version mismatch and cannot change year or authority",
+      "result": "PASS",
+      "milliseconds": 0.28,
+      "log_line": 873
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "workbook upload belongs to an operating import form with source CAS, preview fields and explicit apply",
+      "result": "PASS",
+      "milliseconds": 0.54,
+      "log_line": 874
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "original dictionary migration preserves every version ID, monthly amounts and source totals without mutating reads",
+      "result": "PASS",
+      "milliseconds": 0.75,
+      "log_line": 875
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "render accepts the original dictionary directly and never offers an empty-store first version",
+      "result": "PASS",
+      "milliseconds": 0.85,
+      "log_line": 876
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "legacy dictionary cannot be overwritten by first-version creation or an official unlock/delete/budget write",
+      "result": "PASS",
+      "milliseconds": 0.59,
+      "log_line": 877
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "successful legacy write persists canonical versions and official-by-year without respreading another version",
+      "result": "PASS",
+      "milliseconds": 0.74,
+      "log_line": 878
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "canonical official takes precedence over the retained global pointer, including after deleting the previous official",
+      "result": "PASS",
+      "milliseconds": 1.02,
+      "log_line": 879
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "legacy lockBudget survives normalization and a canonical unlock remains unlocked on later reads",
+      "result": "PASS",
+      "milliseconds": 0.95,
+      "log_line": 880
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "workbook apply accepts a dictionary source with an ID recovered from its dictionary key",
+      "result": "PASS",
+      "milliseconds": 0.44,
+      "log_line": 881
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "invalid dictionary records cannot authorize creating a replacement first version",
+      "result": "PASS",
+      "milliseconds": 0.17,
+      "log_line": 882
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+      "test": "global official numeric ID is never interpreted as an array offset during migration",
+      "result": "PASS",
+      "milliseconds": 0.24,
+      "log_line": 883
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/parity-planner.test.ts",
+      "test": "planner workbook import form accepts both XLSX and legacy XLS files",
+      "result": "PASS",
+      "milliseconds": 1.84,
+      "log_line": 886
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/parity-planner.test.ts",
+      "test": "Dashboard members export parses and imports its roster while ignoring its paired leader summary",
+      "result": "PASS",
+      "milliseconds": 64.35,
+      "log_line": 887
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/parity-planner.test.ts",
+      "test": "the Dashboard auxiliary tab is accepted only with All Members and unknown sheets still fail atomically",
+      "result": "PASS",
+      "milliseconds": 0.33,
+      "log_line": 888
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/parity-planner.test.ts",
+      "test": "a stale position revision rejects the workbook import without applying roster or position changes",
+      "result": "PASS",
+      "milliseconds": 0.37,
+      "log_line": 889
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/parity-planner.test.ts",
+      "test": "members roster imports persist while a locked plan keeps all positions unchanged",
+      "result": "PASS",
+      "milliseconds": 0.31,
+      "log_line": 890
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/parity-planner.test.ts",
+      "test": "OPEX and CAPEX compare grids show all seven original fiscal measures with closed actuals and forecast overrides",
+      "result": "PASS",
+      "milliseconds": 2.11,
+      "log_line": 891
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "planner creates exact sheets, headers, measures, SUM totals and blank versus zero",
+      "result": "PASS",
+      "milliseconds": 29.58,
+      "log_line": 894
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "headcount cost uses FX and effective increase; HR aggregates include domain AF and original rate shapes",
+      "result": "PASS",
+      "milliseconds": 18.97,
+      "log_line": 895
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "viewer and budget owner never receive rate values, override or position cost, even in XML or cached formulas",
+      "result": "PASS",
+      "milliseconds": 34.92,
+      "log_line": 896
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "admin, hr and finance may export salary; other-surface roles cannot export planner",
+      "result": "PASS",
+      "milliseconds": 47.8,
+      "log_line": 897
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "version arrays and nested hc.hrAF survive export without reshaping source",
+      "result": "PASS",
+      "milliseconds": 15.42,
+      "log_line": 898
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "members export has exact columns and leader summary, no salary, and audits every read",
+      "result": "PASS",
+      "milliseconds": 10.26,
+      "log_line": 899
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "members export denies nonadmin atomically until directory leader join is specified",
+      "result": "PASS",
+      "milliseconds": 0.32,
+      "log_line": 900
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "parse XLSX reads known sheets, blank columns and formula cache only, without mutating bytes",
+      "result": "PASS",
+      "milliseconds": 20.07,
+      "log_line": 901
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "invalid XLSX, unsupported sheets, duplicate headers and external links are refused cleanly",
+      "result": "PASS",
+      "milliseconds": 20.73,
+      "log_line": 902
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "Operations source Ticket Register maps paired months and metric labels, excludes totals and never invents SLA/heatmap",
+      "result": "PASS",
+      "milliseconds": 15.57,
+      "log_line": 903
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "Operations requires exact tab, six-month header, numeric data; no invented schema",
+      "result": "PASS",
+      "milliseconds": 24.52,
+      "log_line": 904
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "parser treats structured reference formula caches as values and refuses external workbook formula caches",
+      "result": "PASS",
+      "milliseconds": 34.71,
+      "log_line": 905
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "literal spreadsheet-looking member names stay text, all members are audited, and no fields mutate",
+      "result": "PASS",
+      "milliseconds": 6.66,
+      "log_line": 906
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "Operations follows original 2026 fallback and preserves sparse month keys without selecting months",
+      "result": "PASS",
+      "milliseconds": 14.55,
+      "log_line": 907
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "macro-enabled OOXML can be previewed as data without executing or returning macros",
+      "result": "PASS",
+      "milliseconds": 9.09,
+      "log_line": 908
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "generic parser recognizes Ticket Register through its source-specific month parser",
+      "result": "PASS",
+      "milliseconds": 13.09,
+      "log_line": 909
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "technical workbook budgets reject compressed size, expansion, entry count and invalid host overrides",
+      "result": "PASS",
+      "milliseconds": 3.8,
+      "log_line": 910
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "sparse Operations coordinates are bounded before ExcelJS and accepted sparse rows do not become dense matrices",
+      "result": "PASS",
+      "milliseconds": 8.49,
+      "log_line": 911
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "XML relationship character entities cannot hide external targets; DTDs are refused",
+      "result": "PASS",
+      "milliseconds": 9.02,
+      "log_line": 912
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "lying ZIP expanded sizes are stopped by actual streaming byte counts",
+      "result": "PASS",
+      "milliseconds": 6.89,
+      "log_line": 913
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "XML column definitions, merges, cells, nodes, text and output allocations obey technical limits",
+      "result": "PASS",
+      "milliseconds": 17,
+      "log_line": 914
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/workbooks.test.ts",
+      "test": "ExcelJS XML consumer aliases cannot bypass sparse-coordinate and merge preflight",
+      "result": "PASS",
+      "milliseconds": 42.58,
+      "log_line": 915
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/dashboard-import.test.ts",
+      "test": "business backup cannot provide protected product state and preserves trusted state",
+      "result": "PASS",
+      "milliseconds": 0.23,
+      "log_line": 918
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/import-runtime.test.ts",
+      "test": "HTTP dispatch previews without domain writes, applies once, returns a receipt and denies revoked access",
+      "result": "PASS",
+      "milliseconds": 4766.9,
+      "log_line": 921
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/export-download-privacy.test.ts",
+      "test": "the real Planner download entrypoint omits salary fields, individual cost and rate cards for a viewer",
+      "result": "PASS",
+      "milliseconds": 30.8,
+      "log_line": 924
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/files.test.ts",
+      "test": "private file parsing preserves zero and null and detects changed bytes",
+      "result": "PASS",
+      "milliseconds": 0.57,
+      "log_line": 927
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/files.test.ts",
+      "test": "file format mismatch and malformed backups fail without a parsed value",
+      "result": "PASS",
+      "milliseconds": 0.28,
+      "log_line": 928
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/preview-privacy.test.ts",
+      "test": "C04 budget-owner preview and detail exclude two people's private HR inputs and individual calculated amounts",
+      "result": "PASS",
+      "milliseconds": 412.52,
+      "log_line": 931
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "test": "human workbook admission, Planner preview, atomic receipt and retry survive SQLite reopen",
+      "result": "PASS",
+      "milliseconds": 1141.7,
+      "log_line": 934
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "test": "Dashboard import fence checks the authenticated scoped incarnation and projection",
+      "result": "PASS",
+      "milliseconds": 2.52,
+      "log_line": 937
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+      "test": "dataset restoration requires the current administrator-scoped source",
+      "result": "PASS",
+      "milliseconds": 0.91,
+      "log_line": 938
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+      "test": "human JSON restore keeps private state and returns the same receipt after source replacement",
+      "result": "PASS",
+      "milliseconds": 169.33,
+      "log_line": 941
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/receipt.test.ts",
+      "test": "settlement binds the confirmed domain receipt to the exact private preview",
+      "result": "PASS",
+      "milliseconds": 0.67,
+      "log_line": 944
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/financial-impact.test.ts",
+      "test": "C04 includes the real Planner C02 impact and never doubles the included forecast",
+      "result": "PASS",
+      "milliseconds": 679.86,
+      "log_line": 947
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-provenance.test.ts",
+      "test": "member change points to one actual workbook cell, never an ambiguous row",
+      "result": "PASS",
+      "milliseconds": 0.49,
+      "log_line": 950
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-provenance.test.ts",
+      "test": "ticket metric uses the source cell for its selected month",
+      "result": "PASS",
+      "milliseconds": 0.22,
+      "log_line": 951
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/workbook-provenance-edge.test.ts",
+      "test": "detailed workbook provenance keeps sparse physical coordinates and legacy values",
+      "result": "PASS",
+      "milliseconds": 20.64,
+      "log_line": 954
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/workbook-provenance-edge.test.ts",
+      "test": "detailed workbook parsing rejects a file without a supported worksheet",
+      "result": "PASS",
+      "milliseconds": 10.46,
+      "log_line": 955
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/workbook-provenance-edge.test.ts",
+      "test": "detailed workbook parsing preserves legacy behavior for a title row",
+      "result": "PASS",
+      "milliseconds": 17.92,
+      "log_line": 956
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/detail.test.ts",
+      "test": "detail retains the authorized change and only uses explicit workbook locations",
+      "result": "PASS",
+      "milliseconds": 0.2,
+      "log_line": 959
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/roster-save-race.test.ts",
+      "test": "roster change on source read 2 prevents publishing a stale preview",
+      "result": "PASS",
+      "milliseconds": 53.08,
+      "log_line": 962
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/roster-save-race.test.ts",
+      "test": "roster change on source read 3 prevents publishing a stale preview",
+      "result": "PASS",
+      "milliseconds": 392.92,
+      "log_line": 963
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts",
+      "test": "rich Planner XLSX export survives real HTTP preview, Apply and retry with stable financial identities",
+      "result": "PASS",
+      "milliseconds": 10957.64,
+      "log_line": 966
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner-options-runtime.test.ts",
+      "test": "locked HTTP preview labels retained inputs while applying only the permitted forecast",
+      "result": "PASS",
+      "milliseconds": 9033,
+      "log_line": 969
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner-options-runtime.test.ts",
+      "test": "HTTP newVersion uses a stable preview identity, preserves its official source and returns one receipt",
+      "result": "PASS",
+      "milliseconds": 42463.54,
+      "log_line": 970
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner-options-runtime.test.ts",
+      "test": "legacy XLS removeMissing removes only supplied OPEX and a subsequent no-op has an unchanged receipt",
+      "result": "PASS",
+      "milliseconds": 46452.15,
+      "log_line": 971
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/detail-coverage.test.ts",
+      "test": "preview detail reports explicitly classified unchanged and ignored cells by physical workbook address",
+      "result": "PASS",
+      "milliseconds": 0.25,
+      "log_line": 974
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/html-policy.test.ts",
+      "test": "CSP hashes every inline script, including scripts with attributes",
+      "result": "PASS",
+      "milliseconds": 0.28,
+      "log_line": 977
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/html-policy.test.ts",
+      "test": "HTML decoration runs after authorization and the final response CSP covers its script",
+      "result": "PASS",
+      "milliseconds": 4.32,
+      "log_line": 978
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/workbook-provenance.test.ts",
+      "test": "physical workbook locations survive empty rows and cached formula zero",
+      "result": "PASS",
+      "milliseconds": 19.74,
+      "log_line": 981
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/workbook-provenance.test.ts",
+      "test": "rejected workbook does not expose partial values or locations",
+      "result": "PASS",
+      "milliseconds": 10.43,
+      "log_line": 982
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/workbook-provenance.test.ts",
+      "test": "legacy XLS preserves physical row and column locations",
+      "result": "PASS",
+      "milliseconds": 6.04,
+      "log_line": 983
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/workbook-provenance.test.ts",
+      "test": "ticket register locations point to the numeric cells used for each month",
+      "result": "PASS",
+      "milliseconds": 10.07,
+      "log_line": 984
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/staged-files.test.ts",
+      "test": "private import admission persists SQLite bytes and binds retries to the same target and content",
+      "result": "PASS",
+      "milliseconds": 28.14,
+      "log_line": 987
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-unchanged.test.ts",
+      "test": "unchanged Dashboard cell requires one source mapping and exact before, after and source equality",
+      "result": "PASS",
+      "milliseconds": 0.32,
+      "log_line": 990
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-unchanged.test.ts",
+      "test": "renamed, duplicate, missing-identity and unlocated workbook records stay unclassified",
+      "result": "PASS",
+      "milliseconds": 0.34,
+      "log_line": 991
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-unchanged.test.ts",
+      "test": "unchanged outcomes do not expose fields absent from the authorized workbook map",
+      "result": "PASS",
+      "milliseconds": 0.09,
+      "log_line": 992
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "test": "SQLite Planner imports workbook bytes and rejects a stale preview without partial writes",
+      "result": "PASS",
+      "milliseconds": 19.06,
+      "log_line": 995
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+      "test": "Dashboard Members: real HTTP workbook preview, stale refusal, explicit Apply and faithful retry",
+      "result": "PASS",
+      "milliseconds": 1716.94,
+      "log_line": 998
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+      "test": "Dashboard Projects: real HTTP workbook preview, stale refusal, explicit Apply and faithful retry",
+      "result": "PASS",
+      "milliseconds": 1356.12,
+      "log_line": 999
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-runtime.test.ts",
+      "test": "Dashboard Operations: real HTTP workbook preview, stale refusal, explicit Apply and faithful retry",
+      "result": "PASS",
+      "milliseconds": 1134.18,
+      "log_line": 1000
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner-unchanged.test.ts",
+      "test": "Planner unchanged outcome keeps a physically sourced zero only when both projections match",
+      "result": "PASS",
+      "milliseconds": 0.22,
+      "log_line": 1003
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner-unchanged.test.ts",
+      "test": "changed values and missing or ambiguous line identities remain unclassified",
+      "result": "PASS",
+      "milliseconds": 0.2,
+      "log_line": 1004
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner-unchanged.test.ts",
+      "test": "Planner unchanged outcomes exclude synthetic HR lines",
+      "result": "PASS",
+      "milliseconds": 0.08,
+      "log_line": 1005
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/admission-boundaries.test.ts",
+      "test": "an absent or unavailable domain adapter cannot persist or fabricate an import preview",
+      "result": "PASS",
+      "milliseconds": 27.81,
+      "log_line": 1008
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/admission-boundaries.test.ts",
+      "test": "real deletion and recreation of a Planner ID invalidates its old preview and cannot emit an Apply receipt",
+      "result": "PASS",
+      "milliseconds": 2235.01,
+      "log_line": 1009
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "test": "roster scope is required for both All Members and roster-shaped Headcount",
+      "result": "PASS",
+      "milliseconds": 0.2,
+      "log_line": 1012
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "test": "workbook preview and real Planner command agree without mutating the source",
+      "result": "PASS",
+      "milliseconds": 3.88,
+      "log_line": 1013
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "test": "replayed operation identities are deterministic and distinct per operation",
+      "result": "PASS",
+      "milliseconds": 0.12,
+      "log_line": 1014
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "test": "Apply preserves an independent concurrent value and rejects a changed lock without mutation",
+      "result": "PASS",
+      "milliseconds": 2.52,
+      "log_line": 1015
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "test": "forecast workbook replaces the included amount without changing budget or actual",
+      "result": "PASS",
+      "milliseconds": 2.22,
+      "log_line": 1016
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "test": "the 72000 included forecast becomes 84000 and reconciles 590000 to 602000",
+      "result": "PASS",
+      "milliseconds": 2.4,
+      "log_line": 1017
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "test": "exported workbook reimports through the Planner engine without new lines and normalizes absent bm",
+      "result": "PASS",
+      "milliseconds": 40.88,
+      "log_line": 1018
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/planner.test.ts",
+      "test": "budget owner workbook with one foreign forecast is refused without a commit",
+      "result": "PASS",
+      "milliseconds": 1.38,
+      "log_line": 1019
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/changes.test.ts",
+      "test": "changes distinguish missing, null and zero without treating reordered IDs as new records",
+      "result": "PASS",
+      "milliseconds": 0.15,
+      "log_line": 1022
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/roster-runtime.test.ts",
+      "test": "default CLI roster composition preserves ignored sheets, rejects an ABA roster and applies a fresh preview to a locked version",
+      "result": "PASS",
+      "milliseconds": 37665.72,
+      "log_line": 1029
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard-command.test.ts",
+      "test": "ticket command uses the authorized selected month and current revision, preserving zero",
+      "result": "PASS",
+      "milliseconds": 0.22,
+      "log_line": 1032
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+      "test": "the real import host rejects a mixed-owner workbook preview without domain writes",
+      "result": "PASS",
+      "milliseconds": 49.69,
+      "log_line": 1035
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+      "test": "a later-row domain refusal after preview has a rejected summary and no partial Apply",
+      "result": "PASS",
+      "milliseconds": 965.79,
+      "log_line": 1036
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+      "test": "revocation after preview denies Apply and preserves the selected file and domain",
+      "result": "PASS",
+      "milliseconds": 288.59,
+      "log_line": 1037
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard.test.ts",
+      "test": "member replacement previews internally and applies only the approved command on a staged copy",
+      "result": "PASS",
+      "milliseconds": 2.21,
+      "log_line": 1040
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard.test.ts",
+      "test": "backup preview and apply use the legacy producer and preserve private state",
+      "result": "PASS",
+      "milliseconds": 1.21,
+      "log_line": 1041
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/imports/dashboard.test.ts",
+      "test": "Dashboard import evidence fences changed collections and stale projections",
+      "result": "PASS",
+      "milliseconds": 1.06,
+      "log_line": 1042
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/pdf-empty.test.ts",
+      "test": "a valid PDF without a text layer is refused without inventing extracted text",
+      "result": "PASS",
+      "milliseconds": 277.97,
+      "log_line": 1045
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/candidates.test.ts",
+      "test": "text candidates commit together and confirmation retry preserves evidence",
+      "result": "PASS",
+      "milliseconds": 11.83,
+      "log_line": 1048
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/candidates.test.ts",
+      "test": "docx candidates commit together and confirmation retry preserves evidence",
+      "result": "PASS",
+      "milliseconds": 512.82,
+      "log_line": 1049
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/candidates.test.ts",
+      "test": "an admitted document can be indexed and searched without a field candidate",
+      "result": "PASS",
+      "milliseconds": 4.08,
+      "log_line": 1050
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "test": "txt Request attachments reach the document UI through scoped selection, shared dispatch, confirmation and BCS",
+      "result": "PASS",
+      "milliseconds": 1550.9,
+      "log_line": 1053
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "test": "docx Request attachments reach the document UI through scoped selection, shared dispatch, confirmation and BCS",
+      "result": "PASS",
+      "milliseconds": 3077.4,
+      "log_line": 1054
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+      "test": "pdf Request attachments reach the document UI through scoped selection, shared dispatch, confirmation and BCS",
+      "result": "PASS",
+      "milliseconds": 3375.26,
+      "log_line": 1055
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/source-fence.test.ts",
+      "test": "document write fence uses the locked source incarnation and revision",
+      "result": "PASS",
+      "milliseconds": 0.25,
+      "log_line": 1058
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/pdf-digital.test.ts",
+      "test": "digital PDF text uses the real RAG extractor and preserves external instructions as text",
+      "result": "PASS",
+      "milliseconds": 279.7,
+      "log_line": 1070
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/docx.test.ts",
+      "test": "DOCX evidence text > extracts paragraph text as data and enforces XML limit",
+      "result": "PASS",
+      "milliseconds": 5.86,
+      "log_line": 1073
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/docx.test.ts",
+      "test": "DOCX evidence text > rejects malformed and protected files",
+      "result": "PASS",
+      "milliseconds": 0.5,
+      "log_line": 1074
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/docx.test.ts",
+      "test": "isolated parser respects cancellation and retains DOCX text",
+      "result": "PASS",
+      "milliseconds": 79.4,
+      "log_line": 1075
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/schemas.test.ts",
+      "test": "human schema registration is versioned, source-bound and revocable",
+      "result": "PASS",
+      "milliseconds": 2.06,
+      "log_line": 1078
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/resolver.test.ts",
+      "test": "document evidence resolves only while source bytes and access remain current",
+      "result": "PASS",
+      "milliseconds": 2.55,
+      "log_line": 1081
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "test": "discovery fences source revisions again after both surface reads finish",
+      "result": "PASS",
+      "milliseconds": 23.24,
+      "log_line": 1084
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "test": "Request document evidence uses the actual Request resolver and fences an asset changed after list",
+      "result": "PASS",
+      "milliseconds": 286.29,
+      "log_line": 1085
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+      "test": "search suppresses an earlier match when a later document read changes its source",
+      "result": "PASS",
+      "milliseconds": 306.65,
+      "log_line": 1086
+    }
+  ],
+  "errors": [
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": "error: Cannot find module '../../../../product/routines/dossier.ts' from 'modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts'",
+      "log_line": 1064,
+      "assertions_executed": false
+    }
+  ]
+}

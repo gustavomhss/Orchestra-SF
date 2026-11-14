@@ -3,7 +3,7 @@ import { decodeSfContributionOutput } from "../contracts/schema-admission.ts"
 import type { PortResult } from "../contracts/ports.ts"
 import type { ContributionEnvelope, SkillLoadReceipt } from "../contracts/resident-ai.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
-import type { SfNativeRunRecord, SfProductStatePort } from "../contracts/state.ts"
+import type { SfNativeRunRecord, SfProductStatePort, SfStateNamespace } from "../contracts/state.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
 
 /** Fence the host snapshot used for source validation, excluding the product state checked separately by CAS. */
@@ -17,6 +17,8 @@ export function createSfRunStore(input: {
   state: SfProductStatePort
   requestFor: (context: TrustedDomainContext) => Request | undefined
   revalidate: (context: TrustedDomainContext) => Promise<boolean>
+  /** Additional read dependencies must share the contribution commit's C08 fence. */
+  requiredNamespaces?: readonly SfStateNamespace[]
   preflight: (record: SfNativeRunRecord, context: TrustedDomainContext, output?: ContributionEnvelope) => Promise<PortResult<{ sourceFence: string }>>
   /** Read-only source and authority revalidation under the shared SQLite transaction lock. */
   revalidateForCommit: (record: SfNativeRunRecord, context: TrustedDomainContext, snapshot: Readonly<Snapshot>, output?: ContributionEnvelope) => Promise<PortResult<true>>
@@ -52,6 +54,13 @@ export function createSfRunStore(input: {
     const cases = await input.state.read(request, "cases", () => null)
     if (contributions.status !== "ok") return "reason" in contributions ? { status: contributions.status, reason: contributions.reason } : { status: "unavailable", reason: "unexpected-state-preview" }
     if (cases.status !== "ok") return "reason" in cases ? { status: cases.status, reason: cases.reason } : { status: "unavailable", reason: "unexpected-state-preview" }
+    const additionalNamespaces: { namespace: SfStateNamespace; expectedStorageVersion: number }[] = [{ namespace: "cases", expectedStorageVersion: cases.storageVersion }]
+    for (const namespace of new Set(input.requiredNamespaces ?? [])) {
+      if (namespace === "contributions" || namespace === "cases") continue
+      const source = await input.state.read(request, namespace, () => null)
+      if (source.status !== "ok") return "reason" in source ? { status: source.status, reason: source.reason } : { status: "unavailable", reason: "unexpected-state-preview" }
+      additionalNamespaces.push({ namespace, expectedStorageVersion: source.storageVersion })
+    }
     // Pin the C08 versions before the preflight reads other runs and their outputs.
     const checked = await input.preflight(record, context, output)
     if (checked.status !== "ok") return checked
@@ -59,7 +68,7 @@ export function createSfRunStore(input: {
     if (!await input.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
     const saved = await input.state.transaction<PortResult<SfNativeRunRecord> | undefined>(request, {
       namespace: "contributions", expectedStorageVersion: contributions.storageVersion,
-      additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: cases.storageVersion }],
+      additionalNamespaces,
       idempotencyKey: `run:${record.runRef}:${record.version}`, commandDigest: digestSfValue({ record, output }),
       targetRef: `case:${encodeURIComponent(record.caseRef.id)}:${encodeURIComponent(record.caseRef.incarnation)}`, targetIncarnation: record.caseRef.incarnation,
     }, async (state, authority, snapshot) => {

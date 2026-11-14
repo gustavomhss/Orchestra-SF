@@ -46,7 +46,8 @@ export const loadSfSkill: LoadSfSkill = (input) => Effect.gen(function* () {
     Effect.mapError(() => ({ code: "unavailable", reason: "session-messages-unavailable" } as const)),
   )
   yield* input.session.skill({ sessionID: input.sessionID, skill: input.skill.id, resume: false }).pipe(
-    Effect.mapError(() => ({ code: "invalid-skill", reason: "skill-load-failed" } as const)),
+    Effect.mapError((error) => ({ code: "invalid-skill", reason: error._tag === "Session.SkillNotFoundError" ? "skill-not-found-in-session-location"
+      : error._tag === "Session.BusyError" ? "skill-session-busy" : error._tag === "Session.NotFoundError" ? "skill-session-not-found" : "skill-load-failed" } as const)),
   )
   const after = yield* input.session.messages({ sessionID: input.sessionID }).pipe(
     Effect.mapError(() => ({ code: "unavailable", reason: "session-messages-unavailable" } as const)),

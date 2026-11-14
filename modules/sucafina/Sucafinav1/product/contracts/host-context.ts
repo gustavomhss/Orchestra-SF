@@ -8,10 +8,9 @@ import type { createSfProductAuthority, SfProductGrant } from "../integration/pr
 import type { SfNativeAdmission, SfSelectedRuntime } from "./runtime.ts"
 import type { BusinessPorts, PortResult } from "./ports.ts"
 import type { TrustedDomainContext, TrustedExecutionBinding } from "./sf-execution.ts"
-import type { Period } from "./context.ts"
+import type { Period, RoutineResult } from "./context.ts"
 import type { createCollaborationWorkPort } from "../collaboration/work-port.ts"
 import type { createSfDocumentHost } from "../documents/host.ts"
-import type { createSfRoutineProduct } from "../routines/factory.ts"
 import type { createSfPersonalViews } from "../interface/personal-views.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
 import type { SfNativeRunRecord } from "./state.ts"
@@ -47,13 +46,16 @@ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
   }
   work?: Pick<ReturnType<typeof createCollaborationWorkPort>, "listPresentation">
   documents?: Pick<ReturnType<typeof createSfDocumentHost>, "resolvePresentation">
-  routineRuns?: Pick<ReturnType<typeof createSfRoutineProduct>, "discoverRuns">
+  routineRuns?: { discoverRuns: (context: TrustedDomainContext) => Promise<PortResult<readonly RoutineResult[]>> }
   personalViews?: ReturnType<typeof createSfPersonalViews>
   forecastInputs?: {
     prepare: (context: TrustedUiContext, input: ForecastCompareRequest & { caseRef: { id: string; incarnation: string; version: number } }) => Promise<PortResult<ForecastExplainInput>>
   }
   sourcingInputs?: {
     prepare: (context: TrustedUiContext, input: { requestRef: string; caseRef: { id: string; incarnation: string; version: number } }) => Promise<PortResult<SourcingComparisonInput>>
+  }
+  analysisInputs?: {
+    prepare: (context: TrustedUiContext, input: { request: Omit<Parameters<typeof runSfAnalysis>[0]["request"], "contextFingerprint">; selection: unknown }) => Promise<PortResult<unknown>>
   }
   plannerMonthly?: {
     preview: (context: TrustedUiContext, input: SfPlannerMonthlyInput) => Promise<PortResult<SfPlannerMonthlyResult>>

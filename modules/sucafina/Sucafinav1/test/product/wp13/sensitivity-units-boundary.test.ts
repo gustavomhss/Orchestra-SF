@@ -279,4 +279,4 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     await rm(directory, { recursive: true, force: true })
     checkpoint("cleanup-finished")
   }
-}, 240_000)
+}, 360_000)

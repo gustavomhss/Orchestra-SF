@@ -52,8 +52,6 @@ export function createPlannerSensitivity(input: {
     const baseline = await readScenario(binding.baselineRef, context)
     if (baseline.status !== "ok") return baseline
     if (source.value.kind !== "scenario" || baseline.value.kind !== "scenario" || source.value.requestDigest !== digestSfValue(binding.scenario) || [source.value.caseRef, baseline.value.caseRef].some((ref) => ref.id !== binding.caseRef.id || ref.incarnation !== binding.caseRef.incarnation || ref.version > binding.caseRef.version)) return { status: "stale", reason: "sensitivity-scenario-changed" } as const
-    const sourceCoverage = source.value.result.costCoverage
-    const baselineCoverage = baseline.value.result.costCoverage
     const operations = binding.scenario.operations.filter((operation) => operation.targetRef === request.parameterBounds.parameterRef)
     if (operations.length !== 1 || operations[0].kind !== "replace" || operations[0].replacementRef !== undefined || typeof operations[0].amount !== "number" || !Number.isFinite(operations[0].amount)) return { status: "needs-input", reason: "unsupported-sensitivity-parameter" } as const
     const key = await input.idempotencyKey(digestSfValue(request), context)
@@ -79,7 +77,7 @@ export function createPlannerSensitivity(input: {
         return { status: "ok", value: { resultRef: saved.value.resultRef, scenario: saved.value.result, criterionValue: preview.value.comparison.knownDifference, parameterUnit: binding.parameterUnit, resultUnit: binding.resultUnit, unitMetadataRef: binding.unitMetadataRef, unitMetadataVersion: binding.unitMetadataVersion } }
       },
       exactThreshold: async (_request, trusted) => {
-        if (!input.exactThreshold || samples.some((sample) => !sample.complete) || baselineCoverage.coverageState !== "complete" || sourceCoverage.coverageState !== "complete") return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        if (!input.exactThreshold || samples.some((sample) => !sample.complete) || baseline.value.kind !== "scenario" || source.value.kind !== "scenario" || baseline.value.result.costCoverage.coverageState !== "complete" || source.value.result.costCoverage.coverageState !== "complete") return { status: "unavailable", reason: "exact-threshold-not-proven" }
         const result = await input.exactThreshold(request, binding, trusted)
         if (result.status === "ok") exactEvidence.value = result.value
         return result

@@ -70,6 +70,13 @@ export function createSfImportHost(input: {
       const result = await readPreparedPreviewForAnalysis(selection, context)
       return result.status === "ok" ? { status: "ok" as const, value: { manifest: store.view(result.value.manifest), detail: result.value.detail, digest: result.value.digest } } : result
     },
+    readPreviewReference: async (previewRef: string, context: TrustedDomainContext) => {
+      if (context.kind !== "ui" || !await input.host.revalidate(context)) return { status: "denied" as const, reason: "human-authority-required" }
+      const result = await store.read(previewRef, context)
+      if (result.status !== "ok") return result
+      if (!await input.host.revalidate(context)) return { status: "denied" as const, reason: "preview-access-unavailable" }
+      return { status: "ok" as const, value: { manifest: store.view(result.value.manifest), detail: result.value.detail, digest: result.value.digest, ...(result.value.summary ? { receipt: result.value.summary } : {}) } }
+    },
     detail: async (request: { manifestId: string; version: number; digest?: string }, context: TrustedDomainContext) => {
       if (context.kind !== "ui" || !await input.host.revalidate(context)) return { status: "denied" as const, reason: "human-authority-required" }
       const result = await store.read(request.manifestId, context)

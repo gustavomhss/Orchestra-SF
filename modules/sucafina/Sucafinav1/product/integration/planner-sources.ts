@@ -12,6 +12,20 @@ export function sfPlannerSourceSelector(id: string, incarnation: string, version
   return `planner-version:${encodeURIComponent(id)}:${encodeURIComponent(incarnation)}:${version}`
 }
 
+/** Pure reference construction; callers must authenticate and verify the current scoped identity. */
+export function sfPlannerEvidenceRef(input: { versionId: string; projection: Record<string, unknown>; identity: { incarnation: string; version: number } }, context: TrustedDomainContext): Extract<BusinessEvidenceRef, { kind: "record" }> | undefined {
+  const year = input.projection.year
+  if (typeof year !== "number" || !Number.isSafeInteger(year) || year < 2001 || year > 2099) return undefined
+  const value: Extract<BusinessEvidenceRef, { kind: "record" }> = {
+    schema: "sf-evidence-v1", kind: "record", refId: sfPlannerSourceSelector(input.versionId, input.identity.incarnation, input.identity.version),
+    installationId: context.binding.installationId, projectId: context.binding.projectId, refDigest: "", evidenceLevel: "observed",
+    target: { surface: "planner", recordType: "planner-version", recordId: input.versionId, incarnation: input.identity.incarnation,
+      version: input.identity.version, fields: Object.keys(input.projection), period: { start: `${year}-01-01`, end: `${year}-12-31` },
+      projectionDigest: digestSfValue({ versionId: input.versionId, projection: input.projection }) },
+  }
+  return { ...value, refDigest: digestSfEvidenceRef(value) }
+}
+
 /** Same Request, role map, redaction and projector as the producer. Selectors never grant access. */
 export function createSfPlannerSourceHost(input: {
   host: DomainPortHost
@@ -56,17 +70,11 @@ export function createSfPlannerSourceHost(input: {
       const current = await read().catch(() => undefined)
       if (!current) return { status: "denied", reason: "source-unavailable" }
       if (current.identity.incarnation !== decoded[1] || current.identity.version !== Number(parts[3])) return { status: "stale", reason: "source-replaced-or-changed" }
-      const year = current.projection.year
-      if (typeof year !== "number" || !Number.isSafeInteger(year) || year < 2001 || year > 2099) return { status: "unavailable", reason: "invalid-source-period" }
-      const value: Extract<BusinessEvidenceRef, { kind: "record" }> = {
-        schema: "sf-evidence-v1", kind: "record", refId: reference, installationId: context.binding.installationId, projectId: context.binding.projectId,
-        refDigest: "", evidenceLevel: "observed", target: { surface: "planner", recordType: "planner-version", recordId: decoded[0],
-          incarnation: current.identity.incarnation, version: current.identity.version, fields: Object.keys(current.projection),
-          period: { start: `${year}-01-01`, end: `${year}-12-31` }, projectionDigest: digestSfValue({ versionId: decoded[0], projection: current.projection }) },
-      }
+      const evidence = sfPlannerEvidenceRef({ versionId: decoded[0], ...current }, context)
+      if (!evidence) return { status: "unavailable", reason: "invalid-source-period" }
       const again = await read().catch(() => undefined)
       if (!again || digestSfValue(again) !== digestSfValue(current) || !await input.host.revalidate(context)) return { status: "stale", reason: "source-or-authority-changed" }
-      return { status: "ok", value: { versionId: decoded[0], evidence: { ...value, refDigest: digestSfEvidenceRef(value) } } }
+      return { status: "ok", value: { versionId: decoded[0], evidence } }
     },
   }
 }

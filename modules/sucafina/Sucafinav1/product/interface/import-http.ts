@@ -1,6 +1,6 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
-import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import type { CapabilityResult, TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { Period } from "../contracts/context.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import type { PortResult } from "../contracts/ports.ts"
@@ -8,25 +8,48 @@ import type { createSfUiAuthority } from "../integration/ui-authority.ts"
 import type { createSfHumanAuthority } from "../integration/human-authority.ts"
 import type { createSfImportHost } from "../imports/host.ts"
 import type { ImportTarget } from "../imports/staged-files.ts"
+import { renderSfImportWorkbench } from "../imports/workbench.ts"
 
-type ImportService = { discover: (surface: "planner" | "dashboard", context: TrustedDomainContext, period?: Period) => Promise<PortResult<readonly { label: string; surface: "planner" | "dashboard"; selectionRef: string; formats: string[]; sheet?: string; period?: Period }[]>>; imports: ReturnType<typeof createSfImportHost>; prepareTarget: (selection: { surface: "planner" | "dashboard"; selectionRef: string; options: ImportTarget["options"] }, context: TrustedDomainContext) => Promise<PortResult<ImportTarget>> }
+type ImportService = { discover: (surface: "planner" | "dashboard", context: TrustedDomainContext, period?: Period) => Promise<PortResult<readonly { label: string; surface: "planner" | "dashboard"; selectionRef: string; formats: string[]; sheet?: string; period?: Period }[]>>; imports: ReturnType<typeof createSfImportHost>; prepareTarget: (selection: { surface: "planner" | "dashboard"; selectionRef: string; options: ImportTarget["options"] }, context: TrustedDomainContext) => Promise<PortResult<ImportTarget>>; dispatch: (payload: unknown, context: TrustedDomainContext) => Promise<CapabilityResult> }
 
 /** Human transport only: selection identifiers are resolved under the current actor before file admission. */
 export function createSfImportHttp(input: { origin: string; mount: string; runtime: () => { ui: ReturnType<typeof createSfUiAuthority>; human: ReturnType<typeof createSfHumanAuthority>; service: ImportService } | undefined }) {
   return async (request: Request, surface: string): Promise<Response | undefined> => {
     const url = new URL(request.url)
     const mode = url.searchParams.get("sf")
-    if (!mode || !["import-targets", "import-admit", "import-preview", "import-detail", "import-apply"].includes(mode)) return undefined
+    if (!mode || !["imports", "import-reference", "import-targets", "import-admit", "import-preview", "import-detail", "import-apply"].includes(mode)) return undefined
     const reply = (value: unknown, status: number) => Response.json(value, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
     if (url.origin !== input.origin || !["dashboard", "planner", "procurement"].includes(surface) || url.pathname !== `${input.mount}/${surface}`) return reply({ status: "denied" }, 403)
-    const read = mode === "import-detail" || mode === "import-targets"
+    const read = mode === "imports" || mode === "import-reference" || mode === "import-detail" || mode === "import-targets"
     if (request.method !== (read ? "GET" : "POST")) return reply({ status: "denied" }, 405)
     if (!read && (request.headers.get("origin") !== input.origin || request.headers.get("sec-fetch-site") === "cross-site")) return reply({ status: "denied" }, 403)
-    const keys = mode === "import-detail" ? ["sf", "manifestId", "version"] : mode === "import-targets" ? ["sf", "surface", "start", "end"] : ["sf"]
+    const keys = mode === "imports" || mode === "import-reference" ? ["sf", "importPreviewRef"] : mode === "import-detail" ? ["sf", "manifestId", "version"] : mode === "import-targets" ? ["sf", "surface", "start", "end"] : ["sf"]
     if ([...url.searchParams.keys()].some((key) => !keys.includes(key) || url.searchParams.getAll(key).length !== 1)) return reply({ status: "invalid" }, 400)
     const runtime = input.runtime()
     if (!runtime) return reply({ status: "unavailable" }, 503)
     const status = (result: { status: string }) => result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503
+    if (mode === "import-reference") {
+      const ref = url.searchParams.get("importPreviewRef")
+      if (!ref?.trim() || ref.length > 512) return reply({ status: "invalid" }, 400)
+      const digest = digestSfValue({ importPreviewRef: ref })
+      const admitted = await runtime.ui.admit(request, "sf_import_preview", digest)
+      if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)
+      try {
+        if (!await runtime.ui.validate(admitted.value, "sf_import_preview", digest)) return reply({ status: "denied" }, 403)
+        const result = await runtime.service.imports.readPreviewReference(ref, admitted.value)
+        return result.status === "ok" ? reply({ status: "ok", value: result.value }, 200) : reply({ status: result.status }, status(result))
+      } finally { runtime.ui.finish(admitted.value) }
+    }
+    if (mode === "imports") {
+      if (surface !== "planner" && surface !== "dashboard") return reply({ status: "denied" }, 403)
+      const digest = digestSfValue({ purpose: "import-workbench", surface })
+      const admitted = await runtime.ui.admit(request, "sf_import_preview", digest)
+      if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)
+      try {
+        if (!await runtime.ui.validate(admitted.value, "sf_import_preview", digest) || !await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
+        return renderSfImportWorkbench(surface)
+      } finally { runtime.ui.finish(admitted.value) }
+    }
     if (mode === "import-targets") {
       const selected = url.searchParams.get("surface"), start = url.searchParams.get("start"), end = url.searchParams.get("end")
       const period = start && end ? { start, end } : undefined
@@ -47,7 +70,7 @@ export function createSfImportHttp(input: { origin: string; mount: string; runti
       const format = /\.xlsx$/i.test(file.name) ? "xlsx" : /\.xls$/i.test(file.name) ? "xls" : /\.json$/i.test(file.name) ? "json" : undefined
       const options: unknown = await Promise.resolve().then(() => JSON.parse(rawOptions)).catch(() => undefined)
       if (!format || !options || typeof options !== "object" || Array.isArray(options) || Object.keys(options).some((key) => !["newVersion", "removeMissing", "preview"].includes(key)) || !("newVersion" in options) || !("removeMissing" in options) || !("preview" in options) || typeof options.newVersion !== "boolean" || typeof options.removeMissing !== "boolean" || !options.preview || typeof options.preview !== "object" || Array.isArray(options.preview) || Object.keys(options.preview).some((key) => !["sheet", "replace", "headerRow"].includes(key))) return reply({ status: "invalid" }, 400)
-      const selection: Parameters<typeof runtime.service.prepareTarget>[0] = { surface: targetSurface, selectionRef, options: options as ImportTarget["options"] }
+      const selection: Pick<ImportTarget, "surface" | "selectionRef" | "options"> = { surface: targetSurface, selectionRef, options: options as ImportTarget["options"] }
       const selectionDigest = digestSfValue(selection)
       const admitted = await runtime.ui.admit(request, "sf_import_preview", selectionDigest)
       if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)
@@ -78,7 +101,7 @@ export function createSfImportHttp(input: { origin: string; mount: string; runti
       const digest = digestSfValue(parsed.value)
       const admitted = await runtime.ui.admit(request, "sf_import_preview", digest)
       if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)
-      try { if (!await runtime.ui.validate(admitted.value, "sf_import_preview", digest)) return reply({ status: "denied" }, 403); const result = await runtime.service.imports.preview(parsed.value, admitted.value); return result.status === "ok" ? reply({ status: "ok", value: result.value }, 200) : reply({ status: result.status }, status(result)) } finally { runtime.ui.finish(admitted.value) }
+      try { const result = await runtime.service.dispatch(parsed.value, admitted.value); return result.status === "ok" ? reply({ status: "ok", value: result.result, receipt: result.receipt }, 200) : reply({ status: result.status }, status(result)) } finally { runtime.ui.finish(admitted.value) }
     }
     if (!payload || typeof payload !== "object" || Array.isArray(payload) || Object.keys(payload).some((key) => !["manifestId", "version"].includes(key)) || !("manifestId" in payload) || typeof payload.manifestId !== "string" || !payload.manifestId || !("version" in payload) || !Number.isSafeInteger(payload.version) || Number(payload.version) < 1) return reply({ status: "invalid" }, 400)
     const apply = { manifestId: payload.manifestId, version: Number(payload.version) }

@@ -23,8 +23,8 @@ export function projectHeadcount(snapshot: Snapshot, actor: Actor, _environment:
   const version = projectPlannerSource(snapshot, actor, versionId)
   if (!version) return undefined
   const summary = object(version.summary)
-  const positions = rows(object(version.hc).positions).map<Record<string, unknown> & { state: HeadcountState }>((position) => ({ ...position, state: headcountState(position) }))
-  const domains = [...new Set(positions.map((position) => text(position.domain) || "Unassigned"))]
+  const positions = rows(object(version.hc).positions).map((position) => ({ ...position, state: headcountState(position) }))
+  const domains = [...new Set(positions.map((position) => text(object(position).domain) || "Unassigned"))]
   return {
     versionId,
     locked: version.locked === true,
@@ -36,7 +36,7 @@ export function projectHeadcount(snapshot: Snapshot, actor: Actor, _environment:
         domain,
         syntheticLineId: `HR:${domain}`,
         monthlyOutlookUsd: actor.roles.some((role) => ["admin", "hr", "finance"].includes(role)) && Array.isArray(line?.outlook) ? line.outlook : null,
-        positions: positions.filter((position) => (text(position.domain) || "Unassigned") === domain),
+        positions: positions.filter((position) => (text(object(position).domain) || "Unassigned") === domain),
       }
     }),
   }

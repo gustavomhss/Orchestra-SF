@@ -15,6 +15,7 @@ import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina
 import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import type { SfDocumentReader } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
 import { resolveSfDocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
+import { createSfDocumentScenarios } from "../../../../modules/sucafina/Sucafinav1/product/documents/scenario-inputs.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import { createDashboardPort } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/port.ts"
 import { createDashboardRecordEvidenceHost, createDashboardSourceHost } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/sources.ts"
@@ -175,6 +176,9 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const procurementDecisions = createProcurementDecisionHost({ host: procurementHost, port: procurement, individual, authority: input.authority, procurementEvidenceWrites: input.procurementEvidenceWrites, cases, planner, plannerSources,
     operationIdentity, readSourceFences, lockedSourceFences, createId: randomUUID, now: () => new Date().toISOString() })
   decisionEvidence.current = procurementDecisions
+  const documentScenarios = input.documentRead ? createSfDocumentScenarios({ host, product, evidence: context, reader: input.documentRead,
+    sourceFence: async (call) => { const current = await readSourceFences(call); return current ? digestSfValue(current) : undefined },
+    authorize: (request, call) => input.authority.human.authorize(call, "planner.preview", request) }) : undefined
   const persist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, resolveCase })
   const receipt = input.authority.authority.receiptFor
   const descriptors = [
@@ -350,7 +354,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       return current.status === "ok" && digestSfValue(stable(current.value)) === digestSfValue(stable(material)) && await host.revalidate(call)
     },
   }) }
-  return { dashboard, procurement, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, procurementQueueView, procurementConfirmation, procurementDecisions, collaboration, procurementDossier, forecastInputs, initializeAtlas,
+  return { dashboard, procurement, planner, plannerProduct: product, plannerSources, documentScenarios, registry, individual, resolveProcurement, contracts, cases, context, evidence, results, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, procurementQueueView, procurementConfirmation, procurementDecisions, collaboration, procurementDossier, forecastInputs, initializeAtlas,
     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
     dispose: () => { periods.clear(); evidence.current = undefined; decisionEvidence.current = undefined; procurementDecisions.dispose(); descriptors.splice(baseCount) } }
 }

@@ -16,7 +16,9 @@ import { projectSfSourceScope } from "../integration/source-projections.ts"
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
 type Identity = Pick<SourceRef, "surface" | "type" | "id" | "incarnation">
 type ScopedExpected = { scope: SfSourceScope; incarnation: string; version: number; inputDigest: string; original: Identity; fields: readonly string[]; period: ConfirmationScope["period"]; physicalFingerprint: string; observedAt: string }
-type ConfirmationProof = { state: "unavailable" | "replaced"; index: number; fingerprints: string[] } | { state: "same"; index: number; fingerprints: string[]; physicalIncarnations: string[] }
+type ScopedContinuityResult =
+  | { state: "same"; index: number; fingerprints: readonly string[]; physicalIncarnations: readonly string[] }
+  | { state: "replaced" | "unavailable"; index: number; fingerprints: readonly string[] }
 export type DashboardConfirmationObservation =
   | { state: "available"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: RecordEvidence; projection: DomainProjection }
   | { state: "access-unavailable" | "dependency-unavailable" | "replaced"; sourceVersion: number }
@@ -102,7 +104,7 @@ export function createDashboardConfirmationObserver(input: {
     const check = input.scopedSources.checkScopedSource
     const transactionAll = input.host.persistence.transactionAll
     if (!check || !transactionAll) return unavailable
-    const stable = await transactionAll<ConfirmationProof>(async (snapshots) => {
+    const stable = await transactionAll<ScopedContinuityResult>(async (snapshots) => {
       const fingerprints: string[] = []
       const physicalIncarnations: string[] = []
       for (const [index, entry] of expected.entries()) {

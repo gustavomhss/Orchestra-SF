@@ -18,11 +18,13 @@ import type { ParsedImport } from "./files.ts"
 import type { ImportTarget } from "./staged-files.ts"
 import type { ImportDetail, ImportExecution } from "./store.ts"
 
-type WorkbookResult = ReturnType<typeof previewDashboardWorkbook>
-type ImportPreview = { format: Parameters<typeof previewDashboardWorkbook>[0]["format"] } & (
-  | { result: Exclude<WorkbookResult, { status: "preview" }> }
-  | { result: Extract<WorkbookResult, { status: "preview" }>; impactDigest: string; before: Record<string, unknown>; after: Record<string, unknown> }
-)
+type DashboardPreview = {
+  format: Parameters<typeof previewDashboardWorkbook>[0]["format"]
+  result: ReturnType<typeof previewDashboardWorkbook>
+  impactDigest?: string
+  before?: Record<string, unknown>
+  after?: Record<string, unknown>
+}
 
 export function createSfDashboardImportPreview(input: {
   host: DomainPortHost
@@ -41,7 +43,7 @@ export function createSfDashboardImportPreview(input: {
     const environment = await input.host.environment(http)
     const source: SourceRef = { surface: "dashboard", type: evidence.target.recordType, id: evidence.target.recordId, incarnation: evidence.target.incarnation, version: evidence.target.version, fields: evidence.target.fields, period: evidence.target.period ?? { start: "0001-01-01", end: "9999-12-31" }, observedAt: environment.at }
     const idempotencyKey = digestSfValue({ operationId, principal: context.binding.principalRef, target: request.target, file: request.parsed.sourceDigest })
-    const preview = await input.host.persistence.transaction<ImportPreview | undefined>("dashboard", async (snapshot) => {
+    const preview = await input.host.persistence.transaction<DashboardPreview | undefined>("dashboard", async (snapshot) => {
       const principal = await input.host.authenticate(http, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })
       if (!principal || principal.id !== context.binding.principalRef || !principal.canWrite) return { commit: false, value: undefined }
       const access = object(object(snapshot.data.access)[principal.id])
@@ -65,7 +67,7 @@ export function createSfDashboardImportPreview(input: {
     if (!preview) return { status: "stale", reason: "target-or-sheet-unavailable" }
     if (preview.result.status !== "preview") return { status: preview.result.status === "denied" ? "denied" : preview.result.status === "conflict" ? "stale" : "needs-input", reason: "dashboard-command-rejected" }
     if (!await input.host.revalidate(context)) return { status: "denied", reason: "import-access-unavailable" }
-    if (!("impactDigest" in preview) || !preview.impactDigest || !("before" in preview) || !("after" in preview)) return { status: "unavailable", reason: "mutation-scope-unavailable" }
+    if (!preview.impactDigest || !preview.before || !preview.after) return { status: "unavailable", reason: "mutation-scope-unavailable" }
     const productContext = { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, surface: "dashboard" as const, period: source.period, currency: "USD", sourceRefs: [source], capabilities: ["sf_import_preview"] }
     const changes = compareImportProjections(preview.before, preview.after)
     const values: DomainProjection["values"][number][] = []
@@ -73,7 +75,7 @@ export function createSfDashboardImportPreview(input: {
     changes.forEach((change) => ([["before", change.before], ["after", change.after]] as const).forEach(([side, entry]) => {
       if (entry.state !== "present") { missing.push({ field: `${change.path}:${side}`, reason: "missing" }); return }
       if (entry.value !== null && typeof entry.value !== "string" && typeof entry.value !== "boolean" && !(typeof entry.value === "number" && Number.isFinite(entry.value))) return
-      values.push({ id: `${change.path}:${change.kind}:${side}`, value: entry.value as string | number | boolean | null, period: source.period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: entry.value === null ? "absent" : "confirmed" })
+      values.push({ id: `${change.path}:${change.kind}:${side}`, value: entry.value as string | number | boolean | null, period: source.period, granularity: "record", sourceRefs: [evidence], drilldown: evidence, evidenceState: entry.value === null ? "absent" : side === "after" ? "hypothetical" : "confirmed" })
     }))
     const projection: DomainProjection = { context: productContext, version: source.version, engineVersion: "dashboard-runtime-v1", components: [], values, missing }
     const id = digestSfValue({ operationId, sourceDigest: request.parsed.sourceDigest, target: request.target, principal: context.binding.principalRef })

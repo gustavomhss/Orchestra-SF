@@ -1,5 +1,5 @@
 import { digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
-import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../contracts/business-context.ts"
+import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution, SfAtlasProjection } from "../contracts/business-context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { createSfDashboardSourceAccess, createSfDashboardRecordSourceAccess, createSfCaseEventSourceAccess, createSfProcurementSourceAccess, createSfDocumentSourceAccess, createSfDashboardContinuityProof, createSfSourceContinuityProof } from "../decision-memory/source-access.ts"
 import { createSfAtlasMemory } from "./atlas-memory.ts"
@@ -186,15 +186,9 @@ export function createSfAtlasBusiness(input: {
   const procurement = createSfProcurementSourceAccess({ host: input.host, resolve: input.procurementResolve, procurement: input.procurement })
   const document = createSfDocumentSourceAccess({ host: input.host, read: input.documentRead })
   const planner = async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
-    const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: input.now() })
-    if (!input.planner || ref.kind !== "record" || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || !ref.target.period || !await input.host.revalidate(call)) return unavailable()
-    const first = await input.planner.sources.resolveForecastSource(ref.refId, call)
-    if (first.status !== "ok" || digestSfValue(first.value.evidence) !== digestSfValue(ref)) return unavailable()
-    const projected = await input.planner.port.compareForecast({ baseRef: ref.refId, candidateRef: ref.refId, period: ref.target.period, currency: "USD" }, call)
-    if (projected.status !== "ok" || projected.value.analysisBasis !== "domain" || digestSfValue(projected.value.sourceRefs) !== digestSfValue([ref, ref]) || projected.value.baseline.context.installationId !== call.binding.installationId || projected.value.baseline.context.projectId !== call.binding.projectId || projected.value.baseline.context.principalRef !== call.binding.principalRef || projected.value.baseline.context.accessRevision !== call.binding.accessRevision || projected.value.baseline.context.policyVersion !== call.binding.policyVersion || projected.value.baseline.context.surface !== "planner" || digestSfValue(projected.value.baseline.context.period) !== digestSfValue(ref.target.period) || projected.value.baseline.values.some((value) => value.sourceRefs.length !== 1 || digestSfValue(value.sourceRefs[0]) !== digestSfValue(ref)) || !await input.host.revalidate(call)) return unavailable()
-    const again = await input.planner.sources.resolveForecastSource(ref.refId, call)
-    if (again.status !== "ok" || digestSfValue(again.value.evidence) !== digestSfValue(ref) || !await input.host.revalidate(call)) return unavailable()
-    return { state: "fresh", ref, currentRef: again.value.evidence, authorizedProjection: projected.value.baseline, accessRevision: call.binding.accessRevision, checkedAt: input.now() }
+    if (!input.planner) return { state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: input.now() }
+    const { createSfPlannerEvidenceReader } = await import("../planner/evidence-reader.ts")
+    return createSfPlannerEvidenceReader({ host: input.host, sources: input.planner.sources, now: input.now })(ref, call)
   }
   const readOriginal = async (digest: string, call: TrustedDomainContext) => {
     const caseRef = await input.caseForEvidence(digest, call)
@@ -224,11 +218,23 @@ export function createSfAtlasBusiness(input: {
     recall: async (request, call) => {
       const records = await Promise.all(request.caseRefs.map((ref) => memory.recall(ref, call)))
       if (records.some((result) => result.status !== "ok")) throw new Error("SF_MEMORY_READ_UNAVAILABLE")
-      return records.flatMap((result) => result.status === "ok" ? result.records : [])
+      return records.flatMap((result) => result.status === "ok" ? result.records : []).map((record) => {
+        if (record.envelope.kind !== "task" || !isSfAtlasTaskEntry(record.entry)) throw new Error("SF_MEMORY_ENTRY_UNAVAILABLE")
+        return { envelope: record.envelope, entry: record.entry }
+      })
     },
     emitFromLedger: (ref, call) => memory.emitFromLedger(ref, call),
   })
   const memory = createSfAtlasMemory({ state: input.state, cases: input.cases, host: input.host, evidence: context, proveContinuity: router.proveContinuity, scanner: createSfAtlasScanner({ scanners: input.scanner ? [input.scanner.spec] : [] }), scannerVersion: input.scanner?.version ?? "", now: input.now })
   const capabilities = createSfEvidenceCapabilities({ ...input.selections, context, memory, proveContinuity: router.proveContinuity, revalidate: input.host.revalidate, createReceipt: input.authority.receiptFor })
   return { context, memory, capabilities }
+}
+
+/** The shared Atlas entry union also contains entries outside this product's task contract. */
+function isSfAtlasTaskEntry(value: unknown): value is Extract<SfAtlasProjection, { kind: "task" }>["entry"] {
+  return !!value && typeof value === "object" && !Array.isArray(value) &&
+    "taskId" in value && typeof value.taskId === "string" && "stoppedAt" in value && typeof value.stoppedAt === "string" &&
+    "lesson" in value && typeof value.lesson === "string" && "ref" in value && typeof value.ref === "string" &&
+    "attempted" in value && Array.isArray(value.attempted) && value.attempted.every((item) => typeof item === "string") &&
+    "failedWith" in value && Array.isArray(value.failedWith) && value.failedWith.every((item) => typeof item === "string")
 }
