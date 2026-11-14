@@ -1,0 +1,73 @@
+{
+  "schema": "wp11-independent-final-candidate-audit-review-v1",
+  "reviewer": "ci_reconciliation",
+  "status": "NO_METADATA_OR_SCOPED_QUALIFICATION_BLOCKER_FOUND",
+  "candidateSha": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1",
+  "candidateTree": "47e634b81b9a64fef462cb670373aa832b88b76b",
+  "inputs": [
+    {
+      "path": "/workspace/scratch/c3f9350f32d4/seams/final-W19/candidate-audit.manifest.json",
+      "sha256": "a627990da2b745339c4d88678dbd7aa44321bd927e92de10f4c2f03790d5a8df",
+      "bytes": 394099
+    },
+    {
+      "path": "/workspace/scratch/c3f9350f32d4/seams/candidate-W19-final-metadata-supplement.json",
+      "sha256": "4787e4b45fd49ed9351c8c4bfe7786b3f3d0e89c949874bbb69c1aeff61f8786",
+      "bytes": 14086137
+    },
+    {
+      "path": "/workspace/scratch/c3f9350f32d4/seams/final-W19/candidate-audit.raw.json.gz",
+      "sha256": "0bd8b7a0cce8dc6690aebee36319a6e37f69a0bb8d8669a7564069cbd5629969",
+      "bytes": 793600
+    },
+    {
+      "path": "/workspace/scratch/c3f9350f32d4/ci-analysis/wp11-hosted-execution-index.json",
+      "sha256": "53d61986061203b1c69530f0b1e6dc708a748e0b95f804434b1b4452f33742fc",
+      "bytes": 372849
+    }
+  ],
+  "checked": {
+    "distinctFullPathAndTestNamePairs": 100,
+    "distinctRoots": 44,
+    "qualificationCounts": {
+      "VERIFIED_SCOPED_SYMBOLS_AND_FOCUSED_REGRESSION": 54,
+      "IDENTICAL_ROOT_GRAPH_REUSE": 39,
+      "DIRECT_CANDIDATE_EXECUTION": 7
+    },
+    "independentlyRecomputedRootGraphs": 44,
+    "exactPublishedCandidateBlobs": 157,
+    "identicalConfigurationEntries": 160,
+    "readBytes": 4156,
+    "readSha256": "1715c615c2c112d7ed28715016ee673b55c355ec1475409613a6325598c78e2c",
+    "gzipDecompressesToExactRawAudit": true,
+    "gzipMtimeZeroAndNoEmbeddedFilename": true
+  },
+  "unresolvedTypeBoundaries": [
+    {
+      "root": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "sourceSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "entries": [
+        {
+          "importer": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+          "specifier": "../routines/factory.ts",
+          "line": 14
+        }
+      ]
+    }
+  ],
+  "findings": [
+    "All100 retained passing names are unique by complete test path plus name; every selected latest observation matches its recorded hosted log line, duration and original product/snapshot/run conclusion. Earlier failing source-run conclusions remain failures.",
+    "The7direct final-source names are exactly E2. The39strictly reused names have unchanged conservative relative file graphs; the54other names have only case-port as a changed dependency and are explicitly scoped, never represented as identical graphs.",
+    "The independently recomputed relative graph closures/edges and every old/new Git blob agree with the raw audit. No changed dependency was removed by the exclude-closure probe arguments; those arguments report probe membership only.",
+    "The case read function is exactly4156bytes/hash1715c615 across W17→W19. W18→W19 runtime is byte-identical; changed draft/intent methods were reviewed and directly qualified by E1/E2, while H7 qualifies read and canonical consumers.",
+    "The single pre-existing unresolved type import belongs to WP05choice-history-bi, was present in source and final candidate and remains a disclosed TS2307. It cannot be interpreted as a complete resolved TypeScript graph.",
+    "Published intake candidate blobs and160configuration entries match the frozen Git tree. Original remote provenance remains in the separately verified intake manifests; this review does not invent a new remote source inspection."
+  ],
+  "limits": [
+    "Static relative graphs exclude package internals, computed imports and filesystem build entrypoints. BI rendered modules remain covered by their original hosted observation and the separate frozen-source delta; no mounted-host acceptance is inferred.",
+    "The100names are test observations across multiple original SHAs, not100tests freshly executed on W19 and not83accepted criteria.",
+    "The audit retains selected relevant failures; the full43-entry execution index preserves all24test attempts and19checks, including prior timeout, cancellation and infrastructure failures.",
+    "Global typecheck remains failed with130foreign diagnostics. S0 review/integration and resident/native/portfolio gaps stay independent.",
+    "Only local metadata processing and Git reads occurred. No product execution, typecheck, build, install, remote mutation or repository write."
+  ]
+}

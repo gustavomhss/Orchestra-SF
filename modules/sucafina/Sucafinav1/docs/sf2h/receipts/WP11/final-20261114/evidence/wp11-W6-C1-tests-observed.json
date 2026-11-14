@@ -1,0 +1,1102 @@
+{
+  "log": "ci-analysis/wp11-W6-C1-tests.log",
+  "logSha256": "ccdbd0f1c6aea224473a23067ff7339d9836cf9b89b268a14fb9f091ce74b1eb",
+  "metadata": {
+    "productSha": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+    "productTree": "e63f555351ec6a21402319797e044fd51e8eb4fb",
+    "snapshotSha": "0aa7ce0b6be7debc799eb51b2d066c501fae4eee",
+    "snapshotTree": "eb797fbfbf27ec8c72636a36e93b931f0a49dac0",
+    "branch": "ci-run-linux-astra-wp11-11261a5-b76f108a-c1",
+    "requestSha256": "b76f108aa3ba4f536901f0bad62c7c87129124940ab022065536b803abb2a151",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+        "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+        "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+        "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+        "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+        "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+        "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+        "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+        "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+        "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+        "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+        "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+        "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+        "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+        "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+        "Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+        "Sucafinav1/test/product/wp05/planner-origins.test.ts",
+        "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "--timeout",
+        "180000"
+      ],
+      "env": {}
+    },
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "a207aa32047d33645f3346493ac2891300d4f5fb",
+    "runIds": [
+      43586946650
+    ]
+  },
+  "summary": {
+    "pass": 58,
+    "fail": 2,
+    "tests": 60,
+    "files": 19,
+    "durationSeconds": 1210.74
+  },
+  "omniPositiveControl": {
+    "nonces": [
+      "f603be0c8a928483d4523511b474bcef"
+    ],
+    "observedVerdicts": [
+      "omni positive control [f603be0c8a928483d4523511b474bcef]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [f603be0c8a928483d4523511b474bcef]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "requestedFiles": [
+    "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+    "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+    "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+    "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+    "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+    "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+    "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+    "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+    "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+    "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+    "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+    "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+    "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+    "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+    "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+    "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+    "Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+    "Sucafinav1/test/product/wp05/planner-origins.test.ts",
+    "Sucafinav1/test/product/wp13/history-provenance.test.ts"
+  ],
+  "observedFiles": [
+    "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+    "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+    "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+    "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+    "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+    "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+    "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+    "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+    "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+    "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+    "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+    "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+    "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+    "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+    "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+    "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+    "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+    "Sucafinav1/test/product/wp05/planner-origins.test.ts",
+    "Sucafinav1/test/product/wp05/capacity-numeric.test.ts"
+  ],
+  "fileSummaries": [
+    {
+      "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "reportedTests": 13,
+      "counts": {
+        "pass": 13,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 162.95,
+      "header": {
+        "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+        "line": 829,
+        "timestamp": "2026-11-14T10:49:18.5853049Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+        "status": "pass",
+        "name": "nested C17 refuses revoked lineage after replay while the caller remains authorized",
+        "line": 842,
+        "timestamp": "2026-11-14T10:49:18.7724914Z",
+        "durationMs": 12.8
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 102.07,
+      "header": {
+        "file": "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+        "line": 844,
+        "timestamp": "2026-11-14T10:49:18.7726055Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+        "status": "pass",
+        "name": "C10 keeps the 30000 apparent savings conditional until training changes 210000 to 250000",
+        "line": 845,
+        "timestamp": "2026-11-14T10:49:19.0731414Z",
+        "durationMs": 102.07
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+      "reportedTests": 4,
+      "counts": {
+        "pass": 3,
+        "fail": 1,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 411362.8,
+      "header": {
+        "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+        "line": 847,
+        "timestamp": "2026-11-14T10:49:19.0732658Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+        "status": "pass",
+        "name": "composed proof refuses duplicate and indirect writes to the varying parameter",
+        "line": 852,
+        "timestamp": "2026-11-14T10:56:10.4446000Z",
+        "durationMs": 53927.57
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "reportedTests": 3,
+      "counts": {
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 192279.74,
+      "header": {
+        "file": "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+        "line": 854,
+        "timestamp": "2026-11-14T10:56:59.1895807Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+        "status": "pass",
+        "name": "a source-only observation refuses a coverage change after the real comparison recheck",
+        "line": 857,
+        "timestamp": "2026-11-14T10:59:22.7273579Z",
+        "durationMs": 47883.5
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "reportedTests": 6,
+      "counts": {
+        "pass": 6,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 1072.75,
+      "header": {
+        "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+        "line": 859,
+        "timestamp": "2026-11-14T10:59:22.7274680Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+        "status": "pass",
+        "name": "a self-comparison reads once per source observation and still rejects revocation at final revalidation",
+        "line": 865,
+        "timestamp": "2026-11-14T10:59:23.8058125Z",
+        "durationMs": 38.07
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 22.93,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+        "line": 867,
+        "timestamp": "2026-11-14T10:59:23.8059121Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+        "status": "pass",
+        "name": "promotion commits the reviewed alternative, result and audit event together, and reconciles retries",
+        "line": 868,
+        "timestamp": "2026-11-14T10:59:23.8352808Z",
+        "durationMs": 22.93
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 21.71,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+        "line": 870,
+        "timestamp": "2026-11-14T10:59:23.8353621Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+        "status": "pass",
+        "name": "human acceptance commits the existing analysis ledger event and outbox atomically",
+        "line": 871,
+        "timestamp": "2026-11-14T10:59:23.8583212Z",
+        "durationMs": 21.71
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 47.74,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+        "line": 873,
+        "timestamp": "2026-11-14T10:59:23.8584398Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+        "status": "pass",
+        "name": "real Planner mutation and case receipt commit atomically across surfaces",
+        "line": 874,
+        "timestamp": "2026-11-14T10:59:23.9105343Z",
+        "durationMs": 47.74
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "reportedTests": 2,
+      "counts": {
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 16.73,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+        "line": 876,
+        "timestamp": "2026-11-14T10:59:23.9106619Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+        "status": "pass",
+        "name": "C10 complete coverage needs every category and fresh source resolution",
+        "line": 878,
+        "timestamp": "2026-11-14T10:59:23.9293920Z",
+        "durationMs": 0.63
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 46.2,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+        "line": 880,
+        "timestamp": "2026-11-14T10:59:23.9294766Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+        "status": "pass",
+        "name": "portfolio history can retain a result at the same case version and still requires private provenance and current access",
+        "line": 881,
+        "timestamp": "2026-11-14T10:59:23.9783057Z",
+        "durationMs": 46.2
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 45.75,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "line": 883,
+        "timestamp": "2026-11-14T10:59:23.9784026Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "status": "pass",
+        "name": "human-approved prepared dashboard command and receipt commit together",
+        "line": 884,
+        "timestamp": "2026-11-14T10:59:24.0267056Z",
+        "durationMs": 45.75
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+      "reportedTests": 3,
+      "counts": {
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 2.59,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+        "line": 886,
+        "timestamp": "2026-11-14T10:59:24.0268173Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+        "status": "pass",
+        "name": "reassessment uses scenario entries and keeps hypothetical totals conditioned",
+        "line": 889,
+        "timestamp": "2026-11-14T10:59:24.0307097Z",
+        "durationMs": 1.47
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 1.8,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+        "line": 891,
+        "timestamp": "2026-11-14T10:59:24.0307956Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+        "status": "pass",
+        "name": "human classification is bound to real components, source identity and fresh evidence",
+        "line": 892,
+        "timestamp": "2026-11-14T10:59:24.0328437Z",
+        "durationMs": 1.8
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "reportedTests": 2,
+      "counts": {
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 20.25,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+        "line": 894,
+        "timestamp": "2026-11-14T10:59:24.0329643Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+        "status": "pass",
+        "name": "persisted comparison results are scoped to current case, principal, and source access",
+        "line": 896,
+        "timestamp": "2026-11-14T10:59:24.0546996Z",
+        "durationMs": 19.16
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 40.14,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+        "line": 898,
+        "timestamp": "2026-11-14T10:59:24.0548008Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+        "status": "pass",
+        "name": "proposal coverage is durable, scoped, and fenced against changed sources",
+        "line": 899,
+        "timestamp": "2026-11-14T10:59:24.0971217Z",
+        "durationMs": 40.14
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "reportedTests": 13,
+      "counts": {
+        "pass": 13,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 12.82,
+      "header": {
+        "file": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "line": 901,
+        "timestamp": "2026-11-14T10:59:24.0972372Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "status": "pass",
+        "name": "portfolio historical provenance > rejects a binding that changes between provenance passes",
+        "line": 914,
+        "timestamp": "2026-11-14T10:59:24.1125633Z",
+        "durationMs": 1.01
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "reportedTests": 4,
+      "counts": {
+        "pass": 3,
+        "fail": 1,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 587330.25,
+      "header": {
+        "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+        "line": 916,
+        "timestamp": "2026-11-14T10:59:24.1126641Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+        "status": "pass",
+        "name": "source-specific revocation with a valid UI session withholds persisted BI values and coverage",
+        "line": 921,
+        "timestamp": "2026-11-14T11:09:11.4454232Z",
+        "durationMs": 86949.41
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/planner-origins.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 16496.46,
+      "header": {
+        "file": "Sucafinav1/test/product/wp05/planner-origins.test.ts",
+        "line": 923,
+        "timestamp": "2026-11-14T11:09:11.4456120Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp05/planner-origins.test.ts",
+        "status": "pass",
+        "name": "real Planner zero and nonzero contributions expose explicit A/B origins through waterfall, bars, tables and current C17 selection",
+        "line": 1304,
+        "timestamp": "2026-11-14T11:09:27.9899863Z",
+        "durationMs": 16496.46
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 1317.97,
+      "header": {
+        "file": "Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+        "line": 1306,
+        "timestamp": "2026-11-14T11:09:27.9901672Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+        "status": "pass",
+        "name": "real scoped Planner capacity and cost remain numeric in aligned filtered BI panels without personal data",
+        "line": 1420,
+        "timestamp": "2026-11-14T11:09:29.3117474Z",
+        "durationMs": 1317.97
+      }
+    }
+  ],
+  "lastObservedFile": "Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+  "lastReportedTest": {
+    "file": "Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+    "status": "pass",
+    "name": "real scoped Planner capacity and cost remain numeric in aligned filtered BI panels without personal data",
+    "line": 1420,
+    "timestamp": "2026-11-14T11:09:29.3117474Z",
+    "durationMs": 1317.97
+  },
+  "hasCompletedBunSummary": true,
+  "requestedButNotObserved": [],
+  "observedButNotRequested": [],
+  "ownObservedCounts": {
+    "pass": 14,
+    "fail": 0,
+    "skip": 0,
+    "todo": 0
+  },
+  "observedTests": [
+    {
+      "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "status": "pass",
+      "name": "record-only replay binds C10 coverage, complete source closure and both fresh observations",
+      "line": 830,
+      "timestamp": "2026-11-14T10:49:18.6353917Z",
+      "durationMs": 25.95
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "status": "pass",
+      "name": "recursive read callbacks are bounded before a second stored read, and release their guard",
+      "line": 831,
+      "timestamp": "2026-11-14T10:49:18.6406846Z",
+      "durationMs": 4.0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "status": "pass",
+      "name": "2 independent C17 replays in one binding do not consume ancestral depth",
+      "line": 832,
+      "timestamp": "2026-11-14T10:49:18.6481779Z",
+      "durationMs": 7.35
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "status": "pass",
+      "name": "17 independent C17 replays in one binding do not consume ancestral depth",
+      "line": 833,
+      "timestamp": "2026-11-14T10:49:18.6841130Z",
+      "durationMs": 37.36
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "status": "pass",
+      "name": "the C17 depth bound applies to a recursive path and is released after refusal",
+      "line": 834,
+      "timestamp": "2026-11-14T10:49:18.6888778Z",
+      "durationMs": 4.81
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "status": "pass",
+      "name": "evidence outside the persisted closure and another project never reaches replay",
+      "line": 835,
+      "timestamp": "2026-11-14T10:49:18.6916243Z",
+      "durationMs": 2.71
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "status": "pass",
+      "name": "cyclic calculation references and malformed request fields are unavailable without replay",
+      "line": 836,
+      "timestamp": "2026-11-14T10:49:18.6954259Z",
+      "durationMs": 3.84
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "status": "pass",
+      "name": "callback request mutation is detached and private failures never escape the resolver",
+      "line": 837,
+      "timestamp": "2026-11-14T10:49:18.7001666Z",
+      "durationMs": 4.65
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "status": "pass",
+      "name": "cancellation and revocation after replay never issue calculation evidence",
+      "line": 838,
+      "timestamp": "2026-11-14T10:49:18.7022985Z",
+      "durationMs": 2.15
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "status": "pass",
+      "name": "nested C17 requires replay for calculations and canonical authorization for ledger leaves",
+      "line": 839,
+      "timestamp": "2026-11-14T10:49:18.7363743Z",
+      "durationMs": 34.0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "status": "pass",
+      "name": "nested C17 rejects a digest-valid calculation that cannot reproduce its stored result",
+      "line": 840,
+      "timestamp": "2026-11-14T10:49:18.7421247Z",
+      "durationMs": 5.77
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "status": "pass",
+      "name": "nested C17 rejects semantic ancestor cycles and releases traversal guards",
+      "line": 841,
+      "timestamp": "2026-11-14T10:49:18.7596546Z",
+      "durationMs": 17.56
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "status": "pass",
+      "name": "nested C17 refuses revoked lineage after replay while the caller remains authorized",
+      "line": 842,
+      "timestamp": "2026-11-14T10:49:18.7724914Z",
+      "durationMs": 12.8
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+      "status": "pass",
+      "name": "C10 keeps the 30000 apparent savings conditional until training changes 210000 to 250000",
+      "line": 845,
+      "timestamp": "2026-11-14T10:49:19.0731414Z",
+      "durationMs": 102.07
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+      "status": "pass",
+      "name": "composed Planner operations preserve all fixed costs while proving the real 55000 boundary",
+      "line": 848,
+      "timestamp": "2026-11-14T10:50:31.4999044Z",
+      "durationMs": 72417.85
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+      "status": "fail",
+      "name": "composed Planner threshold includes confirmed training once and distinguishes zero from missing price",
+      "line": 849,
+      "timestamp": "2026-11-14T10:54:23.5708090Z",
+      "durationMs": 232071.18,
+      "timeoutMs": 180000
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+      "status": "pass",
+      "name": "composed interval and threshold refuse changing fixed costs or source revocation",
+      "line": 851,
+      "timestamp": "2026-11-14T10:55:16.5170053Z",
+      "durationMs": 52946.2
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+      "status": "pass",
+      "name": "composed proof refuses duplicate and indirect writes to the varying parameter",
+      "line": 852,
+      "timestamp": "2026-11-14T10:56:10.4446000Z",
+      "durationMs": 53927.57
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "status": "pass",
+      "name": "source-only scenario publishes the covered confirmed total and replays through persistence and C17 without applying a choice",
+      "line": 855,
+      "timestamp": "2026-11-14T10:56:59.1897566Z",
+      "durationMs": 48742.0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "status": "pass",
+      "name": "source-only zero stays confirmed while omitted coverage and null never become a complete total",
+      "line": 856,
+      "timestamp": "2026-11-14T10:58:34.8438499Z",
+      "durationMs": 95654.24
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "status": "pass",
+      "name": "a source-only observation refuses a coverage change after the real comparison recheck",
+      "line": 857,
+      "timestamp": "2026-11-14T10:59:22.7273579Z",
+      "durationMs": 47883.5
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "status": "pass",
+      "name": "replace and include qualify an absent forecast from the real post-command copy, including explicit zero",
+      "line": 860,
+      "timestamp": "2026-11-14T10:59:23.0874593Z",
+      "durationMs": 354.42
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "status": "pass",
+      "name": "a row save preserves an untouched missing December while an explicit December zero is hypothetical",
+      "line": 861,
+      "timestamp": "2026-11-14T10:59:23.4386482Z",
+      "durationMs": 351.18
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "status": "pass",
+      "name": "deferral quantifies its origin and destination while preserving a third missing month on the same row",
+      "line": 862,
+      "timestamp": "2026-11-14T10:59:23.5174677Z",
+      "durationMs": 78.8
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "status": "pass",
+      "name": "an explicit foreign forecast without FX stays absent instead of publishing the engine's legacy zero",
+      "line": 863,
+      "timestamp": "2026-11-14T10:59:23.6100728Z",
+      "durationMs": 92.54
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "status": "pass",
+      "name": "a hypothetical HR forecast remains quantifiable when its independent budget rate is absent",
+      "line": 864,
+      "timestamp": "2026-11-14T10:59:23.7677950Z",
+      "durationMs": 157.74
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "status": "pass",
+      "name": "a self-comparison reads once per source observation and still rejects revocation at final revalidation",
+      "line": 865,
+      "timestamp": "2026-11-14T10:59:23.8058125Z",
+      "durationMs": 38.07
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+      "status": "pass",
+      "name": "promotion commits the reviewed alternative, result and audit event together, and reconciles retries",
+      "line": 868,
+      "timestamp": "2026-11-14T10:59:23.8352808Z",
+      "durationMs": 22.93
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+      "status": "pass",
+      "name": "human acceptance commits the existing analysis ledger event and outbox atomically",
+      "line": 871,
+      "timestamp": "2026-11-14T10:59:23.8583212Z",
+      "durationMs": 21.71
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "status": "pass",
+      "name": "real Planner mutation and case receipt commit atomically across surfaces",
+      "line": 874,
+      "timestamp": "2026-11-14T10:59:23.9105343Z",
+      "durationMs": 47.74
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "status": "pass",
+      "name": "human-confirmed conditional choice persists its C10 caveat and provenance",
+      "line": 877,
+      "timestamp": "2026-11-14T10:59:23.9287755Z",
+      "durationMs": 16.1
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "status": "pass",
+      "name": "C10 complete coverage needs every category and fresh source resolution",
+      "line": 878,
+      "timestamp": "2026-11-14T10:59:23.9293920Z",
+      "durationMs": 0.63
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+      "status": "pass",
+      "name": "portfolio history can retain a result at the same case version and still requires private provenance and current access",
+      "line": 881,
+      "timestamp": "2026-11-14T10:59:23.9783057Z",
+      "durationMs": 46.2
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "status": "pass",
+      "name": "human-approved prepared dashboard command and receipt commit together",
+      "line": 884,
+      "timestamp": "2026-11-14T10:59:24.0267056Z",
+      "durationMs": 45.75
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+      "status": "pass",
+      "name": "conditioned scenarios cannot carry an incomplete coverage seal",
+      "line": 887,
+      "timestamp": "2026-11-14T10:59:24.0288294Z",
+      "durationMs": 0.75
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+      "status": "pass",
+      "name": "an unassigned scenario component prevents complete coverage",
+      "line": 888,
+      "timestamp": "2026-11-14T10:59:24.0291844Z",
+      "durationMs": 0.37
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+      "status": "pass",
+      "name": "reassessment uses scenario entries and keeps hypothetical totals conditioned",
+      "line": 889,
+      "timestamp": "2026-11-14T10:59:24.0307097Z",
+      "durationMs": 1.47
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+      "status": "pass",
+      "name": "human classification is bound to real components, source identity and fresh evidence",
+      "line": 892,
+      "timestamp": "2026-11-14T10:59:24.0328437Z",
+      "durationMs": 1.8
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "status": "pass",
+      "name": "C10 derives omitted renewal costs, distinguishes supported zero, and fails closed on bad evidence",
+      "line": 895,
+      "timestamp": "2026-11-14T10:59:24.0355459Z",
+      "durationMs": 1.09
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "status": "pass",
+      "name": "persisted comparison results are scoped to current case, principal, and source access",
+      "line": 896,
+      "timestamp": "2026-11-14T10:59:24.0546996Z",
+      "durationMs": 19.16
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+      "status": "pass",
+      "name": "proposal coverage is durable, scoped, and fenced against changed sources",
+      "line": 899,
+      "timestamp": "2026-11-14T10:59:24.0971217Z",
+      "durationMs": 40.14
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "status": "pass",
+      "name": "portfolio historical provenance > accepts an original binding and selection when current case and evidence remain authorized",
+      "line": 902,
+      "timestamp": "2026-11-14T10:59:24.1019191Z",
+      "durationMs": 2.24
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "status": "pass",
+      "name": "portfolio historical provenance > allows preserved evidence after a source change while the case remains at the original version",
+      "line": 903,
+      "timestamp": "2026-11-14T10:59:24.1034439Z",
+      "durationMs": 1.51
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "status": "pass",
+      "name": "portfolio historical provenance > rejects a preserved result from a future case version",
+      "line": 904,
+      "timestamp": "2026-11-14T10:59:24.1036701Z",
+      "durationMs": 0.23
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "status": "pass",
+      "name": "portfolio historical provenance > rejects a candidate whose case incarnation was replaced",
+      "line": 905,
+      "timestamp": "2026-11-14T10:59:24.1040630Z",
+      "durationMs": 0.41
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "status": "pass",
+      "name": "portfolio historical provenance > rejects revoked historical sources",
+      "line": 906,
+      "timestamp": "2026-11-14T10:59:24.1072969Z",
+      "durationMs": 3.23
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "status": "pass",
+      "name": "portfolio historical provenance > rejects a historical candidate missing from the authorized case",
+      "line": 907,
+      "timestamp": "2026-11-14T10:59:24.1084619Z",
+      "durationMs": 1.15
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "status": "pass",
+      "name": "portfolio historical provenance > rejects a same-version alternative whose original payload changed",
+      "line": 908,
+      "timestamp": "2026-11-14T10:59:24.1088832Z",
+      "durationMs": 0.41
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "status": "pass",
+      "name": "portfolio historical provenance > rejects ambiguous duplicate alternatives and a case older than the candidate",
+      "line": 909,
+      "timestamp": "2026-11-14T10:59:24.1096545Z",
+      "durationMs": 0.74
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "status": "pass",
+      "name": "portfolio historical provenance > rejects a binding supplied for a different current owner case",
+      "line": 910,
+      "timestamp": "2026-11-14T10:59:24.1098525Z",
+      "durationMs": 0.21
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "status": "pass",
+      "name": "portfolio historical provenance > keeps the first candidate observation when the provider reuses mutable objects",
+      "line": 911,
+      "timestamp": "2026-11-14T10:59:24.1109023Z",
+      "durationMs": 1.03
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "status": "pass",
+      "name": "portfolio historical provenance > rejects a binding whose digest does not cover its contents",
+      "line": 912,
+      "timestamp": "2026-11-14T10:59:24.1112250Z",
+      "durationMs": 0.33
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "status": "pass",
+      "name": "portfolio historical provenance > rejects a selection that differs from the binding proof",
+      "line": 913,
+      "timestamp": "2026-11-14T10:59:24.1115495Z",
+      "durationMs": 0.32
+    },
+    {
+      "file": "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "status": "pass",
+      "name": "portfolio historical provenance > rejects a binding that changes between provenance passes",
+      "line": 914,
+      "timestamp": "2026-11-14T10:59:24.1125633Z",
+      "durationMs": 1.01
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "status": "pass",
+      "name": "Planner's canonical known-subtotal solver proves the 55000 boundary; its integrated sensitivity still discloses pending coverage",
+      "line": 917,
+      "timestamp": "2026-11-14T11:01:00.8029379Z",
+      "durationMs": 96687.79
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "status": "fail",
+      "name": "real Planner results retain omitted training as unknown, then include its 40000 source without mutating the original result",
+      "line": 918,
+      "timestamp": "2026-11-14T11:04:50.4031532Z",
+      "durationMs": 229599.38,
+      "timeoutMs": 180000
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "status": "pass",
+      "name": "real Planner and persisted BI distinguish explicit zero training from an unresolved price",
+      "line": 920,
+      "timestamp": "2026-11-14T11:07:44.4959797Z",
+      "durationMs": 174093.67
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "status": "pass",
+      "name": "source-specific revocation with a valid UI session withholds persisted BI values and coverage",
+      "line": 921,
+      "timestamp": "2026-11-14T11:09:11.4454232Z",
+      "durationMs": 86949.41
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/planner-origins.test.ts",
+      "status": "pass",
+      "name": "real Planner zero and nonzero contributions expose explicit A/B origins through waterfall, bars, tables and current C17 selection",
+      "line": 1304,
+      "timestamp": "2026-11-14T11:09:27.9899863Z",
+      "durationMs": 16496.46
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+      "status": "pass",
+      "name": "real scoped Planner capacity and cost remain numeric in aligned filtered BI panels without personal data",
+      "line": 1420,
+      "timestamp": "2026-11-14T11:09:29.3117474Z",
+      "durationMs": 1317.97
+    }
+  ],
+  "failures": [
+    {
+      "file": "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+      "status": "fail",
+      "name": "composed Planner threshold includes confirmed training once and distinguishes zero from missing price",
+      "line": 849,
+      "timestamp": "2026-11-14T10:54:23.5708090Z",
+      "durationMs": 232071.18,
+      "timeoutMs": 180000
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "status": "fail",
+      "name": "real Planner results retain omitted training as unknown, then include its 40000 source without mutating the original result",
+      "line": 918,
+      "timestamp": "2026-11-14T11:04:50.4031532Z",
+      "durationMs": 229599.38,
+      "timeoutMs": 180000
+    }
+  ],
+  "fixtureTrace": {
+    "observations": [],
+    "parseErrors": [],
+    "lastByLabel": {},
+    "maximumObservedSerializedStateBytes": null,
+    "boundary": "Counts and inclusive overlapping wall durations are fixture instrumentation; serialized state bytes are not sampled process memory or exclusive CPU time."
+  }
+}

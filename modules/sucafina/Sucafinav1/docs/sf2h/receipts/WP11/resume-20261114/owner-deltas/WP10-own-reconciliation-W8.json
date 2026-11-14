@@ -1,0 +1,87 @@
+{
+  "schema": "wp11-own-seam-reconciliation-v1",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "pr": 32,
+    "commit": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+    "inputs": [
+      {
+        "observedFile": "noop-md.md",
+        "gitBlob": "f2b972355daadec0e30256a033a2824910e7220f",
+        "sha256": "349a04f668d8827acae13dc3213d8c408ba64bb7174b358f545eca8102a99e6a"
+      },
+      {
+        "observedFile": "noop-patch.remote-exact.patch",
+        "gitBlob": "3161c93c629249105a358d7acbcc849bc352f12d",
+        "sha256": "88e84008d2412b54fc4ff68d7667ef7420ee300c361232374a46ffe5c19085a5",
+        "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/wp11-noop-promotion-coverage.patch",
+        "normalizationReconciliation": "Earlier scratch copy omitted the last blank line. Exact connector bytes were re-materialized and matched the published git blob before this receipt."
+      },
+      {
+        "observedFile": "hot-topic-patch.patch",
+        "gitBlob": "b83d1f95567bc8fce0758c07fd88d22117a4ce3f",
+        "sha256": "90158263803613f9ac289487848573ac70c0809af7fdf5ff301645aad7e7b5d8"
+      }
+    ]
+  },
+  "baseProductSha": "2bf0197c5d607b43063c36e1c8fef9e769c716ca",
+  "changes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "gitBlob": "e0840d775274ea73c6b938711764c69593dadca0",
+      "sha256": "c1270b39da0574403f7461e007c14e9fb19c8726aa949f938d09879df3988813",
+      "bytes": 39202
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "gitBlob": "d8a151c558227b3bd2612dbb6caba993efa85783",
+      "sha256": "45eb7d1418a0f62ec8f361e9d78a3ed09a98e9d48318db0c2a7b986493fb84fa",
+      "bytes": 20044
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "gitBlob": "991a7fb18f9e8e7372bd2e0193b6727ab6633b26",
+      "sha256": "067e2120174c4767a18cc0714e52a81818b8872855400d79ddb8a246568e0a79",
+      "bytes": 22644
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "gitBlob": "ad9f8aa17a1ece912132d4c2453547693697716f",
+      "sha256": "f08b3293538d2e22382dd394f8a16fb9ca90c90356dc984707656d0f4310f61f",
+      "bytes": 20251
+    }
+  ],
+  "decisions": [
+    {
+      "finding": "ASTRA-WP10-PROMOTION-PROOF-01",
+      "resolution": "Own mutation now always obtains current producer entries and canonical reassessment when coverageEvidence exists. Source-only equality no longer skips the commit proof. Missing proof, source drift, authority revocation and C08 drift remain refusals."
+    },
+    {
+      "finding": "Dashboard Hot Topic snapshot mismatch",
+      "resolution": "Own draft transaction consumes Dashboard snapshot with cases/preferences CAS."
+    },
+    {
+      "finding": "Independent readCurrent/list egress races",
+      "resolution": "Final joint C08 observations after asynchronous callbacks reject a replaced draft while source and authority remain otherwise valid."
+    }
+  ],
+  "reviewReceipt": "independent-review-W8.json",
+  "validationState": "HOSTED_W8_PENDING",
+  "ownerRunObservation": {
+    "runId": 43584781236,
+    "jobId": 132416826537,
+    "productSha": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+    "pass": 36,
+    "fail": 11,
+    "tests": 47,
+    "files": 15,
+    "limit": "Seven BI HTTP409 observations did not print a response reason. The relationship to missing coverage proof is a static inference, not an observed owner error body."
+  },
+  "boundaries": [
+    "No authored foreign runtime edits.",
+    "No local product tests or typecheck.",
+    "Explicit fixture human admissions do not establish browser/native execution.",
+    "No canonical monetary formula duplicated.",
+    "Static regression review and source hashes are not hosted runtime PASS."
+  ]
+}

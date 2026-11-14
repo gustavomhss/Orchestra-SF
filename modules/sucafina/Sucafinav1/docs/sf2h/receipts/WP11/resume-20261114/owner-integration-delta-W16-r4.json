@@ -1,0 +1,1309 @@
+{
+  "schema": "wp11-owner-integration-delta-r4",
+  "status": "UNEXECUTED_OWNER_INTEGRATION_PROPOSAL",
+  "candidateSha": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+  "pins": {
+    "WP10_compose": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+    "WP10_prior_source_review": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+    "WP13_historical_candidate_optional": "d697bcc1076a62375cbf0439376c9f0a4f81173f",
+    "WP13_domain_handoff": "4a7e22c4462cc5e65464b6b5026e222a483cc231",
+    "WP13_same_version_consumed": "46c904ead4e9b363422f6739258e492913ae6e2e",
+    "WP04_prepared_producer_consumed": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+    "WP11_candidate": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+    "Finance_reviewed_not_intaken_refresh": "c449efc092e507fca2b4f61d1e7ce057faf05c89"
+  },
+  "sourceFiles": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "pin": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "cache": "/workspace/scratch/c3f9350f32d4/seams/owner-refresh-ed10/apps/cli/src/sucafina-product/host-context.ts",
+      "sha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+      "verification": "MCP_FETCH_AT_FIXED_PIN_PLUS_RECOMPUTED_GIT_BLOB",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/apps/cli/src/sucafina-product/host-context.ts",
+      "unchangedThroughHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "unchangedEvidence": {
+        "path": "seams/final-owner-refresh-20261114-1233/wp10-metadata.json",
+        "sha256": "893da2bcb69e9097a7276c76bf1e4b95e0de1a238df180a23b6d16f2c1806f3d"
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "pin": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "blob": "5b3de578ce8204e8985076fe72240fdbc4d47286",
+      "cache": "/workspace/scratch/c3f9350f32d4/seams/owner-refresh-ed10/apps/cli/src/sucafina-product/extended-http.ts",
+      "sha256": "a7d0b03dd98c320a44bd689d9c18fbe197cfac16411c6298f12013d12daaaa9c",
+      "verification": "MCP_FETCH_AT_FIXED_PIN_PLUS_RECOMPUTED_GIT_BLOB",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/apps/cli/src/sucafina-product/extended-http.ts",
+      "unchangedThroughHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "unchangedEvidence": {
+        "path": "seams/final-owner-refresh-20261114-1233/wp10-metadata.json",
+        "sha256": "893da2bcb69e9097a7276c76bf1e4b95e0de1a238df180a23b6d16f2c1806f3d"
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "pin": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "blob": "6facc71b1351aea04ed3e7d51d1d0ed5d81c24d9",
+      "cache": "/workspace/scratch/c3f9350f32d4/requirements/final-seam-review/35b9fd4/apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "sha256": "9b7e36cc1ba84d075bda947151f7c3ca63c34ef6616596ec1c9107760e3c8b70",
+      "verification": "CACHED_MCP_PIN_BLOB_REVERIFIED; UNCHANGED_IN_COMPLETE_35b9_TO_ed10_COMPARE",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "equivalentAtNewPin": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "unchangedThroughHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "unchangedEvidence": {
+        "path": "seams/final-owner-refresh-20261114-1233/wp10-metadata.json",
+        "sha256": "893da2bcb69e9097a7276c76bf1e4b95e0de1a238df180a23b6d16f2c1806f3d"
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "pin": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+      "cache": "/workspace/scratch/c3f9350f32d4/requirements/final-seam-review/35b9fd4/apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "sha256": "219b48f070e8d42fef2308667928c75a813807821d61f557a870af0abb4a1a0d",
+      "verification": "CACHED_MCP_PIN_BLOB_REVERIFIED; UNCHANGED_IN_COMPLETE_35b9_TO_ed10_COMPARE",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "equivalentAtNewPin": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "unchangedThroughHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "unchangedEvidence": {
+        "path": "seams/final-owner-refresh-20261114-1233/wp10-metadata.json",
+        "sha256": "893da2bcb69e9097a7276c76bf1e4b95e0de1a238df180a23b6d16f2c1806f3d"
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+      "pin": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "blob": "a57e9d39f81e8a064f903765e70533bdffea4ba2",
+      "cache": "/workspace/scratch/c3f9350f32d4/requirements/final-seam-review/35b9fd4/apps/cli/src/sucafina-product/extended-business-services.ts",
+      "sha256": "69762e50794e88f70407095367f1c63cab1e6638896f9ec10e866740605a9d9d",
+      "verification": "CACHED_MCP_PIN_BLOB_REVERIFIED; UNCHANGED_IN_COMPLETE_35b9_TO_ed10_COMPARE",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/extended-business-services.ts",
+      "equivalentAtNewPin": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "unchangedThroughHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "unchangedEvidence": {
+        "path": "seams/final-owner-refresh-20261114-1233/wp10-metadata.json",
+        "sha256": "893da2bcb69e9097a7276c76bf1e4b95e0de1a238df180a23b6d16f2c1806f3d"
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/change-proposal-services.ts",
+      "pin": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "blob": "4ced95ae5b0be38626e59010f48909d54c95f4cd",
+      "cache": "/workspace/scratch/c3f9350f32d4/requirements/final-seam-review/35b9fd4/apps/cli/src/sucafina-product/change-proposal-services.ts",
+      "sha256": "ae9e64ca1380298cf2a8e0ae40b407ec59f1f13cfca4e6bd432faa2c6cfff65c",
+      "verification": "CACHED_MCP_PIN_BLOB_REVERIFIED; UNCHANGED_IN_COMPLETE_35b9_TO_ed10_COMPARE",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/change-proposal-services.ts",
+      "equivalentAtNewPin": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "unchangedThroughHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "unchangedEvidence": {
+        "path": "seams/final-owner-refresh-20261114-1233/wp10-metadata.json",
+        "sha256": "893da2bcb69e9097a7276c76bf1e4b95e0de1a238df180a23b6d16f2c1806f3d"
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-choice-http.ts",
+      "pin": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "blob": "ade98212eba04a8fe35624ea7e96214ec00a92ce",
+      "cache": "/workspace/scratch/c3f9350f32d4/requirements/final-seam-review/35b9fd4/apps/cli/src/sucafina-product/analysis-choice-http.ts",
+      "sha256": "092871b5424fa0368164f6147ad1a0ff1ce3a701d6aa99cca24a59101e00a809",
+      "verification": "CACHED_MCP_PIN_BLOB_REVERIFIED; UNCHANGED_IN_COMPLETE_35b9_TO_ed10_COMPARE",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/analysis-choice-http.ts",
+      "equivalentAtNewPin": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "unchangedThroughHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "unchangedEvidence": {
+        "path": "seams/final-owner-refresh-20261114-1233/wp10-metadata.json",
+        "sha256": "893da2bcb69e9097a7276c76bf1e4b95e0de1a238df180a23b6d16f2c1806f3d"
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-proposal-services.ts",
+      "pin": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "blob": "0a3e0280c0ff6175936b53a056aecc176b129390",
+      "cache": "/workspace/scratch/c3f9350f32d4/requirements/final-seam-review/35b9fd4/apps/cli/src/sucafina-product/decision-proposal-services.ts",
+      "sha256": "309f6b45a1d80709c24685af81a5af600cde7a000b49ead71ce3d7c04b3a0452",
+      "verification": "CACHED_MCP_PIN_BLOB_REVERIFIED; UNCHANGED_IN_COMPLETE_35b9_TO_ed10_COMPARE",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/decision-proposal-services.ts",
+      "equivalentAtNewPin": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "unchangedThroughHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "unchangedEvidence": {
+        "path": "seams/final-owner-refresh-20261114-1233/wp10-metadata.json",
+        "sha256": "893da2bcb69e9097a7276c76bf1e4b95e0de1a238df180a23b6d16f2c1806f3d"
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-change-services.ts",
+      "pin": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "blob": "46c95ba57b1daf726cdd4c1576d73e782827580d",
+      "cache": "/workspace/scratch/c3f9350f32d4/requirements/final-seam-review/35b9fd4/apps/cli/src/sucafina-product/decision-change-services.ts",
+      "sha256": "108387dcb20cb6c0a86abe2400eb4ee088fe6f516a9b8be0ebed58b20f91962e",
+      "verification": "CACHED_MCP_PIN_BLOB_REVERIFIED; UNCHANGED_IN_COMPLETE_35b9_TO_ed10_COMPARE",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/decision-change-services.ts",
+      "equivalentAtNewPin": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "unchangedThroughHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "unchangedEvidence": {
+        "path": "seams/final-owner-refresh-20261114-1233/wp10-metadata.json",
+        "sha256": "893da2bcb69e9097a7276c76bf1e4b95e0de1a238df180a23b6d16f2c1806f3d"
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-alternative-services.ts",
+      "pin": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "blob": "db35f76e454ecd85f26254c0371f62499e48caba",
+      "cache": "/workspace/scratch/c3f9350f32d4/requirements/final-seam-review/35b9fd4/apps/cli/src/sucafina-product/decision-alternative-services.ts",
+      "sha256": "e615cde3be3b82f58a85057726f0cc733d6aed3e5704b55f7655ebb7931b9d10",
+      "verification": "CACHED_MCP_PIN_BLOB_REVERIFIED; UNCHANGED_IN_COMPLETE_35b9_TO_ed10_COMPARE",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/decision-alternative-services.ts",
+      "equivalentAtNewPin": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "unchangedThroughHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "unchangedEvidence": {
+        "path": "seams/final-owner-refresh-20261114-1233/wp10-metadata.json",
+        "sha256": "893da2bcb69e9097a7276c76bf1e4b95e0de1a238df180a23b6d16f2c1806f3d"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+      "pin": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "blob": "caa3b783b41f95287bba8a4bab3c652c8375c320",
+      "cache": "/workspace/scratch/c3f9350f32d4/requirements/later-seams/modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+      "sha256": "ac1433763f818ccdd4c7d4c49cd71efa3ddec3781171d350b5b6e4b03dc7cf77",
+      "verification": "CACHED_MCP_PIN_BLOB_REVERIFIED",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c21a990c57b714cd60bb7f915beb6be51acbafdb/modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "pin": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+      "cache": "/workspace/scratch/c3f9350f32d4/requirements/later-seams/modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "sha256": "cc8dabe132377e30ca307dff6b043aeb61a8b5aba1e8caf30ae97446efbe20ae",
+      "verification": "CACHED_MCP_PIN_BLOB_REVERIFIED",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c21a990c57b714cd60bb7f915beb6be51acbafdb/modules/sucafina/Sucafinav1/product/portfolio/proof.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "pin": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "blob": "121438a5edc369090ce8ba4f4dce03b47655c970",
+      "cache": "/workspace/scratch/c3f9350f32d4/requirements/later-seams/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "sha256": "da13ba4737953b5e2f6f64fc88d8659ddeb52f2cd7af5b905deed8e4ac2944d2",
+      "verification": "CACHED_MCP_PIN_BLOB_REVERIFIED",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c21a990c57b714cd60bb7f915beb6be51acbafdb/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "pin": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "blob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+      "cache": "/workspace/scratch/c3f9350f32d4/requirements/later-seams/apps/cli/src/sucafina-product/business-services.ts",
+      "sha256": "c6911aa04b6b22750b2f320b680c3b4510ae4f230d29baba76932b4feca12811",
+      "verification": "CACHED_MCP_PIN_BLOB_REVERIFIED; UNCHANGED_IN_COMPLETE_35b9_TO_ed10_COMPARE",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/business-services.ts",
+      "equivalentAtNewPin": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "unchangedThroughHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "unchangedEvidence": {
+        "path": "seams/final-owner-refresh-20261114-1233/wp10-metadata.json",
+        "sha256": "893da2bcb69e9097a7276c76bf1e4b95e0de1a238df180a23b6d16f2c1806f3d"
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "pin": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "blob": "bc224c0b2830fe54a02c3b2bc356cb6bf2b1c327",
+      "cache": "/workspace/scratch/c3f9350f32d4/requirements/later-seams/apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "sha256": "ff4732ca4b8fc8f6b3ffdccc3b04584dbc6739524ab55162196049c30c2357ed",
+      "verification": "CACHED_MCP_PIN_BLOB_REVERIFIED; UNCHANGED_IN_COMPLETE_35b9_TO_ed10_COMPARE",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "equivalentAtNewPin": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "unchangedThroughHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "unchangedEvidence": {
+        "path": "seams/final-owner-refresh-20261114-1233/wp10-metadata.json",
+        "sha256": "893da2bcb69e9097a7276c76bf1e4b95e0de1a238df180a23b6d16f2c1806f3d"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "pin": "a3df1c494495f5fcc5a644caf2d88bc0e9e39fa4",
+      "blob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+      "cache": "/workspace/scratch/c3f9350f32d4/requirements/final-seam-review/a3df1c4/handoff-domain-integration.test.ts",
+      "sha256": "c99518ad2fd8a20e770b903c4107ad683034b7e4578a976238f75e40dcd9338a",
+      "verification": "CACHED_MCP_PIN_BLOB_REVERIFIED_AGAINST_EXACT_FULL_PATH_COMPARE_ENTRY",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a3df1c494495f5fcc5a644caf2d88bc0e9e39fa4/modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "unchangedThroughHead": "4a7e22c4462cc5e65464b6b5026e222a483cc231",
+      "unchangedEvidence": {
+        "path": "seams/final-owner-refresh-20261114-1233/wp13-metadata.json",
+        "sha256": "95e9ccd1ad5bb5fdb49aaed36555ab1bf68688fef5e280878f77e695513c706c"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/domain-handoff-failure-W8.json",
+      "pin": "a3df1c494495f5fcc5a644caf2d88bc0e9e39fa4",
+      "blob": "c4e473b7e2275121189592ff7677821c46d82b18",
+      "cache": "/workspace/scratch/c3f9350f32d4/requirements/final-seam-review/a3df1c4/domain-handoff-failure-W8.json",
+      "sha256": "61e95c8e6342f0b4f3b52a2941cb11bfdea1571477aecdfac785541c0f4543ac",
+      "verification": "CACHED_MCP_PIN_BLOB_REVERIFIED_AGAINST_EXACT_FULL_PATH_COMPARE_ENTRY",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a3df1c494495f5fcc5a644caf2d88bc0e9e39fa4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/domain-handoff-failure-W8.json",
+      "unchangedThroughHead": "4a7e22c4462cc5e65464b6b5026e222a483cc231",
+      "unchangedEvidence": {
+        "path": "seams/final-owner-refresh-20261114-1233/wp13-metadata.json",
+        "sha256": "95e9ccd1ad5bb5fdb49aaed36555ab1bf68688fef5e280878f77e695513c706c"
+      }
+    },
+    {
+      "owner": "wp10",
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "pin": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "expectedBlob": "299979047340dd76d7cc2db667b826da675a1e2e",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/wp10/apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "blob": "299979047340dd76d7cc2db667b826da675a1e2e",
+      "sha256": "291deebb5dcb128ed8aa7bba35cdda68203f838c33c3afbb4a4bfacd77708013",
+      "bytes": 16956,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f9990ecc7ade0d64122633d51258ddafe2c93802/apps/cli/src/sucafina-product/analysis-stale-commit.ts"
+    },
+    {
+      "owner": "wp10base",
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "pin": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "expectedBlob": "f40a30aca8668f3ef7636ca8af4bf65d4e987217",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/wp10base/apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "blob": "f40a30aca8668f3ef7636ca8af4bf65d4e987217",
+      "sha256": "8c237876e2a2636ab0634cf9599bc136300253c621784fa4496d4636dc73e311",
+      "bytes": 13190,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/apps/cli/src/sucafina-product/analysis-stale-commit.ts"
+    },
+    {
+      "owner": "wp10",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "pin": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "expectedBlob": "d8a151c558227b3bd2612dbb6caba993efa85783",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/wp10/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "blob": "d8a151c558227b3bd2612dbb6caba993efa85783",
+      "sha256": "45eb7d1418a0f62ec8f361e9d78a3ed09a98e9d48318db0c2a7b986493fb84fa",
+      "bytes": 20044,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f9990ecc7ade0d64122633d51258ddafe2c93802/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts"
+    },
+    {
+      "owner": "wp10",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "pin": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "expectedBlob": "3e7575cddfd52d9f5751c0ee6179c747bb318c98",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/wp10/modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "blob": "3e7575cddfd52d9f5751c0ee6179c747bb318c98",
+      "sha256": "da9865c8903e9e3f159bded7f4a1604a531df3be8ba5bb337b6cdf5e61fc6f0d",
+      "bytes": 39192,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f9990ecc7ade0d64122633d51258ddafe2c93802/modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+    },
+    {
+      "owner": "wp10",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "pin": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "expectedBlob": "bc32bfb39e8b6012230ee0d136bed142340e5d89",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/wp10/modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "bc32bfb39e8b6012230ee0d136bed142340e5d89",
+      "sha256": "0bc0d34e79bac608968b088030d38ba3bf75ca6a49e388acef6b6b9e8b55705f",
+      "bytes": 18398,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f9990ecc7ade0d64122633d51258ddafe2c93802/modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
+    },
+    {
+      "owner": "wp10",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "pin": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "expectedBlob": "368a7f2e207c4f551ac3c6f77424797c97f794f3",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/wp10/modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "blob": "368a7f2e207c4f551ac3c6f77424797c97f794f3",
+      "sha256": "97cd2aa7cb2a70004c75b0f223889347553ff6ee33a5b12eee5220ce60882ceb",
+      "bytes": 13044,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f9990ecc7ade0d64122633d51258ddafe2c93802/modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts"
+    },
+    {
+      "owner": "wp10",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/round11-held-dependencies.json",
+      "pin": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "expectedBlob": "d8de64ff1b370116cae73d16e4e7ad1dffc5203d",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/wp10/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/round11-held-dependencies.json",
+      "blob": "d8de64ff1b370116cae73d16e4e7ad1dffc5203d",
+      "sha256": "3ead746102d2d0b00894b8d43cd5184478cc27fcaaaa39654a6e1edf43df2f5a",
+      "bytes": 5319,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f9990ecc7ade0d64122633d51258ddafe2c93802/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/round11-held-dependencies.json"
+    },
+    {
+      "owner": "wp10",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/c17-timeout-diagnosis.json",
+      "pin": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "expectedBlob": "20b43ed62a7ba2f76313698a59bc2d78e8dc108a",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/wp10/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/c17-timeout-diagnosis.json",
+      "blob": "20b43ed62a7ba2f76313698a59bc2d78e8dc108a",
+      "sha256": "c5ba0f459b72998a5aa244526e71e0210e46c22faef66526955543e03d9266cd",
+      "bytes": 28834,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f9990ecc7ade0d64122633d51258ddafe2c93802/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/owner-findings/c17-timeout-diagnosis.json"
+    },
+    {
+      "owner": "finance",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "pin": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "expectedBlob": "7a5100d9e60a81f654cc31714efd2b1e7d0b68f5",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/finance/modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "blob": "7a5100d9e60a81f654cc31714efd2b1e7d0b68f5",
+      "sha256": "d8aa020d994c2ed6aa489a9b4968c44cfd3c0be4f3d76caaefc8b0b7470b6f4d",
+      "bytes": 27779,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c449efc092e507fca2b4f61d1e7ce057faf05c89/modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts"
+    },
+    {
+      "owner": "finance",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "pin": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "expectedBlob": "2338917427497733e4bd88aec852985206cce066",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/finance/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "blob": "2338917427497733e4bd88aec852985206cce066",
+      "sha256": "ddaa4cc2a68b466179408513c3f96614265251916e5a31f1638e1c6ebf828eca",
+      "bytes": 3665,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c449efc092e507fca2b4f61d1e7ce057faf05c89/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts"
+    },
+    {
+      "owner": "finance",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "pin": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "expectedBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/finance/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "sha256": "31559515ade97893610d6ccfef80bba7b4eb5c1cc096e6840013fb1309cdbc48",
+      "bytes": 25425,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c449efc092e507fca2b4f61d1e7ce057faf05c89/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts"
+    },
+    {
+      "owner": "finance",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/current-choice-s17-safe-diagnostic-files-ready.json",
+      "pin": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "expectedBlob": "2a04c46be79131cbbd150a5167318c73ffedac57",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/finance/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/current-choice-s17-safe-diagnostic-files-ready.json",
+      "blob": "2a04c46be79131cbbd150a5167318c73ffedac57",
+      "sha256": "87ffc3b16f069505093bc6078f7d165b0f5d4e8063fd9472105744bc7d5df16f",
+      "bytes": 1215,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c449efc092e507fca2b4f61d1e7ce057faf05c89/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/current-choice-s17-safe-diagnostic-files-ready.json"
+    },
+    {
+      "owner": "finance",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/review-current-matcher-boundary.json",
+      "pin": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "expectedBlob": "b981b75193a86b1257dad705ae64a637f8d93a75",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/finance/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/review-current-matcher-boundary.json",
+      "blob": "b981b75193a86b1257dad705ae64a637f8d93a75",
+      "sha256": "0d78c3619eda93a8ce82b0d5d07d950ee9a13d118f76525dc7e6952f389f17a7",
+      "bytes": 5505,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c449efc092e507fca2b4f61d1e7ce057faf05c89/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/review-current-matcher-boundary.json"
+    },
+    {
+      "owner": "intelligence",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "pin": "d697bcc1076a62375cbf0439376c9f0a4f81173f",
+      "expectedBlob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/intelligence/modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "blob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+      "sha256": "b4d5f22cc08da980addedbe25c72428f112162993a977a0e5674892ea67dedd8",
+      "bytes": 11948,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d697bcc1076a62375cbf0439376c9f0a4f81173f/modules/sucafina/Sucafinav1/product/portfolio/product.ts"
+    },
+    {
+      "owner": "intelligence",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+      "pin": "d697bcc1076a62375cbf0439376c9f0a4f81173f",
+      "expectedBlob": "aedc80310eee2752d067dd52afa6312a9558b87a",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/intelligence/modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+      "blob": "aedc80310eee2752d067dd52afa6312a9558b87a",
+      "sha256": "cc40071c5f25343ee587ff6d86cec61ac2bdd6e364b3d488296303e22ebaee46",
+      "bytes": 22284,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d697bcc1076a62375cbf0439376c9f0a4f81173f/modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts"
+    },
+    {
+      "owner": "intelligence",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "pin": "d697bcc1076a62375cbf0439376c9f0a4f81173f",
+      "expectedBlob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/intelligence/modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+      "sha256": "cc8dabe132377e30ca307dff6b043aeb61a8b5aba1e8caf30ae97446efbe20ae",
+      "bytes": 13693,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d697bcc1076a62375cbf0439376c9f0a4f81173f/modules/sucafina/Sucafinav1/product/portfolio/proof.ts"
+    },
+    {
+      "owner": "intelligence",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+      "pin": "d697bcc1076a62375cbf0439376c9f0a4f81173f",
+      "expectedBlob": "caa3b783b41f95287bba8a4bab3c652c8375c320",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/intelligence/modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+      "blob": "caa3b783b41f95287bba8a4bab3c652c8375c320",
+      "sha256": "ac1433763f818ccdd4c7d4c49cd71efa3ddec3781171d350b5b6e4b03dc7cf77",
+      "bytes": 7815,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d697bcc1076a62375cbf0439376c9f0a4f81173f/modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts"
+    },
+    {
+      "owner": "wp13",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "pin": "4a7e22c4462cc5e65464b6b5026e222a483cc231",
+      "expectedBlob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/wp13/modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "blob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+      "sha256": "b4d5f22cc08da980addedbe25c72428f112162993a977a0e5674892ea67dedd8",
+      "bytes": 11948,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4a7e22c4462cc5e65464b6b5026e222a483cc231/modules/sucafina/Sucafinav1/product/portfolio/product.ts"
+    },
+    {
+      "owner": "wp13",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+      "pin": "4a7e22c4462cc5e65464b6b5026e222a483cc231",
+      "expectedBlob": "aedc80310eee2752d067dd52afa6312a9558b87a",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/wp13/modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+      "blob": "aedc80310eee2752d067dd52afa6312a9558b87a",
+      "sha256": "cc40071c5f25343ee587ff6d86cec61ac2bdd6e364b3d488296303e22ebaee46",
+      "bytes": 22284,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4a7e22c4462cc5e65464b6b5026e222a483cc231/modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts"
+    },
+    {
+      "owner": "wp13",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "pin": "4a7e22c4462cc5e65464b6b5026e222a483cc231",
+      "expectedBlob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/wp13/modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+      "sha256": "cc8dabe132377e30ca307dff6b043aeb61a8b5aba1e8caf30ae97446efbe20ae",
+      "bytes": 13693,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4a7e22c4462cc5e65464b6b5026e222a483cc231/modules/sucafina/Sucafinav1/product/portfolio/proof.ts"
+    },
+    {
+      "owner": "wp13",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+      "pin": "4a7e22c4462cc5e65464b6b5026e222a483cc231",
+      "expectedBlob": "caa3b783b41f95287bba8a4bab3c652c8375c320",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/wp13/modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+      "blob": "caa3b783b41f95287bba8a4bab3c652c8375c320",
+      "sha256": "ac1433763f818ccdd4c7d4c49cd71efa3ddec3781171d350b5b6e4b03dc7cf77",
+      "bytes": 7815,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4a7e22c4462cc5e65464b6b5026e222a483cc231/modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts"
+    },
+    {
+      "owner": "wp13",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/wp10-consumer-bundle-W13.NOT_APPLIED.json",
+      "pin": "4a7e22c4462cc5e65464b6b5026e222a483cc231",
+      "expectedBlob": "3a167b2df969f1f0cee90c7caf5bf573d2ecea3e",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/wp13/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/wp10-consumer-bundle-W13.NOT_APPLIED.json",
+      "blob": "3a167b2df969f1f0cee90c7caf5bf573d2ecea3e",
+      "sha256": "890c3e365bc966ab9b18c085e34d8124ea920838f6d1b0942330b916f2dfcd23",
+      "bytes": 5361,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4a7e22c4462cc5e65464b6b5026e222a483cc231/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/wp10-consumer-bundle-W13.NOT_APPLIED.json"
+    },
+    {
+      "owner": "wp13",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/finance-term-sensitivity.NOT_APPLIED.json",
+      "pin": "4a7e22c4462cc5e65464b6b5026e222a483cc231",
+      "expectedBlob": "de17a3059e588ce32d21866f6707cfc6d94d95f9",
+      "cachePath": "/workspace/scratch/c3f9350f32d4/seams/final-owner-refresh-20261114-1233/sources/wp13/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/finance-term-sensitivity.NOT_APPLIED.json",
+      "blob": "de17a3059e588ce32d21866f6707cfc6d94d95f9",
+      "sha256": "f3cba8cd8c3407a916994b14aaa3dbf8fb20ce6f9599979f0365f70ac91b2ae2",
+      "bytes": 5617,
+      "verifiedExact": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4a7e22c4462cc5e65464b6b5026e222a483cc231/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/finance-term-sensitivity.NOT_APPLIED.json"
+    }
+  ],
+  "ownCandidateSources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/product.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "1ba2255fd5792cf78d161fe82233ed21cff54f04",
+      "sha256": "23d905cbe2267b7a269ec2b4dba4bf973fe3d0f40bb5675944dedf0ee3cde1f1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/product/decisions/product.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/host-product.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "74450e928e9bdf67df701f0a1e790ce5829016c7",
+      "sha256": "e26f4b4d0fe6e5ae011835c285a5d378b40a96cbfd866b989c22281849d43e99",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/product/decisions/host-product.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "596512b4e12c094fd178ea845f4b560bbf23a348",
+      "sha256": "bf4b7f397e8376451836cfb6f292577aac63350a23c9afe9a778a87175452fa9",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/product/decisions/http.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "38f82f4b931682e255a18d52856e192f2ee43390",
+      "sha256": "74b8964deabc274b59892f48de8bc54c774aab242d911a9b0713f9ad36f76095",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "2441642f59179516da09c9f9780b1b4764f6fd83",
+      "sha256": "d24f7a1189400531ed00635e22a886a0faa38cb8ea06d9dc95ce0d8741012417",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/current-choice.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "c9d83f1dcc7865e9c724f9246a65102efa7824ca",
+      "sha256": "d3e72e9d89991bae7d71e106b41595d55708b78e44d173c231c83e78b62088e1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/product/planner/current-choice.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/application-status.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "29a01e27af230df149e8862beb370f466abf0808",
+      "sha256": "84260d8fbacd9a353eaa2b3a8fa3b022f2f190c34fadd558646a5f9e322b4b25",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/product/decisions/application-status.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/application-attempt.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e",
+      "sha256": "b952a9869602aee8c6696a769ee3d96278868dafc441bbdb4ff4b15c6b03762c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/product/decisions/application-attempt.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/assumption-divergence.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "d70725ebd2ed99ffe9a617b21eac6fe17e089abd",
+      "sha256": "8f7c2dbf6bb8983da2dc4618d0a4f43cd2451df084d1b285d061b6363f142106",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/product/decisions/assumption-divergence.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "e0840d775274ea73c6b938711764c69593dadca0",
+      "sha256": "c1270b39da0574403f7461e007c14e9fb19c8726aa949f938d09879df3988813",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "d8a151c558227b3bd2612dbb6caba993efa85783",
+      "sha256": "45eb7d1418a0f62ec8f361e9d78a3ed09a98e9d48318db0c2a7b986493fb84fa",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "9c1b657dc4d6d5ba139c4f9fe854c1c8960cc95b",
+      "sha256": "7245fe76e46431dd50dbffff2162b5486c078b998c18a42fc46961c21a0e304b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/product/procurement/prepared.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "229e64c2d8109b413a7667bbe1b208ffa3ab0a73",
+      "sha256": "756906647ca921578b5c242af44c15a8e11c296aa693d8d659a86b4ee65bd3e2",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/product/decisions/apply.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "46b004a1b374229ad46077930134ba0469213087",
+      "sha256": "12dbbe50b2044ce12112cc13d1655d5cc138c58cd387b1f9ffcc799ff1e6fb98",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "73f0e3b3b7e5579f2cc645503d78f067d9b832c9",
+      "sha256": "e8ab9f17cb78bf127e2091ada9b70bdc931d22e410f95f5cccb11c5fb17e3c70",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "f3f66378b7e310565e46eef1767f8110675d38de",
+      "sha256": "c92899fad7f194143654fd42d86f65a10027327eed17e62408b734eab9890574",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "bc32bfb39e8b6012230ee0d136bed142340e5d89",
+      "sha256": "0bc0d34e79bac608968b088030d38ba3bf75ca6a49e388acef6b6b9e8b55705f",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "368a7f2e207c4f551ac3c6f77424797c97f794f3",
+      "sha256": "97cd2aa7cb2a70004c75b0f223889347553ff6ee33a5b12eee5220ce60882ceb",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "45d2821fbd01c13183d450f1347e9017adba9fe2",
+      "sha256": "6db9a23b59b2e444e30128dbd5659a8f5a07a551fc247d1651f90f5e2b15a18c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "9514f80dc7e8dbb9c8acf1822bbd4f1ea067c0e1",
+      "sha256": "667104e7adbf32bcaca7989c1134bbc23de8d9c040740a2dfd86816577166c79",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "73eee84b724bfdef9dbd4aaa65902e4503a1e8e0",
+      "sha256": "aeb01fde16f61497f952f25c9eaf5c5c4cdbc00967e2f3932806ad0894e72b11",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts"
+    }
+  ],
+  "observations": [
+    {
+      "id": "WP10_MOUNT_GAP",
+      "status": "STATIC_CONFIRMED_AT_FIXED_COMPOSE_PIN",
+      "finding": "The f999 fixed head leaves host-context, decision-domain-services/http, extended-business-services, business-services and extended-http unchanged from the prior reviewed mount chain. The five own routes for current-choice preview/promotion, assumption divergence, rejection and application status remain absent from that chain. The refresh changes analysis-stale-commit and source/test receipts, not these route/service mount files.",
+      "inspectedPaths": [
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "apps/cli/src/sucafina-product/decision-domain-services.ts",
+        "apps/cli/src/sucafina-product/decision-domain-http.ts",
+        "apps/cli/src/sucafina-product/extended-business-services.ts",
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "apps/cli/src/sucafina-product/extended-http.ts"
+      ]
+    },
+    {
+      "id": "C11_CAPTURE_ALREADY_PUBLISHED",
+      "status": "STATIC_IMPLEMENTATION_PRESENT_RUNTIME_WITNESS_NOT_ESTABLISHED",
+      "finding": "host-context@ed10 onVerifiedCall decodes actual sf_alternative_draft input/output, requires native operationIdentity, captures exact receipt/call/request, indexes per run and operation identity, rejects changed replay and changed binding. The own consumer must retain those exact capability proofs. This is not proof of a real loaded skill/session/provider journey. The inspected host-context blob remains unchanged through f999; no new native/provider/session witness is inferred."
+    },
+    {
+      "id": "C17_WIRING_ALREADY_PUBLISHED",
+      "status": "STATIC_IMPLEMENTATION_PRESENT_BACKEND_EVIDENCE_AVAILABLE",
+      "finding": "business-services assigns calculations.verifyCalculationSources and capabilities persist through calculations.persist; planner-calculation-services binds scenario-request sources, live source fences, canonical nested replay, evidence, withCalculationCase and per-call ancestor cycle guard. The earlier owner C17 patch is superseded. Own C17 tests passed on W9 and W11; installed native reconstruction remains separate. The f999 refresh adds a guarded historical-calculation path to analysis-stale-commit; it checks the same physical case, recorded result ancestry and same-authority temporary read lease, finishes that lease, and compares the captured snapshot digest after final callbacks. This is source implementation evidence only."
+    },
+    {
+      "id": "WP13_FINAL_CALLBACK_FENCE",
+      "status": "STATIC_DEFECT_REMAINS_IN_REFRESHED_OPTIONAL_HELD_EXTENSION",
+      "finding": "proof.ts second inspect reads authorized case/C08/choice/ledger/result before awaiting evidence.context and host.revalidate; no C08 observation follows that last source callback. history-provenance similarly awaits its final evidence.context after candidate case reads. Two-pass equality cannot detect a C08 membership/ledger CAS performed during the second source callback while the global lease remains valid. Both newly retrieved heads retain the exact e07714d6/caa3b783 source blobs. New reconciliation/product commits do not repair these readers.",
+      "affectedSourceBlobs": [
+        "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+        "caa3b783b41f95287bba8a4bab3c652c8375c320"
+      ],
+      "proofMode": "STATIC_ADVERSARIAL_ANALYSIS_NO_LOCAL_TEST",
+      "unchangedAtHeads": [
+        "d697bcc1076a62375cbf0439376c9f0a4f81173f",
+        "4a7e22c4462cc5e65464b6b5026e222a483cc231"
+      ]
+    },
+    {
+      "id": "WP13_LATER_DOMAIN_COMMIT_SCOPE",
+      "status": "STATIC_INCOMPATIBLE_RETRY_ORACLE_NO_RUNTIME_PROOF",
+      "finding": "Exact a3df handoff test de2315ab injects a Procurement failure after the canonical transaction callback and before SQLite commit, then expects the same prepared request to invoke Procurement a second time. Its receipt c4e473b explicitly records testsRun=false/typecheckRun=false and reads older apply.ts dbcc51d75ccefb23f328f1d4151504be96a35a45. Current WP11 apply reserves a durable global attempt before domain dispatch; after receipt-not-found, an existing attempt returns application-indeterminate-reconciliation-required. A thrown transaction and absent receipt are not an authoritative no-effect reconciliation token. This foreign test cannot transfer its retry oracle or runtime qualification to the current candidate. The source test is unchanged from a3df through4a7. The old receipt declaration is not a claim that no later upstream run exists; any later test of that older apply behavior still cannot be transferred to the current durable-marker contract.",
+      "oldApplyBlob": "dbcc51d75ccefb23f328f1d4151504be96a35a45",
+      "candidateApplyBlob": "229e64c2d8109b413a7667bbe1b208ffa3ab0a73",
+      "sourceTestBlob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+      "sourceReceiptBlob": "c4e473b7e2275121189592ff7677821c46d82b18",
+      "lines": {
+        "faultAndInitialAttempt": "254-263",
+        "retryExpectsSecondDispatch": "269-276"
+      }
+    },
+    {
+      "id": "WP04_AWAITING_APPROVAL",
+      "status": "PUBLISHED_PREPARED_ADAPTER_LIMIT",
+      "finding": "The consumed prepareProcurementMutation requires Requests/action=save and pr title/justification/estAmount. It rejects submit_pr before preparation; the canonical runtime submitPR exists but is not this adapter. A fixture classifier mapping save success to applied cannot prove awaiting-approval or replace procurement approval."
+    },
+    {
+      "id": "CURRENT_CHOICE_READ_FINAL_CALLBACK_FENCE",
+      "status": "OWN_FIX_PUBLISHED_TWO_HOSTED_REGRESSIONS_PASS_ON_W14",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "publishedSource": "dd9363dab38a769dd0c34fcf2068dfb610693779",
+      "oldBlob": "12f9bda4f964763e8c6d60fb67e5fb68a08cd9ee",
+      "fixedBlob": "38f82f4b931682e255a18d52856e192f2ee43390",
+      "finding": "The prior read observed cases/binding before the last asynchronous case authorization and host revalidation. A legitimate CAS during the final callback could invalidate membership while the supplied old snapshot and global lease remained valid. The published own fix finishes those callbacks, reauthorizes preferences read under sameAuthority, then observes decision/reviewed result/producer result/private binding together from C08 and compares full digests, with cancellation and no subsequent product callback. A case namespace read alone is not used to authorize private preferences. Reading does not require write permission.",
+      "newTest": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "blob": "46b004a1b374229ad46077930134ba0469213087",
+        "assertions": [
+          "Real C08 CAS removes membership during the second preview-specific authorizeCase; valid global lease does not allow releasing the old binding.",
+          "Only preferences read is revoked during that callback while case access and global lease remain valid; no binding value escapes.",
+          "Both positive baselines disable preferences write before read. No calculation, promotion, prepare or dispatch callbacks run."
+        ],
+        "boundary": "Reader-isolation fixture seeds the historical choice, source references and private binding; real UI admission, SQLite and result-store operations. Financial values remain unknown/null. No canonical financial or native human journey is established by this new regression.",
+        "observedCases": 2
+      },
+      "independentReview": {
+        "path": "ci-analysis/independent-review-W14-current-choice.json",
+        "sha256": "dc6ff31df853ff53bab76eb2fc2adf0778256111bfb3471b43bbe811e802eb07"
+      },
+      "qualification": "Both reader regressions passed in hosted R1 on W14/run43594721768. Their selected transitive graph is byte-identical through W16; execution source remains W14. The fixture does not establish a native or canonical financial journey.",
+      "hostedEvidence": {
+        "sourceSha": "dd9363dab38a769dd0c34fcf2068dfb610693779",
+        "runId": 43594721768,
+        "selectedPass": 2,
+        "metadata": {
+          "path": "ci-analysis/wp11-W14-R1-evidence-meta.json",
+          "sha256": "5559263326a396c497066adebcb8c699182e7f928f56fe5fa832b354a2be013a"
+        },
+        "equivalence": {
+          "path": "seams/candidate-W16-metadata-supplement.json",
+          "sha256": "2ece28a9292e5b05de0461e7c4cd20b30ec5e4c6d648a04c6bfb1b175123d2ba"
+        }
+      }
+    },
+    {
+      "id": "W8_OWN_FENCES_ALREADY_FIXED_AND_SOURCE_QUALIFIED",
+      "status": "OWN_PRODUCT_FIXES_RETAINED_ORIGINAL_RUN_EVIDENCE",
+      "finding": "Always-read coverage proof/reassessment, actual Dashboard HotTopic surface and final read/list C08 fences remain own fixes. WP10 f999 now adopts HotTopic/result-store/request-store byte-for-byte and has executable-identical mutations (two comment lines differ). Preserve these completed source changes. W12 promotion and W13 HotTopic passes retain their original execution SHAs/runs; no composed or W16 execution is inferred.",
+      "ownProductBlobs": {
+        "modules/sucafina/Sucafinav1/product/decisions/mutations.ts": "e0840d775274ea73c6b938711764c69593dadca0",
+        "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts": "d8a151c558227b3bd2612dbb6caba993efa85783"
+      },
+      "evidence": [
+        {
+          "label": "W12_F2_PROMOTION_ONLY",
+          "productSha": "1fa71a64faf297fdbae07747d260d4ced7ec9532",
+          "runId": 43592791648,
+          "jobId": 132440886431,
+          "runConclusion": "failure",
+          "selection": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+          "selectionPass": 6,
+          "selectionFail": 0,
+          "metadata": {
+            "path": "ci-analysis/wp11-W12-F2-evidence-meta.json",
+            "sha256": "7861c1bb028dec79f5a050900c5c10eb15084a1fddcd783ba99f7c71a5d26b3c"
+          },
+          "limit": "The same run had one unrelated HotTopic fixture source-race failure; only the six promotion passes are cited here."
+        },
+        {
+          "label": "W13_F3_HOT_TOPIC",
+          "productSha": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+          "snapshotSha": "5d386ed8b4b44db080342995dec263772481538b",
+          "runId": 43593540746,
+          "jobId": 132443141064,
+          "runConclusion": "success",
+          "selection": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+          "selectionPass": 6,
+          "selectionFail": 0,
+          "metadata": {
+            "path": "ci-analysis/wp11-W13-F3-evidence-meta.json",
+            "sha256": "4b72c21f86747607be4ad0404d36c59dc0a943f2cd014deaea7a6da139630bd4"
+          },
+          "limit": "Covers the corrected real Dashboard source race plus final read/list races in a private-authority fixture. No installed/native/omni evidence."
+        }
+      ]
+    },
+    {
+      "id": "WP10_C17_MULTIPLICATIVE_TRAVERSAL",
+      "status": "OWNER_DIAGNOSIS_PUBLISHED_NO_NEW_PRODUCTION_INTAKE",
+      "sourcePin": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "sourceBlob": "20b43ed62a7ba2f76313698a59bc2d78e8dc108a",
+      "finding": "The owner-published timing receipt attributes four unresolved composed C17 cases to repeated expensive historical source/request/result observations; it explicitly does not establish a deadlock or dominant primitive. Its rejected traversal-wide cache would reuse authority across initial/final awaits. No permissive verification or timeout increase is proposed here.",
+      "nextOwnerWork": "If a performance protocol is needed, keep it producer-owned and bounded to separate initial/final observation epochs with exact source/state/capture/result/ledger/ACL fences, cycle limits and fresh final validation. Publish and qualify that delta before consumer intake.",
+      "limit": "This audit read the exact source receipt; it did not independently re-fetch or re-run every upstream job cited by that receipt."
+    },
+    {
+      "id": "WP13_PUBLIC_RECONCILIATION_CLOSURE",
+      "status": "PUBLISHED_SOURCE_HELD_FOR_COMPLETE_HOST_CLOSURE",
+      "heads": [
+        "d697bcc1076a62375cbf0439376c9f0a4f81173f",
+        "4a7e22c4462cc5e65464b6b5026e222a483cc231"
+      ],
+      "blobs": {
+        "product.ts": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+        "reconciliation.ts": "aedc80310eee2752d067dd52afa6312a9558b87a"
+      },
+      "finding": "Both heads now expose the public PlannerPort/PlannerSourceHost/PlannerScenarioHost factory type and private reconciliation injection. The read-only reconciliation correlates exact original portfolio/choice/ledger/receipts and delegates materiality to the canonical classifier with per-component scope. Missing authenticated materiality stays unavailable. The public factory also requires the published coverage/sensitivity pipeline; this is not an isolated type-only blob replacement.",
+      "ownerHold": "WP10 round11-held-dependencies explicitly holds product d4c5 because coverage-preview/reconciliation are absent and its planner-sensitivity/sensitivity contract lacks coverage qualification. No foreign hunk is authored to bypass that closure.",
+      "notAppliedBundle": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/wp10-consumer-bundle-W13.NOT_APPLIED.json",
+        "blob": "3a167b2df969f1f0cee90c7caf5bf573d2ecea3e",
+        "proposedTargetPin": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+        "patchBlob": "0dc8b2ffbfe5a7b7fff6acde2bc5f1e261d154e5",
+        "patchSha256": "d6990abb5f6107afa0f5a9e3fdb7e7900a22bc082cb2b35d727bf39c63b5332b",
+        "status": "NOT_APPLIED_OWNER_PROPOSAL_NOT_RUNTIME_PROOF"
+      },
+      "adoptionRule": "Owner must review/rebase the exact proposal against its current head, compose authenticated readPortfolio/readMaterialChange and full sensitivity closure, repair final-C08 observation findings, then provide affected hosted consumer evidence. No existing WP11 source-specific PASS qualifies this new pipeline."
+    },
+    {
+      "id": "WP13_RECONCILIATION_FINAL_CALLBACK_FENCE",
+      "status": "STATIC_DEFECT_IN_NEW_OPTIONAL_HELD_RECONCILIATION",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+      "sourceHeads": [
+        "d697bcc1076a62375cbf0439376c9f0a4f81173f",
+        "4a7e22c4462cc5e65464b6b5026e222a483cc231"
+      ],
+      "sourceBlob": "aedc80310eee2752d067dd52afa6312a9558b87a",
+      "lines": {
+        "insideInspect": "101-107",
+        "finalReturn": "109-114"
+      },
+      "finding": "Each inspect reads latestCase/latestScope and then awaits host.revalidate; after the second inspect there is another awaited host.revalidate before disclosure. DomainPortHost.revalidate has only a Promise<boolean> contract, no guarantee that C08 stayed immutable. A real membership/receipt/case CAS during that final callback while binding and global lease remain valid can escape the prior two-pass equality.",
+      "independentStaticReview": {
+        "agent": "ci_reconciliation",
+        "outcome": "Same concrete window confirmed from source; no local test or runtime claim."
+      },
+      "requiredOwnerFix": "Finish external callbacks before an authorized joint final C08 observation, comparing the same case/choice/ledger/result/receipt witnesses without subsequent external product callbacks. Keep domain receipt access scoped and missing producer proof fail-closed.",
+      "testProposal": "During the final host revalidation, commit a real C08 membership or original receipt/ledger change while keeping the global lease and source outputs valid. The result must expose no prior reconciliation projection; a valid unmodified baseline must still resolve."
+    },
+    {
+      "id": "FINANCE_FIXTURE_REFRESH",
+      "status": "READ_ONLY_SOURCE_REVIEW_NO_AUTOMATIC_INTAKE",
+      "base": "332c5a762365e8550eaac7a278c864be0452651d",
+      "head": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "finding": "The eight-commit refresh changes tests/fixtures and receipt documents, with no product runtime change. Current-choice matcher-boundary isolation is published upstream; WP11 W16 adopts only the independently reviewed minimal own assertion-isolation hunk, not the upstream diagnostic wrappers. The H6 own fixture/proof work is separately published at W15 and remains pending its run.",
+      "ownCandidate": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+        "blob": "45d2821fbd01c13183d450f1347e9017adba9fe2",
+        "sha256": "6db9a23b59b2e444e30128dbd5659a8f5a07a551fc247d1651f90f5e2b15a18c",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc9d4327d07db58d026e7672cf619717394f5ffd/modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts"
+      },
+      "ownReview": {
+        "path": "ci-analysis/independent-review-B1A-observation-isolation.json",
+        "sha256": "642ad5588968cac2166bea16ac68decddda8e82ff5ce0319905fb4d8285311f6"
+      },
+      "qualification": "W14 B1A current-choice failure remains recorded. A plausible shared-entry/asymmetric-matcher mutation is not declared as the proven cause of that log; the W16 isolated assertion needs a new completed hosted result."
+    }
+  ],
+  "actions": [
+    {
+      "id": "WP10_CURRENT_CHOICE_MOUNT",
+      "owner": [
+        "WP10",
+        "S0"
+      ],
+      "requiredFiles": [
+        "apps/cli/src/sucafina-product/decision-domain-services.ts",
+        "apps/cli/src/sucafina-product/decision-domain-http.ts",
+        "apps/cli/src/sucafina-product/host-context.ts"
+      ],
+      "implementation": [
+        "Compose own createCurrentChoicePreview and createCurrentChoicePromotion with canonical Planner current-source resolution, real BusinessContext, durable scenario result/request stores, authorizeCase, operationIdentity and locked C02/source fences. Reuse the own host-product factory when its full composition is supplied; otherwise mount the same explicit dependencies in the manual domain factory.",
+        "Add closed decision-choice-preview and decision-choice-promote transport calls. Existing decisions.promote-alternative grant binds each full and distinct payload; a preview grant must not authorize promotion. withCase selects the exact current case, human.finish runs in finally, final egress revalidates authority.",
+        "Resolve the current source through the actual issuer while preserving original source identity/incarnation/history, classify current coverage canonically and keep the original ChoiceRecord immutable. A hypothetical scenario stays conditioned even if its cost coverage is complete. Promote only the newly reviewed alternative/result after the separate human action.",
+        "Permit historical retry only when the existing durable promotion receipt proves the exact prior payload; preview never has a historical-retry shortcut.",
+        "Consume createCurrentChoicePreview.read at the W14 fixed blob38f82f4b931682e255a18d52856e192f2ee43390. Preserve explicit final preferences read authorization and the following joint C08 decision/results/private-binding fence, with no external product callback after it. Do not reintroduce the older Finance12f9bda4 reader while mounting the consumer."
+      ],
+      "acceptance": [
+        "Mounted user reads the historical210000/totalnull choice and current source quote, explicitly previews then separately promotes the current alternative; asserts no official Planner effect and unchanged historical choice.",
+        "Actual source revocation/reincarnation, changed case membership and C08 CAS between proof and commit refuse the output/write; same-operation retry after response loss/restart resolves the original receipt without a second alternative.",
+        "Retain the two reader negatives now passed in own R1 and add their mounted counterparts: membership change and preferences-only read revocation during final asynchronous authorization must return no binding while the global lease stays valid. Read must not require preferences write."
+      ],
+      "ownReferenceDocs": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/owner-deltas/current-choice-mount.md"
+      ]
+    },
+    {
+      "id": "WP10_REMAINING_DECISION_MOUNTS",
+      "owner": [
+        "WP10",
+        "S0"
+      ],
+      "requiredFiles": [
+        "apps/cli/src/sucafina-product/decision-domain-services.ts",
+        "apps/cli/src/sucafina-product/decision-domain-http.ts"
+      ],
+      "operations": [
+        {
+          "route": "decision-assumption-divergence",
+          "ownService": "assumptionDivergence",
+          "grant": "decisions.portfolio.read",
+          "payload": "purpose=assumption-divergence, caseRef, alternativeId, alternativeVersion",
+          "dependency": "observeAssumption must read the actual owner projection; transport cannot supply the official observed date/value."
+        },
+        {
+          "route": "decision-reject-change",
+          "ownService": "mutations.rejectChange",
+          "grant": "decisions.prepare-changes",
+          "payload": "purpose=reject-change, caseRef, choiceId, changeId, rationale",
+          "dependency": "Distinct full-payload human authorization; preserve refusal after any global attempt marker or authoritative receipt, immutable choice/history and atomic cancelled+ledger+outbox."
+        },
+        {
+          "route": "decision-application-status",
+          "ownService": "applicationStatus",
+          "grant": "decisions.portfolio.read",
+          "payload": "caseRef, choiceId, changeId only",
+          "dependency": "Inject the real PreparedApplyPort.readReceipt and exact receipt lookup. Global dispatch marker alone yields receipt-required, never an applied/reconciled effect. Terminal status requires authorized exact producer receipt and final C08 observation; a case member denied receipt access must receive no terminal value."
+        }
+      ],
+      "acceptance": [
+        "Mounted March assumption/May source view exposes the divergence without editing the official record; the separate domain command changes the source.",
+        "Mounted rejection records new human rationale and cancels only an undispatched proposal; prepare/apply grants cannot be reused as rejection payloads.",
+        "Mounted receipt-loss/restart/concurrent retry displays receipt-required, no second dispatch; authorized restoration reconciles. Cross-domain receipt ACL denial suppresses terminal/aggregate values even when case access remains valid."
+      ],
+      "ownReferenceDocs": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/owner-deltas/additional-decision-mounts.md"
+      ]
+    },
+    {
+      "id": "WP10_CONSUME_OWN_FENCES",
+      "owner": [
+        "S0",
+        "WP10"
+      ],
+      "implementation": [
+        "Do not reimplement the W8 HotTopic/proof changes: refreshed WP10 f999 already contains exact HotTopic/result/request-store fixes and executable-identical mutations. Preserve the own reviewed candidate when composing; the only mutations difference is a comment.",
+        "The W14 current-choice read fence remains a separate own consumer fix to mount, with explicit final preferences authorization and joint C08 read after all external callbacks. R1 two-regression PASS is recorded on W14; it is not native or mounted proof.",
+        "Do not overwrite new own durable-attempt/application-status or current-choice behavior from older producer snapshots during composition."
+      ],
+      "acceptance": [
+        "Preserve original W12 F2 promotion6/6, W13 F3 HotTopic6/6 and W14 R1 reader2/2 source/runs, with current graph equivalence. Earlier fixture failures remain historical. No upstream adoption is claimed to execute those tests.",
+        "Composed source-only result promotion with both source orders passes; missing proof, revoked/drifted source and changed case abort without result/alternative/receipt. HotTopic source/draft mutation during final callback refuses stale data."
+      ],
+      "status": "UPSTREAM_SOURCE_ADOPTION_OBSERVED_PRESERVE_FIXES_CURRENT_CHOICE_MOUNT_STILL_OPEN"
+    },
+    {
+      "id": "WP10_C11_C17_INSTALLED_WITNESS",
+      "owner": [
+        "WP10",
+        "S0"
+      ],
+      "implementation": [
+        "Keep the already published C11 capability capture path and C17 actual request/source/ancestor replay wiring. Do not recreate their financial calculations or substitute permissive verification callbacks.",
+        "Run the surgical mounted analysis→human choice→prepare→separate apply path with actual project/installation/session/provider and loaded skill receipt. Record exact operationIdentity, source request/output digests, persisted C08/C17 refs, run/provider generation and domain receipts.",
+        "For historical replay, reopen the real application/state, reconstruct the authorized calculation case scope and verify each persisted request/ancestor from canonical producer inputs. Historical source permission must remain current; a historical calculation is not silently relabeled as current.",
+        "Treat the published f999 historical stale-calculation lease as an owner-produced source change requiring its own affected host qualification. Keep the owner C17 timing failures open; any bounded proof-reuse protocol must retain independent initial/final authority and source observations."
+      ],
+      "acceptance": [
+        "Capability output from another operation identity/session/payload cannot be consumed; same payload retry has no duplicate choice/preparation/application.",
+        "Nested current and historical C17 replay remains authorized across reopen, stale/revoked source is denied, no duplicate official effects; no claim of whole-process restart from an additional live SQLite connection."
+      ],
+      "alreadyProvedBoundaries": [
+        {
+          "source": "65509f0b8c435b88fb0ec9949299571f011d2347",
+          "run": 43590675088,
+          "files": [
+            "test/product/wp11/calculation-persistence.test.ts",
+            "test/product/wp11/cross-domain-execution.test.ts"
+          ],
+          "limit": "Real backend/provider fixtures; nested persistence opens a second store while writer remains alive."
+        },
+        {
+          "source": "c41d7277be5941bafb105654360a32adea7f0347",
+          "run": 43591612696,
+          "attempt": 2,
+          "files": [
+            "test/product/wp11/calculation-history.test.ts",
+            "test/product/wp11/choice-prepared-execution.test.ts"
+          ],
+          "limit": "Human UI admission and canonical providers within explicit fixture host boundaries, no native installation witness."
+        }
+      ]
+    },
+    {
+      "id": "WP13_HISTORICAL_CANDIDATE_FINAL_FENCE",
+      "owner": [
+        "WP13"
+      ],
+      "requiredFiles": [
+        "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts"
+      ],
+      "implementation": [
+        "After the final asynchronous source/host verification, reobserve the exact case membership/version and private C08 history/result/choice/ledger witnesses under current authority; compare to the inspected proof before returning. No asynchronous product verification callback should remain after that final observation.",
+        "Preserve the authenticated expected candidateDigest and exact original scenarioResultRef named by ChoiceRecord/ledger, full scenario/operations/result digest, same-case/incarnation/version ancestry and duplicate-result ambiguity refusal. Repeated source reads alone are insufficient.",
+        "Add the optional historical-candidate caller only after its complete source/result/store dependencies and final-fence regression are published and adopted; keep missing callback fail-closed until then."
+      ],
+      "discriminatingTest": [
+        "Use the real revised/chosen candidate C08 fixture. During evidence.context invocation2, after computing the legitimate source resolutions, commit a real C08 CAS removing the current participant or the matching choice-ledger witness and advance its version; keep source results and global UI lease unchanged.",
+        "The reader/provenance verifier must refuse with no candidate value after that hook; a fresh authorized case read should independently demonstrate denied/stale. Restore the same fixture and prove the legitimate old choice resolves without replacing its original resultRef with an equivalent later write."
+      ],
+      "adoption": "HELD_AT_D697_AND_4A7_UNTIL_OWNER_FINAL_FENCE_AND_CALLER_PROOF; NO_FOREIGN_PATCH_APPLIED"
+    },
+    {
+      "id": "WP04_APPROVAL_STATE_ADAPTER",
+      "owner": [
+        "WP04",
+        "S0"
+      ],
+      "implementation": [
+        "Publish a canonical prepared submit_pr adapter/review/revision/receipt classifier if the required awaiting-approval journey is part of the integrated scope. It must preserve actual procurement state transitions and approval role boundaries.",
+        "Wire that adapter into C12 only with exact command/digest/target/current-source fences and separate human approval. Save success stays applied only for supported save actions; awaiting-approval must come from the real producer state."
+      ],
+      "acceptance": [
+        "Real prepared submission returns awaiting-approval; reopening/retry returns the same receipt without resubmitting. A different authorized human approval changes procurement state through its own command. Case preparation/application confirmation must not authorize that approval."
+      ]
+    },
+    {
+      "id": "WP13_ALIGN_PRECOMMIT_FAILURE_RECONCILIATION",
+      "owner": [
+        "WP13",
+        "S0"
+      ],
+      "requiredFiles": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts"
+      ],
+      "implementation": [
+        "Rebase the handoff fixture and evidence receipt on the exact current WP11 apply/application-attempt/application-status semantics before adopting or running it as integration proof.",
+        "Retain actual SQLite rollback and official-domain invariants, while explicitly asserting the new durable C08 attempt remains and the status projection says receipt-required. Repeating the same request after a missing authoritative receipt must not invoke Procurement again.",
+        "Separate proven receipt-first reconciliation from an unproven no-effect retry: a successful existing receipt can reconcile without dispatch; a driver exception alone cannot delete or bypass the attempt marker. Any future safe retry-after-known-rollback lane requires an owner-published durable authoritative proof and explicit review; do not create it through fixture assumptions."
+      ],
+      "acceptance": [
+        "Planner applied receipt replays without a new Planner invocation. Procurement precommit failure leaves no official Procurement effect/receipt but retains the global attempt marker; repeat and restart yield indeterminate with the same producer-call count.",
+        "Authorized readReceipt recovery, when available, reconciles the exact original receipt. Case membership without receipt-domain permission must not expose an applied aggregate."
+      ],
+      "adoption": "HOLD_NEW_FOREIGN_TEST_ORACLE_UNTIL_PINNED_RECONCILIATION; NO_NEW_PRODUCT_BEHAVIOR_REQUESTED",
+      "sourceUnchangedThrough": "4a7e22c4462cc5e65464b6b5026e222a483cc231"
+    },
+    {
+      "id": "S0_FINAL_PINNED_COMPOSITION",
+      "owner": [
+        "S0"
+      ],
+      "implementation": [
+        "Pin the final WP11 candidate/PR and all consumed producers; use full-path/blob manifests to reconcile foreign copies and own changes. Keep the 157-copy provenance and original run/source metadata with any carried test evidence.",
+        "Apply only owner-produced host/portfolio/procurement deltas after their stated fixes and then run the affected hosted selections. Establish the resident/global/native acceptance gates in S0 without claiming the WP11 fixtures satisfy them. No dev merge or deployment is authorized by this handoff.",
+        "Current history H6 (W15/run43595614889), corrected current-choice lifecycle (W16, new hosted run pending) and future B1B/BI/mounted outcomes remain open until exact terminal logs establish them. W14 B1A has five passing observations and one functional refusal; it is not timeout or overall green. W13 C2 has exactly two filtered training passes, six filtered-out tests unobserved. Preserve original execution SHAs and earlier failures."
+      ],
+      "acceptance": [
+        "Criterion map preserves literal83 IDs and separates established, partial, blocked and pending evidence. Every PASS cites the actual SHA/run and required observation, with graph equivalence attached when reused.",
+        "No epic suite or local product tests are substituted for the authorized surgical hosted CI."
+      ]
+    },
+    {
+      "id": "WP13_RECONCILIATION_AND_COVERAGE_OWNER_COMPOSITION",
+      "owner": [
+        "WP13",
+        "WP10",
+        "S0"
+      ],
+      "status": "UNEXECUTED_OWNER_PROPOSAL_DEPENDENCY_CLOSURE_REQUIRED",
+      "requiredFiles": [
+        "apps/cli/src/sucafina-product/portfolio-services.ts",
+        "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+        "apps/cli/src/sucafina-product/review-portfolio-history.ts",
+        "apps/cli/src/sucafina-product/portfolio-sensitivity-authority.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts"
+      ],
+      "implementation": [
+        "Use the published NOT_APPLIED owner bundle as review input, not as an already mounted service. Review against the actual f999 head and consume a complete qualified dependency closure or an owner-published genuinely minimal public-port typing patch.",
+        "Supply authenticated historical portfolio/C08/binding/selection reads and canonical component material-change reads. Reject client-supplied numeric materiality and global-change attribution to an unproven component. A missing domain rule remains unavailable.",
+        "Before exposing optional historical/reconciliation reads, finish external verification callbacks and then reobserve exact case/choice/ledger/result/receipt membership under current authority; preserve final private namespace permission checks. Two-pass equality before a final callback is insufficient.",
+        "No published amount/defer adapter establishes contractual cancellation savings. The owner term-sensitivity NOT_APPLIED finding requires a canonical rule-aware adapter; this is a separate owner seam, not a request to invent a WP11 formula."
+      ],
+      "acceptance": [
+        "Hosted composed source-only/covered sensitivity with real evidence and exact threshold provider; changed source/case/ACL refuses.",
+        "Real per-component reconciliation preserves original choice and domain receipts, keeps restricted receipt results unavailable, and refuses a real C08 membership/ledger mutation during the final asynchronous callback.",
+        "No callsite, installed session or campaign invocation is claimed until the corresponding owner mount and execution witness exists."
+      ]
+    }
+  ],
+  "supersededOldProposals": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/owner-deltas/WP10-C17-current-ancestry.patch",
+      "disposition": "DO_NOT_APPLY_BLINDLY; equivalent stronger published C17 wiring already present at35b9/ed10."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/resume-20261114/owner-deltas/WP13-history-same-version.patch",
+      "disposition": "DO_NOT_APPLY_BLINDLY; same-version acceptance with private provenance already consumed at46c904. The c21 final-callback finding is a different issue."
+    }
+  ],
+  "ownValidationStillRequired": [
+    "R1 is terminal: seven PASS on W14 across five files, including both new reader regressions. Five earlier affected F1 observations are superseded for current evidence, not counted twice.",
+    "B1A is terminal on W14: four fully passing files/five PASS are retained, while current-choice lifecycle failed before promotion/reopen. W16 assertion isolation is published but awaits new hosted proof.",
+    "W15 H6 run43595614889 was pending at this update. H4/H5 timed-out histories are not upgraded; literal history completion and B1B/BI remain separate observations.",
+    "Exactly two C2 training tests passed on W13; six filtered tests provide no new observation. Neither slow C2 closure includes current-choice-preview or the H6 helper changes.",
+    "The W6 foreign-without-FX assertion passed historically, but the current selected closure differs at scenario-comparison-port after the W9 batch intake. It is not counted as candidate-equivalent PASS without a new qualification.",
+    "Mounted/native/resident/global gates remain outside the demonstrated backend/fixture boundaries."
+  ],
+  "noMutations": {
+    "foreignRepositoryFilesWritten": false,
+    "productCodeExecutedLocally": false,
+    "remoteMutations": false,
+    "testsRunLocally": false,
+    "filesWritten": "scratch metadata only"
+  },
+  "methodLimits": [
+    "This is a concrete unexecuted owner integration proposal. It does not apply foreign files, mount routes, dispatch CI, merge or deploy.",
+    "All own source pins and hashes are immutable Git objects; exact source caches were hash-verified against GitHub MCP file metadata. No product import, local test, typecheck, install or build was run.",
+    "A complete compare with no truncation establishes unchanged paths between the cited fixed heads; older direct-read pins remain explicit instead of being relabeled as new direct reads.",
+    "Own hosted evidence remains attached to original execution SHA/run. Static graph equivalence permits only the selected observed assertions, never native/UI/provider readiness or an overall-green claim for a mixed source run.",
+    "The old WP13 receipt testsRun=false declaration is historical. It is not a statement about all upstream CI, and no later upstream older-contract pass can qualify current durable-attempt semantics.",
+    "The proposed NOT_APPLIED WP13 bundle and the WP10 held-dependency receipt are source documents. This update does not independently qualify their runtime or exhaustively review unrelated AI/Atlas changes in refreshed branches."
+  ],
+  "supersedesScratchArtifact": {
+    "path": "seams/owner-integration-delta-W14-r3.json",
+    "sha256": "11102995c2be62201e13c27b5b62312e368a4da44f9b5a5795c5f8d689ee7cc5"
+  },
+  "candidateTree": "40c122b24b0e46ed627a5cac506f70575aae6cfd",
+  "externalS17Diagnostic": {
+    "metadata": {
+      "path": "seams/finance-0c4a-diagnosis/S17-current-choice-diagnosis.json",
+      "sha256": "7f7b1c5ff0ac8a48fbf243c45c01f6a40ca4ebcb908a3c0c6c3f67e8034c33d0"
+    },
+    "productSha": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+    "runId": 43591635600,
+    "jobId": 132437416020,
+    "conclusion": "The exact external entries diagnostic starts but its following assignment is not completed. No exception/shape cause is established; the own callback lacks those extra diagnostic clones. The W14 final read fix addresses a separate independently established race, not an asserted cause of S17.",
+    "currentDisposition": "Historical external diagnostic remains inconclusive at entries:start/assignment. It is separate from the own W14 functional refusal and the W14 reader security fix. No foreign product change is inferred."
+  },
+  "ownerRefresh": {
+    "observedAtUtc": "2026-11-14T12:33:27Z",
+    "source": "Read-only GitHub MCP pull request and compare responses, then selected exact file reads; no remote mutation or intake.",
+    "inventory": {
+      "path": "seams/final-owner-refresh-20261114-1233/source-inventory.json",
+      "sha256": "f1a1dac7f66332657e12dde77e4b5184b03739b523b94b2d2021bd0e9b9389e9"
+    },
+    "owners": [
+      {
+        "owner": "wp10",
+        "pullRequest": "https://github.com/gustavomhss/Orchestra-SF/pull/32",
+        "state": "open",
+        "draft": true,
+        "baseBranch": "sf2-stack",
+        "baseSha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "head": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+        "comparedFrom": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+        "commitsAhead": 3,
+        "changedPaths": 38,
+        "compareTooLarge": null,
+        "metadata": {
+          "path": "seams/final-owner-refresh-20261114-1233/wp10-metadata.json",
+          "sha256": "893da2bcb69e9097a7276c76bf1e4b95e0de1a238df180a23b6d16f2c1806f3d"
+        }
+      },
+      {
+        "owner": "finance",
+        "pullRequest": "https://github.com/gustavomhss/Orchestra-SF/pull/35",
+        "state": "open",
+        "draft": true,
+        "baseBranch": "sf2-stack",
+        "baseSha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "head": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+        "comparedFrom": "332c5a762365e8550eaac7a278c864be0452651d",
+        "commitsAhead": 8,
+        "changedPaths": 74,
+        "compareTooLarge": null,
+        "metadata": {
+          "path": "seams/final-owner-refresh-20261114-1233/finance-metadata.json",
+          "sha256": "be1f5d38b6e60ab2a052a4137686f0ab6ffcffc3eae2a39135c0b0f97493317b"
+        }
+      },
+      {
+        "owner": "intelligence",
+        "pullRequest": "https://github.com/gustavomhss/Orchestra-SF/pull/36",
+        "state": "open",
+        "draft": true,
+        "baseBranch": "sf2-stack",
+        "baseSha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "head": "d697bcc1076a62375cbf0439376c9f0a4f81173f",
+        "comparedFrom": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+        "commitsAhead": 2,
+        "changedPaths": 48,
+        "compareTooLarge": null,
+        "metadata": {
+          "path": "seams/final-owner-refresh-20261114-1233/intelligence-metadata.json",
+          "sha256": "d9ea0b2ae5212cdff86aff13846821c5481287b6302675aee82fc913fb0a159d"
+        }
+      },
+      {
+        "owner": "wp13",
+        "pullRequest": "https://github.com/gustavomhss/Orchestra-SF/pull/37",
+        "state": "open",
+        "draft": true,
+        "baseBranch": "sf2-stack",
+        "baseSha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "head": "4a7e22c4462cc5e65464b6b5026e222a483cc231",
+        "comparedFrom": "a3df1c494495f5fcc5a644caf2d88bc0e9e39fa4",
+        "commitsAhead": 4,
+        "changedPaths": 41,
+        "compareTooLarge": null,
+        "metadata": {
+          "path": "seams/final-owner-refresh-20261114-1233/wp13-metadata.json",
+          "sha256": "95e9ccd1ad5bb5fdb49aaed36555ab1bf68688fef5e280878f77e695513c706c"
+        }
+      }
+    ],
+    "limits": [
+      "PR descriptions and owner-authored receipts are source declarations, not independent confirmation of hosted passes.",
+      "Heads are the fixed observed pins above; this report does not automatically follow subsequent updates."
+    ]
+  },
+  "upstreamAdoption": {
+    "sources": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+        "ownerPin": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+        "ownerBlob": "d8a151c558227b3bd2612dbb6caba993efa85783",
+        "wp11Pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+        "wp11Blob": "d8a151c558227b3bd2612dbb6caba993efa85783",
+        "relation": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "ownerPin": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+        "ownerBlob": "bc32bfb39e8b6012230ee0d136bed142340e5d89",
+        "wp11Pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+        "wp11Blob": "bc32bfb39e8b6012230ee0d136bed142340e5d89",
+        "relation": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+        "ownerPin": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+        "ownerBlob": "368a7f2e207c4f551ac3c6f77424797c97f794f3",
+        "wp11Pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+        "wp11Blob": "368a7f2e207c4f551ac3c6f77424797c97f794f3",
+        "relation": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+        "ownerPin": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+        "ownerBlob": "3e7575cddfd52d9f5751c0ee6179c747bb318c98",
+        "wp11Pin": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+        "wp11Blob": "e0840d775274ea73c6b938711764c69593dadca0",
+        "relation": "ONLY_TWO_COMMENT_LINES_DIFFER_EXECUTABLE_SOURCE_IDENTICAL"
+      }
+    ],
+    "commentOnlyDiff": {
+      "path": "seams/final-owner-refresh-20261114-1233/wp10-mutations-vs-own-W16.diff",
+      "sha256": "469a5683f90d8a6f3d5e37499fd7b4577b5681e0e166db7314d9fdabb97aef6f"
+    },
+    "disposition": "Preserve these adopted fixes. Do not request another implementation or import the owner copies over the own tree. No owner CI qualification is inferred from adoption."
+  },
+  "candidateEvidence": {
+    "path": "seams/candidate-W16-metadata-supplement.json",
+    "sha256": "2ece28a9292e5b05de0461e7c4cd20b30ec5e4c6d648a04c6bfb1b175123d2ba",
+    "summary": {
+      "seedToCandidateChangedPaths": 345,
+      "wp11OwnedPaths": 191,
+      "foreignPaths": 153,
+      "authorizedWorkflowPaths": 1,
+      "publishedCopiesInsideWp11Ownership": 4,
+      "exactPublishedCopies": 157,
+      "configurationPaths": 160,
+      "unchangedConfigurationPaths": 160,
+      "individualPassingObservationsWithIdenticalGraphs": 73,
+      "f1UnchangedRootCount": 17,
+      "f1ChangedRootCount": 4,
+      "findings": [],
+      "uniquePassingTestsWithIdenticalGraphs": 73,
+      "duplicatePassingObservationsNotCountedAsNewTests": 0
+    }
+  },
+  "workspaceProtection": {
+    "statusBefore": "",
+    "statusAfter": "",
+    "repositoryWrites": false
+  }
+}

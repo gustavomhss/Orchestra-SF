@@ -1,0 +1,167 @@
+{
+  "source": {
+    "productSha": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1",
+    "productTree": "47e634b81b9a64fef462cb670373aa832b88b76b",
+    "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "seed": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a"
+  },
+  "run": {
+    "id": 43599586885,
+    "head_sha": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1",
+    "head_branch": "astra-check-wp11",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-14T13:24:16Z",
+    "updated_at": "2026-11-14T13:25:45Z",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43599586885",
+    "run_attempt": 1
+  },
+  "jobs": [
+    {
+      "id": 132461269948,
+      "name": "wp11-checks",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43599586885,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout exact product commit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Record product and guard base",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Typecheck Sucafina package",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Guardrails against origin/dev",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Upload exact check evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Checkout exact product commit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "runId": 43599586885,
+    "jobId": 132461269948,
+    "artifactId": 14115802181,
+    "status": "completed",
+    "conclusion": "failure",
+    "typecheck": {
+      "conclusion": "failure",
+      "ownDiagnostics": 0,
+      "foreignDiagnostics": 130,
+      "removedSinceW18": [
+        {
+          "path": "test/product/wp11/case-egress-fence.test.ts",
+          "line": 116,
+          "column": 45,
+          "code": "TS2769",
+          "message": "No overload matches this call.",
+          "ownership": "own"
+        }
+      ],
+      "addedSinceW18": [],
+      "foreignDiagnosticsIdenticalToW17": true,
+      "sameLogBytesAsW17": true
+    },
+    "guards": {
+      "rules": 78,
+      "changedPaths": 864,
+      "gates": 0,
+      "warnings": 12,
+      "errors": 0,
+      "conclusion": "success"
+    },
+    "artifact": {
+      "id": 14115802181,
+      "name": "astra-wp11-checks-a3b57d475e7b564fa7b05932d3a81c5836e3e3c1-1",
+      "zipSha256": "acc1035b3cd0facc3b3bc2f9735fa597509856b245aebfb2976fa21a3e851bb1",
+      "remoteDigestMatched": true,
+      "sourceMatched": true,
+      "files": {
+        "guards.log": {
+          "sha256": "8cf9da65565ee9f0417580c6ccca4b93b68e4c8a61dc597c6b4ef1807c7c9bdf",
+          "bytes": 4861
+        },
+        "source.json": {
+          "sha256": "cc8c015e60ba0887b522bd048dd67b78384a2c89b45453a09634c3b732028c6e",
+          "bytes": 296
+        },
+        "typecheck.log": {
+          "sha256": "6be625fa5ba28cef35348d3f1412d88577b3c8391b9f0ca93acef4807566e0d7",
+          "bytes": 63595
+        }
+      }
+    }
+  },
+  "claimBoundary": [
+    "The explicit fixture guard removes the1own W18 diagnostic. W19 package typecheck remains FAILED with130 foreign diagnostics and zero own; no package-green or integration acceptance is claimed.",
+    "W19 typecheck bytes are identical to W17 and the prior W7 foreign baseline. No foreign implementation or test is silently fixed here.",
+    "Guard78rules/864changedpaths/12warnings/0gates/0errors completed success. This check is not a product-test or epic-suite result.",
+    "Artifact downloaded only from the MCP-provided signed URL; archive digest, safe extraction and sourceW/tree match verified.",
+    "No local product test/typecheck/build/guard/install or remote mutation."
+  ],
+  "files": {
+    "wp11-W19-check.log": {
+      "sha256": "d9218a631b5fe94695e6a24499b16ab575e3e8ad380639659cb4348e6df9d9ee",
+      "bytes": 128627
+    },
+    "wp11-W19-remote-final.json": {
+      "sha256": "ae4ca4b01862c6938a40c3525a776698fbaa66b57a3eca641308766b2c0c7919",
+      "bytes": 3041
+    },
+    "wp11-W19-typecheck-diagnostics.json": {
+      "sha256": "5508ff39dbbd2a2e686f57dd4973c6e43ece2878b433b1eb0affbe032cb2c6da",
+      "bytes": 45062
+    }
+  }
+}

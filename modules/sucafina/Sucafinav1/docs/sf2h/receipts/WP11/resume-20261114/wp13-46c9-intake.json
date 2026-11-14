@@ -1,0 +1,26 @@
+{
+  "schema": "wp11-published-producer-intake-v1",
+  "owner": "WP13",
+  "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+  "sourcePR": 36,
+  "purpose": "Consume published historical provenance correction for same-version cases and immutable read captures. Supersedes prior unexecuted proposal.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+      "previousBlob": "4a3049d462c5fc24b81163c8468b8bd314d8aa61",
+      "sourceBlob": "5b1877a97620c1863c7ee43d3274594ddedde8f9",
+      "sha256": "1a1d35c9de02bcd43fc9a2db851bbe5c1c47b6f4331bc3611a06ad3034845921",
+      "exactPublishedBlob": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "previousBlob": null,
+      "sourceBlob": "af081946dfffcb885059bff9e56c691460ff1a56",
+      "sha256": "0d435015d5f2fc61179dc0aa97c618ac6fb091a3ee14f4aea6c53a1b4b634a70",
+      "exactPublishedBlob": true
+    }
+  ],
+  "testsExecutedLocally": false,
+  "hostedEvidenceStatus": "PENDING",
+  "limitation": "Producer test uses synthetic authorization and candidate/evidence callbacks; not proof of installed native journey."
+}

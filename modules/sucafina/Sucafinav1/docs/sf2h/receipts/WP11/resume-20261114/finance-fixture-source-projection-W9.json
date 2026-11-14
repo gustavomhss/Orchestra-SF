@@ -1,0 +1,51 @@
+{
+  "schema": "sf-wp11-source-projection-fixture-proposal-v1",
+  "status": "APPLIED_OWN_FIXTURE_CHANGE_HOSTED_VALIDATION_PENDING",
+  "baseProductSha": "a12f29ce64018740a1c1a1135daa3fb0e37770de",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "base": {
+        "gitBlob": "35281782202c59bb61c49e68ff206ee22183464e",
+        "sha256": "d550cf3e4c24b89f8eb224071f72f0f39bc3d7b0446eb790231fcdb3b92d7209",
+        "bytes": 24863
+      },
+      "candidate": {
+        "gitBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+        "sha256": "36e11f7e1148d0b30fff90473f971a9183aef6b9ffeb5064f63a3034c96ee7e3",
+        "bytes": 25216
+      },
+      "changes": [
+        "Construct one canonical source Planner over the existing operational source host.",
+        "Pass only that source Planner into createStoredPlannerScenarioHost.",
+        "Keep the original classified planner/sources on mutations, preview, comparison, criteria, baseline coverage and all test assertions."
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "base": {
+        "gitBlob": "55c04318f2196d24f9d3e94eb99dffb0915c593f",
+        "sha256": "92117e4ca3c542ed2308d42100a35f31e1cf163e5e90c08065d155a1ed737600",
+        "bytes": 14130
+      },
+      "candidate": {
+        "gitBlob": "18d95b84d01b26048af9a442c44cb32e8f14e9f5",
+        "sha256": "bad22af33418063fdfcb23499416f20b1adf6edb7f511be892635bd37139d129",
+        "bytes": 14461
+      },
+      "changes": [
+        "Construct one canonical source Planner over the existing operational source host.",
+        "Pass only that source Planner into createStoredPlannerScenarioHost.",
+        "Keep the original classified planner/sources on mutations, preview, comparison, criteria, baseline coverage and all test assertions."
+      ]
+    }
+  ],
+  "patch": {
+    "gitBlob": "27358f3bae7fd115ed817b3e37f0dcd52a586f75",
+    "sha256": "63c250dc0e0b8c599840d9e56ec6e41e3099c2cfa8bc12bdf78b385f9d9e5483"
+  },
+  "noAssertionsRemoved": true,
+  "testTimeoutMs": 180000,
+  "compoundOperationsPreserved": true,
+  "sourceProjectionContains": "Complete canonical DomainProjection including components, amounts, missing, values and engineVersion; no monetary formula copied."
+}

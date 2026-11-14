@@ -1,0 +1,48 @@
+{
+  "schema": "wp11-independent-observed-criterion-review-v1",
+  "reviewer": "ci_reconciliation",
+  "status": "SCOPED_E1_RULE_REVISION_AND_E2_EGRESS_FACTS_CONFIRMED",
+  "sidecars": [
+    {
+      "path": "/workspace/scratch/c3f9350f32d4/requirements/W18-E1-criterion-evidence.json",
+      "sha256": "5a696aafb213178ff7b7ae64aa926db2f0aab8b566f4f32d459b5e10d441a365",
+      "runId": 43599284081,
+      "productSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+      "snapshotSha": "438ac548f7cae91fd907d41052682f6bb945c54d",
+      "assertionCount": 21
+    },
+    {
+      "path": "/workspace/scratch/c3f9350f32d4/requirements/W19-E2-criterion-evidence.json",
+      "sha256": "7b5240b2b1a08b93b39aa6bb0283d8ad68b31e604de5cfae7efe0f19b469daa1",
+      "runId": 43599613374,
+      "productSha": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1",
+      "snapshotSha": "00c5f5845c80863d0bab37def7a71c006b430a15",
+      "assertionCount": 7
+    }
+  ],
+  "metadataFactsIndependentlyMatched": 28,
+  "reviewedFactInterpretations": [
+    "W18_E1_ASSERT_18",
+    "W19_E2_ASSERT_01",
+    "W19_E2_ASSERT_02",
+    "W19_E2_ASSERT_03",
+    "W19_E2_ASSERT_04",
+    "W19_E2_ASSERT_05",
+    "W19_E2_ASSERT_06",
+    "W19_E2_ASSERT_07"
+  ],
+  "findings": [
+    "E1 rule revision uses distinct operation identity and expectedRuleVersion1, stores rule2 with threshold50, reads both exact historical records and live pointer, and re-evaluates the controlled confirmed metric100 as failed. Exact rule2 replay and superseded rule1 refusal leave history intact. Metric/authority inputs are synthetic, explicitly disclosed.",
+    "The7E2facts match exact host callback numbers and counts, outcome reasons, actual committed SQLite/C08 changes and persisted fields. Draft membership/incarnation are denied; same-version draft and all intent races are stale. Global UI lease remains valid and no value escapes.",
+    "The between-reads intent callback3 case specifically tests the full-case comparison across two individually fenced reads; it is not redundant with callback5 final-observation races.",
+    "The explicit guard40f814 appears in the exact E2 source and all7cases pass after it. W19check removes the1own overload error; E1success on W18 did not erase that separate typecheck failure.",
+    "The14other E1passes retain W18 provenance, while E2 proves only7cases on W19. Runtime and read function identity are established separately; no SHA is relabeled."
+  ],
+  "boundaries": [
+    "The empty UI-fixture egress cases prove no financial calculation, installed native/MCP session, human business choice or domain execution.",
+    "The accepted criterion-definition revision is persistence/evaluation proof with controlled values; it is not an actual business grant or a new ChoiceRecord.",
+    "Twenty other E1interpretations remain the same prior-reviewed source assertions; this review additionally confirms all28metadata rows exactly.",
+    "Global typecheck remains failed with130foreign diagnostics. No global acceptance/integration permission is asserted.",
+    "No local product execution, repository edit or remote mutation."
+  ]
+}

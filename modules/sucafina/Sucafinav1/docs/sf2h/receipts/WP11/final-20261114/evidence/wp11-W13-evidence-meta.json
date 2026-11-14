@@ -1,0 +1,55 @@
+{
+  "source": {
+    "productSha": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+    "productTree": "e6831add3e891e020d34540234bd685a7dd05e01",
+    "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "seed": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a"
+  },
+  "checks": {
+    "runId": 43593328264,
+    "jobId": 132442496373,
+    "artifactId": 14113505886,
+    "status": "completed",
+    "conclusion": "failure",
+    "typecheck": {
+      "conclusion": "failure",
+      "ownDiagnostics": 0,
+      "foreignDiagnostics": 130,
+      "removedSinceW12": [],
+      "addedSinceW12": [],
+      "sameLogBytesAsW12": true
+    },
+    "guards": {
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 800,
+      "warnings": 12,
+      "gates": 0,
+      "errors": 0
+    },
+    "artifact": {
+      "id": 14113505886,
+      "name": "astra-wp11-checks-d7775d6f1eb17af1590ccfb98547259eb017cd1b-1",
+      "zipSha256": "150775e0a3d2e7ea00e8a8db7925b07f55c5d3799ee41aefc2dbad018d12dc6e",
+      "remoteDigestMatched": true,
+      "sourceMatched": true,
+      "files": {
+        "guards.log": {
+          "sha256": "ab71016eab014857d4fee95846471538f71bcec027a1e53b379618e59f8d807e",
+          "bytes": 4861
+        },
+        "source.json": {
+          "sha256": "380962f81a6d0e9ecef31998da3624dcf0c0d36d073973ca28a109731d19dc54",
+          "bytes": 296
+        },
+        "typecheck.log": {
+          "sha256": "6be625fa5ba28cef35348d3f1412d88577b3c8391b9f0ca93acef4807566e0d7",
+          "bytes": 63595
+        }
+      }
+    },
+    "rawLogSha256": "fa1226375ac6fb9765829bdb3edb346313208a72780b69bc15129906c22ddfe8"
+  },
+  "claimBoundary": "Full package typecheck remains failure with130 foreign diagnostics. Zero own diagnostics is not a green package check. This check does not execute product tests."
+}

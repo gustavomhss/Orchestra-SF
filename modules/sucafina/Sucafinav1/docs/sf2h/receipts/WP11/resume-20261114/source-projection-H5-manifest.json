@@ -1,0 +1,55 @@
+{
+  "schema": "wp11-own-fixture-projection-only-consumers-v1",
+  "status": "EXACT_OWN_CANDIDATE_APPLIED_FROZEN_NO_STATIC_BLOCKER_HOSTED_VALIDATION_PENDING",
+  "baseProductSha": "14d0cef142561c33076e19bf9c8fb17d1f1e7038",
+  "observedRunId": 43591146911,
+  "observedTestJobId": 132435932792,
+  "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+  "before": {
+    "gitBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+    "sha256": "36e11f7e1148d0b30fff90473f971a9183aef6b9ffeb5064f63a3034c96ee7e3",
+    "bytes": 25216
+  },
+  "candidate": {
+    "gitBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+    "sha256": "31559515ade97893610d6ccfef80bba7b4eb5c1cc096e6840013fb1309cdbc48",
+    "bytes": 25425
+  },
+  "patch": {
+    "gitBlob": "46b0a2eb20c5fc6486c7ca7b7d98c1abf7e5e3f1",
+    "sha256": "64d6b49350b1458100a8f5b915d46172e4bcef4c313f5a2b64ef638b647d368e",
+    "bytes": 4954
+  },
+  "scope": "Exactly four own fixture call-site/wiring changes; no product code or test assertion changes.",
+  "callsChanged": [
+    "baseline.projectForecast → canonical sourcePlanner DomainProjection",
+    "operationSources.resolveForecastCoverage → explicit unavailable, as already used by the human-choice fixture",
+    "renewalCoverage input planner → canonical sourcePlanner DomainProjection",
+    "renewalProjection → canonical sourcePlanner DomainProjection"
+  ],
+  "unchanged": [
+    "Source resolver and authority ingress/egress",
+    "Source-only verifier before/after callbacks and canonical compareForecast",
+    "Nonempty operation verifier and all3 initial replace operations",
+    "C10 baseline.register/assess/classification and snapshot fences",
+    "Classified Planner in mutations/comparison/criteria/preview",
+    "Every history assertion including interval certificate and real collaborator restart",
+    "180000ms timeout and fixture wall-clock guard"
+  ],
+  "runtimeClaim": false,
+  "localProductExecution": false,
+  "independentStaticReview": {
+    "reviewer": "producer_seams",
+    "candidateBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+    "status": "NO_STATIC_BLOCKER_FOUND",
+    "findings": [
+      "Three consumers use DomainProjection, not FinancialAnalysis completeness.",
+      "Actor, current source, projection digest and ingress/egress remain canonical.",
+      "baseline.register still authorizes and computes C10 with CAS/snapshot fences.",
+      "Classified judgment, withCriteria, preview and rules remain unchanged.",
+      "Callback sourcePlanner is initialized before first register; no TDZ.",
+      "No observed duration improvement is claimed before hosted H5."
+    ]
+  },
+  "fourthProjectionCaller": "UNCHANGED_AS_DIRECTED"
+}

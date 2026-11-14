@@ -1,0 +1,120 @@
+{
+  "schema": "decisions-publication-v1",
+  "product": {
+    "sha": "3e1a8ec84ae334b7c7320c86d6b93bd5730ba469",
+    "tree": "6d38dfcbfc0c83879d3b97f7f11b79c57f2d2612",
+    "parent": "e8949be0e31952d5be4987c099003cd0b46e2add"
+  },
+  "snapshot": {
+    "sha": "7b3cc91ec088bdc527e1af1207ef8d66f5c45a2c",
+    "tree": "01161c0f9ae6b4e0c68f41464450de995f572f6e",
+    "parent": "3e1a8ec84ae334b7c7320c86d6b93bd5730ba469",
+    "ref": "ci-run-linux-astra-wp11-3e1a8ec8-2fbc638a-a01"
+  },
+  "request": {
+    "path": ".ci-run.json",
+    "blob": "0362cd22163485e31b3cb07fca74db449f5bd516",
+    "sha256": "2fbc638a0215c7370007f9656507193df5a45cdb51a2dcae615ca04996f81b3c",
+    "normalized": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "packageSelector": "packages/app",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/decisions.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_CHANNEL": "prod"
+      },
+      "config": "e2e/playwright.production.config.ts"
+    }
+  },
+  "equivalence": {
+    "source": "GitHub compare W...S",
+    "commits": 1,
+    "changed_paths": [
+      ".ci-run.json"
+    ],
+    "all_test_product_fixture_config_blobs_identical": true
+  },
+  "delta": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/decisions/attempt-01/IMPLEMENTATION.md",
+      "blob": "167201e5b11b9b9c65a15cb5b8d3c81768b8d136",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/decisions/attempt-01/inputs.json",
+      "blob": "182cecff6ebf7a77f7320e1fb5cbc4b7eeab5e85",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/decisions/attempt-01/request.json",
+      "blob": "0362cd22163485e31b3cb07fca74db449f5bd516",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/decisions/attempt-01/static-audit.json",
+      "blob": "f10df2e616aff177fe39d22a4daf2a8db10e4db0",
+      "status": "added"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "blob": "171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4",
+      "status": "added"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+      "blob": "c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e",
+      "status": "added"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "blob": "2fa77a69a28ae399f30f4d0e7642c05e7f029077",
+      "status": "added"
+    }
+  ],
+  "selection_expected_tests": [
+    "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+    "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+    "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting"
+  ],
+  "ci_run": {
+    "id": 43632217395,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632217395",
+    "head_sha": "7b3cc91ec088bdc527e1af1207ef8d66f5c45a2c",
+    "created_at": "2026-11-14T19:27:50Z",
+    "result": "failure",
+    "attempt": 1,
+    "jobs": [
+      {
+        "id": 132561137773,
+        "name": "test (ubuntu-24.04)",
+        "conclusion": "failure"
+      },
+      {
+        "id": 132562955700,
+        "name": "cleanup",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "dedupe": {
+    "equivalent_runs_found": 0,
+    "active_mission_runs_before_dispatch": 0,
+    "scope": "Latest 100 runs plus exact W and unique snapshot identity; spec did not exist before W."
+  },
+  "runtime_evidence_policy": "Terminal artifacts read. No UI journey passed; only real bootstrap failure is observed.",
+  "artifact": {
+    "id": 14128318661,
+    "name": "playwright-ubuntu-24.04-1",
+    "sha256": "4bdc5962ab41f527447b97658305b785bf1c7dd3feddab37e4c37107299f0e79",
+    "sha256_verified_after_download": true,
+    "expires_at": "2026-11-21T19:34:18Z"
+  },
+  "runtime_artifact_hashes": {
+    "request": "47767af491818c18bbe9a5666888e10181e023a03144886d356f67c6b4d1441e",
+    "selection": "435e0d2487dc671fa624a3d0ae0301fd24b66bc8b19453e40b56b3d1f29cde0c",
+    "runtime": "7d41f2baa962b4c7884f12ddba56a28e9db7b40249fb5c30306bad58a0c7ca44"
+  }
+}

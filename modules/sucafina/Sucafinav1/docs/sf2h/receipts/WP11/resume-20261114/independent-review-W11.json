@@ -1,0 +1,42 @@
+{
+  "scope": "Independent static review of the two own WP11 fixtures after W9 AR2 failures",
+  "baseProductSha": "14d0cef142561c33076e19bf9c8fb17d1f1e7038",
+  "upstreamRun": 43590675088,
+  "upstreamSnapshotSha": "6b769a59b579a93136206fc23f033c24bfbf9e0f",
+  "reviewer": "ci_reconciliation",
+  "result": "no-static-blocker-found",
+  "execution": "No local product tests or typecheck executed. Hosted validation remains required for both changed tests.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "baseBlob": "ae99e63e1e9987be91c46d231bba05ec24748ca1",
+      "reviewedBlob": "9f804318ece7b82c9119508e24763ada47ce294d",
+      "sha256": "a3581e0887391b874967ec5d8ed9abf650de608d6b867433664de1f799226bca"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+      "baseBlob": "08e0b05c8f35225b80d580d61ef5983fd6fc3032",
+      "reviewedBlob": "326a262f17914de6675657dd1e6f82baec31e5c3",
+      "sha256": "1366f702b3c6667b3a268b46642b79990e77e982948a397c6b44c222523e081c"
+    }
+  ],
+  "findings": [
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "cause": "Access revocation removes the UI admission from the private WeakMap. Restoring the ACL does not restore that lease. The old fixture continued source and incarnation negatives under the dead lease.",
+      "change": "After restoring ACL, assert old lease/request are invalid; obtain and consume a new admission for the same principal; replace the context and narrowed Request captured by both state providers; verify exact historical result is readable before source CAS and lease stays valid after source negatives.",
+      "invariants": "No product change. Final result/request source race negatives, source revision, case incarnation, original timeout and all prior assertions retained. Historical result authority matches principal/policy/access revision rather than transport requestId.",
+      "staticTypeReview": "initialRequest and renewedRequest are each checked before assignment; mutable http is inferred as Request, not Request|undefined."
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+      "cause": "plannerFixture initializes Planner only. The source wrapper checks Dashboard/Procurement identity state during the first C08 transactionAll seed.",
+      "change": "Initialize Dashboard and Procurement via fixture.persistence.initializeSources inside try before grants and C08 seed.",
+      "invariants": "No product change, no synthetic identity injection, no guard bypass, no removed assertions or altered domain commands. Cleanup remains active."
+    }
+  ],
+  "requiredHostedValidation": [
+    "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts"
+  ]
+}

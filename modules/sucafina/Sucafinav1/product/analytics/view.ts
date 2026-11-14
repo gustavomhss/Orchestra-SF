@@ -1,4 +1,5 @@
-import type { DomainProjection } from "../contracts/context.ts"
+import type { DomainProjection, SourceRef } from "../contracts/context.ts"
+import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { BiViewRequest } from "../contracts/operations.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
 import { biViews, presentProjection } from "./catalog.ts"
@@ -6,21 +7,35 @@ import type { BiSelection } from "./catalog.ts"
 import { brushPeriod, chartGeometry, temporalPosition } from "./geometry.ts"
 import { resolveBiPresentation } from "./semantics.ts"
 import type { BiPresentation } from "./semantics.ts"
-import { renderWaterfall } from "./waterfall.ts"
+import { renderWaterfall, resolveWaterfall } from "./waterfall.ts"
 import { renderTimeline } from "./milestones.ts"
 import { hasBiDecision } from "./projection.ts"
 import { renderDecisionView } from "./decision-view.ts"
 import { renderPortfolioView } from "./portfolio-view.ts"
+import { renderBiFilters } from "./filter-controls.ts"
+import type { BiFilterControls } from "./filter-controls.ts"
+import { appendBiSourceButtons, biSourceChoices, createBiSourceChooser } from "./source-navigation.ts"
+
+export type BiDecisionNavigation = {
+  openSource?: (source: SourceRef) => void
+  openEvidence?: (reference: BusinessEvidenceRef) => void
+  openCoverage?: (reference: string) => void
+  openQuestion?: (reference: string) => void
+  openResult?: (reference: string) => void
+  openCase?: (reference: string) => void
+}
 
 /** The projection must be freshly authorized by its producer before rendering. */
-export function renderBiView(request: BiViewRequest, projection: DomainProjection, open: (selection: BiSelection) => void, presentation?: BiPresentation) {
+export function renderBiView(request: BiViewRequest, projection: DomainProjection, open: (selection: BiSelection) => void, presentation?: BiPresentation, navigation?: BiDecisionNavigation, filters?: BiFilterControls) {
   const section = document.createElement("section")
+  section.style.minWidth = "0"
+  section.style.overflowWrap = "anywhere"
   const view = biViews.find((entry) => entry.id === request.viewId)
   if (!view || !request.selectionRef || !isSfPeriod(request.period) || projection.context.period.start !== request.period.start || projection.context.period.end !== request.period.end || new Set(projection.values.map((value) => value.id)).size !== projection.values.length) {
     section.textContent = "Visualização indisponível: seleção ou dados inconsistentes."
     return section
   }
-  if (["BI09", "BI10", "BI11"].includes(request.viewId) && !hasBiDecision(projection)) {
+  if (["BI09", "BI10", "BI11"].includes(request.viewId) && !hasBiDecision(projection, request.viewId)) {
     section.textContent = "Visualização indisponível: decisão canônica não fornecida."
     return section
   }
@@ -28,12 +43,39 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
   if (decision?.kind === "scenario") {
     const refs = document.createElement("p")
     refs.textContent = `Cenário: ${decision.scenarioResultRef}; comparação: ${decision.comparisonRef}`
-    section.append(refs, renderDecisionView(decision.scenario, decision.comparison, decision.sensitivity))
+    section.append(refs)
+    if (navigation?.openResult) {
+      const sensitivityRef = "sensitivityResultRef" in decision && typeof decision.sensitivityResultRef === "string" && decision.sensitivityResultRef.trim() ? decision.sensitivityResultRef : undefined
+      for (const reference of [decision.scenarioResultRef, decision.comparisonRef, ...(sensitivityRef ? [sensitivityRef] : [])]) {
+        const button = document.createElement("button")
+        button.type = "button"
+        button.setAttribute("data-bi-focus", reference)
+        button.textContent = `Abrir resultado ${reference}`
+        button.addEventListener("click", () => navigation.openResult!(reference))
+        section.append(button)
+      }
+    }
+    section.append(renderDecisionView(decision.scenario, decision.comparison, decision.sensitivity, navigation?.openSource, navigation?.openEvidence, navigation?.openCoverage, navigation?.openQuestion, navigation?.openResult))
   }
   if (decision?.kind === "portfolio") {
     const ref = document.createElement("p")
     ref.textContent = `Portfólio: ${decision.portfolioResultRef}`
-    section.append(ref, renderPortfolioView(decision.portfolio))
+    section.append(ref)
+    if (navigation?.openResult) {
+      const button = document.createElement("button")
+      button.type = "button"
+      button.setAttribute("data-bi-focus", decision.portfolioResultRef)
+      button.textContent = `Abrir portfólio ${decision.portfolioResultRef}`
+      button.addEventListener("click", () => navigation.openResult!(decision.portfolioResultRef))
+      section.append(button)
+    }
+    section.append(renderPortfolioView(decision.portfolio, navigation?.openSource, navigation?.openEvidence, navigation?.openCoverage, navigation?.openCase, navigation?.openQuestion, navigation?.openResult))
+  }
+  if (decision && !projection.values.length && ["BI09", "BI10", "BI11"].includes(request.viewId)) {
+    const heading = document.createElement("h2")
+    heading.textContent = view.question
+    section.prepend(heading)
+    return section
   }
   const data = presentProjection(projection, request.selectionRef)
   const semantic = presentation?.viewId === request.viewId ? resolveBiPresentation(projection, presentation) : undefined
@@ -43,6 +85,7 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
   const context = document.createElement("p")
   context.textContent = `${data.context.period.start} – ${data.context.period.end} · ${data.context.currency} · v${data.version} · ${view.producer}`
   section.append(context)
+  if (filters) section.append(renderBiFilters(filters))
   if (semantic?.status === "ok") {
     const limitations = document.createElement("ul")
     limitations.setAttribute("aria-label", "Limitações da visualização")
@@ -54,6 +97,10 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
     section.append(limitations)
   }
   const controls = document.createElement("fieldset")
+  controls.style.minWidth = "0"
+  controls.style.display = "flex"
+  controls.style.flexWrap = "wrap"
+  controls.style.gap = "0.5rem"
   const legend = document.createElement("legend")
   legend.textContent = "Filtrar período"
   controls.append(legend)
@@ -132,24 +179,62 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
       return
     }
     const period = { start: start.value, end: end.value }
+    const openSelected = (selection: BiSelection) => open({ ...selection, visualPeriod: period })
     status.textContent = ""
     chart.replaceChildren()
     body.replaceChildren()
-    const selected = brushPeriod(data.rows, period.start, period.end)
+    const chooseSource = createBiSourceChooser(chart, openSelected)
+    const undatedIds = new Set((request.viewId === "BI08" || request.viewId === "BI10") && semantic?.status === "ok" ? presentation?.timeline?.items.flatMap((item) => {
+      const row = data.rows.find((value) => value.id === item.dateValueId)
+      return row && (typeof row.value !== "string" || !isSfPeriod({ start: row.value, end: row.value })) ? [row.id] : []
+    }) : [])
+    const selectedIdsInPeriod = new Set(brushPeriod(data.rows, period.start, period.end).map((row) => row.id))
+    const selected = data.rows.filter((row) => selectedIdsInPeriod.has(row.id) || undatedIds.has(row.id))
     if (!selected.length) status.textContent = "Nenhum dado disponível neste período."
     const waterfall = semantic?.status === "ok" && (request.viewId === "BI02" || request.viewId === "BI09") ? presentation?.waterfall : undefined
     if (waterfall) {
       const ids = new Set(selected.map((row) => row.id))
-      chart.append(renderWaterfall({ ...projection, context: { ...projection.context, period }, values: projection.values.filter((value) => ids.has(value.id)) }, request.selectionRef, waterfall, open))
+      chart.append(renderWaterfall({ ...projection, values: projection.values.filter((value) => ids.has(value.id)) }, request.selectionRef, waterfall, openSelected))
     }
     const timeline = semantic?.status === "ok" && (request.viewId === "BI08" || request.viewId === "BI10") ? presentation?.timeline : undefined
     if (timeline) {
-      const ids = new Set(selected.map((row) => row.id))
-      chart.append(renderTimeline({ ...projection, context: { ...projection.context, period }, values: projection.values.filter((value) => ids.has(value.id)) }, request.selectionRef, { ...timeline, items: timeline.items.filter((item) => ids.has(item.dateValueId)) }, open))
+      const timelineIds = new Set(timeline.items.map((item) => item.dateValueId))
+      const ids = new Set([...selected.map((row) => row.id), ...projection.values.filter((value) => timelineIds.has(value.id) && (value.evidenceState === "absent" || typeof value.value !== "string" || !isSfPeriod({ start: value.value, end: value.value }))).map((value) => value.id)])
+      chart.append(renderTimeline({ ...projection, values: projection.values.filter((value) => ids.has(value.id)) }, request.selectionRef, { ...timeline, items: timeline.items.filter((item) => ids.has(item.dateValueId)) }, openSelected, period))
     }
-    const groups: { unit: string; scaleKey: string; currency?: string; rows: typeof selected }[] = []
+    const groups: { unit: string; seriesId: string; role: string; scaleKey: string; currency?: string; rows: typeof selected }[] = []
     const selectedById = new Map(selected.map((row) => [row.id, row] as const))
     const selectedIds = new Set(selectedById.keys())
+    if (request.viewId === "BI06" && semantic?.status === "ok") {
+      const ages = semantic.series.filter((series) => series.role === "aging").flatMap((series) => series.valueIds.flatMap((id) => {
+        const row = selectedById.get(id)
+        return row ? [row] : []
+      }))
+      const unavailable = ages.filter((row) => typeof row.value !== "number" || !Number.isFinite(row.value))
+      if (unavailable.length) {
+        const heading = document.createElement("p")
+        heading.textContent = `Idade indisponível: ${unavailable.length} de ${ages.length} pedidos nesta seleção.`
+        chart.append(heading)
+        const list = document.createElement("ul")
+        list.setAttribute("aria-label", "Pedidos com idade indisponível")
+        for (const row of unavailable) {
+          const item = document.createElement("li")
+          const reference = row.selection.reference
+          const label = reference?.kind === "record" && reference.target.recordType === "procurement-request" ? reference.target.recordId : row.id
+          item.append(document.createTextNode(`${label}: idade indisponível `))
+          if (reference) {
+            const button = document.createElement("button")
+            button.type = "button"
+            button.setAttribute("data-bi-focus", row.id)
+            button.textContent = `Abrir ${label}`
+            button.addEventListener("click", () => openSelected(row.selection))
+            item.append(button)
+          }
+          list.append(item)
+        }
+        chart.append(list)
+      }
+    }
     const aligned = request.viewId !== "BI04" || (semantic?.status === "ok" && semantic.series.some((series) => series.role === "fte") && semantic.series.some((series) => series.role === "cost") && semantic.series.every((series) => series.alignmentKeys && JSON.stringify(series.alignmentKeys) === JSON.stringify(semantic.series[0]?.alignmentKeys) && JSON.stringify(series.valueIds.map((id) => selectedIds.has(id))) === JSON.stringify(semantic.series[0]?.valueIds.map((id) => selectedIds.has(id)))))
     if (semantic?.status === "ok" && aligned && ["BI01", "BI03", "BI04", "BI05", "BI06", "BI07"].includes(request.viewId)) {
       for (const series of semantic.series) {
@@ -161,7 +246,13 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
         if (rows.length !== candidates.length) status.textContent = "Períodos parcialmente selecionados aparecem apenas na tabela, sem repartição estimada."
         if (rows.length) {
           const currency = rows.find((row) => row.currency)?.currency
-          groups.push({ unit: `${series.label} · ${series.unit}`, currency, scaleKey: JSON.stringify([series.unit, currency ?? null, currency === "unspecified" ? series.id : null, request.viewId === "BI04" ? series.role : null]), rows })
+          const categories = new Map<string, typeof rows>()
+          for (const row of rows) {
+            const stage = request.viewId === "BI06" ? selectedById.get(`${row.id.slice(0, -8)}:approvalStage`) : undefined
+            const label = request.viewId === "BI06" ? typeof stage?.value === "string" && stage.value.trim() ? stage.value : "Tipo de aprovação indisponível" : series.label
+            categories.set(label, [...(categories.get(label) ?? []), row])
+          }
+          for (const [label, categoryRows] of categories) groups.push({ unit: `${label} · ${series.unit}`, seriesId: series.id, role: series.role, currency, scaleKey: JSON.stringify([series.unit, currency ?? null, currency === "unspecified" || request.viewId === "BI03" ? series.id : null, request.viewId === "BI04" ? series.role : null]), rows: categoryRows })
         }
       }
     }
@@ -170,7 +261,14 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
     if (groups.some((group) => group.currency === "unspecified")) status.textContent = `${status.textContent} Moeda não especificada: escalas independentes.`.trim()
     if (!aligned) status.textContent = "Painéis indisponíveis: alinhamento entre capacidade e custo não fornecido. A tabela conserva os dados disponíveis."
     if (!semantic || semantic.status !== "ok") status.textContent = "Gráfico indisponível: identificação das séries não fornecida pelo produtor. A tabela conserva os dados disponíveis."
-    if (aligned && semantic?.status === "ok" && !groups.length && !waterfall && !timeline) status.textContent = "Gráfico indisponível para esta visão ou período. A tabela conserva os dados disponíveis."
+    if (!decision && aligned && semantic?.status === "ok" && !groups.length && !waterfall && !timeline) status.textContent = "Gráfico indisponível para esta visão ou período. A tabela conserva os dados disponíveis."
+    if (request.viewId === "BI03" && groups.some((group) => group.role === "contribution")) {
+      const plan = presentation?.waterfall
+      const proof = plan ? resolveWaterfall(projection, plan) : undefined
+      const ids = plan ? [plan.finalValueId, ...plan.segments.flatMap((segment) => [segment.startValueId, segment.endValueId, segment.componentValueId])] : []
+      const complete = !!plan && proof?.status === "ok" && proof.reconciliation === "reconciled" && ids.every((id) => selectedIds.has(id)) && semantic?.status === "ok" && semantic.series.some((series) => series.role === "result" && series.valueIds.includes(plan.finalValueId))
+      if (!complete) status.textContent = `${status.textContent} Contribuições exibidas não são um total reconciliado.`.trim()
+    }
     const scales = new Map<string, { minimum: number; maximum: number }>()
     for (const group of groups) {
       for (const row of group.rows) {
@@ -182,11 +280,20 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
     for (const group of groups) {
       const unit = group.unit
       const rows = group.rows
+      const seriesId = group.seriesId
       const finite = rows.filter((row) => typeof row.value === "number" && Number.isFinite(row.value))
-      if (!finite.length) continue
+      if (!finite.length) {
+        const unavailable = document.createElement("p")
+        unavailable.textContent = `${unit}: indisponível`
+        chart.append(unavailable)
+        continue
+      }
       const title = document.createElement("p")
       title.textContent = `Medida: ${unit}`
       chart.append(title)
+      const axes = document.createElement("p")
+      axes.textContent = request.viewId === "BI06" ? `Eixo X: dias comprovados na etapa; eixo Y: tipo de aprovação (${unit}). Um ponto por pedido.` : request.viewId === "BI03" || request.viewId === "BI05" ? `Eixo X: ${unit}; eixo Y: componentes fornecidos pelo domínio.` : `Eixo X: competências ou grupos fornecidos pelo domínio; eixo Y: ${unit}.`
+      chart.append(axes)
       const horizontal = request.viewId === "BI03" || request.viewId === "BI05" || request.viewId === "BI06"
       const rawGeometry = chartGeometry(rows, horizontal ? 160 : 600, horizontal ? 600 : 160, scales.get(group.scaleKey))
       const temporal = request.viewId === "BI01" || request.viewId === "BI07"
@@ -224,12 +331,15 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
         if (mark.y === null) continue
         const row = rows.find((item) => item.id === mark.id)
         const group = document.createElementNS(svg.namespaceURI, "g")
-        if (row?.selection.reference) {
+        const description = row ? `${seriesId} · ${mark.id}: ${mark.value} ${unit}; ${row.period.start} – ${row.period.end}` : `${mark.id}: ${mark.value} ${unit}`
+        const origins = row ? biSourceChoices(row, row.selection) : []
+        if (row && origins.length) {
           group.setAttribute("tabindex", "0")
           group.setAttribute("data-bi-focus", row.id)
+          group.setAttribute("data-bi-series", seriesId)
           group.setAttribute("role", "button")
-          group.setAttribute("aria-label", `${mark.id}: ${mark.value} ${unit}. Abrir origem`)
-          const select = () => open({ ...row.selection, context: { ...row.selection.context, period } })
+          group.setAttribute("aria-label", `${description}. ${origins.length === 1 ? "Abrir origem" : "Escolher origem"}`)
+          const select = () => chooseSource(row.id, origins, group)
           group.addEventListener("click", select)
           group.addEventListener("keydown", (event) => {
             if (event instanceof KeyboardEvent && (event.key === "Enter" || event.key === " ")) {
@@ -246,9 +356,9 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
         line.setAttribute("stroke", "currentColor")
         line.setAttribute("stroke-width", "4")
         const label = document.createElementNS(svg.namespaceURI, "title")
-        label.textContent = `${mark.id}: ${mark.value} ${unit}`
+        label.textContent = description
         line.append(label)
-        group.append(line)
+        if (request.viewId !== "BI06") group.append(line)
         const point = document.createElementNS(svg.namespaceURI, "circle")
         point.setAttribute("cx", String(horizontal ? 600 - mark.y : mark.x))
         point.setAttribute("cy", String(horizontal ? mark.x : mark.y))
@@ -261,13 +371,15 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
       }
       chart.append(svg)
       const scaleLabel = document.createElement("p")
-      scaleLabel.textContent = `Escala: ${geometry.minimum} a ${geometry.maximum} ${unit}; zero indicado no eixo. Séries comparáveis compartilham escala; capacidade e custo usam escalas próprias.`
+      scaleLabel.textContent = request.viewId === "BI03" ? `Escala: ${geometry.minimum} a ${geometry.maximum} ${unit}; zero indicado no eixo. Cada série tem escala própria.` : `Escala: ${geometry.minimum} a ${geometry.maximum} ${unit}; zero indicado no eixo. Séries comparáveis compartilham escala; capacidade e custo usam escalas próprias.`
       chart.append(scaleLabel)
       const labels = document.createElement("ol")
       labels.setAttribute("aria-label", `Pontos de ${unit} na ordem do gráfico`)
       for (const row of rows) {
         const label = document.createElement("li")
-        label.textContent = `${row.id} · ${row.period.start} – ${row.period.end}: ${row.value ?? "indisponível"}`
+        const holder = request.viewId === "BI06" ? selectedById.get(`${row.id.slice(0, -8)}:holder`) : undefined
+        const responsibility = request.viewId === "BI06" ? `; responsável: ${typeof holder?.value === "string" && holder.value.trim() ? holder.value : "indisponível"}` : ""
+        label.textContent = `${row.id} · ${row.period.start} – ${row.period.end}: ${row.value ?? "indisponível"}${responsibility}`
         labels.append(label)
       }
       chart.append(labels)
@@ -281,15 +393,7 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
       line.insertCell().textContent = row.granularity
       line.insertCell().textContent = row.evidenceState
       const cell = line.insertCell()
-      if (row.selection.reference) {
-        const button = document.createElement("button")
-        button.type = "button"
-        button.setAttribute("data-bi-focus", row.id)
-        button.textContent = "Abrir origem"
-        button.addEventListener("click", () => open({ ...row.selection, context: { ...row.selection.context, period } }))
-        cell.append(button)
-      }
-      if (!row.selection.reference) cell.textContent = "Indisponível"
+      appendBiSourceButtons(cell, biSourceChoices(row, row.selection), openSelected)
     }
   }
   apply.addEventListener("click", draw)
@@ -316,10 +420,15 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
 /** The host calls this after returning from a detail screen. */
 export function restoreBiFocus(container: HTMLElement, selection: BiSelection | string) {
   const valueId = typeof selection === "string" ? selection : selection.valueId
-  const target = Array.from(container.querySelectorAll("[data-bi-focus]"))
-    .find((element) => element.getAttribute("data-bi-focus") === valueId)
-    ?? container.querySelector("[data-bi-focus-fallback]")
-  if (!(target instanceof HTMLElement) && !(target instanceof SVGElement)) return false
-  target.focus()
-  return true
+  const candidates = [
+    ...Array.from(container.querySelectorAll("[data-bi-focus]")).filter((element) => element.getAttribute("data-bi-focus") === valueId),
+    ...Array.from(container.querySelectorAll("[data-bi-focus-fallback]")),
+  ]
+  for (const target of candidates) {
+    if (!(target instanceof HTMLElement) && !(target instanceof SVGElement)) continue
+    if (!target.isConnected || target.closest("[hidden], [inert]") || !target.getClientRects().length || getComputedStyle(target).visibility === "hidden") continue
+    target.focus()
+    if (target.ownerDocument.activeElement === target) return true
+  }
+  return false
 }

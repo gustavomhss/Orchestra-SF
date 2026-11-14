@@ -1,0 +1,31 @@
+{
+  "scope": "Independent static review of the remaining W12 F2 HotTopic source-race fixture failure",
+  "baseProductSha": "1fa71a64faf297fdbae07747d260d4ced7ec9532",
+  "upstreamRun": 43592791648,
+  "upstreamJob": 132440886431,
+  "upstreamSnapshotSha": "15dcbde28b62ee6b43f723a9b38e6cbf5c668131",
+  "reviewer": "ci_reconciliation",
+  "result": "no-static-blocker-found",
+  "file": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+    "baseBlob": "c0a63b0368e33133bf5f8fde57487d3ebe2ea291",
+    "reviewedBlob": "f3f66378b7e310565e46eef1767f8110675d38de",
+    "sha256": "c92899fad7f194143654fd42d86f65a10027327eed17e62408b734eab9890574"
+  },
+  "observedFailure": "The source-race test expected a Dashboard verifySnapshot invocation but observed none. The official source/audit assertions after that point were not reached.",
+  "staticCause": "The seeded status Open is rejected by the actual DashboardPeople saveRecord validator, which accepts lowercase open/progress/blocked/done. The failed concurrent edit throws inside the hook and the outer product method catches it.",
+  "changes": [
+    "Seed canonical lowercase open, retaining the real Dashboard domain command and source lifecycle.",
+    "Set sourceRace.committed only after the wrapped transaction resolves with applied.ok. Assert true outside the hook and product catch boundary."
+  ],
+  "invariants": [
+    "Preserves expected Dashboard snapshot invocation and its exact array assertion.",
+    "Preserves source note edit, audit increment, unaffected Planner, no private C08 writes/receipts, and all other races/read/list assertions.",
+    "No product, grant, source resolver, timeout, or snapshot-verifier modification.",
+    "No local product tests or typecheck executed."
+  ],
+  "requiredHostedValidation": [
+    "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts"
+  ],
+  "proofBoundary": "Static review only. All6 HotTopic scenarios should rerun on the new source; prior5 passing scenarios and1 failure remain W12 evidence."
+}

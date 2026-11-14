@@ -1,0 +1,79 @@
+{
+  "schema": "wp11-w18-case-egress-selection-proposal-v1",
+  "status": "PROPOSED_NOT_DISPATCHED_NOT_CANONICALLY_NORMALIZED",
+  "baseProductSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "expectedTestCountFromSource": 7,
+      "reason": "New real UI/C08/SQLite CAS negatives in draft and prepareIntentForCase; membership, incarnation and same-version content; same-version between intent reads."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "expectedTestCountFromSource": 10,
+      "reason": "Existing real draft, exact retry, store reopen, native-intent wrapper and explicit-case intent calls; source scope and unchanged case-reader baseline."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "expectedTestCountFromSource": 2,
+      "reason": "Short W17 unchanged-reader baseline. Confirms the separately qualified final read fence remains intact."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+      "expectedTestCountFromSource": 1,
+      "reason": "Actual draft call under consumed real UI admission before collaboration and concurrent edits; concrete affected caller."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "expectedTestCountFromSource": 1,
+      "reason": "Separately reviewed own revision extends the same fixture with accepted rule v2 and immutable history. Included by root request, not because of case-port dependency."
+    }
+  ],
+  "expectedTestCountFromSource": 21,
+  "requestProposal": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+      "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "--timeout",
+      "180000"
+    ],
+    "env": {}
+  },
+  "excludedRequestedCandidates": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+      "reason": "Constructs the port but invokes only cases.read at lines 25 and 28; read and its helpers are byte-identical."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/http.test.ts",
+      "reason": "Uses management edit/list and stubbed current-choice preview/promotion; no real createDecisionCasePort, draft or prepareIntent call."
+    }
+  ],
+  "notRepeated": [
+    "renewal-choice-history.test.ts",
+    "scenario-batch.test.ts",
+    "current-choice-lifecycle.test.ts",
+    "renewal-source-admission.test.ts"
+  ],
+  "nonRepetitionReason": "The changed symbols are draft and prepareIntentForCase. W17 read, shared helpers and all H7 fixtures remain byte-identical. File-level import graphs containing case-port change and therefore are not represented as byte-equivalent graphs.",
+  "foreignAffectedCaller": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+    "callPath": "real createDecisionCasePort -> createDecisionCapabilities -> dispatcher sf_case_draft -> UI draft",
+    "evidenceLines": [
+      36,
+      37,
+      49,
+      50
+    ],
+    "owner": "S0/WP01",
+    "status": "OUTSIDE_OWN_SELECTION_CONSUMER_QUALIFICATION_PENDING",
+    "existingBoundary": "Published local fixture omits the now-required verifyScenarioOperations constructor field and uses Chrome/Playwright; no edit or additional browser provisioning proposed."
+  },
+  "executionBoundary": "Static call-site review only. Root must canonicalize against published W18, dispatch only after the active B1B run is terminal, then collect hosted results and exact W/S identifiers."
+}

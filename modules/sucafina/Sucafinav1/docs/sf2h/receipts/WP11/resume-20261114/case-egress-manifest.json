@@ -1,0 +1,98 @@
+{
+  "schema": "wp11-case-egress-proposal-v1",
+  "author": "ci_reconciliation",
+  "status": "SCRATCH_ONLY_INDEPENDENT_REVIEW_AND_HOSTED_VALIDATION_PENDING",
+  "baseProductSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+  "baseProductTree": "68e75187628ae046a9249238bb14226ebf0ec625",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "candidatePath": "/workspace/scratch/c3f9350f32d4/ci-analysis/case-egress-proposal/candidate/modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "baseBlob": "e646386af209978f2a931a10a070061ba0c97cbe",
+      "candidateBlob": "206271d33bcfb7786ee80ef0dfad50eb80e4fee2",
+      "sha256": "82f7865ae309d1fa3ef5d9138f373029d7b3d4a40db203f6a2cae48523282450",
+      "bytes": 17600,
+      "owner": "WP11"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "candidatePath": "/workspace/scratch/c3f9350f32d4/ci-analysis/case-egress-proposal/candidate/modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "baseBlob": null,
+      "candidateBlob": "0d344369ce375c0cb35633c7eac2f6b8dd11b153",
+      "sha256": "5cab79a445db29e70f9358aab5429ae407ab50d5db9898051093ced7600519b5",
+      "bytes": 9944,
+      "owner": "WP11"
+    }
+  ],
+  "patchPath": "/workspace/scratch/c3f9350f32d4/ci-analysis/case-egress-proposal/case-egress.patch",
+  "patchSha256": "71cebacf53acafd6b2a641850690440f86ee45572033a20015f79eb5c643b64a",
+  "unchangedSymbols": [
+    {
+      "symbol": "read",
+      "bytes": 4156,
+      "sha256": "1715c615c2c112d7ed28715016ee673b55c355ec1475409613a6325598c78e2c",
+      "byteIdenticalToW17": true
+    },
+    {
+      "symbol": "nativePrepareIntentWrapper",
+      "bytes": 324,
+      "sha256": "f3b9499c108330735558e4bcfa95dba634cd7b016d6fe5897075e1d978a7f9e1",
+      "byteIdenticalToW17": true
+    },
+    {
+      "symbol": "parseCaseRefAndSharedHelpers",
+      "bytes": 5007,
+      "sha256": "3910ab717833c84bbc6d81c352072662217fbcd27e1da0af3a932c60e5f94b30",
+      "byteIdenticalToW17": true
+    },
+    {
+      "symbol": "encodeCaseRefAndImports",
+      "bytes": 838,
+      "sha256": "1414066e5aaaeb113ce3bc851c93fb60ecdedc8522ed91a7df1b8ab085889e3c",
+      "byteIdenticalToW17": true
+    }
+  ],
+  "concreteFindings": [
+    {
+      "symbol": "draft",
+      "oldWindow": "The final C08 read precedes authorizeCase, evidence resolution and host.revalidate. A callback can commit membership removal, incarnation replacement or a same-version case edit, while the old current.value is still returned.",
+      "minimumCorrection": "Move the existing final read after all callbacks; capture the transaction result digest before them; require the authorized current case to match it before release. No third read is added."
+    },
+    {
+      "symbol": "prepareIntentForCase",
+      "oldWindow": "The outer host.revalidate runs after the second already-fenced port.read. A callback can commit a case mutation before the helper returns; version-only comparison also misses a same-version change between reads.",
+      "minimumCorrection": "Move outer revalidation before the existing second read; compare the complete case projection to the first captured digest and reject mutation of the original projection or parsed intent. Build criteria from the final matching projection. No external callback follows the final read."
+    }
+  ],
+  "newRegression": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+    "expectedTestsFromSource": 7,
+    "mechanisms": [
+      "Real consumed UI admission for sf_case_draft, real durable draft creation, SQLite/C08 transaction and read fences.",
+      "Three final-callback draft CAS variants: membership version+1, incarnation replacement and same-version objective/criteria revision.",
+      "Three final-callback prepareIntent variants plus one same-version change during the between-reads host callback.",
+      "Global principal/policy/access and UI lease stay valid; input headers are not revoked.",
+      "Successful CAS is asserted outside the callback and catch boundaries; final persisted storageVersion=2 and exact mutation are verified.",
+      "Counts two C08 case reads for draft and four for the two prepareIntent port.read calls; the race uses the raw provider so its verification reads do not inflate those counts.",
+      "No evidence resolver, financial producer, prepared command or domain execution can be invoked by the empty-case fixture."
+    ],
+    "proofBoundaries": [
+      "The explicit-case intent helper is tested under a UI lease; this does not prove an installed native session.",
+      "The case is created through the real draft operation but has no financial claims, alternatives, human choices, prepared changes or receipts.",
+      "No local product tests, typecheck or build ran. No runtime outcome or speed claim is made."
+    ]
+  },
+  "retrySemantics": "An exact creation retry with an unchanged current case remains idempotent. If the case has changed since the saved creation result, draft now fails closed rather than returning a different current draft; existing public case read remains the route to the current case.",
+  "selectionProposalPath": "/workspace/scratch/c3f9350f32d4/ci-analysis/case-egress-proposal/selection-proposal.json",
+  "selectionProposalSha256": "e51234c579f1b651665f6e90345cc1bf137a259d18221a20917f48d17b27024e",
+  "separateQualifiedEvidence": {
+    "readFixProductSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+    "runId": 43597644083,
+    "status": "H7_SUCCESS_23_TESTS_ON_W17",
+    "newDraftAndIntentNegatives": "NOT_EXECUTED"
+  },
+  "repositoryProductEdited": false,
+  "remoteMutation": false,
+  "localProductExecution": false,
+  "integrationStatus": "BLOCKED_PENDING_HOSTED_VALIDATION_AND_S0_REVIEW"
+}

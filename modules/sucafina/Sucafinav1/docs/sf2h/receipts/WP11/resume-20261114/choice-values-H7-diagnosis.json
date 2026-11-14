@@ -1,0 +1,101 @@
+{
+  "schema": "wp11-h7-choice-value-composition-review-v1",
+  "status": "STATIC_PROPOSAL_NOT_APPLIED_NOT_RUN",
+  "rootAuthorization": "Scratch proposal to remove only the discarded criterion evaluation in resolveChoiceValues; preserve canonical monetary comparison, sources, scenarios, evidence, C10, human grants and final authority. No timeout change or local product execution.",
+  "observedFailure": {
+    "metadata": {
+      "path": "ci-analysis/wp11-W15-H6-evidence-meta.json",
+      "sha256": "eb5cb0d5631a9aa71ba4a8cb70eaea76f2d2df10f45c8dc5d45bc932db58856c"
+    },
+    "productSha": "18d4c4dc502a5cedb5659eb29413ec7390c6e3df",
+    "runId": 43595614889,
+    "jobId": 132449332880,
+    "conclusion": "FAILURE",
+    "historyDurationMs": 180014.13,
+    "admissionTestsPassed": 7,
+    "historyNotReached": [
+      "threshold-after15000",
+      "subsequent history/locked/retry assertions",
+      "interval certificate",
+      "restart with collaborator"
+    ],
+    "timingLimit": "Inclusive wall-time counters are not CPU or measured causal savings."
+  },
+  "cause": [
+    "Each recordChoice first invokes the full withCriteria comparison and persists that returned comparison/criterionResults into ChoiceRecord. Later, resolveChoiceValues invokes the same full withCriteria comparison again but extracts only knownDifference; all second-call criterion results are discarded.",
+    "For one requested criterion, scenario-comparison-port calls criteria.evaluate twice. Each registry evaluation invokes the canonical metric once when conditioned, or twice when confirmed. Each metric invokes units.issue twice and may preview the scenario. The proposed value-only comparison retains the two canonical scenario observations/source and C10 fences but omits this second, discarded criterion evaluation tree.",
+    "The returned ChoiceValue still comes from a new canonical compareScenarios call under the same context and scenario refs, without caching any prior comparison, projection, amount, source, rule or authority result."
+  ],
+  "preserved": [
+    "The createDecisionMutations planner remains withCriteria in both fixtures. recordChoice still checks full human payload, separate confirmChoice, case version, requested criterion IDs, canonical comparison refs, persisted historical result digests and immutable choice snapshot.",
+    "choiceValuesPlanner uses the same host, classified sources, stored scenarios and evidence. Only its local read request sets criteria:[]; the original admitted mutation payload/request is not modified.",
+    "Canonical compareScenarios still resolves siblings twice, validates source reference and C10/basis/assessment twice, compares component/projection digests and revalidates host on egress. No financial arithmetic is authored in the fixture.",
+    "saveCase retains expected cases storageVersion and final synchronous mutation/source checks plus authority egress. A legitimate rule register writes preferences AND includes cases in its transaction scope; state-provider increments versions for all scopes, so a concurrent rule update conflicts with the original case storageVersion rather than depending on the discarded extra evaluation.",
+    "All existing financial values, criterion outcomes, three original replaces, full history assertions and 180000ms limit are unchanged."
+  ],
+  "auxiliaryResolverEvaluation": {
+    "globalOperationalDeclaration": "REJECTED_NOT_IN_CANDIDATE",
+    "counterexample": "sourcePlanner.compareForecast reads its final authenticated projection before its refreshed resolveForecastSource callback. Replacing the revised currentSource resolver with a declaration-only lookup globally would remove the real projection read that currently follows that callback. A real source change while the refreshed resolver awaits authority could then leave the old digest accepted.",
+    "currentSourceSpecificBehavior": "Original source declarations retain private revokedSources policy in their existing resolver. Revised references currently check the real host lease and project the actual copied source; human references require one exact known source and currentSource. No generic ACL bypass is permitted.",
+    "possibleSeparateDesign": "Only the H6 strict operations=[]/assumptions=[] branch has a final authenticated projection after both resolver callbacks and the final in-transaction lease check. A distinct declaration resolver used exclusively there might remove repeated projections, but it must preserve all reference-specific policy checks and gain a revised-source race/revocation negative. No such shortcut is included in this minimal proposal.",
+    "unchangedCallers": "sourcePlanner, the full nonempty operation verifier, classified Planner, sources/evidence, baseline coverage, preview, stored-scenario source resolution and human source verification remain byte-identical."
+  },
+  "affectedTests": [
+    "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/implementation-quote-history.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts"
+  ],
+  "validationPlan": "Publish reviewed bytes through root, run the existing affected surgical hosted tests with their unchanged 180000ms limits, and compare trace milestones without claiming prior performance. No additional mirror test is necessary for the two-line callback composition change; existing tests assert canonical choice.values/comparison and grant behavior.",
+  "limits": [
+    "H7 may still exceed the original history budget; no performance success is asserted.",
+    "Source/coverage applicability declarations remain synthetic fixture inputs; human-choice fixture keeps real private UI grants, but no native/installed session is established.",
+    "The seven H6 admission controls remain evidence of that helper, not a passing complete history."
+  ],
+  "sourceInspection": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "sourceSha": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "e0840d775274ea73c6b938711764c69593dadca0",
+      "sha256": "c1270b39da0574403f7461e007c14e9fb19c8726aa949f938d09879df3988813"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+      "sourceSha": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "c357c6c66aac544394ab355306e1f6f7195395f7",
+      "sha256": "88d63af3bb3b3f115e59bcde29de014dd5337ba71ce68910089d97bd89299217"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "sourceSha": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "b7988a2963a2797a96ea19ab2b3a481564548213",
+      "sha256": "f988cc1c91c340628c80523d587bfeec27e92971d6ff467233f9bbb4fff0dfbe"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "sourceSha": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/criterion-metric.ts",
+      "sourceSha": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "2340a9566e1471f47d9c5c7f884bfc31be13cef3",
+      "sha256": "e28f33526f78532826d4b80b0eb2396e805ea7bbc45c8291f1de7bd79018f127"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "sourceSha": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "sha256": "51c9b83256825e90e3a8a8b49c11d73339527edcb1a67da4d98ce6e8bf17e143"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "sourceSha": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+      "blob": "e365ac59376482dfcc6f81aed045b0153f911038",
+      "sha256": "724cabc70e417a23f740c5ccd8f15e71c49a2caca17e0c84d0b97faf98905100"
+    }
+  ],
+  "noRepositoryWrites": true,
+  "noLocalProductExecution": true
+}

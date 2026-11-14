@@ -1,0 +1,13 @@
+{
+  "schema": "wp11-test-type-narrowing-v1",
+  "baseProductSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+  "checkRunId": 43599239480,
+  "finding": "case-egress-fence.test.ts:116:45 TS2769: optional race.beforeDigest supplied to toBe expecting string.",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+  "beforeBlob": "0d344369ce375c0cb35633c7eac2f6b8dd11b153",
+  "afterBlob": "40f814167314c329b30d15db3dadbeaad4cfcb55",
+  "correction": "After asserting that the real CAS committed, require race.before and race.beforeDigest to be present. This narrows the evidence before all later assertions; no cast or assertion removal.",
+  "runtimeDelta": false,
+  "qualification": "Affected seven-case file will be executed on the new product SHA; prior E1 evidence retains W18.",
+  "localProductExecution": false
+}

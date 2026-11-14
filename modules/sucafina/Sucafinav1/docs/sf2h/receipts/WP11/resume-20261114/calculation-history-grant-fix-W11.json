@@ -1,0 +1,64 @@
+{
+  "schema": "wp11-own-fixture-ui-readmission-fix-v1",
+  "status": "FROZEN_NO_STATIC_BLOCKER_HOSTED_VALIDATION_PENDING",
+  "preparedAtUtc": "2026-11-14T11:43:01.966934+00:00",
+  "baseProductSha": "14d0cef142561c33076e19bf9c8fb17d1f1e7038",
+  "baseProductTree": "bd90d90fc5eff26323e522fa42f17a198fa3f233",
+  "failure": {
+    "productSha": "65509f0b8c435b88fb0ec9949299571f011d2347",
+    "snapshotSha": "6b769a59b579a93136206fc23f033c24bfbf9e0f",
+    "requestBlob": "06958fb36fa954dd806df964d4669388d08b881e",
+    "runId": 43590675088,
+    "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+    "test": "an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result",
+    "durationMs": 1541.55,
+    "error": "Case unavailable",
+    "throwLine": 160,
+    "callerLine": 208,
+    "log": "ci-analysis/wp11-W9-AR2-tests.log",
+    "logSha256": "ee6d7a7f2218411cf12fbf852c056f09913e1a906a7dc1b4d633dd37f3fa34e9",
+    "wholeSelection": {
+      "pass": 4,
+      "fail": 2,
+      "tests": 6,
+      "files": 4,
+      "durationSeconds": 120.12
+    }
+  },
+  "diagnostico": "A fixture removia autorização e chamava o leitor histórico; createSfUiAuthority.revalidate apagava a admissão do WeakMap. Restaurar access.allowed não recria o grant. Os negativos posteriores de fonte eram recusados por autoridade ausente e changeCase falhava ao tentar ler C08 com a Request do lease revogado.",
+  "change": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+    "beforeW10Blob": "ae99e63e1e9987be91c46d231bba05ec24748ca1",
+    "candidateBlob": "9f804318ece7b82c9119508e24763ada47ce294d",
+    "sha256": "a3581e0887391b874967ec5d8ed9abf650de608d6b867433664de1f799226bca",
+    "bytes": 23969
+  },
+  "correcao": "Após verificar a recusa por revogação, solicitar nova admissão sf-human:planner.read consumida ao mesmo emissor UI real. Atualizar apenas o par contexto/Request usado pelas duas composições da fixture. Nenhuma função de produto ou verificador é substituído.",
+  "discriminatingAssertions": [
+    "Lease antigo permanece inválido e sem Request mesmo após restauração da ACL.",
+    "Nova admissão possui requestId distinto e o mesmo principal; host revalidate retorna true.",
+    "O resultado histórico exato volta a ser legível antes da mutação real da fonte.",
+    "Após CAS real da fonte, os negativos de resultado, ancestralidade e caso continuam falhando enquanto o novo lease permanece válido.",
+    "A alteração de encarnação do caso e sua recusa histórica seguem no teste."
+  ],
+  "preserved": [
+    "Real UI authority, C08 provider, scoped source issuer and canonical Planner replay",
+    "Both second-callback CAS race negatives and all prior selector/source/horizon/authority/incarnation negatives",
+    "Original ledger and strict current-result refusal",
+    "180000ms timeout",
+    "Original provider remains alive during second-connection reopen; no full restart claim"
+  ],
+  "limits": [
+    "Only one own test file changed; no runtime producer or formula edited.",
+    "No local product test or typecheck ran.",
+    "Producer-capture/native contribution and acceptance-grant boundaries remain explicit contract fixtures, not GNATIVE or actual human confirmation.",
+    "AR2 failure remains recorded. A later hosted pass must identify the new immutable test blob."
+  ],
+  "independentStaticReview": {
+    "reviewer": "ci_reconciliation",
+    "status": "NO_STATIC_BLOCKER_FOUND",
+    "candidateBlob": "9f804318ece7b82c9119508e24763ada47ce294d",
+    "findings": "Private revocation deletes admission; new consumed admission and Request are valid. Both composition closures observe current bindings; Request narrowing is non-optional. Positive historical read before source CAS prevents an authority failure from masquerading as a source negative.",
+    "runtimeClaim": false
+  }
+}

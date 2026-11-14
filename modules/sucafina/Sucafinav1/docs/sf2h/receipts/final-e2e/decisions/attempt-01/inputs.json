@@ -1,0 +1,200 @@
+{
+  "schema": "sf2h-final-e2e-decisions-input-v1",
+  "mission": "e2e-decisions",
+  "actor": "S4-A",
+  "state": "PREPARED_PARTIAL_NOT_RUN",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp11",
+  "pull_request": 40,
+  "source_head": "e8949be0e31952d5be4987c099003cd0b46e2add",
+  "source_tree": "694ab744ce9e1361ec65704c5854c0bd30bf833a",
+  "preserved_product_commit": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1",
+  "authority": {
+    "mission_commit": "c708ec0609dbfc95b259707d8c38481617f74f11",
+    "common_blob": "e54d84e3cdfa0046225518e253baf9dcf377fa7c",
+    "mission_blob": "558501c1d83b8b3b9ae4669ce4b8779db79c2903",
+    "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "s4_a_pack_blob": "75ead4aae6187f440df6d9f9cdda6b10e444da13",
+    "wp11_pack_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "wp11_pack_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+    "ci_protocol_blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "campaign_scope": {
+      "work_packages": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "criteria": 1610
+    }
+  },
+  "instructions_read": [
+    "AGENTS.md",
+    "packages/app-shell/AGENTS.md",
+    "packages/app-shell/e2e/AGENTS.md",
+    "docs/sf2h-plan/START.md",
+    "docs/sf2h-plan/execution/COMMON.md",
+    "docs/sf2h-plan/WORKFLOW.md",
+    "docs/sf2h-plan/execution/actors/S4-A.json (complete)",
+    "S4-A required product-acceptance/resident-runtime appendices",
+    "docs/sf2h/control/handoff/astra/WP11.pack.json (complete)",
+    "docs/sf2h/control/handoff/astra/CI.md",
+    "docs/sf2h/receipts/WP11/final-20261114/INTEGRATION.md",
+    "docs/sf2h/receipts/WP11/final-20261114/EXECUTION.md"
+  ],
+  "planning_path_prefix": "modules/sucafina/Sucafinav1/",
+  "agent_pins": [
+    {
+      "path": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    {
+      "path": "packages/app-shell/AGENTS.md",
+      "blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03"
+    },
+    {
+      "path": "packages/app-shell/e2e/AGENTS.md",
+      "blob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec"
+    }
+  ],
+  "prior_handoff": {
+    "status": "DRAFT_BLOCKED",
+    "criteria": 83,
+    "verified_scoped": 32,
+    "partial": 23,
+    "blocked": 26,
+    "not_established": 2,
+    "policy": "Historical scoped results are preserved, not reaccepted or replaced by this E2E delta."
+  },
+  "write_paths": [
+    "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+    "packages/app-shell/e2e/sucafina/decisions-support/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/decisions/"
+  ],
+  "readonly": [
+    "product",
+    "runtime",
+    "shared config",
+    "shared fixtures",
+    "other owners' product branches",
+    "sf2-stack",
+    "dev"
+  ],
+  "host": {
+    "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+    "symbol": "startPlannerInstallation",
+    "returns": [
+      "origin",
+      "cookie",
+      "actorId",
+      "stop"
+    ],
+    "origin": "http://localhost:4110",
+    "isolation": "Own temporary directory/keys/business-local store and fresh production local-operator enrollment. No host credentials inherited.",
+    "process": "Starts actual apps/cli/src/index.ts serve --installation modules/sucafina/Sucafinav1/local/entry.ts and stops only fixture-owned child",
+    "setup": "installation-setup.ts calls production prepareLocalConfiguration and prepareOperatorAccess",
+    "provider": "No real provider credentials prepared or inherited; do not fabricate IndependentReview/CriticalCheck. Host profile is local-operator.",
+    "limitation": "ORCHESTRA_CHANNEL not forwarded to fixture child; shell built production through config, CLI still actual source production implementation.",
+    "config": "Shared production config starts only built app shell preview, not backend. Spec must reuse host fixture.",
+    "tests": "No Actions run or local test executed by this auditor"
+  },
+  "ci": {
+    "trigger": "push to ci-run-linux-*",
+    "product": "Publish W on astra-wp11; create S with parent W and tree W plus only .ci-run.json",
+    "selection": "validateRequest + locateTestPackage then Playwright --list and validateSelection",
+    "execution": "bun run test:e2e:local --config e2e/playwright.production.config.ts --workers 1 --retries 0 --repeat-each 1 <exact file regex> --trace retain-on-failure",
+    "timeout": "No custom request -t/timeout permitted for Playwright",
+    "artifacts": [
+      "test-ci-evidence/request.json",
+      "test-ci-evidence/playwright-selection.json",
+      "test-ci-evidence/playwright-runtime.json",
+      "packages/app-shell/e2e/test-results",
+      "packages/app-shell/e2e/playwright-report"
+    ],
+    "report": "Do not call HTTP200/screenshots success; assert exact visible state/IDs and require runtime report",
+    "omni": "test-ci.ts controlVerdict is required only runner bun with preload; Playwright path does not emit/check it. N/A by runner, no fabricated pass."
+  },
+  "pins": [
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee"
+    },
+    {
+      "path": "script/test-ci-package.ts",
+      "blob": "a10c7b04ca6633f688b62069a9a9832aaa4543dd"
+    },
+    {
+      "path": "script/module-registry.json",
+      "blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903"
+    },
+    {
+      "path": "packages/app-shell/playwright.config.ts",
+      "blob": "d935c68f5b996c0e53195ec832b969c217fcf858"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "blob": "84dbab99cf1d6d28b2f1b3ba7e688809b0eb74d1"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+      "blob": "7ac66af2c21e1e46c4bf12365c7f64a255446337"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/installation-setup.ts",
+      "blob": "58f40c0f9908ad5cc8c1eebb74f4fd7a1e05283e"
+    },
+    {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "blob": "8364221434311400cae3007ea74cc67ddcfde765"
+    },
+    {
+      "path": ".github/workflows/astra-wp11-check.yml",
+      "blob": "3b361b6b22c7c5628d6b149321f73934ea5f9a84"
+    }
+  ],
+  "execution": {
+    "local_tests": 0,
+    "local_typecheck": 0,
+    "local_servers": 0,
+    "product_actions": "NOT_RUN_AT_PREPARATION",
+    "full_suite": 0,
+    "epic": 0
+  },
+  "review": {
+    "kind": "internal independent static review",
+    "reviewers": [
+      "ci_contract",
+      "criteria_contracts",
+      "ui_surface"
+    ],
+    "product_edits": false,
+    "reviewer_test_runs": 0,
+    "acceptance": "No integrated candidate C, final approval or global release claimed."
+  },
+  "unimplemented": [
+    "UI authorship of initial alternatives/sources",
+    "positive C10 comparison and conditions",
+    "human ChoiceRecord and append-only revision",
+    "proposal/preview and explicit financial Apply",
+    "true partial financial effects and durable receipts",
+    "lost Apply response and explicit same-intention recovery/retry",
+    "C17 persisted choice/receipt history",
+    "independent native critique with available real provider"
+  ],
+  "provider": {
+    "availability": "NOT_OBSERVED",
+    "critique": "NOT_RUN",
+    "fabricated_outputs": 0
+  },
+  "evidence_policy": "Append-only attempt files. Runtime report owns terminal results; static findings and not-reached assertions cannot become PASS."
+}

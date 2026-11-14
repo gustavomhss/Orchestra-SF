@@ -1,0 +1,31 @@
+{
+  "operation": "CI request and file metadata only; no product execution",
+  "selection": "W5-A1",
+  "productParent": "c52f7eed38cefd58962251a8d27a41777af18f6d",
+  "scope": "12 explicit WP11 authority, execution and state files; slow financial/C17 files remain scheduled separately",
+  "fileCount": 12,
+  "requestSha256": "aa2e63002f88ad7b80bd68132d77d7c036ee9fd055312fe38cf9d8faf476454d",
+  "omniControlScope": "declared",
+  "normalized": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+      "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+      "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+      "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "Sucafinav1/test/product/wp11/case-management.test.ts",
+      "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+      "Sucafinav1/test/product/wp11/http.test.ts",
+      "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "--timeout",
+      "180000"
+    ],
+    "env": {}
+  }
+}

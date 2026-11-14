@@ -22,6 +22,7 @@ import { openLocalStore } from "../../../runtime/local-store.ts"
 import { resolve } from "../../../src/identity.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
+const historicalPeriod = { start: "2026-01-01", end: "2026-02-28" }
 const environment = { at: "2026-11-13T00:00:00Z", id: () => "unused", directory: [] }
 
 test("authorized dashboard source reaches BI through the real UI dispatcher", async () => {
@@ -34,6 +35,7 @@ test("authorized dashboard source reaches BI through the real UI dispatcher", as
       snapshot.data.roleMap = [{ surface: "dashboard", role: "admin", entra: "admins", version: 1, by: "admin" }]
       snapshot.data.opexOwners = [{ id: "o", budget: 1200 }]
       snapshot.data.opexEntries = [{ id: "jan", ownerId: "o", year: 2026, month: 1, budget: 200, actual: 0 }]
+      snapshot.data.projects = [{ id: "p", milestones: [{ id: "dated", name: "Launch", date: "2026-03-05", status: "done" }, { id: "planned", name: "Review", date: "2026-12-05", status: "upcoming" }, { id: "historical", name: "Past checkpoint", date: "2026-02-05", status: "upcoming" }, { id: "undated", name: "No date" }] }]
       return { commit: true, value: undefined }
     })
     const ui = createSfUiAuthority({ authorize: async () => ({ installationId: "i", projectId: "p", principalRef: "admin", policyVersion: "1", accessRevision: "1" }), commandIdentity: async () => "command", createId: randomUUID, now: () => Date.parse(environment.at) })
@@ -68,6 +70,54 @@ test("authorized dashboard source reaches BI through the real UI dispatcher", as
     const presentation = await readBiPresentation(request, admitted.value, source, authority)
     expect(presentation.status).toBe("ok")
     if (presentation.status === "ok") expect(presentation.value.presentation.series.find((series) => series.role === "actual")?.valueIds).toContain("budget:2026-01:actual")
+    const milestoneSelection = await createDashboardSourceIssuer({ host, scopedSources: persistence })({ page: "Portfolio Dashboard", fields: ["milestoneDates"], period }, issuerContext.value)
+    expect(milestoneSelection.status).toBe("ok")
+    if (milestoneSelection.status !== "ok") return
+    const milestoneSource = createDashboardBiSource(bindDashboardBiPort({ dashboard, resolve: async (input) => input.viewId === "BI08" ? { status: "ok", value: { fields: ["milestoneDates"], present: (projection) => dashboardBiPresentation("BI08", projection) } } : { status: "unavailable", reason: "unsupported-view" }, revalidate: async (_request, context) => authority.revalidateDomainContext(context) }))
+    const milestoneRequest = { viewId: "BI08", selectionRef: milestoneSelection.value.selectionRef, period }
+    const milestoneAdmission = await ui.admit(new Request("https://example.test"), "sf_bi_view", digestSfValue(milestoneRequest))
+    expect(milestoneAdmission.status).toBe("ok")
+    if (milestoneAdmission.status !== "ok") return
+    const milestoneOutput = await dispatchSfCapability({ operation: "sf_bi_view", payload: milestoneRequest, context: milestoneAdmission.value, descriptors: [createBiDescriptor(milestoneSource, authority)], authority, validateInput: (_descriptor, value) => decodeSfOperationInput("sf_bi_view", value).ok, validateOutput: (_descriptor, output) => output.status !== "ok" || decodeSfOperationOutput("sf_bi_view", output.result).ok })
+    expect(milestoneOutput.status).toBe("ok")
+    if (milestoneOutput.status !== "ok") return
+    const milestoneProjection = decodeSfOperationOutput("sf_bi_view", milestoneOutput.result)
+    expect(milestoneProjection.ok).toBe(true)
+    if (milestoneProjection.ok) {
+      expect(milestoneProjection.value.values).toContainEqual(expect.objectContaining({ id: "milestone:p:undated:date", value: null, evidenceState: "absent" }))
+      expect(milestoneProjection.value.values).toContainEqual(expect.objectContaining({ id: "milestone:p:planned:status", value: "upcoming", period: { start: "2026-11-13", end: "2026-11-13" } }))
+    }
+    const milestonePresentation = await readBiPresentation(milestoneRequest, milestoneAdmission.value, milestoneSource, authority)
+    expect(milestonePresentation.status).toBe("ok")
+    if (milestonePresentation.status === "ok") {
+      expect(milestonePresentation.value.presentation.timeline?.items).toContainEqual(expect.objectContaining({ label: "No date", dateValueId: "milestone:p:undated:date", state: "unknown" }))
+      expect(milestonePresentation.value.presentation.timeline?.items).toContainEqual(expect.objectContaining({ label: "Review", dateValueId: "milestone:p:planned:date", state: "planned" }))
+      expect(milestonePresentation.value.presentation.timeline?.items).toContainEqual(expect.objectContaining({ label: "Launch", dateValueId: "milestone:p:dated:date", state: "unknown" }))
+    }
+    const historicalIssuerRequest = { viewId: "BI08", selectionRef: "historical-source-discovery", period: historicalPeriod }
+    const historicalIssuerContext = await ui.admit(new Request("https://example.test"), "sf_bi_view", digestSfValue(historicalIssuerRequest))
+    expect(historicalIssuerContext.status).toBe("ok")
+    if (historicalIssuerContext.status !== "ok") return
+    expect(await ui.validate(historicalIssuerContext.value, "sf_bi_view", digestSfValue(historicalIssuerRequest))).toBe(true)
+    const historicalSelection = await createDashboardSourceIssuer({ host, scopedSources: persistence })({ page: "Portfolio Dashboard", fields: ["milestoneDates"], period: historicalPeriod }, historicalIssuerContext.value)
+    expect(historicalSelection.status).toBe("ok")
+    if (historicalSelection.status !== "ok") return
+    const historicalRequest = { viewId: "BI08", selectionRef: historicalSelection.value.selectionRef, period: historicalPeriod }
+    const historicalAdmission = await ui.admit(new Request("https://example.test"), "sf_bi_view", digestSfValue(historicalRequest))
+    expect(historicalAdmission.status).toBe("ok")
+    if (historicalAdmission.status !== "ok") return
+    const historicalOutput = await dispatchSfCapability({ operation: "sf_bi_view", payload: historicalRequest, context: historicalAdmission.value, descriptors: [createBiDescriptor(milestoneSource, authority)], authority, validateInput: (_descriptor, value) => decodeSfOperationInput("sf_bi_view", value).ok, validateOutput: (_descriptor, output) => output.status !== "ok" || decodeSfOperationOutput("sf_bi_view", output.result).ok })
+    expect(historicalOutput.status).toBe("ok")
+    if (historicalOutput.status !== "ok") return
+    const historicalProjection = decodeSfOperationOutput("sf_bi_view", historicalOutput.result)
+    expect(historicalProjection.ok).toBe(true)
+    if (historicalProjection.ok) {
+      expect(historicalProjection.value.values).toContainEqual(expect.objectContaining({ id: "milestone:p:historical:date", value: "2026-02-05" }))
+      expect(historicalProjection.value.values.some((value) => value.id === "milestone:p:historical:status")).toBe(false)
+    }
+    const historicalPresentation = await readBiPresentation(historicalRequest, historicalAdmission.value, milestoneSource, authority)
+    expect(historicalPresentation.status).toBe("ok")
+    if (historicalPresentation.status === "ok") expect(historicalPresentation.value.presentation.timeline?.items).toContainEqual(expect.objectContaining({ label: "Past checkpoint", dateValueId: "milestone:p:historical:date", state: "unknown" }))
     await persistence.transaction("dashboard", async (snapshot) => { snapshot.data.opexOwners = [{ id: "o", budget: 1300 }]; return { commit: true, value: undefined } })
     expect((await readBiPresentation(request, admitted.value, source, authority)).status).toBe("stale")
   } finally {

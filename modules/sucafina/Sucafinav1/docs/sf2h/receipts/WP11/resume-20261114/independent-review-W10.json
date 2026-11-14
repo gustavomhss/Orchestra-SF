@@ -1,0 +1,45 @@
+{
+  "reviewer": "ci_reconciliation",
+  "status": "NO_STATIC_BLOCKER_FOUND_HOSTED_VALIDATION_PENDING",
+  "baseProductSha": "65509f0b8c435b88fb0ec9949299571f011d2347",
+  "baseProductTree": "47d4e0833764aebe49a5a6b7ee8a6d937a4193c3",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "beforeW9Blob": "fb973752979eb98ba2e1c3c9002ade471443b728",
+      "candidateBlob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "sha256": "0485d078d1920a333287f4621882c8370cb6cc42b7901a49013c396120735321",
+      "bytes": 16513,
+      "beforeAndCandidateVerified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "beforeW9Blob": "6dcb733518a225039da3e7d7f39ff1c63a35fb09",
+      "candidateBlob": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+      "sha256": "47597f1233478dacd6b4395a811105b44abf072d465341325d4d4834494083bf",
+      "bytes": 8975,
+      "beforeAndCandidateVerified": true
+    }
+  ],
+  "reportedFailure": {
+    "runId": 43589978549,
+    "jobId": 132432435851,
+    "file": "test/product/wp11/renewal-choice-history.test.ts",
+    "line": 36,
+    "kind": "Assertion failure at115011.39ms, not timeout",
+    "cause": "Training source creation declared only November forecast. The other eleven zero values came from budget fallback and remained estimated. Production correctly refused complete total despite complete category coverage."
+  },
+  "review": {
+    "inputCorrection": "The synthetic annual quote now declares f0 through f11 explicitly in the actual Planner OPEX save command:40000 in f10 and0 in all other months. annual remains budget0 and is not treated as forecast evidence.",
+    "scope": "Only the training branch changed. Implementation revision values, original source digest preservation, real copy/save CAS, all3 original replace operations and product classifiers are unchanged.",
+    "newAssertions": "The test explicitly requires12 training components,11 zero components with confirmed evidence, and training:11 amount40000/USD/confirmed before retaining the original complete250000 assertion.",
+    "authorizationAndFreshness": "No authority/source fence or producer call removed. This is fixture source authorship, not a conversion of unknown runtime values to zero.",
+    "validationBoundary": "No local product test or typecheck. Existing180000ms test and fixture deadlines unchanged; lifecycle/threshold-after/restart require hosted success on corrected bytes."
+  },
+  "runtimeClaims": [],
+  "requiredHostedValidation": [
+    "test/product/wp11/renewal-choice-history.test.ts on exact W10 candidate",
+    "Other financial fixtures consuming createRenewalQuoteRevision as already selected in the final surgical groups"
+  ],
+  "claimBoundary": "This static review qualifies the precise fixture input correction only; H3 remains a failed run and later lifecycle steps remain unproven."
+}
