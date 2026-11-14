@@ -1,0 +1,67 @@
+{
+  "schema": "sf2h-native-preparation-capabilities-v1",
+  "recordedAt": "2026-11-14T19:44:28.821215+00:00",
+  "observationWindow": "current preparation session, before attempting host-dependent work",
+  "status": "NEEDS_HOST",
+  "sourceHead": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+  "sourceTree": "a627a2deff7f5d74e35a8b9afef06fa0f67362bd",
+  "candidateC": null,
+  "nativeAccepted": false,
+  "nativeTools": {
+    "matchingExposedTools": 0,
+    "searchedSurfaces": [
+      "Orchestra",
+      "SfHostServices",
+      "SessionV2",
+      "native SF"
+    ],
+    "meaning": "No actual installed native SF host API is callable from this session; generic shell/GitHub are not native host evidence."
+  },
+  "deviceDiscovery": {
+    "service": "Desktop Commander",
+    "name": "MacBook-Pro-de-Gustavo.local",
+    "deviceId": "0a5d296f-2ceb-4be7-ba4b-3846f15d6c37",
+    "observedStatus": "Offline",
+    "reportedLastSeen": "1314h ago at discovery",
+    "accessAttempted": false
+  },
+  "scratchRuntime": {
+    "node": "v24.22.1",
+    "bun": "NOT_INSTALLED",
+    "fullGitCheckout": false,
+    "purpose": "source inspection and preparation utilities only"
+  },
+  "realHostResources": {
+    "authenticatedSession": null,
+    "provider": null,
+    "model": null,
+    "nativeRoot": null,
+    "scannerBinary": null,
+    "restartTarget": null,
+    "acceptedCandidateC": null
+  },
+  "ci": {
+    "requestValidation": "REQUEST_VALIDATED_NOT_DISPATCHED",
+    "canonicalRegistrySourcesVerified": 35,
+    "snapshot": null,
+    "runId": null,
+    "jobIds": [],
+    "dispatches": 0,
+    "reason": "AGENTS requires GitHub Actions; canonical CI creates ci-run-* while the user prohibits any additional branch. No alternate workflow, ref or local product test used."
+  },
+  "typecheck": {
+    "status": "NOT_RUN",
+    "reason": "Required bun typecheck cannot run without Bun/package dependencies."
+  },
+  "guards": {
+    "status": "NOT_RUN",
+    "reason": "Required bun run check:guards --base origin/dev cannot run without Bun and the full Git base; no replacement result is claimed."
+  },
+  "productTestsExecuted": 0,
+  "nativeProofsExecuted": 0,
+  "epicDispatches": 0,
+  "externalMessagesSent": 0,
+  "branchCreations": 0,
+  "pullRequestCreations": 0,
+  "merges": 0
+}

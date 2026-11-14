@@ -1,0 +1,40 @@
+{
+  "schema": "sf2h-preparation-ci-validation-v1",
+  "recordedAt": "2026-11-14T19:44:28.821215+00:00",
+  "status": "REQUEST_VALIDATED_NOT_DISPATCHED",
+  "snapshotS": null,
+  "runId": null,
+  "jobs": [],
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/native-acceptance/preparation.test.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "requestSha256": "650581e8b4b4a0c8eb24983fc796581bab219fe8554f94301aa808692300f4c9",
+  "selectionFileSha256": "7a9d41dd201deef3b5d2c6f6560055cc964bbdeafd90a1b3e987adf6f5ec49d8",
+  "realValidators": [
+    "script/test-ci-request.ts:validateRequest",
+    "script/test-ci-request.ts:omniControlScope",
+    "script/test-ci-location.ts:locateTestPackage"
+  ],
+  "canonicalRegistrySourcesVerified": 35,
+  "fileExistenceCheck": "real filesystem files, contained paths, actual registry/manifests from immutable PR20 source",
+  "omniControlScope": "declared",
+  "fixtureOverrides": null,
+  "productTestsExecuted": 0,
+  "nativeProofsExecuted": 0,
+  "warnings": [
+    "Node MODULE_TYPELESS_PACKAGE_JSON reparsed the unchanged packages/script package as ESM. Request validation completed; package metadata was not edited."
+  ],
+  "dispatchBlock": "Canonical test-ci requires a new ci-run-* branch; forbidden by current user instruction.",
+  "baseHead": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+  "baseTree": "a627a2deff7f5d74e35a8b9afef06fa0f67362bd",
+  "candidateW": null,
+  "workingOverlay": "New preparation files, including the selected test, were present on disk but not yet published. This is request validation, not CI evidence for the base commit."
+}

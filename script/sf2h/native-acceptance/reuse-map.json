@@ -1,0 +1,679 @@
+{
+  "schema_version": 1,
+  "pins": {
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "mission_sha": "c708ec0609dbfc95b259707d8c38481617f74f11",
+    "wp00_head": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+    "wp10_input_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+    "wp10_observed_head": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+    "wp14_input_sha": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+    "wp12_input_sha": "ba27411a7cda9301aa162680a94153a5e643be4d"
+  },
+  "policy": "Read/reuse existing owner APIs and harnesses. Inspected source provenance is not native execution, candidate acceptance or authority to edit owner namespaces.",
+  "sources": [
+    {
+      "id": "atlas-memory.ts",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "classification": "reusable-product-api",
+      "proofs": [
+        "AM03",
+        "AM05"
+      ],
+      "exports": [
+        "createSfAtlasMemory(input)",
+        "rankSfAtlasRecall(input)"
+      ],
+      "reuse": "Use owner-composed emitFromLedger(BusinessEvidenceRef, TrustedDomainContext): Promise<MemoryWriteReceipt>, recall({id,incarnation},context), readOriginal(caseRef,digest,context) and actual createMemoryEmit/createMemoryRead instrumentation.",
+      "limits": [
+        "Never supply synthetic host/state/cases/scanner callbacks.",
+        "Durability requires awaited state transaction; append alone stages data."
+      ]
+    },
+    {
+      "id": "atlas-scanner.ts",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "11922bec60a7b9223f6f11043b02a63885b55b31",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+      "classification": "reusable-product-api",
+      "proofs": [
+        "AM05"
+      ],
+      "exports": [
+        "probeSfAtlasScanner(process: AppProcess.Interface)",
+        "createSfAtlasScanner(config): NamedScanner"
+      ],
+      "reuse": "Use host-selected canonical qualified binary spec/path/version. Real scan returns hit/clean; could-not-run throws controlled unavailability.",
+      "limits": [
+        "No always-clean adapter or substitute executable.",
+        "Host selects command and timeout; these are not model arguments."
+      ]
+    },
+    {
+      "id": "atlas-store.ts",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "0d7a1fa1d0f138d99fd0dc358ab898ebf828dcbf",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+      "classification": "reusable-product-api",
+      "proofs": [
+        "AM05"
+      ],
+      "exports": [
+        "createSfAtlasDurableMemory(partition): DurableMemory"
+      ],
+      "reuse": "Use inside protected C08 snapshot transaction; read validates/folds canonical journal and append stages validated task/project record.",
+      "limits": [
+        "Factory with in-memory partition is not persistence or native proof."
+      ]
+    },
+    {
+      "id": "atlas-restart-reader.ts",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "commit_sha": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+      "blob_sha": "439ba78e8208133e498ebfb87b00e4eb882dd8fd",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/f8031d7c54ec2fa06359156dc0b6462c3a248633/modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "classification": "component-harness-only",
+      "proofs": [
+        "AM05"
+      ],
+      "exports": [],
+      "reuse": "Existing child entry accepts directory, scannerPath and scannerVersion; SF_ATLAS_RESTART_PROBE records PID, authorized match count, outsider/revoked states and phases.",
+      "limits": [
+        "Synthetic identity setup assumes fixture case IDs.",
+        "Do not launch against real business state.",
+        "Native restart requires new authenticated binding in owner-managed isolated proof instance."
+      ]
+    },
+    {
+      "id": "source-access-atlas.test.ts",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "commit_sha": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+      "blob_sha": "4b0edefc2ed818c2c9cd17e035e6d0b84e110dcf",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/f8031d7c54ec2fa06359156dc0b6462c3a248633/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "classification": "component-harness-only",
+      "proofs": [
+        "AM03",
+        "AM05"
+      ],
+      "exports": [],
+      "reuse": "Reuse existing CI selection and assertion pattern: real gitleaks/SQLite/child process/reopen/cross-principal continuity/revocation.",
+      "limits": [
+        "Synthetic alice/bob/carol identities, roles, cases and TrustedDomainContext casts.",
+        "SF_WP14_ATLAS_RESTART_RECEIPT explicitly has nativeSessionWitness:false.",
+        "Cannot execute synthetic setup as native proof."
+      ]
+    },
+    {
+      "id": "routine-services.ts",
+      "path": "apps/cli/src/sucafina-product/routine-services.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "8b76b7591bf3ce0312108faafcda6b244a2d5e89",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/apps/cli/src/sucafina-product/routine-services.ts",
+      "classification": "reusable-product-api-requires-uninstalled-port",
+      "proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "exports": [
+        "SfRoutinePlan",
+        "SfRoutineNativeRecord",
+        "SfRoutineNativePort",
+        "SfRoutineServicesInput",
+        "createSfRoutineServices(input)",
+        "routineSourceDigest(sources)"
+      ],
+      "reuse": "Reuse catalogue/prepareAdmission/readAdmission/readRun/run, resultAccess/openResult/readArtifact and descriptors after owner installs actual SfRoutineNativePort.",
+      "limits": [
+        "Current root supplies no native port and advertises no routine descriptors.",
+        "Input digest, publication, admission, terminal execution and artifact must agree.",
+        "SessionV2.resume/external self-reported ledger cannot implement governed Task admission."
+      ]
+    },
+    {
+      "id": "routine-installed-publication.ts",
+      "path": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "6405d4a2e4aa41a3bb8fb8da40641093d3eee7ff",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/apps/cli/src/sucafina-product/routine-installed-publication.ts",
+      "classification": "reusable-product-api",
+      "proofs": [
+        "AM06"
+      ],
+      "exports": [
+        "createSfInstalledRoutinePublication(input)"
+      ],
+      "reuse": "LocationServiceMap/SessionStore scoped read-only publication backed by actual Relay AuthoringStore; validates placement/provider identity and digest.",
+      "limits": [
+        "Publication only; no governed native admission/execution."
+      ]
+    },
+    {
+      "id": "routine-publication.ts",
+      "path": "apps/cli/src/sucafina-product/routine-publication.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "21e22bb8bb4813711e8b1f7851c0d10369200426",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/apps/cli/src/sucafina-product/routine-publication.ts",
+      "classification": "reusable-product-api",
+      "proofs": [
+        "AM06"
+      ],
+      "exports": [
+        "createSfRoutinePublicationContribution(input)"
+      ],
+      "reuse": "Reuse installed pinned RelayWorkflowBinding publication/acquisition/revalidation.",
+      "limits": [
+        "No fallback fabricated publication/admission."
+      ]
+    },
+    {
+      "id": "routine-inputs.ts",
+      "path": "apps/cli/src/sucafina-product/routine-inputs.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "a7c3cfa6723bf68770f58fca6ebb78cea6eefb4e",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/apps/cli/src/sucafina-product/routine-inputs.ts",
+      "classification": "reusable-product-api",
+      "proofs": [
+        "AM06"
+      ],
+      "exports": [
+        "createSfRoutineInputReaders(input)"
+      ],
+      "reuse": "Resolve actual case/input evidence and current source authorization for C07 input digest.",
+      "limits": [
+        "No fabricated source references."
+      ]
+    },
+    {
+      "id": "decision-change-services.ts",
+      "path": "apps/cli/src/sucafina-product/decision-change-services.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "46c95ba57b1daf726cdd4c1576d73e782827580d",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/apps/cli/src/sucafina-product/decision-change-services.ts",
+      "classification": "reusable-product-api",
+      "proofs": [
+        "AM04"
+      ],
+      "exports": [
+        "createSfDecisionChangeServices(input)"
+      ],
+      "reuse": "Use installed selected-choice/current source fences/authority/typed prepared change service.",
+      "limits": [
+        "Preparation does not choose, Apply or approve.",
+        "No synthetic producer callbacks."
+      ]
+    },
+    {
+      "id": "change-proposal-services.ts",
+      "path": "apps/cli/src/sucafina-product/change-proposal-services.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "4ced95ae5b0be38626e59010f48909d54c95f4cd",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/apps/cli/src/sucafina-product/change-proposal-services.ts",
+      "classification": "reusable-product-api",
+      "proofs": [
+        "AM04"
+      ],
+      "exports": [
+        "createSfChangeProposalServices(input)"
+      ],
+      "reuse": "Reuse actual owner proposal services instead of constructing prepared records.",
+      "limits": [
+        "No direct fabricated receipt or prepared command."
+      ]
+    },
+    {
+      "id": "decision-domain-services.ts",
+      "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "e8a931a3d0788d0c6899e9550fbe069a4a5dc7de",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "classification": "reusable-product-api",
+      "proofs": [
+        "AM04"
+      ],
+      "exports": [
+        "createSfDecisionDomainServices(input)"
+      ],
+      "reuse": "Reuse composed decision domain producers and source/read authority.",
+      "limits": [
+        "Model actor/role never creates human authority."
+      ]
+    },
+    {
+      "id": "prepared-application-egress.ts",
+      "path": "apps/cli/src/sucafina-product/prepared-application-egress.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "e4af87d2a1c5f9c72f86810db1cacc39fcb19faf",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/apps/cli/src/sucafina-product/prepared-application-egress.ts",
+      "classification": "reusable-product-api",
+      "proofs": [
+        "AM04"
+      ],
+      "exports": [
+        "createSfPreparedApplicationEgress(authority)"
+      ],
+      "reuse": "Preserve existing reauthorization of prepared application output and canonical receipt.",
+      "limits": [
+        "Successful HTTP status alone is insufficient."
+      ]
+    },
+    {
+      "id": "contribution.ts",
+      "path": "apps/cli/src/sucafina-product/contribution.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "8d44320acedc4afec9ffc100f5f6a171cdf26993",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/apps/cli/src/sucafina-product/contribution.ts",
+      "classification": "reusable-product-api",
+      "proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM06"
+      ],
+      "exports": [
+        "createSfProductContribution(input)",
+        "createSfProductDispatch(input)"
+      ],
+      "reuse": "Existing resident registration/private MCP bridge/shared dispatch; onVerifiedCall observes real verified calls.",
+      "limits": [
+        "No fake MCP provider or alternate engine.",
+        "Observer never grants permission."
+      ]
+    },
+    {
+      "id": "http.ts",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "b1fca9569190eb42880387bd12c49dd769304522",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/modules/sucafina/Sucafinav1/product/decisions/http.ts",
+      "classification": "reusable-product-http",
+      "proofs": [
+        "AM04"
+      ],
+      "exports": [
+        "createDecisionHttp(input)"
+      ],
+      "reuse": "POST to discovered decision mount with sf=decision-choose/decision-prepare-changes/decision-review/decision-apply; closed JSON schema and current human admission.",
+      "limits": [
+        "Mount/origin discovered from real host.",
+        "reviewDigest must come from review producer.",
+        "Apply response receiptId/surface/version must be joined to canonical receipt/domain effect."
+      ]
+    },
+    {
+      "id": "prepared-apply.ts",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "90c3e981d8418c562342660bd3d56d03f9995383",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "classification": "reusable-product-api",
+      "proofs": [
+        "AM04"
+      ],
+      "exports": [
+        "createSfPreparedApply(input): PreparedApplyPort"
+      ],
+      "reuse": "Use owner-composed executePrepared(request,uiContext) and readReceipt({surface,targetRef,targetIncarnation,idempotencyKey,commandDigest},context). Domain mutation and CommandReceipt are committed together.",
+      "limits": [
+        "Native execution denied: human-authority-required.",
+        "Same key changed digest conflicts.",
+        "Private factory callbacks cannot be supplied by harness."
+      ]
+    },
+    {
+      "id": "apply.ts",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "964a53310c340f4496d7410d66f8b852270b75f1",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "classification": "reusable-product-api",
+      "proofs": [
+        "AM04"
+      ],
+      "exports": [
+        "createPreparedExecution(input)"
+      ],
+      "reuse": "Reuse authoritative receipt lookup, one-attempt reservation, domain execution and later case reconciliation with receipt re-observation.",
+      "limits": [
+        "Per-domain transactions remain distinct.",
+        "Response loss after complete HTTP handler does not prove interruption before reconciliation.",
+        "Indeterminate attempt requires reconciliation, not unconditional redispatch."
+      ]
+    },
+    {
+      "id": "business-context.ts",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "102c849084980ae52223809d33bdeea36a58536b",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "classification": "contract",
+      "proofs": [
+        "AM03",
+        "AM04",
+        "AM05"
+      ],
+      "exports": [
+        "BusinessEvidenceRef",
+        "BusinessEvidenceResolution",
+        "BusinessMemoryEnvelope",
+        "MemoryWriteReceipt",
+        "BusinessContextService"
+      ],
+      "reuse": "Preserve discriminated identity/incarnation/hash/version/receipt fields in requests and observations.",
+      "limits": [
+        "Shape conformity is not authority."
+      ]
+    },
+    {
+      "id": "routine-services.test.ts",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-services.test.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "01663714ae9b55d3f5fb1049d5fda09d57aa8a2c",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-services.test.ts",
+      "classification": "component-harness-only",
+      "proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "exports": [],
+      "reuse": "Reuse CI boundary regression for absent native port, pinned publication, admission versions, artifact digest and provider disposal.",
+      "limits": [
+        "Explicitly labels native C07 I/O a boundary fixture, not GNATIVE.",
+        "Invented native-admission/native-run/native-result values cannot be accepted as native witnesses."
+      ]
+    },
+    {
+      "id": "atlas-recovery.test.ts",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "b4af8ec1ca2b944f89bdfea23fd339c510154182",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+      "classification": "component-harness-only",
+      "proofs": [
+        "AM05"
+      ],
+      "exports": [],
+      "reuse": "Reuse component regression for source-changed-before-commit and receipt recovery after reopen without scanner.",
+      "limits": [
+        "Creates synthetic host/role map; not native Session/model/consumer evidence."
+      ]
+    },
+    {
+      "id": "memory-http.ts",
+      "path": "apps/cli/src/sucafina-product/memory-http.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "f727d5250024df7338491321c36e7055d7c18f74",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/apps/cli/src/sucafina-product/memory-http.ts",
+      "classification": "reusable-product-http",
+      "proofs": [
+        "AM05"
+      ],
+      "exports": [
+        "createSfMemoryHttp(input)"
+      ],
+      "reuse": "Use existing private human dashboard memory-catalog/conditions/signals/materiality/outcome and condition/outcome-selection routes with current registry and withCase authority.",
+      "limits": [
+        "These selections are not resident capabilities.",
+        "Discover mount and honor current origin/query constraints."
+      ]
+    },
+    {
+      "id": "host-context.ts",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/90f2c4f81f74edc26a1783bfda7891638b429fa6/apps/cli/src/sucafina-product/host-context.ts",
+      "classification": "installed-composition-inspected",
+      "proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "exports": [],
+      "reuse": "Read actual root composition and preserve original owner boundary.",
+      "limits": [
+        "At mission pin and observed current WP10 HEAD createSfRoutineServices receives no native property and no routine descriptors are advertised.",
+        "Do not edit this active owner namespace."
+      ]
+    },
+    {
+      "id": "native-host.ts",
+      "path": "apps/cli/src/sucafina-product/native-host.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "f43e9ae216a94f16daf985bac32f2c9e2627a2b7",
+      "classification": "reusable-product-api",
+      "proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM06"
+      ],
+      "exports": [
+        "createSfNativeHostContribution(policy)",
+        "SfNativeHostApi",
+        "SfNativePrepareInput",
+        "SfLoadedSkillObservation"
+      ],
+      "reuse": "Owner-installed onReady API exposes prepare/execute/collect/interrupt/release; real Catalog, SessionV2, source capability, SkillLoadReceipt and C15 gate are required.",
+      "limits": [
+        "Live root binding only; serialized JSON binding is not authority.",
+        "No invented model/credentials/budget."
+      ]
+    },
+    {
+      "id": "verified-call.ts",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/verified-call.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "d4d8f62ae7418535d382fa47b464eb778b008831",
+      "signature": "(operation:string,payload:unknown,result:Extract<CapabilityResult,{status:'ok'}>,context:TrustedCallContext)=>boolean",
+      "classification": "reusable-product-observer-type",
+      "proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM06"
+      ],
+      "exports": [
+        "SfVerifiedCallObserver"
+      ],
+      "reuse": "Observe only after receipt, transport-close and authority validation; false blocks egress.",
+      "limits": [
+        "Only successful verified calls invoke it. Capture denied results independently.",
+        "No invented result/context/receipt."
+      ]
+    },
+    {
+      "id": "wp12-native-mission-harness",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "commit_sha": "ba27411a7cda9301aa162680a94153a5e643be4d",
+      "blob_sha": "49300a78a44ac0739791d10a11c386b317f4b51a",
+      "classification": "mixed-harness-with-synthetic-factory",
+      "proofs": [
+        "AM01",
+        "AM02",
+        "AM03"
+      ],
+      "exports": [
+        "executeWp12NativeMission(context,incoming)",
+        "dispatchWp12Ui",
+        "withWp12NativeMissionHost",
+        "readWp12NativeMissionAfterReload"
+      ],
+      "reuse": "Reuse actual execute/dispatch flow with owner-supplied installed context, or canonical CI regression. Private observation is needed for complete native receipt.",
+      "limits": [
+        "withWp12NativeMissionHost fabricates synthetic principal/directory/grants/temp host and is forbidden as native setup.",
+        "Imports bun:test; do not make native runtime depend on test authority.",
+        "Reload helper logs synthetic identityKind; do not copy as native witness."
+      ]
+    },
+    {
+      "id": "wp12-analysis-http",
+      "path": "apps/cli/src/sucafina-product/analysis-http.ts",
+      "commit_sha": "ba27411a7cda9301aa162680a94153a5e643be4d",
+      "blob_sha": "06522fa4a2eaa0841af8aabead799d9d56a8ada7",
+      "classification": "reusable-product-http",
+      "proofs": [
+        "AM01",
+        "AM02",
+        "AM03"
+      ],
+      "exports": [
+        "createSfAnalysisHttp(input)"
+      ],
+      "reuse": "Authenticated workbench-analysis choices/prepare/start/read/output/cancel at discovered mount/surface.",
+      "limits": [
+        "HTTP result omits complete private native transcript/C16 receipt.",
+        "Offered import choices only cover two profile/skill pairs, not all eighteen."
+      ]
+    },
+    {
+      "id": "wp12-import-analysis-choices",
+      "path": "modules/sucafina/Sucafinav1/product/imports/analysis-options.ts",
+      "commit_sha": "ba27411a7cda9301aa162680a94153a5e643be4d",
+      "blob_sha": "a7d01f61282b4e044591e8d69db4b2c0a9e3252b",
+      "classification": "limited-existing-ui-selection",
+      "proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "exports": [
+        "readSfImportAnalysisChoices"
+      ],
+      "reuse": "Use actual offered choices for the import work entry.",
+      "limits": [
+        "Only sf_maestro/sf-enquadrar-decisao and sf_finance/sf-explicar-forecast offered here.",
+        "Other sixteen skills require their actual work entries or owner-private selected registry; never forge choices."
+      ]
+    },
+    {
+      "id": "business-memory-entry.ts",
+      "path": "modules/atlas/boundary/src/business-memory-entry.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "06f8085df12d57baf7973d0df500da3e366dc29a",
+      "classification": "reusable-product-boundary",
+      "proofs": [
+        "AM05"
+      ],
+      "exports": [
+        "createMemoryRead",
+        "createMemoryEmit",
+        "versioned",
+        "respawnFromRecord",
+        "memoryKindOf",
+        "validate"
+      ],
+      "reuse": "Import exact public @orchestra/atlas-boundary/business-memory-ports.",
+      "limits": [
+        "Packaging alone is not native identity/model/persistence/consumer evidence."
+      ]
+    },
+    {
+      "id": "business-memory-ports.test.ts",
+      "path": "modules/atlas/boundary/test/business-memory-ports.test.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "22d2bad87dd87cfb7dd7b2c08c0da6ca75da6238",
+      "classification": "existing-packaging-regression",
+      "proofs": [
+        "AM05"
+      ],
+      "exports": [],
+      "reuse": "Reuse existing admitBusinessBundle negative assertions and native/business exports checks via canonical CI.",
+      "limits": [
+        "Packaging alone is not native identity/model/persistence/consumer evidence."
+      ]
+    }
+  ],
+  "atlas_generated_artifacts": [
+    {
+      "path": "modules/atlas/boundary/src/generated/business-memory-ports.d.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "7331e839a166dd9690610b99ec6b595aec50c6e5",
+      "sha256": null,
+      "sha256_status": "Calculate from candidate C bytes; Git blob identity is not SHA256."
+    },
+    {
+      "path": "modules/atlas/boundary/src/generated/business-memory-ports.js",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "cfc144ffec16c1eec41b7350ae8c8d47452088c0",
+      "sha256": null,
+      "sha256_status": "Calculate from candidate C bytes; Git blob identity is not SHA256."
+    },
+    {
+      "path": "modules/atlas/boundary/src/generated/native-memory.d.ts",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "bc73667c5513e622ff2b5f4f553605fb3532b395",
+      "sha256": null,
+      "sha256_status": "Calculate from candidate C bytes; Git blob identity is not SHA256."
+    },
+    {
+      "path": "modules/atlas/boundary/src/generated/native-memory.js",
+      "commit_sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+      "blob_sha": "820a3010be24a817edae7ff26299919d448ad4bf",
+      "sha256": null,
+      "sha256_status": "Calculate from candidate C bytes; Git blob identity is not SHA256."
+    }
+  ],
+  "gaps": [
+    {
+      "id": "C07_NATIVE_NOT_INSTALLED",
+      "proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "source_id": "host-context.ts",
+      "confirmed_at": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+      "blob_sha": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+      "observation": "Installed publication is read-only; createSfRoutineServices receives no native port; six routine descriptors not advertised.",
+      "owner_tasks": [
+        "WP10.T01",
+        "WP09.T07"
+      ],
+      "next_action": "Owner installs authentic governed Task/Relay adapter and S0 composes its SHA into future C; keep six AM02 Routines rows and AM06 blocked."
+    },
+    {
+      "id": "NATIVE_LOSS_BARRIER_NOT_EXPOSED",
+      "proofs": [
+        "AM04",
+        "AM05"
+      ],
+      "source_ids": [
+        "apply.ts",
+        "prepared-apply.ts",
+        "atlas-memory.ts"
+      ],
+      "observation": "No installed capability exposed for exact after-commit/before-response-or-case-reconciliation failure boundary.",
+      "owner_tasks": [
+        "WP10.T01",
+        "WP10.T07",
+        "WP11.T04"
+      ],
+      "next_action": "Owner supplies supported controlled native observation/fault boundary; do not modify active host or replace persistence."
+    },
+    {
+      "id": "AM01_UI_SELECTION_INCOMPLETE",
+      "proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "source_id": "wp12-import-analysis-choices",
+      "observation": "The observed import choices do not expose the remaining sixteen skills.",
+      "owner_tasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP10.T06"
+      ],
+      "next_action": "Discover actual task-specific work entries and private installed selections for all eighteen; absence remains NEEDS_HOST."
+    }
+  ],
+  "evidence_boundary": {
+    "component_tests": "Existing component test selections may be reused in canonical CI; synthetic authorities and records never count as AM witnesses.",
+    "same_candidate": "Final native observations all refer to one accepted C. Source pins here are not a multi-head acceptance bundle.",
+    "no_dispatch": "No local product tests, epic launch or final AM execution are authorized by this map."
+  }
+}

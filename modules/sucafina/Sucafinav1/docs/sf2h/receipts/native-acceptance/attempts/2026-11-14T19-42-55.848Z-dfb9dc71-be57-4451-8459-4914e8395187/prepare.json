@@ -1,0 +1,5626 @@
+{
+  "schema": "sf2h-native-plan-v1",
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "missionSha": "c708ec0609dbfc95b259707d8c38481617f74f11",
+  "candidateC": null,
+  "status": "PREPARED_NOT_RUN",
+  "nativeAccepted": false,
+  "coverageDigest": "d0db681558a481e8e4332277e82cfb1085377a8a8892d821b1962fd06ddae17a",
+  "counts": {
+    "profiles": 5,
+    "skills": 18,
+    "packs": 8,
+    "operations": 39,
+    "proofDefinitions": 12,
+    "checks": 278
+  },
+  "requiredReceiptFields": {
+    "AM01": [
+      "testedCommit",
+      "codeBaseline",
+      "fixtureOrRealSource",
+      "principalScope",
+      "caseRef",
+      "runId",
+      "nativeSessionId",
+      "profileId",
+      "skillLoadReceipts",
+      "operation",
+      "handlerIdentity",
+      "inputDigest",
+      "outputRef",
+      "consumerRef",
+      "observedResult",
+      "expectedResult",
+      "verdict"
+    ],
+    "AM02": [
+      "testedCommit",
+      "codeBaseline",
+      "fixtureOrRealSource",
+      "principalScope",
+      "caseRef",
+      "runId",
+      "nativeSessionId",
+      "profileId",
+      "skillLoadReceipts",
+      "operation",
+      "handlerIdentity",
+      "inputDigest",
+      "outputRef",
+      "consumerRef",
+      "observedResult",
+      "expectedResult",
+      "verdict"
+    ],
+    "AM03": [
+      "testedCommit",
+      "codeBaseline",
+      "fixtureOrRealSource",
+      "principalScope",
+      "caseRef",
+      "runId",
+      "nativeSessionId",
+      "profileId",
+      "skillLoadReceipts",
+      "operation",
+      "handlerIdentity",
+      "inputDigest",
+      "outputRef",
+      "consumerRef",
+      "observedResult",
+      "expectedResult",
+      "verdict"
+    ],
+    "AM04": [
+      "testedCommit",
+      "codeBaseline",
+      "fixtureOrRealSource",
+      "principalScope",
+      "caseRef",
+      "runId",
+      "nativeSessionId",
+      "profileId",
+      "skillLoadReceipts",
+      "operation",
+      "handlerIdentity",
+      "inputDigest",
+      "outputRef",
+      "consumerRef",
+      "observedResult",
+      "expectedResult",
+      "verdict"
+    ],
+    "AM05": [
+      "testedCommit",
+      "codeBaseline",
+      "fixtureOrRealSource",
+      "principalScope",
+      "caseRef",
+      "runId",
+      "nativeSessionId",
+      "profileId",
+      "skillLoadReceipts",
+      "operation",
+      "handlerIdentity",
+      "inputDigest",
+      "outputRef",
+      "consumerRef",
+      "observedResult",
+      "expectedResult",
+      "verdict",
+      "generatedArtifactDigests",
+      "nativeBoundSourceDigest",
+      "scannerSourceDigest",
+      "guardSourceDigest",
+      "allowlistDigest",
+      "spawnGuardCommand",
+      "spawnGuardExitStatus",
+      "businessBundleAstVerdict",
+      "exactExternalEdge"
+    ],
+    "AM06": [
+      "testedCommit",
+      "codeBaseline",
+      "fixtureOrRealSource",
+      "principalScope",
+      "caseRef",
+      "runId",
+      "nativeSessionId",
+      "profileId",
+      "skillLoadReceipts",
+      "operation",
+      "handlerIdentity",
+      "inputDigest",
+      "outputRef",
+      "consumerRef",
+      "observedResult",
+      "expectedResult",
+      "verdict"
+    ]
+  },
+  "campaignEvidenceFields": [
+    "criterion_id",
+    "entity_id",
+    "scope",
+    "status",
+    "candidate_sha",
+    "actor_or_role",
+    "fixture_id",
+    "entrypoint_or_action",
+    "expected",
+    "observed",
+    "evidence_uri",
+    "reviewer",
+    "verified_at",
+    "product_candidate_sha",
+    "ci_snapshot_sha",
+    "ci_request_hash",
+    "contract_version",
+    "producer_refs",
+    "consumer_entrypoint",
+    "execution_actor",
+    "logical_owner",
+    "writer_lease",
+    "contract_versions",
+    "profile_id",
+    "profile_version",
+    "skill_ids",
+    "skill_versions",
+    "skill_digests",
+    "source_paths",
+    "bundle_digest",
+    "effective_model",
+    "native_session_id",
+    "case_id",
+    "case_version",
+    "case_incarnation",
+    "mcp_server_generation",
+    "mcp_operation",
+    "domain_port",
+    "domain_call_id",
+    "runtime_build_sha",
+    "atlas_engine_baseline",
+    "atlas_boundary_version",
+    "business_schema_version",
+    "scanner_binary_version",
+    "access_revision",
+    "expected_selection",
+    "selected_files",
+    "measured_duration_seconds"
+  ],
+  "checks": [
+    {
+      "id": "AM01.definition.0.cases.0.positive",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/0/cases/0/positive",
+      "kind": "positive",
+      "expected": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+      "ownerTasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM01.definition.0.cases.0.negative",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/0/cases/0/negative",
+      "kind": "negative",
+      "expected": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+      "ownerTasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM01.definition.0.cases.0.expected_consumed_outputs",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/0/cases/0/expected_consumed_outputs",
+      "kind": "consumption",
+      "expected": "FinancialAnalysis/ScenarioComparison/SensitivityResult e BI consumidos WP01/WP05/WP11; totais iguais a C02/C10.",
+      "ownerTasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM01.definition.0.cases.1.positive",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/0/cases/1/positive",
+      "kind": "positive",
+      "expected": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+      "ownerTasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM01.definition.0.cases.1.negative",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/0/cases/1/negative",
+      "kind": "negative",
+      "expected": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+      "ownerTasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM01.definition.0.cases.1.expected_consumed_outputs",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/0/cases/1/expected_consumed_outputs",
+      "kind": "consumption",
+      "expected": "CommercialComparison/CommercialGap/EvidenceCandidate/PreparedChange visíveis no caso e UI; extração confirmada preserva fonte.",
+      "ownerTasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM01.definition.0.cases.2.positive",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/0/cases/2/positive",
+      "kind": "positive",
+      "expected": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+      "ownerTasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM01.definition.0.cases.2.negative",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/0/cases/2/negative",
+      "kind": "negative",
+      "expected": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+      "ownerTasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM01.definition.0.cases.2.expected_consumed_outputs",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/0/cases/2/expected_consumed_outputs",
+      "kind": "consumption",
+      "expected": "DeliveryAssessment/DependencyConflict/PortfolioComparison/ReconsiderationProposal e precedente com diferenças atuais.",
+      "ownerTasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM01.definition.0.cases.3.positive",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/0/cases/3/positive",
+      "kind": "positive",
+      "expected": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+      "ownerTasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM01.definition.0.cases.3.negative",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/0/cases/3/negative",
+      "kind": "negative",
+      "expected": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+      "ownerTasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM01.definition.0.cases.3.expected_consumed_outputs",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/0/cases/3/expected_consumed_outputs",
+      "kind": "consumption",
+      "expected": "IntentFrame/AnalysisPlan/DecisionBrief/QuestionProposal e relatório real, fontes recuperáveis e perguntas à identidade conhecida.",
+      "ownerTasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM01.definition.0.cases.4.positive",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/0/cases/4/positive",
+      "kind": "positive",
+      "expected": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+      "ownerTasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM01.definition.0.cases.4.negative",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/0/cases/4/negative",
+      "kind": "negative",
+      "expected": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+      "ownerTasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM01.definition.0.cases.4.expected_consumed_outputs",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/0/cases/4/expected_consumed_outputs",
+      "kind": "consumption",
+      "expected": "CritiqueReport/ClaimIssue/UnresolvedCondition em execução distinta; resposta humana altera objeto/viabilidade em vez de só reescrever texto.",
+      "ownerTasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM02.definition.1.checks.0",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/1/checks/0",
+      "kind": "check",
+      "expected": "Usar o mesmo principal, caso, versão, porta e autorização nos caminhos UI, agente e MCP. actor/role/project forjados não alteram a concessão.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T01"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM02.definition.1.checks.1",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/1/checks/1",
+      "kind": "check",
+      "expected": "Ligar o callID da bridge à chamada do domínio, à versão e ao resultado ou recibo. Stub ou engine paralelo falham.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T01"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM02.definition.1.checks.2",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/1/checks/2",
+      "kind": "check",
+      "expected": "Listar contratos e concessões dos oito packs em T+20; exercer sua funcionalidade real até T+75. Discovery não equivale a execução.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T01"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM02.definition.1.checks.3",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/1/checks/3",
+      "kind": "check",
+      "expected": "Conferir 39 rotas positivas nomeadas por perfil/skill/operação e SkillLoadReceipt. Chamada direta do harness passa pelo wrapper C16 com binding real; nunca usar ausência de skill como autorização alternativa.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T01"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM02.definition.1.pack_matrix.0.expected",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/1/pack_matrix/0/expected",
+      "kind": "check",
+      "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T01"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM02.definition.1.pack_matrix.1.expected",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/1/pack_matrix/1/expected",
+      "kind": "check",
+      "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T01"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM02.definition.1.pack_matrix.2.expected",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/1/pack_matrix/2/expected",
+      "kind": "check",
+      "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T01"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM02.definition.1.pack_matrix.3.expected",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/1/pack_matrix/3/expected",
+      "kind": "check",
+      "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T01"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM02.definition.1.pack_matrix.4.expected",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/1/pack_matrix/4/expected",
+      "kind": "check",
+      "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T01"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM02.definition.1.pack_matrix.5.expected",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/1/pack_matrix/5/expected",
+      "kind": "check",
+      "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T01"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM02.definition.1.pack_matrix.6.expected",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/1/pack_matrix/6/expected",
+      "kind": "check",
+      "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T01"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM02.definition.1.pack_matrix.7.expected",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/1/pack_matrix/7/expected",
+      "kind": "check",
+      "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T01"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM03.definition.2.checks.0",
+      "proofId": "AM03",
+      "sourcePointer": "/proof_definitions/2/checks/0",
+      "kind": "check",
+      "expected": "Duas sessões e dois atores com o mesmo perfil e contextos distintos não cruzam dados, contagens ou cache.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T07"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM03.definition.2.checks.1",
+      "proofId": "AM03",
+      "sourcePointer": "/proof_definitions/2/checks/1",
+      "kind": "check",
+      "expected": "case/session/installation/project/location incorretos e grant/actor/role forjados são recusados na chamada direta.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T07"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM03.definition.2.checks.2",
+      "proofId": "AM03",
+      "sourcePointer": "/proof_definitions/2/checks/2",
+      "kind": "check",
+      "expected": "Revogação entre discovery e execution ou entre search e detail alcança memória, fonte, prompt, BI, relatório e link.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T07"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM03.definition.2.checks.3",
+      "proofId": "AM03",
+      "sourcePointer": "/proof_definitions/2/checks/3",
+      "kind": "check",
+      "expected": "Provider sucafina-workbench homônimo, objeto ou generation substituídos e sessão reaberta após reinício não ampliam acesso. Exigir novo binding autenticado.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T07"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM03.definition.2.checks.4",
+      "proofId": "AM03",
+      "sourcePointer": "/proof_definitions/2/checks/4",
+      "kind": "check",
+      "expected": "Operação fora das concessões do perfil é recusada mesmo sem passar por discovery.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP10.T07"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM04.definition.3.checks.0",
+      "proofId": "AM04",
+      "sourcePointer": "/proof_definitions/3/checks/0",
+      "kind": "check",
+      "expected": "O modelo prepara. Escolha, aplicação e aprovação usam as ações autorizadas e os comandos do domínio.",
+      "ownerTasks": [
+        "WP11.T03",
+        "WP11.T04",
+        "WP10.T01"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM04.definition.3.checks.1",
+      "proofId": "AM04",
+      "sourcePointer": "/proof_definitions/3/checks/1",
+      "kind": "check",
+      "expected": "Interromper após o commit no domínio e antes do retorno ou da reconciliação no caso. O retry produz um efeito e recupera o recibo persistido atomicamente.",
+      "ownerTasks": [
+        "WP11.T03",
+        "WP11.T04",
+        "WP10.T01"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM04.definition.3.checks.2",
+      "proofId": "AM04",
+      "sourcePointer": "/proof_definitions/3/checks/2",
+      "kind": "check",
+      "expected": "O mesmo idempotencyKey e digest retornam o resultado autorizado. Chave repetida com conteúdo diferente falha.",
+      "ownerTasks": [
+        "WP11.T03",
+        "WP11.T04",
+        "WP10.T01"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM04.definition.3.checks.3",
+      "proofId": "AM04",
+      "sourcePointer": "/proof_definitions/3/checks/3",
+      "kind": "check",
+      "expected": "Revalidar base e autoridade em cada domínio e explicar o estado parcial. Não declarar transação global.",
+      "ownerTasks": [
+        "WP11.T03",
+        "WP11.T04",
+        "WP10.T01"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM05.definition.4.checks.0",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/4/checks/0",
+      "kind": "check",
+      "expected": "Resolver o import @orchestra/atlas-boundary/business-memory-ports e instrumentar createMemoryEmit, createMemoryRead e DurableMemory com o digest de engine/boundary. Ler apenas o ledger SF não passa.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM05.definition.4.checks.1",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/4/checks/1",
+      "kind": "check",
+      "expected": "Resolver BusinessEvidenceRef para documento/trecho/hash, registro/encarnação/versão e cálculo/recibo. Fonte ausente ou referência invalidada devem ser reconhecidas.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM05.definition.4.checks.2",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/4/checks/2",
+      "kind": "check",
+      "expected": "Exercer append, commit, read, reinício e nova leitura. A entrada autorizada e o contexto original devem persistir. Append ainda sem commit não aparece como sucesso.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM05.definition.4.checks.3",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/4/checks/3",
+      "kind": "check",
+      "expected": "Dois atores com o mesmo perfil, owner omitido ou forjado, sessão/caso incorretos e um canary privado não ampliam o acesso.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM05.definition.4.checks.4",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/4/checks/4",
+      "kind": "check",
+      "expected": "Revalidar e invalidar após revogação ou mudança de encarnação. O precedente recuperado explica pertinência e diferenças atuais.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM05.definition.4.checks.5",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/4/checks/5",
+      "kind": "check",
+      "expected": "Registrar binary path e versão do scanner real. Exercitar clean, secret-canary, timeout e ausência. Hit ou indisponibilidade não fazem append; indisponibilidade retorna scanner-unavailable. Não aceitar scanner simulado como prova real.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM05.definition.4.checks.6",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/4/checks/6",
+      "kind": "check",
+      "expected": "Falha de commit ou resposta perdida preserva consistência do log/ledger e retomada idempotente. A função síncrona append não significa que o commit assíncrono terminou.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM05.definition.4.checks.7",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/4/checks/7",
+      "kind": "check",
+      "expected": "Empacotamento: business-memory-ports tem factories reais e zero imports de spawning; scanner vem de native-memory já admitido. Verificar AST, a aresta external exata, quatro digests gerados, exports bound preservados e check:spawn-imports do candidato com guard/allowlist inalterados.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM06.definition.5.checks.0",
+      "proofId": "AM06",
+      "sourcePointer": "/proof_definitions/5/checks/0",
+      "kind": "check",
+      "expected": "Exercer admissão/publicação pinada, Relay, perfil/skill, operação SF, run/result e UI, com IDs e versões reais.",
+      "ownerTasks": [
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T06",
+        "WP12.T04"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM06.definition.5.checks.1",
+      "proofId": "AM06",
+      "sourcePointer": "/proof_definitions/5/checks/1",
+      "kind": "check",
+      "expected": "Falha, retry e intervenção ficam visíveis. O run pode terminar com pergunta; a resposta ocorre no produto. Não inventar espera humana interna ao run.",
+      "ownerTasks": [
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T06",
+        "WP12.T04"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM06.definition.5.checks.2",
+      "proofId": "AM06",
+      "sourcePointer": "/proof_definitions/5/checks/2",
+      "kind": "check",
+      "expected": "Retomar na nova versão sem duplicar proposta ou efeito. Schedule usa recorrência, dono e timezone atuais e não aprova negócio por conta própria.",
+      "ownerTasks": [
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T06",
+        "WP12.T04"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM06.definition.5.checks.3",
+      "proofId": "AM06",
+      "sourcePointer": "/proof_definitions/5/checks/3",
+      "kind": "check",
+      "expected": "Revogação e cancelamento afetam resultado e agenda. O progresso e a proveniência de C11 chegam à mesa.",
+      "ownerTasks": [
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T06",
+        "WP12.T04"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM06.definition.5.checks.4",
+      "proofId": "AM06",
+      "sourcePointer": "/proof_definitions/5/checks/4",
+      "kind": "check",
+      "expected": "sf_maestro/sf-preparar-revisao-executiva percorre catalog/prepare com pedido humano, run só com admissão C07 atual, status/result e consumo na pauta. Em routine-result, prepare/run são recusados; nenhuma chamada recursiva é criada.",
+      "ownerTasks": [
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T06",
+        "WP12.T04"
+      ],
+      "consumerTasks": []
+    },
+    {
+      "id": "AM01.definition.6.positive_checks.0",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/6/positive_checks/0",
+      "kind": "positive",
+      "expected": "Para cada uma das 18 skills: bytes/digest conferidos, carga SessionV2.skill observada, execução permitida com perfil previsto, output schema-valid persistido e ação real do consumidor após reload.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T04",
+        "WP01.T05",
+        "WP05.T01",
+        "WP05.T05",
+        "WP06.T05",
+        "WP07.T01",
+        "WP07.T02",
+        "WP07.T04",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T06",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP13.T01",
+        "WP13.T04",
+        "WP14.T02"
+      ]
+    },
+    {
+      "id": "AM01.definition.6.positive_checks.1",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/6/positive_checks/1",
+      "kind": "positive",
+      "expected": "Cada perfil contribui em cenário pertinente; Finance reconcilia, Compras explica condição/score, Portfólio detecta dependência/restrição, Maestro estrutura, Revisor contesta.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T04",
+        "WP01.T05",
+        "WP05.T01",
+        "WP05.T05",
+        "WP06.T05",
+        "WP07.T01",
+        "WP07.T02",
+        "WP07.T04",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T06",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP13.T01",
+        "WP13.T04",
+        "WP14.T02"
+      ]
+    },
+    {
+      "id": "AM01.definition.6.positive_checks.2",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/6/positive_checks/2",
+      "kind": "positive",
+      "expected": "Revisor tem run/nativeSession distintos do alvo e não depende de histórico compartilhado para obter evidência.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T04",
+        "WP01.T05",
+        "WP05.T01",
+        "WP05.T05",
+        "WP06.T05",
+        "WP07.T01",
+        "WP07.T02",
+        "WP07.T04",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T06",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP13.T01",
+        "WP13.T04",
+        "WP14.T02"
+      ]
+    },
+    {
+      "id": "AM01.definition.6.negative_checks.0",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/6/negative_checks/0",
+      "kind": "negative",
+      "expected": "Skill apenas catalogada/arquivo não carregado, hash alterado sem versão, saída sem consumerRef ou perfil sem contribuição impedem aceite.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T04",
+        "WP01.T05",
+        "WP05.T01",
+        "WP05.T05",
+        "WP06.T05",
+        "WP07.T01",
+        "WP07.T02",
+        "WP07.T04",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T06",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP13.T01",
+        "WP13.T04",
+        "WP14.T02"
+      ]
+    },
+    {
+      "id": "AM01.definition.6.negative_checks.1",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/6/negative_checks/1",
+      "kind": "negative",
+      "expected": "Mesma sessão usada para análise e crítica ou argumento que troca perfil/skill é recusado.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T04",
+        "WP01.T05",
+        "WP05.T01",
+        "WP05.T05",
+        "WP06.T05",
+        "WP07.T01",
+        "WP07.T02",
+        "WP07.T04",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T06",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP13.T01",
+        "WP13.T04",
+        "WP14.T02"
+      ]
+    },
+    {
+      "id": "AM01.definition.6.negative_checks.2",
+      "proofId": "AM01",
+      "sourcePointer": "/proof_definitions/6/negative_checks/2",
+      "kind": "negative",
+      "expected": "Fonte/skill homônima do projeto não substitui fonte reservada do pacote.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T04",
+        "WP01.T05",
+        "WP05.T01",
+        "WP05.T05",
+        "WP06.T05",
+        "WP07.T01",
+        "WP07.T02",
+        "WP07.T04",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T06",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP13.T01",
+        "WP13.T04",
+        "WP14.T02"
+      ]
+    },
+    {
+      "id": "AM02.definition.7.positive_checks.0",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/7/positive_checks/0",
+      "kind": "positive",
+      "expected": "Manifesto final contém 39 ferramentas distribuídas exatamente pelos 8 packs; cada operação possui handler/export/type/owner implementado.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP02.T01",
+        "WP03.T01",
+        "WP03.T05",
+        "WP04.T01",
+        "WP04.T03",
+        "WP04.T05",
+        "WP05.T04",
+        "WP06.T02",
+        "WP06.T05",
+        "WP07.T02",
+        "WP07.T04",
+        "WP08.T01",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T05",
+        "WP08.T06",
+        "WP09.T01",
+        "WP09.T06",
+        "WP10.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T07",
+        "WP12.T02"
+      ]
+    },
+    {
+      "id": "AM02.definition.7.positive_checks.1",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/7/positive_checks/1",
+      "kind": "positive",
+      "expected": "Para cada operação, UI/direct native/MCP com a mesma autoridade e base invocam o mesmo handler e produzem resultado/version/ref equivalentes; audit traces mostram identidades reais.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP02.T01",
+        "WP03.T01",
+        "WP03.T05",
+        "WP04.T01",
+        "WP04.T03",
+        "WP04.T05",
+        "WP05.T04",
+        "WP06.T02",
+        "WP06.T05",
+        "WP07.T02",
+        "WP07.T04",
+        "WP08.T01",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T05",
+        "WP08.T06",
+        "WP09.T01",
+        "WP09.T06",
+        "WP10.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T07",
+        "WP12.T02"
+      ]
+    },
+    {
+      "id": "AM02.definition.7.positive_checks.2",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/7/positive_checks/2",
+      "kind": "positive",
+      "expected": "Discovery anuncia só operações concedidas e implementadas; corpo final revalida concessão e domínio.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP02.T01",
+        "WP03.T01",
+        "WP03.T05",
+        "WP04.T01",
+        "WP04.T03",
+        "WP04.T05",
+        "WP05.T04",
+        "WP06.T02",
+        "WP06.T05",
+        "WP07.T02",
+        "WP07.T04",
+        "WP08.T01",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T05",
+        "WP08.T06",
+        "WP09.T01",
+        "WP09.T06",
+        "WP10.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T07",
+        "WP12.T02"
+      ]
+    },
+    {
+      "id": "AM02.definition.7.positive_checks.3",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/7/positive_checks/3",
+      "kind": "positive",
+      "expected": "Executar as 39 operation_call_routes com SkillLoadReceipt real e paridade; rejeitar operação sem rota positiva. Direto significa harness no wrapper nativo, sem omitir identidade/perfil/skill.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP02.T01",
+        "WP03.T01",
+        "WP03.T05",
+        "WP04.T01",
+        "WP04.T03",
+        "WP04.T05",
+        "WP05.T04",
+        "WP06.T02",
+        "WP06.T05",
+        "WP07.T02",
+        "WP07.T04",
+        "WP08.T01",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T05",
+        "WP08.T06",
+        "WP09.T01",
+        "WP09.T06",
+        "WP10.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T07",
+        "WP12.T02"
+      ]
+    },
+    {
+      "id": "AM02.definition.7.negative_checks.0",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/7/negative_checks/0",
+      "kind": "negative",
+      "expected": "Operação ausente, handler de fixture, cópia de fórmula ou resultado gerado só para prova falha.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP02.T01",
+        "WP03.T01",
+        "WP03.T05",
+        "WP04.T01",
+        "WP04.T03",
+        "WP04.T05",
+        "WP05.T04",
+        "WP06.T02",
+        "WP06.T05",
+        "WP07.T02",
+        "WP07.T04",
+        "WP08.T01",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T05",
+        "WP08.T06",
+        "WP09.T01",
+        "WP09.T06",
+        "WP10.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T07",
+        "WP12.T02"
+      ]
+    },
+    {
+      "id": "AM02.definition.7.negative_checks.1",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/7/negative_checks/1",
+      "kind": "negative",
+      "expected": "Perfil não concedido tenta operação diretamente apesar de não listada: denied sem efeito.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP02.T01",
+        "WP03.T01",
+        "WP03.T05",
+        "WP04.T01",
+        "WP04.T03",
+        "WP04.T05",
+        "WP05.T04",
+        "WP06.T02",
+        "WP06.T05",
+        "WP07.T02",
+        "WP07.T04",
+        "WP08.T01",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T05",
+        "WP08.T06",
+        "WP09.T01",
+        "WP09.T06",
+        "WP10.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T07",
+        "WP12.T02"
+      ]
+    },
+    {
+      "id": "AM02.definition.7.negative_checks.2",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/7/negative_checks/2",
+      "kind": "negative",
+      "expected": "sf_routine_run sem admissão atual falha; nenhum pack cria aprovação financeira genérica.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP02.T01",
+        "WP03.T01",
+        "WP03.T05",
+        "WP04.T01",
+        "WP04.T03",
+        "WP04.T05",
+        "WP05.T04",
+        "WP06.T02",
+        "WP06.T05",
+        "WP07.T02",
+        "WP07.T04",
+        "WP08.T01",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T05",
+        "WP08.T06",
+        "WP09.T01",
+        "WP09.T06",
+        "WP10.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T07",
+        "WP12.T02"
+      ]
+    },
+    {
+      "id": "AM02.definition.7.negative_checks.3",
+      "proofId": "AM02",
+      "sourcePointer": "/proof_definitions/7/negative_checks/3",
+      "kind": "negative",
+      "expected": "Remover a última concessão de skill de uma operação faz validação de manifesto e AM02 falharem; discovery e recusa universal não satisfazem paridade.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP02.T01",
+        "WP03.T01",
+        "WP03.T05",
+        "WP04.T01",
+        "WP04.T03",
+        "WP04.T05",
+        "WP05.T04",
+        "WP06.T02",
+        "WP06.T05",
+        "WP07.T02",
+        "WP07.T04",
+        "WP08.T01",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T05",
+        "WP08.T06",
+        "WP09.T01",
+        "WP09.T06",
+        "WP10.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T07",
+        "WP12.T02"
+      ]
+    },
+    {
+      "id": "AM03.definition.8.positive_checks.0",
+      "proofId": "AM03",
+      "sourcePointer": "/proof_definitions/8/positive_checks/0",
+      "kind": "positive",
+      "expected": "Duas sessões/principais usando sf_finance simultaneamente recebem somente suas fontes e casos; callIds/pairs/leases não compartilham actor global.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP10.T07",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP08.T06",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP14.T02"
+      ]
+    },
+    {
+      "id": "AM03.definition.8.positive_checks.1",
+      "proofId": "AM03",
+      "sourcePointer": "/proof_definitions/8/positive_checks/1",
+      "kind": "positive",
+      "expected": "Troca de profile/session/case, expiração e mudança de generation tornam chamadas antigas inválidas.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP10.T07",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP08.T06",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP14.T02"
+      ]
+    },
+    {
+      "id": "AM03.definition.8.positive_checks.2",
+      "proofId": "AM03",
+      "sourcePointer": "/proof_definitions/8/positive_checks/2",
+      "kind": "positive",
+      "expected": "Revogação após discovery e antes de execução/retorno alcança fonte, resultado, memória, arquivo e link.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP10.T07",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP08.T06",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP14.T02"
+      ]
+    },
+    {
+      "id": "AM03.definition.8.negative_checks.0",
+      "proofId": "AM03",
+      "sourcePointer": "/proof_definitions/8/negative_checks/0",
+      "kind": "negative",
+      "expected": "Forjar actor/role/project/session/profile/Atlas owner em args falha schema/authority.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP10.T07",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP08.T06",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP14.T02"
+      ]
+    },
+    {
+      "id": "AM03.definition.8.negative_checks.1",
+      "proofId": "AM03",
+      "sourcePointer": "/proof_definitions/8/negative_checks/1",
+      "kind": "negative",
+      "expected": "Config com nome sucafina-workbench ou colisão sanitizada resulta provider-conflict; nunca é conectada como substituto nativo.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP10.T07",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP08.T06",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP14.T02"
+      ]
+    },
+    {
+      "id": "AM03.definition.8.negative_checks.2",
+      "proofId": "AM03",
+      "sourcePointer": "/proof_definitions/8/negative_checks/2",
+      "kind": "negative",
+      "expected": "Chamada direta de operação não concedida, lease reaproveitada/expirada ou client de geração anterior falha.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP10.T07",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP08.T06",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP14.T02"
+      ]
+    },
+    {
+      "id": "AM03.definition.8.negative_checks.3",
+      "proofId": "AM03",
+      "sourcePointer": "/proof_definitions/8/negative_checks/3",
+      "kind": "negative",
+      "expected": "Recall sem owner externo ou com owner forjado não expõe registros, títulos ou contagens alheios; o host deriva owner interno.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP10.T06",
+        "WP10.T07",
+        "WP12.T03",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP08.T06",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP14.T02"
+      ]
+    },
+    {
+      "id": "AM04.definition.9.positive_checks.0",
+      "proofId": "AM04",
+      "sourcePointer": "/proof_definitions/9/positive_checks/0",
+      "kind": "positive",
+      "expected": "Escolha humana gera PreparedChangeSet consumido com versão, preview, necessidade de aprovação e referências preservadas.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP10.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP09.T04",
+        "WP11.T02",
+        "WP11.T03",
+        "WP13.T04"
+      ]
+    },
+    {
+      "id": "AM04.definition.9.positive_checks.1",
+      "proofId": "AM04",
+      "sourcePointer": "/proof_definitions/9/positive_checks/1",
+      "kind": "positive",
+      "expected": "Perder resposta após commit e retomar recupera receipt autoritativo sem novo efeito; falha de outro domínio conserva estado parcial verdadeiro.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP10.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP09.T04",
+        "WP11.T02",
+        "WP11.T03",
+        "WP13.T04"
+      ]
+    },
+    {
+      "id": "AM04.definition.9.negative_checks.0",
+      "proofId": "AM04",
+      "sourcePointer": "/proof_definitions/9/negative_checks/0",
+      "kind": "negative",
+      "expected": "Escolha não aprova PR/PO, não aplica orçamento e não envia mensagem automaticamente.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP10.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP09.T04",
+        "WP11.T02",
+        "WP11.T03",
+        "WP13.T04"
+      ]
+    },
+    {
+      "id": "AM04.definition.9.negative_checks.1",
+      "proofId": "AM04",
+      "sourcePointer": "/proof_definitions/9/negative_checks/1",
+      "kind": "negative",
+      "expected": "Mesma idempotencyKey com payload diferente conflita; versão/encarnação/autoridade velha recusa mutação.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP10.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP09.T04",
+        "WP11.T02",
+        "WP11.T03",
+        "WP13.T04"
+      ]
+    },
+    {
+      "id": "AM05.definition.10.positive_checks.0",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/10/positive_checks/0",
+      "kind": "positive",
+      "expected": "Instrumentação identifica import/módulo real do bundle: memoryKindOf/validate, createMemoryEmit, DurableMemory append, commit SF, restart e createMemoryRead.recall; consumidor abre precedente com diferenças atuais.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07",
+        "WP10.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP12.T02",
+        "WP12.T03"
+      ]
+    },
+    {
+      "id": "AM05.definition.10.positive_checks.1",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/10/positive_checks/1",
+      "kind": "positive",
+      "expected": "Documento digital/DOCX/texto liga candidato confirmado a revisão/offset/hash, incluindo busca e link recuperável.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07",
+        "WP10.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP12.T02",
+        "WP12.T03"
+      ]
+    },
+    {
+      "id": "AM05.definition.10.positive_checks.2",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/10/positive_checks/2",
+      "kind": "positive",
+      "expected": "Dois writes concorrentes/cap e retry após resposta perdida têm estado serializado sem duplicação; read após processo novo conserva evento.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07",
+        "WP10.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP12.T02",
+        "WP12.T03"
+      ]
+    },
+    {
+      "id": "AM05.definition.10.positive_checks.3",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/10/positive_checks/3",
+      "kind": "positive",
+      "expected": "Os dois subpaths resolvem; quatro artefatos têm hashes derivados do build canônico. AST/guard aprovam a aresta external exata e zero novo site spawning.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07",
+        "WP10.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP12.T02",
+        "WP12.T03"
+      ]
+    },
+    {
+      "id": "AM05.definition.10.positive_checks.4",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/10/positive_checks/4",
+      "kind": "positive",
+      "expected": "Native-bound mantém APIs de memória bound e expõe somente os reexports adicionais de scanner; SF usa a implementação real pelo subpath nativo.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07",
+        "WP10.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP12.T02",
+        "WP12.T03"
+      ]
+    },
+    {
+      "id": "AM05.definition.10.negative_checks.0",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/10/negative_checks/0",
+      "kind": "negative",
+      "expected": "Raw BusinessEvidenceRef objeto, key extra no template, pr/logbook/StructRef fictício, owner técnico ou memória local sem Atlas falha.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07",
+        "WP10.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP12.T02",
+        "WP12.T03"
+      ]
+    },
+    {
+      "id": "AM05.definition.10.negative_checks.1",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/10/negative_checks/1",
+      "kind": "negative",
+      "expected": "Scanner real passa clean e bloqueia canary; ausente/timeout/erro é unavailable, nunca clean/blocked incorreto.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07",
+        "WP10.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP12.T02",
+        "WP12.T03"
+      ]
+    },
+    {
+      "id": "AM05.definition.10.negative_checks.2",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/10/negative_checks/2",
+      "kind": "negative",
+      "expected": "Falha/cancelamento antes do commit deixa zero evento após restart; import mesma ID/nova encarnação invalida ref; revogação de um campo suprime registro inteiro.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07",
+        "WP10.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP12.T02",
+        "WP12.T03"
+      ]
+    },
+    {
+      "id": "AM05.definition.10.negative_checks.3",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/10/negative_checks/3",
+      "kind": "negative",
+      "expected": "Namespace protegido não aparece em export JSON, audit genérico, logs/git, prompt revogado nem arquivo de relatório.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07",
+        "WP10.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP12.T02",
+        "WP12.T03"
+      ]
+    },
+    {
+      "id": "AM05.definition.10.negative_checks.4",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/10/negative_checks/4",
+      "kind": "negative",
+      "expected": "Reexportar scanner no novo bundle, remover a resolução exata, usar import computado, duplicar constante ou introduzir raw memory factory em native-bound deve reprovar build/AST/aceite.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07",
+        "WP10.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP12.T02",
+        "WP12.T03"
+      ]
+    },
+    {
+      "id": "AM05.definition.10.negative_checks.5",
+      "proofId": "AM05",
+      "sourcePointer": "/proof_definitions/10/negative_checks/5",
+      "kind": "negative",
+      "expected": "Qualquer alteração do guard/allowlist para obter verde invalida esta prova; ausência de resultado do guard do candidato é NOT_RUN/HOLD.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP06.T05",
+        "WP14.T05",
+        "WP14.T02",
+        "WP10.T07",
+        "WP10.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP07.T04",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T01",
+        "WP11.T02",
+        "WP12.T02",
+        "WP12.T03"
+      ]
+    },
+    {
+      "id": "AM06.definition.11.positive_checks.0",
+      "proofId": "AM06",
+      "sourcePointer": "/proof_definitions/11/positive_checks/0",
+      "kind": "positive",
+      "expected": "Receita publicada/pinada -> admissão real -> Relay -> skill/perfil necessário -> output canônico persistido -> mesa/Meu trabalho.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T06",
+        "WP10.T06",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T04",
+        "WP01.T05",
+        "WP05.T01",
+        "WP07.T01",
+        "WP07.T02",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T06",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T02",
+        "WP11.T03"
+      ]
+    },
+    {
+      "id": "AM06.definition.11.positive_checks.1",
+      "proofId": "AM06",
+      "sourcePointer": "/proof_definitions/11/positive_checks/1",
+      "kind": "positive",
+      "expected": "Resposta humana encerra job anterior e cria continuação versionada que altera análise; narrativa opcional falha sem apagar resultado factual.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T06",
+        "WP10.T06",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T04",
+        "WP01.T05",
+        "WP05.T01",
+        "WP07.T01",
+        "WP07.T02",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T06",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T02",
+        "WP11.T03"
+      ]
+    },
+    {
+      "id": "AM06.definition.11.positive_checks.2",
+      "proofId": "AM06",
+      "sourcePointer": "/proof_definitions/11/positive_checks/2",
+      "kind": "positive",
+      "expected": "Recorrência revalida principal/entrada/admissão a cada disparo; resultado liga ao run e versão efetivos.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T06",
+        "WP10.T06",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T04",
+        "WP01.T05",
+        "WP05.T01",
+        "WP07.T01",
+        "WP07.T02",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T06",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T02",
+        "WP11.T03"
+      ]
+    },
+    {
+      "id": "AM06.definition.11.positive_checks.3",
+      "proofId": "AM06",
+      "sourcePointer": "/proof_definitions/11/positive_checks/3",
+      "kind": "positive",
+      "expected": "sf_maestro/sf-preparar-revisao-executiva percorre catalog/prepare com pedido humano, run só com admissão C07 atual, status/result e consumo na pauta. Em routine-result, prepare/run são recusados; nenhuma chamada recursiva é criada.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T06",
+        "WP10.T06",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T04",
+        "WP01.T05",
+        "WP05.T01",
+        "WP07.T01",
+        "WP07.T02",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T06",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T02",
+        "WP11.T03"
+      ]
+    },
+    {
+      "id": "AM06.definition.11.negative_checks.0",
+      "proofId": "AM06",
+      "sourcePointer": "/proof_definitions/11/negative_checks/0",
+      "kind": "negative",
+      "expected": "Sem autoridade revalidável, receita não publicada ou admissão revogada retorna needs-input/denied; não cria principal fake.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T06",
+        "WP10.T06",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T04",
+        "WP01.T05",
+        "WP05.T01",
+        "WP07.T01",
+        "WP07.T02",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T06",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T02",
+        "WP11.T03"
+      ]
+    },
+    {
+      "id": "AM06.definition.11.negative_checks.1",
+      "proofId": "AM06",
+      "sourcePointer": "/proof_definitions/11/negative_checks/1",
+      "kind": "negative",
+      "expected": "Cancelamento/stale/falha e duplicação de evento não produzem run de sucesso ou efeito duplicado.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T06",
+        "WP10.T06",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T04",
+        "WP01.T05",
+        "WP05.T01",
+        "WP07.T01",
+        "WP07.T02",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T06",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T02",
+        "WP11.T03"
+      ]
+    },
+    {
+      "id": "AM06.definition.11.negative_checks.2",
+      "proofId": "AM06",
+      "sourcePointer": "/proof_definitions/11/negative_checks/2",
+      "kind": "negative",
+      "expected": "Revisor chamado pela rotina permanece independente e sem poder de aprovação.",
+      "ownerTasks": [
+        "WP10.T02",
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T06",
+        "WP10.T06",
+        "WP12.T04"
+      ],
+      "consumerTasks": [
+        "WP01.T04",
+        "WP01.T05",
+        "WP05.T01",
+        "WP07.T01",
+        "WP07.T02",
+        "WP08.T02",
+        "WP08.T04",
+        "WP08.T06",
+        "WP09.T03",
+        "WP09.T04",
+        "WP09.T07",
+        "WP11.T02",
+        "WP11.T03"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-enquadrar-decisao.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-enquadrar-decisao",
+      "sourcePointer": "/skills/0/positive_acceptance",
+      "kind": "positive",
+      "expected": "IntentFrame corrigível é persistido e usado para iniciar plano especializado.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP06.T02"
+      ],
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-enquadrar-decisao.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-enquadrar-decisao",
+      "sourcePointer": "/skills/0/negative_acceptance",
+      "kind": "negative",
+      "expected": "Objetivo ambíguo ou restrição ausente produz needs-input; não inventar critério.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP06.T02"
+      ],
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-enquadrar-decisao.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-enquadrar-decisao",
+      "sourcePointer": "/skills/0/visible_consumption",
+      "kind": "consumption",
+      "expected": "Objetivo, horizonte, critérios e fontes tornam-se campos editáveis do mesmo caso; plano mostra por que cada especialista necessário participa. Reabrir a mesa recupera o enquadramento e autoriza corrigir a intenção. O output guarda importPreviewRef; WP06.T03 abre o manifesto persistido, suas linhas/deltas/erros e o rótulo de simulação. A análise não altera o domínio.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP06.T02"
+      ],
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-enquadrar-decisao.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-enquadrar-decisao",
+      "sourcePointer": "/skills/0/missing_or_failure",
+      "kind": "negative",
+      "expected": "Sem horizonte/critério suficiente: needs-input com lacunas, sem preencher prioridade ou prazo. Falha de modelo mantém rascunho humano e caso utilizáveis.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP06.T02"
+      ],
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-enquadrar-decisao.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-enquadrar-decisao",
+      "sourcePointer": "/skills/0/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Versão/contexto alterado identifica enquadramento stale e pede revalidar só a base afetada; perda de acesso remove referências restritas.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP06.T02"
+      ],
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-enquadrar-decisao.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-enquadrar-decisao",
+      "sourcePointer": "/skills/0/negative_discriminator",
+      "kind": "negative",
+      "expected": "Prompt idêntico com outra referência material muda a saída; resposta genérica sem campos consumidos não passa. Arquivo não admitido ou base alterada recusa/recalcula a prévia; ausência de mudança no estado de domínio é verificada antes e depois.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP06.T02"
+      ],
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-preparar-revisao-executiva.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/skills/1/positive_acceptance",
+      "kind": "positive",
+      "expected": "Pauta contém decisões e pendências recuperáveis na revisão preservada.",
+      "ownerTasks": [
+        "WP09.T02",
+        "WP10.T06",
+        "WP12.T02",
+        "WP09.T01",
+        "WP09.T07"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-preparar-revisao-executiva.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/skills/1/negative_acceptance",
+      "kind": "negative",
+      "expected": "Confirmação inválida ou evidência faltante conserva pendência; narrativa indisponível não elimina parte factual.",
+      "ownerTasks": [
+        "WP09.T02",
+        "WP10.T06",
+        "WP12.T02",
+        "WP09.T01",
+        "WP09.T07"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-preparar-revisao-executiva.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/skills/1/visible_consumption",
+      "kind": "consumption",
+      "expected": "Pauta apresenta mudanças, decisões e pendências com links; usuário ajusta ordem e preserva revisão C05 sem reconstruir o conteúdo em chat. A UI de rotina mostra AdmissionProposal, runRef, estado e resultado canônico; a pauta preservada usa essas referências e a mesma contribuição persistida.",
+      "ownerTasks": [
+        "WP09.T02",
+        "WP10.T06",
+        "WP12.T02",
+        "WP09.T01",
+        "WP09.T07"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-preparar-revisao-executiva.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/skills/1/missing_or_failure",
+      "kind": "negative",
+      "expected": "Sem revisão anterior: mostra primeira revisão. Se síntese falha, fatos/deltas/pendências determinísticos continuam disponíveis e a síntese falha fica explícita.",
+      "ownerTasks": [
+        "WP09.T02",
+        "WP10.T06",
+        "WP12.T02",
+        "WP09.T01",
+        "WP09.T07"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-preparar-revisao-executiva.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/skills/1/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Origem atualizada não reescreve revisão preservada; síntese nova identifica sua base. Revogação remove trechos e links no consumo/export.",
+      "ownerTasks": [
+        "WP09.T02",
+        "WP10.T06",
+        "WP12.T02",
+        "WP09.T01",
+        "WP09.T07"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-preparar-revisao-executiva.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/skills/1/negative_discriminator",
+      "kind": "negative",
+      "expected": "Texto de resumo sem pauta/referências consumidas por WP07 não satisfaz a skill; confirmar fevereiro não recobra janeiro. Sem admissão atual, sf_routine_run é denied. Em routine-result, prepare/run são denied para impedir loop, embora a mesma skill permita essas operações na entrada interactive autorizada.",
+      "ownerTasks": [
+        "WP09.T02",
+        "WP10.T06",
+        "WP12.T02",
+        "WP09.T01",
+        "WP09.T07"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-coordenar-perguntas.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-coordenar-perguntas",
+      "sourcePointer": "/skills/2/positive_acceptance",
+      "kind": "positive",
+      "expected": "Questão abre no Meu trabalho e resposta muda o caso sem duplicação.",
+      "ownerTasks": [
+        "WP08.T06",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-coordenar-perguntas.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-coordenar-perguntas",
+      "sourcePointer": "/skills/2/negative_acceptance",
+      "kind": "negative",
+      "expected": "Nome ambíguo não vira destinatário nem permissões.",
+      "ownerTasks": [
+        "WP08.T06",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-coordenar-perguntas.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-coordenar-perguntas",
+      "sourcePointer": "/skills/2/visible_consumption",
+      "kind": "consumption",
+      "expected": "Pergunta mostra contexto, condição que pode mudar e destinatário explicitamente conhecido. A ação autorizada cria contribuição canônica; resposta única aparece no caso e em Meu trabalho.",
+      "ownerTasks": [
+        "WP08.T06",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-coordenar-perguntas.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-coordenar-perguntas",
+      "sourcePointer": "/skills/2/missing_or_failure",
+      "kind": "negative",
+      "expected": "Sem destinatário verificável: proposta não atribuída com ação de seleção; sem fonte suficiente: explicita por que precisa do dado. Falha não envia nem atribui nada.",
+      "ownerTasks": [
+        "WP08.T06",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-coordenar-perguntas.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-coordenar-perguntas",
+      "sourcePointer": "/skills/2/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Resposta C06 ainda válida é reutilizada; material change reabre contexto uma vez. Revogação não amplia acesso do destinatário nem cria cobrança inacessível.",
+      "ownerTasks": [
+        "WP08.T06",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-coordenar-perguntas.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-coordenar-perguntas",
+      "sourcePointer": "/skills/2/negative_discriminator",
+      "kind": "negative",
+      "expected": "Homônimo não recebe atribuição; repetir skill com resposta válida não duplica pergunta; preparação não é envio externo.",
+      "ownerTasks": [
+        "WP08.T06",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-explicar-forecast.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-explicar-forecast",
+      "sourcePointer": "/skills/3/positive_acceptance",
+      "kind": "positive",
+      "expected": "Delta 12000/6000 reconciliado aparece no gráfico e no objeto FinancialAnalysis.",
+      "ownerTasks": [
+        "WP09.T03",
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP06.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-explicar-forecast.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-explicar-forecast",
+      "sourcePointer": "/skills/3/negative_acceptance",
+      "kind": "negative",
+      "expected": "Sem FX ou coluna privada, retornar limite; não tratar ausente como zero.",
+      "ownerTasks": [
+        "WP09.T03",
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP06.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-explicar-forecast.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-explicar-forecast",
+      "sourcePointer": "/skills/3/visible_consumption",
+      "kind": "consumption",
+      "expected": "Diferença de forecast abre sua composição e motivos registrados; resultado persistido referencia os valores canônicos. Finance distingue margem do orçamento e mudança contra a base. O output guarda importPreviewRef; WP06.T03 abre o manifesto persistido, suas linhas/deltas/erros e o rótulo de simulação. A análise não altera o domínio.",
+      "ownerTasks": [
+        "WP09.T03",
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP06.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-explicar-forecast.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-explicar-forecast",
+      "sourcePointer": "/skills/3/missing_or_failure",
+      "kind": "negative",
+      "expected": "FX/actual/justificativa ausentes ficam explícitos; erro de análise conserva a tabela determinística e não inventa causalidade.",
+      "ownerTasks": [
+        "WP09.T03",
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP06.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-explicar-forecast.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-explicar-forecast",
+      "sourcePointer": "/skills/3/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Nova base invalida interpretação antiga no escopo afetado; leitura de HR depende do mesmo acesso C02 em gráficos, texto e agregados.",
+      "ownerTasks": [
+        "WP09.T03",
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP06.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-explicar-forecast.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-explicar-forecast",
+      "sourcePointer": "/skills/3/negative_discriminator",
+      "kind": "negative",
+      "expected": "590000→602000/596000 deve apontar12000/6000; não trocar por margem-2000/+4000 nem calcular salário restrito no texto. Arquivo não admitido ou base alterada recusa/recalcula a prévia; ausência de mudança no estado de domínio é verificada antes e depois.",
+      "ownerTasks": [
+        "WP09.T03",
+        "WP10.T06",
+        "WP12.T01",
+        "WP12.T02",
+        "WP06.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-comparar-cenarios.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-comparar-cenarios",
+      "sourcePointer": "/skills/4/positive_acceptance",
+      "kind": "positive",
+      "expected": "Alternativas 240000 e 210000 reconciliam e têm cobertura explícita.",
+      "ownerTasks": [
+        "WP03.T01",
+        "WP10.T06",
+        "WP11.T02",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-comparar-cenarios.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-comparar-cenarios",
+      "sourcePointer": "/skills/4/negative_acceptance",
+      "kind": "negative",
+      "expected": "Categoria pertinente ausente torna comparação condicionada; duplicar contribuição não duplica total.",
+      "ownerTasks": [
+        "WP03.T01",
+        "WP10.T06",
+        "WP11.T02",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-comparar-cenarios.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-comparar-cenarios",
+      "sourcePointer": "/skills/4/visible_consumption",
+      "kind": "consumption",
+      "expected": "Tabela de alternativas usa ScenarioResult refs do motor; custo, diferença, condição financeira e categorias pendentes C10 são iguais na mesa e no detalhe.",
+      "ownerTasks": [
+        "WP03.T01",
+        "WP10.T06",
+        "WP11.T02",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-comparar-cenarios.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-comparar-cenarios",
+      "sourcePointer": "/skills/4/missing_or_failure",
+      "kind": "negative",
+      "expected": "Categoria não cadastrada gera pending derivado; comparação condicionada oferece pergunta em vez de benefício confirmado. Falha de modelo conserva simulações já autorizadas.",
+      "ownerTasks": [
+        "WP03.T01",
+        "WP10.T06",
+        "WP11.T02",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-comparar-cenarios.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-comparar-cenarios",
+      "sourcePointer": "/skills/4/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Alteração de parcela/cobertura gera nova versão e conserva escolha original; fonte restrita não sobrevive por delta agregado.",
+      "ownerTasks": [
+        "WP03.T01",
+        "WP10.T06",
+        "WP11.T02",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-comparar-cenarios.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-comparar-cenarios",
+      "sourcePointer": "/skills/4/negative_discriminator",
+      "kind": "negative",
+      "expected": "Training omitido mantém subtotal 210000 condicionado; treinamento 40000 muda resultado250000/-10000. Resumo sem cenário persistido não passa.",
+      "ownerTasks": [
+        "WP03.T01",
+        "WP10.T06",
+        "WP11.T02",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-avaliar-sensibilidade.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-avaliar-sensibilidade",
+      "sourcePointer": "/skills/5/positive_acceptance",
+      "kind": "positive",
+      "expected": "Limite 55000 é consumido na curva/tabela e condição do caso.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T03"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-avaliar-sensibilidade.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-avaliar-sensibilidade",
+      "sourcePointer": "/skills/5/negative_acceptance",
+      "kind": "negative",
+      "expected": "Função não linear amostrada não produz corte exato inventado.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T03"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-avaliar-sensibilidade.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-avaliar-sensibilidade",
+      "sourcePointer": "/skills/5/visible_consumption",
+      "kind": "consumption",
+      "expected": "Série/limiar calculados são exibidos com intervalo, unidade, fonte e condição. Usuário altera parâmetro e a tabela equivalente mostra a mesma transição.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T03"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-avaliar-sensibilidade.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-avaliar-sensibilidade",
+      "sourcePointer": "/skills/5/missing_or_failure",
+      "kind": "negative",
+      "expected": "Parâmetro não suportado ou custo desconhecido produz limite declarado/condicionado, sem curva ou probabilidade fictícia. LLM indisponível não bloqueia o motor.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T03"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-avaliar-sensibilidade.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-avaliar-sensibilidade",
+      "sourcePointer": "/skills/5/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Mudança de cobertura/critério marca série antiga stale e mantém contexto de origem; acesso revogado retira valores e curvas restritos.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T03"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-avaliar-sensibilidade.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-avaliar-sensibilidade",
+      "sourcePointer": "/skills/5/negative_discriminator",
+      "kind": "negative",
+      "expected": "Base completa gera teto 55000; treinamento 40000 gera15000. Cenário não linear amostrado não recebe limiar exato inventado.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T03"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-comparar-sourcing.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-comparar-sourcing",
+      "sourcePointer": "/skills/6/positive_acceptance",
+      "kind": "positive",
+      "expected": "Comparação reflete score e FX da submissão; abre o dossiê correto.",
+      "ownerTasks": [
+        "WP09.T04",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-comparar-sourcing.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-comparar-sourcing",
+      "sourcePointer": "/skills/6/negative_acceptance",
+      "kind": "negative",
+      "expected": "Uma proposta ausente/única não vira competição completa ou fornecedor inventado.",
+      "ownerTasks": [
+        "WP09.T04",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-comparar-sourcing.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-comparar-sourcing",
+      "sourcePointer": "/skills/6/visible_consumption",
+      "kind": "consumption",
+      "expected": "Comparação comercial abre escopo, moeda, prazo, critérios e lacunas do pedido real; reutiliza ranking/valores do WP04 e fica ligada à versão da submissão.",
+      "ownerTasks": [
+        "WP09.T04",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-comparar-sourcing.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-comparar-sourcing",
+      "sourcePointer": "/skills/6/missing_or_failure",
+      "kind": "negative",
+      "expected": "Proposta ausente/única, FX faltante ou critérios ausentes impedem falsa comparação completa. Fatos do dossiê continuam disponíveis se síntese falhar.",
+      "ownerTasks": [
+        "WP09.T04",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-comparar-sourcing.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-comparar-sourcing",
+      "sourcePointer": "/skills/6/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Mudança do pedido/cotação mostra resultado stale; taxa histórica submetida não é trocada pela taxa corrente.",
+      "ownerTasks": [
+        "WP09.T04",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-comparar-sourcing.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-comparar-sourcing",
+      "sourcePointer": "/skills/6/negative_discriminator",
+      "kind": "negative",
+      "expected": "Menor preço não é escolhido automaticamente; fonte sem acesso não aparece em exclusão, total ou comparação.",
+      "ownerTasks": [
+        "WP09.T04",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-condicoes-contratuais.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-condicoes-contratuais",
+      "sourcePointer": "/skills/7/positive_acceptance",
+      "kind": "positive",
+      "expected": "Condição citada abre trecho exato e afeta custo/cenário após confirmação.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-condicoes-contratuais.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-condicoes-contratuais",
+      "sourcePointer": "/skills/7/negative_acceptance",
+      "kind": "negative",
+      "expected": "Sem trecho/revisão não confirma; não formula conclusão jurídica definitiva.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-condicoes-contratuais.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-condicoes-contratuais",
+      "sourcePointer": "/skills/7/visible_consumption",
+      "kind": "consumption",
+      "expected": "Cláusula relevante aparece com trecho/documento/versão e lacuna de prazo/custo; usuário pode abrir a fonte, confirmar candidato ou criar pergunta. Custos não são inseridos sem fonte/ação previstas.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-condicoes-contratuais.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-condicoes-contratuais",
+      "sourcePointer": "/skills/7/missing_or_failure",
+      "kind": "negative",
+      "expected": "Sem trecho verificável: condição inconclusiva e pergunta. Documento sem texto é erro do extrator, não interpretação preenchida. Falha preserva evidência disponível.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-condicoes-contratuais.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-condicoes-contratuais",
+      "sourcePointer": "/skills/7/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Atualização/revogação do documento torna avaliação stale/unavailable e impede usar o candidato como confirmação atual.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-condicoes-contratuais.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-condicoes-contratuais",
+      "sourcePointer": "/skills/7/negative_discriminator",
+      "kind": "negative",
+      "expected": "Não produzir parecer jurídico conclusivo, inventar taxa/penalidade nem aprovar fornecedor; evidência candidata não vira confirmed automaticamente.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-preparar-compra.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-preparar-compra",
+      "sourcePointer": "/skills/8/positive_acceptance",
+      "kind": "positive",
+      "expected": "Dossiê e mudanças abrem com versão e confirmação própria.",
+      "ownerTasks": [
+        "WP09.T04",
+        "WP10.T06",
+        "WP11.T03",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-preparar-compra.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-preparar-compra",
+      "sourcePointer": "/skills/8/negative_acceptance",
+      "kind": "negative",
+      "expected": "Escolha humana não aprova PR/PO e não envia a fornecedor.",
+      "ownerTasks": [
+        "WP09.T04",
+        "WP10.T06",
+        "WP11.T03",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-preparar-compra.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-preparar-compra",
+      "sourcePointer": "/skills/8/visible_consumption",
+      "kind": "consumption",
+      "expected": "Dossiê referencia a escolha e mostra diff/destino/versão/autoridade requerida. Ação humana segue o comando de domínio; receipt aparece no caso por C12.",
+      "ownerTasks": [
+        "WP09.T04",
+        "WP10.T06",
+        "WP11.T03",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-preparar-compra.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-preparar-compra",
+      "sourcePointer": "/skills/8/missing_or_failure",
+      "kind": "negative",
+      "expected": "Campo/holder/permissão não confirmados deixam proposta pendente ou recusada, sem fabricar o destinatário. Erro conserva a preparação, não cria compra.",
+      "ownerTasks": [
+        "WP09.T04",
+        "WP10.T06",
+        "WP11.T03",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-preparar-compra.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-preparar-compra",
+      "sourcePointer": "/skills/8/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Fonte muda entre preparação e aplicação: stale/conflito e revalidação no destino; autorização perdida recusa execução.",
+      "ownerTasks": [
+        "WP09.T04",
+        "WP10.T06",
+        "WP11.T03",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-preparar-compra.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-preparar-compra",
+      "sourcePointer": "/skills/8/negative_discriminator",
+      "kind": "negative",
+      "expected": "Preparação não aprova PR/PO, não envia ao fornecedor e retry não cria segundo efeito; dossiê apenas em chat não passa.",
+      "ownerTasks": [
+        "WP09.T04",
+        "WP10.T06",
+        "WP11.T03",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-dependencias.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-dependencias",
+      "sourcePointer": "/skills/9/positive_acceptance",
+      "kind": "positive",
+      "expected": "Conflito março/maio preserva fontes e direciona pergunta consumida.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T01"
+      ],
+      "consumerTasks": [
+        "WP13.T01",
+        "WP01.T05",
+        "WP08.T06"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-dependencias.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-dependencias",
+      "sourcePointer": "/skills/9/negative_acceptance",
+      "kind": "negative",
+      "expected": "Coincidência de nome não cria relação; FTE não representa capacidade livre.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T01"
+      ],
+      "consumerTasks": [
+        "WP13.T01",
+        "WP01.T05",
+        "WP08.T06"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-dependencias.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-dependencias",
+      "sourcePointer": "/skills/9/visible_consumption",
+      "kind": "consumption",
+      "expected": "Mesa mostra compromisso, dependência confirmada e conflito; março presumido versus marco maio vira questão vinculada, consumida pelo responsável correto.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T01"
+      ],
+      "consumerTasks": [
+        "WP13.T01",
+        "WP01.T05",
+        "WP08.T06"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-dependencias.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-dependencias",
+      "sourcePointer": "/skills/9/missing_or_failure",
+      "kind": "negative",
+      "expected": "Relação/capacidade não informada permanece desconhecida; sugerir vínculo exige confirmação e não cria restrição oficial. Falha conserva vínculos confirmados.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T01"
+      ],
+      "consumerTasks": [
+        "WP13.T01",
+        "WP01.T05",
+        "WP08.T06"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-dependencias.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-dependencias",
+      "sourcePointer": "/skills/9/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Mudança de marco material reavalia só dependências pertinentes; edição textual irrelevante não cria novo conflito.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T01"
+      ],
+      "consumerTasks": [
+        "WP13.T01",
+        "WP01.T05",
+        "WP08.T06"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-dependencias.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-dependencias",
+      "sourcePointer": "/skills/9/negative_discriminator",
+      "kind": "negative",
+      "expected": "FTE não prova capacidade livre; coincidência de nome não cria dependência; Finance e Portfólio devem entregar efeitos diferentes no mesmo caso.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T01"
+      ],
+      "consumerTasks": [
+        "WP13.T01",
+        "WP01.T05",
+        "WP08.T06"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-compor-portfolio.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-compor-portfolio",
+      "sourcePointer": "/skills/10/positive_acceptance",
+      "kind": "positive",
+      "expected": "Comparação e tabela usam a mesma combinação e seus componentes.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T01",
+        "WP13.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP13.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-compor-portfolio.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-compor-portfolio",
+      "sourcePointer": "/skills/10/negative_acceptance",
+      "kind": "negative",
+      "expected": "Nenhuma solução elegível conserva restrições; não relaxa silenciosamente.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T01",
+        "WP13.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP13.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-compor-portfolio.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-compor-portfolio",
+      "sourcePointer": "/skills/10/visible_consumption",
+      "kind": "consumption",
+      "expected": "Comparador persistente mostra combinações avaliadas, compromissos preservados, motivos de inviável/incompleto e limite de exploração; usuário seleciona opção para preparar via WP11.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T01",
+        "WP13.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP13.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-compor-portfolio.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-compor-portfolio",
+      "sourcePointer": "/skills/10/missing_or_failure",
+      "kind": "negative",
+      "expected": "Nenhuma solução preserva restrições: informar ausência de solução. Categoria pendente mantém incomplete/conditioned. Erro conserva os candidatos.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T01",
+        "WP13.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP13.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-compor-portfolio.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-compor-portfolio",
+      "sourcePointer": "/skills/10/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Mudança de candidato/cobertura/critério marca comparação stale; reexecução mantém a composição histórica.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T01",
+        "WP13.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP13.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-compor-portfolio.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-compor-portfolio",
+      "sourcePointer": "/skills/10/negative_discriminator",
+      "kind": "negative",
+      "expected": "Não relaxar restrição, duplicar contribuição, declarar ótimo global de amostra limitada ou promover subtotal a elegibilidade completa.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP13.T01",
+        "WP13.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP13.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-reavaliar-compromissos.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-reavaliar-compromissos",
+      "sourcePointer": "/skills/11/positive_acceptance",
+      "kind": "positive",
+      "expected": "Mudança de preço altera condição correspondente sem reescrever escolha.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP14.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP08.T04",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-reavaliar-compromissos.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-reavaliar-compromissos",
+      "sourcePointer": "/skills/11/negative_acceptance",
+      "kind": "negative",
+      "expected": "Mudança irrelevante não reabre; fonte inacessível é unknown, nunca válido.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP14.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP08.T04",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-reavaliar-compromissos.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-reavaliar-compromissos",
+      "sourcePointer": "/skills/11/visible_consumption",
+      "kind": "consumption",
+      "expected": "Sinal mostra razão original e consequência atual por compromisso; usuário pode comparar, perguntar ou manter escolha com nova justificativa. A proposta é persistida por referência.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP14.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP08.T04",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-reavaliar-compromissos.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-reavaliar-compromissos",
+      "sourcePointer": "/skills/11/missing_or_failure",
+      "kind": "negative",
+      "expected": "Mudança sem dado para medir efeito fica unknown; não concluir quebra por ausência de observação. Falha mantém condição original e sinal não resolvido.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP14.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP08.T04",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-reavaliar-compromissos.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-reavaliar-compromissos",
+      "sourcePointer": "/skills/11/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Fonte revogada impede reuso; mudança irrelevante não gera interrupção. Condições/sinais usam a deduplicação existente.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP14.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP08.T04",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-reavaliar-compromissos.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-reavaliar-compromissos",
+      "sourcePointer": "/skills/11/negative_discriminator",
+      "kind": "negative",
+      "expected": "Training40000/cotação alterada devem afetar a condição pertinente; simples descrição alterada não gera alerta e skill não muda data oficial.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP14.T01"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP08.T04",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-contestar-decisao.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-contestar-decisao",
+      "sourcePointer": "/skills/12/positive_acceptance",
+      "kind": "positive",
+      "expected": "Run/session distintos produzem crítica consumida na alternativa e mesa.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "consumerTasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP08.T06"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-contestar-decisao.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-contestar-decisao",
+      "sourcePointer": "/skills/12/negative_acceptance",
+      "kind": "negative",
+      "expected": "Mesma sessão do autor, fonte oculta ou status de aprovação falha no aceite.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "consumerTasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP08.T06"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-contestar-decisao.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-contestar-decisao",
+      "sourcePointer": "/skills/12/visible_consumption",
+      "kind": "consumption",
+      "expected": "Execução própria do Revisor entrega objeções com fontes/condições; mesa lista o que pode invalidar a escolha e permite responder/corrigir sem copiar conversa. Registro liga critiqueRun ao authorRun sem reutilizar suas instruções.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "consumerTasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP08.T06"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-contestar-decisao.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-contestar-decisao",
+      "sourcePointer": "/skills/12/missing_or_failure",
+      "kind": "negative",
+      "expected": "Fonte insuficiente: inconclusivo com pergunta específica, sem parecer positivo por falta de evidência. Falha mostra revisão não concluída e preserva análise autoral.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "consumerTasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP08.T06"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-contestar-decisao.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-contestar-decisao",
+      "sourcePointer": "/skills/12/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Base muda durante crítica: saída stale vinculada à versão original, sem sobrescrever crítica atual; revogação se aplica igualmente ao Revisor.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "consumerTasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP08.T06"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-contestar-decisao.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-contestar-decisao",
+      "sourcePointer": "/skills/12/negative_discriminator",
+      "kind": "negative",
+      "expected": "Mesmo run/perfil do autor renomeado como Revisor falha. Parecer não aprova compra e não substitui o engine numérico.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "consumerTasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP08.T06"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-evidencias.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-evidencias",
+      "sourcePointer": "/skills/13/positive_acceptance",
+      "kind": "positive",
+      "expected": "Claim sem sustentação vira inconclusivo/issue e o consumidor abre a fonte.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-evidencias.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-evidencias",
+      "sourcePointer": "/skills/13/negative_acceptance",
+      "kind": "negative",
+      "expected": "Hash errado, trecho revogado ou citação inexistente não é evidência confirmada.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-evidencias.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-evidencias",
+      "sourcePointer": "/skills/13/visible_consumption",
+      "kind": "consumption",
+      "expected": "Cada claim fica sustentado/contradito/inconclusivo com motivo e trecho/recibo. Usuário abre evidência, corrige interpretação ou resolve candidato no fluxo existente; leitura do Revisor não confirma documento.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-evidencias.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-evidencias",
+      "sourcePointer": "/skills/13/missing_or_failure",
+      "kind": "negative",
+      "expected": "Fonte ausente/ambígua ou scanner recusado: inconclusivo/unavailable, sem reputar a alegação falsa ou verdadeira automaticamente. Falha não remove questões pendentes.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-evidencias.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-evidencias",
+      "sourcePointer": "/skills/13/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Revisão/encarnação alterada invalida suporte antigo; perder acesso retira trecho, memória e agregados restritos.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-revisar-evidencias.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-revisar-evidencias",
+      "sourcePointer": "/skills/13/negative_discriminator",
+      "kind": "negative",
+      "expected": "Citação com ID plausível mas inexistente não sustenta claim; mesma conclusão após contradição removida falha; revisão própria não ganha permissões.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP06.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-extrair-evidencias.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-extrair-evidencias",
+      "sourcePointer": "/skills/14/positive_acceptance",
+      "kind": "positive",
+      "expected": "PDF digital/DOCX/texto gera candidatos recuperáveis e confirmação altera uso.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP11.T02",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-extrair-evidencias.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-extrair-evidencias",
+      "sourcePointer": "/skills/14/negative_acceptance",
+      "kind": "negative",
+      "expected": "PDF imagem sem OCR declarado ou prompt injection não gera valor/ferramenta inventados.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP11.T02",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-extrair-evidencias.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-extrair-evidencias",
+      "sourcePointer": "/skills/14/visible_consumption",
+      "kind": "consumption",
+      "expected": "Campos candidatos aparecem com valor/unidade e página/trecho/parágrafo; confirmar no produto promove a premissa e reutiliza a mesma referência no cenário/dossiê.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP11.T02",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-extrair-evidencias.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-extrair-evidencias",
+      "sourcePointer": "/skills/14/missing_or_failure",
+      "kind": "negative",
+      "expected": "PDF escaneado/protegido sem texto, DOCX inválido, excesso de limite ou ambiguidade retornam estado/motivo sem valor fabricado. Não confirmar automaticamente.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP11.T02",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-extrair-evidencias.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-extrair-evidencias",
+      "sourcePointer": "/skills/14/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Documento atualizado conserva revisão antiga identificada como stale; referência revogada impede exibição e consumo.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP11.T02",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-extrair-evidencias.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-extrair-evidencias",
+      "sourcePointer": "/skills/14/negative_discriminator",
+      "kind": "negative",
+      "expected": "Instruções do fornecedor são dados; extracted não vira confirmed por ser citado no dossiê; nenhum parser duplicado em WP09.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP11.T02",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-produzir-bi-contextual.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-produzir-bi-contextual",
+      "sourcePointer": "/skills/15/positive_acceptance",
+      "kind": "positive",
+      "expected": "A tabela equivalente e gráfico abrem os mesmos componentes autorizados.",
+      "ownerTasks": [
+        "WP05.T05",
+        "WP10.T06",
+        "WP12.T02",
+        "WP02.T01"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-produzir-bi-contextual.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-produzir-bi-contextual",
+      "sourcePointer": "/skills/15/negative_acceptance",
+      "kind": "negative",
+      "expected": "Tipo visual sem contrato, dado faltante ou valor textual não vira série numérica.",
+      "ownerTasks": [
+        "WP05.T05",
+        "WP10.T06",
+        "WP12.T02",
+        "WP02.T01"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-produzir-bi-contextual.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-produzir-bi-contextual",
+      "sourcePointer": "/skills/15/visible_consumption",
+      "kind": "consumption",
+      "expected": "Proposta escolhe uma visualização do catálogo suportado, tabela equivalente e recorte autorizado; o componente real WP05 a renderiza com drilldown e cobertura C10. A leitura de desempenho vem de sf_dashboard_read; gráfico e tabela preservam as mesmas fontes, filtros e versão.",
+      "ownerTasks": [
+        "WP05.T05",
+        "WP10.T06",
+        "WP12.T02",
+        "WP02.T01"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-produzir-bi-contextual.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-produzir-bi-contextual",
+      "sourcePointer": "/skills/15/missing_or_failure",
+      "kind": "negative",
+      "expected": "Sem série/período/granularidade necessária: mostrar tabela ou lacuna suportada, sem interpolar valores. Erro de interpretação mantém BI determinístico acessível.",
+      "ownerTasks": [
+        "WP05.T05",
+        "WP10.T06",
+        "WP12.T02",
+        "WP02.T01"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-produzir-bi-contextual.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-produzir-bi-contextual",
+      "sourcePointer": "/skills/15/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Novo filtro/base/ACL revalida projection refs e marca proposta antiga stale quando necessário; nenhuma soma restrita fica no gráfico.",
+      "ownerTasks": [
+        "WP05.T05",
+        "WP10.T06",
+        "WP12.T02",
+        "WP02.T01"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-produzir-bi-contextual.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-produzir-bi-contextual",
+      "sourcePointer": "/skills/15/negative_discriminator",
+      "kind": "negative",
+      "expected": "Gráfico bonito sem tabela/produtor/referência falha; não criar regra de cálculo ou barra zero para categoria omitida.",
+      "ownerTasks": [
+        "WP05.T05",
+        "WP10.T06",
+        "WP12.T02",
+        "WP02.T01"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-produzir-material-reuniao.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-produzir-material-reuniao",
+      "sourcePointer": "/skills/16/positive_acceptance",
+      "kind": "positive",
+      "expected": "Arquivo completo persiste e revisão permanece estável após fonte mudar.",
+      "ownerTasks": [
+        "WP07.T02",
+        "WP09.T02",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP07.T02",
+        "WP07.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-produzir-material-reuniao.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-produzir-material-reuniao",
+      "sourcePointer": "/skills/16/negative_acceptance",
+      "kind": "negative",
+      "expected": "Arquivo/trecho revogado não reaparece no export nem em link direto.",
+      "ownerTasks": [
+        "WP07.T02",
+        "WP09.T02",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP07.T02",
+        "WP07.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-produzir-material-reuniao.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-produzir-material-reuniao",
+      "sourcePointer": "/skills/16/visible_consumption",
+      "kind": "consumption",
+      "expected": "Seleção/seções/pauta propostas tornam-se revisão e DOCX/PPTX gerados pelo WP07, com cobertura integral e links. Resultado persistido abre o arquivo real e a revisão correspondente.",
+      "ownerTasks": [
+        "WP07.T02",
+        "WP09.T02",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP07.T02",
+        "WP07.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-produzir-material-reuniao.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-produzir-material-reuniao",
+      "sourcePointer": "/skills/16/missing_or_failure",
+      "kind": "negative",
+      "expected": "Seção vazia/omitida ou export falho informa cobertura/erro; fatos preservados continuam recuperáveis sem síntese de modelo. Não declarar arquivo criado sem artifactRef.",
+      "ownerTasks": [
+        "WP07.T02",
+        "WP09.T02",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP07.T02",
+        "WP07.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-produzir-material-reuniao.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-produzir-material-reuniao",
+      "sourcePointer": "/skills/16/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Revisão preservada não recebe valores correntes silenciosamente; acesso é revalidado no download/export e nas referências.",
+      "ownerTasks": [
+        "WP07.T02",
+        "WP09.T02",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP07.T02",
+        "WP07.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-produzir-material-reuniao.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-produzir-material-reuniao",
+      "sourcePointer": "/skills/16/negative_discriminator",
+      "kind": "negative",
+      "expected": "Texto no chat não substitui material real; arquivo truncado em12 linhas não passa; narrativa não inventa decisão nem reescreve a reunião.",
+      "ownerTasks": [
+        "WP07.T02",
+        "WP09.T02",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "consumerTasks": [
+        "WP07.T02",
+        "WP07.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-consultar-memoria-decisoria.positive_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-consultar-memoria-decisoria",
+      "sourcePointer": "/skills/17/positive_acceptance",
+      "kind": "positive",
+      "expected": "Precedente real lido após restart explica o que coincide e mudou.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP14.T02",
+        "WP14.T05"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP11.T01",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-consultar-memoria-decisoria.negative_acceptance",
+      "proofId": "AM01",
+      "skillId": "sf-consultar-memoria-decisoria",
+      "sourcePointer": "/skills/17/negative_acceptance",
+      "kind": "negative",
+      "expected": "Owner omitido/forjado, caso revogado ou encarnação substituída não revela conteúdo.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP14.T02",
+        "WP14.T05"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP11.T01",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-consultar-memoria-decisoria.visible_consumption",
+      "proofId": "AM01",
+      "skillId": "sf-consultar-memoria-decisoria",
+      "sourcePointer": "/skills/17/visible_consumption",
+      "kind": "consumption",
+      "expected": "Mesa mostra precedente, razão de pertinência, fontes originais e diferenças atuais; ação abre caso anterior autorizado e pode referenciar premissa nova sem copiá-la como fato atual.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP14.T02",
+        "WP14.T05"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP11.T01",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-consultar-memoria-decisoria.missing_or_failure",
+      "proofId": "AM01",
+      "skillId": "sf-consultar-memoria-decisoria",
+      "sourcePointer": "/skills/17/missing_or_failure",
+      "kind": "negative",
+      "expected": "Sem correspondência: vazio explícito. Atlas/scanner/store indisponível: unavailable com trabalho atual preservado, sem substituir por resposta genérica que finja memória integrada.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP14.T02",
+        "WP14.T05"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP11.T01",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-consultar-memoria-decisoria.stale_or_access_change",
+      "proofId": "AM01",
+      "skillId": "sf-consultar-memoria-decisoria",
+      "sourcePointer": "/skills/17/stale_or_access_change",
+      "kind": "negative",
+      "expected": "Autorização, encarnação e atualidade são rechecadas em consulta/prompt/link. Memória persistida não torna fonte antiga atual nem reabre acesso revogado.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP14.T02",
+        "WP14.T05"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP11.T01",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM01.skill.sf-consultar-memoria-decisoria.negative_discriminator",
+      "proofId": "AM01",
+      "skillId": "sf-consultar-memoria-decisoria",
+      "sourcePointer": "/skills/17/negative_discriminator",
+      "kind": "negative",
+      "expected": "Somente ler ledger SF sem consumo instrumentado createMemoryRead/createMemoryEmit/DurableMemory não prova Atlas; mesmo perfil de dois atores não permite compartilhamento implícito.",
+      "ownerTasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP14.T02",
+        "WP14.T05"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP11.T01",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_dashboard_read.positive",
+      "proofId": "AM02",
+      "operationId": "sf_dashboard_read",
+      "skillId": "sf-produzir-bi-contextual",
+      "sourcePointer": "/operation_call_routes/0/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP02.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_dashboard_read.negative",
+      "proofId": "AM02",
+      "operationId": "sf_dashboard_read",
+      "skillId": "sf-produzir-bi-contextual",
+      "sourcePointer": "/operation_call_routes/0/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP02.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_kpi_explain.positive",
+      "proofId": "AM02",
+      "operationId": "sf_kpi_explain",
+      "skillId": "sf-explicar-forecast",
+      "sourcePointer": "/operation_call_routes/1/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP02.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_kpi_explain.negative",
+      "proofId": "AM02",
+      "operationId": "sf_kpi_explain",
+      "skillId": "sf-explicar-forecast",
+      "sourcePointer": "/operation_call_routes/1/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP02.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_bi_view.positive",
+      "proofId": "AM02",
+      "operationId": "sf_bi_view",
+      "skillId": "sf-produzir-bi-contextual",
+      "sourcePointer": "/operation_call_routes/2/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP05.T04",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_bi_view.negative",
+      "proofId": "AM02",
+      "operationId": "sf_bi_view",
+      "skillId": "sf-produzir-bi-contextual",
+      "sourcePointer": "/operation_call_routes/2/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP05.T04",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_source_get.positive",
+      "proofId": "AM02",
+      "operationId": "sf_source_get",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/3/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP10.T07",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_source_get.negative",
+      "proofId": "AM02",
+      "operationId": "sf_source_get",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/3/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP10.T07",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_forecast_compare.positive",
+      "proofId": "AM02",
+      "operationId": "sf_forecast_compare",
+      "skillId": "sf-explicar-forecast",
+      "sourcePointer": "/operation_call_routes/4/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP03.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_forecast_compare.negative",
+      "proofId": "AM02",
+      "operationId": "sf_forecast_compare",
+      "skillId": "sf-explicar-forecast",
+      "sourcePointer": "/operation_call_routes/4/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP03.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_scenario_simulate.positive",
+      "proofId": "AM02",
+      "operationId": "sf_scenario_simulate",
+      "skillId": "sf-comparar-cenarios",
+      "sourcePointer": "/operation_call_routes/5/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP03.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_scenario_simulate.negative",
+      "proofId": "AM02",
+      "operationId": "sf_scenario_simulate",
+      "skillId": "sf-comparar-cenarios",
+      "sourcePointer": "/operation_call_routes/5/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP03.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_scenario_compare.positive",
+      "proofId": "AM02",
+      "operationId": "sf_scenario_compare",
+      "skillId": "sf-comparar-cenarios",
+      "sourcePointer": "/operation_call_routes/6/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP03.T05",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_scenario_compare.negative",
+      "proofId": "AM02",
+      "operationId": "sf_scenario_compare",
+      "skillId": "sf-comparar-cenarios",
+      "sourcePointer": "/operation_call_routes/6/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP03.T05",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_sensitivity_evaluate.positive",
+      "proofId": "AM02",
+      "operationId": "sf_sensitivity_evaluate",
+      "skillId": "sf-avaliar-sensibilidade",
+      "sourcePointer": "/operation_call_routes/7/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP13.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_sensitivity_evaluate.negative",
+      "proofId": "AM02",
+      "operationId": "sf_sensitivity_evaluate",
+      "skillId": "sf-avaliar-sensibilidade",
+      "sourcePointer": "/operation_call_routes/7/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP13.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_portfolio_evaluate.positive",
+      "proofId": "AM02",
+      "operationId": "sf_portfolio_evaluate",
+      "skillId": "sf-compor-portfolio",
+      "sourcePointer": "/operation_call_routes/8/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP13.T02",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP13.T04"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_portfolio_evaluate.negative",
+      "proofId": "AM02",
+      "operationId": "sf_portfolio_evaluate",
+      "skillId": "sf-compor-portfolio",
+      "sourcePointer": "/operation_call_routes/8/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP13.T02",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP13.T04"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_request_read.positive",
+      "proofId": "AM02",
+      "operationId": "sf_request_read",
+      "skillId": "sf-comparar-sourcing",
+      "sourcePointer": "/operation_call_routes/9/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP04.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_request_read.negative",
+      "proofId": "AM02",
+      "operationId": "sf_request_read",
+      "skillId": "sf-comparar-sourcing",
+      "sourcePointer": "/operation_call_routes/9/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP04.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_supplier_read.positive",
+      "proofId": "AM02",
+      "operationId": "sf_supplier_read",
+      "skillId": "sf-comparar-sourcing",
+      "sourcePointer": "/operation_call_routes/10/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP04.T05",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_supplier_read.negative",
+      "proofId": "AM02",
+      "operationId": "sf_supplier_read",
+      "skillId": "sf-comparar-sourcing",
+      "sourcePointer": "/operation_call_routes/10/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP04.T05",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_contract_read.positive",
+      "proofId": "AM02",
+      "operationId": "sf_contract_read",
+      "skillId": "sf-comparar-sourcing",
+      "sourcePointer": "/operation_call_routes/11/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP04.T05",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_contract_read.negative",
+      "proofId": "AM02",
+      "operationId": "sf_contract_read",
+      "skillId": "sf-comparar-sourcing",
+      "sourcePointer": "/operation_call_routes/11/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP04.T05",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_sourcing_compare.positive",
+      "proofId": "AM02",
+      "operationId": "sf_sourcing_compare",
+      "skillId": "sf-comparar-sourcing",
+      "sourcePointer": "/operation_call_routes/12/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP04.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_sourcing_compare.negative",
+      "proofId": "AM02",
+      "operationId": "sf_sourcing_compare",
+      "skillId": "sf-comparar-sourcing",
+      "sourcePointer": "/operation_call_routes/12/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP04.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_case_read.positive",
+      "proofId": "AM02",
+      "operationId": "sf_case_read",
+      "skillId": "sf-enquadrar-decisao",
+      "sourcePointer": "/operation_call_routes/13/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP11.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_case_read.negative",
+      "proofId": "AM02",
+      "operationId": "sf_case_read",
+      "skillId": "sf-enquadrar-decisao",
+      "sourcePointer": "/operation_call_routes/13/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP11.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_case_draft.positive",
+      "proofId": "AM02",
+      "operationId": "sf_case_draft",
+      "skillId": "sf-enquadrar-decisao",
+      "sourcePointer": "/operation_call_routes/14/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP11.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_case_draft.negative",
+      "proofId": "AM02",
+      "operationId": "sf_case_draft",
+      "skillId": "sf-enquadrar-decisao",
+      "sourcePointer": "/operation_call_routes/14/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP11.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_alternative_draft.positive",
+      "proofId": "AM02",
+      "operationId": "sf_alternative_draft",
+      "skillId": "sf-comparar-cenarios",
+      "sourcePointer": "/operation_call_routes/15/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP11.T02",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_alternative_draft.negative",
+      "proofId": "AM02",
+      "operationId": "sf_alternative_draft",
+      "skillId": "sf-comparar-cenarios",
+      "sourcePointer": "/operation_call_routes/15/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP11.T02",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_change_prepare.positive",
+      "proofId": "AM02",
+      "operationId": "sf_change_prepare",
+      "skillId": "sf-preparar-compra",
+      "sourcePointer": "/operation_call_routes/16/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP11.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_change_prepare.negative",
+      "proofId": "AM02",
+      "operationId": "sf_change_prepare",
+      "skillId": "sf-preparar-compra",
+      "sourcePointer": "/operation_call_routes/16/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP11.T03",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_receipt_get.positive",
+      "proofId": "AM02",
+      "operationId": "sf_receipt_get",
+      "skillId": "sf-preparar-compra",
+      "sourcePointer": "/operation_call_routes/17/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP11.T04",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_receipt_get.negative",
+      "proofId": "AM02",
+      "operationId": "sf_receipt_get",
+      "skillId": "sf-preparar-compra",
+      "sourcePointer": "/operation_call_routes/17/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP11.T04",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_work_list.positive",
+      "proofId": "AM02",
+      "operationId": "sf_work_list",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/18/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP08.T04",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_work_list.negative",
+      "proofId": "AM02",
+      "operationId": "sf_work_list",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/18/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP08.T04",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_question_prepare.positive",
+      "proofId": "AM02",
+      "operationId": "sf_question_prepare",
+      "skillId": "sf-enquadrar-decisao",
+      "sourcePointer": "/operation_call_routes/19/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP08.T06",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_question_prepare.negative",
+      "proofId": "AM02",
+      "operationId": "sf_question_prepare",
+      "skillId": "sf-enquadrar-decisao",
+      "sourcePointer": "/operation_call_routes/19/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP08.T06",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_answer_read.positive",
+      "proofId": "AM02",
+      "operationId": "sf_answer_read",
+      "skillId": "sf-coordenar-perguntas",
+      "sourcePointer": "/operation_call_routes/20/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP08.T02",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_answer_read.negative",
+      "proofId": "AM02",
+      "operationId": "sf_answer_read",
+      "skillId": "sf-coordenar-perguntas",
+      "sourcePointer": "/operation_call_routes/20/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP08.T02",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_relation_read.positive",
+      "proofId": "AM02",
+      "operationId": "sf_relation_read",
+      "skillId": "sf-coordenar-perguntas",
+      "sourcePointer": "/operation_call_routes/21/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP08.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_relation_read.negative",
+      "proofId": "AM02",
+      "operationId": "sf_relation_read",
+      "skillId": "sf-coordenar-perguntas",
+      "sourcePointer": "/operation_call_routes/21/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP08.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_handoff_prepare.positive",
+      "proofId": "AM02",
+      "operationId": "sf_handoff_prepare",
+      "skillId": "sf-coordenar-perguntas",
+      "sourcePointer": "/operation_call_routes/22/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP08.T05",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_handoff_prepare.negative",
+      "proofId": "AM02",
+      "operationId": "sf_handoff_prepare",
+      "skillId": "sf-coordenar-perguntas",
+      "sourcePointer": "/operation_call_routes/22/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP08.T05",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_document_extract.positive",
+      "proofId": "AM02",
+      "operationId": "sf_document_extract",
+      "skillId": "sf-revisar-condicoes-contratuais",
+      "sourcePointer": "/operation_call_routes/23/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_document_extract.negative",
+      "proofId": "AM02",
+      "operationId": "sf_document_extract",
+      "skillId": "sf-revisar-condicoes-contratuais",
+      "sourcePointer": "/operation_call_routes/23/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_import_preview.positive",
+      "proofId": "AM02",
+      "operationId": "sf_import_preview",
+      "skillId": "sf-explicar-forecast",
+      "sourcePointer": "/operation_call_routes/24/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP06.T02",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_import_preview.negative",
+      "proofId": "AM02",
+      "operationId": "sf_import_preview",
+      "skillId": "sf-explicar-forecast",
+      "sourcePointer": "/operation_call_routes/24/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP06.T02",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_review_prepare.positive",
+      "proofId": "AM02",
+      "operationId": "sf_review_prepare",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/25/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP07.T02",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_review_prepare.negative",
+      "proofId": "AM02",
+      "operationId": "sf_review_prepare",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/25/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP07.T02",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_report_prepare.positive",
+      "proofId": "AM02",
+      "operationId": "sf_report_prepare",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/26/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP07.T04",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_report_prepare.negative",
+      "proofId": "AM02",
+      "operationId": "sf_report_prepare",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/26/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP07.T04",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_artifact_get.positive",
+      "proofId": "AM02",
+      "operationId": "sf_artifact_get",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/27/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP07.T04",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_artifact_get.negative",
+      "proofId": "AM02",
+      "operationId": "sf_artifact_get",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/27/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP07.T04",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_context_get.positive",
+      "proofId": "AM02",
+      "operationId": "sf_context_get",
+      "skillId": "sf-enquadrar-decisao",
+      "sourcePointer": "/operation_call_routes/28/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP10.T07",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_context_get.negative",
+      "proofId": "AM02",
+      "operationId": "sf_context_get",
+      "skillId": "sf-enquadrar-decisao",
+      "sourcePointer": "/operation_call_routes/28/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP10.T07",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_knowledge_search.positive",
+      "proofId": "AM02",
+      "operationId": "sf_knowledge_search",
+      "skillId": "sf-revisar-condicoes-contratuais",
+      "sourcePointer": "/operation_call_routes/29/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_knowledge_search.negative",
+      "proofId": "AM02",
+      "operationId": "sf_knowledge_search",
+      "skillId": "sf-revisar-condicoes-contratuais",
+      "sourcePointer": "/operation_call_routes/29/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP06.T05",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_evidence_get.positive",
+      "proofId": "AM02",
+      "operationId": "sf_evidence_get",
+      "skillId": "sf-comparar-sourcing",
+      "sourcePointer": "/operation_call_routes/30/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP10.T07",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_evidence_get.negative",
+      "proofId": "AM02",
+      "operationId": "sf_evidence_get",
+      "skillId": "sf-comparar-sourcing",
+      "sourcePointer": "/operation_call_routes/30/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP10.T07",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_decision_recall.positive",
+      "proofId": "AM02",
+      "operationId": "sf_decision_recall",
+      "skillId": "sf-consultar-memoria-decisoria",
+      "sourcePointer": "/operation_call_routes/31/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP10.T07",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP11.T01",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_decision_recall.negative",
+      "proofId": "AM02",
+      "operationId": "sf_decision_recall",
+      "skillId": "sf-consultar-memoria-decisoria",
+      "sourcePointer": "/operation_call_routes/31/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP10.T07",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP11.T01",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_freshness_check.positive",
+      "proofId": "AM02",
+      "operationId": "sf_freshness_check",
+      "skillId": "sf-enquadrar-decisao",
+      "sourcePointer": "/operation_call_routes/32/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP10.T07",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_freshness_check.negative",
+      "proofId": "AM02",
+      "operationId": "sf_freshness_check",
+      "skillId": "sf-enquadrar-decisao",
+      "sourcePointer": "/operation_call_routes/32/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP10.T07",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_routine_catalog.positive",
+      "proofId": "AM02",
+      "operationId": "sf_routine_catalog",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/33/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP09.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_routine_catalog.negative",
+      "proofId": "AM02",
+      "operationId": "sf_routine_catalog",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/33/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP09.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_routine_prepare.positive",
+      "proofId": "AM02",
+      "operationId": "sf_routine_prepare",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/34/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP09.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_routine_prepare.negative",
+      "proofId": "AM02",
+      "operationId": "sf_routine_prepare",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/34/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP09.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_routine_run.positive",
+      "proofId": "AM02",
+      "operationId": "sf_routine_run",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/35/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP09.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_routine_run.negative",
+      "proofId": "AM02",
+      "operationId": "sf_routine_run",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/35/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP09.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_routine_status.positive",
+      "proofId": "AM02",
+      "operationId": "sf_routine_status",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/36/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP09.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_routine_status.negative",
+      "proofId": "AM02",
+      "operationId": "sf_routine_status",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/36/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP09.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_routine_result.positive",
+      "proofId": "AM02",
+      "operationId": "sf_routine_result",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/37/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP09.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_routine_result.negative",
+      "proofId": "AM02",
+      "operationId": "sf_routine_result",
+      "skillId": "sf-preparar-revisao-executiva",
+      "sourcePointer": "/operation_call_routes/37/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP09.T01",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_watch_prepare.positive",
+      "proofId": "AM02",
+      "operationId": "sf_watch_prepare",
+      "skillId": "sf-reavaliar-compromissos",
+      "sourcePointer": "/operation_call_routes/38/expected",
+      "kind": "positive",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "ownerTasks": [
+        "WP09.T06",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP08.T04",
+        "WP09.T07"
+      ]
+    },
+    {
+      "id": "AM02.route.sf_watch_prepare.negative",
+      "proofId": "AM02",
+      "operationId": "sf_watch_prepare",
+      "skillId": "sf-reavaliar-compromissos",
+      "sourcePointer": "/operation_call_routes/38/negative",
+      "kind": "negative",
+      "expected": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos.",
+      "ownerTasks": [
+        "WP09.T06",
+        "WP10.T06"
+      ],
+      "consumerTasks": [
+        "WP01.T05",
+        "WP08.T04",
+        "WP09.T07"
+      ]
+    }
+  ]
+}

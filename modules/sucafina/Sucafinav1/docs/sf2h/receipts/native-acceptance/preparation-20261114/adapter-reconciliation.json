@@ -1,0 +1,119 @@
+{
+  "scope": "Static source reconciliation, not native acceptance, typecheck, test or CI",
+  "target": {
+    "branch": "astra-wp00",
+    "pr": 20,
+    "sha": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d"
+  },
+  "missionSource": "c708ec0609dbfc95b259707d8c38481617f74f11",
+  "wp10Pinned": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+  "wp10Observed": {
+    "pr": 29,
+    "sha": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+    "updatedAt": "2026-11-14T19:18:17Z",
+    "open": true,
+    "draft": true,
+    "merged": false
+  },
+  "adapterFile": "script/sf2h/native-acceptance/installed-host.ts",
+  "importsOnPr20": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "sha": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "runtime": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "sha": "fa0d39f3dfc23bfce751d91b00ae6c8fc2a87686",
+      "runtime": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "sha": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "runtime": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "sha": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "runtime": false
+    }
+  ],
+  "runtimeOnCurrentPr29": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "sha": "920fda293db553096f4d8ab7004fcd9652a69291",
+      "unchangedFromW28": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "sha": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "unchangedFromW28": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "sha": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+      "unchangedFromW28": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "sha": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+      "unchangedFromW28": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-http.ts",
+      "sha": "06522fa4a2eaa0841af8aabead799d9d56a8ada7",
+      "unchangedFromW28": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-host.ts",
+      "sha": "f43e9ae216a94f16daf985bac32f2c9e2627a2b7",
+      "unchangedFromW28": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "sha": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+      "unchangedFromW28": true
+    }
+  ],
+  "authorityColdReview": {
+    "request": "Owner creates authenticated Request in memory. Adapter passes exact object to host admission/transport. Clone is used solely to validate body before send; no cloned Request is admitted.",
+    "ui": "ui.admit -> dispatch consumes lease exactly once -> ui.revalidate -> host lifetime check after await -> ui.finish in finally",
+    "human": "human.admit analysis.read consumes lease -> analyses.list/read/output -> human.authorize same payload -> host lifetime check after await -> human.finish in finally",
+    "collect": "native-host.collect authorizes original registry binding before and after SessionStore.entries. authorized checks current WeakMap/lifetime/original Request abort/expiry/current policy callback. Adapter checks installed services after await.",
+    "mutations": "One adapter per attempt; idempotency key is owner-supplied and immutable in descriptor. prepare/start and every direct dispatch reserved once even on exception/denial. No automated retry, polling or sleep.",
+    "review": "WP10 start preserves authorAnalysis for sf-revisar-evidencias and host derives independent review. No direct generic analyses.start bypass.",
+    "proofBoundary": "The adapter cannot certify authenticity of arbitrary supplied owner functions. Real installed owner/runtime and independent receipt verification remain mandatory. Full capture is not acceptance."
+  },
+  "actualBridge": {
+    "method": "call(context, operation, payload)",
+    "list": "list(context)",
+    "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+    "blob": "bc00a2fe70bb37d6132369c3767388e544e18510"
+  },
+  "http": {
+    "url": "POST {origin}{mount}/{dashboard|planner|procurement}?sf=workbench-analysis",
+    "actions": [
+      "choices",
+      "prepare",
+      "start",
+      "list",
+      "read",
+      "output"
+    ],
+    "headers": [
+      "Origin = installed origin",
+      "Content-Type = application/json",
+      "Idempotency-Key = owner-recorded [A-Za-z0-9._:-]{8,128}"
+    ],
+    "limitBytes": 65536,
+    "readOutputBoundary": "HTTP output is HTML/outputRef/review presentation; analyses.output in-process is full verified ContributionEnvelope.",
+    "transport": "Must be complete already-installed application request handler, including WP01 fallback. SfHostServices.productHttp alone does not guarantee read/output fallback."
+  },
+  "notRun": [
+    "Local product tests",
+    "Typecheck",
+    "Native provider/model execution",
+    "Final AM proofs",
+    "Epic/CI dispatch"
+  ]
+}
