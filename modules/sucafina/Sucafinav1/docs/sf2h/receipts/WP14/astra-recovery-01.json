@@ -1,0 +1,188 @@
+{
+  "schema": "astra-wp14-recovery-v1",
+  "wp": "WP14",
+  "branch": "astra-wp14",
+  "status": "IN_PROGRESS",
+  "baseline": {
+    "commit": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af"
+  },
+  "plan": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "criteria": 91,
+    "tasks": 5
+  },
+  "sources": [
+    {
+      "branch": "sf2-memory-ready",
+      "commit": "02ac8172c17ad57e830bfb23d3ff1d1b1191852b",
+      "tree": "088cef30ce6aef86ae532935e78edcbe3bb46b51"
+    },
+    {
+      "branch": "astra-intelligence",
+      "pr": 36,
+      "commit": "2fb7e9c792327725384d99d656cc44b232ddc485"
+    }
+  ],
+  "policy": "Recover WP14 files only; no merge of historical snapshots. Foreign producer outputs require explicit path pins. Source branches and sf2-stack remain untouched.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c1b3dd08dc663e9dfa406b09dc2af5920281131"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-features.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ff95a311352c0c04b9ca42ab6523783284a8001e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fdc378d5f251511f66bb256b78240f472f1d566c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/domain-outcome.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "024733060d3a5eb0729a81ea81f2487b6420843f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/invalidation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "430cad970087abab2fcb05d299f5d358834c93e9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "acc81c632022c7b3c2f9c85216f1adab8976bb6f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-review.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "08dbdc8fe96069030afc1a2617260ca2eb7088b6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc30d168f18a186a9cbdc149607fec9c30223247"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c3e027ec1de29439a00680f549a9c2f8c3db9b53"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/planner-materiality.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c5f8ba9d7bb2c043ae5d62f044e9fcf8eb9ee7a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6c4c972fb678ca31fc09606008feef5090602b1f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "91b6154c5e932b60ed70d50087961af290b626c6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "83b77eab0314943f3a6e5dfc16b648f1a166db33"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-work.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "659ff5a898dab71e18ba92069e42b6c78012141f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signals.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bf432c915607ed99d050faae373c7fab3f741f88"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4d162bd19de53d61e85880ccd975d2549276a79b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "30ebaf3aac1940c2760b21761dcd72be52d050d9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9268b8797955057559bf22c0625b3b302c49cfe5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b5da85b219d86ca9135f4d6e76b0b72ce97c3ef9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/materiality.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "387275a16459ddbb8bdd34f85c010e2e08b45866"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "38b5839bec7beb1a7b19f0a323842a065c2fc2a0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/planner-materiality.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7361b78c548f4e5fab2a2485b860846ee085cb5f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "42e2a8df724b4771b48f8ebc4509c678a1ce5e2a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/signal-registry.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1829d447bceaf2fdb2f208489a924f24c54da25c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d31c8dc6867bcbb7f389bde79df644a5133de51a"
+    }
+  ],
+  "knownPending": [
+    "Revalidate current source/binding/authorization at all egresses",
+    "Reconcile Planner recall deadline finding from WP10 run 43564553695; host path belongs WP10",
+    "Hosted scoped product CI, package bun typecheck and guards on exact candidate",
+    "Actual persisted Atlas read/restart, scanner and native evidence; no ledger/catalog substitution",
+    "Full 91-criterion expected/observed map and real consumers"
+  ]
+}
