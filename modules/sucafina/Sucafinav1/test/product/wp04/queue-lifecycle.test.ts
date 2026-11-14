@@ -69,9 +69,10 @@ test("durable queue selection, counts and drilldowns keep requester scope across
     expect(JSON.stringify(biAge)).not.toContain("PR-2")
     const projectedAge = biAge.value.values.find((value) => value.id.endsWith(":ageDays"))
     const age = requesterBefore.value.queue[0]!.values.find((value) => value.id === "ageDays")
+    if (!age || !projectedAge) throw new Error("The C02 queue and BI06 must both retain the age datum")
     expect(age).toMatchObject({ value: 2, evidenceState: "confirmed" })
-    expect(projectedAge).toEqual({ ...age, id: projectedAge?.id })
-    const ref = age!.drilldown
+    expect(projectedAge).toEqual({ ...age, id: projectedAge.id })
+    const ref = age.drilldown
     if (!ref || ref.kind !== "record") throw new Error("Queue drilldown missing")
     expect(await port.read({ requestRef: ref.refId }, requester)).toEqual({ status: "ok", value: requesterBefore.value.queue[0] })
     expect((await port.read({ requestRef: ref.refId }, buyer)).status).toBe("denied")

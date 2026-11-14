@@ -41,7 +41,9 @@ test("authorized Requests and My approvals render the actual C02 queue across ba
       expect(requested.html).toContain(`data-source-digest="${row.evidence.refDigest}"`)
       expect(requested.html).toContain(`data-source-version="${row.version}"`)
       expect(requested.html).toContain(row.subject!)
-      expect(row.baseAmount).toBe(row.projection.values.find((value) => value.id === "baseAmount")?.value)
+      const baseAmount = row.projection.values.find((value) => value.id === "baseAmount")?.value
+      if (baseAmount !== null && (typeof baseAmount !== "number" || !Number.isFinite(baseAmount))) throw new Error("C02 must expose a finite base amount or explicit null")
+      expect(row.baseAmount).toBe(baseAmount)
     }
     expect(requested.html).not.toContain("Foreign hidden request")
     expect(requested.html).toContain("Unknown status")

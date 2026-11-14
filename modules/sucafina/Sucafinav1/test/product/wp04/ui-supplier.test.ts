@@ -10,6 +10,14 @@ const buyer = { id: "buyer", roles: ["buyer"], canWrite: true }
 const admin = { id: "supplier-administrator", roles: ["supplier admin"], canWrite: true }
 const environment = { at, directory: [], id: () => "supplier-1", bankKey: new Uint8Array(32).fill(7) }
 
+function exportedCsvRecords(bytes: Uint8Array) {
+  const parsed = new TextDecoder().decode(bytes).split("\r\n").map((line) =>
+    [...line.matchAll(/"((?:[^"]|"")*)"(?:,|$)/g)].map((match) => match[1]!.replaceAll('""', '"')),
+  )
+  const columns = parsed[0] ?? []
+  return parsed.slice(1).map((cells) => Object.fromEntries(columns.map((column, index) => [column, cells[index]])))
+}
+
 test("bank change through the real domain clears validation and explains revalidation without leaking secrets", () => {
   const state: Snapshot = { data: {}, versions: {}, sequences: {}, audit: [], notices: [] }
   expect(domain.execute(state, buyer, { page: "Suppliers", action: "create", version: 0, values: { legalName: "Example supplier", country: "CH", address: "Synthetic address", taxId: "SYNTHETIC-TAX", contactEmail: "supplier@example.invalid", paymentTerms: "Net 30", riskRating: "Low", dueDiligence: true, sanctionsDate: "2026-11-01" } }, environment).ok).toBe(true)
@@ -123,7 +131,7 @@ test("real register and purchase-order downloads preserve recorded business term
     number: "PR-2026-0042", status: "po_issued", createdBy: "owner", createdAt: at,
     pr: { title: "Recorded service", type: "service", category: "Software", costCenter: "Operations", recurring: true, frequency: "Monthly", estAnnual: 1200, estAmount: 100 },
     sourcing: { selectedId: "quote-1", contractStrategy: "existing", quotes: [{ id: "quote-1", supplier: "Recorded supplier", currency: "EUR", total: 100 }] },
-    po: { number: "PO-2026-0042", supplier: "Recorded supplier", supplierContact: "Supplier contact", quoteRef: "QUOTE-42", currency: "EUR", fxRate: 1.08, expenseType: "OPEX", description: "Recorded purchase scope", lines: [{ desc: "Recorded licence", qty: 2, uom: "seat", unitPrice: 50 }], paymentTerms: "Negotiated Net 60", deliveryDate: "2026-12-01", deliveryConditions: "Recorded delivery conditions", contractRef: "FRAME-42", assetRef: "ASSET-TEXT", incoterm: "DAP", billingAddress: "Recorded invoice address", deliveryAddress: "Recorded warehouse", acceptance: "Recorded acceptance", warranty: "Recorded warranty", notes: "Recorded additional terms", issuedAt: at, approval: { steps: [{ levelName: "Recorded approval", status: "approved", by: "holder", at }] }, iban: "NEVER-EXPORT-IBAN", account: "NEVER-EXPORT-ACCOUNT", bankName: "NEVER-EXPORT-BANK", swift: "NEVER-EXPORT-SWIFT", accountHolder: "NEVER-EXPORT-HOLDER", bankCountry: "NEVER-EXPORT-COUNTRY" },
+    po: { number: "PO-2026-0042", supplier: "Recorded supplier", supplierContact: "Supplier contact", quoteRef: "QUOTE-42", currency: "EUR", fxRate: 1.08, approvalBaseCurrency: "USD", expenseType: "OPEX", description: "Recorded purchase scope", lines: [{ desc: "Recorded licence", qty: 2, uom: "seat", unitPrice: 50 }], paymentTerms: "Negotiated Net 60", deliveryDate: "2026-12-01", deliveryConditions: "Recorded delivery conditions", contractRef: "FRAME-42", assetRef: "ASSET-TEXT", incoterm: "DAP", billingAddress: "Recorded invoice address", deliveryAddress: "Recorded warehouse", acceptance: "Recorded acceptance", warranty: "Recorded warranty", notes: "Recorded additional terms", issuedAt: at, approval: { amount: 108, steps: [{ levelName: "Recorded approval", status: "approved", by: "holder", at }] }, iban: "NEVER-EXPORT-IBAN", account: "NEVER-EXPORT-ACCOUNT", bankName: "NEVER-EXPORT-BANK", swift: "NEVER-EXPORT-SWIFT", accountHolder: "NEVER-EXPORT-HOLDER", bankCountry: "NEVER-EXPORT-COUNTRY" },
     history: [{ at, by: "holder", action: "PO issued internally", note: "PO-2026-0042" }],
   }
   const state: Snapshot = { data: { store: { settings: initialProcurementSettings(), requests: { [request.number]: { request, version: 7, by: "holder" } } } }, versions: {}, sequences: {}, audit: [], notices: [] }
@@ -145,6 +153,94 @@ test("real register and purchase-order downloads preserve recorded business term
   if (!hidden.ok) throw new Error("Authorized empty register failed")
   expect(new TextDecoder().decode(hidden.bytes)).not.toContain(request.number)
   expect(state).toEqual(before)
+})
+
+test("real register bytes distinguish missing quotation values and currency from recorded zero and reject ambiguous selection", async () => {
+  const cases = [
+    { id: "PR-export-no-total", quotes: [{ id: "q", supplier: "Declared supplier", currency: "USD" }], total: "Unavailable", supplier: "Declared supplier" },
+    { id: "PR-export-no-currency", quotes: [{ id: "q", supplier: "Declared supplier", total: 100 }], total: "Unavailable", supplier: "Declared supplier" },
+    { id: "PR-export-duplicate", quotes: [{ id: "q", supplier: "First", currency: "USD", total: 100 }, { id: "q", supplier: "Second", currency: "USD", total: 200 }], total: "Unavailable", supplier: "Unavailable" },
+    { id: "PR-export-zero", quotes: [{ id: "q", supplier: "Declared supplier", currency: "USD", total: 0 }], total: "USD 0.00", supplier: "Declared supplier" },
+    { id: "PR-export-original", quotes: [{ id: "q", supplier: "Declared supplier", currency: "EUR", total: 100 }], total: "EUR 100.00", supplier: "Declared supplier" },
+  ]
+  const state: Snapshot = { data: { store: { settings: initialProcurementSettings(), requests: Object.fromEntries(cases.map((item) => [item.id, { request: { number: item.id, status: "sourcing", createdBy: buyer.id, pr: {}, sourcing: { selectedId: "q", quotes: item.quotes } }, version: 1, by: buyer.id }])) } }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const before = structuredClone(state)
+  const result = await download("register", state, buyer, environment, new URLSearchParams())
+  if (!result.ok) throw new Error("Real quotation register export failed")
+  const records = exportedCsvRecords(result.bytes)
+  expect(records).toHaveLength(cases.length)
+  for (const item of cases) expect(records.find((record) => record["PR number"] === item.id)).toMatchObject({ "Selected quote total": item.total, "Selected supplier": item.supplier, "Estimated amount": "Unavailable", "Est. annual value": "Unavailable" })
+  expect(state).toEqual(before)
+})
+
+test("real PO and register bytes keep missing lines prices currency and frozen FX unavailable", async () => {
+  const cases: { name: string; status: string; po: Record<string, unknown>; original: string; currency: string; displayed: string; fx: string }[] = [
+    { name: "absent price", status: "po_draft", po: { currency: "USD", lines: [{ qty: 2, unitPrice: null }] }, original: "Unavailable", currency: "USD", displayed: "Unavailable", fx: "1" },
+    { name: "absent quantity", status: "po_draft", po: { currency: "USD", lines: [{ unitPrice: 50 }] }, original: "Unavailable", currency: "USD", displayed: "Unavailable", fx: "1" },
+    { name: "absent currency", status: "po_draft", po: { lines: [{ qty: 2, unitPrice: 50 }] }, original: "Unavailable", currency: "Unavailable", displayed: "Unavailable", fx: "Unavailable" },
+    { name: "empty lines", status: "po_approved", po: { currency: "USD", lines: [] }, original: "Unavailable", currency: "USD", displayed: "Unavailable", fx: "Unavailable" },
+    { name: "malformed line", status: "po_draft", po: { currency: "USD", lines: [null] }, original: "Unavailable", currency: "USD", displayed: "Unavailable", fx: "1" },
+    { name: "string price", status: "po_draft", po: { currency: "USD", lines: [{ qty: 2, unitPrice: "50" }] }, original: "Unavailable", currency: "USD", displayed: "Unavailable", fx: "1" },
+    { name: "overflow", status: "po_draft", po: { currency: "USD", lines: [{ qty: 2, unitPrice: Number.MAX_VALUE }] }, original: "Unavailable", currency: "USD", displayed: "Unavailable", fx: "1" },
+    { name: "missing submitted FX", status: "po_pending", po: { currency: "EUR", lines: [{ qty: 2, unitPrice: 50 }], approvalBaseCurrency: "USD", fxRate: null, approval: { amount: 108 } }, original: "100", currency: "EUR", displayed: "100.00", fx: "Unavailable" },
+    { name: "string submitted FX", status: "po_pending", po: { currency: "EUR", lines: [{ qty: 2, unitPrice: 50 }], approvalBaseCurrency: "USD", fxRate: "1.08", approval: { amount: 108 } }, original: "100", currency: "EUR", displayed: "100.00", fx: "Unavailable" },
+  ]
+  for (const item of cases) {
+    const id = "PR-export-order"
+    const request = { number: id, status: item.status, createdBy: buyer.id, pr: { estAmount: 777 }, sourcing: { selectedId: "q", quotes: [{ id: "q", supplier: "Must not substitute", total: 555, currency: "USD" }] }, po: { ...item.po, number: "PO-export-order", description: item.name, iban: "NO-EXPORT-BANK" } }
+    const state: Snapshot = { data: { store: { settings: initialProcurementSettings(), requests: { [id]: { request, version: 1, by: buyer.id } } } }, versions: {}, sequences: {}, audit: [], notices: [] }
+    const before = structuredClone(state)
+    const register = await download("register", state, buyer, environment, new URLSearchParams())
+    const order = await download("po", state, buyer, environment, new URLSearchParams({ request: id }))
+    if (!register.ok || !order.ok) throw new Error(`Real export failed for ${item.name}`)
+    expect(exportedCsvRecords(register.bytes)[0]).toMatchObject({ "PO total": item.original, "PO currency": item.currency, "PO total (base)": "Unavailable", "PO FX rate": item.fx })
+    const html = new TextDecoder().decode(order.bytes)
+    expect(html).toContain(`<th colspan="5">Total agreed price (excl. VAT)</th><td>${item.displayed}</td>`)
+    expect(html).toContain(`Unit price (${item.currency})`)
+    expect(html).toContain("Current base amount: Unavailable")
+    expect(html).not.toContain("NO-EXPORT-BANK")
+    if (item.name === "absent price") expect(html).toContain('<td>2</td><td></td><td>Unavailable</td><td>Unavailable</td>')
+    if (item.name === "absent quantity") expect(html).toContain('<td>Unavailable</td><td></td><td>50.00</td><td>Unavailable</td>')
+    expect(state).toEqual(before)
+  }
+})
+
+test("real financial downloads preserve frozen submitted currency after base changes and retain explicit zero", async () => {
+  const id = "PR-export-frozen"
+  const request = { number: id, status: "po_approved", createdBy: buyer.id, pr: { estAmount: 100 }, po: { number: "PO-export-frozen", currency: "EUR", fxRate: 1.08, approvalBaseCurrency: "USD", lines: [{ qty: 2, unitPrice: 50 }], approval: { amount: 108 } } }
+  for (const currency of ["USD", "GBP"]) {
+    const settings = { ...initialProcurementSettings(), currency, fxRates: [{ code: "EUR", rate: 2 }] }
+    const state: Snapshot = { data: { store: { settings, requests: { [id]: { request, version: 1, by: buyer.id } } } }, versions: {}, sequences: {}, audit: [], notices: [] }
+    const before = structuredClone(state)
+    const register = await download("register", state, buyer, environment, new URLSearchParams())
+    const order = await download("po", state, buyer, environment, new URLSearchParams({ request: id }))
+    if (!register.ok || !order.ok) throw new Error("Real frozen export failed")
+    expect(exportedCsvRecords(register.bytes)[0]).toMatchObject({ "PO total": "100", "PO currency": "EUR", "PO base currency": currency, "PO total (base)": currency === "USD" ? "108" : "Unavailable", "PO FX rate": currency === "USD" ? "1.08" : "Unavailable", "PO FX source": currency === "USD" ? "submitted" : "Unavailable", "PO monetary state": "approved", "PO submitted amount": "108", "PO submitted currency": "USD", "PO submitted FX rate": "1.08" })
+    const html = new TextDecoder().decode(order.bytes)
+    expect(html).toContain("Submitted approval: 108.00 USD; submitted FX: 1.08")
+    expect(html).toContain(currency === "USD" ? "Current base amount: 108.00 USD" : "Current base amount: Unavailable")
+    expect(html).not.toContain("200.00")
+    expect(state).toEqual(before)
+  }
+  for (const status of ["po_pending", "po_approved"]) {
+    const incomplete: Snapshot = { data: { store: { settings: initialProcurementSettings(), requests: { [id]: { request: { ...request, status, po: { ...request.po, lines: [] } }, version: 1, by: buyer.id } } } }, versions: {}, sequences: {}, audit: [], notices: [] }
+    const before = structuredClone(incomplete)
+    const register = await download("register", incomplete, buyer, environment, new URLSearchParams())
+    const order = await download("po", incomplete, buyer, environment, new URLSearchParams({ request: id }))
+    if (!register.ok || !order.ok) throw new Error("Real incomplete approved export failed")
+    expect(exportedCsvRecords(register.bytes)[0]).toMatchObject({ "PO total": "Unavailable", "PO total (base)": "Unavailable", "PO currency": "EUR", "PO FX rate": "1.08", "PO FX source": "submitted", "PO monetary state": status === "po_pending" ? "pending-approval" : "approved", "PO submitted amount": "108", "PO submitted currency": "USD", "PO submitted FX rate": "1.08" })
+    const html = new TextDecoder().decode(order.bytes)
+    expect(html).toContain('<th colspan="5">Total agreed price (excl. VAT)</th><td>Unavailable</td>')
+    expect(html).toContain("Current base amount: Unavailable")
+    expect(html).toContain("Submitted approval: 108.00 USD; submitted FX: 1.08")
+    expect(incomplete).toEqual(before)
+  }
+  const zero: Snapshot = { data: { store: { settings: initialProcurementSettings(), requests: { [id]: { request: { ...request, status: "po_draft", po: { number: "PO-export-zero", currency: "USD", lines: [{ qty: 0, unitPrice: 25 }] } }, version: 1, by: buyer.id } } } }, versions: {}, sequences: {}, audit: [], notices: [] }
+  const register = await download("register", zero, buyer, environment, new URLSearchParams())
+  const order = await download("po", zero, buyer, environment, new URLSearchParams({ request: id }))
+  if (!register.ok || !order.ok) throw new Error("Real zero export failed")
+  expect(exportedCsvRecords(register.bytes)[0]).toMatchObject({ "PO total": "0", "PO total (base)": "0", "PO currency": "USD", "PO FX rate": "1", "PO FX source": "base", "PO monetary state": "estimate" })
+  expect(new TextDecoder().decode(order.bytes)).toContain('<th colspan="5">Total agreed price (excl. VAT)</th><td>0.00</td>')
 })
 
 test("real supplier lifecycle covers all four states, authorized search, linked requests and audit without granting buyer status powers", () => {

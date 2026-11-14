@@ -16,7 +16,7 @@ const request: Extract<BusinessEvidenceRef, { kind: "record" }> = {
 function projection(refs: readonly BusinessEvidenceRef[]): AuthorizedCaseProjection {
   return {
     context: { installationId: "installation", projectId: "project", principalRef: "buyer", policyVersion: "1", accessRevision: "1", kind: "ui" },
-    case: { id: "decision", incarnation: "decision-incarnation", version: 3, state: "investigating", objective: "Compare authorized proposals", horizon: period, currency: "USD",
+    case: { id: "decision", incarnation: "decision-incarnation", version: 3, state: "investigating", objective: 'Compare <&quot;> "authorized" proposals', horizon: period, currency: "USD",
       criteria: [], participants: ["buyer"], sourceRefs: refs, alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] },
     events: [], evidenceRefs: refs, checkedAt: "2026-11-13T12:00:00Z",
   }
@@ -51,19 +51,23 @@ test("sourcing entry renders only attached authorized request selectors with the
   const config: string[] = []
   const selected: string[] = []
   const history: string[] = []
+  // Bun HTMLRewriter exposes serialized attributes; a browser's dataset decodes them.
+  // Decode each entity once, preserving an escaped literal entity in user data.
+  const entities: Record<string, string> = { "&quot;": '"', "&amp;": "&", "&lt;": "<", "&gt;": ">", "&#39;": "'" }
+  const attribute = (value: string) => value.replace(/&(?:quot|amp|lt|gt|#39);/g, (entity) => entities[entity] ?? entity)
   await new HTMLRewriter()
-    .on("form[data-sourcing-analysis]", { element: (element) => { config.push(element.getAttribute("data-config")!) } })
+    .on("form[data-sourcing-analysis]", { element: (element) => { config.push(attribute(element.getAttribute("data-config")!)) } })
     .on('select[name="requestRef"] option', { element: (element) => {
       if (!element.hasAttribute("value")) throw new Error("Every request option must declare its value")
       // HTMLRewriter reports the explicitly empty placeholder attribute as null.
       selected.push(element.getAttribute("value") ?? "")
     } })
-    .on("[data-analysis-history]", { element: (element) => { history.push(element.getAttribute("data-case")!) } })
+    .on("[data-analysis-history]", { element: (element) => { history.push(attribute(element.getAttribute("data-case")!)) } })
     .transform(new Response(html)).text()
   expect(selected).toEqual(["", request.refId])
   expect(html).toContain('<option value="">Choose an attached request</option>')
   expect(config).toHaveLength(1)
-  expect(JSON.parse(config[0]!)).toEqual({ caseRef: { id: "decision", incarnation: "decision-incarnation", version: 3 }, objective: "Compare authorized proposals",
+  expect(JSON.parse(config[0]!)).toEqual({ caseRef: { id: "decision", incarnation: "decision-incarnation", version: 3 }, objective: 'Compare <&quot;> "authorized" proposals',
     profileId: "sf_procurement", profileVersion: runtime.selected[0]!.profile.version, skillId: "sf-comparar-sourcing", skillVersion: runtime.selected[0]!.skills[0]!.version,
     manifestDigest: bundle.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: ["sf_request_read", "sf_sourcing_compare"], requestRefs: [request.refId], models })
   expect(history).toEqual([JSON.stringify({ id: "decision", incarnation: "decision-incarnation", version: 3 })])
