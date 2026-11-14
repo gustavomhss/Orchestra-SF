@@ -198,8 +198,9 @@ async function createNativeFixture(directory: string) {
     const selection = selections.find((entry) => entry.route === route)?.selected
     if (!sessions || !registration || !selection) throw new Error("Native Location not initialized")
     const session = existing ?? await Effect.runPromise(sessions.create({ location, agent: AgentV2.ID.make(selection.profile.id), model }))
-    identity.current ??= { installationId: "native-dashboard-installation", hostId: randomUUID(), projectId: session.projectID, location }
-    if (session.projectID !== identity.current.projectId) throw new Error("Native Session placement changed")
+    identity.current ??= { installationId: "native-dashboard-installation", hostId: randomUUID(), projectId: session.projectID, location: session.location }
+    if (session.projectID !== identity.current.projectId || digestSfValue(session.location) !== digestSfValue(identity.current.location)) throw new Error("Native Session placement changed")
+    if (!session.model) throw new Error("Native Session did not retain the selected model")
     const runId = randomUUID()
     const intent = { caseRef, profileId: selection.profile.id, skillId: selection.skills[0]!.id, operation: routes[route].operation, period: nativePeriod }
     const context = nativeValue(await product.human.admit(new Request(request, { method: "POST", headers: { "x-test-principal": "person", origin: new URL(request.url).origin } }), "analysis.start", intent))
@@ -208,7 +209,7 @@ async function createNativeFixture(directory: string) {
       const record: SfNativeRunRecord = {
         schema: "sf-native-run-v1", runRef: runId, version: 1, state: "preparing", requestDigest: digestSfValue(intent), intentDigest: digestSfValue(intent), skillInputDigest: digestSfValue({ operation: intent.operation, period: nativePeriod }),
         principalRef: context.binding.principalRef, policyVersion: context.binding.policyVersion, accessRevision: context.binding.accessRevision,
-        caseRef, selection, model, skillId: intent.skillId, objective: "Read the authorized Dashboard and preserve missing measurements", contextFingerprint: digestSfValue({ caseRef, period: nativePeriod, accessRevision: context.binding.accessRevision }), createdAt: at, updatedAt: at,
+        caseRef, selection, model: session.model, skillId: intent.skillId, objective: "Read the authorized Dashboard and preserve missing measurements", contextFingerprint: digestSfValue({ caseRef, period: nativePeriod, accessRevision: context.binding.accessRevision }), createdAt: at, updatedAt: at,
       }
       nativeValue(await runs.create(record, context))
       const receipt = await Effect.runPromise(loadSfSkill({ session: sessions, skills: registration.skills, sourceCapability: registration.sourceCapability, selected: selection, sessionID: session.id, profile: selection.profile, skill: selection.skills[0]!, runId, manifestDigest: bundle.manifestDigest }))
@@ -235,7 +236,7 @@ async function createNativeFixture(directory: string) {
     async activate(sessions: SessionV2.Interface, store: SessionStore.Interface, tools: ToolRegistry.Interface) {
       runtime.sessions = sessions; runtime.store = store; runtime.tools = tools
       const placement = await Effect.runPromise(sessions.create({ location, agent: AgentV2.ID.make("sf_maestro"), model }))
-      identity.current = { installationId: "native-dashboard-installation", hostId: randomUUID(), projectId: placement.projectID, location }
+      identity.current = { installationId: "native-dashboard-installation", hostId: randomUUID(), projectId: placement.projectID, location: placement.location }
       nativeValue(await product.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: product.creationTarget.ref, targetIncarnation: product.creationTarget.incarnation, idempotencyKey: randomUUID(), commandDigest: digestSfValue(caseRef) }, async (state, authority) => {
         state.cases[caseRef.id] = { ...caseRef, state: "draft", objective: "Review the Dashboard", horizon: nativePeriod, currency: "USD", criteria: [], participants: [authority.principalRef], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
         return { commit: true, value: true }

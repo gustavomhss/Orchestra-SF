@@ -55,6 +55,10 @@ O Dashboard conserva as 16 páginas e seus comandos de domínio. A vista executi
 
 Um conflito de versão conserva o formulário. **Load current version and keep my edits** carrega a revisão atual autorizada, mostra os valores persistidos e mantém o rascunho para comparação. A pessoa precisa salvar e confirmar novamente. Se uma justificativa for editada enquanto a gravação anterior ainda está em andamento, a interface informa que o envio anterior foi salvo e que as alterações novas continuam pendentes.
 
+No rascunho de Hot Topic, **Carregar versão atual e manter minhas alterações** recupera a mesma identidade de rascunho e mostra a versão anterior, a versão atual e os valores digitados. A confirmação **Revisei a versão atual do rascunho e quero manter meus valores** habilita um novo envio. Um segundo rascunho com o mesmo caso e Hot Topic não é confundido com o primeiro; perda de acesso ou substituição da origem mantém a gravação bloqueada.
+
+Em **Security overview**, P1 identifica o mês de IT Operations e os incidentes abertos identificam a data da observação corrente. Cada KPI mostra a competência da sua última medição disponível até o mês executivo, inclusive quando essa medição vem de um mês anterior. Valor ausente permanece indisponível e zero continua sendo um valor medido.
+
 O painel **Revisão e ações** usa as opções descobertas pelo servidor. Os campos de data delimitam o período; **Carregar opções** atualiza registros, reuniões preservadas, casos participados e escolhas existentes. A captura de um registro conserva os valores e a data da observação. Reabrir um retrato exige acesso atual à mesma identidade física; a substituição ou remoção da fonte pode torná-lo indisponível. Um registro atual de pessoas, ações ou performance não ganha um histórico retroativo por trocar o ano da página.
 
 ### Roteiro de revisão de uma ação
@@ -72,4 +76,4 @@ O host liga Dashboard, revisão preservada e aplicação de Hot Topics às mesma
 
 As rotas `sf_dashboard_read` e `sf_kpi_explain` usam o mesmo port pela UI, pela admissão nativa e pela bridge MCP privada. A prova AM02 direta carrega bytes reais de skill em `SessionV2`, observa o `SkillLoadReceipt` persistido e compara resultados e proveniência, incluindo o consumidor BI. Essa prova não representa uma geração por LLM nem o gate global GNATIVE.
 
-Para esta revisão WP02, `bun typecheck` do pacote `modules/sucafina`, os guards contra `origin/dev` e a seleção explícita de testes são executados no GitHub Actions. Os recibos versionados em `docs/sf2h/receipts/WP02/` identificam o commit de produto, o snapshot de testes, o request e os runs; resultados históricos conservam seus próprios SHAs. O commit evidencial posterior apenas acrescenta recibos, sem alterar o produto testado.
+Para esta revisão WP02, `bun typecheck` do pacote `modules/sucafina`, os guards contra `origin/dev` e a seleção explícita de testes são executados no GitHub Actions. O índice de fechamento fica em `docs/sf2h/receipts/WP02/completion-20261114/README.md` e identifica o commit de produto, o snapshot de testes, o request e os runs. Os recibos anteriores em `docs/sf2h/receipts/WP02/` conservam os resultados e SHAs de suas próprias tentativas. O commit evidencial posterior apenas acrescenta recibos, sem alterar o produto testado.

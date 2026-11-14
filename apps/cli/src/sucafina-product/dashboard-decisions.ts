@@ -190,7 +190,7 @@ export function createSfDashboardDecisions(input: {
       const cases: { caseRef: CaseRef; label: string }[] = []
       const emittedCases = new Map<string, DecisionCase>()
       const emittedPreferences = new Map<string, string>()
-      const draftOptions: { caseRef: CaseRef; draftRef: string; version: number; label: string; target: HotTopicDraft["target"]; targetEvidence: HotTopicDraft["targetEvidence"]; fields: HotTopicDraft["fields"]; sourceRefs: HotTopicDraft["sourceRefs"] }[] = []
+      const draftOptions: { id: string; incarnation: string; caseRef: CaseRef; draftRef: string; version: number; label: string; target: HotTopicDraft["target"]; targetEvidence: HotTopicDraft["targetEvidence"]; fields: HotTopicDraft["fields"]; sourceRefs: HotTopicDraft["sourceRefs"] }[] = []
       const preparations: { caseRef: CaseRef; choiceId: string; draftRef: string; label: string; reason: string }[] = []
       const changes: { caseRef: CaseRef; choiceId: string; changeId: string; label: string; state: PreparedChange["state"] }[] = []
       if (current.status === "ok") for (const decision of current.value) {
@@ -206,7 +206,7 @@ export function createSfDashboardDecisions(input: {
           if (actual.status !== "ok" || actual.value.principalRef !== context.binding.principalRef) continue
           emittedPreferences.set(`sf:proposal-coverage:hot-topic:active:${digestSfValue(actual.value.id)}`, digestSfValue(actual.value))
           emittedPreferences.set(`sf:proposal-coverage:hot-topic:history:${digestSfValue(actual.value.draftRef)}`, digestSfValue(actual.value))
-          draftOptions.push({ caseRef, draftRef: draft.draftRef, version: draft.version, label: draft.label, target: actual.value.target, targetEvidence: actual.value.targetEvidence, fields: actual.value.fields, sourceRefs: actual.value.sourceRefs })
+          draftOptions.push({ id: actual.value.id, incarnation: actual.value.incarnation, caseRef, draftRef: draft.draftRef, version: draft.version, label: draft.label, target: actual.value.target, targetEvidence: actual.value.targetEvidence, fields: actual.value.fields, sourceRefs: actual.value.sourceRefs })
           for (const choice of decision.choices) {
             const operations = choice.scenario.operations.filter((operation) => operation.kind === "replace" && operation.targetRef === actual.value.targetEvidence.refId && operation.replacementRef === draft.draftRef)
             if (operations.length !== 1 || decision.preparedChanges.some((change) => change.choiceId === choice.id && change.target.id === draft.target.id && change.state === "planned")) continue

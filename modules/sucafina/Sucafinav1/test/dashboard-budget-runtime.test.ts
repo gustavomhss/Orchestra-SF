@@ -584,14 +584,42 @@ test("executive derived ops, SLA, security and performance expose no raw records
     key: "training",
     value: 96,
     status: "Good",
+    sourceYear: 2026,
+    sourceMonth: 1,
   })
   expect(monthly.kpis).toContainEqual({
     key: "socClosure",
     value: 50,
     status: "High risk",
+    sourceYear: 2026,
+    sourceMonth: 1,
   })
   expect(view.data.executive).toMatchObject({ onTarget: 2 })
   expect(JSON.stringify(view)).not.toContain("secret")
+})
+test("executive security separates the operations month, current incidents and each fallback KPI period", () => {
+  const state = snapshot()
+  state.data.opsHeatmap = [{ year: 2026, month: 3, p1: 2 }, { year: 2026, month: 11, p1: 9 }]
+  state.data.secKpi = [{ year: 2026, month: 9, training: 96, socCritical: 2, socPending: 1 }, { year: 2026, month: 11, training: "", patch: 0 }]
+  state.data.secIncidents = [{ id: "current", contained: true, remediated: false, rootCause: true }]
+  const before = structuredClone(state)
+  const view = domain.view(state, actor, { at, id: () => "unused", directory: [] })
+  const monthly = (view.data.executiveMonths as Record<string, Record<string, unknown>>)["2026:11"]!
+  expect(monthly.kpis).toContainEqual({ key: "training", value: 96, status: "Good", sourceYear: 2026, sourceMonth: 9 })
+  expect(monthly.kpis).toContainEqual(expect.objectContaining({ key: "patch", value: 0, sourceYear: 2026, sourceMonth: 11 }))
+  expect(monthly.kpis).toContainEqual(expect.objectContaining({ value: null, sourceYear: null, sourceMonth: null }))
+  const html = render("Executive Dashboard", { ...view.data, opsMonth: 3 }, { actor, year: 2026, month: 11, at, versions: state.versions })!
+  const security = html.split("<h2>Security overview</h2>")[1]!.split("<h2>Dashboard inputs</h2>")[0]!
+  expect(security).toContain("P1 reference: 2026-03, from IT Operations")
+  expect(security).toContain("Open security incidents: current records as of 2026-11-11")
+  expect(security).toContain("latest nonempty measurement at or before 2026-11")
+  expect(security).toContain('<th scope="col">Source period</th>')
+  expect(security).toContain("<td>training</td><td>96</td><td>2026-09</td>")
+  expect(security).toContain("<td>patch</td><td>0</td><td>2026-11</td>")
+  expect(security).toContain("<td>—</td><td>Unavailable</td>")
+  expect(security).toContain("<span>P1</span><strong>2</strong>")
+  expect(security).toContain("<span>Open security incidents</span><strong>1</strong>")
+  expect(state).toEqual(before)
 })
 test("deviation writes original collection with record CAS and escaped display", () => {
   const state = snapshot()

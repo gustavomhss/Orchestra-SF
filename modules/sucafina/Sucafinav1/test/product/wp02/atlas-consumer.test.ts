@@ -54,7 +54,9 @@ test("C17 consumes Dashboard observations through real Atlas and reauthorizes du
     expect(recalled).toHaveLength(1)
     const record = recalled[0]!
     const authorizedCase = await f.call("sf_case_read", { caseRef: encodeCaseRef(budget.caseRef) }, async (context) => atlasValue(await f.runtime.current.business.cases.read({ caseRef: encodeCaseRef(budget.caseRef) }, context)))
-    expect(record.envelope.owner).toBe(deriveSfMemoryOwner(authorizedCase.context, authorizedCase.case))
+    const owner = deriveSfMemoryOwner(authorizedCase.context, authorizedCase.case)
+    if (!owner) throw new Error("Authorized case did not produce a memory owner")
+    expect(record.envelope.owner).toBe(owner)
     expect(record.envelope.writerPrincipalRef).toBe(f.actors[0])
     expect(record.envelope.eventId).toBe(budgetReceipt.eventId)
     expect(record.envelope.scannerReceipt.digest).toBe(budgetReceipt.recordDigest)
@@ -159,6 +161,7 @@ test("C17 real scanner and Atlas transactions reject unsafe content and reconcil
     expect(await f.inspect()).toEqual(initial)
     const committed = await f.call("sf_case_read", payload, (context) => f.runtime.current.business.context.emitFromLedger(normal.eventRef, context))
     expect(committed.status).toBe("committed")
+    if (!committed.eventId) throw new Error("Committed Atlas event has no identity")
     expect((await f.inspect()).entries).toBe(1)
 
     const second = await f.ledger([sources.budget], "A later accepted observation remains independent of the first record.")
@@ -168,7 +171,7 @@ test("C17 real scanner and Atlas transactions reject unsafe content and reconcil
     expect(f.fault.trips).toBe(2)
     const settled = await f.inspect(), item = settled.outbox[second.key]
     expect(settled.entries).toBe(2)
-    if (!item || item.state !== "settled") throw new Error("Real commit did not settle its outbox")
+    if (!item || item.state !== "settled" || !item.receipt.eventId) throw new Error("Real commit did not settle its outbox with an event identity")
     expect(item.receipt.status).toBe("committed")
     await f.reopen()
     const retry = await f.call("sf_case_read", { caseRef: encodeCaseRef(second.caseRef) }, (context) => f.runtime.current.business.context.emitFromLedger(second.eventRef, context))

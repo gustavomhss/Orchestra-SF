@@ -179,17 +179,20 @@ export const domain: Domain = {
           }
           const heatmap = rows(snapshot.data.opsHeatmap).filter((row) => row.year === year && row.month === month)
           const security = rows(snapshot.data.secKpi)
-            .filter((row) => row.year === year && finite(row.month) <= month)
+            .filter((row) => row.year === year && Number.isInteger(row.month) && finite(row.month) >= 1 && finite(row.month) <= month)
             .sort((a, b) => finite(b.month) - finite(a.month))
           const kpis = SECURITY_KPIS.map((def) => {
             const latest = security
-              .map((entry) => (def.key === "socClosure" ? socClosureValue(entry) : entry[def.key]))
-              .find((value) => value !== undefined && value !== null && value !== "")
-            const value = latest === undefined ? null : Number(latest)
+              .map((entry) => ({ entry, raw: def.key === "socClosure" ? socClosureValue(entry) : entry[def.key] }))
+              .find(({ raw }) => raw !== undefined && raw !== null && raw !== "")
+            const numeric = latest === undefined ? null : Number(latest.raw)
+            const value = numeric !== null && Number.isFinite(numeric) ? numeric : null
             return {
               key: def.key,
               value,
               status: securityKpiStatus(def.better, def.target, def.moderate, value),
+              sourceYear: value === null ? null : latest?.entry.year ?? null,
+              sourceMonth: value === null ? null : latest?.entry.month ?? null,
             }
           })
           return [
@@ -720,16 +723,18 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         slaMetric("Incidents SLA YTD", ops.incYtd, 95),
         slaMetric("Service Requests SLA YTD", ops.svcYtd, 90),
       ], 4) +
-      `<h2>Security overview</h2>` +
+      `<h2>Security overview</h2><p>P1 reference: ${esc(String(context.year))}-${esc(String(opsMonth).padStart(2, "0"))}, from IT Operations. Open security incidents: current records as of ${esc(context.at.slice(0, 10))}.</p>` +
       metricGrid([
         `<section class="metric-tone" data-tone="${typeof ops.p1 !== "number" ? "neutral" : ops.p1 > 0 ? "red" : "green"}">${metric("P1", count(ops.p1))}</section>`,
         metric("Open security incidents", count(monthly.openIncidents)),
       ], 2) +
+      `<p>Security KPI values use the latest nonempty measurement at or before ${esc(String(context.year))}-${esc(String(context.month).padStart(2, "0"))}. Each source period is shown below.</p>` +
       table(
-        ["Security KPI", "Latest value", "Status"],
+        ["Security KPI", "Latest value", "Source period", "Status"],
         rows(monthly.kpis).map((row) => [
           esc(text(row.key)),
           row.value == null ? "—" : esc(String(row.value)),
+          typeof row.sourceYear === "number" && typeof row.sourceMonth === "number" ? `${esc(String(row.sourceYear))}-${esc(String(row.sourceMonth).padStart(2, "0"))}` : "Unavailable",
           esc(text(row.status)),
         ]),
       ) +

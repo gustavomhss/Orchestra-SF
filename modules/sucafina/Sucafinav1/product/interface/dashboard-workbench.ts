@@ -12,6 +12,7 @@ export function dashboardWorkbenchWidget(page: string) {
       <label>Caso<select data-dashboard-case><option value="">Selecione um caso</option></select></label><label>Rascunho<select data-dashboard-draft-choice><option value="">Selecione novo ou existente</option></select></label><label>Hot Topic de origem<select data-dashboard-draft-source><option value="">Selecione um Hot Topic</option></select></label>
       <label>Ação<input name="action" required maxlength="1000" disabled></label><label>Responsável<input name="owner" required maxlength="500" disabled></label><label>Prazo<input name="due" type="date" required disabled></label><label>Prioridade<select name="priority" disabled><option value="normal">Normal</option><option value="high">Alta</option><option value="critical">Crítica</option></select></label><label>Notas<textarea name="notes" maxlength="16000" disabled></textarea></label>
       <button type="submit" data-dashboard-save-draft disabled>Salvar rascunho</button> <button type="button" data-dashboard-reset-draft disabled>Descartar alterações do formulário</button>
+      <button type="button" data-dashboard-refresh-draft disabled>Carregar versão atual e manter minhas alterações</button><div data-dashboard-draft-diff></div><label data-dashboard-draft-confirmation hidden><input type="checkbox" data-dashboard-confirm-draft disabled>Revisei a versão atual do rascunho e quero manter meus valores.</label>
     </fieldset></form>
     <fieldset><legend>Escolhas e alterações</legend><label>Escolha existente para preparar<select data-dashboard-preparation><option value="">Selecione uma escolha</option></select></label><p data-dashboard-choice-reason></p><button type="button" data-dashboard-prepare disabled>Preparar escolha</button>
       <label>Alteração preparada<select data-dashboard-change><option value="">Selecione uma alteração</option></select></label><button type="button" data-dashboard-review disabled>Revisar alterações</button><div data-dashboard-review-view></div>
@@ -31,7 +32,7 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
   const evidenceLabels = { confirmed: 'Confirmado', estimated: 'Estimado', absent: 'Ausente', unavailable: 'Indisponível', hypothetical: 'Hipótese' };
   const origins = { hotTopics: 'Hot Topics', opsTickets: 'Chamados', projects: 'Projetos', risks: 'Riscos', contracts: 'Contratos', members: 'Pessoas', leaders: 'Estrutura da equipe', opexOwners: 'OPEX', opexEntries: 'OPEX', capexProjects: 'CAPEX', capexEntries: 'CAPEX', 'itperf-item': 'Contrato de performance', stakeholders: 'Stakeholders', secKpi: 'Segurança de TI' };
   const states = { planned: 'Aguardando revisão', applied: 'Aplicada', conflict: 'Em conflito', failed: 'Não aplicada' };
-  let data, agenda, review, draftBinding, draftCatalog = [], caseCatalog = [], sourceCatalog = [], busy = false;
+  let data, agenda, review, draftBinding, draftIdentity, pendingDraft, draftConflict = false, draftCatalog = [], caseCatalog = [], sourceCatalog = [], busy = false;
   const keys = new Map();
   const scalar = (value) => value === null || value === undefined ? 'Não informado' : typeof value === 'boolean' ? value ? 'Sim' : 'Não' : String(value);
   const choice = (name, list) => find(name).value === '' ? undefined : list[Number(find(name).value)];
@@ -69,8 +70,10 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     ['case', 'draft-choice', 'draft-source'].forEach((name) => { find(name).disabled = busy || !writes.draft || !!form.dataset.dirty; });
     find('draft-source').disabled = find('draft-source').disabled || find('draft-choice').value !== 'new';
     fields.forEach((name) => { form.elements.namedItem(name).disabled = busy || !writes.draft || !draftBinding; });
-    find('save-draft').disabled = busy || !writes.draft || !draftBinding || !form.dataset.dirty;
+    find('save-draft').disabled = busy || !writes.draft || !draftBinding || !form.dataset.dirty || draftConflict;
     find('reset-draft').disabled = busy || !form.dataset.dirty;
+    find('refresh-draft').disabled = busy || !writes.draft || !draftBinding || !form.dataset.dirty;
+    find('confirm-draft').disabled = busy || !writes.draft || !pendingDraft;
     find('prepare').disabled = busy || !writes.prepare || !choice('preparation', decisions.preparations || []);
     find('review').disabled = busy || !selectedChange || selectedChange.state !== 'planned';
     find('confirm').disabled = busy || !review || !writes.apply;
@@ -90,7 +93,7 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     if (!keys.has(key)) keys.set(key, crypto.randomUUID());
     const response = await fetch(url, id ? { credentials: 'same-origin' } : { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': keys.get(key) }, body: JSON.stringify(payload) });
     const result = await response.json();
-    if (!response.ok || result.status !== 'ok') throw new Error(failure(result));
+    if (!response.ok || result.status !== 'ok') { const error = new Error(failure(result)); error.status = result.status; throw error; }
     keys.delete(key);
     return result.value;
   };
@@ -127,15 +130,17 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     values.forEach((section) => { const title = document.createElement('h3'); title.textContent = section.title; container.append(title); projection(container, section.projection || section.content); });
   };
   const fillFields = (value) => { fields.forEach((name) => { form.elements.namedItem(name).value = value && value[name] || (name === 'priority' ? 'normal' : ''); }); };
+  const draftRequest = (value) => ({ caseRef: value.caseRef, draftRef: value.draftRef, target: value.target, targetEvidence: value.targetEvidence, fields: value.fields, sourceRefs: value.sourceRefs, expectedVersion: value.version });
+  const clearDraftReview = () => { pendingDraft = undefined; draftConflict = false; find('draft-diff').replaceChildren(); find('confirm-draft').checked = false; find('draft-confirmation').hidden = true; };
   const selectDraft = () => {
-    draftBinding = undefined; delete form.dataset.dirty;
+    draftBinding = undefined; draftIdentity = undefined; clearDraftReview(); delete form.dataset.dirty;
     const selected = choice('case', caseCatalog);
     if (selected && find('draft-choice').value === 'new') {
       const source = choice('draft-source', sourceCatalog);
       if (source) draftBinding = { caseRef: selected.caseRef, target: source.draft.target, targetEvidence: source.draft.targetEvidence, fields: source.draft.fields, sourceRefs: [source.draft.targetEvidence], expectedVersion: 0 };
     } else if (selected) {
       const existing = choice('draft-choice', draftCatalog);
-      if (existing) draftBinding = { caseRef: existing.caseRef, draftRef: existing.draftRef, target: existing.target, targetEvidence: existing.targetEvidence, fields: existing.fields, sourceRefs: existing.sourceRefs, expectedVersion: existing.version };
+      if (existing) { draftBinding = draftRequest(existing); draftIdentity = { id: existing.id, incarnation: existing.incarnation }; }
     }
     fillFields(draftBinding && draftBinding.fields); enable();
   };
@@ -181,10 +186,36 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
   find('case').addEventListener('change', selectCase);
   find('draft-choice').addEventListener('change', selectDraft); find('draft-source').addEventListener('change', selectDraft);
   fields.forEach((name) => form.elements.namedItem(name).addEventListener('input', () => { form.dataset.dirty = 'true'; resetReview(); enable(); }));
-  find('reset-draft').addEventListener('click', () => { delete form.dataset.dirty; fillFields(draftBinding && draftBinding.fields); enable(); announce('Alterações do formulário descartadas. Você pode atualizar as opções antes de editar novamente.'); });
+  find('reset-draft').addEventListener('click', () => { delete form.dataset.dirty; clearDraftReview(); fillFields(draftBinding && draftBinding.fields); enable(); announce('Alterações do formulário descartadas. Você pode atualizar as opções antes de editar novamente.'); });
+  find('refresh-draft').addEventListener('click', () => run(async () => {
+    if (!draftBinding || !form.dataset.dirty) return;
+    clearDraftReview(); draftConflict = true;
+    await refresh();
+    const sameCase = (value) => value.caseRef.id === draftBinding.caseRef.id && value.caseRef.incarnation === draftBinding.caseRef.incarnation;
+    const sameTarget = (value) => value.target.id === draftBinding.target.id && value.target.incarnation === draftBinding.target.incarnation;
+    if (draftIdentity) {
+      const matches = data.decisions.drafts.filter((value) => value.id === draftIdentity.id && value.incarnation === draftIdentity.incarnation && sameCase(value) && sameTarget(value));
+      if (matches.length === 1) pendingDraft = draftRequest(matches[0]);
+    } else {
+      const cases = data.decisions.cases.filter(sameCase), sources = data.records.filter((value) => value.draft && sameTarget(value.draft));
+      if (cases.length === 1 && sources.length === 1) pendingDraft = { caseRef: cases[0].caseRef, target: sources[0].draft.target, targetEvidence: sources[0].draft.targetEvidence, fields: sources[0].draft.fields, sourceRefs: [sources[0].draft.targetEvidence], expectedVersion: 0 };
+    }
+    if (!pendingDraft) throw new Error('Este rascunho ou sua origem não está disponível com o acesso atual. Seus valores continuam no formulário.');
+    table(find('draft-diff'), ['Campo', 'Versão anterior', 'Versão atual', 'Meus valores'], fields.map((name) => [labels[name], draftBinding.fields[name], pendingDraft.fields[name], form.elements.namedItem(name).value]));
+    find('draft-confirmation').hidden = false;
+    announce('Versão atual carregada. Compare as diferenças e confirme a base antes de salvar seus valores.');
+  }));
+  find('confirm-draft').addEventListener('change', () => {
+    if (!pendingDraft) return;
+    if (find('confirm-draft').checked) draftBinding = pendingDraft;
+    draftConflict = !find('confirm-draft').checked; enable();
+  });
   form.addEventListener('submit', (event) => { event.preventDefault(); if (!draftBinding || !form.reportValidity()) return; run(async () => {
+    if (draftConflict) throw new Error('Carregue a versão atual e confirme a base antes de salvar. Seus valores foram mantidos.');
     const edited = Object.fromEntries(fields.map((name) => [name, form.elements.namedItem(name).value]));
-    await request('dashboard-hot-topic-draft', { ...draftBinding, fields: edited }); delete form.dataset.dirty; await refreshedAfter('Rascunho salvo. Ele pode ser incluído em uma escolha do caso antes da preparação.');
+    try { await request('dashboard-hot-topic-draft', { ...draftBinding, fields: edited }); }
+    catch (error) { if (error.status === 'conflict' || error.status === 'stale') { clearDraftReview(); draftConflict = true; throw new Error('O rascunho mudou. Use Carregar versão atual e manter minhas alterações, compare as diferenças e confirme a base antes de salvar.'); } throw error; }
+    delete form.dataset.dirty; clearDraftReview(); await refreshedAfter('Rascunho salvo. Ele pode ser incluído em uma escolha do caso antes da preparação.');
   }); });
   find('preparation').addEventListener('change', () => { const selected = choice('preparation', data && data.decisions.preparations || []); find('choice-reason').textContent = selected ? 'Motivo registrado: ' + selected.reason : ''; enable(); });
   find('prepare').addEventListener('click', () => run(async () => { const selected = choice('preparation', data.decisions.preparations); await request('dashboard-hot-topic-prepare', { caseRef: selected.caseRef, choiceId: selected.choiceId, draftRef: selected.draftRef }); await refreshedAfter('Escolha preparada. Selecione a alteração e revise os campos antes de aplicar.'); }));

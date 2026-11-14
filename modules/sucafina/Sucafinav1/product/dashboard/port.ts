@@ -253,8 +253,11 @@ async function read(input: DashboardPortInput, request: DashboardReadRequest, bi
     Array.from({ length: 12 }, (_, index) => index + 1).filter((month) => month >= Number(request.period.start.slice(5, 7)) && month <= Number(request.period.end.slice(5, 7))).forEach((month) => {
       const period = { start: `${year}-${String(month).padStart(2, "0")}-01`, end: `${year}-${String(month).padStart(2, "0")}-${String(new Date(Date.UTC(year, month, 0)).getUTCDate()).padStart(2, "0")}` }
       const entry = (item: typeof records[number]) => item.entries.find((row) => row.year === year && row.month === month && (item.key === "ownerId" ? row.ownerId == item.row.id : (row.projId ?? row.projectId) == item.row.id))
+      const monthlyEntries = records.map((item) => item.entries.filter((row) => row.year === year && row.month === month && (item.key === "ownerId" ? row.ownerId == item.row.id : row.projId == item.row.id || row.projectId == item.row.id)))
       const measurements = (["actual", "forecast"] as const).map((measure) => {
-        const numbers = records.map((item) => entry(item)?.[measure])
+        // The domain sums every matching ledger line. A missing line or cell
+        // still makes the C02 measurement unknown; it is never a recorded zero.
+        const numbers = monthlyEntries.flatMap((entries) => entries.length ? entries.map((row) => row[measure]) : [undefined])
         const amount = numbers.length && numbers.every((value) => typeof value === "number" && Number.isFinite(value)) ? numbers.reduce<number>((sum, value) => sum + Number(value), 0) : null
         return { measure, amount }
       })

@@ -14,6 +14,7 @@ import { createSfBusinessServices } from "../../../../../../apps/cli/src/sucafin
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { object } from "../../../runtime/contract.ts"
 import type { Persistence, Snapshot } from "../../../runtime/contract.ts"
+import type { AssetPersistence } from "../../../runtime/assets.ts"
 import { resolve } from "../../../src/identity.ts"
 import { createResidentAiBundle } from "../../../product/ai/resident.ts"
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
@@ -68,10 +69,10 @@ export async function prepareAtlasScanner(directory: string) {
     if (observed.stdoutTruncated) throw new Error("Gitleaks version output truncated")
     return observed.stdout.toString("utf8").trim()
   }).pipe(Effect.provide(LayerNode.compile(AppProcess.node)), Effect.runPromise)
-  if (version !== scannerRelease.version) throw new Error(`Unexpected Gitleaks version: ${version}`)
+  if (version !== `gitleaks version ${scannerRelease.version}`) throw new Error(`Unexpected Gitleaks version: ${version}`)
   const known = KNOWN_SCANNERS.find((value) => value.name === "gitleaks")
   if (!known) throw new Error("Atlas does not publish a Gitleaks invocation contract")
-  return { spec: { ...known, command }, version }
+  return { spec: { ...known, command }, version: scannerRelease.version }
 }
 
 /** Business ledger text is fixture data; source reads, admission, outbox, Atlas and recall are production. */
@@ -112,10 +113,10 @@ async function createFixture(directory: string) {
       }
       return outcome
     }
-    const forwarding: Persistence = {
+    const forwarding: AssetPersistence & Pick<Persistence, "transactionAll" | "currentSnapshots"> = {
       transaction: async (surface, run, options) => {
         const lost = { value: false }
-        const value = await driver.transaction(surface, (snapshot) => observe(snapshot, () => run(snapshot), lost), options)
+        const value = await driver.transaction(surface, (snapshot, blobs) => observe(snapshot, () => run(snapshot, blobs), lost), options)
         if (lost.value) throw new Error("Atlas test response lost after durable commit")
         return value
       },
@@ -208,7 +209,7 @@ async function createFixture(directory: string) {
   return { runtime, clock, fault, active, actors, request, call, sources, ledger, scanner: pinned, scannerRelease, versions,
     inspect: async () => atlasValue(await runtime.current.authority.state.read(request(), "atlas", (state) => ({
       atlasVersion: state.versions.atlas, outboxVersion: state.versions.outbox, atlasDigest: digestSfValue(state.atlas), owners: Object.keys(state.atlas),
-      entries: Object.values(state.atlas).reduce((count, value) => { const events = object(value).events; return count + (Array.isArray(events) ? events.length : 0) }, 0),
+      entries: Object.values(state.atlas).reduce<number>((count, value) => { const events = object(value).events; return count + (Array.isArray(events) ? events.length : 0) }, 0),
       outbox: structuredClone(state.outbox),
     }))),
     dispatch: (operation: string, payload: unknown, actor: string = actors[0]) => call(operation, payload, async (context) => {
