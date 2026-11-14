@@ -1,0 +1,106 @@
+{
+  "schema": "astra-operations.published-delta-composition-restoration.v1",
+  "id": "OPS-C12-CAS-REGRESSION",
+  "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+  "owner": "astra-finance producer; astra-compose integration",
+  "state": "PROPOSED_NOT_APPLIED_BY_REVIEWER",
+  "classification": "Published WP04 reconciliation delta lost while consuming exact Finance review-binding producer. Restore the union of already published implementations, not a new shared feature.",
+  "observed_failure": {
+    "run_id": 43582205250,
+    "job_id": 132409129729,
+    "product": "644324778e4a21d22424515dd698d5b8d6c01893",
+    "cases": [
+      {
+        "scenario": "H02",
+        "expected_http": 200,
+        "actual_http": 503
+      },
+      {
+        "scenario": "H03",
+        "expected_http": 200,
+        "actual_http": 503
+      },
+      {
+        "scenario": "H05",
+        "expected_http": 409,
+        "actual_http": 503
+      }
+    ],
+    "counterexample": "H06 first apply intentionally loses response; same-proof retry succeeds with current state, consistent with stale post-commit CAS on first application.",
+    "qualification": "The log prints HTTP status and transaction metrics, not the failure response body. The reconciliation reason and mechanism are derived from the exact source path, not claimed as a captured response."
+  },
+  "published_sources": {
+    "wp04_pr23": {
+      "commit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "blob": "927ae5bd892412d7025bde5e9acf274087d71fd9",
+      "sha256": "6c14a47a78861655a1048087b1e0c19a34a36aaff84ae566f7c7f7e3140f5925",
+      "bytes": 11795
+    },
+    "operations_w1": {
+      "commit": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+      "blob": "927ae5bd892412d7025bde5e9acf274087d71fd9",
+      "sha256": "6c14a47a78861655a1048087b1e0c19a34a36aaff84ae566f7c7f7e3140f5925",
+      "bytes": 11795
+    },
+    "finance_pr35": {
+      "commit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "blob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+      "sha256": "5c25c65a9c521c7c7ca8dbb9a6070e9e343833d6e40755183a128d8d1fdbb52b",
+      "bytes": 12410
+    },
+    "operations_w4": {
+      "commit": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "blob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+      "sha256": "5c25c65a9c521c7c7ca8dbb9a6070e9e343833d6e40755183a128d8d1fdbb52b",
+      "bytes": 12410
+    }
+  },
+  "source_verification": "All three immutable owner/W1 producer blobs independently fetched through GitHub MCP; exact hashes agree with local materialized bytes.",
+  "proposed": {
+    "blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+    "sha256": "aa777b4062e785eb69db1724e2be633e4547303310ec02d9b15329affc8f7db8",
+    "bytes": 14023
+  },
+  "restored_hunk": {
+    "verbatim_from_prior": true,
+    "prior_lines": [
+      62,
+      73
+    ],
+    "current_replaced_lines": [
+      79,
+      81
+    ],
+    "restored_sha256": "a3fc2ffc06892fb32c8be698b8b1d2e0ddba06e79992cc51b55e2d39fb9fbd41",
+    "prefix_and_suffix_equal_finance": true
+  },
+  "causal_chain": [
+    "createSfPreparedApply commits receipt and domain with additionalNamespaces cases, checking its current storage CAS.",
+    "createSfProductState increments every namespace named in scope, including cases, even though the first domain receipt transaction does not mutate the selected case value.",
+    "Finance apply.ts then reconciles with current.storageVersion captured before that increment. The transaction returns product-state-changed, mapped by createPreparedExecution to case-reconciliation-pending (HTTP503).",
+    "The preserved WP04 block reloads cases after the domain receipt, requires the entire case value to be unchanged, rereads and matches the authoritative receipt, rechecks case/application/current host authority, and uses the new reconciliation.storageVersion.",
+    "An actual concurrent case edit is distinguished by full case equality and returns stale/case-changed-after-application (HTTP409); it is never silently overwritten.",
+    "The write callback also preserves full selected-case digest equality under its lock."
+  ],
+  "preserved_finance_safety": [
+    "Real reviewDigestFor callback and isReviewDigest validation",
+    "Producer reread before first application",
+    "Persisted receiptReviewBinding and receiptProofTransactionKey verification",
+    "Digest mismatch/conflict handling and bound receipt replay",
+    "No changed permission, grant, target incarnation, CAS guard or command semantics"
+  ],
+  "qualification": {
+    "no_local_product_execution": true,
+    "no_source_mutation_by_reviewer": true,
+    "requires_hosted_selection": [
+      "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "Sucafinav1/test/product/wp11/case-port.test.ts"
+    ],
+    "may_reuse_if_unchanged": "prepared-apply/planner-apply/prepared-production component passes remain at their executed pin if they do not call createPreparedExecution; parent should apply the actual closure selection.",
+    "does_not_promote": [
+      "native",
+      "human",
+      "global"
+    ]
+  }
+}

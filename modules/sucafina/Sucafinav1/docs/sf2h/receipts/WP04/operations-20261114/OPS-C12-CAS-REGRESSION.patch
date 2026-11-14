@@ -1,0 +1,23 @@
+--- a/modules/sucafina/Sucafinav1/product/decisions/apply.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/apply.ts
+@@ -76,9 +76,18 @@
+       if (!await input.authorizeCase(value, context).catch(() => false) || !await input.authorizeApplication(request, change, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }
+       return { status: "ok", value: observed.value }
+     }
+-    const saved = await input.state.transaction(source, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: value.id, targetIncarnation: value.incarnation, idempotencyKey: `${operation}:${change.id}:${observed.value.id}`, commandDigest: digestSfValue({ caseRef: request.caseRef, changeId: change.id, receipt: observed.value, state: result.state, evidence: result.evidence }) }, async (state, authority) => {
++    // Domain application may fence the cases namespace in its atomic receipt write.
++    // Refresh that storage CAS, while requiring the selected case itself to be unchanged.
++    const reconciliation = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[value.id] : undefined).catch(() => undefined)
++    if (!reconciliation || reconciliation.status !== "ok") return { status: "unavailable", reason: "case-reconciliation-pending" }
++    if (!reconciliation.value || digestSfValue(reconciliation.value) !== digestSfValue(value)) return { status: "stale", reason: "case-changed-after-application" }
++    const authoritative = await callDomain(() => input.apply.readReceipt({ surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context))
++    if (authoritative.status !== "ok") return authoritative
++    if (authoritative.value.state !== "found" || digestSfValue(authoritative.value.receipt) !== digestSfValue(observed.value)) return { status: "unavailable", reason: "authoritative-receipt-unavailable" }
++    if (!await input.authorizeCase(reconciliation.value, context).catch(() => false) || !await input.authorizeApplication(request, change, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }
++    const saved = await input.state.transaction(source, { namespace: "cases", expectedStorageVersion: reconciliation.storageVersion, targetRef: value.id, targetIncarnation: value.incarnation, idempotencyKey: `${operation}:${change.id}:${observed.value.id}`, commandDigest: digestSfValue({ caseRef: request.caseRef, changeId: change.id, receipt: observed.value, state: result.state, evidence: result.evidence }) }, async (state, authority) => {
+       const actual = state.cases[value.id]
+-      if (!actual || actual.incarnation !== value.incarnation || actual.version !== value.version || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return { commit: false, value: false }
++      if (!actual || digestSfValue(actual) !== digestSfValue(value) || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return { commit: false, value: false }
+       const changes = actual.preparedChanges.map((item) => item.id === change.id ? reconciled.change : item)
+       state.cases[value.id] = { ...actual, version: actual.version + 1, preparedChanges: changes, receipts: actual.receipts.some((receipt) => receipt.id === observed.value.id) ? actual.receipts : [...actual.receipts, observed.value], sourceRefs: [...actual.sourceRefs, result.evidence].filter((ref, index, refs) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index), state: caseApplicationState(changes) }
+       return { commit: true, value: true }
