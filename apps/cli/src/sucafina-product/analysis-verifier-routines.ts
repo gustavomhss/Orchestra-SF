@@ -71,7 +71,7 @@ export function createSfMeetingVerifier(dependencies: SfAnalysisDependencies & {
           ...current.sections.flatMap((section) => {
             const projection = section.content as DomainProjection & { reviewChart?: ReviewChart }
             const chart = projection.reviewChart
-            return chart && !renderReviewChart(projection, chart) && !renderReviewBars(projection, chart) && !renderReviewTimeline(projection, chart) && !renderReviewWaterfall(projection, chart) && !renderReviewSensitivity(chart)
+            return chart && !renderReviewChart(projection, chart) && !renderReviewBars(projection, chart) && !renderReviewTimeline(projection, chart) && !renderReviewWaterfall(projection, chart) && !renderReviewSensitivity(projection, chart)
               ? [{ id: `${section.id}:chart`, category: "chart", reason: chart.status === "ok" ? "Chart rendering unavailable; captured data remains in the report." : chart.reason, evidenceRefs: [] }] : []
           }),
         ]

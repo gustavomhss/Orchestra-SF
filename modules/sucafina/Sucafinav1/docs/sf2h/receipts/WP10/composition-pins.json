@@ -3603,56 +3603,84 @@
     }
   ],
   "wp10Deltas": {
-    "parent": "d02c64430d459d183eeb9e467e1c35d9a6b958f8",
+    "parent": "43e01fce03a7bb2de3f42370e02ebc294eeda2fb",
     "status": "CANDIDATE_AWAITING_HOSTED_CI_AND_INDEPENDENT_REVIEWS",
     "ownFiles": [
-      {
-        "path": "apps/cli/src/sucafina-product/host-context.ts",
-        "blobSha": "ffc6b9ef1eeac5925dc49f51c7d3393b12839adf"
-      },
-      {
-        "path": "apps/cli/src/sucafina-product/business-services.ts",
-        "blobSha": "8876947e1ba6c6f9bb770433a5382ff49b9db26f"
-      },
       {
         "path": "apps/cli/src/sucafina-product/analysis-services.ts",
         "blobSha": "d510fdb54e91e49a215e6f030f1382b5905f4bfb"
       },
       {
-        "path": "apps/cli/src/sucafina-product/analysis-verifier-routines.ts",
-        "blobSha": "9970b8d661ca374770f7403e3be74a267908dc15"
+        "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+        "blobSha": "9daf034327bfee50317336627b1cc392044c677a"
       },
       {
         "path": "apps/cli/src/sucafina-product/analysis-verifier-procurement.ts",
         "blobSha": "8843617fcab07d6da320cc5935aee563e740e4dd"
       },
       {
-        "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
-        "blobSha": "25444fd946757cd747a3bbcdebab163892be0fc0"
+        "path": "apps/cli/src/sucafina-product/analysis-verifier-routines.ts",
+        "blobSha": "68905e46890ae489669e0efaca00826f21cbae6f"
       },
       {
-        "path": "apps/cli/src/sucafina-product/input-producer-extraction.ts",
-        "blobSha": "a2121f3063010b731d9bd6f50ab8cd05fa475597"
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "blobSha": "e8e9fb1a5eea0e5af05519ad92c220ba000d635d"
       },
       {
-        "path": "apps/cli/src/sucafina-product/input-producer-contract.ts",
-        "blobSha": "2df4656bc5aa750182827fa62c37ae01e88711ff"
+        "path": "apps/cli/src/sucafina-product/contribution.ts",
+        "blobSha": "87d362a5217f30c85eb3e831d025c235dab3bb2a"
       },
       {
         "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
         "blobSha": "0891d178833165fff098e3c05f3a64c5f5b35043"
       },
       {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blobSha": "c02776411a3eafe6070b088ed284575071be9e0c"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/input-producer-bi.ts",
+        "blobSha": "a5cd14609db80287e6f122cfb199338df53a8b50"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/input-producer-contract.ts",
+        "blobSha": "2df4656bc5aa750182827fa62c37ae01e88711ff"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/input-producer-extraction.ts",
+        "blobSha": "a2121f3063010b731d9bd6f50ab8cd05fa475597"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+        "blobSha": "d562279c102ae9ca5adf3b01b2814583823c13fa"
+      },
+      {
         "path": "apps/cli/src/sucafina-product/workspace-services.ts",
         "blobSha": "3eac6bdde960b020e536f56615dcf2bf20cc55c2"
       },
       {
-        "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
-        "blobSha": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "blobSha": "8fee9609d7446202d7d2513303c107e605a2df6f"
       },
       {
-        "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
-        "blobSha": "ec265772aa3100f6f69648cbd444fcdfde01b754"
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "blobSha": "ab1111745c340d35d4edbf8cafb9b6486cf3dd7c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+        "blobSha": "868314870eb2330237fef67d64a4ba1bd39387e7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "blobSha": "ac905cec7c0d65c9f2b96a0d4ec97bd87866ef6f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/bi-http.ts",
+        "blobSha": "ffc5e0d3cfc259d0b1feaa0e1b44c37b73caab52"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+        "blobSha": "b62b13d4867599e4973fc3fdc01572afe83fe4a2"
       },
       {
         "path": "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
@@ -3663,28 +3691,24 @@
         "blobSha": "b56cb0d8379bca9e6eb9e596c276cb159ab7a524"
       },
       {
-        "path": "modules/sucafina/Sucafinav1/product/integration/bi-http.ts",
-        "blobSha": "ffc5e0d3cfc259d0b1feaa0e1b44c37b73caab52"
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+        "blobSha": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
       },
       {
-        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
-        "blobSha": "ac905cec7c0d65c9f2b96a0d4ec97bd87866ef6f"
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "blobSha": "ec265772aa3100f6f69648cbd444fcdfde01b754"
       },
       {
-        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
-        "blobSha": "7c58755689a46f8bcdec7639f0c055d7b604546d"
-      },
-      {
-        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
-        "blobSha": "ab1111745c340d35d4edbf8cafb9b6486cf3dd7c"
+        "path": "modules/sucafina/Sucafinav1/README.md",
+        "blobSha": "b1a450e17b75c380d3f192db69db79335453c160"
       },
       {
         "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
         "blobSha": "9e9bac976b503409de65868a366f352ca1e65071"
       },
       {
-        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
-        "blobSha": "b5502470d44360f6f80b31b932867d27cca63531"
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts",
+        "blobSha": "f8e2886ac152eccaf4cf101475fbe49619c668eb"
       },
       {
         "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
@@ -3695,8 +3719,12 @@
         "blobSha": "6d961b84ffbc105b0797524f1a899d831a13195f"
       },
       {
-        "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts",
-        "blobSha": "0c2977bfb9f24cedfde498b50a8fa6df0c9f0304"
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "blobSha": "b5502470d44360f6f80b31b932867d27cca63531"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/workspace-services.test.ts",
+        "blobSha": "4b590374d9d3a30abe7443b17da320c1f109e9c2"
       }
     ],
     "publishedSupport": [
@@ -3757,5 +3785,18 @@
         "mode": "WP10-owned CLI producer pairs, corrected schema documentRef and syntax; producer implementations remain published inputs"
       }
     ]
-  }
+  },
+  "observedChecks": [
+    {
+      "product": "d02c64430d459d183eeb9e467e1c35d9a6b958f8",
+      "run": 43536384802,
+      "conclusion": "failure"
+    },
+    {
+      "product": "43e01fce03a7bb2de3f42370e02ebc294eeda2fb",
+      "run": 43538139091,
+      "conclusion": "failure",
+      "note": "Foreign WP13 syntax and CLI semantic diagnostics preserved; fixes in this candidate require fresh hosted evidence."
+    }
+  ]
 }

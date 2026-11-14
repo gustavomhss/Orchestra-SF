@@ -25,7 +25,7 @@ function humanBiSelection(value: unknown): { viewId: string; version: number; fi
   const filters = entries.find(([key]) => key === "filters")?.[1]
   const dashboard = decodeSfOperationInput("sf_dashboard_read", entries.find(([key]) => key === "dashboardSelection")?.[1])
   if (typeof viewId !== "string" || !viewId.trim() || typeof version !== "number" || !Number.isSafeInteger(version) || version < 1 || !Array.isArray(filters) || !dashboard.ok) return undefined
-  if (filters.some((filter) => !filter || typeof filter !== "object" || Array.isArray(filter) || typeof filter.field !== "string" || !filter.field.trim() || !Array.isArray(filter.values) || !filter.values.length || filter.values.some((item) => typeof item !== "string" || !item.trim()) || new Set(filter.values).size !== filter.values.length)) return undefined
+  if (filters.some((filter) => !filter || typeof filter !== "object" || Array.isArray(filter) || typeof filter.field !== "string" || !filter.field.trim() || !Array.isArray(filter.values) || !filter.values.length || filter.values.some((item: unknown) => typeof item !== "string" || !item.trim()) || new Set(filter.values).size !== filter.values.length)) return undefined
   if (new Set(filters.map((filter) => filter.field)).size !== filters.length) return undefined
   return { viewId, version, filters: filters.map((filter) => ({ field: filter.field, values: [...filter.values] })), dashboardSelection: dashboard.value }
 }
@@ -58,3 +58,4 @@ export function createSfBiInputProducer(dependencies: SfAnalysisDependencies & {
     },
   }
 }
+

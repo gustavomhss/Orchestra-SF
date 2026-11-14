@@ -131,8 +131,8 @@ export function createSfPurchasePreparationVerifier(dependencies: SfAnalysisDepe
             ? { status: "ok", value: true } : { status: "unavailable", reason: "analysis-output-unverified" }
         }
         const dossier = output.payload
-        const pending = value.choice.costCoverage.entries.filter((entry) => entry.status === "pending")
-        const missing = value.choice.costCoverage.derivedMissingCategoryIds
+        const pending = value.choice.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [entry] : [])
+        const missing: readonly string[] = value.choice.costCoverage.derivedMissingCategoryIds
         if (dossier.requestRef !== value.request.requestRef || dossier.requestVersion !== value.request.version || dossier.domainApplied !== false || digestSfValue(dossier.alternatives) !== digestSfValue([value.choice.alternativeId]) ||
           digestSfValue(dossier.gaps) !== digestSfValue(value.choice.costCoverage.issues) || pending.some((entry) => !dossier.conditions.some((condition) => condition.category === entry.categoryId && condition.reason === entry.reason)) || missing.some((category) => !dossier.conditions.some((condition) => condition.category === category)) ||
           dossier.conditions.some((condition) => !condition.reason.trim() || (!pending.some((entry) => entry.categoryId === condition.category && entry.reason === condition.reason) && !missing.includes(condition.category)) || condition.evidenceRefs.some((ref) => !current.refs.some((item) => digestSfValue(item) === digestSfValue(ref)))) ||

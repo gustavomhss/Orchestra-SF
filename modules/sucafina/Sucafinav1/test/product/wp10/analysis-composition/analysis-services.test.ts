@@ -65,7 +65,7 @@ async function fixture() {
   const incoming: SfAnalysisPreparation = { request: { caseRef, profileId: profile.id, profileVersion: profile.version, skillId: "sf-explicar-forecast", skillVersion: "1",
     manifestDigest: runtime.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: ["sf_forecast_compare"], objective: "Review" }, selection: { ref: "selected-by-human" } }
   const close = async () => { business.dispose(); await driver.dispose(); await rm(directory, { recursive: true, force: true }) }
-  return { actor, authority, request, incoming, create, close }
+  return { actor, authority, business, request, incoming, create, close }
 }
 
 test("analysis input rejects a read lease and a different human payload before producer access", async () => {
@@ -132,6 +132,30 @@ test("a producer cannot rewrite the human choice while obtaining a valid proof",
     state.actor.alterPreparedSelection = true
     expect((await state.create().prepare(admitted.value, state.incoming)).status).toBe("unavailable")
     expect(state.incoming.selection).toEqual({ ref: "selected-by-human" })
+    state.authority.human.finish(admitted.value)
+  } finally { await state.close() }
+})
+
+test("case reads reject an operation whose hidden target has no authorized source", async () => {
+  const state = await fixture()
+  try {
+    const admitted = await state.authority.human.admit(state.request, "analysis.prepare", state.incoming)
+    if (admitted.status !== "ok") throw new Error("Human authority missing")
+    const before = await state.authority.state.read(state.request, "cases", (stored) => stored.versions.cases)
+    if (before.status !== "ok") throw new Error("Case authority missing")
+    const inserted = await state.authority.state.transaction(state.request, { namespace: "cases", expectedStorageVersion: before.value,
+      targetRef: "case", targetIncarnation: "case-inc", idempotencyKey: "hidden-operation", commandDigest: digestSfValue("hidden-operation") }, async (stored) => {
+      const current = stored.cases.case!
+      const result = { id: "hidden-result", version: 1, components: [], currency: "USD", horizon: current.horizon, sourceRefs: [], unresolvedConditions: [], restrictions: [],
+        comparisonStatus: "conditioned" as const, total: null, knownSubtotal: null,
+        costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "hidden", alternativeVersion: 1, currency: "USD", horizon: current.horizon,
+          issues: [], evaluatedSourceRefs: [], coverageState: "pending" as const, entries: [], derivedMissingCategoryIds: ["service"] } }
+      current.alternatives = [{ id: "hidden", version: 1, title: "Hidden target", scenario: { baseRef: "unissued-planner-source", operations: [{ kind: "exclude", targetRef: "restricted-row" }], assumptions: [] }, result }]
+      return { commit: true, value: true }
+    })
+    expect(inserted.status).toBe("ok")
+    expect(await state.business.cases.read({ caseRef: encodeCaseRef(state.incoming.request.caseRef) }, admitted.value))
+      .toMatchObject({ status: "unavailable", reason: "case-evidence-unavailable" })
     state.authority.human.finish(admitted.value)
   } finally { await state.close() }
 })

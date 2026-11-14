@@ -37,6 +37,7 @@ import { createSfAtlasBusiness } from "../../../../modules/sucafina/Sucafinav1/p
 import type { probeSfAtlasScanner } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts"
 import { createSfDashboardServices } from "./dashboard-services.ts"
 import { createSfDashboardDecisions } from "./dashboard-decisions.ts"
+import { createSfScenarioOperationAccess } from "./scenario-operation-access.ts"
 import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
 
 export function createSfBusinessServices(input: { authority: ReturnType<typeof createSfProductAuthority>; persistence: Parameters<CreateSfHostRuntime>[0]["persistence"]; proposalCoverageWrites: WeakSet<object>; dashboardHostWrites: WeakSet<object>; extraDescriptors?: readonly CapabilityDescriptor[]; documentRead?: SfDocumentReader }) {
@@ -104,9 +105,11 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   }
   const operationIdentity = (call: TrustedDomainContext) => call.kind === "ui" ? input.authority.ui.operationIdentity(call) : input.authority.native.operationIdentity?.(call)
   const authorizeCase = async (value: DecisionCase, call: TrustedDomainContext) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call)
+  let scenarioOperationAccess: ReturnType<typeof createSfScenarioOperationAccess> | undefined
   const cases = createDecisionCasePort({ state: input.authority.state, host, creationTarget: input.authority.creationTarget,
     operationIdentity,
     authorizeCase,
+    verifyScenarioOperations: (value, call) => scenarioOperationAccess ? scenarioOperationAccess(value, call) : Promise.resolve(false),
     evidence: context, createId: randomUUID, now: () => new Date().toISOString() })
   const dashboardDecisions = createSfDashboardDecisions({ authority: input.authority, cases, records: dashboardRecords, issue: dashboardServices.issue,
     proposalCoverageWrites: input.proposalCoverageWrites, dashboardHostWrites: input.dashboardHostWrites })
@@ -145,6 +148,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     storedScenarios: { store: results, cases, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } })
   const planner = product.planner
   const plannerSources = product.sources
+  scenarioOperationAccess = createSfScenarioOperationAccess({ host, sources: plannerSources, planner, scenarioInputs: product.scenarioInputs,
+    readSourceFences, externalOperation: dashboardDecisions.resolveOperation })
   const persist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, resolveCase })
   const receipt = input.authority.authority.receiptFor
   const descriptors = [

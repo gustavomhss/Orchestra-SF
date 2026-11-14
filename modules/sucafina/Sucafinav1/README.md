@@ -1,43 +1,122 @@
-# Sucafinav1
+# Sucafina — composição WP10
 
-Módulo exclusivo desta instalação, fora do workspace e do binário distribuído do Orchestra. Fontes: `../Intent.md`, `../Desenho.md`, `../Spec.md` e `../Plano.md`; transições de procurement em `../porta/act.ts`. A autorização posterior do proprietário para agentes paralelos substitui apenas a restrição de despacho do plano.
+Este módulo pertence à instalação Sucafina. O candidato WP10 compõe outputs publicados dos domínios no host existente do Orchestra. A entrega está **em revisão, com pendências de integração**. Commit e PR publicados não representam homologação, execução nativa, aceite global ou deploy.
 
-## Entrada e composição
+A entrada é `createModule(mount, services)` em [index.ts](index.ts). O factory [local/entry.ts](local/entry.ts) usa o processo, listener, identidade e armazenamento da instalação. [O pacote WP10](docs/sf2h/receipts/WP10/) reúne pins, mapa dos 171 critérios, requests, evidências e deltas para S0 e os demais owners. O planejamento em `docs/sf2h/control/` permanece normativo.
 
-A entrada atual é `createModule(mount, services)` em `index.ts`. Compõe 16 páginas de Dashboard, sete de Planner e cinco de Procurement e valida a cobertura do registo. O handler responde a GET, HEAD e POST; fora do mount devolve `undefined` para continuar o router existente. `installation.ts` preserva a entrada anterior de leitura para compatibilidade e não é a entrada das operações novas.
+## Trabalhar com os dados
 
-O host entrega `authenticate`, `environment`, `persistence` e um limite positivo `maxJsonBytes`. `authenticate` recebe a superfície e o mapa atual de grupos dentro da transação; devolve somente identidade e papéis confirmados no diretório. O corpo, a query e um header de actor nunca estabelecem identidade. Os nomes de grupos começam vazios e são configurados por superfície. A identidade local do servidor não substitui uma pessoa do diretório. `environment` entrega instante, gerador de IDs, diretório real e, quando necessário, chave bancária.
+Comece pela superfície da tarefa: Dashboard para acompanhar pessoas, orçamento, riscos, operações e ações; Planner para versões, valores e cenários; Procurement para pedidos, fornecedores, propostas, contratos e compras. A mesma pessoa pode ter permissões diferentes em cada superfície. Perfil de agente, cargo exibido ou conhecimento de um ID não concede acesso.
 
-Para a homologação neste Mac, [local/README.md](local/README.md) descreve o factory externo carregado por `orchestra serve --installation` e o launcher com ambiente, banco e credenciais isolados. O módulo usa o mesmo processo e listener dessa nova instância; o aplicativo existente permanece em execução. A ativação Microsoft foi adiada por orientação do proprietário. Sem uma aplicação real registrada, o perfil corporativo permanece fechado. Para uso nesta homologação foi acrescentado um perfil explícito de operador local, autenticado por credencial privada de uso único e identificado na interface; a rota `/sucafina/status` informa o perfil ativo. `runtime/host.ts` preserva a composição direta anterior para outros hosts; não altera um processo já em execução.
+Antes de comparar, confira período, moeda, fontes e cobertura. Uma referência identifica também encarnação e versão da fonte. Reutilizar um ID após excluir ou importar um registro não recupera a autoridade anterior. Atualize a seleção quando a origem mudar.
 
-## Persistência e serviços privados
+| Estado ou valor | Interpretação |
+| --- | --- |
+| Zero informado | A fonte contém zero; preserve unidade, moeda e período. |
+| Ausente ou indisponível | Não há evidência suficiente. Não substituir por zero. |
+| Estimado ou hipotético | Hipótese explícita; não equivale a evidência confirmada. |
+| Subtotal conhecido | Soma dos componentes conhecidos no recorte permitido; não comprova custo total com categorias pendentes. |
+| Comparação completa | O domínio declara cobertura completa e compatibilidade. Preserve fontes e limitações. |
+| Comparação condicionada | Há dados conhecidos e condições que impedem uma conclusão completa. Mantenha-as no relatório e na decisão. |
+| Moeda/período incompatível | Não somar ou ranquear como equivalentes; conversão e alinhamento precisam de fonte autorizada. |
+| Fonte stale ou substituída | Reabrir a origem e refazer a preparação. Resultado antigo não autoriza nova escrita. |
+| Resultado historical | Deve conservar identidade original e diferenças atuais autorizadas; o percurso integrado ainda está pendente neste candidato. |
 
-`runtime/contract.ts` define a fronteira transacional: dados, versões, sequências, auditoria e notificações são confirmados juntos; falha ou cancelamento não deixa escrita parcial. O adaptador deve serializar concorrência e executar o callback uma vez, sem repetição cega. Escritas obsoletas devolvem conflito com o registo guardado. O adaptador Map de `test/fixture` é exclusivamente uma fixture e não comprova durabilidade após reinício. A homologação implementa `runtime/local-store.ts`, um SQLite privado com confirmação conjunta de estado e BLOBs, codec que preserva valores de auditoria e registros de autenticação separados. `runtime/entra-client.ts` implementa o protocolo Microsoft; `runtime/local-identity.ts` mantém os tokens cifrados no servidor e prepara refresh antes da transação de negócio.
+Cálculos, cenários e rankings vêm das portas de domínio. Texto do agente não se torna cálculo oficial pela aparência da resposta. Proposta, prévia e contribuição aceita também não são recibos de aplicação.
 
-Anexos exigem `assets.persistence` como a mesma instância autoritativa de `persistence`, armazenamento privado transacional, scanner real e chave de assinatura. A confirmação dos objetos privados e dos metadados deve ser atómica, incluindo remoções. Os links expiram e são vinculados à identidade, ao registo e ao objeto. Procurement depende de limite de upload configurado; a ausência não cria um valor por defeito. Sem estes serviços, o módulo não simula armazenamento nem sucesso de upload.
+## Guia por pessoa e tarefa
 
-`runtime/operations.ts` fornece entrega de notificações com claim durável e chave de idempotência, lembretes a partir dos períodos configurados, backup e restauro verificado. O host fornece transporte, relógio, lease, resolução real de destinatários e agendamento. Importar o módulo puro não inicia tarefas. O factory local liga manutenção periódica, backups privados e uma caixa de notificações durável para a identidade real do operador local. O perfil Microsoft mantém os avisos em fila até haver transporte corporativo configurado. Backup de Dashboard e Procurement conserva 35 dias; Planner não recebe retenção numérica inventada. O restauro preserva a monotonicidade dos números emitidos e não reproduz notificações já tratadas.
+| Responsabilidade | Percurso | Conferir |
+| --- | --- | --- |
+| Liderança/revisão executiva | Selecionar período/seções, revisar fontes, preservar revisão, preparar material | Cobertura, comentários vinculados, limitações e versão preservada |
+| Planejamento | Abrir versão, conferir hipóteses, comparar cenários e critérios | Moeda, horizonte, subtotal, custos pendentes e origem das operações |
+| Solicitante/comprador | Abrir pedido autorizado, conferir propostas, comparar sourcing, preparar mudança | Estado, condições comerciais, aprovação e recibo efetivo |
+| Responsável por ação | Abrir trabalho/pergunta/dependência, responder ou confirmar | Registro original, seleção atual, gravação e conflito |
+| Revisor de decisão | Conferir caso, contribuição e condições; escolher ou solicitar análise | Caso/versão, comparação, rationale e separação entre proposta/aplicação |
+| Administrador | Configurar grupos/grants, conferir serviços e recuperação | Identidade efetiva, escopo por superfície, store e transporte |
 
-## Funcionalidade disponível
+Os perfis `sf_maestro`, `sf_finance`, `sf_procurement`, `sf_portfolio` e `sf_reviewer` recebem apenas skills/operações admitidas pelos manifestos e pela autoridade atual. O bundle contém 18 skills; catálogo não demonstra carga real ou consumo. O mapa distingue pares montados, consumidores e provas ainda não executadas.
 
-As páginas usam formulários HTTP, autorização de servidor, controlo de versão e auditoria. Incluem orçamento, pessoas, operações, segurança, portefólio, riscos, contratos, stakeholders, performance, versões e linhas do Planner, pedidos, sourcing, fornecedores e emissão de PO. Os controlos administrativos ficam dentro das páginas existentes. As permissões de linhas de orçamento usam chaves qualificadas, como `opexOwners:7` e `capexProjects:7`, para impedir colisões entre coleções; permissões antigas com ID simples exigem nova seleção explícita pelo admin. O recorte do requester abrange listas, totais e detalhe; salário, talento e dados bancários têm controlos próprios. A ligação entre conta e líder continua por definir na fonte e não é inferida pelo módulo.
+### Preparar, revisar, decidir e acompanhar
 
-Os downloads produzem XLSX, DOCX, PPTX, CSV e PO HTML reais. O parser de workbook não executa fórmulas nem macros. `WORKBOOK_LIMITS` define os tetos técnicos de bytes, expansão ZIP, células e estrutura XML; o host pode reduzi-los com `workbookLimits`, sem alterar os limites de negócio dos anexos de Procurement. A pré-visualização de importação antecede a confirmação. A importação JSON de Dashboard preserva configuração de acesso e referências privadas já existentes; remoção de contratos com ficheiros ou introdução de referências de outro armazenamento exige o fluxo de restauro privado verificado. Os relatórios usam dados e cálculos locais, sem ERP ou geração por IA. Para distribuir a instalação, manter `Sucafinav1/` e `porta/act.ts` como diretórios irmãos: a porta é uma dependência de código versionada, não um serviço remoto. O pacote de entrega deve incluir ambos. As dependências de runtime estão declaradas em `package.json`; instalar com `bun install --frozen-lockfile`.
+1. Abra fontes permitidas e fixe período, moeda, objetivo e critérios do caso.
+2. Prepare a análise a partir da escolha humana. Se fonte, skill ou serviço estiver indisponível, conserve o motivo e resolva a dependência.
+3. Revise contribuição, fontes e condições. A confirmação humana deve corresponder ao conteúdo apresentado.
+4. Escolha a alternativa e prepare a mudança. Confira alvo, versão e prévia; preparar não aplica.
+5. Aplique pelo fluxo autorizado e consulte o recibo. Em conflito, preserve sua intenção, reabra o estado atual e prepare novamente. Não repita uma escrita cegamente.
+6. Acompanhe perguntas, condições, confirmações e resultados no mesmo caso. Resposta posterior pode exigir reavaliação; não modifica silenciosamente a escolha anterior.
 
-## Validação e entrega
+Este é o roteiro de homologação a executar após resolver os deltas de consumidores. A UI publicada pelo WP01 ainda admite a ação humana errada na preparação de análises; alguns bindings de decisão, portfólio e rotina também faltam. Botões ou descriptors não comprovam esse percurso completo.
 
-Executar `bun typecheck` neste diretório verifica a entrada, implementações, testes e a porta importada. Os testes executam somente no GitHub Actions, conforme as instruções do repositório Orchestra. Não executar `bun test` localmente.
+### Revisões, relatórios e BI
 
-A validação hospedada copia `Sucafinav1/` e `porta/` para uma fixture num worktree temporário do Orchestra e usa `bun run test:ci script <ficheiros exatos da fixture> --os linux`. Não inclui dados reais, segredos ou `node_modules`. O teste de browser usa Chrome e grava evidência de ecrã. O guardrail do snapshot usa `bun run check:guards --base origin/dev`.
+Uma revisão preservada mantém o conteúdo selecionado. Mudanças posteriores pertencem à revisão seguinte e à comparação explícita. Relatórios devem conservar a cobertura selecionada e limitações, sem ampliar dados permitidos à pessoa.
 
-O ficheiro `runtime/ACCEPTANCE.json` acompanha o aceite e distingue testes de ativação real. A suíte completa do módulo em Linux aprovou 467 testes, com dois casos de UID posteriormente aprovados em runner com root; o gate do host corrigido em macOS Intel aprovou 94 testes. Typechecks locais, build, auditoria e guardrails também foram verificados. A homologação isolada está montada em `http://localhost:4110/sucafina/status`, com SQLite privado e scanner real. A ativação Microsoft foi adiada pelo proprietário; o perfil corporativo continua fechado enquanto faltarem aplicação e grupos reais. O perfil de homologação local usa a conta real do macOS e armazenamento separado, sem fingir um diretório Microsoft. No perfil local, os avisos são entregues à caixa de entrada do aplicativo; destinatários que não pertencem a esse perfil permanecem pendentes. E-mail e Teams exigem configuração externa, sem fallback nem recibos de envio fictícios. Evidências e hashes estão no pacote de entrega.
+O host compõe as portas publicadas de revisão, comentários e BI no mesmo store. Registra Dashboard BI01/BI07/BI08 e Procurement BI05/BI06. Demais rotas e leitores de seleção contextual pendentes constam nos deltas. `sf_bi_view` não demonstra os onze views nem a skill de BI. Teste de registro não substitui observação de gráfico, download ou uso por uma pessoa.
 
-O acesso atual foi conferido visualmente no Chrome deste Mac, na aba CIO Dashboard. O atalho `../Abrir Sucafina.command` prepara uma sessão local autenticada; não usa a rota técnica de status como tela inicial. A correção do acesso local passou em 45 testes hospedados, incluindo as 28 telas no Chrome.
+### Documentos, importação e exportação
 
-## Operação local e manutenção
+Anexos exigem armazenamento privado transacional, scanner real, limites configurados e a mesma instância autoritativa de persistência. A resolução de schema se vincula ao documento autorizado, mesmo quando a seleção começa por ID de evidência. Sem esses serviços, upload e extração ficam indisponíveis.
 
-A barra superior oferece Notifications, Backups e Sign out. Os avisos internos são persistidos e podem ser marcados como lidos; o logout revoga a sessão local antes de apresentar a página de saída. Não há envio externo automático.
+Revise a prévia antes de confirmar importação. O parser não executa macros ou fórmulas como código. Referências privadas de outro store e configuração de acesso não entram pela importação pública de negócio. Substituição de fonte invalida seleções antigas. Confira formato e cobertura do download; título ou link não comprova conteúdo.
 
-A manutenção gera backups diários das três superfícies com cópias privadas dos anexos e manifestos verificados. Dashboard e Procurement conservam pelo menos 35 dias; Planner não recebe um prazo numérico presumido. O painel Backups permite executar a manutenção, capturar uma cópia e restaurar uma cópia verificada mediante confirmação e revisão atual. A seleção para restauração é fixada antes da retenção, e o estado corrente também é copiado antes da troca. Credenciais de autenticação e arquivos de chaves ficam fora dos backups de negócio.
+### Erros e recuperação
 
-Os serviços deste Mac podem ser preparados por `local/install-startup.command --prepare <checkout-Orchestra-absoluto> <diretório-privado-absoluto>`. Após conferir o plano e adotar somente os três processos privados anteriores, a ativação instala três LaunchAgents exclusivos da instalação no login do dono: servidor, scanner e atualizador. O aplicativo Orchestra existente não é substituído. O atalho verifica os serviços e o scanner antes de abrir uma sessão autenticada. Consulte [o guia local](local/README.md) para a sequência operacional e os limites de armazenamento local.
+| Situação | Comportamento esperado |
+| --- | --- |
+| Outra pessoa salvou depois da leitura | Conflito com estado atual; confirmação anterior não autoriza sobrescrita. |
+| Permissão revogada durante a operação | Recusa no retorno ou commit; sessão/recibo não é grant. |
+| Scanner ou serviço documental indisponível | Indisponibilidade explícita, sem escrita fictícia. |
+| Interrupção antes do commit | Zero efeito parcial; conferir estado antes do retry. |
+| Resposta perdida após commit | Retry idêntico recupera identidade durável; mesma chave com outro conteúdo é conflito. |
+| Memória sem fonte atual autorizada | Não mostrar precedente inteiro como válido. Recuperar recibo difere de autorizar recall. |
+| Rotina sem admissão C07 real | Permanecer pendente; publicação ou Session avulsa não substitui admissão governada. |
+
+A memória usa `createMemoryEmit` e `createMemoryRead` reais do Atlas protegidos pelo C08; ledger Sucafina é oficial. Gitleaks é resolvido pelo toolkit canônico com caminho absoluto e versão observada. Novos appends exigem fontes frescas e fence das três superfícies. Recuperação do recibo revalida caso/evento sem nova varredura.
+
+O host limita custo de ancestralidade antes de IO e não reutiliza autorização entre releituras. Grafo acima do orçamento técnico retorna indisponibilidade. Política/project, histórico com diferenças de domínio e variantes C17 ainda pendentes não são cobertos por uma prova de caso com fonte inalterada.
+
+## Roteiro sintético reproduzível
+
+Use homologação autorizada e dados inventados, rotulados como sintéticos. Este guia não inicia servidor, envia notificações ou cria compras reais; os passos abaixo ainda precisam de observação no candidato correspondente.
+
+1. Configure editor e viewer com grants explícitos. Viewer lê somente seu recorte e não escreve mesmo conhecendo o ID.
+2. No mesmo período/moeda, inclua valor confirmado 100, zero confirmado e valor ausente em registros distintos. Observe três significados distintos.
+3. Prepare renovação com duas alternativas e uma categoria pendente. Subtotal não deve aparecer como total completo.
+4. Abra ação em duas sessões autorizadas; salve na primeira e tente versão antiga na segunda. Observe conflito sem perda silenciosa.
+5. Preserve revisão; altere origem; confira conteúdo preservado e comparação seguinte. Inclua 25 registros e campo negado ao viewer.
+6. Grave evento, reinicie processo e confira recuperação durável/recall. Revogue fonte: o registro revogado deve ser suprimido.
+7. Após fechar bindings, execute preparação, análise nativa e consumo. Registre perfil, skill, handler, principal, caso, versões, digests, recibo e ação do consumidor.
+8. Exercite indisponível, conflito, cancelado e revogado. Medição visual/p95 exige ambiente fixo e repetições comparáveis; tempo de CI não é benchmark de UX.
+
+Dados de fixture, markup, catálogo e autoridade fabricada não contam como jornada nativa. O revisor deve registrar o que aconteceu, inclusive a primeira etapa bloqueada.
+
+## Composição, persistência e operação
+
+O host compõe autenticação, ambiente, fontes, casos, domínios, documentos/imports, colaboração, revisões, BI e runtime residente. UI, ponte MCP privada e consumers usam contratos compartilhados e revalidam identidade, política e revisão de acesso.
+
+C08 conserva doze namespaces, versões, migração, CAS, transações entre superfícies e proteção de escritas privadas. [runtime/local-store.ts](runtime/local-store.ts) fornece SQLite durável. Dados/BLOBs/auditoria/notificações relacionados confirmam juntos; callbacks transacionais não são repetidos cegamente.
+
+A instalação fornece `authenticate`, `environment`, `persistence` e limites positivos. Corpo, query e header actor não criam identidade. Não presumir Microsoft, aplicação registrada, scanner, servidor macOS ou transporte corporativo a partir do repositório.
+
+[local/README.md](local/README.md) descreve operação histórica e pré-requisitos. Homologações anteriores, `runtime/ACCEPTANCE.json`, atalhos ou LaunchAgents não são evidência WP10. Nenhum processo instalado, merge em dev ou deploy faz parte desta entrega.
+
+## Validação e revisão
+
+**Não executar testes de produto localmente nesta campanha.** [CI.md](docs/sf2h/control/handoff/astra/CI.md) define o workflow existente `test-ci.yml` com requests explícitos. Sucafina usa `modules/sucafina`; CLI usa `apps/cli`. Snapshot de teste deriva do produto e acrescenta somente `.ci-run.json`.
+
+O check próprio hospedado executa `bun typecheck` nos packages pertinentes, geração Atlas, `check:generated`, diff dos gerados, typecheck da boundary, `check:spawn-imports` e `check:guards --base origin/dev`. Guards/allowlists não são relaxados. Cada resultado identifica produto, snapshot, tree, request, run, job e tentativa.
+
+O mapa preserva 171 critérios, inclusive dependências de owner, nativo e global. As seis provas AM, oito seleções finais e epic ficam para a campanha global após todo o bundle. CI cirúrgico não substitui esses gates.
+
+Três revisores independentes examinam candidato congelado e recibos. Triagem e autorrevisão não são parecer final. S0 revisará e integrará a PR contra `sf2-stack`; este WP não faz merge em dev nem deploy.
+
+## Alterações da composição
+
+- Inputs fixados por commit/blob; arquivos estrangeiros arquivados preservados.
+- Operações residentes intersectadas com skills selecionadas; inventário MCP lido sem conectar provedores.
+- Serviços de Dashboard/colaboração/revisão/BI ligados; reinicialização Atlas conserva os demais descriptors.
+- Produtor e verificador de análise registrados juntos; bindings ausentes explicitamente indisponíveis.
+- Schema documental vinculado ao documento autorizado; ajustes de tipos/consumidores restritos aos paths próprios.
+- Atlas protegido por source fence, recuperação durável, revogação, proteção de outbox e orçamento de ancestralidade.
+- Guia, matriz e deltas rastreáveis sem atribuir aceite nativo/global à implementação.

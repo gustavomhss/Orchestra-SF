@@ -14,9 +14,10 @@ import type { BusinessPorts } from "../../../../modules/sucafina/Sucafinav1/prod
 import { dispatchSfCapability } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts"
 import { registerSfResidentAgents } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts"
 import { createSfBusinessMcpBridge } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts"
+import type { SfVerifiedBusinessCall } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts"
 
 /** Add SF services to each Location without replacing core Session or execution services. */
-export const createSfProductContribution: CreateSfProductContribution = (input) => ({
+export const createSfProductContribution = (input: Parameters<CreateSfProductContribution>[0] & { onVerifiedCall?: SfVerifiedBusinessCall }): ReturnType<CreateSfProductContribution> => ({
   id: "sucafina-product",
   locationNodes: [makeLocationNode({
     name: "sucafina/product-runtime",

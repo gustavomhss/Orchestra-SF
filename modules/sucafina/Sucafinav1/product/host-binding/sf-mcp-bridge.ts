@@ -8,6 +8,8 @@ import { digestSfValue } from "../contracts/canonical.ts"
 import type { CreateSfBusinessMcpBridge } from "../contracts/runtime.ts"
 import type { CapabilityDescriptor, CapabilityResult, TrustedCallContext } from "../contracts/sf-execution.ts"
 
+export type SfVerifiedBusinessCall = (operation: string, payload: unknown, result: Extract<CapabilityResult, { status: "ok" }>, context: TrustedCallContext) => boolean
+
 /** Inspect configuration without connecting; the host uses this before starting a provider turn. */
 export async function hasSfProviderConflict(mcp: Mcp.Interface) {
   return Object.keys(await Effect.runPromise(mcp.config())).some((name) =>
@@ -15,7 +17,7 @@ export async function hasSfProviderConflict(mcp: Mcp.Interface) {
 }
 
 /** Each operation owns its client, server, transport pair and native lease. */
-export const createSfBusinessMcpBridge: CreateSfBusinessMcpBridge = (input) => {
+export const createSfBusinessMcpBridge = (input: Parameters<CreateSfBusinessMcpBridge>[0] & { onVerifiedCall?: SfVerifiedBusinessCall }): ReturnType<CreateSfBusinessMcpBridge> => {
   const conflict = () => hasSfProviderConflict(input.mcp).catch(() => undefined)
   return {
     list: async (context) => {
@@ -128,3 +130,4 @@ export const createSfBusinessMcpBridge: CreateSfBusinessMcpBridge = (input) => {
     },
   }
 }
+
