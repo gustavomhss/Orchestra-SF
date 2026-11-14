@@ -1,0 +1,250 @@
+{
+  "schema": "finance-state-read-semantics-v1",
+  "scope": "Semantics coverage of S2; evidence remains attached to its actual candidate and snapshot.",
+  "candidate": "a710446e3a002068eacf6ff1ade66365d24005d6",
+  "snapshot": "71c5fcff52b381955b2038c90ff5bf3660c7cabb",
+  "runId": 43639203076,
+  "jobId": 132582691890,
+  "result": {
+    "pass": 41,
+    "fail": 0,
+    "assertions": 352
+  },
+  "storageEvidence": {
+    "realSQLite": [
+      "test/product/finance-state-read-performance/isolation.test.ts (7 tests)",
+      "test/product/finance-state-read-performance/materialization.test.ts",
+      "test/product/wp11/case-read-fence.test.ts",
+      "test/product/wp11/case-lease-egress.test.ts",
+      "test/product/wp11/case-egress-fence.test.ts"
+    ],
+    "adapterOnly": {
+      "file": "test/product/wp10/acceptance/state-provider.test.ts",
+      "tests": 18,
+      "adapter": "testPersistence",
+      "limit": "Supplemental behavioral coverage; these 18 tests are not evidence of SQLite durability."
+    }
+  },
+  "candidateContinuity": {
+    "W1": "a710446e3a002068eacf6ff1ade66365d24005d6",
+    "W2": "1a656f1f7251de8c104e5b03a43b457e80437181",
+    "delta": "W2 changes only two type imports and two type annotations in test/product/finance-state-read-performance/materialization.test.ts. Product source is identical.",
+    "evidenceRule": "S2 remains evidence of execution on W1. Product identity and the type-only test delta do not relabel S2 as execution on W2.",
+    "K2": {
+      "runId": 43639846168,
+      "conclusion": "failure",
+      "typecheck": {
+        "inheritedDiagnostics": 115,
+        "ownDiagnostics": 0
+      },
+      "guards": {
+        "gates": 43,
+        "warnings": 15,
+        "comparison": "identical inherited findings"
+      },
+      "limit": "The package and guards remain FAIL; zero own diagnostics does not mean a passing package gate."
+    },
+    "S3": {
+      "snapshot": "9a2867b258de5cb049876a0005ef54109a4a11c5",
+      "candidate": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "runId": 43640055910,
+      "state": "COMPLETED_FAILURE",
+      "resultReceipt": "S3-result.json",
+      "selection": "43 prior affected tests plus unchanged original full journey",
+      "tests": {
+        "pass": 43,
+        "fail": 1,
+        "filtered": 4,
+        "assertions": 368,
+        "files": 14,
+        "totalSeconds": 464.54,
+        "journeyTestMs": 180032.11,
+        "originalJourneyAssertionsBeforeFailure": 18
+      },
+      "limit": "The43 affected tests pass; the full original journey still fails before final threshold/history/replay/reopen assertions."
+    }
+  },
+  "testNames": {
+    "I1": "C08 case selection detaches its result before the final authority callback and across requests",
+    "I2": "C08 opaque and wrapped selectors retain detached mutable callbacks on success, throw and rejection",
+    "I3": "C08 selectors observe a mutable or accessor binding after admission instead of a captured authority",
+    "I4": "C08 selectors cannot reuse access across principals, Request identity, header mutation or revocation",
+    "I5": "C08 selected reads retain cancellation and cannot commit a caught nested-write attempt",
+    "I6": "C08 case selectors preserve missing, inherited, legacy and malformed state outcomes",
+    "I7": "C08 case selectors preserve accessor counts and omitted parent cases without an extra observation",
+    "M1": "FIN-IND-005 case materialization keeps two fresh reads while skipping unrelated state clones",
+    "F1": "case read suppresses its projection when membership changes during the final host revalidation",
+    "F2": "case read suppresses its projection when same-version content changes during the final host revalidation",
+    "L1": "case read refuses a finished lease after the final C08 namespace authorization",
+    "L2": "case read refuses a expired lease after the final C08 namespace authorization"
+  },
+  "coverage": [
+    {
+      "semantic": "Detached callback and output isolation",
+      "status": "PASS_SCOPED",
+      "tests": [
+        "I1",
+        "I2"
+      ],
+      "observed": "Mutation of the selected result, a retained callback state and a snapshot retained by final authorize does not change later reads. The result is detached before final authorize mutates its snapshot."
+    },
+    {
+      "semantic": "Opaque callback mutation, throw and asynchronous rejection",
+      "status": "PASS_SCOPED",
+      "tests": [
+        "I2"
+      ],
+      "observed": "An opaque wrapper mutates both case and preferences. Final authorize sees the original snapshot. Synchronous throw and Promise rejection persist neither mutation. Copying public selector properties does not confer the internal selector identity."
+    },
+    {
+      "semantic": "Original predicate observation timing and mutable binding",
+      "status": "PASS_SCOPED_PLUS_UNCHANGED_PREDICATE",
+      "tests": [
+        "I3"
+      ],
+      "observed": "Principal mutation, replacement of the binding with another accessRevision and an accessor returning a replacement frozen binding after admission are observed by the original predicate.",
+      "source": "selectSfCase retains authority.principalRef/policyVersion/accessRevision comparisons against context.binding at callback execution time.",
+      "limit": "policyVersion equality is preserved in source; S2 does not separately mutate every binding field."
+    },
+    {
+      "semantic": "Fresh Request and authority on every read",
+      "status": "PASS_SCOPED",
+      "tests": [
+        "I1",
+        "I4"
+      ],
+      "observed": "Distinct requests receive distinct read results and their own two authorization calls. A Request clone without admission is denied. A different principal cannot reuse the selector's matching result."
+    },
+    {
+      "semantic": "Headers, revocation and abort",
+      "status": "PASS_SCOPED",
+      "tests": [
+        "I4",
+        "I5"
+      ],
+      "observed": "Header mutation at final authorization and revocation prevent disclosure. Later revoked admission remains denied. Abort reaches the unchanged SQLite cancellation boundary."
+    },
+    {
+      "semantic": "No result, snapshot or authorization cache across requests",
+      "status": "PASS_SCOPED_PLUS_STATIC",
+      "tests": [
+        "I1",
+        "I4"
+      ],
+      "source": "The WeakMap stores selector identity, case ID and projection code only. Each invocation still enters persistence.transaction, reads state and performs initial/final authorize.",
+      "limit": "This establishes the implemented registry shape and exercised request/principal boundaries, not a separate claim of exhaustive cache analysis."
+    },
+    {
+      "semantic": "Both fresh case observation moments",
+      "status": "PASS_SCOPED",
+      "tests": [
+        "M1",
+        "F1",
+        "F2"
+      ],
+      "observed": "Both materialization arms execute two C08 case reads and 36 observed host checks. Changes to membership or case content without changing the business version during the final host check are rejected."
+    },
+    {
+      "semantic": "Final complete-case and mutable-object fences",
+      "status": "PASS_SCOPED_PLUS_UNCHANGED_SOURCE",
+      "tests": [
+        "F1",
+        "F2"
+      ],
+      "additionalTestFile": "test/product/wp11/case-egress-fence.test.ts",
+      "observed": "Existing draft and prepare-intent races for membership, incarnation and same-version content passed.",
+      "source": "The final digest checks over again.value, the earlier value and refs remain unchanged; draft and prepare-intent retain their saved/input digests."
+    },
+    {
+      "semantic": "Finished and expired lease at final C08 authorization",
+      "status": "PASS_SCOPED",
+      "tests": [
+        "L1",
+        "L2"
+      ],
+      "additionalObservedVariants": [
+        "case draft refuses a finished lease after the final C08 namespace authorization",
+        "case draft refuses a expired lease after the final C08 namespace authorization",
+        "case prepare-intent refuses a finished lease after the final C08 namespace authorization",
+        "case prepare-intent refuses a expired lease after the final C08 namespace authorization"
+      ]
+    },
+    {
+      "semantic": "Nested-write poison and CAS",
+      "status": "PASS_SCOPED",
+      "tests": [
+        "I5"
+      ],
+      "observed": "A nested writer executes its staging callback but cannot commit. Catching its rejection does not clear the parent poison. A subsequent read sees the original case/storageVersion and stale CAS does not invoke work.",
+      "supplemental": "Existing state-provider acceptance tests passed retry/digest conflicts, concurrent CAS, namespace isolation, secondary namespace authority and target replacement using testPersistence."
+    },
+    {
+      "semantic": "Malformed, legacy and special property behavior",
+      "status": "PASS_SCOPED",
+      "tests": [
+        "I6",
+        "I7"
+      ],
+      "observed": "Legacy state without optional fields remains readable. Missing product state, wrong schema, array cases and negative versions retain prior refusals. Missing/inherited case keys retain baseline results. Parent accessors retain baseline getter counts; nonenumerable/inherited parents retain the original clone's omission and TypeError outcome."
+    },
+    {
+      "semantic": "Private namespace separation for the case projection",
+      "status": "PASS_SCOPED_PLUS_UNCHANGED_SOURCE",
+      "tests": [
+        "I1",
+        "I2",
+        "M1"
+      ],
+      "observed": "Case output contains the case fields and does not expose preferences. Mutations of private preferences through an opaque callback do not reach the authorization snapshot or persistence.",
+      "limit": "S2 does not requalify every public/export surface or all namespace consumers."
+    },
+    {
+      "semantic": "Source/current/final evidence checks and source replacement",
+      "status": "UNCHANGED_SOURCE_WITH_POSITIVE_PATH_EXERCISED",
+      "tests": [
+        "M1"
+      ],
+      "source": "case-port.read retains sourcesCovered, both accessible calls, both verifyScenarioOperations calls, both authorizeCase calls, the final host revalidation and the final digest/request/abort fence.",
+      "limit": "S2 exercises the positive financial source path but does not separately reexecute all external-source revocation/replacement or mutable evidence-callback adversaries. Case incarnation races are distinct from replacement of an external evidence source."
+    },
+    {
+      "semantic": "Original financial coverage authority predicate",
+      "status": "UNCHANGED_NOT_REEXECUTED_IN_S2",
+      "source": "coverage-preview.ts and the Finance producer algorithms are outside the product delta.",
+      "limit": "The prior Afalse/Btrue coverage-predicate counterproof is not part of this S2 selection and must retain its original W/run provenance."
+    },
+    {
+      "semantic": "Full financial journey, replay and real reopen",
+      "status": "NOT_CLOSED_BY_S2",
+      "tests": [
+        "M1"
+      ],
+      "observed": "The short proof prepares confirmed training, verifies total250000/difference−10000 and actually rereads the historical choice before its materialization comparison.",
+      "limit": "It does not execute the original complete sensitivity journey,15000/15001 witnesses, authorized choice replay or real restart with collaborator/outsider/revocation. Their outcome belongs only to the unchanged long journey's separate receipt."
+    }
+  ],
+  "limits": [
+    "SQLite serializer and transaction lifecycle are unchanged; S2 does not qualify arbitrary adapters containing nonserializable private values outside the durable snapshot contract.",
+    "The original Request replacement check remains in source; the direct negative test rejects an unadmitted Request object and is not a separate live-host Request replacement race.",
+    "No native AM proof, integrated bundle acceptance, G4 closure or GLOBAL_RELEASE is conferred by this selection.",
+    "The 18 existing state-provider acceptance tests use testPersistence, not SQLite; their passing observations must not be represented as SQLite durability proof."
+  ],
+  "globalRelease": false,
+  "S3SupplementalCoverage": {
+    "receipt": "S3-result.json",
+    "audit": "terminal-review.json",
+    "same43PassingTests": true,
+    "originalPredicate": {
+      "resolutions": 1,
+      "originalChecks": 1,
+      "replacementChecks": 0,
+      "previews": 0,
+      "result": {
+        "status": "stale",
+        "reason": "coverage-authority-changed"
+      }
+    },
+    "sourceRequestHeaderLeaseFacadesNegatives": "PASS in the exact43 original affected tests; named evidence inS3-result.json/terminal-review.json.",
+    "fullJourneyAccessNegatives": "NOT_RUN after original long failure; separate receipt-replay/reopen tests do not substitute these final journey assertions."
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "schema": "finance-state-read-performance-ci-ledger-v1",
+  "finding": "FIN-IND-005",
+  "findingDisposition": "OPEN_IMPLEMENTED_NOT_CLOSED",
+  "productCandidate": {
+    "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+    "tree": "1ebd1ee9d0e95253526d0ee73cf2353a71ccbe58"
+  },
+  "shortProofCandidate": {
+    "W": "a710446e3a002068eacf6ff1ade66365d24005d6",
+    "tree": "2083c7594b85505d0a97167acb30c0b6fd65f6b8",
+    "productBlobsEqualW2": true
+  },
+  "configuration": "ci-config-identity.json",
+  "runs": [
+    {
+      "selection": "S1",
+      "W": "231b0652d12d5c6ce8b5d31d02b725eabdbe308f",
+      "Wtree": "19e946d6a0c68d9fce1e1a2696bf31e66e796814",
+      "S": "27256440a3aa6383b6d96ebd95d9788f3a637ec4",
+      "Stree": "f1a8971de495cdf6595dd72682cc3b878120a3a3",
+      "requestIdentity": {
+        "bytes": 226,
+        "sha256": "6c8da5ba3f7e286dda13f5b3aa507e6f615a16840f8a86b4a44c4d9d3b6cfcf1"
+      },
+      "runId": 43638918360,
+      "jobId": 132581814674,
+      "jobHeadSha": "27256440a3aa6383b6d96ebd95d9788f3a637ec4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43638918360",
+      "conclusion": "failure",
+      "tests": {
+        "pass": 0,
+        "fail": 1,
+        "assertions": 56,
+        "files": 1,
+        "testMs": 65361.88,
+        "totalSeconds": 65.57
+      },
+      "receipt": "S1-result.json",
+      "ciMetadata": {
+        "selection": "S1",
+        "runId": 43638918360,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43638918360",
+        "status": "completed",
+        "conclusion": "failure",
+        "head_sha": "27256440a3aa6383b6d96ebd95d9788f3a637ec4",
+        "event": "push",
+        "branch": "ci-run-linux-finance-state-231b0652-s1",
+        "attempt": 1,
+        "created_at": "2026-11-14T20:42:31Z",
+        "run_started_at": "2026-11-14T20:42:31Z",
+        "updated_at": "2026-11-14T20:45:15Z",
+        "queueSeconds": 2,
+        "setupSeconds": 88,
+        "testSeconds": 66,
+        "artifactSeconds": 0,
+        "timingDefinition": "Rounded GitHub step timestamps; queue created_at->first job start; setup job start->first command; command and artifact duration sums within one job only; not finance performance."
+      }
+    },
+    {
+      "selection": "S2",
+      "W": "a710446e3a002068eacf6ff1ade66365d24005d6",
+      "Wtree": "2083c7594b85505d0a97167acb30c0b6fd65f6b8",
+      "S": "71c5fcff52b381955b2038c90ff5bf3660c7cabb",
+      "Stree": "ef1fd8eaac3df738bdf8dcfddc4b94349f7a7b63",
+      "requestIdentity": {
+        "bytes": 535,
+        "sha256": "9baabd10b3f8cd3a30d03710f7f109ed257c42676b21ce46f7dc76fc51a84fea"
+      },
+      "runId": 43639203076,
+      "jobId": 132582691890,
+      "jobHeadSha": "71c5fcff52b381955b2038c90ff5bf3660c7cabb",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43639203076",
+      "conclusion": "success",
+      "tests": {
+        "pass": 41,
+        "fail": 0,
+        "assertions": 352,
+        "files": 6,
+        "materializationTestMs": 47616.16,
+        "totalSeconds": 47.96
+      },
+      "receipt": "S2-result.json",
+      "ciMetadata": {
+        "selection": "S2",
+        "runId": 43639203076,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43639203076",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "71c5fcff52b381955b2038c90ff5bf3660c7cabb",
+        "event": "push",
+        "branch": "ci-run-linux-finance-state-a710446e-s2",
+        "attempt": 1,
+        "created_at": "2026-11-14T20:45:46Z",
+        "run_started_at": "2026-11-14T20:45:46Z",
+        "updated_at": "2026-11-14T20:48:32Z",
+        "queueSeconds": 2,
+        "setupSeconds": 108,
+        "testSeconds": 48,
+        "artifactSeconds": 0,
+        "timingDefinition": "Rounded GitHub step timestamps; queue created_at->first job start; setup job start->first command; command and artifact duration sums within one job only; not finance performance."
+      }
+    },
+    {
+      "selection": "K1",
+      "W": "a710446e3a002068eacf6ff1ade66365d24005d6",
+      "Wtree": "2083c7594b85505d0a97167acb30c0b6fd65f6b8",
+      "S": null,
+      "Stree": null,
+      "requestIdentity": null,
+      "runId": 43639621582,
+      "jobId": 132584031994,
+      "jobHeadSha": "a710446e3a002068eacf6ff1ade66365d24005d6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43639621582",
+      "conclusion": "failure",
+      "tests": null,
+      "receipt": "K1-result.json",
+      "ciMetadata": {
+        "selection": "K1",
+        "runId": 43639621582,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43639621582",
+        "status": "completed",
+        "conclusion": "failure",
+        "head_sha": "a710446e3a002068eacf6ff1ade66365d24005d6",
+        "event": "push",
+        "branch": "astra-check-fresume",
+        "attempt": 1,
+        "created_at": "2026-11-14T20:50:35Z",
+        "run_started_at": "2026-11-14T20:50:35Z",
+        "updated_at": "2026-11-14T20:52:05Z",
+        "queueSeconds": 2,
+        "setupSeconds": 58,
+        "testSeconds": 25,
+        "artifactSeconds": 2,
+        "timingDefinition": "Rounded GitHub step timestamps; queue created_at->first job start; setup job start->first command; command and artifact duration sums within one job only; not finance performance."
+      }
+    },
+    {
+      "selection": "K2",
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "Wtree": "1ebd1ee9d0e95253526d0ee73cf2353a71ccbe58",
+      "S": null,
+      "Stree": null,
+      "requestIdentity": null,
+      "runId": 43639846168,
+      "jobId": 132584756877,
+      "jobHeadSha": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43639846168",
+      "conclusion": "failure",
+      "tests": null,
+      "receipt": "K2-result.json",
+      "ciMetadata": {
+        "selection": "K2",
+        "runId": 43639846168,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43639846168",
+        "status": "completed",
+        "conclusion": "failure",
+        "head_sha": "1a656f1f7251de8c104e5b03a43b457e80437181",
+        "event": "push",
+        "branch": "astra-check-fresume",
+        "attempt": 1,
+        "created_at": "2026-11-14T20:53:10Z",
+        "run_started_at": "2026-11-14T20:53:10Z",
+        "updated_at": "2026-11-14T20:54:52Z",
+        "queueSeconds": 2,
+        "setupSeconds": 72,
+        "testSeconds": 25,
+        "artifactSeconds": 1,
+        "timingDefinition": "Rounded GitHub step timestamps; queue created_at->first job start; setup job start->first command; command and artifact duration sums within one job only; not finance performance."
+      }
+    },
+    {
+      "selection": "S3",
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "Wtree": "1ebd1ee9d0e95253526d0ee73cf2353a71ccbe58",
+      "S": "9a2867b258de5cb049876a0005ef54109a4a11c5",
+      "Stree": "40637e9cc6ebb4dbd99a549b33b93973e6a5fffc",
+      "requestIdentity": {
+        "bytes": 1931,
+        "sha256": "c1cebc0ccd829bbdf02fdb662f7f4eec64b81c1bf597a40c51c664f8191526f4"
+      },
+      "runId": 43640055910,
+      "jobId": 132585426041,
+      "jobHeadSha": "9a2867b258de5cb049876a0005ef54109a4a11c5",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43640055910",
+      "conclusion": "failure",
+      "tests": {
+        "pass": 43,
+        "fail": 1,
+        "filtered": 4,
+        "assertions": 368,
+        "files": 14,
+        "totalSeconds": 464.54,
+        "journeyTestMs": 180032.11,
+        "originalJourneyAssertionsBeforeFailure": 18
+      },
+      "receipt": "S3-result.json",
+      "ciMetadata": {
+        "selection": "S3",
+        "runId": 43640055910,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43640055910",
+        "status": "completed",
+        "conclusion": "failure",
+        "head_sha": "9a2867b258de5cb049876a0005ef54109a4a11c5",
+        "event": "push",
+        "branch": "ci-run-linux-finance-state-1a656f1f-s3",
+        "attempt": 1,
+        "created_at": "2026-11-14T20:55:39Z",
+        "run_started_at": "2026-11-14T20:55:39Z",
+        "updated_at": "2026-11-14T21:05:18Z",
+        "queueSeconds": 2.0,
+        "setupSeconds": 100.0,
+        "testSeconds": 465.0,
+        "artifactSeconds": 0,
+        "timingDefinition": "Rounded GitHub step timestamps; these are job durations, not additive financial operation costs."
+      }
+    }
+  ],
+  "deduplication": {
+    "keyFields": [
+      "exact candidate",
+      "product tree",
+      "normalized request bytes",
+      "runner/runtime/workflow/validator/configuration identities"
+    ],
+    "attemptsPerSelection": 1,
+    "sameFailedLongTreeRepeated": false,
+    "noSimultaneousMissionRuns": true,
+    "chronology": "ci-metadata.json",
+    "S1ToS2": "New product implementation after expected preimage discriminant failure.",
+    "K1ToK2": "Only two concrete mission-owned typecheck errors fixed; no product change.",
+    "S2ToS3": "Short real materialization proof completed before original journey; no repeated short product test after type-only annotation correction.",
+    "priorResultsReattached": {
+      "selection43": {
+        "runId": 43635340065,
+        "newRunId": 43640055910,
+        "same43PassingNames": true
+      },
+      "priorLongFailure": {
+        "runId": 43636137688,
+        "W": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "notReusedAsCurrentProof": true
+      }
+    }
+  },
+  "bounds": {
+    "shortTestMs": 120000,
+    "originalFixtureMs": 180000,
+    "originalJourneyTestMs": 300000,
+    "originalAssertionsOraclesFixturesUnchanged": true
+  },
+  "allMissionRunsTerminal": true,
+  "pendingRuns": [],
+  "nativeProof": false,
+  "localProductTestsRun": false,
+  "globalRelease": false
+}

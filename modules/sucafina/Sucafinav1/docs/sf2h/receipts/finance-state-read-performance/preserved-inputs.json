@@ -1,0 +1,548 @@
+{
+  "schema": "finance-state-read-inputs-v1",
+  "sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+      "blob": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+      "bytes": 20097,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "bytes": 24537,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/original-authority.test.ts",
+      "blob": "1a6989101c47f36ff21d8495780b179ceb595357",
+      "bytes": 1961,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/result-receipt.test.ts",
+      "blob": "438672355e67c0c4b0f445b01a993edb1b3ad7fc",
+      "bytes": 10778,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/units-batch.test.ts",
+      "blob": "d48900410734026982431b44d4885fe0f91fae9d",
+      "bytes": 9188,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "blob": "18f3140769260dafbe7f639d6694ea493f3ea535",
+      "bytes": 14323,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/materialization.test.ts",
+      "blob": "6731cab950249b1d018ced74cafce42a2ca27b9e",
+      "bytes": 6994,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts",
+      "blob": "960acb6fda9c975aff35f287c202bb3b3b8386f5",
+      "bytes": 8030,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts",
+      "blob": "873a805e013ff4e3f7f3a83faae2ddd5429aa26e",
+      "bytes": 9998,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+      "blob": "e4c53acab52da7d8e16968bc2073be4f38d38bc6",
+      "bytes": 5018,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+      "blob": "6395a5dc529acadfb0d9c1e2d8dca0664f40a39e",
+      "bytes": 9796,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/observed-coverage.ts",
+      "blob": "0b6bdc6285b9a57c38939f5dea469bfdc060eb2f",
+      "bytes": 5176,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/observed-ports.ts",
+      "blob": "5e8740a9e3372e75624674617b63fadb5f81bfbc",
+      "bytes": 1471,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/persisted-recertification.test.ts",
+      "blob": "ca194cbb04ca6e39caaf408b0045fc8d65b70cc1",
+      "bytes": 12158,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/phase-trace.ts",
+      "blob": "127f0ed61d5e5eb74dfb89d9f8346370f235745d",
+      "bytes": 2012,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+      "blob": "4b333c9c92e12e8dd355dd2f7f8f2b11e26a09d6",
+      "bytes": 6856,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "blob": "a39a1ce0c862ecbc563ddc2e49bd4c781791cb2b",
+      "bytes": 15930,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "blob": "40f814167314c329b30d15db3dadbeaad4cfcb55",
+      "bytes": 10043,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+      "blob": "185d8f144c789550c0aa62baf557bed63c830320",
+      "bytes": 7238,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "blob": "67b8b179a3fba332933d8ad00820df82b7ab258e",
+      "bytes": 8384,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blob": "0dc89d86866620a8109051c68bc2d2b4d92c508f",
+      "bytes": 25756,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "blob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "bytes": 16513,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/result-store.test.ts",
+      "blob": "7a1a95e476a183b0ce1eaf1abe6f693b21f3707b",
+      "bytes": 8709,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "blob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "bytes": 12865,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+      "blob": "33193aabe586aee6bdedb8a8a06238783ece25a2",
+      "bytes": 2893,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+      "blob": "a25539d00f8a43f2e7e3be02a16c29ba1c0272f2",
+      "bytes": 10725,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "blob": "bf07b1c804138f04e01f9cf5a518b6d89ab24b9a",
+      "bytes": 34705,
+      "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "missionAdded": false
+    }
+  ],
+  "oracle": {
+    "fixtureGuardMs": 180000,
+    "journeyBunBudgetMs": 300000,
+    "originalJourneyBlob": "6395a5dc529acadfb0d9c1e2d8dca0664f40a39e",
+    "originalJourneyIdentity": {
+      "bytes": 9796,
+      "sha256": "0b152d5980ed053c3e3da7d8067d92ef2c8535845a07127226d4f2662b3fdd90",
+      "gitBlob": "6395a5dc529acadfb0d9c1e2d8dca0664f40a39e"
+    },
+    "unchangedOriginalAssertions": true,
+    "noFixtureOrOracleChanges": true
+  },
+  "sourceProof": {
+    "candidateCompare": {
+      "repository_full_name": "gustavomhss/Orchestra-SF",
+      "base": "d8d586e19c824f75a88494a9c3677faac617e81d",
+      "head": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "status": "ahead",
+      "ahead_by": 3,
+      "behind_by": 0,
+      "total_commits": 3,
+      "too_large": null,
+      "base_commit": {
+        "sha": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/d8d586e19c824f75a88494a9c3677faac617e81d",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/d8d586e19c824f75a88494a9c3677faac617e81d"
+      },
+      "merge_base_commit": {
+        "sha": "d8d586e19c824f75a88494a9c3677faac617e81d",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/d8d586e19c824f75a88494a9c3677faac617e81d",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/d8d586e19c824f75a88494a9c3677faac617e81d"
+      },
+      "files": [
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/intake-01.json",
+          "status": "added",
+          "additions": 78,
+          "deletions": 0,
+          "changes": 78,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "status": "modified",
+          "additions": 4,
+          "deletions": 2,
+          "changes": 6,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "status": "modified",
+          "additions": 33,
+          "deletions": 1,
+          "changes": 34,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/fixture.ts",
+          "status": "added",
+          "additions": 78,
+          "deletions": 0,
+          "changes": 78,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+          "status": "added",
+          "additions": 227,
+          "deletions": 0,
+          "changes": 227,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/materialization.test.ts",
+          "status": "added",
+          "additions": 110,
+          "deletions": 0,
+          "changes": 110,
+          "previous_filename": null
+        }
+      ]
+    },
+    "W2compare": {
+      "repository_full_name": "gustavomhss/Orchestra-SF",
+      "base": "a710446e3a002068eacf6ff1ade66365d24005d6",
+      "head": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "status": "ahead",
+      "ahead_by": 1,
+      "behind_by": 0,
+      "total_commits": 1,
+      "too_large": null,
+      "base_commit": {
+        "sha": "a710446e3a002068eacf6ff1ade66365d24005d6",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/a710446e3a002068eacf6ff1ade66365d24005d6",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/a710446e3a002068eacf6ff1ade66365d24005d6"
+      },
+      "merge_base_commit": {
+        "sha": "a710446e3a002068eacf6ff1ade66365d24005d6",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/a710446e3a002068eacf6ff1ade66365d24005d6",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/a710446e3a002068eacf6ff1ade66365d24005d6"
+      },
+      "files": [
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/materialization.test.ts",
+          "status": "modified",
+          "additions": 3,
+          "deletions": 1,
+          "changes": 4,
+          "previous_filename": null
+        }
+      ]
+    },
+    "S3compare": {
+      "repository_full_name": "gustavomhss/Orchestra-SF",
+      "base": "1a656f1f7251de8c104e5b03a43b457e80437181",
+      "head": "9a2867b258de5cb049876a0005ef54109a4a11c5",
+      "status": "ahead",
+      "ahead_by": 1,
+      "behind_by": 0,
+      "total_commits": 1,
+      "too_large": null,
+      "base_commit": {
+        "sha": "1a656f1f7251de8c104e5b03a43b457e80437181",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/1a656f1f7251de8c104e5b03a43b457e80437181",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/1a656f1f7251de8c104e5b03a43b457e80437181"
+      },
+      "merge_base_commit": {
+        "sha": "1a656f1f7251de8c104e5b03a43b457e80437181",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/1a656f1f7251de8c104e5b03a43b457e80437181",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/1a656f1f7251de8c104e5b03a43b457e80437181"
+      },
+      "files": [
+        {
+          "filename": ".ci-run.json",
+          "status": "added",
+          "additions": 1,
+          "deletions": 0,
+          "changes": 1,
+          "previous_filename": null
+        }
+      ]
+    },
+    "sfEntries": [
+      {
+        "name": "README.md",
+        "path": "modules/sucafina/Sucafinav1/README.md",
+        "sha": "7da102e9f3d6ba8875289b9b127d5dc65017856f",
+        "size": 9542,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/README.md?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/README.md",
+        "git_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/7da102e9f3d6ba8875289b9b127d5dc65017856f",
+        "download_url": "https://raw.githubusercontent.com/gustavomhss/Orchestra-SF/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/README.md",
+        "type": "file",
+        "_links": {
+          "self": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/README.md?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+          "git": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/7da102e9f3d6ba8875289b9b127d5dc65017856f",
+          "html": "https://github.com/gustavomhss/Orchestra-SF/blob/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/README.md"
+        }
+      },
+      {
+        "name": "bun.lock",
+        "path": "modules/sucafina/Sucafinav1/bun.lock",
+        "sha": "eb89ff3c4d61c41275dceddf11c5997f7993c2c8",
+        "size": 54798,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/bun.lock?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/bun.lock",
+        "git_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/eb89ff3c4d61c41275dceddf11c5997f7993c2c8",
+        "download_url": "https://raw.githubusercontent.com/gustavomhss/Orchestra-SF/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/bun.lock",
+        "type": "file",
+        "_links": {
+          "self": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/bun.lock?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+          "git": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/eb89ff3c4d61c41275dceddf11c5997f7993c2c8",
+          "html": "https://github.com/gustavomhss/Orchestra-SF/blob/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/bun.lock"
+        }
+      },
+      {
+        "name": "docs",
+        "path": "modules/sucafina/Sucafinav1/docs",
+        "sha": "23cb7017d69401716bc3e99fce321d9970054aea",
+        "size": 0,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/docs?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/tree/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/docs",
+        "git_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/23cb7017d69401716bc3e99fce321d9970054aea",
+        "download_url": null,
+        "type": "dir",
+        "_links": {
+          "self": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/docs?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+          "git": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/23cb7017d69401716bc3e99fce321d9970054aea",
+          "html": "https://github.com/gustavomhss/Orchestra-SF/tree/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/docs"
+        }
+      },
+      {
+        "name": "index.ts",
+        "path": "modules/sucafina/Sucafinav1/index.ts",
+        "sha": "91facf5b78b1d7150a28a25749057e474acb7fe7",
+        "size": 1456,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/index.ts?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/index.ts",
+        "git_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/91facf5b78b1d7150a28a25749057e474acb7fe7",
+        "download_url": "https://raw.githubusercontent.com/gustavomhss/Orchestra-SF/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/index.ts",
+        "type": "file",
+        "_links": {
+          "self": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/index.ts?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+          "git": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/91facf5b78b1d7150a28a25749057e474acb7fe7",
+          "html": "https://github.com/gustavomhss/Orchestra-SF/blob/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/index.ts"
+        }
+      },
+      {
+        "name": "installation.ts",
+        "path": "modules/sucafina/Sucafinav1/installation.ts",
+        "sha": "66fcbe749ffd7e9d0c19b29c27b5b212139a29f7",
+        "size": 4533,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/installation.ts?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/installation.ts",
+        "git_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/66fcbe749ffd7e9d0c19b29c27b5b212139a29f7",
+        "download_url": "https://raw.githubusercontent.com/gustavomhss/Orchestra-SF/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/installation.ts",
+        "type": "file",
+        "_links": {
+          "self": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/installation.ts?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+          "git": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/66fcbe749ffd7e9d0c19b29c27b5b212139a29f7",
+          "html": "https://github.com/gustavomhss/Orchestra-SF/blob/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/installation.ts"
+        }
+      },
+      {
+        "name": "local",
+        "path": "modules/sucafina/Sucafinav1/local",
+        "sha": "9594d7e2e89df87fc25bcd420e2b66fab41eb1f9",
+        "size": 0,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/local?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/tree/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/local",
+        "git_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/9594d7e2e89df87fc25bcd420e2b66fab41eb1f9",
+        "download_url": null,
+        "type": "dir",
+        "_links": {
+          "self": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/local?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+          "git": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/9594d7e2e89df87fc25bcd420e2b66fab41eb1f9",
+          "html": "https://github.com/gustavomhss/Orchestra-SF/tree/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/local"
+        }
+      },
+      {
+        "name": "package.json",
+        "path": "modules/sucafina/Sucafinav1/package.json",
+        "sha": "18911fee9313f8fb57c1a972bc70eec2f7864c55",
+        "size": 646,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/package.json?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/package.json",
+        "git_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/18911fee9313f8fb57c1a972bc70eec2f7864c55",
+        "download_url": "https://raw.githubusercontent.com/gustavomhss/Orchestra-SF/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/package.json",
+        "type": "file",
+        "_links": {
+          "self": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/package.json?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+          "git": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/18911fee9313f8fb57c1a972bc70eec2f7864c55",
+          "html": "https://github.com/gustavomhss/Orchestra-SF/blob/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/package.json"
+        }
+      },
+      {
+        "name": "product",
+        "path": "modules/sucafina/Sucafinav1/product",
+        "sha": "559eb375c674087b2cfad8c3b031af33efb10c05",
+        "size": 0,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/product?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/tree/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/product",
+        "git_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/559eb375c674087b2cfad8c3b031af33efb10c05",
+        "download_url": null,
+        "type": "dir",
+        "_links": {
+          "self": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/product?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+          "git": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/559eb375c674087b2cfad8c3b031af33efb10c05",
+          "html": "https://github.com/gustavomhss/Orchestra-SF/tree/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/product"
+        }
+      },
+      {
+        "name": "runtime",
+        "path": "modules/sucafina/Sucafinav1/runtime",
+        "sha": "b3d7980b1a80709935191551da031516e72bb2be",
+        "size": 0,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/runtime?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/tree/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/runtime",
+        "git_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/b3d7980b1a80709935191551da031516e72bb2be",
+        "download_url": null,
+        "type": "dir",
+        "_links": {
+          "self": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/runtime?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+          "git": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/b3d7980b1a80709935191551da031516e72bb2be",
+          "html": "https://github.com/gustavomhss/Orchestra-SF/tree/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/runtime"
+        }
+      },
+      {
+        "name": "src",
+        "path": "modules/sucafina/Sucafinav1/src",
+        "sha": "81807a5991fbde3c6511b6616ba041a93d3bfc94",
+        "size": 0,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/src?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/tree/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/src",
+        "git_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/81807a5991fbde3c6511b6616ba041a93d3bfc94",
+        "download_url": null,
+        "type": "dir",
+        "_links": {
+          "self": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/src?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+          "git": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/81807a5991fbde3c6511b6616ba041a93d3bfc94",
+          "html": "https://github.com/gustavomhss/Orchestra-SF/tree/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/src"
+        }
+      },
+      {
+        "name": "test",
+        "path": "modules/sucafina/Sucafinav1/test",
+        "sha": "2dcc0578b67ff67ca455d1fce2dab0d2ae1615f0",
+        "size": 0,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/test?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/tree/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/test",
+        "git_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/2dcc0578b67ff67ca455d1fce2dab0d2ae1615f0",
+        "download_url": null,
+        "type": "dir",
+        "_links": {
+          "self": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/test?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+          "git": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/2dcc0578b67ff67ca455d1fce2dab0d2ae1615f0",
+          "html": "https://github.com/gustavomhss/Orchestra-SF/tree/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/test"
+        }
+      },
+      {
+        "name": "tsconfig.json",
+        "path": "modules/sucafina/Sucafinav1/tsconfig.json",
+        "sha": "51895f3c254e6020d116ca73d4a1c690f7562169",
+        "size": 419,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/tsconfig.json?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/tsconfig.json",
+        "git_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/51895f3c254e6020d116ca73d4a1c690f7562169",
+        "download_url": "https://raw.githubusercontent.com/gustavomhss/Orchestra-SF/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/tsconfig.json",
+        "type": "file",
+        "_links": {
+          "self": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/tsconfig.json?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+          "git": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/51895f3c254e6020d116ca73d4a1c690f7562169",
+          "html": "https://github.com/gustavomhss/Orchestra-SF/blob/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/tsconfig.json"
+        }
+      },
+      {
+        "name": "vendor",
+        "path": "modules/sucafina/Sucafinav1/vendor",
+        "sha": "ecd21cd0495553e8669df9d7caebaa41e7758bc5",
+        "size": 0,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/vendor?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/tree/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/vendor",
+        "git_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/ecd21cd0495553e8669df9d7caebaa41e7758bc5",
+        "download_url": null,
+        "type": "dir",
+        "_links": {
+          "self": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/modules/sucafina/Sucafinav1/vendor?ref=1a656f1f7251de8c104e5b03a43b457e80437181",
+          "git": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/ecd21cd0495553e8669df9d7caebaa41e7758bc5",
+          "html": "https://github.com/gustavomhss/Orchestra-SF/tree/1a656f1f7251de8c104e5b03a43b457e80437181/modules/sucafina/Sucafinav1/vendor"
+        }
+      }
+    ]
+  }
+}
