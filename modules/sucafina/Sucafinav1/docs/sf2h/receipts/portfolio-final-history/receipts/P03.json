@@ -1,0 +1,433 @@
+{
+  "schema": "sf2h.portfolio-final-history.p03-receipts.v1",
+  "mission": 50,
+  "status": "FAIL",
+  "runs": [
+    {
+      "criterion_id": [
+        "WP13.CMP.20",
+        "WP13.DOD.20",
+        "WP13.INV.01",
+        "WP13.INV.20",
+        "WP13.QLT.02",
+        "WP13.QLT.20",
+        "WP13.SUC.10",
+        "WP13.SUC.20",
+        "WP13.T02.CHK.02",
+        "WP13.T02.CHK.20",
+        "WP13.T02.CMP.20",
+        "WP13.T02.DOD.01",
+        "WP13.T02.DOD.20",
+        "WP13.T02.INV.20",
+        "WP13.T02.QLT.01",
+        "WP13.T02.QLT.20",
+        "WP13.T02.SUC.20",
+        "WP13.T03.CHK.20",
+        "WP13.T04.CHK.01"
+      ],
+      "entity_id": "M50-P03-CANONICAL-SOURCE",
+      "scope": "Canonical Planner/Finance/C08 component with controlled authority, Finance34 included; semantic journey incomplete",
+      "status": "FAIL",
+      "candidate_sha": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+      "actor_or_role": "S4-C Portfolio continuation50",
+      "fixture_id": "semantic-union-source-scenario.test.ts@47b5358c8dda3179045499388ce98871576a2aa9",
+      "entrypoint_or_action": "createRenewalChoiceHistory → composePortfolio → baseline → first persistent.evaluateAndStore; later stages not reached",
+      "expected": "Planner/ScenarioAdapter atuais produzem base240000, conhecido210000/training ausente/totalnull e depois training40000/total250000. Mesmo caso, escolha e histórico: teto240000 e vantagemmínima20000 falham, sem prepare/recibo pela confirmação. Seleção exige refs C08 explícitas e simultaneamente autenticadas; discovery ambíguo não escolhe latest.",
+      "observed": {
+        "status": "FAIL",
+        "duration_ms": 180013.86,
+        "budget_ms": 180000,
+        "phase": "before.persistent.evaluateAndStore omitted result before line50",
+        "guard_ms": 180003,
+        "late_status": "stale",
+        "late_reason": "comparison-rule-or-source-changed"
+      },
+      "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653550785/job/132627055702",
+      "reviewer": "root50 actual log review; ci_p03 causal review; review_p02 independent static scope review",
+      "verified_at": "2026-11-14T23:35:08Z",
+      "product_candidate_sha": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+      "ci_snapshot_sha": "c2bb42ba3f1be357b51045f4d827911b86596847",
+      "ci_request_hash": "7abd4938446bf3d555440a26924629602fd903d0",
+      "contract_version": {
+        "decision_result": "sf-decision-result-v1",
+        "portfolio_binding": "sf-portfolio-binding-v1",
+        "comparison_binding": "sf-criterion-comparison-v1"
+      },
+      "producer_refs": [
+        "createPlannerPort",
+        "createPlannerCriterionMetric",
+        "createCriterionRuleRegistry",
+        "createCriterionComparisonBindings",
+        "createPlannerResultPersistence",
+        "createPortfolioAnalysis",
+        "createProductionPortfolio",
+        "createSfDecisionResultStore",
+        "LocalStore Finance34 e9da289bdce680f2429904c1e83dec60c39aa2a8"
+      ],
+      "consumer_entrypoint": "createProductionPortfolio.persistent.evaluateAndStore; first omitted result did not finish",
+      "execution_actor": "GitHub Actions test-ci / test (ubuntu-24.04)",
+      "logical_owner": "Mission50 with47 sole target integrator",
+      "writer_lease": "portfolio-history-browser50",
+      "contract_versions": {
+        "decision_result": "sf-decision-result-v1",
+        "portfolio_binding": "sf-portfolio-binding-v1",
+        "comparison_binding": "sf-criterion-comparison-v1"
+      },
+      "profile_id": "N/A: controlled component fixture, no installed profile",
+      "profile_version": "N/A: no installed profile",
+      "skill_ids": "N/A: direct TypeScript entrypoints, no native skill dispatch",
+      "skill_versions": "N/A: no native skill dispatch",
+      "skill_digests": "N/A: no native skill dispatch",
+      "source_paths": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts"
+      ],
+      "bundle_digest": "f4f646fd0df5340808944215a446ecf2f4d5e480bb607138994fd4d38205ae79",
+      "effective_model": "GPT-6 Astra Pro (authoring/review; not product runtime)",
+      "native_session_id": "N/A: no native session involved",
+      "case_id": "Fixture-local history.before.caseRef.id; no resident cohort",
+      "case_version": "Original/selected phase revisions asserted in code; later chosen/confirmed phase not reached",
+      "case_incarnation": "Fixture-local history.before.caseRef.incarnation; no installed history claim",
+      "mcp_server_generation": "N/A: no installed MCP server invoked",
+      "mcp_operation": "N/A: TypeScript component entrypoints",
+      "domain_port": "Canonical DecisionCasePort/result store + controlled evidence grants",
+      "domain_call_id": "N/A: multiple fixture-local calls; per-test titles retained",
+      "runtime_build_sha": "N/A: Bun directly executes checkout S; no installed build produced",
+      "atlas_engine_baseline": "N/A: no Atlas engine execution",
+      "atlas_boundary_version": "N/A: no Atlas boundary invocation",
+      "business_schema_version": {
+        "decision_result": "sf-decision-result-v1",
+        "portfolio_binding": "sf-portfolio-binding-v1",
+        "comparison_binding": "sf-criterion-comparison-v1"
+      },
+      "scanner_binary_version": "N/A: no scanner invoked",
+      "access_revision": "Controlled history.fixture.context; original negatives preserved, later semantic negatives not reached",
+      "expected_selection": [
+        "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts"
+      ],
+      "selected_files": [
+        "semantic-union-source-scenario.test.ts",
+        "history-provenance.test.ts"
+      ],
+      "measured_duration_seconds": 180.01386,
+      "W": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+      "S": "c2bb42ba3f1be357b51045f4d827911b86596847",
+      "run_id": 43653550785,
+      "job_id": 132627055702,
+      "run_attempt": 1,
+      "selected_test_titles": [
+        "semantic union: portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed"
+      ],
+      "assertion_count_observed": {
+        "combined_R1": 103,
+        "per_P03": "Not separately reported"
+      },
+      "source_tree_sha": "N/A: source code anchored by7b37732555b3378f238eee56e0f713e8ae92cae3; exact material composition tree below",
+      "candidate_tree_sha": "47e2d418566704e49c70286bf32e05e01feb9218",
+      "request_manifest_blob": "7abd4938446bf3d555440a26924629602fd903d0",
+      "result_artifact_sha256": "8c41459fdc43db360863ad3a72477abcb7a3ef91818ecb2d15d0352a0215411e",
+      "applicability_by_field": {
+        "native_profile_skill_MCP_Atlas_scanner_build": "N/A for component scope, not installed/native acceptance",
+        "case_cohort": "No single resident campaign tuple. Known fixturebefore identities, laterphaseNOT_RUN",
+        "assertion_count": "Only actualBun24calls reported; preserve72staticoraclewithoutclaimingcompleteexecution"
+      },
+      "full_criterion_closed": false
+    },
+    {
+      "criterion_id": [
+        "WP13.CMP.20",
+        "WP13.DOD.20",
+        "WP13.INV.01",
+        "WP13.INV.20",
+        "WP13.QLT.02",
+        "WP13.QLT.20",
+        "WP13.SUC.10",
+        "WP13.SUC.20",
+        "WP13.T02.CHK.02",
+        "WP13.T02.CHK.20",
+        "WP13.T02.CMP.20",
+        "WP13.T02.DOD.01",
+        "WP13.T02.DOD.20",
+        "WP13.T02.INV.20",
+        "WP13.T02.QLT.01",
+        "WP13.T02.QLT.20",
+        "WP13.T02.SUC.20",
+        "WP13.T03.CHK.20",
+        "WP13.T04.CHK.01"
+      ],
+      "entity_id": "M50-P03-CANONICAL-SOURCE",
+      "scope": "Canonical Planner/Finance/C08 component with controlled authority, Finance34 included; semantic journey incomplete",
+      "status": "FAIL",
+      "candidate_sha": "9d857d51f18e0dc81f19892b7b0b85482f21c875",
+      "actor_or_role": "S4-C Portfolio continuation50",
+      "fixture_id": "semantic-union-source-scenario.test.ts@82adc95c5eeb8573e1e96cef255b4d26fbff9be7",
+      "entrypoint_or_action": "createRenewalChoiceHistory → composePortfolio → baseline → first persistent.evaluateAndStore; later stages not reached",
+      "expected": "Planner/ScenarioAdapter atuais produzem base240000, conhecido210000/training ausente/totalnull e depois training40000/total250000. Mesmo caso, escolha e histórico: teto240000 e vantagemmínima20000 falham, sem prepare/recibo pela confirmação. Seleção exige refs C08 explícitas e simultaneamente autenticadas; discovery ambíguo não escolhe latest.",
+      "observed": {
+        "status": "FAIL",
+        "tests": 1,
+        "files": 1,
+        "pass": 0,
+        "fail": 1,
+        "errors": 1,
+        "expect_calls": 24,
+        "duration_seconds": 180.19,
+        "test_duration_ms": 180020.75,
+        "budget_ms": 180000,
+        "guard_ms": 180001,
+        "late_status": "stale",
+        "late_reason": "comparison-rule-or-source-changed",
+        "phase": "First omitted evaluateAndStore; full omitted result not admitted",
+        "phases": [
+          {
+            "phase": "compose-before:start",
+            "elapsedMs": 5507,
+            "criterionEvaluations": {
+              "calls": 0,
+              "completed": 0,
+              "totalElapsedMs": 0,
+              "maximumElapsedMs": 0
+            }
+          },
+          {
+            "phase": "compose-before:complete",
+            "elapsedMs": 28187,
+            "criterionEvaluations": {
+              "calls": 12,
+              "completed": 12,
+              "totalElapsedMs": 18242,
+              "maximumElapsedMs": 1544
+            }
+          },
+          {
+            "phase": "baseline:start",
+            "elapsedMs": 28187,
+            "criterionEvaluations": {
+              "calls": 12,
+              "completed": 12,
+              "totalElapsedMs": 18242,
+              "maximumElapsedMs": 1544
+            }
+          },
+          {
+            "phase": "baseline:complete",
+            "status": "ok",
+            "elapsedMs": 43213,
+            "criterionEvaluations": {
+              "calls": 20,
+              "completed": 20,
+              "totalElapsedMs": 30266,
+              "maximumElapsedMs": 1544
+            }
+          },
+          {
+            "phase": "omitted:start",
+            "elapsedMs": 43213,
+            "criterionEvaluations": {
+              "calls": 20,
+              "completed": 20,
+              "totalElapsedMs": 30266,
+              "maximumElapsedMs": 1544
+            }
+          },
+          {
+            "phase": "omitted:complete",
+            "status": "stale",
+            "elapsedMs": 180015,
+            "criterionEvaluations": {
+              "calls": 104,
+              "completed": 104,
+              "totalElapsedMs": 164328,
+              "maximumElapsedMs": 3065
+            }
+          },
+          {
+            "phase": "finally",
+            "elapsedMs": 180015,
+            "criterionEvaluations": {
+              "calls": 104,
+              "completed": 104,
+              "totalElapsedMs": 164328,
+              "maximumElapsedMs": 3065
+            }
+          }
+        ],
+        "trace": {
+          "label": "renewal-choice-history",
+          "phase": "prepare:transition-omitted:complete",
+          "elapsedMs": 180001,
+          "budgetMs": 180000,
+          "status": "deadline-exceeded",
+          "counts": {
+            "c08.read.cases": {
+              "calls": 9721,
+              "elapsedMs": 54946,
+              "maximumMs": 20
+            },
+            "host.revalidate": {
+              "calls": 118210,
+              "elapsedMs": 897,
+              "maximumMs": 3
+            },
+            "operation-source": {
+              "calls": 31888,
+              "elapsedMs": 1155,
+              "maximumMs": 3
+            },
+            "operation-coverage": {
+              "calls": 16809,
+              "elapsedMs": 141,
+              "maximumMs": 4
+            },
+            "c08.read.preferences": {
+              "calls": 96,
+              "elapsedMs": 441,
+              "maximumMs": 8
+            },
+            "c08.transaction.preferences": {
+              "calls": 3,
+              "elapsedMs": 56,
+              "maximumMs": 27
+            },
+            "classified-source": {
+              "calls": 39,
+              "elapsedMs": 1,
+              "maximumMs": 1
+            },
+            "classified-coverage": {
+              "calls": 41,
+              "elapsedMs": 818,
+              "maximumMs": 32
+            },
+            "c08.transaction.cases": {
+              "calls": 6,
+              "elapsedMs": 182,
+              "maximumMs": 35
+            },
+            "planner.verifySourceOnly": {
+              "calls": 3770,
+              "elapsedMs": 6369,
+              "maximumMs": 7
+            },
+            "planner.verifyOperation": {
+              "calls": 3770,
+              "elapsedMs": 47663,
+              "maximumMs": 20
+            },
+            "planner.verifySourceProjection": {
+              "calls": 7540,
+              "elapsedMs": 4978,
+              "maximumMs": 5
+            }
+          }
+        },
+        "control": {
+          "nonce": "4ab232635d8483ea310eea89eee3004e",
+          "nonce_count": 1,
+          "verdict_count": 1,
+          "verdict": "2026-11-14T23:46:27.3064145Z omni positive control [4ab232635d8483ea310eea89eee3004e]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+          "valid": true
+        },
+        "run": 43654501551,
+        "job": 132629953065,
+        "cleanup_job": 132631165881,
+        "cleanup": "PASS",
+        "post_deadline_status_not_independent_corruption": true
+      },
+      "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654501551/job/132629953065",
+      "reviewer": "root50 actual log review; ci_p03 causal review; review_p02 independent static scope review",
+      "verified_at": "2026-11-14T23:46:34Z",
+      "product_candidate_sha": "9d857d51f18e0dc81f19892b7b0b85482f21c875",
+      "ci_snapshot_sha": "25b84a8703bc3d8062b922ca79ad8efb9dbf5b45",
+      "ci_request_hash": "f368e4c41c5d05311001960c0af04d282e4fa552",
+      "contract_version": {
+        "decision_result": "sf-decision-result-v1",
+        "portfolio_binding": "sf-portfolio-binding-v1",
+        "comparison_binding": "sf-criterion-comparison-v1"
+      },
+      "producer_refs": [
+        "createPlannerPort",
+        "createPlannerCriterionMetric",
+        "createCriterionRuleRegistry",
+        "createCriterionComparisonBindings",
+        "createPlannerResultPersistence",
+        "createPortfolioAnalysis",
+        "createProductionPortfolio",
+        "createSfDecisionResultStore",
+        "LocalStore Finance34 e9da289bdce680f2429904c1e83dec60c39aa2a8"
+      ],
+      "consumer_entrypoint": "createProductionPortfolio.persistent.evaluateAndStore; first omitted result did not finish",
+      "execution_actor": "GitHub Actions test-ci / test (ubuntu-24.04)",
+      "logical_owner": "Mission50 with47 sole target integrator",
+      "writer_lease": "portfolio-history-browser50",
+      "contract_versions": {
+        "decision_result": "sf-decision-result-v1",
+        "portfolio_binding": "sf-portfolio-binding-v1",
+        "comparison_binding": "sf-criterion-comparison-v1"
+      },
+      "profile_id": "N/A: controlled component fixture, no installed profile",
+      "profile_version": "N/A: no installed profile",
+      "skill_ids": "N/A: direct TypeScript entrypoints, no native skill dispatch",
+      "skill_versions": "N/A: no native skill dispatch",
+      "skill_digests": "N/A: no native skill dispatch",
+      "source_paths": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts"
+      ],
+      "bundle_digest": "0dca24a0bddf2608300ed219682bde5d1ea6283e1740c9251832fb472dcbc7f2",
+      "effective_model": "GPT-6 Astra Pro (authoring/review; not product runtime)",
+      "native_session_id": "N/A: no native session involved",
+      "case_id": "Fixture-local history.before.caseRef.id; no resident cohort",
+      "case_version": "Original/selected phase revisions asserted in code; later chosen/confirmed phase not reached",
+      "case_incarnation": "Fixture-local history.before.caseRef.incarnation; no installed history claim",
+      "mcp_server_generation": "N/A: no installed MCP server invoked",
+      "mcp_operation": "N/A: TypeScript component entrypoints",
+      "domain_port": "Canonical DecisionCasePort/result store + controlled evidence grants",
+      "domain_call_id": "N/A: multiple fixture-local calls; per-test titles retained",
+      "runtime_build_sha": "N/A: Bun directly executes checkout S; no installed build produced",
+      "atlas_engine_baseline": "N/A: no Atlas engine execution",
+      "atlas_boundary_version": "N/A: no Atlas boundary invocation",
+      "business_schema_version": {
+        "decision_result": "sf-decision-result-v1",
+        "portfolio_binding": "sf-portfolio-binding-v1",
+        "comparison_binding": "sf-criterion-comparison-v1"
+      },
+      "scanner_binary_version": "N/A: no scanner invoked",
+      "access_revision": "Controlled history.fixture.context; original negatives preserved, later semantic negatives not reached",
+      "expected_selection": [
+        "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts"
+      ],
+      "selected_files": [
+        "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts"
+      ],
+      "measured_duration_seconds": 180.19,
+      "W": "9d857d51f18e0dc81f19892b7b0b85482f21c875",
+      "S": "25b84a8703bc3d8062b922ca79ad8efb9dbf5b45",
+      "run_id": 43654501551,
+      "job_id": 132629953065,
+      "run_attempt": 1,
+      "selected_test_titles": [
+        "semantic union: portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed"
+      ],
+      "assertion_count_observed": {
+        "R2": 24,
+        "static_original_expect_lines": 72,
+        "note": "Dynamic24calls does not identify24of72literal lines. All72preserved, fulljourneyFAIL."
+      },
+      "source_tree_sha": "N/A: source code anchored by7b37732555b3378f238eee56e0f713e8ae92cae3; exact material composition tree below",
+      "candidate_tree_sha": "0d655fcddbbc708ba7aa01fcdee1c2699f5e9e08",
+      "request_manifest_blob": "f368e4c41c5d05311001960c0af04d282e4fa552",
+      "result_artifact_sha256": "4762e4466be6d8775b91bb5518226703d89e085581ab0f30f447a9efd2d0a29a",
+      "applicability_by_field": {
+        "native_profile_skill_MCP_Atlas_scanner_build": "N/A for component scope, not installed/native acceptance",
+        "case_cohort": "No single resident campaign tuple. Known fixturebefore identities, laterphaseNOT_RUN",
+        "assertion_count": "Only actualBun24calls reported; preserve72staticoraclewithoutclaimingcompleteexecution"
+      },
+      "full_criterion_closed": false
+    }
+  ],
+  "diagnosis": "../findings/P03-FINAL-DIAGNOSIS.json",
+  "closed": false
+}

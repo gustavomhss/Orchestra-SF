@@ -1,0 +1,72 @@
+{
+  "schema": "sf2h.portfolio-final-history.authority-final.v1",
+  "mission": 50,
+  "epoch": "portfolio-history-browser50",
+  "state": "TERMINATED_WITH_P03_FAIL_AND_GATES_PENDING",
+  "recorded_at": "2026-11-14 23:51:11 UTC",
+  "source_branch": "astra-wp13",
+  "source_pr": 37,
+  "terminal_identity": "Git commit containing this file and HANDOFF-FINAL.md",
+  "expected_parent": "561be4643ef901870ba5a6734791129444213ee7",
+  "source_product_commit": "7b37732555b3378f238eee56e0f713e8ae92cae3",
+  "predecessor43": {
+    "terminal": "6f0ac4628f2c8cf99d809a9150ab1dd0e17e5fc4",
+    "explicit_handoff": true
+  },
+  "ACK50": "85191ca90750da1ff494bc2098bf87c6f4f3c297",
+  "control": "f2383d1248a130e05a9e6667516023ecea70389e",
+  "mission50_blob": "97def2dd8b0c9f8dc10dd9e295d755ee636257ec",
+  "consumer": 47,
+  "sole_target_writer": "Root47 on sf2-stack",
+  "target_observed": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+  "authority47_blob": "30c4d74544dfe16a680757f9b9ce86a4a9de6ccf",
+  "compiler_owner": 45,
+  "consumer_ACK": "REQUESTED_NOT_RECEIVED",
+  "write_lease_ended_explicitly": true,
+  "no_silence_takeover": true,
+  "further_source_writes_authorized": false,
+  "further_CI_dispatches_authorized": false,
+  "delivery": {
+    "P02": "FUNCTIONAL_PASS_W1_SELECTIVE_INTAKE_REQUESTED_GATES_PENDING",
+    "P03": "FAIL_HELD_W1_W2",
+    "external_analysis_patch": "INERT_NOT_APPLIED_NOT_TESTED",
+    "typecheck": "NOT_RUN_OWNER45",
+    "guards": "NOT_RUN_OWNER45"
+  },
+  "runs": [
+    {
+      "id": 43653550785,
+      "state": "COMPLETED_FAILURE",
+      "history": "22PASS",
+      "P03": "FAIL",
+      "cleanup": "PASS"
+    },
+    {
+      "id": 43654501551,
+      "state": "COMPLETED_FAILURE",
+      "P03": "FAIL",
+      "cleanup": "PASS"
+    }
+  ],
+  "remote": {
+    "GitHub_MCP": true,
+    "CAS": true,
+    "force": false,
+    "whole_branch_intake": false,
+    "stack_ref_writes": 0,
+    "other_session_ref_writes": 0,
+    "temporary_ci_refs": 2
+  },
+  "local_product_tests": 0,
+  "epic_runs": 0,
+  "timeout_increases": 0,
+  "oracle_weakening": false,
+  "plan_unchanged": {
+    "WPs": 15,
+    "tasks": 74,
+    "criteria": 1610,
+    "T0": "2026-11-13T04:01:10Z"
+  },
+  "full_criteria_promoted": 0,
+  "GLOBAL_RELEASE": false
+}

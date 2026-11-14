@@ -356,7 +356,177 @@
       "request_blob": "f368e4c41c5d05311001960c0af04d282e4fa552",
       "run": 43654501551,
       "job": 132629953065,
-      "result": "IN_PROGRESS"
+      "result": {
+        "status": "FAIL",
+        "tests": 1,
+        "files": 1,
+        "pass": 0,
+        "fail": 1,
+        "errors": 1,
+        "expect_calls": 24,
+        "duration_seconds": 180.19,
+        "test_duration_ms": 180020.75,
+        "budget_ms": 180000,
+        "guard_ms": 180001,
+        "late_status": "stale",
+        "late_reason": "comparison-rule-or-source-changed",
+        "phase": "First omitted evaluateAndStore; full omitted result not admitted",
+        "phases": [
+          {
+            "phase": "compose-before:start",
+            "elapsedMs": 5507,
+            "criterionEvaluations": {
+              "calls": 0,
+              "completed": 0,
+              "totalElapsedMs": 0,
+              "maximumElapsedMs": 0
+            }
+          },
+          {
+            "phase": "compose-before:complete",
+            "elapsedMs": 28187,
+            "criterionEvaluations": {
+              "calls": 12,
+              "completed": 12,
+              "totalElapsedMs": 18242,
+              "maximumElapsedMs": 1544
+            }
+          },
+          {
+            "phase": "baseline:start",
+            "elapsedMs": 28187,
+            "criterionEvaluations": {
+              "calls": 12,
+              "completed": 12,
+              "totalElapsedMs": 18242,
+              "maximumElapsedMs": 1544
+            }
+          },
+          {
+            "phase": "baseline:complete",
+            "status": "ok",
+            "elapsedMs": 43213,
+            "criterionEvaluations": {
+              "calls": 20,
+              "completed": 20,
+              "totalElapsedMs": 30266,
+              "maximumElapsedMs": 1544
+            }
+          },
+          {
+            "phase": "omitted:start",
+            "elapsedMs": 43213,
+            "criterionEvaluations": {
+              "calls": 20,
+              "completed": 20,
+              "totalElapsedMs": 30266,
+              "maximumElapsedMs": 1544
+            }
+          },
+          {
+            "phase": "omitted:complete",
+            "status": "stale",
+            "elapsedMs": 180015,
+            "criterionEvaluations": {
+              "calls": 104,
+              "completed": 104,
+              "totalElapsedMs": 164328,
+              "maximumElapsedMs": 3065
+            }
+          },
+          {
+            "phase": "finally",
+            "elapsedMs": 180015,
+            "criterionEvaluations": {
+              "calls": 104,
+              "completed": 104,
+              "totalElapsedMs": 164328,
+              "maximumElapsedMs": 3065
+            }
+          }
+        ],
+        "trace": {
+          "label": "renewal-choice-history",
+          "phase": "prepare:transition-omitted:complete",
+          "elapsedMs": 180001,
+          "budgetMs": 180000,
+          "status": "deadline-exceeded",
+          "counts": {
+            "c08.read.cases": {
+              "calls": 9721,
+              "elapsedMs": 54946,
+              "maximumMs": 20
+            },
+            "host.revalidate": {
+              "calls": 118210,
+              "elapsedMs": 897,
+              "maximumMs": 3
+            },
+            "operation-source": {
+              "calls": 31888,
+              "elapsedMs": 1155,
+              "maximumMs": 3
+            },
+            "operation-coverage": {
+              "calls": 16809,
+              "elapsedMs": 141,
+              "maximumMs": 4
+            },
+            "c08.read.preferences": {
+              "calls": 96,
+              "elapsedMs": 441,
+              "maximumMs": 8
+            },
+            "c08.transaction.preferences": {
+              "calls": 3,
+              "elapsedMs": 56,
+              "maximumMs": 27
+            },
+            "classified-source": {
+              "calls": 39,
+              "elapsedMs": 1,
+              "maximumMs": 1
+            },
+            "classified-coverage": {
+              "calls": 41,
+              "elapsedMs": 818,
+              "maximumMs": 32
+            },
+            "c08.transaction.cases": {
+              "calls": 6,
+              "elapsedMs": 182,
+              "maximumMs": 35
+            },
+            "planner.verifySourceOnly": {
+              "calls": 3770,
+              "elapsedMs": 6369,
+              "maximumMs": 7
+            },
+            "planner.verifyOperation": {
+              "calls": 3770,
+              "elapsedMs": 47663,
+              "maximumMs": 20
+            },
+            "planner.verifySourceProjection": {
+              "calls": 7540,
+              "elapsedMs": 4978,
+              "maximumMs": 5
+            }
+          }
+        },
+        "control": {
+          "nonce": "4ab232635d8483ea310eea89eee3004e",
+          "nonce_count": 1,
+          "verdict_count": 1,
+          "verdict": "2026-11-14T23:46:27.3064145Z omni positive control [4ab232635d8483ea310eea89eee3004e]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+          "valid": true
+        },
+        "run": 43654501551,
+        "job": 132629953065,
+        "cleanup_job": 132631165881,
+        "cleanup": "PASS",
+        "post_deadline_status_not_independent_corruption": true
+      }
     },
     "evidence_scope": "R1 qualifies22history tests atW1; R2 selectsP03 only atW2. No claim of combined23-test PASS atW2."
   },
@@ -367,5 +537,23 @@
   },
   "consumer_ACK": "REQUESTED_BY_ARTIFACT_NOT_RECEIVED",
   "source_pass_is_integrated_acceptance": false,
-  "GLOBAL_RELEASE": false
+  "GLOBAL_RELEASE": false,
+  "latest_target_reconciliation": {
+    "commit": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+    "tree": "647569d14e2f01959b17d4245bfbf0485c32fa8c",
+    "symbol": "C19 Memory40",
+    "authority47_blob": "30c4d74544dfe16a680757f9b9ce86a4a9de6ccf",
+    "all_three_patch_preimages_match": true,
+    "all28_kept_blobs_match": true,
+    "Finance34_unchanged_from_C18": true,
+    "proof_limit": "Preimage compatibility only; W1/W2 based onC18, no PASS transferred toC19.47 alone forms nextintegratedcandidate."
+  },
+  "disposition": {
+    "P02": "FUNCTIONAL_FINDING_CLOSED_ON_W1; two-path patch available for47 selective intake, required45 gates and new integrated acceptance pending",
+    "P03": "FAIL_HELD; owned fixture scope correction and diagnostics preserved; no successful full semantic qualification",
+    "selectable_patch": "R1-complete.patch contains only proof.ts and history-provenance.test.ts",
+    "full_owned_patch": "complete.patch also contains the P03 fixture correction, explicitly HELD",
+    "external_proposal": "../external/analysis-owner/analysis-read-before-bind.patch is inert, not applied, not tested, and not a demonstrated timeout fix",
+    "consumer": "47 must reconcile exact preimages and own any sf2-stack CAS; source50 stops at terminal handoff"
+  }
 }

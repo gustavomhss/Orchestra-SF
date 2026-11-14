@@ -1,0 +1,79 @@
+{
+  "schema": "sf2h.portfolio-final-history.artifact-index.v1",
+  "mission": 50,
+  "terminal_identity": "Containing Git commit",
+  "source_product": "7b37732555b3378f238eee56e0f713e8ae92cae3",
+  "code": {
+    "proof": "d99af3b43388b510e510908fff2371a34b57eee1",
+    "history": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+    "P03_fixture": "82adc95c5eeb8573e1e96cef255b4d26fbff9be7",
+    "read_snapshot": "095a0e5764e115fb874a5f5c0c16a9c73466c340"
+  },
+  "candidates": [
+    {
+      "id": "W1",
+      "sha": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+      "tree": "47e2d418566704e49c70286bf32e05e01feb9218",
+      "S": "c2bb42ba3f1be357b51045f4d827911b86596847",
+      "request": "7abd4938446bf3d555440a26924629602fd903d0"
+    },
+    {
+      "id": "W2",
+      "sha": "9d857d51f18e0dc81f19892b7b0b85482f21c875",
+      "tree": "0d655fcddbbc708ba7aa01fcdee1c2699f5e9e08",
+      "S": "25b84a8703bc3d8062b922ca79ad8efb9dbf5b45",
+      "request": "f368e4c41c5d05311001960c0af04d282e4fa552"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "criteria68.json",
+      "git_blob": "6af741c2487b1e2da28164c5644bbd6e07c8af00",
+      "criteria": 68,
+      "original_reconstruction_verified": true
+    },
+    {
+      "path": "logs/R1.log.txt",
+      "git_blob": "3585b6d38a0adb65bc766476e9c08cfacf21c29e",
+      "sha256": "8c41459fdc43db360863ad3a72477abcb7a3ef91818ecb2d15d0352a0215411e",
+      "bytes": 78215
+    },
+    {
+      "path": "logs/R2.log.txt",
+      "git_blob": "2af0e21bff7b7c50f59957279ab50d5adea83a4c",
+      "sha256": "4762e4466be6d8775b91bb5518226703d89e085581ab0f30f447a9efd2d0a29a",
+      "bytes": 73993
+    },
+    {
+      "path": "integration/R1-complete.patch",
+      "sha256": "f4f646fd0df5340808944215a446ecf2f4d5e480bb607138994fd4d38205ae79",
+      "scope": "P02 two target paths"
+    },
+    {
+      "path": "integration/complete.patch",
+      "sha256": "0dca24a0bddf2608300ed219682bde5d1ea6283e1740c9251832fb472dcbc7f2",
+      "scope": "Three owned target paths; P03 remains HELD"
+    },
+    {
+      "path": "external/analysis-owner/analysis-read-before-bind.patch",
+      "sha256": "15d0fca888dfc22de47af6a61d19d434562f6fd788b8312e85c164dd5f381355",
+      "preblob": "347d1c97952167523f9b2b04f1ab4fac7178cc9a",
+      "postblob": "9478bca5458f4c796d31f8ec09045b5733125ae7",
+      "scope": "Inert proposal only, not applied/tested"
+    }
+  ],
+  "navigation": [
+    "HANDOFF-FINAL.md",
+    "AUTHORITY-FINAL.json",
+    "CONSUMER-RELEASE.json",
+    "ci/LEDGER.json",
+    "receipts/P02.json",
+    "receipts/P03.json",
+    "findings/P03-FINAL-DIAGNOSIS.json",
+    "checks/REQUEST-45.json",
+    "integration/manifest.json",
+    "external/analysis-owner/manifest-review.json"
+  ],
+  "evidence_rule": "Exact W/S evidence only; no integrated or whole-criterion acceptance inferred",
+  "GLOBAL_RELEASE": false
+}

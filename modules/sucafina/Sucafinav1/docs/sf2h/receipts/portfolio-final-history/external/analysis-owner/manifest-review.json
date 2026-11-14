@@ -1,0 +1,202 @@
+{
+  "schema": "mission50-inert-owner-proposal-v1",
+  "proposal_id": "WP13-ANALYSIS-READ-EXISTING-BINDING",
+  "state": "INERT_NOT_APPLIED_NOT_TESTED",
+  "publication_condition": "R2 remained FAIL. Delivered to47 for routing to the current analysis.ts owner; not a demonstrated fix for the measured stop.",
+  "repository": "gustavomhss/Orchestra-SF",
+  "mission": 50,
+  "source_pr": 37,
+  "target_file": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+  "path_authority": {
+    "inside_mission50_product_write_paths": false,
+    "mission50_may_apply": false,
+    "integration_owner": "session47",
+    "code_owner": "Owner of product/portfolio/analysis.ts, to be reconciled by root/session47 before any write",
+    "delivery": "An inert full patch may be delivered under mission50 receipt paths. Only the authorized owner may apply to its current preimage via the authorized MCP/CAS route.",
+    "outside_paths_unchanged": true
+  },
+  "base": {
+    "C18": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+    "W1": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+    "same_file_blob_on_C18_and_W1_verified": true,
+    "preblob": "347d1c97952167523f9b2b04f1ab4fac7178cc9a",
+    "postblob": "9478bca5458f4c796d31f8ec09045b5733125ae7",
+    "pre_sha256": "03950652bd05ed49c9f3a6b77fc51b77a7849d64a0404cde257e3df7d9d9dd2a",
+    "post_sha256": "d2499787fad9606d9752eed87f3639accd9787c80c5a1c0151a897d6453432d7",
+    "pre_bytes": 9225,
+    "post_bytes": 9201
+  },
+  "patch": {
+    "path": "analysis-read-before-bind.patch",
+    "format": "Complete git unified diff with one file/one line, six unchanged context lines around the edit, full pre/post Git blob IDs.",
+    "sha256": "15d0fca888dfc22de47af6a61d19d434562f6fd788b8312e85c164dd5f381355",
+    "bytes": 2093,
+    "changed_files": 1,
+    "removed_lines": 1,
+    "added_lines": 1,
+    "change": {
+      "line": 68,
+      "pre": "      const previousBinding = resultRef ? await input.bindings.read({ caseRef: selected.caseRef, resultRef: saved.value.resultRef }, context) : undefined",
+      "post": "      const previousBinding = await input.bindings.read({ caseRef: selected.caseRef, resultRef: saved.value.resultRef }, context)"
+    },
+    "preimage_file": "analysis.pre.ts",
+    "postimage_file": "analysis.proposed.ts"
+  },
+  "read_sources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "ref": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+      "blob": "347d1c97952167523f9b2b04f1ab4fac7178cc9a",
+      "read": "full"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "ref": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+      "blob": "347d1c97952167523f9b2b04f1ab4fac7178cc9a",
+      "read": "full response fetched; exact content equality with full-read C18 verified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "ref": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+      "blob": "1d750c4d699eb27acd2b5066d23b66307f5ae931",
+      "read": "full"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+      "ref": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+      "blob": "dbd02e2d4d15ca2b866179759d38a0066e6550dc",
+      "read": "full"
+    }
+  ],
+  "static_diagnosis": {
+    "observed_code": "For a new comparison, resultRef is undefined because readByRequest returned no prior result. Successful persist can already create and validate its criterion binding, but analysis uses the pre-persist resultRef to decide whether to read that binding; it therefore skips the read and calls bind again.",
+    "persistence_behavior": "With rules and comparisonBindings present, createPlannerResultPersistence calls bindings.bind after storing, runs its current validation, and calls bindings.read before returning ok. Bind itself returns read after its transaction.",
+    "contract_limit": "The persistence type does not guarantee that every injected implementation/configuration binds. The proposed unconditional read may return non-ok; the existing fallback bind branch remains byte-for-byte unchanged.",
+    "proposed_behavior": "Always ask the canonical bindings.read whether the stored result already has a currently valid binding before deciding to bind. Valid existing binding skips the redundant write attempt; absence or any non-ok status follows the same existing bind branch.",
+    "runtime_cause_not_proven": "This static call-graph finding does not establish that the duplicate bind caused R1/R2 timeout or any runtime failure."
+  },
+  "preserved_code_and_checks": {
+    "only_previousBinding_assignment_changed": true,
+    "conditional_bind_branch_unchanged": true,
+    "redundant_undefined_guard_left_unchanged_for_minimality": true,
+    "post_bind_or_reuse_binding_read_unchanged": true,
+    "request_and_rules_digest_comparison_unchanged": true,
+    "selectionAgain_unchanged": true,
+    "revalidate_function_unchanged": true,
+    "revalidate_invocation_unchanged": true,
+    "stored_result_identity_case_and_digest_checks_unchanged": true,
+    "historical_scenario_checks_unchanged": true,
+    "canonical_planner_comparison_and_replay_unchanged": true,
+    "authority_and_snapshot_implementations_unchanged": true,
+    "read_not_replaced_by_cache_or_raw_state": true,
+    "no_source_oracle_budget_or_assertion_edits": true
+  },
+  "cost_review": {
+    "basis": "Static count of criterion-comparison.ts validate(binding) invocations in the analysis segment after persist and stored-result admission, excluding unchanged persistence work, later analysis.revalidate and all other call paths. Each successful bindings.read runs validate twice. A successful bindings.bind runs validate once before transaction, then returns read which runs validate twice.",
+    "scenarios": [
+      {
+        "scenario": "New comparison already bound by persist; redundant bind succeeds",
+        "before": "bind:1 validate + internal read:2 validates; mandatory later read:2 validates",
+        "after": "new preliminary read:2 validates; unchanged later read:2 validates",
+        "before_validate_count": 5,
+        "after_validate_count": 4,
+        "net_validate_reduction": 1,
+        "other_removed_work": "Pre-bind proofs/result admission, case/preferences setup, operation-identity check and redundant transaction attempt in the duplicate bind. Existing first binding persistence and all final checks remain.",
+        "limit": "This is one full validate chain saved, not removal of both reads. No elapsed-time saving has been measured."
+      },
+      {
+        "scenario": "Previously persisted comparison found by readByRequest",
+        "before": "preliminary read plus mandatory later read",
+        "after": "same preliminary read plus same later read",
+        "before_validate_count": 4,
+        "after_validate_count": 4,
+        "net_validate_reduction": 0,
+        "limit": "The old resultRef-truthy path already reused valid binding through this read pattern."
+      },
+      {
+        "scenario": "New comparison with no binding from persist",
+        "before": "bind followed by later read",
+        "after": "preliminary read reports absence, then identical bind followed by identical later read",
+        "before_validate_count": 5,
+        "after_validate_count": 5,
+        "net_validate_reduction": 0,
+        "other_added_work": "Extra missing-binding probe: host authorization/revalidation and preference state read, normally returning before validate when the binding is absent.",
+        "limit": "Invalid/stale rather than absent binding may make the new probe run one or two validations before fallback; this path can cost more, and no speedup is asserted."
+      }
+    ],
+    "transaction_limit": "If duplicate bind does not obtain an idempotent successful replay, its existing-key/transaction path may instead fail. This artifact does not claim a measured outcome or alter transaction semantics."
+  },
+  "risk_review": [
+    {
+      "risk": "Canonical read success must mean a currently valid binding",
+      "assessment": "The actual read validates source/current authority, schema and request/binding digests, stored result/case, rule proofs, evaluator results and verifyBinding, then repeats state/result validation and host revalidation. It is not an unchecked presence probe.",
+      "preserved_backstop": "The unchanged subsequent read, rule/request digest comparison, selectionAgain and entire revalidate remain required before returning ok."
+    },
+    {
+      "risk": "Skip a second bind with operationIdentity/authorizeCase-specific work",
+      "assessment": "The optimization reuses only a binding accepted by the canonical read, matching the existing previously-persisted-result branch. The normal new comparison path already passed the persist binding authority checks. An injected persist that does not bind still falls back to bind if read is non-ok.",
+      "owner_review_required": "Owner should confirm intended read-versus-bind authority semantics for alternate injected implementations; the proposal does not authorize a weaker bindings.read."
+    },
+    {
+      "risk": "Race between preliminary read and final admission",
+      "assessment": "No stable-cache shortcut is introduced. The mandatory subsequent binding read, selectionAgain and two-pass revalidate with canonical replay remain unchanged. Concurrent revocation/change must still be rejected by those checks.",
+      "limit": "Static preservation is not a new concurrency test result."
+    },
+    {
+      "risk": "Ownership and active candidate",
+      "assessment": "analysis.ts is outside mission50 write_paths. It must not be edited on astra-wp13 by50 or directly on47 branch by50.",
+      "owner_review_required": "Reconcile current owner/current blob before apply; if preblob differs, stop blind application and review an adapted minimal diff. Any owner-applied code change creates a new candidate requiring its affected authorized qualification."
+    },
+    {
+      "risk": "Timeout attribution",
+      "assessment": "No profiling, product execution, typecheck or CI dispatch was performed. The180000ms semantic budget and all72 assertions remain untouched.",
+      "limit": "This patch is not evidence that P03 passes or that180s is sufficient. If R2 fails before this segment, the duplicate-bind change is not a demonstrated fix for that failure."
+    }
+  ],
+  "qualification_if_owner_applies": [
+    "Confirm exact preimage or reviewed rebase on the current owned branch with CAS, preserving all47/other-session work.",
+    "Use existing authorized surgical Actions with run dedup, preserving assertions/producers/budgets; never claim this artifact is an executed result.",
+    "Observe reuse when persist already bound, fallback when persist did not bind, and preserved denials for changed source/rules/binding/selection.",
+    "Qualify the actual resulting W/S and diagnose any failure before another repeat. Coordinate any required gate with45.",
+    "Report only scope actually observed; no promotion of full criteria, P01,19KEEP_CURRENT,CurrentChoice46 or integrated acceptance."
+  ],
+  "verification": {
+    "kind": "Local deterministic source-line equality, JSON preparation and Git blob/SHA256 hashing only",
+    "remote_reads_only": true,
+    "full_preimage_blob_matches_expected": true,
+    "one_line_change_verified": true,
+    "all_other_lines_equal": true,
+    "patch_applied_to_repository": false,
+    "git_apply_check_run": false,
+    "typecheck_run": false,
+    "local_product_tests_run": false,
+    "remote_tests_dispatched": false,
+    "remote_writes": false,
+    "performance_measured": false,
+    "criteria_promoted": 0
+  },
+  "observed_R2": {
+    "W": "9d857d51f18e0dc81f19892b7b0b85482f21c875",
+    "S": "25b84a8703bc3d8062b922ca79ad8efb9dbf5b45",
+    "run": 43654501551,
+    "job": 132629953065,
+    "status": "FAIL",
+    "test_duration_ms": 180020.75
+  },
+  "remaining_limitation": "The guard may fire in the final bindings.read inside persist before analysis.previousBinding is reached. No timing benefit or full semantic PASS is established by this patch.",
+  "route": {
+    "consumer": 47,
+    "current_producer_owner": "To be resolved explicitly by47/S0;50 has no authority over analysis.ts",
+    "related_producers": [
+      "product/decisions/criterion-comparison.ts",
+      "product/planner/persistence.ts"
+    ]
+  },
+  "independent_cold_review": {
+    "reviewer": "review_p02",
+    "approved": "INERT_FORWARDING_ONLY",
+    "qualified": false,
+    "originalChecksPreserved": true,
+    "shared_path_written": false
+  }
+}
