@@ -1,0 +1,80 @@
+{
+  "schema": "operations-mount-boundary-source-run-v1",
+  "attempt": 3,
+  "W": "49d29bf4d6512d130307f46e145885949f213ea8",
+  "W_tree": "0d982446f0708975895b59fad3c94d0a53704f58",
+  "S": "ca244e5b74ebb2f9a20262b4e7448aa7d528a15b",
+  "S_tree": "ef240283c9315de412208a1a24e5a1169b735b10",
+  "branch": "ci-run-linux-astra-wp04-49d29bf4-c3cb131600-m24b3",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "@orchestra/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "request_sha256": "c3cb1316006809204c675213e6a7789fe66bb6c7df0325c2af1584d7738c90a6",
+  "envelope": {
+    "w_tree": "0d982446f0708975895b59fad3c94d0a53704f58",
+    "s_tree": "ef240283c9315de412208a1a24e5a1169b735b10",
+    "changed_non_request": [],
+    "missing": [],
+    "request": {
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ff67d3e579dcbf96010db2b529f457771459357c",
+      "size": 274,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/ff67d3e579dcbf96010db2b529f457771459357c"
+    }
+  },
+  "run_id": 43641173533,
+  "job_id": 132588862088,
+  "conclusion": "failure",
+  "selected": 5,
+  "executed": 5,
+  "passed": 3,
+  "failed": 2,
+  "expect_calls": 39,
+  "duration_ms": 633,
+  "tests": [
+    {
+      "name": "Operations mount denies unauthenticated workbenches without changing source data",
+      "result": "FAIL",
+      "cause": "Source W retains import-http f500c9ab/document-http fbb76f54 without workbench routes; response falls through to legacy page401. Target composed input provides72196e5d/8f679dee; do not relax403 assertion."
+    },
+    {
+      "name": "Operations mount serves the real Planner and import/document workbenches",
+      "result": "FAIL",
+      "cause": "Same old source HTTP adapters decline sf=imports; ordinary Planner Overview returned."
+    },
+    {
+      "name": "Operations viewer has no human import or document mutation authority",
+      "result": "PASS"
+    },
+    {
+      "name": "Operations source admission rejects an unissued selector and a revoked credential",
+      "result": "PASS"
+    },
+    {
+      "name": "Operations private upload fails closed with no scanner and preserves the source",
+      "result": "PASS",
+      "proof": "Real Settings/save configured16777216-byte cap. No-scanner path produced exact scanner422 JSON; complete source snapshot remained unchanged."
+    }
+  ],
+  "omni_positive_control": {
+    "result": "not applicable (focused: no declaring test ran)",
+    "spawn_count": 0,
+    "qualification": "No Omni execution proof"
+  },
+  "scope": "Auxiliary real service tests against own source lineage. Not the composed product input; no nominal UI PASS transfer.",
+  "next": "No further rerun on old source-only adapters. Session23 must intake final own code and shared patch into the published composition, then run full seven regression tests and five nominal UI journeys.",
+  "artifacts": [],
+  "artifact_policy": "Existing Bun workflow emits job logs but uploads no test artifact. Structured per-case results and exact run/job identity are preserved here; raw logs remain at the canonical Actions job.",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43641173533/job/132588862088"
+}
