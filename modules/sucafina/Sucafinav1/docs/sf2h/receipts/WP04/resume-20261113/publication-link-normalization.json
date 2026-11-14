@@ -1,0 +1,723 @@
+{
+  "schema": "sf2h.wp04.publication-link-normalization.v1",
+  "method": "Publication-only link adaptation with preserved original source bytes; no product/test/runtime execution",
+  "historical_code_commit": "0506d7c72767249e6482a8c9137df5fef07f0ea0",
+  "handoff_pin": "c4bd6592718b3862afbc7bb601c001365e593c20",
+  "records": [
+    {
+      "original_source": "review/WP04-final-shared-seams.md",
+      "original_sha256": "e987613fa718599043770f45e687ac2d99a182905a8ea0fc645b11d38cf8d4d0",
+      "normalized_source": "review/publication-normalized/WP04-final-shared-seams.md",
+      "normalized_sha256": "1cb20e21fe426e2d00791a0045e1b4b7be43ba2c2bd91fedc6b4c1fb7fd1e6d6",
+      "original_unchanged": true,
+      "links_adapted": 136,
+      "rewrites": [
+        {
+          "source_locator": "repo/apps/cli/src/sucafina-product/analysis-verifier-intent.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/apps/cli/src/sucafina-product/analysis-verifier-intent.ts"
+        },
+        {
+          "source_locator": "repo/apps/cli/src/sucafina-product/analysis-verifier-procurement.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/apps/cli/src/sucafina-product/analysis-verifier-procurement.ts"
+        },
+        {
+          "source_locator": "repo/apps/cli/src/sucafina-product/business-services.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/apps/cli/src/sucafina-product/business-services.ts"
+        },
+        {
+          "source_locator": "repo/apps/cli/src/sucafina-product/host-context.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/apps/cli/src/sucafina-product/host-context.ts"
+        },
+        {
+          "source_locator": "repo/apps/cli/src/sucafina-product/import-services.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/apps/cli/src/sucafina-product/import-services.ts"
+        },
+        {
+          "source_locator": "repo/apps/cli/src/sucafina-product/sourcing-inputs.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/apps/cli/src/sucafina-product/sourcing-inputs.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/local/entry.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/local/entry.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/contracts/state.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/contracts/state.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/decisions/apply.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/decisions/proposals.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/decisions/proposals.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/interface/analysis-http.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/interface/http.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/interface/import-http.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/planner/headcount.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/planner/headcount.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/planner/monthly-host.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/planner/monthly-host.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/planner/persistence.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/planner/prepared.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/planner/prepared.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/portfolio/catalog.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/portfolio/handoff.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/portfolio/port.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/routines/capabilities.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/routines/dossier.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/routines/dossier.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/routines/factory.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/routines/factory.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/routines/publication.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/routines/publication.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/runtime/application.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/runtime/application.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/runtime/contract.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/runtime/downloads.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/runtime/downloads.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/src/screen-shell.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/src/screen-shell.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts"
+        },
+        {
+          "source_locator": "repo/packages/app-shell/e2e/playwright.production.config.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/packages/app-shell/e2e/playwright.production.config.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/procurement/README.md",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/procurement/README.md"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/procurement/guided-request.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/procurement/guided-request.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/procurement/http-body.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/procurement/http-body.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/procurement/monetary.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/procurement/queue-page.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/procurement/queue-page.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/procurement/queue-view.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/procurement/queue-view.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/procurement/sources.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/product/procurement/sourcing-input-http.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/product/procurement/sourcing-input-http.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/runtime/procurement.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp04/contracts.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp04/contracts.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp04/queue-lifecycle.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp04/queue-view.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp04/queue-view.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp04/ui-browser-selection.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp04/ui-browser-selection.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp04/ui-conflict.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp04/ui-conflict.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp04/ui-guidance.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/test/product/wp04/ui-supplier.test.ts"
+        },
+        {
+          "source_locator": "repo/packages/app-shell/e2e/sucafina/wp04/host.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/packages/app-shell/e2e/sucafina/wp04/host.ts"
+        },
+        {
+          "source_locator": "repo/packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/packages/app-shell/e2e/sucafina/wp04/procurement.spec.ts"
+        },
+        {
+          "source_locator": "repo/packages/app-shell/e2e/sucafina/wp04/selection.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/packages/app-shell/e2e/sucafina/wp04/selection.ts"
+        },
+        {
+          "source_locator": "repo/packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/packages/app-shell/e2e/sucafina/wp04/sourcing-controller.spec.ts"
+        },
+        {
+          "source_locator": "manifest-w3.json",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "manifest-w4.json",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "manifest-w5.json",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "manifest-w6.json",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "identity-w3.json",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "identity-w4.json",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "identity-w5.json",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "review/w3-check.log",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "identity-w6.json",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "equality-w6-bun.json",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "handoff/WP04.pack.json",
+          "mode": "immutable-handoff-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/c4bd6592718b3862afbc7bb601c001365e593c20/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP04.pack.json"
+        },
+        {
+          "source_locator": "handoff/WP04.seed.json",
+          "mode": "immutable-handoff-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/c4bd6592718b3862afbc7bb601c001365e593c20/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP04.seed.json"
+        },
+        {
+          "source_locator": "handoff/WP04.previous.json",
+          "mode": "immutable-handoff-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/c4bd6592718b3862afbc7bb601c001365e593c20/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP04.previous.json"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/HANDOFF.md",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/HANDOFF.md"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/integration-requests.md",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/integration-requests.md"
+        },
+        {
+          "source_locator": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/WP04-integration-review.md",
+          "mode": "immutable-W6-source",
+          "published_target": "https://github.com/gustavomhss/Orchestra-SF/blob/0506d7c72767249e6482a8c9137df5fef07f0ea0/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/WP04-integration-review.md"
+        },
+        {
+          "source_locator": "review/WP04-ui-ownership-delta.md",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "review/WP04-INT02-03-followup.md",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "review/typecheck-triage.md",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "review/finance-surgical-selection.json",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "review/w6-g5-export-coverage.json",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "review/w4-bun.log",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "review/w5-bun.log",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "review/w6-bun.log",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "review/w6-check.log",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "review/wp04-codegen-5cde6bbb.zip",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "review/final-review/WP04-independent-review-W6.md",
+          "mode": "published-review-sibling",
+          "published_target": "independent-review-W6.md"
+        },
+        {
+          "source_locator": "review/final-review/WP04-independent-review-W6-hashes.json",
+          "mode": "published-review-sibling",
+          "published_target": "independent-review-W6-hashes.json"
+        },
+        {
+          "source_locator": "review/final-review/WP04-independent-review-W6-addendum.md",
+          "mode": "published-review-sibling",
+          "published_target": "independent-review-W6-addendum.md"
+        },
+        {
+          "source_locator": "review/final-review/WP04-independent-review-W6-addendum-hashes.json",
+          "mode": "published-review-sibling",
+          "published_target": "independent-review-W6-addendum-hashes.json"
+        }
+      ]
+    },
+    {
+      "original_source": "review/final-review/WP04-delivery-builder-review.md",
+      "original_sha256": "e87bb63e7abb380819fb89dae11a28a2065b1af3ef8914f2e42eb361deaad02f",
+      "normalized_source": "review/publication-normalized/WP04-delivery-builder-review.md",
+      "normalized_sha256": "52a16a3647f51977e0eaca77bc9bb6d063506c28c74653609d20c07017b87daa",
+      "original_unchanged": true,
+      "links_adapted": 3,
+      "rewrites": [
+        {
+          "source_locator": "review/build-delivery-receipts.py",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "review/final-evidence-input.pending.json",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        },
+        {
+          "source_locator": "review/final-acceptance-candidate.json",
+          "mode": "historical-unpublished-work-locator",
+          "published_target": null
+        }
+      ]
+    }
+  ]
+}

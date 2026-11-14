@@ -1,0 +1,383 @@
+{
+  "schema": "sf2h.wp04.final-scoped-ci-evidence.v1",
+  "product_commit": "dae18b4f43f0daecf46264e876810025684a919d",
+  "product_tree": "ceb9615bb5bbd5f829d2e9569a2797e3124236a5",
+  "base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+  "pr_url": "https://github.com/gustavomhss/Orchestra-SF/pull/23",
+  "status": "PASS_SCOPED_WITH_14_EXPLICIT_PROOF_LIMITS",
+  "global_qualification": false,
+  "runs": {
+    "bun": {
+      "id": "ci_bun",
+      "run_id": 43534137756,
+      "job_id": 132258880150,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534137756",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534137756/job/132258880150",
+      "conclusion": "success",
+      "product_commit": "dae18b4f43f0daecf46264e876810025684a919d",
+      "product_tree": "ceb9615bb5bbd5f829d2e9569a2797e3124236a5",
+      "snapshot_commit": "846cc5aa5c4e1413e741d4de06bd0f53238f34ed",
+      "snapshot_tree": "b1e1223088f5590f3bae95f04cdabc1214760413",
+      "selection": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp04/capabilities.test.ts",
+          "Sucafinav1/test/product/wp04/comparison-review.test.ts",
+          "Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+          "Sucafinav1/test/product/wp04/confirmation.test.ts",
+          "Sucafinav1/test/product/wp04/contracts.test.ts",
+          "Sucafinav1/test/product/wp04/money.test.ts",
+          "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+          "Sucafinav1/test/product/wp04/projection.test.ts",
+          "Sucafinav1/test/product/wp04/reissue.test.ts",
+          "Sucafinav1/test/product/wp04/sources.test.ts",
+          "Sucafinav1/test/product/wp04/finance-material.test.ts",
+          "Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+          "Sucafinav1/test/product/wp04/queue-lifecycle.test.ts",
+          "Sucafinav1/test/product/wp04/queue-view.test.ts",
+          "Sucafinav1/test/product/wp04/ui-guidance.test.ts",
+          "Sucafinav1/test/product/wp04/ui-queues.test.ts",
+          "Sucafinav1/test/product/wp04/ui-supplier.test.ts",
+          "Sucafinav1/test/parity-procurement.test.ts",
+          "Sucafinav1/test/procurement-runtime.test.ts",
+          "porta/codigo.test.ts",
+          "porta/linha.test.ts",
+          "porta/s3.test.ts",
+          "Sucafinav1/test/product/wp01/personal-views.test.ts",
+          "Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+          "Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+          "Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+          "Sucafinav1/test/product/wp07/review-port.test.ts",
+          "Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+          "Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+          "Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+          "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+          "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+          "Sucafinav1/test/product/wp12/author-reader.test.ts",
+          "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+          "Sucafinav1/test/product/wp03/port.test.ts",
+          "Sucafinav1/test/product/wp03/monthly-host.test.ts",
+          "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+          "Sucafinav1/test/product/wp03/persistence.test.ts",
+          "Sucafinav1/test/product/wp13/handoff.test.ts",
+          "Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+          "Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+          "Sucafinav1/test/product/wp04/ui-browser-selection.test.ts",
+          "Sucafinav1/test/product/wp04/ui-conflict.test.ts",
+          "Sucafinav1/test/product/wp04/host-integration.test.ts",
+          "Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+          "Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+          "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+          "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+          "Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+          "Sucafinav1/test/product/wp00/contracts.test.ts",
+          "Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts"
+        ],
+        "env": {}
+      },
+      "selected_file_count": 53,
+      "request_file": "ci-request-bun.json",
+      "equality_file": "product-snapshot-equality-bun.json",
+      "request_sha256": "e9b78891571f62a3196aaad680e9e4614212a831188269d971918ba111211c7c",
+      "equality_sha256": "c96f1660f88e3d386568926d4509a3a3cfcc0ec13ade16292800c0fffb8d6880",
+      "log_sha256": "c728ea937c9cd0b4f27f3d06634ebb784acbd426438ba54bf9cdfc33cad2379d",
+      "counts": {
+        "pass": 257,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "summary": {
+        "tests": 257,
+        "files": 53,
+        "duration": "221.91s"
+      },
+      "expect_calls": 2763,
+      "structured_results_sha256": "d924cfcf3751a9e27980d4949edd2c1010e905b54aebc0535d5f038ca2a1b1f6",
+      "log_reparsed_by_builder": true,
+      "artifact": null,
+      "omni_control": {
+        "validator": "script/test-ci-request.ts:controlVerdict",
+        "accepted": true,
+        "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+        "native_qualification": false
+      }
+    },
+    "browser": {
+      "id": "ci_browser",
+      "run_id": 43534795463,
+      "job_id": 132261059694,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/job/132261059694",
+      "conclusion": "success",
+      "product_commit": "dae18b4f43f0daecf46264e876810025684a919d",
+      "product_tree": "ceb9615bb5bbd5f829d2e9569a2797e3124236a5",
+      "snapshot_commit": "23f527266a8bf0da2c015624d40db417e2d9bb80",
+      "snapshot_tree": "c8dd17cd3ae19942584b25bfd4e9f079cfeaa0b0",
+      "selection": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/wp04/procurement.spec.ts",
+          "e2e/sucafina/wp04/sourcing-controller.spec.ts"
+        ],
+        "env": {},
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "selected_file_count": 2,
+      "request_file": "ci-request-browser.json",
+      "equality_file": "product-snapshot-equality-browser.json",
+      "request_sha256": "ad49882dad4ab9cacfbf0609ab0ab3b526d8db4cc0d3f24dc3d941605fbda884",
+      "equality_sha256": "804ecb02c0900ac159cfe7863d1b48212125a97cae04914162c33de623460df1",
+      "log_sha256": "15f2aa0792deb494c6a4a673634a08de659d143ca1a00ee2ece6acf120d4dc7f",
+      "artifact": {
+        "id": 14088094597,
+        "name": "playwright-ubuntu-24.04-1",
+        "digest": "sha256:379a94caec10edce2da7afb7f5d0e376eaefbb05f92db93c7cf535962b0c6d84",
+        "verified_sha256": "379a94caec10edce2da7afb7f5d0e376eaefbb05f92db93c7cf535962b0c6d84",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534795463/artifacts/14088094597",
+        "archive_verification": "Builder independently hashed the actual downloaded ZIP, matched digest/name/id/run URL to one hosted upload block, and bound the evidence/attachment bytes to exact members of this archive."
+      },
+      "counts": {
+        "pass": 10,
+        "fail": 0,
+        "skip": 0,
+        "retry": 0
+      },
+      "report_sha256": "fddd3f2b58bbb7f61d0517427a9fc3c922cab8888a33b673574bed31217a7500",
+      "selection_report_sha256": "838c2b85aa81baf9d7694805d42b5800f866716ae9b10e31b029cb0e9a7f5703",
+      "observations_sha256": "d1edc4136bd29cba48e4215fc00c9034fcbb2a0f5bde3016607d04724fe23b50",
+      "visual_review_sha256": "9b2f2abc07e5a97972f17cc345cec7ec13b2629be44ada2d456094e9f5998857",
+      "raw_report_published": false,
+      "human_comprehension_measured": false,
+      "omni_control": {
+        "status": "not-applicable",
+        "reason": "Canonical script/test-ci.ts report applies controlVerdict only to runner=bun with control preload; this runner is playwright. No Omni qualification claimed.",
+        "native_qualification": false
+      }
+    },
+    "checks": {
+      "id": "ci_checks",
+      "run_id": 43534115446,
+      "job_id": 132258805309,
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534115446",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534115446/job/132258805309",
+      "conclusion": "success",
+      "product_commit": "dae18b4f43f0daecf46264e876810025684a919d",
+      "product_tree": "ceb9615bb5bbd5f829d2e9569a2797e3124236a5",
+      "generator_pass": true,
+      "typecheck_pass": true,
+      "guards": {
+        "rules": 78,
+        "changed_paths": 614,
+        "gate": 0,
+        "warn": 11,
+        "errors": 0,
+        "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "artifact": {
+        "id": 14088508352,
+        "name": "astra-wp04-checks",
+        "digest": "sha256:9bf9662dd4051bb0272f5c6703082882f04d5c06cee90f03031d1384bf00f2c0",
+        "verified_sha256": "9bf9662dd4051bb0272f5c6703082882f04d5c06cee90f03031d1384bf00f2c0",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43534115446/artifacts/14088508352",
+        "archive_verification": "Builder independently hashed the actual downloaded ZIP, matched digest/name/id/run URL to one hosted upload block, and bound the evidence/attachment bytes to exact members of this archive."
+      },
+      "log_sha256": "84593d35fcab86a843d3b3943d52243ce6b218a1f38551d9b4a14a26554ca516",
+      "official_schema_sha256": "33fd0a159ef9258e02c4777a3fb4d88b27a86930122e1e563d88ec3d1362d806",
+      "official_schema_git_blob": "bbb80f4a218de28164b2a7f93bb1701432dbe50e",
+      "guard_baseline_sha256": "3d30e28f5510da0b1db905413bd22ed021fcb0e10a9cdc7940f36c9ca232b1e1"
+    }
+  },
+  "qualification": {
+    "mapped_tests": 127,
+    "all_mapped_tests_observed_once": true,
+    "failed": 0,
+    "skipped": 0,
+    "retried": 0,
+    "criteria_counts": {
+      "PASS_SCOPED": 97,
+      "BLOCKED_NATIVE": 10,
+      "NOT_RUN_HUMAN": 4
+    }
+  },
+  "local_execution": {
+    "product_tests": false,
+    "typecheck": false,
+    "runtime": false,
+    "operation": "Read/hash/parse existing source and hosted evidence; generate documentation only"
+  },
+  "input_evidence": {
+    "bun_results": {
+      "path": "review/w8-bun-results.json",
+      "sha256": "d924cfcf3751a9e27980d4949edd2c1010e905b54aebc0535d5f038ca2a1b1f6",
+      "bytes": 66782
+    },
+    "browser_report": {
+      "path": "review/w8-browser-artifact/test-ci-evidence/playwright-runtime.json",
+      "sha256": "fddd3f2b58bbb7f61d0517427a9fc3c922cab8888a33b673574bed31217a7500",
+      "bytes": 25723
+    },
+    "browser_selection": {
+      "path": "review/w8-browser-artifact/test-ci-evidence/playwright-selection.json",
+      "sha256": "838c2b85aa81baf9d7694805d42b5800f866716ae9b10e31b029cb0e9a7f5703",
+      "bytes": 8605
+    },
+    "browser_observations": {
+      "path": "review/w8-browser-observations.json",
+      "sha256": "d1edc4136bd29cba48e4215fc00c9034fcbb2a0f5bde3016607d04724fe23b50",
+      "bytes": 22103
+    },
+    "visual_review": {
+      "path": "review/w8-browser-visual-review.md",
+      "sha256": "9b2f2abc07e5a97972f17cc345cec7ec13b2629be44ada2d456094e9f5998857",
+      "bytes": 4764
+    },
+    "final_input": {
+      "path": "review/final-evidence-input.json",
+      "sha256": "dbf77bd64ccbf7b2c886395bc9b7e0a7aef4cad923f611983dc39094ae648271",
+      "bytes": 3469
+    }
+  },
+  "browser_publication": "Only normalized path/title/status/duration/retry and attachment name/hash/artifact references are published. Raw report, cookies, enrollment URLs, signed download URLs, stdout and attachment bodies remain outside the repo.",
+  "schema_generation": {
+    "sha256": "33fd0a159ef9258e02c4777a3fb4d88b27a86930122e1e563d88ec3d1362d806",
+    "git_blob_sha": "bbb80f4a218de28164b2a7f93bb1701432dbe50e",
+    "artifact_matches_product_bytes": true
+  },
+  "historical_reviews": [
+    {
+      "source": {
+        "path": "review/final-review/WP04-independent-review-W6.md",
+        "sha256": "ccb3ec025b0c1d0302c84cf3f37d00fe3dba109175feb8425077bbc58615d08a",
+        "bytes": 11879
+      },
+      "receipt": "independent-review-W6.md",
+      "historical_assessment_preserved": true,
+      "hosted_results_attributed_to": "integrator evidence collection, not reviewer execution"
+    },
+    {
+      "source": {
+        "path": "review/final-review/WP04-independent-review-W6-hashes.json",
+        "sha256": "1c355fc11a81cdbdbbaa830e92381f1430a805072db381a36f53f60f913fed6c",
+        "bytes": 12353
+      },
+      "receipt": "independent-review-W6-hashes.json",
+      "historical_assessment_preserved": true,
+      "hosted_results_attributed_to": "integrator evidence collection, not reviewer execution"
+    },
+    {
+      "source": {
+        "path": "review/final-review/WP04-independent-review-W6-addendum.md",
+        "sha256": "6d3ec021589ed31dd1d43599e4da65699906abc29441486c03d1bde49de430ba",
+        "bytes": 11887
+      },
+      "receipt": "independent-review-W6-addendum.md",
+      "historical_assessment_preserved": true,
+      "hosted_results_attributed_to": "integrator evidence collection, not reviewer execution"
+    },
+    {
+      "source": {
+        "path": "review/final-review/WP04-independent-review-W6-addendum-hashes.json",
+        "sha256": "f3274bd6025b5142018dea8e23f5f70d4a93bd68d1b709beb5e50f309c428da1",
+        "bytes": 12744
+      },
+      "receipt": "independent-review-W6-addendum-hashes.json",
+      "historical_assessment_preserved": true,
+      "hosted_results_attributed_to": "integrator evidence collection, not reviewer execution"
+    },
+    {
+      "source": {
+        "path": "review/WP04-w7-download-review.md",
+        "sha256": "3f3bfc19edec29a56416a5db1326c562344718685a262847180636de20b5bb1e",
+        "bytes": 2839
+      },
+      "receipt": "independent-review-W7-downloads.md",
+      "historical_assessment_preserved": true,
+      "hosted_results_attributed_to": "integrator evidence collection, not reviewer execution"
+    },
+    {
+      "source": {
+        "path": "review/w7-download-review.json",
+        "sha256": "bd593393125ddad4da2ca2016e4e3b21f213b8b21eb5f7026bb36062b79dd483",
+        "bytes": 5001
+      },
+      "receipt": "independent-review-W7-downloads.json",
+      "historical_assessment_preserved": true,
+      "hosted_results_attributed_to": "integrator evidence collection, not reviewer execution"
+    },
+    {
+      "source": {
+        "path": "review/publication-normalized/WP04-delivery-builder-review.md",
+        "sha256": "52a16a3647f51977e0eaca77bc9bb6d063506c28c74653609d20c07017b87daa",
+        "bytes": 8549
+      },
+      "receipt": "evidence-builder-review.md",
+      "historical_assessment_preserved": true,
+      "hosted_results_attributed_to": "integrator evidence collection, not reviewer execution"
+    },
+    {
+      "source": {
+        "path": "review/final-review/WP04-w8-acceptance-review.md",
+        "sha256": "f975a334d347ee226786f424b8cdcc5f118184c6e1e2d4997ce14031446de959",
+        "bytes": 12511
+      },
+      "receipt": "independent-review-W8-acceptance.md",
+      "historical_assessment_preserved": true,
+      "hosted_results_attributed_to": "integrator evidence collection, not reviewer execution"
+    },
+    {
+      "source": {
+        "path": "review/w8-browser-visual-review.md",
+        "sha256": "9b2f2abc07e5a97972f17cc345cec7ec13b2629be44ada2d456094e9f5998857",
+        "bytes": 4764
+      },
+      "receipt": "browser-visual-review.md",
+      "historical_assessment_preserved": true,
+      "hosted_results_attributed_to": "integrator evidence collection, not reviewer execution"
+    },
+    {
+      "source": {
+        "path": "review/w8-browser-ui-review.md",
+        "sha256": "7f7e84d9d72a5162dee9de25ec70e1acd246eb1f92aa303ef1b7982b6e6b5ed2",
+        "bytes": 7825
+      },
+      "receipt": "browser-ui-review.md",
+      "historical_assessment_preserved": true,
+      "hosted_results_attributed_to": "integrator evidence collection, not reviewer execution"
+    },
+    {
+      "source": {
+        "path": "review/final-review/WP04-w8-acceptance-review-hashes.json",
+        "sha256": "aceb0105bd49e0f1ff3069af0e3523d149ac9be7e40e9da2ac05ab4832e777c6",
+        "bytes": 69889
+      },
+      "receipt": "WP04-w8-acceptance-review-hashes.json",
+      "historical_assessment_preserved": true,
+      "hosted_results_attributed_to": "integrator evidence collection, not reviewer execution"
+    },
+    {
+      "source": {
+        "path": "review/publication-link-normalization.json",
+        "sha256": "95ff926302d2ab7f4f7844d4eebfe5511a30ba7c63c968fe54b0550b4f955d65",
+        "bytes": 45218
+      },
+      "receipt": "publication-link-normalization.json",
+      "historical_assessment_preserved": true,
+      "hosted_results_attributed_to": "integrator evidence collection, not reviewer execution"
+    }
+  ],
+  "proof_boundaries": "proof-boundaries.md",
+  "criteria": "criteria.json",
+  "test_results": "test-results.json",
+  "publication": {
+    "product_commit": "dae18b4f43f0daecf46264e876810025684a919d",
+    "documentation_commit": null,
+    "note": "Root publishes a docs-only commit D after this product W. D and its outside-receipt blob equality are recorded separately in the PR, avoiding self-hash cycles."
+  }
+}
