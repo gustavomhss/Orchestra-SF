@@ -17,9 +17,9 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
   type ReviewRecipientLease = { proof: ReviewThreadRecipientAuthority; authorize: ReviewThreadRecipientAuthority["authorize"]; check: ReviewThreadRecipientAuthority["checkAtCommit"] }
   const reviewRecipientLeases = new WeakMap<TrustedDomainContext, Map<string, ReviewRecipientLease>>()
   const reviewRecipientKey = (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => digestSfValue({ recipientRef, basis, authority: context.binding })
-  const checkReviewRecipient = (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => {
+  const checkReviewRecipient = (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext, requireSelfLease = false) => {
     if (!recipientRef.trim() || !basis.reviewContext || !validThreadSourceContext(basis)) return false
-    if (recipientRef === context.binding.principalRef) return true
+    if (recipientRef === context.binding.principalRef && !requireSelfLease) return true
     const lease = reviewRecipientLeases.get(context)?.get(reviewRecipientKey(recipientRef, basis, context))
     if (!lease) return false
     const current = () => input.reviewRecipientAuthority === lease.proof && lease.proof.authorize === lease.authorize && lease.proof.checkAtCommit === lease.check
@@ -42,13 +42,15 @@ export function createCollaborationAuthority(input: { host: DomainPortHost; evid
     if (!authorize || !validThreadSourceContext(selected) || !await input.host.revalidate(context)) return false
     return await authorize(selected.reviewContext!, selected, context).catch(() => false) && input.authorizeReviewThreadContext === authorize && await input.host.revalidate(context)
   }
-  const reviewRecipientSources = async (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext) => {
+  const reviewRecipientSources = async (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext, requireSelfLease = false) => {
     const selected = structuredClone(basis)
     if (!recipientRef.trim() || !selected.reviewContext || !validThreadSourceContext(selected) || !await reviewThreadBasis(selected, context) || !await historicalSources(selected.evidenceRefs, context)) return false
-    if (recipientRef === context.binding.principalRef) return await input.host.revalidate(context)
+    // Receipt egress requires a synchronous current ACL check for the actor
+    // too; host identity alone cannot certify access to a preserved review.
+    if (recipientRef === context.binding.principalRef && !requireSelfLease) return await input.host.revalidate(context)
     // C08 already owns all source snapshots. Reuse only the privately prepared
     // authority here; preparing a new recipient lease could open a nested write.
-    if (input.host.persistence.currentSnapshots?.()) return checkReviewRecipient(recipientRef, selected, context)
+    if (input.host.persistence.currentSnapshots?.()) return checkReviewRecipient(recipientRef, selected, context, requireSelfLease)
     const proof = input.reviewRecipientAuthority
     const authorize = proof?.authorize
     const checkAtCommit = proof?.checkAtCommit

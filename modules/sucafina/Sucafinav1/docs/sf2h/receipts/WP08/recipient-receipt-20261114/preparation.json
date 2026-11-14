@@ -1,0 +1,119 @@
+{
+  "schema": "sf2h.recipient-receipt.preparation.v1",
+  "status": "IMPLEMENTED_PENDING_HOSTED_VALIDATION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "collab-resume",
+  "pr": 41,
+  "parent": "9ec98ac9cdc807d2b95040274f4312df768d932d",
+  "parentTree": "34c5197f92afe1a773a3c87e2f3397bf89f2abb2",
+  "handoff": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/COLLABORATION-HANDOFF.md",
+    "blob": "e56254b1bc2fc4157c7f3fbc38309b7bef0b39be",
+    "basis": "Affirmative final delivery to S0, PR41 updated with final head and terminal static gate; explicit user continuation in the same branch. Prior writer was preserved while this handoff was absent. All 63 evidence additions retained."
+  },
+  "norm": {
+    "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "commonSha": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+    "packSha": "a3d29d011ba3607a57914701300f09117a3e2de9"
+  },
+  "upstream": {
+    "pr": 54,
+    "sha": "92243fc68ff81df7fc563ec081ac9db686a24dfa",
+    "patchBlob": "4a49fc20064d8122e226e6ac939481b0156697a3",
+    "preimageBlob": "496df344b314df69e5e4d9896aa794ffc84f3cc1",
+    "preimageSha256": "70e8c3eaa6b157b8e138e87b650cf5b31a4022bc07808f4e6a8ae04181877ccd",
+    "preimageRecheckedAtParent": true,
+    "blindApplication": false,
+    "additionalFinding": "The proposed human/host-only final check could not close C05 ACL revocation after the last reader. Egress now uses protected source/thread/receipt checks and a real strict actor lease, without the ordinary self shortcut."
+  },
+  "scope": {
+    "product": [
+      "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+      "modules/sucafina/Sucafinav1/product/collaboration/authority.ts"
+    ],
+    "newTests": 13,
+    "regressionsExpected": 7,
+    "sharedContractWrites": false,
+    "hostBindingWrites": false,
+    "engineWrites": false,
+    "uiWrites": false
+  },
+  "checks": {
+    "localProductExecution": false,
+    "localCompilation": false,
+    "hostedProduct": "NOT_RUN",
+    "hostedStatic": "NOT_RUN",
+    "selection": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp08/recipient-receipt.test.ts",
+        "./Sucafinav1/test/product/wp08/recipient-receipt-recovery.test.ts",
+        "./Sucafinav1/test/product/wp08/recipient-receipt-fences.test.ts",
+        "./Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+        "./Sucafinav1/test/product/wp08/thread-actors.test.ts",
+        "./Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+        "./Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+        "./Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    },
+    "deadlinePreservedMilliseconds": 120000
+  },
+  "inherited": {
+    "c05": {
+      "W": "9e1f44af7689946d27d37ed48b9f5e9849417121",
+      "S": "a4f8c7bd673de3e4092f20185f4c3ea2d10d0ec3",
+      "run": 43625515062,
+      "job": 132540336771,
+      "pass": 5,
+      "fail": 0,
+      "omni": "not applicable",
+      "rerun": false
+    },
+    "static": {
+      "W": "9ec98ac9cdc807d2b95040274f4312df768d932d",
+      "run": 43627225976,
+      "job": 132545732464,
+      "typecheck": "FAILURE_69_INHERITED_DIAGNOSTICS",
+      "guards": "PASS"
+    }
+  },
+  "staticReview": {
+    "reviewer": "/root/receipt_patch_review",
+    "status": "NO_BLOCKER_BY_STATIC_INSPECTION",
+    "executedProduct": false
+  },
+  "limits": [
+    "Full intent in the reopen witness is held in test memory; browser persistence/reload is NOT proved.",
+    "Actor authentication and recipient ACL services remain explicit fixture boundaries; SQLite/C08/source producers are real.",
+    "Legacy Boolean fixture explicitly replaces only a persisted outcome shape; it is not an execution of the old producer.",
+    "No integrated WP07/WP08/WP09 acceptance or GLOBAL_RELEASE."
+  ],
+  "preservedHandoffs": [
+    "../collab-resume-20261114/COLLABORATION-HANDOFF.md",
+    "../../WP07/collab-resume/HANDOFF.md",
+    "../collab-resume-20261114/handoff.md",
+    "../../WP09/collab-resume/owner-deltas.md"
+  ],
+  "affectedCriteria": [
+    "C03",
+    "C05",
+    "C08",
+    "WP08.T02.CHK.03",
+    "WP08.T02.DOD.02",
+    "WP08.T02.INV.01",
+    "WP08.T02.INV.02",
+    "WP08.T02.CMP.01",
+    "WP08.T02.CMP.02",
+    "WP08.CMP.01",
+    "CAMP.INV.04",
+    "CAMP.CMP.02"
+  ],
+  "criteriaAcceptance": "Scoped contribution only; 330-criterion prior maps retained unchanged."
+}
